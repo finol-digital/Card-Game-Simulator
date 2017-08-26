@@ -1,0 +1,4 @@
+*.cs text eol=lf
+*.meta text eol=lf
+*.shader text eol=lf
+*.asset text eol=lf
