@@ -31,13 +31,17 @@ public class CardImageRepository
         string cardImageName = GetCardImageName(card);
         Debug.Log("Loading and caching card image: " + cardImageName);
 
+        WWW loadImage = null;
         string imageFilePath = CardGameManager.CurrentCardGame.FilePathBase + "/" + card.SetCode;
         string imageFileURL = "file://" + imageFilePath + "/" + cardImageName;
-        Debug.Log(" Attempting to load card image from: " + imageFileURL);
-        WWW loadImage = new WWW(imageFileURL);
-        yield return loadImage;
+        bool imageCached = File.Exists(imageFilePath + "/" + cardImageName);
+        if (imageCached) { 
+            Debug.Log(" Attempting to load card image from: " + imageFileURL);
+            loadImage = new WWW(imageFileURL);
+            yield return loadImage;
+        }
 
-        if (!string.IsNullOrEmpty(loadImage.error)) {
+        if (loadImage == null || !string.IsNullOrEmpty(loadImage.error)) {
             string imageWebURL = CardGameManager.CurrentCardGame.CardImageBaseURL + cardImageName;
             Debug.Log(" Attempting to load card image from: " + imageWebURL);
             loadImage = new WWW(imageWebURL);
@@ -57,7 +61,7 @@ public class CardImageRepository
             Debug.Log(" Image saved to file");
         }
 
-        Debug.Log(" Finalizing image sprite and caching it");
+        Debug.Log(" Finalizing load of image sprite");
         Sprite cardImage = Sprite.Create(loadImage.texture, new Rect(0, 0, loadImage.texture.width, loadImage.texture.height), new Vector2(0.5f, 0.5f));
         allCardImages [cardImageName] = cardImage;
     }

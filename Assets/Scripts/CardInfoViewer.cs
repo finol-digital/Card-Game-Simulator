@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
+    public GameObject cardZoomPrefab;
     public Image cardImage;
-    public Image cardZoomImage;
     public Text nameContent;
     public Text idContent;
     public Dropdown propertySelection;
@@ -17,6 +17,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     private static CardInfoViewer instance;
 
+    private RectTransform cardZoomPanel;
     private RectTransform rectTransform;
     private List<Dropdown.OptionData> propertyOptions;
     private int selectedPropertyIndex;
@@ -26,6 +27,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     void Awake()
     {
         instance = this;
+        cardZoomPanel = Instantiate(cardZoomPrefab, UnityExtensionMethods.FindInParents<Canvas>(gameObject).transform).transform as RectTransform;
+        cardZoomPanel.gameObject.SetActive(false);
         rectTransform = this.transform as RectTransform;
         propertyOptions = new List<Dropdown.OptionData>();
     }
@@ -125,9 +128,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         targetYPos = rectTransform.sizeDelta.y;
     }
 
-    public void SetZoomImage()
+    public void ShowCardZoomed()
     {
-        cardZoomImage.sprite = cardImage.sprite;
+        Debug.Log("Showing zoomed image of card");
+        cardZoomPanel.gameObject.SetActive(true);
+        cardZoomPanel.GetChild(0).GetComponent<Image>().sprite = cardImage.sprite;
     }
 
     void Update()

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -15,6 +16,7 @@ public class CardGameManager : MonoBehaviour
     private Dictionary<string, CardGame> allCardGames;
     private string configFilePath;
     private string currentGameName;
+    private SpriteRenderer backgroundImage;
 
     void Awake()
     {
@@ -146,6 +148,14 @@ public class CardGameManager : MonoBehaviour
             if (CurrentCardGame == null)
                 return false;
             return CurrentCardGame.IsLoaded;
+        }
+    }
+
+    public SpriteRenderer BackgroundImage {
+        get {
+            if (backgroundImage == null)
+                backgroundImage = GameObject.FindGameObjectWithTag("Background").GetComponent<SpriteRenderer>();
+            return backgroundImage;
         }
     }
 }

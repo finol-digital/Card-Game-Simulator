@@ -151,7 +151,7 @@ public class CardSearcher : MonoBehaviour
             resultsPanel.GetChild(i).SetParent(cardModelStaging);
         }
 
-        for (int i = 0; i < resultsPanelSize && resultsIndex * resultsPanelSize + i < searchResults.Count; i++) {
+        for (int i = 0; i < resultsPanelSize && resultsIndex >= 0 && resultsIndex * resultsPanelSize + i < searchResults.Count; i++) {
             string cardId = searchResults [resultsIndex * resultsPanelSize + i].Id;
 
             CardModel cardModelToShow;

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class DeckEditorPanel : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+public class CardStack : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -12,7 +12,7 @@ public class DeckEditorPanel : MonoBehaviour, IDropHandler, IPointerEnterHandler
             return;
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null && !cardModel.HasPlaceHolder) {
+        if (cardModel != null) {
             cardModel.CreatePlaceHolderInPanel(this.transform);
         }
 
@@ -25,7 +25,7 @@ public class DeckEditorPanel : MonoBehaviour, IDropHandler, IPointerEnterHandler
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
         if (cardModel != null) {
-            cardModel.removePlaceHolder();
+            cardModel.RemovePlaceHolder();
         }
 
     }

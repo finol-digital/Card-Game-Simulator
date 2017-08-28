@@ -36,7 +36,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     {
         Debug.Log("Clicked on " + gameObject.name);
         downClickId = eventData.pointerId;
-        Debug.Log("Card info view at : " + (CardInfoViewer.Instance.transform as RectTransform).anchoredPosition.y + "; visible: " + CardInfoViewer.Instance.IsVisible);
         if (CardInfoViewer.Instance.IsVisible) {
             Debug.Log(" Selecting " + gameObject.name + " on pointer down, since the card info viewer is visible");
             EventSystem.current.SetSelectedGameObject(gameObject, eventData);
@@ -94,21 +93,15 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         dragOffset = (((Vector2)this.transform.position) - eventData.position);
         EventSystem.current.SetSelectedGameObject(null, eventData);
 
-        if (makesCopyOnDrag) {
-            CreateDraggedCopy(eventData);
-        } else if (placeHolder == null) {
-            CreatePlaceHolderInPanel(this.transform.parent);
-            Canvas canvas = UnityExtensionMethods.FindInParents<Canvas>(gameObject);
-            Transform container = this.transform.parent.parent;
-            if (canvas != null)
-                container = canvas.transform;
-            this.transform.SetParent(container);
-        }
+        if (makesCopyOnDrag)
+            CreateDraggedCopy(eventData.position);
+        else
+            MoveToContainingCanvas();
 
         GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
-    public void CreateDraggedCopy(PointerEventData eventData)
+    public void CreateDraggedCopy(Vector2 position)
     {
         Debug.Log("Creating dragged copy for " + gameObject.name);
         Canvas canvas = UnityExtensionMethods.FindInParents<Canvas>(gameObject);
@@ -123,13 +116,27 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             cardCopyCanvasGroup.blocksRaycasts = false;
 
         draggedCopy = cardCopy;
-        draggedCopy.transform.position = eventData.position + dragOffset;
+        draggedCopy.transform.position = position + dragOffset;
 
+    }
+
+    public void MoveToContainingCanvas()
+    {
+        Debug.Log("Moving card model " + gameObject.name + " to the containing canvas");
+        CreatePlaceHolderInPanel(transform.parent);
+        Canvas canvas = UnityExtensionMethods.FindInParents<Canvas>(gameObject);
+        Transform container = this.transform.parent.parent;
+        if (canvas != null)
+            container = canvas.transform;
+        else
+            Debug.LogWarning("Attempted to move a card model to it's canvas, but it was not in a canvas. Moving it to it's parent instead");
+        this.transform.SetParent(container);
     }
 
     public void CreatePlaceHolderInPanel(Transform panel)
     {
-        Debug.Log("Creating placeholder for " + gameObject.name);
+        RemovePlaceHolder();
+
         GameObject cardCopy = Instantiate(this.gameObject, panel);
         cardCopy.name = cardCopy.name.Replace("(Clone)", "(Placeholder)");
 
@@ -182,13 +189,12 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     }
 
-    public void removePlaceHolder()
+    public void RemovePlaceHolder()
     {
         if (placeHolder == null) {
             return;
         }
 
-        Debug.Log("Destroying placeholder for " + gameObject.name);
         Destroy(placeHolder.gameObject);
         placeHolder = null;
 

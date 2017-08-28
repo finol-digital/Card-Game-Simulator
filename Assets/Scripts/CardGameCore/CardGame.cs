@@ -150,9 +150,10 @@ public class CardGame
             Debug.Log(" Attempting to load background from: " + imageFileURL);
             WWW imageLoader = new WWW(imageFileURL);
             yield return imageLoader;
-            if (string.IsNullOrEmpty(imageLoader.error))
+            if (string.IsNullOrEmpty(imageLoader.error)) {
                 backgroundImage = Sprite.Create(imageLoader.texture, new Rect(0, 0, imageLoader.texture.width, imageLoader.texture.height), new Vector2(0.5f, 0.5f));
-            else
+                CardGameManager.Instance.BackgroundImage.sprite = backgroundImage;
+            } else
                 Debug.LogWarning(" Failed to load background image from file: " + imageLoader.error);
         } else
             Debug.Log(" No background image saved, so keeping the default");
