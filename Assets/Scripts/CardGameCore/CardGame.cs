@@ -9,11 +9,11 @@ using Newtonsoft.Json.Linq;
 [JsonObject(MemberSerialization.OptIn)]
 public class CardGame
 {
-    public const string DefaultImageFileType = "png";
     public const string AllSetsFileName = "AllSets.json";
     public const string AllCardsFileName = "AllCards.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
+    public const string DefaultImageFileType = "png";
 
     public string Name { get; set; }
 
@@ -117,17 +117,18 @@ public class CardGame
         yield return loadDefinition;
 
         if (string.IsNullOrEmpty(loadDefinition.error)) {
-            Debug.Log(" Game definition received from web");
+            Debug.Log("Game definition for " + Name + " received from web");
 
-            Debug.Log(" Saving game definition to : " + DefinitionFilePath);
+            Debug.Log("Saving game definition to : " + DefinitionFilePath);
             if (!System.IO.Directory.Exists(FilePathBase)) {
-                Debug.Log(" Game file directory does not exist, so creating it");
+                Debug.Log(DefinitionFilePath + " Game file directory does not exist, so creating it");
                 Directory.CreateDirectory(FilePathBase);
             }
             File.WriteAllBytes(DefinitionFilePath, loadDefinition.bytes);
-            Debug.Log(" Game definition written to file");
+            Debug.Log("Game definition for " + Name + " written to file");
         } else { 
-            Debug.LogError(" Failed to load game definition from the web!");
+            Debug.LogError("Failed to load game definition from the web! " + Name);
+            // TODO: BETTER ERROR HANDLING?
         }
 
         LoadFromFile();
@@ -190,7 +191,7 @@ public class CardGame
             // TODO: add user feedback to all the logerror and logwarning, so that they are aware
         }
 
-        Debug.Log(" Load from file completed");
+        Debug.Log("Load from file completed for " + Name);
     }
 
     public IEnumerator GetFromURL(string URL, string fileName)
@@ -200,15 +201,15 @@ public class CardGame
         yield return loader;
 
         if (string.IsNullOrEmpty(loader.error)) {
-            Debug.Log(" Received from web. Saving to : " + FilePathBase);
+            Debug.Log("Received from web. Saving to : " + FilePathBase);
             if (!System.IO.Directory.Exists(FilePathBase)) {
-                Debug.Log(" Game file directory does not exist, so creating it");
+                Debug.Log(FilePathBase + " Game file directory does not exist, so creating it");
                 Directory.CreateDirectory(FilePathBase);
             }
             File.WriteAllBytes(FilePathBase + "/" + fileName, loader.bytes);
-            Debug.Log(" Written to file");
+            Debug.Log("Written to file " + fileName);
         } else { 
-            Debug.LogError(" Failed to load  " + fileName + " from " + URL);
+            Debug.LogError("Failed to load  " + fileName + " from " + URL);
             // TODO: BETTER ERROR HANDLING?
         }
     }
@@ -238,7 +239,7 @@ public class CardGame
             // TODO: add user feedback to all the logerror and logwarning, so that they are aware
         }
 
-        Debug.Log(" Load sets from file completed");
+        Debug.Log("Load sets from file completed");
         
     }
 
@@ -276,7 +277,7 @@ public class CardGame
             // TODO: add user feedback to all the logerror and logwarning, so that they are aware
         }
 
-        Debug.Log(" Load cards from file completed");
+        Debug.Log("Load cards from file completed");
     }
 
 

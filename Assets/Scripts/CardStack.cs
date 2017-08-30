@@ -13,7 +13,7 @@ public class CardStack : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoi
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
         if (cardModel != null) {
-            cardModel.CreatePlaceHolderInPanel(this.transform);
+            cardModel.CreatePlaceHolderInPanel(this.transform as RectTransform);
         }
 
     }

@@ -79,9 +79,9 @@ public class CardGameManager : MonoBehaviour
             string gameName = (string)cardGame.SelectToken("name");
             string gameURL = (string)cardGame.SelectToken("url");
             if (gameName == null || gameURL == null) {
-                Debug.LogWarning(" Incorrect entry in the config file! Ignoring it");
+                Debug.LogWarning("Incorrect entry in the config file! Ignoring it");
             } else {
-                Debug.Log(" Defining the card game: " + gameName + " to be at " + gameURL);
+                Debug.Log("Defining the card game: " + gameName + " to be at " + gameURL);
                 CardGame newGame = new CardGame(gameName, gameURL);
                 allCardGames [newGame.Name] = newGame;
             }

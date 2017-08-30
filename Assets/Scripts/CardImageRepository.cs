@@ -36,14 +36,14 @@ public class CardImageRepository
         string imageFileURL = "file://" + imageFilePath + "/" + cardImageName;
         bool imageCached = File.Exists(imageFilePath + "/" + cardImageName);
         if (imageCached) { 
-            Debug.Log(" Attempting to load card image from: " + imageFileURL);
+            Debug.Log("Attempting to load card image from: " + imageFileURL);
             loadImage = new WWW(imageFileURL);
             yield return loadImage;
         }
 
         if (loadImage == null || !string.IsNullOrEmpty(loadImage.error)) {
             string imageWebURL = CardGameManager.CurrentCardGame.CardImageBaseURL + cardImageName;
-            Debug.Log(" Attempting to load card image from: " + imageWebURL);
+            Debug.Log("Attempting to load card image from: " + imageWebURL);
             loadImage = new WWW(imageWebURL);
             yield return loadImage;
 
@@ -52,18 +52,18 @@ public class CardImageRepository
                 // TODO: HANDLING FOR WHEN WE FAIL TO LOAD FROM WEB
             }
 
-            Debug.Log(" Saving image to file");
+            Debug.Log("Saving loaded" + cardImageName + " to file");
             if (!System.IO.Directory.Exists(imageFilePath)) {
-                Debug.Log(" Image file directory does not exist, so creating it");
+                Debug.Log("Image file directory " + imageFilePath + " does not exist, so creating it");
                 Directory.CreateDirectory(imageFilePath);
             }
             File.WriteAllBytes(imageFilePath + "/" + cardImageName, loadImage.bytes);
-            Debug.Log(" Image saved to file");
+            Debug.Log(cardImageName + " saved to file");
         }
 
-        Debug.Log(" Finalizing load of image sprite");
         Sprite cardImage = Sprite.Create(loadImage.texture, new Rect(0, 0, loadImage.texture.width, loadImage.texture.height), new Vector2(0.5f, 0.5f));
         allCardImages [cardImageName] = cardImage;
+        Debug.Log("Finalized load of " + cardImageName);
     }
 
     public static Sprite DefaultImage {

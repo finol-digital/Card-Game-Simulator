@@ -8,14 +8,12 @@ using UnityEngine.Events;
 public class CardSearcher : MonoBehaviour
 {
     public GameObject cardPrefab;
+    public DeckEditor deckEditor;
     public RectTransform advancedFilterPanel;
     public RectTransform filterContentView;
     public RectTransform propertyTemplate;
     public RectTransform resultsPanel;
     public Text resultsCountText;
-
-    private Transform cardModelStaging;
-    private Dictionary<string, CardModel> allCardModels;
 
     private List<Card> searchResults;
     private int resultsPanelSize;
@@ -24,6 +22,9 @@ public class CardSearcher : MonoBehaviour
     private string nameFilter;
     private string setCodeFilter;
     private Dictionary<string, string> propFilters;
+
+    private Transform cardModelStaging;
+    private Dictionary<string, CardModel> allCardModels;
 
     void Awake()
     {
@@ -34,7 +35,6 @@ public class CardSearcher : MonoBehaviour
         nameFilter = "";
         setCodeFilter = "";
         propFilters = new Dictionary<string, string>();
-        
     }
 
     IEnumerator Start()
@@ -171,8 +171,7 @@ public class CardSearcher : MonoBehaviour
     {
         GameObject newCard = Instantiate(cardPrefab, resultsPanel);
         CardModel cardModel = newCard.transform.GetOrAddComponent<CardModel>();
-        cardModel.SetAsCard(cardToShow);
-        cardModel.MakesCopyOnDrag = true;
+        cardModel.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCardModel));
         return cardModel;
     }
 

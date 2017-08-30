@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+public delegate void OnDoubleClickDelegate(CardModel cardDoubleClicked);
+
 [RequireComponent(typeof(Image))]
 public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -13,11 +15,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     private Transform placeHolder = null;
     private Vector2 dragOffset = Vector2.zero;
     private float downClickId;
+    private OnDoubleClickDelegate doubleClickEvent;
 
-    public void SetAsCard(Card card)
+    public void SetAsCard(Card card, bool copyOnDrag = false, OnDoubleClickDelegate onDoubleClick = null)
     {
         this.gameObject.name = card.Name + " [" + card.Id + "]";
         representedCard = card;
+        makesCopyOnDrag = copyOnDrag;
+        doubleClickEvent = onDoubleClick;
         GetComponent<Image>().sprite = CardImageRepository.DefaultImage;
         StartCoroutine(UpdateImage());
     }
@@ -36,17 +41,20 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     {
         Debug.Log("Clicked on " + gameObject.name);
         downClickId = eventData.pointerId;
-        if (CardInfoViewer.Instance.IsVisible) {
-            Debug.Log(" Selecting " + gameObject.name + " on pointer down, since the card info viewer is visible");
+        if (eventData.selectedObject == this.gameObject && doubleClickEvent != null) {
+            Debug.Log("Double click on " + gameObject.name);
+            doubleClickEvent(this);
+        } else if (CardInfoViewer.Instance.IsVisible) {
+            Debug.Log("Selecting " + gameObject.name + " on pointer down, since the card info viewer is visible");
             EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         } else
-            Debug.Log(" Card info view is not visible, so not selecting " + gameObject.name + " on pointer down");
+            Debug.Log("Card info view is not visible, so not selecting " + gameObject.name + " on pointer down");
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (eventData.pointerId != downClickId || eventData.dragging) {
-            Debug.Log("Let go on " + gameObject.name + ", but did not start the press there or it was dragged, so ignoring the action");
+        if (eventData.pointerId != downClickId || eventData.dragging || eventData.selectedObject == CardInfoViewer.Instance.gameObject) {
+            Debug.Log("Let go on " + gameObject.name + ", but did not start the press there, or it was dragged, or its a doubleclick, so ignoring the action");
             return;
         }
 
@@ -123,7 +131,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public void MoveToContainingCanvas()
     {
         Debug.Log("Moving card model " + gameObject.name + " to the containing canvas");
-        CreatePlaceHolderInPanel(transform.parent);
+        CreatePlaceHolderInPanel(transform.parent as RectTransform);
         Canvas canvas = UnityExtensionMethods.FindInParents<Canvas>(gameObject);
         Transform container = this.transform.parent.parent;
         if (canvas != null)
@@ -131,10 +139,15 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         else
             Debug.LogWarning("Attempted to move a card model to it's canvas, but it was not in a canvas. Moving it to it's parent instead");
         this.transform.SetParent(container);
+        this.transform.SetAsLastSibling();
     }
 
-    public void CreatePlaceHolderInPanel(Transform panel)
+    public void CreatePlaceHolderInPanel(RectTransform panel)
     {
+        if (panel == null) {
+            Debug.LogWarning("Attempted to create a place holder in a null panel. Ignoring");
+            return;
+        }
         RemovePlaceHolder();
 
         GameObject cardCopy = Instantiate(this.gameObject, panel);
@@ -178,7 +191,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         
         int newSiblingIndex = placeHolder.parent.childCount;
         for (int i = 0; i < placeHolder.parent.childCount; i++) {
-            if (targetPos.x < placeHolder.parent.GetChild(i).position.x) {
+            if (targetPos.y > placeHolder.parent.GetChild(i).position.y) {
                 newSiblingIndex = i;
                 if (placeHolder.transform.GetSiblingIndex() < newSiblingIndex)
                     newSiblingIndex--;
@@ -206,7 +219,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         GetComponent<CanvasGroup>().blocksRaycasts = true;
         
         if (placeHolder != null) {
-            Debug.Log(" " + gameObject.name + " had a placeholder, so enabling it");
+            Debug.Log(gameObject.name + " had a placeholder, so enabling it before we destroy what was dragged");
             CanvasGroup placeHolderCanvasGroup = placeHolder.GetComponent<CanvasGroup>();
             if (placeHolderCanvasGroup != null) {
                 placeHolderCanvasGroup.alpha = 1;
@@ -216,18 +229,16 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         }
 
         if (draggedCopy != null) {
-            Debug.Log(" Destroying dragged copy");
+            Debug.Log("Destroying dragged copy of " + gameObject.name);
             Destroy(draggedCopy);
             draggedCopy = null;
             placeHolder = null;
         } else {
-            Debug.Log(" Destroying moved card");
+            Debug.Log("Destroying moved card " + gameObject.name);
             Destroy(this.gameObject);
         }
 
     }
-
-    // TODO: IN UPDATE, CHECK IF WE HAVE A PLACEHOLDER WHILE ALSO NOT BEING DRAGGED; IF WE DO, REMOVE THE PLACEHOLDER
 
     public Card RepresentedCard {
         get {
@@ -238,9 +249,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public bool MakesCopyOnDrag {
         get {
             return makesCopyOnDrag;
-        }
-        set {
-            makesCopyOnDrag = value;
         }
     }
 

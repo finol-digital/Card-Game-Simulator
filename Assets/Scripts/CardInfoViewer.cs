@@ -103,7 +103,9 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public void DeselectCard()
     {
         if (selectedCard != null) { 
-            Debug.Log("Card info viewer will attempt to remove the highlight from its selected card");
+            Debug.Log("Card info viewer deselecting the selected card");
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(this.gameObject);
             selectedCard.UnHighlight();
         } else
             Debug.LogWarning("Card info view was told to deselect card when it didn't have a card selected!");
