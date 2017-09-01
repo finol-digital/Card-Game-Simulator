@@ -13,15 +13,21 @@ public class CardGame
     public const string AllCardsFileName = "AllCards.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
+    public const int DefaultCopiesOfCardPerDeck = 4;
+    public const string DefaultDeckFileType = "txt";
     public const string DefaultImageFileType = "png";
 
     public string Name { get; set; }
 
     public string URL { get; set; }
 
+    public bool AutoUpdate { get; set; }
+
     public string FilePathBase { get; set; }
 
     public string DefinitionFilePath { get; set; }
+
+    public string DecksFilePath { get; set; }
 
     [JsonProperty]
     public string AllCardsURL { get; set; }
@@ -72,6 +78,12 @@ public class CardGame
     public List<PropertyDef> CardProperties { get; set; }
 
     [JsonProperty]
+    public int CopiesOfCardPerDeck { get; set; }
+
+    [JsonProperty]
+    public string DeckFileType { get; set; }
+
+    [JsonProperty]
     public string SetCodeIdentifier { get; set; }
 
     [JsonProperty]
@@ -83,13 +95,15 @@ public class CardGame
     private Sprite cardBackImage;
     private bool isLoaded;
 
-    public CardGame(string name, string url)
+    public CardGame(string name, string url, bool autoUpdate)
     {
         Name = name;
         URL = url;
+        AutoUpdate = autoUpdate;
 
         FilePathBase = Application.persistentDataPath + "/" + Name;
         DefinitionFilePath = FilePathBase + "/" + Name + ".json";
+        DecksFilePath = FilePathBase + "/decks";
 
         AllCardsZipped = false;
         AllSetsZipped = false;
@@ -99,6 +113,8 @@ public class CardGame
         CardIdIdentifier = "id";
         CardNameIdentifier = "name";
         CardSetIdentifier = "set";
+        CopiesOfCardPerDeck = DefaultCopiesOfCardPerDeck;
+        DeckFileType = DefaultDeckFileType;
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
 
@@ -112,6 +128,7 @@ public class CardGame
 
     public IEnumerator LoadFromURL()
     {
+        // TODO: IF NOT AUTOUPDATE, DON'T LOAD FROM URL; NEED TO SET UP FILE LOADING CORRECTLY
         Debug.Log("Loading defintion for " + Name + " from " + URL);
         WWW loadDefinition = new WWW(URL);
         yield return loadDefinition;
@@ -120,7 +137,7 @@ public class CardGame
             Debug.Log("Game definition for " + Name + " received from web");
 
             Debug.Log("Saving game definition to : " + DefinitionFilePath);
-            if (!System.IO.Directory.Exists(FilePathBase)) {
+            if (!Directory.Exists(FilePathBase)) {
                 Debug.Log(DefinitionFilePath + " Game file directory does not exist, so creating it");
                 Directory.CreateDirectory(FilePathBase);
             }
@@ -133,46 +150,46 @@ public class CardGame
 
         LoadFromFile();
 
-        Debug.Log(" Loading Sets");
-        if (!string.IsNullOrEmpty(AllSetsURL))
+        Debug.Log("Loading Sets for " + Name);
+        if (AutoUpdate && !string.IsNullOrEmpty(AllSetsURL))
             yield return GetFromURL(AllSetsURL, AllSetsFileName);
         LoadSetsFromFile();
 
-        Debug.Log(" Loading Cards");
-        if (!string.IsNullOrEmpty(AllCardsURL))
+        Debug.Log("Loading Cards for " + Name);
+        if (AutoUpdate && !string.IsNullOrEmpty(AllCardsURL))
             yield return GetFromURL(AllCardsURL, AllCardsFileName);
         LoadCardsFromFile();
 
-        Debug.Log(" Loading Background Image");
+        Debug.Log("Loading Background Image for " + Name);
         if (!string.IsNullOrEmpty(BackgroundImageURL) && !File.Exists(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType))
             yield return GetFromURL(BackgroundImageURL, BackgroundImageFileName + "." + BackgroundImageType);
         string imageFileURL = "file://" + FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType;
         if (File.Exists(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType)) {
-            Debug.Log(" Attempting to load background from: " + imageFileURL);
+            Debug.Log("Attempting to load background from: " + imageFileURL);
             WWW imageLoader = new WWW(imageFileURL);
             yield return imageLoader;
             if (string.IsNullOrEmpty(imageLoader.error)) {
                 backgroundImage = Sprite.Create(imageLoader.texture, new Rect(0, 0, imageLoader.texture.width, imageLoader.texture.height), new Vector2(0.5f, 0.5f));
                 CardGameManager.Instance.BackgroundImage.sprite = backgroundImage;
             } else
-                Debug.LogWarning(" Failed to load background image from file: " + imageLoader.error);
+                Debug.LogWarning("Failed to load background image from file: " + imageLoader.error);
         } else
-            Debug.Log(" No background image saved, so keeping the default");
+            Debug.Log("No background image saved, so keeping the default for " + Name);
 
-        Debug.Log(" Loading Card Back Image");
+        Debug.Log("Loading Card Back Image for " + Name);
         if (!string.IsNullOrEmpty(CardBackImageURL) && !File.Exists(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType))
             yield return GetFromURL(CardBackImageURL, CardBackImageFileName + "." + CardBackImageType);
         imageFileURL = "file://" + FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType;
         if (File.Exists(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType)) {
-            Debug.Log(" Attempting to load card back from: " + imageFileURL);
+            Debug.Log("Attempting to load card back from: " + imageFileURL);
             WWW imageLoader = new WWW(imageFileURL);
             yield return imageLoader;
             if (string.IsNullOrEmpty(imageLoader.error))
                 cardBackImage = Sprite.Create(imageLoader.texture, new Rect(0, 0, imageLoader.texture.width, imageLoader.texture.height), new Vector2(0.5f, 0.5f));
             else
-                Debug.LogWarning(" Failed to load card back image from file: " + imageLoader.error);
+                Debug.LogWarning("Failed to load card back image from file: " + imageLoader.error);
         } else
-            Debug.Log(" No card back image saved, so keeping the default");
+            Debug.Log("No card back image saved, so keeping the default for " + Name);
 
         Debug.Log(Name + " finished loading");
         isLoaded = true;
@@ -259,9 +276,9 @@ public class CardGame
                 string cardId = cardJToken.Value<string>(CardIdIdentifier);
                 string cardName = cardJToken.Value<string>(CardNameIdentifier);
                 string cardSet = cardJToken.Value<string>(CardSetIdentifier);
-                Dictionary<string, CardPropertySet> cardProps = new Dictionary<string, CardPropertySet>();
+                Dictionary<string, PropertySet> cardProps = new Dictionary<string, PropertySet>();
                 foreach (PropertyDef prop in CardProperties) {
-                    cardProps [prop.Name] = new CardPropertySet() {
+                    cardProps [prop.Name] = new PropertySet() {
                         Key = prop,
                         Value = new PropertyDefValue() { Value = cardJToken.Value<string>(prop.Name) }
                     };
@@ -280,10 +297,25 @@ public class CardGame
         Debug.Log("Load cards from file completed");
     }
 
+    public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> properties)
+    {
+        foreach (Card card in Cards) {
+            if (card.Id.ToLower().Contains(id.ToLower())
+                && card.Name.ToLower().Contains(name.ToLower())
+                && card.SetCode.ToLower().Contains(setCode.ToLower())) {
+                bool propsMatch = true;
+                foreach (KeyValuePair<string, string> entry in properties)
+                    if (!(card.Properties [entry.Key].Value.Value).ToLower().Contains(entry.Value.ToLower()))
+                        propsMatch = false;
+                if (propsMatch)
+                    yield return card;
+            }
+        }
+    }
 
-    public string SerializedDeclaration {
+    public string CGSConfigLine {
         get {
-            return "{ \"name\": \"" + Name + "\", \"url\": \"" + URL + "\" }";
+            return string.Format("{{ \"name\": {0}, \"url\": {1}, \"autoUpdate\": {2} }}", Name, URL, AutoUpdate);
         }
     }
 

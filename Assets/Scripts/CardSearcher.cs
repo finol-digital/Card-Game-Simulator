@@ -15,6 +15,8 @@ public class CardSearcher : MonoBehaviour
     public RectTransform resultsPanel;
     public Text resultsCountText;
 
+    private Transform cardModelStaging;
+    private Dictionary<string, CardModel> allCardModels;
     private List<Card> searchResults;
     private int resultsPanelSize;
     private int resultsIndex;
@@ -23,11 +25,12 @@ public class CardSearcher : MonoBehaviour
     private string setCodeFilter;
     private Dictionary<string, string> propFilters;
 
-    private Transform cardModelStaging;
-    private Dictionary<string, CardModel> allCardModels;
-
     void Awake()
     {
+        Debug.Log("Card Searcher initializing");
+        GameObject go = new GameObject("Card Model Staging");
+        cardModelStaging = go.transform;
+        allCardModels = new Dictionary<string, CardModel>();
         searchResults = new List<Card>();
         resultsPanelSize = Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + 25));
         resultsIndex = 0;
@@ -39,10 +42,6 @@ public class CardSearcher : MonoBehaviour
 
     IEnumerator Start()
     {
-        Debug.Log("Card Searcher initializing");
-        GameObject go = new GameObject("Card Model Staging");
-        cardModelStaging = go.transform;
-        allCardModels = new Dictionary<string, CardModel>();
 
         Debug.Log("Card Searcher waiting for the card game to finish loading");
         while (!CardGameManager.IsLoaded)
@@ -109,12 +108,10 @@ public class CardSearcher : MonoBehaviour
             debugFilters += entry.Key + ": " + entry.Value + "; ";
         Debug.Log(debugFilters);
 
-        searchResults = CardGameManager.Cards.Where(
-            card => card.Id.ToLower().Contains(idFilter.ToLower())
-            && card.Name.ToLower().Contains(nameFilter.ToLower())
-            && card.SetCode.ToLower().Contains(setCodeFilter.ToLower())).ToList<Card>();
-        foreach (KeyValuePair<string, string> entry in propFilters)
-            searchResults = searchResults.Where(card => (card.Properties [entry.Key].Value.Value).ToLower().Contains(entry.Value.ToLower())).ToList();
+        searchResults.Clear();
+        IEnumerable<Card> cardSearcher = CardGameManager.CurrentCardGame.FilterCards(idFilter, nameFilter, setCodeFilter, propFilters);
+        foreach (Card card in cardSearcher)
+            searchResults.Add(card);
         ApplySearchResults(searchResults);
 
     }
@@ -171,7 +168,7 @@ public class CardSearcher : MonoBehaviour
     {
         GameObject newCard = Instantiate(cardPrefab, resultsPanel);
         CardModel cardModel = newCard.transform.GetOrAddComponent<CardModel>();
-        cardModel.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCardModel));
+        cardModel.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCard));
         return cardModel;
     }
 
@@ -185,17 +182,17 @@ public class CardSearcher : MonoBehaviour
         advancedFilterPanel.gameObject.SetActive(false);
     }
 
-    public int ResultRowCount {
-        get {
-            return (searchResults.Count / resultsPanelSize) + (searchResults.Count % resultsPanelSize == 0 ? -1 : 0);
-        }
-    }
-
     void Update()
     {
         if (advancedFilterPanel.gameObject.activeInHierarchy && Input.GetKeyDown(KeyCode.Return)) {
             Search();
             HideAdvancedFilterPanel();
+        }
+    }
+
+    public int ResultRowCount {
+        get {
+            return (searchResults.Count / resultsPanelSize) + (searchResults.Count % resultsPanelSize == 0 ? -1 : 0);
         }
     }
 }

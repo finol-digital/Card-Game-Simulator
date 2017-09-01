@@ -12,9 +12,9 @@ public class Card
 
     public string SetCode { get; set; }
 
-    public IDictionary<string , CardPropertySet> Properties { get; set; }
+    public IDictionary<string , PropertySet> Properties { get; set; }
 
-    public Card(string id, string name, string setCode, IDictionary<string,CardPropertySet> properties)
+    public Card(string id, string name, string setCode, IDictionary<string,PropertySet> properties)
     {
         Id = id.Clone() as string;
         Name = name.Clone() as string;
@@ -23,17 +23,17 @@ public class Card
         this.Properties = this.CloneProperties();
     }
 
-    public IDictionary<string, CardPropertySet> CloneProperties()
+    public IDictionary<string, PropertySet> CloneProperties()
     {
-        var ret = new Dictionary<string, CardPropertySet>();
+        var ret = new Dictionary<string, PropertySet>();
         foreach (var p in Properties) {
-            ret.Add((string)p.Key.Clone(), p.Value.Clone() as CardPropertySet);
+            ret.Add((string)p.Key.Clone(), p.Value.Clone() as PropertySet);
         }
         return ret;
     }
 }
 
-public class CardPropertySet : ICloneable
+public class PropertySet : ICloneable
 {
     public PropertyDef Key { get; set; }
 
@@ -41,7 +41,7 @@ public class CardPropertySet : ICloneable
 
     public object Clone()
     {
-        var ret = new CardPropertySet() {
+        var ret = new PropertySet() {
             Key = this.Key.Clone() as PropertyDef,
             Value = this.Value.Clone() as PropertyDefValue
         };

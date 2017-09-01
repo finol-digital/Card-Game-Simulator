@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void OnDoubleClickDelegate(CardModel cardDoubleClicked);
+public delegate void OnDoubleClickDelegate(Card cardDoubleClicked);
 
 [RequireComponent(typeof(Image))]
 public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -43,7 +43,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         downClickId = eventData.pointerId;
         if (eventData.selectedObject == this.gameObject && doubleClickEvent != null) {
             Debug.Log("Double click on " + gameObject.name);
-            doubleClickEvent(this);
+            doubleClickEvent(RepresentedCard);
         } else if (CardInfoViewer.Instance.IsVisible) {
             Debug.Log("Selecting " + gameObject.name + " on pointer down, since the card info viewer is visible");
             EventSystem.current.SetSelectedGameObject(gameObject, eventData);

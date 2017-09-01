@@ -19,23 +19,31 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     private RectTransform cardZoomPanel;
     private RectTransform rectTransform;
+    private float targetYPos;
     private List<Dropdown.OptionData> propertyOptions;
     private int selectedPropertyIndex;
     private CardModel selectedCard;
-    private float targetYPos;
 
     void Awake()
     {
+        if (instance != null) {
+            // TODO: THINK ABOUT HOW THIS OBJECT ACTS BETWEEN MULTIPLE SCENES
+            // Perhaps load the info from the previous manager, delete it, and set this as the new game manager?
+            // remember that we have the Instance property dynamically searching for and generating this as needed too
+        }
         instance = this;
+
         cardZoomPanel = Instantiate(cardZoomPrefab, UnityExtensionMethods.FindInParents<Canvas>(gameObject).transform).transform as RectTransform;
         cardZoomPanel.gameObject.SetActive(false);
         rectTransform = this.transform as RectTransform;
+        targetYPos = rectTransform.sizeDelta.y;
         propertyOptions = new List<Dropdown.OptionData>();
+        selectedPropertyIndex = 0;
+        selectedCard = null;
     }
 
     IEnumerator Start()
     {
-        targetYPos = rectTransform.sizeDelta.y;
 
         Debug.Log("Card Info Viewer waiting for card game to load");
         while (!CardGameManager.IsLoaded)
@@ -107,8 +115,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(this.gameObject);
             selectedCard.UnHighlight();
-        } else
-            Debug.LogWarning("Card info view was told to deselect card when it didn't have a card selected!");
+        }
 
         HideCardInfo();
         

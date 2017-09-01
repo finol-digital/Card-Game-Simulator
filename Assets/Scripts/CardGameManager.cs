@@ -13,6 +13,7 @@ public class CardGameManager : MonoBehaviour
     public const string DefaultGameURL = "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1bTdtQTZzTWZHZ0E";
 
     private static CardGameManager instance;
+
     private Dictionary<string, CardGame> allCardGames;
     private string configFilePath;
     private string currentGameName;
@@ -47,9 +48,9 @@ public class CardGameManager : MonoBehaviour
 
     private void GenerateDefaultConfigFile()
     {
-        CardGame defaultCardGame = new CardGame(DefaultGameName, DefaultGameURL);
+        CardGame defaultCardGame = new CardGame(DefaultGameName, DefaultGameURL, true);
         allCardGames [defaultCardGame.Name] = defaultCardGame;
-        Debug.Log("Generating Default Config File with: " + defaultCardGame.SerializedDeclaration);
+        Debug.Log("Generating Default Config File with: " + defaultCardGame.CGSConfigLine);
         SaveConfigFile();
     }
 
@@ -58,7 +59,7 @@ public class CardGameManager : MonoBehaviour
         Debug.Log("Saving config file to: " + configFilePath);
         string configJson = "[" + System.Environment.NewLine;
         foreach (CardGame cardGame in allCardGames.Values)
-            configJson += cardGame.SerializedDeclaration + "," + System.Environment.NewLine;
+            configJson += cardGame.CGSConfigLine + "," + System.Environment.NewLine;
         int lastEntryEnd = configJson.LastIndexOf("}");
         if (lastEntryEnd <= 0) {
             Debug.LogWarning("Attempted to save a config file when there are no game types in it! Aborting");
@@ -82,7 +83,7 @@ public class CardGameManager : MonoBehaviour
                 Debug.LogWarning("Incorrect entry in the config file! Ignoring it");
             } else {
                 Debug.Log("Defining the card game: " + gameName + " to be at " + gameURL);
-                CardGame newGame = new CardGame(gameName, gameURL);
+                CardGame newGame = new CardGame(gameName, gameURL, true);
                 allCardGames [newGame.Name] = newGame;
             }
         }
@@ -154,7 +155,7 @@ public class CardGameManager : MonoBehaviour
     public SpriteRenderer BackgroundImage {
         get {
             if (backgroundImage == null)
-                backgroundImage = GameObject.FindGameObjectWithTag("Background").GetComponent<SpriteRenderer>();
+                backgroundImage = GameObject.FindGameObjectWithTag("Background").transform.GetOrAddComponent<SpriteRenderer>();
             return backgroundImage;
         }
     }

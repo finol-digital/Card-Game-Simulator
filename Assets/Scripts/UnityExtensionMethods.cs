@@ -30,4 +30,13 @@ static public class UnityExtensionMethods
         return result;
     }
 
+    static public void DestroyAllChildren(this Transform parent)
+    {
+        for (int i = parent.transform.childCount - 1; i >= 0; i--) {
+            Transform child = parent.GetChild(i);
+            child.SetParent(null);
+            GameObject.Destroy(child.gameObject);
+        }
+    }
+
 }
