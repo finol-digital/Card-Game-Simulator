@@ -21,9 +21,8 @@ public class CardImageRepository
 
     public static string GetCardImageFilePath(Card card)
     {
-        string imageFilePath = CardGameManager.CurrentCardGame.FilePathBase + "/" + card.SetCode + "/" + GetCardImageName(card);
+        string imageFilePath = CardGameManager.Current.FilePathBase + "/" + card.SetCode + "/" + GetCardImageName(card);
         return imageFilePath;
-
     }
 
     public static bool TryGetCachedCardImage(Card card, out Sprite image)
@@ -35,45 +34,19 @@ public class CardImageRepository
 
     public static IEnumerator GetAndCacheCardImage(Card card)
     {
+        Debug.Log("Getting and caching card image for: " + card.Name);
         string imageFilePath = GetCardImageFilePath(card);
-        Debug.Log("Loading and caching card image: " + imageFilePath);
+        string imageWebURL = CardGameManager.Current.CardImageURLBase + GetCardImageName(card);
 
-        WWW loadImage = null;
-        bool imageCached = File.Exists(imageFilePath);
-        if (imageCached) { 
-            string imageFileURL = "file://" + imageFilePath;
-            Debug.Log("Attempting to load card image from: " + imageFileURL);
-            loadImage = new WWW(imageFileURL);
-            yield return loadImage;
-        }
-
-        if (loadImage == null || !string.IsNullOrEmpty(loadImage.error)) {
-            string imageWebURL = CardGameManager.CurrentCardGame.CardImageBaseURL + GetCardImageName(card);
-            // TODO: BETTER HANDLING OF HOW TO DETERMINE WHAT THE NAME OF THE IMAGE FOR THE CARD IS, AND HOW TO LOAD IT FROM A URL
-            Debug.Log("Attempting to load card image from: " + imageWebURL);
-            loadImage = new WWW(imageWebURL);
-            yield return loadImage;
-
-            if (!string.IsNullOrEmpty(loadImage.error)) {
-                Debug.LogWarning("Had an error loading from web: " + loadImage.error);
-                // TODO: HANDLING FOR WHEN WE FAIL TO LOAD FROM WEB
-            }
-
-            Debug.Log("Saving loaded" + imageFilePath + " to file");
-            if (!Directory.Exists(imageFilePath.Substring(0, imageFilePath.LastIndexOf('/')))) {
-                Debug.Log("Image file directory for " + imageFilePath + " does not exist, so creating it");
-                Directory.CreateDirectory(imageFilePath);
-            }
-            File.WriteAllBytes(imageFilePath, loadImage.bytes);
-            Debug.Log(imageFilePath + " saved to file");
-        }
-
-        Sprite cardImage = Sprite.Create(loadImage.texture, new Rect(0, 0, loadImage.texture.width, loadImage.texture.height), new Vector2(0.5f, 0.5f));
-        allCardImages [imageFilePath] = cardImage;
-        Debug.Log("Finalized load of " + imageFilePath);
+        Sprite cardImage = null;
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.LoadOrGetImage(imageFilePath, imageWebURL), (output) => cardImage = output);
+        if (cardImage != null)
+            allCardImages [imageFilePath] = cardImage;
+        else
+            Debug.LogWarning("Failed to get and cache card image for " + card.Name + "!");
     }
 
     public static Sprite DefaultImage {
-        get { return CardGameManager.CurrentCardGame.CardBackImage; }
+        get { return CardGameManager.Current.CardBackImage; }
     }
 }

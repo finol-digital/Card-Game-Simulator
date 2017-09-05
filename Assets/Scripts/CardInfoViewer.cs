@@ -50,8 +50,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             yield return null;
 
         Debug.Log("Card Info viewer is setting the properties");
-        foreach (PropertyDef propDef in CardGameManager.CurrentCardGame.CardProperties) {
-            if (propDef.Name.Equals(CardGameManager.CurrentCardGame.CardPrimaryProperty))
+        foreach (PropertyDef propDef in CardGameManager.Current.CardProperties) {
+            if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
                 selectedPropertyIndex = propertyOptions.Count;
             propertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
         }
@@ -118,7 +118,6 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
 
         HideCardInfo();
-        
     }
 
     public void ShowCardInfo()

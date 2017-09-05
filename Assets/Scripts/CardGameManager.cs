@@ -8,15 +8,11 @@ using Newtonsoft.Json.Linq;
 
 public class CardGameManager : MonoBehaviour
 {
-    public const string DefaultConfigFileName = "CGS.json";
-    public const string DefaultGameName = "Crucible";
-    public const string DefaultGameURL = "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1bTdtQTZzTWZHZ0E";
-
     private static CardGameManager instance;
 
     private Dictionary<string, CardGame> allCardGames;
-    private string configFilePath;
-    private string currentGameName;
+    private CardGame current;
+    private string gamesFilePathBase;
     private SpriteRenderer backgroundImage;
 
     void Awake()
@@ -29,80 +25,66 @@ public class CardGameManager : MonoBehaviour
         instance = this;
 
         allCardGames = new Dictionary<string, CardGame>();
-        configFilePath = PlayerPrefs.GetString("CGSFilepath", Application.persistentDataPath + "/" + DefaultConfigFileName);
-        Debug.Log("configFilePath = " + configFilePath);
-        if (!File.Exists(configFilePath)) {
-            Debug.Log("Config file missing. Generating.");
-            GenerateDefaultConfigFile();
+        current = new CardGame("CARD GAME SIMULATOR");
+        gamesFilePathBase = Application.persistentDataPath + "/games";
+        backgroundImage = null;
+
+        Debug.Log("Card Game Manager is initializing");
+        CreateDefaultGames();
+
+        Debug.Log("Card Game Manager is reading the card games directory");
+        foreach (string gameDirectory in Directory.GetDirectories(gamesFilePathBase)) {
+            string gameName = gameDirectory.Substring(gamesFilePathBase.Length + 1);
+            allCardGames [gameName] = new CardGame(gameName);
         }
-        LoadConfigFile();
-        Debug.Log("After loading the config file, selecting the default card game from it"); 
-        IEnumerator enumerator = allCardGames.Keys.GetEnumerator();
-        if (enumerator.MoveNext()) {
-            currentGameName = (string)enumerator.Current;
-            SelectCardGame(currentGameName);
-        } else
-            Debug.LogError("Could not select a default card game because there are no card games loaded!");
 
-    }
-
-    private void GenerateDefaultConfigFile()
-    {
-        CardGame defaultCardGame = new CardGame(DefaultGameName, DefaultGameURL, true);
-        allCardGames [defaultCardGame.Name] = defaultCardGame;
-        Debug.Log("Generating Default Config File with: " + defaultCardGame.CGSConfigLine);
-        SaveConfigFile();
-    }
-
-    private void SaveConfigFile()
-    {
-        Debug.Log("Saving config file to: " + configFilePath);
-        string configJson = "[" + System.Environment.NewLine;
+        Debug.Log("Card Game Manager is loading all the card games");
         foreach (CardGame cardGame in allCardGames.Values)
-            configJson += cardGame.CGSConfigLine + "," + System.Environment.NewLine;
-        int lastEntryEnd = configJson.LastIndexOf("}");
-        if (lastEntryEnd <= 0) {
-            Debug.LogWarning("Attempted to save a config file when there are no game types in it! Aborting");
-            return;
-        }
-        configJson = configJson.Substring(0, lastEntryEnd + 1) + System.Environment.NewLine;
-        configJson += "]";
-        File.WriteAllText(configFilePath, configJson);
-        Debug.Log("Config file saved");
+            StartCoroutine(cardGame.Load());
     }
 
-    private void LoadConfigFile()
+    public void CreateDefaultGames()
     {
-        Debug.Log("Loading config file from: " + configFilePath);
-        string configJson = File.ReadAllText(configFilePath);
-        JArray cardGames = JsonConvert.DeserializeObject<JArray>(configJson);
-        foreach (JToken cardGame in cardGames) {
-            string gameName = (string)cardGame.SelectToken("name");
-            string gameURL = (string)cardGame.SelectToken("url");
-            if (gameName == null || gameURL == null) {
-                Debug.LogWarning("Incorrect entry in the config file! Ignoring it");
-            } else {
-                Debug.Log("Defining the card game: " + gameName + " to be at " + gameURL);
-                CardGame newGame = new CardGame(gameName, gameURL, true);
-                allCardGames [newGame.Name] = newGame;
-            }
-        }
-        Debug.Log("Config file loaded");
+        if (!Directory.Exists(gamesFilePathBase))
+            Directory.CreateDirectory(gamesFilePathBase);
+        CardGame defaultGame = new CardGame("DEFAULT", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1bTdtQTZzTWZHZ0E");
+        allCardGames [defaultGame.Name] = defaultGame;
+    }
+
+    IEnumerator Start()
+    {
+        Debug.Log("Card game manager is waiting for the card games to load");
+        while (!IsLoaded)
+            yield return null;
+
+        Debug.Log("Card Game Manager is selecting the default card game");
+        IEnumerator enumerator = allCardGames.Keys.GetEnumerator();
+        if (enumerator.MoveNext())
+            SelectCardGame((string)enumerator.Current);
+        else
+            Debug.LogError("Could not select a default card game because there are no card games loaded!");
     }
 
     public void SelectCardGame(string name)
     {
+        if (!IsLoaded) {
+            Debug.LogWarning("Attempted to select a new card game before the current game finished loading! Ignoring the request");
+            return;
+        }
+
         if (!allCardGames.ContainsKey(name)) {
             Debug.LogError("Could not select " + name + " because the name is not recognized in the list of card games!");
             return;
         }
 
         Debug.Log("Selecting the card game: " + name);
-        currentGameName = name;
-        CardGame currentGame = allCardGames [currentGameName];
-        if (!currentGame.IsLoaded)
-            StartCoroutine(currentGame.LoadFromURL());
+        current = allCardGames [name];
+        BackgroundImage.sprite = Current.BackgroundImage;
+    }
 
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     public static CardGameManager Instance {
@@ -113,46 +95,34 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public static string CurrentGameName {
+    public static Dictionary<string, CardGame> AllCardGames {
         get {
-            return instance.currentGameName;
+            return Instance.allCardGames;
         }
     }
 
-    public static CardGame CurrentCardGame {
+    public static CardGame Current {
         get { 
-            CardGame currentGame;
-            if (!Instance.allCardGames.TryGetValue(CurrentGameName, out currentGame))
-                currentGame = null;
-            return currentGame;
+            return Instance.current;
         }
     }
 
-    public static List<Set> Sets {
+    public static string GamesFilePathBase {
         get {
-            if (CurrentCardGame == null)
-                return new List<Set>();
-            return CurrentCardGame.Sets;
-        }
-    }
-
-    public static List<Card> Cards {
-        get {
-            if (CurrentCardGame == null)
-                return new List<Card>();
-            return CurrentCardGame.Cards;
+            return Instance.gamesFilePathBase;
         }
     }
 
     public static bool IsLoaded {
         get {
-            if (CurrentCardGame == null)
-                return false;
-            return CurrentCardGame.IsLoaded;
+            foreach (CardGame game in AllCardGames.Values)
+                if (!game.IsLoaded)
+                    return false;
+            return true;
         }
     }
 
-    public SpriteRenderer BackgroundImage {
+    private SpriteRenderer BackgroundImage {
         get {
             if (backgroundImage == null)
                 backgroundImage = GameObject.FindGameObjectWithTag("Background").transform.GetOrAddComponent<SpriteRenderer>();

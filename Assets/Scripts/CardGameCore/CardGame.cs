@@ -6,6 +6,8 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+public delegate void LoadJTokenDelegate(JToken jToken);
+
 [JsonObject(MemberSerialization.OptIn)]
 public class CardGame
 {
@@ -14,18 +16,15 @@ public class CardGame
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
     public const int DefaultCopiesOfCardPerDeck = 4;
+    public const int DefaultDeckCardStackCount = 15;
     public const string DefaultDeckFileType = "txt";
     public const string DefaultImageFileType = "png";
 
     public string Name { get; set; }
 
-    public string URL { get; set; }
-
-    public bool AutoUpdate { get; set; }
-
     public string FilePathBase { get; set; }
 
-    public string DefinitionFilePath { get; set; }
+    public string ConfigFilePath { get; set; }
 
     public string DecksFilePath { get; set; }
 
@@ -40,6 +39,12 @@ public class CardGame
 
     [JsonProperty]
     public bool AllSetsZipped { get; set; }
+
+    [JsonProperty]
+    public bool AutoUpdate { get; set; }
+
+    [JsonProperty]
+    public string AutoUpdateURL { get; set; }
 
     [JsonProperty]
     public string BackgroundImageType { get; set; }
@@ -57,13 +62,10 @@ public class CardGame
     public string CardIdIdentifier { get; set; }
 
     [JsonProperty]
-    public string CardImageBaseURL { get; set; }
-
-    [JsonProperty]
-    public string CardImageRegex { get; set; }
-
-    [JsonProperty]
     public string CardImageType { get; set; }
+
+    [JsonProperty]
+    public string CardImageURLBase { get; set; }
 
     [JsonProperty]
     public string CardNameIdentifier { get; set; }
@@ -81,6 +83,9 @@ public class CardGame
     public int CopiesOfCardPerDeck { get; set; }
 
     [JsonProperty]
+    public int DeckCardStackCount { get; set; }
+
+    [JsonProperty]
     public string DeckFileType { get; set; }
 
     [JsonProperty]
@@ -95,18 +100,15 @@ public class CardGame
     private Sprite cardBackImage;
     private bool isLoaded;
 
-    public CardGame(string name, string url, bool autoUpdate)
+    public CardGame(string name, string url = "")
     {
         Name = name;
-        URL = url;
-        AutoUpdate = autoUpdate;
+        AutoUpdateURL = url;
 
-        FilePathBase = Application.persistentDataPath + "/" + Name;
-        DefinitionFilePath = FilePathBase + "/" + Name + ".json";
+        FilePathBase = CardGameManager.GamesFilePathBase + "/" + Name;
+        ConfigFilePath = FilePathBase + "/" + Name + ".json";
         DecksFilePath = FilePathBase + "/decks";
 
-        AllCardsZipped = false;
-        AllSetsZipped = false;
         BackgroundImageType = DefaultImageFileType;
         CardBackImageType = DefaultImageFileType;
         CardImageType = DefaultImageFileType;
@@ -114,6 +116,7 @@ public class CardGame
         CardNameIdentifier = "name";
         CardSetIdentifier = "set";
         CopiesOfCardPerDeck = DefaultCopiesOfCardPerDeck;
+        DeckCardStackCount = DefaultDeckCardStackCount;
         DeckFileType = DefaultDeckFileType;
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
@@ -126,175 +129,94 @@ public class CardGame
         isLoaded = false;
     }
 
-    public IEnumerator LoadFromURL()
+    public IEnumerator Load()
     {
-        // TODO: IF NOT AUTOUPDATE, DON'T LOAD FROM URL; NEED TO SET UP FILE LOADING CORRECTLY
-        Debug.Log("Loading defintion for " + Name + " from " + URL);
-        WWW loadDefinition = new WWW(URL);
-        yield return loadDefinition;
-
-        if (string.IsNullOrEmpty(loadDefinition.error)) {
-            Debug.Log("Game definition for " + Name + " received from web");
-
-            Debug.Log("Saving game definition to : " + DefinitionFilePath);
-            if (!Directory.Exists(FilePathBase)) {
-                Debug.Log(DefinitionFilePath + " Game file directory does not exist, so creating it");
-                Directory.CreateDirectory(FilePathBase);
-            }
-            File.WriteAllBytes(DefinitionFilePath, loadDefinition.bytes);
-            Debug.Log("Game definition for " + Name + " written to file");
-        } else { 
-            Debug.LogError("Failed to load game definition from the web! " + Name);
-            // TODO: BETTER ERROR HANDLING?
-        }
-
-        LoadFromFile();
+        Debug.Log("Loading config for " + Name);
+        if (!string.IsNullOrEmpty(AutoUpdateURL) && (AutoUpdate || !File.Exists(ConfigFilePath)))
+            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
+        LoadConfigFromFile();
 
         Debug.Log("Loading Sets for " + Name);
-        if (AutoUpdate && !string.IsNullOrEmpty(AllSetsURL))
-            yield return GetFromURL(AllSetsURL, AllSetsFileName);
-        LoadSetsFromFile();
+        string setsFile = FilePathBase + "/" + AllSetsFileName;
+        if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile)))
+            yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, setsFile);
+        LoadJSONFromFile(setsFile, LoadSetFromJToken);
 
         Debug.Log("Loading Cards for " + Name);
-        if (AutoUpdate && !string.IsNullOrEmpty(AllCardsURL))
-            yield return GetFromURL(AllCardsURL, AllCardsFileName);
-        LoadCardsFromFile();
+        string cardsFile = FilePathBase + "/" + AllCardsFileName;
+        if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile)))
+            yield return UnityExtensionMethods.SaveURLToFile(AllCardsURL, cardsFile);
+        LoadJSONFromFile(cardsFile, LoadCardFromJToken);
 
         Debug.Log("Loading Background Image for " + Name);
-        if (!string.IsNullOrEmpty(BackgroundImageURL) && !File.Exists(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType))
-            yield return GetFromURL(BackgroundImageURL, BackgroundImageFileName + "." + BackgroundImageType);
-        string imageFileURL = "file://" + FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType;
-        if (File.Exists(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType)) {
-            Debug.Log("Attempting to load background from: " + imageFileURL);
-            WWW imageLoader = new WWW(imageFileURL);
-            yield return imageLoader;
-            if (string.IsNullOrEmpty(imageLoader.error)) {
-                backgroundImage = Sprite.Create(imageLoader.texture, new Rect(0, 0, imageLoader.texture.width, imageLoader.texture.height), new Vector2(0.5f, 0.5f));
-                CardGameManager.Instance.BackgroundImage.sprite = backgroundImage;
-            } else
-                Debug.LogWarning("Failed to load background image from file: " + imageLoader.error);
-        } else
-            Debug.Log("No background image saved, so keeping the default for " + Name);
+        Sprite loadedImage = null;
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType, BackgroundImageURL), (output) => loadedImage = output);
+        if (loadedImage != null)
+            backgroundImage = loadedImage;
 
         Debug.Log("Loading Card Back Image for " + Name);
-        if (!string.IsNullOrEmpty(CardBackImageURL) && !File.Exists(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType))
-            yield return GetFromURL(CardBackImageURL, CardBackImageFileName + "." + CardBackImageType);
-        imageFileURL = "file://" + FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType;
-        if (File.Exists(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType)) {
-            Debug.Log("Attempting to load card back from: " + imageFileURL);
-            WWW imageLoader = new WWW(imageFileURL);
-            yield return imageLoader;
-            if (string.IsNullOrEmpty(imageLoader.error))
-                cardBackImage = Sprite.Create(imageLoader.texture, new Rect(0, 0, imageLoader.texture.width, imageLoader.texture.height), new Vector2(0.5f, 0.5f));
-            else
-                Debug.LogWarning("Failed to load card back image from file: " + imageLoader.error);
-        } else
-            Debug.Log("No card back image saved, so keeping the default for " + Name);
+        loadedImage = null;
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType, CardBackImageURL), (output) => loadedImage = output);
+        if (loadedImage != null)
+            cardBackImage = loadedImage;
 
         Debug.Log(Name + " finished loading");
         isLoaded = true;
-
     }
 
-    public void LoadFromFile()
+    public void LoadConfigFromFile()
     {
-        Debug.Log("Loading definition for " + Name + " from " + DefinitionFilePath);
-
-        string gameJson = File.ReadAllText(DefinitionFilePath);
         try {
-            JsonConvert.PopulateObject(gameJson, this);
+            JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
             Debug.LogError("Failed to load card game! Error: " + e);
             // TODO: add user feedback to all the logerror and logwarning, so that they are aware
         }
-
-        Debug.Log("Load from file completed for " + Name);
     }
 
-    public IEnumerator GetFromURL(string URL, string fileName)
+    public void LoadJSONFromFile(string file, LoadJTokenDelegate load)
     {
-        Debug.Log("Gettings from " + URL);
-        WWW loader = new WWW(URL);
-        yield return loader;
-
-        if (string.IsNullOrEmpty(loader.error)) {
-            Debug.Log("Received from web. Saving to : " + FilePathBase);
-            if (!System.IO.Directory.Exists(FilePathBase)) {
-                Debug.Log(FilePathBase + " Game file directory does not exist, so creating it");
-                Directory.CreateDirectory(FilePathBase);
-            }
-            File.WriteAllBytes(FilePathBase + "/" + fileName, loader.bytes);
-            Debug.Log("Written to file " + fileName);
-        } else { 
-            Debug.LogError("Failed to load  " + fileName + " from " + URL);
-            // TODO: BETTER ERROR HANDLING?
-        }
-    }
-
-    public void LoadSetsFromFile()
-    {
-        if (!File.Exists(FilePathBase + "/" + AllSetsFileName)) {
-            Debug.Log("Sets file does not exist, so it will not be loaded");
-            return;
-        }
-            
-        Debug.Log("Loading sets for " + Name + " from " + FilePathBase + "/" + AllSetsFileName);
-
-        try {
-            string setsJson = File.ReadAllText(FilePathBase + "/" + AllSetsFileName);
-            JArray setJArray = JsonConvert.DeserializeObject<JArray>(setsJson);
-            foreach (JToken setJToken in setJArray) {
-                string setCode = setJToken.Value<string>(SetCodeIdentifier);
-                string setName = setJToken.Value<string>(SetNameIdentifier);
-                if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
-                    sets.Add(new Set { Code = setCode, Name = setName });
-                else
-                    Debug.LogWarning("Read empty sety in the list of sets! Ignoring it");
-            }
-        } catch (Exception e) {
-            Debug.LogError("Failed to load sets! Error: " + e);
-            // TODO: add user feedback to all the logerror and logwarning, so that they are aware
-        }
-
-        Debug.Log("Load sets from file completed");
-        
-    }
-
-    public void LoadCardsFromFile()
-    {
-        if (!File.Exists(FilePathBase + "/" + AllCardsFileName)) {
-            Debug.Log("Card file does not exist, so it will not be loaded");
+        if (!File.Exists(file)) {
+            Debug.Log("JSON file does not exist, so it will not be loaded");
             return;
         }
 
-        Debug.Log("Loading cards for " + Name + " from " + FilePathBase + "/" + AllCardsFileName);
-
         try {
-            string cardsJson = File.ReadAllText(FilePathBase + "/" + AllCardsFileName);
-            JArray cardsJArray = JsonConvert.DeserializeObject<JArray>(cardsJson);
-            foreach (JToken cardJToken in cardsJArray) {
-                string cardId = cardJToken.Value<string>(CardIdIdentifier);
-                string cardName = cardJToken.Value<string>(CardNameIdentifier);
-                string cardSet = cardJToken.Value<string>(CardSetIdentifier);
-                Dictionary<string, PropertySet> cardProps = new Dictionary<string, PropertySet>();
-                foreach (PropertyDef prop in CardProperties) {
-                    cardProps [prop.Name] = new PropertySet() {
-                        Key = prop,
-                        Value = new PropertyDefValue() { Value = cardJToken.Value<string>(prop.Name) }
-                    };
-                }
-                if (!string.IsNullOrEmpty(cardId))
-                    cards.Add(new Card(cardId, cardName, cardSet, cardProps));
-                else
-                    Debug.LogWarning("Read card without id in the list of cards! Ignoring it");
-                
-            }
+            JArray jArray = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(file));
+            foreach (JToken jToken in jArray)
+                load(jToken);
         } catch (Exception e) {
-            Debug.LogError("Failed to load cards! Error: " + e);
+            Debug.LogError("Failed to load! Error: " + e);
             // TODO: add user feedback to all the logerror and logwarning, so that they are aware
         }
+    }
 
-        Debug.Log("Load cards from file completed");
+    public void LoadSetFromJToken(JToken setJToken)
+    {
+        string setCode = setJToken.Value<string>(SetCodeIdentifier);
+        string setName = setJToken.Value<string>(SetNameIdentifier);
+        if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
+            sets.Add(new Set { Code = setCode, Name = setName });
+        else
+            Debug.LogWarning("Read empty sety in the list of sets! Ignoring it");
+    }
+
+    public void LoadCardFromJToken(JToken cardJToken)
+    {
+        string cardId = cardJToken.Value<string>(CardIdIdentifier);
+        string cardName = cardJToken.Value<string>(CardNameIdentifier);
+        string cardSet = cardJToken.Value<string>(CardSetIdentifier);
+        Dictionary<string, PropertySet> cardProps = new Dictionary<string, PropertySet>();
+        foreach (PropertyDef prop in CardProperties) {
+            cardProps [prop.Name] = new PropertySet() {
+                Key = prop,
+                Value = new PropertyDefValue() { Value = cardJToken.Value<string>(prop.Name) }
+            };
+        }
+        if (!string.IsNullOrEmpty(cardId))
+            cards.Add(new Card(cardId, cardName, cardSet, cardProps));
+        else
+            Debug.LogWarning("Read card without id in the list of cards! Ignoring it");
     }
 
     public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> properties)
@@ -310,12 +232,6 @@ public class CardGame
                 if (propsMatch)
                     yield return card;
             }
-        }
-    }
-
-    public string CGSConfigLine {
-        get {
-            return string.Format("{{ \"name\": {0}, \"url\": {1}, \"autoUpdate\": {2} }}", Name, URL, AutoUpdate);
         }
     }
 

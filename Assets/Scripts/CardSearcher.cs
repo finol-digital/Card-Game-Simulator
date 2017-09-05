@@ -20,8 +20,8 @@ public class CardSearcher : MonoBehaviour
     private List<Card> searchResults;
     private int resultsPanelSize;
     private int resultsIndex;
-    private string idFilter;
     private string nameFilter;
+    private string idFilter;
     private string setCodeFilter;
     private Dictionary<string, string> propFilters;
 
@@ -34,8 +34,8 @@ public class CardSearcher : MonoBehaviour
         searchResults = new List<Card>();
         resultsPanelSize = Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + 25));
         resultsIndex = 0;
-        idFilter = "";
         nameFilter = "";
+        idFilter = "";
         setCodeFilter = "";
         propFilters = new Dictionary<string, string>();
     }
@@ -49,7 +49,7 @@ public class CardSearcher : MonoBehaviour
 
         Debug.Log("Building the Advanced filter panel");
         Vector2 pos = propertyTemplate.localPosition;
-        foreach (PropertyDef prop in CardGameManager.CurrentCardGame.CardProperties) {
+        foreach (PropertyDef prop in CardGameManager.Current.CardProperties) {
             GameObject newProp = Instantiate(propertyTemplate.gameObject, propertyTemplate.position, propertyTemplate.rotation, propertyTemplate.parent) as GameObject;
             newProp.transform.localPosition = pos;
             PropertyEditor editor = newProp.GetComponent<PropertyEditor>();
@@ -60,7 +60,7 @@ public class CardSearcher : MonoBehaviour
             pos.y -= propertyTemplate.rect.height;
         }
         propertyTemplate.gameObject.SetActive(false);
-        filterContentView.sizeDelta = new Vector2(filterContentView.sizeDelta.x, propertyTemplate.rect.height * CardGameManager.CurrentCardGame.CardProperties.Count + propertyTemplate.rect.height * 3);
+        filterContentView.sizeDelta = new Vector2(filterContentView.sizeDelta.x, propertyTemplate.rect.height * CardGameManager.Current.CardProperties.Count + propertyTemplate.rect.height * 3);
 
         Debug.Log("Showing all cards in the search results");
         ClearFilters();
@@ -70,14 +70,14 @@ public class CardSearcher : MonoBehaviour
 
     }
 
-    public void SetIdFilter(string val)
-    {
-        this.idFilter = val;
-    }
-
     public void SetNameFilter(string val)
     {
         this.nameFilter = val;
+    }
+
+    public void SetIdFilter(string val)
+    {
+        this.idFilter = val;
     }
 
     public void SetSetCodeFilter(string val)
@@ -94,22 +94,19 @@ public class CardSearcher : MonoBehaviour
     {
         foreach (InputField input in advancedFilterPanel.GetComponentsInChildren<InputField>())
             input.text = "";
-        this.idFilter = "";
-        this.nameFilter = "";
-        this.setCodeFilter = "";
         propFilters.Clear();
     }
 
     public void Search()
     {
         Debug.Log("Searching with id " + idFilter + ", name " + nameFilter + ", setCode " + setCodeFilter);
-        string debugFilters = " ";
+        string debugFilters = "Search property filters: ";
         foreach (KeyValuePair<string, string> entry in propFilters)
             debugFilters += entry.Key + ": " + entry.Value + "; ";
         Debug.Log(debugFilters);
 
         searchResults.Clear();
-        IEnumerable<Card> cardSearcher = CardGameManager.CurrentCardGame.FilterCards(idFilter, nameFilter, setCodeFilter, propFilters);
+        IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(idFilter, nameFilter, setCodeFilter, propFilters);
         foreach (Card card in cardSearcher)
             searchResults.Add(card);
         ApplySearchResults(searchResults);
@@ -154,7 +151,7 @@ public class CardSearcher : MonoBehaviour
             CardModel cardModelToShow;
             if (!allCardModels.TryGetValue(cardId, out cardModelToShow)) {
                 Debug.Log("Creating Card Model for " + cardId);
-                Card cardToShow = CardGameManager.Cards.Where(card => card.Id == cardId).LastOrDefault();
+                Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).LastOrDefault();
                 cardModelToShow = CreateCardModel(cardToShow);
             }
             cardModelToShow.transform.SetParent(resultsPanel);

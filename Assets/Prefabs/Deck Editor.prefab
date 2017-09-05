@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 114183554343633730}
   - component: {fileID: 114058176793980454}
   m_Layer: 5
-  m_Name: LoadButton
+  m_Name: Load Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 114819483738482570}
   - component: {fileID: 114790929961859574}
   m_Layer: 5
-  m_Name: SaveButton
+  m_Name: Save Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 222972440853960774}
   - component: {fileID: 114089793052337670}
   m_Layer: 5
-  m_Name: DeckName
+  m_Name: Deck Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 114955413232735742}
   - component: {fileID: 114563178233350608}
   m_Layer: 5
-  m_Name: NewButton
+  m_Name: New Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -605,7 +605,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224316503452855000}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.43333334
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1412,7 +1412,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 4200, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!224 &224557686670577544
 RectTransform:

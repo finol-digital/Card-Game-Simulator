@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Deck
 {
@@ -17,6 +18,9 @@ public class Deck
 
     public void DefineFromString(string definition)
     {
+        if (definition == null)
+            return;
+
         cards.Clear();
         foreach (string line in definition.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)) {
             if (line.Length == 0 || line [0] == '#')
@@ -27,18 +31,15 @@ public class Deck
             if (cardName.Contains(" ") && int.TryParse(cardName.Split(' ') [0], out numCopies))
                 cardName = cardName.Substring(cardName.IndexOf(' ') + 1);
 
-            foreach (Card card in CardGameManager.CurrentCardGame.FilterCards("", cardName, "", new Dictionary<string, string>())) {
-                for (int i = 0; i < numCopies; i++)
-                    cards.Add(card);
-                break;
-            }
-
+            List<Card> matchingCards = CardGameManager.Current.Cards.Where((card) => string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase)).ToList<Card>();
+            for (int i = 0; matchingCards.Count > 0 && i < numCopies; i++)
+                cards.Add(matchingCards [0]);
         }
     }
 
     public override string ToString()
     {
-        string definition = "# " + CardGameManager.CurrentGameName + " Deck List" + System.Environment.NewLine;
+        string definition = "# " + CardGameManager.Current.Name + " Deck List" + System.Environment.NewLine;
         Dictionary<string, int> cardCounts = new Dictionary<string, int>();
         foreach (Card card in Cards) {
             int currentCount = 0;

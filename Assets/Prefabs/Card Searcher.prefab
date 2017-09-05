@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 114745487561331878}
   - component: {fileID: 114102832150537352}
   m_Layer: 5
-  m_Name: MoveLeftButton
+  m_Name: MoveLeft Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 114320325184566616}
   - component: {fileID: 114269304544113798}
   m_Layer: 5
-  m_Name: MoveRightButtton
+  m_Name: MoveRight Buttton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 114749095813167248}
   - component: {fileID: 114392236537917180}
   m_Layer: 5
-  m_Name: SearchButton
+  m_Name: Search Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 222601914437136420}
   - component: {fileID: 114897708187412540}
   m_Layer: 5
-  m_Name: ResultsCount
+  m_Name: Results Count
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 114679218956526740}
   - component: {fileID: 114185918711500456}
   m_Layer: 5
-  m_Name: AdvancedFilterButton
+  m_Name: AdvancedFilter Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 114211063942311320}
   - component: {fileID: 114313919104235724}
   m_Layer: 5
-  m_Name: NameField
+  m_Name: Name Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 114343187424243026}
   - component: {fileID: 114843177099478656}
   m_Layer: 5
-  m_Name: ResultsPanel
+  m_Name: Results Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -585,6 +585,17 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 114991940690624064}
         m_MethodName: SetNameFilter
         m_Mode: 0
@@ -730,7 +741,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114749095813167248}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114991940690624064}
+        m_MethodName: Search
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114679218956526740
@@ -1249,9 +1271,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 600}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1200}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &224598940325550706
 RectTransform:
   m_ObjectHideFlags: 1
