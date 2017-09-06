@@ -85,4 +85,8 @@ static public class UnityExtensionMethods
             Debug.LogWarning("Failed to load image from " + imageFilePath + ", error: " + imageFileLoader.error);
     }
 
+    static public string GetSafeFilename(string filename)
+    {
+        return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+    }
 }

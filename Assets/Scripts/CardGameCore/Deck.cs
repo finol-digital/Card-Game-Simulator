@@ -59,4 +59,10 @@ public class Deck
             return cards;
         }
     }
+
+    public string FilePath {
+        get {
+            return CardGameManager.Current.DecksFilePath + "/" + Name + "." + CardGameManager.Current.DeckFileType;
+        }
+    }
 }

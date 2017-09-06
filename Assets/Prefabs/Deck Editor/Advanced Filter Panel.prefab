@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 114660945098118320}
   - component: {fileID: 114080144798801376}
   m_Layer: 5
-  m_Name: Close
+  m_Name: Cancel Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -677,7 +677,7 @@ GameObject:
   - component: {fileID: 224271335298674696}
   - component: {fileID: 114039638862655992}
   m_Layer: 5
-  m_Name: ButtonsPanel
+  m_Name: Buttons Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -713,7 +713,7 @@ GameObject:
   - component: {fileID: 114383156915088170}
   - component: {fileID: 114990008600964508}
   m_Layer: 5
-  m_Name: SearchButton
+  m_Name: Search Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3290,7 +3290,7 @@ RectTransform:
   m_GameObject: {fileID: 1560122522399346}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9999934, y: 0.9999934, z: 0.9999934}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224853912798144526}
   m_Father: {fileID: 224271335298674696}
@@ -3385,7 +3385,7 @@ RectTransform:
   m_GameObject: {fileID: 1378553552454896}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9999934, y: 0.9999934, z: 0.9999934}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224282620962928950}
   m_Father: {fileID: 224271335298674696}

@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 114857194261681452}
   - component: {fileID: 114395411835885060}
   m_Layer: 5
-  m_Name: LoadButon
+  m_Name: Load Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 114600717929479120}
   - component: {fileID: 114122355044325692}
   m_Layer: 5
-  m_Name: ButtonsPanel
+  m_Name: Buttons Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -231,6 +231,7 @@ GameObject:
   - component: {fileID: 224185042520152364}
   - component: {fileID: 222958097545865788}
   - component: {fileID: 114515367326722700}
+  - component: {fileID: 114007050681300680}
   m_Layer: 5
   m_Name: Deck Load Panel
   m_TagString: Untagged
@@ -738,7 +739,7 @@ GameObject:
   - component: {fileID: 224570585798726690}
   - component: {fileID: 114680900261700210}
   m_Layer: 5
-  m_Name: ButtonsPanel
+  m_Name: Buttons Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -791,7 +792,7 @@ GameObject:
   - component: {fileID: 114664229239748096}
   - component: {fileID: 114425240451040134}
   m_Layer: 5
-  m_Name: Close
+  m_Name: Cancel Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -827,7 +828,7 @@ GameObject:
   - component: {fileID: 114470130142328520}
   - component: {fileID: 114314998639530626}
   m_Layer: 5
-  m_Name: LoadButon
+  m_Name: Load Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -846,7 +847,7 @@ GameObject:
   - component: {fileID: 114735257877527724}
   - component: {fileID: 114711630951480728}
   m_Layer: 5
-  m_Name: Close
+  m_Name: Cancel Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -936,6 +937,22 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
+--- !u!114 &114007050681300680
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1240882589060142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e00c0bd42fad5434c9fab94089ec3c58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fileSelectionArea: {fileID: 224624607191661848}
+  fileSelectionTemplate: {fileID: 224343981876410232}
+  loadDeckFromFileButton: {fileID: 114470130142328520}
+  deckNameInputField: {fileID: 114113642883387902}
+  textInputField: {fileID: 114289680823083020}
 --- !u!114 &114032009988218124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1077,8 +1094,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: SetDeckEditorName
+      - m_Target: {fileID: 114007050681300680}
+        m_MethodName: ChangeDeckName
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1949,20 +1966,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: LoadDeckFromFile
+      - m_Target: {fileID: 114007050681300680}
+        m_MethodName: LoadDeckFromFileAndHide
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1240882589060142}
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2192,7 +2198,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224999266905084260}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2386,19 +2392,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1240882589060142}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_MethodName: RevertDeckName
+      - m_Target: {fileID: 114007050681300680}
+        m_MethodName: CancelAndHide
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2664,9 +2659,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1240882589060142}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 114007050681300680}
+        m_MethodName: CancelAndHide
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3019,20 +3014,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: LoadDeckFromText
+      - m_Target: {fileID: 114007050681300680}
+        m_MethodName: LoadDeckFromTextAndHide
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1240882589060142}
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3314,7 +3298,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114007050681300680}
         m_MethodName: PasteClipboardIntoDeckText
         m_Mode: 1
         m_Arguments:
@@ -4283,7 +4267,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000034809113}
+  m_AnchoredPosition: {x: 0, y: 0.000027745962}
   m_SizeDelta: {x: 0, y: 600}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224646598233720374
@@ -4568,7 +4552,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9999998}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

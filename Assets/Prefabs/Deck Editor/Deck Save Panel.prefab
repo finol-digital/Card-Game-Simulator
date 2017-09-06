@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 114570179553400462}
   - component: {fileID: 114418760896741854}
   m_Layer: 5
-  m_Name: SearchButton
+  m_Name: Save Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 114985868165985406}
   - component: {fileID: 114614470906218642}
   m_Layer: 5
-  m_Name: Close
+  m_Name: Cancel Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: 224262584161370150}
   - component: {fileID: 222238098929764432}
   - component: {fileID: 114907125262127128}
+  - component: {fileID: 114242451839019834}
   m_Layer: 5
   m_Name: Deck Save Panel
   m_TagString: Untagged
@@ -266,7 +267,7 @@ GameObject:
   - component: {fileID: 224969700356016602}
   - component: {fileID: 114946766938393662}
   m_Layer: 5
-  m_Name: ButtonsPanel
+  m_Name: Buttons Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -573,8 +574,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: SetDeckEditorName
+      - m_Target: {fileID: 114242451839019834}
+        m_MethodName: ChangeDeckName
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -801,6 +802,19 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114242451839019834
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1587807251502932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b12904ad82b87b46ab99c745ff3a260, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveDeckNameInputField: {fileID: 114133649730685952}
+  textOutputArea: {fileID: 114138372836887090}
 --- !u!114 &114258921043674724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1133,20 +1147,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: SaveDeckToFile
+      - m_Target: {fileID: 114242451839019834}
+        m_MethodName: AttemptSaveAndHide
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1587807251502932}
-        m_MethodName: SetActive
-        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1650,8 +1653,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: CopyTextToClipboard
+      - m_Target: {fileID: 114242451839019834}
+        m_MethodName: CopyDeckTextToClipboard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1702,19 +1705,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1587807251502932}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_MethodName: RevertDeckName
+      - m_Target: {fileID: 114242451839019834}
+        m_MethodName: CancelAndHide
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -24,32 +24,19 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     private int selectedPropertyIndex;
     private CardModel selectedCard;
 
-    void Awake()
+    void Start()
     {
-        if (instance != null) {
-            // TODO: THINK ABOUT HOW THIS OBJECT ACTS BETWEEN MULTIPLE SCENES
-            // Perhaps load the info from the previous manager, delete it, and set this as the new game manager?
-            // remember that we have the Instance property dynamically searching for and generating this as needed too
-        }
-        instance = this;
-
-        cardZoomPanel = Instantiate(cardZoomPrefab, UnityExtensionMethods.FindInParents<Canvas>(gameObject).transform).transform as RectTransform;
+        Debug.Log("Card Info Viewer is initializing");
+        cardZoomPanel = Instantiate(cardZoomPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform as RectTransform;
         cardZoomPanel.gameObject.SetActive(false);
         rectTransform = this.transform as RectTransform;
         targetYPos = rectTransform.sizeDelta.y;
-        propertyOptions = new List<Dropdown.OptionData>();
-        selectedPropertyIndex = 0;
-        selectedCard = null;
     }
 
-    IEnumerator Start()
+    public void UpdatePropertyOptions()
     {
-
-        Debug.Log("Card Info Viewer waiting for card game to load");
-        while (!CardGameManager.IsLoaded)
-            yield return null;
-
-        Debug.Log("Card Info viewer is setting the properties");
+        Debug.Log("Card Info viewer is setting the property options");
+        propertyOptions = new List<Dropdown.OptionData>();
         foreach (PropertyDef propDef in CardGameManager.Current.CardProperties) {
             if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
                 selectedPropertyIndex = propertyOptions.Count;
@@ -62,17 +49,20 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public void SelectProperty(int propertyIndex)
     {
         if (propertyIndex < 0 || propertyIndex >= propertyOptions.Count) {
-            Debug.LogWarning("Attempted to select an invalid property for the card info viewer. Ignoring");
+            Debug.LogWarning("Attempted to select an invalid property for the card info viewer! Ignoring");
             return;
         }
 
         selectedPropertyIndex = propertyIndex;
         Debug.Log("Selected property: " + SelectedPropertyName);
         textLabel.text = SelectedPropertyName;
-        if (selectedCard != null && selectedCard.RepresentedCard.Properties.ContainsKey(SelectedPropertyName))
+
+        if (selectedCard == null)
+            return;
+        if (selectedCard.RepresentedCard.Properties.ContainsKey(SelectedPropertyName))
             textContent.text = selectedCard.RepresentedCard.Properties [SelectedPropertyName].Value.Value;
         else
-            Debug.Log(" Not updating card info text with property, since we either do not have a selected card or the card does not have that property");
+            Debug.LogWarning("Not updating card info text with property, since the card does not have that property!: " + SelectedPropertyName);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -87,17 +77,32 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         ShowCardInfo();
     }
 
-    public void SelectCard(CardModel card)
+    public void SelectCard(CardModel cardModelToSelect)
     {
-        Debug.Log("Updating the card info view with info from the card: " + card);
-        this.selectedCard = card;
+        if (cardModelToSelect == null) {
+            Debug.LogWarning("Attempted to select a null cardModel! Ignoring the request");
+            return;
+        }
+
+        Debug.Log("Updating the card info view with info from the card: " + cardModelToSelect.gameObject.name);
+        selectedCard = cardModelToSelect;
+
         Sprite sprite;
-        CardImageRepository.TryGetCachedCardImage(card.RepresentedCard, out sprite);
+        CardImageRepository.TryGetCachedCardImage(cardModelToSelect.RepresentedCard, out sprite);
         cardImage.sprite = sprite;
-        nameContent.text = card.RepresentedCard.Name;
-        idContent.text = card.RepresentedCard.Id;
-        textLabel.text = SelectedPropertyName;
-        textContent.text = card.RepresentedCard.Properties [SelectedPropertyName].Value.Value;
+        nameContent.text = cardModelToSelect.RepresentedCard.Name;
+        idContent.text = cardModelToSelect.RepresentedCard.Id;
+
+        string mainLabel = "";
+        string mainText = "";
+        PropertySet prop;
+        if (cardModelToSelect.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out prop)) {
+            mainLabel = SelectedPropertyName;
+            mainText = prop.Value.Value;
+        } else
+            Debug.LogWarning("Selected a card that does not have the correct properties to display! Defaulting to blank");
+        textLabel.text = mainLabel;
+        textContent.text = mainText;
 
         ShowCardInfo();
     }
@@ -158,7 +163,12 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     }
 
     public string SelectedPropertyName {
-        get { return propertyOptions [selectedPropertyIndex].text; } 
+        get {
+            string selectedName = "";
+            if (selectedPropertyIndex >= 0 && selectedPropertyIndex < propertyOptions.Count)
+                selectedName = propertyOptions [selectedPropertyIndex].text;
+            return selectedName;
+        } 
     }
 
     public bool IsVisible { 

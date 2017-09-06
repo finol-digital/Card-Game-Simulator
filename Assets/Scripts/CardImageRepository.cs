@@ -21,7 +21,8 @@ public class CardImageRepository
 
     public static string GetCardImageFilePath(Card card)
     {
-        string imageFilePath = CardGameManager.Current.FilePathBase + "/" + card.SetCode + "/" + GetCardImageName(card);
+        // TODO: CONFIRM CARD.SETCODE WON'T BE SOMETHING BAD
+        string imageFilePath = CardGameManager.Current.FilePathBase + "/sets/" + card.SetCode + "/" + GetCardImageName(card);
         return imageFilePath;
     }
 

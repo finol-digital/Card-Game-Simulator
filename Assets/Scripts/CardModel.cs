@@ -9,7 +9,7 @@ public delegate void OnDoubleClickDelegate(Card cardDoubleClicked);
 [RequireComponent(typeof(Image))]
 public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Card representedCard = null;
+    private Card representedCard = new Card("", "", "", new Dictionary<string, PropertySet>());
     private bool makesCopyOnDrag = false;
     private GameObject draggedCopy = null;
     private Transform placeHolder = null;
@@ -19,6 +19,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void SetAsCard(Card card, bool copyOnDrag = false, OnDoubleClickDelegate onDoubleClick = null)
     {
+        if (card == null) {
+            Debug.LogWarning("Attempted to set a card model as a null card! Defaulting to a blank card");
+            card = new Card("", "", "", new Dictionary<string, PropertySet>());
+        }
+
         this.gameObject.name = card.Name + " [" + card.Id + "]";
         representedCard = card;
         makesCopyOnDrag = copyOnDrag;
@@ -39,6 +44,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (eventData == null) {
+            Debug.LogError("Clicked on " + gameObject.name + ", but the eventData was null!");
+            return;
+        }
+
         Debug.Log("Clicked on " + gameObject.name);
         downClickId = eventData.pointerId;
         if (eventData.selectedObject == this.gameObject && doubleClickEvent != null) {
@@ -53,7 +63,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (eventData.pointerId != downClickId || eventData.dragging || eventData.selectedObject == CardInfoViewer.Instance.gameObject) {
+        if (eventData == null || eventData.pointerId != downClickId || eventData.dragging || eventData.selectedObject == CardInfoViewer.Instance.gameObject) {
             Debug.Log("Let go on " + gameObject.name + ", but did not start the press there, or it was dragged, or its a doubleclick, so ignoring the action");
             return;
         }
@@ -97,6 +107,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (eventData == null) {
+            Debug.LogError("Started dragging " + gameObject.name + ", but the eventData was null!");
+            return;
+        }
+
         Debug.Log("Started dragging " + gameObject.name);
         dragOffset = (((Vector2)this.transform.position) - eventData.position);
         EventSystem.current.SetSelectedGameObject(null, eventData);
@@ -125,7 +140,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
         draggedCopy = cardCopy;
         draggedCopy.transform.position = position + dragOffset;
-
     }
 
     public void MoveToContainingCanvas()
@@ -165,11 +179,15 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
         placeHolder = cardCopy.transform;
         UpdatePlaceHolderPosition();
-        
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (eventData == null) {
+            Debug.LogError("Dragging " + gameObject.name + ", but the eventData was null!");
+            return;
+        }
+
         Vector2 targetPos = eventData.position + dragOffset;
         if (draggedCopy != null)
             draggedCopy.transform.position = targetPos;
@@ -177,7 +195,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             this.transform.position = targetPos;
         
         UpdatePlaceHolderPosition();
-
     }
 
     public void UpdatePlaceHolderPosition()
@@ -188,7 +205,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         Vector2 targetPos = this.transform.position;
         if (draggedCopy != null)
             targetPos = draggedCopy.transform.position;
-        
+
+        // TODO: ALLOW HORIZONTAL VS VERTICAL STACKING OF CARDS
         int newSiblingIndex = placeHolder.parent.childCount;
         for (int i = 0; i < placeHolder.parent.childCount; i++) {
             if (targetPos.y > placeHolder.parent.GetChild(i).position.y) {
@@ -199,7 +217,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             }
         }
         placeHolder.transform.SetSiblingIndex(newSiblingIndex);
-
     }
 
     public void RemovePlaceHolder()
@@ -210,11 +227,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
         Destroy(placeHolder.gameObject);
         placeHolder = null;
-
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        // TODO: MOVE TO PLACEHOLDER THROUGH ANIMATION, INSTEAD OF TELEPORTING
         Debug.Log("Stopped dragging " + gameObject.name);
         GetComponent<CanvasGroup>().blocksRaycasts = true;
         
@@ -237,7 +254,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             Debug.Log("Destroying moved card " + gameObject.name);
             Destroy(this.gameObject);
         }
-
     }
 
     public Card RepresentedCard {

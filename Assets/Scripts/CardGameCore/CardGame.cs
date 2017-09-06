@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -32,13 +31,7 @@ public class CardGame
     public string AllCardsURL { get; set; }
 
     [JsonProperty]
-    public bool AllCardsZipped { get; set; }
-
-    [JsonProperty]
     public string AllSetsURL { get; set; }
-
-    [JsonProperty]
-    public bool AllSetsZipped { get; set; }
 
     [JsonProperty]
     public bool AutoUpdate { get; set; }
@@ -96,9 +89,10 @@ public class CardGame
 
     private List<Set> sets;
     private List<Card> cards;
-    private Sprite backgroundImage;
-    private Sprite cardBackImage;
+    private UnityEngine.Sprite backgroundImage;
+    private UnityEngine.Sprite cardBackImage;
     private bool isLoaded;
+    private string error;
 
     public CardGame(string name, string url = "")
     {
@@ -123,72 +117,66 @@ public class CardGame
 
         sets = new List<Set>();
         cards = new List<Card>();
-        backgroundImage = Resources.Load<Sprite>(BackgroundImageFileName);
-        cardBackImage = Resources.Load<Sprite>(CardBackImageFileName);
-
         isLoaded = false;
+        error = null;
     }
 
     public IEnumerator Load()
     {
-        Debug.Log("Loading config for " + Name);
+        UnityEngine.Debug.Log("Loading config for " + Name);
         if (!string.IsNullOrEmpty(AutoUpdateURL) && (AutoUpdate || !File.Exists(ConfigFilePath)))
             yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
-        LoadConfigFromFile();
+        try { 
+            JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
+        } catch (Exception e) {
+            UnityEngine.Debug.LogError("Failed to load card game! Error: " + e.Message);
+            error = e.Message;
+            yield break;
+        }
 
-        Debug.Log("Loading Sets for " + Name);
+        UnityEngine.Debug.Log("Loading Sets and Cards for " + Name);
         string setsFile = FilePathBase + "/" + AllSetsFileName;
         if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile)))
             yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, setsFile);
-        LoadJSONFromFile(setsFile, LoadSetFromJToken);
-
-        Debug.Log("Loading Cards for " + Name);
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
         if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile)))
             yield return UnityExtensionMethods.SaveURLToFile(AllCardsURL, cardsFile);
-        LoadJSONFromFile(cardsFile, LoadCardFromJToken);
+        try { 
+            LoadJSONFromFile(setsFile, LoadSetFromJToken);
+            LoadJSONFromFile(cardsFile, LoadCardFromJToken);
+        } catch (Exception e) {
+            UnityEngine.Debug.LogError("Failed to load card game data! Error: " + e.Message);
+            CardGameManager.Instance.ShowMessage("Failed to load cards for " + Name + ". Error: " + e.Message);
+            error = e.Message;
+            yield break;
+        }
 
-        Debug.Log("Loading Background Image for " + Name);
-        Sprite loadedImage = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType, BackgroundImageURL), (output) => loadedImage = output);
+        UnityEngine.Debug.Log("Loading Background Image for " + Name);
+        UnityEngine.Sprite loadedImage = null;
+        yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType, BackgroundImageURL), (output) => loadedImage = output);
         if (loadedImage != null)
             backgroundImage = loadedImage;
 
-        Debug.Log("Loading Card Back Image for " + Name);
+        UnityEngine.Debug.Log("Loading Card Back Image for " + Name);
         loadedImage = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType, CardBackImageURL), (output) => loadedImage = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType, CardBackImageURL), (output) => loadedImage = output);
         if (loadedImage != null)
             cardBackImage = loadedImage;
 
-        Debug.Log(Name + " finished loading");
+        UnityEngine.Debug.Log(Name + " finished loading");
         isLoaded = true;
-    }
-
-    public void LoadConfigFromFile()
-    {
-        try {
-            JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
-        } catch (Exception e) {
-            Debug.LogError("Failed to load card game! Error: " + e);
-            // TODO: add user feedback to all the logerror and logwarning, so that they are aware
-        }
     }
 
     public void LoadJSONFromFile(string file, LoadJTokenDelegate load)
     {
         if (!File.Exists(file)) {
-            Debug.Log("JSON file does not exist, so it will not be loaded");
+            UnityEngine.Debug.Log("JSON file does not exist, so it will not be loaded");
             return;
         }
 
-        try {
-            JArray jArray = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(file));
-            foreach (JToken jToken in jArray)
-                load(jToken);
-        } catch (Exception e) {
-            Debug.LogError("Failed to load! Error: " + e);
-            // TODO: add user feedback to all the logerror and logwarning, so that they are aware
-        }
+        JArray jArray = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(file));
+        foreach (JToken jToken in jArray)
+            load(jToken);
     }
 
     public void LoadSetFromJToken(JToken setJToken)
@@ -198,7 +186,7 @@ public class CardGame
         if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
             sets.Add(new Set { Code = setCode, Name = setName });
         else
-            Debug.LogWarning("Read empty sety in the list of sets! Ignoring it");
+            UnityEngine.Debug.LogWarning("Read empty sety in the list of sets! Ignoring it");
     }
 
     public void LoadCardFromJToken(JToken cardJToken)
@@ -216,7 +204,7 @@ public class CardGame
         if (!string.IsNullOrEmpty(cardId))
             cards.Add(new Card(cardId, cardName, cardSet, cardProps));
         else
-            Debug.LogWarning("Read card without id in the list of cards! Ignoring it");
+            UnityEngine.Debug.LogWarning("Read card without id in the list of cards! Ignoring it");
     }
 
     public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> properties)
@@ -235,24 +223,47 @@ public class CardGame
         }
     }
 
-    public List<Set> Sets { 
-        get { return sets; }
+    public List<Set> Sets {
+        get {
+            if (sets == null)
+                sets = new List<Set>();
+            return sets;
+        }
     }
 
-    public List<Card> Cards { 
-        get { return cards; }
+    public List<Card> Cards {
+        get {
+            if (cards == null)
+                cards = new List<Card>();
+            return cards;
+        }
     }
 
-    public Sprite BackgroundImage { 
-        get { return backgroundImage; }
+    public UnityEngine.Sprite BackgroundImage {
+        get {
+            if (backgroundImage == null)
+                backgroundImage = UnityEngine.Resources.Load<UnityEngine.Sprite>(BackgroundImageFileName);
+            return backgroundImage;
+        }
     }
 
-    public Sprite CardBackImage { 
-        get { return cardBackImage; }
+    public UnityEngine.Sprite CardBackImage {
+        get {
+            if (cardBackImage == null)
+                cardBackImage = UnityEngine.Resources.Load<UnityEngine.Sprite>(CardBackImageFileName);
+            return cardBackImage;
+        }
     }
 
     public bool IsLoaded {
-        get { return isLoaded; }
+        get {
+            return isLoaded;
+        }
     }
 
+    public string Error {
+        get {
+            return error;
+        }
+    }
 }

@@ -3,17 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 public class CardGameManager : MonoBehaviour
 {
+    public GameObject PopupPrefab;
+
     private static CardGameManager instance;
 
     private Dictionary<string, CardGame> allCardGames;
     private CardGame current;
     private string gamesFilePathBase;
     private SpriteRenderer backgroundImage;
+    private Popup popup;
 
     void Awake()
     {
@@ -53,9 +57,11 @@ public class CardGameManager : MonoBehaviour
 
     IEnumerator Start()
     {
-        Debug.Log("Card game manager is waiting for the card games to load");
-        while (!IsLoaded)
+        Debug.Log("Card game manager is monitoring the loads for errors");
+        while (!IsLoaded) {
+            // TODO: CHECK FOR ERRORS (cardGame.Error)
             yield return null;
+        }
 
         Debug.Log("Card Game Manager is selecting the default card game");
         IEnumerator enumerator = allCardGames.Keys.GetEnumerator();
@@ -74,12 +80,24 @@ public class CardGameManager : MonoBehaviour
 
         if (!allCardGames.ContainsKey(name)) {
             Debug.LogError("Could not select " + name + " because the name is not recognized in the list of card games!");
+            ShowMessage("Error selecting " + name + "!");
             return;
         }
 
         Debug.Log("Selecting the card game: " + name);
         current = allCardGames [name];
         BackgroundImage.sprite = Current.BackgroundImage;
+        CardInfoViewer.Instance.UpdatePropertyOptions();
+    }
+
+    public void ShowMessage(string message)
+    {
+        Popup.Show(message);
+    }
+
+    public void PromptAction(string message, UnityAction action)
+    {
+        Popup.Prompt(message, action);
     }
 
     public void Quit()
@@ -89,8 +107,6 @@ public class CardGameManager : MonoBehaviour
 
     public static CardGameManager Instance {
         get {
-            if (instance == null)
-                instance = GameObject.FindWithTag("CardGameManager").transform.GetOrAddComponent<CardGameManager>();
             return instance;
         }
     }
@@ -127,6 +143,14 @@ public class CardGameManager : MonoBehaviour
             if (backgroundImage == null)
                 backgroundImage = GameObject.FindGameObjectWithTag("Background").transform.GetOrAddComponent<SpriteRenderer>();
             return backgroundImage;
+        }
+    }
+
+    public Popup Popup {
+        get {
+            if (popup == null)
+                popup = Instantiate(PopupPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<Popup>();
+            return popup;
         }
     }
 }
