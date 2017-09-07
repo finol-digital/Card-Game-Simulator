@@ -7,47 +7,38 @@ using UnityEngine.Events;
 
 public class CardSearcher : MonoBehaviour
 {
+    public string nameFilter { get; set; }
+
+    public string idFilter { get; set; }
+
+    public string setCodeFilter { get; set; }
+
     public GameObject cardPrefab;
     public DeckEditor deckEditor;
-    public RectTransform advancedFilterPanel;
+    public RectTransform advancedSearchFilterMenu;
     public RectTransform filterContentView;
     public RectTransform propertyTemplate;
     public RectTransform resultsPanel;
     public Text resultsCountText;
 
-    private Transform cardModelStaging;
-    private Dictionary<string, CardModel> allCardModels;
-    private List<Card> searchResults;
-    private int resultsPanelSize;
-    private int resultsIndex;
-    private string nameFilter;
-    private string idFilter;
-    private string setCodeFilter;
-    private Dictionary<string, string> propFilters;
+    private Transform _cardModelStaging;
+    private Dictionary<string, CardModel> _allCardModels;
+    private List<Card> _searchResults;
+    private int _resultsPanelSize;
+    private int _resultsIndex;
+    private Dictionary<string, string> _propertyFilters;
 
-    void Awake()
+    void Start()
     {
-        Debug.Log("Card Searcher initializing");
-        GameObject go = new GameObject("Card Model Staging");
-        cardModelStaging = go.transform;
-        allCardModels = new Dictionary<string, CardModel>();
-        searchResults = new List<Card>();
-        resultsPanelSize = Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + 25));
-        resultsIndex = 0;
         nameFilter = "";
         idFilter = "";
         setCodeFilter = "";
-        propFilters = new Dictionary<string, string>();
+        CardGameManager.Instance.AddOnSelectAction(UpdateCardSearcher);
     }
 
-    IEnumerator Start()
+    public void UpdateCardSearcher()
     {
-
-        Debug.Log("Card Searcher waiting for the card game to finish loading");
-        while (!CardGameManager.IsLoaded)
-            yield return null;
-
-        Debug.Log("Building the Advanced filter panel");
+        Debug.Log("Building the Advanced Search Filter Menu");
         Vector2 pos = propertyTemplate.localPosition;
         foreach (PropertyDef prop in CardGameManager.Current.CardProperties) {
             GameObject newProp = Instantiate(propertyTemplate.gameObject, propertyTemplate.position, propertyTemplate.rotation, propertyTemplate.parent) as GameObject;
@@ -65,131 +56,139 @@ public class CardSearcher : MonoBehaviour
         Debug.Log("Showing all cards in the search results");
         ClearFilters();
         Search();
-
-        Debug.Log("Card Searcher ready");
-
-    }
-
-    public void SetNameFilter(string val)
-    {
-        this.nameFilter = val;
-    }
-
-    public void SetIdFilter(string val)
-    {
-        this.idFilter = val;
-    }
-
-    public void SetSetCodeFilter(string val)
-    {
-        this.setCodeFilter = val;
     }
 
     public void SetPropertyFilter(string key, string val)
     {
-        this.propFilters [key] = val;
+        PropertyFilters [key] = val;
     }
 
     public void ClearFilters()
     {
-        foreach (InputField input in advancedFilterPanel.GetComponentsInChildren<InputField>())
+        foreach (InputField input in advancedSearchFilterMenu.GetComponentsInChildren<InputField>())
             input.text = "";
-        propFilters.Clear();
+        PropertyFilters.Clear();
     }
 
     public void Search()
     {
         Debug.Log("Searching with id " + idFilter + ", name " + nameFilter + ", setCode " + setCodeFilter);
         string debugFilters = "Search property filters: ";
-        foreach (KeyValuePair<string, string> entry in propFilters)
+        foreach (KeyValuePair<string, string> entry in PropertyFilters)
             debugFilters += entry.Key + ": " + entry.Value + "; ";
         Debug.Log(debugFilters);
 
-        searchResults.Clear();
-        IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(idFilter, nameFilter, setCodeFilter, propFilters);
+        SearchResults.Clear();
+        _resultsIndex = 0;
+        IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(idFilter, nameFilter, setCodeFilter, PropertyFilters);
         foreach (Card card in cardSearcher)
-            searchResults.Add(card);
-        ApplySearchResults(searchResults);
-
-    }
-
-    public void ApplySearchResults(List<Card> cards)
-    {
-        searchResults = cards;
-        resultsIndex = 0;
+            SearchResults.Add(card);
         UpdateSearchResultsPanel();
-
     }
 
     public void MoveSearchResultsLeft()
     {
-        resultsIndex--;
-        if (resultsIndex < 0)
-            resultsIndex = ResultRowCount;
+        _resultsIndex--;
+        if (_resultsIndex < 0)
+            _resultsIndex = ResultRowCount;
         UpdateSearchResultsPanel();
-
     }
 
     public void MoveSearchResultsRight()
     {
-        resultsIndex++;
-        if (resultsIndex > ResultRowCount)
-            resultsIndex = 0;
+        _resultsIndex++;
+        if (_resultsIndex > ResultRowCount)
+            _resultsIndex = 0;
         UpdateSearchResultsPanel();
-
     }
 
     public void UpdateSearchResultsPanel()
     {
         for (int i = resultsPanel.childCount - 1; i >= 0; i--) {
-            resultsPanel.GetChild(i).SetParent(cardModelStaging);
+            resultsPanel.GetChild(i).SetParent(CardModelStaging);
         }
 
-        for (int i = 0; i < resultsPanelSize && resultsIndex >= 0 && resultsIndex * resultsPanelSize + i < searchResults.Count; i++) {
-            string cardId = searchResults [resultsIndex * resultsPanelSize + i].Id;
+        for (int i = 0; i < ResultsPanelSize && _resultsIndex >= 0 && _resultsIndex * ResultsPanelSize + i < SearchResults.Count; i++) {
+            string cardId = SearchResults [_resultsIndex * ResultsPanelSize + i].Id;
 
             CardModel cardModelToShow;
-            if (!allCardModels.TryGetValue(cardId, out cardModelToShow)) {
+            if (!AllCardModels.TryGetValue(cardId, out cardModelToShow)) {
                 Debug.Log("Creating Card Model for " + cardId);
-                Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).LastOrDefault();
-                cardModelToShow = CreateCardModel(cardToShow);
+                Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).FirstOrDefault();
+                cardModelToShow = Instantiate(cardPrefab, resultsPanel).transform.GetOrAddComponent<CardModel>();
+                cardModelToShow.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCard));
             }
             cardModelToShow.transform.SetParent(resultsPanel);
-            allCardModels [cardId] = cardModelToShow;
+            AllCardModels [cardId] = cardModelToShow;
         }
 
-        resultsCountText.text = (resultsIndex + 1) + " / " + (ResultRowCount + 1);
-    }
-
-    private CardModel CreateCardModel(Card cardToShow)
-    {
-        GameObject newCard = Instantiate(cardPrefab, resultsPanel);
-        CardModel cardModel = newCard.transform.GetOrAddComponent<CardModel>();
-        cardModel.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCard));
-        return cardModel;
+        resultsCountText.text = (_resultsIndex + 1) + " / " + (ResultRowCount + 1);
     }
 
     public void ShowAdvancedFilterPanel()
     {
-        advancedFilterPanel.gameObject.SetActive(true);
+        advancedSearchFilterMenu.gameObject.SetActive(true);
+        advancedSearchFilterMenu.SetAsLastSibling();
     }
 
     public void HideAdvancedFilterPanel()
     {
-        advancedFilterPanel.gameObject.SetActive(false);
+        advancedSearchFilterMenu.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if (advancedFilterPanel.gameObject.activeInHierarchy && Input.GetKeyDown(KeyCode.Return)) {
+        if (advancedSearchFilterMenu.gameObject.activeInHierarchy && Input.GetKeyDown(KeyCode.Return)) {
             Search();
             HideAdvancedFilterPanel();
         }
     }
 
+    public Transform CardModelStaging {
+        get {
+            if (_cardModelStaging == null) {
+                GameObject go = new GameObject("Card Model Staging");
+                _cardModelStaging = go.transform;
+            }
+            return _cardModelStaging;
+        }
+    }
+
+    public Dictionary<string, CardModel> AllCardModels {
+        get {
+            if (_allCardModels == null)
+                _allCardModels = new Dictionary<string, CardModel>();
+            return _allCardModels;
+        }
+    }
+
+    public List<Card> SearchResults {
+        get {
+            if (_searchResults == null)
+                _searchResults = new List<Card>();
+            return _searchResults;
+        }
+    }
+
+    public int ResultsPanelSize {
+        get {
+            if (_resultsPanelSize == 0)
+                _resultsPanelSize = Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + (resultsPanel.GetOrAddComponent<HorizontalLayoutGroup>().spacing / 2)));
+            return _resultsPanelSize;
+        }
+    }
+
     public int ResultRowCount {
         get {
-            return (searchResults.Count / resultsPanelSize) + (searchResults.Count % resultsPanelSize == 0 ? -1 : 0);
+            return (SearchResults.Count / ResultsPanelSize) + (SearchResults.Count % ResultsPanelSize == 0 ? -1 : 0);
+        }
+    }
+
+    public Dictionary<string, string> PropertyFilters {
+        get {
+            if (_propertyFilters == null)
+                _propertyFilters = new Dictionary<string, string>();
+            return _propertyFilters;
         }
     }
 }

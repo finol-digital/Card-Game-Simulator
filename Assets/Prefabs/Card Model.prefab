@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 224268304055611970}
   - component: {fileID: 222631724752937954}
   - component: {fileID: 114062300179596830}
-  - component: {fileID: 114870730626564982}
   - component: {fileID: 225568299236548108}
   - component: {fileID: 114835859699800120}
+  - component: {fileID: 114870730626564982}
   m_Layer: 5
   m_Name: Card Model
   m_TagString: Untagged
@@ -81,8 +81,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
+  m_MinWidth: 250
+  m_MinHeight: 350
   m_PreferredWidth: 250
   m_PreferredHeight: 350
   m_FlexibleWidth: 0

@@ -1030,7 +1030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204, type: 2}
   deckEditor: {fileID: 0}
-  advancedFilterPanel: {fileID: 0}
+  advancedSearchFilterMenu: {fileID: 0}
   filterContentView: {fileID: 0}
   propertyTemplate: {fileID: 0}
   resultsPanel: {fileID: 224890603815068912}

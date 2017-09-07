@@ -6,6 +6,11 @@ using UnityEngine.EventSystems;
 
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
+    public const float VisibleYMin = 0.625f;
+    public const float VisibleYMax = 1;
+    public const float HiddenYmin = 1;
+    public const float HiddenYMax = 1.375f;
+
     public GameObject cardZoomPrefab;
     public Image cardImage;
     public Text nameContent;
@@ -15,54 +20,25 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public Text textContent;
     public float animationSpeed = 5.0f;
 
-    private static CardInfoViewer instance;
+    private static CardInfoViewer _instance;
 
-    private RectTransform cardZoomPanel;
-    private RectTransform rectTransform;
-    private float targetYPos;
-    private List<Dropdown.OptionData> propertyOptions;
-    private int selectedPropertyIndex;
-    private CardModel selectedCard;
-
-    void Start()
-    {
-        Debug.Log("Card Info Viewer is initializing");
-        cardZoomPanel = Instantiate(cardZoomPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform as RectTransform;
-        cardZoomPanel.gameObject.SetActive(false);
-        rectTransform = this.transform as RectTransform;
-        targetYPos = rectTransform.sizeDelta.y;
-    }
+    private RectTransform _cardZoomPanel;
+    private List<Dropdown.OptionData> _propertyOptions;
+    private int _selectedPropertyIndex;
+    private CardModel _selectedCardModel;
+    public bool _isVisible;
 
     public void UpdatePropertyOptions()
     {
         Debug.Log("Card Info viewer is setting the property options");
-        propertyOptions = new List<Dropdown.OptionData>();
+        PropertyOptions.Clear();
         foreach (PropertyDef propDef in CardGameManager.Current.CardProperties) {
             if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
-                selectedPropertyIndex = propertyOptions.Count;
-            propertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
+                SelectedPropertyIndex = PropertyOptions.Count;
+            PropertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
         }
-        propertySelection.options = propertyOptions;
-        propertySelection.value = selectedPropertyIndex;
-    }
-
-    public void SelectProperty(int propertyIndex)
-    {
-        if (propertyIndex < 0 || propertyIndex >= propertyOptions.Count) {
-            Debug.LogWarning("Attempted to select an invalid property for the card info viewer! Ignoring");
-            return;
-        }
-
-        selectedPropertyIndex = propertyIndex;
-        Debug.Log("Selected property: " + SelectedPropertyName);
-        textLabel.text = SelectedPropertyName;
-
-        if (selectedCard == null)
-            return;
-        if (selectedCard.RepresentedCard.Properties.ContainsKey(SelectedPropertyName))
-            textContent.text = selectedCard.RepresentedCard.Properties [SelectedPropertyName].Value.Value;
-        else
-            Debug.LogWarning("Not updating card info text with property, since the card does not have that property!: " + SelectedPropertyName);
+        propertySelection.options = PropertyOptions;
+        propertySelection.value = SelectedPropertyIndex;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -74,37 +50,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public void OnSelect(BaseEventData eventData)
     {
         Debug.Log("Selected Card Info");
-        ShowCardInfo();
-    }
-
-    public void SelectCard(CardModel cardModelToSelect)
-    {
-        if (cardModelToSelect == null) {
-            Debug.LogWarning("Attempted to select a null cardModel! Ignoring the request");
-            return;
-        }
-
-        Debug.Log("Updating the card info view with info from the card: " + cardModelToSelect.gameObject.name);
-        selectedCard = cardModelToSelect;
-
-        Sprite sprite;
-        CardImageRepository.TryGetCachedCardImage(cardModelToSelect.RepresentedCard, out sprite);
-        cardImage.sprite = sprite;
-        nameContent.text = cardModelToSelect.RepresentedCard.Name;
-        idContent.text = cardModelToSelect.RepresentedCard.Id;
-
-        string mainLabel = "";
-        string mainText = "";
-        PropertySet prop;
-        if (cardModelToSelect.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out prop)) {
-            mainLabel = SelectedPropertyName;
-            mainText = prop.Value.Value;
-        } else
-            Debug.LogWarning("Selected a card that does not have the correct properties to display! Defaulting to blank");
-        textLabel.text = mainLabel;
-        textContent.text = mainText;
-
-        ShowCardInfo();
+        IsVisible = true;
     }
 
     public void OnDeselect(BaseEventData eventData)
@@ -115,65 +61,125 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void DeselectCard()
     {
-        if (selectedCard != null) { 
-            Debug.Log("Card info viewer deselecting the selected card");
-            if (!EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(this.gameObject);
-            selectedCard.UnHighlight();
-        }
-
-        HideCardInfo();
-    }
-
-    public void ShowCardInfo()
-    {
-        Debug.Log("Showing the card info view");
-        if (selectedCard != null)
-            selectedCard.Highlight();
-        targetYPos = 0.0f;
-    }
-
-    public void HideCardInfo()
-    {
-        Debug.Log("Hiding the card info view");
-        if (selectedCard != null)
-            selectedCard.UnHighlight();
-        targetYPos = rectTransform.sizeDelta.y;
+        Debug.Log("Deselected Card in Info Viewer");
+        if (SelectedCardModel != null && !EventSystem.current.alreadySelecting)
+            EventSystem.current.SetSelectedGameObject(this.gameObject);
+        IsVisible = false;
     }
 
     public void ShowCardZoomed()
     {
         Debug.Log("Showing zoomed image of card");
-        cardZoomPanel.gameObject.SetActive(true);
-        cardZoomPanel.GetChild(0).GetComponent<Image>().sprite = cardImage.sprite;
+        CardZoomPanel.gameObject.SetActive(true);
+        CardZoomPanel.GetChild(0).GetComponent<Image>().sprite = cardImage.sprite;
     }
 
     void Update()
     {
-        float newYPos = Mathf.Lerp(rectTransform.anchoredPosition.y, targetYPos, animationSpeed * Time.deltaTime);
-        rectTransform.anchoredPosition = new Vector2(0, newYPos);
+        // TODO: CONFIRM THAT THIS METHOD OF HIDING AND SHOWING DOESN'T CAUSE TOO MUCH OF A PERFORMANCE IMPACT
+        Vector2 targetAnchorMin = new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
+        Vector2 targetAnchorMax = new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, HiddenYMax, animationSpeed * Time.deltaTime));
+        if (IsVisible) {
+            targetAnchorMin = new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, VisibleYMin, animationSpeed * Time.deltaTime));
+            targetAnchorMax = new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, VisibleYMax, animationSpeed * Time.deltaTime));
+        }
+        rectTransform.anchorMin = targetAnchorMin;
+        rectTransform.anchorMax = targetAnchorMax;
     }
 
     public static CardInfoViewer Instance {
         get {
-            if (instance == null)
-                instance = GameObject.FindWithTag("CardInfo").transform.GetOrAddComponent<CardInfoViewer>();
-            return instance;
+            if (_instance == null)
+                _instance = GameObject.FindWithTag("CardInfo").transform.GetOrAddComponent<CardInfoViewer>();
+            return _instance;
+        }
+    }
+
+    public RectTransform rectTransform {
+        get {
+            return this.transform as RectTransform;
+        }
+    }
+
+    public RectTransform CardZoomPanel {
+        get {
+            if (_cardZoomPanel == null) {
+                _cardZoomPanel = Instantiate(cardZoomPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform as RectTransform;
+                _cardZoomPanel.gameObject.SetActive(false);
+            }
+            return _cardZoomPanel;
+        }
+    }
+
+    public List<Dropdown.OptionData> PropertyOptions {
+        get {
+            if (_propertyOptions == null)
+                _propertyOptions = new List<Dropdown.OptionData>();
+            return _propertyOptions;
+        }
+    }
+
+    public int SelectedPropertyIndex {
+        get {
+            return _selectedPropertyIndex;
+        }
+        set {
+            if (value < 0 || value >= PropertyOptions.Count)
+                return;
+
+            _selectedPropertyIndex = value;
+            textLabel.text = SelectedPropertyName;
+            if (SelectedCardModel != null && SelectedCardModel.RepresentedCard.Properties.ContainsKey(SelectedPropertyName))
+                textContent.text = SelectedCardModel.RepresentedCard.Properties [SelectedPropertyName].Value.Value;
         }
     }
 
     public string SelectedPropertyName {
         get {
             string selectedName = "";
-            if (selectedPropertyIndex >= 0 && selectedPropertyIndex < propertyOptions.Count)
-                selectedName = propertyOptions [selectedPropertyIndex].text;
+            if (SelectedPropertyIndex >= 0 && SelectedPropertyIndex < PropertyOptions.Count)
+                selectedName = PropertyOptions [SelectedPropertyIndex].text;
             return selectedName;
         } 
     }
 
-    public bool IsVisible { 
+    public CardModel SelectedCardModel {
         get {
-            return rectTransform.anchoredPosition.y < rectTransform.sizeDelta.y / 2.0f;
-        } 
+            return _selectedCardModel;
+        }
+        set {
+            if (value == null)
+                return;
+
+            Sprite sprite;
+            CardImageRepository.TryGetCachedCardImage(value.RepresentedCard, out sprite);
+            cardImage.sprite = sprite;
+            nameContent.text = value.RepresentedCard.Name;
+            idContent.text = value.RepresentedCard.Id;
+
+            PropertySet prop;
+            if (value.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out prop))
+                textContent.text = prop.Value.Value;
+            else
+                textContent.text = "";
+
+            _selectedCardModel = value;
+            IsVisible = true;
+        }
+    }
+
+    public bool IsVisible {
+        get {
+            return _isVisible;
+        }
+        set {
+            if (SelectedCardModel != null) {
+                if (value)
+                    SelectedCardModel.Highlight();
+                else
+                    SelectedCardModel.UnHighlight();
+            }
+            _isVisible = value;
+        }
     }
 }

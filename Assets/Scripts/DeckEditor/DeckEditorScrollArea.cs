@@ -11,11 +11,11 @@ public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointe
     public float scrollAmount = 0.01f;
     public float holdFrequency = 0.01f;
 
-    private CanvasGroup canvasGroup;
+    private CanvasGroup _canvasGroup;
 
-    void Awake()
+    void Start()
     {
-        canvasGroup = transform.GetOrAddComponent<CanvasGroup>();
+        _canvasGroup = transform.GetOrAddComponent<CanvasGroup>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -51,7 +51,7 @@ public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointe
 
     void Update()
     {
-        canvasGroup.blocksRaycasts = (!scrollsRight && scrollBar.value != 0) || (scrollsRight && scrollBar.value != 1);
+        _canvasGroup.blocksRaycasts = (!scrollsRight && scrollBar.value != 0) || (scrollsRight && scrollBar.value != 1);
     }
 
 }

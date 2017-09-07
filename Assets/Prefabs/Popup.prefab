@@ -480,6 +480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   messageText: {fileID: 114862140213658612}
   yesButton: {fileID: 114476533814910182}
+  cancelButton: {fileID: 114265690314161124}
 --- !u!114 &114862140213658612
 MonoBehaviour:
   m_ObjectHideFlags: 1

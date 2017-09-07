@@ -87,12 +87,12 @@ public class CardGame
     [JsonProperty]
     public string SetNameIdentifier { get; set; }
 
-    private List<Set> sets;
-    private List<Card> cards;
-    private UnityEngine.Sprite backgroundImage;
-    private UnityEngine.Sprite cardBackImage;
-    private bool isLoaded;
-    private string error;
+    private List<Set> _sets;
+    private List<Card> _cards;
+    private UnityEngine.Sprite _backgroundImage;
+    private UnityEngine.Sprite _cardBackImage;
+    private bool _isLoaded;
+    private string _error;
 
     public CardGame(string name, string url = "")
     {
@@ -115,10 +115,10 @@ public class CardGame
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
 
-        sets = new List<Set>();
-        cards = new List<Card>();
-        isLoaded = false;
-        error = null;
+        _sets = new List<Set>();
+        _cards = new List<Card>();
+        _isLoaded = false;
+        _error = null;
     }
 
     public IEnumerator Load()
@@ -130,7 +130,7 @@ public class CardGame
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
             UnityEngine.Debug.LogError("Failed to load card game! Error: " + e.Message);
-            error = e.Message;
+            _error = e.Message;
             yield break;
         }
 
@@ -147,7 +147,7 @@ public class CardGame
         } catch (Exception e) {
             UnityEngine.Debug.LogError("Failed to load card game data! Error: " + e.Message);
             CardGameManager.Instance.ShowMessage("Failed to load cards for " + Name + ". Error: " + e.Message);
-            error = e.Message;
+            _error = e.Message;
             yield break;
         }
 
@@ -155,16 +155,16 @@ public class CardGame
         UnityEngine.Sprite loadedImage = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageType, BackgroundImageURL), (output) => loadedImage = output);
         if (loadedImage != null)
-            backgroundImage = loadedImage;
+            _backgroundImage = loadedImage;
 
         UnityEngine.Debug.Log("Loading Card Back Image for " + Name);
         loadedImage = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(UnityExtensionMethods.LoadOrGetImage(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageType, CardBackImageURL), (output) => loadedImage = output);
         if (loadedImage != null)
-            cardBackImage = loadedImage;
+            _cardBackImage = loadedImage;
 
         UnityEngine.Debug.Log(Name + " finished loading");
-        isLoaded = true;
+        _isLoaded = true;
     }
 
     public void LoadJSONFromFile(string file, LoadJTokenDelegate load)
@@ -181,16 +181,26 @@ public class CardGame
 
     public void LoadSetFromJToken(JToken setJToken)
     {
+        if (setJToken == null) {
+            UnityEngine.Debug.LogWarning("Attempted to load a null setJToken! Ignoring it");
+            return;
+        }
+
         string setCode = setJToken.Value<string>(SetCodeIdentifier);
         string setName = setJToken.Value<string>(SetNameIdentifier);
         if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
-            sets.Add(new Set { Code = setCode, Name = setName });
+            _sets.Add(new Set { Code = setCode, Name = setName });
         else
-            UnityEngine.Debug.LogWarning("Read empty sety in the list of sets! Ignoring it");
+            UnityEngine.Debug.LogWarning("Read empty set in the list of sets! Ignoring it");
     }
 
     public void LoadCardFromJToken(JToken cardJToken)
     {
+        if (cardJToken == null) {
+            UnityEngine.Debug.LogWarning("Attempted to load a null cardJToken! Ignoring it");
+            return;
+        }
+
         string cardId = cardJToken.Value<string>(CardIdIdentifier);
         string cardName = cardJToken.Value<string>(CardNameIdentifier);
         string cardSet = cardJToken.Value<string>(CardSetIdentifier);
@@ -202,13 +212,18 @@ public class CardGame
             };
         }
         if (!string.IsNullOrEmpty(cardId))
-            cards.Add(new Card(cardId, cardName, cardSet, cardProps));
+            _cards.Add(new Card(cardId, cardName, cardSet, cardProps));
         else
             UnityEngine.Debug.LogWarning("Read card without id in the list of cards! Ignoring it");
     }
 
     public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> properties)
     {
+        if (id == null || name == null || setCode == null || properties == null) {
+            UnityEngine.Debug.LogWarning("Null parameter(s) passed to FilterCards! Exiting filter early");
+            yield break;
+        }
+
         foreach (Card card in Cards) {
             if (card.Id.ToLower().Contains(id.ToLower())
                 && card.Name.ToLower().Contains(name.ToLower())
@@ -225,45 +240,45 @@ public class CardGame
 
     public List<Set> Sets {
         get {
-            if (sets == null)
-                sets = new List<Set>();
-            return sets;
+            if (_sets == null)
+                _sets = new List<Set>();
+            return _sets;
         }
     }
 
     public List<Card> Cards {
         get {
-            if (cards == null)
-                cards = new List<Card>();
-            return cards;
+            if (_cards == null)
+                _cards = new List<Card>();
+            return _cards;
         }
     }
 
     public UnityEngine.Sprite BackgroundImage {
         get {
-            if (backgroundImage == null)
-                backgroundImage = UnityEngine.Resources.Load<UnityEngine.Sprite>(BackgroundImageFileName);
-            return backgroundImage;
+            if (_backgroundImage == null)
+                _backgroundImage = UnityEngine.Resources.Load<UnityEngine.Sprite>(BackgroundImageFileName);
+            return _backgroundImage;
         }
     }
 
     public UnityEngine.Sprite CardBackImage {
         get {
-            if (cardBackImage == null)
-                cardBackImage = UnityEngine.Resources.Load<UnityEngine.Sprite>(CardBackImageFileName);
-            return cardBackImage;
+            if (_cardBackImage == null)
+                _cardBackImage = UnityEngine.Resources.Load<UnityEngine.Sprite>(CardBackImageFileName);
+            return _cardBackImage;
         }
     }
 
     public bool IsLoaded {
         get {
-            return isLoaded;
+            return _isLoaded;
         }
     }
 
     public string Error {
         get {
-            return error;
+            return _error;
         }
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CardImageRepository
 {
-    private static Dictionary<string, Sprite> allCardImages = new Dictionary<string, Sprite>();
+    private static Dictionary<string, Sprite> _allCardImages = new Dictionary<string, Sprite>();
 
     // TODO: MAKE THIS BE DETERMINED DIFFERENTLY BASED OFF THE CARD GAME; WOULD LIKE TO DELETE THIS METHOD ENTIRELY
     public static string GetCardImageName(Card card)
@@ -29,7 +29,7 @@ public class CardImageRepository
     public static bool TryGetCachedCardImage(Card card, out Sprite image)
     {
         string imageFilePath = GetCardImageFilePath(card);
-        bool imageCached = allCardImages.TryGetValue(imageFilePath, out image);
+        bool imageCached = _allCardImages.TryGetValue(imageFilePath, out image);
         return imageCached;
     }
 
@@ -42,7 +42,7 @@ public class CardImageRepository
         Sprite cardImage = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.LoadOrGetImage(imageFilePath, imageWebURL), (output) => cardImage = output);
         if (cardImage != null)
-            allCardImages [imageFilePath] = cardImage;
+            _allCardImages [imageFilePath] = cardImage;
         else
             Debug.LogWarning("Failed to get and cache card image for " + card.Name + "!");
     }

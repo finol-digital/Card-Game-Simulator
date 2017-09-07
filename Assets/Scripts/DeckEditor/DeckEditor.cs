@@ -17,36 +17,52 @@ public class DeckEditor : MonoBehaviour
     public RectTransform deckEditorContent;
     public Text deckEditorNameText;
 
-    private List<CardStack> cardStacks;
-    private DeckLoadMenu deckLoader;
-    private DeckSaveMenu deckSaver;
+    private List<CardStack> _cardStacks;
+    private DeckLoadMenu _deckLoader;
+    private DeckSaveMenu _deckSaver;
 
-    IEnumerator Start()
+    void Start()
     {
-        Debug.Log("Deck Editor is waiting for the card game manager to finish loading");
-        while (!CardGameManager.IsLoaded)
-            yield return null;
+        CardGameManager.Instance.AddOnSelectAction(UpdateDeckEditor);
+    }
 
+    public void UpdateDeckEditor()
+    {
         Debug.Log("Creating card stacks in the deck editor");
-        cardStacks = new List<CardStack>();
+        deckEditorContent.DestroyAllChildren();
         int numCardStacks = CardGameManager.Current.DeckCardStackCount;
         for (int i = 0; i < numCardStacks; i++) {
             GameObject newCardStack = Instantiate(cardStackPrefab, deckEditorContent);
-            cardStacks.Add(newCardStack.transform.GetOrAddComponent<CardStack>());
+            CardStacks.Add(newCardStack.transform.GetOrAddComponent<CardStack>());
         }
         deckEditorContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * numCardStacks, deckEditorContent.sizeDelta.y);
     }
 
+    public void AddCard(CardModel cardToAdd)
+    {
+        if (cardToAdd == null) {
+            Debug.LogWarning("Attempted to add a null card model to the Deck Editor! Ignoring");
+            return;
+        }
+
+        AddCard(cardToAdd.RepresentedCard);
+    }
+
     public void AddCard(Card cardToAdd)
     {
-        Debug.Log("Adding to the deck: " + cardToAdd.Name);
+        if (cardToAdd == null) {
+            Debug.LogWarning("Attempted to add a null card to the Deck Editor! Ignoring");
+            return;
+        }
+
+        Debug.Log("Adding to the deck editor: " + cardToAdd.Name);
         CardInfoViewer.Instance.DeselectCard();
         // TODO: KEEP TRACK OF PREVIOUSLY USED STACK, AND ADD TO THE LAST STACK; WHEN ADDED, MOVE THE VIEW SO THAT THE ADDED CARD IS VISIBLE
-        foreach (CardStack stack in cardStacks) {
+        foreach (CardStack stack in _cardStacks) {
             if (stack.transform.childCount < CardGameManager.Current.CopiesOfCardPerDeck) {
                 GameObject cardCopy = Instantiate(cardModelPrefab, stack.transform);
                 CardModel copyModel = cardCopy.transform.GetOrAddComponent<CardModel>();
-                copyModel.SetAsCard(cardToAdd, false);
+                copyModel.SetAsCard(cardToAdd, false, (cardModel) => GameObject.Destroy(cardModel.gameObject));
                 return;
             }
         }
@@ -61,7 +77,7 @@ public class DeckEditor : MonoBehaviour
     public void Clear()
     {
         Debug.Log("Clearing the deck editor");
-        foreach (CardStack stack in cardStacks)
+        foreach (CardStack stack in _cardStacks)
             stack.transform.DestroyAllChildren();
         deckEditorNameText.text = DefaultDeckName;
         Debug.Log("Deck Editor cleared");
@@ -77,11 +93,16 @@ public class DeckEditor : MonoBehaviour
 
     public void ShowDeckLoadMenu()
     {
-        DeckLoader.Show(deckEditorNameText.text);
+        DeckLoader.Show(LoadDeck, UpdateDeckName, deckEditorNameText.text);
     }
 
     public void LoadDeck(Deck newDeck)
     {
+        if (newDeck == null) {
+            Debug.LogWarning("Attempted to load a null deck into the deck editor! Ignoring");
+            return;
+        }
+
         Clear();
         UpdateDeckName(newDeck.Name);
         foreach (Card card in newDeck.Cards)
@@ -91,29 +112,33 @@ public class DeckEditor : MonoBehaviour
     public void ShowDeckSaveMenu()
     {
         Deck deck = new Deck(deckEditorNameText.text);
-        foreach (CardStack stack in cardStacks)
+        foreach (CardStack stack in _cardStacks)
             foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
                 deck.Cards.Add(card.RepresentedCard);
-        DeckSaver.Show(deck);
+        DeckSaver.Show(deck, UpdateDeckName);
+    }
+
+    public List<CardStack> CardStacks {
+        get {
+            if (_cardStacks == null)
+                _cardStacks = new List<CardStack>();
+            return _cardStacks;
+        }
     }
 
     public DeckLoadMenu DeckLoader {
         get {
-            if (deckLoader == null) {
-                deckLoader = Instantiate(deckLoadMenuPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<DeckLoadMenu>();
-                deckLoader.SetCallBacks(LoadDeck, UpdateDeckName);
-            }
-            return deckLoader;
+            if (_deckLoader == null)
+                _deckLoader = Instantiate(deckLoadMenuPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<DeckLoadMenu>();
+            return _deckLoader;
         }
     }
 
     public DeckSaveMenu DeckSaver {
         get {
-            if (deckSaver == null) {
-                deckSaver = Instantiate(deckSaveMenuPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<DeckSaveMenu>();
-                deckSaver.SetDeckNameChangeCallback(UpdateDeckName);
-            }
-            return deckSaver;
+            if (_deckSaver == null)
+                _deckSaver = Instantiate(deckSaveMenuPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<DeckSaveMenu>();
+            return _deckSaver;
         }
     }
 }

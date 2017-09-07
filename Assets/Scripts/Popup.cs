@@ -8,6 +8,7 @@ public class Popup : MonoBehaviour
 {
     public Text messageText;
     public Button yesButton;
+    public Button cancelButton;
 
     public void Show(string message)
     {
@@ -15,6 +16,7 @@ public class Popup : MonoBehaviour
         this.transform.SetAsLastSibling();
         messageText.text = message;
         yesButton.gameObject.SetActive(false);
+        cancelButton.GetComponentInChildren<Text>().text = "Close";
     }
 
     public void Prompt(string message, UnityAction action)
@@ -24,6 +26,7 @@ public class Popup : MonoBehaviour
         yesButton.onClick.RemoveAllListeners();
         yesButton.onClick.AddListener(action);
         yesButton.onClick.AddListener(Close);
+        cancelButton.GetComponentInChildren<Text>().text = "Cancel";
     }
 
     public void Close()
