@@ -9,119 +9,114 @@ public delegate void OnDoubleClickDelegate(CardModel doubleClickedCard);
 [RequireComponent(typeof(Image), typeof(CanvasGroup))]
 public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Card _representedCard = new Card("", "", "", new Dictionary<string, PropertySet>());
-    private bool _makesCopyOnDrag = false;
-    private GameObject _draggedCopy = null;
-    private Transform _placeHolder = null;
-    private Vector2 _dragOffset = Vector2.zero;
-    private float _downClickId = 0;
-    private OnDoubleClickDelegate _doubleClickEvent = null;
+    public bool MakesCopyOnDrag { get; set; }
+
+    public GameObject DraggedCopy { get; set; }
+
+    public Vector2 DragOffset { get; set; }
+
+    public float DownClickId { get; set; }
+
+    public OnDoubleClickDelegate DoubleClickEvent { get; set; }
+
+    private Card _representedCard;
+    private RectTransform _placeHolder;
+    private BaseEventData _recentEventData;
+    private Image _image;
 
     public void SetAsCard(Card card, bool copyOnDrag = false, OnDoubleClickDelegate onDoubleClick = null)
     {
-        if (card == null) {
-            Debug.LogWarning("Attempted to set a card model as a null card! Defaulting to a blank card");
-            card = new Card("", "", "", new Dictionary<string, PropertySet>());
-        }
-
-        this.gameObject.name = card.Name + " [" + card.Id + "]";
-        _representedCard = card;
-        _makesCopyOnDrag = copyOnDrag;
-        _doubleClickEvent = onDoubleClick;
-        GetComponent<Image>().sprite = CardImageRepository.DefaultImage;
-        StartCoroutine(UpdateImage());
-    }
-
-    public IEnumerator UpdateImage()
-    {
-        Sprite imageToShow;
-        if (!CardImageRepository.TryGetCachedCardImage(_representedCard, out imageToShow)) {
-            yield return CardImageRepository.GetAndCacheCardImage(_representedCard);
-            CardImageRepository.TryGetCachedCardImage(_representedCard, out imageToShow);
-        }
-        GetComponent<Image>().sprite = imageToShow;
+        RepresentedCard = card;
+        MakesCopyOnDrag = copyOnDrag;
+        DoubleClickEvent = onDoubleClick;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData == null) {
-            Debug.LogError("Clicked on " + gameObject.name + ", but the eventData was null!");
-            return;
-        }
+        RecentEventData = eventData;
 
-        Debug.Log("Clicked on " + gameObject.name);
-        _downClickId = eventData.pointerId;
-        if (eventData.selectedObject == this.gameObject && _doubleClickEvent != null) {
-            Debug.Log("Double click on " + gameObject.name);
-            _doubleClickEvent(this);
-        } else if (CardInfoViewer.Instance.IsVisible) {
-            Debug.Log("Selecting " + gameObject.name + " on pointer down, since the card info viewer is visible");
-            EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-        } else
-            Debug.Log("Card info view is not visible, so not selecting " + gameObject.name + " on pointer down");
+        DownClickId = eventData.pointerId;
+        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
+        if (EventSystem.current.currentSelectedGameObject == this.gameObject && DoubleClickEvent != null)
+            DoubleClickEvent(this);
+        else if (CardInfoViewer.Instance.rectTransform.anchorMax.y < (CardInfoViewer.HiddenYMax + CardInfoViewer.VisibleYMax) / 2)
+            EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (eventData == null || eventData.pointerId != _downClickId || eventData.dragging || eventData.selectedObject == CardInfoViewer.Instance.gameObject) {
-            Debug.Log("Let go on " + gameObject.name + ", but did not start the press there, or it was dragged, or its a doubleclick, so ignoring the action");
+        RecentEventData = eventData;
+        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
+        if (eventData.pointerId != DownClickId || eventData.dragging || eventData.selectedObject == CardInfoViewer.Instance.gameObject || eventData.selectedObject == this.gameObject)
             return;
-        }
-
-        Debug.Log("Let go on and therefore selecting " + gameObject.name);
-        EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+        
+        EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        if (_representedCard == null) {
-            Debug.Log("Selected a card that does not represent anything!");
-            return;
-        }
-
-        Debug.Log("Selected " + gameObject.name);
         CardInfoViewer.Instance.SelectedCardModel = this;
-    }
-
-    public void Highlight()
-    {
-        Debug.Log("Adding highlight to " + gameObject.name);
-        Outline outline = this.transform.GetOrAddComponent<Outline>();
-        outline.effectColor = Color.green;
-        outline.effectDistance = new Vector2(10, 10);
-    }
-
-    public void UnHighlight()
-    {
-        Debug.Log("Removing highlight from " + gameObject.name);
-        Outline outline = this.transform.GetOrAddComponent<Outline>();
-        outline.effectColor = Color.black;
-        outline.effectDistance = new Vector2(0, 0);
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        Debug.Log("Deselected " + gameObject.name);
-        CardInfoViewer.Instance.DeselectCard();
+        CardInfoViewer.Instance.IsVisible = false;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (eventData == null) {
-            Debug.LogError("Started dragging " + gameObject.name + ", but the eventData was null!");
-            return;
-        }
+        RecentEventData = eventData;
 
-        Debug.Log("Started dragging " + gameObject.name);
-        _dragOffset = (((Vector2)this.transform.position) - eventData.position);
         EventSystem.current.SetSelectedGameObject(null, eventData);
 
-        if (_makesCopyOnDrag)
+        DragOffset = (((Vector2)this.transform.position) - eventData.position);
+        if (MakesCopyOnDrag)
             CreateDraggedCopy(eventData.position);
         else
             MoveToContainingCanvas();
 
         GetComponent<CanvasGroup>().blocksRaycasts = false;
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        RecentEventData = eventData;
+
+        Vector2 targetPos = eventData.position + DragOffset;
+        if (DraggedCopy != null)
+            DraggedCopy.transform.position = targetPos;
+        else
+            this.transform.position = targetPos;
+
+        UpdatePlaceHolderPosition();
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        RecentEventData = eventData;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+        // TODO: MOVE TO PLACEHOLDER THROUGH ANIMATION, INSTEAD OF TELEPORTING
+
+        if (_placeHolder != null) {
+            Debug.Log(gameObject.name + " had a placeholder, so enabling it before we destroy what was dragged");
+            CanvasGroup placeHolderCanvasGroup = _placeHolder.GetOrAddComponent<CanvasGroup>();
+            placeHolderCanvasGroup.alpha = 1;
+            placeHolderCanvasGroup.blocksRaycasts = true;
+            _placeHolder.name = _placeHolder.name.Replace("(Placeholder)", "");
+        }
+
+        if (DraggedCopy != null) {
+            Debug.Log("Destroying dragged copy of " + gameObject.name);
+            Destroy(DraggedCopy);
+            DraggedCopy = null;
+            _placeHolder = null;
+        } else {
+            Debug.Log("Destroying moved card " + gameObject.name);
+            Destroy(this.gameObject);
+        }
+
+        RecentEventData = eventData;
     }
 
     public void CreateDraggedCopy(Vector2 position)
@@ -135,8 +130,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         cardCopy.name = cardCopy.name.Replace("(Clone)", "(Copy)");
         cardCopy.GetComponent<CanvasGroup>().blocksRaycasts = false;
 
-        _draggedCopy = cardCopy;
-        _draggedCopy.transform.position = position + _dragOffset;
+        DraggedCopy = cardCopy;
+        DraggedCopy.transform.position = position + DragOffset;
     }
 
     public void MoveToContainingCanvas()
@@ -165,30 +160,16 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         cardCopy.name = cardCopy.name.Replace("(Clone)", "(Placeholder)");
 
         CardModel copyModel = cardCopy.GetComponent<CardModel>();
-        copyModel._makesCopyOnDrag = false;
-        copyModel._representedCard = this._representedCard;
+        copyModel.RepresentedCard = this.RepresentedCard;
+        copyModel.MakesCopyOnDrag = false;
+        if (!MakesCopyOnDrag)
+            copyModel.DoubleClickEvent = this.DoubleClickEvent;
 
         CanvasGroup placeHolderCanvasGroup = cardCopy.transform.GetOrAddComponent<CanvasGroup>();
         placeHolderCanvasGroup.alpha = 0;
         placeHolderCanvasGroup.blocksRaycasts = false;
 
-        _placeHolder = cardCopy.transform;
-        UpdatePlaceHolderPosition();
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if (eventData == null) {
-            Debug.LogError("Dragging " + gameObject.name + ", but the eventData was null!");
-            return;
-        }
-
-        Vector2 targetPos = eventData.position + _dragOffset;
-        if (_draggedCopy != null)
-            _draggedCopy.transform.position = targetPos;
-        else
-            this.transform.position = targetPos;
-        
+        _placeHolder = cardCopy.transform as RectTransform;
         UpdatePlaceHolderPosition();
     }
 
@@ -198,8 +179,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             return;
 
         Vector2 targetPos = this.transform.position;
-        if (_draggedCopy != null)
-            targetPos = _draggedCopy.transform.position;
+        if (DraggedCopy != null)
+            targetPos = DraggedCopy.transform.position;
 
         // TODO: ALLOW HORIZONTAL VS VERTICAL STACKING OF CARDS
         int newSiblingIndex = _placeHolder.parent.childCount;
@@ -224,46 +205,78 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         _placeHolder = null;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public void Highlight()
     {
-        // TODO: MOVE TO PLACEHOLDER THROUGH ANIMATION, INSTEAD OF TELEPORTING
-        Debug.Log("Stopped dragging " + gameObject.name);
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
-        
-        if (_placeHolder != null) {
-            Debug.Log(gameObject.name + " had a placeholder, so enabling it before we destroy what was dragged");
-            CanvasGroup placeHolderCanvasGroup = _placeHolder.GetOrAddComponent<CanvasGroup>();
-            placeHolderCanvasGroup.alpha = 1;
-            placeHolderCanvasGroup.blocksRaycasts = true;
-            _placeHolder.name = _placeHolder.name.Replace("(Placeholder)", "");
-        }
+        Outline outline = this.transform.GetOrAddComponent<Outline>();
+        outline.effectColor = Color.green;
+        outline.effectDistance = new Vector2(10, 10);
+    }
 
-        if (_draggedCopy != null) {
-            Debug.Log("Destroying dragged copy of " + gameObject.name);
-            Destroy(_draggedCopy);
-            _draggedCopy = null;
-            _placeHolder = null;
-        } else {
-            Debug.Log("Destroying moved card " + gameObject.name);
-            Destroy(this.gameObject);
-        }
+    public void UnHighlight()
+    {
+        Outline outline = this.transform.GetOrAddComponent<Outline>();
+        outline.effectColor = Color.black;
+        outline.effectDistance = new Vector2(0, 0);
+    }
+
+    public IEnumerator UpdateImage()
+    {
+        Sprite imageToShow = CardGameManager.Current.CardBackImage;
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.LoadOrGetImage(RepresentedCard.ImageFilePath, RepresentedCard.ImageWebURL), (output) => imageToShow = output);
+        Image.sprite = imageToShow;
     }
 
     public Card RepresentedCard {
         get {
+            if (_representedCard == null)
+                _representedCard = new Card("", "", "", new Dictionary<string, PropertySet>());
             return _representedCard;
+        }
+        set {
+            _representedCard = value;
+            if (_representedCard == null) {
+                Debug.LogWarning("Attempted to set a card model as a null card! Defaulting to a blank card");
+                _representedCard = new Card("", "", "", new Dictionary<string, PropertySet>());
+            }
+            this.gameObject.name = _representedCard.Name + " [" + _representedCard.Id + "]";
+            Image.sprite = CardGameManager.Current.CardBackImage;
+            StartCoroutine(UpdateImage());
         }
     }
 
-    public bool MakesCopyOnDrag {
+    public RectTransform PlaceHolder {
         get {
-            return _makesCopyOnDrag;
+            return _placeHolder;
+        }
+        set {
+            _placeHolder = value;
         }
     }
 
     public bool HasPlaceHolder {
         get { 
             return _placeHolder != null; 
+        }
+    }
+
+    public BaseEventData RecentEventData {
+        get {
+            if (_recentEventData == null) {
+                Debug.LogWarning("Attempted to access recent event data for " + this.gameObject.name + ", but it was null! Using a default eventData");
+                _recentEventData = new BaseEventData(EventSystem.current);
+            }
+            return _recentEventData;
+        }
+        set {
+            _recentEventData = value;
+        }
+    }
+
+    public Image Image {
+        get {
+            if (_image == null)
+                _image = GetComponent<Image>();
+            return _image;
         }
     }
 }

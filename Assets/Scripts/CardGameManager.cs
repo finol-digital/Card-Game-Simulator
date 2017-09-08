@@ -11,6 +11,8 @@ public delegate void CardGameSelectedDelegate();
 
 public class CardGameManager : MonoBehaviour
 {
+    public const string QuitPrompt = "Quit?";
+
     public string CurrentGameName { get; set; }
 
     public GameObject PopupPrefab;
@@ -35,7 +37,10 @@ public class CardGameManager : MonoBehaviour
         Debug.Log("Card Game Manager is initializing");
         if (!Directory.Exists(GamesFilePathBase))
             Directory.CreateDirectory(GamesFilePathBase);
-        CardGame defaultGame = new CardGame("DEFAULT", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1bTdtQTZzTWZHZ0E");
+        CardGame defaultGame;
+        defaultGame = new CardGame("HS", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1b0d5WGFJb195UTg");
+        AllCardGames [defaultGame.Name] = defaultGame;
+        defaultGame = new CardGame("DB", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1bTdtQTZzTWZHZ0E");
         AllCardGames [defaultGame.Name] = defaultGame;
 
         Debug.Log("Card Game Manager is reading the card games directory");
@@ -84,7 +89,6 @@ public class CardGameManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Selecting the card game: " + name);
         CurrentGameName = name;
         BackgroundImage.sprite = Current.BackgroundImage;
         CardInfoViewer.Instance.UpdatePropertyOptions();
@@ -100,6 +104,11 @@ public class CardGameManager : MonoBehaviour
     public void PromptAction(string message, UnityAction action)
     {
         Popup.Prompt(message, action);
+    }
+
+    public void PromptForQuit()
+    {
+        Popup.Prompt(QuitPrompt, Quit);
     }
 
     public void Quit()
@@ -164,7 +173,7 @@ public class CardGameManager : MonoBehaviour
     public Popup Popup {
         get {
             if (_popup == null)
-                _popup = Instantiate(PopupPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<Popup>();
+                _popup = Instantiate(PopupPrefab, GameObject.FindGameObjectWithTag("Canvas").transform).transform.GetOrAddComponent<Popup>();
             return _popup;
         }
     }

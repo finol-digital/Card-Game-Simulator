@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public delegate string DeckNameChangeDelegate(string newName);
 
@@ -45,6 +46,9 @@ public class DeckEditor : MonoBehaviour
             return;
         }
 
+        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
+        EventSystem.current.SetSelectedGameObject(CardInfoViewer.Instance.gameObject, cardToAdd.RecentEventData);
+        CardInfoViewer.Instance.IsVisible = false;
         AddCard(cardToAdd.RepresentedCard);
     }
 
@@ -56,17 +60,22 @@ public class DeckEditor : MonoBehaviour
         }
 
         Debug.Log("Adding to the deck editor: " + cardToAdd.Name);
-        CardInfoViewer.Instance.DeselectCard();
         // TODO: KEEP TRACK OF PREVIOUSLY USED STACK, AND ADD TO THE LAST STACK; WHEN ADDED, MOVE THE VIEW SO THAT THE ADDED CARD IS VISIBLE
         foreach (CardStack stack in _cardStacks) {
             if (stack.transform.childCount < CardGameManager.Current.CopiesOfCardPerDeck) {
                 GameObject cardCopy = Instantiate(cardModelPrefab, stack.transform);
                 CardModel copyModel = cardCopy.transform.GetOrAddComponent<CardModel>();
-                copyModel.SetAsCard(cardToAdd, false, (cardModel) => GameObject.Destroy(cardModel.gameObject));
+                copyModel.SetAsCard(cardToAdd, false, DestroyCardModel);
                 return;
             }
         }
         Debug.LogWarning("Failed to find an open stack to which we could add a card! Card not added.");
+    }
+
+    public void DestroyCardModel(CardModel cardModel)
+    {
+        GameObject.Destroy(cardModel.gameObject);
+        CardInfoViewer.Instance.IsVisible = false;
     }
 
     public void PromptForClear()

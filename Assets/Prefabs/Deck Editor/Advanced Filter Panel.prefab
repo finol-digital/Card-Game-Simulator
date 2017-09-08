@@ -349,6 +349,7 @@ GameObject:
   - component: {fileID: 114987368504551142}
   - component: {fileID: 114660945098118320}
   - component: {fileID: 114080144798801376}
+  - component: {fileID: 114031179829660240}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -753,6 +754,17 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114031179829660240
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1378553552454896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114039638862655992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3435,7 +3447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000024288893}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 600}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224721227715299704

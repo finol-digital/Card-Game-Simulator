@@ -14,6 +14,7 @@ public class CardGame
     public const string AllCardsFileName = "AllCards.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
+    public const string DefaultCardImageFileNameFormat = "{0}";
     public const int DefaultCopiesOfCardPerDeck = 4;
     public const int DefaultDeckCardStackCount = 15;
     public const string DefaultDeckFileType = "txt";
@@ -53,6 +54,9 @@ public class CardGame
 
     [JsonProperty]
     public string CardIdIdentifier { get; set; }
+
+    [JsonProperty]
+    public string CardImageFileNameFormat { get; set; }
 
     [JsonProperty]
     public string CardImageType { get; set; }
@@ -105,6 +109,7 @@ public class CardGame
 
         BackgroundImageType = DefaultImageFileType;
         CardBackImageType = DefaultImageFileType;
+        CardImageFileNameFormat = DefaultCardImageFileNameFormat;
         CardImageType = DefaultImageFileType;
         CardIdIdentifier = "id";
         CardNameIdentifier = "name";

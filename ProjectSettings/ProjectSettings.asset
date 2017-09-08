@@ -116,11 +116,11 @@ PlayerSettings:
   wiiUAllowScreenCapture: 1
   wiiUControllerCount: 0
   m_SupportedAspectRatios:
-    4:3: 1
-    5:4: 1
+    4:3: 0
+    5:4: 0
     16:10: 1
-    16:9: 1
-    Others: 1
+    16:9: 0
+    Others: 0
   bundleVersion: 1.0
   preloadedAssets: []
   metroInputSource: 0
@@ -142,6 +142,7 @@ PlayerSettings:
   resolutionScalingMode: 0
   applicationIdentifier:
     Android: com.finoldigital.cardgamesim
+    Standalone: com.FinolDigital.CardGameSim
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 16
@@ -511,6 +512,7 @@ PlayerSettings:
   scriptingRuntimeVersion: 0
   apiCompatibilityLevelPerPlatform:
     Android: 1
+    Standalone: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Card Game Simulator

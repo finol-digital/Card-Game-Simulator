@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 public class Card
 {
@@ -31,59 +29,33 @@ public class Card
         }
         return ret;
     }
-}
 
-public class PropertySet : ICloneable
-{
-    public PropertyDef Key { get; set; }
-
-    public PropertyDefValue Value { get; set; }
-
-    public object Clone()
+    public string StripNameToLowerAlphaNum()
     {
-        var ret = new PropertySet() {
-            Key = this.Key.Clone() as PropertyDef,
-            Value = this.Value.Clone() as PropertyDefValue
-        };
-        return ret;
+        char[] cardNameAlphaNum = Name.Where(c => (char.IsLetterOrDigit(c) ||
+                                  char.IsWhiteSpace(c) ||
+                                  c == '-')).ToArray(); 
+        string cardImageName = new string(cardNameAlphaNum);
+        cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
+        return cardImageName;
     }
-}
-
-public enum PropertyType
-{
-    String,
-    Integer,
-};
-
-[JsonObject(MemberSerialization.OptIn)]
-public class PropertyDef : ICloneable
-{
-    [JsonProperty]
-    public string Name { get; set; }
-
-    [JsonProperty]
-    public PropertyType Type { get; set; }
-
-    public object Clone()
-    {
-        var ret = new PropertyDef() { Name = this.Name, Type = this.Type  };
-        return ret;
-    }
-}
-
-public class PropertyDefValue : ICloneable
-{
-    public string Value { get; set; }
-
-    public object Clone()
-    {
-        var ret = new PropertyDefValue() { Value = this.Value };
-        return ret;
+    // TODO: BETTER MANAGEMENT OF GETTING IMAGEFILENAME
+    public string ImageFileName {
+        get { 
+            return UnityExtensionMethods.GetSafeFilename(string.Format(CardGameManager.Current.CardImageFileNameFormat, Id, Name, SetCode, StripNameToLowerAlphaNum()) + "." + CardGameManager.Current.CardImageType);
+        }
     }
 
-    public override string ToString()
-    {
-        return Value.ToString();
+    public string ImageFilePath {
+        get { 
+            return UnityExtensionMethods.GetSafeFilepath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
+        }
+    }
+
+    public string ImageWebURL {
+        get { 
+            return CardGameManager.Current.CardImageURLBase + ImageFileName;
+        }
     }
 
 }

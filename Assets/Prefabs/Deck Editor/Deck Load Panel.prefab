@@ -791,6 +791,7 @@ GameObject:
   - component: {fileID: 114725835172907270}
   - component: {fileID: 114664229239748096}
   - component: {fileID: 114425240451040134}
+  - component: {fileID: 114701627831801526}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -846,6 +847,7 @@ GameObject:
   - component: {fileID: 114717449279067094}
   - component: {fileID: 114735257877527724}
   - component: {fileID: 114711630951480728}
+  - component: {fileID: 114644453172670452}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -2342,6 +2344,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+--- !u!114 &114644453172670452
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1843305298439102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114659648526345954
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2487,6 +2500,17 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
+--- !u!114 &114701627831801526
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1785256979557912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114711630951480728
 MonoBehaviour:
   m_ObjectHideFlags: 1

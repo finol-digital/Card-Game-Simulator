@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114762617553072466}
   - component: {fileID: 114265690314161124}
   - component: {fileID: 114184757247659530}
+  - component: {fileID: 114550195393035232}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -413,6 +414,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114550195393035232
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1406401209886262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114762617553072466
 MonoBehaviour:
   m_ObjectHideFlags: 1

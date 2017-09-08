@@ -12,6 +12,9 @@ public class Popup : MonoBehaviour
 
     public void Show(string message)
     {
+        if (this.gameObject.activeSelf)
+            Debug.LogWarning("Showing a message when a message is already being shown! Previous message will be overwritten");
+
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
         messageText.text = message;

@@ -30,12 +30,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void UpdatePropertyOptions()
     {
-        Debug.Log("Card Info viewer is setting the property options");
         PropertyOptions.Clear();
         foreach (PropertyDef propDef in CardGameManager.Current.CardProperties) {
-            if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
-                SelectedPropertyIndex = PropertyOptions.Count;
             PropertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
+            if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
+                SelectedPropertyIndex = PropertyOptions.Count - 1;
         }
         propertySelection.options = PropertyOptions;
         propertySelection.value = SelectedPropertyIndex;
@@ -43,33 +42,21 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Clicked on and therefore selecting Card Info");
-        EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+        EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        Debug.Log("Selected Card Info");
         IsVisible = true;
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        Debug.Log("Deselected Card Info");
-        DeselectCard();
-    }
-
-    public void DeselectCard()
-    {
-        Debug.Log("Deselected Card in Info Viewer");
-        if (SelectedCardModel != null && !EventSystem.current.alreadySelecting)
-            EventSystem.current.SetSelectedGameObject(this.gameObject);
         IsVisible = false;
     }
 
     public void ShowCardZoomed()
     {
-        Debug.Log("Showing zoomed image of card");
         CardZoomPanel.gameObject.SetActive(true);
         CardZoomPanel.GetChild(0).GetComponent<Image>().sprite = cardImage.sprite;
     }
@@ -148,23 +135,24 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             return _selectedCardModel;
         }
         set {
-            if (value == null)
-                return;
+            if (_selectedCardModel != null)
+                _selectedCardModel.UnHighlight();
+            
+            _selectedCardModel = value;
 
-            Sprite sprite;
-            CardImageRepository.TryGetCachedCardImage(value.RepresentedCard, out sprite);
-            cardImage.sprite = sprite;
+            if (_selectedCardModel == null) {
+                IsVisible = false;
+                return;
+            }
+            IsVisible = true;
+            cardImage.sprite = _selectedCardModel.Image.sprite;
             nameContent.text = value.RepresentedCard.Name;
             idContent.text = value.RepresentedCard.Id;
-
             PropertySet prop;
             if (value.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out prop))
                 textContent.text = prop.Value.Value;
             else
                 textContent.text = "";
-
-            _selectedCardModel = value;
-            IsVisible = true;
         }
     }
 
@@ -173,13 +161,13 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             return _isVisible;
         }
         set {
+            _isVisible = value;
             if (SelectedCardModel != null) {
-                if (value)
+                if (_isVisible)
                     SelectedCardModel.Highlight();
                 else
                     SelectedCardModel.UnHighlight();
             }
-            _isVisible = value;
         }
     }
 }

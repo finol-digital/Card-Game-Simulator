@@ -17,14 +17,14 @@ public class CardSearcher : MonoBehaviour
     public DeckEditor deckEditor;
     public RectTransform advancedSearchFilterMenu;
     public RectTransform filterContentView;
+    public RectTransform nameProperty;
+    public RectTransform idProperty;
+    public RectTransform setProperty;
     public RectTransform propertyTemplate;
     public RectTransform resultsPanel;
     public Text resultsCountText;
 
-    private Transform _cardModelStaging;
-    private Dictionary<string, CardModel> _allCardModels;
     private List<Card> _searchResults;
-    private int _resultsPanelSize;
     private int _resultsIndex;
     private Dictionary<string, string> _propertyFilters;
 
@@ -39,9 +39,19 @@ public class CardSearcher : MonoBehaviour
     public void UpdateCardSearcher()
     {
         Debug.Log("Building the Advanced Search Filter Menu");
+        propertyTemplate.gameObject.SetActive(true);
+        nameProperty.SetParent(advancedSearchFilterMenu);
+        idProperty.SetParent(advancedSearchFilterMenu);
+        setProperty.SetParent(advancedSearchFilterMenu);
+        propertyTemplate.SetParent(advancedSearchFilterMenu);
+        filterContentView.DestroyAllChildren();
+        nameProperty.SetParent(filterContentView);
+        idProperty.SetParent(filterContentView);
+        setProperty.SetParent(filterContentView);
+        propertyTemplate.SetParent(filterContentView);
         Vector2 pos = propertyTemplate.localPosition;
         foreach (PropertyDef prop in CardGameManager.Current.CardProperties) {
-            GameObject newProp = Instantiate(propertyTemplate.gameObject, propertyTemplate.position, propertyTemplate.rotation, propertyTemplate.parent) as GameObject;
+            GameObject newProp = Instantiate(propertyTemplate.gameObject, propertyTemplate.position, propertyTemplate.rotation, filterContentView) as GameObject;
             newProp.transform.localPosition = pos;
             PropertyEditor editor = newProp.GetComponent<PropertyEditor>();
             editor.nameLabel.text = prop.Name;
@@ -72,12 +82,6 @@ public class CardSearcher : MonoBehaviour
 
     public void Search()
     {
-        Debug.Log("Searching with id " + idFilter + ", name " + nameFilter + ", setCode " + setCodeFilter);
-        string debugFilters = "Search property filters: ";
-        foreach (KeyValuePair<string, string> entry in PropertyFilters)
-            debugFilters += entry.Key + ": " + entry.Value + "; ";
-        Debug.Log(debugFilters);
-
         SearchResults.Clear();
         _resultsIndex = 0;
         IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(idFilter, nameFilter, setCodeFilter, PropertyFilters);
@@ -104,22 +108,13 @@ public class CardSearcher : MonoBehaviour
 
     public void UpdateSearchResultsPanel()
     {
-        for (int i = resultsPanel.childCount - 1; i >= 0; i--) {
-            resultsPanel.GetChild(i).SetParent(CardModelStaging);
-        }
+        resultsPanel.DestroyAllChildren();
 
         for (int i = 0; i < ResultsPanelSize && _resultsIndex >= 0 && _resultsIndex * ResultsPanelSize + i < SearchResults.Count; i++) {
             string cardId = SearchResults [_resultsIndex * ResultsPanelSize + i].Id;
-
-            CardModel cardModelToShow;
-            if (!AllCardModels.TryGetValue(cardId, out cardModelToShow)) {
-                Debug.Log("Creating Card Model for " + cardId);
-                Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).FirstOrDefault();
-                cardModelToShow = Instantiate(cardPrefab, resultsPanel).transform.GetOrAddComponent<CardModel>();
-                cardModelToShow.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCard));
-            }
-            cardModelToShow.transform.SetParent(resultsPanel);
-            AllCardModels [cardId] = cardModelToShow;
+            Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).FirstOrDefault();
+            CardModel cardModelToShow = Instantiate(cardPrefab, resultsPanel).transform.GetOrAddComponent<CardModel>();
+            cardModelToShow.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCard));
         }
 
         resultsCountText.text = (_resultsIndex + 1) + " / " + (ResultRowCount + 1);
@@ -138,27 +133,9 @@ public class CardSearcher : MonoBehaviour
 
     void Update()
     {
-        if (advancedSearchFilterMenu.gameObject.activeInHierarchy && Input.GetKeyDown(KeyCode.Return)) {
+        if (advancedSearchFilterMenu.gameObject.activeSelf && Input.GetButtonDown("Submit")) {
             Search();
             HideAdvancedFilterPanel();
-        }
-    }
-
-    public Transform CardModelStaging {
-        get {
-            if (_cardModelStaging == null) {
-                GameObject go = new GameObject("Card Model Staging");
-                _cardModelStaging = go.transform;
-            }
-            return _cardModelStaging;
-        }
-    }
-
-    public Dictionary<string, CardModel> AllCardModels {
-        get {
-            if (_allCardModels == null)
-                _allCardModels = new Dictionary<string, CardModel>();
-            return _allCardModels;
         }
     }
 
@@ -172,9 +149,7 @@ public class CardSearcher : MonoBehaviour
 
     public int ResultsPanelSize {
         get {
-            if (_resultsPanelSize == 0)
-                _resultsPanelSize = Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + (resultsPanel.GetOrAddComponent<HorizontalLayoutGroup>().spacing / 2)));
-            return _resultsPanelSize;
+            return Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + (resultsPanel.GetOrAddComponent<HorizontalLayoutGroup>().spacing / 2)));
         }
     }
 

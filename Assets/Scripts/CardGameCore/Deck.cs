@@ -11,7 +11,7 @@ public class Deck
 
     public Deck(string name, string definition = "")
     {
-        Name = name;
+        Name = name.Clone() as string;
         Cards = new List<Card>();
         FromString(definition);
     }
