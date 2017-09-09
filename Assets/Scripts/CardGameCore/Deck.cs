@@ -56,7 +56,7 @@ public class Deck
 
     public string FilePath {
         get {
-            return CardGameManager.Current.DecksFilePath + "/" + Name + "." + CardGameManager.Current.DeckFileType;
+            return CardGameManager.Current.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + CardGameManager.Current.DeckFileType);
         }
     }
 }

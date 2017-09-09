@@ -6,10 +6,8 @@ using UnityEngine;
 
 static public class UnityExtensionMethods
 {
-    static public T FindInParents<T>(GameObject go) where T : Component
+    static public T FindInParents<T>(this GameObject go) where T : Component
     {
-        if (go == null)
-            return null;
         var comp = go.GetComponent<T>();
 
         if (comp != null)
@@ -23,11 +21,11 @@ static public class UnityExtensionMethods
         return comp;
     }
 
-    static public T GetOrAddComponent<T>(this Component child) where T: Component
+    static public T GetOrAddComponent<T>(this GameObject go) where T: Component
     {
-        T result = child.GetComponent<T>();
+        T result = go.GetComponent<T>();
         if (result == null) {
-            result = child.gameObject.AddComponent<T>();
+            result = go.AddComponent<T>();
         }
         return result;
     }
@@ -41,37 +39,42 @@ static public class UnityExtensionMethods
         }
     }
 
-    static public IEnumerator RunOutputCoroutine<T>(IEnumerator target, Action<T> output) where T : class
+    public static IEnumerator SaveURLToFile(string url, string filePath)
+    {
+        WWW loader = new WWW(url);
+        yield return loader;
+        if (!string.IsNullOrEmpty(loader.error)) {
+            Debug.LogError("Failed to load from " + url + ", error: " + loader.error);
+            yield break;
+        }
+
+        string directory = GetSafeFilePath(ExtractDirectory(filePath));
+        string fileName = GetSafeFileName(ExtractFileName(filePath));
+        if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName)) {
+            Debug.LogError("Could not save to " + filePath + ", as it is an improperly formed path");
+            yield break;
+        }
+
+        if (!Directory.Exists(directory))
+            Directory.CreateDirectory(directory);
+        File.WriteAllBytes(directory + "/" + fileName, loader.bytes);
+    }
+
+    public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
     {
         object result = null;
-        while (target.MoveNext()) {
-            result = target.Current;
+        while (coroutine.MoveNext()) {
+            result = coroutine.Current;
             yield return result;
         }
         output(result as T);
     }
 
-    static public IEnumerator SaveURLToFile(string url, string filePath)
-    {
-        Debug.Log("Saving from " + url + " to " + filePath);
-        WWW loader = new WWW(url);
-        yield return loader;
-
-        string directory = filePath.Substring(0, filePath.LastIndexOf('/'));
-        if (!Directory.Exists(directory))
-            Directory.CreateDirectory(directory);
-
-        if (string.IsNullOrEmpty(loader.error))
-            File.WriteAllBytes(filePath, loader.bytes);
-        else
-            Debug.LogWarning("Failed to save from " + url + " to " + filePath + ", error: " + loader.error);
-    }
-
-    static public IEnumerator LoadOrGetImage(string imageFilePath, string backUpImageURL)
+    public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageFilePath, string backUpImageURL = null)
     {
         if (!File.Exists(imageFilePath)) {
             if (string.IsNullOrEmpty(backUpImageURL)) {
-                Debug.Log("Image file does not exist, and no backup URL is defined, so the image will not be updated");
+                Debug.LogWarning("Image file does not exist, and no backup URL is defined, so the sprite will not be updated");
                 yield break;
             }
             yield return UnityExtensionMethods.SaveURLToFile(backUpImageURL, imageFilePath);
@@ -79,19 +82,43 @@ static public class UnityExtensionMethods
 
         WWW imageFileLoader = new WWW("file://" + imageFilePath);
         yield return imageFileLoader;
-        if (string.IsNullOrEmpty(imageFileLoader.error))
-            yield return Sprite.Create(imageFileLoader.texture, new Rect(0, 0, imageFileLoader.texture.width, imageFileLoader.texture.height), new Vector2(0.5f, 0.5f));
-        else
-            Debug.LogWarning("Failed to load image from " + imageFilePath + ", error: " + imageFileLoader.error);
+
+        if (string.IsNullOrEmpty(imageFileLoader.error)) {
+            Texture2D newTexture = imageFileLoader.texture;
+            yield return Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
+        } else {
+            Debug.LogWarning("Failed to load image: " + imageFileLoader.error);
+            yield return null;
+        }
     }
 
-    static public string GetSafeFilepath(string filepath)
+    public static string ExtractDirectory(string filePath)
     {
-        return string.Join("_", filepath.Split(Path.GetInvalidPathChars()));
+        int position = filePath.LastIndexOf('/');
+        if (position == -1)
+            return String.Empty;
+        return filePath.Substring(0, position);
     }
 
-    static public string GetSafeFilename(string filename)
+    public static string ExtractFileName(string filePath)
     {
-        return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
+        if (filePath.Trim().EndsWith("/"))
+            return String.Empty;
+        
+        int position = filePath.LastIndexOf('/');
+        if (position == -1)
+            return filePath;
+        
+        return filePath.Substring(position + 1);
+    }
+
+    public static string GetSafeFilePath(string filePath)
+    {
+        return string.Join("_", filePath.Split(Path.GetInvalidPathChars()));
+    }
+
+    public static string GetSafeFileName(string fileName)
+    {
+        return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
     }
 }

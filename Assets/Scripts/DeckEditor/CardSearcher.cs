@@ -30,15 +30,14 @@ public class CardSearcher : MonoBehaviour
 
     void Start()
     {
-        nameFilter = "";
-        idFilter = "";
-        setCodeFilter = "";
+        nameFilter = string.Empty;
+        idFilter = string.Empty;
+        setCodeFilter = string.Empty;
         CardGameManager.Instance.AddOnSelectAction(UpdateCardSearcher);
     }
 
     public void UpdateCardSearcher()
     {
-        Debug.Log("Building the Advanced Search Filter Menu");
         propertyTemplate.gameObject.SetActive(true);
         nameProperty.SetParent(advancedSearchFilterMenu);
         idProperty.SetParent(advancedSearchFilterMenu);
@@ -63,7 +62,6 @@ public class CardSearcher : MonoBehaviour
         propertyTemplate.gameObject.SetActive(false);
         filterContentView.sizeDelta = new Vector2(filterContentView.sizeDelta.x, propertyTemplate.rect.height * CardGameManager.Current.CardProperties.Count + propertyTemplate.rect.height * 3);
 
-        Debug.Log("Showing all cards in the search results");
         ClearFilters();
         Search();
     }
@@ -76,7 +74,7 @@ public class CardSearcher : MonoBehaviour
     public void ClearFilters()
     {
         foreach (InputField input in advancedSearchFilterMenu.GetComponentsInChildren<InputField>())
-            input.text = "";
+            input.text = string.Empty;
         PropertyFilters.Clear();
     }
 
@@ -113,8 +111,10 @@ public class CardSearcher : MonoBehaviour
         for (int i = 0; i < ResultsPanelSize && _resultsIndex >= 0 && _resultsIndex * ResultsPanelSize + i < SearchResults.Count; i++) {
             string cardId = SearchResults [_resultsIndex * ResultsPanelSize + i].Id;
             Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).FirstOrDefault();
-            CardModel cardModelToShow = Instantiate(cardPrefab, resultsPanel).transform.GetOrAddComponent<CardModel>();
-            cardModelToShow.SetAsCard(cardToShow, true, new OnDoubleClickDelegate(deckEditor.AddCard));
+            CardModel cardModelToShow = Instantiate(cardPrefab, resultsPanel).GetOrAddComponent<CardModel>();
+            cardModelToShow.RepresentedCard = cardToShow;
+            cardModelToShow.ClonesOnDrag = true;
+            cardModelToShow.DoubleClickEvent = new OnDoubleClickDelegate(deckEditor.AddCard);
         }
 
         resultsCountText.text = (_resultsIndex + 1) + " / " + (ResultRowCount + 1);
@@ -149,7 +149,7 @@ public class CardSearcher : MonoBehaviour
 
     public int ResultsPanelSize {
         get {
-            return Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + (resultsPanel.GetOrAddComponent<HorizontalLayoutGroup>().spacing / 2)));
+            return Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + (resultsPanel.gameObject.GetOrAddComponent<HorizontalLayoutGroup>().spacing)));
         }
     }
 

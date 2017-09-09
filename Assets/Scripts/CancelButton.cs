@@ -34,7 +34,7 @@ public class CancelButton : MonoBehaviour
     public bool IsPressable {
         get {
             if (_rayCaster == null)
-                _rayCaster = UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).GetComponent<GraphicRaycaster>();
+                _rayCaster = this.gameObject.FindInParents<Canvas>().GetComponent<GraphicRaycaster>();
             PointerEventData ped = new PointerEventData(null);
             ped.position = Button.transform.position;
             List<RaycastResult> results = new List<RaycastResult>();

@@ -218,7 +218,7 @@ GameObject:
   - component: {fileID: 114907125262127128}
   - component: {fileID: 114242451839019834}
   m_Layer: 5
-  m_Name: Deck Save Panel
+  m_Name: Deck Save Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

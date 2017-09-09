@@ -42,13 +42,13 @@ public class Card
     // TODO: BETTER MANAGEMENT OF GETTING IMAGEFILENAME
     public string ImageFileName {
         get { 
-            return UnityExtensionMethods.GetSafeFilename(string.Format(CardGameManager.Current.CardImageFileNameFormat, Id, Name, SetCode, StripNameToLowerAlphaNum()) + "." + CardGameManager.Current.CardImageType);
+            return UnityExtensionMethods.GetSafeFileName(string.Format(CardGameManager.Current.CardImageFileNameFormat, Id, Name, SetCode, StripNameToLowerAlphaNum()) + "." + CardGameManager.Current.CardImageFileType);
         }
     }
 
     public string ImageFilePath {
         get { 
-            return UnityExtensionMethods.GetSafeFilepath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
+            return UnityExtensionMethods.GetSafeFilePath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
         }
     }
 

@@ -11,24 +11,20 @@ public class CardInfoSelectable : MonoBehaviour, IPointerDownHandler, ISelectHan
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Clicked on and therefore selecting Card info component " + gameObject.name);
         EventSystem.current.SetSelectedGameObject(gameObject, eventData);
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        Debug.Log("Selected Card info component " + gameObject.name);
         CardInfoViewer.Instance.IsVisible = true;
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         if (!checkDeselect) {
-            Debug.Log("Deselected " + gameObject.name + ", but it does not check deselect, so ignoring");
             return;
         }
 
-        Debug.Log("Deselected Card info component " + gameObject.name);
         CardInfoViewer.Instance.IsVisible = false;
     }
     

@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
+    public OnDoubleClickDelegate ActionForCardOnDoubleClick { get; set; }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (eventData.pointerDrag == null)
@@ -24,7 +26,22 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
         if (cardModel != null) {
-            cardModel.RemovePlaceHolder();
+            cardModel.PlaceHolder = null;
+        }
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (eventData.pointerDrag == null)
+            return;
+        
+        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
+        if (cardModel != null) {
+            CardModel draggedCardModel;
+            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+                draggedCardModel.DoubleClickEvent = ActionForCardOnDoubleClick;
+            else
+                cardModel.DoubleClickEvent = ActionForCardOnDoubleClick;
         }
     }
 

@@ -7,4 +7,9 @@ public class Set
 
     public string Name { get; set; }
 
+    public Set(string code, string name)
+    {
+        Code = code.Clone() as string;
+        Name = name.Clone() as string;
+    }
 }

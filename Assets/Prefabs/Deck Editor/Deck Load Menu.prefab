@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 114515367326722700}
   - component: {fileID: 114007050681300680}
   m_Layer: 5
-  m_Name: Deck Load Panel
+  m_Name: Deck Load Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 222631724752937954}
   - component: {fileID: 114062300179596830}
   - component: {fileID: 225568299236548108}
-  - component: {fileID: 114835859699800120}
   - component: {fileID: 114870730626564982}
+  - component: {fileID: 114835859699800120}
   m_Layer: 5
   m_Name: Card Model
   m_TagString: Untagged
@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da0cfd7bd166ba43bf3e99b8d74f2e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 500
 --- !u!114 &114870730626564982
 MonoBehaviour:
   m_ObjectHideFlags: 1

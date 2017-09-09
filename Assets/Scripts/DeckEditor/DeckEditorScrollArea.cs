@@ -15,7 +15,7 @@ public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointe
 
     void Start()
     {
-        _canvasGroup = transform.GetOrAddComponent<CanvasGroup>();
+        _canvasGroup = this.gameObject.GetOrAddComponent<CanvasGroup>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

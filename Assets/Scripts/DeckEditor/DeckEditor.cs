@@ -29,12 +29,14 @@ public class DeckEditor : MonoBehaviour
 
     public void UpdateDeckEditor()
     {
-        Debug.Log("Creating card stacks in the deck editor");
+        Clear();
         deckEditorContent.DestroyAllChildren();
+        CardStacks.Clear();
         int numCardStacks = CardGameManager.Current.DeckCardStackCount;
         for (int i = 0; i < numCardStacks; i++) {
-            GameObject newCardStack = Instantiate(cardStackPrefab, deckEditorContent);
-            CardStacks.Add(newCardStack.transform.GetOrAddComponent<CardStack>());
+            CardStack newCardStack = Instantiate(cardStackPrefab, deckEditorContent).GetOrAddComponent<CardStack>();
+            newCardStack.ActionForCardOnDoubleClick = DestroyCardModel;
+            CardStacks.Add(newCardStack);
         }
         deckEditorContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * numCardStacks, deckEditorContent.sizeDelta.y);
     }
@@ -47,7 +49,7 @@ public class DeckEditor : MonoBehaviour
         }
 
         // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
-        EventSystem.current.SetSelectedGameObject(CardInfoViewer.Instance.gameObject, cardToAdd.RecentEventData);
+        EventSystem.current.SetSelectedGameObject(CardInfoViewer.Instance.gameObject, cardToAdd.RecentPointerEventData);
         CardInfoViewer.Instance.IsVisible = false;
         AddCard(cardToAdd.RepresentedCard);
     }
@@ -61,11 +63,11 @@ public class DeckEditor : MonoBehaviour
 
         Debug.Log("Adding to the deck editor: " + cardToAdd.Name);
         // TODO: KEEP TRACK OF PREVIOUSLY USED STACK, AND ADD TO THE LAST STACK; WHEN ADDED, MOVE THE VIEW SO THAT THE ADDED CARD IS VISIBLE
-        foreach (CardStack stack in _cardStacks) {
+        foreach (CardStack stack in CardStacks) {
             if (stack.transform.childCount < CardGameManager.Current.CopiesOfCardPerDeck) {
-                GameObject cardCopy = Instantiate(cardModelPrefab, stack.transform);
-                CardModel copyModel = cardCopy.transform.GetOrAddComponent<CardModel>();
-                copyModel.SetAsCard(cardToAdd, false, DestroyCardModel);
+                CardModel newCardModel = Instantiate(cardModelPrefab, stack.transform).GetOrAddComponent<CardModel>();
+                newCardModel.RepresentedCard = cardToAdd;
+                newCardModel.DoubleClickEvent = DestroyCardModel;
                 return;
             }
         }
@@ -85,18 +87,16 @@ public class DeckEditor : MonoBehaviour
 
     public void Clear()
     {
-        Debug.Log("Clearing the deck editor");
-        foreach (CardStack stack in _cardStacks)
+        foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
         deckEditorNameText.text = DefaultDeckName;
-        Debug.Log("Deck Editor cleared");
     }
 
     public string UpdateDeckName(string newName)
     {
         if (string.IsNullOrEmpty(newName))
             newName = DefaultDeckName;
-        deckEditorNameText.text = UnityExtensionMethods.GetSafeFilename(newName);
+        deckEditorNameText.text = UnityExtensionMethods.GetSafeFileName(newName);
         return deckEditorNameText.text;
     }
 
@@ -121,7 +121,7 @@ public class DeckEditor : MonoBehaviour
     public void ShowDeckSaveMenu()
     {
         Deck deck = new Deck(deckEditorNameText.text);
-        foreach (CardStack stack in _cardStacks)
+        foreach (CardStack stack in CardStacks)
             foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
                 deck.Cards.Add(card.RepresentedCard);
         DeckSaver.Show(deck, UpdateDeckName);
@@ -138,7 +138,7 @@ public class DeckEditor : MonoBehaviour
     public DeckLoadMenu DeckLoader {
         get {
             if (_deckLoader == null)
-                _deckLoader = Instantiate(deckLoadMenuPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<DeckLoadMenu>();
+                _deckLoader = Instantiate(deckLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckLoadMenu>();
             return _deckLoader;
         }
     }
@@ -146,7 +146,7 @@ public class DeckEditor : MonoBehaviour
     public DeckSaveMenu DeckSaver {
         get {
             if (_deckSaver == null)
-                _deckSaver = Instantiate(deckSaveMenuPrefab, UnityExtensionMethods.FindInParents<Canvas>(this.gameObject).transform).transform.GetOrAddComponent<DeckSaveMenu>();
+                _deckSaver = Instantiate(deckSaveMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckSaveMenu>();
             return _deckSaver;
         }
     }

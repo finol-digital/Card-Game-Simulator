@@ -20,6 +20,7 @@ public class CardGameManager : MonoBehaviour
     private static CardGameManager _instance;
 
     private Dictionary<string, CardGame> _allCardGames;
+    private List<Dropdown.OptionData> _gameOptions;
     private List<CardGameSelectedDelegate> _onSelectActions;
     private SpriteRenderer _backgroundImage;
     private Popup _popup;
@@ -38,9 +39,9 @@ public class CardGameManager : MonoBehaviour
         if (!Directory.Exists(GamesFilePathBase))
             Directory.CreateDirectory(GamesFilePathBase);
         CardGame defaultGame;
-        defaultGame = new CardGame("HS", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1b0d5WGFJb195UTg");
-        AllCardGames [defaultGame.Name] = defaultGame;
         defaultGame = new CardGame("DB", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1bTdtQTZzTWZHZ0E");
+        AllCardGames [defaultGame.Name] = defaultGame;
+        defaultGame = new CardGame("HS", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1b0d5WGFJb195UTg");
         AllCardGames [defaultGame.Name] = defaultGame;
 
         Debug.Log("Card Game Manager is reading the card games directory");
@@ -62,18 +63,25 @@ public class CardGameManager : MonoBehaviour
             yield return null;
         }
 
-        // TODO: FIND THE SELECTOR, AND POPULATE OPTIONS; THE SELECTOR SHOULD THEN CHOOSE THE DEFAULT VALUE
-        Debug.Log("Card Game Manager is selecting the default card game");
-        IEnumerator enumerator = AllCardGames.Keys.GetEnumerator();
-        if (enumerator.MoveNext())
-            SelectCardGame((string)enumerator.Current);
-        else
-            Debug.LogError("Could not select a default card game because there are no card games loaded!");
+        UpdateGameSelection();
     }
 
-    public void AddOnSelectAction(CardGameSelectedDelegate onSelectAction)
+    // TODO: CLEAN THIS UP
+    public void UpdateGameSelection()
     {
-        OnSelectActions.Add(onSelectAction);
+        Dropdown gameSelection = GameObject.FindGameObjectWithTag("GameSelection").GetComponent<Dropdown>();
+        _gameOptions = new List<Dropdown.OptionData>();
+        foreach (string gameName in AllCardGames.Keys) {
+            _gameOptions.Add(new Dropdown.OptionData() { text = gameName });
+        }
+        gameSelection.options = _gameOptions;
+        gameSelection.value = 0;
+        SelectCardGame(0);
+    }
+
+    public void SelectCardGame(int index)
+    {
+        SelectCardGame(_gameOptions [index].text);
     }
 
     public void SelectCardGame(string name)
@@ -90,10 +98,15 @@ public class CardGameManager : MonoBehaviour
         }
 
         CurrentGameName = name;
-        BackgroundImage.sprite = Current.BackgroundImage;
+        BackgroundImage.sprite = Current.BackgroundImageSprite;
         CardInfoViewer.Instance.UpdatePropertyOptions();
         foreach (CardGameSelectedDelegate action in OnSelectActions)
             action();
+    }
+
+    public void AddOnSelectAction(CardGameSelectedDelegate onSelectAction)
+    {
+        OnSelectActions.Add(onSelectAction);
     }
 
     public void ShowMessage(string message)
@@ -165,7 +178,7 @@ public class CardGameManager : MonoBehaviour
     private SpriteRenderer BackgroundImage {
         get {
             if (_backgroundImage == null)
-                _backgroundImage = GameObject.FindGameObjectWithTag("Background").transform.GetOrAddComponent<SpriteRenderer>();
+                _backgroundImage = GameObject.FindGameObjectWithTag("Background").GetOrAddComponent<SpriteRenderer>();
             return _backgroundImage;
         }
     }
@@ -173,7 +186,7 @@ public class CardGameManager : MonoBehaviour
     public Popup Popup {
         get {
             if (_popup == null)
-                _popup = Instantiate(PopupPrefab, GameObject.FindGameObjectWithTag("Canvas").transform).transform.GetOrAddComponent<Popup>();
+                _popup = Instantiate(PopupPrefab, GameObject.FindGameObjectWithTag("Canvas").transform).GetOrAddComponent<Popup>();
             return _popup;
         }
     }
