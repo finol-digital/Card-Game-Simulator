@@ -146,7 +146,6 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 IsVisible = false;
                 return;
             }
-            IsVisible = true;
             cardImage.sprite = _selectedCardModel.Image.sprite;
             nameContent.text = value.RepresentedCard.Name;
             idContent.text = value.RepresentedCard.Id;
@@ -155,6 +154,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 textContent.text = prop.Value.Value;
             else
                 textContent.text = string.Empty;
+            IsVisible = true;
         }
     }
 

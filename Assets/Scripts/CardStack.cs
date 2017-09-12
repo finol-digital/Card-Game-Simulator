@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+public delegate void OnDropDelegate(CardStack cardStack,CardModel cardModel);
+
 public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
-    public OnDoubleClickDelegate ActionForCardOnDoubleClick { get; set; }
+    private List<OnDropDelegate> _cardAddedActions;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -15,7 +17,11 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
         if (cardModel != null) {
-            cardModel.CreatePlaceHolderInPanel(this.transform as RectTransform);
+            CardModel draggedCardModel;
+            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+                draggedCardModel.CreatePlaceHolderInPanel(this.transform as RectTransform);
+            else
+                cardModel.CreatePlaceHolderInPanel(this.transform as RectTransform);
         }
     }
 
@@ -26,7 +32,11 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
         if (cardModel != null) {
-            cardModel.PlaceHolder = null;
+            CardModel draggedCardModel;
+            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+                draggedCardModel.PlaceHolder = null;
+            else
+                cardModel.PlaceHolder = null;
         }
     }
 
@@ -37,12 +47,17 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
         if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                draggedCardModel.DoubleClickEvent = ActionForCardOnDoubleClick;
-            else
-                cardModel.DoubleClickEvent = ActionForCardOnDoubleClick;
+            cardModel.DraggedClones.TryGetValue(eventData.pointerId, out cardModel);
+            foreach (OnDropDelegate cardAddAction in CardAddedActions)
+                cardAddAction(this, cardModel);
         }
     }
 
+    public List<OnDropDelegate> CardAddedActions {
+        get {
+            if (_cardAddedActions == null)
+                _cardAddedActions = new List<OnDropDelegate>();
+            return _cardAddedActions;
+        }
+    }
 }

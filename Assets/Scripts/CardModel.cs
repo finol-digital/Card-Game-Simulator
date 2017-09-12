@@ -9,6 +9,12 @@ public delegate void OnDoubleClickDelegate(CardModel cardModel);
 [RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(LayoutElement))]
 public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public const float MovementSpeed = 600f;
+
+    public Vector2 OutlineHighlightDistance {
+        get { return new Vector2(10, 10); }
+    }
+
     public bool ClonesOnDrag { get; set; }
 
     public Vector2 DragOffset { get; set; }
@@ -17,11 +23,10 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public PointerEventData RecentPointerEventData { get; set; }
 
-    public float speed = 500;
-
     private Card _representedCard;
     private Dictionary<int, CardModel> _draggedClones;
     private RectTransform _placeHolder;
+    private Outline _outline;
     private Sprite _newSprite;
     private Image _image;
     private CanvasGroup _canvasGroup;
@@ -35,7 +40,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
         if (EventSystem.current.currentSelectedGameObject == this.gameObject && DoubleClickEvent != null)
             DoubleClickEvent(this);
-        else if (CardInfoViewer.Instance.rectTransform.anchorMax.y < (CardInfoViewer.HiddenYMax + CardInfoViewer.VisibleYMax) / 2)
+        else if (CardInfoViewer.Instance.rectTransform.anchorMax.y < (CardInfoViewer.HiddenYMax + CardInfoViewer.VisibleYMax) / 2.0f)
             EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
         RecentPointerEventData = eventData;
     }
@@ -92,12 +97,10 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         RecentPointerEventData = eventData;
 
         CardModel cardModel;
-        if (DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
-            cardModel.PlaceHolder = this.PlaceHolder;
-        else
+        if (!DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
             cardModel = this;
         
-        if (PlaceHolder != null)
+        if (cardModel.PlaceHolder != null)
             cardModel.StartCoroutine(cardModel.MoveToPlaceHolder());
         else
             Destroy(cardModel.gameObject);
@@ -107,10 +110,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     {
         CardModel draggedClone = Instantiate(this.gameObject, Canvas.transform).GetOrAddComponent<CardModel>();
         draggedClone.CanvasGroup.blocksRaycasts = false;
-        if (NewSprite != null) {
-            Texture2D newTexture = Instantiate(NewSprite.texture) as Texture2D;
-            draggedClone.NewSprite = Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
-        }
+        draggedClone.RepresentedCard = this.RepresentedCard;
+        draggedClone.UnHighlight();
         DraggedClones [RecentPointerEventData.pointerId] = draggedClone;
     }
 
@@ -142,13 +143,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     {
         if (PlaceHolder == null)
             return;
-
+        
         Vector2 targetPos = this.transform.position;
-        CardModel draggedClone;
-        if (DraggedClones.TryGetValue(RecentPointerEventData.pointerId, out draggedClone))
-            targetPos = draggedClone.transform.position;
-
-        // TODO: ALLOW HORIZONTAL VS VERTICAL STACKING OF CARDS
         int newSiblingIndex = PlaceHolder.transform.parent.childCount;
         for (int i = 0; i < PlaceHolder.transform.parent.childCount; i++) {
             if (targetPos.y > PlaceHolder.transform.parent.GetChild(i).position.y) {
@@ -163,10 +159,15 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public IEnumerator MoveToPlaceHolder()
     {
-        while (this.transform.position != PlaceHolder.position) {
-            float step = speed * Time.deltaTime;
+        while (PlaceHolder != null && Vector3.Distance(this.transform.position, PlaceHolder.position) > 1) {
+            float step = MovementSpeed * Time.deltaTime;
             this.transform.position = Vector3.MoveTowards(this.transform.position, PlaceHolder.position, step);
             yield return null;
+        }
+
+        if (PlaceHolder == null) {
+            Destroy(this.gameObject);
+            yield break;
         }
 
         this.transform.SetParent(PlaceHolder.parent);
@@ -177,16 +178,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void Highlight()
     {
-        Outline outline = this.gameObject.GetOrAddComponent<Outline>();
-        outline.effectColor = Color.green;
-        outline.effectDistance = new Vector2(10, 10);
+        Outline.effectColor = Color.green;
+        Outline.effectDistance = OutlineHighlightDistance;
     }
 
     public void UnHighlight()
     {
-        Outline outline = this.gameObject.GetOrAddComponent<Outline>();
-        outline.effectColor = Color.black;
-        outline.effectDistance = new Vector2(0, 0);
+        Outline.effectColor = Color.black;
+        Outline.effectDistance = Vector2.zero;
     }
 
     public IEnumerator UpdateImage()
@@ -206,17 +205,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public Card RepresentedCard {
         get {
             if (_representedCard == null)
-                _representedCard = new Card("", "", "", new Dictionary<string, PropertySet>());
+                _representedCard = new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertySet>());
             return _representedCard;
         }
         set {
             _representedCard = value;
-            if (_representedCard == null) {
-                Debug.LogWarning("Attempted to set a card model as a null card! Defaulting to a blank card");
-                _representedCard = new Card("", "", "", new Dictionary<string, PropertySet>());
-            }
+            if (_representedCard == null)
+                _representedCard = new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertySet>());
             this.gameObject.name = _representedCard.Name + " [" + _representedCard.Id + "]";
-            Image.sprite = CardGameManager.Current.CardBackImageSprite;
             StartCoroutine(UpdateImage());
         }
     }
@@ -237,6 +233,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             if (_placeHolder != null)
                 Destroy(_placeHolder.gameObject);
             _placeHolder = value;
+        }
+    }
+
+    public Outline Outline {
+        get {
+            if (_outline == null)
+                _outline = this.gameObject.GetOrAddComponent<Outline>();
+            return _outline;
         }
     }
 

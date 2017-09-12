@@ -16,80 +16,101 @@ public class DeckEditor : MonoBehaviour
     public GameObject deckLoadMenuPrefab;
     public GameObject deckSaveMenuPrefab;
     public RectTransform deckEditorContent;
+    public Scrollbar deckEditorScrollbar;
     public Text deckEditorNameText;
 
     private List<CardStack> _cardStacks;
+    private int _recentCardStackIndex;
     private DeckLoadMenu _deckLoader;
     private DeckSaveMenu _deckSaver;
 
     void Start()
     {
-        CardGameManager.Instance.AddOnSelectAction(UpdateDeckEditor);
+        CardGameManager.Instance.OnSelectActions.Add(ResetCardStacks);
     }
 
-    public void UpdateDeckEditor()
+    public void ResetCardStacks()
     {
         Clear();
         deckEditorContent.DestroyAllChildren();
         CardStacks.Clear();
-        int numCardStacks = CardGameManager.Current.DeckCardStackCount;
-        for (int i = 0; i < numCardStacks; i++) {
+        for (int i = 0; i < CardGameManager.Current.DeckCardStackCount; i++) {
             CardStack newCardStack = Instantiate(cardStackPrefab, deckEditorContent).GetOrAddComponent<CardStack>();
-            newCardStack.ActionForCardOnDoubleClick = DestroyCardModel;
+            newCardStack.CardAddedActions.Add(OnAddCardModel);
             CardStacks.Add(newCardStack);
         }
-        deckEditorContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * numCardStacks, deckEditorContent.sizeDelta.y);
+        deckEditorContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardGameManager.Current.DeckCardStackCount, deckEditorContent.sizeDelta.y);
+    }
+
+    public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+    {
+        if (cardStack == null || cardModel == null)
+            return;
+        
+        RecentCardStackIndex = CardStacks.IndexOf(cardStack);
+        cardModel.DoubleClickEvent = DestroyCardModel;
     }
 
     public void AddCard(CardModel cardToAdd)
     {
-        if (cardToAdd == null) {
-            Debug.LogWarning("Attempted to add a null card model to the Deck Editor! Ignoring");
+        if (cardToAdd == null || CardStacks.Count < 1)
             return;
-        }
 
         // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
         EventSystem.current.SetSelectedGameObject(CardInfoViewer.Instance.gameObject, cardToAdd.RecentPointerEventData);
         CardInfoViewer.Instance.IsVisible = false;
+
         AddCard(cardToAdd.RepresentedCard);
+
+        float newSpot = ((float)RecentCardStackIndex) / ((float)CardStacks.Count);
+        deckEditorScrollbar.value = newSpot;
     }
 
     public void AddCard(Card cardToAdd)
     {
-        if (cardToAdd == null) {
-            Debug.LogWarning("Attempted to add a null card to the Deck Editor! Ignoring");
+        if (cardToAdd == null || CardStacks.Count < 1)
             return;
-        }
 
-        Debug.Log("Adding to the deck editor: " + cardToAdd.Name);
-        // TODO: KEEP TRACK OF PREVIOUSLY USED STACK, AND ADD TO THE LAST STACK; WHEN ADDED, MOVE THE VIEW SO THAT THE ADDED CARD IS VISIBLE
-        foreach (CardStack stack in CardStacks) {
-            if (stack.transform.childCount < CardGameManager.Current.CopiesOfCardPerDeck) {
-                CardModel newCardModel = Instantiate(cardModelPrefab, stack.transform).GetOrAddComponent<CardModel>();
+        int maxCopiesInStack = CardGameManager.Current.CopiesOfCardPerDeck;
+        bool added = false;
+        while (!added) {
+            if (CardStacks [RecentCardStackIndex].transform.childCount < maxCopiesInStack) {
+                CardModel newCardModel = Instantiate(cardModelPrefab, CardStacks [RecentCardStackIndex].transform).GetOrAddComponent<CardModel>();
                 newCardModel.RepresentedCard = cardToAdd;
                 newCardModel.DoubleClickEvent = DestroyCardModel;
-                return;
+                added = true;
+            } else {
+                RecentCardStackIndex++;
+                if (RecentCardStackIndex == 0)
+                    maxCopiesInStack++;
             }
         }
-        Debug.LogWarning("Failed to find an open stack to which we could add a card! Card not added.");
     }
 
     public void DestroyCardModel(CardModel cardModel)
     {
+        if (cardModel == null)
+            return;
+
         GameObject.Destroy(cardModel.gameObject);
+        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
         CardInfoViewer.Instance.IsVisible = false;
     }
 
     public void PromptForClear()
     {
-        CardGameManager.Instance.PromptAction(NewDeckPrompt, Clear);
+        CardGameManager.Instance.Popup.Prompt(NewDeckPrompt, Clear);
     }
 
     public void Clear()
     {
         foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
+        RecentCardStackIndex = 0;
         deckEditorNameText.text = DefaultDeckName;
+
+        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
+        CardInfoViewer.Instance.IsVisible = false;
     }
 
     public string UpdateDeckName(string newName)
@@ -107,10 +128,8 @@ public class DeckEditor : MonoBehaviour
 
     public void LoadDeck(Deck newDeck)
     {
-        if (newDeck == null) {
-            Debug.LogWarning("Attempted to load a null deck into the deck editor! Ignoring");
+        if (newDeck == null)
             return;
-        }
 
         Clear();
         UpdateDeckName(newDeck.Name);
@@ -132,6 +151,19 @@ public class DeckEditor : MonoBehaviour
             if (_cardStacks == null)
                 _cardStacks = new List<CardStack>();
             return _cardStacks;
+        }
+    }
+
+    public int RecentCardStackIndex {
+        get {
+            if (_recentCardStackIndex < 0 || _recentCardStackIndex >= CardStacks.Count)
+                _recentCardStackIndex = 0;
+            return _recentCardStackIndex;
+        }
+        set {
+            if (value < 0 || value >= CardStacks.Count)
+                _recentCardStackIndex = 0;
+            _recentCardStackIndex = value;
         }
     }
 

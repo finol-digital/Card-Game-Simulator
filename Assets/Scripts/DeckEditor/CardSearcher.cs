@@ -33,7 +33,7 @@ public class CardSearcher : MonoBehaviour
         nameFilter = string.Empty;
         idFilter = string.Empty;
         setCodeFilter = string.Empty;
-        CardGameManager.Instance.AddOnSelectAction(UpdateCardSearcher);
+        CardGameManager.Instance.OnSelectActions.Add(UpdateCardSearcher);
     }
 
     public void UpdateCardSearcher()

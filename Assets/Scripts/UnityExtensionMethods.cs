@@ -73,10 +73,8 @@ static public class UnityExtensionMethods
     public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageFilePath, string backUpImageURL = null)
     {
         if (!File.Exists(imageFilePath)) {
-            if (string.IsNullOrEmpty(backUpImageURL)) {
-                Debug.LogWarning("Image file does not exist, and no backup URL is defined, so the sprite will not be updated");
+            if (string.IsNullOrEmpty(backUpImageURL))
                 yield break;
-            }
             yield return UnityExtensionMethods.SaveURLToFile(backUpImageURL, imageFilePath);
         }
 
@@ -90,6 +88,18 @@ static public class UnityExtensionMethods
             Debug.LogWarning("Failed to load image: " + imageFileLoader.error);
             yield return null;
         }
+    }
+
+    public static void CopyDirectory(string sourceDir, string targetDir)
+    {
+        if (!Directory.Exists(targetDir))
+            Directory.CreateDirectory(targetDir);
+
+        foreach (var file in Directory.GetFiles(sourceDir))
+            File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)));
+
+        foreach (var directory in Directory.GetDirectories(sourceDir))
+            CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
     }
 
     public static string ExtractDirectory(string filePath)

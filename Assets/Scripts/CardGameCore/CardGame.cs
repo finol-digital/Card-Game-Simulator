@@ -20,6 +20,7 @@ public class CardGame
     public const int DefaultDeckCardStackCount = 15;
     public const string DefaultDeckFileType = "txt";
     public const string DefaultImageFileType = "png";
+    public const string DefaultSet = "_CGSDEFAULT_";
 
     public string Name { get; set; }
 
@@ -184,8 +185,8 @@ public class CardGame
         if (setJToken == null)
             return;
 
-        string setCode = setJToken.Value<string>(SetCodeIdentifier);
-        string setName = setJToken.Value<string>(SetNameIdentifier);
+        string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? string.Empty;
+        string setName = setJToken.Value<string>(SetNameIdentifier) ?? string.Empty;
         if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
             Sets.Add(new Set(setCode, setName));
     }
@@ -195,9 +196,9 @@ public class CardGame
         if (cardJToken == null)
             return;
 
-        string cardId = cardJToken.Value<string>(CardIdIdentifier);
-        string cardName = cardJToken.Value<string>(CardNameIdentifier);
-        string cardSet = cardJToken.Value<string>(CardSetIdentifier);
+        string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
+        string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
+        string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? DefaultSet;
         Dictionary<string, PropertySet> cardProps = new Dictionary<string, PropertySet>();
         foreach (PropertyDef prop in CardProperties) {
             cardProps [prop.Name] = new PropertySet() {

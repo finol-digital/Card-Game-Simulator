@@ -1,0 +1,6 @@
+{
+	"cardProperties": [
+		{"name": "rank", "type": "string" },
+		{"name": "suit", "type": "string" },
+	]
+}

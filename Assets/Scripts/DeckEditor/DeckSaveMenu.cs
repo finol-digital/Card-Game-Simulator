@@ -21,7 +21,6 @@ public class DeckSaveMenu : MonoBehaviour
     public void Show(Deck deckToShow, DeckNameChangeDelegate callbackNameChange)
     {
         this.gameObject.SetActive(true);
-        Debug.Log("Showing Deck Save Menu");
         this.transform.SetAsLastSibling();
         _deck = deckToShow;
         _deckNameChangeCallback = callbackNameChange;
@@ -29,24 +28,28 @@ public class DeckSaveMenu : MonoBehaviour
         textOutputArea.text = _deck.ToString();
     }
 
-    public void ChangeDeckName(string newName)
+    public void ChangeDeckName(string changedName)
     {
-        saveDeckNameInputField.text = _deckNameChangeCallback(newName);
+        string newName = _deckNameChangeCallback(changedName);
+        if (!string.IsNullOrEmpty(changedName))
+            saveDeckNameInputField.text = newName;
+        Deck newDeck = new Deck(newName);
+        newDeck.Cards = new List<Card>(_deck.Cards);
+        textOutputArea.text = newDeck.ToString();
     }
 
     public void CopyDeckTextToClipboard()
     {
         UniClipboard.SetText(textOutputArea.text);
-        CardGameManager.Instance.ShowMessage(DeckCopiedMessage);
+        CardGameManager.Instance.Popup.Show(DeckCopiedMessage);
     }
 
     public void AttemptSaveAndHide()
     {
         Deck filePathFinder = new Deck(saveDeckNameInputField.text);
-        if (File.Exists(filePathFinder.FilePath)) {
-            Debug.Log("Attempted to save deck, but it already exists. Prompting user if they wish to overwrite: " + filePathFinder.FilePath);
-            CardGameManager.Instance.PromptAction(OverWriteDeckPrompt, SaveDeckToFile);
-        } else
+        if (File.Exists(filePathFinder.FilePath))
+            CardGameManager.Instance.Popup.Prompt(OverWriteDeckPrompt, SaveDeckToFile);
+        else
             SaveDeckToFile();
 
         Hide();
@@ -55,17 +58,18 @@ public class DeckSaveMenu : MonoBehaviour
     public void SaveDeckToFile()
     {
         _deck.Name = saveDeckNameInputField.text;
-        Debug.Log("Saving deck to: " + _deck.FilePath);
+        SaveToFile(_deck);
+    }
+
+    public static void SaveToFile(Deck deck)
+    {
         try {
-            if (!Directory.Exists(CardGameManager.Current.DecksFilePath)) {
-                Debug.Log(CardGameManager.Current.DecksFilePath + " deck file directory does not exist, so creating it");
+            if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
                 Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
-            }
-            File.WriteAllText(_deck.FilePath, textOutputArea.text);
-            Debug.Log("Deck saved at: " + _deck.FilePath);
+            File.WriteAllText(deck.FilePath, deck.ToString());
         } catch (Exception e) {
             Debug.LogError("Failed to save deck!: " + e.Message);
-            CardGameManager.Instance.ShowMessage("There was an error saving the deck to file: " + e.Message);
+            CardGameManager.Instance.Popup.Show("There was an error saving the deck to file: " + e.Message);
         }
     }
 
@@ -77,7 +81,6 @@ public class DeckSaveMenu : MonoBehaviour
 
     public void Hide()
     {
-        Debug.Log("Hiding the Deck Save Menu");
         this.gameObject.SetActive(false);
     }
 }
