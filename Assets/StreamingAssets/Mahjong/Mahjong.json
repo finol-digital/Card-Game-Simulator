@@ -1,0 +1,8 @@
+{
+	"cardProperties": [
+		{"name": "type", "type": "string" },
+		{"name": "suit", "type": "string" },
+		{"name": "rank", "type": "string" }
+	],
+	"deckCardStackCount": "36"
+}

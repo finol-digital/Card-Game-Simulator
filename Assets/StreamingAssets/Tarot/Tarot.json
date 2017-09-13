@@ -1,0 +1,5 @@
+{
+	"cardProperties": [
+		{"name": "number", "type": "integer" }
+	]
+}

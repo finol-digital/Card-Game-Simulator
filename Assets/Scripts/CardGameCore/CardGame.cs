@@ -6,7 +6,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-public delegate void LoadJTokenDelegate(JToken jToken);
+public delegate void LoadJTokenDelegate(JToken jToken,string defaultValue);
 
 [JsonObject(MemberSerialization.OptIn)]
 public class CardGame
@@ -21,6 +21,7 @@ public class CardGame
     public const string DefaultDeckFileType = "txt";
     public const string DefaultImageFileType = "png";
     public const string DefaultSet = "_CGSDEFAULT_";
+    public const string SetCardsIdentifier = "cards";
 
     public string Name { get; set; }
 
@@ -125,7 +126,6 @@ public class CardGame
 
     public IEnumerator Load()
     {
-        Debug.Log("Loading config for " + Name);
         if (!string.IsNullOrEmpty(AutoUpdateURL) && (AutoUpdate || !File.Exists(ConfigFilePath)))
             yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
         try { 
@@ -136,7 +136,6 @@ public class CardGame
             yield break;
         }
 
-        Debug.Log("Loading Sets and Cards for " + Name);
         string setsFile = FilePathBase + "/" + AllSetsFileName;
         if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile)))
             yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, setsFile);
@@ -172,28 +171,32 @@ public class CardGame
 
         JArray jArray = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(file));
         foreach (JToken jToken in jArray)
-            load(jToken);
+            load(jToken, DefaultSet);
     }
 
-    public void LoadSetFromJToken(JToken setJToken)
+    public void LoadSetFromJToken(JToken setJToken, string defaultSet)
     {
         if (setJToken == null)
             return;
 
-        string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? string.Empty;
-        string setName = setJToken.Value<string>(SetNameIdentifier) ?? string.Empty;
+        string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSet;
+        string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSet;
         if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
             Sets.Add(new Set(setCode, setName));
+        JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
+        if (cards != null)
+            foreach (JToken jToken in cards)
+                LoadCardFromJToken(jToken, setCode);
     }
 
-    public void LoadCardFromJToken(JToken cardJToken)
+    public void LoadCardFromJToken(JToken cardJToken, string defaultSet)
     {
         if (cardJToken == null)
             return;
 
         string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
         string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
-        string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? DefaultSet;
+        string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSet;
         Dictionary<string, PropertySet> cardProps = new Dictionary<string, PropertySet>();
         foreach (PropertyDef prop in CardProperties) {
             cardProps [prop.Name] = new PropertySet() {
@@ -201,8 +204,17 @@ public class CardGame
                 Value = new PropertyDefValue() { Value = cardJToken.Value<string>(prop.Name) }
             };
         }
-        if (!string.IsNullOrEmpty(cardId))
+        if (!string.IsNullOrEmpty(cardId)) {
             Cards.Add(new Card(cardId, cardName, cardSet, cardProps));
+            bool setExists = false;
+            foreach (Set setValue in Sets)
+                if (setValue.Code == cardSet) {
+                    setExists = true;
+                    break;
+                }
+            if (!setExists)
+                Sets.Add(new Set(cardSet, cardSet));
+        }
     }
 
     public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> properties)

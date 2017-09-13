@@ -47,9 +47,12 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
         if (cardModel != null) {
-            cardModel.DraggedClones.TryGetValue(eventData.pointerId, out cardModel);
-            foreach (OnDropDelegate cardAddAction in CardAddedActions)
+            CardModel draggedCardModel;
+            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+                cardModel = draggedCardModel;
+            foreach (OnDropDelegate cardAddAction in CardAddedActions) {
                 cardAddAction(this, cardModel);
+            }
         }
     }
 

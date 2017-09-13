@@ -23,6 +23,7 @@ public class CardSearcher : MonoBehaviour
     public RectTransform propertyTemplate;
     public RectTransform resultsPanel;
     public Text resultsCountText;
+    public ConfigurableLayout layout;
 
     private List<Card> _searchResults;
     private int _resultsIndex;
@@ -137,6 +138,12 @@ public class CardSearcher : MonoBehaviour
             Search();
             HideAdvancedFilterPanel();
         }
+        #if !UNITY_EDITOR
+        if (layout.PreviousOrientation != Screen.orientation) {
+            _resultsIndex = 0;
+            UpdateSearchResultsPanel();
+        }
+        #endif
     }
 
     public List<Card> SearchResults {

@@ -202,6 +202,12 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         NewSprite = null;
     }
 
+    void OnApplicationQuit()
+    {
+        PlaceHolder = null;
+        NewSprite = null;
+    }
+
     public Card RepresentedCard {
         get {
             if (_representedCard == null)

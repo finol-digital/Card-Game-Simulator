@@ -1,0 +1,27 @@
+[
+	{ "code": "Major Arcana", "name": "Major Arcana", "cards": [
+		{"name": "The Fool", "id": "00_fool", "number": "00"},
+		{"name": "The Magician", "id": "01_magician", "number": "01"},
+		{"name": "The High Priestess", "id": "02_high_priestess", "number": "02"},
+		{"name": "The Empress", "id": "03_empress", "number": "03"},
+		{"name": "The Emperor", "id": "04_emperor", "number": "04"},
+		{"name": "The Pope", "id": "05_pope", "number": "05"},
+		{"name": "The Lovers", "id": "06_lovers", "number": "06"},
+		{"name": "The Chariot", "id": "07_chariot", "number": "07"},
+		{"name": "Justice", "id": "08_justice", "number": "08"},
+		{"name": "The Hermit", "id": "09_hermit", "number": "09"},
+		{"name": "Wheel of Fortune", "id": "10_wheel_of_fortune", "number": "10"},
+		{"name": "Strength", "id": "11_strength", "number": "11"},
+		{"name": "The Hanged Man", "id": "12_hanged_man", "number": "12"},
+		{"name": "Death", "id": "13_death", "number": "13"},
+		{"name": "Temperance", "id": "14_temperance", "number": "14"},
+		{"name": "The Devil", "id": "15_devil", "number": "15"},
+		{"name": "The Tower", "id": "16_tower", "number": "16"},
+		{"name": "The Star", "id": "17_star", "number": "17"},
+		{"name": "The Moon", "id": "18_moon", "number": "18"},
+		{"name": "The Sun", "id": "19_sun", "number": "19"},
+		{"name": "Judgment", "id": "20_judgment", "number": "20"},
+		{"name": "The World", "id": "21_world", "number": "21"}
+		]
+	}
+]

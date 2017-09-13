@@ -61,9 +61,6 @@ public class DeckEditor : MonoBehaviour
         CardInfoViewer.Instance.IsVisible = false;
 
         AddCard(cardToAdd.RepresentedCard);
-
-        float newSpot = ((float)RecentCardStackIndex) / ((float)CardStacks.Count);
-        deckEditorScrollbar.value = newSpot;
     }
 
     public void AddCard(Card cardToAdd)
@@ -85,6 +82,9 @@ public class DeckEditor : MonoBehaviour
                     maxCopiesInStack++;
             }
         }
+
+        float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * ((float)RecentCardStackIndex + ((RecentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / deckEditorContent.sizeDelta.x;
+        deckEditorScrollbar.value = Mathf.Clamp01(newSpot);
     }
 
     public void DestroyCardModel(CardModel cardModel)
