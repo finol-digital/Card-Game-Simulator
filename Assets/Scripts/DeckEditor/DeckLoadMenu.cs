@@ -25,6 +25,11 @@ public class DeckLoadMenu : MonoBehaviour
     private string _selectedDeckFileName;
     private Deck _deckToSave;
 
+    void Update()
+    {
+        loadDeckFromFileButton.interactable = !string.IsNullOrEmpty(_selectedDeckFileName);
+    }
+
     public void Show(OnDeckLoadedDelegate callbackDeckLoad, DeckNameChangeDelegate callbackNameChange, string originalDeckName)
     {
         this.gameObject.SetActive(true);
@@ -32,7 +37,7 @@ public class DeckLoadMenu : MonoBehaviour
         _deckLoadCallback = callbackDeckLoad;
         _deckNameChangeCallback = callbackNameChange;
         _originalDeckName = originalDeckName;
-        _selectedDeckFileName = "";
+        _selectedDeckFileName = string.Empty;
         string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath) ? Directory.GetFiles(CardGameManager.Current.DecksFilePath) : new string[0];
         List<string> deckFiles = new List<string>();
         foreach (string fileName in files)
@@ -56,13 +61,8 @@ public class DeckLoadMenu : MonoBehaviour
             pos.y -= fileSelectionTemplate.rect.height;
         }
         fileSelectionTemplate.SetParent(fileSelectionArea.parent);
+        fileSelectionTemplate.gameObject.SetActive(deckFiles.Count < 1);
         fileSelectionArea.sizeDelta = new Vector2(fileSelectionArea.sizeDelta.x, fileSelectionTemplate.rect.height * deckFiles.Count);
-
-        bool hasFiles = deckFiles.Count > 0;
-        if (hasFiles)
-            fileSelectionArea.GetChild(0).GetComponent<Toggle>().isOn = true;
-        fileSelectionTemplate.gameObject.SetActive(!hasFiles);
-        loadDeckFromFileButton.interactable = hasFiles;
     }
 
     public void SelectDeckFileToLoad(bool isSelected, string deckFileName)
@@ -85,7 +85,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void LoadDeckFromFileAndHide()
     {
-        string deckText = "";
+        string deckText = string.Empty;
         try { 
             deckText = File.ReadAllText(_selectedDeckFileName);
         } catch (Exception e) {

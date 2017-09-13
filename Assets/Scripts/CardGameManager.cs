@@ -45,8 +45,13 @@ public class CardGameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(this.gameObject);
 
-        if (!Directory.Exists(GamesFilePathBase))
+        if (!Directory.Exists(GamesFilePathBase)) {
+            #if UNITY_ANDROID && !UNITY_EDITOR
+            AndroidStreamingAssets.Extract(GamesFilePathBase);
+            #else
             UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
+            #endif
+        }
         
         foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase)) {
             string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
@@ -59,48 +64,65 @@ public class CardGameManager : MonoBehaviour
         //defaultGame = new CardGame("HS", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1b0d5WGFJb195UTg");
         //AllCardGames [defaultGame.Name] = defaultGame;
 
-        UpdateGameSelection();
+        ResetGameSelection();
     }
 
-    public void UpdateGameSelection()
+    public void ResetGameSelection()
     {
+        int defaultGameIndex = 0;
         GameSelectionOptions.Clear();
-        foreach (string gameName in AllCardGames.Keys)
+        foreach (string gameName in AllCardGames.Keys) {
             GameSelectionOptions.Add(new Dropdown.OptionData() { text = gameName });
+            if (gameName.Equals(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName)))
+                defaultGameIndex = GameSelectionOptions.Count - 1;
+        }
         GameSelection.options = GameSelectionOptions;
+
+        GameSelection.onValueChanged.RemoveAllListeners();
         GameSelection.onValueChanged.AddListener(SelectCardGame);
-        SelectCardGame(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName));
+        GameSelection.value = defaultGameIndex;
     }
 
     public void SelectCardGame(int index)
     {
+        if (index < 0 || index >= GameSelectionOptions.Count) {
+            Debug.LogError(InvalidGameSelectionMessage);
+            Popup.Show(InvalidGameSelectionMessage);
+            return;
+        }
+
         SelectCardGame(GameSelectionOptions [index].text);
     }
 
     public void SelectCardGame(string name)
     {
-        CardGame selectedCardGame;
-        if (!AllCardGames.TryGetValue(name, out selectedCardGame)) {
+        if (!AllCardGames.ContainsKey(name)) {
             Debug.LogError(InvalidGameSelectionMessage);
             Popup.Show(InvalidGameSelectionMessage);
             return;
         }
 
         CurrentGameName = name;
-        PlayerPrefs.SetString(PlayerPrefGameName, CurrentGameName);
-
-        if (!Current.IsLoaded)
-            StartCoroutine(Current.Load());
         StartCoroutine(DoGameSelectionActions());
     }
 
     public IEnumerator DoGameSelectionActions()
     {
-        while (!Current.IsLoaded)
+        if (!Current.IsLoaded)
+            StartCoroutine(Current.Load());
+        
+        while (!Current.IsLoaded) {
+            if (!string.IsNullOrEmpty(Current.Error)) {
+                // TODO: BETTER ERROR HANDLING
+                Popup.Show(Current.Error);
+                yield break;
+            }
             yield return null;
+        }
 
+        PlayerPrefs.SetString(PlayerPrefGameName, CurrentGameName);
         BackgroundImage.sprite = Current.BackgroundImageSprite;
-        CardInfoViewer.Instance.UpdatePropertyOptions();
+        CardInfoViewer.Instance.ResetPropertyOptions();
 
         for (int i = OnSelectActions.Count - 1; i >= 0; i--)
             if (OnSelectActions [i] == null)

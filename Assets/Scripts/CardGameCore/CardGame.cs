@@ -152,28 +152,23 @@ public class CardGame
             yield break;
         }
 
-        Debug.Log("Loading Background Image for " + Name);
         Sprite backgroundSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), (output) => backgroundSprite = output);
         if (backgroundSprite != null)
             _backgroundImageSprite = backgroundSprite;
-
-        Debug.Log("Loading Card Back Image for " + Name);
+        
         Sprite cardBackSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), (output) => cardBackSprite = output);
         if (cardBackSprite != null)
             _cardBackImageSprite = cardBackSprite;
-
-        Debug.Log(Name + " finished loading");
+        
         _isLoaded = true;
     }
 
     public void LoadJSONFromFile(string file, LoadJTokenDelegate load)
     {
-        if (!File.Exists(file)) {
-            Debug.Log("JSON file does not exist, so it will not be loaded: " + file);
+        if (!File.Exists(file))
             return;
-        }
 
         JArray jArray = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(file));
         foreach (JToken jToken in jArray)

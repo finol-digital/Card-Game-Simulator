@@ -33,10 +33,10 @@ public class CardSearcher : MonoBehaviour
         nameFilter = string.Empty;
         idFilter = string.Empty;
         setCodeFilter = string.Empty;
-        CardGameManager.Instance.OnSelectActions.Add(UpdateCardSearcher);
+        CardGameManager.Instance.OnSelectActions.Add(ResetCardSearcher);
     }
 
-    public void UpdateCardSearcher()
+    public void ResetCardSearcher()
     {
         propertyTemplate.gameObject.SetActive(true);
         nameProperty.SetParent(advancedSearchFilterMenu);

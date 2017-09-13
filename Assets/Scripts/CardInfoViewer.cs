@@ -29,7 +29,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     private CardModel _selectedCardModel;
     public bool _isVisible;
 
-    public void UpdatePropertyOptions()
+    public void ResetPropertyOptions()
     {
         SelectedPropertyIndex = 0;
         PropertyOptions.Clear();
@@ -40,6 +40,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
         propertySelection.options = PropertyOptions;
         propertySelection.value = SelectedPropertyIndex;
+        propertySelection.onValueChanged.Invoke(SelectedPropertyIndex);
     }
 
     public void OnPointerDown(PointerEventData eventData)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ICSharpCode.SharpZipLib.Zip;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,8 +49,8 @@ static public class UnityExtensionMethods
             yield break;
         }
 
-        string directory = GetSafeFilePath(ExtractDirectory(filePath));
-        string fileName = GetSafeFileName(ExtractFileName(filePath));
+        string directory = Path.GetDirectoryName(filePath);
+        string fileName = Path.GetFileName(filePath);
         if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName)) {
             Debug.LogError("Could not save to " + filePath + ", as it is an improperly formed path");
             yield break;
@@ -90,45 +91,39 @@ static public class UnityExtensionMethods
         }
     }
 
-    public static void CopyDirectory(string sourceDir, string targetDir)
-    {
-        if (!Directory.Exists(targetDir))
-            Directory.CreateDirectory(targetDir);
-
-        foreach (var file in Directory.GetFiles(sourceDir))
-            File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)));
-
-        foreach (var directory in Directory.GetDirectories(sourceDir))
-            CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
-    }
-
-    public static string ExtractDirectory(string filePath)
-    {
-        int position = filePath.LastIndexOf('/');
-        if (position == -1)
-            return String.Empty;
-        return filePath.Substring(0, position);
-    }
-
-    public static string ExtractFileName(string filePath)
-    {
-        if (filePath.Trim().EndsWith("/"))
-            return String.Empty;
-        
-        int position = filePath.LastIndexOf('/');
-        if (position == -1)
-            return filePath;
-        
-        return filePath.Substring(position + 1);
-    }
-
     public static string GetSafeFilePath(string filePath)
     {
+        if (string.IsNullOrEmpty(filePath))
+            return string.Empty;
         return string.Join("_", filePath.Split(Path.GetInvalidPathChars()));
     }
 
     public static string GetSafeFileName(string fileName)
     {
+        if (string.IsNullOrEmpty(fileName))
+            return string.Empty;
         return string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()));
     }
+
+    public static void CopyDirectory(string sourceDir, string targetDir)
+    {
+        if (!Directory.Exists(targetDir))
+            Directory.CreateDirectory(targetDir);
+
+        foreach (string filePath in Directory.GetFiles(sourceDir))
+            File.Copy(filePath, Path.Combine(targetDir, Path.GetFileName(filePath)));
+
+        foreach (string directory in Directory.GetDirectories(sourceDir))
+            CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
+    }
+
+    public static void ExtractZip(string zipPath, string targetDir)
+    {
+        if (!Directory.Exists(targetDir))
+            Directory.CreateDirectory(targetDir);
+
+        FastZip fastZip = new FastZip();
+        fastZip.ExtractZip(zipPath, targetDir, null);
+    }
+
 }
