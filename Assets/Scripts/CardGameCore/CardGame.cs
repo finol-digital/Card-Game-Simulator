@@ -206,12 +206,10 @@ public class CardGame
         }
         if (!string.IsNullOrEmpty(cardId)) {
             Cards.Add(new Card(cardId, cardName, cardSet, cardProps));
-            bool setExists = false;
-            foreach (Set setValue in Sets)
-                if (setValue.Code == cardSet) {
+            bool setExists = cardSet == defaultSet;
+            for (int i = 0; !setExists && i < Sets.Count; i++)
+                if (Sets [i].Code == cardSet)
                     setExists = true;
-                    break;
-                }
             if (!setExists)
                 Sets.Add(new Set(cardSet, cardSet));
         }
