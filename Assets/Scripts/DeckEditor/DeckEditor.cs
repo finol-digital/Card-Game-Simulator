@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public delegate string DeckNameChangeDelegate(string newName);
 
@@ -24,7 +25,7 @@ public class DeckEditor : MonoBehaviour
     private DeckLoadMenu _deckLoader;
     private DeckSaveMenu _deckSaver;
 
-    void Start()
+    void OnEnable()
     {
         CardGameManager.Instance.OnSelectActions.Add(ResetCardStacks);
     }
@@ -144,6 +145,17 @@ public class DeckEditor : MonoBehaviour
             foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
                 deck.Cards.Add(card.RepresentedCard);
         DeckSaver.Show(deck, UpdateDeckName);
+    }
+
+    public void BackToMainMenu()
+    {
+        // TODO: CHECK IF WE HAD ANY UNSAVED CHANGES
+        SceneManager.LoadScene(0);
+    }
+
+    void OnDisable()
+    {
+        CardGameManager.Instance.OnSelectActions.Remove(ResetCardStacks);
     }
 
     public List<CardStack> CardStacks {

@@ -29,12 +29,16 @@ public class CardSearcher : MonoBehaviour
     private List<Card> _searchResults;
     private Dictionary<string, string> _propertyFilters;
 
+    void OnEnable()
+    {
+        CardGameManager.Instance.OnSelectActions.Add(ResetCardSearcher);
+    }
+
     void Start()
     {
         nameFilter = string.Empty;
         idFilter = string.Empty;
         setCodeFilter = string.Empty;
-        CardGameManager.Instance.OnSelectActions.Add(ResetCardSearcher);
     }
 
     public void ResetCardSearcher()
@@ -138,6 +142,11 @@ public class CardSearcher : MonoBehaviour
             Search();
             HideAdvancedFilterPanel();
         }
+    }
+
+    void OnDisable()
+    {
+        CardGameManager.Instance.OnSelectActions.Remove(ResetCardSearcher);
     }
 
     public List<Card> SearchResults {

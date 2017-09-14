@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine.SceneManagement;
 
 public delegate void CardGameSelectedDelegate();
 
@@ -17,7 +18,6 @@ public class CardGameManager : MonoBehaviour
     public const string PlayerPrefGameName = "DefaultGame";
     public const string FirstGameName = "Standard";
     public const string InvalidGameSelectionMessage = "Could not select the card game because the name is not recognized in the list of card games! Try selecting a different card game.";
-    public const string QuitPrompt = "Quit?";
 
     public static string GamesFilePathBase {
         get { return Application.persistentDataPath + "/games"; }
@@ -57,13 +57,12 @@ public class CardGameManager : MonoBehaviour
             string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
             AllCardGames [gameName] = new CardGame(gameName);
         }
-        // TODO: ADDING IN CUSTOM GAMES, LIKE DB AND HS
-        //CardGame defaultGame;
-        //defaultGame = new CardGame("DB", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1bTdtQTZzTWZHZ0E");
-        //AllCardGames [defaultGame.Name] = defaultGame;
-        //defaultGame = new CardGame("HS", "https://drive.google.com/uc?export=download&id=0B8G-U4tnM7g1b0d5WGFJb195UTg");
-        //AllCardGames [defaultGame.Name] = defaultGame;
 
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
         ResetGameSelection();
     }
 
@@ -76,8 +75,11 @@ public class CardGameManager : MonoBehaviour
             if (gameName.Equals(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName)))
                 defaultGameIndex = GameSelectionOptions.Count - 1;
         }
-        GameSelection.options = GameSelectionOptions;
 
+        if (GameSelection == null)
+            return;
+
+        GameSelection.options = GameSelectionOptions;
         GameSelection.onValueChanged.RemoveAllListeners();
         GameSelection.onValueChanged.AddListener(SelectCardGame);
         GameSelection.value = defaultGameIndex;
@@ -124,21 +126,13 @@ public class CardGameManager : MonoBehaviour
         BackgroundImage.sprite = Current.BackgroundImageSprite;
         CardInfoViewer.Instance.ResetPropertyOptions();
 
-        for (int i = OnSelectActions.Count - 1; i >= 0; i--)
-            if (OnSelectActions [i] == null)
-                OnSelectActions.RemoveAt(i);
         foreach (CardGameSelectedDelegate action in OnSelectActions)
             action();
     }
 
-    public void PromptForQuit()
+    void OnDisable()
     {
-        Popup.Prompt(QuitPrompt, Quit);
-    }
-
-    public void Quit()
-    {
-        Application.Quit();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     public static CardGameManager Instance {
@@ -166,8 +160,11 @@ public class CardGameManager : MonoBehaviour
 
     public Dropdown GameSelection {
         get {
-            if (_gameSelection == null)
-                _gameSelection = GameObject.FindGameObjectWithTag(GameSelectionTag).GetComponent<Dropdown>();
+            if (_gameSelection == null) {
+                GameObject obj = GameObject.FindGameObjectWithTag(GameSelectionTag);
+                if (obj != null)
+                    _gameSelection = obj.GetComponent<Dropdown>();
+            }
             return _gameSelection;
         }
     }
