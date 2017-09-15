@@ -23,13 +23,20 @@ public class CardGame
     public const string DefaultSet = "_CGSDEFAULT_";
     public const string SetCardsIdentifier = "cards";
 
+    public string FilePathBase {
+        get { return CardGameManager.GamesFilePathBase + "/" + Name; }
+    }
+
+    public string ConfigFilePath {
+        get { return FilePathBase + "/" + Name + ".json"; }
+    }
+
+    public string DecksFilePath {
+        get  { return FilePathBase + "/decks"; }
+    }
+
+    [JsonProperty]
     public string Name { get; set; }
-
-    public string FilePathBase { get; set; }
-
-    public string ConfigFilePath { get; set; }
-
-    public string DecksFilePath { get; set; }
 
     [JsonProperty]
     public string AllCardsURL { get; set; }
@@ -101,14 +108,10 @@ public class CardGame
     private bool _isLoaded;
     private string _error;
 
-    public CardGame(string name, string url = "")
+    public CardGame(string name, string url)
     {
         Name = name;
         AutoUpdateURL = url;
-
-        FilePathBase = CardGameManager.GamesFilePathBase + "/" + Name;
-        ConfigFilePath = FilePathBase + "/" + Name + ".json";
-        DecksFilePath = FilePathBase + "/decks";
 
         BackgroundImageFileType = DefaultImageFileType;
         CardBackImageFileType = DefaultImageFileType;

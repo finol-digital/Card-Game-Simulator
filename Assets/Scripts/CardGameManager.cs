@@ -33,7 +33,7 @@ public class CardGameManager : MonoBehaviour
     private Dropdown _gameSelection;
     private List<Dropdown.OptionData> _gameSelectionOptions;
     private List<CardGameSelectedDelegate> _onSelectActions;
-    private SpriteRenderer _backgroundImage;
+    private Image _backgroundImage;
     private Popup _popup;
 
     void Awake()
@@ -55,7 +55,7 @@ public class CardGameManager : MonoBehaviour
         
         foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase)) {
             string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
-            AllCardGames [gameName] = new CardGame(gameName);
+            AllCardGames [gameName] = new CardGame(gameName, string.Empty);
         }
 
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -145,7 +145,7 @@ public class CardGameManager : MonoBehaviour
         get {
             CardGame currentGame;
             if (!Instance.AllCardGames.TryGetValue(Instance.CurrentGameName, out currentGame))
-                return new CardGame(string.Empty);
+                return new CardGame(string.Empty, string.Empty);
             return currentGame;
         }
     }
@@ -185,10 +185,10 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    private SpriteRenderer BackgroundImage {
+    private Image BackgroundImage {
         get {
             if (_backgroundImage == null)
-                _backgroundImage = GameObject.FindGameObjectWithTag(BackgroundImageTag).GetOrAddComponent<SpriteRenderer>();
+                _backgroundImage = GameObject.FindGameObjectWithTag(BackgroundImageTag).GetOrAddComponent<Image>();
             return _backgroundImage;
         }
     }

@@ -194,6 +194,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(RepresentedCard.ImageFilePath, RepresentedCard.ImageWebURL), (output) => newSprite = output);
         if (newSprite != null)
             NewSprite = newSprite;
+        else
+            Image.sprite = CardGameManager.Current.CardBackImageSprite;
     }
 
     void OnDestroy()
