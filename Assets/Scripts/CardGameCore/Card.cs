@@ -10,9 +10,9 @@ public class Card
 
     public string SetCode { get; set; }
 
-    public IDictionary<string , PropertySet> Properties { get; set; }
+    public Dictionary<string , PropertySet> Properties { get; set; }
 
-    public Card(string id, string name, string setCode, IDictionary<string,PropertySet> properties)
+    public Card(string id, string name, string setCode, Dictionary<string,PropertySet> properties)
     {
         Id = id.Clone() as string;
         Name = name.Clone() as string;
@@ -21,7 +21,7 @@ public class Card
         this.Properties = this.CloneProperties();
     }
 
-    public IDictionary<string, PropertySet> CloneProperties()
+    public Dictionary<string, PropertySet> CloneProperties()
     {
         var ret = new Dictionary<string, PropertySet>();
         foreach (var p in Properties) {
@@ -39,10 +39,10 @@ public class Card
         cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
         return cardImageName;
     }
-    // TODO: BETTER MANAGEMENT OF GETTING IMAGEFILENAME
+
     public string ImageFileName {
         get { 
-            return UnityExtensionMethods.GetSafeFileName(string.Format(CardGameManager.Current.CardImageFileNameFormat, Id, Name, SetCode, StripNameToLowerAlphaNum()) + "." + CardGameManager.Current.CardImageFileType);
+            return UnityExtensionMethods.GetSafeFileName(Id + "." + CardGameManager.Current.CardImageFileType);
         }
     }
 
@@ -53,8 +53,11 @@ public class Card
     }
 
     public string ImageWebURL {
-        get { 
-            return CardGameManager.Current.CardImageURLBase + ImageFileName;
+        get {
+            PropertySet firstProp;
+            if (!Properties.TryGetValue(Properties.Keys.FirstOrDefault(), out firstProp))
+                firstProp = new PropertySet();
+            return CardGameManager.Current.CardImageURLBase + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode.ToLower(), StripNameToLowerAlphaNum(), firstProp.Value.Value) + "." + CardGameManager.Current.CardImageFileType;
         }
     }
 

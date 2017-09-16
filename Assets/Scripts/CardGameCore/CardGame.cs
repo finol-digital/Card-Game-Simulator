@@ -15,7 +15,7 @@ public class CardGame
     public const string AllCardsFileName = "AllCards.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
-    public const string DefaultCardImageFileNameFormat = "{0}";
+    public const string DefaultCardImageURLFormat = "{0}";
     public const int DefaultCopiesOfCardPerDeck = 4;
     public const int DefaultDeckCardStackCount = 15;
     public const string DefaultDeckFileType = "txt";
@@ -42,7 +42,13 @@ public class CardGame
     public string AllCardsURL { get; set; }
 
     [JsonProperty]
+    public bool AllCardsZipped { get; set; }
+
+    [JsonProperty]
     public string AllSetsURL { get; set; }
+
+    [JsonProperty]
+    public bool AllSetsZipped { get; set; }
 
     [JsonProperty]
     public bool AutoUpdate { get; set; }
@@ -66,13 +72,13 @@ public class CardGame
     public string CardIdIdentifier { get; set; }
 
     [JsonProperty]
-    public string CardImageFileNameFormat { get; set; }
-
-    [JsonProperty]
     public string CardImageFileType { get; set; }
 
     [JsonProperty]
     public string CardImageURLBase { get; set; }
+
+    [JsonProperty]
+    public string CardImageURLFormat { get; set; }
 
     [JsonProperty]
     public string CardNameIdentifier { get; set; }
@@ -115,7 +121,7 @@ public class CardGame
 
         BackgroundImageFileType = DefaultImageFileType;
         CardBackImageFileType = DefaultImageFileType;
-        CardImageFileNameFormat = DefaultCardImageFileNameFormat;
+        CardImageURLFormat = DefaultCardImageURLFormat;
         CardImageFileType = DefaultImageFileType;
         CardIdIdentifier = "id";
         CardNameIdentifier = "name";
@@ -134,22 +140,28 @@ public class CardGame
         try { 
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
-            Debug.LogError("Failed to load card game! Error: " + e.Message);
+            Debug.LogError("Failed to load card game! Error: " + e.Message + e.StackTrace);
             _error = e.Message;
             yield break;
         }
 
         string setsFile = FilePathBase + "/" + AllSetsFileName;
-        if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile)))
-            yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, setsFile);
+        if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile))) {
+            yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, AllSetsZipped ? setsFile + ".zip" : setsFile);
+            if (AllSetsZipped)
+                UnityExtensionMethods.ExtractZip(setsFile + ".zip", FilePathBase);
+        }
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
-        if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile)))
-            yield return UnityExtensionMethods.SaveURLToFile(AllCardsURL, cardsFile);
-        try { 
+        if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile))) {
+            yield return UnityExtensionMethods.SaveURLToFile(AllCardsURL, AllCardsZipped ? cardsFile + ".zip" : cardsFile);
+            if (AllCardsZipped)
+                UnityExtensionMethods.ExtractZip(cardsFile + ".zip", FilePathBase);
+        }
+        try {
             LoadJSONFromFile(setsFile, LoadSetFromJToken);
             LoadJSONFromFile(cardsFile, LoadCardFromJToken);
         } catch (Exception e) {
-            Debug.LogError("Failed to load card game data! Error: " + e.Message);
+            Debug.LogError("Failed to load card game data! Error: " + e.Message + e.StackTrace);
             _error = e.Message;
             yield break;
         }
@@ -171,9 +183,12 @@ public class CardGame
     {
         if (!File.Exists(file))
             return;
-
-        JArray jArray = JsonConvert.DeserializeObject<JArray>(File.ReadAllText(file));
-        foreach (JToken jToken in jArray)
+        
+        JToken root = JToken.Parse(File.ReadAllText(file));
+        IJEnumerable<JToken> jTokenEnumeration = root as JArray;
+        if (jTokenEnumeration == null)
+            jTokenEnumeration = (root as JObject).PropertyValues();
+        foreach (JToken jToken in jTokenEnumeration)
             load(jToken, DefaultSet);
     }
 
@@ -181,7 +196,7 @@ public class CardGame
     {
         if (setJToken == null)
             return;
-
+        
         string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSet;
         string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSet;
         if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
