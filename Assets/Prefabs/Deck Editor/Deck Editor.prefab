@@ -895,7 +895,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224889601546764672}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1027,7 +1027,7 @@ MonoBehaviour:
     type: 2}
   deckLoadMenuPrefab: {fileID: 1240882589060142, guid: 5f8f2d4006988c74ca0e02ce057e329a,
     type: 2}
-  deckSaveMenuPrefab: {fileID: 1825612736129938, guid: 0e1b94959fbbbb44e8022d149694aae5,
+  deckSaveMenuPrefab: {fileID: 1734947806896296, guid: 0e1b94959fbbbb44e8022d149694aae5,
     type: 2}
   deckEditorContent: {fileID: 224408426121836392}
   deckEditorScrollbar: {fileID: 114243208697385258}

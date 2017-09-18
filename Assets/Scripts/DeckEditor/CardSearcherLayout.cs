@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class CardSearcherLayout : MonoBehaviour
 {
+    public const float WidthCheck = 1000f;
 
-    public Vector2 searchNameLandscapePosition {
+    public Vector2 SearchNameLandscapePosition {
         get { return new Vector2(200f, 367.5f); }
     }
 
-    public Vector2 searchNamePortraitPosition {
+    public Vector2 SearchNamePortraitPosition {
         get { return new Vector2(200f, 467.5f); }
     }
 
@@ -19,10 +20,10 @@ public class CardSearcherLayout : MonoBehaviour
     #if UNITY_ANDROID && !UNITY_EDITOR
     void OnRectTransformDimensionsChange()
     {
-        if (Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
-            searchName.anchoredPosition = searchNamePortraitPosition;
+        if (GetComponent<RectTransform>().rect.width < WidthCheck)
+            searchName.anchoredPosition = SearchNamePortraitPosition;
         else
-            searchName.anchoredPosition = searchNameLandscapePosition;
+            searchName.anchoredPosition = SearchNameLandscapePosition;
         
         cardSearcher.ResultsIndex = 0;
         cardSearcher.UpdateSearchResultsPanel();
