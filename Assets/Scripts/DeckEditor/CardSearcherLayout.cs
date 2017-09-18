@@ -26,6 +26,7 @@ public class CardSearcherLayout : MonoBehaviour
         
         cardSearcher.ResultsIndex = 0;
         cardSearcher.UpdateSearchResultsPanel();
+        CardInfoViewer.Instance.IsVisible = false;
     }
     #endif
 

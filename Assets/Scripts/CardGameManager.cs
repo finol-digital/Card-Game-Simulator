@@ -116,6 +116,7 @@ public class CardGameManager : MonoBehaviour
         while (!Current.IsLoaded) {
             if (!string.IsNullOrEmpty(Current.Error)) {
                 // TODO: BETTER ERROR HANDLING
+                Debug.LogError(Current.Error);
                 Popup.Show(Current.Error);
                 yield break;
             }

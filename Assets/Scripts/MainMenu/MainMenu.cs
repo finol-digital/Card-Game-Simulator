@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameObject quitButton;
+
     public void GoToPlayer()
     {
         SceneManager.LoadScene(1);
@@ -19,4 +21,17 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit();
     }
+
+    #if UNITY_ANDROID && !UNITY_EDITOR
+    void Start()
+    {
+        quitButton.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+    }
+    #endif
 }

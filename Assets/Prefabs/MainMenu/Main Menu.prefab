@@ -516,6 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49fc900b90bc87e4f91d1bfa3ed95f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quitButton: {fileID: 1724602693319770}
 --- !u!114 &114611477577729408
 MonoBehaviour:
   m_ObjectHideFlags: 1
