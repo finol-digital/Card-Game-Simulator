@@ -11,6 +11,7 @@ public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
 
 public class DeckLoadMenu : MonoBehaviour
 {
+    public const string DefaultDeckName = "Untitled";
     public const string DeckSavePrompt = "Would you like to save this deck to file?";
 
     public RectTransform fileSelectionArea;
@@ -30,7 +31,7 @@ public class DeckLoadMenu : MonoBehaviour
         loadDeckFromFileButton.interactable = !string.IsNullOrEmpty(_selectedDeckFileName);
     }
 
-    public void Show(OnDeckLoadedDelegate callbackDeckLoad, DeckNameChangeDelegate callbackNameChange, string originalDeckName)
+    public void Show(OnDeckLoadedDelegate callbackDeckLoad, DeckNameChangeDelegate callbackNameChange, string originalDeckName = DefaultDeckName)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
@@ -63,6 +64,8 @@ public class DeckLoadMenu : MonoBehaviour
         fileSelectionTemplate.SetParent(fileSelectionArea.parent);
         fileSelectionTemplate.gameObject.SetActive(deckFiles.Count < 1);
         fileSelectionArea.sizeDelta = new Vector2(fileSelectionArea.sizeDelta.x, fileSelectionTemplate.rect.height * deckFiles.Count);
+
+        deckNameInputField.text = originalDeckName;
     }
 
     public void SelectDeckFileToLoad(bool isSelected, string deckFileName)

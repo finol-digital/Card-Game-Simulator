@@ -9,7 +9,6 @@ public delegate string DeckNameChangeDelegate(string newName);
 
 public class DeckEditor : MonoBehaviour
 {
-    public const string DefaultDeckName = "Untitled";
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
 
     public GameObject cardModelPrefab;
@@ -108,7 +107,7 @@ public class DeckEditor : MonoBehaviour
         foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
         RecentCardStackIndex = 0;
-        deckEditorNameText.text = DefaultDeckName;
+        deckEditorNameText.text = DeckLoadMenu.DefaultDeckName;
 
         // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
         CardInfoViewer.Instance.IsVisible = false;
@@ -117,7 +116,7 @@ public class DeckEditor : MonoBehaviour
     public string UpdateDeckName(string newName)
     {
         if (string.IsNullOrEmpty(newName))
-            newName = DefaultDeckName;
+            newName = DeckLoadMenu.DefaultDeckName;
         deckEditorNameText.text = UnityExtensionMethods.GetSafeFileName(newName);
         return deckEditorNameText.text;
     }

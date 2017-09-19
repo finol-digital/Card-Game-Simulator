@@ -218,8 +218,8 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: cardgamesimulator
+  AndroidKeystoreName: C:/Users/David/Documents/GitHub/Card Game Simulator/cgs.keystore
+  AndroidKeyaliasName: davidfinolcgs
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   androidEnableBanner: 1

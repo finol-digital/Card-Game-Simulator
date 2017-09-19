@@ -76,8 +76,10 @@ public class CardGameManager : MonoBehaviour
                 defaultGameIndex = GameSelectionOptions.Count - 1;
         }
 
-        if (GameSelection == null)
+        if (GameSelection == null) {
+            SelectCardGame(defaultGameIndex);
             return;
+        }
 
         GameSelection.options = GameSelectionOptions;
         GameSelection.onValueChanged.RemoveAllListeners();
