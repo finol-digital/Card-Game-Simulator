@@ -27,7 +27,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     private List<Dropdown.OptionData> _propertyOptions;
     private int _selectedPropertyIndex;
     private CardModel _selectedCardModel;
-    public bool _isVisible;
+    private bool _isVisible;
 
     public void ResetPropertyOptions()
     {

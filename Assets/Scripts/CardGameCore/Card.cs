@@ -4,6 +4,10 @@ using System.Linq;
 
 public class Card
 {
+    public static Card Blank {
+        get { return new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertySet>()); }
+    }
+
     public string Id { get; set; }
 
     public string Name { get; set; }

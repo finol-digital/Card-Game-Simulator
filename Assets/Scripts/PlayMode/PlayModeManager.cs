@@ -5,19 +5,26 @@ using UnityEngine.SceneManagement;
 
 public class PlayModeManager : MonoBehaviour
 {
+    public RectTransform playArea;
     public GameObject deckLoadMenuPrefab;
+    public DeckZone deckZone;
 
-    private Deck _deck;
     private DeckLoadMenu _deckLoader;
 
     void Start()
     {
         DeckLoader.Show(LoadDeck, UnityExtensionMethods.GetSafeFileName);
+        playArea.gameObject.GetOrAddComponent<CardStack>().CardAddedActions.Add(DoubleClickToFlip);
     }
 
     public void LoadDeck(Deck newDeck)
     {
-        _deck = newDeck;
+        deckZone.Deck = newDeck;
+    }
+
+    public void DoubleClickToFlip(CardStack cardStack, CardModel cardModel)
+    {
+        cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
     }
 
     public void BackToMainMenu()

@@ -36,6 +36,7 @@ public class DeckEditor : MonoBehaviour
         CardStacks.Clear();
         for (int i = 0; i < CardGameManager.Current.DeckCardStackCount; i++) {
             CardStack newCardStack = Instantiate(cardStackPrefab, deckEditorContent).GetOrAddComponent<CardStack>();
+            newCardStack.type = CardStackType.Vertical;
             newCardStack.CardAddedActions.Add(OnAddCardModel);
             CardStacks.Add(newCardStack);
         }

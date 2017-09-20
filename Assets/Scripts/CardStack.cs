@@ -6,8 +6,18 @@ using UnityEngine.EventSystems;
 
 public delegate void OnDropDelegate(CardStack cardStack,CardModel cardModel);
 
+public enum CardStackType
+{
+    Full,
+    Vertical,
+    Horizontal,
+    Bounds
+}
+
 public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
+    public CardStackType type;
+
     private List<OnDropDelegate> _cardAddedActions;
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -19,9 +29,9 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (cardModel != null) {
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                draggedCardModel.CreatePlaceHolderInPanel(this.transform as RectTransform);
+                draggedCardModel.PlaceHolderStack = this;
             else
-                cardModel.CreatePlaceHolderInPanel(this.transform as RectTransform);
+                cardModel.PlaceHolderStack = this;
         }
     }
 
@@ -34,9 +44,9 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (cardModel != null) {
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                draggedCardModel.PlaceHolder = null;
+                draggedCardModel.PlaceHolderStack = null;
             else
-                cardModel.PlaceHolder = null;
+                cardModel.PlaceHolderStack = null;
         }
     }
 
@@ -50,9 +60,8 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
-            foreach (OnDropDelegate cardAddAction in CardAddedActions) {
+            foreach (OnDropDelegate cardAddAction in CardAddedActions)
                 cardAddAction(this, cardModel);
-            }
         }
     }
 
