@@ -12,7 +12,7 @@ public class DeckZone : MonoBehaviour, IDropHandler
 
     void Start()
     {
-        GetComponent<CardStack>().CardAddedActions.Add(CardModel.HideCard);
+        GetComponent<CardStack>().OnCardDropActions.Add(CardModel.HideCard);
     }
 
     public void Shuffle(CardModel unused)

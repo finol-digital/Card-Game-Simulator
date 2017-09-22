@@ -13,7 +13,7 @@ public class HandZone : MonoBehaviour, IDropHandler
 
     void Start()
     {
-        handExtended.gameObject.GetOrAddComponent<CardStack>().CardAddedActions.Add(CardModel.ShowCard);
+        handExtended.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(CardModel.ShowCard);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -27,8 +27,7 @@ public class HandZone : MonoBehaviour, IDropHandler
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
 
-            CardModel newCardModel = Instantiate(cardModel.gameObject, handExtended).GetOrAddComponent<CardModel>();
-            newCardModel.RepresentedCard = cardModel.RepresentedCard;
+            CardModel newCardModel = cardModel.Clone(handExtended);
             newCardModel.DoubleClickEvent = CardModel.ToggleFacedown;
             newCardModel.CanvasGroup.blocksRaycasts = true;
         }

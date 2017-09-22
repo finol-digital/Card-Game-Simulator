@@ -121,7 +121,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: deddcc44bff93db3a2b201206fedca348ae6158b
+  bundleVersion: 508442f8cab674aa276f85fba80018ae39bf4d81
   preloadedAssets: []
   metroInputSource: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -144,7 +144,7 @@ PlayerSettings:
     Android: com.finoldigital.cardgamesim
     Standalone: com.FinolDigital.CardGameSim
   buildNumber: {}
-  AndroidBundleVersionCode: 2
+  AndroidBundleVersionCode: 3
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

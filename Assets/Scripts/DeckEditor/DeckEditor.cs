@@ -37,7 +37,7 @@ public class DeckEditor : MonoBehaviour
         for (int i = 0; i < CardGameManager.Current.DeckCardStackCount; i++) {
             CardStack newCardStack = Instantiate(cardStackPrefab, deckEditorContent).GetOrAddComponent<CardStack>();
             newCardStack.type = CardStackType.Vertical;
-            newCardStack.CardAddedActions.Add(OnAddCardModel);
+            newCardStack.OnCardDropActions.Add(OnAddCardModel);
             CardStacks.Add(newCardStack);
         }
         deckEditorContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardGameManager.Current.DeckCardStackCount, deckEditorContent.sizeDelta.y);
@@ -56,10 +56,8 @@ public class DeckEditor : MonoBehaviour
     {
         if (cardToAdd == null || CardStacks.Count < 1)
             return;
-
-        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
-        EventSystem.current.SetSelectedGameObject(CardInfoViewer.Instance.gameObject, cardToAdd.RecentPointerEventData);
-        CardInfoViewer.Instance.IsVisible = false;
+        
+        EventSystem.current.SetSelectedGameObject(null, cardToAdd.RecentPointerEventData);
 
         AddCard(cardToAdd.RepresentedCard);
     }
@@ -94,7 +92,6 @@ public class DeckEditor : MonoBehaviour
             return;
 
         GameObject.Destroy(cardModel.gameObject);
-        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
         CardInfoViewer.Instance.IsVisible = false;
     }
 
@@ -110,7 +107,6 @@ public class DeckEditor : MonoBehaviour
         RecentCardStackIndex = 0;
         deckEditorNameText.text = DeckLoadMenu.DefaultDeckName;
 
-        // HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
         CardInfoViewer.Instance.IsVisible = false;
     }
 

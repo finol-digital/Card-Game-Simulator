@@ -17,13 +17,17 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public bool ClonesOnDrag { get; set; }
 
-    public Vector2 DragOffset { get; set; }
+    public int PrimaryDragId { get; private set; }
+
+    public Vector2 DragOffset { get; private set; }
 
     public bool SelectedOnDown { get; private set; }
 
     public OnDoubleClickDelegate DoubleClickEvent { get; set; }
 
     public PointerEventData RecentPointerEventData { get; set; }
+
+    public bool AllowsRotation { get; set; }
 
     private Card _representedCard;
     private Dictionary<int, CardModel> _draggedClones;
@@ -36,12 +40,17 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     private CanvasGroup _canvasGroup;
     private Canvas _canvas;
 
+    public CardModel Clone(Transform parent)
+    {
+        CardModel clone = Instantiate(this.gameObject, this.transform.position, this.transform.rotation, parent).GetOrAddComponent<CardModel>();
+        clone.RepresentedCard = this.RepresentedCard;
+        clone.UnHighlight();
+        return clone;
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (eventData.dragging)
-            return;
-
-        // HACK TO SELECT ON DOWN WHEN THE CARD INFO VIEWER IS VISIBLE; CAN'T USE CARDINFOVIEWER.ISVISIBLE DUE TO CONSTRAINTS WITH THE EVENT SYSTEM
+        // HACK TO SELECT ON DOWN WHEN THE CARD INFO VIEWER IS VISIBLE; CAN'T USE CARDINFOVIEWER.ISVISIBLE SINCE IT IS SET TO FALSE WHEN POINTER DOWN, BEFORE THIS METHOD IS CALLED
         SelectedOnDown = CardInfoViewer.Instance.rectTransform.anchorMax.y < (CardInfoViewer.HiddenYMax + CardInfoViewer.VisibleYMax) / 2.0f && CardInfoViewer.Instance.SelectedCardModel != this;
         if (SelectedOnDown)
             EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
@@ -51,7 +60,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (RecentPointerEventData == null || RecentPointerEventData.pointerId != eventData.pointerId || eventData.dragging || eventData.selectedObject == CardInfoViewer.Instance.gameObject)
+        if (RecentPointerEventData == null || RecentPointerEventData.pointerId != eventData.pointerId || DraggedClones.ContainsKey(eventData.pointerId) || this.transform.parent.GetComponent<CardStack>() == null)
             return;
         
         if (!SelectedOnDown && EventSystem.current.currentSelectedGameObject == this.gameObject && DoubleClickEvent != null)
@@ -75,87 +84,105 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        RecentPointerEventData = eventData;
-
-        DragOffset = (((Vector2)this.transform.position) - eventData.position);
-        if (ClonesOnDrag)
-            DragClone();
-        else
-            MoveToCanvas();
+        CardModel cardModel = this;
+        if (ClonesOnDrag) {
+            DraggedClones [eventData.pointerId] = Clone(Canvas.transform);
+            cardModel = DraggedClones [eventData.pointerId];
+            cardModel.CanvasGroup.blocksRaycasts = false;
+        }
+        
+        if (cardModel.PrimaryDragId == 0) {
+            cardModel.PrimaryDragId = eventData.pointerId;
+            cardModel.DragOffset = (((Vector2)cardModel.transform.position) - eventData.position);
+        }
         
         EventSystem.current.SetSelectedGameObject(null, eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        RecentPointerEventData = eventData;
-
         CardModel cardModel;
         if (!DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
             cardModel = this;
 
-        Vector2 targetPos = eventData.position + DragOffset;
-        cardModel.transform.position = targetPos;
-        cardModel.UpdatePlaceHolderPosition();
+        if (eventData.pointerId == cardModel.PrimaryDragId)
+            cardModel.UpdatePosition(eventData.position);
+        else if (AllowsRotation)
+            cardModel.UpdateRotation(eventData.position);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        RecentPointerEventData = eventData;
-
         CardModel cardModel;
         if (!DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
             cardModel = this;
+        else
+            DraggedClones.Remove(eventData.pointerId);
+
+        if (cardModel.PrimaryDragId == eventData.pointerId)
+            cardModel.PrimaryDragId = 0;
         
         if (cardModel.PlaceHolder != null)
             cardModel.StartCoroutine(cardModel.MoveToPlaceHolder());
-        else
+        else if (cardModel.transform.parent.GetComponent<CardStack>() == null)
             Destroy(cardModel.gameObject);
     }
 
-    public void DragClone()
+    public void UpdatePosition(Vector2 pointerPosition)
     {
-        CardModel draggedClone = Instantiate(this.gameObject, Canvas.transform).GetOrAddComponent<CardModel>();
-        draggedClone.CanvasGroup.blocksRaycasts = false;
-        draggedClone.RepresentedCard = this.RepresentedCard;
-        draggedClone.UnHighlight();
-        DraggedClones [RecentPointerEventData.pointerId] = draggedClone;
+        Vector2 targetPosition = pointerPosition + DragOffset;
+        CardStack cardStack = this.transform.parent.GetComponent<CardStack>();
+        if (cardStack != null)
+            UpdatePositionInCardStack(targetPosition, cardStack);
+        else
+            this.transform.position = targetPosition;
+
+        if (PlaceHolderStack != null)
+            PlaceHolderStack.UpdateLayout(PlaceHolder, targetPosition);
     }
 
-    public void MoveToCanvas()
+    public void UpdatePositionInCardStack(Vector2 targetPosition, CardStack cardStack)
     {
-        CardStack placeHolderStack = transform.parent.GetComponent<CardStack>();
-        if (placeHolderStack != null)
-            PlaceHolderStack = placeHolderStack;
-        CanvasGroup.blocksRaycasts = false;
-        this.transform.SetParent(Canvas.transform);
-        this.transform.SetAsLastSibling();
-    }
+        this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
+        cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
 
-    public void UpdatePlaceHolderPosition()
-    {
-        if (PlaceHolder == null || PlaceHolderStack == null || PlaceHolderStack.type == CardStackType.Full)
-            return;
-
-        if (PlaceHolderStack.type == CardStackType.Vertical || PlaceHolderStack.type == CardStackType.Horizontal) {
-            Vector2 targetPos = this.transform.position;
-            int newSiblingIndex = PlaceHolder.transform.parent.childCount;
-            for (int i = 0; i < PlaceHolder.transform.parent.childCount; i++) {
-                bool goesBelow = targetPos.y > PlaceHolder.transform.parent.GetChild(i).position.y;
-                if (PlaceHolderStack.type == CardStackType.Horizontal)
-                    goesBelow = targetPos.x < PlaceHolder.transform.parent.GetChild(i).position.x;
-                if (goesBelow) {
-                    newSiblingIndex = i;
-                    if (PlaceHolder.transform.GetSiblingIndex() < newSiblingIndex)
-                        newSiblingIndex--;
-                    break;
+        if (cardStack.type == CardStackType.Full || cardStack.type == CardStackType.Area) {
+            PlaceHolderStack = cardStack;
+            ParentToCanvas();
+            this.transform.position = targetPosition;
+        } else if (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal) {
+            RectTransform stackRT = cardStack.transform as RectTransform;
+            if (cardStack.free ||
+                (cardStack.type == CardStackType.Vertical && (targetPosition.y < (stackRT.position.y + stackRT.offsetMin.y * Canvas.scaleFactor) || targetPosition.y > (stackRT.position.y + stackRT.offsetMax.y * Canvas.scaleFactor))) ||
+                (cardStack.type == CardStackType.Horizontal && (targetPosition.x < stackRT.rect.xMin || targetPosition.x > stackRT.rect.xMax))) {
+                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
+                PlaceHolderStack = null;
+                ParentToCanvas();
+                this.transform.position = targetPosition;
+            } else {
+                bool isMovingTop = cardStack.type == CardStackType.Horizontal ? 
+                    targetPosition.x > cardStack.transform.GetChild(cardStack.transform.childCount - 1).position.x : targetPosition.y < cardStack.transform.GetChild(cardStack.transform.childCount - 1).position.y;
+                if (isMovingTop) {
+                    PlaceHolderStack = cardStack;
+                    this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = true;
+                    this.transform.position = cardStack.type == CardStackType.Horizontal ? new Vector2(targetPosition.x, this.transform.position.y) : new Vector2(this.transform.position.x, targetPosition.y);
+                } else {
+                    this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
+                    PlaceHolderStack = null;
                 }
             }
-            PlaceHolder.transform.SetSiblingIndex(newSiblingIndex);
-        } else if (PlaceHolderStack.type == CardStackType.Bounds) {
-            PlaceHolder.transform.position = this.transform.position;
-            // TODO: check bounds of the card stack area, to clamp within it
         }
+    }
+
+    public void ParentToCanvas()
+    {
+        this.transform.SetParent(Canvas.transform);
+        this.transform.SetAsLastSibling();
+        CanvasGroup.blocksRaycasts = false;
+    }
+
+    public void UpdateRotation(Vector2 pointerPosition)
+    {
     }
 
     public IEnumerator MoveToPlaceHolder()
@@ -171,6 +198,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             yield break;
         }
 
+        this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
         this.transform.SetParent(PlaceHolder.parent);
         this.transform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
         PlaceHolder = null;
@@ -279,6 +307,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             if (_placeHolder != null)
                 Destroy(_placeHolder.gameObject);
             _placeHolder = value;
+            if (_placeHolder == null)
+                _placeHolderStack = null;
         }
     }
 

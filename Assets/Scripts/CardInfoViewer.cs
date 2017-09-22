@@ -66,6 +66,9 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     void Update()
     {
+        if (SelectedCardModel == null)
+            IsVisible = false;
+
         // TODO: CONFIRM THAT THIS METHOD OF HIDING AND SHOWING DOESN'T CAUSE TOO MUCH OF A PERFORMANCE IMPACT
         Vector2 targetAnchorMin = new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
         Vector2 targetAnchorMax = new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, HiddenYMax, animationSpeed * Time.deltaTime));

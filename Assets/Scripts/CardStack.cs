@@ -11,12 +11,13 @@ public enum CardStackType
     Full,
     Vertical,
     Horizontal,
-    Bounds
+    Area
 }
 
 public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
     public CardStackType type;
+    public bool free;
 
     private List<OnDropDelegate> _cardAddedActions;
 
@@ -29,9 +30,8 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (cardModel != null) {
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                draggedCardModel.PlaceHolderStack = this;
-            else
-                cardModel.PlaceHolderStack = this;
+                cardModel = draggedCardModel;
+            cardModel.PlaceHolderStack = this;
         }
     }
 
@@ -44,8 +44,8 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (cardModel != null) {
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                draggedCardModel.PlaceHolderStack = null;
-            else
+                cardModel = draggedCardModel;
+            if (cardModel.PlaceHolderStack == this)
                 cardModel.PlaceHolderStack = null;
         }
     }
@@ -60,12 +60,36 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
-            foreach (OnDropDelegate cardAddAction in CardAddedActions)
-                cardAddAction(this, cardModel);
+            foreach (OnDropDelegate cardDropAction in OnCardDropActions)
+                cardDropAction(this, cardModel);
         }
     }
 
-    public List<OnDropDelegate> CardAddedActions {
+    public void UpdateLayout(RectTransform child, Vector2 targetPosition)
+    {
+        if (child == null || this.type == CardStackType.Full)
+            return;
+
+        if (this.type == CardStackType.Vertical || this.type == CardStackType.Horizontal) {
+            child.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
+            int newSiblingIndex = this.transform.childCount;
+            for (int i = 0; i < this.transform.childCount; i++) {
+                bool goesBelow = targetPosition.y > this.transform.GetChild(i).position.y;
+                if (this.type == CardStackType.Horizontal)
+                    goesBelow = targetPosition.x < this.transform.GetChild(i).position.x;
+                if (goesBelow) {
+                    newSiblingIndex = i;
+                    if (child.GetSiblingIndex() < newSiblingIndex)
+                        newSiblingIndex--;
+                    break;
+                }
+            }
+            child.SetSiblingIndex(newSiblingIndex);
+        } else if (this.type == CardStackType.Area)
+            child.position = targetPosition;
+    }
+
+    public List<OnDropDelegate> OnCardDropActions {
         get {
             if (_cardAddedActions == null)
                 _cardAddedActions = new List<OnDropDelegate>();

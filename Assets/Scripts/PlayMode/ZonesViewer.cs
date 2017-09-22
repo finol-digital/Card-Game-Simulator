@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class ZonesViewer : MonoBehaviour
 {
-    public const float HiddenWidth = 200f;
+    public const float HiddenWidth = 395f;
     public const float TotalWidth = 475f;
 
     public RectTransform zonesCondensed;
     public RectTransform zonesExtended;
-    public float animationSpeed = 5.0f;
 
     public bool IsVisible { get; set; }
 
     public bool WasVisible { get; private set; }
+
+    void Start()
+    {
+        IsVisible = true;
+        #if UNITY_ANDROID && !UNITY_EDITOR
+        IsVisible = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height;
+        #endif
+        WasVisible = !IsVisible;
+    }
 
     void Update()
     {
@@ -27,5 +35,12 @@ public class ZonesViewer : MonoBehaviour
 
         WasVisible = IsVisible;
     }
+
+    #if UNITY_ANDROID && !UNITY_EDITOR
+    void OnRectTransformDimensionsChange()
+    {
+        IsVisible = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height;
+    }
+    #endif
 
 }
