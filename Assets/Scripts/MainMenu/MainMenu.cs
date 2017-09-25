@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    #if UNITY_ANDROID && !UNITY_EDITOR
+    #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
     void Start()
     {
         quitButton.SetActive(false);

@@ -17,7 +17,7 @@ public class CardSearcherLayout : MonoBehaviour
     public RectTransform searchName;
     public CardSearcher cardSearcher;
 
-    #if UNITY_ANDROID && !UNITY_EDITOR
+    #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
     void OnRectTransformDimensionsChange()
     {
         if (GetComponent<RectTransform>().rect.width < WidthCheck)

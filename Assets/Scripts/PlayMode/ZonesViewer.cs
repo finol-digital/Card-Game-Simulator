@@ -17,7 +17,7 @@ public class ZonesViewer : MonoBehaviour
     void Start()
     {
         IsVisible = true;
-        #if UNITY_ANDROID && !UNITY_EDITOR
+        #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         IsVisible = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height;
         #endif
         WasVisible = !IsVisible;
@@ -36,7 +36,7 @@ public class ZonesViewer : MonoBehaviour
         WasVisible = IsVisible;
     }
 
-    #if UNITY_ANDROID && !UNITY_EDITOR
+    #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
     void OnRectTransformDimensionsChange()
     {
         IsVisible = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height;
