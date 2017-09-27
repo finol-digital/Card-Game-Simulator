@@ -13,9 +13,10 @@ public class DeckZone : MonoBehaviour, IDropHandler
     void Start()
     {
         GetComponent<CardStack>().OnCardDropActions.Add(CardModel.HideCard);
+        GetComponent<CardStack>().OnCardDropActions.Add(CardModel.ResetRotation);
     }
 
-    public void Shuffle(CardModel unused)
+    public void Shuffle(Vector2 unused1, Vector2 unused2)
     {
         Deck = new Deck(Deck.Name, Deck.ToString());
     }
@@ -30,7 +31,8 @@ public class DeckZone : MonoBehaviour, IDropHandler
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
-            cardModel.DoubleClickEvent = Shuffle;
+            cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
+            cardModel.SecondaryDragAction = Shuffle;
         }
     }
 
@@ -50,7 +52,8 @@ public class DeckZone : MonoBehaviour, IDropHandler
                 CardModel newCard = Instantiate(cardPrefab, this.transform).GetOrAddComponent<CardModel>();
                 newCard.RepresentedCard = card;
                 newCard.Facedown = true;
-                newCard.DoubleClickEvent = Shuffle;
+                newCard.DoubleClickEvent = CardModel.ToggleFacedown;
+                newCard.SecondaryDragAction = Shuffle;
             }
         }
     }

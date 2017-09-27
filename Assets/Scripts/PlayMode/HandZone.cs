@@ -14,6 +14,7 @@ public class HandZone : MonoBehaviour, IDropHandler
     void Start()
     {
         handExtended.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(CardModel.ShowCard);
+        handExtended.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(CardModel.ResetRotation);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -29,6 +30,7 @@ public class HandZone : MonoBehaviour, IDropHandler
 
             CardModel newCardModel = cardModel.Clone(handExtended);
             newCardModel.DoubleClickEvent = CardModel.ToggleFacedown;
+            newCardModel.SecondaryDragAction = null;
             newCardModel.CanvasGroup.blocksRaycasts = true;
         }
     }

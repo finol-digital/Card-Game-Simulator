@@ -14,7 +14,7 @@ public class PlayModeManager : MonoBehaviour
     void Start()
     {
         DeckLoader.Show(LoadDeck, UnityExtensionMethods.GetSafeFileName);
-        playArea.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(DoubleClickToFlip);
+        playArea.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(SetPlayActions);
     }
 
     public void LoadDeck(Deck newDeck)
@@ -22,9 +22,10 @@ public class PlayModeManager : MonoBehaviour
         deckZone.Deck = newDeck;
     }
 
-    public void DoubleClickToFlip(CardStack cardStack, CardModel cardModel)
+    public void SetPlayActions(CardStack cardStack, CardModel cardModel)
     {
         cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
+        cardModel.SecondaryDragAction = cardModel.Rotate;
     }
 
     public void BackToMainMenu()

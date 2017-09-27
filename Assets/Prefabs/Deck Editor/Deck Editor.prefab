@@ -1030,6 +1030,7 @@ MonoBehaviour:
   deckSaveMenuPrefab: {fileID: 1734947806896296, guid: 0e1b94959fbbbb44e8022d149694aae5,
     type: 2}
   deckEditorContent: {fileID: 224408426121836392}
+  deckEditorScrollRect: {fileID: 114871026241885584}
   deckEditorScrollbar: {fileID: 114243208697385258}
   deckEditorNameText: {fileID: 114545811908978588}
 --- !u!114 &114308443340881178

@@ -16,6 +16,7 @@ public class DeckEditor : MonoBehaviour
     public GameObject deckLoadMenuPrefab;
     public GameObject deckSaveMenuPrefab;
     public RectTransform deckEditorContent;
+    public ScrollRect deckEditorScrollRect;
     public Scrollbar deckEditorScrollbar;
     public Text deckEditorNameText;
 
@@ -37,6 +38,7 @@ public class DeckEditor : MonoBehaviour
         for (int i = 0; i < CardGameManager.Current.DeckCardStackCount; i++) {
             CardStack newCardStack = Instantiate(cardStackPrefab, deckEditorContent).GetOrAddComponent<CardStack>();
             newCardStack.type = CardStackType.Vertical;
+            newCardStack.container = deckEditorScrollRect;
             newCardStack.OnCardDropActions.Add(OnAddCardModel);
             CardStacks.Add(newCardStack);
         }
