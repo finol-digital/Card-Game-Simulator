@@ -11,34 +11,33 @@ public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
 
 public class DeckLoadMenu : MonoBehaviour
 {
-    public const string DefaultDeckName = "Untitled";
-    public const string DeckSavePrompt = "Would you like to save this deck to file?";
+    public const string DefaultName = "Untitled";
+    public const string SavePrompt = "Would you like to save this deck to file?";
 
     public RectTransform fileSelectionArea;
     public RectTransform fileSelectionTemplate;
-    public Button loadDeckFromFileButton;
-    public InputField deckNameInputField;
+    public Button loadFromFileButton;
+    public InputField nameInputField;
     public TMPro.TMP_InputField textInputField;
 
-    private OnDeckLoadedDelegate _deckLoadCallback;
-    private DeckNameChangeDelegate _deckNameChangeCallback;
-    private string _originalDeckName;
-    private string _selectedDeckFileName;
-    private Deck _deckToSave;
+    public OnDeckLoadedDelegate LoadCallback { get; private set; }
 
-    void Update()
-    {
-        loadDeckFromFileButton.interactable = !string.IsNullOrEmpty(_selectedDeckFileName);
-    }
+    public DeckNameChangeDelegate NameChangeCallback { get; private set; }
 
-    public void Show(OnDeckLoadedDelegate callbackDeckLoad, DeckNameChangeDelegate callbackNameChange, string originalDeckName = DefaultDeckName)
+    public string OriginalName { get; private set; }
+
+    public string SelectedFileName { get; private set; }
+
+    public Deck LoadedDeck { get; private set; }
+
+    public void Show(OnDeckLoadedDelegate loadCallback, DeckNameChangeDelegate nameChangeCallback, string originalName = DefaultName)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
-        _deckLoadCallback = callbackDeckLoad;
-        _deckNameChangeCallback = callbackNameChange;
-        _originalDeckName = originalDeckName;
-        _selectedDeckFileName = string.Empty;
+        LoadCallback = loadCallback;
+        NameChangeCallback = nameChangeCallback;
+        OriginalName = originalName;
+        SelectedFileName = string.Empty;
         string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath) ? Directory.GetFiles(CardGameManager.Current.DecksFilePath) : new string[0];
         List<string> deckFiles = new List<string>();
         foreach (string fileName in files)
@@ -55,79 +54,84 @@ public class DeckLoadMenu : MonoBehaviour
             deckFileSelection.transform.localPosition = pos;
             Toggle toggle = deckFileSelection.GetComponent<Toggle>();
             toggle.isOn = false;
-            UnityAction<bool> valueChange = new UnityAction<bool>(isOn => SelectDeckFileToLoad(isOn, deckFile));
+            UnityAction<bool> valueChange = new UnityAction<bool>(isOn => SelectFileToLoad(isOn, deckFile));
             toggle.onValueChanged.AddListener(valueChange);
             Text labelText = deckFileSelection.GetComponentInChildren<Text>();
-            labelText.text = GetDeckNameFromPath(deckFile);
+            labelText.text = GetNameFromPath(deckFile);
             pos.y -= fileSelectionTemplate.rect.height;
         }
         fileSelectionTemplate.SetParent(fileSelectionArea.parent);
         fileSelectionTemplate.gameObject.SetActive(deckFiles.Count < 1);
         fileSelectionArea.sizeDelta = new Vector2(fileSelectionArea.sizeDelta.x, fileSelectionTemplate.rect.height * deckFiles.Count);
 
-        deckNameInputField.text = originalDeckName;
+        nameInputField.text = originalName;
     }
 
-    public void SelectDeckFileToLoad(bool isSelected, string deckFileName)
+    void Update()
+    {
+        loadFromFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
+    }
+
+    public void SelectFileToLoad(bool isSelected, string deckFileName)
     {
         if (!isSelected || string.IsNullOrEmpty(deckFileName))
             return;
         
-        _deckNameChangeCallback(GetDeckNameFromPath(deckFileName));
-        if (deckFileName.Equals(_selectedDeckFileName))
-            LoadDeckFromFileAndHide();
-        _selectedDeckFileName = deckFileName;
+        NameChangeCallback(GetNameFromPath(deckFileName));
+        if (deckFileName.Equals(SelectedFileName))
+            LoadFromFileAndHide();
+        SelectedFileName = deckFileName;
     }
 
-    public string GetDeckNameFromPath(string deckFilePath)
+    public string GetNameFromPath(string filePath)
     {
-        int startName = deckFilePath.LastIndexOf(Path.DirectorySeparatorChar) + 1;
-        int endName = deckFilePath.LastIndexOf('.');
-        return deckFilePath.Substring(startName, endName - startName);
+        int startName = filePath.LastIndexOf(Path.DirectorySeparatorChar) + 1;
+        int endName = filePath.LastIndexOf('.');
+        return filePath.Substring(startName, endName - startName);
     }
 
-    public void LoadDeckFromFileAndHide()
+    public void LoadFromFileAndHide()
     {
         string deckText = string.Empty;
         try { 
-            deckText = File.ReadAllText(_selectedDeckFileName);
+            deckText = File.ReadAllText(SelectedFileName);
         } catch (Exception e) {
             Debug.LogError("Failed to load deck!: " + e.Message);
             CardGameManager.Instance.Popup.Show("There was an error while attempting to read the deck list from file: " + e.Message);
         }
 
-        Deck newDeck = new Deck(GetDeckNameFromPath(_selectedDeckFileName), deckText);
-        _deckLoadCallback(newDeck);
+        Deck newDeck = new Deck(GetNameFromPath(SelectedFileName), deckText);
+        LoadCallback(newDeck);
         Hide();
     }
 
-    public void ChangeDeckName(string newName)
+    public void ChangeName(string newName)
     {
-        deckNameInputField.text = _deckNameChangeCallback(newName);
+        nameInputField.text = NameChangeCallback(newName);
     }
 
-    public void PasteClipboardIntoDeckText()
+    public void PasteClipboardIntoText()
     {
         textInputField.text = UniClipboard.GetText();
     }
 
     public void LoadDeckFromTextAndHide()
     {
-        Deck newDeck = new Deck(deckNameInputField.text, textInputField.text);
-        _deckLoadCallback(newDeck);
-        _deckToSave = newDeck;
+        Deck newDeck = new Deck(nameInputField.text, textInputField.text);
+        LoadCallback(newDeck);
+        LoadedDeck = newDeck;
         PromptForSave();
         Hide();
     }
 
     public void PromptForSave()
     {
-        CardGameManager.Instance.Popup.Prompt(DeckSavePrompt, DoSaveNoOverwrite);
+        CardGameManager.Instance.Popup.Prompt(SavePrompt, DoSaveNoOverwrite);
     }
 
     public void DoSaveNoOverwrite()
     {
-        if (_deckToSave == null || !File.Exists(_deckToSave.FilePath)) {
+        if (LoadedDeck == null || !File.Exists(LoadedDeck.FilePath)) {
             DoSave();
             return;
         }
@@ -142,12 +146,12 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void DoSave()
     {
-        DeckSaveMenu.SaveToFile(_deckToSave);
+        DeckSaveMenu.SaveToFile(LoadedDeck);
     }
 
     public void CancelAndHide()
     {
-        _deckNameChangeCallback(_originalDeckName);
+        NameChangeCallback(OriginalName);
         Hide();
     }
 

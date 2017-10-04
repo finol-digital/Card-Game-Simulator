@@ -70,7 +70,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (RecentPointerEventData == null || RecentPointerEventData.pointerId != eventData.pointerId || eventData.button == PointerEventData.InputButton.Right || DraggedClones.ContainsKey(eventData.pointerId))
+        if (RecentPointerEventData == null || RecentPointerEventData.pointerId != eventData.pointerId || eventData.button == PointerEventData.InputButton.Right || eventData.dragging || DraggedClones.ContainsKey(eventData.pointerId))
             return;
         
         if (!SelectedOnDown && EventSystem.current.currentSelectedGameObject == this.gameObject && DoubleClickEvent != null)
@@ -168,17 +168,17 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
         cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
 
-        if (!cardStack.free && cardStack.container != null) {
+        if (!cardStack.isFree && cardStack.scrollRectContainer != null) {
             switch (dragPhase) {
                 case DragPhase.Begin:
-                    cardStack.container.OnBeginDrag(RecentPointerEventData);
+                    cardStack.scrollRectContainer.OnBeginDrag(RecentPointerEventData);
                     break;
                 case DragPhase.Drag:
-                    cardStack.container.OnDrag(RecentPointerEventData);
+                    cardStack.scrollRectContainer.OnDrag(RecentPointerEventData);
                     break;
                 case DragPhase.End:
                 default:
-                    cardStack.container.OnEndDrag(RecentPointerEventData);
+                    cardStack.scrollRectContainer.OnEndDrag(RecentPointerEventData);
                     break;
             }
         }
@@ -191,11 +191,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
         } else if (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal) {
             RectTransform stackRT = cardStack.transform as RectTransform;
-            if (cardStack.free ||
+            if (cardStack.isFree ||
                 (cardStack.type == CardStackType.Vertical && (targetPosition.y < (stackRT.position.y + stackRT.offsetMin.y * Canvas.scaleFactor) || targetPosition.y > (stackRT.position.y + stackRT.offsetMax.y * Canvas.scaleFactor))) ||
                 (cardStack.type == CardStackType.Horizontal && (targetPosition.x < stackRT.rect.xMin || targetPosition.x > stackRT.rect.xMax))) {
-                if (cardStack.container != null)
-                    cardStack.container.OnEndDrag(RecentPointerEventData);
+                if (cardStack.scrollRectContainer != null)
+                    cardStack.scrollRectContainer.OnEndDrag(RecentPointerEventData);
                 this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
                 PlaceHolderStack = null;
                 ParentToCanvas();

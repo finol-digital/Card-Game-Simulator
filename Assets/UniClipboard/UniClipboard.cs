@@ -22,7 +22,6 @@ public class UniClipboard
 
     public static void SetText(string str)
     {
-        Debug.Log("SetText");
         board.SetText(str);
     }
 
@@ -72,17 +71,19 @@ class IOSBoard : IBoard {
 #endif
 
 #if UNITY_ANDROID
-class AndroidBoard : IBoard {
+class AndroidBoard : IBoard
+{
 
     AndroidJavaClass cb = new AndroidJavaClass("jp.ne.donuts.uniclipboard.Clipboard");
 
-    public void SetText(string str){
-        Debug.Log ("Set Text At AndroidBoard: " + str);
-        cb.CallStatic ("setText", str);
+    public void SetText(string str)
+    {
+        cb.CallStatic("setText", str);
     }
 
-    public string GetText(){
-        return cb.CallStatic<string> ("getText");
+    public string GetText()
+    {
+        return cb.CallStatic<string>("getText");
     }
 }
 #endif

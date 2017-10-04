@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardSearcherLayout : MonoBehaviour
+public class SearchResultsLayout : MonoBehaviour
 {
     public const float WidthCheck = 1000f;
 
@@ -15,7 +15,7 @@ public class CardSearcherLayout : MonoBehaviour
     }
 
     public RectTransform searchName;
-    public CardSearcher cardSearcher;
+    public SearchResults cardSearcher;
 
     void OnRectTransformDimensionsChange()
     {
@@ -27,7 +27,7 @@ public class CardSearcherLayout : MonoBehaviour
         else
             searchName.anchoredPosition = SearchNameLandscapePosition;
         
-        cardSearcher.ResultsIndex = 0;
+        cardSearcher.CurrentPageIndex = 0;
         cardSearcher.UpdateSearchResultsPanel();
         CardInfoViewer.Instance.IsVisible = false;
     }

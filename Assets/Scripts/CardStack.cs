@@ -17,8 +17,8 @@ public enum CardStackType
 public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
 {
     public CardStackType type;
-    public ScrollRect container;
-    public bool free;
+    public ScrollRect scrollRectContainer;
+    public bool isFree;
 
     private List<OnDropDelegate> _cardAddedActions;
 

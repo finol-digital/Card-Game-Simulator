@@ -5,7 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameObject addGameMenuPrefab;
     public GameObject quitButton;
+
+    private AddGameMenu _addGameMenu;
+
+    public void ShowAddGameMenu()
+    {
+        AddGameMenu.Show();
+    }
 
     public void GoToPlayMode()
     {
@@ -19,7 +27,11 @@ public class MainMenu : MonoBehaviour
 
     public void Quit()
     {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
         Application.Quit();
+        #endif
     }
 
     #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -34,4 +46,12 @@ public class MainMenu : MonoBehaviour
             Application.Quit();
     }
     #endif
+
+    public AddGameMenu AddGameMenu {
+        get {
+            if (_addGameMenu == null)
+                _addGameMenu = Instantiate(addGameMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<AddGameMenu>();
+            return _addGameMenu;
+        }
+    }
 }

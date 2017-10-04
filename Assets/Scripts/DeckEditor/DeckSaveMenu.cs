@@ -12,33 +12,34 @@ public class DeckSaveMenu : MonoBehaviour
     public const string DeckCopiedMessage = "The text for this deck has been copied to the clipboard.";
     public const string OverWriteDeckPrompt = "A deck with that name already exists. Overwrite?";
 
-    public InputField saveDeckNameInputField;
+    public InputField nameInputField;
     public TMPro.TMP_Text textOutputArea;
 
-    private Deck _deck;
-    private DeckNameChangeDelegate _deckNameChangeCallback;
+    public Deck CurrentDeck { get; private set; }
 
-    public void Show(Deck deckToShow, DeckNameChangeDelegate callbackNameChange)
+    public DeckNameChangeDelegate NameChangeCallback { get; private set; }
+
+    public void Show(Deck deckToShow, DeckNameChangeDelegate nameChangeCallback)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
-        _deck = deckToShow;
-        _deckNameChangeCallback = callbackNameChange;
-        saveDeckNameInputField.text = deckToShow.Name;
-        textOutputArea.text = _deck.ToString();
+        CurrentDeck = deckToShow;
+        NameChangeCallback = nameChangeCallback;
+        nameInputField.text = deckToShow.Name;
+        textOutputArea.text = CurrentDeck.ToString();
     }
 
-    public void ChangeDeckName(string changedName)
+    public void ChangeName(string newName)
     {
-        string newName = _deckNameChangeCallback(changedName);
-        if (!string.IsNullOrEmpty(changedName))
-            saveDeckNameInputField.text = newName;
+        newName = NameChangeCallback(newName);
+        if (!string.IsNullOrEmpty(newName))
+            nameInputField.text = newName;
         Deck newDeck = new Deck(newName);
-        newDeck.Cards = new List<Card>(_deck.Cards);
+        newDeck.Cards = new List<Card>(CurrentDeck.Cards);
         textOutputArea.text = newDeck.ToString();
     }
 
-    public void CopyDeckTextToClipboard()
+    public void CopyTextToClipboard()
     {
         UniClipboard.SetText(textOutputArea.text);
         CardGameManager.Instance.Popup.Show(DeckCopiedMessage);
@@ -46,19 +47,19 @@ public class DeckSaveMenu : MonoBehaviour
 
     public void AttemptSaveAndHide()
     {
-        Deck filePathFinder = new Deck(saveDeckNameInputField.text);
+        Deck filePathFinder = new Deck(nameInputField.text);
         if (File.Exists(filePathFinder.FilePath))
-            CardGameManager.Instance.Popup.Prompt(OverWriteDeckPrompt, SaveDeckToFile);
+            CardGameManager.Instance.Popup.Prompt(OverWriteDeckPrompt, SaveToFile);
         else
-            SaveDeckToFile();
+            SaveToFile();
 
         Hide();
     }
 
-    public void SaveDeckToFile()
+    public void SaveToFile()
     {
-        _deck.Name = saveDeckNameInputField.text;
-        SaveToFile(_deck);
+        CurrentDeck.Name = nameInputField.text;
+        SaveToFile(CurrentDeck);
     }
 
     public static void SaveToFile(Deck deck)
@@ -75,7 +76,7 @@ public class DeckSaveMenu : MonoBehaviour
 
     public void CancelAndHide()
     {
-        _deckNameChangeCallback(_deck.Name);
+        NameChangeCallback(CurrentDeck.Name);
         Hide();
     }
 
