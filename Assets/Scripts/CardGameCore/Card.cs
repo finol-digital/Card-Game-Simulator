@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Card
+public class Card : IComparable<Card>
 {
     public static Card Blank {
         get { return new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertySet>()); }
@@ -34,14 +34,28 @@ public class Card
         return ret;
     }
 
-    public string StripNameToLowerAlphaNum()
+    public int CompareTo(Card other)
     {
-        char[] cardNameAlphaNum = Name.Where(c => (char.IsLetterOrDigit(c) ||
-                                  char.IsWhiteSpace(c) ||
-                                  c == '-')).ToArray(); 
-        string cardImageName = new string(cardNameAlphaNum);
-        cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
-        return cardImageName;
+        if (other == null)
+            return -1;
+
+        foreach (string propName in Properties.Keys) {
+            int comparison = Properties [propName].Value.Value.CompareTo(other.Properties [propName].Value.Value);
+            if (comparison != 0)
+                return comparison;
+        }
+        return 0;
+    }
+
+    public string NameStrippedToLowerAlphaNum {
+        get { 
+            char[] cardNameAlphaNum = Name.Where(c => (char.IsLetterOrDigit(c) ||
+                                      char.IsWhiteSpace(c) ||
+                                      c == '-')).ToArray(); 
+            string cardImageName = new string(cardNameAlphaNum);
+            cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
+            return cardImageName;
+        }
     }
 
     public string ImageFileName {
@@ -61,7 +75,7 @@ public class Card
             PropertySet firstProp;
             if (!Properties.TryGetValue(Properties.Keys.FirstOrDefault(), out firstProp))
                 firstProp = new PropertySet();
-            return CardGameManager.Current.CardImageURLBase + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode.ToLower(), StripNameToLowerAlphaNum(), firstProp.Value.Value) + "." + CardGameManager.Current.CardImageFileType;
+            return CardGameManager.Current.CardImageURLBase + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode.ToLower(), NameStrippedToLowerAlphaNum, firstProp.Value.Value) + "." + CardGameManager.Current.CardImageFileType;
         }
     }
 

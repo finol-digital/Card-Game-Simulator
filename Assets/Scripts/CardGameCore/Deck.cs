@@ -37,6 +37,11 @@ public class Deck
         }
     }
 
+    public void Sort()
+    {
+        Cards.Sort();
+    }
+
     public override string ToString()
     {
         string definition = "# " + CardGameManager.Current.Name + " Deck List: " + Name + System.Environment.NewLine;

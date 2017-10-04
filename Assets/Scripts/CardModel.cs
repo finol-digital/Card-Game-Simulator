@@ -400,7 +400,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
                 Destroy(_newSprite);
             }
             _newSprite = value;
-            if (!Facedown)
+            if (_newSprite != null && !Facedown)
                 Image.sprite = _newSprite;
         }
     }

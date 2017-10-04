@@ -7,6 +7,18 @@ using UnityEngine.Events;
 
 public class CardSearcher : MonoBehaviour
 {
+    public int ResultsPanelSize {
+        get {
+            return Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + (resultsPanel.gameObject.GetOrAddComponent<HorizontalLayoutGroup>().spacing)));
+        }
+    }
+
+    public int ResultRowCount {
+        get {
+            return ResultsPanelSize == 0 ? 0 : (SearchResults.Count / ResultsPanelSize) + ((SearchResults.Count % ResultsPanelSize) == 0 ? -1 : 0);
+        }
+    }
+
     public string nameFilter { get; set; }
 
     public string idFilter { get; set; }
@@ -17,7 +29,7 @@ public class CardSearcher : MonoBehaviour
 
     public GameObject cardPrefab;
     public DeckEditor deckEditor;
-    public RectTransform advancedSearchFilterMenu;
+    public RectTransform searchAdvancedMenu;
     public RectTransform filterContentView;
     public RectTransform nameProperty;
     public RectTransform idProperty;
@@ -44,10 +56,10 @@ public class CardSearcher : MonoBehaviour
     public void ResetCardSearcher()
     {
         propertyTemplate.gameObject.SetActive(true);
-        nameProperty.SetParent(advancedSearchFilterMenu);
-        idProperty.SetParent(advancedSearchFilterMenu);
-        setProperty.SetParent(advancedSearchFilterMenu);
-        propertyTemplate.SetParent(advancedSearchFilterMenu);
+        nameProperty.SetParent(searchAdvancedMenu);
+        idProperty.SetParent(searchAdvancedMenu);
+        setProperty.SetParent(searchAdvancedMenu);
+        propertyTemplate.SetParent(searchAdvancedMenu);
         filterContentView.DestroyAllChildren();
         nameProperty.SetParent(filterContentView);
         idProperty.SetParent(filterContentView);
@@ -78,7 +90,7 @@ public class CardSearcher : MonoBehaviour
 
     public void ClearFilters()
     {
-        foreach (InputField input in advancedSearchFilterMenu.GetComponentsInChildren<InputField>())
+        foreach (InputField input in searchAdvancedMenu.GetComponentsInChildren<InputField>())
             input.text = string.Empty;
         PropertyFilters.Clear();
     }
@@ -127,18 +139,18 @@ public class CardSearcher : MonoBehaviour
 
     public void ShowAdvancedFilterPanel()
     {
-        advancedSearchFilterMenu.gameObject.SetActive(true);
-        advancedSearchFilterMenu.SetAsLastSibling();
+        searchAdvancedMenu.gameObject.SetActive(true);
+        searchAdvancedMenu.SetAsLastSibling();
     }
 
     public void HideAdvancedFilterPanel()
     {
-        advancedSearchFilterMenu.gameObject.SetActive(false);
+        searchAdvancedMenu.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if (advancedSearchFilterMenu.gameObject.activeSelf && Input.GetButtonDown("Submit")) {
+        if (searchAdvancedMenu.gameObject.activeSelf && Input.GetButtonDown("Submit")) {
             Search();
             HideAdvancedFilterPanel();
         }
@@ -154,18 +166,6 @@ public class CardSearcher : MonoBehaviour
             if (_searchResults == null)
                 _searchResults = new List<Card>();
             return _searchResults;
-        }
-    }
-
-    public int ResultsPanelSize {
-        get {
-            return Mathf.FloorToInt(resultsPanel.rect.width / (cardPrefab.GetComponent<RectTransform>().rect.width + (resultsPanel.gameObject.GetOrAddComponent<HorizontalLayoutGroup>().spacing)));
-        }
-    }
-
-    public int ResultRowCount {
-        get {
-            return (SearchResults.Count / ResultsPanelSize) + (SearchResults.Count % ResultsPanelSize == 0 ? -1 : 0);
         }
     }
 

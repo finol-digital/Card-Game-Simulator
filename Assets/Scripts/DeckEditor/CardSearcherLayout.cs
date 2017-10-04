@@ -17,9 +17,11 @@ public class CardSearcherLayout : MonoBehaviour
     public RectTransform searchName;
     public CardSearcher cardSearcher;
 
-    #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
     void OnRectTransformDimensionsChange()
     {
+        if (!this.gameObject.activeInHierarchy)
+            return;
+
         if (GetComponent<RectTransform>().rect.width < WidthCheck)
             searchName.anchoredPosition = SearchNamePortraitPosition;
         else
@@ -29,6 +31,5 @@ public class CardSearcherLayout : MonoBehaviour
         cardSearcher.UpdateSearchResultsPanel();
         CardInfoViewer.Instance.IsVisible = false;
     }
-    #endif
 
 }

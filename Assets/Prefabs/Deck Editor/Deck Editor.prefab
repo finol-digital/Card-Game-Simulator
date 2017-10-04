@@ -1385,6 +1385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b227be9232b9f9b4088e4ffb88147fcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deckEditor: {fileID: 114304696567015316}
   deckButtons: {fileID: 224798447440874530}
 --- !u!114 &114530633917431774
 MonoBehaviour:

@@ -97,6 +97,22 @@ public class DeckEditor : MonoBehaviour
         CardInfoViewer.Instance.IsVisible = false;
     }
 
+    public Deck GetDeck()
+    {
+        Deck deck = new Deck(deckEditorNameText.text);
+        foreach (CardStack stack in CardStacks)
+            foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
+                deck.Cards.Add(card.RepresentedCard);
+        return deck;
+    }
+
+    public void Sort()
+    {
+        Deck deck = GetDeck();
+        deck.Sort();
+        LoadDeck(deck);
+    }
+
     public void PromptForClear()
     {
         CardGameManager.Instance.Popup.Prompt(NewDeckPrompt, Clear);
@@ -138,10 +154,7 @@ public class DeckEditor : MonoBehaviour
 
     public void ShowDeckSaveMenu()
     {
-        Deck deck = new Deck(deckEditorNameText.text);
-        foreach (CardStack stack in CardStacks)
-            foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
-                deck.Cards.Add(card.RepresentedCard);
+        Deck deck = GetDeck();
         DeckSaver.Show(deck, UpdateDeckName);
     }
 

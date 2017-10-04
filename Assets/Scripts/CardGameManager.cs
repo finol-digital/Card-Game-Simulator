@@ -38,11 +38,11 @@ public class CardGameManager : MonoBehaviour
 
     void Awake()
     {
-        if (_instance != null && _instance != this) {
+        if (CardGameManager._instance != null && CardGameManager._instance != this) {
             Destroy(this.gameObject);
             return;
         }
-        _instance = this;
+        CardGameManager._instance = this;
         DontDestroyOnLoad(this.gameObject);
 
         if (!Directory.Exists(GamesFilePathBase)) {

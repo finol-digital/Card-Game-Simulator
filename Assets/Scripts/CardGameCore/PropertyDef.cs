@@ -4,21 +4,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-public class PropertySet : ICloneable
-{
-    public PropertyDef Key { get; set; }
-
-    public PropertyDefValue Value { get; set; }
-
-    public object Clone()
-    {
-        var ret = new PropertySet() {
-            Key = this.Key.Clone() as PropertyDef,
-            Value = this.Value.Clone() as PropertyDefValue
-        };
-        return ret;
-    }
-}
 
 public enum PropertyType
 {
@@ -56,5 +41,20 @@ public class PropertyDefValue : ICloneable
     {
         return Value.ToString();
     }
+}
 
+public class PropertySet : ICloneable
+{
+    public PropertyDef Key { get; set; }
+
+    public PropertyDefValue Value { get; set; }
+
+    public object Clone()
+    {
+        var ret = new PropertySet() {
+            Key = this.Key.Clone() as PropertyDef,
+            Value = this.Value.Clone() as PropertyDefValue
+        };
+        return ret;
+    }
 }
