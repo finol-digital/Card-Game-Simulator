@@ -17,9 +17,9 @@ public class DeckSaveMenu : MonoBehaviour
 
     public Deck CurrentDeck { get; private set; }
 
-    public DeckNameChangeDelegate NameChangeCallback { get; private set; }
+    public NameChangeDelegate NameChangeCallback { get; private set; }
 
-    public void Show(Deck deckToShow, DeckNameChangeDelegate nameChangeCallback)
+    public void Show(Deck deckToShow, NameChangeDelegate nameChangeCallback)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();

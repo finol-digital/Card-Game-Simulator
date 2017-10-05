@@ -22,7 +22,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public OnDeckLoadedDelegate LoadCallback { get; private set; }
 
-    public DeckNameChangeDelegate NameChangeCallback { get; private set; }
+    public NameChangeDelegate NameChangeCallback { get; private set; }
 
     public string OriginalName { get; private set; }
 
@@ -30,7 +30,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public Deck LoadedDeck { get; private set; }
 
-    public void Show(OnDeckLoadedDelegate loadCallback, DeckNameChangeDelegate nameChangeCallback, string originalName = DefaultName)
+    public void Show(OnDeckLoadedDelegate loadCallback, NameChangeDelegate nameChangeCallback, string originalName = DefaultName)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();

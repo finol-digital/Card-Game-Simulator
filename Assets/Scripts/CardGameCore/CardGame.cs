@@ -135,14 +135,19 @@ public class CardGame
 
     public IEnumerator Load()
     {
+        string initialDirectory = FilePathBase;
         if (!string.IsNullOrEmpty(AutoUpdateURL) && (AutoUpdate || !File.Exists(ConfigFilePath)))
             yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
-        try { 
+        try {
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
             Debug.LogError("Failed to load card game! Error: " + e.Message + e.StackTrace);
             _error = e.Message;
             yield break;
+        }
+        if (!initialDirectory.Equals(FilePathBase)) {
+            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
+            Directory.Delete(initialDirectory, true);
         }
 
         string setsFile = FilePathBase + "/" + AllSetsFileName;
@@ -215,10 +220,10 @@ public class CardGame
         string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
         string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
         string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSet;
-        Dictionary<string, PropertySet> cardProps = new Dictionary<string, PropertySet>();
+        Dictionary<string, PropertyDefValuePair> cardProps = new Dictionary<string, PropertyDefValuePair>();
         foreach (PropertyDef prop in CardProperties) {
-            cardProps [prop.Name] = new PropertySet() {
-                Key = prop,
+            cardProps [prop.Name] = new PropertyDefValuePair() {
+                Def = prop,
                 Value = new PropertyDefValue() { Value = cardJToken.Value<string>(prop.Name) }
             };
         }

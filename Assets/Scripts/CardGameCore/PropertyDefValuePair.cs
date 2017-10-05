@@ -4,11 +4,11 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-
 public enum PropertyType
 {
     String,
     Integer,
+    Enum,
 };
 
 [JsonObject(MemberSerialization.OptIn)]
@@ -43,16 +43,16 @@ public class PropertyDefValue : ICloneable
     }
 }
 
-public class PropertySet : ICloneable
+public class PropertyDefValuePair : ICloneable
 {
-    public PropertyDef Key { get; set; }
+    public PropertyDef Def { get; set; }
 
     public PropertyDefValue Value { get; set; }
 
     public object Clone()
     {
-        var ret = new PropertySet() {
-            Key = this.Key.Clone() as PropertyDef,
+        var ret = new PropertyDefValuePair() {
+            Def = this.Def.Clone() as PropertyDef,
             Value = this.Value.Clone() as PropertyDefValue
         };
         return ret;

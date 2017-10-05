@@ -4,17 +4,35 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+public delegate void OnFilterChangeDelegate(string filters);
 public delegate void OnSearchDelegate(List<Card> searchResults);
 
 public class SearchMenu : MonoBehaviour
 {
+    public string Filters {
+        get {
+            string filters = string.Empty;
+            if (!string.IsNullOrEmpty(IdFilter))
+                filters += "id:" + IdFilter + "; ";
+            if (!string.IsNullOrEmpty(SetCodeFilter))
+                filters += "set:" + SetCodeFilter + "; ";
+            foreach (var filter in PropertyFilters)
+                filters += filter.Key + ":" + filter.Value + "; ";
+            return filters;
+        }
+    }
+
     public RectTransform filterContentView;
     public RectTransform nameProperty;
     public RectTransform idProperty;
     public RectTransform setProperty;
     public RectTransform propertyTemplate;
 
-    public OnSearchDelegate SearchCallback { get; private set; }
+    public NameChangeDelegate NameChangeCallback { get; set; }
+
+    public OnFilterChangeDelegate FilterChangeCallback { get; set; }
+
+    public OnSearchDelegate SearchCallback { get; set; }
 
     private string _nameFilter;
     private string _idFilter;
@@ -22,10 +40,12 @@ public class SearchMenu : MonoBehaviour
     private Dictionary<string, string> _propertyFilters;
     private List<Card> _results;
 
-    public void Show(OnSearchDelegate searchCallback)
+    public void Show(NameChangeDelegate nameChangeCallback, OnFilterChangeDelegate filterChangeCallback, OnSearchDelegate searchCallback)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
+        NameChangeCallback = nameChangeCallback;
+        FilterChangeCallback = filterChangeCallback;
         SearchCallback = searchCallback;
 
         propertyTemplate.gameObject.SetActive(true);
@@ -42,11 +62,14 @@ public class SearchMenu : MonoBehaviour
         foreach (PropertyDef prop in CardGameManager.Current.CardProperties) {
             GameObject newProp = Instantiate(propertyTemplate.gameObject, propertyTemplate.position, propertyTemplate.rotation, filterContentView) as GameObject;
             newProp.transform.localPosition = pos;
-            PropertyEditor editor = newProp.GetComponent<PropertyEditor>();
+            SearchProperty editor = newProp.GetComponent<SearchProperty>();
             editor.nameLabel.text = prop.Name;
+            string propValue = string.Empty;
+            if (PropertyFilters.TryGetValue(prop.Name, out propValue))
+                editor.inputField.text = propValue;
+            editor.placeHolderText.text = "Enter " + prop.Name + "...";
             UnityAction<string> textChange = new UnityAction<string>(text => SetPropertyFilter(prop.Name, text));
             editor.inputField.onValueChanged.AddListener(textChange);
-            editor.placeHolderText.text = "Enter " + prop.Name + "...";
             pos.y -= propertyTemplate.rect.height;
         }
         propertyTemplate.gameObject.SetActive(false);
@@ -55,7 +78,15 @@ public class SearchMenu : MonoBehaviour
 
     public void SetPropertyFilter(string key, string val)
     {
+        if (string.IsNullOrEmpty(val)) {
+            if (PropertyFilters.ContainsKey(key))
+                PropertyFilters.Remove(key);
+            return;
+        }
+
         PropertyFilters [key] = val;
+        if (FilterChangeCallback != null)
+            FilterChangeCallback(Filters);
     }
 
     public void ClearFilters()
@@ -63,6 +94,9 @@ public class SearchMenu : MonoBehaviour
         foreach (InputField input in GetComponentsInChildren<InputField>())
             input.text = string.Empty;
         PropertyFilters.Clear();
+
+        if (FilterChangeCallback != null)
+            FilterChangeCallback(Filters);
     }
 
     public void ClearSearch()
@@ -77,7 +111,8 @@ public class SearchMenu : MonoBehaviour
         IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(IdFilter, NameFilter, SetCodeFilter, PropertyFilters);
         foreach (Card card in cardSearcher)
             Results.Add(card);
-        SearchCallback(Results);
+        if (SearchCallback != null)
+            SearchCallback(Results);
     }
 
     void Update()
@@ -101,7 +136,11 @@ public class SearchMenu : MonoBehaviour
         }
         set {
             _nameFilter = value;
-            Search();
+            if (NameChangeCallback != null)
+                NameChangeCallback(_nameFilter);
+            InputField nameField = nameProperty.GetComponentInChildren<InputField>();
+            if (nameField != null)
+                nameField.text = _nameFilter;
         }
     }
 
@@ -113,7 +152,8 @@ public class SearchMenu : MonoBehaviour
         }
         set {
             _idFilter = value;
-            Search();
+            if (FilterChangeCallback != null)
+                FilterChangeCallback(Filters);
         }
     }
 
@@ -125,7 +165,8 @@ public class SearchMenu : MonoBehaviour
         }
         set {
             _setCodeFilter = value;
-            Search();
+            if (FilterChangeCallback != null)
+                FilterChangeCallback(Filters);
         }
     }
 
@@ -144,12 +185,4 @@ public class SearchMenu : MonoBehaviour
             return _results;
         }
     }
-}
-
-public class PropertyEditor : MonoBehaviour
-{
-    public Text nameLabel;
-    public InputField inputField;
-    public Text placeHolderText;
-    public Text valueText;
 }

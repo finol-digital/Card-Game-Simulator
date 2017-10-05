@@ -5,7 +5,7 @@ using System.Linq;
 public class Card : IComparable<Card>
 {
     public static Card Blank {
-        get { return new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertySet>()); }
+        get { return new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>()); }
     }
 
     public string Id { get; set; }
@@ -14,9 +14,9 @@ public class Card : IComparable<Card>
 
     public string SetCode { get; set; }
 
-    public Dictionary<string , PropertySet> Properties { get; set; }
+    public Dictionary<string , PropertyDefValuePair> Properties { get; set; }
 
-    public Card(string id, string name, string setCode, Dictionary<string,PropertySet> properties)
+    public Card(string id, string name, string setCode, Dictionary<string,PropertyDefValuePair> properties)
     {
         Id = id.Clone() as string;
         Name = name.Clone() as string;
@@ -25,11 +25,11 @@ public class Card : IComparable<Card>
         this.Properties = this.CloneProperties();
     }
 
-    public Dictionary<string, PropertySet> CloneProperties()
+    public Dictionary<string, PropertyDefValuePair> CloneProperties()
     {
-        var ret = new Dictionary<string, PropertySet>();
+        var ret = new Dictionary<string, PropertyDefValuePair>();
         foreach (var p in Properties) {
-            ret.Add((string)p.Key.Clone(), p.Value.Clone() as PropertySet);
+            ret.Add((string)p.Key.Clone(), p.Value.Clone() as PropertyDefValuePair);
         }
         return ret;
     }
@@ -72,9 +72,9 @@ public class Card : IComparable<Card>
 
     public string ImageWebURL {
         get {
-            PropertySet firstProp;
+            PropertyDefValuePair firstProp;
             if (!Properties.TryGetValue(Properties.Keys.FirstOrDefault(), out firstProp))
-                firstProp = new PropertySet();
+                firstProp = new PropertyDefValuePair();
             return CardGameManager.Current.CardImageURLBase + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode.ToLower(), NameStrippedToLowerAlphaNum, firstProp.Value.Value) + "." + CardGameManager.Current.CardImageFileType;
         }
     }

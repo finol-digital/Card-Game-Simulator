@@ -153,7 +153,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             cardImage.sprite = _selectedCardModel.Image.sprite;
             nameContent.text = value.RepresentedCard.Name;
             idContent.text = value.RepresentedCard.Id;
-            PropertySet prop;
+            PropertyDefValuePair prop;
             if (value.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out prop))
                 textContent.text = prop.Value.Value;
             else

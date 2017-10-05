@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public delegate string DeckNameChangeDelegate(string newName);
+public delegate string NameChangeDelegate(string newName);
 
 public class DeckEditor : MonoBehaviour
 {

@@ -29,32 +29,22 @@ public class AddGameMenu : MonoBehaviour
     public void AddGame()
     {
         CardGameManager.Instance.StartCoroutine(LoadGame());
-        Hide();
     }
 
     public IEnumerator LoadGame()
     {
-        string error = string.Empty;
-        CardGame newGame = new CardGame(string.Empty, urlInput.text.Trim());
-        WWW load = new WWW(newGame.AutoUpdateURL);
-        yield return load;
-        if (!string.IsNullOrEmpty(load.error))
-            error += load.error;
+        CardGame newGame = new CardGame(CardGame.DefaultSet, urlInput.text.Trim());
+        yield return newGame.Load();
 
-        try {
-            if (string.IsNullOrEmpty(error))
-                JsonConvert.PopulateObject(load.text, newGame);
-        } catch (Exception e) {
-            error += e.Message;
-        }
-
-        if (!string.IsNullOrEmpty(newGame.Name)) {
-            // TODO: CHECK THE CARD GAME NAME DOESN'T ALREADY EXIST
+        if (string.IsNullOrEmpty(newGame.Error)) {
             PlayerPrefs.SetString(CardGameManager.PlayerPrefGameName, newGame.Name);
             CardGameManager.Instance.AllCardGames [newGame.Name] = newGame;
             CardGameManager.Instance.ResetGameSelection();
-        } else
-            CardGameManager.Instance.Popup.Show("Failed to load game url! " + error);
+        } else {
+            Debug.LogError("Failed to load game url! " + newGame.Error);
+            CardGameManager.Instance.Popup.Show("Failed to load game url! " + newGame.Error);
+        }
+        Hide();
     }
 
     void Update()

@@ -6,9 +6,13 @@ using UnityEngine.UI;
 
 public class SearchResults : MonoBehaviour
 {
+    public const string EmptyFilterText = "<None>";
+
     public GameObject searchMenuPrefab;
     public DeckEditor deckEditor;
     public RectTransform layoutArea;
+    public InputField nameInputField;
+    public Text filtersText;
     public Text countText;
 
     public int CardsPerPage {
@@ -26,7 +30,31 @@ public class SearchResults : MonoBehaviour
 
     void OnEnable()
     {
+        SearchMenu.SearchCallback = ShowResults;
         CardGameManager.Instance.OnSelectActions.Add(SearchMenu.ClearSearch);
+    }
+
+    public string SetNameInputField(string name)
+    {
+        nameInputField.text = name;
+        return nameInputField.text;
+    }
+
+    public void SetNameFilter(string name)
+    {
+        SearchMenu.NameFilter = name;
+    }
+
+    public void SetFiltersText(string filters)
+    {
+        if (string.IsNullOrEmpty(filters))
+            filters = EmptyFilterText;
+        filtersText.text = filters;
+    }
+
+    public void Search()
+    {
+        SearchMenu.Search();
     }
 
     public void MoveLeft()
@@ -63,12 +91,17 @@ public class SearchResults : MonoBehaviour
 
     public void ShowSearchMenu()
     {
-        SearchMenu.Show(ShowResults);
+        SearchMenu.Show(SetNameInputField, SetFiltersText, ShowResults);
     }
 
     public void ShowResults(List<Card> results)
     {
         AllResults = results;
+    }
+
+    void OnDisable()
+    {
+        CardGameManager.Instance.OnSelectActions.Remove(SearchMenu.ClearSearch);
     }
 
     public SearchMenu SearchMenu {
