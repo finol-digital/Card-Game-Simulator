@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -14,11 +15,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public GameObject cardZoomPrefab;
     public Image cardImage;
-    public Text nameContent;
-    public Text idContent;
+    public Text nameText;
+    public Text idText;
     public Dropdown propertySelection;
-    public Text textLabel;
-    public Text textContent;
+    public Text labelText;
+    public Text contentText;
     public float animationSpeed = 5.0f;
 
     private static CardInfoViewer _instance;
@@ -41,6 +42,22 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         propertySelection.options = PropertyOptions;
         propertySelection.value = SelectedPropertyIndex;
         propertySelection.onValueChanged.Invoke(SelectedPropertyIndex);
+    }
+
+    public void SetContentText()
+    {
+        string propertyText = string.Empty;
+        PropertyDefValuePair property;
+        if (SelectedCardModel != null && SelectedCardModel.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out property)) {
+            propertyText = property.Value.Value;
+            int enumValue;
+            if (property.Def.Type == PropertyType.Enum && EnumDef.TryParse(propertyText, out enumValue)) {
+                EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(SelectedPropertyName)).First();
+                if (enumDef != null)
+                    propertyText = enumDef.GetStringFromFlags(enumValue);
+            }
+        }
+        contentText.text = propertyText;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -121,9 +138,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 return;
 
             _selectedPropertyIndex = value;
-            textLabel.text = SelectedPropertyName;
-            if (SelectedCardModel != null && SelectedCardModel.RepresentedCard.Properties.ContainsKey(SelectedPropertyName))
-                textContent.text = SelectedCardModel.RepresentedCard.Properties [SelectedPropertyName].Value.Value;
+            labelText.text = SelectedPropertyName;
+            SetContentText();
         }
     }
 
@@ -151,13 +167,10 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 return;
             }
             cardImage.sprite = _selectedCardModel.Image.sprite;
-            nameContent.text = value.RepresentedCard.Name;
-            idContent.text = value.RepresentedCard.Id;
-            PropertyDefValuePair prop;
-            if (value.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out prop))
-                textContent.text = prop.Value.Value;
-            else
-                textContent.text = string.Empty;
+            nameText.text = value.RepresentedCard.Name;
+            idText.text = value.RepresentedCard.Id;
+            SetContentText();
+
             IsVisible = true;
         }
     }

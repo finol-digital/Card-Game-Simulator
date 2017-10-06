@@ -9,4 +9,6 @@ public class SearchPropertyPanel : MonoBehaviour
     public Text stringPlaceHolderText;
     public InputField integerMinInputField;
     public InputField integerMaxInputField;
+    public RectTransform enumContent;
+    public Toggle enumToggle;
 }

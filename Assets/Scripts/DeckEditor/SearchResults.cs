@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SearchResults : MonoBehaviour
 {
-    public const string EmptyFilterText = "<None>";
+    public const string EmptyFilterText = "*";
 
     public GameObject searchMenuPrefab;
     public DeckEditor deckEditor;
@@ -83,7 +83,7 @@ public class SearchResults : MonoBehaviour
             CardModel cardModelToShow = Instantiate(deckEditor.cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
             cardModelToShow.RepresentedCard = cardToShow;
             cardModelToShow.ClonesOnDrag = true;
-            cardModelToShow.DoubleClickEvent = new OnDoubleClickDelegate(deckEditor.AddCard);
+            cardModelToShow.DoubleClickEvent = new OnDoubleClickDelegate(deckEditor.AddCardModel);
         }
 
         countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);

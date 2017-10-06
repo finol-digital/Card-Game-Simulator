@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 222708119364597364}
   - component: {fileID: 114549357438997408}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Zoom Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1407,13 +1407,12 @@ MonoBehaviour:
   cardZoomPrefab: {fileID: 1856330612537136, guid: 78b380b5aabfbc347b72128609be36f0,
     type: 2}
   cardImage: {fileID: 114599712195971226}
-  nameContent: {fileID: 114029540621107818}
-  idContent: {fileID: 114263840708938884}
+  nameText: {fileID: 114029540621107818}
+  idText: {fileID: 114263840708938884}
   propertySelection: {fileID: 114614785053118358}
-  textLabel: {fileID: 114258581464069302}
-  textContent: {fileID: 114970408654567440}
+  labelText: {fileID: 114258581464069302}
+  contentText: {fileID: 114970408654567440}
   animationSpeed: 5
-  _isVisible: 0
 --- !u!114 &114549357438997408
 MonoBehaviour:
   m_ObjectHideFlags: 1

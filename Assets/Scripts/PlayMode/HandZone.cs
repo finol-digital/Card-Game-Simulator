@@ -13,8 +13,8 @@ public class HandZone : MonoBehaviour, IDropHandler
 
     void Start()
     {
-        handExtended.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(CardModel.ShowCard);
-        handExtended.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(CardModel.ResetRotation);
+        handExtended.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
+        handExtended.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
     }
 
     public void OnDrop(PointerEventData eventData)

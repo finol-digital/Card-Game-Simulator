@@ -241,7 +241,7 @@ public class CardGame
         }
     }
 
-    public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> stringProperties, Dictionary<string, int> intMinProperties, Dictionary<string, int> intMaxProperties)
+    public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> stringProperties, Dictionary<string, int> intMinProperties, Dictionary<string, int> intMaxProperties, Dictionary<string, int> enumProperties)
     {
         if (id == null)
             id = string.Empty;
@@ -270,6 +270,9 @@ public class CardGame
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in intMaxProperties)
                     if (int.TryParse(card.Properties [entry.Key].Value.Value, out intValue) && intValue > entry.Value)
+                        propsMatch = false;
+                foreach (KeyValuePair<string, int> entry in enumProperties)
+                    if (int.TryParse(card.Properties [entry.Key].Value.Value, out intValue) && (intValue & entry.Value) == 0)
                         propsMatch = false;
                 if (propsMatch)
                     yield return card;

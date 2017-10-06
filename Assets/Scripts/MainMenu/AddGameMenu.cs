@@ -34,10 +34,10 @@ public class AddGameMenu : MonoBehaviour
 
     public IEnumerator LoadGame()
     {
-        urlInput.text = string.Empty;
-        urlInput.interactable = false;
         CardGame newGame = new CardGame(CardGame.DefaultSet, urlInput.text.Trim());
         newGame.AutoUpdate = true;
+        urlInput.text = string.Empty;
+        urlInput.interactable = false;
         yield return newGame.Load();
 
         if (string.IsNullOrEmpty(newGame.Error)) {

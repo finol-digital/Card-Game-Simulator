@@ -11,6 +11,16 @@ public class DeckEditor : MonoBehaviour
 {
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
 
+    public Deck CurrentDeck {
+        get { 
+            Deck deck = new Deck(nameText.text);
+            foreach (CardStack stack in CardStacks)
+                foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
+                    deck.Cards.Add(card.RepresentedCard);
+            return deck;
+        }
+    }
+
     public GameObject cardModelPrefab;
     public GameObject cardStackPrefab;
     public GameObject deckLoadMenuPrefab;
@@ -40,7 +50,8 @@ public class DeckEditor : MonoBehaviour
             CardStack newCardStack = Instantiate(cardStackPrefab, layoutContent).GetOrAddComponent<CardStack>();
             newCardStack.type = CardStackType.Vertical;
             newCardStack.scrollRectContainer = layoutArea.gameObject.GetOrAddComponent<ScrollRect>();
-            newCardStack.OnCardDropActions.Add(OnAddCardModel);
+            newCardStack.OnAddCardActions.Add(OnAddCardModel);
+            newCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
             CardStacks.Add(newCardStack);
         }
         layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardGameManager.Current.DeckCardStackCount, layoutContent.sizeDelta.y);
@@ -53,25 +64,29 @@ public class DeckEditor : MonoBehaviour
         
         RecentCardStackIndex = CardStacks.IndexOf(cardStack);
         cardModel.DoubleClickEvent = DestroyCardModel;
-        Deck deck = GetDeck();
-        UpdateDeckSize(deck.Cards.Count + 1);
+        UpdateDeckSize();
     }
 
-    public void AddCard(CardModel cardToAdd)
+    public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
-        if (cardToAdd == null || CardStacks.Count < 1)
+        UpdateDeckSize();
+    }
+
+    public void AddCardModel(CardModel cardModelToAdd)
+    {
+        if (cardModelToAdd == null || CardStacks.Count < 1)
             return;
         
-        EventSystem.current.SetSelectedGameObject(null, cardToAdd.RecentPointerEventData);
+        EventSystem.current.SetSelectedGameObject(null, cardModelToAdd.RecentPointerEventData);
 
-        AddCard(cardToAdd.RepresentedCard);
+        AddCard(cardModelToAdd.RepresentedCard);
     }
 
     public void AddCard(Card cardToAdd)
     {
         if (cardToAdd == null || CardStacks.Count < 1)
             return;
-
+        
         int maxCopiesInStack = CardGameManager.Current.CopiesOfCardPerDeck;
         bool added = false;
         while (!added) {
@@ -90,8 +105,7 @@ public class DeckEditor : MonoBehaviour
         float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * ((float)RecentCardStackIndex + ((RecentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
         horizontalScrollbar.value = Mathf.Clamp01(newSpot);
 
-        Deck deck = GetDeck();
-        UpdateDeckSize(deck.Cards.Count);
+        UpdateDeckSize();
     }
 
     public void DestroyCardModel(CardModel cardModel)
@@ -99,26 +113,17 @@ public class DeckEditor : MonoBehaviour
         if (cardModel == null)
             return;
 
+        cardModel.transform.SetParent(null);
         GameObject.Destroy(cardModel.gameObject);
         CardInfoViewer.Instance.IsVisible = false;
-        Deck deck = GetDeck();
-        UpdateDeckSize(deck.Cards.Count - 1);
-    }
-
-    public Deck GetDeck()
-    {
-        Deck deck = new Deck(nameText.text);
-        foreach (CardStack stack in CardStacks)
-            foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
-                deck.Cards.Add(card.RepresentedCard);
-        return deck;
+        UpdateDeckSize();
     }
 
     public void Sort()
     {
-        Deck deck = GetDeck();
-        deck.Sort();
-        LoadDeck(deck);
+        Deck sortedDeck = CurrentDeck;
+        sortedDeck.Sort();
+        LoadDeck(sortedDeck);
     }
 
     public void PromptForClear()
@@ -134,6 +139,7 @@ public class DeckEditor : MonoBehaviour
         nameText.text = DeckLoadMenu.DefaultName;
 
         CardInfoViewer.Instance.IsVisible = false;
+        UpdateDeckSize();
     }
 
     public string UpdateDeckName(string newName)
@@ -144,9 +150,9 @@ public class DeckEditor : MonoBehaviour
         return nameText.text;
     }
 
-    public void UpdateDeckSize(int newSize)
+    public void UpdateDeckSize()
     {
-        sizeText.text = newSize.ToString();
+        sizeText.text = CurrentDeck.Cards.Count.ToString();
     }
 
     public void ShowDeckLoadMenu()
@@ -163,12 +169,12 @@ public class DeckEditor : MonoBehaviour
         UpdateDeckName(newDeck.Name);
         foreach (Card card in newDeck.Cards)
             AddCard(card);
+        UpdateDeckSize();
     }
 
     public void ShowDeckSaveMenu()
     {
-        Deck deck = GetDeck();
-        DeckSaveMenu.Show(deck, UpdateDeckName);
+        DeckSaveMenu.Show(CurrentDeck, UpdateDeckName);
     }
 
     public void BackToMainMenu()

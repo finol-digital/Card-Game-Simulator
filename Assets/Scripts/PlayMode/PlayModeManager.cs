@@ -14,7 +14,7 @@ public class PlayModeManager : MonoBehaviour
     void Start()
     {
         DeckLoader.Show(LoadDeck, UnityExtensionMethods.GetSafeFileName);
-        playArea.gameObject.GetOrAddComponent<CardStack>().OnCardDropActions.Add(SetPlayActions);
+        playArea.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(SetPlayActions);
     }
 
     public void LoadDeck(Deck newDeck)

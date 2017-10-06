@@ -12,8 +12,8 @@ public class DeckZone : MonoBehaviour, IDropHandler
 
     void Start()
     {
-        GetComponent<CardStack>().OnCardDropActions.Add(CardModel.HideCard);
-        GetComponent<CardStack>().OnCardDropActions.Add(CardModel.ResetRotation);
+        GetComponent<CardStack>().OnAddCardActions.Add(CardModel.HideCard);
+        GetComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
     }
 
     public void Shuffle(Vector2 unused1, Vector2 unused2)

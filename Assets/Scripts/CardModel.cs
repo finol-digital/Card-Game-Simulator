@@ -217,8 +217,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void ParentToCanvas()
     {
+        CardStack parentStack = transform.parent.GetComponent<CardStack>();
         this.transform.SetParent(Canvas.transform);
         this.transform.SetAsLastSibling();
+        if (parentStack != null)
+            parentStack.OnRemove(this);
         CanvasGroup.blocksRaycasts = false;
     }
 
@@ -238,6 +241,9 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
         this.transform.SetParent(PlaceHolder.parent);
         this.transform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
+        CardStack parentStack = transform.parent.GetComponent<CardStack>();
+        if (parentStack != null)
+            parentStack.OnAdd(this);
         PlaceHolder = null;
         CanvasGroup.blocksRaycasts = true;
     }

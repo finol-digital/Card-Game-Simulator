@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public delegate void OnDropDelegate(CardStack cardStack,CardModel cardModel);
+public delegate void OnAddCardDelegate(CardStack cardStack,CardModel cardModel);
+public delegate void OnRemoveCardDelegate(CardStack cardStack,CardModel cardModel);
 
 public enum CardStackType
 {
@@ -14,13 +15,14 @@ public enum CardStackType
     Area
 }
 
-public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
+public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public CardStackType type;
     public ScrollRect scrollRectContainer;
     public bool isFree;
 
-    private List<OnDropDelegate> _cardAddedActions;
+    private List<OnAddCardDelegate> _cardAddedActions;
+    private List<OnRemoveCardDelegate> _cardRemovedActions;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -51,19 +53,22 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
     }
 
-    public void OnDrop(PointerEventData eventData)
+    public void OnAdd(CardModel cardModel)
     {
-        if (eventData.pointerDrag == null)
+        if (cardModel == null)
             return;
         
-        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                cardModel = draggedCardModel;
-            foreach (OnDropDelegate cardDropAction in OnCardDropActions)
-                cardDropAction(this, cardModel);
-        }
+        foreach (OnAddCardDelegate cardAddAction in OnAddCardActions)
+            cardAddAction(this, cardModel);
+    }
+
+    public void OnRemove(CardModel cardModel)
+    {
+        if (cardModel == null)
+            return;
+        
+        foreach (OnRemoveCardDelegate cardRemoveAction in OnRemoveCardActions)
+            cardRemoveAction(this, cardModel);
     }
 
     public void UpdateLayout(RectTransform child, Vector2 targetPosition)
@@ -90,11 +95,19 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             child.position = targetPosition;
     }
 
-    public List<OnDropDelegate> OnCardDropActions {
+    public List<OnAddCardDelegate> OnAddCardActions {
         get {
             if (_cardAddedActions == null)
-                _cardAddedActions = new List<OnDropDelegate>();
+                _cardAddedActions = new List<OnAddCardDelegate>();
             return _cardAddedActions;
+        }
+    }
+
+    public List<OnRemoveCardDelegate> OnRemoveCardActions {
+        get {
+            if (_cardRemovedActions == null)
+                _cardRemovedActions = new List<OnRemoveCardDelegate>();
+            return _cardRemovedActions;
         }
     }
 }
