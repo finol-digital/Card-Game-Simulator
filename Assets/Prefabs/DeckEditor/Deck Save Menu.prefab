@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 222452430526336150}
   - component: {fileID: 114928755103991548}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Nane Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,7 +93,6 @@ GameObject:
   - component: {fileID: 222587964734950070}
   - component: {fileID: 114559423745407088}
   - component: {fileID: 114245138271125832}
-  - component: {fileID: 114391401003815438}
   - component: {fileID: 114001652318017978}
   m_Layer: 5
   m_Name: Cancel Button
@@ -114,7 +113,7 @@ GameObject:
   - component: {fileID: 114199451936440170}
   - component: {fileID: 114900194541871270}
   m_Layer: 5
-  m_Name: InputField
+  m_Name: Name InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -440,7 +439,6 @@ GameObject:
   - component: {fileID: 222911307482731434}
   - component: {fileID: 114256031059842298}
   - component: {fileID: 114319009483259136}
-  - component: {fileID: 114847985896085882}
   m_Layer: 5
   m_Name: Save Button
   m_TagString: Untagged
@@ -553,7 +551,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114248314341314196}
-        m_MethodName: CopyDeckTextToClipboard
+        m_MethodName: CopyTextToClipboard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -710,7 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b12904ad82b87b46ab99c745ff3a260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveDeckNameInputField: {fileID: 114900194541871270}
+  nameInputField: {fileID: 114900194541871270}
   textOutputArea: {fileID: 114773187625006168}
 --- !u!114 &114256031059842298
 MonoBehaviour:
@@ -938,25 +936,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
---- !u!114 &114391401003815438
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1096730489285464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &114398732800154726
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1503,25 +1482,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
---- !u!114 &114847985896085882
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1994620351222200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &114890194374153930
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1610,7 +1570,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114248314341314196}
-        m_MethodName: ChangeDeckName
+        m_MethodName: ChangeName
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1959,8 +1919,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 593.70435, y: -35}
-  m_SizeDelta: {x: 1177.4087, y: 60}
+  m_AnchoredPosition: {x: 593.872, y: -35}
+  m_SizeDelta: {x: 1177.744, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224281893381768302
 RectTransform:
@@ -1997,7 +1957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 423.24432, y: -75}
+  m_AnchoredPosition: {x: 423.36, y: -75}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224513592051074986
@@ -2302,7 +2262,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1269.7329, y: -75}
+  m_AnchoredPosition: {x: 1270.08, y: -75}
   m_SizeDelta: {x: 350, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224906293977325038
@@ -2322,8 +2282,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 588.70435, y: -30}
-  m_SizeDelta: {x: 1157.4087, y: 50}
+  m_AnchoredPosition: {x: 588.872, y: -30}
+  m_SizeDelta: {x: 1157.744, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224959618740630358
 RectTransform:

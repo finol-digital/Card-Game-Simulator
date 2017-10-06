@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 114355898836881508}
   - component: {fileID: 114113642883387902}
   m_Layer: 5
-  m_Name: InputField
+  m_Name: Name InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,6 @@ GameObject:
   - component: {fileID: 222480926322191578}
   - component: {fileID: 114286890902453982}
   - component: {fileID: 114857194261681452}
-  - component: {fileID: 114395411835885060}
   m_Layer: 5
   m_Name: Load Button
   m_TagString: Untagged
@@ -435,7 +434,7 @@ GameObject:
   - component: {fileID: 222012132650155800}
   - component: {fileID: 114938580948009848}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Name Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -789,7 +788,6 @@ GameObject:
   - component: {fileID: 222567271150016086}
   - component: {fileID: 114725835172907270}
   - component: {fileID: 114664229239748096}
-  - component: {fileID: 114425240451040134}
   - component: {fileID: 114701627831801526}
   m_Layer: 5
   m_Name: Cancel Button
@@ -826,7 +824,6 @@ GameObject:
   - component: {fileID: 222024289261211214}
   - component: {fileID: 114271943706026462}
   - component: {fileID: 114470130142328520}
-  - component: {fileID: 114314998639530626}
   m_Layer: 5
   m_Name: Load Button
   m_TagString: Untagged
@@ -845,7 +842,6 @@ GameObject:
   - component: {fileID: 222888147624412354}
   - component: {fileID: 114717449279067094}
   - component: {fileID: 114735257877527724}
-  - component: {fileID: 114711630951480728}
   - component: {fileID: 114644453172670452}
   m_Layer: 5
   m_Name: Cancel Button
@@ -950,8 +946,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fileSelectionArea: {fileID: 224624607191661848}
   fileSelectionTemplate: {fileID: 224343981876410232}
-  loadDeckFromFileButton: {fileID: 114470130142328520}
-  deckNameInputField: {fileID: 114113642883387902}
+  loadFromFileButton: {fileID: 114470130142328520}
+  nameInputField: {fileID: 114113642883387902}
   textInputField: {fileID: 114289680823083020}
 --- !u!114 &114032009988218124
 MonoBehaviour:
@@ -1717,25 +1713,6 @@ MonoBehaviour:
   m_RestoreOriginalTextOnEscape: 1
   m_isRichTextEditingAllowed: 1
   m_InputValidator: {fileID: 0}
---- !u!114 &114314998639530626
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1812516763734306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &114315020666869214
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1802,25 +1779,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114395411835885060
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1063705488108596}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &114423679586556262
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1848,25 +1806,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114425240451040134
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1785256979557912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &114431416052235194
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1967,7 +1906,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114007050681300680}
-        m_MethodName: LoadDeckFromFileAndHide
+        m_MethodName: LoadFromFileAndHide
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2197,7 +2136,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114477277995489710}
   m_HandleRect: {fileID: 224999266905084260}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2465,25 +2404,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114711630951480728
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1843305298439102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!114 &114717449279067094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2993,7 +2913,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114007050681300680}
-        m_MethodName: LoadDeckFromTextAndHide
+        m_MethodName: LoadFromTextAndHide
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3277,7 +3197,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114007050681300680}
-        m_MethodName: PasteClipboardIntoDeckText
+        m_MethodName: PasteClipboardIntoText
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3673,7 +3593,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 423.24432, y: -75}
+  m_AnchoredPosition: {x: 423.36, y: -75}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224184534679307318
@@ -4513,7 +4433,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1269.7329, y: -75}
+  m_AnchoredPosition: {x: 1270.08, y: -75}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224999266905084260

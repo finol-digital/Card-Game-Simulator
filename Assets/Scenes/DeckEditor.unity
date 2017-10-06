@@ -2360,7 +2360,7 @@ Prefab:
     - target: {fileID: 224689950044374086, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: -81.721924
+      value: -81.55502
       objectReference: {fileID: 0}
     - target: {fileID: 224048262214563894, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
@@ -2380,7 +2380,7 @@ Prefab:
     - target: {fileID: 224048262214563894, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 522.146
+      value: 522
       objectReference: {fileID: 0}
     - target: {fileID: 224048262214563894, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
@@ -2400,7 +2400,7 @@ Prefab:
     - target: {fileID: 224016562723493122, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 522.146
+      value: 522
       objectReference: {fileID: 0}
     - target: {fileID: 224016562723493122, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
@@ -2410,7 +2410,7 @@ Prefab:
     - target: {fileID: 224016562723493122, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 522.146
+      value: 522
       objectReference: {fileID: 0}
     - target: {fileID: 224016562723493122, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
@@ -2430,7 +2430,7 @@ Prefab:
     - target: {fileID: 224109361500935880, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 1044.292
+      value: 1044
       objectReference: {fileID: 0}
     - target: {fileID: 224109361500935880, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
@@ -2440,7 +2440,7 @@ Prefab:
     - target: {fileID: 224109361500935880, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 492.146
+      value: 492
       objectReference: {fileID: 0}
     - target: {fileID: 224109361500935880, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
@@ -4033,7 +4033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d50b4fa3784ef4d8dc39a6b43af545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchMenuPrefab: {fileID: 1155578285337220, guid: 2a856778d84365048929069dfca116b5,
+  searchMenuPrefab: {fileID: 1970696357239060, guid: 2a856778d84365048929069dfca116b5,
     type: 2}
   deckEditor: {fileID: 1691862800}
   layoutArea: {fileID: 1955078419}

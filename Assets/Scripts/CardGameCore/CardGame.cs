@@ -102,6 +102,9 @@ public class CardGame
     public string DeckFileType { get; set; }
 
     [JsonProperty]
+    public List<EnumDef> Enums { get; set; }
+
+    [JsonProperty]
     public string SetCodeIdentifier { get; set; }
 
     [JsonProperty]
@@ -238,7 +241,7 @@ public class CardGame
         }
     }
 
-    public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> properties)
+    public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> stringProperties, Dictionary<string, int> intMinProperties, Dictionary<string, int> intMaxProperties)
     {
         if (id == null)
             id = string.Empty;
@@ -246,16 +249,27 @@ public class CardGame
             name = string.Empty;
         if (setCode == null)
             setCode = string.Empty;
-        if (properties == null)
-            properties = new Dictionary<string, string>();
+        if (stringProperties == null)
+            stringProperties = new Dictionary<string, string>();
+        if (intMinProperties == null)
+            intMinProperties = new Dictionary<string, int>();
+        if (intMaxProperties == null)
+            intMaxProperties = new Dictionary<string, int>();
 
         foreach (Card card in Cards) {
             if (card.Id.ToLower().Contains(id.ToLower())
                 && card.Name.ToLower().Contains(name.ToLower())
                 && card.SetCode.ToLower().Contains(setCode.ToLower())) {
                 bool propsMatch = true;
-                foreach (KeyValuePair<string, string> entry in properties)
+                foreach (KeyValuePair<string, string> entry in stringProperties)
                     if (!(card.Properties [entry.Key].Value.Value).ToLower().Contains(entry.Value.ToLower()))
+                        propsMatch = false;
+                int intValue;
+                foreach (KeyValuePair<string, int> entry in intMinProperties)
+                    if (int.TryParse(card.Properties [entry.Key].Value.Value, out intValue) && intValue < entry.Value)
+                        propsMatch = false;
+                foreach (KeyValuePair<string, int> entry in intMaxProperties)
+                    if (int.TryParse(card.Properties [entry.Key].Value.Value, out intValue) && intValue > entry.Value)
                         propsMatch = false;
                 if (propsMatch)
                     yield return card;

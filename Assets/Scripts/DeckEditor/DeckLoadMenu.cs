@@ -115,7 +115,7 @@ public class DeckLoadMenu : MonoBehaviour
         textInputField.text = UniClipboard.GetText();
     }
 
-    public void LoadDeckFromTextAndHide()
+    public void LoadFromTextAndHide()
     {
         Deck newDeck = new Deck(nameInputField.text, textInputField.text);
         LoadCallback(newDeck);

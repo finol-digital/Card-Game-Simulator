@@ -18,7 +18,8 @@ public class AddGameMenu : MonoBehaviour
 
     public void Paste()
     {
-        urlInput.text = UniClipboard.GetText();
+        if (urlInput.interactable)
+            urlInput.text = UniClipboard.GetText();
     }
 
     public void Clear()
@@ -33,7 +34,10 @@ public class AddGameMenu : MonoBehaviour
 
     public IEnumerator LoadGame()
     {
+        urlInput.text = string.Empty;
+        urlInput.interactable = false;
         CardGame newGame = new CardGame(CardGame.DefaultSet, urlInput.text.Trim());
+        newGame.AutoUpdate = true;
         yield return newGame.Load();
 
         if (string.IsNullOrEmpty(newGame.Error)) {
@@ -44,6 +48,7 @@ public class AddGameMenu : MonoBehaviour
             Debug.LogError("Failed to load game url! " + newGame.Error);
             CardGameManager.Instance.Popup.Show("Failed to load game url! " + newGame.Error);
         }
+        urlInput.interactable = true;
         Hide();
     }
 
