@@ -48,7 +48,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         string propertyText = string.Empty;
         PropertyDefValuePair property;
-        if (SelectedCardModel != null && SelectedCardModel.RepresentedCard.Properties.TryGetValue(SelectedPropertyName, out property)) {
+        if (SelectedCardModel != null && SelectedCardModel.Card.Properties.TryGetValue(SelectedPropertyName, out property)) {
             propertyText = property.Value.Value;
             int enumValue;
             if (property.Def.Type == PropertyType.Enum && EnumDef.TryParse(propertyText, out enumValue)) {
@@ -167,8 +167,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 return;
             }
             cardImage.sprite = _selectedCardModel.Image.sprite;
-            nameText.text = value.RepresentedCard.Name;
-            idText.text = value.RepresentedCard.Id;
+            nameText.text = value.Card.Name;
+            idText.text = value.Card.Id;
             SetContentText();
 
             IsVisible = true;

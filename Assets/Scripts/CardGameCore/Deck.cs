@@ -9,14 +9,14 @@ public class Deck
 
     public List<Card> Cards { get; set; }
 
-    public Deck(string name, string definition = "")
+    public Deck(string name, string text = "")
     {
         Name = name.Clone() as string;
         Cards = new List<Card>();
-        FromString(definition);
+        FromTxt(text);
     }
 
-    public void FromString(string definition)
+    public void FromTxt(string definition)
     {
         if (definition == null)
             return;
@@ -37,12 +37,7 @@ public class Deck
         }
     }
 
-    public void Sort()
-    {
-        Cards.Sort();
-    }
-
-    public override string ToString()
+    public string ToTxt()
     {
         string definition = "# " + CardGameManager.Current.Name + " Deck List: " + Name + System.Environment.NewLine;
         Dictionary<string, int> cardCounts = new Dictionary<string, int>();
@@ -55,8 +50,13 @@ public class Deck
 
         foreach (string cardName in cardCounts.Keys)
             definition += cardCounts [cardName] + " " + cardName + System.Environment.NewLine;
-        
+
         return definition;
+    }
+
+    public void Sort()
+    {
+        Cards.Sort();
     }
 
     public string FilePath {

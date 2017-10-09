@@ -18,7 +18,7 @@ public class DeckZone : MonoBehaviour, IDropHandler
 
     public void Shuffle(Vector2 unused1, Vector2 unused2)
     {
-        Deck = new Deck(Deck.Name, Deck.ToString());
+        Deck = new Deck(Deck.Name, Deck.ToTxt());
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -50,8 +50,8 @@ public class DeckZone : MonoBehaviour, IDropHandler
             this.transform.DestroyAllChildren();
             foreach (Card card in _deck.Cards) {
                 CardModel newCard = Instantiate(cardPrefab, this.transform).GetOrAddComponent<CardModel>();
-                newCard.RepresentedCard = card;
-                newCard.Facedown = true;
+                newCard.Card = card;
+                newCard.IsFacedown = true;
                 newCard.DoubleClickEvent = CardModel.ToggleFacedown;
                 newCard.SecondaryDragAction = Shuffle;
             }

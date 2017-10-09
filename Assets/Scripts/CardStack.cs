@@ -34,7 +34,8 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
-            cardModel.PlaceHolderStack = this;
+            if (cardModel.ParentCardStack == null || cardModel.ParentCardStack.isFree)
+                cardModel.PlaceHolderCardStack = this;
         }
     }
 
@@ -48,8 +49,8 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
-            if (cardModel.PlaceHolderStack == this)
-                cardModel.PlaceHolderStack = null;
+            if (cardModel.PlaceHolderCardStack == this)
+                cardModel.PlaceHolderCardStack = null;
         }
     }
 

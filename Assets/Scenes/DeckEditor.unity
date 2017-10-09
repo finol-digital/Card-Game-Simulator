@@ -2512,13 +2512,13 @@ MonoBehaviour:
     m_Left: 0
     m_Right: 0
     m_Top: 0
-    m_Bottom: 0
+    m_Bottom: 85
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
 --- !u!1 &965125245
 GameObject:
   m_ObjectHideFlags: 0
@@ -4011,7 +4011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 2}
-  cardStackPrefab: {fileID: 1143369158700022, guid: a98e6f63635e6f046938f07c822f0370,
+  cardStackPrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
     type: 2}
   deckLoadMenuPrefab: {fileID: 1240882589060142, guid: 5f8f2d4006988c74ca0e02ce057e329a,
     type: 2}

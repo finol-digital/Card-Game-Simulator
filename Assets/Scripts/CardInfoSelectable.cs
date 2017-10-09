@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-// HACK: NOT SURE HOW TO MANAGE THE CARD INFO VIEWER AND CARD MODEL SELECTION/VISIBILITY
 public class CardInfoSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
-    public bool checkDeselect = false;
+    public bool checksDeselect = false;
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -21,7 +20,7 @@ public class CardInfoSelectable : MonoBehaviour, IPointerDownHandler, ISelectHan
 
     public void OnDeselect(BaseEventData eventData)
     {
-        if (!checkDeselect) {
+        if (!checksDeselect) {
             return;
         }
 

@@ -81,8 +81,8 @@ public class SearchResults : MonoBehaviour
             string cardId = AllResults [CurrentPageIndex * CardsPerPage + i].Id;
             Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).FirstOrDefault();
             CardModel cardModelToShow = Instantiate(deckEditor.cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
-            cardModelToShow.RepresentedCard = cardToShow;
-            cardModelToShow.ClonesOnDrag = true;
+            cardModelToShow.Card = cardToShow;
+            cardModelToShow.DoesCloneOnDrag = true;
             cardModelToShow.DoubleClickEvent = new OnDoubleClickDelegate(deckEditor.AddCardModel);
         }
 

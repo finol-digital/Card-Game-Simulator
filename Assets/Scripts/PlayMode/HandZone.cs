@@ -6,15 +6,15 @@ using UnityEngine.EventSystems;
 
 public class HandZone : MonoBehaviour, IDropHandler
 {
-    public RectTransform handExtended;
+    public RectTransform handExtension;
     public Text handCountText;
 
-    public bool Extended { get; private set; }
+    public bool IsExtended { get; private set; }
 
     void Start()
     {
-        handExtended.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
-        handExtended.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
+        handExtension.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
+        handExtension.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -28,7 +28,7 @@ public class HandZone : MonoBehaviour, IDropHandler
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
 
-            CardModel newCardModel = cardModel.Clone(handExtended);
+            CardModel newCardModel = cardModel.Clone(handExtension);
             newCardModel.DoubleClickEvent = CardModel.ToggleFacedown;
             newCardModel.SecondaryDragAction = null;
             newCardModel.CanvasGroup.blocksRaycasts = true;
@@ -37,13 +37,13 @@ public class HandZone : MonoBehaviour, IDropHandler
 
     void Update()
     {
-        handCountText.text = handExtended.childCount.ToString();
+        handCountText.text = handExtension.childCount.ToString();
     }
 
-    public void ToggleExtended()
+    public void ToggleExtension()
     {
-        Extended = !Extended;
-        handExtended.gameObject.GetOrAddComponent<CanvasGroup>().alpha = Extended ? 1 : 0;
-        handExtended.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = Extended;
+        IsExtended = !IsExtended;
+        handExtension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
+        handExtension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
     }
 }

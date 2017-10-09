@@ -24,7 +24,7 @@ public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointe
             return;
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null && !cardModel.IsInStack)
+        if (cardModel != null && cardModel.ParentCardStack == null)
             StartCoroutine(MoveScrollbar());
     }
 

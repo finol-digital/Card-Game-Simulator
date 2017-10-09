@@ -16,8 +16,7 @@ public class CardGame
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
     public const string DefaultCardImageURLFormat = "{0}";
-    public const int DefaultCopiesOfCardPerDeck = 4;
-    public const int DefaultDeckCardStackCount = 15;
+    public const int DefaultDeckMaxSize = 75;
     public const string DefaultDeckFileType = "txt";
     public const string DefaultImageFileType = "png";
     public const string DefaultSet = "_CGSDEFAULT_";
@@ -93,13 +92,10 @@ public class CardGame
     public List<PropertyDef> CardProperties { get; set; }
 
     [JsonProperty]
-    public int CopiesOfCardPerDeck { get; set; }
-
-    [JsonProperty]
-    public int DeckCardStackCount { get; set; }
-
-    [JsonProperty]
     public string DeckFileType { get; set; }
+
+    [JsonProperty]
+    public int DeckMaxSize { get; set; }
 
     [JsonProperty]
     public List<EnumDef> Enums { get; set; }
@@ -129,9 +125,8 @@ public class CardGame
         CardIdIdentifier = "id";
         CardNameIdentifier = "name";
         CardSetIdentifier = "set";
-        CopiesOfCardPerDeck = DefaultCopiesOfCardPerDeck;
-        DeckCardStackCount = DefaultDeckCardStackCount;
         DeckFileType = DefaultDeckFileType;
+        DeckMaxSize = DefaultDeckMaxSize;
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
     }
