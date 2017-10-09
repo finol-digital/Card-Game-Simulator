@@ -26,7 +26,7 @@ public class DeckSaveMenu : MonoBehaviour
         CurrentDeck = deckToShow;
         NameChangeCallback = nameChangeCallback;
         nameInputField.text = deckToShow.Name;
-        textOutputArea.text = CurrentDeck.ToTxt();
+        textOutputArea.text = CurrentDeck.ToString();
     }
 
     public void ChangeName(string newName)
@@ -34,9 +34,9 @@ public class DeckSaveMenu : MonoBehaviour
         newName = NameChangeCallback(newName);
         if (!string.IsNullOrEmpty(newName))
             nameInputField.text = newName;
-        Deck newDeck = new Deck(newName);
+        Deck newDeck = new Deck(newName, CardGameManager.Current.DeckFileType);
         newDeck.Cards = new List<Card>(CurrentDeck.Cards);
-        textOutputArea.text = newDeck.ToTxt();
+        textOutputArea.text = newDeck.ToString();
     }
 
     public void CopyTextToClipboard()
@@ -47,7 +47,7 @@ public class DeckSaveMenu : MonoBehaviour
 
     public void AttemptSaveAndHide()
     {
-        Deck filePathFinder = new Deck(nameInputField.text);
+        Deck filePathFinder = new Deck(nameInputField.text, CardGameManager.Current.DeckFileType);
         if (File.Exists(filePathFinder.FilePath))
             CardGameManager.Instance.Popup.Prompt(OverWriteDeckPrompt, SaveToFile);
         else
@@ -67,7 +67,7 @@ public class DeckSaveMenu : MonoBehaviour
         try {
             if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
                 Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
-            File.WriteAllText(deck.FilePath, deck.ToTxt());
+            File.WriteAllText(deck.FilePath, deck.ToString());
         } catch (Exception e) {
             Debug.LogError("Failed to save deck!: " + e.Message);
             CardGameManager.Instance.Popup.Show("There was an error saving the deck to file: " + e.Message);

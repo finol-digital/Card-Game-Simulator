@@ -49,7 +49,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         string propertyText = string.Empty;
         PropertyDefValuePair property;
         if (SelectedCardModel != null && SelectedCardModel.Card.Properties.TryGetValue(SelectedPropertyName, out property)) {
-            propertyText = property.Value.Value;
+            propertyText = property.Value;
             int enumValue;
             if (property.Def.Type == PropertyType.Enum && EnumDef.TryParse(propertyText, out enumValue)) {
                 EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(SelectedPropertyName)).First();
@@ -85,16 +85,13 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         if (SelectedCardModel == null)
             IsVisible = false;
-
-        // TODO: CONFIRM THAT THIS METHOD OF HIDING AND SHOWING DOESN'T CAUSE TOO MUCH OF A PERFORMANCE IMPACT
-        Vector2 targetAnchorMin = new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
-        Vector2 targetAnchorMax = new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, HiddenYMax, animationSpeed * Time.deltaTime));
-        if (IsVisible) {
-            targetAnchorMin = new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, VisibleYMin, animationSpeed * Time.deltaTime));
-            targetAnchorMax = new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, VisibleYMax, animationSpeed * Time.deltaTime));
-        }
-        rectTransform.anchorMin = targetAnchorMin;
-        rectTransform.anchorMax = targetAnchorMax;
+        
+        rectTransform.anchorMin = IsVisible ? 
+            new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, VisibleYMin, animationSpeed * Time.deltaTime)) :
+            new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
+        rectTransform.anchorMax = IsVisible ? 
+            new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, VisibleYMax, animationSpeed * Time.deltaTime)) :
+            new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, HiddenYMax, animationSpeed * Time.deltaTime));
     }
 
     public static CardInfoViewer Instance {

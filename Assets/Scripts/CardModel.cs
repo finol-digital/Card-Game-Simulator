@@ -171,9 +171,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public void UpdatePositionInCardStack(Vector2 targetPosition, DragPhase dragPhase)
     {
         CardStack cardStack = ParentCardStack;
+        if (cardStack == null)
+            return;
+
         this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
         cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
-
         if (!cardStack.isFree && cardStack.scrollRectContainer != null) {
             switch (dragPhase) {
                 case DragPhase.Begin:
@@ -193,7 +195,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             PlaceHolderCardStack = cardStack;
             ParentToCanvas();
             this.transform.position = targetPosition;
-            // TODO: AREA
 
         } else if (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal) {
             RectTransform stackRT = cardStack.transform as RectTransform;

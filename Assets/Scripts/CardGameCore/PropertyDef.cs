@@ -27,33 +27,17 @@ public class PropertyDef : ICloneable
     }
 }
 
-public class PropertyDefValue : ICloneable
-{
-    public string Value { get; set; }
-
-    public object Clone()
-    {
-        var ret = new PropertyDefValue() { Value = this.Value };
-        return ret;
-    }
-
-    public override string ToString()
-    {
-        return Value.ToString();
-    }
-}
-
 public class PropertyDefValuePair : ICloneable
 {
     public PropertyDef Def { get; set; }
 
-    public PropertyDefValue Value { get; set; }
+    public string Value { get; set; }
 
     public object Clone()
     {
         var ret = new PropertyDefValuePair() {
             Def = this.Def.Clone() as PropertyDef,
-            Value = this.Value.Clone() as PropertyDefValue
+            Value = this.Value.Clone() as string
         };
         return ret;
     }

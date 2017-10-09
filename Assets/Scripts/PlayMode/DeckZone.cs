@@ -18,7 +18,7 @@ public class DeckZone : MonoBehaviour, IDropHandler
 
     public void Shuffle(Vector2 unused1, Vector2 unused2)
     {
-        Deck = new Deck(Deck.Name, Deck.ToTxt());
+        Deck = Deck;
     }
 
     public void OnDrop(PointerEventData eventData)

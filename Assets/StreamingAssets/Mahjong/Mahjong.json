@@ -4,5 +4,5 @@
 		{"name": "suit", "type": "string" },
 		{"name": "rank", "type": "string" }
 	],
-	"deckCardStackCount": "36"
+	"deckMaxSize": "144"
 }

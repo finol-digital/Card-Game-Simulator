@@ -10,12 +10,7 @@ public delegate string NameChangeDelegate(string newName);
 public class DeckEditor : MonoBehaviour
 {
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
-
-    public int CardStackSize {
-        get { 
-            return 8;
-        }
-    }
+    public const int CardStackSize = 8;
 
     public int CardStackCount {
         get {
@@ -25,7 +20,7 @@ public class DeckEditor : MonoBehaviour
 
     public Deck CurrentDeck {
         get { 
-            Deck deck = new Deck(nameText.text);
+            Deck deck = new Deck(nameText.text, CardGameManager.Current.DeckFileType);
             foreach (CardStack stack in CardStacks)
                 foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
                     deck.Cards.Add(card.Card);

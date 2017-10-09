@@ -40,7 +40,7 @@ public class Card : IComparable<Card>
             return -1;
 
         foreach (string propName in Properties.Keys) {
-            int comparison = Properties [propName].Value.Value.CompareTo(other.Properties [propName].Value.Value);
+            int comparison = Properties [propName].Value.CompareTo(other.Properties [propName].Value);
             if (comparison != 0)
                 return comparison;
         }
@@ -72,10 +72,13 @@ public class Card : IComparable<Card>
 
     public string ImageWebURL {
         get {
-            PropertyDefValuePair firstProp;
-            if (!Properties.TryGetValue(Properties.Keys.FirstOrDefault(), out firstProp))
-                firstProp = new PropertyDefValuePair();
-            return CardGameManager.Current.CardImageURLBase + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode.ToLower(), NameStrippedToLowerAlphaNum, firstProp.Value.Value) + "." + CardGameManager.Current.CardImageFileType;
+            string imageUrlName = string.Empty;
+            PropertyDefValuePair imageURLNameProperty;
+            if (!string.IsNullOrEmpty(CardGameManager.Current.CardImageURLName) && Properties.TryGetValue(CardGameManager.Current.CardImageURLName, out imageURLNameProperty))
+                imageUrlName = imageURLNameProperty.Value;
+            return CardGameManager.Current.CardImageURLBase
+            + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode.ToLower(), NameStrippedToLowerAlphaNum, imageUrlName)
+            + "." + CardGameManager.Current.CardImageFileType;
         }
     }
 

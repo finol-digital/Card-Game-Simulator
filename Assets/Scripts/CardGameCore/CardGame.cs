@@ -17,7 +17,7 @@ public class CardGame
     public const string CardBackImageFileName = "CardBack";
     public const string DefaultCardImageURLFormat = "{0}";
     public const int DefaultDeckMaxSize = 75;
-    public const string DefaultDeckFileType = "txt";
+    public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
     public const string DefaultImageFileType = "png";
     public const string DefaultSet = "_CGSDEFAULT_";
     public const string SetCardsIdentifier = "cards";
@@ -80,6 +80,9 @@ public class CardGame
     public string CardImageURLFormat { get; set; }
 
     [JsonProperty]
+    public string CardImageURLName { get; set; }
+
+    [JsonProperty]
     public string CardNameIdentifier { get; set; }
 
     [JsonProperty]
@@ -92,7 +95,7 @@ public class CardGame
     public List<PropertyDef> CardProperties { get; set; }
 
     [JsonProperty]
-    public string DeckFileType { get; set; }
+    public DeckFileType DeckFileType { get; set; }
 
     [JsonProperty]
     public int DeckMaxSize { get; set; }
@@ -222,7 +225,7 @@ public class CardGame
         foreach (PropertyDef prop in CardProperties) {
             cardProps [prop.Name] = new PropertyDefValuePair() {
                 Def = prop,
-                Value = new PropertyDefValue() { Value = cardJToken.Value<string>(prop.Name) }
+                Value = cardJToken.Value<string>(prop.Name) ?? string.Empty
             };
         }
         if (!string.IsNullOrEmpty(cardId)) {
@@ -250,6 +253,8 @@ public class CardGame
             intMinProperties = new Dictionary<string, int>();
         if (intMaxProperties == null)
             intMaxProperties = new Dictionary<string, int>();
+        if (enumProperties == null)
+            enumProperties = new Dictionary<string, int>();
 
         foreach (Card card in Cards) {
             if (card.Id.ToLower().Contains(id.ToLower())
@@ -257,17 +262,17 @@ public class CardGame
                 && card.SetCode.ToLower().Contains(setCode.ToLower())) {
                 bool propsMatch = true;
                 foreach (KeyValuePair<string, string> entry in stringProperties)
-                    if (!(card.Properties [entry.Key].Value.Value).ToLower().Contains(entry.Value.ToLower()))
+                    if (!(card.Properties [entry.Key].Value).ToLower().Contains(entry.Value.ToLower()))
                         propsMatch = false;
                 int intValue;
                 foreach (KeyValuePair<string, int> entry in intMinProperties)
-                    if (int.TryParse(card.Properties [entry.Key].Value.Value, out intValue) && intValue < entry.Value)
+                    if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && intValue < entry.Value)
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in intMaxProperties)
-                    if (int.TryParse(card.Properties [entry.Key].Value.Value, out intValue) && intValue > entry.Value)
+                    if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && intValue > entry.Value)
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in enumProperties)
-                    if (int.TryParse(card.Properties [entry.Key].Value.Value, out intValue) && (intValue & entry.Value) == 0)
+                    if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && (intValue & entry.Value) == 0)
                         propsMatch = false;
                 if (propsMatch)
                     yield return card;
