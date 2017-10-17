@@ -30,17 +30,17 @@ static public class UnityExtensionMethods
 
     static public T FindInParents<T>(this GameObject go) where T : Component
     {
-        var comp = go.GetComponent<T>();
+        T component = go.GetComponent<T>();
 
-        if (comp != null)
-            return comp;
+        if (component != null)
+            return component;
 
-        var t = go.transform.parent;
-        while (t != null && comp == null) {
-            comp = t.gameObject.GetComponent<T>();
-            t = t.parent;
+        Transform transform = go.transform.parent;
+        while (transform != null && component == null) {
+            component = transform.gameObject.GetComponent<T>();
+            transform = transform.parent;
         }
-        return comp;
+        return component;
     }
 
     static public T GetOrAddComponent<T>(this GameObject go) where T: Component
@@ -66,14 +66,14 @@ static public class UnityExtensionMethods
         WWW loader = new WWW(url);
         yield return loader;
         if (!string.IsNullOrEmpty(loader.error)) {
-            Debug.LogError("Failed to load from " + url + ", error: " + loader.error);
+            Debug.LogWarning("Failed to load from " + url + ", error: " + loader.error);
             yield break;
         }
 
         string directory = Path.GetDirectoryName(filePath);
         string fileName = Path.GetFileName(filePath);
         if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName)) {
-            Debug.LogError("Could not save to " + filePath + ", as it is an improperly formed path");
+            Debug.LogWarning("Could not save to " + filePath + ", as it is an improperly formed path");
             yield break;
         }
 

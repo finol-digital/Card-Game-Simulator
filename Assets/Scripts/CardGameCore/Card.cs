@@ -14,7 +14,7 @@ public class Card : IComparable<Card>
 
     public string SetCode { get; set; }
 
-    public Dictionary<string , PropertyDefValuePair> Properties { get; set; }
+    public Dictionary<string, PropertyDefValuePair> Properties { get; set; }
 
     public Card(string id, string name, string setCode, Dictionary<string,PropertyDefValuePair> properties)
     {
@@ -27,11 +27,27 @@ public class Card : IComparable<Card>
 
     public Dictionary<string, PropertyDefValuePair> CloneProperties()
     {
-        var ret = new Dictionary<string, PropertyDefValuePair>();
-        foreach (var p in Properties) {
-            ret.Add((string)p.Key.Clone(), p.Value.Clone() as PropertyDefValuePair);
-        }
-        return ret;
+        Dictionary<string, PropertyDefValuePair> clone = new Dictionary<string, PropertyDefValuePair>();
+        foreach (KeyValuePair<string, PropertyDefValuePair> property in Properties)
+            clone.Add((string)property.Key.Clone(), property.Value.Clone() as PropertyDefValuePair);
+        return clone;
+    }
+
+    public string GetPropertyValueString(string propertyName)
+    {
+        if (string.IsNullOrEmpty(propertyName))
+            return string.Empty;
+        if (Properties.ContainsKey(propertyName))
+            return Properties [propertyName] != null ? Properties [propertyName].Value : string.Empty;
+        return string.Empty;
+    }
+
+    public int GetPropertyValueInt(string propertyName)
+    {
+        int intValue;
+        if (Properties.ContainsKey(propertyName) && Properties [propertyName] != null && int.TryParse(Properties [propertyName].Value, out intValue))
+            return intValue;
+        return 0;
     }
 
     public int CompareTo(Card other)
@@ -72,12 +88,8 @@ public class Card : IComparable<Card>
 
     public string ImageWebURL {
         get {
-            string imageUrlName = string.Empty;
-            PropertyDefValuePair imageURLNameProperty;
-            if (!string.IsNullOrEmpty(CardGameManager.Current.CardImageURLName) && Properties.TryGetValue(CardGameManager.Current.CardImageURLName, out imageURLNameProperty))
-                imageUrlName = imageURLNameProperty.Value;
             return CardGameManager.Current.CardImageURLBase
-            + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode.ToLower(), NameStrippedToLowerAlphaNum, imageUrlName)
+            + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode, NameStrippedToLowerAlphaNum, GetPropertyValueString(CardGameManager.Current.CardImageURLName))
             + "." + CardGameManager.Current.CardImageFileType;
         }
     }

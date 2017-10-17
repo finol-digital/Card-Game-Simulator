@@ -143,7 +143,7 @@ public class DeckEditor : MonoBehaviour
         foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
         RecentCardStackIndex = 0;
-        nameText.text = DeckLoadMenu.DefaultName;
+        nameText.text = Deck.DefaultName;
 
         CardInfoViewer.Instance.IsVisible = false;
         UpdateDeckSize();
@@ -152,7 +152,7 @@ public class DeckEditor : MonoBehaviour
     public string UpdateDeckName(string newName)
     {
         if (string.IsNullOrEmpty(newName))
-            newName = DeckLoadMenu.DefaultName;
+            newName = Deck.DefaultName;
         nameText.text = UnityExtensionMethods.GetSafeFileName(newName);
         return nameText.text;
     }

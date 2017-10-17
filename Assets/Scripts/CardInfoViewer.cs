@@ -48,7 +48,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         string propertyText = string.Empty;
         PropertyDefValuePair property;
-        if (SelectedCardModel != null && SelectedCardModel.Card.Properties.TryGetValue(SelectedPropertyName, out property)) {
+        if (SelectedCardModel != null && SelectedCardModel.Card.Properties.TryGetValue(SelectedPropertyName, out property) && property != null) {
             propertyText = property.Value;
             int enumValue;
             if (property.Def.Type == PropertyType.Enum && EnumDef.TryParse(propertyText, out enumValue)) {
@@ -178,6 +178,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
         set {
             _isVisible = value;
+            if (!_isVisible)
+                CardZoomPanel.gameObject.SetActive(false);
             if (SelectedCardModel != null) {
                 if (_isVisible)
                     SelectedCardModel.Highlight();

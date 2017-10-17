@@ -221,15 +221,15 @@ public class CardGame
         string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
         string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
         string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSet;
-        Dictionary<string, PropertyDefValuePair> cardProps = new Dictionary<string, PropertyDefValuePair>();
-        foreach (PropertyDef prop in CardProperties) {
-            cardProps [prop.Name] = new PropertyDefValuePair() {
-                Def = prop,
-                Value = cardJToken.Value<string>(prop.Name) ?? string.Empty
+        Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
+        foreach (PropertyDef property in CardProperties) {
+            cardProperties [property.Name] = new PropertyDefValuePair() {
+                Def = property,
+                Value = cardJToken.Value<string>(property.Name) ?? string.Empty
             };
         }
         if (!string.IsNullOrEmpty(cardId)) {
-            Cards.Add(new Card(cardId, cardName, cardSet, cardProps));
+            Cards.Add(new Card(cardId, cardName, cardSet, cardProperties));
             bool setExists = cardSet == defaultSet;
             for (int i = 0; !setExists && i < Sets.Count; i++)
                 if (Sets [i].Code == cardSet)

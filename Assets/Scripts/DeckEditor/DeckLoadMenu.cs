@@ -11,7 +11,6 @@ public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
 
 public class DeckLoadMenu : MonoBehaviour
 {
-    public const string DefaultName = "Untitled";
     public const string SavePrompt = "Would you like to save this deck to file?";
     public const string DeletePrompt = "Are you sure you would like to delete this deck?";
 
@@ -33,7 +32,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public Deck LoadedDeck { get; private set; }
 
-    public void Show(OnDeckLoadedDelegate loadCallback, NameChangeDelegate nameChangeCallback, string originalName = DefaultName)
+    public void Show(OnDeckLoadedDelegate loadCallback, NameChangeDelegate nameChangeCallback, string originalName = Deck.DefaultName)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
@@ -68,13 +67,15 @@ public class DeckLoadMenu : MonoBehaviour
         fileSelectionArea.sizeDelta = new Vector2(fileSelectionArea.sizeDelta.x, fileSelectionTemplate.rect.height * deckFiles.Count);
 
         switch (CardGameManager.Current.DeckFileType) {
+            case DeckFileType.Dec:
+                instructionsText.text = Deck.DecInstructions;
+                break;
             case DeckFileType.Hsd:
                 instructionsText.text = Deck.HsdInstructions;
                 break;
             case DeckFileType.Ydk:
                 instructionsText.text = Deck.YdkInstructions;
                 break;
-            case DeckFileType.Dec:
             case DeckFileType.Txt:
             default:
                 instructionsText.text = Deck.TxtInstructions;
@@ -124,15 +125,14 @@ public class DeckLoadMenu : MonoBehaviour
     public void LoadFromFileAndHide()
     {
         string deckText = string.Empty;
-        try { 
+        try {
             deckText = File.ReadAllText(SelectedFileName);
         } catch (Exception e) {
             Debug.LogError("Failed to load deck!: " + e.Message);
             CardGameManager.Instance.Popup.Show("There was an error while attempting to read the deck list from file: " + e.Message);
         }
 
-        Deck newDeck = new Deck(GetNameFromPath(SelectedFileName), GetFileTypeFromPath(SelectedFileName));
-        newDeck.Load(deckText);
+        Deck newDeck = Deck.Parse(GetNameFromPath(SelectedFileName), GetFileTypeFromPath(SelectedFileName), deckText);
         LoadCallback(newDeck);
         Hide();
     }
@@ -165,8 +165,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void LoadFromTextAndHide()
     {
-        Deck newDeck = new Deck(nameInputField.text, CardGameManager.Current.DeckFileType);
-        newDeck.Load(textInputField.text);
+        Deck newDeck = Deck.Parse(nameInputField.text, CardGameManager.Current.DeckFileType, textInputField.text);
         LoadCallback(newDeck);
         LoadedDeck = newDeck;
         PromptForSave();

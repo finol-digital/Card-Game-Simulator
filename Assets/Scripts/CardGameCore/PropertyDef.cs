@@ -8,8 +8,8 @@ public enum PropertyType
 {
     String,
     Integer,
-    Enum,
-};
+    Enum
+}
 
 [JsonObject(MemberSerialization.OptIn)]
 public class PropertyDef : ICloneable
@@ -22,7 +22,7 @@ public class PropertyDef : ICloneable
 
     public object Clone()
     {
-        var ret = new PropertyDef() { Name = this.Name, Type = this.Type  };
+        PropertyDef ret = new PropertyDef() { Name = this.Name, Type = this.Type  };
         return ret;
     }
 }
@@ -35,7 +35,7 @@ public class PropertyDefValuePair : ICloneable
 
     public object Clone()
     {
-        var ret = new PropertyDefValuePair() {
+        PropertyDefValuePair ret = new PropertyDefValuePair() {
             Def = this.Def.Clone() as PropertyDef,
             Value = this.Value.Clone() as string
         };
