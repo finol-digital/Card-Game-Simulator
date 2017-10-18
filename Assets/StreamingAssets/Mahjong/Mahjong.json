@@ -4,5 +4,6 @@
 		{"name": "suit", "type": "string" },
 		{"name": "rank", "type": "string" }
 	],
-	"deckMaxSize": "144"
+	"deckMaxSize": "144",
+	"handStartSize": "13"
 }

@@ -18,6 +18,7 @@ public class CardGame
     public const string DefaultCardImageURLFormat = "{0}";
     public const int DefaultDeckMaxSize = 75;
     public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
+    public const int DefaultHandStartSize = 5;
     public const string DefaultImageFileType = "png";
     public const string DefaultSet = "_CGSDEFAULT_";
     public const string SetCardsIdentifier = "cards";
@@ -139,6 +140,7 @@ public class CardGame
         DeckMaxSize = DefaultDeckMaxSize;
         Enums = new List<EnumDef>();
         Extras = new List<ExtraDef>();
+        HandStartSize = DefaultHandStartSize;
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
     }
@@ -152,7 +154,7 @@ public class CardGame
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
             Debug.LogError("Failed to load card game! Error: " + e.Message + e.StackTrace);
-            _error = e.Message;
+            Error = e.Message;
             yield break;
         }
         if (!initialDirectory.Equals(FilePathBase)) {
@@ -177,21 +179,21 @@ public class CardGame
             LoadJSONFromFile(cardsFile, LoadCardFromJToken);
         } catch (Exception e) {
             Debug.LogError("Failed to load card game data! Error: " + e.Message + e.StackTrace);
-            _error = e.Message;
+            Error = e.Message;
             yield break;
         }
 
         Sprite backgroundSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), (output) => backgroundSprite = output);
         if (backgroundSprite != null)
-            _backgroundImageSprite = backgroundSprite;
+            BackgroundImageSprite = backgroundSprite;
         
         Sprite cardBackSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), (output) => cardBackSprite = output);
         if (cardBackSprite != null)
-            _cardBackImageSprite = cardBackSprite;
+            CardBackImageSprite = cardBackSprite;
         
-        _isLoaded = true;
+        IsLoaded = true;
     }
 
     public void LoadJSONFromFile(string file, LoadJTokenDelegate load)
@@ -311,6 +313,9 @@ public class CardGame
                 _backgroundImageSprite = Resources.Load<Sprite>(BackgroundImageFileName);
             return _backgroundImageSprite;
         }
+        private set {
+            _backgroundImageSprite = value;
+        }
     }
 
     public Sprite CardBackImageSprite {
@@ -319,17 +324,26 @@ public class CardGame
                 _cardBackImageSprite = Resources.Load<Sprite>(CardBackImageFileName);
             return _cardBackImageSprite;
         }
+        private set {
+            _cardBackImageSprite = value;
+        }
     }
 
     public bool IsLoaded {
         get {
             return _isLoaded;
         }
+        private set {
+            _isLoaded = value;
+        }
     }
 
     public string Error {
         get {
             return _error;
+        }
+        private set {
+            _error = value;
         }
     }
 }

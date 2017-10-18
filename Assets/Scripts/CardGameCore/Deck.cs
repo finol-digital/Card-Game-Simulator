@@ -25,6 +25,7 @@ public class Deck
     public const string DefaultName = "Untitled";
     public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
     public const string HsdInstructions = "#Paste the deck string/code here";
+    public const string HsdPropertyId = "dbfId";
     public const string TxtInstructions = "#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
     public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
 
@@ -44,106 +45,94 @@ public class Deck
 
     public Deck(string name, DeckFileType fileType)
     {
-        Name = name.Clone() as string;
+        Name = name != null ? name.Clone() as string : string.Empty;
         FileType = fileType;
         Cards = new List<Card>();
     }
 
     public static Deck Parse(string name, DeckFileType type, string text)
     {
-        Deck newDeck = new Deck();
-        switch (type) {
-            case DeckFileType.Dec:
-                newDeck = ParseDec(name, text);
-                break;
-            case DeckFileType.Hsd:
-                newDeck = ParseHsd(name, text);
-                break;
-            case DeckFileType.Ydk:
-                newDeck = ParseYdk(name, text);
-                break;
-            case DeckFileType.Txt:
-            default:
-                newDeck = ParseTxt(name, text);
-                break;
-        }
-        return newDeck;
-    }
-
-    public static Deck ParseDec(string name, string text)
-    {
-        Deck newDeck = new Deck(name, DeckFileType.Dec);
-        if (text == null)
+        Deck newDeck = new Deck(name, type);
+        if (string.IsNullOrEmpty(text))
             return newDeck;
 
         foreach (string line in text.Split('\n').Select(x => x.Trim())) {
-            if (string.IsNullOrEmpty(line) || line.StartsWith("//") || line.StartsWith("SB:"))
-                continue;
-
-            int cardCount = 1;
-            List<string> tokens = line.Split(' ').ToList();
-            if (tokens.Count > 0 && int.TryParse(tokens [0], out cardCount))
-                tokens.RemoveAt(0);
-            string cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
-            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(null, cardName, null, null, null, null, null);
-            foreach (Card card in cards) {
-                if (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase))
-                    for (int i = 0; i < cardCount; i++)
-                        newDeck.Cards.Add(card);
-                break;
+            switch (type) {
+                case DeckFileType.Dec:
+                    newDeck.LoadDec(line);
+                    break;
+                case DeckFileType.Hsd:
+                    newDeck.LoadHsd(line);
+                    break;
+                case DeckFileType.Ydk:
+                    if (line.Equals("!side"))
+                        return newDeck;
+                    newDeck.LoadYdk(line);
+                    break;
+                case DeckFileType.Txt:
+                default:
+                    if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
+                        return newDeck;
+                    newDeck.LoadTxt(line);
+                    break;
             }
         }
         return newDeck;
     }
 
-    public static Deck ParseHsd(string name, string text)
+    public void LoadDec(string line)
     {
-        Deck newDeck = new Deck(name, DeckFileType.Hsd);
-        if (text == null)
-            return newDeck;
-        
-        foreach (string line in text.Split('\n').Select(x => x.Trim())) {
-            if (string.IsNullOrEmpty(line))
-                continue;
-            if (line.StartsWith("#")) {
-                if (line.StartsWith("###"))
-                    name = line.Substring(3).Trim();
-                continue;
-            }
+        if (string.IsNullOrEmpty(line) || line.StartsWith("//") || line.StartsWith("SB:"))
+            return;
 
-            return DeserializeHsd(name, line);
+        int cardCount = 1;
+        List<string> tokens = line.Split(' ').ToList();
+        if (tokens.Count > 0 && int.TryParse(tokens [0], out cardCount))
+            tokens.RemoveAt(0);
+        string cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
+        IEnumerable<Card> cards = CardGameManager.Current.FilterCards(null, cardName, null, null, null, null, null);
+        foreach (Card card in cards) {
+            if (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase))
+                for (int i = 0; i < cardCount; i++)
+                    Cards.Add(card);
+            break;
         }
-        return newDeck;
     }
 
-    public static Deck DeserializeHsd(string name, string deckString)
+    public void LoadHsd(string line)
     {
-        Deck newDeck = new Deck(name, DeckFileType.Hsd);
-        byte[] bytes = Convert.FromBase64String(deckString);
+        if (string.IsNullOrEmpty(line))
+            return;
+        if (line.StartsWith("#")) {
+            if (line.StartsWith("###"))
+                Name = line.Substring(3).Trim();
+            return;
+        }
+
+        byte[] bytes = Convert.FromBase64String(line);
         ulong offset = 3;
         int length;
 
         int numHeroes = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numHeroes; i++)
-            newDeck.AddCardsByPropertyInt("dbfId", (int)VarInt.Read(bytes, ref offset, out length), 1);
+            AddCardsByPropertyInt(HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
         int numSingleCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numSingleCards; i++)
-            newDeck.AddCardsByPropertyInt("dbfId", (int)VarInt.Read(bytes, ref offset, out length), 1);
+            AddCardsByPropertyInt(HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
         int numDoubleCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numDoubleCards; i++)
-            newDeck.AddCardsByPropertyInt("dbfId", (int)VarInt.Read(bytes, ref offset, out length), 2);
+            AddCardsByPropertyInt(HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 2);
 
         int numMultiCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numMultiCards; i++) {
-            int dbfId = (int)VarInt.Read(bytes, ref offset, out length);
+            int id = (int)VarInt.Read(bytes, ref offset, out length);
             int count = (int)VarInt.Read(bytes, ref offset, out length);
-            newDeck.AddCardsByPropertyInt("dbfId", dbfId, count);
+            AddCardsByPropertyInt(HsdPropertyId, id, count);
         }
 
-        newDeck.Sort();
-        return newDeck;
+        Sort();
     }
 
     public void AddCardsByPropertyInt(string propertyName, int propertyValue, int count)
@@ -153,71 +142,53 @@ public class Deck
             Cards.Add(card);
     }
 
-    public static Deck ParseYdk(string name, string text)
+    public void LoadYdk(string line)
     {
-        Deck newDeck = new Deck(name, DeckFileType.Ydk);
-        if (text == null)
-            return newDeck;
-
-        foreach (string line in text.Split('\n').Select(x => x.Trim())) {
-            if (line.Equals("!side"))
-                break;
-            if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
-                continue;
+        if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
+            return;
             
-            List<Card> results = CardGameManager.Current.Cards.Where((card) => card.Id.Equals(line)).ToList();
-            if (results.Count > 0)
-                newDeck.Cards.Add(results [0]);
-        }
-        return newDeck;
+        List<Card> results = CardGameManager.Current.Cards.Where((card) => card.Id.Equals(line)).ToList();
+        if (results.Count > 0)
+            Cards.Add(results [0]);
     }
 
-    public static Deck ParseTxt(string name, string text)
+    public void LoadTxt(string line)
     {
-        Deck newDeck = new Deck(name, DeckFileType.Txt);
-        if (text == null)
-            return newDeck;
+        if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
+            return;
 
-        foreach (string line in text.Split('\n').Select(x => x.Trim())) {
-            if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
-                break;
-            if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
-                continue;
+        int cardCount = 1;
+        string cardName = line;
+        string cardId = string.Empty;
+        string cardSet = string.Empty;
+        if (line.Contains(" ")) {
+            List<string> tokens = line.Split(' ').ToList();
+            if (tokens.Count > 0 && int.TryParse(tokens [0].EndsWith("x") ? tokens [0].Remove(tokens [0].Length - 1) : tokens [0], out cardCount))
+                tokens.RemoveAt(0);
 
-            int cardCount = 1;
-            string cardName = line;
-            string cardId = string.Empty;
-            string cardSet = string.Empty;
-            if (line.Contains(" ")) {
-                List<string> tokens = line.Split(' ').ToList();
-                if (tokens.Count > 0 && int.TryParse(tokens [0].EndsWith("x") ? tokens [0].Remove(tokens [0].Length - 1) : tokens [0], out cardCount))
-                    tokens.RemoveAt(0);
-
-                if (tokens.Count > 0 && tokens [0].StartsWith("[") && tokens [0].EndsWith("]")) {
-                    cardId = tokens [0].Substring(1, tokens [0].Length - 2);
-                    tokens.RemoveAt(0);
-                }
-
-                if (tokens.Count > 0 && tokens [tokens.Count - 1].StartsWith("(") && tokens [tokens.Count - 1].EndsWith(")")) {
-                    string inParens = tokens [tokens.Count - 1].Substring(1, tokens [tokens.Count - 1].Length - 2);
-                    if (CardGameManager.Current.Sets.Where((currSet) => currSet.Code.Equals(inParens)).ToList().Count > 0) {
-                        cardSet = inParens;
-                        tokens.RemoveAt(tokens.Count - 1);
-                    }
-                }
-
-                cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
+            if (tokens.Count > 0 && tokens [0].StartsWith("[") && tokens [0].EndsWith("]")) {
+                cardId = tokens [0].Substring(1, tokens [0].Length - 2);
+                tokens.RemoveAt(0);
             }
 
-            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(cardId, cardName, cardSet, null, null, null, null);
-            foreach (Card card in cards) {
-                if (card.Id.Equals(cardId) || (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) && (string.IsNullOrEmpty(cardSet) || card.SetCode.Equals(cardSet))))
-                    for (int i = 0; i < cardCount; i++)
-                        newDeck.Cards.Add(card);
-                break;
+            if (tokens.Count > 0 && tokens [tokens.Count - 1].StartsWith("(") && tokens [tokens.Count - 1].EndsWith(")")) {
+                string inParens = tokens [tokens.Count - 1].Substring(1, tokens [tokens.Count - 1].Length - 2);
+                if (CardGameManager.Current.Sets.Where((currSet) => currSet.Code.Equals(inParens)).ToList().Count > 0) {
+                    cardSet = inParens;
+                    tokens.RemoveAt(tokens.Count - 1);
+                }
             }
+
+            cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
         }
-        return newDeck;
+
+        IEnumerable<Card> cards = CardGameManager.Current.FilterCards(cardId, cardName, cardSet, null, null, null, null);
+        foreach (Card card in cards) {
+            if (card.Id.Equals(cardId) || (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) && (string.IsNullOrEmpty(cardSet) || card.SetCode.Equals(cardSet))))
+                for (int i = 0; i < cardCount; i++)
+                    Cards.Add(card);
+            break;
+        }
     }
 
     public void Shuffle()
@@ -242,6 +213,19 @@ public class Deck
         return cardCounts;
     }
 
+    public List<Card> GetExtraCards()
+    {
+        List<Card> extraCards = new List<Card>();
+        foreach (ExtraDef extraDef in CardGameManager.Current.Extras) {
+            EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(extraDef.Property)).FirstOrDefault();
+            extraCards.AddRange(Cards.Where(
+                (card) => enumDef != null ? 
+                enumDef.GetStringFromFlags(card.GetPropertyValueInt(extraDef.Property)).Contains(extraDef.Value) :
+                card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)).ToList());
+        }
+        return extraCards;
+    }
+
     public string ToDec()
     {
         string text = string.Empty;
@@ -253,32 +237,25 @@ public class Deck
 
     public string ToHsd()
     {
-        string cardClass = "UNKNOWN";
-        List<int> heroDBFIds = new List<int>();
-        foreach (Card card in Cards) {
-            if ("HERO".Equals(card.GetPropertyValueString("type"))) {
-                cardClass = card.GetPropertyValueString("cardClass");
-                heroDBFIds.Add(card.GetPropertyValueInt("dbfId"));
-            }
-        }
         string text = "### " + Name + System.Environment.NewLine;
-        text += "# Class: " + cardClass + System.Environment.NewLine;
+        List<Card> extraCards = GetExtraCards();
+        text += "# Class: " + (extraCards.Count > 0 ? extraCards [0].GetPropertyValueString("cardClass") : "UNKNOWN") + System.Environment.NewLine;
         text += "# Format: Wild" + System.Environment.NewLine;
         text += "#" + System.Environment.NewLine;
+
         Dictionary<Card, int> cardCounts = GetCardCounts();
         foreach (Card card in cardCounts.Keys)
-            if (!heroDBFIds.Contains(card.GetPropertyValueInt("dbfId")))
+            if (!extraCards.Contains(card))
                 text += "# " + cardCounts [card] + "x (" + card.GetPropertyValueString("cost") + ") " + card.Name + System.Environment.NewLine;
         text += "#" + System.Environment.NewLine;
-        text += SerializeHsd(heroDBFIds) + System.Environment.NewLine;
-        text += "#" + System.Environment.NewLine;
-        text += "#To use this deck, copy it to your clipboard and paste it where it can be loaded" + System.Environment.NewLine;
+
+        text += SerializeHsd(extraCards) + System.Environment.NewLine;
         return text;
     }
 
-    public string SerializeHsd(List<int> heroDBFIds)
+    public string SerializeHsd(List<Card> extraCards)
     {
-        if (heroDBFIds == null || heroDBFIds.Count < 1)
+        if (extraCards == null || extraCards.Count < 1)
             return string.Empty;
         
         using (MemoryStream ms = new MemoryStream()) {
@@ -290,25 +267,25 @@ public class Deck
             List<KeyValuePair<Card, int>> singleCopy = cardCounts.Where(x => x.Value == 1).ToList();
             List<KeyValuePair<Card, int>> doubleCopy = cardCounts.Where(x => x.Value == 2).ToList();
             List<KeyValuePair<Card, int>> nCopy = cardCounts.Where(x => x.Value > 2).ToList();
-            singleCopy.RemoveAll((cardCount) => heroDBFIds.Contains(cardCount.Key.GetPropertyValueInt("dbfId")));
-            doubleCopy.RemoveAll((cardCount) => heroDBFIds.Contains(cardCount.Key.GetPropertyValueInt("dbfId")));
-            nCopy.RemoveAll((cardCount) => heroDBFIds.Contains(cardCount.Key.GetPropertyValueInt("dbfId")));
+            singleCopy.RemoveAll((cardCount) => extraCards.Contains(cardCount.Key));
+            doubleCopy.RemoveAll((cardCount) => extraCards.Contains(cardCount.Key));
+            nCopy.RemoveAll((cardCount) => extraCards.Contains(cardCount.Key));
 
-            VarInt.Write(ms, heroDBFIds.Count);
-            foreach (int heroDbfId in heroDBFIds)
-                VarInt.Write(ms, heroDbfId);
+            VarInt.Write(ms, extraCards.Count);
+            foreach (Card card in extraCards)
+                VarInt.Write(ms, card.GetPropertyValueInt(HsdPropertyId));
 
             VarInt.Write(ms, singleCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt("dbfId"));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(HsdPropertyId));
 
             VarInt.Write(ms, doubleCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt("dbfId"));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(HsdPropertyId));
 
             VarInt.Write(ms, nCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in nCopy) {
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt("dbfId"));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(HsdPropertyId));
                 VarInt.Write(ms, cardCount.Value);
             }
 
@@ -319,23 +296,16 @@ public class Deck
     public string ToYdk()
     {
         string text = "#created by Card Game Simulator" + System.Environment.NewLine;
-        text += "#main" + System.Environment.NewLine;
+        List<Card> mainCards = Cards;
+        List<Card> extraCards = GetExtraCards();
+        mainCards.RemoveAll((card) => extraCards.Contains(card));
 
-        EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals("type")).First();
-        bool missingExtra = enumDef != null;
-        PropertyDefValuePair property;
-        int propertyIntValue;
-        foreach (Card card in Cards) {
-            if (missingExtra && card.Properties.TryGetValue("type", out property)) {
-                EnumDef.TryParse(property.Value, out propertyIntValue);
-                string enumValue = enumDef.GetStringFromFlags(propertyIntValue);
-                if (enumValue.Contains("Fusion") || enumValue.Contains("Synchro") || enumValue.Contains("XYZ") || enumValue.Contains("Link")) {
-                    text += "#extra" + System.Environment.NewLine;
-                    missingExtra = false;
-                }
-            }
+        text += "#main" + System.Environment.NewLine;
+        foreach (Card card in mainCards)
             text += card.Id + System.Environment.NewLine;
-        }
+        text += "#extra" + System.Environment.NewLine;
+        foreach (Card card in extraCards)
+            text += card.Id + System.Environment.NewLine;
 
         text += "!side" + System.Environment.NewLine;
         return text;

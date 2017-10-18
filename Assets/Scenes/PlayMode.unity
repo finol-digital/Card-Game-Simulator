@@ -1422,7 +1422,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   scrollRectContainer: {fileID: 0}
-  isFree: 0
+  isFree: 1
 --- !u!114 &757979954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2569,7 +2569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   scrollRectContainer: {fileID: 0}
-  isFree: 0
+  isFree: 1
 --- !u!114 &1199433608
 MonoBehaviour:
   m_ObjectHideFlags: 0

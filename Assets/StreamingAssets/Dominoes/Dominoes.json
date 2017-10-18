@@ -2,5 +2,6 @@
 	"cardProperties": [
 		{"name": "lowerValue", "type": "integer" },
 		{"name": "higherValue", "type": "integer" }
-	]
+	],
+	"handStartSize": "7"
 }

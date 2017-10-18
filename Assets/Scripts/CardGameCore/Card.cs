@@ -55,8 +55,20 @@ public class Card : IComparable<Card>
         if (other == null)
             return -1;
 
-        foreach (string propName in Properties.Keys) {
-            int comparison = Properties [propName].Value.CompareTo(other.Properties [propName].Value);
+        foreach (PropertyDefValuePair property in Properties.Values) {
+            int comparison = 0;
+            switch (property.Def.Type) {
+                case PropertyType.Enum:
+                case PropertyType.Integer:
+                    int thisValue = GetPropertyValueInt(property.Def.Name);
+                    int otherValue = other.GetPropertyValueInt(property.Def.Name);
+                    comparison = thisValue.CompareTo(otherValue);
+                    break;
+                case PropertyType.String:
+                default:
+                    comparison = property.Value.CompareTo(other.Properties [property.Def.Name].Value);
+                    break;
+            }
             if (comparison != 0)
                 return comparison;
         }

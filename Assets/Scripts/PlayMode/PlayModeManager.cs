@@ -28,18 +28,15 @@ public class PlayModeManager : MonoBehaviour
 
     public void LoadDeck(Deck newDeck)
     {
-        List<Card> extraCards = new List<Card>();
-        foreach (ExtraDef extraDef in CardGameManager.Current.Extras) {
-            extraCards.AddRange(newDeck.Cards.Where((card) => card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)).ToList());
-        }
+        List<Card> extraCards = newDeck.GetExtraCards();
         foreach (Card card in extraCards)
             extraZone.AddCard(card);
 
         deckZone.Cards = newDeck.Cards;
         deckZone.Cards.RemoveAll((card) => extraCards.Contains(card));
-
         deckZone.Shuffle();
 
+        // TODO: SEPARATE FUNCTION FOR DEALING OUT CARDS
         List<Card> handCards = new List<Card>();
         for (int i = 0; deckZone.Cards.Count > 0 && i < CardGameManager.Current.HandStartSize; i++) {
             handCards.Add(deckZone.Cards.Last());
@@ -47,7 +44,7 @@ public class PlayModeManager : MonoBehaviour
         }
         foreach (Card card in handCards)
             handZone.AddCard(card);
-
+        
         deckZone.Display();
     }
 

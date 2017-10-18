@@ -71,7 +71,7 @@ public class DeckZone : MonoBehaviour
             return _cards;
         }
         set {
-            _cards = value;
+            _cards = new List<Card>(value);
             Display();
         }
     }
