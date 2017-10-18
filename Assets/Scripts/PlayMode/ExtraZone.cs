@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-public class HandZone : MonoBehaviour, IDropHandler
+public class ExtraZone : MonoBehaviour
 {
     public GameObject cardPrefab;
     public RectTransform extension;
@@ -16,20 +15,6 @@ public class HandZone : MonoBehaviour, IDropHandler
     {
         extension.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
         extension.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
-    }
-
-    public void OnDrop(PointerEventData eventData)
-    {
-        if (eventData.pointerDrag == null)
-            return;
-
-        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                cardModel = draggedCardModel;
-            AddCard(cardModel.Card);
-        }
     }
 
     public void AddCard(Card card)
@@ -52,4 +37,5 @@ public class HandZone : MonoBehaviour, IDropHandler
         extension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
         extension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
     }
+    
 }

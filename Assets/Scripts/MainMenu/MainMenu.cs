@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public const int PlayModeSceneIndex = 1;
+    public const int DeckEditorSceneIndex = 2;
+
     public GameObject addGameMenuPrefab;
     public GameObject quitButton;
 
@@ -17,12 +20,12 @@ public class MainMenu : MonoBehaviour
 
     public void GoToPlayMode()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
     public void GoToDeckEditor()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(DeckEditorSceneIndex);
     }
 
     public void Quit()

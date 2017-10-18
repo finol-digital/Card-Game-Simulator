@@ -941,7 +941,7 @@ GameObject:
   - component: {fileID: 114525236214966416}
   - component: {fileID: 114191964917244482}
   m_Layer: 5
-  m_Name: Search Menu
+  m_Name: Card Search Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

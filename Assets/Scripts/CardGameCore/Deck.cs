@@ -25,8 +25,8 @@ public class Deck
     public const string DefaultName = "Untitled";
     public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
     public const string HsdInstructions = "#Paste the deck string/code here";
-    public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
     public const string TxtInstructions = "#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+    public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
 
     public string Name { get; set; }
 
@@ -51,7 +51,7 @@ public class Deck
 
     public static Deck Parse(string name, DeckFileType type, string text)
     {
-        Deck newDeck = new Deck(name);
+        Deck newDeck = new Deck();
         switch (type) {
             case DeckFileType.Dec:
                 newDeck = ParseDec(name, text);
@@ -141,6 +141,8 @@ public class Deck
             int count = (int)VarInt.Read(bytes, ref offset, out length);
             newDeck.AddCardsByPropertyInt("dbfId", dbfId, count);
         }
+
+        newDeck.Sort();
         return newDeck;
     }
 
@@ -153,12 +155,11 @@ public class Deck
 
     public static Deck ParseYdk(string name, string text)
     {
-        Deck newDeck = new Deck(name);
-        newDeck.FileType = DeckFileType.Hsd;
+        Deck newDeck = new Deck(name, DeckFileType.Ydk);
         if (text == null)
             return newDeck;
 
-        foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Select(x => x.Trim())) {
+        foreach (string line in text.Split('\n').Select(x => x.Trim())) {
             if (line.Equals("!side"))
                 break;
             if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
@@ -177,7 +178,7 @@ public class Deck
         if (text == null)
             return newDeck;
 
-        foreach (string line in text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Select(x => x.Trim())) {
+        foreach (string line in text.Split('\n').Select(x => x.Trim())) {
             if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
                 break;
             if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
@@ -217,6 +218,11 @@ public class Deck
             }
         }
         return newDeck;
+    }
+
+    public void Shuffle()
+    {
+        Cards.Shuffle();
     }
 
     public void Sort()

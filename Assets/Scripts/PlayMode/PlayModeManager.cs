@@ -2,24 +2,66 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class PlayModeManager : MonoBehaviour
 {
     public RectTransform playArea;
     public GameObject deckLoadMenuPrefab;
+    public GameObject searchMenuPrefab;
+    public ExtraZone extraZone;
     public DeckZone deckZone;
+    public HandZone handZone;
 
     private DeckLoadMenu _deckLoader;
+    private CardSearchMenu _cardSearcher;
 
     void Start()
     {
-        DeckLoader.Show(LoadDeck, UnityExtensionMethods.GetSafeFileName);
         playArea.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(SetPlayActions);
+    }
+
+    public void ShowDeckLoader()
+    {
+        DeckLoader.Show(LoadDeck, UnityExtensionMethods.GetSafeFileName);
     }
 
     public void LoadDeck(Deck newDeck)
     {
-        deckZone.Deck = newDeck;
+        List<Card> extraCards = new List<Card>();
+        foreach (ExtraDef extraDef in CardGameManager.Current.Extras) {
+            extraCards.AddRange(newDeck.Cards.Where((card) => card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)).ToList());
+        }
+        foreach (Card card in extraCards)
+            extraZone.AddCard(card);
+
+        deckZone.Cards = newDeck.Cards;
+        deckZone.Cards.RemoveAll((card) => extraCards.Contains(card));
+
+        deckZone.Shuffle();
+
+        List<Card> handCards = new List<Card>();
+        for (int i = 0; deckZone.Cards.Count > 0 && i < CardGameManager.Current.HandStartSize; i++) {
+            handCards.Add(deckZone.Cards.Last());
+            deckZone.Cards.RemoveAt(deckZone.Cards.Count - 1);
+        }
+        foreach (Card card in handCards)
+            handZone.AddCard(card);
+
+        deckZone.Display();
+    }
+
+    public void ShowCardSearcher()
+    {
+        CardSearcher.Show(null, null, AddCard);
+    }
+
+    public void AddCard(List<Card> results)
+    {
+        if (results == null || results.Count < 1)
+            return;
+        
+        handZone.AddCard(results [0]);
     }
 
     public void SetPlayActions(CardStack cardStack, CardModel cardModel)
@@ -38,6 +80,14 @@ public class PlayModeManager : MonoBehaviour
             if (_deckLoader == null)
                 _deckLoader = Instantiate(deckLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckLoadMenu>();
             return _deckLoader;
+        }
+    }
+
+    public CardSearchMenu CardSearcher {
+        get {
+            if (_cardSearcher == null)
+                _cardSearcher = Instantiate(searchMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardSearchMenu>();
+            return _cardSearcher;
         }
     }
 }

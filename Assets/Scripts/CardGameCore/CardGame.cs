@@ -104,6 +104,12 @@ public class CardGame
     public List<EnumDef> Enums { get; set; }
 
     [JsonProperty]
+    public List<ExtraDef> Extras { get; set; }
+
+    [JsonProperty]
+    public int HandStartSize { get; set; }
+
+    [JsonProperty]
     public string SetCodeIdentifier { get; set; }
 
     [JsonProperty]
@@ -128,8 +134,11 @@ public class CardGame
         CardIdIdentifier = "id";
         CardNameIdentifier = "name";
         CardSetIdentifier = "set";
+        CardProperties = new List<PropertyDef>();
         DeckFileType = DefaultDeckFileType;
         DeckMaxSize = DefaultDeckMaxSize;
+        Enums = new List<EnumDef>();
+        Extras = new List<ExtraDef>();
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
     }

@@ -7,11 +7,11 @@ public class SearchResultsLayout : MonoBehaviour
     public const float WidthCheck = 1000f;
 
     public Vector2 SearchNameLandscapePosition {
-        get { return new Vector2(200f, 367.5f); }
+        get { return new Vector2(150f, 367.5f); }
     }
 
     public Vector2 SearchNamePortraitPosition {
-        get { return new Vector2(200f, 467.5f); }
+        get { return new Vector2(150f, 467.5f); }
     }
 
     public RectTransform searchName;

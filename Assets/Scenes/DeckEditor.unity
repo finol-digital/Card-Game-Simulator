@@ -741,7 +741,7 @@ GameObject:
   - component: {fileID: 211486273}
   - component: {fileID: 211486272}
   m_Layer: 5
-  m_Name: Search Menu Button
+  m_Name: Filter Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -891,7 +891,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -50, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 375}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &213237323
@@ -1259,7 +1259,7 @@ GameObject:
   - component: {fileID: 446946375}
   - component: {fileID: 446946376}
   m_Layer: 5
-  m_Name: Deck Editor Buttons
+  m_Name: Deck Editor Buttons Group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2745,7 +2745,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 335690429}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99971175
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3399,7 +3399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1315809170}
   m_Layer: 5
-  m_Name: Search Name
+  m_Name: Card Search Name Group
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3423,7 +3423,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 200, y: 367.5}
+  m_AnchoredPosition: {x: 150, y: 367.5}
   m_SizeDelta: {x: 737.5, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!1 &1434746452
@@ -3462,8 +3462,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 12.499999, y: -12.499999}
+  m_SizeDelta: {x: -25, y: -25}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1434746454
 MonoBehaviour:
@@ -4033,7 +4033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d50b4fa3784ef4d8dc39a6b43af545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchMenuPrefab: {fileID: 1903820368062098, guid: 2a856778d84365048929069dfca116b5,
+  cardSearchMenuPrefab: {fileID: 1903820368062098, guid: 2a856778d84365048929069dfca116b5,
     type: 2}
   deckEditor: {fileID: 1691862800}
   layoutArea: {fileID: 1955078419}
@@ -4402,7 +4402,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -400, y: 375}
+  m_SizeDelta: {x: -300, y: 375}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1955078420
 MonoBehaviour:
@@ -4517,7 +4517,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.395}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: -100, y: -100}
+  m_SizeDelta: {x: 0, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1956326056
 MonoBehaviour:
@@ -4792,7 +4792,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 375}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2037950164
@@ -4919,8 +4919,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 12.499999, y: -12.499999}
+  m_SizeDelta: {x: -25, y: -25}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2131642176
 MonoBehaviour:

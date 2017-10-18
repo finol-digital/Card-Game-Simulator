@@ -4,57 +4,75 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class DeckZone : MonoBehaviour, IDropHandler
+[RequireComponent(typeof(CardStack))]
+public class DeckZone : MonoBehaviour
 {
     public GameObject cardPrefab;
+    public bool isFaceup;
 
-    private Deck _deck;
+    private List<Card> _cards;
 
     void Start()
     {
-        GetComponent<CardStack>().OnAddCardActions.Add(CardModel.HideCard);
+        if (!isFaceup)
+            GetComponent<CardStack>().OnAddCardActions.Add(CardModel.HideCard);
         GetComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
+        GetComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
+        GetComponent<CardStack>().OnRemoveCardActions.Add(OnRemoveCardModel);
     }
 
-    public void Shuffle(Vector2 unused1, Vector2 unused2)
+    public void OnAddCardModel(CardStack unused, CardModel cardModel)
     {
-        Deck = Deck;
-    }
-
-    public void OnDrop(PointerEventData eventData)
-    {
-        if (eventData.pointerDrag == null)
+        if (cardModel == null)
             return;
 
-        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                cardModel = draggedCardModel;
-            cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
-            cardModel.SecondaryDragAction = Shuffle;
+        cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
+        cardModel.SecondaryDragAction = Shuffle;
+        Cards.Add(cardModel.Card);
+    }
+
+    public void OnRemoveCardModel(CardStack unused, CardModel cardModel)
+    {
+        if (cardModel == null)
+            return;
+        
+        if (Cards.Contains(cardModel.Card))
+            Cards.Remove(cardModel.Card);
+    }
+
+    public void Display()
+    {
+        this.transform.DestroyAllChildren();
+
+        foreach (Card card in Cards) {
+            CardModel newCard = Instantiate(cardPrefab, this.transform).GetOrAddComponent<CardModel>();
+            newCard.Card = card;
+            newCard.IsFacedown = !isFaceup;
+            newCard.DoubleClickEvent = CardModel.ToggleFacedown;
+            newCard.SecondaryDragAction = Shuffle;
         }
     }
 
-    public Deck Deck {
+    public void Shuffle(Vector2 unused, Vector2 unused2)
+    {
+        Shuffle();
+    }
+
+    public void Shuffle()
+    {
+        Cards.Shuffle();
+        Display();
+    }
+
+    public List<Card> Cards {
         get {
-            return _deck;
+            if (_cards == null)
+                _cards = new List<Card>();
+            return _cards;
         }
         set {
-            _deck = value;
-
-            if (_deck == null || _deck.Cards.Count < 1)
-                return;
-
-            _deck.Cards.Shuffle();
-            this.transform.DestroyAllChildren();
-            foreach (Card card in _deck.Cards) {
-                CardModel newCard = Instantiate(cardPrefab, this.transform).GetOrAddComponent<CardModel>();
-                newCard.Card = card;
-                newCard.IsFacedown = true;
-                newCard.DoubleClickEvent = CardModel.ToggleFacedown;
-                newCard.SecondaryDragAction = Shuffle;
-            }
+            _cards = value;
+            Display();
         }
     }
 }

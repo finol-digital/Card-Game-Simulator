@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public delegate void OnFilterChangeDelegate(string filters);
 public delegate void OnSearchDelegate(List<Card> searchResults);
 
-public class SearchMenu : MonoBehaviour
+public class CardSearchMenu : MonoBehaviour
 {
     public const float PropertyPanelHeight = 150f;
     public const float ToggleButtonWidth = 200f;

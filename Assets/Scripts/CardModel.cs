@@ -408,6 +408,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             _newSprite = value;
             if (_newSprite != null && !IsFacedown)
                 Image.sprite = _newSprite;
+            Image.alphaHitTestMinimumThreshold = 0.01f;
         }
     }
 

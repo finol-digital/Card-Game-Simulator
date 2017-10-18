@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ZonesViewer : MonoBehaviour
 {
-    public const float HiddenWidth = 395f;
-    public const float TotalWidth = 475f;
+    public const float HiddenWidth = 270f;
+    public const float TotalWidth = 350f;
 
-    public RectTransform zonesCondensed;
-    public RectTransform zonesExtended;
+    public RectTransform zonesArea;
+    public RectTransform zoneExtension;
 
     public bool IsVisible { get; set; }
 
@@ -25,10 +25,10 @@ public class ZonesViewer : MonoBehaviour
         if (IsVisible == WasVisible)
             return;
         
-        zonesCondensed.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, IsVisible ? 0 : -HiddenWidth, TotalWidth);
+        zonesArea.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, IsVisible ? 0 : -HiddenWidth, TotalWidth);
 
         float width = ((RectTransform)this.transform).rect.width;
-        zonesExtended.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, TotalWidth - (IsVisible ? 0 : HiddenWidth), width - TotalWidth + (IsVisible ? 0 : HiddenWidth));
+        zoneExtension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, TotalWidth - (IsVisible ? 0 : HiddenWidth), width - TotalWidth + (IsVisible ? 0 : HiddenWidth));
 
         WasVisible = IsVisible;
     }

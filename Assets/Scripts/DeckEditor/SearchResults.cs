@@ -8,7 +8,7 @@ public class SearchResults : MonoBehaviour
 {
     public const string EmptyFilterText = "*";
 
-    public GameObject searchMenuPrefab;
+    public GameObject cardSearchMenuPrefab;
     public DeckEditor deckEditor;
     public RectTransform layoutArea;
     public InputField nameInputField;
@@ -25,13 +25,13 @@ public class SearchResults : MonoBehaviour
 
     public int CurrentPageIndex { get; set; }
 
-    private SearchMenu _searchMenu;
+    private CardSearchMenu _cardSearcher;
     private List<Card> _allResults;
 
     void OnEnable()
     {
-        SearchMenu.SearchCallback = ShowResults;
-        CardGameManager.Instance.OnSelectActions.Add(SearchMenu.ClearSearch);
+        CardSearcher.SearchCallback = ShowResults;
+        CardGameManager.Instance.OnSelectActions.Add(CardSearcher.ClearSearch);
     }
 
     public string SetNameInputField(string name)
@@ -42,7 +42,7 @@ public class SearchResults : MonoBehaviour
 
     public void SetNameFilter(string name)
     {
-        SearchMenu.NameFilter = name;
+        CardSearcher.NameFilter = name;
     }
 
     public void SetFiltersText(string filters)
@@ -54,7 +54,7 @@ public class SearchResults : MonoBehaviour
 
     public void Search()
     {
-        SearchMenu.Search();
+        CardSearcher.Search();
     }
 
     public void MoveLeft()
@@ -91,7 +91,7 @@ public class SearchResults : MonoBehaviour
 
     public void ShowSearchMenu()
     {
-        SearchMenu.Show(SetNameInputField, SetFiltersText, ShowResults);
+        CardSearcher.Show(SetNameInputField, SetFiltersText, ShowResults);
     }
 
     public void ShowResults(List<Card> results)
@@ -101,14 +101,14 @@ public class SearchResults : MonoBehaviour
 
     void OnDisable()
     {
-        CardGameManager.Instance.OnSelectActions.Remove(SearchMenu.ClearSearch);
+        CardGameManager.Instance.OnSelectActions.Remove(CardSearcher.ClearSearch);
     }
 
-    public SearchMenu SearchMenu {
+    public CardSearchMenu CardSearcher {
         get {
-            if (_searchMenu == null)
-                _searchMenu = Instantiate(searchMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<SearchMenu>();
-            return _searchMenu;
+            if (_cardSearcher == null)
+                _cardSearcher = Instantiate(cardSearchMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardSearchMenu>();
+            return _cardSearcher;
         }
     }
 
