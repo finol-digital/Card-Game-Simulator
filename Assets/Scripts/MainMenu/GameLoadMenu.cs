@@ -28,7 +28,7 @@ public class GameLoadMenu : MonoBehaviour
         urlInput.text = string.Empty;
     }
 
-    public void AddGame()
+    public void StartLoad()
     {
         CardGameManager.Instance.StartCoroutine(LoadGame());
     }

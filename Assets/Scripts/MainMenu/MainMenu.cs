@@ -18,6 +18,9 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         versionText.text = "Ver. " + Application.version;
+        #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        quitButton.SetActive(false);
+        #endif
     }
 
     public void ShowGameLoadMenu()
@@ -35,6 +38,14 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(DeckEditorSceneIndex);
     }
 
+    void Update()
+    {
+        #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Quit();
+        #endif
+    }
+
     public void Quit()
     {
         #if UNITY_EDITOR
@@ -43,19 +54,6 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
         #endif
     }
-
-    #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-    void Start()
-    {
-        quitButton.SetActive(false);
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            Application.Quit();
-    }
-    #endif
 
     public GameLoadMenu GameLoader {
         get {

@@ -184,10 +184,11 @@ public class Deck
 
         IEnumerable<Card> cards = CardGameManager.Current.FilterCards(cardId, cardName, cardSet, null, null, null, null);
         foreach (Card card in cards) {
-            if (card.Id.Equals(cardId) || (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) && (string.IsNullOrEmpty(cardSet) || card.SetCode.Equals(cardSet))))
+            if (card.Id.Equals(cardId) || (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) && (string.IsNullOrEmpty(cardSet) || card.SetCode.Equals(cardSet)))) {
                 for (int i = 0; i < cardCount; i++)
                     Cards.Add(card);
-            break;
+                break;
+            }
         }
     }
 

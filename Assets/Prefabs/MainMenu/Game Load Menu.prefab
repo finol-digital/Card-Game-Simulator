@@ -682,7 +682,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114391373870781462}
-        m_MethodName: AddGame
+        m_MethodName: StartLoad
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
