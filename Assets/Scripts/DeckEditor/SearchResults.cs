@@ -101,7 +101,8 @@ public class SearchResults : MonoBehaviour
 
     void OnDisable()
     {
-        CardGameManager.Instance.OnSelectActions.Remove(CardSearcher.ClearSearch);
+        if (CardGameManager.HasInstance)
+            CardGameManager.Instance.OnSelectActions.Remove(CardSearcher.ClearSearch);
     }
 
     public CardSearchMenu CardSearcher {

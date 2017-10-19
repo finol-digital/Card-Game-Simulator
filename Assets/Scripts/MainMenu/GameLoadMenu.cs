@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 
-public class AddGameMenu : MonoBehaviour
+public class GameLoadMenu : MonoBehaviour
 {
     public InputField urlInput;
-    public Button addButton;
+    public Button cancelButton;
+    public Button downloadButton;
 
     public void Show()
     {
@@ -38,6 +39,7 @@ public class AddGameMenu : MonoBehaviour
         newGame.AutoUpdate = true;
         urlInput.text = string.Empty;
         urlInput.interactable = false;
+        cancelButton.interactable = false;
         yield return newGame.Load();
 
         if (string.IsNullOrEmpty(newGame.Error)) {
@@ -49,12 +51,13 @@ public class AddGameMenu : MonoBehaviour
             CardGameManager.Instance.Popup.Show("Failed to load game url! " + newGame.Error);
         }
         urlInput.interactable = true;
+        cancelButton.interactable = true;
         Hide();
     }
 
     void Update()
     {
-        addButton.interactable = System.Uri.IsWellFormedUriString(urlInput.text.Trim(), System.UriKind.Absolute); 
+        downloadButton.interactable = System.Uri.IsWellFormedUriString(urlInput.text.Trim(), System.UriKind.Absolute); 
     }
 
     public void Hide()

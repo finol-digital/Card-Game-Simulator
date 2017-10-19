@@ -91,10 +91,11 @@ public class Deck
         string cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
         IEnumerable<Card> cards = CardGameManager.Current.FilterCards(null, cardName, null, null, null, null, null);
         foreach (Card card in cards) {
-            if (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase)) {
                 for (int i = 0; i < cardCount; i++)
                     Cards.Add(card);
-            break;
+                break;
+            }
         }
     }
 

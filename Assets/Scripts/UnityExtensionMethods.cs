@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.Core;
 
 public static class ThreadSafeRandom
 {
@@ -16,6 +17,9 @@ public static class ThreadSafeRandom
 
 static public class UnityExtensionMethods
 {
+    public const string AndroidStreamingAssetsDirectory = "assets/";
+    public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
+
     static public void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
@@ -147,4 +151,46 @@ static public class UnityExtensionMethods
         fastZip.ExtractZip(zipPath, targetDir, null);
     }
 
+    public static void ExtractAndroidStreamingAssets(string targetPath)
+    {
+        if (!Directory.Exists(targetPath))
+            Directory.CreateDirectory(targetPath);
+
+        if (targetPath [targetPath.Length - 1] != '/' || targetPath [targetPath.Length - 1] != '\\')
+            targetPath += '/';
+
+        HashSet<string> createdDirectories = new HashSet<string>();
+
+        ZipFile zf = null;
+        try {
+            using (FileStream fs = File.OpenRead(Application.dataPath)) {
+                zf = new ZipFile(fs);
+                foreach (ZipEntry zipEntry in zf) {
+                    if (!zipEntry.IsFile)
+                        continue;
+
+                    string name = zipEntry.Name;
+                    if (name.StartsWith(AndroidStreamingAssetsDirectory) && !name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) {
+                        name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
+                        string relativeDir = System.IO.Path.GetDirectoryName(name);
+                        if (!createdDirectories.Contains(relativeDir)) {
+                            Directory.CreateDirectory(targetPath + relativeDir);
+                            createdDirectories.Add(relativeDir);
+                        }
+
+                        byte[] buffer = new byte[4096];
+                        using (Stream zipStream = zf.GetInputStream(zipEntry))
+                        using (FileStream streamWriter = File.Create(targetPath + name)) {
+                            StreamUtils.Copy(zipStream, streamWriter, buffer);
+                        }
+                    }
+                }
+            }
+        } finally {
+            if (zf != null) {
+                zf.IsStreamOwner = true;
+                zf.Close();
+            }
+        }
+    }
 }

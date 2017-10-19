@@ -47,7 +47,7 @@ public class CardGameManager : MonoBehaviour
 
         if (!Directory.Exists(GamesFilePathBase)) {
             #if UNITY_ANDROID && !UNITY_EDITOR
-            AndroidStreamingAssets.Extract(GamesFilePathBase);
+            UnityExtensionMethods.ExtractAndroidStreamingAssets(GamesFilePathBase);
             #else
             UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
             #endif
@@ -150,6 +150,10 @@ public class CardGameManager : MonoBehaviour
             }
             return _instance;
         }
+    }
+
+    public static bool HasInstance {
+        get { return _instance != null; }
     }
 
     public static CardGame Current {

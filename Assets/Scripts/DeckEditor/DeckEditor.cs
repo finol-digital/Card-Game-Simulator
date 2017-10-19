@@ -40,8 +40,8 @@ public class DeckEditor : MonoBehaviour
 
     private List<CardStack> _cardStacks;
     private int _recentCardStackIndex;
-    private DeckLoadMenu _deckLoadMenu;
-    private DeckSaveMenu _deckSaveMenu;
+    private DeckLoadMenu _deckLoader;
+    private DeckSaveMenu _deckSaver;
 
     void OnEnable()
     {
@@ -164,7 +164,7 @@ public class DeckEditor : MonoBehaviour
 
     public void ShowDeckLoadMenu()
     {
-        DeckLoadMenu.Show(LoadDeck, UpdateDeckName, nameText.text);
+        DeckLoader.Show(LoadDeck, UpdateDeckName, nameText.text);
     }
 
     public void LoadDeck(Deck newDeck)
@@ -181,7 +181,7 @@ public class DeckEditor : MonoBehaviour
 
     public void ShowDeckSaveMenu()
     {
-        DeckSaveMenu.Show(CurrentDeck, UpdateDeckName);
+        DeckSaver.Show(CurrentDeck, UpdateDeckName);
     }
 
     public void BackToMainMenu()
@@ -192,7 +192,8 @@ public class DeckEditor : MonoBehaviour
 
     void OnDisable()
     {
-        CardGameManager.Instance.OnSelectActions.Remove(ResetCardStacks);
+        if (CardGameManager.HasInstance)
+            CardGameManager.Instance.OnSelectActions.Remove(ResetCardStacks);
     }
 
     public List<CardStack> CardStacks {
@@ -210,25 +211,23 @@ public class DeckEditor : MonoBehaviour
             return _recentCardStackIndex;
         }
         set {
-            if (value < 0 || value >= CardStacks.Count)
-                _recentCardStackIndex = 0;
             _recentCardStackIndex = value;
         }
     }
 
-    public DeckLoadMenu DeckLoadMenu {
+    public DeckLoadMenu DeckLoader {
         get {
-            if (_deckLoadMenu == null)
-                _deckLoadMenu = Instantiate(deckLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckLoadMenu>();
-            return _deckLoadMenu;
+            if (_deckLoader == null)
+                _deckLoader = Instantiate(deckLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckLoadMenu>();
+            return _deckLoader;
         }
     }
 
-    public DeckSaveMenu DeckSaveMenu {
+    public DeckSaveMenu DeckSaver {
         get {
-            if (_deckSaveMenu == null)
-                _deckSaveMenu = Instantiate(deckSaveMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckSaveMenu>();
-            return _deckSaveMenu;
+            if (_deckSaver == null)
+                _deckSaver = Instantiate(deckSaveMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckSaveMenu>();
+            return _deckSaver;
         }
     }
 }

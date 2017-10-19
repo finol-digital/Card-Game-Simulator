@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 222147349432082326}
   - component: {fileID: 114958476005044746}
   m_Layer: 5
-  m_Name: Add Text
+  m_Name: Load Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 114518432077405346}
   - component: {fileID: 114094341428066366}
   m_Layer: 5
-  m_Name: Add Button
+  m_Name: Load Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 114326705301126134}
   - component: {fileID: 114391373870781462}
   m_Layer: 5
-  m_Name: AddGame Menu
+  m_Name: Game Load Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,7 +544,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   urlInput: {fileID: 114424474110760876}
-  addButton: {fileID: 114518432077405346}
+  cancelButton: {fileID: 114134677716711310}
+  downloadButton: {fileID: 114518432077405346}
 --- !u!114 &114424474110760876
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -780,7 +781,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter url of game to add...
+  m_Text: Enter url of game to download...
 --- !u!114 &114737551533877166
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -998,7 +999,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Add
+  m_Text: Load
 --- !u!222 &222125119594024724
 CanvasRenderer:
   m_ObjectHideFlags: 1

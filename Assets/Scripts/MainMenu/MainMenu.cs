@@ -2,20 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     public const int PlayModeSceneIndex = 1;
     public const int DeckEditorSceneIndex = 2;
 
-    public GameObject addGameMenuPrefab;
+    public GameObject gameLoadMenuPrefab;
     public GameObject quitButton;
+    public Text versionText;
 
-    private AddGameMenu _addGameMenu;
+    private GameLoadMenu _gameLoader;
 
-    public void ShowAddGameMenu()
+    void Start()
     {
-        AddGameMenu.Show();
+        versionText.text = "Ver. " + Application.version;
+    }
+
+    public void ShowGameLoadMenu()
+    {
+        GameLoader.Show();
     }
 
     public void GoToPlayMode()
@@ -50,11 +57,11 @@ public class MainMenu : MonoBehaviour
     }
     #endif
 
-    public AddGameMenu AddGameMenu {
+    public GameLoadMenu GameLoader {
         get {
-            if (_addGameMenu == null)
-                _addGameMenu = Instantiate(addGameMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<AddGameMenu>();
-            return _addGameMenu;
+            if (_gameLoader == null)
+                _gameLoader = Instantiate(gameLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<GameLoadMenu>();
+            return _gameLoader;
         }
     }
 }

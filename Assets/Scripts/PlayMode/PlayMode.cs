@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 
-public class PlayModeManager : MonoBehaviour
+public class PlayMode : MonoBehaviour
 {
     public RectTransform playArea;
     public GameObject deckLoadMenuPrefab;
