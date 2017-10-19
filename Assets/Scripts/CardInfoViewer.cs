@@ -46,18 +46,9 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void SetContentText()
     {
-        string propertyText = string.Empty;
-        PropertyDefValuePair property;
-        if (SelectedCardModel != null && SelectedCardModel.Card.Properties.TryGetValue(SelectedPropertyName, out property) && property != null) {
-            propertyText = property.Value;
-            int enumValue;
-            if (property.Def.Type == PropertyType.Enum && EnumDef.TryParse(propertyText, out enumValue)) {
-                EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(SelectedPropertyName)).First();
-                if (enumDef != null)
-                    propertyText = enumDef.GetStringFromFlags(enumValue);
-            }
-        }
-        contentText.text = propertyText;
+        contentText.text = string.Empty;
+        if (SelectedCardModel != null)
+            contentText.text = SelectedCardModel.Card.GetPropertyValueString(SelectedPropertyName);
     }
 
     public void OnPointerDown(PointerEventData eventData)

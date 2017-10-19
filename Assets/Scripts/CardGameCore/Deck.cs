@@ -25,7 +25,6 @@ public class Deck
     public const string DefaultName = "Untitled";
     public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
     public const string HsdInstructions = "#Paste the deck string/code here";
-    public const string HsdPropertyId = "dbfId";
     public const string TxtInstructions = "#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
     public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
 
@@ -115,21 +114,21 @@ public class Deck
 
         int numHeroes = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numHeroes; i++)
-            AddCardsByPropertyInt(HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
         int numSingleCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numSingleCards; i++)
-            AddCardsByPropertyInt(HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
         int numDoubleCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numDoubleCards; i++)
-            AddCardsByPropertyInt(HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 2);
+            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 2);
 
         int numMultiCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numMultiCards; i++) {
             int id = (int)VarInt.Read(bytes, ref offset, out length);
             int count = (int)VarInt.Read(bytes, ref offset, out length);
-            AddCardsByPropertyInt(HsdPropertyId, id, count);
+            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, id, count);
         }
 
         Sort();
@@ -163,7 +162,7 @@ public class Deck
         string cardSet = string.Empty;
         if (line.Contains(" ")) {
             List<string> tokens = line.Split(' ').ToList();
-            if (tokens.Count > 0 && int.TryParse(tokens [0].EndsWith("x") ? tokens [0].Remove(tokens [0].Length - 1) : tokens [0], out cardCount))
+            if (tokens.Count > 0 && int.TryParse((tokens [0].StartsWith("x") || tokens [0].EndsWith("x")) ? tokens [0].Replace("x", "") : tokens [0], out cardCount))
                 tokens.RemoveAt(0);
 
             if (tokens.Count > 0 && tokens [0].StartsWith("[") && tokens [0].EndsWith("]")) {
@@ -216,13 +215,11 @@ public class Deck
     public List<Card> GetExtraCards()
     {
         List<Card> extraCards = new List<Card>();
-        foreach (ExtraDef extraDef in CardGameManager.Current.Extras) {
-            EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(extraDef.Property)).FirstOrDefault();
+        foreach (ExtraDef extraDef in CardGameManager.Current.Extras)
             extraCards.AddRange(Cards.Where(
-                (card) => enumDef != null ? 
-                enumDef.GetStringFromFlags(card.GetPropertyValueInt(extraDef.Property)).Contains(extraDef.Value) :
+                (card) => EnumDef.IsEnumProperty(extraDef.Property) ?
+                card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value) :
                 card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)).ToList());
-        }
         return extraCards;
     }
 
@@ -239,7 +236,8 @@ public class Deck
     {
         string text = "### " + Name + System.Environment.NewLine;
         List<Card> extraCards = GetExtraCards();
-        text += "# Class: " + (extraCards.Count > 0 ? extraCards [0].GetPropertyValueString("cardClass") : "UNKNOWN") + System.Environment.NewLine;
+        if (extraCards.Count > 0 && !string.IsNullOrEmpty(extraCards [0].GetPropertyValueString("cardClass")))
+            text += "# Class: " + extraCards [0].GetPropertyValueString("cardClass") + System.Environment.NewLine;
         text += "# Format: Wild" + System.Environment.NewLine;
         text += "#" + System.Environment.NewLine;
 
@@ -249,21 +247,19 @@ public class Deck
                 text += "# " + cardCounts [card] + "x (" + card.GetPropertyValueString("cost") + ") " + card.Name + System.Environment.NewLine;
         text += "#" + System.Environment.NewLine;
 
-        text += SerializeHsd(extraCards) + System.Environment.NewLine;
+        text += SerializeHsd() + System.Environment.NewLine;
         return text;
     }
 
-    public string SerializeHsd(List<Card> extraCards)
+    public string SerializeHsd()
     {
-        if (extraCards == null || extraCards.Count < 1)
-            return string.Empty;
-        
         using (MemoryStream ms = new MemoryStream()) {
             ms.WriteByte(0);
             VarInt.Write(ms, 1);
             VarInt.Write(ms, 1);
 
             Dictionary<Card, int> cardCounts = GetCardCounts();
+            List<Card> extraCards = GetExtraCards();
             List<KeyValuePair<Card, int>> singleCopy = cardCounts.Where(x => x.Value == 1).ToList();
             List<KeyValuePair<Card, int>> doubleCopy = cardCounts.Where(x => x.Value == 2).ToList();
             List<KeyValuePair<Card, int>> nCopy = cardCounts.Where(x => x.Value > 2).ToList();
@@ -273,19 +269,19 @@ public class Deck
 
             VarInt.Write(ms, extraCards.Count);
             foreach (Card card in extraCards)
-                VarInt.Write(ms, card.GetPropertyValueInt(HsdPropertyId));
+                VarInt.Write(ms, card.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
 
             VarInt.Write(ms, singleCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(HsdPropertyId));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
 
             VarInt.Write(ms, doubleCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(HsdPropertyId));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
 
             VarInt.Write(ms, nCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in nCopy) {
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(HsdPropertyId));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
                 VarInt.Write(ms, cardCount.Value);
             }
 
@@ -296,7 +292,7 @@ public class Deck
     public string ToYdk()
     {
         string text = "#created by Card Game Simulator" + System.Environment.NewLine;
-        List<Card> mainCards = Cards;
+        List<Card> mainCards = new List<Card>(Cards);
         List<Card> extraCards = GetExtraCards();
         mainCards.RemoveAll((card) => extraCards.Contains(card));
 

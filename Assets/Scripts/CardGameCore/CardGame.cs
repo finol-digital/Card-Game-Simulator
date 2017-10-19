@@ -19,6 +19,7 @@ public class CardGame
     public const int DefaultDeckMaxSize = 75;
     public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
     public const int DefaultHandStartSize = 5;
+    public const string DefaultHsdPropertyId = "dbfId";
     public const string DefaultImageFileType = "png";
     public const string DefaultSet = "_CGSDEFAULT_";
     public const string SetCardsIdentifier = "cards";
@@ -111,6 +112,9 @@ public class CardGame
     public int HandStartSize { get; set; }
 
     [JsonProperty]
+    public string HsdPropertyId { get; set; }
+
+    [JsonProperty]
     public string SetCodeIdentifier { get; set; }
 
     [JsonProperty]
@@ -141,6 +145,7 @@ public class CardGame
         Enums = new List<EnumDef>();
         Extras = new List<ExtraDef>();
         HandStartSize = DefaultHandStartSize;
+        HsdPropertyId = DefaultHsdPropertyId;
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
     }

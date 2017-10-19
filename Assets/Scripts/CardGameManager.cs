@@ -15,6 +15,8 @@ public class CardGameManager : MonoBehaviour
     public const string GameSelectionTag = "GameSelection";
     public const string BackgroundImageTag = "Background";
     public const string MainCanvasTag = "Canvas";
+    public const string CardGameManagerTag = "CardGameManager";
+    public const string PopupPrefabName = "Popup";
     public const string PlayerPrefGameName = "DefaultGame";
     public const string FirstGameName = "Standard";
     public const string InvalidGameSelectionMessage = "Could not select the card game because the name is not recognized in the list of card games! Try selecting a different card game.";
@@ -24,8 +26,6 @@ public class CardGameManager : MonoBehaviour
     }
 
     public string CurrentGameName { get; set; }
-
-    public GameObject PopupPrefab;
 
     private static CardGameManager _instance;
 
@@ -139,6 +139,15 @@ public class CardGameManager : MonoBehaviour
 
     public static CardGameManager Instance {
         get {
+            if (_instance == null) {
+                GameObject cardGameManager = GameObject.FindGameObjectWithTag(CardGameManagerTag);
+                if (cardGameManager == null) {
+                    cardGameManager = new GameObject(CardGameManagerTag);
+                    cardGameManager.tag = CardGameManagerTag;
+                    cardGameManager.transform.position = Vector3.zero;
+                }
+                _instance = cardGameManager.GetOrAddComponent<CardGameManager>();
+            }
             return _instance;
         }
     }
@@ -198,7 +207,7 @@ public class CardGameManager : MonoBehaviour
     public Popup Popup {
         get {
             if (_popup == null)
-                _popup = Instantiate(PopupPrefab, GameObject.FindGameObjectWithTag(MainCanvasTag).transform).GetOrAddComponent<Popup>();
+                _popup = Instantiate(Resources.Load<GameObject>(PopupPrefabName), GameObject.FindGameObjectWithTag(MainCanvasTag).transform).GetOrAddComponent<Popup>();
             return _popup;
         }
     }

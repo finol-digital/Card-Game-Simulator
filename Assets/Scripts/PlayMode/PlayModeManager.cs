@@ -21,6 +21,12 @@ public class PlayModeManager : MonoBehaviour
         playArea.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(SetPlayActions);
     }
 
+    void Update()
+    {
+        if (Input.GetButtonDown("Draw"))
+            Deal(1);
+    }
+
     public void ShowDeckLoader()
     {
         DeckLoader.Show(LoadDeck, UnityExtensionMethods.GetSafeFileName);
@@ -36,15 +42,19 @@ public class PlayModeManager : MonoBehaviour
         deckZone.Cards.RemoveAll((card) => extraCards.Contains(card));
         deckZone.Shuffle();
 
-        // TODO: SEPARATE FUNCTION FOR DEALING OUT CARDS
+        Deal(CardGameManager.Current.HandStartSize);
+    }
+
+    public void Deal(int cardCount)
+    {
         List<Card> handCards = new List<Card>();
-        for (int i = 0; deckZone.Cards.Count > 0 && i < CardGameManager.Current.HandStartSize; i++) {
+        for (int i = 0; deckZone.Cards.Count > 0 && i < cardCount; i++) {
             handCards.Add(deckZone.Cards.Last());
             deckZone.Cards.RemoveAt(deckZone.Cards.Count - 1);
         }
         foreach (Card card in handCards)
             handZone.AddCard(card);
-        
+
         deckZone.Display();
     }
 

@@ -18,6 +18,7 @@ public enum DragPhase
 public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public const float MovementSpeed = 600f;
+    public const float AlphaHitTestMinimumThreshold = 0.01f;
 
     public CardStack ParentCardStack {
         get {
@@ -408,7 +409,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             _newSprite = value;
             if (_newSprite != null && !IsFacedown)
                 Image.sprite = _newSprite;
-            Image.alphaHitTestMinimumThreshold = 0.01f;
+            Image.alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         }
     }
 

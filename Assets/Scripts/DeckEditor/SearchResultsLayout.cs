@@ -15,7 +15,7 @@ public class SearchResultsLayout : MonoBehaviour
     }
 
     public RectTransform searchName;
-    public SearchResults cardSearcher;
+    public SearchResults searchResults;
 
     void OnRectTransformDimensionsChange()
     {
@@ -27,8 +27,8 @@ public class SearchResultsLayout : MonoBehaviour
         else
             searchName.anchoredPosition = SearchNameLandscapePosition;
         
-        cardSearcher.CurrentPageIndex = 0;
-        cardSearcher.UpdateSearchResultsPanel();
+        searchResults.CurrentPageIndex = 0;
+        searchResults.UpdateSearchResultsPanel();
         CardInfoViewer.Instance.IsVisible = false;
     }
 

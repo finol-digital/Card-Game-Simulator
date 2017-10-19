@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114614180611090904}
   m_Layer: 0
   m_Name: Card Game Manager
-  m_TagString: Untagged
+  m_TagString: CardGameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,5 +51,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6920e0423b49035438e0f18dd7c0581c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopupPrefab: {fileID: 1841404771972492, guid: 159c1b942b201514d9d36c985ef3c58b,
-    type: 2}

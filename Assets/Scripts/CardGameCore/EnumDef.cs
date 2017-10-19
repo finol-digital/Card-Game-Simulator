@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
+using System.Linq;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class EnumDef
@@ -34,5 +35,10 @@ public class EnumDef
         }
 
         return result;
+    }
+
+    public static bool IsEnumProperty(string propertyName)
+    {
+        return CardGameManager.Current.Enums.Where((def) => def.Property.Equals(propertyName)).ToList().Count > 0;
     }
 }

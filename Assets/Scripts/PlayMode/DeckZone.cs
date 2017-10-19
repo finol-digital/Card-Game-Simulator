@@ -37,7 +37,7 @@ public class DeckZone : MonoBehaviour
             return;
         
         if (Cards.Contains(cardModel.Card))
-            Cards.Remove(cardModel.Card);
+            Cards.RemoveAt(Cards.LastIndexOf(cardModel.Card));
     }
 
     public void Display()

@@ -35,11 +35,13 @@ public class Card : IComparable<Card>
 
     public string GetPropertyValueString(string propertyName)
     {
-        if (string.IsNullOrEmpty(propertyName))
+        if (string.IsNullOrEmpty(propertyName) || !Properties.ContainsKey(propertyName))
             return string.Empty;
-        if (Properties.ContainsKey(propertyName))
-            return Properties [propertyName] != null ? Properties [propertyName].Value : string.Empty;
-        return string.Empty;
+
+        EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(propertyName)).FirstOrDefault();
+        if (enumDef != null)
+            return enumDef.GetStringFromFlags(GetPropertyValueInt(propertyName));
+        return Properties [propertyName] != null ? Properties [propertyName].Value : string.Empty;
     }
 
     public int GetPropertyValueInt(string propertyName)
