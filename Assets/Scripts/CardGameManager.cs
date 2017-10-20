@@ -126,7 +126,8 @@ public class CardGameManager : MonoBehaviour
 
         PlayerPrefs.SetString(PlayerPrefGameName, CurrentGameName);
         BackgroundImage.sprite = Current.BackgroundImageSprite;
-        CardInfoViewer.Instance.ResetPropertyOptions();
+        if (CardInfoViewer.Instance != null)
+            CardInfoViewer.Instance.ResetPropertyOptions();
 
         foreach (CardGameSelectedDelegate action in OnSelectActions)
             action();

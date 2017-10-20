@@ -76,7 +76,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         if (SelectedCardModel == null)
             IsVisible = false;
-        
+
+        RectTransform rectTransform = this.transform as RectTransform;
         rectTransform.anchorMin = IsVisible ? 
             new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, VisibleYMin, animationSpeed * Time.deltaTime)) :
             new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
@@ -87,15 +88,12 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public static CardInfoViewer Instance {
         get {
-            if (_instance == null)
-                _instance = GameObject.FindWithTag(GameObjectTag).GetOrAddComponent<CardInfoViewer>();
+            if (_instance == null) {
+                GameObject cardInfoViwer = GameObject.FindWithTag(GameObjectTag);
+                if (cardInfoViwer != null)
+                    _instance = cardInfoViwer.GetOrAddComponent<CardInfoViewer>();
+            }
             return _instance;
-        }
-    }
-
-    public RectTransform rectTransform {
-        get {
-            return this.transform as RectTransform;
         }
     }
 

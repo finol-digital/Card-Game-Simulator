@@ -88,6 +88,9 @@ static public class UnityExtensionMethods
 
     public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
     {
+        if (coroutine == null || output == null)
+            yield break;
+
         object result = null;
         while (coroutine.MoveNext()) {
             result = coroutine.Current;
