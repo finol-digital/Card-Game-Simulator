@@ -5,5 +5,6 @@
 		{"name": "rank", "type": "string" }
 	],
 	"deckMaxSize": "144",
-	"handStartSize": "13"
+	"handStartSize": "13",
+	"name": "Mahjong"
 }

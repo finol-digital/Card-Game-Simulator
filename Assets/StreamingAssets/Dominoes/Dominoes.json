@@ -3,5 +3,6 @@
 		{"name": "lowerValue", "type": "integer" },
 		{"name": "higherValue", "type": "integer" }
 	],
-	"handStartSize": "7"
+	"handStartSize": "7",
+	"name": "Dominoes"
 }
