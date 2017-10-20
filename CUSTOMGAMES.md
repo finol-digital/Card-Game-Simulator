@@ -31,45 +31,26 @@ When downloading a custom game from a url, the data that is being downloaded is 
 
 | Property Name | Property Type | Default Value | Description |
 | --- | --- | --- | --- |
-| Name | string | Required | Name is the only required field, as all other fields will use a default value if it is not assigned. This name is the name of the custom card game, and CGS will create the data for the card game in a folder with this name |
- 
- string AllCardsURL
-
- bool AllCardsZipped
-
- string AllSetsURL
-
- bool AllSetsZipped
-
- bool AutoUpdate
-
- string AutoUpdateURL
-
- string BackgroundImageFileType
-
- string BackgroundImageURL
-
- string CardBackImageFileType
-
- string CardBackImageURL
-
- string CardIdIdentifier
-
- string CardImageFileType
-
- string CardImageURLBase
-
- string CardImageURLFormat
-
- string CardImageURLName
-
- string CardNameIdentifier
-
- string CardSetIdentifier
-
- string CardPrimaryProperty
-
- List<PropertyDef> CardProperties
+| Name | string | Required | Name is the only required field, as all other fields will use a default value if it is not assigned. This name is the name of the custom card game as it appears in the dropdown in the main menu, and CGS will create the data for the card game in a folder with this name. |
+| AllCardsURL | string | "" | From AllCardsURL, CGS downloads the json that contains info about the cards for the game. If CGS is able to successfully download this json, it will save it as AllCards.json. The structure of this file is "[ {\<CardIdIdentifier\>, \<CardNameIdentifier\>, \<CardSetIdentifier\>, \<CardPrimaryProperty\>, \<CardProperties\>}, ... ]". Information about these fields can be found below. You may choose not to have an AllCards.json, and instead define all the card information directly in AllSets.json. |
+| AllCardsZipped | boolean | false | AllCardsURL may point to a zipped file. If it is zipped, set AllCardsZipped to true, and CGS will unzip the file and then save the unzipped file as AllCards.json. |
+| AllSetsURL | string | "" | From AllSetsURL, CGS downloads the json that contains info about the sets for the game. If CGS is able to successfully download this json, it will save it as AllSets.json. The structure of this file is "[ {\<SetCode\>, \<SetName\>, cards: <AllCards.json>}, ... ]". You must have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.
+| AllSetsZipped | boolean | false | AllSetsURL may point to a zipped file. If it is zipped, set AllSetsZipped to true, and CGS will unzip the file and then save the unzipped file as AllSets.json. |
+| AutoUpdate | boolean | false | If AutoUpdate is true, CGS will re-download \<Name\>.json, AllCards.json, and AllSets.json every time the user starts to play a card game. |
+| AutoUpdateURL | string | "" | AutoUpdateURL should correspond to the URL from which users download \<Name\>.json. CGS will automatically redownload the custom game from this url if AutoUpdate is set to true. |
+| BackgroundImageFileType | string | "png" | TODO |
+| BackgroundImageURL | string | "" | TODO |
+| CardBackImageFileType | string | "png" | TODO |
+| CardBackImageURL | string | "" | TODO |
+| CardIdIdentifier | string | "id" | TODO |
+| CardImageFileType | string | "png" | TODO |
+| CardImageURLBase | string | "" | TODO |
+| CardImageURLFormat | string | TODO | TODO |
+| CardImageURLName | string | TODO | TODO |
+| CardNameIdentifier | string | "name" | TODO |
+| CardSetIdentifier | string | "set" | TODO |
+| CardPrimaryProperty | string | "" | TODO |
+| CardProperties | List<PropertyDef> | [] | TODO |
 
  DeckFileType DeckFileType
 
@@ -88,3 +69,6 @@ When downloading a custom game from a url, the data that is being downloaded is 
  string SetNameIdentifier
 
 }
+
+## Example
+A functional example of a custom card game definition can be found at: TODO
