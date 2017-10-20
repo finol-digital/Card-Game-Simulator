@@ -25,4 +25,63 @@ The structure of this custom game folder is:
     - ...
 
 ## JSON File Structure
-When downloading a custom game from a url, the data that is being downloaded is the contents of the \<Name\>.json file. Card game simulator generates the rest of the folder structure based off the information in that file. The strucutre for that file is:
+When downloading a custom game from a url, the data that is being downloaded is the contents of the \<Name\>.json file. Card game simulator generates the rest of the folder structure based off the information in that file. The structure for that file is:
+{
+
+ string Name
+ 
+ string AllCardsURL
+
+ bool AllCardsZipped
+
+ string AllSetsURL
+
+ bool AllSetsZipped
+
+ bool AutoUpdate
+
+ string AutoUpdateURL
+
+ string BackgroundImageFileType
+
+ string BackgroundImageURL
+
+ string CardBackImageFileType
+
+ string CardBackImageURL
+
+ string CardIdIdentifier
+
+ string CardImageFileType
+
+ string CardImageURLBase
+
+ string CardImageURLFormat
+
+ string CardImageURLName
+
+ string CardNameIdentifier
+
+ string CardSetIdentifier
+
+ string CardPrimaryProperty
+
+ List<PropertyDef> CardProperties
+
+ DeckFileType DeckFileType
+
+ int DeckMaxSize
+
+ List<EnumDef> Enums
+
+ List<ExtraDef> Extras
+
+ int HandStartSize
+
+ string HsdPropertyId
+
+ string SetCodeIdentifier
+
+ string SetNameIdentifier
+
+}
