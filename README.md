@@ -5,4 +5,4 @@ Included card games:
 - Mahjong
 - Tarot
 
-Custom card games can be added by pressing the + on the main menu
+Custom card games can be added by pressing the + button on the main menu
