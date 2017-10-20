@@ -7,13 +7,13 @@ A custom card game can also be manually addded by creating a new folder within C
 - Mac: ~/Library/Application Support/Finol Digital/Card Game Simulator/games/
 
 The structure of this custom game folder is:
--<Name>/
- -<Name>.json
- -[AllSets.json]
- -[AllCards.json]
- -[Background.<BackgroundImageFileType>]
- -[CardBack.<CardBackImageFileType>]
- -[decks/]
- -sets/
-  -<SetCode>/
-   -<CardId>.<CardImageFileType>
+- <Name>/
+  - <Name>.json
+  - [AllSets.json]
+  - [AllCards.json]
+  - [Background.<BackgroundImageFileType>]
+  - [CardBack.<CardBackImageFileType>]
+  - [decks/]
+  - sets/
+    - <SetCode>/
+      - <CardId>.<CardImageFileType>
