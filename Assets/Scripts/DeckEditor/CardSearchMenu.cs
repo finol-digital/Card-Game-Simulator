@@ -38,7 +38,7 @@ public class CardSearchMenu : MonoBehaviour
                             break;
                         EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(property.Name)).First();
                         if (enumDef != null)
-                            filters += property.Name + ":" + enumDef.GetStringFromFlags(EnumPropertyFilters [property.Name]) + "; ";
+                            filters += property.Name + ":" + enumDef.GetStringFromIntFlags(EnumPropertyFilters [property.Name]) + "; ";
                         break;
                 }
             }
@@ -164,7 +164,7 @@ public class CardSearchMenu : MonoBehaviour
         Vector3 localPosition = config.enumToggle.transform.localPosition;
         foreach (KeyValuePair<string, string> enumValue in enumDef.Values) {
             int intValue;
-            if (!EnumDef.TryParse(enumValue.Key, out intValue))
+            if (!EnumDef.TryParseInt(enumValue.Key, out intValue))
                 continue;
             Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
             newToggle.isOn = (storedFilter & intValue) != 0;

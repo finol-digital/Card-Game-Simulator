@@ -1,14 +1,22 @@
 ﻿using System;
 
-public class Set
+public class Set : IEquatable<Set>
 {
-    public string Code { get; set; }
+    public const string DefaultCode = "_CGSDEFAULT_";
 
-    public string Name { get; set; }
+    public string Code { get; private set; }
+
+    public string Name { get; private set; }
 
     public Set(string code, string name)
     {
-        Code = code.Clone() as string;
-        Name = name.Clone() as string;
+        Code = !string.IsNullOrEmpty(code) ? code.Clone() as string : DefaultCode;
+        Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : DefaultCode;
     }
+
+    public bool Equals(Set other)
+    {
+        return Code.Equals(other.Code);
+    }
+
 }

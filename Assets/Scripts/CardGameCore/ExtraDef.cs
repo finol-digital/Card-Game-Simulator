@@ -4,9 +4,9 @@
 public class ExtraDef
 {
     [JsonProperty]
-    public string Property { get; set; }
+    public string Property { get; private set; }
 
     [JsonProperty]
-    public string Value { get; set; }
+    public string Value { get; private set; }
     
 }

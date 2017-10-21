@@ -20,7 +20,7 @@ public enum DeckFileType
     Ydk
 }
 
-public class Deck
+public class Deck : IEquatable<Deck>
 {
     public const string DefaultName = "Untitled";
     public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
@@ -30,9 +30,9 @@ public class Deck
 
     public string Name { get; set; }
 
-    public DeckFileType FileType { get; set; }
+    public DeckFileType FileType { get; private set; }
 
-    public List<Card> Cards { get; set; }
+    public List<Card> Cards { get; private set; }
 
     public Deck() : this(DefaultName)
     {
@@ -44,7 +44,7 @@ public class Deck
 
     public Deck(string name, DeckFileType fileType)
     {
-        Name = name != null ? name.Clone() as string : string.Empty;
+        Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : DefaultName;
         FileType = fileType;
         Cards = new List<Card>();
     }
@@ -337,6 +337,11 @@ public class Deck
                 break;
         }
         return text;
+    }
+
+    public bool Equals(Deck other)
+    {
+        return ToString().Equals(other.ToString());
     }
 
     public string FilePath {

@@ -9,18 +9,18 @@ using System.Linq;
 public class EnumDef
 {
     [JsonProperty]
-    public string Property { get; set; }
+    public string Property { get; private set; }
 
     [JsonProperty]
-    public Dictionary<string, string> Values { get; set; }
+    public Dictionary<string, string> Values { get; private set; }
 
-    public static bool TryParse(string number, out int intValue)
+    public static bool TryParseInt(string number, out int intValue)
     {
         bool isHex = number.StartsWith("0x");
         return int.TryParse(isHex ? number.Substring(2) : number, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
     }
 
-    public string GetStringFromFlags(int flags)
+    public string GetStringFromIntFlags(int flags)
     {
         string result = string.Empty;
 

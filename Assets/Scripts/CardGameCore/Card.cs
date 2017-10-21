@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Card : IComparable<Card>
+public class Card : IComparable<Card>, IEquatable<Card>
 {
     public static Card Blank {
         get { return new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>()); }
     }
 
-    public string Id { get; set; }
+    public string Id { get; private set; }
 
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
-    public string SetCode { get; set; }
+    public string SetCode { get; private set; }
 
-    public Dictionary<string, PropertyDefValuePair> Properties { get; set; }
+    public Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
 
     public Card(string id, string name, string setCode, Dictionary<string,PropertyDefValuePair> properties)
     {
         Id = id.Clone() as string;
-        Name = name.Clone() as string;
-        SetCode = setCode.Clone() as string;
+        Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : string.Empty;
+        SetCode = !string.IsNullOrEmpty(setCode) ? setCode.Clone() as string : Set.DefaultCode;
+        if (properties == null)
+            properties = new Dictionary<string, PropertyDefValuePair>();
         Properties = properties;
         this.Properties = this.CloneProperties();
     }
@@ -40,7 +42,7 @@ public class Card : IComparable<Card>
 
         EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(propertyName)).FirstOrDefault();
         if (enumDef != null)
-            return enumDef.GetStringFromFlags(GetPropertyValueInt(propertyName));
+            return enumDef.GetStringFromIntFlags(GetPropertyValueInt(propertyName));
         return Properties [propertyName] != null ? Properties [propertyName].Value : string.Empty;
     }
 
@@ -75,6 +77,11 @@ public class Card : IComparable<Card>
                 return comparison;
         }
         return 0;
+    }
+
+    public bool Equals(Card other)
+    {
+        return Id.Equals(other.Id);
     }
 
     public string NameStrippedToLowerAlphaNum {

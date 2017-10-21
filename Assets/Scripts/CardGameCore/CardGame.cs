@@ -11,8 +11,8 @@ public delegate void LoadJTokenDelegate(JToken jToken,string defaultValue);
 [JsonObject(MemberSerialization.OptIn)]
 public class CardGame
 {
-    public const string AllSetsFileName = "AllSets.json";
     public const string AllCardsFileName = "AllCards.json";
+    public const string AllSetsFileName = "AllSets.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
     public const string DefaultCardImageURLFormat = "{0}";
@@ -21,7 +21,6 @@ public class CardGame
     public const int DefaultHandStartSize = 5;
     public const string DefaultHsdPropertyId = "dbfId";
     public const string DefaultImageFileType = "png";
-    public const string DefaultSet = "_CGSDEFAULT_";
     public const string SetCardsIdentifier = "cards";
 
     public string FilePathBase {
@@ -120,8 +119,8 @@ public class CardGame
     [JsonProperty]
     public string SetNameIdentifier { get; set; }
 
-    private List<Set> _sets;
     private List<Card> _cards;
+    private List<Set> _sets;
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
     private bool _isLoaded;
@@ -167,21 +166,21 @@ public class CardGame
             Directory.Delete(initialDirectory, true);
         }
 
-        string setsFile = FilePathBase + "/" + AllSetsFileName;
-        if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile))) {
-            yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, AllSetsZipped ? setsFile + ".zip" : setsFile);
-            if (AllSetsZipped)
-                UnityExtensionMethods.ExtractZip(setsFile + ".zip", FilePathBase);
-        }
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
         if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile))) {
             yield return UnityExtensionMethods.SaveURLToFile(AllCardsURL, AllCardsZipped ? cardsFile + ".zip" : cardsFile);
             if (AllCardsZipped)
                 UnityExtensionMethods.ExtractZip(cardsFile + ".zip", FilePathBase);
         }
+        string setsFile = FilePathBase + "/" + AllSetsFileName;
+        if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile))) {
+            yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, AllSetsZipped ? setsFile + ".zip" : setsFile);
+            if (AllSetsZipped)
+                UnityExtensionMethods.ExtractZip(setsFile + ".zip", FilePathBase);
+        }
         try {
-            LoadJSONFromFile(setsFile, LoadSetFromJToken);
             LoadJSONFromFile(cardsFile, LoadCardFromJToken);
+            LoadJSONFromFile(setsFile, LoadSetFromJToken);
         } catch (Exception e) {
             Debug.LogError("Failed to load card game data! Error: " + e.Message + e.StackTrace);
             Error = e.Message;
@@ -211,32 +210,17 @@ public class CardGame
         if (jTokenEnumeration == null)
             jTokenEnumeration = (root as JObject).PropertyValues();
         foreach (JToken jToken in jTokenEnumeration)
-            load(jToken, DefaultSet);
+            load(jToken, Set.DefaultCode);
     }
 
-    public void LoadSetFromJToken(JToken setJToken, string defaultSet)
-    {
-        if (setJToken == null)
-            return;
-        
-        string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSet;
-        string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSet;
-        if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
-            Sets.Add(new Set(setCode, setName));
-        JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
-        if (cards != null)
-            foreach (JToken jToken in cards)
-                LoadCardFromJToken(jToken, setCode);
-    }
-
-    public void LoadCardFromJToken(JToken cardJToken, string defaultSet)
+    public void LoadCardFromJToken(JToken cardJToken, string defaultSetCode)
     {
         if (cardJToken == null)
             return;
 
         string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
         string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
-        string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSet;
+        string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
         Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
         foreach (PropertyDef property in CardProperties) {
             cardProperties [property.Name] = new PropertyDefValuePair() {
@@ -244,15 +228,30 @@ public class CardGame
                 Value = cardJToken.Value<string>(property.Name) ?? string.Empty
             };
         }
-        if (!string.IsNullOrEmpty(cardId)) {
+        if (!string.IsNullOrEmpty(cardId)) { // TODO: && !CARDS.CONTAINSKEY(CARDID)
             Cards.Add(new Card(cardId, cardName, cardSet, cardProperties));
-            bool setExists = cardSet == defaultSet;
+            bool setExists = cardSet == defaultSetCode;
             for (int i = 0; !setExists && i < Sets.Count; i++)
                 if (Sets [i].Code == cardSet)
                     setExists = true;
             if (!setExists)
                 Sets.Add(new Set(cardSet, cardSet));
         }
+    }
+
+    public void LoadSetFromJToken(JToken setJToken, string defaultSetCode)
+    {
+        if (setJToken == null)
+            return;
+        
+        string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
+        string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSetCode;
+        if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName)) // TODO: && !SETS.CONTAINSKEY(SETCODE)
+            Sets.Add(new Set(setCode, setName));
+        JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
+        if (cards != null)
+            foreach (JToken jToken in cards)
+                LoadCardFromJToken(jToken, setCode);
     }
 
     public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> stringProperties, Dictionary<string, int> intMinProperties, Dictionary<string, int> intMaxProperties, Dictionary<string, int> enumProperties)
@@ -296,19 +295,19 @@ public class CardGame
         }
     }
 
-    public List<Set> Sets {
-        get {
-            if (_sets == null)
-                _sets = new List<Set>();
-            return _sets;
-        }
-    }
-
     public List<Card> Cards {
         get {
             if (_cards == null)
                 _cards = new List<Card>();
             return _cards;
+        }
+    }
+
+    public List<Set> Sets {
+        get {
+            if (_sets == null)
+                _sets = new List<Set>();
+            return _sets;
         }
     }
 

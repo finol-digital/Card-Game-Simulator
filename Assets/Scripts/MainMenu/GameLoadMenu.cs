@@ -35,7 +35,7 @@ public class GameLoadMenu : MonoBehaviour
 
     public IEnumerator LoadGame()
     {
-        CardGame newGame = new CardGame(CardGame.DefaultSet, urlInput.text.Trim());
+        CardGame newGame = new CardGame(Set.DefaultCode, urlInput.text.Trim());
         newGame.AutoUpdate = true;
         urlInput.text = string.Empty;
         urlInput.interactable = false;

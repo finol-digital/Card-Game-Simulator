@@ -35,7 +35,7 @@ public class DeckSaveMenu : MonoBehaviour
         if (!string.IsNullOrEmpty(newName))
             nameInputField.text = newName;
         Deck newDeck = new Deck(newName, CardGameManager.Current.DeckFileType);
-        newDeck.Cards = new List<Card>(CurrentDeck.Cards);
+        newDeck.Cards.AddRange(CurrentDeck.Cards);
         textOutputArea.text = newDeck.ToString();
     }
 
