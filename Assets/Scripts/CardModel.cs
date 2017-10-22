@@ -301,7 +301,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public IEnumerator UpdateImage()
     {
         Sprite newSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(Card.ImageFilePath, Card.ImageWebURL), (output) => newSprite = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(Card.ImageFilePath, Card.ImageWebURL), output => newSprite = output);
         if (newSprite != null)
             NewSprite = newSprite;
         else

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 public delegate void LoadJTokenDelegate(JToken jToken,string defaultValue);
 
@@ -120,7 +121,7 @@ public class CardGame
     public string SetNameIdentifier { get; set; }
 
     private List<Card> _cards;
-    private List<Set> _sets;
+    private HashSet<Set> _sets;
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
     private bool _isLoaded;
@@ -128,12 +129,19 @@ public class CardGame
 
     public CardGame(string name, string url)
     {
-        Name = name;
-        AutoUpdateURL = url;
+        Name = name ?? Set.DefaultCode;
+        AutoUpdateURL = url ?? string.Empty;
+
+        AllCardsURL = string.Empty;
+        AllSetsURL = string.Empty;
 
         BackgroundImageFileType = DefaultImageFileType;
+        BackgroundImageURL = string.Empty;
         CardBackImageFileType = DefaultImageFileType;
+        CardBackImageURL = string.Empty;
+        CardImageURLBase = string.Empty;
         CardImageURLFormat = DefaultCardImageURLFormat;
+        CardImageURLName = string.Empty;
         CardImageFileType = DefaultImageFileType;
         CardIdIdentifier = "id";
         CardNameIdentifier = "name";
@@ -188,12 +196,12 @@ public class CardGame
         }
 
         Sprite backgroundSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), (output) => backgroundSprite = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), output => backgroundSprite = output);
         if (backgroundSprite != null)
             BackgroundImageSprite = backgroundSprite;
         
         Sprite cardBackSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), (output) => cardBackSprite = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), output => cardBackSprite = output);
         if (cardBackSprite != null)
             CardBackImageSprite = cardBackSprite;
         
@@ -220,7 +228,7 @@ public class CardGame
 
         string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
         string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
-        string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
+        Set cardSet = new Set(cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode, cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode);
         Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
         foreach (PropertyDef property in CardProperties) {
             cardProperties [property.Name] = new PropertyDefValuePair() {
@@ -228,14 +236,9 @@ public class CardGame
                 Value = cardJToken.Value<string>(property.Name) ?? string.Empty
             };
         }
-        if (!string.IsNullOrEmpty(cardId)) { // TODO: && !CARDS.CONTAINSKEY(CARDID)
-            Cards.Add(new Card(cardId, cardName, cardSet, cardProperties));
-            bool setExists = cardSet == defaultSetCode;
-            for (int i = 0; !setExists && i < Sets.Count; i++)
-                if (Sets [i].Code == cardSet)
-                    setExists = true;
-            if (!setExists)
-                Sets.Add(new Set(cardSet, cardSet));
+        if (!string.IsNullOrEmpty(cardId)) {
+            Cards.Add(new Card(cardId, cardName, cardSet.Code, cardProperties));
+            Sets.Add(cardSet);
         }
     }
 
@@ -246,8 +249,13 @@ public class CardGame
         
         string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
         string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSetCode;
-        if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName)) // TODO: && !SETS.CONTAINSKEY(SETCODE)
-            Sets.Add(new Set(setCode, setName));
+        if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName)) {
+            Set newSet = new Set(setCode, setName);
+            if (Sets.Contains(newSet))
+                Sets.Where(currSet => currSet.Code == setCode).First().Name = setName;
+            else
+                Sets.Add(newSet);
+        }
         JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
         if (cards != null)
             foreach (JToken jToken in cards)
@@ -303,10 +311,10 @@ public class CardGame
         }
     }
 
-    public List<Set> Sets {
+    public HashSet<Set> Sets {
         get {
             if (_sets == null)
-                _sets = new List<Set>();
+                _sets = new HashSet<Set>();
             return _sets;
         }
     }

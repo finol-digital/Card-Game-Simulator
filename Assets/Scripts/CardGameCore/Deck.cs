@@ -137,7 +137,7 @@ public class Deck : IEquatable<Deck>
 
     public void AddCardsByPropertyInt(string propertyName, int propertyValue, int count)
     {
-        Card card = CardGameManager.Current.Cards.Where((curr) => curr.GetPropertyValueInt(propertyName) == propertyValue).ToList().FirstOrDefault();
+        Card card = CardGameManager.Current.Cards.Where(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue).FirstOrDefault();
         for (int i = 0; card != null && i < count; i++)
             Cards.Add(card);
     }
@@ -147,7 +147,7 @@ public class Deck : IEquatable<Deck>
         if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
             return;
             
-        List<Card> results = CardGameManager.Current.Cards.Where((card) => card.Id.Equals(line)).ToList();
+        List<Card> results = CardGameManager.Current.Cards.Where(card => card.Id.Equals(line)).ToList();
         if (results.Count > 0)
             Cards.Add(results [0]);
     }
@@ -173,7 +173,7 @@ public class Deck : IEquatable<Deck>
 
             if (tokens.Count > 0 && tokens [tokens.Count - 1].StartsWith("(") && tokens [tokens.Count - 1].EndsWith(")")) {
                 string inParens = tokens [tokens.Count - 1].Substring(1, tokens [tokens.Count - 1].Length - 2);
-                if (CardGameManager.Current.Sets.Where((currSet) => currSet.Code.Equals(inParens)).ToList().Count > 0) {
+                if (CardGameManager.Current.Sets.Where(currSet => currSet.Code.Equals(inParens)).ToList().Count > 0) {
                     cardSet = inParens;
                     tokens.RemoveAt(tokens.Count - 1);
                 }
@@ -219,7 +219,7 @@ public class Deck : IEquatable<Deck>
         List<Card> extraCards = new List<Card>();
         foreach (ExtraDef extraDef in CardGameManager.Current.Extras)
             extraCards.AddRange(Cards.Where(
-                (card) => EnumDef.IsEnumProperty(extraDef.Property) ?
+                card => EnumDef.IsEnumProperty(extraDef.Property) ?
                 card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value) :
                 card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)).ToList());
         return extraCards;
@@ -265,9 +265,9 @@ public class Deck : IEquatable<Deck>
             List<KeyValuePair<Card, int>> singleCopy = cardCounts.Where(x => x.Value == 1).ToList();
             List<KeyValuePair<Card, int>> doubleCopy = cardCounts.Where(x => x.Value == 2).ToList();
             List<KeyValuePair<Card, int>> nCopy = cardCounts.Where(x => x.Value > 2).ToList();
-            singleCopy.RemoveAll((cardCount) => extraCards.Contains(cardCount.Key));
-            doubleCopy.RemoveAll((cardCount) => extraCards.Contains(cardCount.Key));
-            nCopy.RemoveAll((cardCount) => extraCards.Contains(cardCount.Key));
+            singleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
+            doubleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
+            nCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
 
             VarInt.Write(ms, extraCards.Count);
             foreach (Card card in extraCards)
@@ -296,7 +296,7 @@ public class Deck : IEquatable<Deck>
         string text = "#created by Card Game Simulator" + System.Environment.NewLine;
         List<Card> mainCards = new List<Card>(Cards);
         List<Card> extraCards = GetExtraCards();
-        mainCards.RemoveAll((card) => extraCards.Contains(card));
+        mainCards.RemoveAll(card => extraCards.Contains(card));
 
         text += "#main" + System.Environment.NewLine;
         foreach (Card card in mainCards)

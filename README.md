@@ -4,7 +4,7 @@
 Get CGS from the [Google Play Store](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim). We are also on [Facebook](https://www.facebook.com/cardgamesimulator/)!
 
 ## Add Card Games
-CGS comes packageed with 4 games:
+CGS comes packaged with 4 games:
 - Standard Playing Cards
 - Dominoes
 - Mahjong

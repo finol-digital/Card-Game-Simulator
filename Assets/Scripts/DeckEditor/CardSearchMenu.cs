@@ -36,7 +36,7 @@ public class CardSearchMenu : MonoBehaviour
                     case PropertyType.Enum:
                         if (!EnumPropertyFilters.ContainsKey(property.Name))
                             break;
-                        EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(property.Name)).First();
+                        EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(property.Name)).First();
                         if (enumDef != null)
                             filters += property.Name + ":" + enumDef.GetStringFromIntFlags(EnumPropertyFilters [property.Name]) + "; ";
                         break;
@@ -148,7 +148,7 @@ public class CardSearchMenu : MonoBehaviour
 
     public GameObject CreateEnumPropertyFilterPanel(Vector3 panelPosition, string propertyName)
     {
-        EnumDef enumDef = CardGameManager.Current.Enums.Where((def) => def.Property.Equals(propertyName)).First();
+        EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).First();
         if (enumDef == null || enumDef.Values.Count < 1)
             return null;
         

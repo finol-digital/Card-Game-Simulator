@@ -6,7 +6,7 @@ public class Set : IEquatable<Set>
 
     public string Code { get; private set; }
 
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
     public Set(string code, string name)
     {

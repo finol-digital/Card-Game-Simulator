@@ -39,7 +39,7 @@ public class PlayMode : MonoBehaviour
             extraZone.AddCard(card);
 
         deckZone.Cards = newDeck.Cards;
-        deckZone.Cards.RemoveAll((card) => extraCards.Contains(card));
+        deckZone.Cards.RemoveAll(card => extraCards.Contains(card));
         deckZone.Shuffle();
 
         Deal(CardGameManager.Current.HandStartSize);

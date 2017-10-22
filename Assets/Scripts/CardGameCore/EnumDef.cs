@@ -39,6 +39,6 @@ public class EnumDef
 
     public static bool IsEnumProperty(string propertyName)
     {
-        return CardGameManager.Current.Enums.Where((def) => def.Property.Equals(propertyName)).ToList().Count > 0;
+        return CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
     }
 }

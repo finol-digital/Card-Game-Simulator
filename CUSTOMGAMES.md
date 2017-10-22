@@ -38,18 +38,18 @@ When downloading a custom game from a url, the data that is being downloaded is 
 | AllSetsZipped | boolean | false | AllSetsURL may point to a zipped file. If it is zipped, set AllSetsZipped to true, and CGS will unzip the file and then save the unzipped file as AllSets.json. |
 | AutoUpdate | boolean | false | If AutoUpdate is true, CGS will re-download \<Name\>.json, AllCards.json, and AllSets.json every time the user starts to play that custom card game. |
 | AutoUpdateURL | string | "" | AutoUpdateURL should correspond to the URL from which users download \<Name\>.json. CGS will automatically redownload the custom game from this url if AutoUpdate is set to true. |
-| BackgroundImageFileType | string | "png" | The file type extension for the image file that CGS downloads from BackgroundImageURL. |
+| BackgroundImageFileType | string | "png" | BackgroundImageFileType is the file type extension for the image file that CGS downloads from BackgroundImageURL. |
 | BackgroundImageURL | string | "" | If BackgroundImageURL is a valid url, CGS will download the image at that url and save it as Background.\<BackgroundImageFileType\>. CGS will attempt to display the  Background.\<BackgroundImageFileType\> in the background anytime the custom card game is selected by the user. If it is unable to read Background.\<BackgroundImageFileType\>, CGS will simply display the CGS logo in the background. |
-| CardBackImageFileType | string | "png" | The file type extension for the image file that CGS downloads from CardBackImageURL. |
+| CardBackImageFileType | string | "png" | CardBackImageFileType is the file type extension for the image file that CGS downloads from CardBackImageURL. |
 | CardBackImageURL | string | "" | If CardBackImageURL is a valid url, CGS will download the image at that url and save it as CardBack.\<CardBackImageFileType\>. CGS will display the CardBack.\<CardBackImageFileType\> when the user turns a card facedown or if CGS is unable to find the appropriate card image. If CGS is unable to get a custom card back, CGS will use the default CGS card back. |
-| CardIdIdentifier | string | "id" | Every card must have a unique card id. When defining a card in AllCards.json or AllSets.json, you can have the card id mapped to the field defined by CardIdIdentifier. Most custom games will likely want to keep the default CardIdIdentifier. |
-| CardImageFileType | string | "png" | TODO |
-| CardImageURLBase | string | "" | TODO |
-| CardImageURLFormat | string | TODO | TODO |
-| CardImageURLName | string | TODO | TODO |
-| CardNameIdentifier | string | "name" | TODO |
-| CardSetIdentifier | string | "set" | TODO |
-| CardPrimaryProperty | string | "" | TODO |
+| CardIdIdentifier | string | "id" | Every card must have a unique card id. When defining a card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by CardIdIdentifier. Most custom games will likely want to keep the default CardIdIdentifier. |
+| CardImageFileType | string | "png" | CardImageFileType is the file type extension for the image files that CGS downloads for each individual card. |
+| CardImageURLBase | string | "" | CardImageURLBase can be used by CardImageURLFormat to indicate the domain/directory from which CGS should download individual card images. |
+| CardImageURLFormat | string | "{0}/{1}" | CardImageURLFormat indicates the URL from which CGS should download missing card image files. CardImageURLFormat can be built from provided parameters: **{0}:\<CardImageURLBase\>**, **{1}:*Card:Id***, **{2}:*Card:\<CardImageURLName\>***, **{3}:*Card:Name***, **{4}:*Card:NameStrippedToLowerAlphaNum**, **{5}:*Card:SetCode*** |
+| CardImageURLName | string | "" | CardImageURLName can be used by CardImageURLFormat to indicate which *Card:Property* contains the url/name for the image of each individual card. |
+| CardNameIdentifier | string | "name" | When defining a card in AllCards.json or AllSets.json, you can have the *Card:Name* mapped to the field defined by CardNameIdentifier. Most custom games will likely want to keep the default CardNameIdentifier. |
+| CardSetIdentifier | string | "set" | When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by CardSetIdentifier. Most custom games will likely want to keep the default CardSetIdentifier. If no mapping is created for the set, CGS will use "_CGSDEFAULT_" as the default *Set:Code*. |
+| CardPrimaryProperty | string | "" | The CardPrimaryProperty is the property that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card. |
 | CardProperties | List\<PropertyDef\> | [] | TODO |
 | DeckFileType | DeckFileType | "txt" | TODO |
 | DeckMaxSize | int | 75 | TODO |
