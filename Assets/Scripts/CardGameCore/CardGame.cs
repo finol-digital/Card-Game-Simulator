@@ -120,7 +120,7 @@ public class CardGame
     [JsonProperty]
     public string SetNameIdentifier { get; set; }
 
-    private List<Card> _cards;
+    private Dictionary<string, Card> _cards;
     private HashSet<Set> _sets;
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
@@ -237,7 +237,8 @@ public class CardGame
             };
         }
         if (!string.IsNullOrEmpty(cardId)) {
-            Cards.Add(new Card(cardId, cardName, cardSet.Code, cardProperties));
+            Card newCard = new Card(cardId, cardName, cardSet.Code, cardProperties);
+            Cards [newCard.Id] = newCard;
             Sets.Add(cardSet);
         }
     }
@@ -279,7 +280,7 @@ public class CardGame
         if (enumProperties == null)
             enumProperties = new Dictionary<string, int>();
 
-        foreach (Card card in Cards) {
+        foreach (Card card in Cards.Values) {
             if (card.Id.ToLower().Contains(id.ToLower())
                 && card.Name.ToLower().Contains(name.ToLower())
                 && card.SetCode.ToLower().Contains(setCode.ToLower())) {
@@ -303,10 +304,10 @@ public class CardGame
         }
     }
 
-    public List<Card> Cards {
+    public Dictionary<string, Card> Cards {
         get {
             if (_cards == null)
-                _cards = new List<Card>();
+                _cards = new Dictionary<string, Card>();
             return _cards;
         }
     }

@@ -79,7 +79,9 @@ public class SearchResults : MonoBehaviour
 
         for (int i = 0; i < CardsPerPage && CurrentPageIndex >= 0 && CurrentPageIndex * CardsPerPage + i < AllResults.Count; i++) {
             string cardId = AllResults [CurrentPageIndex * CardsPerPage + i].Id;
-            Card cardToShow = CardGameManager.Current.Cards.Where(card => card.Id == cardId).FirstOrDefault();
+            if (!CardGameManager.Current.Cards.ContainsKey(cardId))
+                continue;
+            Card cardToShow = CardGameManager.Current.Cards [cardId];
             CardModel cardModelToShow = Instantiate(deckEditor.cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
             cardModelToShow.Card = cardToShow;
             cardModelToShow.DoesCloneOnDrag = true;

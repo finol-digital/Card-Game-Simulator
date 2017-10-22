@@ -137,7 +137,7 @@ public class Deck : IEquatable<Deck>
 
     public void AddCardsByPropertyInt(string propertyName, int propertyValue, int count)
     {
-        Card card = CardGameManager.Current.Cards.Where(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue).FirstOrDefault();
+        Card card = CardGameManager.Current.Cards.Values.Where(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue).FirstOrDefault();
         for (int i = 0; card != null && i < count; i++)
             Cards.Add(card);
     }
@@ -147,9 +147,8 @@ public class Deck : IEquatable<Deck>
         if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
             return;
             
-        List<Card> results = CardGameManager.Current.Cards.Where(card => card.Id.Equals(line)).ToList();
-        if (results.Count > 0)
-            Cards.Add(results [0]);
+        if (CardGameManager.Current.Cards.ContainsKey(line))
+            Cards.Add(CardGameManager.Current.Cards [line]);
     }
 
     public void LoadTxt(string line)
