@@ -109,8 +109,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public string ImageWebURL {
         get {
-            return CardGameManager.Current.CardImageURLBase
-            + string.Format(CardGameManager.Current.CardImageURLFormat, Id, Name, SetCode, NameStrippedToLowerAlphaNum, GetPropertyValueString(CardGameManager.Current.CardImageURLName))
+            return string.Format(CardGameManager.Current.CardImageURLFormat, CardGameManager.Current.CardImageURLBase, Id, GetPropertyValueString(CardGameManager.Current.CardImageURLName), Name, NameStrippedToLowerAlphaNum, SetCode)
             + "." + CardGameManager.Current.CardImageFileType;
         }
     }

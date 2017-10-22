@@ -1,5 +1,10 @@
 # Card Game Simulator
-Included card games:
+
+## Get Card Game Simulator
+Get CGS from the [Google Play Store](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim). We are also on [Facebook](https://www.facebook.com/cardgamesimulator/)!
+
+## Add Card Games
+CGS comes packageed with 4 games:
 - Standard Playing Cards
 - Dominoes
 - Mahjong
@@ -13,5 +18,7 @@ In the resulting popup, type or paste the url that hosts the json for the custom
 
 ![Game Popup Image](screenshots/gamepopup.png)
 
-You can get an appropriate url from other users, or you can define your own custom game.
+You can get an appropriate url from other people. For example, try adding the Gaia game by pasting this url: TODO
+
+You can also define your own custom game.
 To create your own custom games, see [Defining Custom Games](CUSTOMGAMES.md)

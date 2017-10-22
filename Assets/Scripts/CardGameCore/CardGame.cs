@@ -15,7 +15,7 @@ public class CardGame
     public const string AllSetsFileName = "AllSets.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
-    public const string DefaultCardImageURLFormat = "{0}";
+    public const string DefaultCardImageURLFormat = "{0}/{1}";
     public const int DefaultDeckMaxSize = 75;
     public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
     public const int DefaultHandStartSize = 5;
