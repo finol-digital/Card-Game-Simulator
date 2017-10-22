@@ -63,4 +63,4 @@ When downloading a custom game from a url, the data that is being downloaded is 
 }
 
 ## Example
-A functional example of a custom card game definition can be found at: https://drive.google.com/open?id=0B563jbWV7hpdcVJ0bnZZdTlHNGM
+A functional example of a custom card game definition can be found [here](https://drive.google.com/open?id=0B563jbWV7hpdcVJ0bnZZdTlHNGM)
