@@ -48,17 +48,17 @@ When downloading a custom game from a url, the data that is being downloaded is 
 | CardImageURLFormat | string | "{0}/{1}" | CardImageURLFormat indicates the URL from which CGS should download missing card image files. CardImageURLFormat can be built from provided parameters: **{0}:\<CardImageURLBase\>**, **{1}:*Card:Id***, **{2}:*Card:\<CardImageURLName\>***, **{3}:*Card:Name***, **{4}:*Card:NameStrippedToLowerAlphaNum***, **{5}:*Card:SetCode*** |
 | CardImageURLName | string | "" | CardImageURLName can be used by CardImageURLFormat to indicate which *Card:Property* contains the url/name for the image of each individual card. |
 | CardNameIdentifier | string | "name" | When defining a card in AllCards.json or AllSets.json, you can have the *Card:Name* mapped to the field defined by CardNameIdentifier. Most custom games will likely want to keep the default CardNameIdentifier. |
-| CardSetIdentifier | string | "set" | When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by CardSetIdentifier. Most custom games will likely want to keep the default CardSetIdentifier. If no mapping is created for the set, CGS will use "_CGSDEFAULT_" as the default *Set:Code*. |
+| CardSetIdentifier | string | "set" | When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by CardSetIdentifier. Most custom games will likely want to keep the default CardSetIdentifier. If no mapping is created for the set, CGS will use "\_CGSDEFAULT\_" as the default *Set:Code*. |
 | CardPrimaryProperty | string | "" | The CardPrimaryProperty is the property that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card. |
 | CardProperties | List\<PropertyDef\> | [] | TODO |
-| DeckFileType | DeckFileType | "txt" | TODO |
-| DeckMaxSize | int | 75 | TODO |
-| Enums | List<EnumDef> | [] | TODO |
-| Extras | List<ExtraDef> | [] | TODO |
-| HandStartSize | int | 5 | TODO |
-| HsdPropertyId | string | "dbfId" | TODO |
-| SetCodeIdentifier | string | "code" | TODO |
-| SetNameIdentifier | string | "name" | TODO |
+| DeckFileType | DeckFileType | "txt" | When saving a deck, the formatting for how it is saved and loaded is defined by the DeckFileType. **dec** refers to the old MTGO deck file format. **hsd** refers to the Hearstone deck string format. **ydk** refers to the YGOPRO deck file format. **txt** takes the following format: TODO |
+| DeckMaxSize | int | 75 | DeckMaxSize is used to decide how many card slots should appear in the deck editor, when the custom game is selected. |
+| Enums | List\<EnumDef\> | [] | *EnumDef* has the properties: TODO |
+| Extras | List\<ExtraDef\> | [] | *ExtraDef* has the properties: TODO |
+| HandStartSize | int | 5 | HandStartSize indicates how many cards are automatically dealt from the deck to the hand, when a user loads a deck in Play Mode. |
+| HsdPropertyId | string | "dbfId" | When saving or loading a deck with the **hsd** DeckFileType, HdsPropertyId refers to the *Card:Property* used to uniquely identify each card and is stored as a varint within the deck sting. |
+| SetCodeIdentifier | string | "code" | When defining a set in AllSets.json, you can have the *Set:Code* mapped to the field defined by SetCodeIdentifier. Most custom games will likely want to keep the default SetCodeIdentifier. If no mapping is created for the set, CGS will use "\_CGSDEFAULT\_" as the default *Set:Code*. |
+| SetNameIdentifier | string | "name" | When defining a set in AllSets.json, you can have the *Set:Name* mapped to the field defined by SetNameIdentifier. Most custom games will likely want to keep the default SetNameIdentifier. |
 
 }
 
