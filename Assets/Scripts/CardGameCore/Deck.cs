@@ -340,6 +340,9 @@ public class Deck : IEquatable<Deck>
 
     public bool Equals(Deck other)
     {
+        if (other == null)
+            return false;
+        
         return ToString().Equals(other.ToString());
     }
 

@@ -14,6 +14,11 @@ public class EnumDef
     [JsonProperty]
     public Dictionary<string, string> Values { get; private set; }
 
+    public static bool IsEnumProperty(string propertyName)
+    {
+        return CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
+    }
+
     public static bool TryParseInt(string number, out int intValue)
     {
         bool isHex = number.StartsWith("0x");
@@ -26,8 +31,7 @@ public class EnumDef
 
         int intValue;
         foreach (KeyValuePair<string, string> enumValue in Values) {
-            bool isHex = enumValue.Key.StartsWith("0x");
-            if (int.TryParse(isHex ? enumValue.Key.Substring(2) : enumValue.Key, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue) && (intValue & flags) != 0) {
+            if (EnumDef.TryParseInt(enumValue.Key, out intValue) && (intValue & flags) != 0) {
                 if (!string.IsNullOrEmpty(result))
                     result += "|";
                 result += enumValue.Value;
@@ -35,10 +39,5 @@ public class EnumDef
         }
 
         return result;
-    }
-
-    public static bool IsEnumProperty(string propertyName)
-    {
-        return CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
     }
 }

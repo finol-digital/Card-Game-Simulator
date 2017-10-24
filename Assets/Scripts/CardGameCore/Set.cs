@@ -16,6 +16,9 @@ public class Set : IEquatable<Set>
 
     public bool Equals(Set other)
     {
+        if (other == null)
+            return false;
+        
         return Code.Equals(other.Code);
     }
 

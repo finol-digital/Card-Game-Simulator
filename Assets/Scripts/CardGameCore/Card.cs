@@ -81,18 +81,10 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public bool Equals(Card other)
     {
-        return Id.Equals(other.Id);
-    }
+        if (other == null)
+            return false;
 
-    public string NameStrippedToLowerAlphaNum {
-        get { 
-            char[] cardNameAlphaNum = Name.Where(c => (char.IsLetterOrDigit(c) ||
-                                      char.IsWhiteSpace(c) ||
-                                      c == '-')).ToArray(); 
-            string cardImageName = new string(cardNameAlphaNum);
-            cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
-            return cardImageName;
-        }
+        return Id.Equals(other.Id);
     }
 
     public string ImageFileName {
@@ -109,8 +101,21 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public string ImageWebURL {
         get {
-            return string.Format(CardGameManager.Current.CardImageURLFormat, CardGameManager.Current.CardImageURLBase, Id, GetPropertyValueString(CardGameManager.Current.CardImageURLName), Name, NameStrippedToLowerAlphaNum, SetCode)
-            + "." + CardGameManager.Current.CardImageFileType;
+            return 
+                string.Format(
+                CardGameManager.Current.CardImageURLFormat, 
+                CardGameManager.Current.CardImageURLBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageURLProperty), NameStrippedToLowerAlphaNum);
+        }
+    }
+
+    public string NameStrippedToLowerAlphaNum {
+        get { 
+            char[] cardNameAlphaNum = Name.Where(c => (char.IsLetterOrDigit(c) ||
+                                      char.IsWhiteSpace(c) ||
+                                      c == '-')).ToArray(); 
+            string cardImageName = new string(cardNameAlphaNum);
+            cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
+            return cardImageName;
         }
     }
 

@@ -16,7 +16,7 @@ public class CardGame
     public const string AllSetsFileName = "AllSets.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
-    public const string DefaultCardImageURLFormat = "{0}/{1}";
+    public const string DefaultCardImageURLFormat = "{0}/{1}.{2}";
     public const int DefaultDeckMaxSize = 75;
     public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
     public const int DefaultHandStartSize = 5;
@@ -82,7 +82,7 @@ public class CardGame
     public string CardImageURLFormat { get; set; }
 
     [JsonProperty]
-    public string CardImageURLName { get; set; }
+    public string CardImageURLProperty { get; set; }
 
     [JsonProperty]
     public string CardNameIdentifier { get; set; }
@@ -141,7 +141,7 @@ public class CardGame
         CardBackImageURL = string.Empty;
         CardImageURLBase = string.Empty;
         CardImageURLFormat = DefaultCardImageURLFormat;
-        CardImageURLName = string.Empty;
+        CardImageURLProperty = string.Empty;
         CardImageFileType = DefaultImageFileType;
         CardIdIdentifier = "id";
         CardNameIdentifier = "name";
