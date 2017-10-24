@@ -1,7 +1,7 @@
 # Card Game Simulator
 
 ## Get Card Game Simulator
-Get CGS from the [Google Play Store](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)! You can also download Windows and Mac versions from [this Google Drive folder](https://drive.google.com/open?id=0B563jbWV7hpdTi1TbUdjM1UwTWs). We are also on [Facebook](https://www.facebook.com/cardgamesimulator/)!
+You can get CGS from the [Google Play Store](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim), and you can also download Windows and Mac versions from [this Google Drive folder](https://drive.google.com/open?id=0B563jbWV7hpdTi1TbUdjM1UwTWs). We are also on [Facebook](https://www.facebook.com/cardgamesimulator/)!
 
 ## Add Card Games
 CGS comes pre-packaged with these games:
