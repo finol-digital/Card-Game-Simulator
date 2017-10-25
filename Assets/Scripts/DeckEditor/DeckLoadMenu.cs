@@ -17,28 +17,30 @@ public class DeckLoadMenu : MonoBehaviour
     public RectTransform fileSelectionArea;
     public RectTransform fileSelectionTemplate;
     public Button loadFromFileButton;
+    public Button fileCancelButton;
     public Button deleteFileButton;
+    public Button textCancelButton;
     public InputField nameInputField;
     public TMPro.TextMeshProUGUI instructionsText;
     public TMPro.TMP_InputField textInputField;
 
-    public OnDeckLoadedDelegate LoadCallback { get; private set; }
-
-    public NameChangeDelegate NameChangeCallback { get; private set; }
-
     public string OriginalName { get; private set; }
+
+    public OnDeckNameChangeDelegate NameChangeCallback { get; private set; }
+
+    public OnDeckLoadedDelegate LoadCallback { get; private set; }
 
     public string SelectedFileName { get; private set; }
 
     public Deck LoadedDeck { get; private set; }
 
-    public void Show(OnDeckLoadedDelegate loadCallback, NameChangeDelegate nameChangeCallback, string originalName = Deck.DefaultName)
+    public void Show(string originalName = Deck.DefaultName, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckLoadedDelegate loadCallback = null)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
-        LoadCallback = loadCallback;
-        NameChangeCallback = nameChangeCallback;
         OriginalName = originalName;
+        NameChangeCallback = nameChangeCallback;
+        LoadCallback = loadCallback;
         SelectedFileName = string.Empty;
         string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath) ? Directory.GetFiles(CardGameManager.Current.DecksFilePath) : new string[0];
         List<string> deckFiles = new List<string>();
@@ -95,8 +97,9 @@ public class DeckLoadMenu : MonoBehaviour
     {
         if (!isSelected || string.IsNullOrEmpty(deckFileName))
             return;
-        
-        NameChangeCallback(GetNameFromPath(deckFileName));
+
+        if (NameChangeCallback != null)
+            NameChangeCallback(GetNameFromPath(deckFileName));
         if (deckFileName.Equals(SelectedFileName))
             LoadFromFileAndHide();
         SelectedFileName = deckFileName;
@@ -133,7 +136,8 @@ public class DeckLoadMenu : MonoBehaviour
         }
 
         Deck newDeck = Deck.Parse(GetNameFromPath(SelectedFileName), GetFileTypeFromPath(SelectedFileName), deckText);
-        LoadCallback(newDeck);
+        if (LoadCallback != null)
+            LoadCallback(newDeck);
         Hide();
     }
 
@@ -146,7 +150,7 @@ public class DeckLoadMenu : MonoBehaviour
     {
         try { 
             File.Delete(SelectedFileName);
-            Show(LoadCallback, NameChangeCallback, OriginalName);
+            Show(OriginalName, NameChangeCallback, LoadCallback);
         } catch (Exception e) {
             Debug.LogError("Failed to delete deck!: " + e.Message);
             CardGameManager.Instance.Popup.Show("There was an error while attempting to delete the deck: " + e.Message);
@@ -155,7 +159,9 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void ChangeName(string newName)
     {
-        nameInputField.text = NameChangeCallback(newName);
+        if (NameChangeCallback != null)
+            newName = NameChangeCallback(newName);
+        nameInputField.text = newName;
     }
 
     public void PasteClipboardIntoText()
@@ -166,7 +172,8 @@ public class DeckLoadMenu : MonoBehaviour
     public void LoadFromTextAndHide()
     {
         Deck newDeck = Deck.Parse(nameInputField.text, CardGameManager.Current.DeckFileType, textInputField.text);
-        LoadCallback(newDeck);
+        if (LoadCallback != null)
+            LoadCallback(newDeck);
         LoadedDeck = newDeck;
         PromptForSave();
         Hide();
@@ -199,7 +206,8 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void CancelAndHide()
     {
-        NameChangeCallback(OriginalName);
+        if (NameChangeCallback != null)
+            NameChangeCallback(OriginalName);
         Hide();
     }
 

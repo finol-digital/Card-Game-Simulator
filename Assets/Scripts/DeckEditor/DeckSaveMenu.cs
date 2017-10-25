@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
+public delegate void OnDeckSavedDelegate(Deck savedDeck);
+
 public class DeckSaveMenu : MonoBehaviour
 {
     public const string DeckCopiedMessage = "The text for this deck has been copied to the clipboard.";
@@ -17,21 +19,25 @@ public class DeckSaveMenu : MonoBehaviour
 
     public Deck CurrentDeck { get; private set; }
 
-    public NameChangeDelegate NameChangeCallback { get; private set; }
+    public OnDeckNameChangeDelegate NameChangeCallback { get; private set; }
 
-    public void Show(Deck deckToShow, NameChangeDelegate nameChangeCallback)
+    public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
+
+    public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
-        CurrentDeck = deckToShow;
+        CurrentDeck = deckToShow ?? new Deck();
         NameChangeCallback = nameChangeCallback;
-        nameInputField.text = deckToShow.Name;
+        DeckSaveCallback = deckSaveCallback;
+        nameInputField.text = CurrentDeck.Name;
         textOutputArea.text = CurrentDeck.ToString();
     }
 
     public void ChangeName(string newName)
     {
-        newName = NameChangeCallback(newName);
+        if (NameChangeCallback != null)
+            newName = NameChangeCallback(newName);
         if (!string.IsNullOrEmpty(newName))
             nameInputField.text = newName;
         Deck newDeck = new Deck(newName, CardGameManager.Current.DeckFileType);
@@ -59,10 +65,10 @@ public class DeckSaveMenu : MonoBehaviour
     public void SaveToFile()
     {
         CurrentDeck.Name = nameInputField.text;
-        SaveToFile(CurrentDeck);
+        DeckSaveMenu.SaveToFile(CurrentDeck, DeckSaveCallback);
     }
 
-    public static void SaveToFile(Deck deck)
+    public static void SaveToFile(Deck deck, OnDeckSavedDelegate deckSaveCallback = null)
     {
         try {
             if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
@@ -72,11 +78,14 @@ public class DeckSaveMenu : MonoBehaviour
             Debug.LogError("Failed to save deck!: " + e.Message);
             CardGameManager.Instance.Popup.Show("There was an error saving the deck to file: " + e.Message);
         }
+        if (deckSaveCallback != null)
+            deckSaveCallback(deck);
     }
 
     public void CancelAndHide()
     {
-        NameChangeCallback(CurrentDeck.Name);
+        if (NameChangeCallback != null)
+            NameChangeCallback(CurrentDeck.Name);
         Hide();
     }
 

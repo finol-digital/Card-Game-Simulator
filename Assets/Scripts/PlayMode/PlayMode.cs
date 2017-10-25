@@ -16,8 +16,17 @@ public class PlayMode : MonoBehaviour
     private DeckLoadMenu _deckLoader;
     private CardSearchMenu _cardSearcher;
 
+    void OnEnable()
+    {
+        CardGameManager.Instance.OnSelectActions.Add(ShowDeckLoader);
+    }
+
     void Start()
     {
+        DeckLoader.fileCancelButton.onClick.RemoveAllListeners();
+        DeckLoader.fileCancelButton.onClick.AddListener(BackToMainMenu);
+        DeckLoader.textCancelButton.onClick.RemoveAllListeners();
+        DeckLoader.textCancelButton.onClick.AddListener(BackToMainMenu);
         playArea.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(SetPlayActions);
     }
 
@@ -29,7 +38,7 @@ public class PlayMode : MonoBehaviour
 
     public void ShowDeckLoader()
     {
-        DeckLoader.Show(LoadDeck, UnityExtensionMethods.GetSafeFileName);
+        DeckLoader.Show(Deck.DefaultName, UnityExtensionMethods.GetSafeFileName, LoadDeck);
     }
 
     public void LoadDeck(Deck newDeck)
@@ -80,6 +89,12 @@ public class PlayMode : MonoBehaviour
     public void BackToMainMenu()
     {
         SceneManager.LoadScene(0);
+    }
+
+    void OnDisable()
+    {
+        if (CardGameManager.HasInstance)
+            CardGameManager.Instance.OnSelectActions.Remove(ShowDeckLoader);
     }
 
     public DeckLoadMenu DeckLoader {

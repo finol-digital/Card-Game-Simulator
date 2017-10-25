@@ -983,7 +983,9 @@ MonoBehaviour:
   fileSelectionArea: {fileID: 224624607191661848}
   fileSelectionTemplate: {fileID: 224343981876410232}
   loadFromFileButton: {fileID: 114470130142328520}
+  fileCancelButton: {fileID: 114203327761692740}
   deleteFileButton: {fileID: 114735257877527724}
+  textCancelButton: {fileID: 114664229239748096}
   nameInputField: {fileID: 114113642883387902}
   instructionsText: {fileID: 114130094491262586}
   textInputField: {fileID: 114289680823083020}

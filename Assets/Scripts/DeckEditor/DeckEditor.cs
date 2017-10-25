@@ -5,11 +5,12 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public delegate string NameChangeDelegate(string newName);
+public delegate string OnDeckNameChangeDelegate(string newName);
 
 public class DeckEditor : MonoBehaviour
 {
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
+    public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
     public const int CardStackSize = 8;
 
     public int CardStackCount {
@@ -20,13 +21,15 @@ public class DeckEditor : MonoBehaviour
 
     public Deck CurrentDeck {
         get { 
-            Deck deck = new Deck(nameText.text, CardGameManager.Current.DeckFileType);
+            Deck deck = new Deck(nameText.text.Replace("*", ""), CardGameManager.Current.DeckFileType);
             foreach (CardStack stack in CardStacks)
                 foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
                     deck.Cards.Add(card.Card);
             return deck;
         }
     }
+
+    public bool HasChanged { get; private set; }
 
     public GameObject cardModelPrefab;
     public GameObject cardStackPrefab;
@@ -71,11 +74,15 @@ public class DeckEditor : MonoBehaviour
         
         RecentCardStackIndex = CardStacks.IndexOf(cardStack);
         cardModel.DoubleClickEvent = DestroyCardModel;
+        HasChanged = true;
+        UpdateDeckName();
         UpdateDeckSize();
     }
 
     public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
+        HasChanged = true;
+        UpdateDeckName();
         UpdateDeckSize();
     }
 
@@ -112,6 +119,8 @@ public class DeckEditor : MonoBehaviour
         float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * ((float)RecentCardStackIndex + ((RecentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
         horizontalScrollbar.value = Mathf.Clamp01(newSpot);
 
+        HasChanged = true;
+        UpdateDeckName();
         UpdateDeckSize();
     }
 
@@ -123,6 +132,8 @@ public class DeckEditor : MonoBehaviour
         cardModel.transform.SetParent(null);
         GameObject.Destroy(cardModel.gameObject);
         CardInfoViewer.Instance.IsVisible = false;
+        HasChanged = true;
+        UpdateDeckName();
         UpdateDeckSize();
     }
 
@@ -143,9 +154,10 @@ public class DeckEditor : MonoBehaviour
         foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
         RecentCardStackIndex = 0;
-        nameText.text = Deck.DefaultName;
 
         CardInfoViewer.Instance.IsVisible = false;
+        HasChanged = false;
+        UpdateDeckName(Deck.DefaultName);
         UpdateDeckSize();
     }
 
@@ -153,7 +165,14 @@ public class DeckEditor : MonoBehaviour
     {
         if (string.IsNullOrEmpty(newName))
             newName = Deck.DefaultName;
-        nameText.text = UnityExtensionMethods.GetSafeFileName(newName);
+        newName = UnityExtensionMethods.GetSafeFileName(newName);
+        nameText.text = newName + (HasChanged ? "*" : "");
+        return newName;
+    }
+
+    public string UpdateDeckName()
+    {
+        nameText.text = CurrentDeck.Name + (HasChanged ? "*" : "");
         return nameText.text;
     }
 
@@ -164,7 +183,7 @@ public class DeckEditor : MonoBehaviour
 
     public void ShowDeckLoadMenu()
     {
-        DeckLoader.Show(LoadDeck, UpdateDeckName, nameText.text);
+        DeckLoader.Show(CurrentDeck.Name, UpdateDeckName, LoadDeck);
     }
 
     public void LoadDeck(Deck newDeck)
@@ -173,20 +192,37 @@ public class DeckEditor : MonoBehaviour
             return;
 
         Clear();
-        UpdateDeckName(newDeck.Name);
         foreach (Card card in newDeck.Cards)
             AddCard(card);
+        HasChanged = false;
+        UpdateDeckName(newDeck.Name);
         UpdateDeckSize();
     }
 
     public void ShowDeckSaveMenu()
     {
-        DeckSaver.Show(CurrentDeck, UpdateDeckName);
+        DeckSaver.Show(CurrentDeck, UpdateDeckName, OnSaveDeck);
+    }
+
+    public void OnSaveDeck(Deck savedDeck)
+    {
+        HasChanged = false;
+        UpdateDeckName(savedDeck.Name);
+        UpdateDeckSize();
+    }
+
+    public void CheckBackToMainMenu()
+    {
+        if (HasChanged) {
+            CardGameManager.Instance.Popup.Ask(SaveChangesPrompt, BackToMainMenu, ShowDeckSaveMenu);
+            return;
+        }
+
+        BackToMainMenu();
     }
 
     public void BackToMainMenu()
     {
-        // TODO: CHECK IF WE HAD ANY UNSAVED CHANGES
         SceneManager.LoadScene(0);
     }
 

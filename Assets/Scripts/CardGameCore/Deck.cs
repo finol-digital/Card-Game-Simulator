@@ -213,14 +213,28 @@ public class Deck : IEquatable<Deck>
         return cardCounts;
     }
 
+    public Dictionary<string, List<Card>> GetExtraGroups()
+    {
+        Dictionary<string, List<Card>> extraGroups = new Dictionary<string, List<Card>>();
+        foreach (Card card in Cards) {
+            foreach (ExtraDef extraDef in CardGameManager.Current.Extras) {
+                if (EnumDef.IsEnumProperty(extraDef.Property) ? card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value) : card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)) {
+                    string groupName = !string.IsNullOrEmpty(extraDef.Group) ? extraDef.Group : ExtraDef.DefaultExtraGroup;
+                    if (!extraGroups.ContainsKey(groupName))
+                        extraGroups [groupName] = new List<Card>();
+                    extraGroups [groupName].Add(card);
+                    break;
+                }
+            }
+        }
+        return extraGroups;
+    }
+
     public List<Card> GetExtraCards()
     {
         List<Card> extraCards = new List<Card>();
-        foreach (ExtraDef extraDef in CardGameManager.Current.Extras)
-            extraCards.AddRange(Cards.Where(
-                card => EnumDef.IsEnumProperty(extraDef.Property) ?
-                card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value) :
-                card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)).ToList());
+        foreach (KeyValuePair<string, List<Card>> cardGroup in GetExtraGroups())
+            extraCards.AddRange(cardGroup.Value);
         return extraCards;
     }
 

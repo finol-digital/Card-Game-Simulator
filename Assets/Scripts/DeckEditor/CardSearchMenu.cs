@@ -53,7 +53,7 @@ public class CardSearchMenu : MonoBehaviour
     public SearchPropertyPanel integerPropertyPanel;
     public SearchPropertyPanel enumPropertyPanel;
 
-    public NameChangeDelegate NameChangeCallback { get; set; }
+    public OnDeckNameChangeDelegate NameChangeCallback { get; set; }
 
     public OnFilterChangeDelegate FilterChangeCallback { get; set; }
 
@@ -69,7 +69,7 @@ public class CardSearchMenu : MonoBehaviour
     private Dictionary<string, int> _enumPropertyFilters;
     private List<Card> _results;
 
-    public void Show(NameChangeDelegate nameChangeCallback, OnFilterChangeDelegate filterChangeCallback, OnSearchDelegate searchCallback)
+    public void Show(OnDeckNameChangeDelegate nameChangeCallback, OnFilterChangeDelegate filterChangeCallback, OnSearchDelegate searchCallback)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
