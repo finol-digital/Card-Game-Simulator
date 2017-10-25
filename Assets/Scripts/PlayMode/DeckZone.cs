@@ -8,14 +8,11 @@ using UnityEngine.EventSystems;
 public class DeckZone : MonoBehaviour
 {
     public GameObject cardPrefab;
-    public bool isFaceup;
 
     private List<Card> _cards;
 
     void Start()
     {
-        if (!isFaceup)
-            GetComponent<CardStack>().OnAddCardActions.Add(CardModel.HideCard);
         GetComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
         GetComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
         GetComponent<CardStack>().OnRemoveCardActions.Add(OnRemoveCardModel);
@@ -47,7 +44,7 @@ public class DeckZone : MonoBehaviour
         foreach (Card card in Cards) {
             CardModel newCard = Instantiate(cardPrefab, this.transform).GetOrAddComponent<CardModel>();
             newCard.Card = card;
-            newCard.IsFacedown = !isFaceup;
+            newCard.IsFacedown = true;
             newCard.DoubleClickEvent = CardModel.ToggleFacedown;
             newCard.SecondaryDragAction = Shuffle;
         }

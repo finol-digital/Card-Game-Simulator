@@ -9,9 +9,9 @@ public class PlayMode : MonoBehaviour
     public RectTransform playArea;
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
-    public ExtraZone extraZone;
+    public ExtensibleCardZone extraZone;
     public DeckZone deckZone;
-    public HandZone handZone;
+    public ExtensibleCardZone handZone;
 
     private DeckLoadMenu _deckLoader;
     private CardSearchMenu _cardSearcher;
@@ -44,8 +44,13 @@ public class PlayMode : MonoBehaviour
     public void LoadDeck(Deck newDeck)
     {
         List<Card> extraCards = newDeck.GetExtraCards();
-        foreach (Card card in extraCards)
-            extraZone.AddCard(card);
+        Dictionary<string, List<Card>> extraGroups = newDeck.GetExtraGroups();
+        foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups) {
+            extraZone.labelText.text = cardGroup.Key;
+            foreach (Card card in cardGroup.Value)
+                extraZone.AddCard(card);
+            break; // TODO: ALLOW MULTIPE CARD GROUPS
+        }
 
         deckZone.Cards = newDeck.Cards;
         deckZone.Cards.RemoveAll(card => extraCards.Contains(card));

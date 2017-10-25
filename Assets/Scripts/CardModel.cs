@@ -175,9 +175,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         if (cardStack == null)
             return;
 
+        RectTransform stackRT = cardStack.transform as RectTransform;
         this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
-        cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
-        if (!cardStack.isFree && cardStack.scrollRectContainer != null) {
+        if (cardStack.type != CardStackType.Horizontal)
+            cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
+        if (cardStack.scrollRectContainer != null) {
             switch (dragPhase) {
                 case DragPhase.Begin:
                     cardStack.scrollRectContainer.OnBeginDrag(RecentPointerEventData);
@@ -192,33 +194,38 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             }
         }
 
-        if (cardStack.type == CardStackType.Full) {
+        if (cardStack.type == CardStackType.Full || cardStack.type == CardStackType.Area) {
             PlaceHolderCardStack = cardStack;
             ParentToCanvas();
             this.transform.position = targetPosition;
 
-        } else if (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal) {
-            RectTransform stackRT = cardStack.transform as RectTransform;
-            bool isOutX = transform.localPosition.x < stackRT.rect.xMin || transform.localPosition.x > stackRT.rect.xMax;
-            bool isOutY = transform.localPosition.y < stackRT.rect.yMin || transform.localPosition.y > stackRT.rect.yMax;
-            if (cardStack.isFree || (cardStack.type == CardStackType.Vertical && isOutY) || (cardStack.type == CardStackType.Horizontal && isOutX)) {
+        } else if (cardStack.type == CardStackType.Vertical) {
+            bool isOutYBounds = this.transform.localPosition.y < stackRT.rect.yMin || this.transform.localPosition.y > stackRT.rect.yMax;
+            bool isMovingTop = stackRT.childCount <= 2 || targetPosition.y < cardStack.transform.GetChild(cardStack.transform.childCount - 1).position.y;
+            if (isOutYBounds) {
                 if (cardStack.scrollRectContainer != null)
                     cardStack.scrollRectContainer.OnEndDrag(RecentPointerEventData);
-                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
                 PlaceHolderCardStack = null;
+                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
                 ParentToCanvas();
                 this.transform.position = targetPosition;
+            } else if (isMovingTop) {
+                PlaceHolderCardStack = cardStack;
+                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = true;
+                this.transform.position = new Vector2(this.transform.position.x, targetPosition.y);
             } else {
-                bool isMovingTop = stackRT.childCount <= 2 || (cardStack.type == CardStackType.Horizontal ? 
-                    targetPosition.x > cardStack.transform.GetChild(cardStack.transform.childCount - 1).position.x : targetPosition.y < cardStack.transform.GetChild(cardStack.transform.childCount - 1).position.y);
-                if (isMovingTop) {
-                    PlaceHolderCardStack = cardStack;
-                    this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = true;
-                    this.transform.position = cardStack.type == CardStackType.Horizontal ? new Vector2(targetPosition.x, this.transform.position.y) : new Vector2(this.transform.position.x, targetPosition.y);
-                } else {
-                    this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
-                    PlaceHolderCardStack = null;
-                }
+                PlaceHolderCardStack = null;
+                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
+            }
+
+        } else if (cardStack.type == CardStackType.Horizontal) {
+            bool isGoingOut = targetPosition.y < stackRT.transform.position.y + stackRT.rect.min.y || targetPosition.y > stackRT.transform.position.y + stackRT.rect.max.y;
+            if (isGoingOut) {
+                if (cardStack.scrollRectContainer != null)
+                    cardStack.scrollRectContainer.OnEndDrag(RecentPointerEventData);
+                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false; 
+                ParentToCanvas();
+                this.transform.position = targetPosition;
             }
         }
     }

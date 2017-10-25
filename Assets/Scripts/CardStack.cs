@@ -19,7 +19,6 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 {
     public CardStackType type;
     public ScrollRect scrollRectContainer;
-    public bool isFree;
 
     private List<OnAddCardDelegate> _cardAddedActions;
     private List<OnRemoveCardDelegate> _cardRemovedActions;
@@ -34,7 +33,7 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
-            if (cardModel.ParentCardStack == null || cardModel.ParentCardStack.isFree)
+            if (cardModel.ParentCardStack == null || cardModel.ParentCardStack.type == CardStackType.Horizontal)
                 cardModel.PlaceHolderCardStack = this;
         }
     }

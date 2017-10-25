@@ -4,18 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class HandZone : MonoBehaviour, IDropHandler
+public class ExtensibleCardZone : MonoBehaviour, IDropHandler
 {
     public GameObject cardPrefab;
     public RectTransform extension;
+    public RectTransform content;
+    public Text labelText;
     public Text countText;
 
     public bool IsExtended { get; private set; }
 
     void Start()
     {
-        extension.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
-        extension.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
+        content.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
+        content.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -28,13 +30,14 @@ public class HandZone : MonoBehaviour, IDropHandler
             CardModel draggedCardModel;
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
-            AddCard(cardModel.Card);
+            if (cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
+                AddCard(cardModel.Card);
         }
     }
 
     public void AddCard(Card card)
     {
-        CardModel newCardModel = Instantiate(cardPrefab, extension).GetOrAddComponent<CardModel>();
+        CardModel newCardModel = Instantiate(cardPrefab, content).GetOrAddComponent<CardModel>();
         newCardModel.Card = card;
         newCardModel.DoubleClickEvent = CardModel.ToggleFacedown;
         newCardModel.SecondaryDragAction = null;
@@ -43,7 +46,7 @@ public class HandZone : MonoBehaviour, IDropHandler
 
     void Update()
     {
-        countText.text = extension.childCount.ToString();
+        countText.text = content.childCount.ToString();
     }
 
     public void ToggleExtension()
