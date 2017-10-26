@@ -49,7 +49,7 @@ public class PlayMode : MonoBehaviour
             extraZone.labelText.text = cardGroup.Key;
             foreach (Card card in cardGroup.Value)
                 extraZone.AddCard(card);
-            break; // TODO: ALLOW MULTIPE CARD GROUPS
+            // TODO: ALLOW MULTIPLE CARD GROUPS
         }
 
         deckZone.Cards = newDeck.Cards;

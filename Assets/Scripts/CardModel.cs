@@ -219,7 +219,10 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             }
 
         } else if (cardStack.type == CardStackType.Horizontal) {
-            bool isGoingOut = targetPosition.y < stackRT.transform.position.y + stackRT.rect.min.y || targetPosition.y > stackRT.transform.position.y + stackRT.rect.max.y;
+            targetPosition = targetPosition - PrimaryDragOffset;
+            Vector3[] stackCorners = new Vector3[4];
+            stackRT.GetWorldCorners(stackCorners);
+            bool isGoingOut = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
             if (isGoingOut) {
                 if (cardStack.scrollRectContainer != null)
                     cardStack.scrollRectContainer.OnEndDrag(RecentPointerEventData);
