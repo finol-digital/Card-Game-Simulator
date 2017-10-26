@@ -585,7 +585,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Finol Digital
+  m_Text: Finol Digital LLC
 --- !u!222 &392720267
 CanvasRenderer:
   m_ObjectHideFlags: 0
