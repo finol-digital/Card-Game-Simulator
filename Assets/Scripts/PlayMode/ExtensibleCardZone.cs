@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ExtensibleCardZone : MonoBehaviour, IDropHandler
+[RequireComponent(typeof(CardDropZone))]
+public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
     public GameObject cardPrefab;
     public RectTransform extension;
@@ -18,21 +19,8 @@ public class ExtensibleCardZone : MonoBehaviour, IDropHandler
     {
         content.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
         content.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
-    }
-
-    public void OnDrop(PointerEventData eventData)
-    {
-        if (eventData.pointerDrag == null)
-            return;
-
-        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                cardModel = draggedCardModel;
-            if (cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
-                AddCard(cardModel.Card);
-        }
+        GetComponent<CardDropZone>().dropHandler = this;
+        extension.gameObject.GetOrAddComponent<CardDropZone>().dropHandler = this;
     }
 
     public void AddCard(Card card)

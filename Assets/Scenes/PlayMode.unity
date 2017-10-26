@@ -1158,6 +1158,7 @@ GameObject:
   - component: {fileID: 651689494}
   - component: {fileID: 651689492}
   - component: {fileID: 651689493}
+  - component: {fileID: 651689496}
   m_Layer: 5
   m_Name: Hand Content
   m_TagString: Untagged
@@ -1181,7 +1182,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1800, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &651689492
 MonoBehaviour:
@@ -1251,6 +1252,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 651689490}
+--- !u!114 &651689496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 651689490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
 --- !u!1 &653275813
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,6 +1339,7 @@ GameObject:
   - component: {fileID: 673528074}
   - component: {fileID: 673528073}
   - component: {fileID: 673528072}
+  - component: {fileID: 673528076}
   m_Layer: 5
   m_Name: Hand Extension
   m_TagString: Untagged
@@ -1426,6 +1441,17 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &673528076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 673528070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &683956549
 GameObject:
   m_ObjectHideFlags: 0
@@ -2086,6 +2112,7 @@ GameObject:
   - component: {fileID: 903002066}
   - component: {fileID: 903002068}
   - component: {fileID: 903002065}
+  - component: {fileID: 903002064}
   m_Layer: 5
   m_Name: Extra Zone
   m_TagString: Untagged
@@ -2114,6 +2141,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 1125}
   m_SizeDelta: {x: 275, y: 375}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &903002064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 903002062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &903002065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3094,6 +3132,7 @@ GameObject:
   - component: {fileID: 1345406563}
   - component: {fileID: 1345406562}
   - component: {fileID: 1345406561}
+  - component: {fileID: 1345406565}
   m_Layer: 5
   m_Name: Hand Zone
   m_TagString: Untagged
@@ -3227,6 +3266,17 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1345406559}
+--- !u!114 &1345406565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1345406559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1521820525
 GameObject:
   m_ObjectHideFlags: 0
@@ -3557,6 +3607,7 @@ GameObject:
   - component: {fileID: 2128014487}
   - component: {fileID: 2128014486}
   - component: {fileID: 2128014485}
+  - component: {fileID: 2128014488}
   m_Layer: 5
   m_Name: Extras Extension
   m_TagString: Untagged
@@ -3658,6 +3709,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2128014482}
+--- !u!114 &2128014488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2128014482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2128763650
 GameObject:
   m_ObjectHideFlags: 0

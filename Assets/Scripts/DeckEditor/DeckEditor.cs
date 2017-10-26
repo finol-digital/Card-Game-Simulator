@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public delegate string OnDeckNameChangeDelegate(string newName);
 
-public class DeckEditor : MonoBehaviour
+public class DeckEditor : MonoBehaviour, ICardDropHandler
 {
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
     public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
@@ -49,6 +49,11 @@ public class DeckEditor : MonoBehaviour
     void OnEnable()
     {
         CardGameManager.Instance.OnSelectActions.Add(ResetCardStacks);
+    }
+
+    void Start()
+    {
+        layoutArea.gameObject.GetOrAddComponent<CardDropZone>().dropHandler = this;
     }
 
     public void ResetCardStacks()
