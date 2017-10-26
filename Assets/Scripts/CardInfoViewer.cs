@@ -144,7 +144,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
         set {
             if (_selectedCardModel != null)
-                _selectedCardModel.UnHighlight();
+                _selectedCardModel.HideHighlight();
             
             _selectedCardModel = value;
 
@@ -171,9 +171,9 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 CardZoomPanel.gameObject.SetActive(false);
             if (SelectedCardModel != null) {
                 if (_isVisible)
-                    SelectedCardModel.Highlight();
+                    SelectedCardModel.ShowHighlight();
                 else
-                    SelectedCardModel.UnHighlight();
+                    SelectedCardModel.HideHighlight();
             }
         }
     }

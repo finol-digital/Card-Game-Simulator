@@ -51,17 +51,16 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     private CardStack _placeHolderCardStack;
     private RectTransform _placeHolder;
     private bool _isFacedown;
-    private Outline _outline;
+    private Outline _highlight;
     private Sprite _newSprite;
     private Image _image;
     private CanvasGroup _canvasGroup;
-    private Canvas _canvas;
 
     public CardModel Clone(Transform parent)
     {
         CardModel clone = Instantiate(this.gameObject, this.transform.position, this.transform.rotation, parent).GetOrAddComponent<CardModel>();
         clone.Card = this.Card;
-        clone.UnHighlight();
+        clone.HideHighlight();
         return clone;
     }
 
@@ -105,7 +104,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
         CardModel cardModel = this;
         if (DoesCloneOnDrag) {
-            DraggedClones [eventData.pointerId] = Clone(Canvas.transform);
+            DraggedClones [eventData.pointerId] = Clone(this.gameObject.FindInParents<Canvas>().transform);
             cardModel = DraggedClones [eventData.pointerId];
             cardModel.CanvasGroup.blocksRaycasts = false;
         }
@@ -236,7 +235,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public void ParentToCanvas()
     {
         CardStack prevParentStack = ParentCardStack;
-        this.transform.SetParent(Canvas.transform);
+        this.transform.SetParent(this.gameObject.FindInParents<Canvas>().transform);
         this.transform.SetAsLastSibling();
         if (prevParentStack != null)
             prevParentStack.OnRemove(this);
@@ -296,16 +295,16 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         EventSystem.current.SetSelectedGameObject(null, cardModel.RecentPointerEventData);
     }
 
-    public void Highlight()
+    public void ShowHighlight()
     {
-        Outline.effectColor = Color.green;
-        Outline.effectDistance = OutlineHighlightDistance;
+        Highlight.effectColor = Color.green;
+        Highlight.effectDistance = OutlineHighlightDistance;
     }
 
-    public void UnHighlight()
+    public void HideHighlight()
     {
-        Outline.effectColor = Color.black;
-        Outline.effectDistance = Vector2.zero;
+        Highlight.effectColor = Color.black;
+        Highlight.effectDistance = Vector2.zero;
     }
 
     public IEnumerator UpdateImage()
@@ -399,11 +398,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         }
     }
 
-    public Outline Outline {
+    public Outline Highlight {
         get {
-            if (_outline == null)
-                _outline = this.gameObject.GetOrAddComponent<Outline>();
-            return _outline;
+            if (_highlight == null)
+                _highlight = this.gameObject.GetOrAddComponent<Outline>();
+            return _highlight;
         }
     }
 
@@ -436,14 +435,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             if (_canvasGroup == null)
                 _canvasGroup = GetComponent<CanvasGroup>();
             return _canvasGroup;
-        }
-    }
-
-    public Canvas Canvas {
-        get {
-            if (_canvas == null)
-                _canvas = this.gameObject.FindInParents<Canvas>();
-            return _canvas;
         }
     }
 }
