@@ -46,20 +46,18 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public PointerEventData RecentPointerEventData { get; set; }
 
-    private Card _card;
+    private Card _value;
     private Dictionary<int, CardModel> _draggedClones;
     private CardStack _placeHolderCardStack;
     private RectTransform _placeHolder;
     private bool _isFacedown;
     private Outline _highlight;
     private Sprite _newSprite;
-    private Image _image;
-    private CanvasGroup _canvasGroup;
 
     public CardModel Clone(Transform parent)
     {
         CardModel clone = Instantiate(this.gameObject, this.transform.position, this.transform.rotation, parent).GetOrAddComponent<CardModel>();
-        clone.Card = this.Card;
+        clone.Value = this.Value;
         clone.HideHighlight();
         return clone;
     }
@@ -106,7 +104,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         if (DoesCloneOnDrag) {
             DraggedClones [eventData.pointerId] = Clone(this.gameObject.FindInParents<Canvas>().transform);
             cardModel = DraggedClones [eventData.pointerId];
-            cardModel.CanvasGroup.blocksRaycasts = false;
+            cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
         
         if (cardModel.PrimaryDragId == 0 && eventData.button != PointerEventData.InputButton.Right) {
@@ -239,7 +237,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         this.transform.SetAsLastSibling();
         if (prevParentStack != null)
             prevParentStack.OnRemove(this);
-        CanvasGroup.blocksRaycasts = false;
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 
     public IEnumerator MoveToPlaceHolder()
@@ -261,7 +259,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         if (ParentCardStack != null)
             ParentCardStack.OnAdd(this);
         PlaceHolder = null;
-        CanvasGroup.blocksRaycasts = true;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
 
     public void Rotate(Vector2 primaryPosition, Vector2 secondaryPosition)
@@ -310,11 +308,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public IEnumerator UpdateImage()
     {
         Sprite newSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(Card.ImageFilePath, Card.ImageWebURL), output => newSprite = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(Value.ImageFilePath, Value.ImageWebURL), output => newSprite = output);
         if (newSprite != null)
             NewSprite = newSprite;
         else
-            Image.sprite = CardGameManager.Current.CardBackImageSprite;
+            GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
     }
 
     void OnDestroy()
@@ -329,17 +327,17 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         NewSprite = null;
     }
 
-    public Card Card {
+    public Card Value {
         get {
-            if (_card == null)
-                _card = Card.Blank;
-            return _card;
+            if (_value == null)
+                _value = Card.Blank;
+            return _value;
         }
         set {
-            _card = value;
-            if (_card == null)
-                _card = Card.Blank;
-            this.gameObject.name = _card.Name + " [" + _card.Id + "]";
+            _value = value;
+            if (_value == null)
+                _value = Card.Blank;
+            this.gameObject.name = _value.Name + " [" + _value.Id + "]";
             StartCoroutine(UpdateImage());
         }
     }
@@ -392,9 +390,9 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         set {
             _isFacedown = value;
             if (_isFacedown)
-                Image.sprite = CardGameManager.Current.CardBackImageSprite;
+                GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
             else if (NewSprite != null)
-                Image.sprite = NewSprite;
+                GetComponent<Image>().sprite = NewSprite;
         }
     }
 
@@ -417,24 +415,9 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             }
             _newSprite = value;
             if (_newSprite != null && !IsFacedown)
-                Image.sprite = _newSprite;
-            Image.alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
-        }
-    }
-
-    public Image Image {
-        get {
-            if (_image == null)
-                _image = GetComponent<Image>();
-            return _image;
-        }
-    }
-
-    public CanvasGroup CanvasGroup {
-        get {
-            if (_canvasGroup == null)
-                _canvasGroup = GetComponent<CanvasGroup>();
-            return _canvasGroup;
+                GetComponent<Image>().sprite = _newSprite;
+            // TODO: FIX THIS; WILL SOMETIMES CLICK ON A NONTRANSPARENT PORTION OF A TRANSPARENT IMAGE, AND THE CLICK DOES NOT REGISTER
+            GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         }
     }
 }

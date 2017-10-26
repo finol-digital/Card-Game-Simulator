@@ -48,7 +48,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         contentText.text = string.Empty;
         if (SelectedCardModel != null)
-            contentText.text = SelectedCardModel.Card.GetPropertyValueString(SelectedPropertyName);
+            contentText.text = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -152,9 +152,9 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 IsVisible = false;
                 return;
             }
-            cardImage.sprite = _selectedCardModel.Image.sprite;
-            nameText.text = value.Card.Name;
-            idText.text = value.Card.Id;
+            cardImage.sprite = _selectedCardModel.GetComponent<Image>().sprite;
+            nameText.text = value.Value.Name;
+            idText.text = value.Value.Id;
             SetContentText();
 
             IsVisible = true;

@@ -83,7 +83,7 @@ public class SearchResults : MonoBehaviour
                 continue;
             Card cardToShow = CardGameManager.Current.Cards [cardId];
             CardModel cardModelToShow = Instantiate(deckEditor.cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
-            cardModelToShow.Card = cardToShow;
+            cardModelToShow.Value = cardToShow;
             cardModelToShow.DoesCloneOnDrag = true;
             cardModelToShow.DoubleClickEvent = new OnDoubleClickDelegate(deckEditor.AddCardModel);
         }

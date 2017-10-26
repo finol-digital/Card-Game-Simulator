@@ -5,49 +5,60 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CardStack))]
-public class DeckZone : MonoBehaviour
+public class DeckZone : ExtensibleCardZone
 {
-    public GameObject cardPrefab;
+    public CardStack DeckCardStack { get; private set; }
+
+    public CardStack ExtensionCardStack { get; private set; }
 
     private List<Card> _cards;
 
-    void Start()
+    public override void OnStart()
     {
-        GetComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
-        GetComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
-        GetComponent<CardStack>().OnRemoveCardActions.Add(OnRemoveCardModel);
+        DeckCardStack = GetComponent<CardStack>();
+        ExtensionCardStack = extensionContent.GetComponent<CardStack>();
+
+        DeckCardStack.OnAddCardActions.Add(CardModel.ResetRotation);
+        DeckCardStack.OnAddCardActions.Add(OnAddCardModel);
+        DeckCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
+
+        ExtensionCardStack.OnAddCardActions.Remove(CardModel.ShowCard);
+        ExtensionCardStack.OnAddCardActions.Add(OnAddCardModel);
+        ExtensionCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
     }
 
-    public void OnAddCardModel(CardStack unused, CardModel cardModel)
+    public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
     {
-        if (cardModel == null)
+        if (cardStack == null || cardModel == null)
             return;
 
-        cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
-        cardModel.SecondaryDragAction = Shuffle;
-        Cards.Add(cardModel.Card);
-    }
-
-    public void OnRemoveCardModel(CardStack unused, CardModel cardModel)
-    {
-        if (cardModel == null)
-            return;
+        int cardIndex = Cards.Count;
+        if (cardStack == ExtensionCardStack)
+            cardIndex = cardModel.transform.GetSiblingIndex();
         
-        if (Cards.Contains(cardModel.Card))
-            Cards.RemoveAt(Cards.LastIndexOf(cardModel.Card));
+        cardModel.DoubleClickEvent = ToggleDeckExtension;
+        cardModel.SecondaryDragAction = Shuffle;
+
+        Cards.Insert(cardIndex, cardModel.Value);
     }
 
-    public void Display()
+    public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
-        this.transform.DestroyAllChildren();
+        if (cardStack == null || cardModel == null)
+            return;
 
-        foreach (Card card in Cards) {
-            CardModel newCard = Instantiate(cardPrefab, this.transform).GetOrAddComponent<CardModel>();
-            newCard.Card = card;
-            newCard.IsFacedown = true;
-            newCard.DoubleClickEvent = CardModel.ToggleFacedown;
-            newCard.SecondaryDragAction = Shuffle;
-        }
+        int cardIndex = Cards.Count - 1;
+        if (cardStack == ExtensionCardStack)
+            cardIndex = cardModel.transform.GetSiblingIndex();
+        
+        if (Cards.Contains(cardModel.Value))
+            Cards.RemoveAt(cardIndex);
+    }
+
+    public void ToggleDeckExtension(CardModel cardModel)
+    {
+        ToggleExtension();
+        Display();
     }
 
     public void Shuffle(Vector2 unused, Vector2 unused2)
@@ -59,6 +70,24 @@ public class DeckZone : MonoBehaviour
     {
         Cards.Shuffle();
         Display();
+    }
+
+    public void Display()
+    {
+        DeckCardStack.transform.DestroyAllChildren();
+        ExtensionCardStack.transform.DestroyAllChildren();
+
+        Transform parent = DeckCardStack.transform;
+        if (IsExtended)
+            parent = ExtensionCardStack.transform;
+        
+        foreach (Card card in Cards) {
+            CardModel newCard = Instantiate(cardPrefab, parent).GetOrAddComponent<CardModel>();
+            newCard.Value = card;
+            newCard.IsFacedown = !IsExtended;
+            newCard.DoubleClickEvent = ToggleDeckExtension;
+            newCard.SecondaryDragAction = Shuffle;
+        }
     }
 
     public List<Card> Cards {

@@ -24,7 +24,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             Deck deck = new Deck(nameText.text.Replace("*", ""), CardGameManager.Current.DeckFileType);
             foreach (CardStack stack in CardStacks)
                 foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
-                    deck.Cards.Add(card.Card);
+                    deck.Cards.Add(card.Value);
             return deck;
         }
     }
@@ -98,7 +98,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         
         EventSystem.current.SetSelectedGameObject(null, cardModelToAdd.RecentPointerEventData);
 
-        AddCard(cardModelToAdd.Card);
+        AddCard(cardModelToAdd.Value);
     }
 
     public void AddCard(Card cardToAdd)
@@ -111,7 +111,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         while (!added) {
             if (CardStacks [RecentCardStackIndex].transform.childCount < maxCopiesInStack) {
                 CardModel newCardModel = Instantiate(cardModelPrefab, CardStacks [RecentCardStackIndex].transform).GetOrAddComponent<CardModel>();
-                newCardModel.Card = cardToAdd;
+                newCardModel.Value = cardToAdd;
                 newCardModel.DoubleClickEvent = DestroyCardModel;
                 added = true;
             } else {

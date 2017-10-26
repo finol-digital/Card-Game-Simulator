@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(CardDropZone))]
 public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
     public GameObject cardPrefab;
+    public List<CardDropZone> cardDropZones;
     public RectTransform extension;
-    public RectTransform content;
+    public RectTransform extensionContent;
     public Text labelText;
     public Text countText;
 
@@ -17,24 +17,23 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     void Start()
     {
-        content.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
-        content.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
-        GetComponent<CardDropZone>().dropHandler = this;
-        extension.gameObject.GetOrAddComponent<CardDropZone>().dropHandler = this;
+        foreach (CardDropZone dropZone in cardDropZones)
+            dropZone.dropHandler = this;
+        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
+        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
+        OnStart();
     }
 
-    public void AddCard(Card card)
+    public virtual void OnStart()
     {
-        CardModel newCardModel = Instantiate(cardPrefab, content).GetOrAddComponent<CardModel>();
-        newCardModel.Card = card;
+    }
+
+    public virtual void AddCard(Card card)
+    {
+        CardModel newCardModel = Instantiate(cardPrefab, extensionContent).GetOrAddComponent<CardModel>();
+        newCardModel.Value = card;
         newCardModel.DoubleClickEvent = CardModel.ToggleFacedown;
         newCardModel.SecondaryDragAction = null;
-        newCardModel.CanvasGroup.blocksRaycasts = true;
-    }
-
-    void Update()
-    {
-        countText.text = content.childCount.ToString();
     }
 
     public void ToggleExtension()
@@ -42,5 +41,11 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         IsExtended = !IsExtended;
         extension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
         extension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
+    }
+
+    void Update()
+    {
+        if (countText != null)
+            countText.text = extensionContent.childCount.ToString();
     }
 }

@@ -24,7 +24,7 @@ public class CardDropZone : MonoBehaviour, IDropHandler
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
             if (cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
-                dropHandler.AddCard(cardModel.Card);
+                dropHandler.AddCard(cardModel.Value);
         }
     }
 
