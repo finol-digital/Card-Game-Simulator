@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public interface ICardDropHandler
 {
-    void AddCard(Card card);
+    void OnDrop(CardModel cardModel);
 }
 
 public class CardDropZone : MonoBehaviour, IDropHandler
@@ -24,7 +24,7 @@ public class CardDropZone : MonoBehaviour, IDropHandler
             if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
                 cardModel = draggedCardModel;
             if (cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
-                dropHandler.AddCard(cardModel.Value);
+                dropHandler.OnDrop(cardModel);
         }
     }
 

@@ -65,7 +65,7 @@ public class PlayMode : MonoBehaviour
 
     public void Deal(int cardCount)
     {
-        for (int i = 0; deckZone.CardModels.Count > 0 && i < cardCount; i++)
+        for (int i = 0; deckZone.Count > 0 && i < cardCount; i++)
             handZone.AddCard(deckZone.PopCard());
     }
 

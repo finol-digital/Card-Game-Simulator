@@ -254,8 +254,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         }
 
         this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
+        CardStack prevParentStack = ParentCardStack;
         this.transform.SetParent(PlaceHolder.parent);
         this.transform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
+        if (prevParentStack != null)
+            prevParentStack.OnRemove(this);
         if (ParentCardStack != null)
             ParentCardStack.OnAdd(this);
         PlaceHolder = null;

@@ -29,6 +29,11 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
     }
 
+    public virtual void OnDrop(CardModel cardModel)
+    {
+        AddCard(cardModel.Value);
+    }
+
     public virtual void AddCard(Card card)
     {
         CardModel newCardModel = Instantiate(cardPrefab, extensionContent).GetOrAddComponent<CardModel>();
@@ -37,10 +42,11 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         newCardModel.SecondaryDragAction = null;
     }
 
-    public void ToggleExtension()
+    public virtual void ToggleExtension()
     {
         IsExtended = !IsExtended;
 
+        // TODO: SET CORRECT WIDTH
         //float width = ((RectTransform)this.transform).rect.width;
         //extension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, ZonesViewer.TotalWidth - (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth), width - ZonesViewer.TotalWidth + (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth));
 
