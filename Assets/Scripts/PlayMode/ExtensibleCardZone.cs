@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
     public GameObject cardPrefab;
+    public ZonesViewer zonesViewer;
     public List<CardDropZone> cardDropZones;
     public RectTransform extension;
     public RectTransform extensionContent;
@@ -39,13 +40,21 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     public void ToggleExtension()
     {
         IsExtended = !IsExtended;
+
+        //float width = ((RectTransform)this.transform).rect.width;
+        //extension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, ZonesViewer.TotalWidth - (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth), width - ZonesViewer.TotalWidth + (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth));
+
         extension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
         extension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
     }
 
     void Update()
     {
-        if (countText != null)
-            countText.text = extensionContent.childCount.ToString();
+        UpdateCountText();
+    }
+
+    public virtual void UpdateCountText()
+    {
+        countText.text = extensionContent.childCount.ToString();
     }
 }

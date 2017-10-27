@@ -5,13 +5,15 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CardStack))]
-public class DeckZone : ExtensibleCardZone
+public class StackedZone : ExtensibleCardZone
 {
+    public bool isFaceup;
+
     public CardStack DeckCardStack { get; private set; }
 
     public CardStack ExtensionCardStack { get; private set; }
 
-    private List<Card> _cards;
+    private List<CardModel> _cardModels;
 
     public override void OnStart()
     {
@@ -27,19 +29,41 @@ public class DeckZone : ExtensibleCardZone
         ExtensionCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
     }
 
+    public override void AddCard(Card card)
+    {
+        CardModel newCardModel = Instantiate(cardPrefab, IsExtended ? ExtensionCardStack.transform : DeckCardStack.transform).GetOrAddComponent<CardModel>();
+        newCardModel.Value = card;
+        newCardModel.IsFacedown = !isFaceup;
+        newCardModel.DoubleClickEvent = ToggleDeckExtension;
+        newCardModel.SecondaryDragAction = Shuffle;
+        CardModels.Add(newCardModel);
+    }
+
+    public Card PopCard()
+    {
+        if (CardModels.Count < 1)
+            return Card.Blank;
+
+        CardModel cardModel = CardModels [CardModels.Count - 1];
+        Card card = cardModel.Value;
+        CardModels.RemoveAt(CardModels.Count - 1);
+        Destroy(cardModel.gameObject);
+        return card;
+    }
+
     public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
     {
         if (cardStack == null || cardModel == null)
             return;
 
-        int cardIndex = Cards.Count;
+        int cardIndex = CardModels.Count;
         if (cardStack == ExtensionCardStack)
             cardIndex = cardModel.transform.GetSiblingIndex();
         
         cardModel.DoubleClickEvent = ToggleDeckExtension;
         cardModel.SecondaryDragAction = Shuffle;
 
-        Cards.Insert(cardIndex, cardModel.Value);
+        CardModels.Insert(cardIndex, cardModel);
     }
 
     public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
@@ -47,12 +71,12 @@ public class DeckZone : ExtensibleCardZone
         if (cardStack == null || cardModel == null)
             return;
 
-        int cardIndex = Cards.Count - 1;
+        int cardIndex = CardModels.Count - 1;
         if (cardStack == ExtensionCardStack)
             cardIndex = cardModel.transform.GetSiblingIndex();
         
-        if (Cards.Contains(cardModel.Value))
-            Cards.RemoveAt(cardIndex);
+        if (CardModels.Contains(cardModel))
+            CardModels.RemoveAt(cardIndex);
     }
 
     public void ToggleDeckExtension(CardModel cardModel)
@@ -68,37 +92,37 @@ public class DeckZone : ExtensibleCardZone
 
     public void Shuffle()
     {
-        Cards.Shuffle();
+        CardModels.Shuffle();
         Display();
     }
 
     public void Display()
     {
-        DeckCardStack.transform.DestroyAllChildren();
-        ExtensionCardStack.transform.DestroyAllChildren();
-
         Transform parent = DeckCardStack.transform;
         if (IsExtended)
             parent = ExtensionCardStack.transform;
         
-        foreach (Card card in Cards) {
-            CardModel newCard = Instantiate(cardPrefab, parent).GetOrAddComponent<CardModel>();
-            newCard.Value = card;
-            newCard.IsFacedown = !IsExtended;
-            newCard.DoubleClickEvent = ToggleDeckExtension;
-            newCard.SecondaryDragAction = Shuffle;
+        foreach (CardModel cardModel in CardModels) {
+            cardModel.transform.SetParent(parent);
+            cardModel.IsFacedown = !IsExtended && !isFaceup;
+            if (!IsExtended) {
+                ((RectTransform)cardModel.transform).anchorMin = new Vector2(0.5f, 0.5f);
+                ((RectTransform)cardModel.transform).anchorMax = new Vector2(0.5f, 0.5f);
+                ((RectTransform)cardModel.transform).anchoredPosition = Vector2.zero;
+            }
         }
     }
 
-    public List<Card> Cards {
+    public override void UpdateCountText()
+    {
+        countText.text = CardModels.Count.ToString();
+    }
+
+    public List<CardModel> CardModels {
         get {
-            if (_cards == null)
-                _cards = new List<Card>();
-            return _cards;
-        }
-        set {
-            _cards = new List<Card>(value);
-            Display();
+            if (_cardModels == null)
+                _cardModels = new List<CardModel>();
+            return _cardModels;
         }
     }
 }

@@ -12,7 +12,8 @@ public class PlayMode : MonoBehaviour
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
     public ExtensibleCardZone extraZone;
-    public DeckZone deckZone;
+    public StackedZone discardZone;
+    public StackedZone deckZone;
     public ExtensibleCardZone handZone;
 
     private DeckLoadMenu _deckLoader;
@@ -54,8 +55,9 @@ public class PlayMode : MonoBehaviour
             // TODO: ALLOW MULTIPLE CARD GROUPS
         }
 
-        deckZone.Cards = newDeck.Cards;
-        deckZone.Cards.RemoveAll(card => extraCards.Contains(card));
+        foreach (Card card in newDeck.Cards)
+            if (!extraCards.Contains(card))
+                deckZone.AddCard(card);
         deckZone.Shuffle();
 
         Deal(CardGameManager.Current.HandStartSize);
@@ -63,15 +65,8 @@ public class PlayMode : MonoBehaviour
 
     public void Deal(int cardCount)
     {
-        List<Card> handCards = new List<Card>();
-        for (int i = 0; deckZone.Cards.Count > 0 && i < cardCount; i++) {
-            handCards.Add(deckZone.Cards.Last());
-            deckZone.Cards.RemoveAt(deckZone.Cards.Count - 1);
-        }
-        foreach (Card card in handCards)
-            handZone.AddCard(card);
-
-        deckZone.Display();
+        for (int i = 0; deckZone.CardModels.Count > 0 && i < cardCount; i++)
+            handZone.AddCard(deckZone.PopCard());
     }
 
     public void ShowCardSearcher()
@@ -95,7 +90,7 @@ public class PlayMode : MonoBehaviour
 
     public void PromptBackToMainMenu()
     {
-        CardGameManager.Instance.Popup.Ask(MainMenuPrompt, null, BackToMainMenu);
+        CardGameManager.Instance.Popup.Prompt(MainMenuPrompt, BackToMainMenu);
     }
 
     public void BackToMainMenu()
