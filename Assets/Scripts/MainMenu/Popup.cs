@@ -39,7 +39,8 @@ public class Popup : MonoBehaviour
         Prompt(message, yesAction);
         noButton.gameObject.SetActive(true);
         noButton.onClick.RemoveAllListeners();
-        noButton.onClick.AddListener(noAction);
+        if (noAction != null)
+            noButton.onClick.AddListener(noAction);
         noButton.onClick.AddListener(Close);
     }
 

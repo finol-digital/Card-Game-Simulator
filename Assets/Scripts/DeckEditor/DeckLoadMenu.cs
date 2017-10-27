@@ -181,7 +181,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void PromptForSave()
     {
-        CardGameManager.Instance.Popup.Prompt(SavePrompt, DoSaveNoOverwrite);
+        CardGameManager.Instance.Popup.Ask(SavePrompt, null, DoSaveNoOverwrite);
     }
 
     public void DoSaveNoOverwrite()
@@ -196,7 +196,7 @@ public class DeckLoadMenu : MonoBehaviour
     public IEnumerator WaitToPromptOverwrite()
     {
         yield return new WaitForSeconds(0.1f);
-        CardGameManager.Instance.Popup.Prompt(DeckSaveMenu.OverWriteDeckPrompt, DoSave);
+        CardGameManager.Instance.Popup.Ask(DeckSaveMenu.OverWriteDeckPrompt, null, DoSave);
     }
 
     public void DoSave()

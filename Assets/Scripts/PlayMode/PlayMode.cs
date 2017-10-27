@@ -6,6 +6,8 @@ using System.Linq;
 
 public class PlayMode : MonoBehaviour
 {
+    public const string MainMenuPrompt = "Go back to the main menu?";
+
     public RectTransform playArea;
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
@@ -89,6 +91,11 @@ public class PlayMode : MonoBehaviour
     {
         cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
         cardModel.SecondaryDragAction = cardModel.Rotate;
+    }
+
+    public void PromptBackToMainMenu()
+    {
+        CardGameManager.Instance.Popup.Ask(MainMenuPrompt, null, BackToMainMenu);
     }
 
     public void BackToMainMenu()
