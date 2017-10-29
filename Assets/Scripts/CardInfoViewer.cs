@@ -7,21 +7,21 @@ using UnityEngine.EventSystems;
 
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
-    public const string GameObjectTag = "CardInfoViewer";
+    public const string CardInfoViewerTag = "CardInfoViewer";
     public const float VisibleYMin = 0.625f;
     public const float VisibleYMax = 1;
     public const float HiddenYmin = 1.025f;
     public const float HiddenYMax = 1.4f;
+    public const float AnimationSpeed = 5.0f;
 
-    public GameObject cardZoomPrefab;
-    public RectTransform backgroundPanel;
+    public RectTransform infoPanel;
+    public RectTransform zoomPanel;
     public Image cardImage;
     public Text nameText;
     public Text idText;
     public Dropdown propertySelection;
     public Text labelText;
     public Text contentText;
-    public float animationSpeed = 5.0f;
 
     private static CardInfoViewer _instance;
 
@@ -69,8 +69,13 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void ShowCardZoomed()
     {
-        CardZoomPanel.gameObject.SetActive(true);
-        CardZoomPanel.GetChild(0).GetComponent<Image>().sprite = cardImage.sprite;
+        zoomPanel.gameObject.SetActive(true);
+        zoomPanel.GetChild(0).GetComponent<Image>().sprite = cardImage.sprite;
+    }
+
+    public void HideCardZoomed()
+    {
+        zoomPanel.gameObject.SetActive(false);
     }
 
     void Update()
@@ -78,32 +83,22 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         if (SelectedCardModel == null)
             IsVisible = false;
         
-        backgroundPanel.anchorMin = IsVisible ? 
-            new Vector2(backgroundPanel.anchorMin.x, Mathf.Lerp(backgroundPanel.anchorMin.y, VisibleYMin, animationSpeed * Time.deltaTime)) :
-            new Vector2(backgroundPanel.anchorMin.x, Mathf.Lerp(backgroundPanel.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
-        backgroundPanel.anchorMax = IsVisible ? 
-            new Vector2(backgroundPanel.anchorMax.x, Mathf.Lerp(backgroundPanel.anchorMax.y, VisibleYMax, animationSpeed * Time.deltaTime)) :
-            new Vector2(backgroundPanel.anchorMax.x, Mathf.Lerp(backgroundPanel.anchorMax.y, HiddenYMax, animationSpeed * Time.deltaTime));
+        infoPanel.anchorMin = IsVisible ? 
+            new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, VisibleYMin, AnimationSpeed * Time.deltaTime)) :
+            new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, HiddenYmin, AnimationSpeed * Time.deltaTime));
+        infoPanel.anchorMax = IsVisible ? 
+            new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, VisibleYMax, AnimationSpeed * Time.deltaTime)) :
+            new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, HiddenYMax, AnimationSpeed * Time.deltaTime));
     }
 
     public static CardInfoViewer Instance {
         get {
             if (_instance == null) {
-                GameObject cardInfoViwer = GameObject.FindWithTag(GameObjectTag);
-                if (cardInfoViwer != null)
-                    _instance = cardInfoViwer.GetOrAddComponent<CardInfoViewer>();
+                GameObject cardInfoViewer = GameObject.FindWithTag(CardInfoViewerTag);
+                if (cardInfoViewer != null)
+                    _instance = cardInfoViewer.GetOrAddComponent<CardInfoViewer>();
             }
             return _instance;
-        }
-    }
-
-    public RectTransform CardZoomPanel {
-        get {
-            if (_cardZoomPanel == null) {
-                _cardZoomPanel = Instantiate(cardZoomPrefab).transform as RectTransform;
-                _cardZoomPanel.gameObject.SetActive(false);
-            }
-            return _cardZoomPanel;
         }
     }
 
@@ -168,7 +163,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         set {
             _isVisible = value;
             if (!_isVisible)
-                CardZoomPanel.gameObject.SetActive(false);
+                zoomPanel.gameObject.SetActive(false);
             if (SelectedCardModel != null) {
                 if (_isVisible)
                     SelectedCardModel.ShowHighlight();

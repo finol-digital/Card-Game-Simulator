@@ -45,13 +45,15 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     public virtual void ToggleExtension()
     {
         IsExtended = !IsExtended;
-
-        // TODO: SET CORRECT WIDTH
-        //float width = ((RectTransform)this.transform).rect.width;
-        //extension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, ZonesViewer.TotalWidth - (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth), width - ZonesViewer.TotalWidth + (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth));
-
+        RedetermineWidth();
         extension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
         extension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
+    }
+
+    public void RedetermineWidth()
+    {
+        float width = ((RectTransform)this.transform.GetComponentInParent<Canvas>().transform).rect.width - ZonesViewer.TotalWidth + (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth);
+        extension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, ZonesViewer.HiddenWidth, width);
     }
 
     void Update()

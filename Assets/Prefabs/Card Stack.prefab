@@ -44,7 +44,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   scrollRectContainer: {fileID: 0}
-  isFree: 0
 --- !u!114 &114352584284230584
 MonoBehaviour:
   m_ObjectHideFlags: 1

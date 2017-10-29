@@ -1847,6 +1847,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2655ea0c592824b4fa58764634469684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zones:
+  - {fileID: 114690046462756858}
+  - {fileID: 114086065792413648}
+  - {fileID: 114975581981063688}
+  - {fileID: 114078270519855014}
 --- !u!114 &114617697832289760
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2847,7 +2852,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 40
   m_TargetDisplay: 0
 --- !u!223 &223137543357449584
 Canvas:
@@ -2867,7 +2872,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 30
   m_TargetDisplay: 0
 --- !u!223 &223505583319993256
 Canvas:
@@ -2887,7 +2892,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 20
   m_TargetDisplay: 0
 --- !u!223 &223717411361424956
 Canvas:
@@ -2907,7 +2912,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!224 &224001005160637454
 RectTransform:

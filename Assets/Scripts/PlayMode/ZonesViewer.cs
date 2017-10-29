@@ -8,6 +8,8 @@ public class ZonesViewer : MonoBehaviour
     public const float TotalWidth = 350f;
     public const float HeightCheck = 1300f;
 
+    public List<ExtensibleCardZone> zones;
+
     private bool _isVisible;
 
     void Start()
@@ -30,6 +32,8 @@ public class ZonesViewer : MonoBehaviour
         set {
             _isVisible = value;
             ((RectTransform)this.transform).SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, _isVisible ? 0 : -HiddenWidth, TotalWidth);
+            foreach (ExtensibleCardZone zone in zones)
+                zone.RedetermineWidth();
         }
     }
 

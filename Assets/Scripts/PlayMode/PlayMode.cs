@@ -8,9 +8,9 @@ public class PlayMode : MonoBehaviour
 {
     public const string MainMenuPrompt = "Go back to the main menu?";
 
-    public RectTransform playArea;
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
+    public RectTransform playArea;
     public ExtensibleCardZone extraZone;
     public StackedZone discardZone;
     public StackedZone deckZone;
