@@ -4,11 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - CardInfo
-  - Background
-  - Canvas
-  - GameSelection
   - CardGameManager
+  - Background
+  - CardInfoViewer
+  - GameSelection
   layers:
   - Default
   - TransparentFX

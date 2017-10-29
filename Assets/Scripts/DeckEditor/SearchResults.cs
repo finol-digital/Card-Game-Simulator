@@ -101,16 +101,10 @@ public class SearchResults : MonoBehaviour
         AllResults = results;
     }
 
-    void OnDisable()
-    {
-        if (CardGameManager.HasInstance)
-            CardGameManager.Instance.OnSelectActions.Remove(CardSearcher.ClearSearch);
-    }
-
     public CardSearchMenu CardSearcher {
         get {
             if (_cardSearcher == null)
-                _cardSearcher = Instantiate(cardSearchMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardSearchMenu>();
+                _cardSearcher = Instantiate(cardSearchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
             return _cardSearcher;
         }
     }

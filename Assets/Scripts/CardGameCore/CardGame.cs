@@ -127,7 +127,7 @@ public class CardGame
     private bool _isLoaded;
     private string _error;
 
-    public CardGame(string name, string url)
+    public CardGame(string name = Set.DefaultCode, string url = "")
     {
         Name = name ?? Set.DefaultCode;
         AutoUpdateURL = url ?? string.Empty;

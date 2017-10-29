@@ -7,13 +7,14 @@ using UnityEngine.EventSystems;
 
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
-    public const string GameObjectTag = "CardInfo";
+    public const string GameObjectTag = "CardInfoViewer";
     public const float VisibleYMin = 0.625f;
     public const float VisibleYMax = 1;
     public const float HiddenYmin = 1.025f;
     public const float HiddenYMax = 1.4f;
 
     public GameObject cardZoomPrefab;
+    public RectTransform backgroundPanel;
     public Image cardImage;
     public Text nameText;
     public Text idText;
@@ -76,14 +77,13 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         if (SelectedCardModel == null)
             IsVisible = false;
-
-        RectTransform rectTransform = this.transform as RectTransform;
-        rectTransform.anchorMin = IsVisible ? 
-            new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, VisibleYMin, animationSpeed * Time.deltaTime)) :
-            new Vector2(rectTransform.anchorMin.x, Mathf.Lerp(rectTransform.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
-        rectTransform.anchorMax = IsVisible ? 
-            new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, VisibleYMax, animationSpeed * Time.deltaTime)) :
-            new Vector2(rectTransform.anchorMax.x, Mathf.Lerp(rectTransform.anchorMax.y, HiddenYMax, animationSpeed * Time.deltaTime));
+        
+        backgroundPanel.anchorMin = IsVisible ? 
+            new Vector2(backgroundPanel.anchorMin.x, Mathf.Lerp(backgroundPanel.anchorMin.y, VisibleYMin, animationSpeed * Time.deltaTime)) :
+            new Vector2(backgroundPanel.anchorMin.x, Mathf.Lerp(backgroundPanel.anchorMin.y, HiddenYmin, animationSpeed * Time.deltaTime));
+        backgroundPanel.anchorMax = IsVisible ? 
+            new Vector2(backgroundPanel.anchorMax.x, Mathf.Lerp(backgroundPanel.anchorMax.y, VisibleYMax, animationSpeed * Time.deltaTime)) :
+            new Vector2(backgroundPanel.anchorMax.x, Mathf.Lerp(backgroundPanel.anchorMax.y, HiddenYMax, animationSpeed * Time.deltaTime));
     }
 
     public static CardInfoViewer Instance {
@@ -100,7 +100,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public RectTransform CardZoomPanel {
         get {
             if (_cardZoomPanel == null) {
-                _cardZoomPanel = Instantiate(cardZoomPrefab, this.gameObject.FindInParents<Canvas>().transform).transform as RectTransform;
+                _cardZoomPanel = Instantiate(cardZoomPrefab).transform as RectTransform;
                 _cardZoomPanel.gameObject.SetActive(false);
             }
             return _cardZoomPanel;

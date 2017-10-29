@@ -98,16 +98,10 @@ public class PlayMode : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    void OnDisable()
-    {
-        if (CardGameManager.HasInstance)
-            CardGameManager.Instance.OnSelectActions.Remove(ShowDeckLoader);
-    }
-
     public DeckLoadMenu DeckLoader {
         get {
             if (_deckLoader == null)
-                _deckLoader = Instantiate(deckLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckLoadMenu>();
+                _deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
             return _deckLoader;
         }
     }
@@ -115,7 +109,7 @@ public class PlayMode : MonoBehaviour
     public CardSearchMenu CardSearcher {
         get {
             if (_cardSearcher == null)
-                _cardSearcher = Instantiate(searchMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardSearchMenu>();
+                _cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
             return _cardSearcher;
         }
     }

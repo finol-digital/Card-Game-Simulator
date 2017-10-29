@@ -12,10 +12,9 @@ public delegate void CardGameSelectedDelegate();
 
 public class CardGameManager : MonoBehaviour
 {
+    public const string CardGameManagerTag = "CardGameManager";
     public const string GameSelectionTag = "GameSelection";
     public const string BackgroundImageTag = "Background";
-    public const string MainCanvasTag = "Canvas";
-    public const string CardGameManagerTag = "CardGameManager";
     public const string PopupPrefabName = "Popup";
     public const string PlayerPrefGameName = "DefaultGame";
     public const string FirstGameName = "Standard";
@@ -28,6 +27,7 @@ public class CardGameManager : MonoBehaviour
     public string CurrentGameName { get; set; }
 
     private static CardGameManager _instance;
+    private static bool _isQuitting;
 
     private Dictionary<string, CardGame> _allCardGames;
     private Dropdown _gameSelection;
@@ -59,11 +59,17 @@ public class CardGameManager : MonoBehaviour
         }
 
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         ResetGameSelection();
+    }
+
+    void OnSceneUnloaded(Scene scene)
+    {
+        OnSelectActions.Clear();
     }
 
     public void ResetGameSelection()
@@ -129,6 +135,9 @@ public class CardGameManager : MonoBehaviour
         if (CardInfoViewer.Instance != null)
             CardInfoViewer.Instance.ResetPropertyOptions();
 
+        for (int i = OnSelectActions.Count - 1; i >= 0; i--)
+            if (OnSelectActions [i] == null)
+                OnSelectActions.RemoveAt(i);
         foreach (CardGameSelectedDelegate action in OnSelectActions)
             action();
     }
@@ -138,8 +147,16 @@ public class CardGameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    void OnApplicationQuit()
+    {
+        CardGameManager._isQuitting = true;
+    }
+
     public static CardGameManager Instance {
         get {
+            if (_isQuitting)
+                return null;
+            
             if (_instance == null) {
                 GameObject cardGameManager = GameObject.FindGameObjectWithTag(CardGameManagerTag);
                 if (cardGameManager == null) {
@@ -153,15 +170,11 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public static bool HasInstance {
-        get { return _instance != null; }
-    }
-
     public static CardGame Current {
         get {
             CardGame currentGame;
             if (!Instance.AllCardGames.TryGetValue(Instance.CurrentGameName, out currentGame))
-                return new CardGame(string.Empty, string.Empty);
+                return new CardGame();
             return currentGame;
         }
     }
@@ -212,7 +225,7 @@ public class CardGameManager : MonoBehaviour
     public Popup Popup {
         get {
             if (_popup == null)
-                _popup = Instantiate(Resources.Load<GameObject>(PopupPrefabName), GameObject.FindGameObjectWithTag(MainCanvasTag).transform).GetOrAddComponent<Popup>();
+                _popup = Instantiate(Resources.Load<GameObject>(PopupPrefabName)).GetOrAddComponent<Popup>();
             return _popup;
         }
     }

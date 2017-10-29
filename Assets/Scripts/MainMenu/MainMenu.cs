@@ -58,7 +58,7 @@ public class MainMenu : MonoBehaviour
     public GameLoadMenu GameLoader {
         get {
             if (_gameLoader == null)
-                _gameLoader = Instantiate(gameLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<GameLoadMenu>();
+                _gameLoader = Instantiate(gameLoadMenuPrefab).GetOrAddComponent<GameLoadMenu>();
             return _gameLoader;
         }
     }

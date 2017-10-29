@@ -236,12 +236,6 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         SceneManager.LoadScene(0);
     }
 
-    void OnDisable()
-    {
-        if (CardGameManager.HasInstance)
-            CardGameManager.Instance.OnSelectActions.Remove(ResetCardStacks);
-    }
-
     public List<CardStack> CardStacks {
         get {
             if (_cardStacks == null)
@@ -264,7 +258,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public DeckLoadMenu DeckLoader {
         get {
             if (_deckLoader == null)
-                _deckLoader = Instantiate(deckLoadMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckLoadMenu>();
+                _deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
             return _deckLoader;
         }
     }
@@ -272,7 +266,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public DeckSaveMenu DeckSaver {
         get {
             if (_deckSaver == null)
-                _deckSaver = Instantiate(deckSaveMenuPrefab, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<DeckSaveMenu>();
+                _deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>();
             return _deckSaver;
         }
     }
