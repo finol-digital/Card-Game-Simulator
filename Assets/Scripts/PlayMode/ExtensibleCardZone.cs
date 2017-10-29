@@ -20,8 +20,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
         foreach (CardDropZone dropZone in cardDropZones)
             dropZone.dropHandler = this;
-        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ShowCard);
-        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(CardModel.ResetRotation);
+        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
         OnStart();
     }
 
@@ -38,8 +37,18 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
         CardModel newCardModel = Instantiate(cardPrefab, extensionContent).GetOrAddComponent<CardModel>();
         newCardModel.Value = card;
-        newCardModel.DoubleClickEvent = CardModel.ToggleFacedown;
-        newCardModel.SecondaryDragAction = null;
+        OnAddCardModel(null, newCardModel);
+    }
+
+    public virtual void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+    {
+        if (cardModel == null)
+            return;
+
+        CardModel.ShowCard(cardStack, cardModel);
+        CardModel.ResetRotation(cardStack, cardModel);
+        cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
+        cardModel.SecondaryDragAction = null;
     }
 
     public virtual void ToggleExtension()

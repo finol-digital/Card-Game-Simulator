@@ -37,7 +37,7 @@ public class StackedZone : ExtensibleCardZone
         OnAddCardModel(IsExtended ? ExtensionCardStack : DeckCardStack, newCardModel);
     }
 
-    public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+    public override void OnAddCardModel(CardStack cardStack, CardModel cardModel)
     {
         if (cardStack == null || cardModel == null)
             return;

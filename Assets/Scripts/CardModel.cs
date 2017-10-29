@@ -65,7 +65,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public void OnPointerDown(PointerEventData eventData)
     {
         // HACK TO SELECT ON DOWN WHEN THE CARD INFO VIEWER IS VISIBLE; CAN'T USE CARDINFOVIEWER.ISVISIBLE SINCE IT IS SET TO FALSE WHEN POINTER DOWN, BEFORE THIS METHOD IS CALLED
-        DidSelectOnDown = eventData.button != PointerEventData.InputButton.Right && CardInfoViewer.Instance.SelectedCardModel != this && ((RectTransform)CardInfoViewer.Instance.transform).anchorMax.y < (CardInfoViewer.HiddenYMax + CardInfoViewer.VisibleYMax) / 2.0f;
+        DidSelectOnDown = eventData.button != PointerEventData.InputButton.Right && CardInfoViewer.Instance.SelectedCardModel != this && ((RectTransform)CardInfoViewer.Instance.infoPanel).anchorMax.y < (CardInfoViewer.HiddenYMax + CardInfoViewer.VisibleYMax) / 2.0f;
         if (DidSelectOnDown)
             EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
         
