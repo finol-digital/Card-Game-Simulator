@@ -12,7 +12,7 @@ Custom card games can be added by pressing the + button on the main menu:
 
 ![Main Menu Image](screenshots/mainmenu.png)
 
-In the resulting popup, type or paste the url that hosts the json for the custom game you would like to download:
+In the resulting popup, type or paste the url for the custom game you would like to download:
 
 ![Game Popup Image](screenshots/gamepopup.png)
 
