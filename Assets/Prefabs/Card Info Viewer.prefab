@@ -1181,7 +1181,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114790830591875498}
         m_MethodName: set_SelectedPropertyIndex
         m_Mode: 0
         m_Arguments:

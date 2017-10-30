@@ -106,13 +106,13 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             cardModel = DraggedClones [eventData.pointerId];
             cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
-        
+
         if (cardModel.PrimaryDragId == 0 && eventData.button != PointerEventData.InputButton.Right) {
             cardModel.PrimaryDragId = eventData.pointerId;
             cardModel.PrimaryDragOffset = (((Vector2)cardModel.transform.position) - eventData.position);
             cardModel.UpdatePosition(eventData.position, DragPhase.Begin);
         } else
-            SecondaryDragPosition = eventData.position;
+            cardModel.SecondaryDragPosition = eventData.position;
         
         EventSystem.current.SetSelectedGameObject(null, eventData);
     }
@@ -127,8 +127,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
         if (eventData.pointerId == cardModel.PrimaryDragId)
             cardModel.UpdatePosition(eventData.position, DragPhase.Drag);
-        else if (SecondaryDragAction != null)
-            SecondaryDragAction(((Vector2)this.transform.position) - cardModel.PrimaryDragOffset, eventData.position);
+        else if (cardModel.SecondaryDragAction != null)
+            cardModel.SecondaryDragAction(((Vector2)cardModel.transform.position) - cardModel.PrimaryDragOffset, eventData.position);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -191,9 +191,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             }
         }
 
-        if (cardStack.type == CardStackType.Full || cardStack.type == CardStackType.Area) {
+        if (cardStack.type == CardStackType.Full) {
             PlaceHolderCardStack = cardStack;
             ParentToCanvas();
+            this.transform.position = targetPosition;
+
+        }
+        if (cardStack.type == CardStackType.Area) {
+            PlaceHolderCardStack = cardStack;
             this.transform.position = targetPosition;
 
         } else if (cardStack.type == CardStackType.Vertical) {
