@@ -85,7 +85,7 @@ public class SearchResults : MonoBehaviour
             CardModel cardModelToShow = Instantiate(deckEditor.cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
             cardModelToShow.Value = cardToShow;
             cardModelToShow.DoesCloneOnDrag = true;
-            cardModelToShow.DoubleClickEvent = new OnDoubleClickDelegate(deckEditor.AddCardModel);
+            cardModelToShow.DoubleClickAction = new OnDoubleClickDelegate(deckEditor.AddCardModel);
         }
 
         countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);

@@ -47,19 +47,19 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
         CardModel.ShowCard(cardStack, cardModel);
         CardModel.ResetRotation(cardStack, cardModel);
-        cardModel.DoubleClickEvent = CardModel.ToggleFacedown;
+        cardModel.DoubleClickAction = CardModel.ToggleFacedown;
         cardModel.SecondaryDragAction = null;
     }
 
     public virtual void ToggleExtension()
     {
         IsExtended = !IsExtended;
-        RedetermineWidth();
+        ResetExtensionWidth();
         extension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
         extension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
     }
 
-    public void RedetermineWidth()
+    public void ResetExtensionWidth()
     {
         float width = ((RectTransform)this.transform.GetComponentInParent<Canvas>().transform).rect.width - ZonesViewer.TotalWidth + (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth);
         extension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, ZonesViewer.HiddenWidth, width);

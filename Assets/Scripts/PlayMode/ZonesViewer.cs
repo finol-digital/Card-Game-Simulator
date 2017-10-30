@@ -33,7 +33,7 @@ public class ZonesViewer : MonoBehaviour
             _isVisible = value;
             ((RectTransform)this.transform).SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, _isVisible ? 0 : -HiddenWidth, TotalWidth);
             foreach (ExtensibleCardZone zone in zones)
-                zone.RedetermineWidth();
+                zone.ResetExtensionWidth();
         }
     }
 

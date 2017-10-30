@@ -42,7 +42,7 @@ public class StackedZone : ExtensibleCardZone
         if (cardStack == null || cardModel == null)
             return;
         
-        cardModel.DoubleClickEvent = ToggleExtension;
+        cardModel.DoubleClickAction = ToggleExtension;
         cardModel.SecondaryDragAction = Shuffle;
 
         int cardIndex = CardModels.Count;
@@ -77,11 +77,6 @@ public class StackedZone : ExtensibleCardZone
     {
         base.ToggleExtension();
         Display();
-    }
-
-    public void Shuffle(Vector2 unused, Vector2 unused2)
-    {
-        Shuffle();
     }
 
     public void Shuffle()
