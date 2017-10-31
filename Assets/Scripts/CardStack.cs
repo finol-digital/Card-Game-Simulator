@@ -95,6 +95,26 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             child.position = targetPosition;
     }
 
+    public void UpdateScrollRect(DragPhase dragPhase, PointerEventData eventData)
+    {
+        if (scrollRectContainer == null)
+            return;
+        
+        switch (dragPhase) {
+            case DragPhase.Begin:
+                scrollRectContainer.OnBeginDrag(eventData);
+                break;
+            case DragPhase.Drag:
+                scrollRectContainer.OnDrag(eventData);
+                break;
+            case DragPhase.End:
+            default:
+                scrollRectContainer.OnEndDrag(eventData);
+                break;
+        }
+
+    }
+
     public List<OnAddCardDelegate> OnAddCardActions {
         get {
             if (_cardAddedActions == null)

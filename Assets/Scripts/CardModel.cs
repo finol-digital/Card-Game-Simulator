@@ -21,7 +21,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public const float AlphaHitTestMinimumThreshold = 0.01f;
 
     public bool IsProcessingSecondaryDragAction {
-        get { return PointerDragPositions.Count > 1 || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right); }
+        get { return PointerPositions.Count > 1 || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right); }
     }
 
     public CardStack ParentCardStack {
@@ -40,11 +40,13 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public SecondaryDragDelegate SecondaryDragAction { get; set; }
 
-    public PointerEventData CurrentPointerEventData { get; set; }
+    public PointerEventData CurrentPointerEventData { get; private set; }
+
+    public DragPhase CurrentDragPhase { get; private set; }
 
     private Card _value;
+    private Dictionary<int, Vector2> _pointerPositions;
     private Dictionary<int, CardModel> _draggedClones;
-    private Dictionary<int, Vector2> _pointerDragPositions;
     private Dictionary<int, Vector2> _pointerDragOffsets;
     private CardStack _placeHolderCardStack;
     private RectTransform _placeHolder;
@@ -66,21 +68,30 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         DidSelectOnDown = eventData.button != PointerEventData.InputButton.Right && CardInfoViewer.Instance.SelectedCardModel != this && ((RectTransform)CardInfoViewer.Instance.infoPanel).anchorMax.y < (CardInfoViewer.HiddenYMax + CardInfoViewer.VisibleYMax) / 2.0f;
         if (DidSelectOnDown)
             EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
-        
+
+        PointerPositions [eventData.pointerId] = eventData.position;
+
         CurrentPointerEventData = eventData;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId || eventData.button == PointerEventData.InputButton.Right || eventData.dragging || DraggedClones.ContainsKey(eventData.pointerId))
-            return;
-        
-        if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == this.gameObject && DoubleClickAction != null)
-            DoubleClickAction(this);
-        else if (PlaceHolder == null)
-            EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
+        if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId && eventData.button != PointerEventData.InputButton.Right && !eventData.dragging && !DraggedClones.ContainsKey(eventData.pointerId)) {
+            if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == this.gameObject && DoubleClickAction != null)
+                DoubleClickAction(this);
+            else if (PlaceHolder == null)
+                EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
+        }
         
         CurrentPointerEventData = eventData;
+        CurrentDragPhase = DragPhase.End;
+
+        if (!IsProcessingSecondaryDragAction)
+            UpdatePosition();
+        else if (SecondaryDragAction != null)
+            SecondaryDragAction();
+        if (PointerPositions.ContainsKey(eventData.pointerId))
+            PointerPositions.Remove(eventData.pointerId);
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -106,12 +117,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         }
 
         cardModel.CurrentPointerEventData = eventData;
+        cardModel.CurrentDragPhase = DragPhase.Begin;
 
-        cardModel.PointerDragPositions [eventData.pointerId] = eventData.position;
+        cardModel.PointerPositions [eventData.pointerId] = eventData.position;
         cardModel.PointerDragOffsets [eventData.pointerId] = ((Vector2)cardModel.transform.position) - eventData.position;
         if (!IsProcessingSecondaryDragAction)
-            cardModel.UpdatePosition(DragPhase.Begin);
-
+            cardModel.UpdatePosition();
+        else if (cardModel.SecondaryDragAction != null)
+            cardModel.SecondaryDragAction();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -121,10 +134,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             cardModel = this;
         
         cardModel.CurrentPointerEventData = eventData;
+        cardModel.CurrentDragPhase = DragPhase.Drag;
 
-        cardModel.PointerDragPositions [eventData.pointerId] = eventData.position;
+        cardModel.PointerPositions [eventData.pointerId] = eventData.position;
         if (!IsProcessingSecondaryDragAction)
-            cardModel.UpdatePosition(DragPhase.Drag);
+            cardModel.UpdatePosition();
         else if (cardModel.SecondaryDragAction != null)
             cardModel.SecondaryDragAction();
     }
@@ -138,13 +152,9 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             DraggedClones.Remove(eventData.pointerId);
 
         cardModel.CurrentPointerEventData = eventData;
-
-        if (!cardModel.IsProcessingSecondaryDragAction)
-            cardModel.UpdatePosition(DragPhase.End);
-        cardModel.PointerDragPositions.Remove(eventData.pointerId);
         cardModel.PointerDragOffsets.Remove(eventData.pointerId);
 
-        if (cardModel.PointerDragPositions.Count == 0) {
+        if (!cardModel.IsProcessingSecondaryDragAction) {
             if (cardModel.PlaceHolder != null)
                 cardModel.StartCoroutine(cardModel.MoveToPlaceHolder());
             else if (cardModel.ParentCardStack == null)
@@ -152,14 +162,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         }
     }
 
-    public void UpdatePosition(DragPhase dragPhase)
+    public void UpdatePosition()
     {
-        if (CurrentPointerEventData == null || !PointerDragPositions.ContainsKey(CurrentPointerEventData.pointerId) || !PointerDragOffsets.ContainsKey(CurrentPointerEventData.pointerId))
+        if (CurrentPointerEventData == null || !PointerPositions.ContainsKey(CurrentPointerEventData.pointerId) || !PointerDragOffsets.ContainsKey(CurrentPointerEventData.pointerId))
             return;
 
-        Vector2 targetPosition = PointerDragPositions [CurrentPointerEventData.pointerId] + PointerDragOffsets [CurrentPointerEventData.pointerId];
+        Vector2 targetPosition = PointerPositions [CurrentPointerEventData.pointerId] + PointerDragOffsets [CurrentPointerEventData.pointerId];
         if (ParentCardStack != null)
-            UpdatePositionInCardStack(targetPosition, dragPhase);
+            UpdatePositionInCardStack(targetPosition);
         else
             this.transform.position = targetPosition;
 
@@ -167,83 +177,55 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
     }
 
-    public void UpdatePositionInCardStack(Vector2 targetPosition, DragPhase dragPhase)
+    public void UpdatePositionInCardStack(Vector2 targetPosition)
     {
         CardStack cardStack = ParentCardStack;
         if (cardStack == null)
             return;
 
-        RectTransform stackRT = cardStack.transform as RectTransform;
-        this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
         if (cardStack.type != CardStackType.Horizontal)
             cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
-        if (cardStack.scrollRectContainer != null) {
-            switch (dragPhase) {
-                case DragPhase.Begin:
-                    cardStack.scrollRectContainer.OnBeginDrag(CurrentPointerEventData);
-                    break;
-                case DragPhase.Drag:
-                    cardStack.scrollRectContainer.OnDrag(CurrentPointerEventData);
-                    break;
-                case DragPhase.End:
-                default:
-                    cardStack.scrollRectContainer.OnEndDrag(CurrentPointerEventData);
-                    break;
-            }
-        }
 
-        if (cardStack.type == CardStackType.Full) {
-            PlaceHolderCardStack = cardStack;
-            ParentToCanvas();
-            this.transform.position = targetPosition;
-
-        } else if (cardStack.type == CardStackType.Vertical) {
-            bool isOutYBounds = this.transform.localPosition.y < stackRT.rect.yMin || this.transform.localPosition.y > stackRT.rect.yMax;
-            bool isMovingTop = stackRT.childCount <= 2 || targetPosition.y < cardStack.transform.GetChild(cardStack.transform.childCount - 1).position.y;
-            if (isOutYBounds) {
-                if (cardStack.scrollRectContainer != null)
-                    cardStack.scrollRectContainer.OnEndDrag(CurrentPointerEventData);
-                PlaceHolderCardStack = null;
-                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
+        RectTransform stackRT = cardStack.transform as RectTransform;
+        Vector3[] stackCorners = new Vector3[4];
+        stackRT.GetWorldCorners(stackCorners);
+        bool isOutYBounds = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
+        switch (cardStack.type) {
+            case CardStackType.Full:
                 ParentToCanvas();
                 this.transform.position = targetPosition;
-            } else if (isMovingTop) {
-                PlaceHolderCardStack = cardStack;
-                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = true;
-                this.transform.position = new Vector2(this.transform.position.x, targetPosition.y);
-            } else {
-                PlaceHolderCardStack = null;
-                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
-            }
-
-        } else if (cardStack.type == CardStackType.Horizontal) {
-            targetPosition = targetPosition - PointerDragOffsets [CurrentPointerEventData.pointerId];
-            Vector3[] stackCorners = new Vector3[4];
-            stackRT.GetWorldCorners(stackCorners);
-            bool isGoingOut = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
-            if (isGoingOut) {
-                if (cardStack.scrollRectContainer != null)
-                    cardStack.scrollRectContainer.OnEndDrag(CurrentPointerEventData);
-                this.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false; 
-                ParentToCanvas();
+                break;
+            case CardStackType.Vertical:
+                if (!IsProcessingSecondaryDragAction) {
+                    if (cardStack.scrollRectContainer != null)
+                        cardStack.scrollRectContainer.OnEndDrag(CurrentPointerEventData);
+                    ParentToCanvas();
+                    this.transform.position = targetPosition;
+                }
+                break;
+            case CardStackType.Horizontal:
+                cardStack.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
+                if (isOutYBounds) {
+                    if (cardStack.scrollRectContainer != null)
+                        cardStack.scrollRectContainer.OnEndDrag(CurrentPointerEventData);
+                    ParentToCanvas();
+                    this.transform.position = targetPosition;
+                }
+                break;
+            case CardStackType.Area:
+            default:
+                if (isOutYBounds)
+                    ParentToCanvas();
                 this.transform.position = targetPosition;
-            }
-
-        } else if (cardStack.type == CardStackType.Area) {
-            PlaceHolderCardStack = cardStack;
-            Vector3[] stackCorners = new Vector3[4];
-            stackRT.GetWorldCorners(stackCorners);
-            bool isGoingOut = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
-            if (isGoingOut)
-                ParentToCanvas();
-            this.transform.position = targetPosition;
+                break;
         }
-
     }
 
     public void ParentToCanvas()
     {
         CardStack prevParentStack = ParentCardStack;
+        if (prevParentStack != null)
+            PlaceHolderCardStack = prevParentStack;
         this.transform.SetParent(this.gameObject.FindInParents<Canvas>().transform);
         this.transform.SetAsLastSibling();
         if (prevParentStack != null)
@@ -276,10 +258,17 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
 
+    public void UpdateParentCardStackScrollRect()
+    {
+        CardStack cardStack = ParentCardStack;
+        if (cardStack != null)
+            cardStack.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
+    }
+
     public void Rotate()
     {
         Vector2 referencePoint = this.transform.position;
-        foreach (KeyValuePair<int, Vector2> pointerDragPosition in PointerDragPositions)
+        foreach (KeyValuePair<int, Vector2> pointerDragPosition in PointerPositions)
             if (pointerDragPosition.Key != CurrentPointerEventData.pointerId)
                 referencePoint = pointerDragPosition.Value;
         Vector2 prevDir = (CurrentPointerEventData.position - CurrentPointerEventData.delta) - referencePoint;      
@@ -368,19 +357,19 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         }
     }
 
+    public Dictionary<int, Vector2> PointerPositions {
+        get {
+            if (_pointerPositions == null)
+                _pointerPositions = new Dictionary<int, Vector2>();
+            return _pointerPositions;
+        }
+    }
+
     public Dictionary<int, CardModel> DraggedClones {
         get {
             if (_draggedClones == null)
                 _draggedClones = new Dictionary<int, CardModel>();
             return _draggedClones;
-        }
-    }
-
-    public Dictionary<int, Vector2> PointerDragPositions {
-        get {
-            if (_pointerDragPositions == null)
-                _pointerDragPositions = new Dictionary<int, Vector2>();
-            return _pointerDragPositions;
         }
     }
 

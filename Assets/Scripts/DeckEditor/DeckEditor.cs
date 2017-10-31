@@ -42,7 +42,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public Text sizeText;
 
     private List<CardStack> _cardStacks;
-    private int _recentCardStackIndex;
+    private int _currentCardStackIndex;
     private DeckLoadMenu _deckLoader;
     private DeckSaveMenu _deckSaver;
 
@@ -72,25 +72,6 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardStacks.Count, layoutContent.sizeDelta.y);
     }
 
-    public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
-    {
-        if (cardStack == null || cardModel == null)
-            return;
-        
-        RecentCardStackIndex = CardStacks.IndexOf(cardStack);
-        cardModel.DoubleClickAction = DestroyCardModel;
-        HasChanged = true;
-        UpdateDeckName();
-        UpdateDeckSize();
-    }
-
-    public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
-    {
-        HasChanged = true;
-        UpdateDeckName();
-        UpdateDeckSize();
-    }
-
     public void OnDrop(CardModel cardModel)
     {
         AddCardModel(cardModel);
@@ -112,23 +93,40 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             return;
         
         int maxCopiesInStack = CardStackSize;
-        bool added = false;
-        while (!added) {
-            if (CardStacks [RecentCardStackIndex].transform.childCount < maxCopiesInStack) {
-                CardModel newCardModel = Instantiate(cardModelPrefab, CardStacks [RecentCardStackIndex].transform).GetOrAddComponent<CardModel>();
+        CardModel newCardModel = null;
+        while (newCardModel == null) {
+            if (CardStacks [CurrentCardStackIndex].transform.childCount < maxCopiesInStack) {
+                newCardModel = Instantiate(cardModelPrefab, CardStacks [CurrentCardStackIndex].transform).GetOrAddComponent<CardModel>();
                 newCardModel.Value = card;
-                newCardModel.DoubleClickAction = DestroyCardModel;
-                added = true;
             } else {
-                RecentCardStackIndex++;
-                if (RecentCardStackIndex == 0)
+                CurrentCardStackIndex++;
+                if (CurrentCardStackIndex == 0)
                     maxCopiesInStack++;
             }
         }
 
-        float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * ((float)RecentCardStackIndex + ((RecentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
+        float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * ((float)CurrentCardStackIndex + ((CurrentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
         horizontalScrollbar.value = Mathf.Clamp01(newSpot);
 
+        OnAddCardModel(CardStacks [CurrentCardStackIndex], newCardModel);
+    }
+
+    public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+    {
+        if (cardStack == null || cardModel == null)
+            return;
+
+        CurrentCardStackIndex = CardStacks.IndexOf(cardStack);
+        cardModel.SecondaryDragAction = cardModel.UpdateParentCardStackScrollRect;
+        cardModel.DoubleClickAction = DestroyCardModel;
+
+        HasChanged = true;
+        UpdateDeckName();
+        UpdateDeckSize();
+    }
+
+    public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
+    {
         HasChanged = true;
         UpdateDeckName();
         UpdateDeckSize();
@@ -163,7 +161,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
-        RecentCardStackIndex = 0;
+        CurrentCardStackIndex = 0;
 
         CardInfoViewer.Instance.IsVisible = false;
         HasChanged = false;
@@ -244,14 +242,14 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         }
     }
 
-    public int RecentCardStackIndex {
+    public int CurrentCardStackIndex {
         get {
-            if (_recentCardStackIndex < 0 || _recentCardStackIndex >= CardStacks.Count)
-                _recentCardStackIndex = 0;
-            return _recentCardStackIndex;
+            if (_currentCardStackIndex < 0 || _currentCardStackIndex >= CardStacks.Count)
+                _currentCardStackIndex = 0;
+            return _currentCardStackIndex;
         }
         set {
-            _recentCardStackIndex = value;
+            _currentCardStackIndex = value;
         }
     }
 
