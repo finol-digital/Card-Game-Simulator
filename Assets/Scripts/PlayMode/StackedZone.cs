@@ -5,9 +5,11 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CardStack))]
-public class StackedZone : ExtensibleCardZone
+public class StackedZone : ExtensibleCardZone, ICardDropHandler
 {
-    public CardStack DeckCardStack { get; private set; }
+    public CardDropZone DropZone { get; private set; }
+
+    public CardStack ZoneCardStack { get; private set; }
 
     public CardStack ExtensionCardStack { get; private set; }
 
@@ -17,12 +19,13 @@ public class StackedZone : ExtensibleCardZone
 
     public override void OnStart()
     {
-        DeckCardStack = GetComponent<CardStack>();
+        DropZone = this.gameObject.GetOrAddComponent<CardDropZone>();
+        ZoneCardStack = GetComponent<CardStack>();
         ExtensionCardStack = extensionContent.GetComponent<CardStack>();
 
-        DeckCardStack.OnAddCardActions.Add(CardModel.ResetRotation);
-        DeckCardStack.OnAddCardActions.Add(OnAddCardModel);
-        DeckCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
+        ZoneCardStack.OnAddCardActions.Add(CardModel.ResetRotation);
+        ZoneCardStack.OnAddCardActions.Add(OnAddCardModel);
+        ZoneCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
 
         ExtensionCardStack.OnAddCardActions.Remove(CardModel.ShowCard);
         ExtensionCardStack.OnAddCardActions.Add(OnAddCardModel);
@@ -31,10 +34,10 @@ public class StackedZone : ExtensibleCardZone
 
     public override void AddCard(Card card)
     {
-        CardModel newCardModel = Instantiate(cardPrefab, IsExtended ? ExtensionCardStack.transform : DeckCardStack.transform).GetOrAddComponent<CardModel>();
+        CardModel newCardModel = Instantiate(cardPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform).GetOrAddComponent<CardModel>();
         newCardModel.Value = card;
         newCardModel.IsFacedown = !isFaceup;
-        OnAddCardModel(IsExtended ? ExtensionCardStack : DeckCardStack, newCardModel);
+        OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, newCardModel);
     }
 
     public override void OnAddCardModel(CardStack cardStack, CardModel cardModel)
@@ -76,6 +79,8 @@ public class StackedZone : ExtensibleCardZone
     public override void ToggleExtension()
     {
         base.ToggleExtension();
+        DropZone.dropHandler = IsExtended ? this : null;
+        ZoneCardStack.enabled = !IsExtended;
         Display();
     }
 
@@ -87,7 +92,7 @@ public class StackedZone : ExtensibleCardZone
 
     public void Display()
     {
-        Transform parent = DeckCardStack.transform;
+        Transform parent = ZoneCardStack.transform;
         if (IsExtended)
             parent = ExtensionCardStack.transform;
 
