@@ -65,6 +65,17 @@ static public class UnityExtensionMethods
         }
     }
 
+    public static Vector2 GetAverage(List<Vector2> list)
+    {
+        if (list == null)
+            return Vector2.zero;
+
+        Vector2 sum = Vector2.zero;
+        foreach (Vector2 vector in list)
+            sum += vector;
+        return sum /= list.Count;
+    }
+
     public static IEnumerator SaveURLToFile(string url, string filePath)
     {
         WWW loader = new WWW(url);
