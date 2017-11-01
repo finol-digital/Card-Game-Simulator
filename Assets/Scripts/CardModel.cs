@@ -70,10 +70,10 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         if (DidSelectOnDown)
             EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
 
+        CurrentPointerEventData = eventData;
+
         PointerPositions [eventData.pointerId] = eventData.position;
         PointerDragOffsets [eventData.pointerId] = ((Vector2)this.transform.position) - eventData.position;
-
-        CurrentPointerEventData = eventData;
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -162,9 +162,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public void UpdatePosition()
     {
-        Debug.Log("Calling updateposition");
-        Debug.Log(PointerPositions.Count);
-        Debug.Log(PointerDragOffsets.Count);
         bool isClickingRight = false;
         #if UNITY_EDITOR || (!UNITY_ANDROID && !UNITY_IOS)
         isClickingRight = Input.GetMouseButton(1) || Input.GetMouseButtonUp(1);
@@ -173,7 +170,6 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             return;
 
         Vector2 targetPosition = UnityExtensionMethods.GetAverage(PointerPositions.Values.ToList()) + UnityExtensionMethods.GetAverage(PointerDragOffsets.Values.ToList());
-        Debug.Log(targetPosition);
         if (ParentCardStack != null)
             UpdatePositionInCardStack(targetPosition);
         else
@@ -197,15 +193,15 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         Vector3[] stackCorners = new Vector3[4];
         (cardStack.transform as RectTransform).GetWorldCorners(stackCorners);
         bool isOutYBounds = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
-        if (cardStack.type == CardStackType.Full || (cardStack.type == CardStackType.Vertical && !IsProcessingSecondaryDragAction) || ((cardStack.type == CardStackType.Horizontal || cardStack.type == CardStackType.Area) && isOutYBounds))
+        if ((cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
+            || (cardStack.type == CardStackType.Vertical && !IsProcessingSecondaryDragAction)
+            || ((cardStack.type == CardStackType.Horizontal || cardStack.type == CardStackType.Area) && isOutYBounds))
             ParentToCanvas(targetPosition);
     }
 
     public void ParentToCanvas(Vector3 targetPosition)
     {
         CardStack prevParentStack = ParentCardStack;
-        if (prevParentStack != null)
-            PlaceHolderCardStack = prevParentStack;
         this.transform.SetParent(this.gameObject.FindInParents<Canvas>().transform);
         this.transform.SetAsLastSibling();
         if (prevParentStack != null)

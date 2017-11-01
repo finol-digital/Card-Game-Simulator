@@ -162,7 +162,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
         set {
             _isVisible = value;
-            if (!_isVisible)
+            if (!_isVisible && zoomPanel != null)
                 zoomPanel.gameObject.SetActive(false);
             if (SelectedCardModel != null) {
                 if (_isVisible)
