@@ -84,16 +84,13 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             else if (PlaceHolder == null)
                 EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
         }
-        
-        CurrentPointerEventData = eventData;
-        CurrentDragPhase = DragPhase.End;
 
-        UpdatePosition();
-        if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
-            SecondaryDragAction();
-        
-        PointerPositions.Remove(eventData.pointerId);
-        PointerDragOffsets.Remove(eventData.pointerId);
+        CurrentPointerEventData = eventData;
+
+        if (CurrentDragPhase != DragPhase.Drag) {
+            PointerPositions.Remove(eventData.pointerId);
+            PointerDragOffsets.Remove(eventData.pointerId);
+        }
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -113,8 +110,12 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
         CardModel cardModel = this;
         if (DoesCloneOnDrag) {
+            PointerPositions.Remove(eventData.pointerId);
+            PointerDragOffsets.Remove(eventData.pointerId);
             DraggedClones [eventData.pointerId] = Clone(this.gameObject.FindInParents<Canvas>().transform);
             cardModel = DraggedClones [eventData.pointerId];
+            cardModel.PointerPositions [eventData.pointerId] = eventData.position;
+            cardModel.PointerDragOffsets [eventData.pointerId] = ((Vector2)cardModel.transform.position) - eventData.position;
             cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
@@ -151,6 +152,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             DraggedClones.Remove(eventData.pointerId);
 
         cardModel.CurrentPointerEventData = eventData;
+        cardModel.CurrentDragPhase = DragPhase.End;
+
+        cardModel.UpdatePosition();
+        if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
+            cardModel.SecondaryDragAction();
+        
+        cardModel.PointerPositions.Remove(eventData.pointerId);
+        cardModel.PointerDragOffsets.Remove(eventData.pointerId);
 
         if (!cardModel.IsProcessingSecondaryDragAction) {
             if (cardModel.PlaceHolder != null)

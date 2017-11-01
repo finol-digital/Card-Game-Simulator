@@ -20,12 +20,12 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
         foreach (CardDropZone dropZone in cardDropZones)
             dropZone.dropHandler = this;
-        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
         OnStart();
     }
 
     public virtual void OnStart()
     {
+        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
     }
 
     public virtual void OnDrop(CardModel cardModel)

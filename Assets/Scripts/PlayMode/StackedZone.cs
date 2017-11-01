@@ -20,14 +20,12 @@ public class StackedZone : ExtensibleCardZone, ICardDropHandler
     public override void OnStart()
     {
         DropZone = this.gameObject.GetOrAddComponent<CardDropZone>();
-        ZoneCardStack = GetComponent<CardStack>();
-        ExtensionCardStack = extensionContent.GetComponent<CardStack>();
 
-        ZoneCardStack.OnAddCardActions.Add(CardModel.ResetRotation);
+        ZoneCardStack = GetComponent<CardStack>();
         ZoneCardStack.OnAddCardActions.Add(OnAddCardModel);
         ZoneCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
 
-        ExtensionCardStack.OnAddCardActions.Remove(CardModel.ShowCard);
+        ExtensionCardStack = extensionContent.GetComponent<CardStack>();
         ExtensionCardStack.OnAddCardActions.Add(OnAddCardModel);
         ExtensionCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
     }
@@ -44,9 +42,12 @@ public class StackedZone : ExtensibleCardZone, ICardDropHandler
     {
         if (cardStack == null || cardModel == null)
             return;
-        
+
+        cardModel.transform.rotation = Quaternion.identity;
         cardModel.DoubleClickAction = ToggleExtension;
         cardModel.SecondaryDragAction = Shuffle;
+        if (IsExtended)
+            cardModel.IsFacedown = false;
 
         int cardIndex = CardModels.Count;
         if (cardStack == ExtensionCardStack)
