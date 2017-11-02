@@ -33,6 +33,18 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
+    public void HostGame()
+    {
+    }
+
+    public void HostAndJoinGame()
+    {
+    }
+
+    public void JoinGame()
+    {
+    }
+
     public void GoToDeckEditor()
     {
         SceneManager.LoadScene(DeckEditorSceneIndex);
