@@ -132,7 +132,7 @@ public class DeckLoadMenu : MonoBehaviour
             deckText = File.ReadAllText(SelectedFileName);
         } catch (Exception e) {
             Debug.LogError("Failed to load deck!: " + e.Message);
-            CardGameManager.Instance.Popup.Show("There was an error while attempting to read the deck list from file: " + e.Message);
+            CardGameManager.Instance.Messenger.Show("There was an error while attempting to read the deck list from file: " + e.Message);
         }
 
         Deck newDeck = Deck.Parse(GetNameFromPath(SelectedFileName), GetFileTypeFromPath(SelectedFileName), deckText);
@@ -143,7 +143,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void PromptForDeleteFile()
     {
-        CardGameManager.Instance.Popup.Prompt(DeletePrompt, DeleteFile);
+        CardGameManager.Instance.Messenger.Prompt(DeletePrompt, DeleteFile);
     }
 
     public void DeleteFile()
@@ -153,7 +153,7 @@ public class DeckLoadMenu : MonoBehaviour
             Show(OriginalName, NameChangeCallback, LoadCallback);
         } catch (Exception e) {
             Debug.LogError("Failed to delete deck!: " + e.Message);
-            CardGameManager.Instance.Popup.Show("There was an error while attempting to delete the deck: " + e.Message);
+            CardGameManager.Instance.Messenger.Show("There was an error while attempting to delete the deck: " + e.Message);
         }
     }
 
@@ -181,7 +181,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void PromptForSave()
     {
-        CardGameManager.Instance.Popup.Ask(SavePrompt, null, DoSaveNoOverwrite);
+        CardGameManager.Instance.Messenger.Ask(SavePrompt, null, DoSaveNoOverwrite);
     }
 
     public void DoSaveNoOverwrite()
@@ -196,7 +196,7 @@ public class DeckLoadMenu : MonoBehaviour
     public IEnumerator WaitToPromptOverwrite()
     {
         yield return new WaitForSeconds(0.1f);
-        CardGameManager.Instance.Popup.Ask(DeckSaveMenu.OverWriteDeckPrompt, null, DoSave);
+        CardGameManager.Instance.Messenger.Ask(DeckSaveMenu.OverWriteDeckPrompt, null, DoSave);
     }
 
     public void DoSave()

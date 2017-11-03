@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine.SceneManagement;
 
 public delegate void CardGameSelectedDelegate();
@@ -15,6 +13,7 @@ public class CardGameManager : MonoBehaviour
     public const string CardGameManagerTag = "CardGameManager";
     public const string GameSelectionTag = "GameSelection";
     public const string BackgroundImageTag = "Background";
+    public const string CanvasTag = "Canvas";
     public const string PopupPrefabName = "Popup";
     public const string PlayerPrefGameName = "DefaultGame";
     public const string FirstGameName = "Standard";
@@ -34,7 +33,8 @@ public class CardGameManager : MonoBehaviour
     private List<Dropdown.OptionData> _gameSelectionOptions;
     private List<CardGameSelectedDelegate> _onSelectActions;
     private Image _backgroundImage;
-    private Popup _popup;
+    private Popup _messenger;
+    private Canvas _topCanvas;
 
     void Awake()
     {
@@ -97,7 +97,7 @@ public class CardGameManager : MonoBehaviour
     {
         if (index < 0 || index >= GameSelectionOptions.Count) {
             Debug.LogError(InvalidGameSelectionMessage);
-            Popup.Show(InvalidGameSelectionMessage);
+            Messenger.Show(InvalidGameSelectionMessage);
             return;
         }
 
@@ -108,7 +108,7 @@ public class CardGameManager : MonoBehaviour
     {
         if (!AllCardGames.ContainsKey(name)) {
             Debug.LogError(InvalidGameSelectionMessage);
-            Popup.Show(InvalidGameSelectionMessage);
+            Messenger.Show(InvalidGameSelectionMessage);
             return;
         }
 
@@ -124,7 +124,7 @@ public class CardGameManager : MonoBehaviour
         while (!Current.IsLoaded) {
             if (!string.IsNullOrEmpty(Current.Error)) {
                 Debug.LogError(Current.Error);
-                Popup.Show(Current.Error);
+                Messenger.Show(Current.Error);
                 yield break;
             }
             yield return null;
@@ -222,11 +222,24 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public Popup Popup {
+    public Popup Messenger {
         get {
-            if (_popup == null)
-                _popup = Instantiate(Resources.Load<GameObject>(PopupPrefabName)).GetOrAddComponent<Popup>();
-            return _popup;
+            if (_messenger == null)
+                _messenger = Instantiate(Resources.Load<GameObject>(PopupPrefabName)).GetOrAddComponent<Popup>();
+            return _messenger;
+        }
+    }
+
+    public Canvas TopCanvas {
+        get {
+            if (_topCanvas == null)
+                foreach (GameObject canvasGO in GameObject.FindGameObjectsWithTag(CanvasTag))
+                    if (_topCanvas == null || canvasGO.GetComponent<Canvas>().sortingOrder > _topCanvas.sortingOrder)
+                        _topCanvas = canvasGO.GetComponent<Canvas>();
+            return _topCanvas;
+        }
+        set {
+            _topCanvas = value;
         }
     }
 }

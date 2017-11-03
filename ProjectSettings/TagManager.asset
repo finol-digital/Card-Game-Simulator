@@ -8,6 +8,7 @@ TagManager:
   - Background
   - CardInfoViewer
   - GameSelection
+  - Canvas
   layers:
   - Default
   - TransparentFX

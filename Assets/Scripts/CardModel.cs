@@ -211,7 +211,7 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     public void ParentToCanvas(Vector3 targetPosition)
     {
         CardStack prevParentStack = ParentCardStack;
-        this.transform.SetParent(this.gameObject.FindInParents<Canvas>().transform);
+        this.transform.SetParent(CardGameManager.Instance.TopCanvas.transform);
         this.transform.SetAsLastSibling();
         if (prevParentStack != null)
             prevParentStack.OnRemove(this);
