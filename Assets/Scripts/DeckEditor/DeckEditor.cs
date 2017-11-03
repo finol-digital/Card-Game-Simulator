@@ -154,7 +154,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public void PromptForClear()
     {
-        CardGameManager.Instance.Popup.Prompt(NewDeckPrompt, Clear);
+        CardGameManager.Instance.Messenger.Prompt(NewDeckPrompt, Clear);
     }
 
     public void Clear()
@@ -222,7 +222,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public void CheckBackToMainMenu()
     {
         if (HasChanged) {
-            CardGameManager.Instance.Popup.Ask(SaveChangesPrompt, BackToMainMenu, ShowDeckSaveMenu);
+            CardGameManager.Instance.Messenger.Ask(SaveChangesPrompt, BackToMainMenu, ShowDeckSaveMenu);
             return;
         }
 

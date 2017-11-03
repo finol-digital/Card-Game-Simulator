@@ -48,14 +48,14 @@ public class DeckSaveMenu : MonoBehaviour
     public void CopyTextToClipboard()
     {
         UniClipboard.SetText(textOutputArea.text);
-        CardGameManager.Instance.Popup.Show(DeckCopiedMessage);
+        CardGameManager.Instance.Messenger.Show(DeckCopiedMessage);
     }
 
     public void AttemptSaveAndHide()
     {
         Deck filePathFinder = new Deck(nameInputField.text, CardGameManager.Current.DeckFileType);
         if (File.Exists(filePathFinder.FilePath))
-            CardGameManager.Instance.Popup.Prompt(OverWriteDeckPrompt, SaveToFile);
+            CardGameManager.Instance.Messenger.Prompt(OverWriteDeckPrompt, SaveToFile);
         else
             SaveToFile();
 
@@ -76,7 +76,7 @@ public class DeckSaveMenu : MonoBehaviour
             File.WriteAllText(deck.FilePath, deck.ToString());
         } catch (Exception e) {
             Debug.LogError("Failed to save deck!: " + e.Message);
-            CardGameManager.Instance.Popup.Show("There was an error saving the deck to file: " + e.Message);
+            CardGameManager.Instance.Messenger.Show("There was an error saving the deck to file: " + e.Message);
         }
         if (deckSaveCallback != null)
             deckSaveCallback(deck);

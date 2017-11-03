@@ -48,7 +48,7 @@ public class GameLoadMenu : MonoBehaviour
             CardGameManager.Instance.ResetGameSelection();
         } else {
             Debug.LogError("Failed to load game url! " + newGame.Error);
-            CardGameManager.Instance.Popup.Show("Failed to load game url! " + newGame.Error);
+            CardGameManager.Instance.Messenger.Show("Failed to load game url! " + newGame.Error);
         }
         urlInput.interactable = true;
         cancelButton.interactable = true;

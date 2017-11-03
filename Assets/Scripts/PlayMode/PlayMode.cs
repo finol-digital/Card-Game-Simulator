@@ -90,7 +90,7 @@ public class PlayMode : MonoBehaviour
 
     public void PromptBackToMainMenu()
     {
-        CardGameManager.Instance.Popup.Prompt(MainMenuPrompt, BackToMainMenu);
+        CardGameManager.Instance.Messenger.Prompt(MainMenuPrompt, BackToMainMenu);
     }
 
     public void BackToMainMenu()

@@ -61,7 +61,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public void ResetExtensionWidth()
     {
-        float width = ((RectTransform)this.transform.GetComponentInParent<Canvas>().transform).rect.width - ZonesViewer.TotalWidth + (zonesViewer.IsVisible ? 0 : ZonesViewer.HiddenWidth);
+        float width = ((RectTransform)this.transform.GetComponentInParent<Canvas>().transform).rect.width - ZonesViewer.TotalWidth + (zonesViewer.IsExtended ? 0 : ZonesViewer.HiddenWidth);
         extension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, ZonesViewer.HiddenWidth, width);
     }
 
