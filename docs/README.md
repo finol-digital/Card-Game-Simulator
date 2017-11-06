@@ -6,7 +6,6 @@ CGS comes pre-packaged with these card games:
 - Standard Playing Cards
 - Dominoes
 - Mahjong
-- Tarot
 
 Custom card games can be added by pressing the + button on the main menu:
 
@@ -19,4 +18,6 @@ In the resulting popup, type or paste the url for the custom game you would like
 You can get an appropriate url from other people. For example, try adding Hearthstone by pasting this url: https://drive.google.com/uc?export=download&id=0B563jbWV7hpdZmxBOUtsaFhIR0E
 
 You can also define your own custom game.
-To create your own custom games, see [Defining Custom Games](CUSTOMGAMES.md)
+To create your own custom games, see [Defining Custom Games](CUSTOM.md).
+
+You may also be interested in our [[Privacy Policy]](PRIVACY.md).
