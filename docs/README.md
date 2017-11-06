@@ -20,4 +20,4 @@ You can get an appropriate url from other people. For example, try adding Hearth
 You can also define your own custom game.
 To create your own custom games, see [Defining Custom Games](CUSTOM.md).
 
-You may also be interested in our [[Privacy Policy]](PRIVACY.md).
+You may also be interested in our [Privacy Policy](PRIVACY.md).
