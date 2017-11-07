@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
     public const string CardInfoViewerTag = "CardInfoViewer";
+    public const string SetLabel = "Set";
     public const float VisibleYMin = 0.625f;
     public const float VisibleYMax = 1;
     public const float HiddenYmin = 1.025f;
@@ -35,6 +36,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         SelectedPropertyIndex = 0;
         PropertyOptions.Clear();
+        PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
         foreach (PropertyDef propDef in CardGameManager.Current.CardProperties) {
             PropertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
             if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
@@ -49,7 +51,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         contentText.text = string.Empty;
         if (SelectedCardModel != null)
-            contentText.text = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
+            contentText.text = SelectedPropertyIndex != 0 ? SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName) : CardGameManager.Current.Sets [SelectedCardModel.Value.SetCode].ToString();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -126,8 +128,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public string SelectedPropertyName {
         get {
-            string selectedName = string.Empty;
-            if (SelectedPropertyIndex >= 0 && SelectedPropertyIndex < PropertyOptions.Count)
+            string selectedName = SetLabel;
+            if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
                 selectedName = PropertyOptions [SelectedPropertyIndex].text;
             return selectedName;
         } 
@@ -148,8 +150,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 return;
             }
             cardImage.sprite = _selectedCardModel.GetComponent<Image>().sprite;
-            nameText.text = value.Value.Name;
-            idText.text = value.Value.Id;
+            nameText.text = _selectedCardModel.Value.Name;
+            idText.text = _selectedCardModel.Value.Id;
             SetContentText();
 
             IsVisible = true;

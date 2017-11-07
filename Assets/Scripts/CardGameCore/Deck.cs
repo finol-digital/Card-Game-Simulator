@@ -172,7 +172,7 @@ public class Deck : IEquatable<Deck>
 
             if (tokens.Count > 0 && tokens [tokens.Count - 1].StartsWith("(") && tokens [tokens.Count - 1].EndsWith(")")) {
                 string inParens = tokens [tokens.Count - 1].Substring(1, tokens [tokens.Count - 1].Length - 2);
-                if (CardGameManager.Current.Sets.Where(currSet => currSet.Code.Equals(inParens)).ToList().Count > 0) {
+                if (CardGameManager.Current.Sets.ContainsKey(inParens)) {
                     cardSet = inParens;
                     tokens.RemoveAt(tokens.Count - 1);
                 }

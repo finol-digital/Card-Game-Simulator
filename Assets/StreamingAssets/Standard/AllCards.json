@@ -1,55 +1,55 @@
-[{"name":"Ace of Clubs", "id":"ace_of_clubs", "rank":"Ace", "suit":"Clubs"}
-,{"name":"Ace of Diamonds", "id":"ace_of_diamonds", "rank":"Ace", "suit":"Diamonds"}
-,{"name":"Ace of Hearts", "id":"ace_of_hearts", "rank":"Ace", "suit":"Hearts"}
-,{"name":"Ace of Spades", "id":"ace_of_spades", "rank":"Ace", "suit":"Spades"}
-,{"name":"2 of Clubs", "id":"2_of_clubs", "rank":"2", "suit":"Clubs"}
-,{"name":"2 of Diamonds", "id":"2_of_diamonds", "rank":"2", "suit":"Diamonds"}
-,{"name":"2 of Hearts", "id":"2_of_hearts", "rank":"2", "suit":"Hearts"}
-,{"name":"2 of Spades", "id":"2_of_spades", "rank":"2", "suit":"Spades"}
-,{"name":"3 of Clubs", "id":"3_of_clubs", "rank":"3", "suit":"Clubs"}
-,{"name":"3 of Diamonds", "id":"3_of_diamonds", "rank":"3", "suit":"Diamonds"}
-,{"name":"3 of Hearts", "id":"3_of_hearts", "rank":"3", "suit":"Hearts"}
-,{"name":"3 of Spades", "id":"3_of_spades", "rank":"3", "suit":"Spades"}
-,{"name":"4 of Clubs", "id":"4_of_clubs", "rank":"4", "suit":"Clubs"}
-,{"name":"4 of Diamonds", "id":"4_of_diamonds", "rank":"4", "suit":"Diamonds"}
-,{"name":"4 of Hearts", "id":"4_of_hearts", "rank":"4", "suit":"Hearts"}
-,{"name":"4 of Spades", "id":"4_of_spades", "rank":"4", "suit":"Spades"}
-,{"name":"5 of Clubs", "id":"5_of_clubs", "rank":"5", "suit":"Clubs"}
-,{"name":"5 of Diamonds", "id":"5_of_diamonds", "rank":"5", "suit":"Diamonds"}
-,{"name":"5 of Hearts", "id":"5_of_hearts", "rank":"5", "suit":"Hearts"}
-,{"name":"5 of Spades", "id":"5_of_spades", "rank":"5", "suit":"Spades"}
-,{"name":"6 of Clubs", "id":"6_of_clubs", "rank":"6", "suit":"Clubs"}
-,{"name":"6 of Diamonds", "id":"6_of_diamonds", "rank":"6", "suit":"Diamonds"}
-,{"name":"6 of Hearts", "id":"6_of_hearts", "rank":"6", "suit":"Hearts"}
-,{"name":"6 of Spades", "id":"6_of_spades", "rank":"6", "suit":"Spades"}
-,{"name":"7 of Clubs", "id":"7_of_clubs", "rank":"7", "suit":"Clubs"}
-,{"name":"7 of Diamonds", "id":"7_of_diamonds", "rank":"7", "suit":"Diamonds"}
-,{"name":"7 of Hearts", "id":"7_of_hearts", "rank":"7", "suit":"Hearts"}
-,{"name":"7 of Spades", "id":"7_of_spades", "rank":"7", "suit":"Spades"}
-,{"name":"8 of Clubs", "id":"8_of_clubs", "rank":"8", "suit":"Clubs"}
-,{"name":"8 of Diamonds", "id":"8_of_diamonds", "rank":"8", "suit":"Diamonds"}
-,{"name":"8 of Hearts", "id":"8_of_hearts", "rank":"8", "suit":"Hearts"}
-,{"name":"8 of Spades", "id":"8_of_spades", "rank":"8", "suit":"Spades"}
-,{"name":"9 of Clubs", "id":"9_of_clubs", "rank":"9", "suit":"Clubs"}
-,{"name":"9 of Diamonds", "id":"9_of_diamonds", "rank":"9", "suit":"Diamonds"}
-,{"name":"9 of Hearts", "id":"9_of_hearts", "rank":"9", "suit":"Hearts"}
-,{"name":"9 of Spades", "id":"9_of_spades", "rank":"9", "suit":"Spades"}
-,{"name":"10 of Clubs", "id":"10_of_clubs", "rank":"10", "suit":"Clubs"}
-,{"name":"10 of Diamonds", "id":"10_of_diamonds", "rank":"10", "suit":"Diamonds"}
-,{"name":"10 of Hearts", "id":"10_of_hearts", "rank":"10", "suit":"Hearts"}
-,{"name":"10 of Spades", "id":"10_of_spades", "rank":"10", "suit":"Spades"}
-,{"name":"Jack of Clubs", "id":"jack_of_clubs", "rank":"Jack", "suit":"Clubs"}
-,{"name":"Jack of Diamonds", "id":"jack_of_diamonds", "rank":"Jack", "suit":"Diamonds"}
-,{"name":"Jack of Hearts", "id":"jack_of_hearts", "rank":"Jack", "suit":"Hearts"}
-,{"name":"Jack of Spades", "id":"jack_of_spades", "rank":"Jack", "suit":"Spades"}
-,{"name":"Queen of Clubs", "id":"queen_of_clubs", "rank":"Queen", "suit":"Clubs"}
-,{"name":"Queen of Diamonds", "id":"queen_of_diamonds", "rank":"Queen", "suit":"Diamonds"}
-,{"name":"Queen of Hearts", "id":"queen_of_hearts", "rank":"Queen", "suit":"Hearts"}
-,{"name":"Queen of Spades", "id":"queen_of_spades", "rank":"Queen", "suit":"Spades"}
-,{"name":"King of Clubs", "id":"king_of_clubs", "rank":"King", "suit":"Clubs"}
-,{"name":"King of Diamonds", "id":"king_of_diamonds", "rank":"King", "suit":"Diamonds"}
-,{"name":"King of Hearts", "id":"king_of_hearts", "rank":"King", "suit":"Hearts"}
-,{"name":"King of Spades", "id":"king_of_spades", "rank":"King", "suit":"Spades"}
-,{"name":"Black Joker", "id":"black_joker", "rank":"Joker", "suit":"Black"}
-,{"name":"Red Joker", "id":"red_joker", "rank":"Joker", "suit":"Red"}
+[{"set": "Standard", "name":"Ace of Clubs", "id":"ace_of_clubs", "rank":"Ace", "suit":"Clubs"}
+,{"set": "Standard", "name":"Ace of Diamonds", "id":"ace_of_diamonds", "rank":"Ace", "suit":"Diamonds"}
+,{"set": "Standard", "name":"Ace of Hearts", "id":"ace_of_hearts", "rank":"Ace", "suit":"Hearts"}
+,{"set": "Standard", "name":"Ace of Spades", "id":"ace_of_spades", "rank":"Ace", "suit":"Spades"}
+,{"set": "Standard", "name":"2 of Clubs", "id":"2_of_clubs", "rank":"2", "suit":"Clubs"}
+,{"set": "Standard", "name":"2 of Diamonds", "id":"2_of_diamonds", "rank":"2", "suit":"Diamonds"}
+,{"set": "Standard", "name":"2 of Hearts", "id":"2_of_hearts", "rank":"2", "suit":"Hearts"}
+,{"set": "Standard", "name":"2 of Spades", "id":"2_of_spades", "rank":"2", "suit":"Spades"}
+,{"set": "Standard", "name":"3 of Clubs", "id":"3_of_clubs", "rank":"3", "suit":"Clubs"}
+,{"set": "Standard", "name":"3 of Diamonds", "id":"3_of_diamonds", "rank":"3", "suit":"Diamonds"}
+,{"set": "Standard", "name":"3 of Hearts", "id":"3_of_hearts", "rank":"3", "suit":"Hearts"}
+,{"set": "Standard", "name":"3 of Spades", "id":"3_of_spades", "rank":"3", "suit":"Spades"}
+,{"set": "Standard", "name":"4 of Clubs", "id":"4_of_clubs", "rank":"4", "suit":"Clubs"}
+,{"set": "Standard", "name":"4 of Diamonds", "id":"4_of_diamonds", "rank":"4", "suit":"Diamonds"}
+,{"set": "Standard", "name":"4 of Hearts", "id":"4_of_hearts", "rank":"4", "suit":"Hearts"}
+,{"set": "Standard", "name":"4 of Spades", "id":"4_of_spades", "rank":"4", "suit":"Spades"}
+,{"set": "Standard", "name":"5 of Clubs", "id":"5_of_clubs", "rank":"5", "suit":"Clubs"}
+,{"set": "Standard", "name":"5 of Diamonds", "id":"5_of_diamonds", "rank":"5", "suit":"Diamonds"}
+,{"set": "Standard", "name":"5 of Hearts", "id":"5_of_hearts", "rank":"5", "suit":"Hearts"}
+,{"set": "Standard", "name":"5 of Spades", "id":"5_of_spades", "rank":"5", "suit":"Spades"}
+,{"set": "Standard", "name":"6 of Clubs", "id":"6_of_clubs", "rank":"6", "suit":"Clubs"}
+,{"set": "Standard", "name":"6 of Diamonds", "id":"6_of_diamonds", "rank":"6", "suit":"Diamonds"}
+,{"set": "Standard", "name":"6 of Hearts", "id":"6_of_hearts", "rank":"6", "suit":"Hearts"}
+,{"set": "Standard", "name":"6 of Spades", "id":"6_of_spades", "rank":"6", "suit":"Spades"}
+,{"set": "Standard", "name":"7 of Clubs", "id":"7_of_clubs", "rank":"7", "suit":"Clubs"}
+,{"set": "Standard", "name":"7 of Diamonds", "id":"7_of_diamonds", "rank":"7", "suit":"Diamonds"}
+,{"set": "Standard", "name":"7 of Hearts", "id":"7_of_hearts", "rank":"7", "suit":"Hearts"}
+,{"set": "Standard", "name":"7 of Spades", "id":"7_of_spades", "rank":"7", "suit":"Spades"}
+,{"set": "Standard", "name":"8 of Clubs", "id":"8_of_clubs", "rank":"8", "suit":"Clubs"}
+,{"set": "Standard", "name":"8 of Diamonds", "id":"8_of_diamonds", "rank":"8", "suit":"Diamonds"}
+,{"set": "Standard", "name":"8 of Hearts", "id":"8_of_hearts", "rank":"8", "suit":"Hearts"}
+,{"set": "Standard", "name":"8 of Spades", "id":"8_of_spades", "rank":"8", "suit":"Spades"}
+,{"set": "Standard", "name":"9 of Clubs", "id":"9_of_clubs", "rank":"9", "suit":"Clubs"}
+,{"set": "Standard", "name":"9 of Diamonds", "id":"9_of_diamonds", "rank":"9", "suit":"Diamonds"}
+,{"set": "Standard", "name":"9 of Hearts", "id":"9_of_hearts", "rank":"9", "suit":"Hearts"}
+,{"set": "Standard", "name":"9 of Spades", "id":"9_of_spades", "rank":"9", "suit":"Spades"}
+,{"set": "Standard", "name":"10 of Clubs", "id":"10_of_clubs", "rank":"10", "suit":"Clubs"}
+,{"set": "Standard", "name":"10 of Diamonds", "id":"10_of_diamonds", "rank":"10", "suit":"Diamonds"}
+,{"set": "Standard", "name":"10 of Hearts", "id":"10_of_hearts", "rank":"10", "suit":"Hearts"}
+,{"set": "Standard", "name":"10 of Spades", "id":"10_of_spades", "rank":"10", "suit":"Spades"}
+,{"set": "Standard", "name":"Jack of Clubs", "id":"jack_of_clubs", "rank":"Jack", "suit":"Clubs"}
+,{"set": "Standard", "name":"Jack of Diamonds", "id":"jack_of_diamonds", "rank":"Jack", "suit":"Diamonds"}
+,{"set": "Standard", "name":"Jack of Hearts", "id":"jack_of_hearts", "rank":"Jack", "suit":"Hearts"}
+,{"set": "Standard", "name":"Jack of Spades", "id":"jack_of_spades", "rank":"Jack", "suit":"Spades"}
+,{"set": "Standard", "name":"Queen of Clubs", "id":"queen_of_clubs", "rank":"Queen", "suit":"Clubs"}
+,{"set": "Standard", "name":"Queen of Diamonds", "id":"queen_of_diamonds", "rank":"Queen", "suit":"Diamonds"}
+,{"set": "Standard", "name":"Queen of Hearts", "id":"queen_of_hearts", "rank":"Queen", "suit":"Hearts"}
+,{"set": "Standard", "name":"Queen of Spades", "id":"queen_of_spades", "rank":"Queen", "suit":"Spades"}
+,{"set": "Standard", "name":"King of Clubs", "id":"king_of_clubs", "rank":"King", "suit":"Clubs"}
+,{"set": "Standard", "name":"King of Diamonds", "id":"king_of_diamonds", "rank":"King", "suit":"Diamonds"}
+,{"set": "Standard", "name":"King of Hearts", "id":"king_of_hearts", "rank":"King", "suit":"Hearts"}
+,{"set": "Standard", "name":"King of Spades", "id":"king_of_spades", "rank":"King", "suit":"Spades"}
+,{"set": "Standard", "name":"Black Joker", "id":"black_joker", "rank":"Joker", "suit":"Black"}
+,{"set": "Standard", "name":"Red Joker", "id":"red_joker", "rank":"Joker", "suit":"Red"}
 ]

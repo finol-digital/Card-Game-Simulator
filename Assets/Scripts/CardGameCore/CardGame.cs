@@ -121,7 +121,7 @@ public class CardGame
     public string SetNameIdentifier { get; set; }
 
     private Dictionary<string, Card> _cards;
-    private HashSet<Set> _sets;
+    private Dictionary<string, Set> _sets;
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
     private bool _isLoaded;
@@ -228,7 +228,7 @@ public class CardGame
 
         string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
         string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
-        Set cardSet = new Set(cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode, cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode);
+        string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
         Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
         foreach (PropertyDef property in CardProperties) {
             cardProperties [property.Name] = new PropertyDefValuePair() {
@@ -237,9 +237,10 @@ public class CardGame
             };
         }
         if (!string.IsNullOrEmpty(cardId)) {
-            Card newCard = new Card(cardId, cardName, cardSet.Code, cardProperties);
+            Card newCard = new Card(cardId, cardName, cardSet, cardProperties);
             Cards [newCard.Id] = newCard;
-            Sets.Add(cardSet);
+            if (!Sets.ContainsKey(cardSet))
+                Sets [cardSet] = new Set(cardSet);
         }
     }
 
@@ -250,13 +251,8 @@ public class CardGame
         
         string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
         string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSetCode;
-        if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName)) {
-            Set newSet = new Set(setCode, setName);
-            if (Sets.Contains(newSet))
-                Sets.Where(currSet => currSet.Code == setCode).First().Name = setName;
-            else
-                Sets.Add(newSet);
-        }
+        if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
+            Sets [setCode] = new Set(setCode, setName);
         JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
         if (cards != null)
             foreach (JToken jToken in cards)
@@ -312,10 +308,10 @@ public class CardGame
         }
     }
 
-    public HashSet<Set> Sets {
+    public Dictionary<string, Set> Sets {
         get {
             if (_sets == null)
-                _sets = new HashSet<Set>();
+                _sets = new Dictionary<string, Set>();
             return _sets;
         }
     }
