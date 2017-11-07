@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     public const int DeckEditorSceneIndex = 2;
 
     public GameObject gameLoadMenuPrefab;
+    public GameObject networkPanel;
     public GameObject quitButton;
     public Text versionText;
 
@@ -53,7 +54,7 @@ public class MainMenu : MonoBehaviour
     void Update()
     {
         #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !networkPanel.activeSelf)
             Quit();
         #endif
     }
