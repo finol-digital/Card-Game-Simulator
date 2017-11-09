@@ -8,6 +8,14 @@ using UnityEngine.SceneManagement;
 
 public delegate void CardGameSelectedDelegate();
 
+public enum LocalPlayMode
+{
+    Host,
+    HostJoin,
+    Join,
+    Solo
+}
+
 public class CardGameManager : MonoBehaviour
 {
     public const string CardGameManagerTag = "CardGameManager";
@@ -23,10 +31,13 @@ public class CardGameManager : MonoBehaviour
         get { return Application.persistentDataPath + "/games"; }
     }
 
-    public string CurrentGameName { get; set; }
+    public static string CurrentGameName { get; set; }
+
+    public static LocalPlayMode NetworkMode { get; set; }
+
+    public static bool IsQuitting { get; private set; }
 
     private static CardGameManager _instance;
-    private static bool _isQuitting;
 
     private Dictionary<string, CardGame> _allCardGames;
     private Dropdown _gameSelection;
@@ -42,7 +53,7 @@ public class CardGameManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-        CardGameManager._instance = this;
+        CardGameManager.Instance = this;
         DontDestroyOnLoad(this.gameObject);
 
         if (!Directory.Exists(GamesFilePathBase)) {
@@ -149,12 +160,12 @@ public class CardGameManager : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        CardGameManager._isQuitting = true;
+        CardGameManager.IsQuitting = true;
     }
 
     public static CardGameManager Instance {
         get {
-            if (_isQuitting)
+            if (IsQuitting)
                 return null;
             
             if (_instance == null) {
@@ -168,12 +179,15 @@ public class CardGameManager : MonoBehaviour
             }
             return _instance;
         }
+        private set {
+            _instance = value;
+        }
     }
 
     public static CardGame Current {
         get {
             CardGame currentGame;
-            if (!Instance.AllCardGames.TryGetValue(Instance.CurrentGameName, out currentGame))
+            if (!Instance.AllCardGames.TryGetValue(CurrentGameName, out currentGame))
                 return new CardGame();
             return currentGame;
         }

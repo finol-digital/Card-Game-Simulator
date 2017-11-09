@@ -31,19 +31,26 @@ public class MainMenu : MonoBehaviour
 
     public void GoToPlayMode()
     {
+        CardGameManager.NetworkMode = LocalPlayMode.Solo;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
     public void HostGame()
     {
+        CardGameManager.NetworkMode = LocalPlayMode.Host;
+        SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
     public void HostAndJoinGame()
     {
+        CardGameManager.NetworkMode = LocalPlayMode.HostJoin;
+        SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
     public void JoinGame()
     {
+        CardGameManager.NetworkMode = LocalPlayMode.Join;
+        SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
     public void GoToDeckEditor()

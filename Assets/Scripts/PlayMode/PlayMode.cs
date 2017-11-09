@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Linq;
 
 public class PlayMode : MonoBehaviour
 {
@@ -10,9 +10,8 @@ public class PlayMode : MonoBehaviour
 
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
-    public RectTransform playArea;
+    public RectTransform playAreaContent;
     public ExtensibleCardZone extraZone;
-    public StackedZone discardZone;
     public StackedZone deckZone;
     public ExtensibleCardZone handZone;
 
@@ -30,7 +29,7 @@ public class PlayMode : MonoBehaviour
         DeckLoader.fileCancelButton.onClick.AddListener(BackToMainMenu);
         DeckLoader.textCancelButton.onClick.RemoveAllListeners();
         DeckLoader.textCancelButton.onClick.AddListener(BackToMainMenu);
-        playArea.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(SetPlayActions);
+        playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
     }
 
     void Update()
@@ -46,6 +45,8 @@ public class PlayMode : MonoBehaviour
 
     public void LoadDeck(Deck newDeck)
     {
+        CardSpawnManager.Instance.PlayAreaContent = playAreaContent;
+
         List<Card> extraCards = newDeck.GetExtraCards();
         Dictionary<string, List<Card>> extraGroups = newDeck.GetExtraGroups();
         foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups) {
@@ -71,10 +72,10 @@ public class PlayMode : MonoBehaviour
 
     public void ShowCardSearcher()
     {
-        CardSearcher.Show(null, null, AddCard);
+        CardSearcher.Show(null, null, AddCardToHand);
     }
 
-    public void AddCard(List<Card> results)
+    public void AddCardToHand(List<Card> results)
     {
         if (results == null || results.Count < 1)
             return;
@@ -82,10 +83,12 @@ public class PlayMode : MonoBehaviour
         handZone.AddCard(results [0]);
     }
 
-    public void SetPlayActions(CardStack cardStack, CardModel cardModel)
+    public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
-        cardModel.DoubleClickAction = CardModel.ToggleFacedown;
-        cardModel.SecondaryDragAction = cardModel.Rotate;
+        if (UnityEngine.Networking.NetworkManager.singleton.isNetworkActive)
+            CardSpawnManager.Instance.MoveCardToServer(cardModel);
+        else
+            CardSpawnManager.Instance.SetPlayActions(cardStack, cardModel);
     }
 
     public void PromptBackToMainMenu()

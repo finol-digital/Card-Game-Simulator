@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Linq;
+using UnityEngine.Networking;
 
 public delegate void OnDoubleClickDelegate(CardModel cardModel);
 public delegate void SecondaryDragDelegate();
@@ -16,9 +17,10 @@ public enum DragPhase
 }
 
 [RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(LayoutElement))]
-public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public const float MovementSpeed = 600f;
+
     public const float AlphaHitTestMinimumThreshold = 0.01f;
 
     public bool IsProcessingSecondaryDragAction {
@@ -33,6 +35,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
         get { return new Vector2(10, 10); }
     }
 
+    public bool IsUpdatingImage { get; private set; }
+
     public bool DidSelectOnDown { get; private set; }
 
     public OnDoubleClickDelegate DoubleClickAction { get; set; }
@@ -45,7 +49,8 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public DragPhase CurrentDragPhase { get; private set; }
 
-    private Card _value;
+    [SyncVar]
+    private string _id;
     private Dictionary<int, Vector2> _pointerPositions;
     private Dictionary<int, CardModel> _draggedClones;
     private Dictionary<int, Vector2> _pointerDragOffsets;
@@ -54,6 +59,11 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
     private bool _isFacedown;
     private Outline _highlight;
     private Sprite _newSprite;
+
+    void Start()
+    {
+        StartCoroutine(UpdateImage());
+    }
 
     public CardModel Clone(Transform parent)
     {
@@ -208,8 +218,16 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
             ParentToCanvas(targetPosition);
     }
 
+    [Command]
+    void CmdUnspawnCard()
+    {
+        NetworkServer.UnSpawn(this.gameObject);
+    }
+
     public void ParentToCanvas(Vector3 targetPosition)
     {
+        if (this.hasAuthority)
+            CmdUnspawnCard();
         CardStack prevParentStack = ParentCardStack;
         this.transform.SetParent(CardGameManager.Instance.TopCanvas.transform);
         this.transform.SetAsLastSibling();
@@ -308,12 +326,17 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public IEnumerator UpdateImage()
     {
+        if (IsUpdatingImage)
+            yield break;
+        
+        IsUpdatingImage = true;
         Sprite newSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(Value.ImageFilePath, Value.ImageWebURL), output => newSprite = output);
         if (newSprite != null)
             NewSprite = newSprite;
         else
             GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
+        IsUpdatingImage = false;
     }
 
     void OnDestroy()
@@ -330,15 +353,14 @@ public class CardModel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, 
 
     public Card Value {
         get {
-            if (_value == null)
-                _value = Card.Blank;
-            return _value;
+            Card cardValue;
+            if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out cardValue))
+                return Card.Blank;
+            return cardValue;
         }
         set {
-            _value = value;
-            if (_value == null)
-                _value = Card.Blank;
-            this.gameObject.name = _value.Name + " [" + _value.Id + "]";
+            _id = value != null ? value.Id : string.Empty;
+            this.gameObject.name = value != null ? value.Name + " [" + value.Id + "]" : string.Empty;
             StartCoroutine(UpdateImage());
         }
     }
