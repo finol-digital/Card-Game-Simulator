@@ -30,6 +30,7 @@ public class PlayMode : MonoBehaviour
         DeckLoader.textCancelButton.onClick.RemoveAllListeners();
         DeckLoader.textCancelButton.onClick.AddListener(BackToMainMenu);
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
+        CardSpawnManager.Instance.PlayAreaContent = playAreaContent;
     }
 
     void Update()
@@ -45,8 +46,6 @@ public class PlayMode : MonoBehaviour
 
     public void LoadDeck(Deck newDeck)
     {
-        CardSpawnManager.Instance.PlayAreaContent = playAreaContent;
-
         List<Card> extraCards = newDeck.GetExtraCards();
         Dictionary<string, List<Card>> extraGroups = newDeck.GetExtraGroups();
         foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups) {
@@ -86,7 +85,7 @@ public class PlayMode : MonoBehaviour
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
         if (UnityEngine.Networking.NetworkManager.singleton.isNetworkActive)
-            CardSpawnManager.Instance.MoveCardToServer(cardModel);
+            CardSpawnManager.Instance.LocalPlayer.MoveCardToServer(cardModel);
         else
             CardSpawnManager.Instance.SetPlayActions(cardStack, cardModel);
     }

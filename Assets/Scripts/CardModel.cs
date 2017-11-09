@@ -39,18 +39,20 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public bool DidSelectOnDown { get; private set; }
 
-    public OnDoubleClickDelegate DoubleClickAction { get; set; }
-
-    public bool DoesCloneOnDrag { get; set; }
-
-    public SecondaryDragDelegate SecondaryDragAction { get; set; }
-
     public PointerEventData CurrentPointerEventData { get; private set; }
 
     public DragPhase CurrentDragPhase { get; private set; }
 
+    public bool DoesCloneOnDrag { get; set; }
+
+    public OnDoubleClickDelegate DoubleClickAction { get; set; }
+
+    public SecondaryDragDelegate SecondaryDragAction { get; set; }
+
     [SyncVar]
     private string _id;
+    [SyncVar]
+    private Vector2 _localPosition;
     private Dictionary<int, Vector2> _pointerPositions;
     private Dictionary<int, CardModel> _draggedClones;
     private Dictionary<int, Vector2> _pointerDragOffsets;
@@ -63,6 +65,16 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     void Start()
     {
         StartCoroutine(UpdateImage());
+    }
+
+    void Update()
+    {
+        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent) {
+            if (this.hasAuthority)
+                _localPosition = this.transform.localPosition;
+            else
+                this.transform.localPosition = _localPosition;
+        }
     }
 
     public CardModel Clone(Transform parent)
@@ -116,6 +128,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent && !this.hasAuthority)
+            return;
+        
         EventSystem.current.SetSelectedGameObject(null, eventData);
 
         CardModel cardModel = this;
@@ -140,6 +155,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent && !this.hasAuthority)
+            return;
+        
         CardModel cardModel;
         if (!DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
             cardModel = this;
@@ -155,6 +173,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent && !this.hasAuthority)
+            return;
+        
         CardModel cardModel;
         if (!DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
             cardModel = this;
@@ -360,7 +381,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         }
         set {
             _id = value != null ? value.Id : string.Empty;
-            this.gameObject.name = value != null ? value.Name + " [" + value.Id + "]" : string.Empty;
+            this.gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
             StartCoroutine(UpdateImage());
         }
     }

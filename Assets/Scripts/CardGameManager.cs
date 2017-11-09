@@ -10,10 +10,9 @@ public delegate void CardGameSelectedDelegate();
 
 public enum LocalPlayMode
 {
+    Solo,
     Host,
-    HostJoin,
     Join,
-    Solo
 }
 
 public class CardGameManager : MonoBehaviour

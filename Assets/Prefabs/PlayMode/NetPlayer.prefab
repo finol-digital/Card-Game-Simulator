@@ -20,9 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4493576556417028}
   - component: {fileID: 114797580129434228}
-  - component: {fileID: 114754449770434672}
+  - component: {fileID: 114416027808059046}
   m_Layer: 0
-  m_Name: Card Spawn Manager
+  m_Name: NetPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114754449770434672
+--- !u!114 &114416027808059046
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -49,11 +49,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1833244134286464}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1250e77da250ad0439a9d2a8c2eaf41e, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a88bd459dba0be449622f9c07ed8e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
-    type: 2}
 --- !u!114 &114797580129434228
 MonoBehaviour:
   m_ObjectHideFlags: 1
