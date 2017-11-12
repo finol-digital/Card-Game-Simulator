@@ -10,7 +10,6 @@ public class MainMenu : MonoBehaviour
     public const int DeckEditorSceneIndex = 2;
 
     public GameObject gameLoadMenuPrefab;
-    public GameObject playPanel;
     public GameObject quitButton;
     public Text versionText;
 
@@ -31,19 +30,13 @@ public class MainMenu : MonoBehaviour
 
     public void PlaySolo()
     {
-        CardGameManager.NetworkMode = LocalPlayMode.Solo;
+        CardGameManager.IsMultiplayer = false;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
-    public void HostGame()
+    public void PlayLocal()
     {
-        CardGameManager.NetworkMode = LocalPlayMode.Host;
-        SceneManager.LoadScene(PlayModeSceneIndex);
-    }
-
-    public void JoinGame()
-    {
-        CardGameManager.NetworkMode = LocalPlayMode.Join;
+        CardGameManager.IsMultiplayer = true;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 

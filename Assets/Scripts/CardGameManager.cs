@@ -8,13 +8,6 @@ using UnityEngine.SceneManagement;
 
 public delegate void CardGameSelectedDelegate();
 
-public enum LocalPlayMode
-{
-    Solo,
-    Host,
-    Join,
-}
-
 public class CardGameManager : MonoBehaviour
 {
     public const string CardGameManagerTag = "CardGameManager";
@@ -32,7 +25,7 @@ public class CardGameManager : MonoBehaviour
 
     public static string CurrentGameName { get; set; }
 
-    public static LocalPlayMode NetworkMode { get; set; }
+    public static bool IsMultiplayer { get; set; }
 
     public static bool IsQuitting { get; private set; }
 

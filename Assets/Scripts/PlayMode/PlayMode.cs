@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 public class PlayMode : MonoBehaviour
 {
@@ -18,19 +19,22 @@ public class PlayMode : MonoBehaviour
     private DeckLoadMenu _deckLoader;
     private CardSearchMenu _cardSearcher;
 
-    void OnEnable()
+    IEnumerator Start()
     {
-        CardGameManager.Instance.OnSelectActions.Add(ShowDeckLoader);
-    }
+        CardGameManager.IsMultiplayer = true;
+        if (CardGameManager.IsMultiplayer) {
+            ((LocalNetManager)NetworkManager.singleton).SearchForHost();
+            yield return new WaitForSecondsRealtime(3.0f);
+            if (!NetworkManager.singleton.isNetworkActive)
+                NetworkManager.singleton.StartHost();
+        }
 
-    void Start()
-    {
         DeckLoader.fileCancelButton.onClick.RemoveAllListeners();
         DeckLoader.fileCancelButton.onClick.AddListener(BackToMainMenu);
         DeckLoader.textCancelButton.onClick.RemoveAllListeners();
         DeckLoader.textCancelButton.onClick.AddListener(BackToMainMenu);
+        DeckLoader.Show(Deck.DefaultName, null, LoadDeck);
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
-        CardSpawnManager.Instance.PlayAreaContent = playAreaContent;
     }
 
     void Update()
@@ -84,10 +88,10 @@ public class PlayMode : MonoBehaviour
 
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
-        if (UnityEngine.Networking.NetworkManager.singleton.isNetworkActive)
-            CardSpawnManager.Instance.LocalPlayer.MoveCardToServer(cardModel);
+        if (NetworkManager.singleton.isNetworkActive)
+            ((LocalNetManager)NetworkManager.singleton).LocalPlayer.MoveCardToServer(cardModel);
         else
-            CardSpawnManager.Instance.SetPlayActions(cardStack, cardModel);
+            ((LocalNetManager)NetworkManager.singleton).SetPlayActions(cardStack, cardModel);
     }
 
     public void PromptBackToMainMenu()

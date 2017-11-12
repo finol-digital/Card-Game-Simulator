@@ -23,6 +23,14 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public const float AlphaHitTestMinimumThreshold = 0.01f;
 
+    public bool IsOnline {
+        get { return NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive && this.transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent; }
+    }
+
+    public bool IsOwnedByOtherPlayer {
+        get { return IsOnline && !this.hasAuthority; }
+    }
+
     public bool IsProcessingSecondaryDragAction {
         get { return PointerPositions.Count > 1 || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right); }
     }
@@ -69,7 +77,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Update()
     {
-        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent) {
+        if (IsOnline) {
             if (this.hasAuthority)
                 _localPosition = this.transform.localPosition;
             else
@@ -128,7 +136,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent && !this.hasAuthority)
+        if (IsOwnedByOtherPlayer)
             return;
         
         EventSystem.current.SetSelectedGameObject(null, eventData);
@@ -155,7 +163,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent && !this.hasAuthority)
+        if (IsOwnedByOtherPlayer)
             return;
         
         CardModel cardModel;
@@ -173,7 +181,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (NetworkManager.singleton.isNetworkActive && this.transform.parent == CardSpawnManager.Instance.PlayAreaContent && !this.hasAuthority)
+        if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive && this.transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent && !this.hasAuthority)
             return;
         
         CardModel cardModel;

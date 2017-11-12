@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 public class Card : IComparable<Card>, IEquatable<Card>
 {
@@ -48,10 +49,14 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public int GetPropertyValueInt(string propertyName)
     {
+        PropertyDefValuePair property;
+        if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            return 0; 
+        
         int intValue;
-        if (Properties.ContainsKey(propertyName) && Properties [propertyName] != null && int.TryParse(Properties [propertyName].Value, out intValue))
-            return intValue;
-        return 0;
+        bool isHex = property.Value.StartsWith("0x");
+        int.TryParse(isHex ? property.Value.Substring(2) : property.Value, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
+        return intValue;
     }
 
     public int CompareTo(Card other)

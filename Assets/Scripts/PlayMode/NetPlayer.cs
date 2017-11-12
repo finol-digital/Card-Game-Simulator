@@ -8,17 +8,11 @@ public class NetPlayer : NetworkBehaviour
     void Start()
     {
         if (this.isLocalPlayer)
-            CardSpawnManager.Instance.LocalPlayer = this;
+            ((LocalNetManager)NetworkManager.singleton).LocalPlayer = this;
     }
 
     public void MoveCardToServer(CardModel cardModel)
     {
-        Vector3 position = cardModel.transform.position;
-        RectTransform cardRT = cardModel.transform as RectTransform;
-        cardRT.anchorMin = Vector2.zero;
-        cardRT.anchorMax = Vector2.zero;
-        cardRT.pivot = Vector2.zero;
-        cardRT.position = position;
         CmdSpawnCard(cardModel.Value.Id, cardModel.transform.position, cardModel.IsFacedown);
         Destroy(cardModel.gameObject);
     }
@@ -26,7 +20,7 @@ public class NetPlayer : NetworkBehaviour
     [Command]
     public void CmdSpawnCard(string cardId, Vector3 position, bool isFacedown)
     {
-        CardModel newCardModel = CardSpawnManager.Instance.SpawnCard(position, CardSpawnManager.CardModelAssetId).GetOrAddComponent<CardModel>();
+        CardModel newCardModel = ((LocalNetManager)NetworkManager.singleton).SpawnCard(position, LocalNetManager.CardModelAssetId).GetOrAddComponent<CardModel>();
         newCardModel.Value = CardGameManager.Current.Cards [cardId];
         newCardModel.IsFacedown = isFacedown;
         NetworkServer.SpawnWithClientAuthority(newCardModel.gameObject, this.gameObject);
