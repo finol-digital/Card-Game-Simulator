@@ -109,18 +109,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
             return 
                 string.Format(
                 CardGameManager.Current.CardImageURLFormat, 
-                CardGameManager.Current.CardImageURLBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageURLProperty), NameStrippedToLowerAlphaNum);
-        }
-    }
-
-    public string NameStrippedToLowerAlphaNum {
-        get { 
-            char[] cardNameAlphaNum = Name.Where(c => (char.IsLetterOrDigit(c) ||
-                                      char.IsWhiteSpace(c) ||
-                                      c == '-')).ToArray(); 
-            string cardImageName = new string(cardNameAlphaNum);
-            cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
-            return cardImageName;
+                CardGameManager.Current.CardImageURLBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageURLProperty));
         }
     }
 
