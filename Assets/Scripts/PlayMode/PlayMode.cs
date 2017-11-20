@@ -21,7 +21,6 @@ public class PlayMode : MonoBehaviour
 
     IEnumerator Start()
     {
-        CardGameManager.IsMultiplayer = true;
         if (CardGameManager.IsMultiplayer) {
             ((LocalNetManager)NetworkManager.singleton).SearchForHost();
             yield return new WaitForSecondsRealtime(3.0f);

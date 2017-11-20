@@ -48,7 +48,7 @@ public class MainMenu : MonoBehaviour
     void Update()
     {
         #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Escape) && !networkPanel.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Escape))
             Quit();
         #endif
     }

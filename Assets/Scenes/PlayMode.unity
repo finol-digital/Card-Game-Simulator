@@ -1186,7 +1186,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1243243123}
   - component: {fileID: 1243243121}
-  - component: {fileID: 1243243122}
   - component: {fileID: 1243243124}
   - component: {fileID: 1243243125}
   m_Layer: 0
@@ -1281,28 +1280,7 @@ MonoBehaviour:
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 2}
   playAreaContent: {fileID: 217919977}
-  discovery: {fileID: 1243243122}
---- !u!114 &1243243122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1243243120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e21bfc5d90e10d642a004d12853a1010, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BroadcastPort: 47777
-  m_BroadcastKey: 2222
-  m_BroadcastVersion: 1
-  m_BroadcastSubVersion: 1
-  m_BroadcastInterval: 1000
-  m_UseNetworkManager: 1
-  m_BroadcastData: CGS
-  m_ShowGUI: 0
-  m_OffsetX: 0
-  m_OffsetY: 0
+  discovery: {fileID: 0}
 --- !u!4 &1243243123
 Transform:
   m_ObjectHideFlags: 0

@@ -40,10 +40,17 @@ public class Card : IComparable<Card>, IEquatable<Card>
     {
         if (string.IsNullOrEmpty(propertyName) || !Properties.ContainsKey(propertyName))
             return string.Empty;
-
+        
         EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).FirstOrDefault();
-        if (enumDef != null)
-            return enumDef.GetStringFromIntFlags(GetPropertyValueInt(propertyName));
+        if (enumDef != null) {
+            int intValue;
+            string stringValue;
+            if (EnumDef.TryParseInt(Properties [propertyName].Value, out intValue))
+                return enumDef.GetStringFromIntFlags(intValue);
+            if (enumDef.Values.TryGetValue(Properties [propertyName].Value, out stringValue))
+                return stringValue;
+        }
+
         return Properties [propertyName] != null ? Properties [propertyName].Value : string.Empty;
     }
 

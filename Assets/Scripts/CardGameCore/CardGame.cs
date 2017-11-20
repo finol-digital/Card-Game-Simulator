@@ -294,6 +294,9 @@ public class CardGame
                 foreach (KeyValuePair<string, int> entry in enumProperties)
                     if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && (intValue & entry.Value) == 0)
                         propsMatch = false;
+                    else {
+                        // TODO: CHECK AGAINST INT INDEXES IN ENUMDEF
+                    }
                 if (propsMatch)
                     yield return card;
             }

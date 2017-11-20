@@ -25,7 +25,7 @@ The structure of this custom game folder is:
     - ...
 
 ## JSON File Structure
-When downloading a custom game from a url, the data that is being downloaded is the contents of the \<Name\>.json file. CGS generates the rest of the folder structure based off the information in that file. The structure for that file is:
+When downloading a custom game from a url, the data that is being downloaded is the contents of the \<Name\>.json file. CGS generates the rest of the folder structure based off the information in that file. The fields for that file are:
 
 {
 

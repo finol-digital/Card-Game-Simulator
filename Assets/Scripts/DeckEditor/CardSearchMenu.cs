@@ -36,9 +36,9 @@ public class CardSearchMenu : MonoBehaviour
                     case PropertyType.Enum:
                         if (!EnumPropertyFilters.ContainsKey(property.Name))
                             break;
-                        EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(property.Name)).First();
+                        EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(property.Name)).FirstOrDefault();
                         if (enumDef != null)
-                            filters += property.Name + ":" + enumDef.GetStringFromIntFlags(EnumPropertyFilters [property.Name]) + "; ";
+                            filters += property.Name + ":=" + EnumPropertyFilters [property.Name].ToString() + "; ";
                         break;
                 }
             }
@@ -89,12 +89,12 @@ public class CardSearchMenu : MonoBehaviour
         Vector2 panelPosition = stringPropertyPanel.transform.localPosition;
         foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
             GameObject newPanel = null;
-            if (property.Type == PropertyType.String)
-                newPanel = CreateStringPropertyFilterPanel(panelPosition, property.Name);
+            if (EnumDef.IsEnumProperty(property.Name))
+                newPanel = CreateEnumPropertyFilterPanel(panelPosition, property.Name);
             else if (property.Type == PropertyType.Integer)
                 newPanel = CreateIntegerPropertyFilterPanel(panelPosition, property.Name);
-            else if (property.Type == PropertyType.Enum)
-                newPanel = CreateEnumPropertyFilterPanel(panelPosition, property.Name);
+            else //if (property.Type == PropertyType.String)
+                newPanel = CreateStringPropertyFilterPanel(panelPosition, property.Name);
             
             if (newPanel != null) {
                 panelPosition.y -= PropertyPanelHeight;
@@ -162,10 +162,11 @@ public class CardSearchMenu : MonoBehaviour
         EnumPropertyFilters.TryGetValue(propertyName, out storedFilter);
 
         Vector3 localPosition = config.enumToggle.transform.localPosition;
+        int i = 0;
         foreach (KeyValuePair<string, string> enumValue in enumDef.Values) {
             int intValue;
             if (!EnumDef.TryParseInt(enumValue.Key, out intValue))
-                continue;
+                intValue = 1 << i;
             Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
             newToggle.isOn = (storedFilter & intValue) != 0;
             UnityAction<bool> enumChange = new UnityAction<bool>(isOn => SetEnumPropertyFilter(propertyName, intValue, isOn));
@@ -173,6 +174,7 @@ public class CardSearchMenu : MonoBehaviour
             newToggle.GetComponentInChildren<Text>().text = enumValue.Value;
             newToggle.transform.localPosition = localPosition;
             localPosition.x += ToggleButtonWidth;
+            i++;
         }
 
         config.enumToggle.gameObject.SetActive(false);

@@ -7,11 +7,12 @@ public class LocalNetManager : NetworkManager
 {
     public GameObject cardModelPrefab;
     public RectTransform playAreaContent;
-    public NetworkDiscovery discovery;
 
     public NetPlayer LocalPlayer { get; set; }
 
     public static NetworkHash128 CardModelAssetId { get; private set; }
+
+    private NetworkDiscovery _discovery;
 
     void Start()
     {
@@ -40,23 +41,31 @@ public class LocalNetManager : NetworkManager
 
     public void SearchForHost()
     {
-        if (discovery.running)
-            discovery.StopBroadcast();
-        discovery.Initialize();
-        discovery.StartAsClient();
+        if (Discovery.running)
+            Discovery.StopBroadcast();
+        Discovery.Initialize();
+        Discovery.StartAsClient();
     }
 
     public override void OnStartHost()
     {
         base.OnStartHost();
-        if (discovery.running)
-            discovery.StopBroadcast();
-        discovery.Initialize();
-        discovery.StartAsServer();
+        if (Discovery.running)
+            Discovery.StopBroadcast();
+        Discovery.Initialize();
+        Discovery.StartAsServer();
     }
 
     public override void OnClientConnect(NetworkConnection conn)
     {
         ClientScene.AddPlayer(conn, 0);
+    }
+
+    public NetworkDiscovery Discovery {
+        get {
+            if (_discovery == null)
+                _discovery = CardGameManager.Instance.gameObject.GetOrAddComponent<AutoJoinDiscovery>();
+            return _discovery;
+        }
     }
 }

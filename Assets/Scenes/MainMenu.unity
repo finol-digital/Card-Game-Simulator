@@ -455,7 +455,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameLoadMenuPrefab: {fileID: 1780522991010872, guid: e724368f37ff7b74084c48c4dbd57e3a,
     type: 2}
-  playPanel: {fileID: 0}
   quitButton: {fileID: 1452764036}
   versionText: {fileID: 1467840448}
 --- !u!1 &267957204
