@@ -1,7 +1,23 @@
 {
 	"cardProperties": [
-		{"name": "lowerValue", "type": "integer" },
-		{"name": "higherValue", "type": "integer" }
+		{"name": "type", "type": "enum" },
+		{"name": "suit", "type": "enum" },
+		{"name": "rank", "type": "integer" }
+	],
+	"enums": [
+		{"property": "type",  "values": {
+			"0x1": "single",
+			"0x2": "double"
+		}},
+		{"property": "suit",  "values": {
+			"0x1": "0",
+			"0x2": "1",
+			"0x4": "2",
+			"0x8": "3",
+			"0x10": "4",
+			"0x20": "5",
+			"0x40": "6"
+		}}
 	],
 	"handStartSize": "7",
 	"name": "Dominoes"

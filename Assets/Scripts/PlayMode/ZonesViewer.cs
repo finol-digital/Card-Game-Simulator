@@ -11,6 +11,7 @@ public class ZonesViewer : MonoBehaviour
 
     public RectTransform zonesPanel;
     public RectTransform zonesScrollView;
+    public RectTransform zonesContent;
     public List<ExtensibleCardZone> zones;
 
     private bool _isExtended;
@@ -20,6 +21,10 @@ public class ZonesViewer : MonoBehaviour
     {
         IsExtended = zonesPanel.rect.height < HeightCheck;
         IsVisible = true;
+        float height = 0f;
+        foreach (ExtensibleCardZone zone in zones)
+            height += (zone.transform as RectTransform).rect.height;
+        zonesContent.sizeDelta = new Vector2(zonesContent.sizeDelta.x, height);
     }
 
     void OnRectTransformDimensionsChange()

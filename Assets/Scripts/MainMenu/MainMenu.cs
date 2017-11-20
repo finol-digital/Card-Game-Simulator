@@ -28,24 +28,19 @@ public class MainMenu : MonoBehaviour
         GameLoader.Show();
     }
 
-    public void GoToPlayMode()
+    public void PlaySolo()
     {
+        CardGameManager.IsMultiplayer = false;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
-    public void HostGame()
+    public void PlayLocal()
     {
+        CardGameManager.IsMultiplayer = true;
+        SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
-    public void HostAndJoinGame()
-    {
-    }
-
-    public void JoinGame()
-    {
-    }
-
-    public void GoToDeckEditor()
+    public void EditDeck()
     {
         SceneManager.LoadScene(DeckEditorSceneIndex);
     }

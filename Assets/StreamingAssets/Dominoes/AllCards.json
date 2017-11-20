@@ -1,29 +1,29 @@
-[{"name":"0/0", "id": "0", "lowerValue": "0", "higherValue": "0"}
-,{"name":"0/1", "id": "1", "lowerValue": "0", "higherValue": "1"}
-,{"name":"0/2", "id": "2", "lowerValue": "0", "higherValue": "2"}
-,{"name":"0/3", "id": "3", "lowerValue": "0", "higherValue": "3"}
-,{"name":"0/4", "id": "4", "lowerValue": "0", "higherValue": "4"}
-,{"name":"0/5", "id": "5", "lowerValue": "0", "higherValue": "5"}
-,{"name":"0/6", "id": "6", "lowerValue": "0", "higherValue": "6"}
-,{"name":"1/1", "id": "7", "lowerValue": "1", "higherValue": "1"}
-,{"name":"1/2", "id": "8", "lowerValue": "1", "higherValue": "2"}
-,{"name":"1/3", "id": "9", "lowerValue": "1", "higherValue": "3"}
-,{"name":"1/4", "id": "10", "lowerValue": "1", "higherValue": "4"}
-,{"name":"1/5", "id": "11", "lowerValue": "1", "higherValue": "5"}
-,{"name":"1/6", "id": "12", "lowerValue": "1", "higherValue": "6"}
-,{"name":"2/2", "id": "13", "lowerValue": "2", "higherValue": "2"}
-,{"name":"2/3", "id": "14", "lowerValue": "2", "higherValue": "3"}
-,{"name":"2/4", "id": "15", "lowerValue": "2", "higherValue": "4"}
-,{"name":"2/5", "id": "16", "lowerValue": "2", "higherValue": "5"}
-,{"name":"2/6", "id": "17", "lowerValue": "2", "higherValue": "6"}
-,{"name":"3/3", "id": "18", "lowerValue": "3", "higherValue": "3"}
-,{"name":"3/4", "id": "19", "lowerValue": "3", "higherValue": "4"}
-,{"name":"3/5", "id": "20", "lowerValue": "3", "higherValue": "5"}
-,{"name":"3/6", "id": "21", "lowerValue": "3", "higherValue": "6"}
-,{"name":"4/4", "id": "22", "lowerValue": "4", "higherValue": "4"}
-,{"name":"4/5", "id": "23", "lowerValue": "4", "higherValue": "5"}
-,{"name":"4/6", "id": "24", "lowerValue": "4", "higherValue": "6"}
-,{"name":"5/5", "id": "25", "lowerValue": "5", "higherValue": "5"}
-,{"name":"5/6", "id": "26", "lowerValue": "6", "higherValue": "6"}
-,{"name":"6/6", "id": "27", "lowerValue": "6", "higherValue": "6"}
+[{"set": "Dominoes", "name":"0-0", "id": "0", "type": "0x2", "suit": "0x1", "rank": "0"}
+,{"set": "Dominoes", "name":"0-1", "id": "1", "type": "0x1", "suit": "0x3", "rank": "1"}
+,{"set": "Dominoes", "name":"0-2", "id": "2", "type": "0x1", "suit": "0x5", "rank": "2"}
+,{"set": "Dominoes", "name":"0-3", "id": "3", "type": "0x1", "suit": "0x9", "rank": "3"}
+,{"set": "Dominoes", "name":"0-4", "id": "4", "type": "0x1", "suit": "0x11", "rank": "4"}
+,{"set": "Dominoes", "name":"0-5", "id": "5", "type": "0x1", "suit": "0x21", "rank": "5"}
+,{"set": "Dominoes", "name":"0-6", "id": "6", "type": "0x1", "suit": "0x41", "rank": "6"}
+,{"set": "Dominoes", "name":"1-1", "id": "7", "type": "0x2", "suit": "0x2", "rank": "2"}
+,{"set": "Dominoes", "name":"1-2", "id": "8", "type": "0x1", "suit": "0x6", "rank": "3"}
+,{"set": "Dominoes", "name":"1-3", "id": "9", "type": "0x1", "suit": "0x10", "rank": "4"}
+,{"set": "Dominoes", "name":"1-4", "id": "10", "type": "0x1", "suit": "0x12", "rank": "5"}
+,{"set": "Dominoes", "name":"1-5", "id": "11", "type": "0x1", "suit": "0x22", "rank": "6"}
+,{"set": "Dominoes", "name":"1-6", "id": "12", "type": "0x1", "suit": "0x42", "rank": "7"}
+,{"set": "Dominoes", "name":"2-2", "id": "13", "type": "0x2", "suit": "0x4", "rank": "4"}
+,{"set": "Dominoes", "name":"2-3", "id": "14", "type": "0x1", "suit": "0xC", "rank": "5"}
+,{"set": "Dominoes", "name":"2-4", "id": "15", "type": "0x1", "suit": "0x14", "rank": "6"}
+,{"set": "Dominoes", "name":"2-5", "id": "16", "type": "0x1", "suit": "0x24", "rank": "7"}
+,{"set": "Dominoes", "name":"2-6", "id": "17", "type": "0x1", "suit": "0x44", "rank": "8"}
+,{"set": "Dominoes", "name":"3-3", "id": "18", "type": "0x2", "suit": "0x8", "rank": "6"}
+,{"set": "Dominoes", "name":"3-4", "id": "19", "type": "0x1", "suit": "0x18", "rank": "7"}
+,{"set": "Dominoes", "name":"3-5", "id": "20", "type": "0x1", "suit": "0x28", "rank": "8"}
+,{"set": "Dominoes", "name":"3-6", "id": "21", "type": "0x1", "suit": "0x48", "rank": "9"}
+,{"set": "Dominoes", "name":"4-4", "id": "22", "type": "0x2", "suit": "0x10", "rank": "8"}
+,{"set": "Dominoes", "name":"4-5", "id": "23", "type": "0x1", "suit": "0x30", "rank": "9"}
+,{"set": "Dominoes", "name":"4-6", "id": "24", "type": "0x1", "suit": "0x50", "rank": "10"}
+,{"set": "Dominoes", "name":"5-5", "id": "25", "type": "0x2", "suit": "0x20", "rank": "10"}
+,{"set": "Dominoes", "name":"5-6", "id": "26", "type": "0x1", "suit": "0x60", "rank": "11"}
+,{"set": "Dominoes", "name":"6-6", "id": "27", "type": "0x2", "suit": "0x40", "rank": "12"}
 ]

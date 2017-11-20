@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Linq;
+using UnityEngine.Networking;
 
 public class PlayMode : MonoBehaviour
 {
@@ -10,27 +11,29 @@ public class PlayMode : MonoBehaviour
 
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
-    public RectTransform playArea;
+    public RectTransform playAreaContent;
     public ExtensibleCardZone extraZone;
-    public StackedZone discardZone;
     public StackedZone deckZone;
     public ExtensibleCardZone handZone;
 
     private DeckLoadMenu _deckLoader;
     private CardSearchMenu _cardSearcher;
 
-    void OnEnable()
+    IEnumerator Start()
     {
-        CardGameManager.Instance.OnSelectActions.Add(ShowDeckLoader);
-    }
+        if (CardGameManager.IsMultiplayer) {
+            ((LocalNetManager)NetworkManager.singleton).SearchForHost();
+            yield return new WaitForSecondsRealtime(3.0f);
+            if (!NetworkManager.singleton.isNetworkActive)
+                NetworkManager.singleton.StartHost();
+        }
 
-    void Start()
-    {
         DeckLoader.fileCancelButton.onClick.RemoveAllListeners();
         DeckLoader.fileCancelButton.onClick.AddListener(BackToMainMenu);
         DeckLoader.textCancelButton.onClick.RemoveAllListeners();
         DeckLoader.textCancelButton.onClick.AddListener(BackToMainMenu);
-        playArea.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(SetPlayActions);
+        DeckLoader.Show(Deck.DefaultName, null, LoadDeck);
+        playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
     }
 
     void Update()
@@ -71,10 +74,10 @@ public class PlayMode : MonoBehaviour
 
     public void ShowCardSearcher()
     {
-        CardSearcher.Show(null, null, AddCard);
+        CardSearcher.Show(null, null, AddCardToHand);
     }
 
-    public void AddCard(List<Card> results)
+    public void AddCardToHand(List<Card> results)
     {
         if (results == null || results.Count < 1)
             return;
@@ -82,10 +85,12 @@ public class PlayMode : MonoBehaviour
         handZone.AddCard(results [0]);
     }
 
-    public void SetPlayActions(CardStack cardStack, CardModel cardModel)
+    public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
-        cardModel.DoubleClickAction = CardModel.ToggleFacedown;
-        cardModel.SecondaryDragAction = cardModel.Rotate;
+        if (NetworkManager.singleton.isNetworkActive)
+            ((LocalNetManager)NetworkManager.singleton).LocalPlayer.MoveCardToServer(cardModel);
+        else
+            ((LocalNetManager)NetworkManager.singleton).SetPlayActions(cardStack, cardModel);
     }
 
     public void PromptBackToMainMenu()

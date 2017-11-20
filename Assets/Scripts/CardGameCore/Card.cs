@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 public class Card : IComparable<Card>, IEquatable<Card>
 {
@@ -39,19 +40,30 @@ public class Card : IComparable<Card>, IEquatable<Card>
     {
         if (string.IsNullOrEmpty(propertyName) || !Properties.ContainsKey(propertyName))
             return string.Empty;
-
+        
         EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).FirstOrDefault();
-        if (enumDef != null)
-            return enumDef.GetStringFromIntFlags(GetPropertyValueInt(propertyName));
+        if (enumDef != null) {
+            int intValue;
+            string stringValue;
+            if (EnumDef.TryParseInt(Properties [propertyName].Value, out intValue))
+                return enumDef.GetStringFromIntFlags(intValue);
+            if (enumDef.Values.TryGetValue(Properties [propertyName].Value, out stringValue))
+                return stringValue;
+        }
+
         return Properties [propertyName] != null ? Properties [propertyName].Value : string.Empty;
     }
 
     public int GetPropertyValueInt(string propertyName)
     {
+        PropertyDefValuePair property;
+        if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            return 0; 
+        
         int intValue;
-        if (Properties.ContainsKey(propertyName) && Properties [propertyName] != null && int.TryParse(Properties [propertyName].Value, out intValue))
-            return intValue;
-        return 0;
+        bool isHex = property.Value.StartsWith("0x");
+        int.TryParse(isHex ? property.Value.Substring(2) : property.Value, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
+        return intValue;
     }
 
     public int CompareTo(Card other)
@@ -104,18 +116,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
             return 
                 string.Format(
                 CardGameManager.Current.CardImageURLFormat, 
-                CardGameManager.Current.CardImageURLBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageURLProperty), NameStrippedToLowerAlphaNum);
-        }
-    }
-
-    public string NameStrippedToLowerAlphaNum {
-        get { 
-            char[] cardNameAlphaNum = Name.Where(c => (char.IsLetterOrDigit(c) ||
-                                      char.IsWhiteSpace(c) ||
-                                      c == '-')).ToArray(); 
-            string cardImageName = new string(cardNameAlphaNum);
-            cardImageName = cardImageName.Replace(" ", "_").Replace("-", "_").ToLower();
-            return cardImageName;
+                CardGameManager.Current.CardImageURLBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageURLProperty));
         }
     }
 

@@ -1091,6 +1091,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zonesPanel: {fileID: 224691393985084552}
   zonesScrollView: {fileID: 224248920115532768}
+  zonesContent: {fileID: 224319334060790952}
   zones:
   - {fileID: 114706531399332996}
   - {fileID: 114462057243742528}
@@ -2260,8 +2261,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114994820473725660}
   m_HandleRect: {fileID: 224652935489840904}
   m_Direction: 2
-  m_Value: 0.5
-  m_Size: 0.010312011
+  m_Value: 0.49999997
+  m_Size: 0.009999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3239,7 +3240,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!223 &223215204220625612
 Canvas:
@@ -3259,7 +3260,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!223 &223455554254488956
 Canvas:
@@ -3279,7 +3280,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!223 &223495577826093442
 Canvas:
@@ -3319,7 +3320,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!224 &224028782779521192
 RectTransform:
@@ -3827,8 +3828,8 @@ RectTransform:
   m_Father: {fileID: 224880233493838788}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.494844}
-  m_AnchorMax: {x: 1, y: 0.505156}
+  m_AnchorMin: {x: 0, y: 0.49499997}
+  m_AnchorMax: {x: 1, y: 0.505}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

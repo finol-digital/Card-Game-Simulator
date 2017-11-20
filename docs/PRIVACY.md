@@ -63,10 +63,8 @@ We do not specifically market to children under the age of 13 years old.
 The Fair Information Practices Principles form the backbone of privacy law in the United States and the concepts they include have played a significant role in the development of data protection laws around the globe. Understanding the Fair Information Practice Principles and how they should be implemented is critical to comply with the various privacy laws that protect personal information.
 
 In order to be in line with Fair Information Practices we will take the following responsive action, should a data breach occur:
-We will notify you via email
-- Within 7 business days
-We will notify the users via in-site notification
-- Within 7 business days
+- We will notify you via email within 7 business days.
+- We will notify the users via in-site notification within 7 business days.
 
 We also agree to the Individual Redress Principle which requires that individuals have the right to legally pursue enforceable rights against data collectors and processors who fail to adhere to the law. This principle requires not only that individuals have enforceable rights against data users, but also that individuals have recourse to courts or government agencies to investigate and/or prosecute non-compliance by data processors.
 
