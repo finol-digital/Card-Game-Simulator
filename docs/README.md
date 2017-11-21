@@ -19,7 +19,7 @@ In the resulting popup, type or paste the AutoUpdate URL for the custom game you
 
 ![Game Popup Image](screenshots/gamepopup.png)
 
-For example, the AutoUpdate URL for Hearthstone is: https://hs.finoldigital.com/
+For example, the CGS AutoUpdate URL for Hearthstone is: https://hearthstone.finoldigital.com/
 
 You can also define your own custom game(s) by following the [Custom Games Documentation](CUSTOM.md).
 

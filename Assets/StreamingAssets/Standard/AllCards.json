@@ -1,7 +1,7 @@
-[{"set": "Standard", "name":"Ace of Clubs", "id":"ace_of_clubs", "rank":"Ace", "suit":"Clubs"}
-,{"set": "Standard", "name":"Ace of Diamonds", "id":"ace_of_diamonds", "rank":"Ace", "suit":"Diamonds"}
-,{"set": "Standard", "name":"Ace of Hearts", "id":"ace_of_hearts", "rank":"Ace", "suit":"Hearts"}
-,{"set": "Standard", "name":"Ace of Spades", "id":"ace_of_spades", "rank":"Ace", "suit":"Spades"}
+[{"set": "Standard", "name":"Ace of Clubs", "id":"ace_of_clubs", "rank":"1", "suit":"Clubs"}
+,{"set": "Standard", "name":"Ace of Diamonds", "id":"ace_of_diamonds", "rank":"1", "suit":"Diamonds"}
+,{"set": "Standard", "name":"Ace of Hearts", "id":"ace_of_hearts", "rank":"1", "suit":"Hearts"}
+,{"set": "Standard", "name":"Ace of Spades", "id":"ace_of_spades", "rank":"1", "suit":"Spades"}
 ,{"set": "Standard", "name":"2 of Clubs", "id":"2_of_clubs", "rank":"2", "suit":"Clubs"}
 ,{"set": "Standard", "name":"2 of Diamonds", "id":"2_of_diamonds", "rank":"2", "suit":"Diamonds"}
 ,{"set": "Standard", "name":"2 of Hearts", "id":"2_of_hearts", "rank":"2", "suit":"Hearts"}
@@ -38,18 +38,18 @@
 ,{"set": "Standard", "name":"10 of Diamonds", "id":"10_of_diamonds", "rank":"10", "suit":"Diamonds"}
 ,{"set": "Standard", "name":"10 of Hearts", "id":"10_of_hearts", "rank":"10", "suit":"Hearts"}
 ,{"set": "Standard", "name":"10 of Spades", "id":"10_of_spades", "rank":"10", "suit":"Spades"}
-,{"set": "Standard", "name":"Jack of Clubs", "id":"jack_of_clubs", "rank":"Jack", "suit":"Clubs"}
-,{"set": "Standard", "name":"Jack of Diamonds", "id":"jack_of_diamonds", "rank":"Jack", "suit":"Diamonds"}
-,{"set": "Standard", "name":"Jack of Hearts", "id":"jack_of_hearts", "rank":"Jack", "suit":"Hearts"}
-,{"set": "Standard", "name":"Jack of Spades", "id":"jack_of_spades", "rank":"Jack", "suit":"Spades"}
-,{"set": "Standard", "name":"Queen of Clubs", "id":"queen_of_clubs", "rank":"Queen", "suit":"Clubs"}
-,{"set": "Standard", "name":"Queen of Diamonds", "id":"queen_of_diamonds", "rank":"Queen", "suit":"Diamonds"}
-,{"set": "Standard", "name":"Queen of Hearts", "id":"queen_of_hearts", "rank":"Queen", "suit":"Hearts"}
-,{"set": "Standard", "name":"Queen of Spades", "id":"queen_of_spades", "rank":"Queen", "suit":"Spades"}
-,{"set": "Standard", "name":"King of Clubs", "id":"king_of_clubs", "rank":"King", "suit":"Clubs"}
-,{"set": "Standard", "name":"King of Diamonds", "id":"king_of_diamonds", "rank":"King", "suit":"Diamonds"}
-,{"set": "Standard", "name":"King of Hearts", "id":"king_of_hearts", "rank":"King", "suit":"Hearts"}
-,{"set": "Standard", "name":"King of Spades", "id":"king_of_spades", "rank":"King", "suit":"Spades"}
-,{"set": "Standard", "name":"Black Joker", "id":"black_joker", "rank":"Joker", "suit":"Black"}
-,{"set": "Standard", "name":"Red Joker", "id":"red_joker", "rank":"Joker", "suit":"Red"}
+,{"set": "Standard", "name":"Jack of Clubs", "id":"jack_of_clubs", "rank":"11", "suit":"Clubs"}
+,{"set": "Standard", "name":"Jack of Diamonds", "id":"jack_of_diamonds", "rank":"11", "suit":"Diamonds"}
+,{"set": "Standard", "name":"Jack of Hearts", "id":"jack_of_hearts", "rank":"11", "suit":"Hearts"}
+,{"set": "Standard", "name":"Jack of Spades", "id":"jack_of_spades", "rank":"11", "suit":"Spades"}
+,{"set": "Standard", "name":"Queen of Clubs", "id":"queen_of_clubs", "rank":"12", "suit":"Clubs"}
+,{"set": "Standard", "name":"Queen of Diamonds", "id":"queen_of_diamonds", "rank":"12", "suit":"Diamonds"}
+,{"set": "Standard", "name":"Queen of Hearts", "id":"queen_of_hearts", "rank":"12", "suit":"Hearts"}
+,{"set": "Standard", "name":"Queen of Spades", "id":"queen_of_spades", "rank":"12", "suit":"Spades"}
+,{"set": "Standard", "name":"King of Clubs", "id":"king_of_clubs", "rank":"13", "suit":"Clubs"}
+,{"set": "Standard", "name":"King of Diamonds", "id":"king_of_diamonds", "rank":"13", "suit":"Diamonds"}
+,{"set": "Standard", "name":"King of Hearts", "id":"king_of_hearts", "rank":"13", "suit":"Hearts"}
+,{"set": "Standard", "name":"King of Spades", "id":"king_of_spades", "rank":"13", "suit":"Spades"}
+,{"set": "Standard", "name":"Black Joker", "id":"black_joker", "rank":"0", "suit":"Black"}
+,{"set": "Standard", "name":"Red Joker", "id":"red_joker", "rank":"0", "suit":"Red"}
 ]
