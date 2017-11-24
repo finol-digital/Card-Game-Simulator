@@ -15,7 +15,7 @@ Custom card games can be added by pressing the + button on the main menu:
 
 ![Main Menu Image](screenshots/mainmenu.png)
 
-In the resulting popup, type or paste the AutoUpdate URL for the game you would like to download:
+In the resulting popup, enter the CGS AutoUpdate URL for the game you would like to download:
 
 ![Game Popup Image](screenshots/gamepopup.png)
 
