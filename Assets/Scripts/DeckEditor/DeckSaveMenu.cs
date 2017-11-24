@@ -23,13 +23,16 @@ public class DeckSaveMenu : MonoBehaviour
 
     public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
 
-    public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null)
+	public bool DoesAutoOverwrite { get; private set; }
+
+	public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
         CurrentDeck = deckToShow ?? new Deck();
         NameChangeCallback = nameChangeCallback;
         DeckSaveCallback = deckSaveCallback;
+		DoesAutoOverwrite = overwrite;
         nameInputField.text = CurrentDeck.Name;
         textOutputArea.text = CurrentDeck.ToString();
     }
@@ -54,7 +57,7 @@ public class DeckSaveMenu : MonoBehaviour
     public void AttemptSaveAndHide()
     {
         Deck filePathFinder = new Deck(nameInputField.text, CardGameManager.Current.DeckFileType);
-        if (File.Exists(filePathFinder.FilePath))
+        if (!DoesAutoOverwrite && File.Exists(filePathFinder.FilePath))
             CardGameManager.Instance.Messenger.Prompt(OverWriteDeckPrompt, SaveToFile);
         else
             SaveToFile();

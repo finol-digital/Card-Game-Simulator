@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler
 {
-    public Scrollbar scrollBar;
+	public DeckEditor editor;
     public bool scrollsRight = false;
     public float scrollAmount = 0.01f;
     public float holdFrequency = 0.01f;
@@ -40,9 +40,10 @@ public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointe
 
     IEnumerator MoveScrollbar()
     {
-        float scrollValue = Mathf.Clamp01(scrollBar.value + scrollAmount * (scrollsRight ? 1 : -1));
-        scrollBar.value = scrollValue;
-        if (scrollBar.value > 0 && scrollBar.value < 1) {
+        float scrollValue = Mathf.Clamp01(editor.scrollBar.value + scrollAmount * (scrollsRight ? 1 : -1));
+		editor.CurrentCardStackIndex = Mathf.RoundToInt (scrollValue * editor.CardStackCount);
+        editor.scrollBar.value = scrollValue;
+        if (editor.scrollBar.value > 0 && editor.scrollBar.value < 1) {
             yield return new WaitForSeconds(holdFrequency);
             StartCoroutine(MoveScrollbar());
         }
@@ -50,7 +51,7 @@ public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointe
 
     void Update()
     {
-        _canvasGroup.blocksRaycasts = (!scrollsRight && scrollBar.value != 0) || (scrollsRight && scrollBar.value != 1);
+        _canvasGroup.blocksRaycasts = (!scrollsRight && editor.scrollBar.value != 0) || (scrollsRight && editor.scrollBar.value != 1);
     }
 
 }

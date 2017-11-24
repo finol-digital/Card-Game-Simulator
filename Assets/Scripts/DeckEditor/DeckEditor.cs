@@ -14,9 +14,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public const int CardStackSize = 8;
 
     public int CardStackCount {
-        get {
-            return Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxSize / CardStackSize);
-        }
+        get { return Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxSize / CardStackSize); }
     }
 
     public Deck CurrentDeck {
@@ -27,9 +25,17 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
                     deck.Cards.Add(card.Value);
             return deck;
         }
-    }
+	}
 
-    public bool HasChanged { get; private set; }
+	public Deck SavedDeck { get; private set; }
+
+    public bool HasChanged {
+		get {
+			if (SavedDeck == null)
+				return false;
+			return !CurrentDeck.Equals (SavedDeck);
+		}
+	}
 
     public GameObject cardModelPrefab;
     public GameObject cardStackPrefab;
@@ -37,7 +43,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public GameObject deckSaveMenuPrefab;
     public RectTransform layoutArea;
     public RectTransform layoutContent;
-    public Scrollbar horizontalScrollbar;
+    public Scrollbar scrollBar;
     public Text nameText;
     public Text sizeText;
 
@@ -106,7 +112,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         }
 
         float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * ((float)CurrentCardStackIndex + ((CurrentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
-        horizontalScrollbar.value = Mathf.Clamp01(newSpot);
+        scrollBar.value = Mathf.Clamp01(newSpot);
 
         OnAddCardModel(CardStacks [CurrentCardStackIndex], newCardModel);
     }
@@ -120,14 +126,12 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         cardModel.SecondaryDragAction = cardModel.UpdateParentCardStackScrollRect;
         cardModel.DoubleClickAction = DestroyCardModel;
 
-        HasChanged = true;
         UpdateDeckName();
         UpdateDeckSize();
     }
 
     public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
-        HasChanged = true;
         UpdateDeckName();
         UpdateDeckSize();
     }
@@ -140,7 +144,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         cardModel.transform.SetParent(null);
         GameObject.Destroy(cardModel.gameObject);
         CardInfoViewer.Instance.IsVisible = false;
-        HasChanged = true;
+
         UpdateDeckName();
         UpdateDeckSize();
     }
@@ -164,7 +168,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         CurrentCardStackIndex = 0;
 
         CardInfoViewer.Instance.IsVisible = false;
-        HasChanged = false;
+		SavedDeck = null;
         UpdateDeckName(Deck.DefaultName);
         UpdateDeckSize();
     }
@@ -191,7 +195,9 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public void ShowDeckLoadMenu()
     {
-        DeckLoader.Show(CurrentDeck.Name, UpdateDeckName, LoadDeck);
+		Deck currentDeck = CurrentDeck;
+		string orignalText = currentDeck.Cards.Count > 0 ? currentDeck.ToString () : null;
+		DeckLoader.Show(CurrentDeck.Name, UpdateDeckName, LoadDeck, orignalText);
     }
 
     public void LoadDeck(Deck newDeck)
@@ -202,19 +208,21 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         Clear();
         foreach (Card card in newDeck.Cards)
             AddCard(card);
-        HasChanged = false;
+		SavedDeck = newDeck;
         UpdateDeckName(newDeck.Name);
         UpdateDeckSize();
     }
 
     public void ShowDeckSaveMenu()
     {
-        DeckSaver.Show(CurrentDeck, UpdateDeckName, OnSaveDeck);
+		Deck deckToSave = CurrentDeck;
+		bool overwrite = SavedDeck != null && deckToSave.Name.Equals (SavedDeck.Name);
+		DeckSaver.Show(deckToSave, UpdateDeckName, OnSaveDeck, overwrite);
     }
 
     public void OnSaveDeck(Deck savedDeck)
     {
-        HasChanged = false;
+		SavedDeck = savedDeck;
         UpdateDeckName(savedDeck.Name);
         UpdateDeckSize();
     }
@@ -268,4 +276,5 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             return _deckSaver;
         }
     }
+
 }

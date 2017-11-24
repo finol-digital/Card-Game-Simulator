@@ -11,7 +11,6 @@ public delegate void OnSearchDelegate(List<Card> searchResults);
 public class CardSearchMenu : MonoBehaviour
 {
     public const float PropertyPanelHeight = 150f;
-    public const float ToggleButtonWidth = 200f;
 
     public string Filters {
         get {
@@ -162,23 +161,30 @@ public class CardSearchMenu : MonoBehaviour
         EnumPropertyFilters.TryGetValue(propertyName, out storedFilter);
 
         Vector3 localPosition = config.enumToggle.transform.localPosition;
+		float panelWidth = 0;
         int i = 0;
         foreach (KeyValuePair<string, string> enumValue in enumDef.Values) {
             int intValue;
-            if (!EnumDef.TryParseInt(enumValue.Key, out intValue))
-                intValue = 1 << i;
+			if (!EnumDef.TryParseInt (enumValue.Key, out intValue)) {
+				intValue = 1 << i;
+				enumDef.Lookup [intValue] = enumValue.Key;
+			}
             Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
             newToggle.isOn = (storedFilter & intValue) != 0;
             UnityAction<bool> enumChange = new UnityAction<bool>(isOn => SetEnumPropertyFilter(propertyName, intValue, isOn));
             newToggle.onValueChanged.AddListener(enumChange);
             newToggle.GetComponentInChildren<Text>().text = enumValue.Value;
             newToggle.transform.localPosition = localPosition;
-            localPosition.x += ToggleButtonWidth;
+			float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 20;
+			RectTransform imageTransform = (RectTransform)newToggle.GetComponentInChildren<Image> ().transform;
+			imageTransform.sizeDelta = new Vector2 (width, imageTransform.sizeDelta.y); 
+			localPosition.x += width;
+			panelWidth += width;
             i++;
         }
 
         config.enumToggle.gameObject.SetActive(false);
-        config.enumContent.sizeDelta = new Vector2(ToggleButtonWidth * enumDef.Values.Count, config.enumContent.sizeDelta.y);
+		config.enumContent.sizeDelta = new Vector2(panelWidth, config.enumContent.sizeDelta.y);
 
         return newPanel;
     }

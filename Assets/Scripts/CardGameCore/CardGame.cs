@@ -291,12 +291,19 @@ public class CardGame
                 foreach (KeyValuePair<string, int> entry in intMaxProperties)
                     if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && intValue > entry.Value)
                         propsMatch = false;
-                foreach (KeyValuePair<string, int> entry in enumProperties)
-                    if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && (intValue & entry.Value) == 0)
-                        propsMatch = false;
-                    else {
-                        // TODO: CHECK AGAINST INT INDEXES IN ENUMDEF
-                    }
+				foreach (KeyValuePair<string, int> entry in enumProperties) {
+					PropertyDefValuePair prop;
+					if (card.Properties.TryGetValue(entry.Key, out prop) && prop.Value.StartsWith ("0x")) {
+						if (EnumDef.TryParseInt (prop.Value, out intValue) && (intValue & entry.Value) == 0)
+							propsMatch = false;
+					}
+					else if (EnumDef.IsEnumProperty(entry.Key)){
+						EnumDef enumDef = Enums.Where (def => def.Property.Equals (entry.Key)).First ();
+						// TODO: CHECK AGAINST INT INDEXES IN ENUMDEF
+					}
+					else
+						propsMatch = false;
+				}
                 if (propsMatch)
                     yield return card;
             }

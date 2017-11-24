@@ -34,7 +34,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public Deck LoadedDeck { get; private set; }
 
-    public void Show(string originalName = Deck.DefaultName, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckLoadedDelegate loadCallback = null)
+	public void Show(string originalName = Deck.DefaultName, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckLoadedDelegate loadCallback = null, string originalText = null)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
@@ -85,6 +85,8 @@ public class DeckLoadMenu : MonoBehaviour
         }
 
         nameInputField.text = originalName;
+		if (!string.IsNullOrEmpty (originalText))
+			textInputField.text = originalText;
     }
 
     void Update()
