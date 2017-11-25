@@ -169,9 +169,10 @@ public class CardGame
             Error = e.Message;
             yield break;
         }
-        if (!initialDirectory.Equals(FilePathBase)) {
+        if (AutoUpdate || !initialDirectory.Equals(FilePathBase)) {
             yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
-            Directory.Delete(initialDirectory, true);
+            if (!initialDirectory.Equals(FilePathBase))
+                Directory.Delete(initialDirectory, true);
         }
 
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
@@ -291,19 +292,20 @@ public class CardGame
                 foreach (KeyValuePair<string, int> entry in intMaxProperties)
                     if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && intValue > entry.Value)
                         propsMatch = false;
-				foreach (KeyValuePair<string, int> entry in enumProperties) {
-					PropertyDefValuePair prop;
-					if (card.Properties.TryGetValue(entry.Key, out prop) && prop.Value.StartsWith ("0x")) {
-						if (EnumDef.TryParseInt (prop.Value, out intValue) && (intValue & entry.Value) == 0)
-							propsMatch = false;
-					}
-					else if (EnumDef.IsEnumProperty(entry.Key)){
-						EnumDef enumDef = Enums.Where (def => def.Property.Equals (entry.Key)).First ();
-						// TODO: CHECK AGAINST INT INDEXES IN ENUMDEF
-					}
-					else
-						propsMatch = false;
-				}
+                foreach (KeyValuePair<string, int> entry in enumProperties) {
+                    PropertyDefValuePair prop;
+                    if (card.Properties.TryGetValue(entry.Key, out prop) && prop.Value.StartsWith("0x")) {
+                        if (EnumDef.TryParseInt(prop.Value, out intValue) && (intValue & entry.Value) == 0)
+                            propsMatch = false;
+                    } else if (EnumDef.IsEnumProperty(entry.Key)) {
+                        string stringValue;
+                        EnumDef enumDef = Enums.Where(def => def.Property.Equals(entry.Key)).First();
+                        if (enumDef.Lookup.TryGetValue(entry.Value, out stringValue) && !prop.Value.Equals(stringValue))
+                            propsMatch = false;
+                        // TODO: ALLOW FOR MULTIPLE ENUM SELECTION (OR VS AND)
+                    } else
+                        propsMatch = false;
+                }
                 if (propsMatch)
                     yield return card;
             }
