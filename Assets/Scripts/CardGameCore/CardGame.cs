@@ -343,8 +343,9 @@ public class CardGame
         else
             newSprite = CardGameManager.Current.CardBackImageSprite;
 
-        foreach (CardModel cardModel in CardModels[card.Id])
-            cardModel.GetComponent<Image>().sprite = newSprite;
+        if (CardModels.ContainsKey(card.Id))
+            foreach (CardModel cardModel in CardModels[card.Id])
+                cardModel.GetComponent<Image>().sprite = newSprite;
         Cards [card.Id].IsLoadingImage = false;
     }
 
