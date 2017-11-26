@@ -17,6 +17,8 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
 
+    public bool IsLoadingImage { get; set; }
+
     public Card(string id, string name, string setCode, Dictionary<string,PropertyDefValuePair> properties)
     {
         Id = id.Clone() as string;

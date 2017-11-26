@@ -23,6 +23,7 @@ public class PlayMode : MonoBehaviour
     {
         if (CardGameManager.IsMultiplayer) {
             ((LocalNetManager)NetworkManager.singleton).SearchForHost();
+            // TODO: BETTER MANAGEMENT OF ONLINE VS OFFLINE
             yield return new WaitForSecondsRealtime(3.0f);
             if (!NetworkManager.singleton.isNetworkActive)
                 NetworkManager.singleton.StartHost();

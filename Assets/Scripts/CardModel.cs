@@ -43,8 +43,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         get { return new Vector2(10, 10); }
     }
 
-    public bool IsUpdatingImage { get; private set; }
-
     public bool DidSelectOnDown { get; private set; }
 
     public PointerEventData CurrentPointerEventData { get; private set; }
@@ -72,7 +70,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
-        StartCoroutine(UpdateImage());
+        // TODO: FIX THIS; WILL SOMETIMES CLICK ON A NONTRANSPARENT PORTION OF A TRANSPARENT IMAGE, AND THE CLICK DOES NOT REGISTER
+        GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
+        CardGameManager.Current.PutCardImage(this);
     }
 
     void Update()
@@ -353,31 +353,17 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         Highlight.effectDistance = Vector2.zero;
     }
 
-    public IEnumerator UpdateImage()
-    {
-        if (IsUpdatingImage)
-            yield break;
-        
-        IsUpdatingImage = true;
-        Sprite newSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(Value.ImageFilePath, Value.ImageWebURL), output => newSprite = output);
-        if (newSprite != null)
-            NewSprite = newSprite;
-        else
-            GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
-        IsUpdatingImage = false;
-    }
-
     void OnDestroy()
     {
+        if (CardGameManager.IsQuitting)
+            return;
+
         PlaceHolder = null;
-        NewSprite = null;
+        CardGameManager.Current.RemoveCardImage(this);
     }
 
-    void OnApplicationQuit()
-    {
-        PlaceHolder = null;
-        NewSprite = null;
+    public string Id {
+        get { return _id; }
     }
 
     public Card Value {
@@ -390,7 +376,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         set {
             _id = value != null ? value.Id : string.Empty;
             this.gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
-            StartCoroutine(UpdateImage());
+            CardGameManager.Current.PutCardImage(this);
         }
     }
 
@@ -459,8 +445,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             _isFacedown = value;
             if (_isFacedown)
                 GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
-            else if (NewSprite != null)
-                GetComponent<Image>().sprite = NewSprite;
+            else
+                CardGameManager.Current.PutCardImage(this);
         }
     }
 
@@ -469,23 +455,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             if (_highlight == null)
                 _highlight = this.gameObject.GetOrAddComponent<Outline>();
             return _highlight;
-        }
-    }
-
-    public Sprite NewSprite {
-        get {
-            return _newSprite;
-        }
-        set {
-            if (_newSprite != null) {
-                Destroy(_newSprite.texture);
-                Destroy(_newSprite);
-            }
-            _newSprite = value;
-            if (_newSprite != null && !IsFacedown)
-                GetComponent<Image>().sprite = _newSprite;
-            // TODO: FIX THIS; WILL SOMETIMES CLICK ON A NONTRANSPARENT PORTION OF A TRANSPARENT IMAGE, AND THE CLICK DOES NOT REGISTER
-            GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         }
     }
 }

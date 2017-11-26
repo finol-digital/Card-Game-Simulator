@@ -175,7 +175,7 @@ public class CardSearchMenu : MonoBehaviour
             newToggle.onValueChanged.AddListener(enumChange);
             newToggle.GetComponentInChildren<Text>().text = enumValue.Value;
             newToggle.transform.localPosition = localPosition;
-            float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 20;
+            float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 25;
             RectTransform imageTransform = (RectTransform)newToggle.GetComponentInChildren<Image>().transform;
             imageTransform.sizeDelta = new Vector2(width, imageTransform.sizeDelta.y); 
             localPosition.x += width;

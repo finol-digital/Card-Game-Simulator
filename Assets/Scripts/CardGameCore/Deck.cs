@@ -357,7 +357,7 @@ public class Deck : IEquatable<Deck>
         if (other == null)
             return false;
         
-        return ToString().Equals(other.ToString());
+        return this.ToString().Equals(other.ToString());
     }
 
     public string FilePath {

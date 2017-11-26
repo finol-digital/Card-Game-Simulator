@@ -25,17 +25,18 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
                     deck.Cards.Add(card.Value);
             return deck;
         }
-	}
+    }
 
-	public Deck SavedDeck { get; private set; }
+    public Deck SavedDeck { get; private set; }
 
     public bool HasChanged {
-		get {
-			if (SavedDeck == null)
-				return false;
-			return !CurrentDeck.Equals (SavedDeck);
-		}
-	}
+        get {
+            Deck currentDeck = CurrentDeck;
+            if (currentDeck.Cards.Count < 1)
+                return false;
+            return !currentDeck.Equals(SavedDeck);
+        }
+    }
 
     public GameObject cardModelPrefab;
     public GameObject cardStackPrefab;
@@ -168,15 +169,15 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         CurrentCardStackIndex = 0;
 
         CardInfoViewer.Instance.IsVisible = false;
-		SavedDeck = null;
+        SavedDeck = null;
         UpdateDeckName(Deck.DefaultName);
         UpdateDeckSize();
     }
 
     public string UpdateDeckName(string newName)
     {
-        if (string.IsNullOrEmpty(newName))
-            newName = Deck.DefaultName;
+        if (newName == null)
+            newName = string.Empty;
         newName = UnityExtensionMethods.GetSafeFileName(newName);
         nameText.text = newName + (HasChanged ? "*" : "");
         return newName;
@@ -195,9 +196,9 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public void ShowDeckLoadMenu()
     {
-		Deck currentDeck = CurrentDeck;
-		string orignalText = currentDeck.Cards.Count > 0 ? currentDeck.ToString () : null;
-		DeckLoader.Show(CurrentDeck.Name, UpdateDeckName, LoadDeck, orignalText);
+        Deck currentDeck = CurrentDeck;
+        string orignalText = currentDeck.Cards.Count > 0 ? currentDeck.ToString() : null;
+        DeckLoader.Show(CurrentDeck.Name, UpdateDeckName, LoadDeck, orignalText);
     }
 
     public void LoadDeck(Deck newDeck)
@@ -208,21 +209,21 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         Clear();
         foreach (Card card in newDeck.Cards)
             AddCard(card);
-		SavedDeck = newDeck;
+        SavedDeck = newDeck;
         UpdateDeckName(newDeck.Name);
         UpdateDeckSize();
     }
 
     public void ShowDeckSaveMenu()
     {
-		Deck deckToSave = CurrentDeck;
-		bool overwrite = SavedDeck != null && deckToSave.Name.Equals (SavedDeck.Name);
-		DeckSaver.Show(deckToSave, UpdateDeckName, OnSaveDeck, overwrite);
+        Deck deckToSave = CurrentDeck;
+        bool overwrite = SavedDeck != null && deckToSave.Name.Equals(SavedDeck.Name);
+        DeckSaver.Show(deckToSave, UpdateDeckName, OnSaveDeck, overwrite);
     }
 
     public void OnSaveDeck(Deck savedDeck)
     {
-		SavedDeck = savedDeck;
+        SavedDeck = savedDeck;
         UpdateDeckName(savedDeck.Name);
         UpdateDeckSize();
     }
