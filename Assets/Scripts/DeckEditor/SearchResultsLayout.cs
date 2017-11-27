@@ -11,7 +11,7 @@ public class SearchResultsLayout : MonoBehaviour
     }
 
     public Vector2 SearchNamePortraitPosition {
-        get { return new Vector2(150f, 467.5f); }
+        get { return new Vector2(150f, 450f); }
     }
 
     public RectTransform searchName;

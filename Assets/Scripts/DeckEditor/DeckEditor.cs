@@ -46,7 +46,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public RectTransform layoutContent;
     public Scrollbar scrollBar;
     public Text nameText;
-    public Text sizeText;
+    public Text countText;
 
     private List<CardStack> _cardStacks;
     private int _currentCardStackIndex;
@@ -185,7 +185,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         if (SavedDeck != null)
             deckName = SavedDeck.Name;
         nameText.text = deckName + (HasChanged ? "*" : "");
-        sizeText.text = CurrentDeck.Cards.Count.ToString();
+        countText.text = CurrentDeck.Cards.Count.ToString();
     }
 
     public void ShowDeckLoadMenu()
