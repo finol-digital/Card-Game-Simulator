@@ -19,7 +19,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public Deck CurrentDeck {
         get { 
-            Deck deck = new Deck(nameText.text.Replace("*", ""), CardGameManager.Current.DeckFileType);
+            Deck deck = new Deck(SavedDeck != null ? SavedDeck.Name : Deck.DefaultName, CardGameManager.Current.DeckFileType);
             foreach (CardStack stack in CardStacks)
                 foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
                     deck.Cards.Add(card.Value);
@@ -127,14 +127,12 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         cardModel.SecondaryDragAction = cardModel.UpdateParentCardStackScrollRect;
         cardModel.DoubleClickAction = DestroyCardModel;
 
-        UpdateDeckName();
-        UpdateDeckSize();
+        UpdateDeckStats();
     }
 
     public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
-        UpdateDeckName();
-        UpdateDeckSize();
+        UpdateDeckStats();
     }
 
     public void DestroyCardModel(CardModel cardModel)
@@ -146,8 +144,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         GameObject.Destroy(cardModel.gameObject);
         CardInfoViewer.Instance.IsVisible = false;
 
-        UpdateDeckName();
-        UpdateDeckSize();
+        UpdateDeckStats();
     }
 
     public void Sort()
@@ -170,8 +167,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
         CardInfoViewer.Instance.IsVisible = false;
         SavedDeck = null;
-        UpdateDeckName(Deck.DefaultName);
-        UpdateDeckSize();
+        UpdateDeckStats();
     }
 
     public string UpdateDeckName(string newName)
@@ -183,14 +179,12 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         return newName;
     }
 
-    public string UpdateDeckName()
+    public void UpdateDeckStats()
     {
-        nameText.text = CurrentDeck.Name + (HasChanged ? "*" : "");
-        return nameText.text;
-    }
-
-    public void UpdateDeckSize()
-    {
+        string deckName = Deck.DefaultName;
+        if (SavedDeck != null)
+            deckName = SavedDeck.Name;
+        nameText.text = deckName + (HasChanged ? "*" : "");
         sizeText.text = CurrentDeck.Cards.Count.ToString();
     }
 
@@ -210,8 +204,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         foreach (Card card in newDeck.Cards)
             AddCard(card);
         SavedDeck = newDeck;
-        UpdateDeckName(newDeck.Name);
-        UpdateDeckSize();
+        UpdateDeckStats();
     }
 
     public void ShowDeckSaveMenu()
@@ -224,8 +217,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public void OnSaveDeck(Deck savedDeck)
     {
         SavedDeck = savedDeck;
-        UpdateDeckName(savedDeck.Name);
-        UpdateDeckSize();
+        UpdateDeckStats();
     }
 
     public void CheckBackToMainMenu()

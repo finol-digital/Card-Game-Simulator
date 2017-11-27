@@ -123,8 +123,6 @@ public class CardGame
 
     private Dictionary<string, Card> _cards;
     private Dictionary<string, Set> _sets;
-    private Dictionary<string, HashSet<CardModel>> _cardModels;
-    private Dictionary<string, Sprite> _cardImageSprites;
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
     private bool _isLoaded;
@@ -317,53 +315,39 @@ public class CardGame
 
     public void PutCardImage(CardModel cardModel)
     {
-        HashSet<CardModel> modelsWaitingForImage;
-        if (!CardModels.TryGetValue(cardModel.Id, out modelsWaitingForImage))
-            modelsWaitingForImage = new HashSet<CardModel>();
-        modelsWaitingForImage.Add(cardModel);
-        CardModels [cardModel.Id] = modelsWaitingForImage;
+        Card card = cardModel.Value;
+        card.ModelsUsingImage.Add(cardModel);
 
-        Sprite sprite;
-        if (CardImageSprites.TryGetValue(cardModel.Id, out sprite)) {
-            cardModel.GetComponent<Image>().sprite = sprite;
-            return;
-        }
-
-        if (!Cards [cardModel.Id].IsLoadingImage)
-            CardGameManager.Instance.StartCoroutine(GetAndSetImageSprite(Cards [cardModel.Id]));
+        if (card.ImageSprite != null)
+            cardModel.GetComponent<Image>().sprite = card.ImageSprite;
+        else if (!card.IsLoadingImage)
+            CardGameManager.Instance.StartCoroutine(GetAndSetImageSprite(card));
     }
 
     public IEnumerator GetAndSetImageSprite(Card card)
     {
-        Cards [card.Id].IsLoadingImage = true;
+        if (card.IsLoadingImage)
+            yield break;
+
+        card.IsLoadingImage = true;
         Sprite newSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(card.ImageFilePath, card.ImageWebURL), output => newSprite = output);
         if (newSprite != null)
-            CardImageSprites [card.Id] = newSprite;
+            card.ImageSprite = newSprite;
         else
             newSprite = CardGameManager.Current.CardBackImageSprite;
 
-        if (CardModels.ContainsKey(card.Id))
-            foreach (CardModel cardModel in CardModels[card.Id])
-                cardModel.GetComponent<Image>().sprite = newSprite;
-        Cards [card.Id].IsLoadingImage = false;
+        foreach (CardModel cardModel in card.ModelsUsingImage)
+            cardModel.GetComponent<Image>().sprite = newSprite;
+        card.IsLoadingImage = false;
     }
 
     public void RemoveCardImage(CardModel cardModel)
     {
-        HashSet<CardModel> modelsWaitingForImage;
-        if (!CardModels.TryGetValue(cardModel.Id, out modelsWaitingForImage))
-            return;
-        modelsWaitingForImage.Remove(cardModel);
-        if (modelsWaitingForImage.Count < 1) {
-            CardModels.Remove(cardModel.Id);
-            Sprite sprite;
-            if (CardImageSprites.TryGetValue(cardModel.Id, out sprite)) {
-                GameObject.Destroy(sprite.texture);
-                GameObject.Destroy(sprite);
-                CardImageSprites.Remove(cardModel.Id);
-            }
-        }
+        Card card = cardModel.Value;
+        card.ModelsUsingImage.Remove(cardModel);
+        if (card.ModelsUsingImage.Count < 1)
+            card.ImageSprite = null;
     }
 
     public Dictionary<string, Card> Cards {
@@ -379,22 +363,6 @@ public class CardGame
             if (_sets == null)
                 _sets = new Dictionary<string, Set>();
             return _sets;
-        }
-    }
-
-    public Dictionary<string, HashSet<CardModel>> CardModels {
-        get {
-            if (_cardModels == null)
-                _cardModels = new Dictionary<string, HashSet<CardModel>>();
-            return _cardModels;
-        }
-    }
-
-    public Dictionary<string, Sprite> CardImageSprites {
-        get {
-            if (_cardImageSprites == null)
-                _cardImageSprites = new Dictionary<string, Sprite>();
-            return _cardImageSprites;
         }
     }
 

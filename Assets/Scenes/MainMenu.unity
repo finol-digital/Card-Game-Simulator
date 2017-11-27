@@ -469,7 +469,7 @@ GameObject:
   - component: {fileID: 267957207}
   - component: {fileID: 267957206}
   m_Layer: 5
-  m_Name: EditDeck Text
+  m_Name: DeckEditor Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -527,7 +527,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Edit Deck
+  m_Text: Deck Editor
 --- !u!222 &267957207
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -626,7 +626,7 @@ GameObject:
   - component: {fileID: 447907123}
   - component: {fileID: 447907122}
   m_Layer: 5
-  m_Name: PlaySolo Button
+  m_Name: Singleplayer Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -752,7 +752,7 @@ GameObject:
   - component: {fileID: 656276341}
   - component: {fileID: 656276340}
   m_Layer: 5
-  m_Name: Quit Text
+  m_Name: Exit Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -810,7 +810,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Quit
+  m_Text: Exit
 --- !u!222 &656276341
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -872,7 +872,7 @@ GameObject:
   - component: {fileID: 1309525987}
   - component: {fileID: 1309525986}
   m_Layer: 5
-  m_Name: PlayLocal Text
+  m_Name: Multiplayer Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -930,7 +930,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Play Local
+  m_Text: Multiplayer
 --- !u!222 &1309525987
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -977,7 +977,7 @@ GameObject:
   - component: {fileID: 1452764039}
   - component: {fileID: 1452764038}
   m_Layer: 5
-  m_Name: Quit Button
+  m_Name: Exit Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1193,7 +1193,7 @@ GameObject:
   - component: {fileID: 1536454907}
   - component: {fileID: 1536454906}
   m_Layer: 5
-  m_Name: PlaySolo Text
+  m_Name: Singleplayer Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1251,7 +1251,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Play Solo
+  m_Text: Singleplayer
 --- !u!222 &1536454907
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1569,7 +1569,7 @@ GameObject:
   - component: {fileID: 1857487459}
   - component: {fileID: 1857487458}
   m_Layer: 5
-  m_Name: EditDeck Button
+  m_Name: DeckEditor Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1774,7 +1774,7 @@ GameObject:
   - component: {fileID: 2020150242}
   - component: {fileID: 2020150241}
   m_Layer: 5
-  m_Name: PlayLocal Button
+  m_Name: Multiplayer Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

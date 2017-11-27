@@ -17,7 +17,11 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
 
+    public HashSet<CardModel> ModelsUsingImage { get; private set; }
+
     public bool IsLoadingImage { get; set; }
+
+    private UnityEngine.Sprite _imageSprite;
 
     public Card(string id, string name, string setCode, Dictionary<string,PropertyDefValuePair> properties)
     {
@@ -28,6 +32,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
             properties = new Dictionary<string, PropertyDefValuePair>();
         Properties = properties;
         this.Properties = this.CloneProperties();
+        ModelsUsingImage = new HashSet<CardModel>();
     }
 
     public Dictionary<string, PropertyDefValuePair> CloneProperties()
@@ -122,4 +127,16 @@ public class Card : IComparable<Card>, IEquatable<Card>
         }
     }
 
+    public UnityEngine.Sprite ImageSprite {
+        get {
+            return _imageSprite;
+        }
+        set {
+            if (_imageSprite != null) {
+                UnityEngine.GameObject.Destroy(_imageSprite.texture);
+                UnityEngine.GameObject.Destroy(_imageSprite);
+            }
+            _imageSprite = value;
+        }
+    }
 }
