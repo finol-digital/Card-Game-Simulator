@@ -6,8 +6,6 @@ TagManager:
   tags:
   - CardGameManager
   - Background
-  - CardInfoViewer
-  - GameSelection
   - Canvas
   layers:
   - Default

@@ -121,12 +121,16 @@ public class CardGame
     [JsonProperty]
     public string SetNameIdentifier { get; set; }
 
-    private Dictionary<string, Card> _cards;
-    private Dictionary<string, Set> _sets;
+    public bool IsLoading { get; private set; }
+
+    public bool IsLoaded { get; private set; }
+
+    public string Error { get; private set; }
+
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
-    private bool _isLoaded;
-    private string _error;
+    private Dictionary<string, Card> _cards;
+    private Dictionary<string, Set> _sets;
 
     public CardGame(string name = Set.DefaultCode, string url = "")
     {
@@ -160,6 +164,10 @@ public class CardGame
 
     public IEnumerator Load()
     {
+        if (IsLoading)
+            yield break;
+        IsLoading = true;
+
         string initialDirectory = FilePathBase;
         if (!string.IsNullOrEmpty(AutoUpdateURL) && (AutoUpdate || !File.Exists(ConfigFilePath)))
             yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
@@ -168,6 +176,7 @@ public class CardGame
         } catch (Exception e) {
             Debug.LogError("Failed to load card game! Error: " + e.Message + e.StackTrace);
             Error = e.Message;
+            IsLoading = false;
             yield break;
         }
         if (AutoUpdate || !initialDirectory.Equals(FilePathBase)) {
@@ -175,6 +184,16 @@ public class CardGame
             if (!initialDirectory.Equals(FilePathBase))
                 Directory.Delete(initialDirectory, true);
         }
+
+        Sprite backgroundSprite = null;
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), output => backgroundSprite = output);
+        if (backgroundSprite != null)
+            BackgroundImageSprite = backgroundSprite;
+
+        Sprite cardBackSprite = null;
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), output => cardBackSprite = output);
+        if (cardBackSprite != null)
+            CardBackImageSprite = cardBackSprite;
 
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
         if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile))) {
@@ -194,19 +213,11 @@ public class CardGame
         } catch (Exception e) {
             Debug.LogError("Failed to load card game data! Error: " + e.Message + e.StackTrace);
             Error = e.Message;
+            IsLoading = false;
             yield break;
         }
 
-        Sprite backgroundSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), output => backgroundSprite = output);
-        if (backgroundSprite != null)
-            BackgroundImageSprite = backgroundSprite;
-        
-        Sprite cardBackSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), output => cardBackSprite = output);
-        if (cardBackSprite != null)
-            CardBackImageSprite = cardBackSprite;
-        
+        IsLoading = false;
         IsLoaded = true;
     }
 
@@ -284,24 +295,24 @@ public class CardGame
                 && card.SetCode.ToLower().Contains(setCode.ToLower())) {
                 bool propsMatch = true;
                 foreach (KeyValuePair<string, string> entry in stringProperties)
-                    if (!(card.Properties [entry.Key].Value).ToLower().Contains(entry.Value.ToLower()))
+                    if (!card.GetPropertyValueString(entry.Key).ToLower().Contains(entry.Value.ToLower()))
                         propsMatch = false;
                 int intValue;
                 foreach (KeyValuePair<string, int> entry in intMinProperties)
-                    if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && intValue < entry.Value)
+                    if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue < entry.Value)
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in intMaxProperties)
-                    if (int.TryParse(card.Properties [entry.Key].Value, out intValue) && intValue > entry.Value)
+                    if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue > entry.Value)
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in enumProperties) {
-                    PropertyDefValuePair prop;
-                    if (card.Properties.TryGetValue(entry.Key, out prop) && prop.Value.StartsWith("0x")) {
-                        if (EnumDef.TryParseInt(prop.Value, out intValue) && (intValue & entry.Value) == 0)
+                    string stringValue = card.GetPropertyValueString(entry.Key);
+                    if (stringValue.StartsWith("0x")) {
+                        if (EnumDef.TryParseInt(stringValue, out intValue) && (intValue & entry.Value) == 0)
                             propsMatch = false;
                     } else if (EnumDef.IsEnumProperty(entry.Key)) {
-                        string stringValue;
+                        string stringValue2;
                         EnumDef enumDef = Enums.Where(def => def.Property.Equals(entry.Key)).First();
-                        if (enumDef.Lookup.TryGetValue(entry.Value, out stringValue) && !prop.Value.Equals(stringValue))
+                        if (enumDef.Lookup.TryGetValue(entry.Value, out stringValue2) && !stringValue.Equals(stringValue2))
                             propsMatch = false;
                         // TODO: ALLOW FOR MULTIPLE ENUM SELECTION (OR VS AND)
                     } else
@@ -350,22 +361,6 @@ public class CardGame
             card.ImageSprite = null;
     }
 
-    public Dictionary<string, Card> Cards {
-        get {
-            if (_cards == null)
-                _cards = new Dictionary<string, Card>();
-            return _cards;
-        }
-    }
-
-    public Dictionary<string, Set> Sets {
-        get {
-            if (_sets == null)
-                _sets = new Dictionary<string, Set>();
-            return _sets;
-        }
-    }
-
     public Sprite BackgroundImageSprite {
         get {
             if (_backgroundImageSprite == null)
@@ -388,21 +383,19 @@ public class CardGame
         }
     }
 
-    public bool IsLoaded {
+    public Dictionary<string, Card> Cards {
         get {
-            return _isLoaded;
-        }
-        private set {
-            _isLoaded = value;
+            if (_cards == null)
+                _cards = new Dictionary<string, Card>();
+            return _cards;
         }
     }
 
-    public string Error {
+    public Dictionary<string, Set> Sets {
         get {
-            return _error;
-        }
-        private set {
-            _error = value;
+            if (_sets == null)
+                _sets = new Dictionary<string, Set>();
+            return _sets;
         }
     }
 }

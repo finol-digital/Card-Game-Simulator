@@ -255,7 +255,7 @@ GameObject:
   - component: {fileID: 114007050681300680}
   m_Layer: 5
   m_Name: Deck Load Menu
-  m_TagString: Untagged
+  m_TagString: Canvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

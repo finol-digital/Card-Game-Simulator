@@ -11,13 +11,17 @@ CGS comes pre-packaged with these card games:
 - Dominoes
 - Mahjong
 
-Custom card games can be added by pressing the + button on the main menu:
+To download additional card games, go to the Main Menu and press the "Select Card Game" button:
 
 ![Main Menu Image](screenshots/mainmenu.png)
 
-In the resulting popup, enter the CGS AutoUpdate URL for the game you would like to download:
+In the resulting Game Selection Menu, press the "Download Game" button:
 
-![Game Popup Image](screenshots/gamepopup.png)
+![Game Selection Menu Image](screenshots/gameselection.png)
+
+Then, enter the CGS AutoUpdate URL for the game you would like to download:
+
+![Game Download Image](screenshots/gamedownload.png)
 
 For example, the CGS AutoUpdate URL for Hearthstone is: https://hearthstone.finoldigital.com/
 

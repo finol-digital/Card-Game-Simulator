@@ -232,7 +232,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public void BackToMainMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
     }
 
     public List<CardStack> CardStacks {

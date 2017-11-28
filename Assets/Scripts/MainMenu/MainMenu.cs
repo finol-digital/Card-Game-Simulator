@@ -6,26 +6,32 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    public const int PlayModeSceneIndex = 1;
-    public const int DeckEditorSceneIndex = 2;
+    public const int MainMenuSceneIndex = 1;
+    public const int PlayModeSceneIndex = 2;
+    public const int DeckEditorSceneIndex = 3;
+    public const string ExitPrompt = "Exit CGS?";
 
-    public GameObject gameLoadMenuPrefab;
-    public GameObject quitButton;
+    public GameObject exitButton;
     public Text versionText;
-
-    private GameLoadMenu _gameLoader;
 
     void Start()
     {
-        versionText.text = "Ver. " + Application.version;
         #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        quitButton.SetActive(false);
+        if (exitButton != null)
+            exitButton.SetActive(false);
         #endif
+        versionText.text = "Ver. " + Application.version;
     }
 
-    public void ShowGameLoadMenu()
+    public void GoToMainMenu()
     {
-        GameLoader.Show();
+        CardGameManager.Instance.Selector.Show();
+        SceneManager.LoadScene(MainMenuSceneIndex);
+    }
+
+    public void SelectCardGame()
+    {
+        CardGameManager.Instance.Selector.Show();
     }
 
     public void PlaySolo()
@@ -45,13 +51,15 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(DeckEditorSceneIndex);
     }
 
+    #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
     void Update()
     {
-        #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        if (CardGameManager.Instance.Messenger.gameObject.activeSelf || CardGameManager.Instance.Selector.gameObject.activeSelf)
+            return;
         if (Input.GetKeyDown(KeyCode.Escape))
-            Quit();
-        #endif
+            CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }
+    #endif
 
     public void Quit()
     {
@@ -60,13 +68,5 @@ public class MainMenu : MonoBehaviour
         #else
         Application.Quit();
         #endif
-    }
-
-    public GameLoadMenu GameLoader {
-        get {
-            if (_gameLoader == null)
-                _gameLoader = Instantiate(gameLoadMenuPrefab).GetOrAddComponent<GameLoadMenu>();
-            return _gameLoader;
-        }
     }
 }

@@ -101,7 +101,7 @@ public class PlayMode : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
     }
 
     public DeckLoadMenu DeckLoader {

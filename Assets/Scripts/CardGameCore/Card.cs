@@ -15,7 +15,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public string SetCode { get; private set; }
 
-    public Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
+    protected Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
 
     public HashSet<CardModel> ModelsUsingImage { get; private set; }
 
