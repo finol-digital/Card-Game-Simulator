@@ -900,7 +900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deckLoadMenuPrefab: {fileID: 1127774218722746, guid: 5f8f2d4006988c74ca0e02ce057e329a,
     type: 2}
-  searchMenuPrefab: {fileID: 1583058827987502, guid: 2a856778d84365048929069dfca116b5,
+  searchMenuPrefab: {fileID: 1767781636286590, guid: 2a856778d84365048929069dfca116b5,
     type: 2}
   playAreaContent: {fileID: 217919977}
   extraZone: {fileID: 903002065}

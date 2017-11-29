@@ -19,7 +19,7 @@ public class DeckLoadMenu : MonoBehaviour
     public Button deleteFileButton;
     public Button loadFromFileButton;
 
-    public RectTransform savePanel;
+    public RectTransform newDeckPanel;
     public InputField nameInputField;
     public TMPro.TextMeshProUGUI instructionsText;
     public TMPro.TMP_InputField textInputField;
@@ -158,9 +158,9 @@ public class DeckLoadMenu : MonoBehaviour
         Hide();
     }
 
-    public void ShowSavePanel()
+    public void ShowNewDeckPanel()
     {
-        savePanel.gameObject.SetActive(true);
+        newDeckPanel.gameObject.SetActive(true);
     }
 
     public void ValidateDeckName(string name)
@@ -199,12 +199,12 @@ public class DeckLoadMenu : MonoBehaviour
             Debug.LogError("Failed to save deck!: " + e.Message);
             CardGameManager.Instance.Messenger.Show("There was an error saving the deck to file: " + e.Message);
         }
-        HideSavePanel();
+        HideNewDeckPanel();
     }
 
-    public void HideSavePanel()
+    public void HideNewDeckPanel()
     {
-        savePanel.gameObject.SetActive(false);
+        newDeckPanel.gameObject.SetActive(false);
     }
 
     public void Hide()

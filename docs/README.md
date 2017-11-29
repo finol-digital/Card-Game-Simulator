@@ -11,11 +11,11 @@ CGS comes pre-packaged with these card games:
 - Dominoes
 - Mahjong
 
-You may download custom games by pressing "Select Card Game" in the Main Menu:
+You can download custom games by pressing "Select Card Game" in the Main Menu:
 
 ![Main Menu Image](screenshots/mainmenu.png)
 
-In the resulting Game Selection Menu, press "Download Game":
+In the resulting menu, press "Download Game":
 
 ![Game Selection Menu Image](screenshots/gameselection.png)
 

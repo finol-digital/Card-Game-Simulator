@@ -346,7 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d50b4fa3784ef4d8dc39a6b43af545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardSearchMenuPrefab: {fileID: 1583058827987502, guid: 2a856778d84365048929069dfca116b5,
+  cardSearchMenuPrefab: {fileID: 1767781636286590, guid: 2a856778d84365048929069dfca116b5,
     type: 2}
   deckEditor: {fileID: 62766704}
   layoutArea: {fileID: 1955078419}
@@ -370,7 +370,7 @@ MonoBehaviour:
     type: 2}
   deckLoadMenuPrefab: {fileID: 1127774218722746, guid: 5f8f2d4006988c74ca0e02ce057e329a,
     type: 2}
-  deckSaveMenuPrefab: {fileID: 1734947806896296, guid: 0e1b94959fbbbb44e8022d149694aae5,
+  deckSaveMenuPrefab: {fileID: 1855235277117932, guid: 0e1b94959fbbbb44e8022d149694aae5,
     type: 2}
   layoutArea: {fileID: 1956326055}
   layoutContent: {fileID: 943351770}

@@ -199,7 +199,7 @@ GameObject:
   - component: {fileID: 222029561731916122}
   - component: {fileID: 114369190002400730}
   m_Layer: 5
-  m_Name: Name Text
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1404,7 +1404,7 @@ MonoBehaviour:
   loadCancelButton: {fileID: 114683534554066756}
   deleteFileButton: {fileID: 114323573504276002}
   loadFromFileButton: {fileID: 114090451633235480}
-  savePanel: {fileID: 224527897203354518}
+  newDeckPanel: {fileID: 224527897203354518}
   nameInputField: {fileID: 114867563623491238}
   instructionsText: {fileID: 114201478586118114}
   textInputField: {fileID: 114091031962157288}
@@ -2046,7 +2046,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114296614435119458}
-        m_MethodName: HideSavePanel
+        m_MethodName: HideNewDeckPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2350,7 +2350,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224271510216812180}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2397,7 +2397,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114296614435119458}
-        m_MethodName: ShowSavePanel
+        m_MethodName: ShowNewDeckPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3198,7 +3198,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
