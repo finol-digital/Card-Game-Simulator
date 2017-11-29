@@ -12,7 +12,14 @@ public class MainMenu : MonoBehaviour
     public const string ExitPrompt = "Exit CGS?";
 
     public GameObject exitButton;
+    public Text currentGameText;
     public Text versionText;
+
+    void OnEnable()
+    {
+        if (currentGameText != null)
+            CardGameManager.Instance.OnSelectActions.Add(UpdateCurrentGameText);
+    }
 
     void Start()
     {
@@ -21,6 +28,12 @@ public class MainMenu : MonoBehaviour
             exitButton.SetActive(false);
         #endif
         versionText.text = "Ver. " + Application.version;
+    }
+
+    public void UpdateCurrentGameText()
+    {
+        if (currentGameText != null)
+            currentGameText.text = CardGameManager.CurrentGameName;
     }
 
     public void GoToMainMenu()

@@ -468,6 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   exitButton: {fileID: 1452764036}
+  currentGameText: {fileID: 539304557}
   versionText: {fileID: 1467840448}
 --- !u!1001 &248207488
 Prefab:

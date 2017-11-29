@@ -368,7 +368,8 @@ MonoBehaviour:
     type: 2}
   cardStackPrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
     type: 2}
-  deckLoadMenuPrefab: {fileID: 0}
+  deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
+    type: 2}
   deckSaveMenuPrefab: {fileID: 1855235277117932, guid: 0e1b94959fbbbb44e8022d149694aae5,
     type: 2}
   layoutArea: {fileID: 1956326055}
@@ -491,7 +492,7 @@ Prefab:
     - target: {fileID: 224252938770132402, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: -111.7995
+      value: -76.55896
       objectReference: {fileID: 0}
     - target: {fileID: 224673017872509486, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
         type: 2}
@@ -2807,7 +2808,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 335690429}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99031955
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
