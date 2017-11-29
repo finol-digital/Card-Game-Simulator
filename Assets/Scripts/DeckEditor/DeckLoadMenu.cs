@@ -73,6 +73,7 @@ public class DeckLoadMenu : MonoBehaviour
         foreach (string deckFile in deckFiles) {
             GameObject deckFileSelection = Instantiate(fileSelectionTemplate.gameObject, fileSelectionArea) as GameObject;
             deckFileSelection.SetActive(true);
+            deckFileSelection.transform.localScale = Vector3.one;
             deckFileSelection.transform.localPosition = pos;
             Toggle toggle = deckFileSelection.GetComponent<Toggle>();
             toggle.isOn = false;
