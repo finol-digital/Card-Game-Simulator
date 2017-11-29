@@ -225,6 +225,101 @@ Prefab:
       propertyPath: m_SizeDelta.x
       value: -76.55896
       objectReference: {fileID: 0}
+    - target: {fileID: 224673017872509486, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224673017872509486, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224673017872509486, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224673017872509486, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 200.92949
+      objectReference: {fileID: 0}
+    - target: {fileID: 224673017872509486, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224174961411463182, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224174961411463182, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224174961411463182, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 200.92949
+      objectReference: {fileID: 0}
+    - target: {fileID: 224174961411463182, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224174961411463182, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 200.92949
+      objectReference: {fileID: 0}
+    - target: {fileID: 224174961411463182, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224677791729663838, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224677791729663838, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224677791729663838, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 401.85898
+      objectReference: {fileID: 0}
+    - target: {fileID: 224677791729663838, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224677791729663838, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 170.92949
+      objectReference: {fileID: 0}
+    - target: {fileID: 224677791729663838, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224143448842205196, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224560339167716316, guid: 09ee4d14818c1ba47b96c322e8a36f1d,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 09ee4d14818c1ba47b96c322e8a36f1d, type: 2}
   m_IsPrefabParent: 0
@@ -803,7 +898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 339ec11f9a93f934f96e983220e60d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deckLoadMenuPrefab: {fileID: 1240882589060142, guid: 5f8f2d4006988c74ca0e02ce057e329a,
+  deckLoadMenuPrefab: {fileID: 1127774218722746, guid: 5f8f2d4006988c74ca0e02ce057e329a,
     type: 2}
   searchMenuPrefab: {fileID: 1583058827987502, guid: 2a856778d84365048929069dfca116b5,
     type: 2}

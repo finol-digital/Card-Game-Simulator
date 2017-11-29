@@ -191,8 +191,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public void ShowDeckLoadMenu()
     {
         Deck currentDeck = CurrentDeck;
-        string orignalText = currentDeck.Cards.Count > 0 ? currentDeck.ToString() : null;
-        DeckLoader.Show(CurrentDeck.Name, UpdateDeckName, LoadDeck, orignalText);
+        DeckLoader.Show(LoadDeck, currentDeck.Name, currentDeck.Cards.Count > 0 ? currentDeck.ToString() : null);
     }
 
     public void LoadDeck(Deck newDeck)

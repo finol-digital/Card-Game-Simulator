@@ -29,11 +29,10 @@ public class PlayMode : MonoBehaviour
                 NetworkManager.singleton.StartHost();
         }
 
-        DeckLoader.fileCancelButton.onClick.RemoveAllListeners();
-        DeckLoader.fileCancelButton.onClick.AddListener(BackToMainMenu);
-        DeckLoader.textCancelButton.onClick.RemoveAllListeners();
-        DeckLoader.textCancelButton.onClick.AddListener(BackToMainMenu);
-        DeckLoader.Show(Deck.DefaultName, null, LoadDeck);
+        DeckLoader.loadCancelButton.onClick.RemoveAllListeners();
+        DeckLoader.loadCancelButton.onClick.AddListener(BackToMainMenu);
+        DeckLoader.Show(LoadDeck);
+
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
     }
 
@@ -41,11 +40,6 @@ public class PlayMode : MonoBehaviour
     {
         if (Input.GetButtonDown("Draw"))
             Deal(1);
-    }
-
-    public void ShowDeckLoader()
-    {
-        DeckLoader.Show(Deck.DefaultName, UnityExtensionMethods.GetSafeFileName, LoadDeck);
     }
 
     public void LoadDeck(Deck newDeck)

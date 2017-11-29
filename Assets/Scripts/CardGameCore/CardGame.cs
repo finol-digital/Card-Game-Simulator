@@ -349,7 +349,8 @@ public class CardGame
             newSprite = CardGameManager.Current.CardBackImageSprite;
 
         foreach (CardModel cardModel in card.ModelsUsingImage)
-            cardModel.GetComponent<Image>().sprite = newSprite;
+            if (!cardModel.IsFacedown)
+                cardModel.GetComponent<Image>().sprite = newSprite;
         card.IsLoadingImage = false;
     }
 
