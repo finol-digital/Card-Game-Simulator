@@ -50,11 +50,12 @@ public class Card : IComparable<Card>, IEquatable<Card>
         
         EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).FirstOrDefault();
         if (enumDef != null) {
+            PropertyDefValuePair property = Properties [propertyName];
             int lookupKeys;
             string stringValue;
-            if (EnumDef.TryParseInt(Properties [propertyName].Value, out lookupKeys))
+            if (((property.Def.Type == PropertyType.EnumList || enumDef.LookupEqualsValue) && EnumDef.TryParseInt(property.Value, out lookupKeys)) || enumDef.ReverseLookup.TryGetValue(property.Value, out lookupKeys))
                 return enumDef.GetStringFromLookupKeys(lookupKeys);
-            if (enumDef.Values.TryGetValue(Properties [propertyName].Value, out stringValue))
+            if (enumDef.Values.TryGetValue(property.Value, out stringValue))
                 return stringValue;
         }
 
