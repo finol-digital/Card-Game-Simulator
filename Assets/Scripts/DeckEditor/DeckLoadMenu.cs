@@ -73,6 +73,7 @@ public class DeckLoadMenu : MonoBehaviour
         foreach (string deckFile in deckFiles) {
             GameObject deckFileSelection = Instantiate(fileSelectionTemplate.gameObject, fileSelectionArea) as GameObject;
             deckFileSelection.SetActive(true);
+            // WORKAROUND FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
             deckFileSelection.transform.localScale = Vector3.one;
             deckFileSelection.transform.localPosition = pos;
             Toggle toggle = deckFileSelection.GetComponent<Toggle>();

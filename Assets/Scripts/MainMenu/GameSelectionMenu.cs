@@ -29,6 +29,8 @@ public class GameSelectionMenu : MonoBehaviour
         foreach (string gameName in CardGameManager.Instance.AllCardGames.Keys) {
             GameObject gameSelection = Instantiate(gameSelectionTemplate.gameObject, gameSelectionArea) as GameObject;
             gameSelection.SetActive(true);
+            // WORKAROUND FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
+            gameSelection.transform.localScale = Vector3.one;
             gameSelection.transform.localPosition = pos;
             gameSelection.GetComponentInChildren<Text>().text = gameName;
             Toggle toggle = gameSelection.GetComponent<Toggle>();
