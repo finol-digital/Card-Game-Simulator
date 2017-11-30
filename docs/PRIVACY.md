@@ -44,7 +44,8 @@ Our Privacy Policy link includes the word 'Privacy' and can easily be found on t
 
 You will be notified of any Privacy Policy changes:
 - On our Privacy Policy Page
-Can change your personal information:
+
+You can change your personal information:
 - By emailing us
 
 ## How does our site handle Do Not Track signals?
@@ -93,4 +94,4 @@ HOUSTON, TX 77094
 United States
 david@finoldigital.com
 
-Last Edited on 2017-11-05
+Last Edited on 2017-11-30
