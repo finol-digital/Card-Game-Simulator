@@ -33,6 +33,7 @@ public class CardSearchMenu : MonoBehaviour
                             filters += property.Name + "<=" + IntMaxPropertyFilters [property.Name].ToString() + "; ";
                         break;
                     case PropertyType.Enum:
+                    case PropertyType.EnumList:
                         if (!EnumPropertyFilters.ContainsKey(property.Name))
                             break;
                         EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(property.Name)).FirstOrDefault();
@@ -162,16 +163,13 @@ public class CardSearchMenu : MonoBehaviour
 
         Vector3 localPosition = config.enumToggle.transform.localPosition;
         float panelWidth = 0;
-        int i = 0;
         foreach (KeyValuePair<string, string> enumValue in enumDef.Values) {
-            int intValue;
-            if (!EnumDef.TryParseInt(enumValue.Key, out intValue)) {
-                intValue = 1 << i;
-                enumDef.Lookup [intValue] = enumValue.Key;
-            }
+            int lookupKey;
+            if (!enumDef.ReverseLookup.TryGetValue(enumValue.Key, out lookupKey))
+                lookupKey = enumDef.CreateLookup(enumValue.Key);
             Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
-            newToggle.isOn = (storedFilter & intValue) != 0;
-            UnityAction<bool> enumChange = new UnityAction<bool>(isOn => SetEnumPropertyFilter(propertyName, intValue, isOn));
+            newToggle.isOn = (storedFilter & lookupKey) != 0;
+            UnityAction<bool> enumChange = new UnityAction<bool>(isOn => SetEnumPropertyFilter(propertyName, lookupKey, isOn));
             newToggle.onValueChanged.AddListener(enumChange);
             newToggle.GetComponentInChildren<Text>().text = enumValue.Value;
             newToggle.transform.localPosition = localPosition;
@@ -180,11 +178,11 @@ public class CardSearchMenu : MonoBehaviour
             imageTransform.sizeDelta = new Vector2(width, imageTransform.sizeDelta.y); 
             localPosition.x += width;
             panelWidth += width;
-            i++;
         }
 
         config.enumToggle.gameObject.SetActive(false);
         config.enumContent.sizeDelta = new Vector2(panelWidth, config.enumContent.sizeDelta.y);
+        newPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(Mathf.Clamp(panelWidth + 250, newPanel.GetComponent<RectTransform>().sizeDelta.x, propertyFiltersContent.rect.width), newPanel.GetComponent<RectTransform>().sizeDelta.y);
 
         return newPanel;
     }

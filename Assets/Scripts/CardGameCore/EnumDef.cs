@@ -14,15 +14,26 @@ public class EnumDef
     [JsonProperty]
     public Dictionary<string, string> Values { get; private set; }
 
-	public Dictionary<int, string> Lookup {
-		get {
-			if (_lookup == null)
-				_lookup = new Dictionary<int, string> ();
-			return _lookup;
-		}
-	}
+    public Dictionary<int, string> Lookup {
+        get {
+            if (_lookup == null)
+                _lookup = new Dictionary<int, string>();
+            return _lookup;
+        }
+    }
 
-	private Dictionary<int, string> _lookup;
+    public Dictionary<string, int> ReverseLookup {
+        get {
+            if (_reverseLookup == null)
+                _reverseLookup = new Dictionary<string, int>();
+            return _reverseLookup;
+        }
+    }
+
+    public bool LookupEqualsValue { get; private set; }
+
+    private Dictionary<int, string> _lookup;
+    private Dictionary<string, int> _reverseLookup;
 
     public static bool IsEnumProperty(string propertyName)
     {
@@ -35,13 +46,29 @@ public class EnumDef
         return int.TryParse(isHex ? number.Substring(2) : number, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
     }
 
-    public string GetStringFromIntFlags(int flags)
+    public int CreateLookup(string key)
+    {
+        if (ReverseLookup.ContainsKey(key))
+            return 0;
+        
+        int intValue;
+        if (!key.StartsWith("0x") || !EnumDef.TryParseInt(key, out intValue))
+            intValue = 1 << Lookup.Count;
+        else
+            LookupEqualsValue = true;
+        
+        Lookup [intValue] = key;
+        ReverseLookup [key] = intValue;
+        return intValue;
+    }
+
+    public string GetStringFromLookupKeys(int keys)
     {
         string result = string.Empty;
 
-        int intValue;
+        int lookupValue;
         foreach (KeyValuePair<string, string> enumValue in Values) {
-            if (EnumDef.TryParseInt(enumValue.Key, out intValue) && (intValue & flags) != 0) {
+            if (ReverseLookup.TryGetValue(enumValue.Key, out lookupValue) && (lookupValue & keys) != 0) {
                 if (!string.IsNullOrEmpty(result))
                     result += "|";
                 result += enumValue.Value;

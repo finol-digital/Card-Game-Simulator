@@ -1,7 +1,8 @@
 {
 	"cardProperties": [
 		{"name": "rank", "type": "enum" },
-		{"name": "suit", "type": "enum" }
+		{"name": "suit", "type": "enum" },
+		{"name": "color", "type": "enum" }
 	],
 	"enums": [
 		{"property": "rank",  "values": {
@@ -18,15 +19,17 @@
 			"11": "Jack",
 			"12": "Queen",
 			"13": "King",
-			"0": "Joker",
+			"0": "Joker"
 		}},
 		{"property": "suit",  "values": {
-			"Clubs": "Clubs",
-			"Diamonds": "Diamonds",
-			"Hearts": "Hearts",
-			"Spades": "Spades",
-			"Black": "Black",
-			"Red": "Red"
+			"clubs": "Clubs",
+			"diamonds": "Diamonds",
+			"hearts": "Hearts",
+			"spades": "Spades"
+		}},
+		{"property": "color",  "values": {
+			"black": "Black",
+			"red": "Red"
 		}}
 	],
 	"name": "Standard Playing Cards"

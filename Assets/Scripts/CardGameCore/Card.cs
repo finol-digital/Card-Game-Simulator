@@ -50,10 +50,10 @@ public class Card : IComparable<Card>, IEquatable<Card>
         
         EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).FirstOrDefault();
         if (enumDef != null) {
-            int intValue;
+            int lookupKeys;
             string stringValue;
-            if (EnumDef.TryParseInt(Properties [propertyName].Value, out intValue))
-                return enumDef.GetStringFromIntFlags(intValue);
+            if (EnumDef.TryParseInt(Properties [propertyName].Value, out lookupKeys))
+                return enumDef.GetStringFromLookupKeys(lookupKeys);
             if (enumDef.Values.TryGetValue(Properties [propertyName].Value, out stringValue))
                 return stringValue;
         }
@@ -71,6 +71,22 @@ public class Card : IComparable<Card>, IEquatable<Card>
         bool isHex = property.Value.StartsWith("0x");
         int.TryParse(isHex ? property.Value.Substring(2) : property.Value, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
         return intValue;
+    }
+
+    public int GetPropertyValueEnum(string propertyName)
+    {
+        PropertyDefValuePair property;
+        if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            return 0; 
+        
+        EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).FirstOrDefault();
+        if (enumDef == null)
+            return 0;
+
+        int enumValue;
+        if (((property.Def.Type == PropertyType.EnumList || enumDef.LookupEqualsValue) && EnumDef.TryParseInt(property.Value, out enumValue)) || enumDef.ReverseLookup.TryGetValue(property.Value, out enumValue))
+            return enumValue;
+        return 0;
     }
 
     public int CompareTo(Card other)

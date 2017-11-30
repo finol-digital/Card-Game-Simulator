@@ -189,11 +189,14 @@ public class CardGame
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), output => backgroundSprite = output);
         if (backgroundSprite != null)
             BackgroundImageSprite = backgroundSprite;
-
         Sprite cardBackSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), output => cardBackSprite = output);
         if (cardBackSprite != null)
             CardBackImageSprite = cardBackSprite;
+
+        foreach (EnumDef enumDef in Enums)
+            foreach (string key in enumDef.Values.Keys)
+                enumDef.CreateLookup(key);
 
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
         if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile))) {
@@ -244,10 +247,22 @@ public class CardGame
         string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
         Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
         foreach (PropertyDef property in CardProperties) {
-            cardProperties [property.Name] = new PropertyDefValuePair() {
-                Def = property,
-                Value = cardJToken.Value<string>(property.Name) ?? string.Empty
-            };
+            PropertyDefValuePair newPropertyEntry = new PropertyDefValuePair() { Def = property };
+            if (property.Type == PropertyType.EnumList) {
+                int enumValue = 0;
+                EnumDef enumDef = Enums.Where(def => def.Property.Equals(property.Name)).FirstOrDefault();
+                IJEnumerable<JToken> enumValues = cardJToken as JArray;
+                if (enumDef != null && enumValues != null) {
+                    foreach (JToken jToken in enumValues) {
+                        int lookupValue;
+                        if (enumDef.ReverseLookup.TryGetValue(jToken.Value<string>() ?? string.Empty, out lookupValue))
+                            enumValue |= lookupValue;
+                    }
+                }
+                newPropertyEntry.Value = enumValue.ToString();
+            } else
+                newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
+            cardProperties [property.Name] = newPropertyEntry;
         }
         if (!string.IsNullOrEmpty(cardId)) {
             Card newCard = new Card(cardId, cardName, cardSet, cardProperties);
@@ -305,17 +320,7 @@ public class CardGame
                     if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue > entry.Value)
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in enumProperties) {
-                    string stringValue = card.GetPropertyValueString(entry.Key);
-                    if (stringValue.StartsWith("0x")) {
-                        if (EnumDef.TryParseInt(stringValue, out intValue) && (intValue & entry.Value) == 0)
-                            propsMatch = false;
-                    } else if (EnumDef.IsEnumProperty(entry.Key)) {
-                        string stringValue2;
-                        EnumDef enumDef = Enums.Where(def => def.Property.Equals(entry.Key)).First();
-                        if (enumDef.Lookup.TryGetValue(entry.Value, out stringValue2) && !stringValue.Equals(stringValue2))
-                            propsMatch = false;
-                        // TODO: ALLOW FOR MULTIPLE ENUM SELECTION (OR VS AND)
-                    } else
+                    if ((card.GetPropertyValueEnum(entry.Key) & entry.Value) == 0)
                         propsMatch = false;
                 }
                 if (propsMatch)

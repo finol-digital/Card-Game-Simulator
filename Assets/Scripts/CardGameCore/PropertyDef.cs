@@ -8,7 +8,8 @@ public enum PropertyType
 {
     String,
     Integer,
-    Enum
+    Enum,
+    EnumList
 }
 
 [JsonObject(MemberSerialization.OptIn)]
