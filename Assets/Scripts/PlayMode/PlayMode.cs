@@ -58,7 +58,7 @@ public class PlayMode : MonoBehaviour
                 deckZone.AddCard(card);
         deckZone.Shuffle();
 
-        Deal(CardGameManager.Current.HandStartSize);
+        Deal(CardGameManager.Current.GameStartHandCount);
     }
 
     public void Deal(int cardCount)

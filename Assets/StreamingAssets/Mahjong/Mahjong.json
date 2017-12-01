@@ -4,7 +4,7 @@
 		{"name": "suit", "type": "string" },
 		{"name": "rank", "type": "string" }
 	],
-	"deckMaxSize": "144",
-	"handStartSize": "13",
+	"deckMaxCount": "144",
+	"gameStartHandCount": "13",
 	"name": "Mahjong"
 }

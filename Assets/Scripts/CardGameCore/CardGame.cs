@@ -18,11 +18,15 @@ public class CardGame
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
     public const string DefaultCardImageURLFormat = "{0}/{1}.{2}";
-    public const int DefaultDeckMaxSize = 75;
+    public const float DefaultCardHeight = 3.5f;
+    public const float DefaultCardWidth = 2.5f;
+    public const int DefaultDeckMaxCount = 75;
     public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
-    public const int DefaultHandStartSize = 5;
+    public const int DefaultGameStartHandCount = 5;
     public const string DefaultHsdPropertyId = "dbfId";
     public const string DefaultImageFileType = "png";
+    public const float DefaultPlayAreaHeight = 13.5f;
+    public const float DefaultPlayAreaWidth = 23.5f;
     public const string SetCardsIdentifier = "cards";
 
     public string FilePathBase {
@@ -98,10 +102,16 @@ public class CardGame
     public List<PropertyDef> CardProperties { get; set; }
 
     [JsonProperty]
+    public float CardHeight { get; set; }
+
+    [JsonProperty]
+    public float CardWidth { get; set; }
+
+    [JsonProperty]
     public DeckFileType DeckFileType { get; set; }
 
     [JsonProperty]
-    public int DeckMaxSize { get; set; }
+    public int DeckMaxCount { get; set; }
 
     [JsonProperty]
     public List<EnumDef> Enums { get; set; }
@@ -110,10 +120,19 @@ public class CardGame
     public List<ExtraDef> Extras { get; set; }
 
     [JsonProperty]
-    public int HandStartSize { get; set; }
+    public int GameStartHandCount { get; set; }
+
+    [JsonProperty]
+    public int GameStartPointsCount { get; set; }
 
     [JsonProperty]
     public string HsdPropertyId { get; set; }
+
+    [JsonProperty]
+    public float PlayAreaHeight { get; set; }
+
+    [JsonProperty]
+    public float PlayAreaWidth { get; set; }
 
     [JsonProperty]
     public string SetCodeIdentifier { get; set; }
@@ -152,12 +171,16 @@ public class CardGame
         CardNameIdentifier = "name";
         CardSetIdentifier = "set";
         CardProperties = new List<PropertyDef>();
+        CardHeight = DefaultCardHeight;
+        CardWidth = DefaultCardWidth;
         DeckFileType = DefaultDeckFileType;
-        DeckMaxSize = DefaultDeckMaxSize;
+        DeckMaxCount = DefaultDeckMaxCount;
         Enums = new List<EnumDef>();
         Extras = new List<ExtraDef>();
-        HandStartSize = DefaultHandStartSize;
+        GameStartHandCount = DefaultGameStartHandCount;
         HsdPropertyId = DefaultHsdPropertyId;
+        PlayAreaHeight = PlayAreaHeight;
+        PlayAreaWidth = PlayAreaWidth;
         SetCodeIdentifier = "code";
         SetNameIdentifier = "name";
     }

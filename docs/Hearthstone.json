@@ -26,7 +26,7 @@
 		{"name": "dbfId", "type": "integer" }
 	],
 	"deckFileType": "hsd",
-	"deckMaxSize": "31",
+	"deckMaxCount": "31",
 	"enums": [
 		{"property": "rarity",  "values": {
 			"COMMON": "COMMON",
@@ -153,6 +153,7 @@
 		{"group": "Hero", "property": "dbfId", "value": "47817" },
 		{"group": "Hero", "property": "dbfId", "value": "41887" }
 	],
-	"handStartSize": "3",
+	"gameStartHandCount": "3",
+	"gameStartPointsCount": "30",
 	"name": "Hearthstone"
 }

@@ -14,7 +14,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public const int CardStackSize = 8;
 
     public int CardStackCount {
-        get { return Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxSize / CardStackSize); }
+        get { return Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardStackSize); }
     }
 
     public Deck CurrentDeck {

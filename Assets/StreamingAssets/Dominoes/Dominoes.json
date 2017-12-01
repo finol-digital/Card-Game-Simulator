@@ -4,6 +4,8 @@
 		{"name": "suit", "type": "enum" },
 		{"name": "rank", "type": "integer" }
 	],
+	"cardHeight": "2",
+	"cardWidth": "1",
 	"enums": [
 		{"property": "type",  "values": {
 			"0x1": "single",
@@ -19,6 +21,6 @@
 			"0x40": "6"
 		}}
 	],
-	"handStartSize": "7",
+	"gameStartHandCount": "7",
 	"name": "Dominoes"
 }
