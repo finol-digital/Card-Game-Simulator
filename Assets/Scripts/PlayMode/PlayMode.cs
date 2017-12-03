@@ -11,19 +11,30 @@ public class PlayMode : MonoBehaviour
 
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
+    public GameObject diceZonePrefab;
+    public GameObject extraZonePrefab;
+    public GameObject discardZonePrefab;
+    public GameObject deckZonePrefab;
+    public GameObject handZonePrefab;
+
+    public ZonesViewer zones;
+    public PointsCounter points;
     public RectTransform playAreaContent;
-    public ExtensibleCardZone extraZone;
-    public StackedZone deckZone;
-    public ExtensibleCardZone handZone;
+
+    public Deck LoadedDeck { get; private set; }
+
+    public StackedZone DeckZone { get; private set; }
+
+    public ExtensibleCardZone HandZone { get; private set; }
 
     private DeckLoadMenu _deckLoader;
     private CardSearchMenu _cardSearcher;
 
     IEnumerator Start()
     {
+        // TODO: BETTER MANAGEMENT OF ONLINE VS OFFLINE
         if (CardGameManager.IsMultiplayer) {
             ((LocalNetManager)NetworkManager.singleton).SearchForHost();
-            // TODO: BETTER MANAGEMENT OF ONLINE VS OFFLINE
             yield return new WaitForSecondsRealtime(3.0f);
             if (!NetworkManager.singleton.isNetworkActive)
                 NetworkManager.singleton.StartHost();
@@ -36,6 +47,14 @@ public class PlayMode : MonoBehaviour
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
     }
 
+    void OnRectTransformDimensionsChange()
+    {
+        if (!this.gameObject.activeInHierarchy)
+            return;
+
+        zones.ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ? zones.verticalScrollView : zones.horizontalScrollView;
+    }
+
     void Update()
     {
         if (Input.GetButtonDown("Draw"))
@@ -44,40 +63,50 @@ public class PlayMode : MonoBehaviour
 
     public void LoadDeck(Deck newDeck)
     {
-        List<Card> extraCards = newDeck.GetExtraCards();
+        LoadedDeck = newDeck;
+
         Dictionary<string, List<Card>> extraGroups = newDeck.GetExtraGroups();
         foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups) {
+            ExtensibleCardZone extraZone = Instantiate(extraZonePrefab, zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
             extraZone.labelText.text = cardGroup.Key;
             foreach (Card card in cardGroup.Value)
                 extraZone.AddCard(card);
-            // TODO: ALLOW MULTIPLE CARD GROUPS
+            zones.AddZone(extraZone);
         }
 
-        foreach (Card card in newDeck.Cards)
+        StackedZone discardZone = Instantiate(discardZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
+        DeckZone = Instantiate(deckZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
+        HandZone = Instantiate(handZonePrefab, zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
+
+        zones.AddZone(discardZone);
+        zones.AddZone(DeckZone);
+        zones.AddZone(HandZone);
+
+        points.Count = CardGameManager.Current.GameStartPointsCount;
+        StartCoroutine(WaitToDealDeck());
+    }
+
+    public IEnumerator WaitToDealDeck()
+    {
+        yield return null;
+
+        List<Card> extraCards = LoadedDeck.GetExtraCards();
+        foreach (Card card in LoadedDeck.Cards)
             if (!extraCards.Contains(card))
-                deckZone.AddCard(card);
-        deckZone.Shuffle();
+                DeckZone.AddCard(card);
+        DeckZone.Shuffle();
 
         Deal(CardGameManager.Current.GameStartHandCount);
     }
 
+
     public void Deal(int cardCount)
     {
-        for (int i = 0; deckZone.Count > 0 && i < cardCount; i++)
-            handZone.AddCard(deckZone.PopCard());
-    }
-
-    public void ShowCardSearcher()
-    {
-        CardSearcher.Show(null, null, AddCardToHand);
-    }
-
-    public void AddCardToHand(List<Card> results)
-    {
-        if (results == null || results.Count < 1)
+        if (DeckZone == null || HandZone == null)
             return;
         
-        handZone.AddCard(results [0]);
+        for (int i = 0; DeckZone.Count > 0 && i < cardCount; i++)
+            HandZone.AddCard(DeckZone.PopCard());
     }
 
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)

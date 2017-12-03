@@ -22,7 +22,6 @@ public class CardGame
     public const float DefaultCardWidth = 2.5f;
     public const int DefaultDeckMaxCount = 75;
     public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
-    public const int DefaultGameStartHandCount = 5;
     public const string DefaultHsdPropertyId = "dbfId";
     public const string DefaultImageFileType = "png";
     public const float DefaultPlayAreaHeight = 13.5f;
@@ -39,6 +38,14 @@ public class CardGame
 
     public string DecksFilePath {
         get  { return FilePathBase + "/decks"; }
+    }
+
+    public float AspectRatio {
+        get { 
+            if (CardWidth <= 0 || CardHeight <= 0)
+                return DefaultCardWidth / DefaultCardHeight;
+            return CardWidth / CardHeight;
+        }
     }
 
     [JsonProperty]
@@ -75,6 +82,9 @@ public class CardGame
     public string CardBackImageURL { get; set; }
 
     [JsonProperty]
+    public float CardHeight { get; set; }
+
+    [JsonProperty]
     public string CardIdIdentifier { get; set; }
 
     [JsonProperty]
@@ -102,9 +112,6 @@ public class CardGame
     public List<PropertyDef> CardProperties { get; set; }
 
     [JsonProperty]
-    public float CardHeight { get; set; }
-
-    [JsonProperty]
     public float CardWidth { get; set; }
 
     [JsonProperty]
@@ -112,6 +119,9 @@ public class CardGame
 
     [JsonProperty]
     public int DeckMaxCount { get; set; }
+
+    [JsonProperty]
+    public List<DeckURL> DeckURLs { get; set; }
 
     [JsonProperty]
     public List<EnumDef> Enums { get; set; }
@@ -175,9 +185,9 @@ public class CardGame
         CardWidth = DefaultCardWidth;
         DeckFileType = DefaultDeckFileType;
         DeckMaxCount = DefaultDeckMaxCount;
+        DeckURLs = new List<DeckURL>();
         Enums = new List<EnumDef>();
         Extras = new List<ExtraDef>();
-        GameStartHandCount = DefaultGameStartHandCount;
         HsdPropertyId = DefaultHsdPropertyId;
         PlayAreaHeight = PlayAreaHeight;
         PlayAreaWidth = PlayAreaWidth;
@@ -187,7 +197,7 @@ public class CardGame
 
     public IEnumerator Load()
     {
-        if (IsLoading)
+        if (IsLoading || IsLoaded)
             yield break;
         IsLoading = true;
 
@@ -242,6 +252,10 @@ public class CardGame
             IsLoading = false;
             yield break;
         }
+
+        if (DeckURLs.Count > 0 && !Directory.Exists(DecksFilePath))
+            foreach (DeckURL deckURL in DeckURLs)
+                yield return UnityExtensionMethods.SaveURLToFile(deckURL.URL, DecksFilePath + "/" + deckURL.Name + "." + DeckFileType);
 
         IsLoading = false;
         IsLoaded = true;

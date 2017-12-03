@@ -27,10 +27,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         get { return NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive && this.transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent; }
     }
 
-    public bool IsOwnedByOtherPlayer {
-        get { return IsOnline && !this.hasAuthority; }
-    }
-
     public bool IsProcessingSecondaryDragAction {
         get { return PointerPositions.Count > 1 || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right); }
     }
@@ -70,7 +66,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
-        // FIXME: WILL SOMETIMES CLICK ON A NONTRANSPARENT PORTION OF A TRANSPARENT IMAGE, AND THE CLICK DOES NOT REGISTER
+        if (CardGameManager.Current.CardWidth > 0 && CardGameManager.Current.CardHeight > 0)
+            GetComponent<RectTransform>().sizeDelta = new Vector2(CardGameManager.Current.CardWidth * CardGameManager.PPI, CardGameManager.Current.CardHeight * CardGameManager.PPI);
+        // TODO: FIXME: WILL SOMETIMES CLICK ON A NONTRANSPARENT PORTION OF A TRANSPARENT IMAGE, AND THE CLICK DOES NOT REGISTER
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         CardGameManager.Current.PutCardImage(this);
     }
@@ -136,7 +134,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (IsOwnedByOtherPlayer)
+        if (IsOnline && !this.hasAuthority)
             return;
         
         EventSystem.current.SetSelectedGameObject(null, eventData);
@@ -163,7 +161,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (IsOwnedByOtherPlayer)
+        if (IsOnline && !this.hasAuthority)
             return;
         
         CardModel cardModel;

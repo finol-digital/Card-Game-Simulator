@@ -6,8 +6,9 @@ using UnityEngine.EventSystems;
 
 public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
+    public ZonesViewer Viewer { get; set; }
+
     public GameObject cardPrefab;
-    public ZonesViewer zonesViewer;
     public List<CardDropZone> cardDropZones;
     public RectTransform extension;
     public RectTransform extensionContent;
@@ -26,6 +27,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     public virtual void OnStart()
     {
         extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
+        extensionContent.gameObject.GetOrAddComponent<CardStack>().OnRemoveCardActions.Add(OnRemoveCardModel);
     }
 
     public virtual void OnDrop(CardModel cardModel)
@@ -49,23 +51,11 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         CardModel.ResetRotation(cardStack, cardModel);
         cardModel.DoubleClickAction = CardModel.ToggleFacedown;
         cardModel.SecondaryDragAction = null;
+
+        UpdateCountText();
     }
 
-    public virtual void ToggleExtension()
-    {
-        IsExtended = !IsExtended;
-        ResetExtensionWidth();
-        extension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
-        extension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
-    }
-
-    public void ResetExtensionWidth()
-    {
-        float width = ((RectTransform)this.transform.GetComponentInParent<Canvas>().transform).rect.width - ZonesViewer.TotalWidth + (zonesViewer.IsExtended ? 0 : ZonesViewer.HiddenWidth);
-        extension.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, ZonesViewer.HiddenWidth, width);
-    }
-
-    void Update()
+    public virtual void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
         UpdateCountText();
     }
@@ -73,5 +63,35 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     public virtual void UpdateCountText()
     {
         countText.text = extensionContent.childCount.ToString();
+    }
+
+    public virtual void ToggleExtension()
+    {
+        IsExtended = !IsExtended;
+        ResizeExtension();
+        extension.gameObject.GetOrAddComponent<CanvasGroup>().alpha = IsExtended ? 1 : 0;
+        extension.gameObject.GetOrAddComponent<CanvasGroup>().blocksRaycasts = IsExtended;
+    }
+
+    public void ResizeExtension()
+    {
+        RectTransform canvasRT = Viewer.transform as RectTransform;
+        RectTransform.Edge edge = Viewer.ActiveScrollView == Viewer.verticalScrollView ? RectTransform.Edge.Right : RectTransform.Edge.Top;
+        float inset = (Viewer.ActiveScrollView == Viewer.verticalScrollView ? ZonesViewer.VerticalWidth : ZonesViewer.HorizontalHeight) - ZonesViewer.ButtonLength;
+        float width = canvasRT.rect.width - ZonesViewer.VerticalWidth + (Viewer.IsExtended ? 0 : inset);
+        float height = canvasRT.rect.height - ZonesViewer.ButtonLength - (Viewer.IsExtended ? 0 : inset);
+        extension.SetInsetAndSizeFromParentEdge(edge, inset, Viewer.ActiveScrollView == Viewer.verticalScrollView ? width : height);
+
+        if (Viewer.ActiveScrollView == Viewer.verticalScrollView) {
+            extension.anchorMin = new Vector2(extension.anchorMin.x, 0);
+            extension.anchorMax = new Vector2(extension.anchorMin.x, 1);
+            extension.offsetMin = new Vector2(extension.offsetMin.x, 0);
+            extension.offsetMax = new Vector2(extension.offsetMax.x, 0);
+        } else {
+            extension.anchorMin = new Vector2(0, extension.anchorMin.y);
+            extension.anchorMax = new Vector2(1, extension.anchorMin.y);
+            extension.offsetMin = new Vector2(0, extension.offsetMin.y);
+            extension.offsetMax = new Vector2(0, extension.offsetMax.y);
+        }
     }
 }

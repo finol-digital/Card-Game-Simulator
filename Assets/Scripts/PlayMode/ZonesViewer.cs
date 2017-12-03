@@ -1,61 +1,98 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ZonesViewer : MonoBehaviour
 {
-    public const float HiddenWidth = 270f;
-    public const float TotalWidth = 350f;
-    public const float HeightCheck = 1300f;
-    public const float InvisibleHeight = 100f;
+    public const float VerticalWidth = 350f;
+    public const float HorizontalHeight = 450f;
+    public const float ButtonLength = 80f;
 
-    public RectTransform zonesPanel;
-    public RectTransform zonesScrollView;
-    public RectTransform zonesContent;
-    public List<ExtensibleCardZone> zones;
+    public ScrollRect verticalScrollView;
+    public ScrollRect horizontalScrollView;
 
-    private bool _isExtended;
-    private bool _isVisible;
+    private ScrollRect _activeScrollRect;
+    private List<ExtensibleCardZone> _zones;
 
     void Start()
     {
-        IsExtended = zonesPanel.rect.height < HeightCheck;
+        verticalScrollView.transform.parent.gameObject.SetActive(false);
+        horizontalScrollView.transform.parent.gameObject.SetActive(false);
+        ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ? verticalScrollView : horizontalScrollView;
+        IsExtended = true;
         IsVisible = true;
-        float height = 0f;
-        foreach (ExtensibleCardZone zone in zones)
-            height += (zone.transform as RectTransform).rect.height;
-        zonesContent.sizeDelta = new Vector2(zonesContent.sizeDelta.x, height);
     }
 
-    void OnRectTransformDimensionsChange()
+    public void AddZone(ExtensibleCardZone newZone)
     {
-        if (!this.gameObject.activeInHierarchy)
-            return;
-        
-        IsExtended = zonesPanel.rect.height < HeightCheck;
+        Zones.Add(newZone);
+        newZone.Viewer = this;
+        ResizeContent();
+    }
+
+    public void ResizeContent()
+    {
+        float width = 0f;
+        float height = 0f;
+        foreach (ExtensibleCardZone zone in Zones) {
+            width += (zone.transform as RectTransform).rect.width;
+            height += (zone.transform as RectTransform).rect.height;
+        }
+        verticalScrollView.content.sizeDelta = new Vector2(verticalScrollView.content.sizeDelta.x, height);
+        horizontalScrollView.content.sizeDelta = new Vector2(width, horizontalScrollView.content.sizeDelta.y);
+    }
+
+    public ScrollRect ActiveScrollView { 
+        get {
+            if (_activeScrollRect == null)
+                _activeScrollRect = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ? verticalScrollView : horizontalScrollView;
+            return _activeScrollRect;
+        }
+        set {
+            Debug.Log("switch");
+            if (_activeScrollRect != null)
+                _activeScrollRect.transform.parent.gameObject.SetActive(false);
+            _activeScrollRect = value;
+            foreach (ExtensibleCardZone zone in Zones) {
+                zone.transform.SetParent(_activeScrollRect.content);
+                zone.ResizeExtension();
+            }
+            _activeScrollRect.transform.parent.gameObject.SetActive(true);
+        }
+    }
+
+    protected List<ExtensibleCardZone> Zones {
+        get {
+            if (_zones == null)
+                _zones = new List<ExtensibleCardZone>();
+            return _zones;
+        }
     }
 
     public bool IsExtended {
         get {
-            return _isExtended;
+            return ActiveScrollView == verticalScrollView ? (verticalScrollView.transform.parent as RectTransform).anchoredPosition.x < 1 : (horizontalScrollView.transform.parent as RectTransform).anchoredPosition.y > 1;
         }
         set {
-            _isExtended = value;
-            zonesPanel.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, _isExtended ? 0 : -HiddenWidth, TotalWidth);
-            foreach (ExtensibleCardZone zone in zones)
-                zone.ResetExtensionWidth();
+            RectTransform.Edge edge = ActiveScrollView == verticalScrollView ? RectTransform.Edge.Right : RectTransform.Edge.Top;
+            float size = ActiveScrollView == verticalScrollView ? VerticalWidth : HorizontalHeight;
+            float inset = value ? 0 : -(size - ButtonLength);
+            (ActiveScrollView.transform.parent as RectTransform).SetInsetAndSizeFromParentEdge(edge, inset, size);
+            foreach (ExtensibleCardZone zone in Zones)
+                zone.ResizeExtension();
         }
     }
 
     public bool IsVisible {
         get {
-            return _isVisible;
+            return ActiveScrollView.gameObject.activeSelf;
         }
         set {
-            _isVisible = value;
-            zonesPanel.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, _isVisible ? GetComponent<RectTransform>().rect.height : InvisibleHeight);
-            zonesScrollView.gameObject.SetActive(_isVisible);
+            ActiveScrollView.gameObject.SetActive(value);
+            RectTransform.Edge edge = ActiveScrollView == verticalScrollView ? RectTransform.Edge.Top : RectTransform.Edge.Right;
+            float size = ActiveScrollView == verticalScrollView ? GetComponent<RectTransform>().rect.height : GetComponent<RectTransform>().rect.width;
+            (ActiveScrollView.transform.parent as RectTransform).SetInsetAndSizeFromParentEdge(edge, 0, ActiveScrollView.gameObject.activeSelf ? size : ButtonLength);
         }
     }
-
 }

@@ -11,15 +11,15 @@ public class PointsCounter : MonoBehaviour
 
     public void Decrement()
     {
-        Points--;
+        Count--;
     }
 
     public void Increment()
     {
-        Points++;
+        Count++;
     }
 
-    public float Points {
+    public float Count {
         get {
             return _points;
         }

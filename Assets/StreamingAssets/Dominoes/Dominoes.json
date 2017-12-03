@@ -1,10 +1,10 @@
 {
+	"cardHeight": "2",
 	"cardProperties": [
 		{"name": "type", "type": "enum" },
 		{"name": "suit", "type": "enum" },
 		{"name": "rank", "type": "integer" }
 	],
-	"cardHeight": "2",
 	"cardWidth": "1",
 	"enums": [
 		{"property": "type",  "values": {

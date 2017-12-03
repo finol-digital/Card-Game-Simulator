@@ -53,11 +53,13 @@ public class StackedZone : ExtensibleCardZone, ICardDropHandler
         if (cardStack == ExtensionCardStack)
             cardIndex = cardModel.transform.GetSiblingIndex();
         CardModels.Insert(cardIndex, cardModel);
+        UpdateCountText();
     }
 
-    public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
+    public override void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
         CardModels.Remove(cardModel);
+        UpdateCountText();
     }
 
     public Card PopCard()

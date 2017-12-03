@@ -19,6 +19,11 @@ public class CardGameManager : MonoBehaviour
     public const string MessengerPrefabName = "Popup";
     public const string InvalidGameSelectionMessage = "Could not select the card game because the name is not recognized in the list of card games! Try selecting a different card game.";
 
+    // Pixels per inch
+    public static int PPI {
+        get { return 100; }
+    }
+
     public static string GamesFilePathBase {
         get { return Application.persistentDataPath + "/games"; }
     }
@@ -110,7 +115,7 @@ public class CardGameManager : MonoBehaviour
         if (BackgroundImage != null)
             BackgroundImage.sprite = Current.BackgroundImageSprite;
         if (CardInfoViewer.Instance != null)
-            CardInfoViewer.Instance.ResetPropertyOptions();
+            CardInfoViewer.Instance.Reset();
 
         for (int i = OnSelectActions.Count - 1; i >= 0; i--)
             if (OnSelectActions [i] == null)
