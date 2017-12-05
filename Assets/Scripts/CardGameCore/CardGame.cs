@@ -40,6 +40,10 @@ public class CardGame
         get  { return FilePathBase + "/decks"; }
     }
 
+    public string GameBoardsFilePath {
+        get  { return FilePathBase + "/boards"; }
+    }
+
     public float AspectRatio {
         get { 
             if (CardWidth <= 0 || CardHeight <= 0)
@@ -130,6 +134,15 @@ public class CardGame
     public List<ExtraDef> Extras { get; set; }
 
     [JsonProperty]
+    public string GameBoardFileType { get; set; }
+
+    [JsonProperty]
+    public List<GameBoardCard> GameBoardCards { get; set; }
+
+    [JsonProperty]
+    public List<GameBoardURL> GameBoardURLs { get; set; }
+
+    [JsonProperty]
     public int GameStartHandCount { get; set; }
 
     [JsonProperty]
@@ -188,6 +201,9 @@ public class CardGame
         DeckURLs = new List<DeckURL>();
         Enums = new List<EnumDef>();
         Extras = new List<ExtraDef>();
+        GameBoardFileType = DefaultImageFileType;
+        GameBoardCards = new List<GameBoardCard>();
+        GameBoardURLs = new List<GameBoardURL>();
         HsdPropertyId = DefaultHsdPropertyId;
         PlayAreaHeight = PlayAreaHeight;
         PlayAreaWidth = PlayAreaWidth;
@@ -256,6 +272,10 @@ public class CardGame
         if (DeckURLs.Count > 0 && !Directory.Exists(DecksFilePath))
             foreach (DeckURL deckURL in DeckURLs)
                 yield return UnityExtensionMethods.SaveURLToFile(deckURL.URL, DecksFilePath + "/" + deckURL.Name + "." + DeckFileType);
+
+        if (GameBoardURLs.Count > 0 && !Directory.Exists(GameBoardsFilePath))
+            foreach (GameBoardURL boardURL in GameBoardURLs)
+                yield return UnityExtensionMethods.SaveURLToFile(boardURL.URL, GameBoardsFilePath + "/" + boardURL.Id + "." + GameBoardFileType);
 
         IsLoading = false;
         IsLoaded = true;

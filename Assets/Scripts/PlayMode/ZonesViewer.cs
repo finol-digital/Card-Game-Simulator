@@ -33,8 +33,8 @@ public class ZonesViewer : MonoBehaviour
 
     public void ResizeContent()
     {
-        float width = 0f;
-        float height = 0f;
+        float width = 4 * ButtonLength;
+        float height = 2 * ButtonLength;
         foreach (ExtensibleCardZone zone in Zones) {
             width += (zone.transform as RectTransform).rect.width;
             height += (zone.transform as RectTransform).rect.height;
@@ -50,7 +50,6 @@ public class ZonesViewer : MonoBehaviour
             return _activeScrollRect;
         }
         set {
-            Debug.Log("switch");
             if (_activeScrollRect != null)
                 _activeScrollRect.transform.parent.gameObject.SetActive(false);
             _activeScrollRect = value;

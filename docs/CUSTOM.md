@@ -15,6 +15,9 @@ The structure of this custom game folder is:
   - AllSets.json
   - Background.\<BackgroundImageFileType\>
   - CardBack.\<CardBackImageFileType\>
+  - boards/
+    - *Board:Id*.\<BoardFileType\>
+    - ...
   - decks/
     - *Deck:Name*.\<DeckFileType\>
     - ...
@@ -58,9 +61,12 @@ When downloading a custom game from a url, the data that is being downloaded is 
 | DeckURLs | List\<DeckURL\> | [] | *DeckURL* has the properties: *Name*, and *URL*. If the "decks/" folder does not exist, CGS will go through each DeckURL, and save the data from *DeckURL:URL* to "decks/*DeckURL:Name*.\<DeckFileType\>". |
 | Enums | List\<EnumDef\> | [] | *EnumDef* has the properties: *Property* and *Values*. *EnumDef:Property* refers to a *PropertyDef:Name* in \<CardProperties\>. *EnumDef:Values* is a Dictionary with strings as the keys and values. The value is displayed to the user through the UI while the keys remain hidden. If the keys are entered as a hexadecimal integers (prefixed with 0x), multiple values can go through bitwise and/ors to have a single enumValue represent multiple values. The multiple values would be displayed together to the user, using "\|" as the delimiter. |
 | Extras | List\<ExtraDef\> | [] | *ExtraDef* has the properties: *Group*, *Property*, and *Value*. *ExtraDef:Property* refers to a *PropertyDef:Name* in \<CardProperties\>. *ExtraDef:Value* is a string. If *Card:Properties\[ExtraDef:Property\]* equals *ExtraDef:Value*, then that card will be moved from the main deck and put into the *ExtraDef:Group* zone during play mode. If no *ExtraDef:Group* is defined, CGS will default to "Extras". The **hsd** DeckFileType treats all extra cards as Heroes, and the **ydk** DeckFileType treats all extra cards as extra deck cards. |
+| GameBoardFileType | string | "png" | GameBoardFileType is the file type extension for the image files that CGS downloads for each game board. |
+| GameBoardCards | List<GameBoardCard> | [] | *GameBoardCard* has the properties: *Card*, and *Boards*. When a deck is loaded in Play Mode, any card with *Card:Id* = *Card* will cause *Boards* to be put into the play area. *Boards* is a List of *GameBoard*s. *GameBoard* has the properties *Id*, *OffsetMax*, and *OffsetMin*.  *Id* indicates which image should display, and *OffsetMax* and *OffsetMin* indicate the positions (in inches) of the top-right corner and the bottom-left corner. |
+| GameBoardURLs | List<GameBoardURL> | [] | *GameBoardURL* has the properties: *Id*, and *URL*. If the "boards/" folder does not exist, CGS will go through each GameBoardURL, and save the data from *GameBoardURL:URL* to "boards/*GameBoardURL:Id*.\<GameBoardFileType\>". |
 | GameStartHandCount | int | 0 | GameStartHandCount indicates how many cards are automatically dealt from the deck to the hand, when a user loads a deck in Play Mode. |
 | GameStartPointsCount | int | 0 | GameStartPointsCount indicates how many points are assigned to each player, when that player loads a deck in Play Mode. |
-| HsdPropertyId | string | "dbfId" | When saving or loading a deck with the **hsd** DeckFileType, HsdPropertyId refers to the *Card:Property* used to uniquely identify each card and is stored as a varint within the deck sting. |
+| HsdPropertyId | string | "dbfId" | When saving or loading a deck with the **hsd** DeckFileType, HsdPropertyId refers to the *Card:Property* used to uniquely identify each card and is stored as a varint within the deck string. |
 | PlayAreaHeight | float | 13.5 | PlayAreaHeight is the height in inches of the play area in Play Mode. |
 | PlayAreaWidth | float | 23.5 | PlayAreaWidth is the width in inches of the play area in Play Mode. |
 | SetCodeIdentifier | string | "code" | When defining a set in AllSets.json, you can have the *Set:Code* mapped to the field defined by SetCodeIdentifier. Most custom games will likely want to keep the default SetCodeIdentifier. If no mapping is created for the set, CGS will use "\_CGSDEFAULT\_" as the default *Set:Code*. |
@@ -68,5 +74,5 @@ When downloading a custom game from a url, the data that is being downloaded is 
 
 }
 
-## Example
-A functional example of a custom card game definition can be found for [Saga.li](https://drive.google.com/open?id=1RaMQ1qjz2asDz3YoQVR6YiH4Dj2IukE1).
+## Examples
+Functional examples can be found in the [CGS Google Drive folder](https://drive.google.com/open?id=1kVms-_CXRw1e4Ob18fRkS84MN_cxQGF5).
