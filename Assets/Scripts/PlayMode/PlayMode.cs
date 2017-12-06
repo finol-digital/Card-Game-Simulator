@@ -41,7 +41,6 @@ public class PlayMode : MonoBehaviour
             if (!NetworkManager.singleton.isNetworkActive)
                 NetworkManager.singleton.StartHost();
         }
-
         DeckLoader.loadCancelButton.onClick.RemoveAllListeners();
         DeckLoader.loadCancelButton.onClick.AddListener(BackToMainMenu);
         DeckLoader.Show(LoadDeck);
