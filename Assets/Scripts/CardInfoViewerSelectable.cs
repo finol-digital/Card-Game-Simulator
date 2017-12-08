@@ -27,5 +27,4 @@ public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISel
 
         CardInfoViewer.Instance.IsVisible = false;
     }
-    
 }

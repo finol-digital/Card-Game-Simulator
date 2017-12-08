@@ -92,6 +92,39 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
             extension.anchorMax = new Vector2(1, extension.anchorMin.y);
             extension.offsetMin = new Vector2(0, extension.offsetMin.y);
             extension.offsetMax = new Vector2(0, extension.offsetMax.y);
-        }
+		}
+
+		ReorientExtension ();
     }
+
+	public void ReorientExtension()
+	{
+		CardStack cardStack = extensionContent.gameObject.GetOrAddComponent<CardStack> ();
+		if (Viewer.ActiveScrollView == Viewer.verticalScrollView) {
+			if (cardStack.scrollRectContainer != null) {
+				cardStack.scrollRectContainer.vertical = false;
+				cardStack.scrollRectContainer.horizontal = true;
+			}
+			cardStack.type = CardStackType.Horizontal;
+			VerticalLayoutGroup oldLayout = extensionContent.GetComponent<VerticalLayoutGroup> ();
+			if (oldLayout != null)
+				GameObject.DestroyImmediate (oldLayout);
+			HorizontalLayoutGroup newLayout = extensionContent.GetComponent<HorizontalLayoutGroup> ();
+			if (newLayout == null)
+				newLayout = extensionContent.gameObject.AddComponent<HorizontalLayoutGroup> ();
+		} else {
+			if (cardStack.scrollRectContainer != null) {
+				cardStack.scrollRectContainer.vertical = true;
+				cardStack.scrollRectContainer.horizontal = false;
+			}
+			cardStack.type = CardStackType.Vertical;
+			HorizontalLayoutGroup oldLayout = extensionContent.GetComponent<HorizontalLayoutGroup> ();
+			if (oldLayout != null)
+				GameObject.DestroyImmediate (oldLayout);
+			VerticalLayoutGroup newLayout = extensionContent.GetComponent<VerticalLayoutGroup> ();
+			if (newLayout == null)
+				newLayout = extensionContent.gameObject.AddComponent<VerticalLayoutGroup> ();
+		}
+		
+	}
 }
