@@ -130,11 +130,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (DoesCloneOnDrag) {
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
-            CardModel clone = Instantiate(this.gameObject, this.transform.position, this.transform.rotation, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
-            clone.Value = this.Value;
-            clone.HideHighlight();
-            DraggedClones [eventData.pointerId] = clone;
+            DraggedClones [eventData.pointerId] = Instantiate(this.gameObject, this.transform.position, this.transform.rotation, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
             cardModel = DraggedClones [eventData.pointerId];
+            cardModel.HideHighlight();
+            cardModel.Value = this.Value;
             cardModel.PointerPositions [eventData.pointerId] = eventData.position;
             cardModel.PointerDragOffsets [eventData.pointerId] = ((Vector2)cardModel.transform.position) - eventData.position;
             cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
