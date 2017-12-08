@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -68,27 +68,14 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         if (CardGameManager.Current.CardWidth > 0 && CardGameManager.Current.CardHeight > 0)
             GetComponent<RectTransform>().sizeDelta = new Vector2(CardGameManager.Current.CardWidth * CardGameManager.PPI, CardGameManager.Current.CardHeight * CardGameManager.PPI);
-        // TODO: FIXME: WILL SOMETIMES CLICK ON A NONTRANSPARENT PORTION OF A TRANSPARENT IMAGE, AND THE CLICK DOES NOT REGISTER
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         CardGameManager.Current.PutCardImage(this);
     }
 
     void Update()
     {
-        if (IsOnline) {
-            if (this.hasAuthority)
-                _localPosition = this.transform.localPosition;
-            else
-                this.transform.localPosition = _localPosition;
-        }
-    }
-
-    public CardModel Clone(Transform parent)
-    {
-        CardModel clone = Instantiate(this.gameObject, this.transform.position, this.transform.rotation, parent).GetOrAddComponent<CardModel>();
-        clone.Value = this.Value;
-        clone.HideHighlight();
-        return clone;
+        if (IsOnline && !this.hasAuthority)
+            this.transform.localPosition = _localPosition;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -143,7 +130,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (DoesCloneOnDrag) {
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
-            DraggedClones [eventData.pointerId] = Clone(this.gameObject.FindInParents<Canvas>().transform);
+            CardModel clone = Instantiate(this.gameObject, this.transform.position, this.transform.rotation, this.gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
+            clone.Value = this.Value;
+            clone.HideHighlight();
+            DraggedClones [eventData.pointerId] = clone;
             cardModel = DraggedClones [eventData.pointerId];
             cardModel.PointerPositions [eventData.pointerId] = eventData.position;
             cardModel.PointerDragOffsets [eventData.pointerId] = ((Vector2)cardModel.transform.position) - eventData.position;
@@ -179,7 +169,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive && this.transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent && !this.hasAuthority)
+        if (IsOnline !this.hasAuthority)
             return;
         
         CardModel cardModel;
@@ -223,6 +213,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         if (PlaceHolderCardStack != null)
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
+        
+        _localPosition = this.transform.localPosition;
     }
 
     public void UpdatePositionInCardStack(Vector2 targetPosition)
