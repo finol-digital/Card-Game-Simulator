@@ -20,6 +20,8 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public CardStackType type;
     public ScrollRect scrollRectContainer;
 
+    public bool DoesImmediatelyRelease { get; set; }
+
     private List<OnAddCardDelegate> _cardAddedActions;
     private List<OnRemoveCardDelegate> _cardRemovedActions;
 

@@ -21,7 +21,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 {
     public const float MovementSpeed = 600f;
 
-    public const float AlphaHitTestMinimumThreshold = 0.01f;
+    public const float AlphaHitTestMinimumThreshold = 0.1f;
 
     public bool IsOnline {
         get { return NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive && this.transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent; }
@@ -53,8 +53,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     [SyncVar]
     private string _id;
-    [SyncVar]
-    private Vector2 _localPosition;
     private Dictionary<int, Vector2> _pointerPositions;
     private Dictionary<int, CardModel> _draggedClones;
     private Dictionary<int, Vector2> _pointerDragOffsets;
@@ -62,7 +60,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     private RectTransform _placeHolder;
     private bool _isFacedown;
     private Outline _highlight;
-    private Sprite _newSprite;
 
     void Start()
     {
@@ -70,12 +67,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             GetComponent<RectTransform>().sizeDelta = new Vector2(CardGameManager.Current.CardWidth * CardGameManager.PPI, CardGameManager.Current.CardHeight * CardGameManager.PPI);
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         CardGameManager.Current.PutCardImage(this);
-    }
-
-    void Update()
-    {
-        if (IsOnline && !this.hasAuthority)
-            this.transform.localPosition = _localPosition;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -197,46 +188,60 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void UpdatePosition()
     {
-        if (IsOnline && !this.hasAuthority)
-            return;
-        
+        bool isOnline = IsOnline;
         bool isClickingRight = false;
         #if UNITY_EDITOR || (!UNITY_ANDROID && !UNITY_IOS)
         isClickingRight = Input.GetMouseButton(1) || Input.GetMouseButtonUp(1);
         #endif
-        if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || isClickingRight)
+        if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || isClickingRight || (isOnline && !this.hasAuthority))
             return;
 
         Vector2 targetPosition = UnityExtensionMethods.GetAverage(PointerPositions.Values.ToList()) + UnityExtensionMethods.GetAverage(PointerDragOffsets.Values.ToList());
         if (ParentCardStack != null)
-            UpdatePositionInCardStack(targetPosition);
+            UpdateCardStackPosition(targetPosition);
         else
             this.transform.position = targetPosition;
 
         if (PlaceHolderCardStack != null)
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
-        
-        _localPosition = this.transform.localPosition;
+
+        if (isOnline)
+            CmdUpdateLocalPosition(this.transform.localPosition);
     }
 
-    public void UpdatePositionInCardStack(Vector2 targetPosition)
+    public void UpdateCardStackPosition(Vector2 targetPosition)
     {
         CardStack cardStack = ParentCardStack;
-        if (cardStack == null)
+        if (cardStack == null || (IsOnline && !this.hasAuthority))
             return;
 
-        if (cardStack.type != CardStackType.Horizontal)
-            cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
-        if (cardStack.type == CardStackType.Horizontal)
+        if (!cardStack.DoesImmediatelyRelease && (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal))
             cardStack.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
+        else
+            cardStack.UpdateLayout(this.transform as RectTransform, targetPosition);
         
         Vector3[] stackCorners = new Vector3[4];
         (cardStack.transform as RectTransform).GetWorldCorners(stackCorners);
         bool isOutYBounds = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
-        if ((cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
-            || (cardStack.type == CardStackType.Vertical && !IsProcessingSecondaryDragAction)
+        bool isOutXBounds = targetPosition.x < stackCorners [0].x || targetPosition.y > stackCorners [2].x;
+        if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
+            || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
+            || (cardStack.type == CardStackType.Vertical && isOutXBounds)
             || ((cardStack.type == CardStackType.Horizontal || cardStack.type == CardStackType.Area) && isOutYBounds))
             ParentToCanvas(targetPosition);
+    }
+
+    [Command]
+    void CmdUpdateLocalPosition(Vector3 localPosition)
+    {
+        RpcUpdateLocalPosition(localPosition);
+    }
+
+    [ClientRpc]
+    void RpcUpdateLocalPosition(Vector3 localPosition)
+    {
+        if (!this.hasAuthority)
+            this.transform.localPosition = localPosition;
     }
 
     [Command]

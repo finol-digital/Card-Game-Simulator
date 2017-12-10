@@ -72,6 +72,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             CardStack newCardStack = Instantiate(cardStackPrefab, layoutContent).GetOrAddComponent<CardStack>();
             newCardStack.type = CardStackType.Vertical;
             newCardStack.scrollRectContainer = layoutArea.gameObject.GetOrAddComponent<ScrollRect>();
+            newCardStack.DoesImmediatelyRelease = true;
             newCardStack.OnAddCardActions.Add(OnAddCardModel);
             newCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
             CardStacks.Add(newCardStack);
