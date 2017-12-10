@@ -168,7 +168,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (IsOnline !this.hasAuthority)
+        if (IsOnline && !this.hasAuthority)
             return;
         
         CardModel cardModel;
@@ -197,6 +197,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void UpdatePosition()
     {
+        if (IsOnline && !this.hasAuthority)
+            return;
+        
         bool isClickingRight = false;
         #if UNITY_EDITOR || (!UNITY_ANDROID && !UNITY_IOS)
         isClickingRight = Input.GetMouseButton(1) || Input.GetMouseButtonUp(1);
