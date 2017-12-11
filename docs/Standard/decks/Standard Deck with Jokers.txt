@@ -1,4 +1,4 @@
-# Standard Playing Cards Deck List without Jokers
+# Standard Playing Cards Deck List: Standard Deck with Jokers
 1 Ace of Clubs
 1 Ace of Diamonds
 1 Ace of Hearts
@@ -51,3 +51,5 @@
 1 King of Diamonds
 1 King of Hearts
 1 King of Spades
+2 Black Joker
+2 Red Joker

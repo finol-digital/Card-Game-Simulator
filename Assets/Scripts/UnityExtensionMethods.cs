@@ -19,6 +19,7 @@ static public class UnityExtensionMethods
 {
     public const string AndroidStreamingAssetsDirectory = "assets/";
     public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
+    public const string MetaExtension = ".meta";
 
     static public void Shuffle<T>(this IList<T> list)
     {
@@ -150,7 +151,8 @@ static public class UnityExtensionMethods
             Directory.CreateDirectory(targetDir);
 
         foreach (string filePath in Directory.GetFiles(sourceDir))
-            File.Copy(filePath, Path.Combine(targetDir, Path.GetFileName(filePath)));
+            if (!filePath.EndsWith(MetaExtension))
+                File.Copy(filePath, Path.Combine(targetDir, Path.GetFileName(filePath)));
 
         foreach (string directory in Directory.GetDirectories(sourceDir))
             CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
@@ -184,7 +186,7 @@ static public class UnityExtensionMethods
                         continue;
 
                     string name = zipEntry.Name;
-                    if (name.StartsWith(AndroidStreamingAssetsDirectory) && !name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) {
+                    if (name.StartsWith(AndroidStreamingAssetsDirectory) && !name.EndsWith(MetaExtension) && !name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) {
                         name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
                         string relativeDir = System.IO.Path.GetDirectoryName(name);
                         if (!createdDirectories.Contains(relativeDir)) {
