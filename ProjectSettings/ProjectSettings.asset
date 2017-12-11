@@ -125,7 +125,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 0.14.0
+  bundleVersion: 0.15.0
   preloadedAssets: []
   metroInputSource: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -154,7 +154,7 @@ PlayerSettings:
     Standalone: com.FinolDigital.CardGameSim
     iOS: com.finoldigital.CardGameSimTest
   buildNumber:
-    Standalone: 15
+    Standalone: 16
     iOS: 15
   AndroidBundleVersionCode: 15
   AndroidMinSdkVersion: 16
