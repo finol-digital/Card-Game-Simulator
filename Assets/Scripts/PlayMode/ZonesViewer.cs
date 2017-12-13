@@ -33,7 +33,7 @@ public class ZonesViewer : MonoBehaviour
 
     public void ResizeContent()
     {
-        float width = 4 * ButtonLength;
+        float width = 5 * ButtonLength;
         float height = 2 * ButtonLength;
         foreach (ExtensibleCardZone zone in Zones) {
             width += (zone.transform as RectTransform).rect.width;

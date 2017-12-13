@@ -156,7 +156,7 @@ PlayerSettings:
   buildNumber:
     Standalone: 16
     iOS: 15
-  AndroidBundleVersionCode: 15
+  AndroidBundleVersionCode: 16
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1

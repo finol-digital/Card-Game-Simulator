@@ -83,12 +83,14 @@ public class PlayMode : MonoBehaviour
             zones.AddZone(extraZone);
         }
 
-        StackedZone discardZone = Instantiate(discardZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
-        DeckZone = Instantiate(deckZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
-        HandZone = Instantiate(handZonePrefab, zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
+        if (CardGameManager.Current.GameHasDiscardZone) {
+            StackedZone discardZone = Instantiate(discardZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
+            zones.AddZone(discardZone);
+        }
 
-        zones.AddZone(discardZone);
+        DeckZone = Instantiate(deckZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
         zones.AddZone(DeckZone);
+        HandZone = Instantiate(handZonePrefab, zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
         zones.AddZone(HandZone);
 
         points.Count = CardGameManager.Current.GameStartPointsCount;
@@ -125,6 +127,9 @@ public class PlayMode : MonoBehaviour
     public IEnumerator WaitToDealDeck()
     {
         yield return null;
+
+        zones.verticalScrollView.verticalScrollbar.value = 0;
+        zones.horizontalScrollView.horizontalScrollbar.value = 0;
 
         List<Card> extraCards = LoadedDeck.GetExtraCards();
         foreach (Card card in LoadedDeck.Cards)

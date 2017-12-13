@@ -143,6 +143,9 @@ public class CardGame
     public List<GameBoardURL> GameBoardURLs { get; set; }
 
     [JsonProperty]
+    public bool GameHasDiscardZone { get; set; }
+
+    [JsonProperty]
     public int GameStartHandCount { get; set; }
 
     [JsonProperty]
