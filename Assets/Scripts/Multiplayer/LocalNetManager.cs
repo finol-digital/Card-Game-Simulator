@@ -36,7 +36,10 @@ public class LocalNetManager : NetworkManager
 
     public void UnSpawnCard(GameObject spawned)
     {
-        Destroy(spawned);
+        Debug.Log("Unspawning on network");
+        CardModel cardModel = spawned.GetComponent<CardModel>();
+        if (cardModel != null && !cardModel.hasAuthority)
+            GameObject.Destroy(spawned);
     }
 
     public void SearchForHost()

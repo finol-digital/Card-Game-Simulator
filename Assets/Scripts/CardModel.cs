@@ -244,15 +244,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             this.transform.localPosition = localPosition;
     }
 
-    [Command]
-    void CmdUnspawnCard()
-    {
-        NetworkServer.UnSpawn(this.gameObject);
-    }
-
     public void ParentToCanvas(Vector3 targetPosition)
     {
-        if (this.hasAuthority)
+        Debug.Log("Parenting to canvas");
+        if (IsOnline && this.hasAuthority)
             CmdUnspawnCard();
         CardStack prevParentStack = ParentCardStack;
         this.transform.SetParent(CardGameManager.Instance.TopCanvas.transform);
@@ -261,6 +256,23 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             prevParentStack.OnRemove(this);
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         this.transform.position = targetPosition;
+    }
+
+    [Command]
+    void CmdUnspawnCard()
+    {
+        Debug.Log("Unspawning on server");
+        RpcUnspawn();
+        ((LocalNetManager)NetworkManager.singleton).UnSpawnCard(this.gameObject);
+        NetworkServer.UnSpawn(this.gameObject);
+    }
+
+    [ClientRpc]
+    public void RpcUnspawn()
+    {
+        Debug.Log("Unspawning on client");
+        if (!isServer && !this.hasAuthority)
+            GameObject.Destroy(this.gameObject);
     }
 
     public IEnumerator MoveToPlaceHolder()
