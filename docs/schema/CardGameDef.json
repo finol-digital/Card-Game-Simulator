@@ -86,7 +86,7 @@
 			"format": "uri"
 		},
 		"cardImageUrlFormat": {
-			"description": "cardImageUrlFormat indicates the url from which CGS should download missing card image files, built from: {0}:<CardImageURLBase>, {1}:*Card:Id*, {2}:<CardImageFileType>, {3}:*Card:Name*, {4}:*Card:SetCode*, {5}:Card:<CardImageURLProperty>",
+			"description": "cardImageUrlFormat indicates the url from which CGS should download missing card image files, built from: {0}:<cardImageUrlBase>, {1}:*Card:Id*, {2}:<cardImageFileType>, {3}:*Card:Name*, {4}:*Card:SetCode*, {5}:Card:<cardImageUrlProperty>",
 			"default": "{0}/{1}.{2}",
 			"type": "string"
 		},
@@ -105,7 +105,7 @@
 			"type": "string"
 		},
 		"cardPrimaryProperty": {
-			"description": "The CardPrimaryProperty is the property that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
+			"description": "The cardPrimaryProperty is the property that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
 			"type": "string"
 		},
 		"cardProperties": {
