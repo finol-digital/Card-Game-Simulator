@@ -1,20 +1,20 @@
 {
-	"allCardsURL": "https://cardgamesim.finoldigital.com/Dominoes/AllCards.json",
-	"allSetsURL": "https://cardgamesim.finoldigital.com/Dominoes/AllSets.json",
-	"autoUpdateURL": "https://cardgamesim.finoldigital.com/Dominoes/Dominoes.json",
-	"backgroundImageURL": "https://cardgamesim.finoldigital.com/Dominoes/Background.png",
-	"cardBackImageURL": "https://cardgamesim.finoldigital.com/Dominoes/CardBack.png",
+	"allCardsUrl": "https://cardgamesim.finoldigital.com/Dominoes/AllCards.json",
+	"allSetsUrl": "https://cardgamesim.finoldigital.com/Dominoes/AllSets.json",
+	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/Dominoes/Dominoes.json",
+	"backgroundImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/Background.png",
+	"cardBackImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/CardBack.png",
 	"cardHeight": 2,
-	"cardImageURLBase": "https://cardgamesim.finoldigital.com/Dominoes",
-	"cardImageURLFormat": "{0}/sets/{4}/{1}.{2}",
+	"cardImageUrlBase": "https://cardgamesim.finoldigital.com/Dominoes",
+	"cardImageUrlFormat": "{0}/sets/{4}/{1}.{2}",
 	"cardProperties": [
 		{"name": "type", "type": "enum" },
 		{"name": "suit", "type": "enum" },
 		{"name": "rank", "type": "integer" }
 	],
 	"cardWidth": 1,
-	"deckURLs": [
-		{"name": "Double Six Dominoes", "URL": "https://cardgamesim.finoldigital.com/Dominoes/decks/Double%20Six%20Dominoes.txt"}
+	"deckUrls": [
+		{"name": "Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/Dominoes/decks/Double%20Six%20Dominoes.txt"}
 	],
 	"enums": [
 		{"property": "type",  "values": {
