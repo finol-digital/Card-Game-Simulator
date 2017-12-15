@@ -9,7 +9,7 @@ In addition to downloading a custom game from a url, custom card games can also 
 
 ## Custom game folder structure
 The structure of this custom game folder is:
-- \<name\>/
+\<name\>/
  - \<name\>.json
  - AllCards.json
  - AllSets.json
