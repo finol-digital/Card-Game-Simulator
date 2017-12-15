@@ -293,6 +293,11 @@
 			"exclusiveMinimum": 0,
 			"type": "number"
 		},
+		"setCardsIdentifier": {
+			"description": "When defining a set in AllSets.json, you can also define cards to include in that set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
+			"default": "cards",
+			"type": "string"
+		},
 		"setCodeIdentifier": {
 			"description": "When defining a set in AllSets.json, you can have the *Set:Code* mapped to the field defined by setCodeIdentifier. Most custom games will likely want to keep the default setCodeIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
 			"default": "code",
