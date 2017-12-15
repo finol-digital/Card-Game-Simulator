@@ -1,6 +1,7 @@
 {
 	"$schema": "http://json-schema.org/schema#",
 	"id": "https://cardgamesim.finoldigital.com/AllSets",
+	"description": "The structure of this file is **[ {\<SetCodeIdentifier\>:*Set:Code*, \<SetNameIdentifier\>:*Set:Name*, cards:\<AllCards.json\>}, ... ]**. You should have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.",
 	"type": "array",
 	"items": {
 	}
