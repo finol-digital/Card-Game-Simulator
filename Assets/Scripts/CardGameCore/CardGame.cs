@@ -17,7 +17,6 @@ public class CardGame
     public const string AllSetsFileName = "AllSets.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
-    public const string SetCardsIdentifier = "cards";
 
     public string FilePathBase {
         get { return CardGameManager.GamesFilePathBase + "/" + Name; }
@@ -146,6 +145,9 @@ public class CardGame
 
     [JsonProperty]
     public float PlayAreaWidth { get; set; } = 23.5f;
+    
+    [JsonProperty]
+    public string SetCardsIdentifier { get; set; } = "cards";
 
     [JsonProperty]
     public string SetCodeIdentifier { get; set; } = "code";
