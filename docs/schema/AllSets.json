@@ -17,5 +17,6 @@
 			}
 		}
 	},
-	"type": "array"
+	"type": "array",
+	"uniqueItems": true
 }
