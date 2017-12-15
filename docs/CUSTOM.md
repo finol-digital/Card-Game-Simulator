@@ -16,7 +16,7 @@ The structure of this custom game folder is:
   - Background.\<backgroundImageFileType\>
   - CardBack.\<cardBackImageFileType\>
   - boards/
-    * *Board:Id*.\<boardFileType\>
+    * *GameBoard:Id*.\<boardFileType\>
     * ...
   - decks/
     * *Deck:Name*.\<deckFileType\>
