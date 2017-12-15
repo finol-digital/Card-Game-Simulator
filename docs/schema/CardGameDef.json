@@ -6,12 +6,8 @@
 		"vector2": {
 			"type": "object",
 			"properties": {
-				"x": {
-					"type": "number"
-				},
-				"y": {
-					"type": "number"
-				}
+				"x": { "type": "number" },
+				"y": { "type": "number" }
 			}
 		}
 	},
