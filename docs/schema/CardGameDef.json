@@ -195,7 +195,7 @@
 					},
 					"value": {
 						"description": "If *Card:Properties[ExtraDef:Property]* equals *ExtraDef:Value*, then that card will be moved from the main deck to this extra deck",
-						"type": "object"
+						"type": "string"
 					}
 				}
 			},
