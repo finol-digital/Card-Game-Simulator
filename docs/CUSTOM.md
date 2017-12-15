@@ -3,12 +3,14 @@ Card Game Simulator allows users to download custom card games to use within the
 
 ## CGS games directory
 In addition to downloading a custom game from a url, custom card games can also be manually added by creating a new folder within the persistent game data directory. The location of this persistent data directory varies depending on platform. Some examples include:
+
 - Android: /Data/Data/com.finoldigital.cardgamesim/files/games/
 - Windows: C:/Users/\<Username\>/AppData/LocalLow/Finol Digital/Card Game Simulator/games/
 - Mac: ~/Library/Application Support/Finol Digital/Card Game Simulator/games/
 
 ## Custom game folder structure
 The structure of this custom game folder is:
+
 \<name\>/
  - \<name\>.json
  - AllCards.json
@@ -29,6 +31,7 @@ The structure of this custom game folder is:
 
 ## JSON File Structure
 When downloading a custom game from a url, the data that is being downloaded is the contents of the \<name\>.json file. CGS generates the rest of the folder structure based off the information in that file. You can create your own json and validate against these schema:
+
 - [CardGameDef](schema/CardGameDef.json)
 - [AllCards](schema/AllCards.json)
 - [AllSets](schema/AllSets.json)
