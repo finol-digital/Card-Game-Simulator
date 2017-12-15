@@ -1,16 +1,21 @@
 {
 	"$schema": "http://json-schema.org/schema#",
-	"id": "https://cardgamesim.finoldigital.com/CardGameDef",
+	"id": "https://cardgamesim.finoldigital.com/schemas/CardGameDef.json",
 	"description": "A custom card game definition to be used within Card Game Simulator",
-	"type": "object",
 	"definitions": {
-	*PropertyDef* has the properties: *Name* and *Type*. *PropertyDef:Name* is a string indicating the name of the property, and this name can be referenced by CardImageURLProperty, cardPrimaryProperty, Enums, Extras, and HsdPropertyId. *PropertyDef:Type* can be **string**, **integer**, **enum**, or **enumList**.
-	*DeckURL* has the properties: *Name*, and *URL*. If the "decks/" folder does not exist, CGS will go through each DeckURL, and save the data from *DeckURL:URL* to "decks/*DeckURL:Name*.\<DeckFileType\>".
-	*EnumDef* has the properties: *Property* and *Values*. *EnumDef:Property* refers to a *PropertyDef:Name* in \<cardProperties\>. *EnumDef:Values* is a Dictionary with strings as the keys and values. The value is displayed to the user through the UI while the keys remain hidden. If the keys are entered as a hexadecimal integers (prefixed with 0x), multiple values can go through bitwise and/ors to have a single enumValue represent multiple values. The multiple values would be displayed together to the user, using "\|" as the delimiter.
-	*ExtraDef* has the properties: *Group*, *Property*, and *Value*. *ExtraDef:Property* refers to a *PropertyDef:Name* in \<cardProperties\>. *ExtraDef:Value* is a string. If *Card:Properties\[ExtraDef:Property\]* equals *ExtraDef:Value*, then that card will be moved from the main deck and put into the *ExtraDef:Group* zone during play mode. If no *ExtraDef:Group* is defined, CGS will default to "Extras". The **hsd** DeckFileType treats all extra cards as Heroes, and the **ydk** DeckFileType treats all extra cards as extra deck cards.
-	*GameBoardCard* has the properties: *Card*, and *Boards*. When a deck is loaded in Play Mode, any card with *Card:Id* = *Card* will cause *Boards* to be put into the play area. *Boards* is a List of *GameBoard*s. *GameBoard* has the properties *Id*, *OffsetMax*, and *OffsetMin*.  *Id* indicates which image should display, and *OffsetMax* and *OffsetMin* are Vector2s which indicate the positions (in inches) of the top-right corner and the bottom-left corner.
-	*GameBoardURL* has the properties: *Id*, and *URL*. If the "boards/" folder does not exist, CGS will go through each GameBoardURL, and save the data from *GameBoardURL:URL* to "boards/*GameBoardURL:Id*.\<GameBoardFileType\>".
+		"vector2": {
+			"type": "object",
+			"properties": {
+				"x": {
+					"type": "number"
+				},
+				"y": {
+					"type": "number"
+				}
+			}
+		}
 	},
+	"type": "object",
 	"properties": {
 		"name": {
 			"description": "This name is the name of the custom card game as it appears to the user, and CGS will create the data for this card game in a folder with this name.",
@@ -30,7 +35,7 @@
 			"type": "string",
 			"format": "uri"
 		},
-		"allCardsZipped": {
+		"allSetsZipped": {
 			"description": "If allSetsUrl points to a zipped file, set allSetsZipped to true, and CGS will unzip the file and then save the unzipped file as AllSets.json.",
 			"type": "boolean"
 		},
@@ -66,6 +71,7 @@
 		"cardHeight": {
 			"description": "cardHeight is the height in inches of each card.",
 			"default": 3.5,
+			"exclusiveMinimum": 0,
 			"type": "number"
 		},
 		"cardIdIdentifier": {
@@ -78,18 +84,18 @@
 			"default": "png",
 			"type": "string"
 		},
-		"cardImageURLBase": {
-			"description": "cardImageURLBase can be used by cardImageURLFormat to indicate the domain/directory from which CGS should download individual card images.",
+		"cardImageUrlBase": {
+			"description": "cardImageUrlBase can be used by cardImageUrlFormat to indicate the domain/directory from which CGS should download individual card images.",
 			"type": "string",
 			"format": "uri"
 		},
-		"cardImageURLFormat": {
-			"description": "cardImageFileType is the file type extension for the image files that CGS downloads for each individual card.",
+		"cardImageUrlFormat": {
+			"description": "cardImageUrlFormat indicates the url from which CGS should download missing card image files, built from: {0}:<CardImageURLBase>, {1}:*Card:Id*, {2}:<CardImageFileType>, {3}:*Card:Name*, {4}:*Card:SetCode*, {5}:Card:<CardImageURLProperty>",
 			"default": "{0}/{1}.{2}",
 			"type": "string"
 		},
-		"cardImageURLProperty": {
-			"description": "cardImageURLProperty can be used by cardImageURLFormat to indicate which *Card:Property* contains the url/name for the image of each individual card.",
+		"cardImageUrlProperty": {
+			"description": "cardImageUrlProperty can be used by cardImageUrlFormat to indicate which *Card:Property* contains the url/name for the image of each individual card.",
 			"type": "string"
 		},
 		"cardNameIdentifier": {
@@ -98,12 +104,29 @@
 			"type": "string"
 		},
 		"cardProperties": {
-			"items": { "type": "$ref" },
+			"description": "cardProperties defines the possibilities for *Card:Property*s.",
+			"items": {
+				"title": "Property",
+				"type": "object",
+				"properties": {
+					"name": {
+						"description": "The name of the property: This name can be referenced to lookup a card's property",
+						"type": "string"
+					},
+					"type": {
+						"description": "The type of the property",
+						"enum": ["string", "integer", "enum", "enumList"],
+						"default": "string",
+						"type": "string"
+					}
+				}
+			},
 			"type": "array"
 		},
 		"cardWidth": {
 			"description": "cardWidth is the width in inches of each card.",
 			"default": 2.5,
+			"exclusiveMinimum": 0,
 			"type": "number"
 		},
 		"deckFileType": {
@@ -118,16 +141,64 @@
 			"minimum": 0,
 			"type": "integer"
 		},
-		"deckURLs": {
-			"items": { "type": "$ref" },
+		"deckUrls": {
+			"description": "If the 'decks/' folder does not exist, CGS will go through each DeckUrl, and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'",
+			"items": {
+				"title": "DeckUrl",
+				"type": "object",
+				"properties": {
+					"name": {
+						"description": "The name of the deck",
+						"type": "string"
+					},
+					"url": {
+						"description": "The url from which to download the deck",
+						"type": "string",
+						"format": "uri"
+					}
+				}
+			},
 			"type": "array"
 		},
 		"enums": {
-			"items": { "type": "$ref" },
+			"description": "The value is displayed to the user through the UI while the keys remain hidden. If the keys are entered as a hexadecimal integers (prefixed with 0x), multiple values can go through bitwise and/ors to have a single enumValue represent multiple values. The multiple values would be displayed together to the user, using | as the delimiter.",
+			"items": {
+				"title": "EnumDef",
+				"type": "object",
+				"properties": {
+					"property": {
+						"description": "Refers to a *Property:Name* in <cardProperties>",
+						"type": "string"
+					},
+					"value": {
+						"description": "Dictionary with string key-value pairs.",
+						"type": "object"
+					}
+				}
+			},
 			"type": "array"
 		},
 		"extras": {
-			"items": { "type": "$ref" },
+			"description": "Describes extra cards separate from the main deck: The hsd deckFileType treats all extra cards as Heroes, and the ydk deckFileType treats all extra cards as extra deck cards",
+			"items": {
+				"title": "ExtraDef",
+				"type": "object",
+				"properties": {
+					"group": {
+						"description": "A group of extra cards is displayed together with this label in Play Mode",
+						"default": "Extras",
+						"type": "string"
+					},
+					"property": {
+						"description": "Refers to a *Property:Name* in <cardProperties>",
+						"type": "string"
+					},
+					"value": {
+						"description": "If *Card:Properties[ExtraDef:Property]* equals *ExtraDef:Value*, then that card will be moved from the main deck to this extra deck",
+						"type": "object"
+					}
+				}
+			},
 			"type": "array"
 		},
 		"gameBoardFileType": {
@@ -136,11 +207,56 @@
 			"type": "string"
 		},
 		"gameBoardCards": {
-			"items": { "type": "$ref" },
+			"items": {
+				"title": "GameBoardCard",
+				"type": "object",
+				"properties": {
+					"card": {
+						"description": "When a deck is loaded in Play Mode, any card with *Card:Id* = *Card* will cause *Boards* to be put into the play area.",
+						"type": "string"
+					},
+					"boards": {
+						"items": {
+							"title": "GameBoard",
+							"type": "object",
+							"properties": {
+								"id": {
+									"description": "The id of the board",
+									"type": "string"
+								},
+								"offsetMax": {
+									"description": "Indicates the position (in inches) of the top-right corner",
+									"$ref": "#/definitions/vector2"
+								},
+								"offsetMin": {
+									"description": "Indicates the position (in inches) of the bottom-left corner",
+									"$ref": "#/definitions/vector2"
+								}
+							}
+						},
+						"type": "array"
+					}
+				}
+			},
 			"type": "array"
 		},
 		"gameBoardURLs": {
-			"items": { "type": "$ref" },
+			"description": "If the 'boards/' folder does not exist, CGS will go through each GameBoardUrl, and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<GameBoardFileType>'",
+			"items": {
+				"title": "GameBoardUrl",
+				"type": "object",
+				"properties": {
+					"id": {
+						"description": "The id of the board",
+						"type": "string"
+					},
+					"url": {
+						"description": "The url from which to download the board image",
+						"type": "string",
+						"format": "uri"
+					}
+				}
+			},
 			"type": "array"
 		},
 		"gameHasDiscardZone": {
