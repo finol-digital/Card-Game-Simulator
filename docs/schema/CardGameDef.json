@@ -265,7 +265,6 @@
 		},
 		"gameStartPointsCount": {
 			"description": "gameStartPointsCount indicates how many points are assigned to each player, when that player loads a deck in Play Mode.",
-			"minimum": 0,
 			"type": "integer"
 		},
 		"hsdPropertyId": {
