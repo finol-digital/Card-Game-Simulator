@@ -99,6 +99,15 @@
 			"default": "name",
 			"type": "string"
 		},
+		"cardSetIdentifier": {
+			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. Most custom games will likely want to keep the default cardSetIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
+			"default": "set",
+			"type": "string"
+		},
+		"cardPrimaryProperty": {
+			"description": "The CardPrimaryProperty is the property that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
+			"type": "string"
+		},
 		"cardProperties": {
 			"description": "cardProperties defines the possibilities for *Card:Property*s.",
 			"items": {
@@ -236,7 +245,7 @@
 			},
 			"type": "array"
 		},
-		"gameBoardURLs": {
+		"gameBoardUrls": {
 			"description": "If the 'boards/' folder does not exist, CGS will go through each GameBoardUrl, and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<GameBoardFileType>'",
 			"items": {
 				"title": "GameBoardUrl",
