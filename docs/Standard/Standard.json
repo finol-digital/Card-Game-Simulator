@@ -1,16 +1,16 @@
 {
-	"allCardsURL": "https://cardgamesim.finoldigital.com/Standard/AllCards.json",
-	"allSetsURL": "https://cardgamesim.finoldigital.com/Standard/AllSets.json",
-	"autoUpdateURL": "https://cardgamesim.finoldigital.com/Standard/Standard.json",
-	"cardImageURLBase": "https://cardgamesim.finoldigital.com/Standard/sets/STD_FR",
+	"allCardsUrl": "https://cardgamesim.finoldigital.com/Standard/AllCards.json",
+	"allSetsUrl": "https://cardgamesim.finoldigital.com/Standard/AllSets.json",
+	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/Standard/Standard.json",
+	"cardImageUrlBase": "https://cardgamesim.finoldigital.com/Standard/sets/STD_FR",
 	"cardProperties": [
 		{"name": "rank", "type": "enum" },
 		{"name": "suit", "type": "enum" },
 		{"name": "color", "type": "enum" }
 	],
-	"deckURLs": [
-		{"name": "Standard 52-card Deck", "URL": "https://cardgamesim.finoldigital.com/Standard/decks/Standard%2052-card%20Deck.txt"},
-		{"name": "Standard Deck with Jokers", "URL": "https://cardgamesim.finoldigital.com/Standard/decks/Standard%20Deck%20with%20Jokers.txt"}
+	"deckUrls": [
+		{"name": "Standard 52-card Deck", "url": "https://cardgamesim.finoldigital.com/Standard/decks/Standard%2052-card%20Deck.txt"},
+		{"name": "Standard Deck with Jokers", "url": "https://cardgamesim.finoldigital.com/Standard/decks/Standard%20Deck%20with%20Jokers.txt"}
 	],
 	"enums": [
 		{"property": "rank",  "values": {
