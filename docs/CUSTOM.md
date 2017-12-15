@@ -9,23 +9,23 @@ In addition to downloading a custom game from a url, custom card games can also 
 
 ## Custom game folder structure
 The structure of this custom game folder is:
-* \<name\>/
-  * \<name\>.json
-  * AllCards.json
-  * AllSets.json
-  * Background.\<backgroundImageFileType\>
-  * CardBack.\<cardBackImageFileType\>
-  * boards/
-        * *Board:Id*.\<boardFileType\>
-        * ...
-  * decks/
-        * *Deck:Name*.\<deckFileType\>
-        * ...
-  * sets/
-        * *Set:Code*/
-              * *Card:Id*.\<cardImageFileType\>
-              * ...
-        *...
+- \<name\>/
+  - \<name\>.json
+  - AllCards.json
+  - AllSets.json
+  - Background.\<backgroundImageFileType\>
+  - CardBack.\<cardBackImageFileType\>
+  - boards/
+    * *Board:Id*.\<boardFileType\>
+    * ...
+  - decks/
+    * *Deck:Name*.\<deckFileType\>
+    * ...
+  - sets/
+    * *Set:Code*/
+      * *Card:Id*.\<cardImageFileType\>
+      * ...
+    *...
 
 ## JSON File Structure
 When downloading a custom game from a url, the data that is being downloaded is the contents of the \<name\>.json file. CGS generates the rest of the folder structure based off the information in that file. You can create your own json and validate against these schema:
