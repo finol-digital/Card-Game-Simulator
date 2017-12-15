@@ -13,7 +13,7 @@
 	"deckURLs": [
 		{"name": "Traditional Mahjong Deck", "URL": "https://cardgamesim.finoldigital.com/Mahjong/decks/Traditional%20Mahjong%20Deck.txt"}
 	],
-	"deckMaxCount": "144",
-	"gameStartHandCount": "13",
+	"deckMaxCount": 144,
+	"gameStartHandCount": 13,
 	"name": "Mahjong"
 }
