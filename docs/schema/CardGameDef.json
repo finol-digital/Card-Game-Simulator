@@ -36,11 +36,11 @@
 			"type": "boolean"
 		},
 		"autoUpdate": {
-			"description": "If autoUpdate is true, CGS will re-download <Name>.json, AllCards.json, and AllSets.json every time the user starts to play that custom card game.",
+			"description": "If autoUpdate is true, CGS will re-download <name>.json, AllCards.json, and AllSets.json every time the user starts to play that custom card game.",
 			"type": "boolean"
 		},
 		"autoUpdateUrl": {
-			"description": "autoUpdateUrl should correspond to the url from which users download <Name>.json. CGS will automatically re-download the custom game from this url if autoUpdate is set to true.",
+			"description": "autoUpdateUrl should correspond to the url from which users download <name>.json. CGS will automatically re-download the custom game from this url if autoUpdate is set to true.",
 			"type": "string",
 			"format": "uri"
 		},
