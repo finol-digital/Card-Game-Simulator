@@ -246,7 +246,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void ParentToCanvas(Vector3 targetPosition)
     {
-        Debug.Log("Parenting to canvas");
         if (IsOnline && this.hasAuthority)
             CmdUnspawnCard();
         CardStack prevParentStack = ParentCardStack;
@@ -261,16 +260,14 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     [Command]
     void CmdUnspawnCard()
     {
-        Debug.Log("Unspawning on server");
         RpcUnspawn();
-        ((LocalNetManager)NetworkManager.singleton).UnSpawnCard(this.gameObject);
         NetworkServer.UnSpawn(this.gameObject);
+        ((LocalNetManager)NetworkManager.singleton).UnSpawnCard(this.gameObject);
     }
 
     [ClientRpc]
     public void RpcUnspawn()
     {
-        Debug.Log("Unspawning on client");
         if (!isServer && !this.hasAuthority)
             GameObject.Destroy(this.gameObject);
     }

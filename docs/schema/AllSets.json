@@ -1,0 +1,7 @@
+{
+	"$schema": "http://json-schema.org/schema#",
+	"id": "https://cardgamesim.finoldigital.com/AllSets",
+	"type": "array",
+	"items": {
+	}
+}

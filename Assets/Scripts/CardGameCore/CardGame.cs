@@ -17,15 +17,6 @@ public class CardGame
     public const string AllSetsFileName = "AllSets.json";
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
-    public const string DefaultCardImageURLFormat = "{0}/{1}.{2}";
-    public const float DefaultCardHeight = 3.5f;
-    public const float DefaultCardWidth = 2.5f;
-    public const int DefaultDeckMaxCount = 75;
-    public const DeckFileType DefaultDeckFileType = DeckFileType.Txt;
-    public const string DefaultHsdPropertyId = "dbfId";
-    public const string DefaultImageFileType = "png";
-    public const float DefaultPlayAreaHeight = 13.5f;
-    public const float DefaultPlayAreaWidth = 23.5f;
     public const string SetCardsIdentifier = "cards";
 
     public string FilePathBase {
@@ -45,24 +36,20 @@ public class CardGame
     }
 
     public float AspectRatio {
-        get { 
-            if (CardWidth <= 0 || CardHeight <= 0)
-                return DefaultCardWidth / DefaultCardHeight;
-            return CardWidth / CardHeight;
-        }
+        get { return CardHeight > 0 ? Mathf.Abs(CardWidth / CardHeight) : 0.715f; }
     }
 
     [JsonProperty]
     public string Name { get; set; }
 
     [JsonProperty]
-    public string AllCardsURL { get; set; }
+    public string AllCardsUrl { get; set; } = "";
 
     [JsonProperty]
     public bool AllCardsZipped { get; set; }
 
     [JsonProperty]
-    public string AllSetsURL { get; set; }
+    public string AllSetsUrl { get; set; } = "";
 
     [JsonProperty]
     public bool AllSetsZipped { get; set; }
@@ -71,76 +58,76 @@ public class CardGame
     public bool AutoUpdate { get; set; }
 
     [JsonProperty]
-    public string AutoUpdateURL { get; set; }
+    public string AutoUpdateUrl { get; set; } = "";
 
     [JsonProperty]
-    public string BackgroundImageFileType { get; set; }
+    public string BackgroundImageFileType { get; set; } = "png";
 
     [JsonProperty]
-    public string BackgroundImageURL { get; set; }
+    public string BackgroundImageUrl { get; set; } = "";
 
     [JsonProperty]
-    public string CardBackImageFileType { get; set; }
+    public string CardBackImageFileType { get; set; } = "png";
 
     [JsonProperty]
-    public string CardBackImageURL { get; set; }
+    public string CardBackImageUrl { get; set; } = "";
 
     [JsonProperty]
-    public float CardHeight { get; set; }
+    public float CardHeight { get; set; } = 3.5f;
 
     [JsonProperty]
-    public string CardIdIdentifier { get; set; }
+    public string CardIdIdentifier { get; set; }= "id";
 
     [JsonProperty]
-    public string CardImageFileType { get; set; }
+    public string CardImageFileType { get; set; } = "png";
 
     [JsonProperty]
-    public string CardImageURLBase { get; set; }
+    public string CardImageUrlBase { get; set; } = "";
 
     [JsonProperty]
-    public string CardImageURLFormat { get; set; }
+    public string CardImageUrlFormat { get; set; } = "{0}/{1}.{2}";
 
     [JsonProperty]
-    public string CardImageURLProperty { get; set; }
+    public string CardImageUrlProperty { get; set; } = "";
 
     [JsonProperty]
-    public string CardNameIdentifier { get; set; }
+    public string CardNameIdentifier { get; set; } = "name";
 
     [JsonProperty]
-    public string CardSetIdentifier { get; set; }
+    public string CardSetIdentifier { get; set; } = "set";
 
     [JsonProperty]
-    public string CardPrimaryProperty { get; set; }
+    public string CardPrimaryProperty { get; set; } = "";
 
     [JsonProperty]
-    public List<PropertyDef> CardProperties { get; set; }
+    public List<PropertyDef> CardProperties { get; set; } = new List<PropertyDef>();
 
     [JsonProperty]
-    public float CardWidth { get; set; }
+    public float CardWidth { get; set; } = 2.5f;
 
     [JsonProperty]
-    public DeckFileType DeckFileType { get; set; }
+    public DeckFileType DeckFileType { get; set; } = DeckFileType.Txt;
 
     [JsonProperty]
-    public int DeckMaxCount { get; set; }
+    public int DeckMaxCount { get; set; } = 75;
 
     [JsonProperty]
-    public List<DeckURL> DeckURLs { get; set; }
+    public List<DeckUrl> DeckUrls { get; set; } = new List<DeckUrl>();
 
     [JsonProperty]
-    public List<EnumDef> Enums { get; set; }
+    public List<EnumDef> Enums { get; set; } = new List<EnumDef>();
 
     [JsonProperty]
-    public List<ExtraDef> Extras { get; set; }
+    public List<ExtraDef> Extras { get; set; } = new List<ExtraDef>();
 
     [JsonProperty]
-    public string GameBoardFileType { get; set; }
+    public string GameBoardFileType { get; set; } = "png";
 
     [JsonProperty]
-    public List<GameBoardCard> GameBoardCards { get; set; }
+    public List<GameBoardCard> GameBoardCards { get; set; } = new List<GameBoardCard>();
 
     [JsonProperty]
-    public List<GameBoardURL> GameBoardURLs { get; set; }
+    public List<GameBoardUrl> GameBoardUrls { get; set; } = new List<GameBoardUrl>();
 
     [JsonProperty]
     public bool GameHasDiscardZone { get; set; }
@@ -152,19 +139,19 @@ public class CardGame
     public int GameStartPointsCount { get; set; }
 
     [JsonProperty]
-    public string HsdPropertyId { get; set; }
+    public string HsdPropertyId { get; set; } = "dbfId";
 
     [JsonProperty]
-    public float PlayAreaHeight { get; set; }
+    public float PlayAreaHeight { get; set; } = 13.5f;
 
     [JsonProperty]
-    public float PlayAreaWidth { get; set; }
+    public float PlayAreaWidth { get; set; } = 23.5f;
 
     [JsonProperty]
-    public string SetCodeIdentifier { get; set; }
+    public string SetCodeIdentifier { get; set; } = "code";
 
     [JsonProperty]
-    public string SetNameIdentifier { get; set; }
+    public string SetNameIdentifier { get; set; } = "name";
 
     public bool IsLoading { get; private set; }
 
@@ -180,38 +167,7 @@ public class CardGame
     public CardGame(string name = Set.DefaultCode, string url = "")
     {
         Name = name ?? Set.DefaultCode;
-        AutoUpdateURL = url ?? string.Empty;
-
-        AllCardsURL = string.Empty;
-        AllSetsURL = string.Empty;
-
-        BackgroundImageFileType = DefaultImageFileType;
-        BackgroundImageURL = string.Empty;
-        CardBackImageFileType = DefaultImageFileType;
-        CardBackImageURL = string.Empty;
-        CardImageURLBase = string.Empty;
-        CardImageURLFormat = DefaultCardImageURLFormat;
-        CardImageURLProperty = string.Empty;
-        CardImageFileType = DefaultImageFileType;
-        CardIdIdentifier = "id";
-        CardNameIdentifier = "name";
-        CardSetIdentifier = "set";
-        CardProperties = new List<PropertyDef>();
-        CardHeight = DefaultCardHeight;
-        CardWidth = DefaultCardWidth;
-        DeckFileType = DefaultDeckFileType;
-        DeckMaxCount = DefaultDeckMaxCount;
-        DeckURLs = new List<DeckURL>();
-        Enums = new List<EnumDef>();
-        Extras = new List<ExtraDef>();
-        GameBoardFileType = DefaultImageFileType;
-        GameBoardCards = new List<GameBoardCard>();
-        GameBoardURLs = new List<GameBoardURL>();
-        HsdPropertyId = DefaultHsdPropertyId;
-        PlayAreaHeight = PlayAreaHeight;
-        PlayAreaWidth = PlayAreaWidth;
-        SetCodeIdentifier = "code";
-        SetNameIdentifier = "name";
+        AutoUpdateUrl = url ?? string.Empty;
     }
 
     public IEnumerator Load()
@@ -221,28 +177,27 @@ public class CardGame
         IsLoading = true;
 
         string initialDirectory = FilePathBase;
-        if (!string.IsNullOrEmpty(AutoUpdateURL) && (AutoUpdate || !File.Exists(ConfigFilePath)))
-            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
+        if (!string.IsNullOrEmpty(AutoUpdateUrl) && (AutoUpdate || !File.Exists(ConfigFilePath)))
+            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateUrl, ConfigFilePath);
         try {
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
-            Debug.LogError("Failed to load card game! Error: " + e.Message + e.StackTrace);
             Error = e.Message;
             IsLoading = false;
             yield break;
         }
         if (AutoUpdate || !initialDirectory.Equals(FilePathBase)) {
-            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateURL, ConfigFilePath);
+            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateUrl, ConfigFilePath);
             if (!initialDirectory.Equals(FilePathBase))
                 Directory.Delete(initialDirectory, true);
         }
 
         Sprite backgroundSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageURL), output => backgroundSprite = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageUrl), output => backgroundSprite = output);
         if (backgroundSprite != null)
             BackgroundImageSprite = backgroundSprite;
         Sprite cardBackSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageURL), output => cardBackSprite = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageUrl), output => cardBackSprite = output);
         if (cardBackSprite != null)
             CardBackImageSprite = cardBackSprite;
 
@@ -251,14 +206,14 @@ public class CardGame
                 enumDef.CreateLookup(key);
 
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
-        if (!string.IsNullOrEmpty(AllCardsURL) && (AutoUpdate || !File.Exists(cardsFile))) {
-            yield return UnityExtensionMethods.SaveURLToFile(AllCardsURL, AllCardsZipped ? cardsFile + ".zip" : cardsFile);
+        if (!string.IsNullOrEmpty(AllCardsUrl) && (AutoUpdate || !File.Exists(cardsFile))) {
+            yield return UnityExtensionMethods.SaveURLToFile(AllCardsUrl, AllCardsZipped ? cardsFile + ".zip" : cardsFile);
             if (AllCardsZipped)
                 UnityExtensionMethods.ExtractZip(cardsFile + ".zip", FilePathBase);
         }
         string setsFile = FilePathBase + "/" + AllSetsFileName;
-        if (!string.IsNullOrEmpty(AllSetsURL) && (AutoUpdate || !File.Exists(setsFile))) {
-            yield return UnityExtensionMethods.SaveURLToFile(AllSetsURL, AllSetsZipped ? setsFile + ".zip" : setsFile);
+        if (!string.IsNullOrEmpty(AllSetsUrl) && (AutoUpdate || !File.Exists(setsFile))) {
+            yield return UnityExtensionMethods.SaveURLToFile(AllSetsUrl, AllSetsZipped ? setsFile + ".zip" : setsFile);
             if (AllSetsZipped)
                 UnityExtensionMethods.ExtractZip(setsFile + ".zip", FilePathBase);
         }
@@ -266,19 +221,18 @@ public class CardGame
             LoadJSONFromFile(cardsFile, LoadCardFromJToken);
             LoadJSONFromFile(setsFile, LoadSetFromJToken);
         } catch (Exception e) {
-            Debug.LogError("Failed to load card game data! Error: " + e.Message + e.StackTrace);
             Error = e.Message;
             IsLoading = false;
             yield break;
         }
 
-        if (DeckURLs.Count > 0 && !Directory.Exists(DecksFilePath))
-            foreach (DeckURL deckURL in DeckURLs)
-                yield return UnityExtensionMethods.SaveURLToFile(deckURL.URL, DecksFilePath + "/" + deckURL.Name + "." + DeckFileType);
+        if (DeckUrls.Count > 0 && !Directory.Exists(DecksFilePath))
+            foreach (DeckUrl deckURL in DeckUrls)
+                yield return UnityExtensionMethods.SaveURLToFile(deckURL.Url, DecksFilePath + "/" + deckURL.Name + "." + DeckFileType);
 
-        if (GameBoardURLs.Count > 0 && !Directory.Exists(GameBoardsFilePath))
-            foreach (GameBoardURL boardURL in GameBoardURLs)
-                yield return UnityExtensionMethods.SaveURLToFile(boardURL.URL, GameBoardsFilePath + "/" + boardURL.Id + "." + GameBoardFileType);
+        if (GameBoardUrls.Count > 0 && !Directory.Exists(GameBoardsFilePath))
+            foreach (GameBoardUrl boardURL in GameBoardUrls)
+                yield return UnityExtensionMethods.SaveURLToFile(boardURL.Url, GameBoardsFilePath + "/" + boardURL.Id + "." + GameBoardFileType);
 
         IsLoading = false;
         IsLoaded = true;
@@ -407,7 +361,7 @@ public class CardGame
 
         card.IsLoadingImage = true;
         Sprite newSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(card.ImageFilePath, card.ImageWebURL), output => newSprite = output);
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(card.ImageFilePath, card.ImageWebUrl), output => newSprite = output);
         if (newSprite != null)
             card.ImageSprite = newSprite;
         else

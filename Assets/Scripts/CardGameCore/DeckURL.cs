@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class DeckURL
+public class DeckUrl
 {
     [JsonProperty]
     public string Name { get; private set; }
 
     [JsonProperty]
-    public string URL { get; private set; }
+    public string Url { get; private set; }
 }

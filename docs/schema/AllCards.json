@@ -1,0 +1,8 @@
+{
+	"$schema": "http://json-schema.org/schema#",
+	"id": "https://cardgamesim.finoldigital.com/AllCards",
+	"description": "The structure of this file is **[ {\<CardIdIdentifier\>:*Card:Id*, \<CardNameIdentifier\>:*Card:Name*, \<CardSetIdentifier\>:*Card:SetCode*, \<*CardProperties[i]:Name*\>:*Value*, ...}, ... ]**. Information about these fields can be found below. You may choose to not have an AllCards.json, since you may instead define all the card information directly in AllSets.json.",
+	"type": "array",
+	"items": {
+	}
+}

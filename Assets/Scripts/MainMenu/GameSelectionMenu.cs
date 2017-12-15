@@ -8,9 +8,11 @@ using Newtonsoft.Json;
 
 public class GameSelectionMenu : MonoBehaviour
 {
+    public const string GameLoadErrorMessage = "Failed to load game url! ";
+
     public RectTransform gameSelectionArea;
     public RectTransform gameSelectionTemplate;
-	public Scrollbar scrollBar;
+    public Scrollbar scrollBar;
 
     public RectTransform downloadPanel;
     public InputField urlInput;
@@ -27,38 +29,38 @@ public class GameSelectionMenu : MonoBehaviour
 
         Vector3 pos = gameSelectionTemplate.localPosition;
         pos.y = 0;
-		float i = 0;
-		float index = 0;
+        float i = 0;
+        float index = 0;
         foreach (string gameName in CardGameManager.Instance.AllCardGames.Keys) {
             GameObject gameSelection = Instantiate(gameSelectionTemplate.gameObject, gameSelectionArea) as GameObject;
             gameSelection.SetActive(true);
-            // WORKAROUND FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
+            // FIX FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
             gameSelection.transform.localScale = Vector3.one;
             gameSelection.transform.localPosition = pos;
             gameSelection.GetComponentInChildren<Text>().text = gameName;
             Toggle toggle = gameSelection.GetComponent<Toggle>();
             toggle.isOn = gameName.Equals(CardGameManager.CurrentGameName);
-			if (toggle.isOn)
-				index = i;
+            if (toggle.isOn)
+                index = i;
             UnityAction<bool> valueChange = new UnityAction<bool>(isOn => SelectGame(isOn, gameName));
             toggle.onValueChanged.AddListener(valueChange);
             pos.y -= gameSelectionTemplate.rect.height;
-			i++;
+            i++;
         }
 
         gameSelectionTemplate.SetParent(gameSelectionArea.parent);
         gameSelectionTemplate.gameObject.SetActive(CardGameManager.Instance.AllCardGames.Count < 1);
-		gameSelectionArea.sizeDelta = new Vector2(gameSelectionArea.sizeDelta.x, gameSelectionTemplate.rect.height * CardGameManager.Instance.AllCardGames.Count);
+        gameSelectionArea.sizeDelta = new Vector2(gameSelectionArea.sizeDelta.x, gameSelectionTemplate.rect.height * CardGameManager.Instance.AllCardGames.Count);
 
-		float newSpot = gameSelectionTemplate.GetComponent<RectTransform>().rect.height * (index + ((index < CardGameManager.Instance.AllCardGames.Keys.Count / 2f) ? 0f : 1f)) / gameSelectionArea.sizeDelta.y;
-		StartCoroutine(SkipFrameToMoveScrollbar(1 - Mathf.Clamp01(newSpot)));
+        float newSpot = gameSelectionTemplate.GetComponent<RectTransform>().rect.height * (index + ((index < CardGameManager.Instance.AllCardGames.Keys.Count / 2f) ? 0f : 1f)) / gameSelectionArea.sizeDelta.y;
+        StartCoroutine(SkipFrameToMoveScrollbar(1 - Mathf.Clamp01(newSpot)));
     }
 
-	public IEnumerator SkipFrameToMoveScrollbar(float scrollBarValue)
-	{
-		yield return null;
-		scrollBar.value = Mathf.Clamp01(scrollBarValue);
-	}
+    public IEnumerator SkipFrameToMoveScrollbar(float scrollBarValue)
+    {
+        yield return null;
+        scrollBar.value = Mathf.Clamp01(scrollBarValue);
+    }
 
     public void SelectGame(bool isOn, string gameName)
     {
@@ -111,8 +113,8 @@ public class GameSelectionMenu : MonoBehaviour
             CardGameManager.Instance.AllCardGames [newGame.Name] = newGame;
             CardGameManager.Instance.SelectCardGame(newGame.Name);
         } else {
-            Debug.LogError("Failed to load game url! " + newGame.Error);
-            CardGameManager.Instance.Messenger.Show("Failed to load game url! " + newGame.Error);
+            Debug.LogError(GameLoadErrorMessage + newGame.Error);
+            CardGameManager.Instance.Messenger.Show(GameLoadErrorMessage + newGame.Error);
         }
         urlInput.interactable = true;
         cancelButton.interactable = true;

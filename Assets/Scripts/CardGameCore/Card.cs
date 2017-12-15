@@ -135,12 +135,12 @@ public class Card : IComparable<Card>, IEquatable<Card>
         }
     }
 
-    public string ImageWebURL {
+    public string ImageWebUrl {
         get {
             return 
                 string.Format(
-                CardGameManager.Current.CardImageURLFormat, 
-                CardGameManager.Current.CardImageURLBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageURLProperty));
+                CardGameManager.Current.CardImageUrlFormat, 
+                CardGameManager.Current.CardImageUrlBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageUrlProperty));
         }
     }
 

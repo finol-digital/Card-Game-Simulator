@@ -13,6 +13,7 @@ public class DeckSaveMenu : MonoBehaviour
 {
     public const string DeckCopiedMessage = "The text for this deck has been copied to the clipboard.";
     public const string OverWriteDeckPrompt = "A deck with that name already exists. Overwrite?";
+    public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
     public InputField nameInputField;
     public TMPro.TMP_Text textOutputArea;
@@ -23,16 +24,16 @@ public class DeckSaveMenu : MonoBehaviour
 
     public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
 
-	public bool DoesAutoOverwrite { get; private set; }
+    public bool DoesAutoOverwrite { get; private set; }
 
-	public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
+    public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
     {
         this.gameObject.SetActive(true);
         this.transform.SetAsLastSibling();
         CurrentDeck = deckToShow ?? new Deck();
         NameChangeCallback = nameChangeCallback;
         DeckSaveCallback = deckSaveCallback;
-		DoesAutoOverwrite = overwrite;
+        DoesAutoOverwrite = overwrite;
         nameInputField.text = CurrentDeck.Name;
         textOutputArea.text = CurrentDeck.ToString();
     }
@@ -78,8 +79,8 @@ public class DeckSaveMenu : MonoBehaviour
                 Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
             File.WriteAllText(deck.FilePath, deck.ToString());
         } catch (Exception e) {
-            Debug.LogError("Failed to save deck!: " + e.Message);
-            CardGameManager.Instance.Messenger.Show("There was an error saving the deck to file: " + e.Message);
+            Debug.LogError(DeckSaveErrorMessage + e.Message);
+            CardGameManager.Instance.Messenger.Show(DeckSaveErrorMessage + e.Message);
         }
         if (deckSaveCallback != null)
             deckSaveCallback(deck);

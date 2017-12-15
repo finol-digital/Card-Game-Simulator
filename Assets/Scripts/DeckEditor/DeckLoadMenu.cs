@@ -12,6 +12,9 @@ public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
 public class DeckLoadMenu : MonoBehaviour
 {
     public const string DeletePrompt = "Are you sure you would like to delete this deck?";
+    public const string DeckDeleteErrorMessage = "There was an error while attempting to delete the deck: ";
+    public const string DeckLoadErrorMessage = "There was an error while loading the deck: ";
+    public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
     public RectTransform fileSelectionArea;
     public RectTransform fileSelectionTemplate;
@@ -73,7 +76,7 @@ public class DeckLoadMenu : MonoBehaviour
         foreach (string deckFile in deckFiles) {
             GameObject deckFileSelection = Instantiate(fileSelectionTemplate.gameObject, fileSelectionArea) as GameObject;
             deckFileSelection.SetActive(true);
-            // WORKAROUND FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
+            // FIX FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
             deckFileSelection.transform.localScale = Vector3.one;
             deckFileSelection.transform.localPosition = pos;
             Toggle toggle = deckFileSelection.GetComponent<Toggle>();
@@ -137,8 +140,8 @@ public class DeckLoadMenu : MonoBehaviour
         try { 
             File.Delete(SelectedFileName);
         } catch (Exception e) {
-            Debug.LogError("Failed to delete deck!: " + e.Message);
-            CardGameManager.Instance.Messenger.Show("There was an error while attempting to delete the deck: " + e.Message);
+            Debug.LogError(DeckDeleteErrorMessage + e.Message);
+            CardGameManager.Instance.Messenger.Show(DeckDeleteErrorMessage + e.Message);
         }
         SelectedFileName = string.Empty;
         BuildDeckFileSelectionOptions();
@@ -150,8 +153,8 @@ public class DeckLoadMenu : MonoBehaviour
         try {
             deckText = File.ReadAllText(SelectedFileName);
         } catch (Exception e) {
-            Debug.LogError("Failed to load deck!: " + e.Message);
-            CardGameManager.Instance.Messenger.Show("There was an error while attempting to read the deck list from file: " + e.Message);
+            Debug.LogError(DeckLoadErrorMessage + e.Message);
+            CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
         }
 
         Deck newDeck = Deck.Parse(GetNameFromPath(SelectedFileName), GetFileTypeFromPath(SelectedFileName), deckText);
@@ -186,7 +189,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public IEnumerator WaitToPromptOverwrite()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return null;
         CardGameManager.Instance.Messenger.Ask(DeckSaveMenu.OverWriteDeckPrompt, null, DoSave);
     }
 
@@ -198,8 +201,8 @@ public class DeckLoadMenu : MonoBehaviour
                 Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
             File.WriteAllText(filePathFinder.FilePath, textInputField.text);
         } catch (Exception e) {
-            Debug.LogError("Failed to save deck!: " + e.Message);
-            CardGameManager.Instance.Messenger.Show("There was an error saving the deck to file: " + e.Message);
+            Debug.LogError(DeckSaveErrorMessage + e.Message);
+            CardGameManager.Instance.Messenger.Show(DeckSaveErrorMessage + e.Message);
         }
         HideNewDeckPanel();
     }
