@@ -14,9 +14,12 @@
 			},
 			"CardGameDef.json#/properties/cardSetIdentifier": {
 				"type": "string"
-			},
-			"$ref": "CardGameDef.json#/properties/cardProperties"
-		}
+			}
+		},
+		"additionalProperties": {
+			"description": "CardGameDef.json#/properties/cardProperties"
+		},
+		"required": ["CardGameDef.json#/properties/cardIdIdentifier"]
 	},
 	"type": "array"
 }
