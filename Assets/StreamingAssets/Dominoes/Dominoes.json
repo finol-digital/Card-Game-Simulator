@@ -4,7 +4,7 @@
 	"autoUpdateURL": "https://cardgamesim.finoldigital.com/Dominoes/Dominoes.json",
 	"backgroundImageURL": "https://cardgamesim.finoldigital.com/Dominoes/Background.png",
 	"cardBackImageURL": "https://cardgamesim.finoldigital.com/Dominoes/CardBack.png",
-	"cardHeight": "2",
+	"cardHeight": 2,
 	"cardImageURLBase": "https://cardgamesim.finoldigital.com/Dominoes",
 	"cardImageURLFormat": "{0}/sets/{4}/{1}.{2}",
 	"cardProperties": [
@@ -12,7 +12,7 @@
 		{"name": "suit", "type": "enum" },
 		{"name": "rank", "type": "integer" }
 	],
-	"cardWidth": "1",
+	"cardWidth": 1,
 	"deckURLs": [
 		{"name": "Double Six Dominoes", "URL": "https://cardgamesim.finoldigital.com/Dominoes/decks/Double%20Six%20Dominoes.txt"}
 	],
@@ -31,6 +31,6 @@
 			"0x40": "6"
 		}}
 	],
-	"gameStartHandCount": "7",
+	"gameStartHandCount": 7,
 	"name": "Dominoes"
 }
