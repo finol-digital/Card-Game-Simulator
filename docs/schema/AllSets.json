@@ -6,13 +6,13 @@
 		"title": "Set",
 		"type": "object",
 		"properties": {
-			"CardGameDef.json#/properties/setCodeIdentifier": {
+			"!CardGameDef.json#/properties/setCodeIdentifier": {
 				"type": "string"
 			},
-			"CardGameDef.json#/properties/setNameIdentifier": {
+			"!CardGameDef.json#/properties/setNameIdentifier": {
 				"type": "string"
 			},
-			"cards": {
+			"!CardGameDef.json#/properties/setCardsIdentifier": {
 				"$ref": "AllCards.json"
 			}
 		}
