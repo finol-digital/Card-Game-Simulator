@@ -6,12 +6,16 @@
 		"title": "Set",
 		"type": "object",
 		"properties": {
-			"$ref": "CardGameDef.json#/properties/setCodeIdentifier",
-			"$ref": "CardGameDef.json#/properties/setNameIdentifier",
+			"CardGameDef.json#/properties/setCodeIdentifier": {
+				"type": "string"
+			},
+			"CardGameDef.json#/properties/setNameIdentifier": {
+				"type": "string"
+			},
 			"cards": {
 				"$ref": "AllCards.json"
 			}
 		}
-	}
-	"type": "array",
+	},
+	"type": "array"
 }
