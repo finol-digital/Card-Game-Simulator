@@ -10,18 +10,18 @@ In addition to downloading a custom game from a url, custom card games can also 
 ## Custom game folder structure
 The structure of this custom game folder is:
 - \<name\>/
-  - \<name\>.json
-  - AllCards.json
-  - AllSets.json
-  - Background.\<backgroundImageFileType\>
-  - CardBack.\<cardBackImageFileType\>
-  - boards/
+ - \<name\>.json
+ - AllCards.json
+ - AllSets.json
+ - Background.\<backgroundImageFileType\>
+ - CardBack.\<cardBackImageFileType\>
+ - boards/
    - *Board:Id*.\<boardFileType\>
    - ...
-  - decks/
+ - decks/
    - *Deck:Name*.\<deckFileType\>
    - ...
-  - sets/
+ - sets/
    - *Set:Code*/
     - *Card:Id*.\<cardImageFileType\>
     - ...
