@@ -20,6 +20,7 @@ static public class UnityExtensionMethods
     public const string AndroidStreamingAssetsDirectory = "assets/";
     public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
     public const string MetaExtension = ".meta";
+    public const string ZipExtension = ".zip";
 
     static public void Shuffle<T>(this IList<T> list)
     {
