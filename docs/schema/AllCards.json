@@ -6,20 +6,20 @@
 		"title": "Card",
 		"type": "object",
 		"properties": {
-			"CardGameDef.json#/properties/cardIdIdentifier": {
+			"!CardGameDef.json#/properties/cardIdIdentifier": {
 				"type": "string"
 			},
-			"CardGameDef.json#/properties/cardNameIdentifier": {
+			"!CardGameDef.json#/properties/cardNameIdentifier": {
 				"type": "string"
 			},
-			"CardGameDef.json#/properties/cardSetIdentifier": {
+			"!CardGameDef.json#/properties/cardSetIdentifier": {
 				"type": "string"
 			}
 		},
 		"additionalProperties": {
-			"description": "CardGameDef.json#/properties/cardProperties"
+			"description": "!CardGameDef.json#/properties/cardProperties"
 		},
-		"required": ["CardGameDef.json#/properties/cardIdIdentifier"]
+		"required": ["!CardGameDef.json#/properties/cardIdIdentifier"]
 	},
 	"type": "array"
 }
