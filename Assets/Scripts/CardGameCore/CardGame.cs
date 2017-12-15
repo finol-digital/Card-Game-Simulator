@@ -209,15 +209,15 @@ public class CardGame
 
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
         if (!string.IsNullOrEmpty(AllCardsUrl) && (AutoUpdate || !File.Exists(cardsFile))) {
-            yield return UnityExtensionMethods.SaveURLToFile(AllCardsUrl, AllCardsZipped ? cardsFile + ".zip" : cardsFile);
+            yield return UnityExtensionMethods.SaveURLToFile(AllCardsUrl, AllCardsZipped ? cardsFile + UnityExtensionMethods.ZipExtension : cardsFile);
             if (AllCardsZipped)
-                UnityExtensionMethods.ExtractZip(cardsFile + ".zip", FilePathBase);
+                UnityExtensionMethods.ExtractZip(cardsFile + UnityExtensionMethods.ZipExtension, FilePathBase);
         }
         string setsFile = FilePathBase + "/" + AllSetsFileName;
         if (!string.IsNullOrEmpty(AllSetsUrl) && (AutoUpdate || !File.Exists(setsFile))) {
-            yield return UnityExtensionMethods.SaveURLToFile(AllSetsUrl, AllSetsZipped ? setsFile + ".zip" : setsFile);
+            yield return UnityExtensionMethods.SaveURLToFile(AllSetsUrl, AllSetsZipped ? setsFile + UnityExtensionMethods.ZipExtension : setsFile);
             if (AllSetsZipped)
-                UnityExtensionMethods.ExtractZip(setsFile + ".zip", FilePathBase);
+                UnityExtensionMethods.ExtractZip(setsFile + UnityExtensionMethods.ZipExtension, FilePathBase);
         }
         try {
             LoadJSONFromFile(cardsFile, LoadCardFromJToken);
