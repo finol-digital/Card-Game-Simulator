@@ -6,13 +6,13 @@
 		"title": "Card",
 		"type": "object",
 		"properties": {
-			"!CardGameDef.json#/properties/cardSetIdentifier": {
-				"type": "string"
-			},
 			"!CardGameDef.json#/properties/cardIdIdentifier": {
 				"type": "string"
 			},
 			"!CardGameDef.json#/properties/cardNameIdentifier": {
+				"type": "string"
+			},
+			"!CardGameDef.json#/properties/cardSetIdentifier": {
 				"type": "string"
 			}
 		},
