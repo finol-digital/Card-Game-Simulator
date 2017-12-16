@@ -109,7 +109,7 @@
 			"type": "string"
 		},
 		"cardProperties": {
-			"description": "cardProperties defines the possibilities for *Card:Property*s.",
+			"description": "cardProperties defines the name keys for *Card:Property*s. The values should be mapped in AllCards.json or AllSets.json.",
 			"items": {
 				"title": "Property",
 				"type": "object",
