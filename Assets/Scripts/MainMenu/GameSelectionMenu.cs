@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using Newtonsoft.Json;
 
 public class GameSelectionMenu : MonoBehaviour
 {
@@ -21,7 +18,7 @@ public class GameSelectionMenu : MonoBehaviour
 
     public void Show()
     {
-        this.gameObject.SetActive(true);
+        gameObject.SetActive(true);
 
         gameSelectionArea.GetComponent<ToggleGroup>().SetAllTogglesOff();
         gameSelectionArea.DestroyAllChildren();
@@ -32,7 +29,7 @@ public class GameSelectionMenu : MonoBehaviour
         float i = 0;
         float index = 0;
         foreach (string gameName in CardGameManager.Instance.AllCardGames.Keys) {
-            GameObject gameSelection = Instantiate(gameSelectionTemplate.gameObject, gameSelectionArea) as GameObject;
+            GameObject gameSelection = Instantiate(gameSelectionTemplate.gameObject, gameSelectionArea);
             gameSelection.SetActive(true);
             // FIX FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
             gameSelection.transform.localScale = Vector3.one;
@@ -42,7 +39,7 @@ public class GameSelectionMenu : MonoBehaviour
             toggle.isOn = gameName.Equals(CardGameManager.CurrentGameName);
             if (toggle.isOn)
                 index = i;
-            UnityAction<bool> valueChange = new UnityAction<bool>(isOn => SelectGame(isOn, gameName));
+            UnityAction<bool> valueChange = isOn => SelectGame(isOn, gameName);
             toggle.onValueChanged.AddListener(valueChange);
             pos.y -= gameSelectionTemplate.rect.height;
             i++;
@@ -53,10 +50,10 @@ public class GameSelectionMenu : MonoBehaviour
         gameSelectionArea.sizeDelta = new Vector2(gameSelectionArea.sizeDelta.x, gameSelectionTemplate.rect.height * CardGameManager.Instance.AllCardGames.Count);
 
         float newSpot = gameSelectionTemplate.GetComponent<RectTransform>().rect.height * (index + ((index < CardGameManager.Instance.AllCardGames.Keys.Count / 2f) ? 0f : 1f)) / gameSelectionArea.sizeDelta.y;
-        StartCoroutine(SkipFrameToMoveScrollbar(1 - Mathf.Clamp01(newSpot)));
+        StartCoroutine(WaitToMoveScrollbar(1 - Mathf.Clamp01(newSpot)));
     }
 
-    public IEnumerator SkipFrameToMoveScrollbar(float scrollBarValue)
+    public IEnumerator WaitToMoveScrollbar(float scrollBarValue)
     {
         yield return null;
         scrollBar.value = Mathf.Clamp01(scrollBarValue);
@@ -101,8 +98,7 @@ public class GameSelectionMenu : MonoBehaviour
 
     public IEnumerator DownloadGame()
     {
-        CardGame newGame = new CardGame(Set.DefaultCode, urlInput.text.Trim());
-        newGame.AutoUpdate = true;
+        CardGame newGame = new CardGame(Set.DefaultCode, urlInput.text.Trim()) {AutoUpdate = true};
         urlInput.text = string.Empty;
         urlInput.interactable = false;
         cancelButton.interactable = false;
@@ -129,6 +125,6 @@ public class GameSelectionMenu : MonoBehaviour
 
     public void Hide()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -22,8 +21,8 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public bool DoesImmediatelyRelease { get; set; }
 
-    private List<OnAddCardDelegate> _cardAddedActions;
-    private List<OnRemoveCardDelegate> _cardRemovedActions;
+    public List<OnAddCardDelegate> OnAddCardActions { get; } = new List<OnAddCardDelegate>();
+    public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new List<OnRemoveCardDelegate>();
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -31,13 +30,15 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             return;
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                cardModel = draggedCardModel;
-            if (cardModel.ParentCardStack == null || cardModel.ParentCardStack.type == CardStackType.Horizontal)
-                cardModel.PlaceHolderCardStack = this;
-        }
+        if (cardModel == null)
+            return;
+
+        CardModel draggedCardModel;
+        if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+            cardModel = draggedCardModel;
+
+        if (cardModel.ParentCardStack == null || cardModel.ParentCardStack.type == CardStackType.Horizontal)
+            cardModel.PlaceHolderCardStack = this;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -46,13 +47,15 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             return;
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                cardModel = draggedCardModel;
-            if (cardModel.PlaceHolderCardStack == this)
-                cardModel.PlaceHolderCardStack = null;
-        }
+        if (cardModel == null)
+            return;
+
+        CardModel draggedCardModel;
+        if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+            cardModel = draggedCardModel;
+
+        if (cardModel.PlaceHolderCardStack == this)
+            cardModel.PlaceHolderCardStack = null;
     }
 
     public void OnAdd(CardModel cardModel)
@@ -75,26 +78,30 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void UpdateLayout(RectTransform child, Vector2 targetPosition)
     {
-        if (child == null || this.type == CardStackType.Full)
+        if (child == null)
             return;
 
-        if (this.type == CardStackType.Vertical || this.type == CardStackType.Horizontal) {
-            child.gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
-            int newSiblingIndex = this.transform.childCount;
-            for (int i = 0; i < this.transform.childCount; i++) {
-                bool goesBelow = targetPosition.y > this.transform.GetChild(i).position.y;
-                if (this.type == CardStackType.Horizontal)
-                    goesBelow = targetPosition.x < this.transform.GetChild(i).position.x;
-                if (goesBelow) {
+        switch (type) {
+            case CardStackType.Full:
+                break;
+            case CardStackType.Vertical:
+            case CardStackType.Horizontal:
+                int newSiblingIndex = transform.childCount;
+                for (int i = 0; i < transform.childCount; i++) {
+                    if (type == CardStackType.Vertical ? targetPosition.y > transform.GetChild(i).position.y : targetPosition.x < transform.GetChild(i).position.x)
+                        continue;
                     newSiblingIndex = i;
                     if (child.GetSiblingIndex() < newSiblingIndex)
                         newSiblingIndex--;
                     break;
                 }
-            }
-            child.SetSiblingIndex(newSiblingIndex);
-        } else if (this.type == CardStackType.Area)
-            child.position = targetPosition;
+                child.SetSiblingIndex(newSiblingIndex);
+                break;
+            case CardStackType.Area:
+            default:
+                child.position = targetPosition;
+                break;
+        }
     }
 
     public void UpdateScrollRect(DragPhase dragPhase, PointerEventData eventData)
@@ -115,21 +122,5 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 break;
         }
 
-    }
-
-    public List<OnAddCardDelegate> OnAddCardActions {
-        get {
-            if (_cardAddedActions == null)
-                _cardAddedActions = new List<OnAddCardDelegate>();
-            return _cardAddedActions;
-        }
-    }
-
-    public List<OnRemoveCardDelegate> OnRemoveCardActions {
-        get {
-            if (_cardRemovedActions == null)
-                _cardRemovedActions = new List<OnRemoveCardDelegate>();
-            return _cardRemovedActions;
-        }
     }
 }

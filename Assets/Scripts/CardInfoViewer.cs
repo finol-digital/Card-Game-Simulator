@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -24,12 +22,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public Text labelText;
     public Text contentText;
 
-    private static CardInfoViewer _instance;
+    public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
 
-    private RectTransform _cardZoomPanel;
-    private List<Dropdown.OptionData> _propertyOptions;
-    private int _selectedPropertyIndex;
+    private static CardInfoViewer _instance;
     private CardModel _selectedCardModel;
+    private int _selectedPropertyIndex;
     private bool _isVisible;
 
     public void Reset()
@@ -59,7 +56,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        EventSystem.current.SetSelectedGameObject(this.gameObject, eventData);
+        EventSystem.current.SetSelectedGameObject(gameObject, eventData);
     }
 
     public void OnSelect(BaseEventData eventData)
@@ -98,34 +95,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public static CardInfoViewer Instance {
         get {
-            if (_instance == null) {
-                GameObject cardInfoViewer = GameObject.FindWithTag(CardInfoViewerTag);
-                if (cardInfoViewer != null)
-                    _instance = cardInfoViewer.GetOrAddComponent<CardInfoViewer>();
-            }
+            if (_instance != null) return _instance;
+            GameObject cardInfoViewer = GameObject.FindWithTag(CardInfoViewerTag);
+            if (cardInfoViewer != null)
+                _instance = cardInfoViewer.GetOrAddComponent<CardInfoViewer>();
             return _instance;
-        }
-    }
-
-    public List<Dropdown.OptionData> PropertyOptions {
-        get {
-            if (_propertyOptions == null)
-                _propertyOptions = new List<Dropdown.OptionData>();
-            return _propertyOptions;
-        }
-    }
-
-    public int SelectedPropertyIndex {
-        get {
-            return _selectedPropertyIndex;
-        }
-        set {
-            if (value < 0 || value >= PropertyOptions.Count)
-                return;
-
-            _selectedPropertyIndex = value;
-            labelText.text = SelectedPropertyName;
-            SetContentText();
         }
     }
 
@@ -133,15 +107,23 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         get {
             string selectedName = SetLabel;
             if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
-                selectedName = PropertyOptions [SelectedPropertyIndex].text;
+                selectedName = PropertyOptions[SelectedPropertyIndex].text;
             return selectedName;
-        } 
+        }
+    }
+
+    public int SelectedPropertyIndex {
+        get { return _selectedPropertyIndex; }
+        set {
+            if (value < 0 || value >= PropertyOptions.Count) return;
+            _selectedPropertyIndex = value;
+            labelText.text = SelectedPropertyName;
+            SetContentText();
+        }
     }
 
     public CardModel SelectedCardModel {
-        get {
-            return _selectedCardModel;
-        }
+        get { return _selectedCardModel; }
         set {
             if (_selectedCardModel != null)
                 _selectedCardModel.HideHighlight();
@@ -162,19 +144,19 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     }
 
     public bool IsVisible {
-        get {
-            return _isVisible;
-        }
+        get { return _isVisible; }
         set {
             _isVisible = value;
             if (!_isVisible && zoomPanel != null)
                 zoomPanel.gameObject.SetActive(false);
-            if (SelectedCardModel != null) {
-                if (_isVisible)
-                    SelectedCardModel.ShowHighlight();
-                else
-                    SelectedCardModel.HideHighlight();
-            }
+
+            if (SelectedCardModel == null)
+                return;
+
+            if (_isVisible)
+                SelectedCardModel.ShowHighlight();
+            else
+                SelectedCardModel.HideHighlight();
         }
     }
 }

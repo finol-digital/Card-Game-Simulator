@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,8 +9,8 @@ public class MainMenu : MonoBehaviour
     public const int DeckEditorSceneIndex = 3;
     public const string ExitPrompt = "Exit CGS?";
 
-    public GameObject exitButton;
     public Text currentGameText;
+    public Button exitButton;
     public Text versionText;
 
     void OnEnable()
@@ -25,7 +23,7 @@ public class MainMenu : MonoBehaviour
     {
         #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         if (exitButton != null)
-            exitButton.SetActive(false);
+            exitButton.gameObject.SetActive(false);
         #endif
         versionText.text = "Ver. " + Application.version;
     }

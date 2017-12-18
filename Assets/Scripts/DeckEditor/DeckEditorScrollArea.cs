@@ -1,12 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class DeckEditorScrollArea : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler
 {
-	public DeckEditor editor;
+    public DeckEditor editor;
     public bool scrollsRight = false;
     public float scrollAmount = 0.01f;
     public float holdFrequency = 0.01f;

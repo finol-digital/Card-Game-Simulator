@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 // HACK: THIS CLASS EXISTS TO DEAL WITH WONKINESS WITH SELECTING DIE BUTTONS

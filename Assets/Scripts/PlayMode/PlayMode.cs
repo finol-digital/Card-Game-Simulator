@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -113,8 +112,8 @@ public class PlayMode : MonoBehaviour
         rt.SetParent(playAreaContent);
         rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;
-        rt.offsetMax = CardGameManager.PPI * board.OffsetMax;
-        rt.offsetMin = CardGameManager.PPI * board.OffsetMin;
+        rt.offsetMax = CardGameManager.PixelsPerInch * board.OffsetMax;
+        rt.offsetMin = CardGameManager.PixelsPerInch * board.OffsetMin;
 
         Sprite boardImageSprite = null;
         yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." + CardGameManager.Current.GameBoardFileType, null), output => boardImageSprite = output);

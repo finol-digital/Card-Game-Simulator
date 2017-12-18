@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -254,20 +253,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         }
     }
 
-    public DeckLoadMenu DeckLoader {
-        get {
-            if (_deckLoader == null)
-                _deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
-            return _deckLoader;
-        }
-    }
+    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
 
-    public DeckSaveMenu DeckSaver {
-        get {
-            if (_deckSaver == null)
-                _deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>();
-            return _deckSaver;
-        }
-    }
-
+    public DeckSaveMenu DeckSaver => _deckSaver ?? (_deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>());
 }

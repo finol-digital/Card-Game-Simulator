@@ -180,7 +180,7 @@ public class CardGame
 
         string initialDirectory = FilePathBase;
         if (!string.IsNullOrEmpty(AutoUpdateUrl) && (AutoUpdate || !File.Exists(ConfigFilePath)))
-            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateUrl, ConfigFilePath);
+            yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
         try {
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
@@ -189,7 +189,7 @@ public class CardGame
             yield break;
         }
         if (AutoUpdate || !initialDirectory.Equals(FilePathBase)) {
-            yield return UnityExtensionMethods.SaveURLToFile(AutoUpdateUrl, ConfigFilePath);
+            yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
             if (!initialDirectory.Equals(FilePathBase))
                 Directory.Delete(initialDirectory, true);
         }
@@ -209,19 +209,19 @@ public class CardGame
 
         string cardsFile = FilePathBase + "/" + AllCardsFileName;
         if (!string.IsNullOrEmpty(AllCardsUrl) && (AutoUpdate || !File.Exists(cardsFile))) {
-            yield return UnityExtensionMethods.SaveURLToFile(AllCardsUrl, AllCardsZipped ? cardsFile + UnityExtensionMethods.ZipExtension : cardsFile);
+            yield return UnityExtensionMethods.SaveUrlToFile(AllCardsUrl, AllCardsZipped ? cardsFile + UnityExtensionMethods.ZipExtension : cardsFile);
             if (AllCardsZipped)
                 UnityExtensionMethods.ExtractZip(cardsFile + UnityExtensionMethods.ZipExtension, FilePathBase);
         }
         string setsFile = FilePathBase + "/" + AllSetsFileName;
         if (!string.IsNullOrEmpty(AllSetsUrl) && (AutoUpdate || !File.Exists(setsFile))) {
-            yield return UnityExtensionMethods.SaveURLToFile(AllSetsUrl, AllSetsZipped ? setsFile + UnityExtensionMethods.ZipExtension : setsFile);
+            yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, AllSetsZipped ? setsFile + UnityExtensionMethods.ZipExtension : setsFile);
             if (AllSetsZipped)
                 UnityExtensionMethods.ExtractZip(setsFile + UnityExtensionMethods.ZipExtension, FilePathBase);
         }
         try {
-            LoadJSONFromFile(cardsFile, LoadCardFromJToken);
-            LoadJSONFromFile(setsFile, LoadSetFromJToken);
+            LoadJsonFromFile(cardsFile, LoadCardFromJToken);
+            LoadJsonFromFile(setsFile, LoadSetFromJToken);
         } catch (Exception e) {
             Error = e.Message;
             IsLoading = false;
@@ -229,18 +229,18 @@ public class CardGame
         }
 
         if (DeckUrls.Count > 0 && !Directory.Exists(DecksFilePath))
-            foreach (DeckUrl deckURL in DeckUrls)
-                yield return UnityExtensionMethods.SaveURLToFile(deckURL.Url, DecksFilePath + "/" + deckURL.Name + "." + DeckFileType);
+            foreach (DeckUrl deckUrl in DeckUrls)
+                yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
         if (GameBoardUrls.Count > 0 && !Directory.Exists(GameBoardsFilePath))
-            foreach (GameBoardUrl boardURL in GameBoardUrls)
-                yield return UnityExtensionMethods.SaveURLToFile(boardURL.Url, GameBoardsFilePath + "/" + boardURL.Id + "." + GameBoardFileType);
+            foreach (GameBoardUrl boardUrl in GameBoardUrls)
+                yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
 
         IsLoading = false;
         IsLoaded = true;
     }
 
-    public void LoadJSONFromFile(string file, LoadJTokenDelegate load)
+    public void LoadJsonFromFile(string file, LoadJTokenDelegate load)
     {
         if (!File.Exists(file))
             return;
