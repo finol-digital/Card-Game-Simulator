@@ -105,7 +105,7 @@
 			"type": "string"
 		},
 		"cardPrimaryProperty": {
-			"description": "The cardPrimaryProperty is the property that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
+			"description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
 			"type": "string"
 		},
 		"cardProperties": {
@@ -221,6 +221,7 @@
 						"type": "string"
 					},
 					"boards": {
+						"title": "Boards",
 						"items": {
 							"title": "GameBoard",
 							"type": "object",
@@ -265,7 +266,7 @@
 			"type": "array"
 		},
 		"gameHasDiscardZone": {
-			"description": "If gameHasDiscardZone is set to true, a Discard Zone will be added to the Zones Viewer, to which cards will be sent when removed from the play area. If gameHasDiscardZone is set to false, cards will simply deleted when removed from the play area.",
+			"description": "If gameHasDiscardZone is set to true, a Discard Zone will be added to the Zones Viewer, to which cards will be sent when removed from the play area. If gameHasDiscardZone is set to false, cards will simply be deleted when removed from the play area.",
 			"type": "boolean"
 		},
 		"gameStartHandCount": {
