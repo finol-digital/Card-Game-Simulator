@@ -1,6 +1,6 @@
 {
 	"$schema": "http://json-schema.org/schema#",
-	"id": "https://cardgamesim.finoldigital.com/schemas/AllCards.json",
+	"id": "https://cardgamesim.finoldigital.com/schema/AllCards.json",
 	"description": "Lists out card information. You should have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.",
 	"items": {
 		"title": "Card",
