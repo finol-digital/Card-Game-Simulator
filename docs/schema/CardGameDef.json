@@ -1,6 +1,6 @@
 {
 	"$schema": "http://json-schema.org/schema#",
-	"id": "https://cardgamesim.finoldigital.com/schemas/CardGameDef.json",
+	"id": "https://cardgamesim.finoldigital.com/schema/CardGameDef.json",
 	"description": "A custom card game definition to be used within Card Game Simulator",
 	"definitions": {
 		"vector2": {
