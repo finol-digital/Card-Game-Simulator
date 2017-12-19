@@ -2,7 +2,7 @@
 	"allCardsUrl": "https://api.hearthstonejson.com/v1/latest/enUS/cards.json",
 	"autoUpdate": true,
 	"autoUpdateUrl": "https://hearthstone.finoldigital.com/",
-	"backgroundImageUrl": "https://hearthstone-a.akamaihd.net/images/logos/logo-sub-f9a9f860d35e0eee0a4793276b2aca09210794b461d65a64b252984c68ac20768bc31804dfeb9870b2d3b010e01a2027bb951d45946e345a819df6d9dc377572.png",
+	"backgroundImageUrl": "https://hearthstone.gamepedia.com/media/hearthstone.gamepedia.com/d/d4/Hearthstone_logo.png",
 	"cardBackImageUrl": "https://hearthstone.gamepedia.com/media/hearthstone.gamepedia.com/1/1a/Card_back-Classic.png",
 	"cardImageUrlBase": "https://art.hearthstonejson.com/v1/render/latest/enUS/256x",
 	"cardPrimaryProperty": "text",
