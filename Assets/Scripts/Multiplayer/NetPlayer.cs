@@ -5,7 +5,7 @@ public class NetPlayer : NetworkBehaviour
 {
     void Start()
     {
-        if (this.isLocalPlayer)
+        if (isLocalPlayer)
             ((LocalNetManager)NetworkManager.singleton).LocalPlayer = this;
     }
 
@@ -21,6 +21,6 @@ public class NetPlayer : NetworkBehaviour
         CardModel newCardModel = ((LocalNetManager)NetworkManager.singleton).SpawnCard(position, LocalNetManager.CardModelAssetId).GetOrAddComponent<CardModel>();
         newCardModel.Value = CardGameManager.Current.Cards [cardId];
         newCardModel.IsFacedown = isFacedown;
-        NetworkServer.SpawnWithClientAuthority(newCardModel.gameObject, this.gameObject);
+        NetworkServer.SpawnWithClientAuthority(newCardModel.gameObject, gameObject);
     }
 }

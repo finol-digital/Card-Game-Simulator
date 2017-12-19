@@ -9,6 +9,7 @@ public delegate void OnSearchDelegate(List<Card> searchResults);
 
 public class CardSearchMenu : MonoBehaviour
 {
+    public const string SubmitString = "Submit";
     public const float PropertyPanelHeight = 150f;
 
     public string Filters {
@@ -18,26 +19,27 @@ public class CardSearchMenu : MonoBehaviour
                 filters += "id:" + IdFilter + "; ";
             if (!string.IsNullOrEmpty(SetCodeFilter))
                 filters += "set:" + SetCodeFilter + "; ";
-            
+
             foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
                 switch (property.Type) {
-                    case PropertyType.String:
-                        if (StringPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + ":" + StringPropertyFilters [property.Name] + "; ";
-                        break;
                     case PropertyType.Integer:
                         if (IntMinPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + ">=" + IntMinPropertyFilters [property.Name].ToString() + "; ";
+                            filters += property.Name + ">=" + IntMinPropertyFilters[property.Name] + "; ";
                         if (IntMaxPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + "<=" + IntMaxPropertyFilters [property.Name].ToString() + "; ";
+                            filters += property.Name + "<=" + IntMaxPropertyFilters[property.Name] + "; ";
                         break;
                     case PropertyType.Enum:
                     case PropertyType.EnumList:
                         if (!EnumPropertyFilters.ContainsKey(property.Name))
                             break;
-                        EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(property.Name)).FirstOrDefault();
+                        EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
                         if (enumDef != null)
-                            filters += property.Name + ":=" + EnumPropertyFilters [property.Name].ToString() + "; ";
+                            filters += property.Name + ":=" + EnumPropertyFilters[property.Name] + "; ";
+                        break;
+                    case PropertyType.String:
+                    default:
+                        if (StringPropertyFilters.ContainsKey(property.Name))
+                            filters += property.Name + ":" + StringPropertyFilters[property.Name] + "; ";
                         break;
                 }
             }
@@ -53,25 +55,24 @@ public class CardSearchMenu : MonoBehaviour
     public SearchPropertyPanel enumPropertyPanel;
 
     public OnDeckNameChangeDelegate NameChangeCallback { get; set; }
-
     public OnFilterChangeDelegate FilterChangeCallback { get; set; }
-
     public OnSearchDelegate SearchCallback { get; set; }
 
-    private List<GameObject> _filterPanels;
+    public List<GameObject> FilterPanels { get; } = new List<GameObject>();
+    public Dictionary<string, string> StringPropertyFilters { get; } = new Dictionary<string, string>();
+    public Dictionary<string, int> IntMinPropertyFilters { get; } = new Dictionary<string, int>();
+    public Dictionary<string, int> IntMaxPropertyFilters { get; } = new Dictionary<string, int>();
+    public Dictionary<string, int> EnumPropertyFilters { get; } = new Dictionary<string, int>();
+    public List<Card> Results { get; } = new List<Card>();
+
     private string _nameFilter;
     private string _idFilter;
     private string _setCodeFilter;
-    private Dictionary<string, string> _stringPropertyFilters;
-    private Dictionary<string, int> _intMinPropertyFilters;
-    private Dictionary<string, int> _intMaxPropertyFilters;
-    private Dictionary<string, int> _enumPropertyFilters;
-    private List<Card> _results;
 
     public void Show(OnDeckNameChangeDelegate nameChangeCallback, OnFilterChangeDelegate filterChangeCallback, OnSearchDelegate searchCallback)
     {
-        this.gameObject.SetActive(true);
-        this.transform.SetAsLastSibling();
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
         NameChangeCallback = nameChangeCallback;
         FilterChangeCallback = filterChangeCallback;
         SearchCallback = searchCallback;
@@ -87,18 +88,19 @@ public class CardSearchMenu : MonoBehaviour
 
         Vector2 panelPosition = stringPropertyPanel.transform.localPosition;
         foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
-            GameObject newPanel = null;
+            GameObject newPanel;
             if (EnumDef.IsEnumProperty(property.Name))
                 newPanel = CreateEnumPropertyFilterPanel(panelPosition, property.Name);
             else if (property.Type == PropertyType.Integer)
                 newPanel = CreateIntegerPropertyFilterPanel(panelPosition, property.Name);
             else //if (property.Type == PropertyType.String)
                 newPanel = CreateStringPropertyFilterPanel(panelPosition, property.Name);
-            
-            if (newPanel != null) {
-                panelPosition.y -= PropertyPanelHeight;
-                FilterPanels.Add(newPanel);
-            }
+
+            if (newPanel == null)
+                continue;
+
+            panelPosition.y -= PropertyPanelHeight;
+            FilterPanels.Add(newPanel);
         }
 
         propertyFiltersContent.sizeDelta = new Vector2(propertyFiltersContent.sizeDelta.x, PropertyPanelHeight * CardGameManager.Current.CardProperties.Count + (PropertyPanelHeight * 3));
@@ -106,17 +108,17 @@ public class CardSearchMenu : MonoBehaviour
 
     public GameObject CreateStringPropertyFilterPanel(Vector3 panelPosition, string propertyName)
     {
-        GameObject newPanel = Instantiate(stringPropertyPanel.gameObject, propertyFiltersContent) as GameObject;
+        GameObject newPanel = Instantiate(stringPropertyPanel.gameObject, propertyFiltersContent);
         newPanel.gameObject.SetActive(true);
         newPanel.transform.localPosition = panelPosition;
 
         SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
         config.nameLabelText.text = propertyName;
-        string storedFilter = string.Empty;
+        string storedFilter;
         if (StringPropertyFilters.TryGetValue(propertyName, out storedFilter))
             config.stringInputField.text = storedFilter;
         config.stringPlaceHolderText.text = "Enter " + propertyName + "...";
-        UnityAction<string> textChange = new UnityAction<string>(text => SetStringPropertyFilter(propertyName, text));
+        UnityAction<string> textChange = text => SetStringPropertyFilter(propertyName, text);
         config.stringInputField.onValueChanged.AddListener(textChange);
 
         return newPanel;
@@ -124,22 +126,22 @@ public class CardSearchMenu : MonoBehaviour
 
     public GameObject CreateIntegerPropertyFilterPanel(Vector3 panelPosition, string propertyName)
     {
-        GameObject newPanel = Instantiate(integerPropertyPanel.gameObject, propertyFiltersContent) as GameObject;
+        GameObject newPanel = Instantiate(integerPropertyPanel.gameObject, propertyFiltersContent);
         newPanel.gameObject.SetActive(true);
         newPanel.transform.localPosition = panelPosition;
 
         SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
         config.nameLabelText.text = propertyName;
-        int storedFilter = 0;
+        int storedFilter;
 
         if (IntMinPropertyFilters.TryGetValue(propertyName, out storedFilter))
             config.integerMinInputField.text = storedFilter.ToString();
-        UnityAction<string> minChange = new UnityAction<string>(text => SetIntMinPropertyFilter(propertyName, text));
+        UnityAction<string> minChange = text => SetIntMinPropertyFilter(propertyName, text);
         config.integerMinInputField.onValueChanged.AddListener(minChange);
 
         if (IntMaxPropertyFilters.TryGetValue(propertyName, out storedFilter))
             config.integerMaxInputField.text = storedFilter.ToString();
-        UnityAction<string> maxChange = new UnityAction<string>(text => SetIntMaxPropertyFilter(propertyName, text));
+        UnityAction<string> maxChange = text => SetIntMaxPropertyFilter(propertyName, text);
         config.integerMaxInputField.onValueChanged.AddListener(maxChange);
 
         return newPanel;
@@ -147,17 +149,17 @@ public class CardSearchMenu : MonoBehaviour
 
     public GameObject CreateEnumPropertyFilterPanel(Vector3 panelPosition, string propertyName)
     {
-        EnumDef enumDef = CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).First();
+        EnumDef enumDef = CardGameManager.Current.Enums.First(def => def.Property.Equals(propertyName));
         if (enumDef == null || enumDef.Values.Count < 1)
             return null;
-        
-        GameObject newPanel = Instantiate(enumPropertyPanel.gameObject, propertyFiltersContent) as GameObject;
+
+        GameObject newPanel = Instantiate(enumPropertyPanel.gameObject, propertyFiltersContent);
         newPanel.gameObject.SetActive(true);
         newPanel.transform.localPosition = panelPosition;
 
         SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
         config.nameLabelText.text = propertyName;
-        int storedFilter = 0;
+        int storedFilter;
         EnumPropertyFilters.TryGetValue(propertyName, out storedFilter);
 
         Vector3 localPosition = config.enumToggle.transform.localPosition;
@@ -168,13 +170,13 @@ public class CardSearchMenu : MonoBehaviour
                 lookupKey = enumDef.CreateLookup(enumValue.Key);
             Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
             newToggle.isOn = (storedFilter & lookupKey) != 0;
-            UnityAction<bool> enumChange = new UnityAction<bool>(isOn => SetEnumPropertyFilter(propertyName, lookupKey, isOn));
+            UnityAction<bool> enumChange = isOn => SetEnumPropertyFilter(propertyName, lookupKey, isOn);
             newToggle.onValueChanged.AddListener(enumChange);
             newToggle.GetComponentInChildren<Text>().text = enumValue.Value;
             newToggle.transform.localPosition = localPosition;
             float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 25;
             RectTransform imageTransform = (RectTransform)newToggle.GetComponentInChildren<Image>().transform;
-            imageTransform.sizeDelta = new Vector2(width, imageTransform.sizeDelta.y); 
+            imageTransform.sizeDelta = new Vector2(width, imageTransform.sizeDelta.y);
             localPosition.x += width;
             panelWidth += width;
         }
@@ -196,8 +198,7 @@ public class CardSearchMenu : MonoBehaviour
 
         StringPropertyFilters [propertyName] = filterValue;
 
-        if (FilterChangeCallback != null)
-            FilterChangeCallback(Filters);
+        FilterChangeCallback?.Invoke(Filters);
     }
 
     public void SetIntMinPropertyFilter(string propertyName, string filterValue)
@@ -211,8 +212,7 @@ public class CardSearchMenu : MonoBehaviour
 
         IntMinPropertyFilters [propertyName] = intValue;
 
-        if (FilterChangeCallback != null)
-            FilterChangeCallback(Filters);
+        FilterChangeCallback?.Invoke(Filters);
     }
 
     public void SetIntMaxPropertyFilter(string propertyName, string filterValue)
@@ -226,8 +226,7 @@ public class CardSearchMenu : MonoBehaviour
 
         IntMaxPropertyFilters [propertyName] = intValue;
 
-        if (FilterChangeCallback != null)
-            FilterChangeCallback(Filters);
+        FilterChangeCallback?.Invoke(Filters);
     }
 
     public void SetEnumPropertyFilter(string propertyName, int filterValue, bool isOn)
@@ -236,16 +235,15 @@ public class CardSearchMenu : MonoBehaviour
         int storedFilter = 0;
         if (isStored)
             storedFilter = EnumPropertyFilters [propertyName];
-        
+
         int newFilter = isOn ? storedFilter | filterValue : storedFilter & ~filterValue;
         if (newFilter == 0) {
             if (isStored)
                 EnumPropertyFilters.Remove(propertyName);
         } else
             EnumPropertyFilters [propertyName] = newFilter;
-        
-        if (FilterChangeCallback != null)
-            FilterChangeCallback(Filters);
+
+        FilterChangeCallback?.Invoke(Filters);
     }
 
     public void ClearFilters()
@@ -254,14 +252,13 @@ public class CardSearchMenu : MonoBehaviour
             input.text = string.Empty;
         foreach (Toggle toggle in GetComponentsInChildren<Toggle>())
             toggle.isOn = false;
-        
+
         StringPropertyFilters.Clear();
         IntMinPropertyFilters.Clear();
         IntMaxPropertyFilters.Clear();
         EnumPropertyFilters.Clear();
 
-        if (FilterChangeCallback != null)
-            FilterChangeCallback(Filters);
+        FilterChangeCallback?.Invoke(Filters);
     }
 
     public void ClearSearch()
@@ -276,109 +273,46 @@ public class CardSearchMenu : MonoBehaviour
         IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(IdFilter, NameFilter, SetCodeFilter, StringPropertyFilters, IntMinPropertyFilters, IntMaxPropertyFilters, EnumPropertyFilters);
         foreach (Card card in cardSearcher)
             Results.Add(card);
-        if (SearchCallback != null)
-            SearchCallback(Results);
+        SearchCallback?.Invoke(Results);
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Submit")) {
-            Search();
-            Hide();
-        }
+        if (!Input.GetButtonDown(SubmitString))
+            return;
+
+        Search();
+        Hide();
     }
 
     public void Hide()
     {
-        this.gameObject.SetActive(false);
-    }
-
-    public List<GameObject> FilterPanels {
-        get {
-            if (_filterPanels == null)
-                _filterPanels = new List<GameObject>();
-            return _filterPanels;
-        }
+        gameObject.SetActive(false);
     }
 
     public string NameFilter {
-        get {
-            if (_nameFilter == null)
-                _nameFilter = string.Empty;
-            return _nameFilter;
-        }
+        get { return _nameFilter ?? (_nameFilter = string.Empty); }
         set {
             _nameFilter = value;
-            if (NameChangeCallback != null)
-                NameChangeCallback(_nameFilter);
+            NameChangeCallback?.Invoke(_nameFilter);
             if (nameInputField != null)
                 nameInputField.text = _nameFilter;
         }
     }
 
     public string IdFilter {
-        get {
-            if (_idFilter == null)
-                _idFilter = string.Empty;
-            return _idFilter;
-        }
+        get { return _idFilter ?? (_idFilter = string.Empty); }
         set {
             _idFilter = value;
-            if (FilterChangeCallback != null)
-                FilterChangeCallback(Filters);
+            FilterChangeCallback?.Invoke(Filters);
         }
     }
 
     public string SetCodeFilter {
-        get {
-            if (_setCodeFilter == null)
-                _setCodeFilter = string.Empty;
-            return _setCodeFilter;
-        }
+        get { return _setCodeFilter ?? (_setCodeFilter = string.Empty); }
         set {
             _setCodeFilter = value;
-            if (FilterChangeCallback != null)
-                FilterChangeCallback(Filters);
-        }
-    }
-
-    public Dictionary<string, string> StringPropertyFilters {
-        get {
-            if (_stringPropertyFilters == null)
-                _stringPropertyFilters = new Dictionary<string, string>();
-            return _stringPropertyFilters;
-        }
-    }
-
-    public Dictionary<string, int> IntMinPropertyFilters {
-        get {
-            if (_intMinPropertyFilters == null)
-                _intMinPropertyFilters = new Dictionary<string, int>();
-            return _intMinPropertyFilters;
-        }
-    }
-
-    public Dictionary<string, int> IntMaxPropertyFilters {
-        get {
-            if (_intMaxPropertyFilters == null)
-                _intMaxPropertyFilters = new Dictionary<string, int>();
-            return _intMaxPropertyFilters;
-        }
-    }
-
-    public Dictionary<string, int> EnumPropertyFilters {
-        get {
-            if (_enumPropertyFilters == null)
-                _enumPropertyFilters = new Dictionary<string, int>();
-            return _enumPropertyFilters;
-        }
-    }
-
-    public List<Card> Results {
-        get {
-            if (_results == null)
-                _results = new List<Card>();
-            return _results;
+            FilterChangeCallback?.Invoke(Filters);
         }
     }
 }

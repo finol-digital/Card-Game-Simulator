@@ -14,7 +14,7 @@ public class LocalNetManager : NetworkManager
 
     void Start()
     {
-        LocalNetManager.CardModelAssetId = cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
+        CardModelAssetId = cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
         ClientScene.RegisterSpawnHandler(CardModelAssetId, SpawnCard, UnSpawnCard);
     }
 
@@ -36,7 +36,7 @@ public class LocalNetManager : NetworkManager
     {
         CardModel cardModel = spawned.GetComponent<CardModel>();
         if (cardModel != null && !cardModel.hasAuthority)
-            GameObject.Destroy(spawned);
+            Destroy(spawned);
     }
 
     public void SearchForHost()

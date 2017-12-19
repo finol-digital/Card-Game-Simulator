@@ -20,7 +20,7 @@ public class PropertyDef : ICloneable
 
     public object Clone()
     {
-        PropertyDef ret = new PropertyDef() { Name = this.Name, Type = this.Type  };
+        PropertyDef ret = new PropertyDef() { Name = Name.Clone() as string, Type = Type  };
         return ret;
     }
 }
@@ -34,8 +34,8 @@ public class PropertyDefValuePair : ICloneable
     public object Clone()
     {
         PropertyDefValuePair ret = new PropertyDefValuePair() {
-            Def = this.Def.Clone() as PropertyDef,
-            Value = this.Value.Clone() as string
+            Def = Def.Clone() as PropertyDef,
+            Value = Value.Clone() as string
         };
         return ret;
     }

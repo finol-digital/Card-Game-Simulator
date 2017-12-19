@@ -6,7 +6,9 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Button))]
 public class CancelButton : MonoBehaviour
 {
-    private GraphicRaycaster _rayCaster;
+    public const string CancelString = "Cancel";
+
+    public GraphicRaycaster RayCaster { get; private set; }
 
     void Start()
     {
@@ -17,23 +19,20 @@ public class CancelButton : MonoBehaviour
 
     void Update()
     {
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("Cancel")) && IsPressable)
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelString)) && IsPressable)
             GetComponent<Button>().onClick.Invoke();
     }
 
     public bool IsPressable {
         get {
-            if (!this.gameObject.GetComponentInParent<Canvas>().Equals(CardGameManager.Instance.TopCanvas))
+            if (!gameObject.GetComponentInParent<Canvas>().Equals(CardGameManager.Instance.TopCanvas))
                 return false;
-            if (_rayCaster == null)
-                _rayCaster = this.gameObject.FindInParents<Canvas>().GetComponent<GraphicRaycaster>();
-            PointerEventData ped = new PointerEventData(null);
-            ped.position = GetComponent<Button>().transform.position;
+            if (RayCaster == null)
+                RayCaster = gameObject.FindInParents<Canvas>().GetComponent<GraphicRaycaster>();
+            PointerEventData ped = new PointerEventData(null) {position = GetComponent<Button>().transform.position};
             List<RaycastResult> results = new List<RaycastResult>();
-            _rayCaster.Raycast(ped, results);
-            if (results.Count < 1 || results [0].gameObject != GetComponent<Button>().gameObject)
-                return false;
-            return true;
+            RayCaster.Raycast(ped, results);
+            return results.Count >= 1 && results [0].gameObject == GetComponent<Button>().gameObject;
         }
     }
 }

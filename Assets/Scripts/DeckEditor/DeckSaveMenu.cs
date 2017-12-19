@@ -15,17 +15,14 @@ public class DeckSaveMenu : MonoBehaviour
     public TMPro.TMP_Text textOutputArea;
 
     public Deck CurrentDeck { get; private set; }
-
     public OnDeckNameChangeDelegate NameChangeCallback { get; private set; }
-
     public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
-
     public bool DoesAutoOverwrite { get; private set; }
 
     public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
     {
-        this.gameObject.SetActive(true);
-        this.transform.SetAsLastSibling();
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
         CurrentDeck = deckToShow ?? new Deck();
         NameChangeCallback = nameChangeCallback;
         DeckSaveCallback = deckSaveCallback;
@@ -65,7 +62,7 @@ public class DeckSaveMenu : MonoBehaviour
     public void SaveToFile()
     {
         CurrentDeck.Name = nameInputField.text;
-        DeckSaveMenu.SaveToFile(CurrentDeck, DeckSaveCallback);
+        SaveToFile(CurrentDeck, DeckSaveCallback);
     }
 
     public static void SaveToFile(Deck deck, OnDeckSavedDelegate deckSaveCallback = null)
@@ -78,19 +75,17 @@ public class DeckSaveMenu : MonoBehaviour
             Debug.LogError(DeckSaveErrorMessage + e.Message);
             CardGameManager.Instance.Messenger.Show(DeckSaveErrorMessage + e.Message);
         }
-        if (deckSaveCallback != null)
-            deckSaveCallback(deck);
+        deckSaveCallback?.Invoke(deck);
     }
 
     public void CancelAndHide()
     {
-        if (NameChangeCallback != null)
-            NameChangeCallback(CurrentDeck.Name);
+        NameChangeCallback?.Invoke(CurrentDeck.Name);
         Hide();
     }
 
     public void Hide()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

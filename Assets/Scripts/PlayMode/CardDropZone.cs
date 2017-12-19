@@ -17,13 +17,14 @@ public class CardDropZone : MonoBehaviour, IDropHandler
             return;
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null) {
-            CardModel draggedCardModel;
-            if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-                cardModel = draggedCardModel;
-            if (cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
-                dropHandler.OnDrop(cardModel);
-        }
+        if (cardModel == null)
+            return;
+
+        CardModel draggedCardModel;
+        if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+            cardModel = draggedCardModel;
+        if (cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
+            dropHandler.OnDrop(cardModel);
     }
 
 }

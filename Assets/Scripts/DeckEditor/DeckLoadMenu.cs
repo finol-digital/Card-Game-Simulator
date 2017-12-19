@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -10,6 +11,11 @@ public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
 
 public class DeckLoadMenu : MonoBehaviour
 {
+    public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+    public const string HsdInstructions = "#Paste the deck string/code here";
+    public const string TxtInstructions = "#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+    public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
+
     public const string DeletePrompt = "Are you sure you would like to delete this deck?";
     public const string DeckDeleteErrorMessage = "There was an error while attempting to delete the deck: ";
     public const string DeckLoadErrorMessage = "There was an error while loading the deck: ";
@@ -28,31 +34,29 @@ public class DeckLoadMenu : MonoBehaviour
     public Button saveCancelButton;
 
     public string SelectedFileName { get; private set; }
-
     public OnDeckLoadedDelegate LoadCallback { get; private set; }
 
     public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null, string originalText = null)
     {
-        this.gameObject.SetActive(true);
-        this.transform.SetAsLastSibling();
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
         SelectedFileName = string.Empty;
         LoadCallback = loadCallback;
 
         BuildDeckFileSelectionOptions();
-        // TODO: REPLACE THIS WITH LANGUAGE LOCALIZATION
         switch (CardGameManager.Current.DeckFileType) {
             case DeckFileType.Dec:
-                instructionsText.text = Deck.DecInstructions;
+                instructionsText.text = DecInstructions;
                 break;
             case DeckFileType.Hsd:
-                instructionsText.text = Deck.HsdInstructions;
+                instructionsText.text = HsdInstructions;
                 break;
             case DeckFileType.Ydk:
-                instructionsText.text = Deck.YdkInstructions;
+                instructionsText.text = YdkInstructions;
                 break;
             case DeckFileType.Txt:
             default:
-                instructionsText.text = Deck.TxtInstructions;
+                instructionsText.text = TxtInstructions;
                 break;
         }
 
@@ -63,24 +67,21 @@ public class DeckLoadMenu : MonoBehaviour
     public void BuildDeckFileSelectionOptions()
     {
         string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath) ? Directory.GetFiles(CardGameManager.Current.DecksFilePath) : new string[0];
-        List<string> deckFiles = new List<string>();
-        foreach (string fileName in files)
-            if (string.Equals(fileName.Substring(fileName.LastIndexOf('.') + 1), CardGameManager.Current.DeckFileType.ToString(), StringComparison.OrdinalIgnoreCase))
-                deckFiles.Add(fileName);
+        List<string> deckFiles = files.Where(fileName => string.Equals(fileName.Substring(fileName.LastIndexOf('.') + 1), CardGameManager.Current.DeckFileType.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
 
         fileSelectionArea.DestroyAllChildren();
         fileSelectionTemplate.SetParent(fileSelectionArea);
         Vector3 pos = fileSelectionTemplate.localPosition;
         pos.y = 0;
         foreach (string deckFile in deckFiles) {
-            GameObject deckFileSelection = Instantiate(fileSelectionTemplate.gameObject, fileSelectionArea) as GameObject;
+            GameObject deckFileSelection = Instantiate(fileSelectionTemplate.gameObject, fileSelectionArea);
             deckFileSelection.SetActive(true);
             // FIX FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
             deckFileSelection.transform.localScale = Vector3.one;
             deckFileSelection.transform.localPosition = pos;
             Toggle toggle = deckFileSelection.GetComponent<Toggle>();
             toggle.isOn = false;
-            UnityAction<bool> valueChange = new UnityAction<bool>(isOn => SelectFile(isOn, deckFile));
+            UnityAction<bool> valueChange = isOn => SelectFile(isOn, deckFile);
             toggle.onValueChanged.AddListener(valueChange);
             Text labelText = deckFileSelection.GetComponentInChildren<Text>();
             labelText.text = GetNameFromPath(deckFile);
@@ -102,7 +103,7 @@ public class DeckLoadMenu : MonoBehaviour
 
         if (!isSelected || string.IsNullOrEmpty(deckFileName))
             return;
-        
+
         if (deckFileName.Equals(SelectedFileName))
             LoadFromFileAndHide();
         else
@@ -136,7 +137,7 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void DeleteFile()
     {
-        try { 
+        try {
             File.Delete(SelectedFileName);
         } catch (Exception e) {
             Debug.LogError(DeckDeleteErrorMessage + e.Message);
@@ -157,8 +158,7 @@ public class DeckLoadMenu : MonoBehaviour
         }
 
         Deck newDeck = Deck.Parse(GetNameFromPath(SelectedFileName), GetFileTypeFromPath(SelectedFileName), deckText);
-        if (LoadCallback != null)
-            LoadCallback(newDeck);
+        LoadCallback?.Invoke(newDeck);
         Hide();
     }
 
@@ -167,9 +167,9 @@ public class DeckLoadMenu : MonoBehaviour
         newDeckPanel.gameObject.SetActive(true);
     }
 
-    public void ValidateDeckName(string name)
+    public void ValidateDeckName(string deckName)
     {
-        nameInputField.text = UnityExtensionMethods.GetSafeFileName(name);
+        nameInputField.text = UnityExtensionMethods.GetSafeFileName(deckName);
     }
 
     public void PasteClipboardIntoText()
@@ -213,6 +213,6 @@ public class DeckLoadMenu : MonoBehaviour
 
     public void Hide()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

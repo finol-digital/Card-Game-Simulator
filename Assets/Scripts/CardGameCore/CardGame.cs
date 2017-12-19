@@ -18,25 +18,11 @@ public class CardGame
     public const string BackgroundImageFileName = "Background";
     public const string CardBackImageFileName = "CardBack";
 
-    public string FilePathBase {
-        get { return CardGameManager.GamesFilePathBase + "/" + Name; }
-    }
-
-    public string ConfigFilePath {
-        get { return FilePathBase + "/" + Name + ".json"; }
-    }
-
-    public string DecksFilePath {
-        get  { return FilePathBase + "/decks"; }
-    }
-
-    public string GameBoardsFilePath {
-        get  { return FilePathBase + "/boards"; }
-    }
-
-    public float AspectRatio {
-        get { return CardHeight > 0 ? Mathf.Abs(CardWidth / CardHeight) : 0.715f; }
-    }
+    public string FilePathBase => CardGameManager.GamesFilePathBase + "/" + Name;
+    public string ConfigFilePath => FilePathBase + "/" + Name + ".json";
+    public string DecksFilePath => FilePathBase + "/decks";
+    public string GameBoardsFilePath => FilePathBase + "/boards";
+    public float AspectRatio => CardHeight > 0 ? Mathf.Abs(CardWidth / CardHeight) : 0.715f;
 
     [JsonProperty]
     public string Name { get; set; }
@@ -57,7 +43,7 @@ public class CardGame
     public bool AutoUpdate { get; set; }
 
     [JsonProperty]
-    public string AutoUpdateUrl { get; set; } = "";
+    public string AutoUpdateUrl { get; set; }
 
     [JsonProperty]
     public string BackgroundImageFileType { get; set; } = "png";
@@ -145,7 +131,7 @@ public class CardGame
 
     [JsonProperty]
     public float PlayAreaWidth { get; set; } = 23.5f;
-    
+
     [JsonProperty]
     public string SetCardsIdentifier { get; set; } = "cards";
 
@@ -155,16 +141,15 @@ public class CardGame
     [JsonProperty]
     public string SetNameIdentifier { get; set; } = "name";
 
+    public Dictionary<string, Card> Cards { get; } = new Dictionary<string, Card>();
+    public Dictionary<string, Set> Sets { get; } = new Dictionary<string, Set>();
+
     public bool IsLoading { get; private set; }
-
     public bool IsLoaded { get; private set; }
-
     public string Error { get; private set; }
 
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
-    private Dictionary<string, Card> _cards;
-    private Dictionary<string, Set> _sets;
 
     public CardGame(string name = Set.DefaultCode, string url = "")
     {
@@ -244,11 +229,9 @@ public class CardGame
     {
         if (!File.Exists(file))
             return;
-        
+
         JToken root = JToken.Parse(File.ReadAllText(file));
-        IJEnumerable<JToken> jTokenEnumeration = root as JArray;
-        if (jTokenEnumeration == null)
-            jTokenEnumeration = (root as JObject).PropertyValues();
+        IJEnumerable<JToken> jTokenEnumeration = root as JArray ?? (IJEnumerable<JToken>) ((JObject) root).PropertyValues();
         foreach (JToken jToken in jTokenEnumeration)
             load(jToken, Set.DefaultCode);
     }
@@ -266,7 +249,7 @@ public class CardGame
             PropertyDefValuePair newPropertyEntry = new PropertyDefValuePair() { Def = property };
             if (property.Type == PropertyType.EnumList) {
                 int enumValue = 0;
-                EnumDef enumDef = Enums.Where(def => def.Property.Equals(property.Name)).FirstOrDefault();
+                EnumDef enumDef = Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
                 IJEnumerable<JToken> enumValues = cardJToken as JArray;
                 if (enumDef != null && enumValues != null) {
                     foreach (JToken jToken in enumValues) {
@@ -280,27 +263,32 @@ public class CardGame
                 newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
             cardProperties [property.Name] = newPropertyEntry;
         }
-        if (!string.IsNullOrEmpty(cardId)) {
-            Card newCard = new Card(cardId, cardName, cardSet, cardProperties);
-            Cards [newCard.Id] = newCard;
-            if (!Sets.ContainsKey(cardSet))
-                Sets [cardSet] = new Set(cardSet);
-        }
+
+        if (string.IsNullOrEmpty(cardId))
+            return;
+
+        Card newCard = new Card(cardId, cardName, cardSet, cardProperties);
+        Cards [newCard.Id] = newCard;
+        if (!Sets.ContainsKey(cardSet))
+            Sets [cardSet] = new Set(cardSet);
     }
 
     public void LoadSetFromJToken(JToken setJToken, string defaultSetCode)
     {
         if (setJToken == null)
             return;
-        
+
         string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
         string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSetCode;
         if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
             Sets [setCode] = new Set(setCode, setName);
         JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
-        if (cards != null)
-            foreach (JToken jToken in cards)
-                LoadCardFromJToken(jToken, setCode);
+
+        if (cards == null)
+            return;
+
+        foreach (JToken jToken in cards)
+            LoadCardFromJToken(jToken, setCode);
     }
 
     public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> stringProperties, Dictionary<string, int> intMinProperties, Dictionary<string, int> intMaxProperties, Dictionary<string, int> enumProperties)
@@ -321,27 +309,25 @@ public class CardGame
             enumProperties = new Dictionary<string, int>();
 
         foreach (Card card in Cards.Values) {
-            if (card.Id.ToLower().Contains(id.ToLower())
-                && card.Name.ToLower().Contains(name.ToLower())
-                && card.SetCode.ToLower().Contains(setCode.ToLower())) {
-                bool propsMatch = true;
-                foreach (KeyValuePair<string, string> entry in stringProperties)
-                    if (!card.GetPropertyValueString(entry.Key).ToLower().Contains(entry.Value.ToLower()))
-                        propsMatch = false;
-                int intValue;
-                foreach (KeyValuePair<string, int> entry in intMinProperties)
-                    if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue < entry.Value)
-                        propsMatch = false;
-                foreach (KeyValuePair<string, int> entry in intMaxProperties)
-                    if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue > entry.Value)
-                        propsMatch = false;
-                foreach (KeyValuePair<string, int> entry in enumProperties) {
-                    if ((card.GetPropertyValueEnum(entry.Key) & entry.Value) == 0)
-                        propsMatch = false;
-                }
-                if (propsMatch)
-                    yield return card;
+            if (!card.Id.ToLower().Contains(id.ToLower()) || !card.Name.ToLower().Contains(name.ToLower()) ||
+                !card.SetCode.ToLower().Contains(setCode.ToLower())) continue;
+            bool propsMatch = true;
+            foreach (KeyValuePair<string, string> entry in stringProperties)
+                if (!card.GetPropertyValueString(entry.Key).ToLower().Contains(entry.Value.ToLower()))
+                    propsMatch = false;
+            int intValue;
+            foreach (KeyValuePair<string, int> entry in intMinProperties)
+                if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue < entry.Value)
+                    propsMatch = false;
+            foreach (KeyValuePair<string, int> entry in intMaxProperties)
+                if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue > entry.Value)
+                    propsMatch = false;
+            foreach (KeyValuePair<string, int> entry in enumProperties) {
+                if ((card.GetPropertyValueEnum(entry.Key) & entry.Value) == 0)
+                    propsMatch = false;
             }
+            if (propsMatch)
+                yield return card;
         }
     }
 
@@ -384,40 +370,12 @@ public class CardGame
     }
 
     public Sprite BackgroundImageSprite {
-        get {
-            if (_backgroundImageSprite == null)
-                _backgroundImageSprite = Resources.Load<Sprite>(BackgroundImageFileName);
-            return _backgroundImageSprite;
-        }
-        private set {
-            _backgroundImageSprite = value;
-        }
+        get { return _backgroundImageSprite ?? (_backgroundImageSprite = Resources.Load<Sprite>(BackgroundImageFileName)); }
+        private set { _backgroundImageSprite = value; }
     }
 
     public Sprite CardBackImageSprite {
-        get {
-            if (_cardBackImageSprite == null)
-                _cardBackImageSprite = Resources.Load<Sprite>(CardBackImageFileName);
-            return _cardBackImageSprite;
-        }
-        private set {
-            _cardBackImageSprite = value;
-        }
-    }
-
-    public Dictionary<string, Card> Cards {
-        get {
-            if (_cards == null)
-                _cards = new Dictionary<string, Card>();
-            return _cards;
-        }
-    }
-
-    public Dictionary<string, Set> Sets {
-        get {
-            if (_sets == null)
-                _sets = new Dictionary<string, Set>();
-            return _sets;
-        }
+        get { return _cardBackImageSprite ?? (_cardBackImageSprite = Resources.Load<Sprite>(CardBackImageFileName)); }
+        private set { _cardBackImageSprite = value; }
     }
 }

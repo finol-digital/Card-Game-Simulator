@@ -15,11 +15,11 @@ public class Popup : MonoBehaviour
 
     public void Show(string message)
     {
-        if (this.gameObject.activeSelf)
+        if (gameObject.activeSelf)
             Debug.LogWarning(OverwriteWarning);
 
-        this.gameObject.SetActive(true);
-        this.transform.SetAsLastSibling();
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
         messageText.text = message;
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
@@ -48,6 +48,6 @@ public class Popup : MonoBehaviour
 
     public void Close()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

@@ -6,32 +6,18 @@ using System.Linq;
 [JsonObject(MemberSerialization.OptIn)]
 public class EnumDef
 {
+    public const string Hex = "0x";
+    public const string Delimiter = "|";
+
     [JsonProperty]
     public string Property { get; private set; }
 
     [JsonProperty]
     public Dictionary<string, string> Values { get; private set; }
 
-    public Dictionary<int, string> Lookup {
-        get {
-            if (_lookup == null)
-                _lookup = new Dictionary<int, string>();
-            return _lookup;
-        }
-    }
-
-    public Dictionary<string, int> ReverseLookup {
-        get {
-            if (_reverseLookup == null)
-                _reverseLookup = new Dictionary<string, int>();
-            return _reverseLookup;
-        }
-    }
-
+    public Dictionary<int, string> Lookup { get; } = new Dictionary<int, string>();
+    public Dictionary<string, int> ReverseLookup { get; } = new Dictionary<string, int>();
     public bool LookupEqualsValue { get; private set; }
-
-    private Dictionary<int, string> _lookup;
-    private Dictionary<string, int> _reverseLookup;
 
     public static bool IsEnumProperty(string propertyName)
     {
@@ -40,21 +26,21 @@ public class EnumDef
 
     public static bool TryParseInt(string number, out int intValue)
     {
-        bool isHex = number.StartsWith("0x");
-        return int.TryParse(isHex ? number.Substring(2) : number, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
+        bool isHex = number.StartsWith(Hex);
+        return int.TryParse(isHex ? number.Substring(Hex.Length) : number, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
     }
 
     public int CreateLookup(string key)
     {
         if (ReverseLookup.ContainsKey(key))
             return 0;
-        
+
         int intValue;
-        if (!key.StartsWith("0x") || !EnumDef.TryParseInt(key, out intValue))
+        if (!key.StartsWith(Hex) || !TryParseInt(key, out intValue))
             intValue = 1 << Lookup.Count;
         else
             LookupEqualsValue = true;
-        
+
         Lookup [intValue] = key;
         ReverseLookup [key] = intValue;
         return intValue;
@@ -64,13 +50,13 @@ public class EnumDef
     {
         string result = string.Empty;
 
-        int lookupValue;
         foreach (KeyValuePair<string, string> enumValue in Values) {
-            if (ReverseLookup.TryGetValue(enumValue.Key, out lookupValue) && (lookupValue & keys) != 0) {
-                if (!string.IsNullOrEmpty(result))
-                    result += "|";
-                result += enumValue.Value;
-            }
+            int lookupValue;
+            if (!ReverseLookup.TryGetValue(enumValue.Key, out lookupValue) || (lookupValue & keys) == 0)
+                continue;
+            if (!string.IsNullOrEmpty(result))
+                result += Delimiter;
+            result += enumValue.Value;
         }
 
         return result;

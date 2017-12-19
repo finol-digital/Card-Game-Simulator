@@ -22,15 +22,11 @@ public enum DeckFileType
 public class Deck : IEquatable<Deck>
 {
     public const string DefaultName = "Untitled";
-    public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
-    public const string HsdInstructions = "#Paste the deck string/code here";
-    public const string TxtInstructions = "#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
-    public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
+
+    public string FilePath => CardGameManager.Current.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
 
     public string Name { get; set; }
-
     public DeckFileType FileType { get; private set; }
-
     public List<Card> Cards { get; private set; }
 
     public Deck() : this(DefaultName)
@@ -90,11 +86,11 @@ public class Deck : IEquatable<Deck>
         string cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
         IEnumerable<Card> cards = CardGameManager.Current.FilterCards(null, cardName, null, null, null, null, null);
         foreach (Card card in cards) {
-            if (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase)) {
-                for (int i = 0; i < cardCount; i++)
-                    Cards.Add(card);
-                break;
-            }
+            if (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase))
+                continue;
+            for (int i = 0; i < cardCount; i++)
+                Cards.Add(card);
+            break;
         }
     }
 
@@ -136,7 +132,7 @@ public class Deck : IEquatable<Deck>
 
     public void AddCardsByPropertyInt(string propertyName, int propertyValue, int count)
     {
-        Card card = CardGameManager.Current.Cards.Values.Where(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue).FirstOrDefault();
+        Card card = CardGameManager.Current.Cards.Values.FirstOrDefault(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue);
         for (int i = 0; card != null && i < count; i++)
             Cards.Add(card);
     }
@@ -145,7 +141,7 @@ public class Deck : IEquatable<Deck>
     {
         if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
             return;
-            
+
         if (CardGameManager.Current.Cards.ContainsKey(line))
             Cards.Add(CardGameManager.Current.Cards [line]);
     }
@@ -182,11 +178,12 @@ public class Deck : IEquatable<Deck>
 
         IEnumerable<Card> cards = CardGameManager.Current.FilterCards(cardId, cardName, cardSet, null, null, null, null);
         foreach (Card card in cards) {
-            if (card.Id.Equals(cardId) || (string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) && (string.IsNullOrEmpty(cardSet) || card.SetCode.Equals(cardSet)))) {
-                for (int i = 0; i < cardCount; i++)
-                    Cards.Add(card);
-                break;
-            }
+            if (!card.Id.Equals(cardId) && (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) ||
+                                            (!string.IsNullOrEmpty(cardSet) && !card.SetCode.Equals(cardSet))))
+                continue;
+            for (int i = 0; i < cardCount; i++)
+                Cards.Add(card);
+            break;
         }
     }
 
@@ -204,7 +201,7 @@ public class Deck : IEquatable<Deck>
     {
         Dictionary<Card, int> cardCounts = new Dictionary<Card, int>();
         foreach (Card card in Cards) {
-            int currentCount = 0;
+            int currentCount;
             cardCounts.TryGetValue(card, out currentCount);
             currentCount++;
             cardCounts [card] = currentCount;
@@ -217,13 +214,14 @@ public class Deck : IEquatable<Deck>
         Dictionary<string, List<Card>> extraGroups = new Dictionary<string, List<Card>>();
         foreach (Card card in Cards) {
             foreach (ExtraDef extraDef in CardGameManager.Current.Extras) {
-                if (EnumDef.IsEnumProperty(extraDef.Property) ? card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value) : card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)) {
-                    string groupName = !string.IsNullOrEmpty(extraDef.Group) ? extraDef.Group : ExtraDef.DefaultExtraGroup;
-                    if (!extraGroups.ContainsKey(groupName))
-                        extraGroups [groupName] = new List<Card>();
-                    extraGroups [groupName].Add(card);
-                    break;
-                }
+                if (EnumDef.IsEnumProperty(extraDef.Property) ? !card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
+                                                                : !card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value))
+                    continue;
+                string groupName = !string.IsNullOrEmpty(extraDef.Group) ? extraDef.Group : ExtraDef.DefaultExtraGroup;
+                if (!extraGroups.ContainsKey(groupName))
+                    extraGroups [groupName] = new List<Card>();
+                extraGroups [groupName].Add(card);
+                break;
             }
         }
         return extraGroups;
@@ -241,27 +239,23 @@ public class Deck : IEquatable<Deck>
     {
         string text = string.Empty;
         Dictionary<Card, int> cardCounts = GetCardCounts();
-        foreach (Card card in cardCounts.Keys)
-            text += cardCounts [card] + " " + card.Name + System.Environment.NewLine;
-        return text;
+        return cardCounts.Keys.Aggregate(text, (current, card) => current + (cardCounts[card] + " " + card.Name + Environment.NewLine));
     }
 
     public string ToHsd()
     {
-        string text = "### " + Name + System.Environment.NewLine;
+        string text = "### " + Name + Environment.NewLine;
         List<Card> extraCards = GetExtraCards();
         if (extraCards.Count > 0 && !string.IsNullOrEmpty(extraCards [0].GetPropertyValueString("cardClass")))
-            text += "# Class: " + extraCards [0].GetPropertyValueString("cardClass") + System.Environment.NewLine;
-        text += "# Format: Wild" + System.Environment.NewLine;
-        text += "#" + System.Environment.NewLine;
+            text += "# Class: " + extraCards [0].GetPropertyValueString("cardClass") + Environment.NewLine;
+        text += "# Format: Wild" + Environment.NewLine;
+        text += "#" + Environment.NewLine;
 
         Dictionary<Card, int> cardCounts = GetCardCounts();
-        foreach (Card card in cardCounts.Keys)
-            if (!extraCards.Contains(card))
-                text += "# " + cardCounts [card] + "x (" + card.GetPropertyValueString("cost") + ") " + card.Name + System.Environment.NewLine;
-        text += "#" + System.Environment.NewLine;
+        text = cardCounts.Keys.Where(card => !extraCards.Contains(card)).Aggregate(text, (current, card) => current + ("# " + cardCounts[card] + "x (" + card.GetPropertyValueString("cost") + ") " + card.Name + Environment.NewLine));
+        text += "#" + Environment.NewLine;
 
-        text += SerializeHsd() + System.Environment.NewLine;
+        text += SerializeHsd() + Environment.NewLine;
         return text;
     }
 
@@ -305,34 +299,30 @@ public class Deck : IEquatable<Deck>
 
     public string ToYdk()
     {
-        string text = "#created by Card Game Simulator" + System.Environment.NewLine;
+        string text = "#created by Card Game Simulator" + Environment.NewLine;
         List<Card> mainCards = new List<Card>(Cards);
         List<Card> extraCards = GetExtraCards();
         mainCards.RemoveAll(card => extraCards.Contains(card));
 
-        text += "#main" + System.Environment.NewLine;
-        foreach (Card card in mainCards)
-            text += card.Id + System.Environment.NewLine;
-        text += "#extra" + System.Environment.NewLine;
-        foreach (Card card in extraCards)
-            text += card.Id + System.Environment.NewLine;
+        text += "#main" + Environment.NewLine;
+        text = mainCards.Aggregate(text, (current, card) => current + (card.Id + Environment.NewLine));
+        text += "#extra" + Environment.NewLine;
+        text = extraCards.Aggregate(text, (current, card) => current + (card.Id + Environment.NewLine));
 
-        text += "!side" + System.Environment.NewLine;
+        text += "!side" + Environment.NewLine;
         return text;
     }
 
     public string ToTxt()
     {
-        string text = "# " + CardGameManager.Current.Name + " Deck List: " + Name + System.Environment.NewLine;
+        string text = "# " + CardGameManager.Current.Name + " Deck List: " + Name + Environment.NewLine;
         Dictionary<Card, int> cardCounts = GetCardCounts();
-        foreach (Card card in cardCounts.Keys)
-            text += cardCounts [card] + " " + card.Name + System.Environment.NewLine;
-        return text;
+        return cardCounts.Keys.Aggregate(text, (current, card) => current + (cardCounts[card] + " " + card.Name + Environment.NewLine));
     }
 
     public override string ToString()
     {
-        string text = string.Empty;
+        string text;
         switch (FileType) {
             case DeckFileType.Dec:
                 text = ToDec();
@@ -353,15 +343,6 @@ public class Deck : IEquatable<Deck>
 
     public bool Equals(Deck other)
     {
-        if (other == null)
-            return false;
-        
-        return this.ToString().Equals(other.ToString());
-    }
-
-    public string FilePath {
-        get {
-            return CardGameManager.Current.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
-        }
+        return other != null && ToString().Equals(other.ToString());
     }
 }

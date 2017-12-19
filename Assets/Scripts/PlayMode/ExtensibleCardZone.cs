@@ -73,7 +73,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public void ResizeExtension()
     {
-        RectTransform canvasRT = Viewer.transform as RectTransform;
+        RectTransform canvasRT = (RectTransform) Viewer.transform;
         RectTransform.Edge edge = Viewer.ActiveScrollView == Viewer.verticalScrollView ? RectTransform.Edge.Right : RectTransform.Edge.Top;
         float inset = (Viewer.ActiveScrollView == Viewer.verticalScrollView ? ZonesViewer.VerticalWidth : ZonesViewer.HorizontalHeight) - ZonesViewer.ButtonLength;
         float width = canvasRT.rect.width - ZonesViewer.VerticalWidth + (Viewer.IsExtended ? 0 : inset);
@@ -106,11 +106,11 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 			cardStack.type = CardStackType.Horizontal;
 			VerticalLayoutGroup oldLayout = extensionContent.GetComponent<VerticalLayoutGroup> ();
 			if (oldLayout != null)
-				GameObject.DestroyImmediate (oldLayout);
-			HorizontalLayoutGroup newLayout = extensionContent.GetComponent<HorizontalLayoutGroup> ();
-			if (newLayout == null)
-				newLayout = extensionContent.gameObject.AddComponent<HorizontalLayoutGroup> ();
-		} else {
+				DestroyImmediate (oldLayout);
+			HorizontalLayoutGroup newLayout = extensionContent.GetComponent<HorizontalLayoutGroup> () ?? extensionContent.gameObject.AddComponent<HorizontalLayoutGroup> ();
+		    newLayout.childControlHeight = false;
+		    newLayout.childControlWidth = false;
+        } else {
 			if (cardStack.scrollRectContainer != null) {
 				cardStack.scrollRectContainer.vertical = true;
 				cardStack.scrollRectContainer.horizontal = false;
@@ -118,11 +118,11 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 			cardStack.type = CardStackType.Vertical;
 			HorizontalLayoutGroup oldLayout = extensionContent.GetComponent<HorizontalLayoutGroup> ();
 			if (oldLayout != null)
-				GameObject.DestroyImmediate (oldLayout);
-			VerticalLayoutGroup newLayout = extensionContent.GetComponent<VerticalLayoutGroup> ();
-			if (newLayout == null)
-				newLayout = extensionContent.gameObject.AddComponent<VerticalLayoutGroup> ();
-		}
-		
+				DestroyImmediate (oldLayout);
+			VerticalLayoutGroup newLayout = extensionContent.GetComponent<VerticalLayoutGroup> () ?? extensionContent.gameObject.AddComponent<VerticalLayoutGroup> ();
+		    newLayout.childControlHeight = false;
+		    newLayout.childControlWidth = false;
+        }
+
 	}
 }

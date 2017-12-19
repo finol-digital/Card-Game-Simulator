@@ -21,10 +21,10 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
-        #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         if (exitButton != null)
             exitButton.gameObject.SetActive(false);
-        #endif
+#endif
         versionText.text = "Ver. " + Application.version;
     }
 
@@ -62,7 +62,7 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(DeckEditorSceneIndex);
     }
 
-    #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
     void Update()
     {
         if (CardGameManager.Instance.Messenger.gameObject.activeSelf || CardGameManager.Instance.Selector.gameObject.activeSelf)
@@ -70,14 +70,14 @@ public class MainMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }
-    #endif
+#endif
 
     public void Quit()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 }

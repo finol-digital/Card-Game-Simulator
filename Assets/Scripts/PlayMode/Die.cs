@@ -66,7 +66,7 @@ public class Die : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelec
 	public void OnPointerUp (PointerEventData eventData)
 	{
 		if (!EventSystem.current.alreadySelecting)
-			EventSystem.current.SetSelectedGameObject (this.gameObject, eventData);
+			EventSystem.current.SetSelectedGameObject (gameObject, eventData);
 		ShowButtons ();
 	}
 
@@ -83,13 +83,13 @@ public class Die : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelec
 	public void OnBeginDrag (PointerEventData eventData)
 	{
 		DragOffset = eventData.position - ((Vector2)transform.position);
-		this.transform.SetAsLastSibling ();
+		transform.SetAsLastSibling ();
 		HideButtons ();
 	}
 
 	public void OnDrag (PointerEventData eventData)
 	{
-		this.transform.position = eventData.position - DragOffset;
+		transform.position = eventData.position - DragOffset;
 	}
 
 	public void Decrement ()

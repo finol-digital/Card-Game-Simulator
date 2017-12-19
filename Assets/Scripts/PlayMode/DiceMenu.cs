@@ -20,8 +20,8 @@ public class DiceMenu : MonoBehaviour
 
     public void Show(RectTransform playArea)
     {
-        this.gameObject.SetActive(true);
-        this.transform.SetAsLastSibling();
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
         Target = playArea;
     }
 
@@ -55,7 +55,7 @@ public class DiceMenu : MonoBehaviour
 
     public void Hide()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
 

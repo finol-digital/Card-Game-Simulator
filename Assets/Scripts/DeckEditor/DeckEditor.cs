@@ -10,14 +10,25 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 {
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
     public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
+    public const string ChangeIndicator = "*";
     public const int CardStackSize = 8;
 
-    public int CardStackCount {
-        get { return Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardStackSize); }
+    public int CardStackCount => Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardStackSize);
+    public List<CardStack> CardStacks => _cardStacks ?? (_cardStacks = new List<CardStack>());
+    public int CurrentCardStackIndex {
+        get {
+            if (_currentCardStackIndex < 0 || _currentCardStackIndex >= CardStacks.Count)
+                _currentCardStackIndex = 0;
+            return _currentCardStackIndex;
+        }
+        set { _currentCardStackIndex = value; }
     }
+    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+    public DeckSaveMenu DeckSaver => _deckSaver ?? (_deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>());
+
 
     public Deck CurrentDeck {
-        get { 
+        get {
             Deck deck = new Deck(SavedDeck != null ? SavedDeck.Name : Deck.DefaultName, CardGameManager.Current.DeckFileType);
             foreach (CardStack stack in CardStacks)
                 foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
@@ -25,9 +36,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             return deck;
         }
     }
-
     public Deck SavedDeck { get; private set; }
-
     public bool HasChanged {
         get {
             Deck currentDeck = CurrentDeck;
@@ -88,7 +97,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         if (cardModel == null || CardStacks.Count < 1)
             return;
-        
+
         EventSystem.current.SetSelectedGameObject(null, cardModel.CurrentPointerEventData);
 
         AddCard(cardModel.Value);
@@ -98,7 +107,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         if (card == null || CardStacks.Count < 1)
             return;
-        
+
         int maxCopiesInStack = CardStackSize;
         CardModel newCardModel = null;
         while (newCardModel == null) {
@@ -112,7 +121,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             }
         }
 
-        float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * ((float)CurrentCardStackIndex + ((CurrentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
+        float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * (CurrentCardStackIndex + ((CurrentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
         scrollBar.value = Mathf.Clamp01(newSpot);
 
         OnAddCardModel(CardStacks [CurrentCardStackIndex], newCardModel);
@@ -141,7 +150,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             return;
 
         cardModel.transform.SetParent(null);
-        GameObject.Destroy(cardModel.gameObject);
+        Destroy(cardModel.gameObject);
         CardInfoViewer.Instance.IsVisible = false;
 
         UpdateDeckStats();
@@ -175,7 +184,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         if (newName == null)
             newName = string.Empty;
         newName = UnityExtensionMethods.GetSafeFileName(newName);
-        nameText.text = newName + (HasChanged ? "*" : "");
+        nameText.text = newName + (HasChanged ? ChangeIndicator : string.Empty);
         return newName;
     }
 
@@ -184,7 +193,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         string deckName = Deck.DefaultName;
         if (SavedDeck != null)
             deckName = SavedDeck.Name;
-        nameText.text = deckName + (HasChanged ? "*" : "");
+        nameText.text = deckName + (HasChanged ? ChangeIndicator : string.Empty);
         countText.text = CurrentDeck.Cards.Count.ToString();
     }
 
@@ -233,27 +242,4 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
     }
-
-    public List<CardStack> CardStacks {
-        get {
-            if (_cardStacks == null)
-                _cardStacks = new List<CardStack>();
-            return _cardStacks;
-        }
-    }
-
-    public int CurrentCardStackIndex {
-        get {
-            if (_currentCardStackIndex < 0 || _currentCardStackIndex >= CardStacks.Count)
-                _currentCardStackIndex = 0;
-            return _currentCardStackIndex;
-        }
-        set {
-            _currentCardStackIndex = value;
-        }
-    }
-
-    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
-
-    public DeckSaveMenu DeckSaver => _deckSaver ?? (_deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>());
 }
