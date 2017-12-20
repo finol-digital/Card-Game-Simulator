@@ -3,40 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 
-public class Die : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler
+public class Die : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler
 {
 	public const float RollTime = 1.0f;
 	public const float RollDelay = 0.05f;
 
-	public int Min { get; set; }
-
-	public int Max { get; set; }
-
 	public Text valueText;
 	public List<CanvasGroup> buttons;
 
-	public Vector2 DragOffset { get; private set; }
+    public int Min { get; set; }
+    public int Max { get; set; }
 
+    public Vector2 DragOffset { get; private set; }
+
+    [SyncVar]
 	private int _value;
 
-	void Start ()
+	void Start()
 	{
 		Roll ();
 		HideButtons ();
 	}
 
-	public void Roll ()
+	public void Roll()
 	{
-		StartCoroutine (DoRoll ());
+		StartCoroutine(DoRoll());
 	}
 
-	public IEnumerator DoRoll ()
+	public IEnumerator DoRoll()
 	{
 		float elapsedTime = 0f;
 		while (elapsedTime < RollTime) {
-			Value = Random.Range (Min, Max);
-			yield return new WaitForSeconds (RollDelay);
+			Value = Random.Range(Min, Max);
+			yield return new WaitForSeconds(RollDelay);
 			elapsedTime += RollDelay;
 		}
 	}
@@ -59,60 +60,57 @@ public class Die : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ISelec
 		}
 	}
 
-	public void OnPointerDown (PointerEventData eventData)
-	{
-	}
+    // Required for OnPointerUp to trigger
+	public void OnPointerDown(PointerEventData eventData) {}
 
-	public void OnPointerUp (PointerEventData eventData)
+	public void OnPointerUp(PointerEventData eventData)
 	{
 		if (!EventSystem.current.alreadySelecting)
-			EventSystem.current.SetSelectedGameObject (gameObject, eventData);
-		ShowButtons ();
+			EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+		ShowButtons();
 	}
 
-	public void OnSelect (BaseEventData eventData)
+	public void OnSelect(BaseEventData eventData)
 	{
-		ShowButtons ();
+		ShowButtons();
 	}
 
-	public void OnDeselect (BaseEventData eventData)
+	public void OnDeselect(BaseEventData eventData)
 	{
-		HideButtons ();
+		HideButtons();
 	}
 
-	public void OnBeginDrag (PointerEventData eventData)
+	public void OnBeginDrag(PointerEventData eventData)
 	{
 		DragOffset = eventData.position - ((Vector2)transform.position);
-		transform.SetAsLastSibling ();
-		HideButtons ();
+		transform.SetAsLastSibling();
+		HideButtons();
 	}
 
-	public void OnDrag (PointerEventData eventData)
+	public void OnDrag(PointerEventData eventData)
 	{
 		transform.position = eventData.position - DragOffset;
 	}
 
-	public void Decrement ()
+	public void Decrement()
 	{
 		Value--;
 	}
 
-	public void Increment ()
+	public void Increment()
 	{
 		Value++;
 	}
 
 	public int Value {
-		get {
-			return _value;
-		}
+		get { return _value; }
 		set {
 			_value = value;
 			if (_value > Max)
 				_value = Min;
 			if (_value < Min)
 				_value = Max;
-			valueText.text = _value.ToString ();
+			valueText.text = _value.ToString();
 		}
 	}
 }

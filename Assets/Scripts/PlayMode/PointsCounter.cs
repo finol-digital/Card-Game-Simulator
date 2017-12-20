@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Globalization;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class PointsCounter : MonoBehaviour
+public class PointsCounter : NetworkBehaviour
 {
     public Text pointsText;
 
+    [SyncVar]
     private float _points;
 
     public void Decrement()
@@ -18,12 +20,10 @@ public class PointsCounter : MonoBehaviour
     }
 
     public float Count {
-        get {
-            return _points;
-        }
+        get { return _points; }
         set {
             _points = value;
-            pointsText.text = _points.ToString();
+            pointsText.text = _points.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

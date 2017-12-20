@@ -123,6 +123,5 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 		    newLayout.childControlHeight = false;
 		    newLayout.childControlWidth = false;
         }
-
 	}
 }

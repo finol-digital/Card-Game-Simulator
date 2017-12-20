@@ -16,7 +16,7 @@ public enum DragPhase
     End
 }
 
-[RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(LayoutElement))]
+[RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(Outline))]
 public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public const float MovementSpeed = 600f;
@@ -38,9 +38,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public bool DidSelectOnDown { get; private set; }
     public PointerEventData CurrentPointerEventData { get; private set; }
     public DragPhase CurrentDragPhase { get; private set; }
-
-    private Outline _highlight;
-    public Outline Highlight => _highlight ?? (_highlight = gameObject.GetOrAddComponent<Outline>());
 
     [SyncVar]
     private string _id;
@@ -179,7 +176,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         bool isOnline = IsOnline;
         bool isClickingRight;
-#if !UNITY_ANDROID && !UNITY_IOS
+#if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
         isClickingRight = Input.GetMouseButton(1) || Input.GetMouseButtonUp(1);
 #endif
         if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || isClickingRight || (isOnline && !hasAuthority))
@@ -274,7 +271,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             yield break;
         }
 
-        gameObject.GetOrAddComponent<LayoutElement>().ignoreLayout = false;
         CardStack prevParentStack = ParentCardStack;
         transform.SetParent(PlaceHolder.parent);
         transform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
@@ -338,14 +334,21 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void ShowHighlight()
     {
-        Highlight.effectColor = Color.green;
-        Highlight.effectDistance = OutlineHighlightDistance;
+        GetComponent<Outline>().effectColor = Color.green;
+        GetComponent<Outline>().effectDistance = OutlineHighlightDistance;
+    }
+
+    public void WarnHighlight()
+    {
+        GetComponent<Outline>().effectColor = Color.red;
+        GetComponent<Outline>().effectDistance = OutlineHighlightDistance;
     }
 
     public void HideHighlight()
     {
-        Highlight.effectColor = Color.black;
-        Highlight.effectDistance = Vector2.zero;
+        bool isOthers = IsOnline && !hasAuthority;
+        GetComponent<Outline>().effectColor = isOthers ? Color.yellow : Color.black;
+        GetComponent<Outline>().effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
     }
 
     void OnDestroy()

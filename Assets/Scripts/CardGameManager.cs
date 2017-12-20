@@ -153,9 +153,14 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public Popup Messenger => _messenger ?? (_messenger =
-        Instantiate(Resources.Load<GameObject>(MessengerPrefabName)).GetOrAddComponent<Popup>());
-
+    public Popup Messenger {
+        get {
+            if (_messenger != null) return _messenger;
+            _messenger = Instantiate(Resources.Load<GameObject>(MessengerPrefabName)).GetOrAddComponent<Popup>();
+            _messenger.transform.SetParent(transform);
+            return _messenger;
+        }
+    }
     private Image BackgroundImage {
         get {
             if (_backgroundImage == null && GameObject.FindGameObjectWithTag(BackgroundImageTag) != null)

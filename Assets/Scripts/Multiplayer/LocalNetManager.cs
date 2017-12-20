@@ -10,7 +10,11 @@ public class LocalNetManager : NetworkManager
 
     public static NetworkHash128 CardModelAssetId { get; private set; }
 
-    private NetworkDiscovery _discovery;
+    public static LocalNetManager Instance => (LocalNetManager)singleton;
+
+    private LobbyDiscovery _discovery;
+    public LobbyDiscovery Discovery => _discovery ??
+                                         (_discovery = CardGameManager.Instance.gameObject.GetOrAddComponent<LobbyDiscovery>());
 
     void Start()
     {
@@ -28,6 +32,7 @@ public class LocalNetManager : NetworkManager
 
     public void SetPlayActions(CardStack cardStack, CardModel cardModel)
     {
+        cardModel.HideHighlight();
         cardModel.DoubleClickAction = CardModel.ToggleFacedown;
         cardModel.SecondaryDragAction = cardModel.Rotate;
     }
@@ -59,13 +64,5 @@ public class LocalNetManager : NetworkManager
     public override void OnClientConnect(NetworkConnection conn)
     {
         ClientScene.AddPlayer(conn, 0);
-    }
-
-    public NetworkDiscovery Discovery {
-        get {
-            if (_discovery == null)
-                _discovery = CardGameManager.Instance.gameObject.GetOrAddComponent<AutoJoinDiscovery>();
-            return _discovery;
-        }
     }
 }

@@ -31,7 +31,8 @@ public class Popup : MonoBehaviour
         Show(message);
         yesButton.gameObject.SetActive(true);
         yesButton.onClick.RemoveAllListeners();
-        yesButton.onClick.AddListener(yesAction);
+        if (yesAction != null)
+            yesButton.onClick.AddListener(yesAction);
         yesButton.onClick.AddListener(Close);
         cancelButton.GetComponentInChildren<Text>().text = CancelString;
     }

@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4566502268858140}
   - component: {fileID: 114614180611090904}
-  - component: {fileID: 114598106250051860}
+  - component: {fileID: 114214761007353596}
   m_Layer: 0
   m_Name: Card Game Manager
   m_TagString: CardGameManager
@@ -41,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114598106250051860
+--- !u!114 &114214761007353596
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1565440365293990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e21bfc5d90e10d642a004d12853a1010, type: 3}
+  m_Script: {fileID: 11500000, guid: aab6f7970b6174146adbd24a9b607499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_BroadcastPort: 47777
@@ -58,10 +58,11 @@ MonoBehaviour:
   m_BroadcastSubVersion: 1
   m_BroadcastInterval: 1000
   m_UseNetworkManager: 1
-  m_BroadcastData: CGS
+  m_BroadcastData: HELLO
   m_ShowGUI: 0
   m_OffsetX: 0
   m_OffsetY: 0
+  lobby: {fileID: 0}
 --- !u!114 &114614180611090904
 MonoBehaviour:
   m_ObjectHideFlags: 1

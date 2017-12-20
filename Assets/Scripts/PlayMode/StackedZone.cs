@@ -2,21 +2,21 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CardStack))]
-public class StackedZone : ExtensibleCardZone, ICardDropHandler
+public class StackedZone : ExtensibleCardZone
 {
+    public int Count => CardModels.Count;
+
     public CardDropZone DropZone { get; private set; }
-
     public CardStack ZoneCardStack { get; private set; }
-
     public CardStack ExtensionCardStack { get; private set; }
+
+    protected List<CardModel> CardModels { get; } = new List<CardModel>();
 
     public bool isFaceup;
 
-    private List<CardModel> _cardModels;
-
     public override void OnStart()
     {
-        DropZone = this.gameObject.GetOrAddComponent<CardDropZone>();
+        DropZone = gameObject.GetOrAddComponent<CardDropZone>();
 
         ZoneCardStack = GetComponent<CardStack>();
         ZoneCardStack.OnAddCardActions.Add(OnAddCardModel);
@@ -100,13 +100,13 @@ public class StackedZone : ExtensibleCardZone, ICardDropHandler
         foreach (CardModel cardModel in CardModels) {
             cardModel.transform.SetParent(parent);
             cardModel.IsFacedown = !IsExtended && !isFaceup;
-            if (!IsExtended) {
-                ((RectTransform)cardModel.transform).anchorMin = new Vector2(0.5f, 0.5f);
-                ((RectTransform)cardModel.transform).anchorMax = new Vector2(0.5f, 0.5f);
-                ((RectTransform)cardModel.transform).anchoredPosition = Vector2.zero;
-                cardModel.transform.SetSiblingIndex(siblingIndex);
-                siblingIndex++;
-            }
+            if (IsExtended)
+                continue;
+            ((RectTransform)cardModel.transform).anchorMin = new Vector2(0.5f, 0.5f);
+            ((RectTransform)cardModel.transform).anchorMax = new Vector2(0.5f, 0.5f);
+            ((RectTransform)cardModel.transform).anchoredPosition = Vector2.zero;
+            cardModel.transform.SetSiblingIndex(siblingIndex);
+            siblingIndex++;
         }
     }
 
@@ -115,17 +115,4 @@ public class StackedZone : ExtensibleCardZone, ICardDropHandler
         countText.text = CardModels.Count.ToString();
     }
 
-    private List<CardModel> CardModels {
-        get {
-            if (_cardModels == null)
-                _cardModels = new List<CardModel>();
-            return _cardModels;
-        }
-    }
-
-    public int Count {
-        get {
-            return CardModels.Count; 
-        }
-    }
 }

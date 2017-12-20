@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public class PlayMode : MonoBehaviour
 {
     public const string MainMenuPrompt = "Go back to the main menu?";
+    public const string DrawString = "Draw";
 
+    public GameObject lobbyPrefab;
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
     public GameObject diceMenuPrefab;
@@ -22,44 +24,51 @@ public class PlayMode : MonoBehaviour
     public RectTransform playAreaContent;
 
     public Deck LoadedDeck { get; private set; }
-
     public StackedZone DeckZone { get; private set; }
-
     public ExtensibleCardZone HandZone { get; private set; }
 
+    public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());
+    private LobbyMenu _lobby;
+
+    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
     private DeckLoadMenu _deckLoader;
+
+    public DiceMenu DiceCreator => _diceCreator ?? (_diceCreator = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
     private DiceMenu _diceCreator;
+
+    public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
     private CardSearchMenu _cardSearcher;
 
-    IEnumerator Start()
+    void Start()
     {
-        // TODO: BETTER MANAGEMENT OF ONLINE VS OFFLINE
         if (CardGameManager.IsMultiplayer) {
-            ((LocalNetManager)NetworkManager.singleton).SearchForHost();
-            yield return new WaitForSecondsRealtime(3.0f);
-            if (!NetworkManager.singleton.isNetworkActive)
-                NetworkManager.singleton.StartHost();
+            Lobby.cancelButton.onClick.RemoveAllListeners();
+            Lobby.cancelButton.onClick.AddListener(BackToMainMenu);
+            Lobby.Show(this);
+        } else {
+            DeckLoader.loadCancelButton.onClick.RemoveAllListeners();
+            DeckLoader.loadCancelButton.onClick.AddListener(BackToMainMenu);
+            DeckLoader.Show(LoadDeck);
         }
-        DeckLoader.loadCancelButton.onClick.RemoveAllListeners();
-        DeckLoader.loadCancelButton.onClick.AddListener(BackToMainMenu);
-        DeckLoader.Show(LoadDeck);
 
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
     }
 
     void OnRectTransformDimensionsChange()
     {
-        if (!this.gameObject.activeInHierarchy)
+        if (!gameObject.activeInHierarchy)
             return;
 
         zones.ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ? zones.verticalScrollView : zones.horizontalScrollView;
     }
 
+#if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
     void Update()
     {
-        if (Input.GetButtonDown("Draw"))
+        if (Input.GetButtonDown(DrawString))
             Deal(1);
     }
+#endif
 
     public void LoadDeck(Deck newDeck)
     {
@@ -91,6 +100,8 @@ public class PlayMode : MonoBehaviour
         zones.AddZone(DeckZone);
         HandZone = Instantiate(handZonePrefab, zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
         zones.AddZone(HandZone);
+        zones.IsExtended = true;
+        zones.IsVisible = true;
 
         points.Count = CardGameManager.Current.GameStartPointsCount;
         StartCoroutine(WaitToDealDeck());
@@ -100,7 +111,7 @@ public class PlayMode : MonoBehaviour
     {
         if (boards == null || boards.Count < 1)
             return;
-        
+
         foreach (GameBoard board in boards)
             StartCoroutine(CreateBoard(board));
     }
@@ -108,7 +119,7 @@ public class PlayMode : MonoBehaviour
     public IEnumerator CreateBoard(GameBoard board)
     {
         GameObject newBoard = new GameObject(board.Id, typeof(RectTransform));
-        RectTransform rt = newBoard.transform as RectTransform;
+        RectTransform rt = (RectTransform)newBoard.transform;
         rt.SetParent(playAreaContent);
         rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;
@@ -116,7 +127,9 @@ public class PlayMode : MonoBehaviour
         rt.offsetMin = CardGameManager.PixelsPerInch * board.OffsetMin;
 
         Sprite boardImageSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." + CardGameManager.Current.GameBoardFileType, null), output => boardImageSprite = output);
+        string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
+                               CardGameManager.Current.GameBoardFileType;
+        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(boardFilepath), output => boardImageSprite = output);
         if (boardImageSprite != null)
             newBoard.AddComponent<Image>().sprite = boardImageSprite;
 
@@ -144,9 +157,14 @@ public class PlayMode : MonoBehaviour
     {
         if (DeckZone == null || HandZone == null)
             return;
-        
+
         for (int i = 0; DeckZone.Count > 0 && i < cardCount; i++)
             HandZone.AddCard(DeckZone.PopCard());
+    }
+
+    public void ShowDeckMenu()
+    {
+        DeckLoader.Show(LoadDeck);
     }
 
     public void ShowDiceMenu()
@@ -168,9 +186,9 @@ public class PlayMode : MonoBehaviour
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
         if (NetworkManager.singleton.isNetworkActive)
-            ((LocalNetManager)NetworkManager.singleton).LocalPlayer.MoveCardToServer(cardModel);
+            LocalNetManager.Instance.LocalPlayer.MoveCardToServer(cardModel);
         else
-            ((LocalNetManager)NetworkManager.singleton).SetPlayActions(cardStack, cardModel);
+            LocalNetManager.Instance.SetPlayActions(cardStack, cardModel);
     }
 
     public void PromptBackToMainMenu()
@@ -180,30 +198,14 @@ public class PlayMode : MonoBehaviour
 
     public void BackToMainMenu()
     {
+        if (NetworkManager.singleton.isNetworkActive || LocalNetManager.Instance.Discovery.running) {
+            if (NetworkServer.active)
+                NetworkManager.singleton.StopHost();
+            else if (NetworkManager.singleton.IsClientConnected())
+                NetworkManager.singleton.StopClient();
+            LocalNetManager.Instance.Discovery.StopBroadcast();
+        }
+
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
-    }
-
-    public DeckLoadMenu DeckLoader {
-        get {
-            if (_deckLoader == null)
-                _deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
-            return _deckLoader;
-        }
-    }
-
-    public DiceMenu DiceCreator {
-        get {
-            if (_diceCreator == null)
-                _diceCreator = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>();
-            return _diceCreator;
-        }
-    }
-
-    public CardSearchMenu CardSearcher {
-        get {
-            if (_cardSearcher == null)
-                _cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
-            return _cardSearcher;
-        }
     }
 }

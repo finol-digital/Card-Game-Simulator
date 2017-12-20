@@ -22,5 +22,6 @@ public class NetPlayer : NetworkBehaviour
         newCardModel.Value = CardGameManager.Current.Cards [cardId];
         newCardModel.IsFacedown = isFacedown;
         NetworkServer.SpawnWithClientAuthority(newCardModel.gameObject, gameObject);
+        newCardModel.HideHighlight();
     }
 }
