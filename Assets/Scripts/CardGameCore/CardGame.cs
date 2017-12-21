@@ -22,7 +22,7 @@ public class CardGame
     public string ConfigFilePath => FilePathBase + "/" + Name + ".json";
     public string DecksFilePath => FilePathBase + "/decks";
     public string GameBoardsFilePath => FilePathBase + "/boards";
-    public float AspectRatio => CardHeight > 0 ? Mathf.Abs(CardWidth / CardHeight) : 0.715f;
+    public float AspectRatio => CardSize.y > 0 ? Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
 
     [JsonProperty]
     public string Name { get; set; }
@@ -58,22 +58,13 @@ public class CardGame
     public string CardBackImageUrl { get; set; } = "";
 
     [JsonProperty]
-    public float CardHeight { get; set; } = 3.5f;
-
-    [JsonProperty]
     public string CardIdIdentifier { get; set; }= "id";
 
     [JsonProperty]
     public string CardImageFileType { get; set; } = "png";
 
     [JsonProperty]
-    public string CardImageUrlBase { get; set; } = "";
-
-    [JsonProperty]
-    public string CardImageUrlFormat { get; set; } = "{0}/{1}.{2}";
-
-    [JsonProperty]
-    public string CardImageUrlProperty { get; set; } = "";
+    public string CardImageUrl { get; set; } = "";
 
     [JsonProperty]
     public string CardNameIdentifier { get; set; } = "name";
@@ -88,7 +79,7 @@ public class CardGame
     public List<PropertyDef> CardProperties { get; set; } = new List<PropertyDef>();
 
     [JsonProperty]
-    public float CardWidth { get; set; } = 2.5f;
+    public Vector2 CardSize { get; set; } = new Vector2(2.5f, 3.5f);
 
     [JsonProperty]
     public DeckFileType DeckFileType { get; set; } = DeckFileType.Txt;
@@ -127,10 +118,7 @@ public class CardGame
     public string HsdPropertyId { get; set; } = "dbfId";
 
     [JsonProperty]
-    public float PlayAreaHeight { get; set; } = 13.5f;
-
-    [JsonProperty]
-    public float PlayAreaWidth { get; set; } = 23.5f;
+    public Vector2 PlayAreaSize { get; set; } = new Vector2(23.5f, 13.5f);
 
     [JsonProperty]
     public string SetCardsIdentifier { get; set; } = "cards";
