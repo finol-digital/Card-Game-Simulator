@@ -64,12 +64,6 @@
 			"type": "string",
 			"format": "uri"
 		},
-		"cardHeight": {
-			"description": "cardHeight is the height in inches of each card.",
-			"default": 3.5,
-			"exclusiveMinimum": 0,
-			"type": "number"
-		},
 		"cardIdIdentifier": {
 			"description": "Every card must have a unique card id. When defining a card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by cardIdIdentifier. Most custom games will likely want to keep the default cardIdIdentifier.",
 			"default": "id",
@@ -99,11 +93,6 @@
 			"default": "name",
 			"type": "string"
 		},
-		"cardSetIdentifier": {
-			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. Most custom games will likely want to keep the default cardSetIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
-			"default": "set",
-			"type": "string"
-		},
 		"cardPrimaryProperty": {
 			"description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
 			"type": "string"
@@ -128,11 +117,15 @@
 			},
 			"type": "array"
 		},
-		"cardWidth": {
-			"description": "cardWidth is the width in inches of each card.",
-			"default": 2.5,
-			"exclusiveMinimum": 0,
-			"type": "number"
+		"cardSetIdentifier": {
+			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. Most custom games will likely want to keep the default cardSetIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
+			"default": "set",
+			"type": "string"
+		},
+		"cardSize": {
+			"description": "cardSize indicates a card's width and height in inches.",
+			"default": { "x": 2.5, "y": 3.5 },
+			"$ref": "#/definitions/vector2"
 		},
 		"deckFileType": {
 			"description": "When saving a deck, the formatting for how it is saved and loaded is defined by the deckFileType. dec refers to the old MTGO deck file format. hsd refers to the Hearthstone deck string format. ydk refers to the YGOPRO deck file format. txt parses each line for the following: <Quantity> [*Card:Id*] *Card:Name* (*Card:SetCode*)",
@@ -230,12 +223,12 @@
 									"description": "The id of the board",
 									"type": "string"
 								},
-								"offsetMax": {
-									"description": "Indicates the position (in inches) of the top-right corner",
-									"$ref": "#/definitions/vector2"
-								},
 								"offsetMin": {
 									"description": "Indicates the position (in inches) of the bottom-left corner",
+									"$ref": "#/definitions/vector2"
+								},
+								"size": {
+									"description": "Indicates the board's width and height in inches",
 									"$ref": "#/definitions/vector2"
 								}
 							}
@@ -282,17 +275,10 @@
 			"default": "dbfId",
 			"type": "string"
 		},
-		"playAreaHeight": {
-			"description": "playAreaHeight is the height in inches of the play area in Play Mode.",
-			"default": 13.5,
-			"exclusiveMinimum": 0,
-			"type": "number"
-		},
-		"playAreaWidth": {
-			"description": "playAreaWidth is the width in inches of the play area in Play Mode.",
-			"default": 23.5,
-			"exclusiveMinimum": 0,
-			"type": "number"
+		"playAreaSize": {
+			"description": "playAreaSize indicates the width and height in inches of the play area in Play Mode.",
+			"default": { "x": 23.5, "y": 13.5 },
+			"$ref": "#/definitions/vector2"
 		},
 		"setCardsIdentifier": {
 			"description": "When defining a set in AllSets.json, you can also define cards to include in that set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
