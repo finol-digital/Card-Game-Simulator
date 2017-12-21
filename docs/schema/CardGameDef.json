@@ -74,19 +74,10 @@
 			"default": "png",
 			"type": "string"
 		},
-		"cardImageUrlBase": {
-			"description": "cardImageUrlBase can be used by cardImageUrlFormat to indicate the domain/directory from which CGS should download individual card images.",
+		"cardImageUrl": {
+			"description": "cardImageUrl indicates a parameterized url from which CGS downloads missing card image files. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}:*Card:SetCode*, {card.<Property>}=*Card:<Property>*, {cardImageFileType}=<cardImageFileType>",
 			"type": "string",
 			"format": "uri"
-		},
-		"cardImageUrlFormat": {
-			"description": "cardImageUrlFormat indicates the url from which CGS should download missing card image files, built from: {0}:<cardImageUrlBase>, {1}:*Card:Id*, {2}:<cardImageFileType>, {3}:*Card:Name*, {4}:*Card:SetCode*, {5}:Card:<cardImageUrlProperty>",
-			"default": "{0}/{1}.{2}",
-			"type": "string"
-		},
-		"cardImageUrlProperty": {
-			"description": "cardImageUrlProperty can be used by cardImageUrlFormat to indicate which *Card:Property* contains the url/name for the image of each individual card.",
-			"type": "string"
 		},
 		"cardNameIdentifier": {
 			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:Name* mapped to the field defined by cardNameIdentifier. Most custom games will likely want to keep the default cardNameIdentifier.",
