@@ -17,10 +17,18 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public string ImageFileName => UnityExtensionMethods.GetSafeFileName(Id + "." + CardGameManager.Current.CardImageFileType);
     public string ImageFilePath => UnityExtensionMethods.GetSafeFilePath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
-    public string ImageWebUrl => string.Format(
-        CardGameManager.Current.CardImageUrlFormat,
-        CardGameManager.Current.CardImageUrlBase, Id, CardGameManager.Current.CardImageFileType, Name, SetCode, GetPropertyValueString(CardGameManager.Current.CardImageUrlProperty));
-
+    public string ImageWebUrl {
+        get {
+            string url = CardGameManager.Current.CardImageUrl;
+            url.Replace("{cardId}", Id);
+            url.Replace("{cardName}", Name);
+            url.Replace("{cardSet}", SetCode);
+            url.Replace("{card.<Property>}", GetPropertyValueString("<Property>");
+            url.Replace("{cardImageFileType}", CardGameManager.Current.CardImageFileType);
+            return url;
+        }
+    }
+    
     private UnityEngine.Sprite _imageSprite;
 
     public Card(string id, string name, string setCode, Dictionary<string,PropertyDefValuePair> properties)
