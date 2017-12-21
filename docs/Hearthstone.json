@@ -25,6 +25,7 @@
 		{"name": "artist", "type": "string" },
 		{"name": "dbfId", "type": "integer" }
 	],
+	"cardSize": { "x": 2.55, "y": 3.8 },
 	"deckFileType": "hsd",
 	"deckMaxCount": 31,
 	"enums": [
