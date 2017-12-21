@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -176,12 +177,12 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void UpdatePosition()
     {
-        bool isOnline = IsOnline;
-        bool isClickingRight;
 #if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
-        isClickingRight = Input.GetMouseButton(1) || Input.GetMouseButtonUp(1);
+        if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1))
+            return;
 #endif
-        if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || isClickingRight || (isOnline && !hasAuthority))
+        bool isOnline = IsOnline;
+        if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (isOnline && !hasAuthority))
             return;
 
         Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList()) + UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
