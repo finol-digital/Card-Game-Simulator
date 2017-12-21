@@ -118,13 +118,16 @@ public class PlayMode : MonoBehaviour
 
     public IEnumerator CreateBoard(GameBoard board)
     {
+        if (board == null)
+            return;
+
         GameObject newBoard = new GameObject(board.Id, typeof(RectTransform));
         RectTransform rt = (RectTransform)newBoard.transform;
         rt.SetParent(playAreaContent);
-        rt.anchorMax = Vector2.zero;
         rt.anchorMin = Vector2.zero;
-        rt.offsetMax = CardGameManager.PixelsPerInch * board.OffsetMax;
-        rt.offsetMin = CardGameManager.PixelsPerInch * board.OffsetMin;
+        rt.anchorMax = Vector2.zero;
+        rt.offsetMin = board.OffsetMin * CardGameManager.PixelsPerInch;
+        rt.offsetMax = board.Size * CardGameManager.PixelsPerInch + rt.offsetMin;
 
         Sprite boardImageSprite = null;
         string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
