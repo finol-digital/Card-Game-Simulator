@@ -50,7 +50,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     void Start()
     {
         if (CardGameManager.Current.CardWidth > 0 && CardGameManager.Current.CardHeight > 0)
-            GetComponent<RectTransform>().sizeDelta = new Vector2(CardGameManager.Current.CardWidth * CardGameManager.PixelsPerInch, CardGameManager.Current.CardHeight * CardGameManager.PixelsPerInch);
+            GetComponent<RectTransform>().sizeDelta = new Vector2(CardGameManager.Current.CardSize.x * CardGameManager.PixelsPerInch, CardGameManager.Current.CardSize.y * CardGameManager.PixelsPerInch);
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         CardGameManager.Current.PutCardImage(this);
     }
