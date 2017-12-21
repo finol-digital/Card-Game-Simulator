@@ -4,8 +4,7 @@
 	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/Dominoes/Dominoes.json",
 	"backgroundImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/Background.png",
 	"cardBackImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/CardBack.png",
-	"cardImageUrlBase": "https://cardgamesim.finoldigital.com/Dominoes",
-	"cardImageUrlFormat": "{0}/sets/{4}/{1}.{2}",
+	"cardImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",
 	"cardProperties": [
 		{"name": "type", "type": "enum" },
 		{"name": "suit", "type": "enum" },
