@@ -51,6 +51,7 @@ public class PlayMode : MonoBehaviour
             DeckLoader.Show(LoadDeck);
         }
 
+        playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
     }
 
@@ -59,7 +60,8 @@ public class PlayMode : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             return;
 
-        zones.ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ? zones.verticalScrollView : zones.horizontalScrollView;
+        zones.ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ? 
+            zones.verticalScrollView : zones.horizontalScrollView;
     }
 
 #if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
@@ -119,7 +121,7 @@ public class PlayMode : MonoBehaviour
     public IEnumerator CreateBoard(GameBoard board)
     {
         if (board == null)
-            return;
+            yield break;
 
         GameObject newBoard = new GameObject(board.Id, typeof(RectTransform));
         RectTransform rt = (RectTransform)newBoard.transform;
