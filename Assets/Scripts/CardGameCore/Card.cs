@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Globalization;
 
@@ -18,12 +19,13 @@ public class Card : IComparable<Card>, IEquatable<Card>
     public string ImageFileName => UnityExtensionMethods.GetSafeFileName(Id + "." + CardGameManager.Current.CardImageFileType);
     public string ImageFilePath => UnityExtensionMethods.GetSafeFilePath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
     public string ImageWebUrl {
-        get {
-            string url = CardGameManager.Current.CardImageUrl;
+        get { string url = CardGameManager.Current.CardImageUrl;
             url.Replace("{cardId}", Id);
             url.Replace("{cardName}", Name);
             url.Replace("{cardSet}", SetCode);
-            url.Replace("{card.<Property>}", GetPropertyValueString("<Property>");
+            Regex rgx = new Regex("\{card\.(?<prop>\w+)\}");
+            foreach(Match match in rgx.Matches(url))
+                url.Replace("{card." + match.Value + "}", GetPropertyValueString(match.Value);
             url.Replace("{cardImageFileType}", CardGameManager.Current.CardImageFileType);
             return url;
         }
