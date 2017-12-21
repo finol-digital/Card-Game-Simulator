@@ -2,7 +2,7 @@
 	"allCardsUrl": "https://cardgamesim.finoldigital.com/Standard/AllCards.json",
 	"allSetsUrl": "https://cardgamesim.finoldigital.com/Standard/AllSets.json",
 	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/Standard/Standard.json",
-	"cardImageUrlBase": "https://cardgamesim.finoldigital.com/Standard/sets/STD_FR",
+	"cardImageUrl": "https://cardgamesim.finoldigital.com/Standard/sets/STD_FR/{cardId}.{cardImageFileType}",
 	"cardProperties": [
 		{"name": "rank", "type": "enum" },
 		{"name": "suit", "type": "enum" },
