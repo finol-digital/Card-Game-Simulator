@@ -23,9 +23,9 @@ public class Card : IComparable<Card>, IEquatable<Card>
             url.Replace("{cardId}", Id);
             url.Replace("{cardName}", Name);
             url.Replace("{cardSet}", SetCode);
-            Regex rgx = new Regex("\{card\.(?<prop>\w+)\}");
+            Regex rgx = new Regex("\{card\.(?<property>\w)\}");
             foreach(Match match in rgx.Matches(url))
-                url.Replace("{card." + match.Value + "}", GetPropertyValueString(match.Value);
+                url.Replace(match.Value, GetPropertyValueString(match.Groups["property"].Value));
             url.Replace("{cardImageFileType}", CardGameManager.Current.CardImageFileType);
             return url;
         }
