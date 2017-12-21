@@ -10,36 +10,36 @@ public class SelectionPanel : MonoBehaviour
     
     public void Rebuild(List<string> options, UnityAction<bool> valueChange, string currentValue = "")
     {
+        if (options == null)
+            options = new List<string>();
+        if (valueChange == null)
+            valueChange = new UnityAction<bool>();
+        if (currentValue == null)
+            currentValue = string.Empty;
+
         selectionContent.GetComponent<ToggleGroup>().SetAllTogglesOff();
         selectionContent.DestroyAllChildren();
-        // selectionTemplate.SetParent(selectionContent);
+        selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
 
-        Vector3 pos = selectionTemplate.localPosition;
-        pos.y = 0;
-        float i = 0;
-        float index = 0;
+        Vector2 pos = Vector2.zero;
         foreach (string option in options) {
             GameObject selection = Instantiate(selectionTemplate.gameObject, selectionContent);
             selection.SetActive(true);
-            gameSelection.transform.localScale = Vector3.one;
-            gameSelection.transform.localPosition = pos;
-            gameSelection.GetComponentInChildren<Text>().text = gameName;
-            Toggle toggle = gameSelection.GetComponent<Toggle>();
-            toggle.isOn = gameName.Equals(CardGameManager.CurrentGameName);
-            if (toggle.isOn)
-                index = i;
-            UnityAction<bool> valueChange = isOn => SelectGame(isOn, gameName);
-            toggle.onValueChanged.AddListener(valueChange);
-            pos.y -= gameSelectionTemplate.rect.height;
-            i++;
+            selection.transform.localScale = Vector3.one;
+            selection.transform.localPosition = pos;
+            selection.GetComponentInChildren<Text>().text = option;
+            selection.GetComponent<Toggle>().isOn = option.Equals(currentValue);
+            selection.GetComponent<Toggle>().onValueChanged.AddListener(valueChange);
+            pos.y -= selectionTemplate.rect.height;
         }
-
-        gameSelectionTemplate.SetParent(gameSelectionArea.parent);
-        gameSelectionTemplate.gameObject.SetActive(CardGameManager.Instance.AllCardGames.Count < 1);
-        gameSelectionArea.sizeDelta = new Vector2(gameSelectionArea.sizeDelta.x, gameSelectionTemplate.rect.height * CardGameManager.Instance.AllCardGames.Count);
-
-        float newSpot = gameSelectionTemplate.GetComponent<RectTransform>().rect.height 
-            * (index + ((index < CardGameManager.Instance.AllCardGames.Keys.Count / 2f) ? 0f : 1f)) / gameSelectionArea.sizeDelta.y;
+        
+        selectionTemplate.gameObject.SetActive(options.Count < 1);
+        float index = options.IndexOf(currentValue);
+        if (index < 0)
+            return;
+        
+        float newSpot = selectionTemplate.GetComponent<RectTransform>().rect.height 
+            * (index + ((index < options.Count / 2f) ? 0f : 1f)) / selectionContent.sizeDelta.y;
         StartCoroutine(WaitToMoveScrollbar(1 - Mathf.Clamp01(newSpot)));
     }
 
