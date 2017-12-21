@@ -23,8 +23,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public const float AlphaHitTestMinimumThreshold = 0.1f;
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
-    public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive && transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent;
-    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right);
+    public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive 
+        && transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent;
+    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 
+        || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right);
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
     public Dictionary<int, CardModel> DraggedClones { get; } = new Dictionary<int, CardModel>();
@@ -50,7 +52,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     void Start()
     {
         if (CardGameManager.Current.CardWidth > 0 && CardGameManager.Current.CardHeight > 0)
-            GetComponent<RectTransform>().sizeDelta = new Vector2(CardGameManager.Current.CardSize.x * CardGameManager.PixelsPerInch, CardGameManager.Current.CardSize.y * CardGameManager.PixelsPerInch);
+            GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         CardGameManager.Current.PutCardImage(this);
     }
