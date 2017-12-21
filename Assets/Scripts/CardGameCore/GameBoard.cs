@@ -8,8 +8,8 @@ public class GameBoard
     public string Id { get; private set; }
 
     [JsonProperty]
-    public Vector2 OffsetMax { get; private set; }
+    public Vector2 OffsetMin { get; private set; }
 
     [JsonProperty]
-    public Vector2 OffsetMin { get; private set; }
+    public Vector2 Size { get; private set; }
 }
