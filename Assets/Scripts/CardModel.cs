@@ -44,10 +44,15 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     [SyncVar]
     private string _id;
     public string Id => _id;
-
-    private CardStack _placeHolderCardStack;
-    private RectTransform _placeHolder;
+    
+    [SyncVar]
     private bool _isFacedown;
+    
+    [SyncVar]
+    private Vector2 _localPosition;
+
+    private RectTransform _placeHolder;
+    private CardStack _placeHolderCardStack;
 
     void Start()
     {
@@ -193,8 +198,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (PlaceHolderCardStack != null)
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
 
+        LocalPosition = transform.localPosition;
         if (isOnline)
-            CmdUpdateLocalPosition(transform.localPosition);
+            CmdUpdateLocalPosition(LocalPosition);
     }
 
     public void UpdateCardStackPosition(Vector2 targetPosition)
@@ -376,6 +382,33 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         }
     }
 
+    public bool IsFacedown {
+        get { return _isFacedown; }
+        set {
+            _isFacedown = value;
+            if (_isFacedown)
+                GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
+            else
+                CardGameManager.Current.PutCardImage(this);
+        }
+    }
+    
+    public Vector2 LocalPosition {
+        get { return _localPosition; }
+        set { _localPosition = value; }
+    }
+
+    public RectTransform PlaceHolder {
+        get { return _placeHolder; }
+        private set {
+            if (_placeHolder != null)
+                Destroy(_placeHolder.gameObject);
+            _placeHolder = value;
+            if (_placeHolder == null)
+                _placeHolderCardStack = null;
+        }
+    }
+
     public CardStack PlaceHolderCardStack {
         get { return _placeHolderCardStack; }
         set {
@@ -391,28 +424,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             PlaceHolder.SetParent(_placeHolderCardStack.transform);
             PlaceHolder.sizeDelta = ((RectTransform)transform).sizeDelta;
             PlaceHolder.anchoredPosition = Vector2.zero;
-        }
-    }
-
-    public RectTransform PlaceHolder {
-        get { return _placeHolder; }
-        private set {
-            if (_placeHolder != null)
-                Destroy(_placeHolder.gameObject);
-            _placeHolder = value;
-            if (_placeHolder == null)
-                _placeHolderCardStack = null;
-        }
-    }
-
-    public bool IsFacedown {
-        get { return _isFacedown; }
-        set {
-            _isFacedown = value;
-            if (_isFacedown)
-                GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
-            else
-                CardGameManager.Current.PutCardImage(this);
         }
     }
 }
