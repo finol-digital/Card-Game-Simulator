@@ -20,17 +20,17 @@ public class Card : IComparable<Card>, IEquatable<Card>
     public string ImageFilePath => UnityExtensionMethods.GetSafeFilePath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
     public string ImageWebUrl {
         get { string url = CardGameManager.Current.CardImageUrl;
-            url.Replace("{cardId}", Id);
-            url.Replace("{cardName}", Name);
-            url.Replace("{cardSet}", SetCode);
-            Regex rgx = new Regex("\{card\.(?<property>\w)\}");
-            foreach(Match match in rgx.Matches(url))
-                url.Replace(match.Value, GetPropertyValueString(match.Groups["property"].Value));
-            url.Replace("{cardImageFileType}", CardGameManager.Current.CardImageFileType);
+            url = url.Replace("{cardId}", Id);
+            url = url.Replace("{cardName}", Name);
+            url = url.Replace("{cardSet}", SetCode);
+            Regex rgx = new Regex("{card\\.(?<property>\\w+)}");
+            foreach (Match match in rgx.Matches(url))
+                url = url.Replace(match.Value, GetPropertyValueString(match.Groups["property"].Value));
+            url = url.Replace("{cardImageFileType}", CardGameManager.Current.CardImageFileType);
             return url;
         }
     }
-    
+
     private UnityEngine.Sprite _imageSprite;
 
     public Card(string id, string name, string setCode, Dictionary<string,PropertyDefValuePair> properties)

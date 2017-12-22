@@ -397,6 +397,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224937724690924458}
   - component: {fileID: 114562436159873448}
+  - component: {fileID: 114940806605657680}
   m_Layer: 5
   m_Name: Deck Selection Content
   m_TagString: Untagged
@@ -860,8 +861,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00c0bd42fad5434c9fab94089ec3c58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileSelectionArea: {fileID: 224937724690924458}
-  fileSelectionTemplate: {fileID: 224513094372486550}
+  selectionContent: {fileID: 224937724690924458}
+  selectionTemplate: {fileID: 224513094372486550}
+  scrollBar: {fileID: 114551414685404242}
   loadCancelButton: {fileID: 114440245882454988}
   deleteFileButton: {fileID: 114582670716232018}
   loadFromFileButton: {fileID: 114827358892291670}
@@ -1759,7 +1761,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114789693491450984}
   m_HandleRect: {fileID: 224000485604831812}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1778,7 +1780,7 @@ MonoBehaviour:
   m_Script: {fileID: -1184210157, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 0
+  m_AllowSwitchOff: 1
 --- !u!114 &114566568564714180
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2623,6 +2625,28 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114940806605657680
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1509103260482658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 1
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 0
 --- !u!114 &114941884669689048
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2829,7 +2853,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 114818117411095866}
   toggleTransition: 1
   graphic: {fileID: 114465374533446108}
@@ -2839,7 +2863,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!114 &114994077164294228
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3217,7 +3241,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 997.61957, y: -150}
+  m_AnchoredPosition: {x: 1676.9065, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 1, y: 0}
 --- !u!224 &224123843510932322
@@ -3521,7 +3545,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 641.15686, y: -150}
+  m_AnchoredPosition: {x: 1126.3618, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &224299171445019738
@@ -3540,7 +3564,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 28.231369, y: -150}
+  m_AnchoredPosition: {x: 125.272354, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &224315770740700714
@@ -3596,7 +3620,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 284.6941, y: -150}
+  m_AnchoredPosition: {x: 575.8171, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &224351681432825400
@@ -3825,7 +3849,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00010494888}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &224977536836211226

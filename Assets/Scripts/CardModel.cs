@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -24,9 +23,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public const float AlphaHitTestMinimumThreshold = 0.1f;
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
-    public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive 
+    public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive
         && transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent;
-    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 
+    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1
         || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right);
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
@@ -52,8 +51,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
-        if (CardGameManager.Current.CardWidth > 0 && CardGameManager.Current.CardHeight > 0)
-            GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
+        GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         CardGameManager.Current.PutCardImage(this);
     }

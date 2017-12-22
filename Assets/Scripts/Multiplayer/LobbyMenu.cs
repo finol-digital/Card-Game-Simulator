@@ -1,21 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class LobbyMenu : MonoBehaviour
+public class LobbyMenu : SelectionPanel
 {
     public const string DeckLoadPrompt = "Would you like to join the game with your own deck?";
 
-    public RectTransform sessionSelectionArea;
-    public RectTransform sessionSelectionTemplate;
+    public List<string> HostNames { get; set; } = new List<string>();
+    public string SelectedHost { get; set; } = "";
+
     public Button cancelButton;
     public Button joinButton;
 
-    public List<string> Hosts { get; set; } = new List<string>();
-    public string SelectedHost { get; set; } = "";
     public PlayMode Controller { get; private set; }
 
     public void Show(PlayMode controller)
@@ -29,33 +26,16 @@ public class LobbyMenu : MonoBehaviour
 
     public void DisplayHosts(List<string> hostNames)
     {
-        if (hostNames == null || hostNames.Equals(Hosts))
+        if (hostNames == null || hostNames.Equals(HostNames))
             return;
 
-        if (!hostNames.Contains(SelectedHost)) {
+        HostNames = hostNames;
+        if (!HostNames.Contains(SelectedHost)) {
             SelectedHost = string.Empty;
             joinButton.interactable = false;
         }
 
-        sessionSelectionArea.DestroyAllChildren();
-        Vector2 localPosition = Vector2.zero;
-        foreach (string hostName in hostNames) {
-            GameObject hostSelection = Instantiate(sessionSelectionTemplate.gameObject, sessionSelectionArea);
-            hostSelection.SetActive(true);
-            // FIX FOR UNITY BUG SETTING SCALE TO 0 WHEN RESOLUTION=REFERENCE_RESOLUTION(1080p)
-            hostSelection.transform.localScale = Vector3.one;
-            hostSelection.transform.localPosition = localPosition;
-            Toggle toggle = hostSelection.GetComponent<Toggle>();
-            toggle.isOn = hostName.Equals(SelectedHost);
-            UnityAction<bool> valueChange = isOn => SelectHost(isOn, hostName);
-            toggle.onValueChanged.AddListener(valueChange);
-            Text labelText = hostSelection.GetComponentInChildren<Text>();
-            labelText.text = hostName;
-            localPosition.y -= sessionSelectionTemplate.rect.height;
-        }
-        sessionSelectionArea.sizeDelta = new Vector2(sessionSelectionArea.sizeDelta.x, sessionSelectionTemplate.rect.height * hostNames.Count);
-
-        Hosts = hostNames;
+        Rebuild(HostNames, SelectHost, SelectedHost);
     }
 
     public void Host()
