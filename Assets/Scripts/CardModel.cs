@@ -42,16 +42,13 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public DragPhase CurrentDragPhase { get; private set; }
 
     [SyncVar]
+    public Vector2 LocalPosition;
+
+    [SyncVar]
     private string _id;
     public string Id => _id;
-    
-    [SyncVar]
-    private Vector2 _localPosition;
-        
-    [SyncVar]
-    private Quaternion _rotation;
-    
-    [SyncVar(hook = "IsFacedown")]
+
+    //[SyncVar(hook = "IsFacedown")]
     private bool _isFacedown;
 
     private RectTransform _placeHolder;
@@ -62,6 +59,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
         CardGameManager.Current.PutCardImage(this);
+        HideHighlight();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -119,9 +117,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             DraggedClones [eventData.pointerId] = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
             cardModel = DraggedClones [eventData.pointerId];
             cardModel.HideHighlight();
-            cardModel.PointerPositions [eventData.pointerId] = eventData.position;
-            cardModel.PointerDragOffsets [eventData.pointerId] = ((Vector2)cardModel.transform.position) - eventData.position;
             cardModel.Value = Value;
+            cardModel.PointerDragOffsets[eventData.pointerId] = ((Vector2)transform.position) - eventData.position;
             cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
@@ -229,13 +226,13 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     [Command]
-    void CmdUpdateLocalPosition(Vector3 localPosition)
+    void CmdUpdateLocalPosition(Vector2 localPosition)
     {
         RpcUpdateLocalPosition(localPosition);
     }
 
     [ClientRpc]
-    void RpcUpdateLocalPosition(Vector3 localPosition)
+    void RpcUpdateLocalPosition(Vector2 localPosition)
     {
         if (!hasAuthority)
             transform.localPosition = localPosition;
@@ -313,21 +310,21 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public static void ResetRotation(CardStack cardStack, CardModel cardModel)
     {
-        if (cardModel == null || (IsOnline && !hasAuthority))
+        if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
         cardModel.transform.rotation = Quaternion.identity;
     }
 
     public static void ShowCard(CardStack cardStack, CardModel cardModel)
     {
-        if (cardModel == null || (IsOnline && !hasAuthority))
+        if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
         cardModel.IsFacedown = false;
     }
 
     public static void HideCard(CardStack cardStack, CardModel cardModel)
     {
-        if (cardModel == null || (IsOnline && !hasAuthority))
+        if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
 
         cardModel.IsFacedown = true;
@@ -336,7 +333,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public static void ToggleFacedown(CardModel cardModel)
     {
-        if (cardModel == null || (IsOnline && !hasAuthority))
+        if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
 
         cardModel.IsFacedown = !cardModel.IsFacedown;
@@ -383,11 +380,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
             CardGameManager.Current.PutCardImage(this);
         }
-    }
-    
-    public Vector2 LocalPosition {
-        get { return _localPosition; }
-        set { _localPosition = value; }
     }
 
     public bool IsFacedown {

@@ -18,10 +18,14 @@ public class NetPlayer : NetworkBehaviour
     [Command]
     public void CmdSpawnCard(string cardId, Vector3 position, bool isFacedown)
     {
-        CardModel newCardModel = ((LocalNetManager)NetworkManager.singleton).SpawnCard(position, LocalNetManager.CardModelAssetId).GetOrAddComponent<CardModel>();
-        newCardModel.Value = CardGameManager.Current.Cards [cardId];
-        newCardModel.IsFacedown = isFacedown;
-        NetworkServer.SpawnWithClientAuthority(newCardModel.gameObject, gameObject);
-        newCardModel.HideHighlight();
+        LocalNetManager netManager = ((LocalNetManager) NetworkManager.singleton);
+        GameObject newCardGO = Instantiate(netManager.cardModelPrefab, position, Quaternion.identity, netManager.playAreaContent);
+        CardModel cardModel = newCardGO.GetComponent<CardModel>();
+        cardModel.Value = CardGameManager.Current.Cards[cardId];
+        cardModel.transform.position = position;
+        cardModel.LocalPosition = cardModel.transform.localPosition;
+        cardModel.IsFacedown = isFacedown;
+        netManager.SetPlayActions(netManager.playAreaContent.GetComponent<CardStack>(), cardModel);
+        NetworkServer.SpawnWithClientAuthority(newCardGO, gameObject);
     }
 }

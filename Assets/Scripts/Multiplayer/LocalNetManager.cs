@@ -27,13 +27,13 @@ public class LocalNetManager : NetworkManager
         GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.transform.localPosition = cardModel.LocalPosition;
+        cardModel.HideHighlight();
         SetPlayActions(playAreaContent.GetComponent<CardStack>(), cardModel);
         return newCardGO;
     }
 
     public void SetPlayActions(CardStack cardStack, CardModel cardModel)
     {
-        cardModel.HideHighlight();
         cardModel.DoubleClickAction = CardModel.ToggleFacedown;
         cardModel.SecondaryDragAction = cardModel.Rotate;
     }
