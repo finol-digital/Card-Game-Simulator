@@ -46,10 +46,13 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public string Id => _id;
     
     [SyncVar]
-    private bool _isFacedown;
-    
-    [SyncVar]
     private Vector2 _localPosition;
+        
+    [SyncVar]
+    private Quaternion _rotation;
+    
+    [SyncVar(hook = "IsFacedown")]
+    private bool _isFacedown;
 
     private RectTransform _placeHolder;
     private CardStack _placeHolderCardStack;
@@ -310,21 +313,21 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public static void ResetRotation(CardStack cardStack, CardModel cardModel)
     {
-        if (cardModel == null)
+        if (cardModel == null || (IsOnline && !hasAuthority))
             return;
         cardModel.transform.rotation = Quaternion.identity;
     }
 
     public static void ShowCard(CardStack cardStack, CardModel cardModel)
     {
-        if (cardModel == null)
+        if (cardModel == null || (IsOnline && !hasAuthority))
             return;
         cardModel.IsFacedown = false;
     }
 
     public static void HideCard(CardStack cardStack, CardModel cardModel)
     {
-        if (cardModel == null)
+        if (cardModel == null || (IsOnline && !hasAuthority))
             return;
 
         cardModel.IsFacedown = true;
@@ -333,7 +336,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public static void ToggleFacedown(CardModel cardModel)
     {
-        if (cardModel == null)
+        if (cardModel == null || (IsOnline && !hasAuthority))
             return;
 
         cardModel.IsFacedown = !cardModel.IsFacedown;
@@ -381,6 +384,11 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             CardGameManager.Current.PutCardImage(this);
         }
     }
+    
+    public Vector2 LocalPosition {
+        get { return _localPosition; }
+        set { _localPosition = value; }
+    }
 
     public bool IsFacedown {
         get { return _isFacedown; }
@@ -391,11 +399,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             else
                 CardGameManager.Current.PutCardImage(this);
         }
-    }
-    
-    public Vector2 LocalPosition {
-        get { return _localPosition; }
-        set { _localPosition = value; }
     }
 
     public RectTransform PlaceHolder {
