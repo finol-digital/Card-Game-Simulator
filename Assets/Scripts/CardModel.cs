@@ -111,6 +111,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             DraggedClones [eventData.pointerId] = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
             cardModel = DraggedClones [eventData.pointerId];
             cardModel.HideHighlight();
+            cardModel.PointerPositions [eventData.pointerId] = eventData.position;
+            cardModel.PointerDragOffsets [eventData.pointerId] = ((Vector2)cardModel.transform.position) - eventData.position;
             cardModel.Value = Value;
             cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
@@ -118,7 +120,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         cardModel.CurrentPointerEventData = eventData;
         cardModel.CurrentDragPhase = DragPhase.Begin;
         cardModel.PointerPositions [eventData.pointerId] = eventData.position;
-        cardModel.PointerDragOffsets[eventData.pointerId] = ((Vector2)cardModel.transform.position) - eventData.position;
 
         cardModel.UpdatePosition();
         if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
