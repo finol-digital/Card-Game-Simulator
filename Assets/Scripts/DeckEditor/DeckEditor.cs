@@ -26,7 +26,6 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
     public DeckSaveMenu DeckSaver => _deckSaver ?? (_deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>());
 
-
     public Deck CurrentDeck {
         get {
             Deck deck = new Deck(SavedDeck != null ? SavedDeck.Name : Deck.DefaultName, CardGameManager.Current.DeckFileType);
@@ -160,7 +159,11 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         Deck sortedDeck = CurrentDeck;
         sortedDeck.Sort();
-        LoadDeck(sortedDeck);
+        foreach (CardStack stack in CardStacks)
+            stack.transform.DestroyAllChildren();
+        CurrentCardStackIndex = 0;
+        foreach (Card card in sortedDeck.Cards)
+            AddCard(card);
     }
 
     public void PromptForClear()
