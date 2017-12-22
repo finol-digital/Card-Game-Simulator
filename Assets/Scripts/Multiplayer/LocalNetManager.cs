@@ -24,9 +24,10 @@ public class LocalNetManager : NetworkManager
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
     {
-        GameObject newCardGO = Instantiate(cardModelPrefab, playAreaContent);
-        newCardGO.transform.position = position;
-        SetPlayActions(playAreaContent.GetComponent<CardStack>(), newCardGO.GetComponent<CardModel>());
+        GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playAreaContent);
+        CardModel cardModel = newCardGO.GetComponent<CardModel>();
+        cardModel.transform.localPosition = cardModel.LocalPosition;
+        SetPlayActions(playAreaContent.GetComponent<CardStack>(), cardModel);
         return newCardGO;
     }
 
