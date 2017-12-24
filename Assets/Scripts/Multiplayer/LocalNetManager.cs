@@ -27,6 +27,7 @@ public class LocalNetManager : NetworkManager
         GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.transform.localPosition = cardModel.LocalPosition;
+        cardModel.transform.rotation = cardModel.Rotation;
         cardModel.HideHighlight();
         SetPlayActions(playAreaContent.GetComponent<CardStack>(), cardModel);
         return newCardGO;
@@ -64,6 +65,7 @@ public class LocalNetManager : NetworkManager
 
     public override void OnClientConnect(NetworkConnection conn)
     {
+        Debug.Log("client connected");
         ClientScene.AddPlayer(conn, 0);
     }
 }

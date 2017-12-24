@@ -7,19 +7,23 @@ public class LobbyMenu : SelectionPanel
 {
     public const string DeckLoadPrompt = "Would you like to join the game with your own deck?";
 
-    public List<string> HostNames { get; set; } = new List<string>();
-    public string SelectedHost { get; set; } = "";
-
     public Button cancelButton;
     public Button joinButton;
 
     public PlayMode Controller { get; private set; }
+    public List<string> HostNames { get; private set; } = new List<string>();
+    public string SelectedHost { get; private set; } = "";
 
     public void Show(PlayMode controller)
     {
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
         Controller = controller;
+
+        HostNames.Clear();
+        SelectedHost = string.Empty;
+        Rebuild(HostNames, SelectHost, SelectedHost);
+
         LocalNetManager.Instance.Discovery.lobby = this;
         LocalNetManager.Instance.SearchForHost();
     }

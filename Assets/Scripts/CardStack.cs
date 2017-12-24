@@ -26,35 +26,15 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (eventData.pointerDrag == null)
-            return;
-
-        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel == null)
-            return;
-
-        CardModel draggedCardModel;
-        if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-            cardModel = draggedCardModel;
-
-        if (cardModel.ParentCardStack == null || cardModel.ParentCardStack.type == CardStackType.Horizontal)
+        CardModel cardModel = CardModel.GetPointerDrag(eventData);
+        if (cardModel != null && cardModel.ParentCardStack == null)
             cardModel.PlaceHolderCardStack = this;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (eventData.pointerDrag == null)
-            return;
-
-        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel == null)
-            return;
-
-        CardModel draggedCardModel;
-        if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-            cardModel = draggedCardModel;
-
-        if (cardModel.PlaceHolderCardStack == this)
+        CardModel cardModel = CardModel.GetPointerDrag(eventData);
+        if (cardModel != null && cardModel.PlaceHolderCardStack == this)
             cardModel.PlaceHolderCardStack = null;
     }
 
@@ -62,7 +42,7 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (cardModel == null)
             return;
-        
+
         foreach (OnAddCardDelegate cardAddAction in OnAddCardActions)
             cardAddAction(this, cardModel);
     }
@@ -71,7 +51,7 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (cardModel == null)
             return;
-        
+
         foreach (OnRemoveCardDelegate cardRemoveAction in OnRemoveCardActions)
             cardRemoveAction(this, cardModel);
     }
@@ -108,7 +88,7 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     {
         if (scrollRectContainer == null)
             return;
-        
+
         switch (dragPhase) {
             case DragPhase.Begin:
                 scrollRectContainer.OnBeginDrag(eventData);

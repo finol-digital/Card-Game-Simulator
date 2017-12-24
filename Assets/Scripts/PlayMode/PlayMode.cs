@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PlayMode : MonoBehaviour
 {
     public const string MainMenuPrompt = "Go back to the main menu?";
-    public const string DrawString = "Draw";
+    public const string DrawInput = "Draw";
 
     public GameObject lobbyPrefab;
     public GameObject deckLoadMenuPrefab;
@@ -60,14 +60,14 @@ public class PlayMode : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             return;
 
-        zones.ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ? 
+        zones.ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ?
             zones.verticalScrollView : zones.horizontalScrollView;
     }
 
 #if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
     void Update()
     {
-        if (Input.GetButtonDown(DrawString))
+        if (Input.GetButtonDown(DrawInput))
             Deal(1);
     }
 #endif

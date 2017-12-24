@@ -36,6 +36,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public bool DoesCloneOnDrag { get; set; }
     public OnDoubleClickDelegate DoubleClickAction { get; set; }
     public SecondaryDragDelegate SecondaryDragAction { get; set; }
+    public CardDropZone DropTarget { get; set; }
 
     public bool DidSelectOnDown { get; private set; }
     public PointerEventData CurrentPointerEventData { get; private set; }
@@ -45,10 +46,13 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public Vector2 LocalPosition;
 
     [SyncVar]
+    public Quaternion Rotation;
+
+    [SyncVar]
     private string _id;
     public string Id => _id;
 
-    //[SyncVar(hook = "IsFacedown")]
+    [SyncVar]
     private bool _isFacedown;
 
     private RectTransform _placeHolder;
@@ -57,9 +61,11 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     void Start()
     {
         GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
+        if (!IsFacedown)
+            CardGameManager.Current.PutCardImage(this);
+        else
+            GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
-        CardGameManager.Current.PutCardImage(this);
-        HideHighlight();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -177,6 +183,21 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             cardModel.StartCoroutine(cardModel.MoveToPlaceHolder());
         else if (cardModel.ParentCardStack == null)
             Destroy(cardModel.gameObject);
+    }
+
+    public static CardModel GetPointerDrag(PointerEventData eventData)
+    {
+        if (eventData.pointerDrag == null)
+            return null;
+
+        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
+        if (cardModel == null)
+            return null;
+
+        CardModel draggedCardModel;
+        if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
+            cardModel = draggedCardModel;
+        return cardModel;
     }
 
     public void UpdatePosition()
@@ -306,19 +327,41 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         Vector2 prevDir = (CurrentPointerEventData.position - CurrentPointerEventData.delta) - referencePoint;
         Vector2 currDir = CurrentPointerEventData.position - referencePoint;
         transform.Rotate(0, 0, Vector2.SignedAngle(prevDir, currDir));
+
+        Rotation = transform.rotation;
+        if (IsOnline)
+            CmdUpdateRotation(Rotation);
+    }
+
+    [Command]
+    void CmdUpdateRotation(Quaternion rotation)
+    {
+        RpcUpdateRotation(rotation);
+    }
+
+    [ClientRpc]
+    void RpcUpdateRotation(Quaternion rotation)
+    {
+        if (!hasAuthority)
+            transform.rotation = rotation;
     }
 
     public static void ResetRotation(CardStack cardStack, CardModel cardModel)
     {
         if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
+
         cardModel.transform.rotation = Quaternion.identity;
+        cardModel.Rotation = cardModel.transform.rotation;
+        if (cardModel.IsOnline)
+            cardModel.CmdUpdateRotation(cardModel.Rotation);
     }
 
     public static void ShowCard(CardStack cardStack, CardModel cardModel)
     {
         if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
+
         cardModel.IsFacedown = false;
     }
 
@@ -340,6 +383,19 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         EventSystem.current.SetSelectedGameObject(null, cardModel.CurrentPointerEventData);
     }
 
+    [Command]
+    void CmdUpdateIsFacedown(bool isFacedown)
+    {
+        RpcUpdateIsFacedown(isFacedown);
+    }
+
+    [ClientRpc]
+    void RpcUpdateIsFacedown(bool isFacedown)
+    {
+        if (!hasAuthority)
+            IsFacedown = isFacedown;
+    }
+
     public void ShowHighlight()
     {
         GetComponent<Outline>().effectColor = Color.green;
@@ -359,13 +415,20 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         GetComponent<Outline>().effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
     }
 
+    [ClientRpc]
+    public void RpcHideHighlight()
+    {
+        HideHighlight();
+    }
+
     void OnDestroy()
     {
         if (CardGameManager.IsQuitting)
             return;
 
-        PlaceHolder = null;
         CardGameManager.Current.RemoveCardImage(this);
+        if (PlaceHolder != null)
+            Destroy(PlaceHolder.gameObject);
     }
 
     public Card Value {
@@ -385,11 +448,15 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public bool IsFacedown {
         get { return _isFacedown; }
         set {
+            if (value == _isFacedown)
+                return;
             _isFacedown = value;
             if (_isFacedown)
                 GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
             else
                 CardGameManager.Current.PutCardImage(this);
+            if (IsOnline && hasAuthority)
+                CmdUpdateIsFacedown(_isFacedown);
         }
     }
 
@@ -399,8 +466,12 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             if (_placeHolder != null)
                 Destroy(_placeHolder.gameObject);
             _placeHolder = value;
-            if (_placeHolder == null)
+            if (_placeHolder == null) {
+                if (ParentCardStack == null && DropTarget == null)
+                    WarnHighlight();
                 _placeHolderCardStack = null;
+            } else
+                HideHighlight();
         }
     }
 
@@ -413,6 +484,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
                 PlaceHolder = null;
                 return;
             }
+            DropTarget = null;
 
             GameObject placeholder = new GameObject(gameObject.name + "(PlaceHolder)", typeof(RectTransform));
             PlaceHolder = (RectTransform)placeholder.transform;
