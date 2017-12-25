@@ -24,7 +24,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
     public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive
-        && transform.parent == ((LocalNetManager)NetworkManager.singleton).playAreaContent;
+        && transform.parent == ((LocalNetManager)NetworkManager.singleton).playController.playAreaContent;
     public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1
         || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right);
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();

@@ -1,24 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class LobbyMenu : SelectionPanel
 {
-    public const string DeckLoadPrompt = "Would you like to join the game with your own deck?";
-
     public Button cancelButton;
     public Button joinButton;
 
-    public PlayMode Controller { get; private set; }
     public List<string> HostNames { get; private set; } = new List<string>();
     public string SelectedHost { get; private set; } = "";
 
-    public void Show(PlayMode controller)
+    public void Show()
     {
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
-        Controller = controller;
 
         HostNames.Clear();
         SelectedHost = string.Empty;
@@ -45,8 +42,14 @@ public class LobbyMenu : SelectionPanel
     public void Host()
     {
         NetworkManager.singleton.StartHost();
-        NetworkManager.singleton.StartCoroutine(WaitToPromptDeckLoad());
+        NetworkManager.singleton.StartCoroutine(WaitToShowDeckLoader());
         Hide();
+    }
+
+    public IEnumerator WaitToShowDeckLoader()
+    {
+        yield return null;
+        LocalNetManager.Instance.playController.ShowDeckMenu();
     }
 
     public void SelectHost(bool isOn, string hostName)
@@ -62,15 +65,7 @@ public class LobbyMenu : SelectionPanel
     {
         NetworkManager.singleton.networkAddress = SelectedHost;
         NetworkManager.singleton.StartClient();
-        NetworkManager.singleton.StartCoroutine(WaitToPromptDeckLoad());
         Hide();
-    }
-
-    public IEnumerator WaitToPromptDeckLoad()
-    {
-        yield return null;
-        if (Controller != null)
-            CardGameManager.Instance.Messenger.Ask(DeckLoadPrompt, null, Controller.ShowDeckMenu);
     }
 
     public void Hide()

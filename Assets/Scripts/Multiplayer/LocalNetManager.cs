@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 public class LocalNetManager : NetworkManager
 {
     public GameObject cardModelPrefab;
-    public RectTransform playAreaContent;
+    public PlayMode playController;
 
     public NetPlayer LocalPlayer { get; set; }
 
@@ -24,12 +24,12 @@ public class LocalNetManager : NetworkManager
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
     {
-        GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playAreaContent);
+        GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playController.playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.transform.localPosition = cardModel.LocalPosition;
         cardModel.transform.rotation = cardModel.Rotation;
         cardModel.HideHighlight();
-        SetPlayActions(playAreaContent.GetComponent<CardStack>(), cardModel);
+        SetPlayActions(playController.playAreaContent.GetComponent<CardStack>(), cardModel);
         return newCardGO;
     }
 

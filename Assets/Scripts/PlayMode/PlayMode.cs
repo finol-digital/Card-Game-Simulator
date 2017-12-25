@@ -25,7 +25,7 @@ public class PlayMode : MonoBehaviour
 
     public Deck LoadedDeck { get; private set; }
     public StackedZone DeckZone { get; private set; }
-    public ExtensibleCardZone HandZone { get; private set; }
+    public ExtensibleCardZone HandZone { get; set; }
 
     public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());
     private LobbyMenu _lobby;
@@ -44,7 +44,7 @@ public class PlayMode : MonoBehaviour
         if (CardGameManager.IsMultiplayer) {
             Lobby.cancelButton.onClick.RemoveAllListeners();
             Lobby.cancelButton.onClick.AddListener(BackToMainMenu);
-            Lobby.Show(this);
+            Lobby.Show();
         } else {
             DeckLoader.loadCancelButton.onClick.RemoveAllListeners();
             DeckLoader.loadCancelButton.onClick.AddListener(BackToMainMenu);
@@ -154,7 +154,8 @@ public class PlayMode : MonoBehaviour
                 DeckZone.AddCard(card);
         DeckZone.Shuffle();
 
-        Deal(CardGameManager.Current.GameStartHandCount);
+        if (!NetworkManager.singleton.isNetworkActive)
+            Deal(CardGameManager.Current.GameStartHandCount);
     }
 
 
