@@ -60,7 +60,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
-        GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
+        // GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
         if (!IsFacedown)
             CardGameManager.Current.PutCardImage(this);
         else
