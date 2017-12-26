@@ -56,19 +56,20 @@ public class NetPlayer : NetworkBehaviour
 
     public void MoveCardToServer(CardModel cardModel)
     {
-        CmdSpawnCard(cardModel.Value.Id, cardModel.transform.position, cardModel.IsFacedown);
+        CmdSpawnCard(cardModel.Id, cardModel.LocalPosition, cardModel.Rotation, cardModel.IsFacedown);
         Destroy(cardModel.gameObject);
     }
 
     [Command]
-    public void CmdSpawnCard(string cardId, Vector3 position, bool isFacedown)
+    public void CmdSpawnCard(string cardId, Vector3 localPosition, Quaternion rotation, bool isFacedown)
     {
-        GameObject newCardGO = Instantiate(LocalNetManager.Instance.cardModelPrefab, position, Quaternion.identity, LocalNetManager.Instance.playController.playAreaContent);
+        GameObject newCardGO = Instantiate(LocalNetManager.Instance.cardModelPrefab, LocalNetManager.Instance.playController.playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.Value = CardGameManager.Current.Cards[cardId];
-        cardModel.transform.position = position;
-        cardModel.LocalPosition = cardModel.transform.localPosition;
-        cardModel.Rotation = cardModel.transform.rotation;
+        cardModel.transform.localPosition = localPosition;
+        cardModel.LocalPosition = localPosition;
+        cardModel.transform.rotation = rotation;
+        cardModel.Rotation = rotation;
         cardModel.IsFacedown = isFacedown;
         LocalNetManager.Instance.SetPlayActions(LocalNetManager.Instance.playController.playAreaContent.GetComponent<CardStack>(), cardModel);
         NetworkServer.SpawnWithClientAuthority(newCardGO, gameObject);
