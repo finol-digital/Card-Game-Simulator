@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
     void OnEnable()
     {
         if (currentGameText != null)
-            CardGameManager.Instance.OnSelectActions.Add(UpdateCurrentGameText);
+            CardGameManager.Instance.OnSceneActions.Add(UpdateCurrentGameText);
     }
 
     void Start()
