@@ -22,14 +22,12 @@ public class NetPlayer : NetworkBehaviour
 
     public void RequestHand()
     {
-        Debug.Log("requesting from client");
         CmdDealHand();
     }
 
     [Command]
     public void CmdDealHand()
     {
-        Debug.Log("processsing on server");
         StackedZone deckZone = LocalNetManager.Instance.playController.DeckZone;
         for (int i = 0; i < CardGameManager.Current.GameStartHandCount; i++) {
             Card card = deckZone?.PopCard() ?? Card.Blank;
@@ -43,7 +41,6 @@ public class NetPlayer : NetworkBehaviour
 
     static void DealCard(NetworkMessage netMsg)
     {
-        Debug.Log("processing on client");
         DealCardMsg dealCardMsg = netMsg.ReadMessage<DealCardMsg>();
         if (LocalNetManager.Instance.playController.HandZone == null) {
             LocalNetManager.Instance.playController.HandZone = Instantiate(LocalNetManager.Instance.playController.handZonePrefab, LocalNetManager.Instance.playController.zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
@@ -54,7 +51,7 @@ public class NetPlayer : NetworkBehaviour
         LocalNetManager.Instance.playController.HandZone.AddCard(CardGameManager.Current.Cards[dealCardMsg.cardId]);
     }
 
-    public void MoveCardToServer(CardModel cardModel)
+    public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
     {
         CmdSpawnCard(cardModel.Id, cardModel.LocalPosition, cardModel.Rotation, cardModel.IsFacedown);
         Destroy(cardModel.gameObject);
