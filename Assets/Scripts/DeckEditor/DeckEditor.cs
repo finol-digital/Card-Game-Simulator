@@ -62,7 +62,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     void OnEnable()
     {
-        CardGameManager.Instance.OnSelectActions.Add(ResetCardStacks);
+        CardGameManager.Instance.OnSceneActions.Add(ResetCardStacks);
     }
 
     void Start()
