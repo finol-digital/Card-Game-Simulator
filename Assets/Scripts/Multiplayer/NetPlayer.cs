@@ -60,7 +60,8 @@ public class NetPlayer : NetworkBehaviour
     [Command]
     public void CmdSpawnCard(string cardId, Vector3 localPosition, Quaternion rotation, bool isFacedown)
     {
-        GameObject newCardGO = Instantiate(LocalNetManager.Instance.cardModelPrefab, LocalNetManager.Instance.playController.playAreaContent);
+        PlayMode controller = LocalNetManager.Instance.playController;
+        GameObject newCardGO = Instantiate(LocalNetManager.Instance.cardModelPrefab, controller.playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.Value = CardGameManager.Current.Cards[cardId];
         cardModel.transform.localPosition = localPosition;
@@ -68,7 +69,7 @@ public class NetPlayer : NetworkBehaviour
         cardModel.transform.rotation = rotation;
         cardModel.Rotation = rotation;
         cardModel.IsFacedown = isFacedown;
-        LocalNetManager.Instance.SetPlayActions(LocalNetManager.Instance.playController.playAreaContent.GetComponent<CardStack>(), cardModel);
+        controller.SetPlayActions(controller.playAreaContent.GetComponent<CardStack>(), cardModel);
         NetworkServer.SpawnWithClientAuthority(newCardGO, gameObject);
         cardModel.RpcHideHighlight();
     }
