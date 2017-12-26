@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public delegate void CardGameSelectedDelegate();
+public delegate void GameSceneDelegate();
 
 public class CardGameManager : MonoBehaviour
 {
@@ -25,7 +25,7 @@ public class CardGameManager : MonoBehaviour
     public static bool IsQuitting { get; private set; }
 
     public Dictionary<string, CardGame> AllCardGames { get; } = new Dictionary<string, CardGame>();
-    public List<CardGameSelectedDelegate> OnSelectActions { get; } = new List<CardGameSelectedDelegate>();
+    public List<GameSceneDelegate> OnSceneActions { get; } = new List<GameSceneDelegate>();
 
     private static CardGameManager _instance;
     private GameSelectionMenu _selector;
@@ -62,12 +62,12 @@ public class CardGameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        SelectCardGame(CurrentGameName);
+        DoGameSceneActions();
     }
 
     void OnSceneUnloaded(Scene scene)
     {
-        OnSelectActions.Clear();
+        OnSceneActions.Clear();
     }
 
     public void SelectCardGame(string gameName)
@@ -79,10 +79,10 @@ public class CardGameManager : MonoBehaviour
         }
 
         CurrentGameName = gameName;
-        DoGameSelectionActions();
+        DoGameSceneActions();
     }
 
-    public void DoGameSelectionActions()
+    public void DoGameSceneActions()
     {
         if (!Current.IsLoaded)
             Current.Load();
@@ -99,10 +99,10 @@ public class CardGameManager : MonoBehaviour
         if (CardInfoViewer.Instance != null)
             CardInfoViewer.Instance.Reset();
 
-        for (int i = OnSelectActions.Count - 1; i >= 0; i--)
-            if (OnSelectActions [i] == null)
-                OnSelectActions.RemoveAt(i);
-        foreach (CardGameSelectedDelegate action in OnSelectActions)
+        for (int i = OnSceneActions.Count - 1; i >= 0; i--)
+            if (OnSceneActions [i] == null)
+                OnSceneActions.RemoveAt(i);
+        foreach (GameSceneDelegate action in OnSceneActions)
             action();
     }
 
