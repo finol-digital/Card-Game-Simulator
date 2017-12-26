@@ -13,13 +13,12 @@ public delegate void LoadJTokenDelegate(JToken jToken,string defaultValue);
 [JsonObject(MemberSerialization.OptIn)]
 public class CardGame
 {
-    public const string AllCardsFileName = "AllCards.json";
-    public const string AllSetsFileName = "AllSets.json";
-    public const string BackgroundImageFileName = "Background";
-    public const string CardBackImageFileName = "CardBack";
-
     public string FilePathBase => CardGameManager.GamesFilePathBase + "/" + Name;
     public string ConfigFilePath => FilePathBase + "/" + Name + ".json";
+    public string CardsFilePath => FilePathBase + "/AllCards.json";
+    public string SetsFilePath => FilePathBase + "/AllSets.json";
+    public string BackgroundImageFilePath => FilePathBase + "/Background." + BackgroundImageFileType;
+    public string CardBackImageFilePath => FilePathBase +"/CardBack." + CardBackImageFileType;
     public string DecksFilePath => FilePathBase + "/decks";
     public string GameBoardsFilePath => FilePathBase + "/boards";
     public float AspectRatio => CardSize.y > 0 ? Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
@@ -133,7 +132,6 @@ public class CardGame
     public Dictionary<string, Set> Sets { get; } = new Dictionary<string, Set>();
 
     public bool IsLoading { get; private set; }
-    public bool IsLoaded { get; private set; }
     public string Error { get; private set; }
 
     private Sprite _backgroundImageSprite;
@@ -144,73 +142,80 @@ public class CardGame
         Name = name ?? Set.DefaultCode;
         AutoUpdateUrl = url ?? string.Empty;
     }
-
-    public IEnumerator Load()
+    
+    public IEnumerator Download()
     {
-        if (IsLoading || IsLoaded)
+        if (IsDownloading)
             yield break;
-        IsLoading = true;
-
+        IsDownloading = true;
+        
         string initialDirectory = FilePathBase;
-        if (!string.IsNullOrEmpty(AutoUpdateUrl) && (AutoUpdate || !File.Exists(ConfigFilePath)))
-            yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
+        yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
         try {
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
             Error = e.Message;
-            IsLoading = false;
+            IsDownloading = false;
             yield break;
         }
-        if (AutoUpdate || !initialDirectory.Equals(FilePathBase)) {
-            yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
-            if (!initialDirectory.Equals(FilePathBase))
-                Directory.Delete(initialDirectory, true);
+        if (!initialDirectory.Equals(FilePathBase)) {
+            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath));
+            Directory.Delete(initialDirectory, true);
+        }
+        
+        yield return UnityExtensionMethods.SaveUrlToFile(AllCardsUrl, CardsFilePath 
+                                                         + (AllCardsZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
+        if (AllCardsZipped)
+            UnityExtensionMethods.ExtractZip(CardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+
+        yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, SetsFilePath 
+                                                         + AllSetsZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
+        if (AllSetsZipped)
+                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+        
+        yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
+        yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
+        
+        foreach (GameBoardUrl boardUrl in GameBoardUrls)
+                yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
+        
+        foreach (DeckUrl deckUrl in DeckUrls)
+                yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
+        
+        IsDownloading = false;
+    }
+
+    public void Load()
+    {
+        if (IsDownloading)
+            return;
+        
+        try {
+            JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
+            CreateEnumLookups();
+            LoadJsonFromFile(CardsFilePath, LoadCardFromJToken);
+            LoadJsonFromFile(SetsFilePath, LoadSetFromJToken);
+        } catch (Exception e) {
+            Error = e.Message;
+            return;
         }
 
-        Sprite backgroundSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType, BackgroundImageUrl), output => backgroundSprite = output);
+        Sprite backgroundSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
         if (backgroundSprite != null)
             BackgroundImageSprite = backgroundSprite;
-        Sprite cardBackSprite = null;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType, CardBackImageUrl), output => cardBackSprite = output);
+        Sprite cardBackSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
         if (cardBackSprite != null)
             CardBackImageSprite = cardBackSprite;
-
+        
+        if (AutoUpdate)
+            CardGameManager.Instance.StartCoroutine(Download());
+    }
+    
+    public void CreateEnumLookups()
+    {
         foreach (EnumDef enumDef in Enums)
             foreach (string key in enumDef.Values.Keys)
                 enumDef.CreateLookup(key);
-
-        string cardsFile = FilePathBase + "/" + AllCardsFileName;
-        if (!string.IsNullOrEmpty(AllCardsUrl) && (AutoUpdate || !File.Exists(cardsFile))) {
-            yield return UnityExtensionMethods.SaveUrlToFile(AllCardsUrl, AllCardsZipped ? cardsFile + UnityExtensionMethods.ZipExtension : cardsFile);
-            if (AllCardsZipped)
-                UnityExtensionMethods.ExtractZip(cardsFile + UnityExtensionMethods.ZipExtension, FilePathBase);
-        }
-        string setsFile = FilePathBase + "/" + AllSetsFileName;
-        if (!string.IsNullOrEmpty(AllSetsUrl) && (AutoUpdate || !File.Exists(setsFile))) {
-            yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, AllSetsZipped ? setsFile + UnityExtensionMethods.ZipExtension : setsFile);
-            if (AllSetsZipped)
-                UnityExtensionMethods.ExtractZip(setsFile + UnityExtensionMethods.ZipExtension, FilePathBase);
-        }
-        try {
-            LoadJsonFromFile(cardsFile, LoadCardFromJToken);
-            LoadJsonFromFile(setsFile, LoadSetFromJToken);
-        } catch (Exception e) {
-            Error = e.Message;
-            IsLoading = false;
-            yield break;
-        }
-
-        if (DeckUrls.Count > 0 && !Directory.Exists(DecksFilePath))
-            foreach (DeckUrl deckUrl in DeckUrls)
-                yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
-
-        if (GameBoardUrls.Count > 0 && !Directory.Exists(GameBoardsFilePath))
-            foreach (GameBoardUrl boardUrl in GameBoardUrls)
-                yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
-
-        IsLoading = false;
-        IsLoaded = true;
     }
 
     public void LoadJsonFromFile(string file, LoadJTokenDelegate load)
