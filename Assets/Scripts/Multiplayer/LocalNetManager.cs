@@ -29,14 +29,8 @@ public class LocalNetManager : NetworkManager
         cardModel.transform.localPosition = cardModel.LocalPosition;
         cardModel.transform.rotation = cardModel.Rotation;
         cardModel.HideHighlight();
-        SetPlayActions(playController.playAreaContent.GetComponent<CardStack>(), cardModel);
+        playController.SetPlayActions(playController.playAreaContent.GetComponent<CardStack>(), cardModel);
         return newCardGO;
-    }
-
-    public void SetPlayActions(CardStack cardStack, CardModel cardModel)
-    {
-        cardModel.DoubleClickAction = CardModel.ToggleFacedown;
-        cardModel.SecondaryDragAction = cardModel.Rotate;
     }
 
     public void UnSpawnCard(GameObject spawned)
