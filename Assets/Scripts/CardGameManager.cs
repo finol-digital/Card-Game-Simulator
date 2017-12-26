@@ -79,27 +79,19 @@ public class CardGameManager : MonoBehaviour
         }
 
         CurrentGameName = gameName;
-        StartCoroutine(DoGameSelectionActions());
+        DoGameSelectionActions();
     }
 
-    public IEnumerator DoGameSelectionActions()
+    public void DoGameSelectionActions()
     {
-        string selectedGame = CurrentGameName;
-        if (!Current.IsLoaded) {
-            if (Current.IsLoading)
-                yield break;
-            StartCoroutine(Current.Load());
+        if (!Current.IsLoaded)
+            Current.Load();
+        
+        if (!string.IsNullOrEmpty(Current.Error)) {
+            Debug.LogError(Current.Error);
+            Messenger.Show(Current.Error);
+            return;
         }
-        while (!Current.IsLoaded) {
-            if (!string.IsNullOrEmpty(Current.Error)) {
-                Debug.LogError(Current.Error);
-                Messenger.Show(Current.Error);
-                yield break;
-            }
-            yield return null;
-        }
-        if (selectedGame != CurrentGameName)
-            yield break;
 
         PlayerPrefs.SetString(PlayerPrefGameName, CurrentGameName);
         if (BackgroundImage != null)
