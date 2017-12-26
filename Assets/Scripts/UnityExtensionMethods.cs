@@ -180,23 +180,21 @@ static public class UnityExtensionMethods
         output(result as T);
     }
 
-    public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageFilePath, string backUpImageUrl = null)
+    public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageFilePath, string backUpImageUrl)
     {
-        if (!File.Exists(imageFilePath)) {
-            if (string.IsNullOrEmpty(backUpImageUrl))
-                yield break;
+        if (!File.Exists(imageFilePath))
             yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
-        }
 
-        WWW imageFileLoader = new WWW("file://" + imageFilePath);
-        yield return imageFileLoader;
-
-        if (string.IsNullOrEmpty(imageFileLoader.error)) {
-            Texture2D newTexture = imageFileLoader.texture;
-            yield return Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
-        } else {
-            Debug.LogWarning("Failed to load image: " + imageFileLoader.error);
-            yield return null;
-        }
+        yield return CreateSprite(imageFilePath);
+    }
+    
+    public static Sprite CreateSprite(string textureFilePath)
+    {
+        if (!File.Exists(textureFilePath)
+            return null;
+        byte[] fileData = File.ReadAllBytes(filePath);
+        Texture2D newTexture = new Texture2D(2, 2);
+        newTexture.LoadImage(fileData);
+        yield return Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
     }
 }
