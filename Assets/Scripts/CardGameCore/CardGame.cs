@@ -132,6 +132,7 @@ public class CardGame
     public Dictionary<string, Set> Sets { get; } = new Dictionary<string, Set>();
 
     public bool IsLoading { get; private set; }
+    public bool IsLoaded { get; private set; }
     public string Error { get; private set; }
 
     private Sprite _backgroundImageSprite;
@@ -209,6 +210,7 @@ public class CardGame
         
         if (AutoUpdate)
             CardGameManager.Instance.StartCoroutine(Download());
+        IsLoaded = true;
     }
     
     public void CreateEnumLookups()
