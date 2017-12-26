@@ -192,9 +192,8 @@ static public class UnityExtensionMethods
     {
         if (!File.Exists(textureFilePath)
             return null;
-        byte[] fileData = File.ReadAllBytes(filePath);
         Texture2D newTexture = new Texture2D(2, 2);
-        newTexture.LoadImage(fileData);
+        newTexture.LoadImage(File.ReadAllBytes(filePath));
         yield return Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
     }
 }
