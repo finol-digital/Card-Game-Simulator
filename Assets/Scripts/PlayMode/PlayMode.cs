@@ -191,10 +191,18 @@ public class PlayMode : MonoBehaviour
 
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
+        cardModel.transform.SetParent(cardStack.transform);
+        cardModel.LocalPosition = cardModel.transform.localPosition;
         if (NetworkManager.singleton.isNetworkActive)
             LocalNetManager.Instance.LocalPlayer.MoveCardToServer(cardModel);
         else
-            LocalNetManager.Instance.SetPlayActions(cardStack, cardModel);
+            SetPlayActions(cardStack, cardModel);
+    }
+    
+    public void SetPlayActions(CardStack cardStack, CardModel cardModel)
+    {
+        cardModel.DoubleClickAction = CardModel.ToggleFacedown;
+        cardModel.SecondaryDragAction = cardModel.Rotate;
     }
 
     public void PromptBackToMainMenu()
