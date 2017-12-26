@@ -60,10 +60,9 @@ public class GameSelectionMenu : SelectionPanel
         urlInput.text = string.Empty;
         urlInput.interactable = false;
         cancelButton.interactable = false;
-        yield return newGame.Load();
+        yield return newGame.Download();
 
         if (string.IsNullOrEmpty(newGame.Error)) {
-            PlayerPrefs.SetString(CardGameManager.PlayerPrefGameName, newGame.Name);
             CardGameManager.Instance.AllCardGames [newGame.Name] = newGame;
             CardGameManager.Instance.SelectCardGame(newGame.Name);
         } else {
