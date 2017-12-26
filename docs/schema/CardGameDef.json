@@ -75,7 +75,7 @@
 			"type": "string"
 		},
 		"cardImageUrl": {
-			"description": "cardImageUrl indicates a parameterized url from which CGS downloads missing card image files. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}:*Card:SetCode*, {card.<property>}=*Card:<property>*, {cardImageFileType}=<cardImageFileType>",
+			"description": "cardImageUrl indicates a parameterized url from which CGS downloads missing card image files. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {card.<property>}=*Card:<property>*, {cardImageFileType}=<cardImageFileType>",
 			"type": "string",
 			"format": "uri"
 		},
@@ -231,7 +231,7 @@
 			"type": "array"
 		},
 		"gameBoardUrls": {
-			"description": "If the 'boards/' folder does not exist, CGS will go through each GameBoardUrl, and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<GameBoardFileType>'",
+			"description": "If the 'boards/' folder does not exist, CGS will go through each GameBoardUrl, and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardFileType>'",
 			"items": {
 				"title": "GameBoardUrl",
 				"type": "object",
