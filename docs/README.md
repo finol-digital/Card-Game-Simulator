@@ -1,9 +1,9 @@
 # Get Card Game Simulator
 You can get CGS on your preferred device:
-- Android via the [Google Play Store](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
-- Windows x64 via [ZIP File](https://drive.google.com/uc?id=1dPRqs9mtLmR5_0K4NbrfzinJJW7TQH51&export=download)
+- Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
+- iOS via the App Store
 - Mac x64 via [ZIP File](https://drive.google.com/uc?id=1ag7kjPRzweO5O5_Kj7q_yCj7xVkKdiaA&export=download)
-- Public iOS version coming soon. Send an email to david@finoldigital.com to be added to the TestFlight iOS closed beta!
+- Windows x64 via [ZIP File](https://drive.google.com/uc?id=1dPRqs9mtLmR5_0K4NbrfzinJJW7TQH51&export=download)
 
 ## Add Custom Card Games
 CGS comes pre-packaged with these card games:
