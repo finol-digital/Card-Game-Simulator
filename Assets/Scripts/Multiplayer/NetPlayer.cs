@@ -1,21 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.Networking;
-
-public class DealCardMsg : MessageBase
-{
-    public NetworkInstanceId netId;
-    public string cardId;
-}
 
 public class NetPlayer : NetworkBehaviour
 {
     public const string DeckLoadPrompt = "Would you like to join the game with your own deck?";
-    public const short DealCardMsgId = 1000;
 
     public override void OnStartLocalPlayer()
     {
-        NetworkManager.singleton.client.RegisterHandler(DealCardMsgId, DealCard);
-        ((LocalNetManager)NetworkManager.singleton).LocalPlayer = this;
+        LocalNetManager.Instance.LocalPlayer = this;
         if (!isServer)
             CardGameManager.Instance.Messenger.Ask(DeckLoadPrompt, RequestHand, LocalNetManager.Instance.playController.ShowDeckMenu);
     }
@@ -28,27 +22,14 @@ public class NetPlayer : NetworkBehaviour
     [Command]
     public void CmdDealHand()
     {
-        StackedZone deckZone = LocalNetManager.Instance.playController.DeckZone;
-        for (int i = 0; i < CardGameManager.Current.GameStartHandCount; i++) {
-            Card card = deckZone?.PopCard() ?? Card.Blank;
-            DealCardMsg dealCardMsg = new DealCardMsg {
-                netId = netId,
-                cardId = card.Id
-            };
-            connectionToClient.Send(DealCardMsgId, dealCardMsg);
-        }
+        TargetDealCards(connectionToClient, LocalNetManager.Instance.playController.PopDeckCards(CardGameManager.Current.GameStartHandCount).Select(card => card.Id).ToArray());
     }
 
-    static void DealCard(NetworkMessage netMsg)
+    [TargetRpc]
+    public void TargetDealCards(NetworkConnection target, string[] cardIds)
     {
-        DealCardMsg dealCardMsg = netMsg.ReadMessage<DealCardMsg>();
-        if (LocalNetManager.Instance.playController.HandZone == null) {
-            LocalNetManager.Instance.playController.HandZone = Instantiate(LocalNetManager.Instance.playController.handZonePrefab, LocalNetManager.Instance.playController.zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
-            LocalNetManager.Instance.playController.zones.AddZone(LocalNetManager.Instance.playController.HandZone);
-            LocalNetManager.Instance.playController.zones.IsExtended = true;
-            LocalNetManager.Instance.playController.zones.IsVisible = true;
-        }
-        LocalNetManager.Instance.playController.HandZone.AddCard(CardGameManager.Current.Cards[dealCardMsg.cardId]);
+        List<Card> cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
+        LocalNetManager.Instance.playController.AddCardsToHand(cards);
     }
 
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
@@ -61,8 +42,8 @@ public class NetPlayer : NetworkBehaviour
     public void CmdSpawnCard(string cardId, Vector3 localPosition, Quaternion rotation, bool isFacedown)
     {
         PlayMode controller = LocalNetManager.Instance.playController;
-        GameObject newCardGO = Instantiate(LocalNetManager.Instance.cardModelPrefab, controller.playAreaContent);
-        CardModel cardModel = newCardGO.GetComponent<CardModel>();
+        GameObject newCard = Instantiate(LocalNetManager.Instance.cardModelPrefab, controller.playAreaContent);
+        CardModel cardModel = newCard.GetComponent<CardModel>();
         cardModel.Value = CardGameManager.Current.Cards[cardId];
         cardModel.transform.localPosition = localPosition;
         cardModel.LocalPosition = localPosition;
@@ -70,7 +51,7 @@ public class NetPlayer : NetworkBehaviour
         cardModel.Rotation = rotation;
         cardModel.IsFacedown = isFacedown;
         controller.SetPlayActions(controller.playAreaContent.GetComponent<CardStack>(), cardModel);
-        NetworkServer.SpawnWithClientAuthority(newCardGO, gameObject);
+        NetworkServer.SpawnWithClientAuthority(newCard, gameObject);
         cardModel.RpcHideHighlight();
     }
 }

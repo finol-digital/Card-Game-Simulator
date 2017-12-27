@@ -23,21 +23,21 @@ public class PlayMode : MonoBehaviour
     public PointsCounter points;
     public RectTransform playAreaContent;
 
-    public Deck LoadedDeck { get; private set; }
-    public StackedZone DeckZone { get; private set; }
-    public ExtensibleCardZone HandZone { get; set; }
-
     public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());
     private LobbyMenu _lobby;
-
-    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
-    private DeckLoadMenu _deckLoader;
 
     public DiceMenu DiceCreator => _diceCreator ?? (_diceCreator = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
     private DiceMenu _diceCreator;
 
     public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
     private CardSearchMenu _cardSearcher;
+
+    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+    private DeckLoadMenu _deckLoader;
+
+    protected Deck LoadedDeck { get; private set; }
+    protected StackedZone DeckZone { get; private set; }
+    protected ExtensibleCardZone HandZone { get; private set; }
 
     void Start()
     {
@@ -53,6 +53,9 @@ public class PlayMode : MonoBehaviour
 
         playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
+
+        if (CardGameManager.Current.GameHasDiscardZone)
+            zones.AddZone(Instantiate(discardZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>());
     }
 
     void OnRectTransformDimensionsChange()
@@ -72,11 +75,25 @@ public class PlayMode : MonoBehaviour
     }
 #endif
 
+    public void ShowDiceMenu()
+    {
+        DiceCreator.Show(playAreaContent);
+    }
+
+    public void ShowCardsMenu()
+    {
+        CardSearcher.Show(null, null, AddCardsToHand);
+    }
+
+    public void ShowDeckMenu()
+    {
+        DeckLoader.Show(LoadDeck);
+    }
+
     public void LoadDeck(Deck newDeck)
     {
         if (newDeck == null)
             return;
-
         LoadedDeck = newDeck;
 
         foreach (Card card in newDeck.Cards)
@@ -93,19 +110,11 @@ public class PlayMode : MonoBehaviour
             zones.AddZone(extraZone);
         }
 
-        if (CardGameManager.Current.GameHasDiscardZone) {
-            StackedZone discardZone = Instantiate(discardZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
-            zones.AddZone(discardZone);
-        }
-
         DeckZone = Instantiate(deckZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>();
         zones.AddZone(DeckZone);
-        HandZone = Instantiate(handZonePrefab, zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
-        zones.AddZone(HandZone);
-        zones.IsExtended = true;
-        zones.IsVisible = true;
 
-        points.Count = CardGameManager.Current.GameStartPointsCount;
+        if (HandZone == null)
+            CreateHand();
         StartCoroutine(WaitToDealDeck());
     }
 
@@ -115,13 +124,13 @@ public class PlayMode : MonoBehaviour
             return;
 
         foreach (GameBoard board in boards)
-            StartCoroutine(CreateBoard(board));
+            CreateBoard(board);
     }
 
-    public IEnumerator CreateBoard(GameBoard board)
+    public void CreateBoard(GameBoard board)
     {
         if (board == null)
-            yield break;
+            return;
 
         GameObject newBoard = new GameObject(board.Id, typeof(RectTransform));
         RectTransform rt = (RectTransform)newBoard.transform;
@@ -131,14 +140,21 @@ public class PlayMode : MonoBehaviour
         rt.offsetMin = board.OffsetMin * CardGameManager.PixelsPerInch;
         rt.offsetMax = board.Size * CardGameManager.PixelsPerInch + rt.offsetMin;
 
-        Sprite boardImageSprite = null;
         string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
                                CardGameManager.Current.GameBoardFileType;
-        yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(boardFilepath), output => boardImageSprite = output);
+        Sprite boardImageSprite = UnityExtensionMethods.CreateSprite(boardFilepath);
         if (boardImageSprite != null)
             newBoard.AddComponent<Image>().sprite = boardImageSprite;
 
         rt.localScale = Vector3.one;
+    }
+
+    public void CreateHand()
+    {
+        HandZone = Instantiate(handZonePrefab, zones.ActiveScrollView.content).GetComponent<ExtensibleCardZone>();
+        zones.AddZone(HandZone);
+        zones.IsExtended = true;
+        zones.IsVisible = true;
     }
 
     public IEnumerator WaitToDealDeck()
@@ -158,34 +174,28 @@ public class PlayMode : MonoBehaviour
             Deal(CardGameManager.Current.GameStartHandCount);
     }
 
-
     public void Deal(int cardCount)
     {
-        if (DeckZone == null || HandZone == null)
-            return;
-
-        for (int i = 0; DeckZone.Count > 0 && i < cardCount; i++)
-            HandZone.AddCard(DeckZone.PopCard());
+        AddCardsToHand(PopDeckCards(cardCount));
     }
 
-    public void ShowDeckMenu()
+    public List<Card> PopDeckCards(int cardCount)
     {
-        DeckLoader.Show(LoadDeck);
+        List<Card> cards = new List<Card>(cardCount);
+        if (DeckZone == null)
+            return cards;
+
+        for (int i = 0; i < cardCount && DeckZone.Count > 0; i++)
+            cards.Add(DeckZone.PopCard());
+        return cards;
     }
 
-    public void ShowDiceMenu()
+    public void AddCardsToHand(List<Card> cards)
     {
-        DiceCreator.Show(playAreaContent);
-    }
+        if (HandZone == null)
+            CreateHand();
 
-    public void ShowCardsMenu()
-    {
-        CardSearcher.Show(null, null, AddSearchResults);
-    }
-
-    public void AddSearchResults(List<Card> results)
-    {
-        foreach (Card card in results)
+        foreach (Card card in cards)
             HandZone.AddCard(card);
     }
 
@@ -196,7 +206,7 @@ public class PlayMode : MonoBehaviour
         else
             SetPlayActions(cardStack, cardModel);
     }
-    
+
     public void SetPlayActions(CardStack cardStack, CardModel cardModel)
     {
         cardModel.DoubleClickAction = CardModel.ToggleFacedown;

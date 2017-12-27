@@ -27,7 +27,7 @@ public class SearchResults : MonoBehaviour
     void OnEnable()
     {
         CardSearcher.SearchCallback = ShowResults;
-        CardGameManager.Instance.OnSelectActions.Add(CardSearcher.ClearSearch);
+        CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
     }
 
     public string SetNameInputField(string nameFilter)

@@ -9,7 +9,7 @@ public delegate void OnSearchDelegate(List<Card> searchResults);
 
 public class CardSearchMenu : MonoBehaviour
 {
-    public const string SubmitString = "Submit";
+    public const string SubmitInput = "Submit";
     public const float PropertyPanelHeight = 150f;
 
     public string Filters {
@@ -278,7 +278,7 @@ public class CardSearchMenu : MonoBehaviour
 
     void Update()
     {
-        if (!Input.GetButtonDown(SubmitString))
+        if (!Input.GetButtonDown(SubmitInput))
             return;
 
         Search();

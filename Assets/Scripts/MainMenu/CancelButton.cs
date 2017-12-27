@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Button))]
 public class CancelButton : MonoBehaviour
 {
-    public const string CancelString = "Cancel";
+    public const string CancelInput = "Cancel";
 
     public GraphicRaycaster RayCaster { get; private set; }
 
@@ -19,7 +19,7 @@ public class CancelButton : MonoBehaviour
 
     void Update()
     {
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelString)) && IsPressable)
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && IsPressable)
             GetComponent<Button>().onClick.Invoke();
     }
 

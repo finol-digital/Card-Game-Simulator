@@ -17,8 +17,10 @@ public class CardGame
     public string ConfigFilePath => FilePathBase + "/" + Name + ".json";
     public string CardsFilePath => FilePathBase + "/AllCards.json";
     public string SetsFilePath => FilePathBase + "/AllSets.json";
-    public string BackgroundImageFilePath => FilePathBase + "/Background." + BackgroundImageFileType;
-    public string CardBackImageFilePath => FilePathBase +"/CardBack." + CardBackImageFileType;
+    public const string BackgroundImageFileName = "Background";
+    public string BackgroundImageFilePath => FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType;
+    public const string CardBackImageFileName = "CardBack";
+    public string CardBackImageFilePath => FilePathBase +"/" + CardBackImageFileName + "." + CardBackImageFileType;
     public string DecksFilePath => FilePathBase + "/decks";
     public string GameBoardsFilePath => FilePathBase + "/boards";
     public float AspectRatio => CardSize.y > 0 ? Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
@@ -131,7 +133,7 @@ public class CardGame
     public Dictionary<string, Card> Cards { get; } = new Dictionary<string, Card>();
     public Dictionary<string, Set> Sets { get; } = new Dictionary<string, Set>();
 
-    public bool IsLoading { get; private set; }
+    public bool IsDownloading { get; private set; }
     public bool IsLoaded { get; private set; }
     public string Error { get; private set; }
 
@@ -143,13 +145,13 @@ public class CardGame
         Name = name ?? Set.DefaultCode;
         AutoUpdateUrl = url ?? string.Empty;
     }
-    
+
     public IEnumerator Download()
     {
         if (IsDownloading)
             yield break;
         IsDownloading = true;
-        
+
         string initialDirectory = FilePathBase;
         yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
         try {
@@ -160,29 +162,29 @@ public class CardGame
             yield break;
         }
         if (!initialDirectory.Equals(FilePathBase)) {
-            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath));
+            CardGameManager.Instance.StartCoroutine(UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath));
             Directory.Delete(initialDirectory, true);
         }
-        
-        yield return UnityExtensionMethods.SaveUrlToFile(AllCardsUrl, CardsFilePath 
+
+        yield return UnityExtensionMethods.SaveUrlToFile(AllCardsUrl, CardsFilePath
                                                          + (AllCardsZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
         if (AllCardsZipped)
             UnityExtensionMethods.ExtractZip(CardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
 
-        yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, SetsFilePath 
-                                                         + AllSetsZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
+        yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, SetsFilePath
+                                                         + (AllSetsZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
         if (AllSetsZipped)
                 UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
-        
+
         yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
         yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
-        
+
         foreach (GameBoardUrl boardUrl in GameBoardUrls)
                 yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
-        
+
         foreach (DeckUrl deckUrl in DeckUrls)
                 yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
-        
+
         IsDownloading = false;
     }
 
@@ -190,7 +192,7 @@ public class CardGame
     {
         if (IsDownloading)
             return;
-        
+
         try {
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
             CreateEnumLookups();
@@ -207,12 +209,12 @@ public class CardGame
         Sprite cardBackSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
         if (cardBackSprite != null)
             CardBackImageSprite = cardBackSprite;
-        
+
         if (AutoUpdate)
             CardGameManager.Instance.StartCoroutine(Download());
         IsLoaded = true;
     }
-    
+
     public void CreateEnumLookups()
     {
         foreach (EnumDef enumDef in Enums)

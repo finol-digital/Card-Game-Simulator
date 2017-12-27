@@ -9,6 +9,11 @@ public class PointsCounter : NetworkBehaviour
     [SyncVar]
     private float _points;
 
+    void Start()
+    {
+        Count = CardGameManager.Current.GameStartPointsCount;
+    }
+
     public void Decrement()
     {
         Count--;

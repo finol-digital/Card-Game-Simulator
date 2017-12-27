@@ -59,7 +59,6 @@ public class LocalNetManager : NetworkManager
 
     public override void OnClientConnect(NetworkConnection conn)
     {
-        Debug.Log("client connected");
         ClientScene.AddPlayer(conn, 0);
     }
 }
