@@ -22,7 +22,8 @@ public class NetPlayer : NetworkBehaviour
     [Command]
     public void CmdDealHand()
     {
-        TargetDealCards(connectionToClient, LocalNetManager.Instance.playController.PopDeckCards(CardGameManager.Current.GameStartHandCount).Select(card => card.Id).ToArray());
+        List<Card> cards = LocalNetManager.Instance.playController.PopDeckCards(CardGameManager.Current.GameStartHandCount).Select(card => card.Id).ToArray();
+        TargetDealCards(connectionToClient, cards);
     }
 
     [TargetRpc]
