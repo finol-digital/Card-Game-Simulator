@@ -174,16 +174,16 @@ public class CardGame
         yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, SetsFilePath
                                                          + (AllSetsZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
         if (AllSetsZipped)
-                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+            UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
 
         yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
         yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
 
         foreach (GameBoardUrl boardUrl in GameBoardUrls)
-                yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
+            yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
 
         foreach (DeckUrl deckUrl in DeckUrls)
-                yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
+            yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
         IsDownloading = false;
     }
