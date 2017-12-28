@@ -155,7 +155,8 @@ public class CardGame
         string initialDirectory = FilePathBase;
         yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
         try {
-            JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
+            if (!IsLoaded)
+                JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
             Error = e.Message;
             IsDownloading = false;
