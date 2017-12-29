@@ -86,7 +86,7 @@ public class CardGameManager : MonoBehaviour
     {
         if (!Current.IsLoaded)
             Current.Load();
-        
+
         if (!string.IsNullOrEmpty(Current.Error)) {
             Debug.LogError(Current.Error);
             Messenger.Show(Current.Error);

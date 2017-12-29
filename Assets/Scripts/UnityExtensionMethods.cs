@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
+using RavingBots.EdgePadding;
 using Object = UnityEngine.Object;
 
 public static class ThreadSafeRandom
@@ -195,6 +196,7 @@ static public class UnityExtensionMethods
 
         Texture2D newTexture = new Texture2D(2, 2);
         newTexture.LoadImage(File.ReadAllBytes(textureFilePath));
+        newTexture.ApplyPadding();
         return Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
     }
 }

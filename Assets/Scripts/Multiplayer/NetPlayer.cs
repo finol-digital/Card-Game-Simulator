@@ -35,6 +35,8 @@ public class NetPlayer : NetworkBehaviour
 
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
     {
+        cardModel.transform.SetParent(cardStack.transform);
+        cardModel.LocalPosition = cardModel.transform.localPosition;
         CmdSpawnCard(cardModel.Id, cardModel.LocalPosition, cardModel.Rotation, cardModel.IsFacedown);
         Destroy(cardModel.gameObject);
     }

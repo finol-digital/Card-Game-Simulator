@@ -6,7 +6,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
     public ZonesViewer Viewer { get; set; }
 
-    public GameObject cardPrefab;
+    public GameObject cardModelPrefab;
     public List<CardDropZone> cardDropZones;
     public RectTransform extension;
     public RectTransform extensionContent;
@@ -35,7 +35,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public virtual void AddCard(Card card)
     {
-        CardModel newCardModel = Instantiate(cardPrefab, extensionContent).GetOrAddComponent<CardModel>();
+        CardModel newCardModel = Instantiate(cardModelPrefab, extensionContent).GetOrAddComponent<CardModel>();
         newCardModel.Value = card;
         OnAddCardModel(null, newCardModel);
     }

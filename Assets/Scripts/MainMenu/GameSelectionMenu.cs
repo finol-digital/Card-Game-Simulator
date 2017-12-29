@@ -21,9 +21,10 @@ public class GameSelectionMenu : SelectionPanel
 
     public void SelectGame(bool isOn, string gameName)
     {
-        CardGameManager.Instance.SelectCardGame(gameName);
-        if (isOn)
+        if (isOn) {
             gameObject.SetActive(true);
+            CardGameManager.Instance.SelectCardGame(gameName);
+        }
         else
             Hide();
     }

@@ -1149,7 +1149,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Local Multiplayer
+  m_Text: Multiplayer LAN
 --- !u!222 &1309525987
 CanvasRenderer:
   m_ObjectHideFlags: 0

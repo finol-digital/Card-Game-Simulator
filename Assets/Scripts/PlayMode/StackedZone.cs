@@ -29,7 +29,7 @@ public class StackedZone : ExtensibleCardZone
 
     public override void AddCard(Card card)
     {
-        CardModel newCardModel = Instantiate(cardPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform).GetOrAddComponent<CardModel>();
+        CardModel newCardModel = Instantiate(cardModelPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform).GetOrAddComponent<CardModel>();
         newCardModel.Value = card;
         newCardModel.IsFacedown = !isFaceup;
         OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, newCardModel);
