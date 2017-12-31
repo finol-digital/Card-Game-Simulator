@@ -124,7 +124,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             cardModel = DraggedClones [eventData.pointerId];
             cardModel.HideHighlight();
             cardModel.Value = Value;
-            cardModel.PointerDragOffsets[eventData.pointerId] = ((Vector2)transform.position) - eventData.position;
+            cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
             cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
@@ -277,7 +277,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         RpcUnspawn();
         NetworkServer.UnSpawn(gameObject);
-        ((LocalNetManager)NetworkManager.singleton).UnSpawnCard(gameObject);
+        LocalNetManager.Instance.UnSpawnCard(gameObject);
     }
 
     [ClientRpc]

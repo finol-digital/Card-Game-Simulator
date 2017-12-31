@@ -3,27 +3,26 @@ using UnityEngine.Networking;
 
 public class LocalNetManager : NetworkManager
 {
-    public GameObject cardModelPrefab;
-    public PlayMode playController;
-
-    public NetPlayer LocalPlayer { get; set; }
-
-    public static NetworkHash128 CardModelAssetId { get; private set; }
-
     public static LocalNetManager Instance => (LocalNetManager)singleton;
+    public NetPlayer LocalPlayer { get; set; }
+    public PlayMode playController;
+    public GameObject cardModelPrefab;
 
     private LobbyDiscovery _discovery;
     public LobbyDiscovery Discovery => _discovery ??
                                          (_discovery = CardGameManager.Instance.gameObject.GetOrAddComponent<LobbyDiscovery>());
-
     void Start()
     {
-        CardModelAssetId = cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
-        ClientScene.RegisterSpawnHandler(CardModelAssetId, SpawnCard, UnSpawnCard);
+        if (!CardGameManager.IsMultiplayer)
+            return;
+
+        Debug.Log("CGSNet: Registering Card Spawner on client");
+        ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
     {
+        Debug.Log("CGSNet: Spawning card as directed by server");
         GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playController.playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.transform.localPosition = cardModel.LocalPosition;
@@ -35,6 +34,7 @@ public class LocalNetManager : NetworkManager
 
     public void UnSpawnCard(GameObject spawned)
     {
+        Debug.Log("CGSNet: Unspawning card as directed by server");
         CardModel cardModel = spawned.GetComponent<CardModel>();
         if (cardModel != null && !cardModel.hasAuthority)
             Destroy(spawned);
@@ -42,6 +42,7 @@ public class LocalNetManager : NetworkManager
 
     public void SearchForHost()
     {
+        Debug.Log("CGSNet: Searching For Host");
         if (Discovery.running)
             Discovery.StopBroadcast();
         Discovery.Initialize();
@@ -51,14 +52,16 @@ public class LocalNetManager : NetworkManager
     public override void OnStartHost()
     {
         base.OnStartHost();
+        Debug.Log("CGSNet: Starting Host");
         if (Discovery.running)
             Discovery.StopBroadcast();
         Discovery.Initialize();
         Discovery.StartAsServer();
     }
 
-    public override void OnClientConnect(NetworkConnection conn)
+    public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
-        ClientScene.AddPlayer(conn, 0);
+        base.OnServerAddPlayer(conn, playerControllerId);
+        Debug.Log("CGSNet: Host adds player: " + playerControllerId);
     }
 }
