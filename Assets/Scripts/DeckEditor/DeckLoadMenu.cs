@@ -123,7 +123,7 @@ public class DeckLoadMenu : SelectionPanel
     public void DeleteFile()
     {
         try {
-            File.Delete(SelectedFileName);
+            File.Delete(DeckFiles[SelectedFileName]);
         } catch (Exception e) {
             Debug.LogError(DeckDeleteErrorMessage + e.Message);
             CardGameManager.Instance.Messenger.Show(DeckDeleteErrorMessage + e.Message);

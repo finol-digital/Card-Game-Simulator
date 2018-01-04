@@ -149,19 +149,15 @@ static public class UnityExtensionMethods
 
     public static IEnumerator SaveUrlToFile(string url, string filePath)
     {
-        WWW loader = new WWW(url);
-        yield return loader;
-        if (!string.IsNullOrEmpty(loader.error)) {
-            Debug.LogWarning("Failed to load from " + url + ", error: " + loader.error);
-            yield break;
-        }
-
         string directory = Path.GetDirectoryName(filePath);
         string fileName = Path.GetFileName(filePath);
-        if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName)) {
-            Debug.LogWarning("Could not save to " + filePath + ", as it is an improperly formed path");
+        if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
             yield break;
-        }
+
+        WWW loader = new WWW(url);
+        yield return loader;
+        if (!string.IsNullOrEmpty(loader.error))
+            yield break;
 
         if (!Directory.Exists(directory))
             Directory.CreateDirectory(directory);
@@ -196,7 +192,6 @@ static public class UnityExtensionMethods
 
         Texture2D newTexture = new Texture2D(2, 2);
         newTexture.LoadImage(File.ReadAllBytes(textureFilePath));
-        newTexture.ApplyPadding();
         return Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
     }
 }

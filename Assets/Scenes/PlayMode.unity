@@ -2014,8 +2014,7 @@ MonoBehaviour:
     type: 2}
   deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
     type: 2}
-  searchMenuPrefab: {fileID: 1767781636286590, guid: 2a856778d84365048929069dfca116b5,
-    type: 2}
+  searchMenuPrefab: {fileID: 0}
   diceMenuPrefab: {fileID: 1257987102104264, guid: 0a553e85694d0e64ca920258e2fdd78d,
     type: 2}
   extraZonePrefab: {fileID: 1070941818217934, guid: a3317236d95550446b012dc8cdfc9b94,

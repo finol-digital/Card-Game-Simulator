@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9d50b4fa3784ef4d8dc39a6b43af545, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardSearchMenuPrefab: {fileID: 1767781636286590, guid: 2a856778d84365048929069dfca116b5,
+  cardSearchMenuPrefab: {fileID: 1332435347197338, guid: 3193cd5bbf6276147a6652aff7dca225,
     type: 2}
   deckEditor: {fileID: 62766704}
   layoutArea: {fileID: 1955078419}
@@ -588,7 +588,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00008090676, y: 0}
+  m_AnchoredPosition: {x: 0.00004455255, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &196520020

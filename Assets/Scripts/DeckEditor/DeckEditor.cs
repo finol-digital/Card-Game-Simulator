@@ -176,6 +176,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
         CurrentCardStackIndex = 0;
+        scrollBar.value = 0;
 
         CardInfoViewer.Instance.IsVisible = false;
         SavedDeck = null;
