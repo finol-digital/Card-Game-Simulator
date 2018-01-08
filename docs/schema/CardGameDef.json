@@ -22,6 +22,11 @@
 			"type": "string",
 			"format": "uri"
 		},
+		"allCardsUrlPageCount": {
+			"description": "When downloading AllCards.json from allCardsUrl, CGS will append ?page=<page> to the url for each page after the first page.",
+			"default": 1,
+			"type": "integer"
+		},
 		"allCardsZipped": {
 			"description": "If allCardsUrl points to a zipped file, set allCardsZipped to true, and CGS will unzip the file and then save the unzipped file as AllCards.json.",
 			"type": "boolean"
@@ -63,6 +68,10 @@
 			"description": "If cardBackImageUrl is a valid url, CGS will download the image at that url and save it as CardBack.<cardBackImageFileType>. CGS will display the CardBack.<cardBackImageFileType> when the user turns a card facedown or if CGS is unable to find the appropriate card image. If CGS is unable to get a custom card back, CGS will use the default CGS card back.",
 			"type": "string",
 			"format": "uri"
+		},
+		"cardDataIdentifier": {
+			"description": "If cardDataIdentifier is set to a non-empty string, AllCards.json will be parsed as a JSON object: {\"!cardDataIdentifier\":{\"$ref\":\"AllCards.json\"}}",
+			"type": "string"
 		},
 		"cardIdIdentifier": {
 			"description": "Every card must have a unique card id. When defining a card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by cardIdIdentifier. Most custom games will likely want to keep the default cardIdIdentifier.",
@@ -279,6 +288,10 @@
 		"setCodeIdentifier": {
 			"description": "When defining a set in AllSets.json, you can have the *Set:Code* mapped to the field defined by setCodeIdentifier. Most custom games will likely want to keep the default setCodeIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
 			"default": "code",
+			"type": "string"
+		},
+		"setDataIdentifier": {
+			"description": "If setDataIdentifier is set to a non-empty string, AllSets.json will be parsed as a JSON object: {\"!setDataIdentifier\":{\"$ref\":\"AllSets.json\"}}",
 			"type": "string"
 		},
 		"setNameIdentifier": {

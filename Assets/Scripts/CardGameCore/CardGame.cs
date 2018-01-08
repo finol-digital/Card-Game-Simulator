@@ -32,6 +32,9 @@ public class CardGame
     public string AllCardsUrl { get; set; } = "";
 
     [JsonProperty]
+    public int AllCardsUrlPageCount { get; set; } = 1;
+
+    [JsonProperty]
     public bool AllCardsZipped { get; set; }
 
     [JsonProperty]
@@ -57,6 +60,9 @@ public class CardGame
 
     [JsonProperty]
     public string CardBackImageUrl { get; set; } = "";
+
+    [JsonProperty]
+    public string CardDataIdentifier { get; set; } = "";
 
     [JsonProperty]
     public string CardIdIdentifier { get; set; }= "id";
@@ -128,6 +134,9 @@ public class CardGame
     public string SetCodeIdentifier { get; set; } = "code";
 
     [JsonProperty]
+    public string SetDataIdentifier { get; set; } = "";
+
+    [JsonProperty]
     public string SetNameIdentifier { get; set; } = "name";
 
     public Dictionary<string, Card> Cards { get; } = new Dictionary<string, Card>();
@@ -196,20 +205,15 @@ public class CardGame
 
         try {
             JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
+            BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
+            CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
             CreateEnumLookups();
-            LoadJsonFromFile(CardsFilePath, LoadCardFromJToken);
-            LoadJsonFromFile(SetsFilePath, LoadSetFromJToken);
+            LoadJsonFromFile(CardsFilePath, LoadCardFromJToken, CardDataIdentifier);
+            LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
         } catch (Exception e) {
             Error = e.Message;
             return;
         }
-
-        Sprite backgroundSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
-        if (backgroundSprite != null)
-            BackgroundImageSprite = backgroundSprite;
-        Sprite cardBackSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
-        if (cardBackSprite != null)
-            CardBackImageSprite = cardBackSprite;
 
         if (AutoUpdate)
             CardGameManager.Instance.StartCoroutine(Download());
@@ -223,14 +227,13 @@ public class CardGame
                 enumDef.CreateLookup(key);
     }
 
-    public void LoadJsonFromFile(string file, LoadJTokenDelegate load)
+    public void LoadJsonFromFile(string file, LoadJTokenDelegate load, string dataId)
     {
         if (!File.Exists(file))
             return;
 
         JToken root = JToken.Parse(File.ReadAllText(file));
-        IJEnumerable<JToken> jTokenEnumeration = root as JArray ?? (IJEnumerable<JToken>) ((JObject) root).PropertyValues();
-        foreach (JToken jToken in jTokenEnumeration)
+        foreach (JToken jToken in !string.IsNullOrEmpty(dataId) ? root[dataId] : root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues())
             load(jToken, Set.DefaultCode);
     }
 
@@ -240,6 +243,9 @@ public class CardGame
             return;
 
         string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
+        if (string.IsNullOrEmpty(cardId))
+            return;
+
         string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
         string cardSet = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
         Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
@@ -248,22 +254,26 @@ public class CardGame
             if (property.Type == PropertyType.EnumList) {
                 int enumValue = 0;
                 EnumDef enumDef = Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
-                IJEnumerable<JToken> enumValues = cardJToken as JArray;
-                if (enumDef != null && enumValues != null) {
-                    foreach (JToken jToken in enumValues) {
+                try {
+                    foreach (JToken jToken in cardJToken[property.Name]) {
                         int lookupValue;
-                        if (enumDef.ReverseLookup.TryGetValue(jToken.Value<string>() ?? string.Empty, out lookupValue))
+                        if (enumDef != null && enumDef.ReverseLookup.TryGetValue(jToken.Value<string>() ?? string.Empty, out lookupValue))
                             enumValue |= lookupValue;
                     }
+                } catch {
+                    // ignored
+                } finally {
+                    newPropertyEntry.Value = enumValue.ToString();
                 }
-                newPropertyEntry.Value = enumValue.ToString();
-            } else
-                newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
+            } else {
+                try {
+                    newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
+                } catch (Exception) {
+                    newPropertyEntry.Value = string.Empty;
+                }
+            }
             cardProperties [property.Name] = newPropertyEntry;
         }
-
-        if (string.IsNullOrEmpty(cardId))
-            return;
 
         Card newCard = new Card(cardId, cardName, cardSet, cardProperties);
         Cards [newCard.Id] = newCard;

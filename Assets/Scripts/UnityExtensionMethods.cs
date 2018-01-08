@@ -149,6 +149,9 @@ static public class UnityExtensionMethods
 
     public static IEnumerator SaveUrlToFile(string url, string filePath)
     {
+        if (string.IsNullOrEmpty(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            yield break;
+
         string directory = Path.GetDirectoryName(filePath);
         string fileName = Path.GetFileName(filePath);
         if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
