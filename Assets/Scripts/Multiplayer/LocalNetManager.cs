@@ -60,7 +60,7 @@ public class LocalNetManager : NetworkManager
     public void UnSpawnCard(GameObject spawned)
     {
         Debug.Log("CGSNet: Unspawning card as directed by server");
-        CardModel cardModel = spawned.GetComponent<CardModel>();
+        CardModel cardModel = spawned?.GetComponent<CardModel>();
         if (cardModel != null && !cardModel.hasAuthority)
             Destroy(spawned);
     }
