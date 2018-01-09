@@ -3,11 +3,9 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
-using RavingBots.EdgePadding;
-using Object = UnityEngine.Object;
+using UnityEngine;
 
 public static class ThreadSafeRandom
 {
@@ -58,7 +56,7 @@ static public class UnityExtensionMethods
         for (int i = parent.transform.childCount - 1; i >= 0; i--) {
             Transform child = parent.GetChild(i);
             child.SetParent(null);
-            Object.Destroy(child.gameObject);
+            UnityEngine.Object.Destroy(child.gameObject);
         }
     }
 
