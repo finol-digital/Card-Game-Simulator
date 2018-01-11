@@ -21,6 +21,7 @@ public class PlayMode : MonoBehaviour
 
     public ZonesViewer zones;
     public PointsCounter points;
+    public Text netText;
     public RectTransform playAreaContent;
 
     public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());

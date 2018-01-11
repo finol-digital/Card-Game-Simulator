@@ -24,7 +24,7 @@ public class LocalNetManager : NetworkManager
     public override void OnStartHost()
     {
         base.OnStartHost();
-        playController.netText = "Players: ";
+        playController.netText.text = "Players: ";
         Debug.Log("CGSNet: Starting Host");
         if (Discovery.running)
             Discovery.StopBroadcast();
