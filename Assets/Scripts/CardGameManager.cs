@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -163,7 +162,7 @@ public class CardGameManager : MonoBehaviour
 
     public Canvas TopCanvas {
         get {
-            if (_topCanvas != null) return _topCanvas;
+            if (_topCanvas != null && _topCanvas.gameObject.activeSelf) return _topCanvas;
             foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(CanvasTag))
                 if (canvas.activeSelf && (_topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > _topCanvas.sortingOrder))
                     _topCanvas = canvas.GetComponent<Canvas>();
