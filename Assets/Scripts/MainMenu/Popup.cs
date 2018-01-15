@@ -27,14 +27,6 @@ public class Popup : MonoBehaviour
         DisplayMessage(message);
     }
 
-    private void DisplayMessage(string message)
-    {
-        messageText.text = message ?? string.Empty;
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        cancelButton.GetComponentInChildren<Text>().text = CloseString;
-    }
-
     public void Prompt(string message, UnityAction yesAction)
     {
         Show(message);
@@ -54,6 +46,14 @@ public class Popup : MonoBehaviour
         if (noAction != null)
             noButton.onClick.AddListener(noAction);
         noButton.onClick.AddListener(Close);
+    }
+
+    private void DisplayMessage(string message)
+    {
+        messageText.text = message ?? string.Empty;
+        yesButton.gameObject.SetActive(false);
+        noButton.gameObject.SetActive(false);
+        cancelButton.GetComponentInChildren<Text>().text = CloseString;
     }
 
     public void Close()
