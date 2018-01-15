@@ -69,48 +69,41 @@ public class LocalNetManager : NetworkManager
     {
         base.OnStopHost();
         Debug.Log("Host Stopped");
-        CardGameManager.Instance.Messenger.Show("Host Stopped");
     }
 
     public override void OnServerError(NetworkConnection conn, int errorCode)
     {
         base.OnServerError(conn, errorCode);
         Debug.Log("Server error:" + errorCode);
-        CardGameManager.Instance.Messenger.Show("Server error:" + errorCode);
     }
 
     public override void OnStopServer()
     {
         base.OnStopServer();
         Debug.Log("Server Stopped");
-        CardGameManager.Instance.Messenger.Show("Server Stopped");
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         base.OnServerDisconnect(conn);
         Debug.Log("Server disconnected");
-        CardGameManager.Instance.Messenger.Show("Server disconnected");
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         base.OnClientError(conn, errorCode);
         Debug.Log("Client error:" + errorCode);
-        CardGameManager.Instance.Messenger.Show("Client error:" + errorCode);
     }
 
     public override void OnStopClient()
     {
         base.OnStopClient();
         Debug.Log("Client Stopped");
-        CardGameManager.Instance.Messenger.Show("Client Stopped");
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
     {
         base.OnClientDisconnect(conn);
         Debug.Log("Client Disconnected");
-        CardGameManager.Instance.Messenger.Show("Client Disconnected");
     }
 }

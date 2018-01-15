@@ -16,7 +16,7 @@ public class CardGameManager : MonoBehaviour
     public const string FirstGameName = "Standard Playing Cards";
     public const string MessengerPrefabName = "Popup";
     public const string InvalidGameSelectionMessage = "Could not select the card game because the name is not recognized in the list of card games! Try selecting a different card game.";
-    public const string GameLoadErrorMessage = "Error!: ";
+    public const string GameLoadErrorMessage = "Error loading game!: ";
     public const int PixelsPerInch = 100;
 
     public static string GamesFilePathBase => Application.persistentDataPath + "/games";
@@ -56,8 +56,14 @@ public class CardGameManager : MonoBehaviour
         }
         CurrentGameName = PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName);
 
+        Application.logMessageReceived += HandleLog;
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        Messenger.Show(logString);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -74,7 +80,6 @@ public class CardGameManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
             Debug.LogError(InvalidGameSelectionMessage);
-            Messenger.Show(InvalidGameSelectionMessage);
             return;
         }
 
@@ -87,10 +92,9 @@ public class CardGameManager : MonoBehaviour
         if (!Current.IsLoaded)
             Current.Load();
 
-        if (!string.IsNullOrEmpty(Current.Error)) {
+        if (!string.IsNullOrEmpty(Current.Error))
             Debug.LogError(GameLoadErrorMessage + Current.Error);
-            Messenger.Show(GameLoadErrorMessage + Current.Error);
-        } else
+        else
             PlayerPrefs.SetString(PlayerPrefGameName, CurrentGameName);
 
         if (BackgroundImage != null)
@@ -163,6 +167,7 @@ public class CardGameManager : MonoBehaviour
     public Canvas TopCanvas {
         get {
             if (_topCanvas != null && _topCanvas.gameObject.activeSelf) return _topCanvas;
+            _topCanvas = null;
             foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(CanvasTag))
                 if (canvas.activeSelf && (_topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > _topCanvas.sortingOrder))
                     _topCanvas = canvas.GetComponent<Canvas>();

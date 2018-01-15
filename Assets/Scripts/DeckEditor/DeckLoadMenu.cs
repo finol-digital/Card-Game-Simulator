@@ -126,7 +126,6 @@ public class DeckLoadMenu : SelectionPanel
             File.Delete(DeckFiles[SelectedFileName]);
         } catch (Exception e) {
             Debug.LogError(DeckDeleteErrorMessage + e.Message);
-            CardGameManager.Instance.Messenger.Show(DeckDeleteErrorMessage + e.Message);
         }
         SelectedFileName = string.Empty;
         BuildDeckFileSelectionOptions();
@@ -139,7 +138,6 @@ public class DeckLoadMenu : SelectionPanel
             deckText = File.ReadAllText(DeckFiles[SelectedFileName]);
         } catch (Exception e) {
             Debug.LogError(DeckLoadErrorMessage + e.Message);
-            CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
         }
 
         Deck newDeck = Deck.Parse(SelectedFileName, CardGameManager.Current.DeckFileType, deckText);
@@ -186,7 +184,6 @@ public class DeckLoadMenu : SelectionPanel
             File.WriteAllText(filePathFinder.FilePath, textInputField.text);
         } catch (Exception e) {
             Debug.LogError(DeckSaveErrorMessage + e.Message);
-            CardGameManager.Instance.Messenger.Show(DeckSaveErrorMessage + e.Message);
         }
         HideNewDeckPanel();
     }

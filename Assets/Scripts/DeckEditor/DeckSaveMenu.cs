@@ -73,7 +73,6 @@ public class DeckSaveMenu : MonoBehaviour
             File.WriteAllText(deck.FilePath, deck.ToString());
         } catch (Exception e) {
             Debug.LogError(DeckSaveErrorMessage + e.Message);
-            CardGameManager.Instance.Messenger.Show(DeckSaveErrorMessage + e.Message);
         }
         deckSaveCallback?.Invoke(deck);
     }

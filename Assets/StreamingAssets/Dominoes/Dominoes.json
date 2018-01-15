@@ -12,7 +12,9 @@
 	],
 	"cardSize": { "x": 1, "y": 2 },
 	"deckUrls": [
-		{"name": "Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/Dominoes/decks/Double%20Six%20Dominoes.txt"}
+		{"name": "Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/Dominoes/decks/Double%20Six%20Dominoes.txt"},
+		{"name": "Double Nine Dominoes", "url": "https://cardgamesim.finoldigital.com/Dominoes/decks/Double%20Nine%20Dominoes.txt"},
+		{"name": "Wooden Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/Dominoes/decks/Wooden%20Double%20Six%20Dominoes.txt"}
 	],
 	"enums": [
 		{"property": "type",  "values": {
@@ -26,7 +28,10 @@
 			"0x8": "3",
 			"0x10": "4",
 			"0x20": "5",
-			"0x40": "6"
+			"0x40": "6",
+			"0x80": "7",
+			"0x100": "8",
+			"0x200": "9"
 		}}
 	],
 	"gameStartHandCount": 7,

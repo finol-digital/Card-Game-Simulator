@@ -66,10 +66,9 @@ public class GameSelectionMenu : SelectionPanel
         if (string.IsNullOrEmpty(newGame.Error)) {
             CardGameManager.Instance.AllCardGames [newGame.Name] = newGame;
             CardGameManager.Instance.SelectCardGame(newGame.Name);
-        } else {
+        } else
             Debug.LogError(GameLoadErrorMessage + newGame.Error);
-            CardGameManager.Instance.Messenger.Show(GameLoadErrorMessage + newGame.Error);
-        }
+
         urlInput.interactable = true;
         cancelButton.interactable = true;
         HideDownloadPanel();

@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
 public class Popup : MonoBehaviour
 {
-    public const string OverwriteWarning = "Showing a message when a message is already being shown! Previous message will be overwritten";
     public const string CloseString = "Close";
     public const string CancelString = "Cancel";
 
@@ -13,14 +13,23 @@ public class Popup : MonoBehaviour
     public Button noButton;
     public Button cancelButton;
 
+    public Queue<string> MessageQueue { get; } = new Queue<string>();
+
     public void Show(string message)
     {
-        if (gameObject.activeSelf)
-            Debug.LogWarning(OverwriteWarning);
+        if (gameObject.activeSelf) {
+            MessageQueue.Enqueue(message);
+            return;
+        }
 
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
-        messageText.text = message;
+        DisplayMessage(message);
+    }
+
+    private void DisplayMessage(string message)
+    {
+        messageText.text = message ?? string.Empty;
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
         cancelButton.GetComponentInChildren<Text>().text = CloseString;
@@ -49,6 +58,9 @@ public class Popup : MonoBehaviour
 
     public void Close()
     {
-        gameObject.SetActive(false);
+        if (MessageQueue.Count > 0)
+            DisplayMessage(MessageQueue.Dequeue());
+        else
+            gameObject.SetActive(false);
     }
 }
