@@ -164,7 +164,7 @@ PlayerSettings:
     Standalone: com.FinolDigital.CardGameSim
     iOS: com.finoldigital.CardGameSimTest
   buildNumber:
-    Standalone: 16
+    Standalone: 17
     iOS: 17
   AndroidBundleVersionCode: 16
   AndroidMinSdkVersion: 16
