@@ -34,17 +34,27 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         cardImage.gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.AspectRatio;
         zoomPanel.GetChild(0).gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.AspectRatio;
 
-        SelectedPropertyIndex = 0;
+        int selectedPropertyIndex = 0;
         PropertyOptions.Clear();
         PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
         foreach (PropertyDef propDef in CardGameManager.Current.CardProperties) {
             PropertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
             if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
-                SelectedPropertyIndex = PropertyOptions.Count - 1;
+                selectedPropertyIndex = PropertyOptions.Count - 1;
         }
         propertySelection.options = PropertyOptions;
-        propertySelection.value = SelectedPropertyIndex;
-        propertySelection.onValueChanged.Invoke(SelectedPropertyIndex);
+        propertySelection.value = selectedPropertyIndex;
+        propertySelection.onValueChanged.Invoke(selectedPropertyIndex);
+    }
+
+    public void DecrementProperty()
+    {
+        SelectedPropertyIndex--;
+    }
+
+    public void IncrementProperty()
+    {
+        SelectedPropertyIndex++;
     }
 
     public void SetContentText()
@@ -84,11 +94,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     {
         if (SelectedCardModel == null)
             IsVisible = false;
-        
-        infoPanel.anchorMin = IsVisible ? 
+
+        infoPanel.anchorMin = IsVisible ?
             new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, VisibleYMin, AnimationSpeed * Time.deltaTime)) :
             new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, HiddenYmin, AnimationSpeed * Time.deltaTime));
-        infoPanel.anchorMax = IsVisible ? 
+        infoPanel.anchorMax = IsVisible ?
             new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, VisibleYMax, AnimationSpeed * Time.deltaTime)) :
             new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, HiddenYMax, AnimationSpeed * Time.deltaTime));
     }
@@ -115,8 +125,12 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public int SelectedPropertyIndex {
         get { return _selectedPropertyIndex; }
         set {
-            if (value < 0 || value >= PropertyOptions.Count) return;
             _selectedPropertyIndex = value;
+            if (_selectedPropertyIndex < 0)
+                _selectedPropertyIndex = PropertyOptions.Count - 1;
+            if (_selectedPropertyIndex >= PropertyOptions.Count)
+                _selectedPropertyIndex = 0;
+            propertySelection.value = _selectedPropertyIndex;
             labelText.text = SelectedPropertyName;
             SetContentText();
         }
@@ -127,7 +141,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         set {
             if (_selectedCardModel != null)
                 _selectedCardModel.HideHighlight();
-            
+
             _selectedCardModel = value;
 
             if (_selectedCardModel == null) {
