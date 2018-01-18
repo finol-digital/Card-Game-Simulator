@@ -195,12 +195,27 @@ public class CardGame
         foreach (DeckUrl deckUrl in DeckUrls)
             yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
+        if (!IsLoaded) {
+            try {
+                BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
+                CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
+                CreateEnumLookups();
+                LoadJsonFromFile(CardsFilePath, LoadCardFromJToken, CardDataIdentifier);
+                LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
+                IsLoaded = true;
+            } catch (Exception e) {
+                Error = e.Message;
+                IsDownloading = false;
+                yield break;
+            }
+        }
+
         IsDownloading = false;
     }
 
     public void Load()
     {
-        if (IsDownloading)
+        if (IsLoaded || IsDownloading)
             return;
 
         try {
@@ -317,8 +332,10 @@ public class CardGame
             enumProperties = new Dictionary<string, int>();
 
         foreach (Card card in Cards.Values) {
-            if (!card.Id.ToLower().Contains(id.ToLower()) || !card.Name.ToLower().Contains(name.ToLower()) ||
-                !card.SetCode.ToLower().Contains(setCode.ToLower())) continue;
+            if (!name.ToLower().Split(' ').All(card.Name.ToLower().Contains))
+                continue;
+            if (!card.Id.ToLower().Contains(id.ToLower()) || !card.SetCode.ToLower().Contains(setCode.ToLower()))
+                continue;
             bool propsMatch = true;
             foreach (KeyValuePair<string, string> entry in stringProperties)
                 if (!card.GetPropertyValueString(entry.Key).ToLower().Contains(entry.Value.ToLower()))
