@@ -53,7 +53,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
     {
         PropertyDefValuePair property;
         if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
-            return 0;
+            return string.Empty;
 
         EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
         if (enumDef == null)
