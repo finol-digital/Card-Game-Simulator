@@ -58,7 +58,6 @@ public class Card : IComparable<Card>, IEquatable<Card>
         EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
         if (enumDef == null)
             return property.Value;
-
         return enumDef.GetStringFromPropertyValue(property.Value);
     }
 
@@ -69,8 +68,8 @@ public class Card : IComparable<Card>, IEquatable<Card>
             return 0;
 
         int intValue;
-        bool isHex = property.Value.StartsWith(EnumDef.Hex);
-        int.TryParse(isHex ? property.Value.Substring(EnumDef.Hex.Length) : property.Value, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
+        if (!EnumDef.TryParseInt(property.Value, out intValue)
+            return 0;
         return intValue;
     }
 
@@ -83,7 +82,6 @@ public class Card : IComparable<Card>, IEquatable<Card>
         EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
         if (enumDef == null)
             return 0;
-
         return enumDef.GetEnumFromPropertyValue(property.Value);
     }
 
