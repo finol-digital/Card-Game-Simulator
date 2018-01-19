@@ -48,17 +48,50 @@ public class EnumDef
 
     public string GetStringFromLookupKeys(int keys)
     {
-        string result = string.Empty;
-
+        string stringValue = string.Empty;
         foreach (KeyValuePair<string, string> enumValue in Values) {
             int lookupValue;
             if (!ReverseLookup.TryGetValue(enumValue.Key, out lookupValue) || (lookupValue & keys) == 0)
                 continue;
-            if (!string.IsNullOrEmpty(result))
-                result += Delimiter;
-            result += enumValue.Value;
+            if (!string.IsNullOrEmpty(stringValue))
+                stringValue += Delimiter;
+            stringValue += enumValue.Value;
         }
+        return stringValue;
+    }
+    
+    public string GetStringFromPropertyValue(string propertyValue, bool isPropertyList = false)
+    {
+        if (string.IsNullOrEmpty(propertyValue)
+            return 0;
 
-        return result;
+        string stringValue = string.Empty;
+        foreach(string splitValue in propertyValue.Split(Delimiter, StringSplitOptions.RemoveEmptyEntries)) {
+            if (!string.IsNullOrEmpty(stringValue))
+                stringValue += Delimiter;
+            int lookupKeys;
+            string mappedValue;
+            if ((LookupEqualsValue && TryParseInt(splitValue, out lookupKeys)) 
+                || ReverseLookup.TryGetValue(splitValue, out lookupKeys))
+                stringValue += GetStringFromLookupKeys(lookupKeys);
+            else
+                stringValue += Values.TryGetValue(splitValue, out mappedValue) ? mappedValue : splitValue;
+        }
+        return stringValue;
+    }
+    
+    public int GetEnumFromPropertyValue(string propertyValue)
+    {
+        if (string.IsNullOrEmpty(propertyValue)
+            return 0;
+
+        int enumValue = 0;
+        foreach(string stringValue in propertyValue.Split(Delimiter, StringSplitOptions.RemoveEmptyEntries)) {
+            int intValue;
+            if ((LookupEqualsValue && TryParseInt(stringValue, out intValue)) 
+                || ReverseLookup.TryGetValue(stringValue, out intValue))
+                enumValue |= intValue;
+        }
+        return enumValue;
     }
 }
