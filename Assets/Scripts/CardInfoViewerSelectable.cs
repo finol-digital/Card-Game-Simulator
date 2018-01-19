@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 // HACK: THIS CLASS EXISTS TO DEAL WITH WONKINESS WITH SELECTING THINGS ON THE CARD INFO VIEWER
 public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
-    public bool checksDeselect = false;
+    public bool ignoreDeselect = false;
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -18,7 +18,7 @@ public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISel
 
     public void OnDeselect(BaseEventData eventData)
     {
-        if (!checksDeselect)
+        if (ignoreDeselect)
             return;
 
         CardInfoViewer.Instance.IsVisible = false;
