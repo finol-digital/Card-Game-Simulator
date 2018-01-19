@@ -15,9 +15,7 @@ public class EnumDef
     [JsonProperty]
     public Dictionary<string, string> Values { get; private set; }
 
-    public Dictionary<int, string> Lookup { get; } = new Dictionary<int, string>();
-    public Dictionary<string, int> ReverseLookup { get; } = new Dictionary<string, int>();
-    public bool LookupEqualsValue { get; private set; }
+    public Dictionary<string, int> Lookup { get; } = new Dictionary<string, int>();
 
     public static bool IsEnumProperty(string propertyName)
     {
@@ -32,26 +30,23 @@ public class EnumDef
 
     public int CreateLookup(string key)
     {
-        if (ReverseLookup.ContainsKey(key))
+        if (key == 0 || Lookup.ContainsKey(key))
             return 0;
 
         int intValue;
         if (!key.StartsWith(Hex) || !TryParseInt(key, out intValue))
             intValue = 1 << Lookup.Count;
-        else
-            LookupEqualsValue = true;
 
-        Lookup [intValue] = key;
-        ReverseLookup [key] = intValue;
+        Lookup [key] = intValue;
         return intValue;
     }
 
-    public string GetStringFromLookupKeys(int keys)
+    public string GetStringFromLookupFlags(int flags)
     {
         string stringValue = string.Empty;
         foreach (KeyValuePair<string, string> enumValue in Values) {
             int lookupValue;
-            if (!ReverseLookup.TryGetValue(enumValue.Key, out lookupValue) || (lookupValue & keys) == 0)
+            if (!Lookup.TryGetValue(enumValue.Key, out lookupValue) || (lookupValue & flags) == 0)
                 continue;
             if (!string.IsNullOrEmpty(stringValue))
                 stringValue += Delimiter;
@@ -60,20 +55,19 @@ public class EnumDef
         return stringValue;
     }
     
-    public string GetStringFromPropertyValue(string propertyValue, bool isPropertyList = false)
+    public string GetStringFromPropertyValue(string propertyValue)
     {
         if (string.IsNullOrEmpty(propertyValue)
-            return 0;
+            return string.Empty;
 
         string stringValue = string.Empty;
         foreach(string splitValue in propertyValue.Split(Delimiter, StringSplitOptions.RemoveEmptyEntries)) {
             if (!string.IsNullOrEmpty(stringValue))
                 stringValue += Delimiter;
-            int lookupKeys;
+            int lookupFlags;
             string mappedValue;
-            if ((LookupEqualsValue && TryParseInt(splitValue, out lookupKeys)) 
-                || ReverseLookup.TryGetValue(splitValue, out lookupKeys))
-                stringValue += GetStringFromLookupKeys(lookupKeys);
+            if (Lookup.TryGetValue(splitValue, out lookupFlags))
+                stringValue += GetStringFromLookupFlags(lookupFlags);
             else
                 stringValue += Values.TryGetValue(splitValue, out mappedValue) ? mappedValue : splitValue;
         }
@@ -88,8 +82,7 @@ public class EnumDef
         int enumValue = 0;
         foreach(string stringValue in propertyValue.Split(Delimiter, StringSplitOptions.RemoveEmptyEntries)) {
             int intValue;
-            if ((LookupEqualsValue && TryParseInt(stringValue, out intValue)) 
-                || ReverseLookup.TryGetValue(stringValue, out intValue))
+            if (Lookup.TryGetValue(stringValue, out intValue))
                 enumValue |= intValue;
         }
         return enumValue;
