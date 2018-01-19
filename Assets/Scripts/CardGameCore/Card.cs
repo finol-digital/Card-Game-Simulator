@@ -51,20 +51,15 @@ public class Card : IComparable<Card>, IEquatable<Card>
 
     public string GetPropertyValueString(string propertyName)
     {
-        if (string.IsNullOrEmpty(propertyName) || !Properties.ContainsKey(propertyName))
-            return string.Empty;
+        PropertyDefValuePair property;
+        if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            return 0;
 
-        PropertyDefValuePair property = Properties[propertyName];
         EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
         if (enumDef == null)
-            return property != null ? property.Value : string.Empty;
+            return property.Value;
 
-        int lookupKeys;
-        if (((property.Def.Type == PropertyType.EnumList || enumDef.LookupEqualsValue) && EnumDef.TryParseInt(property.Value, out lookupKeys)) || enumDef.ReverseLookup.TryGetValue(property.Value, out lookupKeys))
-            return enumDef.GetStringFromLookupKeys(lookupKeys);
-
-        string stringValue;
-        return enumDef.Values.TryGetValue(property.Value, out stringValue) ? stringValue : property.Value;
+        return enumDef.GetStringFromPropertyValue(property.Value);
     }
 
     public int GetPropertyValueInt(string propertyName)
@@ -89,10 +84,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
         if (enumDef == null)
             return 0;
 
-        int enumValue;
-        if (((property.Def.Type == PropertyType.EnumList || enumDef.LookupEqualsValue) && EnumDef.TryParseInt(property.Value, out enumValue)) || enumDef.ReverseLookup.TryGetValue(property.Value, out enumValue))
-            return enumValue;
-        return 0;
+        return enumDef.GetEnumFromPropertyValue(property.Value);
     }
 
     public int CompareTo(Card other)
