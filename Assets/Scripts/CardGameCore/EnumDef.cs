@@ -7,7 +7,7 @@ using System.Linq;
 public class EnumDef
 {
     public const string Hex = "0x";
-    public const string Delimiter = "|";
+    public const string Delimiter = " | ";
 
     [JsonProperty]
     public string Property { get; private set; }
