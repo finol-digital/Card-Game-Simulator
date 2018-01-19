@@ -266,26 +266,19 @@ public class CardGame
         Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
         foreach (PropertyDef property in CardProperties) {
             PropertyDefValuePair newPropertyEntry = new PropertyDefValuePair() { Def = property };
+            try {
             if (property.Type == PropertyType.EnumList) {
-                int enumValue = 0;
-                EnumDef enumDef = Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
-                try {
-                    foreach (JToken jToken in cardJToken[property.Name]) {
-                        int lookupValue;
-                        if (enumDef != null && enumDef.ReverseLookup.TryGetValue(jToken.Value<string>() ?? string.Empty, out lookupValue))
-                            enumValue |= lookupValue;
-                    }
-                } catch {
-                    // ignored
-                } finally {
-                    newPropertyEntry.Value = enumValue.ToString();
+                string listValue = string.Empty;
+                foreach (JToken jToken in cardJToken[property.Name]) {
+                    if (!string.IsNullOrEmpty(listValue))
+                        listValue += EnumDef.Delimiter;
+                    listValue += jToken.Value<string>() ?? string.Empty;
                 }
+                newPropertyEntry.Value = listValue;
             } else {
-                try {
-                    newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
-                } catch (Exception) {
-                    newPropertyEntry.Value = string.Empty;
-                }
+                newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
+            } } catch {
+                newPropertyEntry.Value = string.Empty;
             }
             cardProperties [property.Name] = newPropertyEntry;
         }
