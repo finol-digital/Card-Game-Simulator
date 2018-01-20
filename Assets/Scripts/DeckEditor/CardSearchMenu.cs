@@ -148,7 +148,7 @@ public class CardSearchMenu : MonoBehaviour
         float panelWidth = 0;
         foreach (KeyValuePair<string, string> enumValue in enumDef.Values) {
             int lookupKey;
-            if (!enumDef.ReverseLookup.TryGetValue(enumValue.Key, out lookupKey))
+            if (!enumDef.Lookup.TryGetValue(enumValue.Key, out lookupKey))
                 lookupKey = enumDef.CreateLookup(enumValue.Key);
             Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
             newToggle.isOn = (storedFilter & lookupKey) != 0;

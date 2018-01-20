@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Linq;
+using System;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class EnumDef
@@ -30,7 +31,7 @@ public class EnumDef
 
     public int CreateLookup(string key)
     {
-        if (key == 0 || Lookup.ContainsKey(key))
+        if (string.IsNullOrEmpty(key) || Lookup.ContainsKey(key))
             return 0;
 
         int intValue;
@@ -54,14 +55,14 @@ public class EnumDef
         }
         return stringValue;
     }
-    
+
     public string GetStringFromPropertyValue(string propertyValue)
     {
-        if (string.IsNullOrEmpty(propertyValue)
+        if (string.IsNullOrEmpty(propertyValue))
             return string.Empty;
 
         string stringValue = string.Empty;
-        foreach(string splitValue in propertyValue.Split(Delimiter, StringSplitOptions.RemoveEmptyEntries)) {
+        foreach(string splitValue in propertyValue.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries)) {
             if (!string.IsNullOrEmpty(stringValue))
                 stringValue += Delimiter;
             int lookupFlags;
@@ -73,14 +74,14 @@ public class EnumDef
         }
         return stringValue;
     }
-    
+
     public int GetEnumFromPropertyValue(string propertyValue)
     {
-        if (string.IsNullOrEmpty(propertyValue)
+        if (string.IsNullOrEmpty(propertyValue))
             return 0;
 
         int enumValue = 0;
-        foreach(string stringValue in propertyValue.Split(Delimiter, StringSplitOptions.RemoveEmptyEntries)) {
+        foreach(string stringValue in propertyValue.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries)) {
             int intValue;
             if (Lookup.TryGetValue(stringValue, out intValue))
                 enumValue |= intValue;

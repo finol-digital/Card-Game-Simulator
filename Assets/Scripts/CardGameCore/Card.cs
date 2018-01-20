@@ -68,7 +68,7 @@ public class Card : IComparable<Card>, IEquatable<Card>
             return 0;
 
         int intValue;
-        if (!EnumDef.TryParseInt(property.Value, out intValue)
+        if (!EnumDef.TryParseInt(property.Value, out intValue))
             return 0;
         return intValue;
     }
