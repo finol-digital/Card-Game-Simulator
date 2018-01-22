@@ -26,6 +26,15 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
     public DeckSaveMenu DeckSaver => _deckSaver ?? (_deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>());
 
+    public List<CardModel> CardModels {
+        get {
+            List<CardModel> cardModels = new List<CardModel>();
+            foreach (CardStack stack in CardStacks)
+                foreach (CardModel cardModel in stack.GetComponentsInChildren<CardModel>())
+                    cardModels.Add(cardModel);
+            return cardModels;
+        }
+    }
     public Deck CurrentDeck {
         get {
             Deck deck = new Deck(SavedDeck != null ? SavedDeck.Name : Deck.DefaultName, CardGameManager.Current.DeckFileType);
