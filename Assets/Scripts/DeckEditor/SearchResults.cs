@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class SearchResults : MonoBehaviour
 {
+    public const string SearchNameInput = "SearchName";
+    public const string FilterMenuInput = "FilterMenu";
     public const string EmptyFilterText = "*";
 
     public GameObject cardSearchMenuPrefab;
@@ -28,6 +30,14 @@ public class SearchResults : MonoBehaviour
     {
         CardSearcher.SearchCallback = ShowResults;
         CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
+    }
+    
+    void Update()
+    {
+        if (Input.GetButtonUp(SearchNameInput))
+            nameInputField.ActivateInputField();
+        else if (Input.GetButtonUp(FilterMenuInput))
+            ShowSearchMenu();
     }
 
     public string SetNameInputField(string nameFilter)
