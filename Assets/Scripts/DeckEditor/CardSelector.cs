@@ -15,12 +15,42 @@ public class CardSelector : MonoBehaviour
     {
         if (EventSystem.current.alreadySelecting)
             return;
+
+        List<CardModel> editorCards = editor.CardModels;
+        if (editorCards.Count < 1)
+            return;
+
+        for (int i = 0; i < editorCards.Count; i++) {
+            if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
+                continue;
+            i++;
+            if (i == editorCards.Count)
+                i = 0;
+            EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+            return;
+        }
+        EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
     }
     
     public void MoveUp()
     {
         if (EventSystem.current.alreadySelecting)
             return;
+
+        List<CardModel> editorCards = editor.CardModels;
+        if (editorCards.Count < 1)
+            return;
+
+        for (int i = editorCards.Count - 1; i >= 0; i--) {
+            if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
+                continue;
+            i--;
+            if (i < 0)
+                i = editorCards.Count - 1;
+            EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+            return;
+        }
+        EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
     }
     
     public void MoveLeft()
