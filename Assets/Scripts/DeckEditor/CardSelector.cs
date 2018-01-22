@@ -8,8 +8,8 @@ public class CardSelector : MonoBehaviour
     public const string LeftInput = "Left";
     public const string RightInput = "Right";
     
-    public DeckEditor deckEditor;
-    public SearchResults searchResults;
+    public DeckEditor editor;
+    public SearchResults results;
     
     public void MoveDown()
     {
@@ -27,6 +27,11 @@ public class CardSelector : MonoBehaviour
     {
         if (EventSystem.current.alreadySelecting)
             return;
+
+        GameObject goToSelect = null;
+        while (goToSelect == null) {
+        }
+        EventSystem.current.SetSelectedGameObject(goToSelect);
     }
     
     public void MoveRight()
