@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 public class PlayMode : MonoBehaviour
 {
-    public const string MainMenuPrompt = "Go back to the main menu?";
     public const string DrawInput = "Draw";
+    public const string CancelInput = "Cancel";
+    public const string MainMenuPrompt = "Go back to the main menu?";
 
     public GameObject lobbyPrefab;
     public GameObject deckLoadMenuPrefab;
@@ -68,13 +69,16 @@ public class PlayMode : MonoBehaviour
             zones.verticalScrollView : zones.horizontalScrollView;
     }
 
-#if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
     void Update()
     {
-        if (Input.GetButtonDown(DrawInput))
+        if (CardInfoViewer.Instance.IsVisible)
+            return;
+        
+        if (Input.GetButtonUp(DrawInput) && CardGameManager.TopMenuCanvas == null)
             Deal(1);
+        else if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
+            PromptBackToMainMenu();
     }
-#endif
 
     public void ShowDiceMenu()
     {
