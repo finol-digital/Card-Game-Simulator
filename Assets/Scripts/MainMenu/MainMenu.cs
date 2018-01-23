@@ -67,13 +67,10 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (CardGameManager.Instance.Messenger.gameObject.activeSelf || CardGameManager.Instance.Selector.gameObject.activeSelf)
-            return;
-
-        if (multiplayerButton != null && Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+        if (multiplayerButton != null && Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && CardGameManager.TopMenuCanvas == null)
             EventSystem.current.SetSelectedGameObject(multiplayerButton.gameObject);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && CardGameManager.TopMenuCanvas == null)
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
 #endif
     }
