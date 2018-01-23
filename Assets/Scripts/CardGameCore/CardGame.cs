@@ -333,12 +333,11 @@ public class CardGame
             foreach (KeyValuePair<string, string> entry in stringProperties)
                 if (!card.GetPropertyValueString(entry.Key).ToLower().Contains(entry.Value.ToLower()))
                     propsMatch = false;
-            int intValue;
             foreach (KeyValuePair<string, int> entry in intMinProperties)
-                if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue < entry.Value)
+                if (card.GetPropertyValueInt(entry.Key) < entry.Value)
                     propsMatch = false;
             foreach (KeyValuePair<string, int> entry in intMaxProperties)
-                if (int.TryParse(card.GetPropertyValueString(entry.Key), out intValue) && intValue > entry.Value)
+                if (card.GetPropertyValueInt(entry.Key) > entry.Value)
                     propsMatch = false;
             foreach (KeyValuePair<string, int> entry in enumProperties) {
                 if ((card.GetPropertyValueEnum(entry.Key) & entry.Value) == 0)
