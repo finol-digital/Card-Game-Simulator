@@ -10,7 +10,8 @@ public class CardGameManager : MonoBehaviour
 {
     public const string CardGameManagerTag = "CardGameManager";
     public const string BackgroundImageTag = "Background";
-    public const string CanvasTag = "Canvas";
+    public const string CardCanvasTag = "CardCanvas";
+    public const string MenuCanvasTag = "MenuCanvas";
     public const string SelectorPrefabName = "Game Selection Menu";
     public const string PlayerPrefGameName = "DefaultGame";
     public const string FirstGameName = "Standard Playing Cards";
@@ -31,7 +32,6 @@ public class CardGameManager : MonoBehaviour
     private GameSelectionMenu _selector;
     private Popup _messenger;
     private Image _backgroundImage;
-    private Canvas _topCanvas;
 
     void Awake()
     {
@@ -164,14 +164,23 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public Canvas TopCanvas {
+    public static Canvas TopCardCanvas {
         get {
-            if (_topCanvas != null && _topCanvas.gameObject.activeSelf) return _topCanvas;
-            _topCanvas = null;
-            foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(CanvasTag))
-                if (canvas.activeSelf && (_topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > _topCanvas.sortingOrder))
-                    _topCanvas = canvas.GetComponent<Canvas>();
-            return _topCanvas;
+            Canvas topCanvas = null;
+            foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(CardCanvasTag))
+                if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
+                    topCanvas = canvas.GetComponent<Canvas>();
+            return topCanvas;
+        }
+    }
+
+    public static Canvas TopMenuCanvas {
+        get {
+            Canvas topCanvas = null;
+            foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(MenuCanvasTag))
+                if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
+                    topCanvas = canvas.GetComponent<Canvas>();
+            return topCanvas;
         }
     }
 
