@@ -56,8 +56,8 @@ public class Card : IComparable<Card>, IEquatable<Card>
             return string.Empty;
 
         EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
-        if (enumDef == null)
-            return property.Value;
+        if (enumDef == null || string.IsNullOrEmpty(property.Value))
+            return !string.IsNullOrEmpty(property.Value) ? property.Value : property.Def.Empty ?? string.Empty;
         return enumDef.GetStringFromPropertyValue(property.Value);
     }
 

@@ -112,6 +112,10 @@
 						"enum": ["string", "integer", "enum", "enumList"],
 						"default": "string",
 						"type": "string"
+					},
+					"empty": {
+						"description": "The value to display if the value is null or empty",
+						"type": "string"
 					}
 				}
 			},

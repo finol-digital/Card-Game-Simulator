@@ -18,9 +18,12 @@ public class PropertyDef : ICloneable
     [JsonProperty]
     public PropertyType Type { get; set; }
 
+    [JsonProperty]
+    public string Empty { get; set; }
+
     public object Clone()
     {
-        PropertyDef ret = new PropertyDef() { Name = Name.Clone() as string, Type = Type  };
+        PropertyDef ret = new PropertyDef() { Name = Name.Clone() as string, Type = Type, Empty = Empty  };
         return ret;
     }
 }

@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
 using System.IO;
 
-[JsonConverter(typeof(MonoStringEnumConverter))]
 public enum DeckFileType
 {
-    [EnumMember(Value = "dec")]
     Dec,
-    [EnumMember(Value = "hsd")]
     Hsd,
-    [EnumMember(Value = "txt")]
     Txt,
-    [EnumMember(Value = "ydk")]
     Ydk
 }
 
