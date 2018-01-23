@@ -8,6 +8,11 @@ public delegate string OnDeckNameChangeDelegate(string newName);
 
 public class DeckEditor : MonoBehaviour, ICardDropHandler
 {
+    public const string SortInput = "Sort";
+    public const string NewInput = "New";
+    public const string LoadInput = "Load";
+    public const string SaveInput = "Save";
+    public const string CancelInput = "Cancel";
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
     public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
     public const string ChangeIndicator = "*";
@@ -77,6 +82,23 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     void Start()
     {
         layoutArea.gameObject.GetOrAddComponent<CardDropZone>().dropHandler = this;
+    }
+    
+    void Update()
+    {
+        if (CardInfoViewer.Instance.IsVisble)
+            return;
+        
+        if (Input.GetButtonUp(SortInput) && CardGameManager.TopMenuCanvas == null)
+            Sort();
+        else if (Input.GetButtonUp(NewInput) && CardGameManager.TopMenuCanvas == null)
+            PromptForClear();
+        else if (Input.GetButtonUp(LoadInput) && CardGameManager.TopMenuCanvas == null)
+            ShowDeckLoadMenu();
+        else if (Input.GetButtonUp(SaveInput) && CardGameManager.TopMenuCanvas == null)
+            ShowDeckSaveMenu();
+        else if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
+            CheckBackToMainMenu();
     }
 
     public void ResetCardStacks()
