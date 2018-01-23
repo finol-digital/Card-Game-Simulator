@@ -6,6 +6,7 @@ public class SearchResults : MonoBehaviour
 {
     public const string SearchNameInput = "SearchName";
     public const string FilterMenuInput = "FilterMenu";
+    public const string PageInput = "Page";
     public const string EmptyFilterText = "*";
 
     public GameObject cardSearchMenuPrefab;
@@ -41,6 +42,12 @@ public class SearchResults : MonoBehaviour
             nameInputField.ActivateInputField();
         else if (Input.GetButtonUp(FilterMenuInput) && CardGameManager.TopMenuCanvas == null)
             ShowSearchMenu();
+        else if (Input.GetButtonDown(PageInput) && CardGameManager.TopMenuCanvas == null) {
+            if (Input.GetAxis(PageInput) > 0)
+                MoveRight();
+            else
+                MoveLeft();
+        }
     }
 
     public string SetNameInputField(string nameFilter)
