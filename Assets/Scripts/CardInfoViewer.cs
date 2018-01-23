@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
     public const string CardInfoViewerTag = "CardInfoViewer";
+    public const string CVInput = "CardViewer";
+    public const string CancelInput = "Cancel";
     public const string SetLabel = "Set";
     public const float VisibleYMin = 0.625f;
     public const float VisibleYMax = 1;
@@ -92,8 +94,16 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     void Update()
     {
-        if (SelectedCardModel == null)
-            IsVisible = false;
+        if (IsVisible) {
+            if (Input.GetButtonDown(CVInput) && CardGameManager.TopMenuCanvas == null) {
+                if (Input.GetAxis(CVInput) > 0)
+                    IncrementProperty();
+                else
+                    DecrementProperty();
+            }
+            if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
+                SelectedCardModel = null;
+        }
 
         infoPanel.anchorMin = IsVisible ?
             new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, VisibleYMin, AnimationSpeed * Time.deltaTime)) :
