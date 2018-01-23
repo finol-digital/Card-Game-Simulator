@@ -71,7 +71,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     
     void Update()
     {
-        if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
+        if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null && CardGameManager.TopMenuCanvas == null)
             DoubleClickAction(this);
     }
 
