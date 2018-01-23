@@ -19,6 +19,7 @@ public enum DragPhase
 [RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(Outline))]
 public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public const string SubmitInput = "Submit";
     public const float MovementSpeed = 600f;
     public const float AlphaHitTestMinimumThreshold = 0.1f;
     public static readonly Color SelectedHighlightColor = new Color(0, 140, 255);
@@ -66,6 +67,12 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         else
             GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
+    }
+    
+    void Update()
+    {
+        if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
+            DoubleClickAction(this);
     }
 
     public void OnPointerDown(PointerEventData eventData)
