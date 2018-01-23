@@ -25,7 +25,7 @@ public class CancelButton : MonoBehaviour
 
     public bool IsPressable {
         get {
-            if (!gameObject.GetComponentInParent<Canvas>().Equals(CardGameManager.Instance.TopCanvas))
+            if (!gameObject.GetComponentInParent<Canvas>().Equals(CardGameManager.Instance.TopMenuCanvas))
                 return false;
             if (RayCaster == null)
                 RayCaster = gameObject.FindInParents<Canvas>().GetComponent<GraphicRaycaster>();
