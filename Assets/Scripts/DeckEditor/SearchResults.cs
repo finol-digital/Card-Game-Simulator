@@ -34,6 +34,9 @@ public class SearchResults : MonoBehaviour
     
     void Update()
     {
+        if (CardInfoViewer.Instance.IsVisble)
+            return;
+        
         if (Input.GetButtonUp(SearchNameInput) && CardGameManager.TopMenuCanvas == null)
             nameInputField.ActivateInputField();
         else if (Input.GetButtonUp(FilterMenuInput) && CardGameManager.TopMenuCanvas == null)
