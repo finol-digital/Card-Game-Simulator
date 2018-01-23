@@ -106,14 +106,14 @@ public class CardSelector : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown(VerticalInput)) {
+        if (Input.GetButtonDown(VerticalInput) && CardGameManager.TopMenuCanvas == null) {
             if (Input.GetAxis(VerticalInput) > 0)
                 MoveUp();
             else
                 MoveDown();
         }
 
-        if (Input.GetButtonDown(HorizontalInput)) {
+        if (Input.GetButtonDown(HorizontalInput) && CardGameManager.TopMenuCanvas == null) {
             if (Input.GetAxis(HorizontalInput) > 0)
                 MoveRight();
             else
