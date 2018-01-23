@@ -264,7 +264,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline && hasAuthority)
             CmdUnspawnCard();
         CardStack prevParentStack = ParentCardStack;
-        transform.SetParent(CardGameManager.Instance.TopCanvas.transform);
+        transform.SetParent(CardGameManager.Instance.TopCardCanvas.transform);
         transform.SetAsLastSibling();
         if (prevParentStack != null)
             prevParentStack.OnRemove(this);
