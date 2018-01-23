@@ -1,24 +1,25 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CardSelector : MonoBehaviour
 {
-    public const string DownInput = "Down";
-    public const string UpInput = "Up";
-    public const string LeftInput = "Left";
-    public const string RightInput = "Right";
-    
+    public const string VerticalInput = "Vertical";
+    public const string HorizontalInput = "Horizontal";
+
     public DeckEditor editor;
     public SearchResults results;
-    
+
     public void MoveDown()
     {
         if (EventSystem.current.alreadySelecting)
             return;
 
         List<CardModel> editorCards = editor.CardModels;
-        if (editorCards.Count < 1)
+        if (editorCards.Count < 1) {
+            EventSystem.current.SetSelectedGameObject(null);
             return;
+        }
 
         for (int i = 0; i < editorCards.Count; i++) {
             if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
@@ -31,15 +32,17 @@ public class CardSelector : MonoBehaviour
         }
         EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
     }
-    
+
     public void MoveUp()
     {
         if (EventSystem.current.alreadySelecting)
             return;
 
         List<CardModel> editorCards = editor.CardModels;
-        if (editorCards.Count < 1)
+        if (editorCards.Count < 1) {
+            EventSystem.current.SetSelectedGameObject(null);
             return;
+        }
 
         for (int i = editorCards.Count - 1; i >= 0; i--) {
             if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
@@ -52,11 +55,16 @@ public class CardSelector : MonoBehaviour
         }
         EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
     }
-    
+
     public void MoveLeft()
     {
-        if (EventSystem.current.alreadySelecting || results.layoutArea.childCount < 1)
+        if (EventSystem.current.alreadySelecting)
             return;
+
+        if (results.layoutArea.childCount < 1) {
+            EventSystem.current.SetSelectedGameObject(null);
+            return;
+        }
 
         for (int i = results.layoutArea.childCount - 1; i >= 0; i--) {
             if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
@@ -71,11 +79,16 @@ public class CardSelector : MonoBehaviour
         }
         EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(results.layoutArea.childCount - 1).gameObject);
     }
-    
+
     public void MoveRight()
     {
         if (EventSystem.current.alreadySelecting || results.layoutArea.childCount < 1)
             return;
+
+        if (results.layoutArea.childCount < 1) {
+            EventSystem.current.SetSelectedGameObject(null);
+            return;
+        }
 
         for (int i = 0; i < results.layoutArea.childCount; i++) {
             if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
@@ -90,16 +103,21 @@ public class CardSelector : MonoBehaviour
         }
         EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
     }
-    
+
     void Update()
     {
-        if (Input.GetButtonDown(DownInput)
-            MoveDown();
-        else if (Input.GetButtonDown(UpInput)
-            MoveUp();
-        else if (Input.GetButtonDown(LeftInput)
-            MoveLeft();
-        else if (Input.GetButtonDown(RightInput)
-            MoveRight();
+        if (Input.GetButtonDown(VerticalInput)) {
+            if (Input.GetAxis(VerticalInput) > 0)
+                MoveUp();
+            else
+                MoveDown();
+        }
+
+        if (Input.GetButtonDown(HorizontalInput)) {
+            if (Input.GetAxis(HorizontalInput) > 0)
+                MoveRight();
+            else
+                MoveLeft();
+        }
     }
 }

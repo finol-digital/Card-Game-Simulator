@@ -473,6 +473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentGameText: {fileID: 539304557}
+  multiplayerButton: {fileID: 2020150241}
   exitButton: {fileID: 1452764039}
   versionText: {fileID: 1467840448}
 --- !u!1001 &248207488

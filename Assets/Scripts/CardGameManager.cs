@@ -100,7 +100,7 @@ public class CardGameManager : MonoBehaviour
         if (BackgroundImage != null)
             BackgroundImage.sprite = Current.BackgroundImageSprite;
         if (CardInfoViewer.Instance != null)
-            CardInfoViewer.Instance.Reset();
+            CardInfoViewer.Instance.ResetInfo();
 
         for (int i = OnSceneActions.Count - 1; i >= 0; i--)
             if (OnSceneActions [i] == null)

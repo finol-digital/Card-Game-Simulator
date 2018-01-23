@@ -21,6 +21,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 {
     public const float MovementSpeed = 600f;
     public const float AlphaHitTestMinimumThreshold = 0.1f;
+    public static readonly Color SelectedHighlightColor = new Color(0, 140, 255);
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
     public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive
@@ -60,7 +61,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
-        // GetComponent<RectTransform>().sizeDelta = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
         if (!IsFacedown)
             CardGameManager.Current.PutCardImage(this);
         else
@@ -398,7 +398,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void ShowHighlight()
     {
-        GetComponent<Outline>().effectColor = Color.green;
+        GetComponent<Outline>().effectColor = SelectedHighlightColor;
         GetComponent<Outline>().effectDistance = OutlineHighlightDistance;
     }
 

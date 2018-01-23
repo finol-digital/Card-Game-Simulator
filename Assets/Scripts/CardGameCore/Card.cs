@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
-using System.Globalization;
 
 public class Card : IComparable<Card>, IEquatable<Card>
 {

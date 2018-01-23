@@ -373,9 +373,13 @@ public class CardGame
         else
             newSprite = CardGameManager.Current.CardBackImageSprite;
 
-        foreach (CardModel cardModel in card.ModelsUsingImage)
-            if (!cardModel.IsFacedown)
+        foreach (CardModel cardModel in card.ModelsUsingImage) {
+            if (!cardModel.IsFacedown) {
                 cardModel.GetComponent<Image>().sprite = newSprite;
+                if (cardModel == CardInfoViewer.Instance.SelectedCardModel)
+                    CardInfoViewer.Instance.cardImage.sprite = newSprite;
+            }
+        }
         card.IsLoadingImage = false;
     }
 

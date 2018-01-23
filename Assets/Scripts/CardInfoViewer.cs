@@ -29,7 +29,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     private int _selectedPropertyIndex;
     private bool _isVisible;
 
-    public void Reset()
+    public void ResetInfo()
     {
         cardImage.gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.AspectRatio;
         zoomPanel.GetChild(0).gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.AspectRatio;
