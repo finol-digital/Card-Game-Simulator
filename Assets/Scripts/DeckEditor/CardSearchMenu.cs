@@ -88,7 +88,7 @@ public class CardSearchMenu : MonoBehaviour
         foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
             GameObject newPanel;
             if (EnumDef.IsEnumProperty(property.Name))
-                newPanel = CreateEnumPropertyFilterPanel(property.Name);
+                newPanel = CreateEnumPropertyFilterPanel(property);
             else if (property.Type == PropertyType.Integer)
                 newPanel = CreateIntegerPropertyFilterPanel(property.Name);
             else //if (property.Type == PropertyType.String)
@@ -133,17 +133,17 @@ public class CardSearchMenu : MonoBehaviour
         return newPanel;
     }
 
-    public GameObject CreateEnumPropertyFilterPanel(string propertyName)
+    public GameObject CreateEnumPropertyFilterPanel(PropertyDef property)
     {
         GameObject newPanel = Instantiate(enumPropertyPanel.gameObject, propertyFiltersContent);
         newPanel.gameObject.SetActive(true);
 
         SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
-        config.nameLabelText.text = propertyName;
+        config.nameLabelText.text = property.Name;
         int storedFilter;
-        EnumPropertyFilters.TryGetValue(propertyName, out storedFilter);
+        EnumPropertyFilters.TryGetValue(property.Name, out storedFilter);
 
-        EnumDef enumDef = CardGameManager.Current.Enums.First(def => def.Property.Equals(propertyName));
+        EnumDef enumDef = CardGameManager.Current.Enums.First(def => def.Property.Equals(property.Name));
         Vector3 localPosition = config.enumToggle.transform.localPosition;
         float panelWidth = 0;
         foreach (KeyValuePair<string, string> enumValue in enumDef.Values) {
@@ -152,7 +152,7 @@ public class CardSearchMenu : MonoBehaviour
                 lookupKey = enumDef.CreateLookup(enumValue.Key);
             Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
             newToggle.isOn = (storedFilter & lookupKey) != 0;
-            newToggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(propertyName, lookupKey, isOn));
+            newToggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(property.Name, lookupKey, isOn));
             newToggle.GetComponentInChildren<Text>().text = enumValue.Value;
             newToggle.transform.localPosition = localPosition;
             float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 25;
@@ -161,10 +161,24 @@ public class CardSearchMenu : MonoBehaviour
             localPosition.x += width;
             panelWidth += width;
         }
-
+        
+        if (!string.IsNullOrEmpty(property.Empty) {
+            int lookupKey;
+            if (!enumDef.Lookup.TryGetValue(property.Empty, out lookupKey))
+                lookupKey = enumDef.CreateLookup(property.Empty);
+            Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
+            newToggle.isOn = (storedFilter & lookupKey) != 0;
+            newToggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(property.Name, lookupKey, isOn));
+            newToggle.GetComponentInChildren<Text>().text = property.Empty;
+            newToggle.transform.localPosition = localPosition;
+            float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 25;
+            RectTransform imageTransform = (RectTransform)newToggle.GetComponentInChildren<Image>().transform;
+            imageTransform.sizeDelta = new Vector2(width, imageTransform.sizeDelta.y);
+            localPosition.x += width;
+            panelWidth += width;
+        }
         config.enumToggle.gameObject.SetActive(false);
         config.enumContent.sizeDelta = new Vector2(panelWidth, config.enumContent.sizeDelta.y);
-        newPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(Mathf.Clamp(panelWidth + 250, newPanel.GetComponent<RectTransform>().sizeDelta.x, propertyFiltersContent.rect.width), newPanel.GetComponent<RectTransform>().sizeDelta.y);
 
         return newPanel;
     }
