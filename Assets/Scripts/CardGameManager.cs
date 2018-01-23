@@ -183,5 +183,4 @@ public class CardGameManager : MonoBehaviour
             return topCanvas;
         }
     }
-
 }
