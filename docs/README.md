@@ -5,7 +5,7 @@ You can get CGS on your preferred device:
 - Mac x64 via [ZIP File](https://drive.google.com/uc?id=1ag7kjPRzweO5O5_Kj7q_yCj7xVkKdiaA&export=download)
 - Windows x64 via [ZIP File](https://drive.google.com/uc?id=1dPRqs9mtLmR5_0K4NbrfzinJJW7TQH51&export=download)
 
-## Add Custom Card Games
+## Get Custom Games
 CGS comes pre-packaged with these card games:
 - Standard Playing Cards
 - Dominoes
