@@ -1,4 +1,4 @@
-# Get Card Game Simulator
+# Get CGS
 You can get CGS on your preferred device:
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
 - iOS via the [App Store](mailto:david@finoldigital.com?subject=GetCGS)
@@ -26,5 +26,8 @@ Then, enter the CGS AutoUpdate URL for the game you would like to download:
 For example, the CGS AutoUpdate URL for Hearthstone is: https://hearthstone.finoldigital.com/
 
 You can also define your own custom game(s) by following the [Custom Games Documentation](CUSTOM.md).
+
+## Use CGS
+You can use [keyboard shortcuts](KEYBOARD.md) when using CGS.
 
 You may also be interested in our [Privacy Policy](PRIVACY.md).
