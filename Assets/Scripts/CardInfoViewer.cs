@@ -94,14 +94,16 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     void Update()
     {
-        if (IsVisible) {
-            if (Input.GetButtonDown(CVInput) && CardGameManager.TopMenuCanvas == null) {
+        if (IsVisible && SelectedCardModel != null) {
+            if (Input.GetButtonUp(SubmitInput) && CardGameManager.TopMenuCanvas == null && SelectedCardModel.DoubleClickAction != null)
+                SelectedCardModel.DoubleClickAction(SelectedCardModel);
+            else if (Input.GetButtonDown(CVInput) && CardGameManager.TopMenuCanvas == null) {
                 if (Input.GetAxis(CVInput) > 0)
                     IncrementProperty();
                 else
                     DecrementProperty();
             }
-            if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
+            else if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
                 SelectedCardModel = null;
         }
 
@@ -174,13 +176,10 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             if (!_isVisible && zoomPanel != null)
                 zoomPanel.gameObject.SetActive(false);
 
-            if (SelectedCardModel == null)
-                return;
-
             if (_isVisible)
-                SelectedCardModel.ShowHighlight();
+                SelectedCardModel?.ShowHighlight();
             else
-                SelectedCardModel.HideHighlight();
+                SelectedCardModel?.HideHighlight();
         }
     }
 }
