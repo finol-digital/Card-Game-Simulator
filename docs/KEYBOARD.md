@@ -19,7 +19,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Cancel**: *Esc* - Back to main menu.
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **Horizontal**: *left*, *right* - Scroll through card search results.
-- **Page**: *z*, *x* - Page through card search results.
+- **Page**: *PgDn*, *PgUp* - Page through card search results.
 - **Sort**: *q* - Brings up the sort menu.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the deck load menu.
@@ -50,10 +50,17 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 
 ## Deck Save Menu
 - **Cancel**: *Esc* - Cancel.
-
+- **FocusName**: *\`* - Focuses keyboard to the deck name input field.
+- **Submit**: *Enter* - Save.
 
 ## Search Filter Menu
 - **Cancel**: *Esc* - Cancel.
+- **FocusText**: *Tab* - Focuses keyboard to the next text input field.
+- **Page**: *PgDn*, *PgUp* - Focuses to the next enum row.
+- **Horizontal**: *left*, *right* - Scroll through enum values.
+- **Filter**: *f* - Toggles selected enum value.
+- **Delete**: *Delete* - Clear.
+- **Submit**: *Enter* - Search!
 
 ## Dice Creation Menu
 - **Cancel**: *Esc* - Cancel.
