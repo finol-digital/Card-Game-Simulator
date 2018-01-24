@@ -25,11 +25,19 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Load**: *r* - Brings up the deck load menu.
 - **Save**: *t* - Brings up the deck save menu.
 - **Filter**: *f* - Brings up the search filter menu.
-- **SearchName**: *`* - Focuses keyboard to the search name input field.
+- **SearchName**: *\`* - Focuses keyboard to the search name input field.
 
 ## Popup
+- **Cancel**: *Esc* - Cancel/Close.
+- **No**: *n* - No.
+- **Submit**: *Enter* - Yes.
 
 ## Game Selection Menu
+- **Cancel**: *Esc* - Cancel.
+- **Vertical**: *down*, *up* - Scroll through games.
+- **Load**: *r* - Brings up download game url input.
+- **SearchName**: *\`* - Focuses keyboard to the url input field.
+- **Submit**: *Enter* - OK/Download.
 
 ## Deck Load Menu
 
