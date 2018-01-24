@@ -68,12 +68,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
     }
-    
-    void Update()
-    {
-        if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null && CardGameManager.TopMenuCanvas == null)
-            DoubleClickAction(this);
-    }
 
     public void OnPointerDown(PointerEventData eventData)
     {
