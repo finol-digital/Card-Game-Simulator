@@ -1,5 +1,5 @@
 # CGS Keyboard Shortcuts
-If [your CGS device](README.md#Get CGS) has a keyboard, you can use these keyboard shortcuts.
+If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboard shortcuts.
 
 ## Main Menu
 - **Cancel**: *Esc* - Exit CGS.
