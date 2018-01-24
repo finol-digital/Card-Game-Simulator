@@ -51,6 +51,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 ## Deck Save Menu
 - **Cancel**: *Esc* - Cancel.
 
+
 ## Search Filter Menu
 - **Cancel**: *Esc* - Cancel.
 
