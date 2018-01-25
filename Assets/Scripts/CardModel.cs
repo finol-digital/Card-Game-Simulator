@@ -69,12 +69,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
     }
 
-    void Update()
-    {
-        if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null && CardGameManager.TopMenuCanvas == null)
-            DoubleClickAction(this);
-    }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         // HACK TO SELECT ON DOWN WHEN THE CARD INFO VIEWER IS VISIBLE; CAN'T USE CARDINFOVIEWER.ISVISIBLE SINCE IT IS SET TO FALSE WHEN POINTER DOWN, BEFORE THIS METHOD IS CALLED
