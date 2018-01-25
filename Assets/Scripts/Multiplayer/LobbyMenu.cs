@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class LobbyMenu : SelectionPanel
@@ -19,6 +20,9 @@ public class LobbyMenu : SelectionPanel
     
     void Update()
     {
+        if (!Input.anyKey || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            return;
+        
         if (Input.GetButtonUp(SubmitInput) && joinButton.interactable)
             Join();
         else if (Input.GetButtonUp(NewInput))
