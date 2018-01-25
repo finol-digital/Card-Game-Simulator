@@ -23,5 +23,4 @@ public class Set : IEquatable<Set>
     {
         return Code.Equals(Name) ? Code : string.Format("{1} ({0})", Code, Name);
     }
-
 }
