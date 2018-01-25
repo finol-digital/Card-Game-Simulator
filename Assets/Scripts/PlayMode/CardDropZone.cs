@@ -31,5 +31,4 @@ public class CardDropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (cardModel != null && cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
             dropHandler.OnDrop(cardModel);
     }
-
 }
