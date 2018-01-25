@@ -83,12 +83,12 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         layoutArea.gameObject.GetOrAddComponent<CardDropZone>().dropHandler = this;
     }
-    
+
     void Update()
     {
-        if (CardInfoViewer.Instance.IsVisble)
+        if (CardInfoViewer.Instance.IsVisible)
             return;
-        
+
         if (Input.GetButtonUp(SortInput) && CardGameManager.TopMenuCanvas == null)
             Sort();
         else if (Input.GetButtonUp(NewInput) && CardGameManager.TopMenuCanvas == null)

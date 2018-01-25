@@ -276,7 +276,7 @@ GameObject:
   - component: {fileID: 114113776787117456}
   m_Layer: 5
   m_Name: Deck Save Menu
-  m_TagString: Canvas
+  m_TagString: MenuCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

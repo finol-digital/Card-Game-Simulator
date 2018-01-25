@@ -68,7 +68,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
         GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
     }
-    
+
     void Update()
     {
         if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null && CardGameManager.TopMenuCanvas == null)
@@ -271,7 +271,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline && hasAuthority)
             CmdUnspawnCard();
         CardStack prevParentStack = ParentCardStack;
-        transform.SetParent(CardGameManager.Instance.TopCardCanvas.transform);
+        transform.SetParent(CardGameManager.TopCardCanvas.transform);
         transform.SetAsLastSibling();
         if (prevParentStack != null)
             prevParentStack.OnRemove(this);

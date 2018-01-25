@@ -787,7 +787,6 @@ GameObject:
   - component: {fileID: 222817837672566900}
   - component: {fileID: 114695952522369170}
   - component: {fileID: 114322291885956760}
-  - component: {fileID: 114992615021452234}
   m_Layer: 5
   m_Name: Close Card Info Button
   m_TagString: Untagged
@@ -2683,17 +2682,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: <Property:Name>
---- !u!114 &114992615021452234
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1984063691387510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &222011094432522244
 CanvasRenderer:
   m_ObjectHideFlags: 1

@@ -161,8 +161,8 @@ public class CardSearchMenu : MonoBehaviour
             localPosition.x += width;
             panelWidth += width;
         }
-        
-        if (!string.IsNullOrEmpty(property.Empty) {
+
+        if (!string.IsNullOrEmpty(property.Empty)) {
             int lookupKey;
             if (!enumDef.Lookup.TryGetValue(property.Empty, out lookupKey))
                 lookupKey = enumDef.CreateLookup(property.Empty);

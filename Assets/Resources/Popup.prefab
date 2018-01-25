@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 114813159902558396}
   m_Layer: 5
   m_Name: Popup
-  m_TagString: Canvas
+  m_TagString: MenuCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 114170174395839966}
   m_Layer: 5
   m_Name: Dice Menu
-  m_TagString: Canvas
+  m_TagString: MenuCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

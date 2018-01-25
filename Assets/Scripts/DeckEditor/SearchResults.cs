@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SearchResults : MonoBehaviour
 {
-    public const string SearchNameInput = "SearchName";
+    public const string FocusNameInput = "FocusName";
     public const string FilterMenuInput = "FilterMenu";
     public const string PageInput = "Page";
     public const string EmptyFilterText = "*";
@@ -32,13 +32,13 @@ public class SearchResults : MonoBehaviour
         CardSearcher.SearchCallback = ShowResults;
         CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
     }
-    
+
     void Update()
     {
-        if (CardInfoViewer.Instance.IsVisble)
+        if (CardInfoViewer.Instance.IsVisible)
             return;
-        
-        if (Input.GetButtonUp(SearchNameInput) && CardGameManager.TopMenuCanvas == null)
+
+        if (Input.GetButtonUp(FocusNameInput) && CardGameManager.TopMenuCanvas == null)
             nameInputField.ActivateInputField();
         else if (Input.GetButtonUp(FilterMenuInput) && CardGameManager.TopMenuCanvas == null)
             ShowSearchMenu();

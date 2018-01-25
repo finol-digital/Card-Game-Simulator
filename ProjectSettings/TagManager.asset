@@ -6,8 +6,9 @@ TagManager:
   tags:
   - CardGameManager
   - Background
-  - Canvas
   - CardInfoViewer
+  - CardCanvas
+  - MenuCanvas
   layers:
   - Default
   - TransparentFX
