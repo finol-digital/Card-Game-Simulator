@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
@@ -45,6 +46,9 @@ public class DeckLoadMenu : SelectionPanel
 
     void Update()
     {
+        if (!Input.anyKey || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            return;
+        
         if (newDeckPanel.gameObject.activeSelf) {
             if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
                 DoSaveDontOverwrite();
