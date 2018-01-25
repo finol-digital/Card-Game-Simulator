@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public delegate void OnFilterChangeDelegate(string filters);
@@ -9,16 +10,20 @@ public delegate void OnSearchDelegate(List<Card> searchResults);
 public class CardSearchMenu : MonoBehaviour
 {
     public const string SubmitInput = "Submit";
+    public const string FocusTextInput = "FocusText";
+    public const string PageInput = "Page";
+    public const string HorizontalInput = "Horizontal";
+    public const string FilterInput = "Filter";
+    public const string DeleteInput = "Delete";
+    public const string CancelInput = "Input";
     public const float PropertyPanelHeight = 150f;
 
     public string Filters {
-        get {
-            string filters = string.Empty;
+        get { string filters = string.Empty;
             if (!string.IsNullOrEmpty(IdFilter))
                 filters += "id:" + IdFilter + "; ";
             if (!string.IsNullOrEmpty(SetCodeFilter))
                 filters += "set:" + SetCodeFilter + "; ";
-
             foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
                 switch (property.Type) {
                     case PropertyType.Integer:
@@ -42,7 +47,6 @@ public class CardSearchMenu : MonoBehaviour
                         break;
                 }
             }
-
             return filters;
         }
     }
@@ -67,6 +71,21 @@ public class CardSearchMenu : MonoBehaviour
     private string _nameFilter;
     private string _idFilter;
     private string _setCodeFilter;
+    
+    void Update()
+    {
+        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            return;
+        
+        if (Input.GetButtonDown(SubmitInput)) {
+            Search();
+            Hide();
+        }
+        else if (Input.GetButtonDown(DeleteInput) && EventSystem.current.currentSelectedGameObject == null)
+            ClearFilters();
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            Hide();
+    }
 
     public void Show(OnDeckNameChangeDelegate nameChangeCallback, OnFilterChangeDelegate filterChangeCallback, OnSearchDelegate searchCallback)
     {
@@ -265,15 +284,6 @@ public class CardSearchMenu : MonoBehaviour
         foreach (Card card in cardSearcher)
             Results.Add(card);
         SearchCallback?.Invoke(Results);
-    }
-
-    void Update()
-    {
-        if (!Input.GetButtonDown(SubmitInput))
-            return;
-
-        Search();
-        Hide();
     }
 
     public void Hide()
