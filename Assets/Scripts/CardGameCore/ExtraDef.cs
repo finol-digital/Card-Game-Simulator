@@ -13,5 +13,4 @@ public class ExtraDef
 
     [JsonProperty]
     public string Value { get; private set; }
-    
 }
