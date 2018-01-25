@@ -20,12 +20,12 @@ public class LobbyMenu : SelectionPanel
     
     void Update()
     {
-        if (!Input.anyKey || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
         
-        if (Input.GetButtonUp(SubmitInput) && joinButton.interactable)
+        if (Input.GetButtonDown(SubmitInput) && joinButton.interactable)
             Join();
-        else if (Input.GetButtonUp(NewInput))
+        else if (Input.GetButtonDown(NewInput))
             Host();
         else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
