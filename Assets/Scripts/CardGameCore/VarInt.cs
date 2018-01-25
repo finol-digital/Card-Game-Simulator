@@ -43,7 +43,6 @@ public static class VarInt
         }
     }
 
-
     public static ulong Read(byte[] bytes, ref ulong offset, out int length)
     {
         if (offset > (ulong)bytes.Length)
@@ -53,5 +52,4 @@ public static class VarInt
         offset += (ulong)length;
         return value;
     }
-
 }
