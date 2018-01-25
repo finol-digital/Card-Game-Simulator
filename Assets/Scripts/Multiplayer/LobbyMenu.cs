@@ -27,7 +27,6 @@ public class LobbyMenu : SelectionPanel
             EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
             Hide();
-        }
     }
 
     public void Show()
