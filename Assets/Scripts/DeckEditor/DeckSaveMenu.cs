@@ -8,11 +8,6 @@ public delegate void OnDeckSavedDelegate(Deck savedDeck);
 
 public class DeckSaveMenu : MonoBehaviour
 {
-    public const string SubmitInput = "Submit";
-    public const string FocusNameInput = "FocusName";
-    public const string LoadInput = "Load";
-    public const string CancelInput = "Cancel";
-
     public const string DeckCopiedMessage = "The text for this deck has been copied to the clipboard.";
     public const string OverWriteDeckPrompt = "A deck with that name already exists. Overwrite?";
     public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
@@ -30,13 +25,13 @@ public class DeckSaveMenu : MonoBehaviour
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
         
-        if (Input.GetButtonDown(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+        if (Input.GetButtonDown(CardIn.SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
             AttemptSaveAndHide();
-        else if (Input.GetButtonDown(FocusNameInput) && EventSystem.current.currentSelectedGameObject == null)
-            Host();
-        else if (Input.GetButtonDown(LoadInput) && EventSystem.current.currentSelectedGameObject == null)
-            EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+        else if (Input.GetButtonDown(CardIn.FocusNameInput))
+            nameInputField.ActivateInputField();
+        else if (Input.GetButtonDown(CardIn.LoadInput) && EventSystem.current.currentSelectedGameObject == null)
+            CopyTextToClipboard();
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             Hide();
     }
 
