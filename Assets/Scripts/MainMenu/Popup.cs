@@ -5,9 +5,6 @@ using UnityEngine.Events;
 
 public class Popup : MonoBehaviour
 {
-    public const string SubmitInput = "Submit";
-    public const string NoInput = "No";
-    public const string CancelInput = "Cancel";
     public const string CloseLabel = "Close";
     public const string CancelLabel = "Cancel";
 
@@ -20,11 +17,11 @@ public class Popup : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown(SubmitInput))
+        if (Input.GetButtonDown(CardIn.SubmitInput) && yesButton.gameObject.activeInHierarchy)
             yesButton.onClick?.Invoke();
-        else if (Input.GetButtonDown(NoInput))
+        else if (Input.GetButtonDown(CardIn.NoInput) && noButton.gameObject.activeInHierarchy)
             noButton.onClick?.Invoke();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             Close();
     }
 
