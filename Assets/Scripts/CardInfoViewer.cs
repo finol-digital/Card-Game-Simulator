@@ -86,9 +86,12 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void SetContentText()
     {
-        contentText.text = string.Empty;
         if (SelectedCardModel != null)
-            contentText.text = SelectedPropertyIndex != 0 ? SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName) : CardGameManager.Current.Sets [SelectedCardModel.Value.SetCode].ToString();
+            contentText.text = SelectedPropertyIndex != 0 ? 
+                SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName)
+                : CardGameManager.Current.Sets [SelectedCardModel.Value.SetCode].ToString();
+        else
+            contentText.text = string.Empty;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -121,8 +124,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         get {
             if (_instance != null) return _instance;
             GameObject cardInfoViewer = GameObject.FindWithTag(CardInfoViewerTag);
-            if (cardInfoViewer != null)
-                _instance = cardInfoViewer.GetOrAddComponent<CardInfoViewer>();
+            _instance = cardInfoViewer?.GetOrAddComponent<CardInfoViewer>();
             return _instance;
         }
     }
