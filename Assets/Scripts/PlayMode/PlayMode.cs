@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class PlayMode : MonoBehaviour
 {
-    public const string DrawInput = "Draw";
-    public const string CancelInput = "Cancel";
     public const string MainMenuPrompt = "Go back to the main menu?";
 
     public GameObject lobbyPrefab;
@@ -65,9 +63,9 @@ public class PlayMode : MonoBehaviour
         if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(DrawInput))
+        if (Input.GetButtonDown(CardIn.DrawInput))
             Deal(1);
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             PromptBackToMainMenu();
     }
 
