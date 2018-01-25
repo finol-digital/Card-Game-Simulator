@@ -11,7 +11,7 @@ CGS comes pre-packaged with these card games:
 - Dominoes
 - Mahjong
 
-You can download custom games by pressing the top button of the Main Menu:
+You can download additional games by pressing the top button of the Main Menu:
 
 ![Main Menu Image](screenshots/mainmenu.png)
 
@@ -30,4 +30,4 @@ You can also define your own custom game(s) by following the [Custom Games Docum
 ## Use CGS
 You can use [keyboard shortcuts](KEYBOARD.md) when using CGS.
 
-You may also be interested in our [Privacy Policy](PRIVACY.md).
+### You may also be interested in our [Privacy Policy](PRIVACY.md).
