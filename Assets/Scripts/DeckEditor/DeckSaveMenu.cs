@@ -27,7 +27,7 @@ public class DeckSaveMenu : MonoBehaviour
     
     void Update()
     {
-        if (!Input.anyKey || CardGameManager.TopMenuCanvas != this.GetComponent<Canvas>())
+        if (!Input.anyKey || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
         
         if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
