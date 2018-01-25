@@ -22,24 +22,24 @@ public class GameSelectionMenu : SelectionPanel
     
     void Update()
     {
-        if (!Input.anyKey || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
         
         if (downloadPanel.gameObject.activeSelf) {
-            if (Input.GetButtonUp(SubmitInput) && downloadButton.interactable)
+            if (Input.GetButtonDown(SubmitInput) && downloadButton.interactable)
                 StartDownload();
-            else if (Input.GetButtonUp(SaveInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(SaveInput) && urlInput.interactable)
                 Paste();
-            else if (Input.GetButtonUp(NewInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(NewInput) && urlInput.interactable)
                 Clear();
-            else if (Input.GetButtonUp(FocusNameInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(FocusNameInput) && urlInput.interactable)
                 urlInput.ActivateInputField();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
                 HideDownloadPanel();
         } else {
-            if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+            if (Input.GetButtonDown(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
                 Hide();
-            else if (Input.GetButtonUp(LoadInput))
+            else if (Input.GetButtonDown(LoadInput))
                 ShowDownloadPanel();
             else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
