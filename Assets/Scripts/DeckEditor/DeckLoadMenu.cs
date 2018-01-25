@@ -34,6 +34,18 @@ public class DeckLoadMenu : SelectionPanel
     public string SelectedFileName { get; private set; }
     public Dictionary<string, string> DeckFiles { get; } = new Dictionary<string, string>();
 
+    void Update()
+    {
+        if (Input.GetButtonUp(SubmitInput) && joinButton.interactable)
+            Join();
+        else if (Input.GetButtonUp(NewInput))
+            Host();
+        else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            Hide();
+    }
+
     public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null, string originalText = null)
     {
         gameObject.SetActive(true);
