@@ -6,11 +6,29 @@ using UnityEngine.UI;
 
 public class LobbyMenu : SelectionPanel
 {
+    public const string SubmitInput = "Submit";
+    public const string VerticalInput = "Vertical";
+    public const string NewInput = "New";
+    public const string CancelInput = "Cancel";
+
     public Button cancelButton;
     public Button joinButton;
 
     public List<string> HostNames { get; private set; } = new List<string>();
     public string SelectedHost { get; private set; } = "";
+    
+    void Update()
+    {
+        if (Input.GetButtonUp(SubmitInput) && joinButton.interactable)
+            Join();
+        else if (Input.GetButtonUp(NewInput))
+            Host();
+        else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            Hide();
+        }
+    }
 
     public void Show()
     {
