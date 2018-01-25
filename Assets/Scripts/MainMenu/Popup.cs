@@ -5,8 +5,11 @@ using UnityEngine.Events;
 
 public class Popup : MonoBehaviour
 {
-    public const string CloseString = "Close";
-    public const string CancelString = "Cancel";
+    public const string SubmitInput = "Submit";
+    public const string NoInput = "No";
+    public const string CancelInput = "Cancel";
+    public const string CloseLabel = "Close";
+    public const string CancelLabel = "Cancel";
 
     public Text messageText;
     public Button yesButton;
@@ -14,6 +17,16 @@ public class Popup : MonoBehaviour
     public Button cancelButton;
 
     public Queue<string> MessageQueue { get; } = new Queue<string>();
+
+    void Update()
+    {
+        if (Input.GetButtonUp(SubmitInput))
+            yesButton.onClick?.Invoke();
+        else if (Input.GetButtonUp(NoInput))
+            noButton.onClick?.Invoke();
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            Close();
+    }
 
     public void Show(string message)
     {
@@ -35,7 +48,7 @@ public class Popup : MonoBehaviour
         if (yesAction != null)
             yesButton.onClick.AddListener(yesAction);
         yesButton.onClick.AddListener(Close);
-        cancelButton.GetComponentInChildren<Text>().text = CancelString;
+        cancelButton.GetComponentInChildren<Text>().text = CancelLabel;
     }
 
     public void Ask(string message, UnityAction noAction, UnityAction yesAction)
@@ -53,7 +66,7 @@ public class Popup : MonoBehaviour
         messageText.text = message ?? string.Empty;
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
-        cancelButton.GetComponentInChildren<Text>().text = CloseString;
+        cancelButton.GetComponentInChildren<Text>().text = CloseLabel;
     }
 
     public void Close()

@@ -104,7 +104,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 else
                     DecrementProperty();
             }
-            else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
+            else if ((Input.GetKeyUp(KeyCode.Escape) || Input.GetButtonUp(CancelInput)) && CardGameManager.TopMenuCanvas == null)
                 SelectedCardModel = null;
         }
 

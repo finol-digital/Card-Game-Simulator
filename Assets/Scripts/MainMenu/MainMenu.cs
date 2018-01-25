@@ -68,7 +68,9 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && multiplayerButton != null && CardGameManager.TopMenuCanvas == null)
+        if (currentGameText == null && Input.anyKeyDown)
+            GoToMainMenu();
+        else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && multiplayerButton != null && CardGameManager.TopMenuCanvas == null)
             EventSystem.current.SetSelectedGameObject(multiplayerButton.gameObject);
         else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);

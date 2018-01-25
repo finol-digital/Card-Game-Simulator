@@ -73,10 +73,10 @@ public class PlayMode : MonoBehaviour
     {
         if (CardInfoViewer.Instance.IsVisible)
             return;
-        
+
         if (Input.GetButtonUp(DrawInput) && CardGameManager.TopMenuCanvas == null)
             Deal(1);
-        else if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
             PromptBackToMainMenu();
     }
 

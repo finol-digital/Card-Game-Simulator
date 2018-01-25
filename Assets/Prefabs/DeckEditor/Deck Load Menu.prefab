@@ -156,7 +156,6 @@ GameObject:
   - component: {fileID: 222456830217972474}
   - component: {fileID: 114732441453382998}
   - component: {fileID: 114582670716232018}
-  - component: {fileID: 114663280257841638}
   m_Layer: 5
   m_Name: Delete Button
   m_TagString: Untagged
@@ -193,7 +192,6 @@ GameObject:
   - component: {fileID: 222511756359048540}
   - component: {fileID: 114336152821703538}
   - component: {fileID: 114276936609868636}
-  - component: {fileID: 114403518601058438}
   m_Layer: 5
   m_Name: New Button
   m_TagString: Untagged
@@ -296,7 +294,6 @@ GameObject:
   - component: {fileID: 222521208442392020}
   - component: {fileID: 114925912712323056}
   - component: {fileID: 114440245882454988}
-  - component: {fileID: 114325994019290074}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -525,7 +522,6 @@ GameObject:
   - component: {fileID: 222467590742150474}
   - component: {fileID: 114472998138905164}
   - component: {fileID: 114244462576921514}
-  - component: {fileID: 114325833437131218}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -1263,28 +1259,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114325833437131218
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1668386784400414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114325994019290074
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1412239434783484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114336152821703538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1312,17 +1286,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114403518601058438
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1236469228691354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114421254648281562
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1762,7 +1725,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 224000485604831812}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99962205
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2127,17 +2090,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114663280257841638
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1222557345866490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114725699684520732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3124,7 +3076,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.99962205}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3241,7 +3193,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1676.9065, y: -150}
+  m_AnchoredPosition: {x: 1677.8324, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 1, y: 0}
 --- !u!224 &224123843510932322
@@ -3545,7 +3497,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1126.3618, y: -150}
+  m_AnchoredPosition: {x: 1127.0231, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!224 &224299171445019738
@@ -3564,7 +3516,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125.272354, y: -150}
+  m_AnchoredPosition: {x: 125.40462, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &224315770740700714
@@ -3620,7 +3572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 575.8171, y: -150}
+  m_AnchoredPosition: {x: 576.21387, y: -150}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!224 &224351681432825400
@@ -3849,7 +3801,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.0001391903}
   m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &224977536836211226

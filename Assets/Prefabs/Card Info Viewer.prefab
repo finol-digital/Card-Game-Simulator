@@ -622,7 +622,6 @@ GameObject:
   - component: {fileID: 222713151755278018}
   - component: {fileID: 114647145243440378}
   - component: {fileID: 114195554468142330}
-  - component: {fileID: 114385345584262546}
   m_Layer: 5
   m_Name: Zoom Panel
   m_TagString: Untagged
@@ -1606,17 +1605,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: <Value>
---- !u!114 &114385345584262546
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1743704267921664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1803fb2e808e4d9bb9d5325872a2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114400247473913040
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3133,7 +3121,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -996.9423, y: 0}
+  m_SizeDelta: {x: -998.0524, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224134245546147898
 RectTransform:
@@ -3169,7 +3157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0000048393495}
+  m_AnchoredPosition: {x: 0, y: -0.000026751028}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224247773585803872
@@ -3324,7 +3312,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 50.735126}
+  m_AnchoredPosition: {x: 0, y: 50.735172}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224463543092697836
@@ -3473,7 +3461,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0000048393495}
+  m_AnchoredPosition: {x: 0, y: -0.000026751028}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224695781774734674

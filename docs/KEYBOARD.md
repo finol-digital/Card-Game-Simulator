@@ -36,21 +36,31 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through games.
 - **Load**: *r* - Brings up download game url input.
+- **Save**: *t* - Pastes text clipboard into the url input field.
+- **New**: *e* - Clears the url input field.
 - **FocusName**: *\`* - Focuses keyboard to the url input field.
 - **Submit**: *Enter* - OK/Download.
+
+## Multiplayer Lobby
+- **Cancel**: *Esc* - Cancel.
+- **Vertical**: *down*, *up* - Scroll through sessions.
+- **New**: *e* - Host new session.
+- **Submit**: *Enter* - Join selected session.
 
 ## Deck Load Menu
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through decks.
-- **New**: *e* - Brings up the deck text editor.
+- **New**: *e* - Brings up the deck text editor/Clears the deck text input field.
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
 - **FocusText**: *Tab* - Focuses keyboard to the deck text input field.
-- **Delete**: *Delete* - Delete.
-- **Submit**: *Enter* - Load/Save.
+- **Save**: *t* - Pastes text clipboard into the deck text input field.
+- **Delete**: *Delete* - Delete selected deck.
+- **Submit**: *Enter* - Load selected deck/Save.
 
 ## Deck Save Menu
 - **Cancel**: *Esc* - Cancel.
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
+- **Load**: *r* - Copies deck text to the text clipboard.
 - **Submit**: *Enter* - Save.
 
 ## Search Filter Menu
@@ -64,6 +74,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 
 ## Dice Creation Menu
 - **Cancel**: *Esc* - Cancel.
+- **Submit**: *Enter* - Create dice.
 
 ## Sort Menu
 - **Cancel**: *Esc* - Cancel.

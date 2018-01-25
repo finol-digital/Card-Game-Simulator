@@ -97,7 +97,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             ShowDeckLoadMenu();
         else if (Input.GetButtonUp(SaveInput) && CardGameManager.TopMenuCanvas == null)
             ShowDeckSaveMenu();
-        else if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
             CheckBackToMainMenu();
     }
 

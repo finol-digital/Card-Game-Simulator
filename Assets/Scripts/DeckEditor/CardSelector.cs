@@ -112,8 +112,7 @@ public class CardSelector : MonoBehaviour
             else
                 MoveDown();
         }
-
-        if (Input.GetButtonDown(HorizontalInput) && CardGameManager.TopMenuCanvas == null) {
+        else if (Input.GetButtonDown(HorizontalInput) && CardGameManager.TopMenuCanvas == null) {
             if (Input.GetAxis(HorizontalInput) > 0)
                 MoveRight();
             else
