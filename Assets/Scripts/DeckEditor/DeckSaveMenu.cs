@@ -27,14 +27,14 @@ public class DeckSaveMenu : MonoBehaviour
     
     void Update()
     {
-        if (!Input.anyKey || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
         
-        if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+        if (Input.GetButtonDown(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
             AttemptSaveAndHide();
-        else if (Input.GetButtonUp(FocusNameInput) && EventSystem.current.currentSelectedGameObject == null)
+        else if (Input.GetButtonDown(FocusNameInput) && EventSystem.current.currentSelectedGameObject == null)
             Host();
-        else if (Input.GetButtonUp(LoadInput) && EventSystem.current.currentSelectedGameObject == null)
+        else if (Input.GetButtonDown(LoadInput) && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
             Hide();
