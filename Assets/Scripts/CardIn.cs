@@ -1,6 +1,7 @@
 public static class CardIn
 {
     public const string CancelInput = "Cancel";
+    public const string CardViewerInput = "CardViewer";
     public const string ColumnInput = "Column";
     public const string DeleteInput = "Delete";
     public const string FilterInput = "Filter";
