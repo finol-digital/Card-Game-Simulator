@@ -101,6 +101,5 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 scrollRectContainer.OnEndDrag(eventData);
                 break;
         }
-
     }
 }
