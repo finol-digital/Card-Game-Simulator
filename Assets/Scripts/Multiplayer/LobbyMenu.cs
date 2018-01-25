@@ -7,11 +7,6 @@ using UnityEngine.UI;
 
 public class LobbyMenu : SelectionPanel
 {
-    public const string SubmitInput = "Submit";
-    public const string VerticalInput = "Vertical";
-    public const string NewInput = "New";
-    public const string CancelInput = "Cancel";
-
     public Button cancelButton;
     public Button joinButton;
 
@@ -23,13 +18,13 @@ public class LobbyMenu : SelectionPanel
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
         
-        if (Input.GetButtonDown(SubmitInput) && joinButton.interactable)
+        if (Input.GetButtonDown(CardIn.SubmitInput) && joinButton.interactable)
             Join();
-        else if (Input.GetButtonDown(NewInput))
+        else if (Input.GetButtonDown(CardIn.NewInput))
             Host();
-        else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+        else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             Hide();
     }
 
@@ -93,5 +88,4 @@ public class LobbyMenu : SelectionPanel
     {
         gameObject.SetActive(false);
     }
-
 }
