@@ -34,7 +34,7 @@ public class GameSelectionMenu : SelectionPanel
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
                 HideDownloadPanel();
         } else {
-            if (Input.GetButtonDown(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+            if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
                 Hide();
             else if (Input.GetButtonUp(LoadInput))
                 ShowDownloadPanel();
