@@ -20,9 +20,9 @@ public class Popup : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonUp(SubmitInput))
+        if (Input.GetButtonDown(SubmitInput))
             yesButton.onClick?.Invoke();
-        else if (Input.GetButtonUp(NoInput))
+        else if (Input.GetButtonDown(NoInput))
             noButton.onClick?.Invoke();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
             Close();
