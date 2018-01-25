@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class DiceMenu : MonoBehaviour
 {
+    public const int DefaultMin = 1;
+    public const int DefaultMax = 6;
+    
     public GameObject diePrefab;
     public Text minText;
     public Text maxText;
@@ -14,8 +17,19 @@ public class DiceMenu : MonoBehaviour
 
     void Start()
     {
-        Min = 1;
-        Max = 6;
+        Min = DefaultMin;
+        Max = DefaultMax;
+    }
+    
+    void Update()
+    {
+        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            return;
+
+        if (Input.GetButtonDown(CardIn.SubmitInput))
+            CreateAndHide();
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+            Hide();
     }
 
     public void Show(RectTransform playArea)
@@ -73,5 +87,4 @@ public class DiceMenu : MonoBehaviour
             maxText.text = _max.ToString();
         }
     }
-
 }
