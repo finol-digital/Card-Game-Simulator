@@ -8,11 +8,6 @@ public delegate string OnDeckNameChangeDelegate(string newName);
 
 public class DeckEditor : MonoBehaviour, ICardDropHandler
 {
-    public const string SortInput = "Sort";
-    public const string NewInput = "New";
-    public const string LoadInput = "Load";
-    public const string SaveInput = "Save";
-    public const string CancelInput = "Cancel";
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
     public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
     public const string ChangeIndicator = "*";
@@ -89,15 +84,15 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(SortInput))
+        if (Input.GetButtonDown(CardIn.SortInput))
             Sort();
-        else if (Input.GetButtonDown(NewInput))
+        else if (Input.GetButtonDown(CardIn.NewInput))
             PromptForClear();
-        else if (Input.GetButtonDown(LoadInput))
+        else if (Input.GetButtonDown(CardIn.LoadInput))
             ShowDeckLoadMenu();
-        else if (Input.GetButtonDown(SaveInput))
+        else if (Input.GetButtonDown(CardIn.SaveInput))
             ShowDeckSaveMenu();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             CheckBackToMainMenu();
     }
 
