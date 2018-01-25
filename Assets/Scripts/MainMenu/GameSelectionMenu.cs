@@ -22,6 +22,9 @@ public class GameSelectionMenu : SelectionPanel
     
     void Update()
     {
+        if (!Input.anyKey || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            return;
+        
         if (downloadPanel.gameObject.activeSelf) {
             if (Input.GetButtonUp(SubmitInput) && downloadButton.interactable)
                 StartDownload();
