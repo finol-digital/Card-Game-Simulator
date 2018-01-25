@@ -9,15 +9,6 @@ public delegate void OnSearchDelegate(List<Card> searchResults);
 
 public class CardSearchMenu : MonoBehaviour
 {
-    public const string SubmitInput = "Submit";
-    public const string FocusTextInput = "FocusText";
-    public const string PageInput = "Page";
-    public const string HorizontalInput = "Horizontal";
-    public const string FilterInput = "Filter";
-    public const string DeleteInput = "Delete";
-    public const string CancelInput = "Input";
-    public const float PropertyPanelHeight = 150f;
-
     public string Filters {
         get { string filters = string.Empty;
             if (!string.IsNullOrEmpty(IdFilter))
@@ -50,6 +41,7 @@ public class CardSearchMenu : MonoBehaviour
             return filters;
         }
     }
+    public float PropertyPanelHeight => ((RectTransform)stringPropertyPanel.transform).rect.height;
 
     public InputField nameInputField;
     public RectTransform propertyFiltersContent;
@@ -77,13 +69,13 @@ public class CardSearchMenu : MonoBehaviour
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
         
-        if (Input.GetButtonDown(SubmitInput)) {
+        if (Input.GetButtonDown(CardIn.SubmitInput)) {
             Search();
             Hide();
         }
-        else if (Input.GetButtonDown(DeleteInput) && EventSystem.current.currentSelectedGameObject == null)
+        else if (Input.GetButtonDown(CardIn.DeleteInput) && EventSystem.current.currentSelectedGameObject == null)
             ClearFilters();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             Hide();
     }
 
