@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class SearchResults : MonoBehaviour
 {
-    public const string FocusNameInput = "FocusName";
-    public const string FilterInput = "Filter";
-    public const string PageInput = "Page";
     public const string EmptyFilterText = "*";
 
     public GameObject cardSearchMenuPrefab;
@@ -35,15 +32,15 @@ public class SearchResults : MonoBehaviour
 
     void Update()
     {
-        if (CardInfoViewer.Instance.IsVisible)
+        if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonUp(FocusNameInput) && CardGameManager.TopMenuCanvas == null)
+        if (Input.GetButtonDown(CardIn.FocusNameInput))
             nameInputField.ActivateInputField();
-        else if (Input.GetButtonUp(FilterInput) && CardGameManager.TopMenuCanvas == null)
+        else if (Input.GetButtonDown(CardIn.FilterInput))
             ShowSearchMenu();
-        else if (Input.GetButtonDown(PageInput) && CardGameManager.TopMenuCanvas == null) {
-            if (Input.GetAxis(PageInput) > 0)
+        else if (Input.GetButtonDown(CardIn.PageInput)) {
+            if (Input.GetAxis(CardIn.PageInput) > 0)
                 MoveRight();
             else
                 MoveLeft();
