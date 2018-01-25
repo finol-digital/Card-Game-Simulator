@@ -98,7 +98,7 @@ public class CardSelector : MonoBehaviour
 
     public void MoveRight()
     {
-        if (EventSystem.current.alreadySelecting || results.layoutArea.childCount < 1)
+        if (EventSystem.current.alreadySelecting)
             return;
 
         if (results.layoutArea.childCount < 1) {
