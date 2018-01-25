@@ -9,6 +9,7 @@ public class MainMenu : MonoBehaviour
     public const int PlayModeSceneIndex = 2;
     public const int DeckEditorSceneIndex = 3;
     public const string VerticalInput = "Vertical";
+    public const string CancelInput = "Cancel";
     public const string ExitPrompt = "Exit CGS?";
 
     public Text currentGameText;
@@ -67,12 +68,10 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (multiplayerButton != null && Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && CardGameManager.TopMenuCanvas == null)
+        if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && multiplayerButton != null && CardGameManager.TopMenuCanvas == null)
             EventSystem.current.SetSelectedGameObject(multiplayerButton.gameObject);
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Escape) && CardGameManager.TopMenuCanvas == null)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
-#endif
     }
 
     public void Quit()

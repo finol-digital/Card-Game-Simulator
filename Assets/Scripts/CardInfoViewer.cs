@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
     public const string CardInfoViewerTag = "CardInfoViewer";
-    public const string CVInput = "CardViewer";
+    public const string SubmitInput = "Submit";
+    public const string CardViewerInput = "CardViewer";
     public const string CancelInput = "Cancel";
     public const string SetLabel = "Set";
     public const float VisibleYMin = 0.625f;
@@ -97,13 +98,13 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         if (IsVisible && SelectedCardModel != null) {
             if (Input.GetButtonUp(SubmitInput) && CardGameManager.TopMenuCanvas == null && SelectedCardModel.DoubleClickAction != null)
                 SelectedCardModel.DoubleClickAction(SelectedCardModel);
-            else if (Input.GetButtonDown(CVInput) && CardGameManager.TopMenuCanvas == null) {
-                if (Input.GetAxis(CVInput) > 0)
+            else if (Input.GetButtonDown(CardViewerInput) && CardGameManager.TopMenuCanvas == null) {
+                if (Input.GetAxis(CardViewerInput) > 0)
                     IncrementProperty();
                 else
                     DecrementProperty();
             }
-            else if (Input.GetButtonUp(CancelInput) && CardGameManager.TopMenuCanvas == null)
+            else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
                 SelectedCardModel = null;
         }
 

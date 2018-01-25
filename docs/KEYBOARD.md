@@ -12,14 +12,14 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the card viewer.
-- **CV**: *c*, *v* - Scroll through properties in the card viewer.
+- **CardViewer**: *c*, *v* - Scroll through properties in the card viewer.
 - **Submit**: *Enter* - Double-click action on selected card.
 
 ## Deck Editor
 - **Cancel**: *Esc* - Back to main menu.
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **Horizontal**: *left*, *right* - Scroll through card search results.
-- **Page**: *PgDn*, *PgUp* - Page through card search results.
+- **Page**: *PgUp*, *PgDn* - Page through card search results.
 - **Sort**: *q* - Brings up the sort menu.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the deck load menu.
