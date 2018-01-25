@@ -6,13 +6,6 @@ using UnityEngine.UI;
 
 public class GameSelectionMenu : SelectionPanel
 {
-    public const string SubmitInput = "Submit";
-    public const string LoadInput = "Load";
-    public const string SaveInput = "Save";
-    public const string NewInput = "New";
-    public const string FocusNameInput = "FocusName";
-    public const string VerticalInput = "Vertical";
-    public const string CancelInput = "Cancel";
     public const string GameLoadErrorMessage = "Failed to load game url! ";
 
     public RectTransform downloadPanel;
@@ -26,24 +19,24 @@ public class GameSelectionMenu : SelectionPanel
             return;
         
         if (downloadPanel.gameObject.activeSelf) {
-            if (Input.GetButtonDown(SubmitInput) && downloadButton.interactable)
+            if (Input.GetButtonDown(CardIn.SubmitInput) && downloadButton.interactable)
                 StartDownload();
-            else if (Input.GetButtonDown(SaveInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(CardIn.SaveInput) && urlInput.interactable)
                 Paste();
-            else if (Input.GetButtonDown(NewInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(CardIn.NewInput) && urlInput.interactable)
                 Clear();
-            else if (Input.GetButtonDown(FocusNameInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(CardIn.FocusNameInput) && urlInput.interactable)
                 urlInput.ActivateInputField();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
                 HideDownloadPanel();
         } else {
-            if (Input.GetButtonDown(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+            if (Input.GetButtonDown(CardIn.SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
                 Hide();
-            else if (Input.GetButtonDown(LoadInput))
+            else if (Input.GetButtonDown(CardIn.LoadInput))
                 ShowDownloadPanel();
-            else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
                 Hide();
         }
     }
