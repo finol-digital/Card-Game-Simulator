@@ -60,6 +60,17 @@ public class PlayMode : MonoBehaviour
             zones.AddZone(Instantiate(discardZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>());
     }
 
+    void Update()
+    {
+        if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+            return;
+
+        if (Input.GetButtonDown(DrawInput))
+            Deal(1);
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            PromptBackToMainMenu();
+    }
+
     void OnRectTransformDimensionsChange()
     {
         if (!gameObject.activeInHierarchy)
@@ -67,17 +78,6 @@ public class PlayMode : MonoBehaviour
 
         zones.ActiveScrollView = GetComponent<RectTransform>().rect.width > GetComponent<RectTransform>().rect.height ?
             zones.verticalScrollView : zones.horizontalScrollView;
-    }
-
-    void Update()
-    {
-        if (CardInfoViewer.Instance.IsVisible)
-            return;
-
-        if (Input.GetButtonUp(DrawInput) && CardGameManager.TopMenuCanvas == null)
-            Deal(1);
-        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
-            PromptBackToMainMenu();
     }
 
     public void ShowDiceMenu()
