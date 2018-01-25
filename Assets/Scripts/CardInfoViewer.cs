@@ -6,9 +6,6 @@ using UnityEngine.EventSystems;
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
     public const string CardInfoViewerTag = "CardInfoViewer";
-    public const string SubmitInput = "Submit";
-    public const string CardViewerInput = "CardViewer";
-    public const string CancelInput = "Cancel";
     public const string SetLabel = "Set";
     public const float VisibleYMin = 0.625f;
     public const float VisibleYMax = 1;
@@ -31,6 +28,33 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     private CardModel _selectedCardModel;
     private int _selectedPropertyIndex;
     private bool _isVisible;
+
+    void Update()
+    {
+        infoPanel.anchorMin = IsVisible ?
+            new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, VisibleYMin, AnimationSpeed * Time.deltaTime)) :
+            new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, HiddenYmin, AnimationSpeed * Time.deltaTime));
+        infoPanel.anchorMax = IsVisible ?
+            new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, VisibleYMax, AnimationSpeed * Time.deltaTime)) :
+            new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, HiddenYMax, AnimationSpeed * Time.deltaTime));
+    }
+    
+    void LateUpdate()
+    {
+        if (!IsVisible || SelectedCardModel == null || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+            return;
+
+        if (Input.GetButtonDown(CardIn.SubmitInput) && SelectedCardModel.DoubleClickAction != null)
+            SelectedCardModel.DoubleClickAction(SelectedCardModel);
+        else if (Input.GetButtonDown(CardIn.CardViewerInput)) {
+            if (Input.GetAxis(CardIn.CardViewerInput) > 0)
+                IncrementProperty();
+            else
+                DecrementProperty();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+            SelectedCardModel = null;
+    }
 
     public void ResetInfo()
     {
@@ -91,29 +115,6 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public void HideCardZoomed()
     {
         zoomPanel.gameObject.SetActive(false);
-    }
-
-    void Update()
-    {
-        if (IsVisible && SelectedCardModel != null) {
-            if (Input.GetButtonUp(SubmitInput) && CardGameManager.TopMenuCanvas == null && SelectedCardModel.DoubleClickAction != null)
-                SelectedCardModel.DoubleClickAction(SelectedCardModel);
-            else if (Input.GetButtonDown(CardViewerInput) && CardGameManager.TopMenuCanvas == null) {
-                if (Input.GetAxis(CardViewerInput) > 0)
-                    IncrementProperty();
-                else
-                    DecrementProperty();
-            }
-            else if ((Input.GetKeyUp(KeyCode.Escape) || Input.GetButtonUp(CancelInput)) && CardGameManager.TopMenuCanvas == null)
-                SelectedCardModel = null;
-        }
-
-        infoPanel.anchorMin = IsVisible ?
-            new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, VisibleYMin, AnimationSpeed * Time.deltaTime)) :
-            new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, HiddenYmin, AnimationSpeed * Time.deltaTime));
-        infoPanel.anchorMax = IsVisible ?
-            new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, VisibleYMax, AnimationSpeed * Time.deltaTime)) :
-            new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, HiddenYMax, AnimationSpeed * Time.deltaTime));
     }
 
     public static CardInfoViewer Instance {
