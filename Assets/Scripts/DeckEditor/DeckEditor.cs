@@ -86,18 +86,18 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     void Update()
     {
-        if (CardInfoViewer.Instance.IsVisible)
+        if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonUp(SortInput) && CardGameManager.TopMenuCanvas == null)
+        if (Input.GetButtonDown(SortInput))
             Sort();
-        else if (Input.GetButtonUp(NewInput) && CardGameManager.TopMenuCanvas == null)
+        else if (Input.GetButtonDown(NewInput))
             PromptForClear();
-        else if (Input.GetButtonUp(LoadInput) && CardGameManager.TopMenuCanvas == null)
+        else if (Input.GetButtonDown(LoadInput))
             ShowDeckLoadMenu();
-        else if (Input.GetButtonUp(SaveInput) && CardGameManager.TopMenuCanvas == null)
+        else if (Input.GetButtonDown(SaveInput))
             ShowDeckSaveMenu();
-        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
             CheckBackToMainMenu();
     }
 
