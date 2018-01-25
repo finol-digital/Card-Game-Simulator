@@ -183,4 +183,5 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
                 SelectedCardModel?.HideHighlight();
         }
     }
+    public bool WasVisible => infoPanel.anchorMax.y < (HiddenYMax + VisibleYMax) / 2.0f;
 }
