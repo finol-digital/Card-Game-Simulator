@@ -114,5 +114,4 @@ public class StackedZone : ExtensibleCardZone
     {
         countText.text = CardModels.Count.ToString();
     }
-
 }
