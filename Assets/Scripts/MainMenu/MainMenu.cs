@@ -32,6 +32,16 @@ public class MainMenu : MonoBehaviour
         versionText.text = "Ver. " + Application.version;
     }
 
+    void Update()
+    {
+        if (currentGameText == null && Input.anyKeyDown)
+            GoToMainMenu();
+        else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && multiplayerButton != null && CardGameManager.TopMenuCanvas == null)
+            EventSystem.current.SetSelectedGameObject(multiplayerButton.gameObject);
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
+            CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
+    }
+
     public void UpdateCurrentGameText()
     {
         if (currentGameText != null)
@@ -49,31 +59,21 @@ public class MainMenu : MonoBehaviour
         CardGameManager.Instance.Selector.Show();
     }
 
-    public void PlaySolo()
-    {
-        CardGameManager.IsMultiplayer = false;
-        SceneManager.LoadScene(PlayModeSceneIndex);
-    }
-
     public void PlayLocal()
     {
         CardGameManager.IsMultiplayer = true;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
+    public void PlaySolo()
+    {
+        CardGameManager.IsMultiplayer = false;
+        SceneManager.LoadScene(PlayModeSceneIndex);
+    }
+
     public void EditDeck()
     {
         SceneManager.LoadScene(DeckEditorSceneIndex);
-    }
-
-    void Update()
-    {
-        if (currentGameText == null && Input.anyKeyDown)
-            GoToMainMenu();
-        else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && multiplayerButton != null && CardGameManager.TopMenuCanvas == null)
-            EventSystem.current.SetSelectedGameObject(multiplayerButton.gameObject);
-        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
-            CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }
 
     public void Quit()
