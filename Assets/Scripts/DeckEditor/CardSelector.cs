@@ -4,11 +4,27 @@ using UnityEngine.EventSystems;
 
 public class CardSelector : MonoBehaviour
 {
-    public const string VerticalInput = "Vertical";
-    public const string HorizontalInput = "Horizontal";
-
     public DeckEditor editor;
     public SearchResults results;
+
+    void Update()
+    {
+        if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+            return;
+        
+        if (Input.GetButtonDown(CardIn.VerticalInput)) {
+            if (Input.GetAxis(CardIn.VerticalInput) > 0)
+                MoveUp();
+            else
+                MoveDown();
+        }
+        else if (Input.GetButtonDown(CardIn.HorizontalInput)) {
+            if (Input.GetAxis(CardIn.HorizontalInput) > 0)
+                MoveRight();
+            else
+                MoveLeft();
+        }
+    }
 
     public void MoveDown()
     {
@@ -102,21 +118,5 @@ public class CardSelector : MonoBehaviour
             return;
         }
         EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-    }
-
-    void Update()
-    {
-        if (Input.GetButtonDown(VerticalInput) && CardGameManager.TopMenuCanvas == null) {
-            if (Input.GetAxis(VerticalInput) > 0)
-                MoveUp();
-            else
-                MoveDown();
-        }
-        else if (Input.GetButtonDown(HorizontalInput) && CardGameManager.TopMenuCanvas == null) {
-            if (Input.GetAxis(HorizontalInput) > 0)
-                MoveRight();
-            else
-                MoveLeft();
-        }
     }
 }
