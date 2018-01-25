@@ -1,12 +1,18 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public delegate void OnDeckSavedDelegate(Deck savedDeck);
 
 public class DeckSaveMenu : MonoBehaviour
 {
+    public const string SubmitInput = "Submit";
+    public const string FocusNameInput = "FocusName";
+    public const string LoadInput = "Load";
+    public const string CancelInput = "Cancel";
+
     public const string DeckCopiedMessage = "The text for this deck has been copied to the clipboard.";
     public const string OverWriteDeckPrompt = "A deck with that name already exists. Overwrite?";
     public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
@@ -18,6 +24,21 @@ public class DeckSaveMenu : MonoBehaviour
     public OnDeckNameChangeDelegate NameChangeCallback { get; private set; }
     public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
     public bool DoesAutoOverwrite { get; private set; }
+    
+    void Update()
+    {
+        if (!Input.anyKey || CardGameManager.TopMenuCanvas != this.GetComponent<Canvas>())
+            return;
+        
+        if (Input.GetButtonUp(SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+            AttemptSaveAndHide();
+        else if (Input.GetButtonUp(FocusNameInput) && EventSystem.current.currentSelectedGameObject == null)
+            Host();
+        else if (Input.GetButtonUp(LoadInput) && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput))
+            Hide();
+    }
 
     public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
     {
