@@ -8,8 +8,6 @@ public class MainMenu : MonoBehaviour
     public const int MainMenuSceneIndex = 1;
     public const int PlayModeSceneIndex = 2;
     public const int DeckEditorSceneIndex = 3;
-    public const string VerticalInput = "Vertical";
-    public const string CancelInput = "Cancel";
     public const string ExitPrompt = "Exit CGS?";
 
     public Text currentGameText;
@@ -34,11 +32,14 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (currentGameText == null && Input.anyKeyDown)
+        if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+            return;
+ 
+        if (currentGameText == null)
             GoToMainMenu();
-        else if (Input.GetButtonDown(VerticalInput) && EventSystem.current.currentSelectedGameObject == null && multiplayerButton != null && CardGameManager.TopMenuCanvas == null)
-            EventSystem.current.SetSelectedGameObject(multiplayerButton.gameObject);
-        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CancelInput)) && CardGameManager.TopMenuCanvas == null)
+        else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(multiplayerButton?.gameObject);
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }
 
