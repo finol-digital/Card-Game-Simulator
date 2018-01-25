@@ -66,7 +66,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 ## Search Filter Menu
 - **Cancel**: *Esc* - Cancel.
 - **FocusText**: *Tab* - Focuses keyboard to the next text input field.
-- **Page**: *PgDn*, *PgUp* - Focuses to the next enum row.
+- **Vertical**: *down*, *up* - Focuses to the next enum row.
 - **Horizontal**: *left*, *right* - Scroll through enum values.
 - **Filter**: *f* - Toggles selected enum value.
 - **Delete**: *Delete* - Clear.
