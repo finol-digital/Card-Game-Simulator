@@ -13,14 +13,14 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the card viewer.
 - **CardViewer**: *c*, *v* - Scroll through properties in the card viewer.
-- **Submit**: *Enter* - Double-click action on selected card.
+- **Submit**: *Enter* - Double-click on selected card.
 
 ## Deck Editor
 - **Cancel**: *Esc* - Back to main menu.
-- **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
-- **Horizontal**: *left*, *right* - Scroll through card search results.
-- **Page**: *PgUp*, *PgDn* - Page through card search results.
-- **Column**: *z*, *x* - Shift through card stacks in the deck editor.
+- **Vertical**: *down*, *up* - Scroll through the deck editor.
+- **Horizontal**: *left*, *right* - Scroll through search results.
+- **Page**: *PgUp*, *PgDn* - Page through search results.
+- **Column**: *z*, *x* - Shift through stacks in the deck editor.
 - **Sort**: *q* - Brings up the sort menu.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the deck load menu.
@@ -38,7 +38,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Vertical**: *down*, *up* - Scroll through games.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Load**: *r* - Brings up download game url input.
-- **Save**: *t* - Pastes text clipboard into the url input field.
+- **Save**: *t* - Pastes clipboard into the url input field.
 - **New**: *e* - Clears the url input field.
 - **FocusName**: *\`* - Focuses keyboard to the url input field.
 - **Delete**: *Delete* - Delete selected card game.
@@ -55,11 +55,11 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through decks.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
-- **New**: *e* - Brings up the deck text editor/Clears the deck text input field.
+- **New**: *e* - Brings up the deck text editor.
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
 - **FocusText**: *Tab* - Focuses keyboard to the deck text input field.
-- **Save**: *t* - Pastes text clipboard into the deck text input field.
-- **Delete**: *Delete* - Delete selected deck.
+- **Save**: *t* - Pastes clipboard into the deck text input field.
+- **Delete**: *Delete* - Delete selected deck/Clears the deck text input field.
 - **Submit**: *Enter* - Load selected deck/Save.
 
 ## Deck Save Menu
