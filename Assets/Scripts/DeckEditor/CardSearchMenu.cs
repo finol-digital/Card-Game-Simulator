@@ -63,12 +63,12 @@ public class CardSearchMenu : MonoBehaviour
     private string _nameFilter;
     private string _idFilter;
     private string _setCodeFilter;
-    
-    void Update()
+
+    void LateUpdate()
     {
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
-        
+
         if (Input.GetButtonDown(CardIn.SubmitInput)) {
             Search();
             Hide();

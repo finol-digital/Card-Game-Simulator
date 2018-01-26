@@ -15,14 +15,17 @@ public class Popup : MonoBehaviour
 
     public Queue<string> MessageQueue { get; } = new Queue<string>();
 
-    void Update()
+    public bool IsNewMessage { get; private set; }
+
+    void LateUpdate()
     {
         if (Input.GetButtonDown(CardIn.SubmitInput) && yesButton.gameObject.activeInHierarchy)
             yesButton.onClick?.Invoke();
         else if (Input.GetButtonDown(CardIn.NoInput) && noButton.gameObject.activeInHierarchy)
             noButton.onClick?.Invoke();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+        else if (!IsNewMessage && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput)))
             Close();
+        IsNewMessage = false;
     }
 
     public void Show(string message)
@@ -64,6 +67,7 @@ public class Popup : MonoBehaviour
         yesButton.gameObject.SetActive(false);
         noButton.gameObject.SetActive(false);
         cancelButton.GetComponentInChildren<Text>().text = CloseLabel;
+        IsNewMessage = true;
     }
 
     public void Close()

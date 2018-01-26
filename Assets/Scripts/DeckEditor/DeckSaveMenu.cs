@@ -19,12 +19,12 @@ public class DeckSaveMenu : MonoBehaviour
     public OnDeckNameChangeDelegate NameChangeCallback { get; private set; }
     public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
     public bool DoesAutoOverwrite { get; private set; }
-    
-    void Update()
+
+    void LateUpdate()
     {
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
-        
+
         if (Input.GetButtonDown(CardIn.SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
             AttemptSaveAndHide();
         else if (Input.GetButtonDown(CardIn.FocusNameInput))

@@ -12,12 +12,12 @@ public class GameSelectionMenu : SelectionPanel
     public InputField urlInput;
     public Button cancelButton;
     public Button downloadButton;
-    
-    void Update()
+
+    void LateUpdate()
     {
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
-        
+
         if (downloadPanel.gameObject.activeSelf) {
             if (Input.GetButtonDown(CardIn.SubmitInput) && downloadButton.interactable)
                 StartDownload();
@@ -35,7 +35,7 @@ public class GameSelectionMenu : SelectionPanel
             else if (Input.GetButtonDown(CardIn.LoadInput))
                 ShowDownloadPanel();
             else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
-                EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
+                EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
                 Hide();
         }

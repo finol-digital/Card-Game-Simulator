@@ -12,18 +12,18 @@ public class LobbyMenu : SelectionPanel
 
     public List<string> HostNames { get; private set; } = new List<string>();
     public string SelectedHost { get; private set; } = "";
-    
+
     void Update()
     {
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
-        
+
         if (Input.GetButtonDown(CardIn.SubmitInput) && joinButton.interactable)
             Join();
         else if (Input.GetButtonDown(CardIn.NewInput))
             Host();
         else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
-            EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
+            EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             Hide();
     }

@@ -35,11 +35,11 @@ public class DeckLoadMenu : SelectionPanel
     public string SelectedFileName { get; private set; }
     public Dictionary<string, string> DeckFiles { get; } = new Dictionary<string, string>();
 
-    void Update()
+    void LateUpdate()
     {
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
-        
+
         if (newDeckPanel.gameObject.activeSelf) {
             if (Input.GetButtonDown(CardIn.SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
                 DoSaveDontOverwrite();
@@ -61,7 +61,7 @@ public class DeckLoadMenu : SelectionPanel
             else if (Input.GetButtonDown(CardIn.DeleteInput) && deleteFileButton.interactable)
                 PromptForDeleteFile();
             else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
-                EventSystem.SetSelectedGameObject(selectionContent.GetChild(0));
+                EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
                 Hide();
         }

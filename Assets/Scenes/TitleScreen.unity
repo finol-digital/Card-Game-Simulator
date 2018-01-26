@@ -499,7 +499,7 @@ GameObject:
   - component: {fileID: 941064314}
   m_Layer: 5
   m_Name: TitleScreen Canvas
-  m_TagString: Canvas
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -596,6 +596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentGameText: {fileID: 0}
+  multiplayerButton: {fileID: 0}
   exitButton: {fileID: 0}
   versionText: {fileID: 1672633402}
 --- !u!1001 &1471381903

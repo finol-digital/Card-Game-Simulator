@@ -5,7 +5,7 @@ public class DiceMenu : MonoBehaviour
 {
     public const int DefaultMin = 1;
     public const int DefaultMax = 6;
-    
+
     public GameObject diePrefab;
     public Text minText;
     public Text maxText;
@@ -20,8 +20,8 @@ public class DiceMenu : MonoBehaviour
         Min = DefaultMin;
         Max = DefaultMax;
     }
-    
-    void Update()
+
+    void LateUpdate()
     {
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
