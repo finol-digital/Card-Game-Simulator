@@ -20,7 +20,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **Horizontal**: *left*, *right* - Scroll through card search results.
 - **Page**: *PgUp*, *PgDn* - Page through card search results.
-- **Column**: *z*, *x* - Shift through deck editor columns.
+- **Column**: *z*, *x* - Shift through card stacks in the deck editor.
 - **Sort**: *q* - Brings up the sort menu.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the deck load menu.
@@ -54,6 +54,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 ## Deck Load Menu
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through decks.
+- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
 - **New**: *e* - Brings up the deck text editor/Clears the deck text input field.
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
 - **FocusText**: *Tab* - Focuses keyboard to the deck text input field.
