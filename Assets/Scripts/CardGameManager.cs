@@ -24,7 +24,8 @@ public class CardGameManager : MonoBehaviour
     public const int PixelsPerInch = 100;
 
     public static string GamesFilePathBase => Application.persistentDataPath + "/games";
-    public static string CurrentGameName { get; set; } = "";
+    public static string CurrentGameName { get; private set; } = Set.DefaultCode;
+    
     public static bool IsMultiplayer { get; set; }
     public static bool IsQuitting { get; private set; }
 
@@ -83,6 +84,7 @@ public class CardGameManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
             Debug.LogError(InvalidGameSelectionMessage);
+            CurrentGameName = Set.DefaultCode;
             Selector.Show();
             return;
         }
