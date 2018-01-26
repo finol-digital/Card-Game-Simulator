@@ -83,6 +83,7 @@ public class CardGameManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
             Debug.LogError(InvalidGameSelectionMessage);
+            Selector.Show();
             return;
         }
 
