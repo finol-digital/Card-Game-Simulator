@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class GameSelectionMenu : SelectionPanel
 {
+    public const string DeleteMessage = "Please download additional card games before deleting.";
+    public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
     public const string GameLoadErrorMessage = "Failed to load game url! ";
 
     public RectTransform downloadPanel;
@@ -34,6 +36,8 @@ public class GameSelectionMenu : SelectionPanel
                 Hide();
             else if (Input.GetButtonDown(CardIn.LoadInput))
                 ShowDownloadPanel();
+            else if (Input.GetButtonDown(CardIn.DeleteInput))
+                Delete();
             else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
@@ -56,6 +60,14 @@ public class GameSelectionMenu : SelectionPanel
         }
         else
             Hide();
+    }
+
+    public void Delete()
+    {
+        if (CardGameManager.Instance.AllCardGames.Count > 1)
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, CardGameManager.Instance.DeleteGame);
+        else
+            CardGameManager.Instance.Messenger.Show(DeleteMessage);
     }
 
     public void ShowDownloadPanel()

@@ -20,6 +20,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **Horizontal**: *left*, *right* - Scroll through card search results.
 - **Page**: *PgUp*, *PgDn* - Page through card search results.
+- **Column**: *z*, *x* - Shift through deck editor columns.
 - **Sort**: *q* - Brings up the sort menu.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the deck load menu.
@@ -35,15 +36,18 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 ## Game Selection Menu
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through games.
+- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Load**: *r* - Brings up download game url input.
 - **Save**: *t* - Pastes text clipboard into the url input field.
 - **New**: *e* - Clears the url input field.
 - **FocusName**: *\`* - Focuses keyboard to the url input field.
+- **Delete**: *Delete* - Delete selected card game.
 - **Submit**: *Enter* - OK/Download.
 
 ## Multiplayer Lobby
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through sessions.
+- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
 - **New**: *e* - Host new session.
 - **Submit**: *Enter* - Join selected session.
 
@@ -67,6 +71,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Cancel**: *Esc* - Cancel.
 - **FocusName**: *\`* - Focuses keyboard to the previous text input field.
 - **FocusText**: *Tab* - Focuses keyboard to the next text input field.
+- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Vertical**: *down*, *up* - Focuses to the next enum row.
 - **Horizontal**: *left*, *right* - Scroll through enum values.
 - **New**: *e* - Toggles selected enum value.

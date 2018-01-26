@@ -11,7 +11,7 @@ public class CardSelector : MonoBehaviour
     {
         if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
-        
+
         if (Input.GetButtonDown(CardIn.VerticalInput)) {
             if (Input.GetAxis(CardIn.VerticalInput) > 0)
                 MoveUp();
@@ -23,6 +23,11 @@ public class CardSelector : MonoBehaviour
                 MoveRight();
             else
                 MoveLeft();
+        } else if (Input.GetButtonDown(CardIn.ColumnInput)) {
+            if (Input.GetAxis(CardIn.ColumnInput) > 0)
+                ShiftRight();
+            else
+                ShiftLeft();
         }
     }
 
@@ -118,5 +123,15 @@ public class CardSelector : MonoBehaviour
             return;
         }
         EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+    }
+
+    public void ShiftLeft()
+    {
+
+    }
+
+    public void ShiftRight()
+    {
+
     }
 }
