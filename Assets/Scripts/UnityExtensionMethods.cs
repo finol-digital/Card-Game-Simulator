@@ -10,7 +10,8 @@ using UnityEngine;
 public static class ThreadSafeRandom
 {
     [ThreadStatic] private static System.Random _local;
-    public static System.Random ThisThreadsRandom => _local ?? (_local = new System.Random(unchecked(Environment.TickCount * 31 + System.Threading.Thread.CurrentThread.ManagedThreadId)));
+    public static System.Random ThisThreadsRandom => _local ?? 
+        (_local = new System.Random(unchecked(Environment.TickCount * 31 + System.Threading.Thread.CurrentThread.ManagedThreadId)));
 }
 
 static public class UnityExtensionMethods
