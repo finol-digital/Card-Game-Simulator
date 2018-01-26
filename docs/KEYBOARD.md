@@ -58,7 +58,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **New**: *e* - Brings up the deck text editor.
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
 - **FocusText**: *Tab* - Focuses keyboard to the deck text input field.
-- **Save**: *t* - Pastes clipboard into the deck text input field.
+- **Save**: *t* - Pastes clipboard to the deck text input field.
 - **Delete**: *Delete* - Delete selected deck/Clears the deck text input field.
 - **Submit**: *Enter* - Load selected deck/Save.
 
