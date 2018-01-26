@@ -21,6 +21,8 @@ public class Popup : MonoBehaviour
     {
         if (Input.GetButtonDown(CardIn.SubmitInput) && yesButton.gameObject.activeInHierarchy)
             yesButton.onClick?.Invoke();
+        else if (!IsNewMessage && Input.GetButtonDown(CardIn.SubmitInput) && !yesButton.gameObject.activeInHierarchy)
+            Close();
         else if (Input.GetButtonDown(CardIn.NoInput) && noButton.gameObject.activeInHierarchy)
             noButton.onClick?.Invoke();
         else if (!IsNewMessage && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput)))
