@@ -51,6 +51,8 @@ public class DeckLoadMenu : SelectionPanel
                 textInputField.ActivateInputField();
             else if (Input.GetButtonDown(CardIn.SaveInput) && EventSystem.current.currentSelectedGameObject == null)
                 PasteClipboardIntoText();
+            else if (Input.GetButtonDown(CardIn.DeleteInput) && EventSystem.current.currentSelectedGameObject == null)
+                textInputField.text = string.Empty;
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
                 HideNewDeckPanel();
         } else {
