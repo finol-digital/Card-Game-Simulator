@@ -9,6 +9,8 @@ public delegate void OnSearchDelegate(List<Card> searchResults);
 
 public class CardSearchMenu : MonoBehaviour
 {
+    public const string ClearFiltersPrompt = "Clear Filters?";
+    
     public string Filters {
         get { string filters = string.Empty;
             if (!string.IsNullOrEmpty(IdFilter))
@@ -54,6 +56,11 @@ public class CardSearchMenu : MonoBehaviour
     public OnSearchDelegate SearchCallback { get; set; }
 
     public List<GameObject> FilterPanels { get; } = new List<GameObject>();
+    public List<InputField> InputFields { get; } = new List<InputField>();
+    public InputField ActiveInputField { get; private set; } = null;
+    public List<Toggle> Toggles { get; } = new List<Toggle>();
+    public Toggle ActiveToggle { get; private set; } = null;
+    
     public Dictionary<string, string> StringPropertyFilters { get; } = new Dictionary<string, string>();
     public Dictionary<string, int> IntMinPropertyFilters { get; } = new Dictionary<string, int>();
     public Dictionary<string, int> IntMaxPropertyFilters { get; } = new Dictionary<string, int>();
@@ -73,10 +80,31 @@ public class CardSearchMenu : MonoBehaviour
             Search();
             Hide();
         }
-        else if (Input.GetButtonDown(CardIn.DeleteInput) && EventSystem.current.currentSelectedGameObject == null)
-            ClearFilters();
+        else if (Input.GetButtonDown(CardIn.FocusName) || Input.GetButtonDown(CardIn.FocusText))
+            FocusInputField();
+        else if (Input.GetButtonDown(CardIn.Vertical) || Input.GetButtonDown(CardIn.Horizontal))
+            FocusToggle();
+        else if (Input.GetButtonDown(CardIn.NewInput) && ActiveToggle != null)
+            ToggleEnum();
+        else if (Input.GetButtonDown(CardIn.DeleteInput) && ActiveInputField == null)
+            PromptClearFilters();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             Hide();
+    }
+
+    public void FocusInputField()
+    {
+    }
+    
+    public void FocusToggle()
+    {
+    }
+    
+    public void ToggleEnum()
+    {
+        if (ActiveToggle == null)
+            return;
+         ActiveToggle.isOn = !ActiveToggle.isOn;
     }
 
     public void Show(OnDeckNameChangeDelegate nameChangeCallback, OnFilterChangeDelegate filterChangeCallback, OnSearchDelegate searchCallback)
@@ -94,6 +122,8 @@ public class CardSearchMenu : MonoBehaviour
             Destroy(FilterPanels [i].gameObject);
             FilterPanels.RemoveAt(i);
         }
+        InputFields.Clear();
+        Toggles.Clear();
 
         propertyFiltersContent.sizeDelta = new Vector2(propertyFiltersContent.sizeDelta.x, PropertyPanelHeight * CardGameManager.Current.CardProperties.Count + (PropertyPanelHeight * 3));
         foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
@@ -105,6 +135,10 @@ public class CardSearchMenu : MonoBehaviour
             else //if (property.Type == PropertyType.String)
                 newPanel = CreateStringPropertyFilterPanel(property.Name);
             FilterPanels.Add(newPanel);
+            foreach(InputField inputField in newPanel.GetComponentsInChildren<InputField>())
+                InputFields.Add(inputField);
+            foreach(Toggle toggle in newPanel.GetComponentsInChildren<Toggle>())
+                Toggles.Add(toggle);
         }
     }
 
@@ -246,6 +280,11 @@ public class CardSearchMenu : MonoBehaviour
         } else
             EnumPropertyFilters [propertyName] = newFilter;
         FilterChangeCallback?.Invoke(Filters);
+    }
+    
+    public void PromptClearFilters()
+    {
+        CardGameManager.Instance.Messenger.Prompt(ClearFiltersPrompt, ClearFilters);
     }
 
     public void ClearFilters()
