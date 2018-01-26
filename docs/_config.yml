@@ -1,3 +1,5 @@
+plugins:
+  - jekyll-sitemap
 title: Card Game Simulator
 description: Play your favorite card games!
 show_downloads: false
