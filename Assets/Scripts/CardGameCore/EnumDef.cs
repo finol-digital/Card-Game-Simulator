@@ -67,7 +67,9 @@ public class EnumDef
                 stringValue += Delimiter;
             int lookupFlags;
             string mappedValue;
-            if (Lookup.TryGetValue(splitValue, out lookupFlags))
+            if (TryParseInt(splitValue, out lookupFlags))
+                stringValue += GetStringFromLookupFlags(lookupFlags);
+            else if (Lookup.TryGetValue(splitValue, out lookupFlags))
                 stringValue += GetStringFromLookupFlags(lookupFlags);
             else
                 stringValue += Values.TryGetValue(splitValue, out mappedValue) ? mappedValue : splitValue;
