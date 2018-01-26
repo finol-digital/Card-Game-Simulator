@@ -127,11 +127,51 @@ public class CardSelector : MonoBehaviour
 
     public void ShiftLeft()
     {
+        if (EventSystem.current.alreadySelecting)
+            return;
 
+        List<CardModel> editorCards = editor.CardModels;
+        if (editorCards.Count < 1) {
+            EventSystem.current.SetSelectedGameObject(null);
+            return;
+        }
+
+        Transform startParent = null;
+        for (int i = editorCards.Count - 1; i >= 0; i--) {
+            if (startParent == null && editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
+                continue;
+            if (editorCards[i] == CardInfoViewer.Instance.SelectedCardModel)
+                startParent = editorCards[i].transform.parent;
+            if (startParent != editorCards[i].transform.parent) {
+                EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+                return;
+            }
+        }
+        EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
     }
 
     public void ShiftRight()
     {
+        if (EventSystem.current.alreadySelecting)
+            return;
 
+        List<CardModel> editorCards = editor.CardModels;
+        if (editorCards.Count < 1) {
+            EventSystem.current.SetSelectedGameObject(null);
+            return;
+        }
+
+        Transform startParent = null;
+        for (int i = 0; i < editorCards.Count; i++) {
+            if (startParent == null && editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
+                continue;
+            if (editorCards[i] == CardInfoViewer.Instance.SelectedCardModel)
+                startParent = editorCards[i].transform.parent;
+            if (startParent != editorCards[i].transform.parent) {
+                EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+                return;
+            }
+        }
+        EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
     }
 }
