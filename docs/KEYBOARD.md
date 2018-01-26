@@ -31,7 +31,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
 - **No**: *n* - No.
-- **Submit**: *Enter* - Yes.
+- **Submit**: *Enter* - Yes/Close.
 
 ## Game Selection Menu
 - **Cancel**: *Esc* - Cancel.
