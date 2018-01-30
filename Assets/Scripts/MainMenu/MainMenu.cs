@@ -51,7 +51,6 @@ public class MainMenu : MonoBehaviour
 
     public void GoToMainMenu()
     {
-        CardGameManager.Instance.Selector.Show();
         SceneManager.LoadScene(MainMenuSceneIndex);
     }
 
