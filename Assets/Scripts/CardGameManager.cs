@@ -160,7 +160,7 @@ public class CardGameManager : MonoBehaviour
         get {
             if (_selector != null) return _selector;
             _selector = Instantiate(Resources.Load<GameObject>(SelectorPrefabName)).GetOrAddComponent<GameSelectionMenu>();
-            _selector.transform.SetParent(transform);
+            _selector.transform.SetParent(null);
             return _selector;
         }
     }
