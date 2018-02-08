@@ -8,26 +8,28 @@ public class ScreenRotationManager : MonoBehaviour
           ToggleAutoRotation();
     }
 
-    static void ToggleAutoRotation()
+    public static void ToggleAutoRotation()
     {
-        AutoRotationOn = DeviceAutoRotationIsOn();
-        Screen.autorotateToPortrait = AutoRotationOn;
-        Screen.autorotateToPortraitUpsideDown = AutoRotationOn;
-        Screen.autorotateToLandscapeLeft = AutoRotationOn;
-        Screen.autorotateToLandscapeRight = AutoRotationOn;
+        bool autoRotationOn = IsAutoRotationOn;
+        Screen.autorotateToPortrait = autoRotationOn;
+        Screen.autorotateToPortraitUpsideDown = autoRotationOn;
+        Screen.autorotateToLandscapeLeft = autoRotationOn;
+        Screen.autorotateToLandscapeRight = autoRotationOn;
         Screen.orientation = ScreenOrientation.AutoRotation;
     }
 
-    static bool DeviceAutoRotationIsOn()
+    public static bool IsAutoRotationOn
     {
+		get {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        using (AndroidJavaClass actClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
-            AndroidJavaObject context = actClass.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaClass systemGlobal = new AndroidJavaClass("android.provider.Settings$System");
-            int rotationOn = systemGlobal.CallStatic<int>("getInt", context.Call<AndroidJavaObject>("getContentResolver"), "accelerometer_rotation");
-            return rotationOn==1;
-        }
+			using (AndroidJavaClass actClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
+				AndroidJavaObject context = actClass.GetStatic<AndroidJavaObject>("currentActivity");
+				AndroidJavaClass systemGlobal = new AndroidJavaClass("android.provider.Settings$System");
+				int rotationOn = systemGlobal.CallStatic<int>("getInt", context.Call<AndroidJavaObject>("getContentResolver"), "accelerometer_rotation");
+				return rotationOn==1;
+			}
 #endif
-        return true;
+			return true;
+		}
     }
 }

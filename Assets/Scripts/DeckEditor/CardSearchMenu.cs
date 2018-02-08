@@ -80,9 +80,9 @@ public class CardSearchMenu : MonoBehaviour
             Search();
             Hide();
         }
-        else if (Input.GetButtonDown(CardIn.FocusName) || Input.GetButtonDown(CardIn.FocusText))
+        else if (Input.GetButtonDown(CardIn.FocusNameInput) || Input.GetButtonDown(CardIn.FocusTextInput))
             FocusInputField();
-        else if (Input.GetButtonDown(CardIn.Vertical) || Input.GetButtonDown(CardIn.Horizontal))
+        else if (Input.GetButtonDown(CardIn.VerticalInput) || Input.GetButtonDown(CardIn.HorizontalInput))
             FocusToggle();
         else if (Input.GetButtonDown(CardIn.NewInput) && ActiveToggle != null)
             ToggleEnum();
