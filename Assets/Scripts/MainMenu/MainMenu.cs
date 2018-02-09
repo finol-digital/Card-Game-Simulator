@@ -34,11 +34,19 @@ public class MainMenu : MonoBehaviour
     {
         if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
- 
+
         if (currentGameText == null)
             GoToMainMenu();
         else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(multiplayerButton?.gameObject);
+        else if (Input.GetButtonDown(CardIn.SortInput))
+            SelectCardGame();
+        else if (Input.GetButtonDown(CardIn.NewInput))
+            StartGame();
+        else if (Input.GetButtonDown(CardIn.LoadInput))
+            JoinGame();
+        else if (Input.GetButtonDown(CardIn.SaveInput))
+            EditDeck();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }
@@ -59,15 +67,15 @@ public class MainMenu : MonoBehaviour
         CardGameManager.Instance.Selector.Show();
     }
 
-    public void PlayLocal()
+    public void StartGame()
     {
-        CardGameManager.IsMultiplayer = true;
+        CardGameManager.IsMultiplayer = false;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
-    public void PlaySolo()
+    public void JoinGame()
     {
-        CardGameManager.IsMultiplayer = false;
+        CardGameManager.IsMultiplayer = true;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 

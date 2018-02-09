@@ -92,7 +92,7 @@ public class CardSelector : MonoBehaviour
                 continue;
             i--;
             if (i < 0) {
-                results.MoveLeft();
+                results.PageLeft();
                 i = results.layoutArea.childCount - 1;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
@@ -116,7 +116,7 @@ public class CardSelector : MonoBehaviour
                 continue;
             i++;
             if (i == results.layoutArea.childCount) {
-                results.MoveRight();
+                results.PageRight();
                 i = 0;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);

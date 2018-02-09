@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class ZonesViewer : MonoBehaviour
 {
     public const float VerticalWidth = 350f;
+    public const float VerticalHeight = 240f;
     public const float HorizontalHeight = 450f;
+    public const float HorizontalWidth = 600f;
     public const float ButtonLength = 80f;
 
     public ScrollRect verticalScrollView;
@@ -31,11 +33,11 @@ public class ZonesViewer : MonoBehaviour
 
     public void ResizeContent()
     {
-        float width = 5 * ButtonLength;
-        float height = 2 * ButtonLength;
+        float height = VerticalHeight;
+        float width = HorizontalWidth;
         foreach (ExtensibleCardZone zone in Zones) {
+            height += ((RectTransform)zone.transform).rect.height;
             width += ((RectTransform) zone.transform).rect.width;
-            height += ((RectTransform) zone.transform).rect.height;
         }
         verticalScrollView.content.sizeDelta = new Vector2(verticalScrollView.content.sizeDelta.x, height);
         horizontalScrollView.content.sizeDelta = new Vector2(width, horizontalScrollView.content.sizeDelta.y);

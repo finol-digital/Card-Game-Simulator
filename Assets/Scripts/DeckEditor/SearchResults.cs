@@ -41,9 +41,9 @@ public class SearchResults : MonoBehaviour
             ShowSearchMenu();
         else if (Input.GetButtonDown(CardIn.PageInput)) {
             if (Input.GetAxis(CardIn.PageInput) > 0)
-                MoveRight();
+                PageRight();
             else
-                MoveLeft();
+                PageLeft();
         }
     }
 
@@ -70,7 +70,7 @@ public class SearchResults : MonoBehaviour
         CardSearcher.Search();
     }
 
-    public void MoveLeft()
+    public void PageLeft()
     {
         CurrentPageIndex--;
         if (CurrentPageIndex < 0)
@@ -78,7 +78,7 @@ public class SearchResults : MonoBehaviour
         UpdateSearchResultsPanel();
     }
 
-    public void MoveRight()
+    public void PageRight()
     {
         CurrentPageIndex++;
         if (CurrentPageIndex > TotalPageCount)

@@ -41,21 +41,18 @@ public class PlayMode : MonoBehaviour
 
     void Start()
     {
-        if (CardGameManager.IsMultiplayer) {
-            Lobby.cancelButton.onClick.RemoveAllListeners();
-            Lobby.cancelButton.onClick.AddListener(BackToMainMenu);
-            Lobby.Show();
-        } else {
-            DeckLoader.loadCancelButton.onClick.RemoveAllListeners();
-            DeckLoader.loadCancelButton.onClick.AddListener(BackToMainMenu);
-            DeckLoader.Show(LoadDeck);
-        }
-
         playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
 
         if (CardGameManager.Current.GameHasDiscardZone)
             zones.AddZone(Instantiate(discardZonePrefab, zones.ActiveScrollView.content).GetComponent<StackedZone>());
+
+        if (CardGameManager.IsMultiplayer) {
+            Lobby.cancelButton.onClick.RemoveAllListeners();
+            Lobby.cancelButton.onClick.AddListener(BackToMainMenu);
+            Lobby.Show();
+        } else
+            Lobby.Host();
     }
 
     void Update()

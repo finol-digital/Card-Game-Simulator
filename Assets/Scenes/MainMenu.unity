@@ -688,7 +688,7 @@ GameObject:
   - component: {fileID: 267957207}
   - component: {fileID: 267957206}
   m_Layer: 5
-  m_Name: DeckEditor Text
+  m_Name: EditDeck Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -746,7 +746,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Deck Editor
+  m_Text: Edit Deck
 --- !u!222 &267957207
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -772,7 +772,7 @@ GameObject:
   - component: {fileID: 447907123}
   - component: {fileID: 447907122}
   m_Layer: 5
-  m_Name: Singleplayer Button
+  m_Name: JoinGame Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -839,7 +839,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 222978328}
-        m_MethodName: PlaySolo
+        m_MethodName: JoinGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -897,7 +897,7 @@ GameObject:
   - component: {fileID: 539304558}
   - component: {fileID: 539304557}
   m_Layer: 5
-  m_Name: SelectCardGame Text
+  m_Name: GameName Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -953,7 +953,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Select Card Game
+  m_Text: <Game:Name>
 --- !u!222 &539304558
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1092,7 +1092,7 @@ GameObject:
   - component: {fileID: 1309525987}
   - component: {fileID: 1309525986}
   m_Layer: 5
-  m_Name: Multiplayer Text
+  m_Name: StartGame Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1150,7 +1150,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Multiplayer LAN
+  m_Text: Start Game
 --- !u!222 &1309525987
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1313,7 +1313,7 @@ GameObject:
   - component: {fileID: 1536454907}
   - component: {fileID: 1536454906}
   m_Layer: 5
-  m_Name: Singleplayer Text
+  m_Name: JoinGame Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1371,7 +1371,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Single-player
+  m_Text: Join Game
 --- !u!222 &1536454907
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1569,7 +1569,7 @@ GameObject:
   - component: {fileID: 1857487459}
   - component: {fileID: 1857487458}
   m_Layer: 5
-  m_Name: DeckEditor Button
+  m_Name: EditDeck Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1696,7 +1696,7 @@ GameObject:
   - component: {fileID: 2020150242}
   - component: {fileID: 2020150241}
   m_Layer: 5
-  m_Name: Multiplayer Button
+  m_Name: StartGame Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1763,7 +1763,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 222978328}
-        m_MethodName: PlayLocal
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
