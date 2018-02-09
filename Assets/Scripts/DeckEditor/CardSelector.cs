@@ -98,7 +98,7 @@ public class CardSelector : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
             return;
         }
-        EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(results.layoutArea.childCount - 1).gameObject);
+        EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
     }
 
     public void MoveRight()
