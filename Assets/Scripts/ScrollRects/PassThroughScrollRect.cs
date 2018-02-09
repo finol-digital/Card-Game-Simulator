@@ -1,9 +1,12 @@
 using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PassThroughScrollRect : ScrollRect
 {
+    [Header("Additional Fields")]
+    [SerializeField]
     public ScrollRect parentScrollRect;
     public bool routeToParent = false;
 

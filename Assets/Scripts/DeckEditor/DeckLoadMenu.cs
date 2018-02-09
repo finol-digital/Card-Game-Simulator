@@ -220,6 +220,7 @@ public class DeckLoadMenu : SelectionPanel
         } catch (Exception e) {
             Debug.LogError(DeckSaveErrorMessage + e.Message);
         }
+        BuildDeckFileSelectionOptions();
         HideNewDeckPanel();
     }
 

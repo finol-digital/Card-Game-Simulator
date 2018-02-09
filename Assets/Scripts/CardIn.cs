@@ -17,4 +17,11 @@ public static class CardIn
     public const string SortInput = "Sort";
     public const string SubmitInput = "Submit";
     public const string VerticalInput = "Vertical";
+
+    public static char FilterFocusNameInput(char charToValidate)
+    {
+        if (charToValidate == '`')
+            charToValidate = '\0';
+        return charToValidate;
+    }
 }

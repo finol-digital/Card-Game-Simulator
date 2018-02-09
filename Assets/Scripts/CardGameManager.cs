@@ -25,7 +25,7 @@ public class CardGameManager : MonoBehaviour
 
     public static string GamesFilePathBase => Application.persistentDataPath + "/games";
     public static string CurrentGameName { get; private set; } = Set.DefaultCode;
-    
+
     public static bool IsMultiplayer { get; set; }
     public static bool IsQuitting { get; private set; }
 

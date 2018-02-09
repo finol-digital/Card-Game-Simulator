@@ -38,7 +38,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, VisibleYMax, AnimationSpeed * Time.deltaTime)) :
             new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, HiddenYMax, AnimationSpeed * Time.deltaTime));
     }
-    
+
     void LateUpdate()
     {
         if (!IsVisible || SelectedCardModel == null || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
@@ -87,7 +87,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public void SetContentText()
     {
         if (SelectedCardModel != null)
-            contentText.text = SelectedPropertyIndex != 0 ? 
+            contentText.text = SelectedPropertyIndex != 0 ?
                 SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName)
                 : CardGameManager.Current.Sets [SelectedCardModel.Value.SetCode].ToString();
         else
@@ -180,10 +180,13 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             if (!_isVisible && zoomPanel != null)
                 zoomPanel.gameObject.SetActive(false);
 
+            if (SelectedCardModel == null)
+                return;
+
             if (_isVisible)
-                SelectedCardModel?.ShowHighlight();
+                SelectedCardModel.ShowHighlight();
             else
-                SelectedCardModel?.HideHighlight();
+                SelectedCardModel.HideHighlight();
         }
     }
     public bool WasVisible => infoPanel.anchorMax.y < (HiddenYMax + VisibleYMax) / 2.0f;

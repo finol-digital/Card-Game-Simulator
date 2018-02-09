@@ -10,42 +10,11 @@ public delegate void OnSearchDelegate(List<Card> searchResults);
 public class CardSearchMenu : MonoBehaviour
 {
     public const string ClearFiltersPrompt = "Clear Filters?";
-    
-    public string Filters {
-        get { string filters = string.Empty;
-            if (!string.IsNullOrEmpty(IdFilter))
-                filters += "id:" + IdFilter + "; ";
-            if (!string.IsNullOrEmpty(SetCodeFilter))
-                filters += "set:" + SetCodeFilter + "; ";
-            foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
-                switch (property.Type) {
-                    case PropertyType.Integer:
-                        if (IntMinPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + ">=" + IntMinPropertyFilters[property.Name] + "; ";
-                        if (IntMaxPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + "<=" + IntMaxPropertyFilters[property.Name] + "; ";
-                        break;
-                    case PropertyType.Enum:
-                    case PropertyType.EnumList:
-                        if (!EnumPropertyFilters.ContainsKey(property.Name))
-                            break;
-                        EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
-                        if (enumDef != null)
-                            filters += property.Name + ":=" + EnumPropertyFilters[property.Name] + "; ";
-                        break;
-                    case PropertyType.String:
-                    default:
-                        if (StringPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + ":" + StringPropertyFilters[property.Name] + "; ";
-                        break;
-                }
-            }
-            return filters;
-        }
-    }
     public float PropertyPanelHeight => ((RectTransform)stringPropertyPanel.transform).rect.height;
 
     public InputField nameInputField;
+    public InputField idInputField;
+    public InputField setCodeInputField;
     public RectTransform propertyFiltersContent;
     public SearchPropertyPanel stringPropertyPanel;
     public SearchPropertyPanel integerPropertyPanel;
@@ -57,10 +26,8 @@ public class CardSearchMenu : MonoBehaviour
 
     public List<GameObject> FilterPanels { get; } = new List<GameObject>();
     public List<InputField> InputFields { get; } = new List<InputField>();
-    public InputField ActiveInputField { get; private set; } = null;
     public List<Toggle> Toggles { get; } = new List<Toggle>();
-    public Toggle ActiveToggle { get; private set; } = null;
-    
+
     public Dictionary<string, string> StringPropertyFilters { get; } = new Dictionary<string, string>();
     public Dictionary<string, int> IntMinPropertyFilters { get; } = new Dictionary<string, int>();
     public Dictionary<string, int> IntMaxPropertyFilters { get; } = new Dictionary<string, int>();
@@ -94,12 +61,88 @@ public class CardSearchMenu : MonoBehaviour
 
     public void FocusInputField()
     {
+        if (ActiveInputField == null || InputFields.Count < 1) {
+            InputFields.FirstOrDefault()?.ActivateInputField();
+            ActiveInputField = InputFields.FirstOrDefault();
+            return;
+        }
+
+        if (Input.GetButtonDown(CardIn.FocusNameInput)) { // up
+            InputField previous = InputFields.Last();
+            for (int i = 0; i < InputFields.Count; i++) {
+                if (ActiveInputField == InputFields[i]) {
+                    previous.ActivateInputField();
+                    ActiveInputField = previous;
+                    break;
+                }
+                previous = InputFields[i];
+            }
+        } else { // down
+            InputField next = InputFields.First();
+            for (int i = InputFields.Count - 1; i >= 0; i--) {
+                if (ActiveInputField == InputFields[i]) {
+                    next.ActivateInputField();
+                    ActiveInputField = next;
+                    break;
+                }
+                next = InputFields[i];
+            }
+        }
     }
-    
+
     public void FocusToggle()
     {
+        if (ActiveToggle == null || Toggles.Count < 1) {
+            ActiveToggle = Toggles.FirstOrDefault();
+            return;
+        }
+
+        if (Input.GetButtonDown(CardIn.VerticalInput)) {
+            Transform currentPanel = ActiveToggle.transform.parent;
+            if (Input.GetAxis(CardIn.VerticalInput) > 0) { // up
+                Toggle previous = Toggles.Last();
+                for (int i = 0; i < Toggles.Count; i++) {
+                    if (ActiveToggle == Toggles[i]) {
+                        ActiveToggle = previous;
+                        break;
+                    }
+                    if (Toggles[i].transform.parent != ActiveToggle.transform.parent)
+                        previous = Toggles[i];
+                }
+            } else { // down
+                Toggle next = Toggles.First();
+                for (int i = Toggles.Count - 1; i >= 0; i--) {
+                    if (ActiveToggle == Toggles[i]) {
+                        ActiveToggle = next;
+                        break;
+                    }
+                    if (Toggles[i].transform.parent != ActiveToggle.transform.parent)
+                        next = Toggles[i];
+                }
+            }
+        } else if (Input.GetButton(CardIn.HorizontalInput)) {
+            if (Input.GetAxis(CardIn.HorizontalInput) > 0) { // right
+                Toggle next = Toggles.First();
+                for (int i = Toggles.Count - 1; i >= 0; i--) {
+                    if (ActiveToggle == Toggles[i]) {
+                        ActiveToggle = next;
+                        break;
+                    }
+                    next = Toggles[i];
+                }
+            } else { // left
+                Toggle previous = Toggles.Last();
+                for (int i = 0; i < Toggles.Count; i++) {
+                    if (ActiveToggle == Toggles[i]) {
+                        ActiveToggle = previous;
+                        break;
+                    }
+                    previous = Toggles[i];
+                }
+            }
+        }
     }
-    
+
     public void ToggleEnum()
     {
         if (ActiveToggle == null)
@@ -125,6 +168,13 @@ public class CardSearchMenu : MonoBehaviour
         InputFields.Clear();
         Toggles.Clear();
 
+        nameInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
+        InputFields.Add(nameInputField);
+        idInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
+        InputFields.Add(idInputField);
+        setCodeInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
+        InputFields.Add(setCodeInputField);
+
         propertyFiltersContent.sizeDelta = new Vector2(propertyFiltersContent.sizeDelta.x, PropertyPanelHeight * CardGameManager.Current.CardProperties.Count + (PropertyPanelHeight * 3));
         foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
             GameObject newPanel;
@@ -135,8 +185,10 @@ public class CardSearchMenu : MonoBehaviour
             else //if (property.Type == PropertyType.String)
                 newPanel = CreateStringPropertyFilterPanel(property.Name);
             FilterPanels.Add(newPanel);
-            foreach(InputField inputField in newPanel.GetComponentsInChildren<InputField>())
+            foreach(InputField inputField in newPanel.GetComponentsInChildren<InputField>()) {
+                inputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
                 InputFields.Add(inputField);
+            }
             foreach(Toggle toggle in newPanel.GetComponentsInChildren<Toggle>())
                 Toggles.Add(toggle);
         }
@@ -281,7 +333,7 @@ public class CardSearchMenu : MonoBehaviour
             EnumPropertyFilters [propertyName] = newFilter;
         FilterChangeCallback?.Invoke(Filters);
     }
-    
+
     public void PromptClearFilters()
     {
         CardGameManager.Instance.Messenger.Prompt(ClearFiltersPrompt, ClearFilters);
@@ -322,6 +374,41 @@ public class CardSearchMenu : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public string Filters
+    {
+        get {
+            string filters = string.Empty;
+            if (!string.IsNullOrEmpty(IdFilter))
+                filters += "id:" + IdFilter + "; ";
+            if (!string.IsNullOrEmpty(SetCodeFilter))
+                filters += "set:" + SetCodeFilter + "; ";
+            foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
+                switch (property.Type) {
+                    case PropertyType.Integer:
+                        if (IntMinPropertyFilters.ContainsKey(property.Name))
+                            filters += property.Name + ">=" + IntMinPropertyFilters[property.Name] + "; ";
+                        if (IntMaxPropertyFilters.ContainsKey(property.Name))
+                            filters += property.Name + "<=" + IntMaxPropertyFilters[property.Name] + "; ";
+                        break;
+                    case PropertyType.Enum:
+                    case PropertyType.EnumList:
+                        if (!EnumPropertyFilters.ContainsKey(property.Name))
+                            break;
+                        EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
+                        if (enumDef != null)
+                            filters += property.Name + ":=" + EnumPropertyFilters[property.Name] + "; ";
+                        break;
+                    case PropertyType.String:
+                    default:
+                        if (StringPropertyFilters.ContainsKey(property.Name))
+                            filters += property.Name + ":" + StringPropertyFilters[property.Name] + "; ";
+                        break;
+                }
+            }
+            return filters;
+        }
+    }
+
     public string NameFilter {
         get { return _nameFilter ?? (_nameFilter = string.Empty); }
         set {
@@ -345,6 +432,21 @@ public class CardSearchMenu : MonoBehaviour
         set {
             _setCodeFilter = value;
             FilterChangeCallback?.Invoke(Filters);
+        }
+    }
+    public InputField ActiveInputField {
+        get { return EventSystem.current.currentSelectedGameObject?.GetComponent<InputField>(); }
+        set {
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(value.gameObject);
+        }
+    }
+
+    public Toggle ActiveToggle {
+        get { return EventSystem.current.currentSelectedGameObject?.GetComponent<Toggle>(); }
+        set {
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(value.gameObject);
         }
     }
 }
