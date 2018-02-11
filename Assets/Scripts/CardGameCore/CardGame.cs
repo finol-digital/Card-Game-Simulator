@@ -363,11 +363,11 @@ public class CardGame
 
         if (card.ImageSprite != null) {
             cardModel.HideNameLabel();
-            cardModel.GetComponent<Image>().sprite = card.ImageSprite;
+            cardModel.image.sprite = card.ImageSprite;
         }
         else {
             cardModel.ShowNameLabel();
-            cardModel.GetComponent<Image>().sprite = CardBackImageSprite;
+            cardModel.image.sprite = CardBackImageSprite;
             if (!card.IsLoadingImage)
                 CardGameManager.Instance.StartCoroutine(GetAndSetImageSprite(card));
         }
@@ -392,7 +392,7 @@ public class CardGame
                     cardModel.HideNameLabel();
                 else
                     cardModel.ShowNameLabel();
-                cardModel.GetComponent<Image>().sprite = newSprite;
+                cardModel.image.sprite = newSprite;
                 if (cardModel == CardInfoViewer.Instance.SelectedCardModel)
                     CardInfoViewer.Instance.cardImage.sprite = newSprite;
             }

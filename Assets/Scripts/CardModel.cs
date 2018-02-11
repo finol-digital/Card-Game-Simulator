@@ -55,6 +55,11 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     [SyncVar]
     private bool _isFacedown;
+    private Image _image;
+    public Image image => _image ?? (_image = GetComponent<Image>());
+
+    private Outline _outline;
+    private Text _nameText;
 
     private RectTransform _placeHolder;
     private CardStack _placeHolderCardStack;
@@ -64,8 +69,11 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (!IsFacedown)
             CardGameManager.Current.PutCardImage(this);
         else
-            GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
-        GetComponent<Image>().alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
+            image.sprite = CardGameManager.Current.CardBackImageSprite;
+        image.alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
+
+        _outline = GetComponent<Outline>();
+        _nameText = GetComponentInChildren<Text>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -397,21 +405,27 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void ShowHighlight()
     {
-        GetComponent<Outline>().effectColor = SelectedHighlightColor;
-        GetComponent<Outline>().effectDistance = OutlineHighlightDistance;
+        if (_outline == null)
+            _outline = GetComponent<Outline>();
+        _outline.effectColor = SelectedHighlightColor;
+        _outline.effectDistance = OutlineHighlightDistance;
     }
 
     public void WarnHighlight()
     {
-        GetComponent<Outline>().effectColor = Color.red;
-        GetComponent<Outline>().effectDistance = OutlineHighlightDistance;
+        if (_outline == null)
+            _outline = GetComponent<Outline>();
+        _outline.effectColor = Color.red;
+        _outline.effectDistance = OutlineHighlightDistance;
     }
 
     public void HideHighlight()
     {
+        if (_outline == null)
+            _outline = GetComponent<Outline>();
         bool isOthers = IsOnline && !hasAuthority;
-        GetComponent<Outline>().effectColor = isOthers ? Color.yellow : Color.black;
-        GetComponent<Outline>().effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+        _outline.effectColor = isOthers ? Color.yellow : Color.black;
+        _outline.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
     }
 
     [ClientRpc]
@@ -423,7 +437,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public void ShowNameLabel()
     {
         transform.GetChild(0).gameObject.SetActive(true);
-        GetComponentInChildren<Text>().text = Value.Name;
+        if (_nameText == null)
+            _nameText = GetComponentInChildren<Text>();
+        _nameText.text = Value.Name;
     }
 
     public void HideNameLabel()
@@ -463,7 +479,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             _isFacedown = value;
             if (_isFacedown) {
                 HideNameLabel();
-                GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
+                image.sprite = CardGameManager.Current.CardBackImageSprite;
             }
             else
                 CardGameManager.Current.PutCardImage(this);
@@ -472,6 +488,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
                 CmdUpdateIsFacedown(_isFacedown);
         }
     }
+    public bool HasImage => image.sprite != CardGameManager.Current.CardBackImageSprite;
 
     public RectTransform PlaceHolder {
         get { return _placeHolder; }

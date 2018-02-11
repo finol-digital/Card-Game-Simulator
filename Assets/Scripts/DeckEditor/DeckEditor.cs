@@ -82,6 +82,9 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     void Update()
     {
+        if (!CardGameManager.Current.CardNameIsAtTop)
+            LabelCardsInStacks();
+
         if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
             return;
 
@@ -99,6 +102,18 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             searchResults.ShowSearchMenu();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             CheckBackToMainMenu();
+    }
+
+    public void LabelCardsInStacks()
+    {
+        foreach (CardStack cardStack in CardStacks) {
+            foreach (CardModel cardModel in cardStack.GetComponentsInChildren<CardModel>()) {
+                if (cardModel.transform.GetSiblingIndex() == cardStack.transform.childCount - 1 && cardModel.HasImage)
+                    cardModel.HideNameLabel();
+                else
+                    cardModel.ShowNameLabel();
+            }
+        }
     }
 
     public void ResetCardStacks()
@@ -171,6 +186,8 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
     {
+        if (cardModel.HasImage)
+            cardModel.HideNameLabel();
         UpdateDeckStats();
     }
 
