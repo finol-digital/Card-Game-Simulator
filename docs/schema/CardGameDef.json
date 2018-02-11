@@ -23,9 +23,14 @@
 			"format": "uri"
 		},
 		"allCardsUrlPageCount": {
-			"description": "When downloading AllCards.json from allCardsUrl, CGS will append ?page=<page> to the url for each page after the first page.",
+			"description": "When downloading AllCards.json from allCardsUrl, CGS will use <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page after the first page.",
 			"default": 1,
 			"type": "integer"
+		},
+		"allCardsUrlPageIdentifier": {
+			"description": "If allCardsUrlPageCount > 1, CGS will use <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page after the first page.",
+			"default": "?page=",
+			"type": "string"
 		},
 		"allCardsZipped": {
 			"description": "If allCardsUrl points to a zipped file, set allCardsZipped to true, and CGS will unzip the file and then save the unzipped file as AllCards.json.",

@@ -35,6 +35,9 @@ public class CardGame
     public int AllCardsUrlPageCount { get; set; } = 1;
 
     [JsonProperty]
+    public string AllCardsUrlPageIdentifier { get; set; } = "?page=";
+
+    [JsonProperty]
     public bool AllCardsZipped { get; set; }
 
     [JsonProperty]
@@ -156,6 +159,7 @@ public class CardGame
     {
         Name = name ?? Set.DefaultCode;
         AutoUpdateUrl = url ?? string.Empty;
+        Error = string.Empty;
     }
 
     public IEnumerator Download()
@@ -170,7 +174,7 @@ public class CardGame
             if (!IsLoaded)
                 JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
         } catch (Exception e) {
-            Error = e.Message;
+            Error+= e.Message;
             IsDownloading = false;
             yield break;
         }
@@ -183,6 +187,8 @@ public class CardGame
                                                          + (AllCardsZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
         if (AllCardsZipped)
             UnityExtensionMethods.ExtractZip(CardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+        for (int page = 2; page <= AllCardsUrlPageCount; page++)
+            yield return UnityExtensionMethods.SaveUrlToFile(AllCardsUrl + AllCardsUrlPageIdentifier + page, CardsFilePath + page);
 
         yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, SetsFilePath
                                                          + (AllSetsZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
@@ -198,21 +204,8 @@ public class CardGame
         foreach (DeckUrl deckUrl in DeckUrls)
             yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
-        if (!IsLoaded) {
-            try {
-                BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
-                CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
-                CreateEnumLookups();
-                LoadJsonFromFile(CardsFilePath, LoadCardFromJToken, CardDataIdentifier);
-                LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
-                IsLoaded = true;
-            } catch (Exception e) {
-                Error = e.Message;
-                IsDownloading = false;
-                yield break;
-            }
-        }
-
+        if (!IsLoaded)
+            DoLoad(true);
         IsDownloading = false;
     }
 
@@ -220,22 +213,40 @@ public class CardGame
     {
         if (IsLoaded || IsDownloading)
             return;
+        DoLoad(false);
+    }
 
+    private void DoLoad(bool isDownloaded)
+    {
         try {
-            JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
+            if (!isDownloaded)
+                JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
             BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
             CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
             CreateEnumLookups();
             LoadJsonFromFile(CardsFilePath, LoadCardFromJToken, CardDataIdentifier);
             LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
-        } catch (Exception e) {
-            Error = e.Message;
-            return;
-        }
+            IsLoaded = true;
 
-        if (AutoUpdate)
-            CardGameManager.Instance.StartCoroutine(Download());
-        IsLoaded = true;
+            if (!isDownloaded && AutoUpdate)
+                CardGameManager.Instance.StartCoroutine(Download());
+            if (AllCardsUrlPageCount > 1)
+                CardGameManager.Instance.StartCoroutine(RunLoadPages());
+        } catch (Exception e) {
+            Error+= e.Message;
+        }
+    }
+
+    public IEnumerator RunLoadPages()
+    {
+        for (int page = 2; page <= AllCardsUrlPageCount; page++) {
+            try {
+                LoadJsonFromFile(CardsFilePath + page, LoadCardFromJToken, CardDataIdentifier);
+            } catch (Exception e) {
+                Error+= e.Message;
+            }
+            yield return null;
+        }
     }
 
     public void CreateEnumLookups()
