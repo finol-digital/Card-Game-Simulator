@@ -93,6 +93,11 @@
 			"default": "name",
 			"type": "string"
 		},
+		"cardNameIsAtTop": {
+			"description": "cardNameIsAtTop is used to determine if a label needs to be put at the top of a card when other cards are stacked on top it.",
+			"default": "true",
+			"type": "boolean"
+		},
 		"cardPrimaryProperty": {
 			"description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
 			"type": "string"

@@ -246,7 +246,6 @@ GameObject:
   - component: {fileID: 62766699}
   - component: {fileID: 62766704}
   - component: {fileID: 62766703}
-  - component: {fileID: 62766705}
   m_Layer: 5
   m_Name: DeckEditor Canvas
   m_TagString: CardCanvas
@@ -387,19 +386,7 @@ MonoBehaviour:
   scrollBar: {fileID: 1015008765}
   nameText: {fileID: 779102099}
   countText: {fileID: 836546759}
---- !u!114 &62766705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 62766698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5de303b3a0e1fc8478dba7c76724b2a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  editor: {fileID: 62766704}
-  results: {fileID: 62766703}
+  searchResults: {fileID: 62766703}
 --- !u!1 &64640897
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,7 +466,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 62766703}
+      - m_Target: {fileID: 1516954979}
         m_MethodName: PageRight
         m_Mode: 1
         m_Arguments:
@@ -642,7 +629,7 @@ Prefab:
     - target: {fileID: 224134245546147898, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: -94.3764
+      value: -58.355133
       objectReference: {fileID: 0}
     - target: {fileID: 224844730852030870, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
@@ -662,7 +649,7 @@ Prefab:
     - target: {fileID: 224844730852030870, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 480.8539
+      value: 480.56534
       objectReference: {fileID: 0}
     - target: {fileID: 224844730852030870, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
@@ -682,7 +669,7 @@ Prefab:
     - target: {fileID: 224494150876344956, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 480.8539
+      value: 480.56534
       objectReference: {fileID: 0}
     - target: {fileID: 224494150876344956, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
@@ -692,7 +679,7 @@ Prefab:
     - target: {fileID: 224494150876344956, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 480.8539
+      value: 480.56534
       objectReference: {fileID: 0}
     - target: {fileID: 224494150876344956, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
@@ -712,7 +699,7 @@ Prefab:
     - target: {fileID: 224409994527677996, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 961.7078
+      value: 961.1307
       objectReference: {fileID: 0}
     - target: {fileID: 224409994527677996, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
@@ -722,7 +709,7 @@ Prefab:
     - target: {fileID: 224409994527677996, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 480.8539
+      value: 480.56534
       objectReference: {fileID: 0}
     - target: {fileID: 224409994527677996, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
@@ -747,17 +734,17 @@ Prefab:
     - target: {fileID: 224695748224604718, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000037634578
+      value: 0.000062749285
       objectReference: {fileID: 0}
     - target: {fileID: 224162416682328514, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000037634578
+      value: 0.000062749285
       objectReference: {fileID: 0}
     - target: {fileID: 224461052092812746, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 49.262897
+      value: 50.76443
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 04f1873b7f6a8324887109e8e76da3d7, type: 2}
@@ -875,7 +862,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00007768885, y: 0}
+  m_AnchoredPosition: {x: -0.000026670761, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &179835150
@@ -968,7 +955,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000028958955, y: 0}
+  m_AnchoredPosition: {x: 0.000007693631, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &196520020
@@ -1294,7 +1281,7 @@ GameObject:
   - component: {fileID: 213237323}
   - component: {fileID: 213237326}
   m_Layer: 5
-  m_Name: Search Results SelectRight Buttton
+  m_Name: Search Results MoveRight Buttton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1360,7 +1347,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 62766705}
+      - m_Target: {fileID: 1516954979}
         m_MethodName: MoveRight
         m_Mode: 1
         m_Arguments:
@@ -1499,7 +1486,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 62766703}
+      - m_Target: {fileID: 1516954979}
         m_MethodName: PageLeft
         m_Mode: 1
         m_Arguments:
@@ -2719,7 +2706,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000028179644, y: 0}
+  m_AnchoredPosition: {x: 0.000015258789, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &796070842
@@ -2844,7 +2831,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000044217744, y: 0}
+  m_AnchoredPosition: {x: -0.000057188336, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &836546758
@@ -2935,7 +2922,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -12.5}
+  m_AnchoredPosition: {x: -0.000061035156, y: -12.5}
   m_SizeDelta: {x: 1820, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &943351771
@@ -3197,8 +3184,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 335690431}
   m_HandleRect: {fileID: 335690429}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: 0.0000034136217
+  m_Size: 0.9901759
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4317,8 +4304,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 62766705}
-        m_MethodName: MoveUp
+      - m_Target: {fileID: 1516954979}
+        m_MethodName: SelectUp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4386,8 +4373,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1516954977}
   - component: {fileID: 1516954978}
+  - component: {fileID: 1516954979}
   m_Layer: 5
-  m_Name: DeckEditor Layout
+  m_Name: DeckEditor Layout & Card Selector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4429,6 +4417,19 @@ MonoBehaviour:
   resultsPage: {fileID: 1599741431}
   deckEditorLayout: {fileID: 1956326055}
   searchResults: {fileID: 62766703}
+--- !u!114 &1516954979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1516954976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de303b3a0e1fc8478dba7c76724b2a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  editor: {fileID: 62766704}
+  results: {fileID: 62766703}
 --- !u!1 &1581076310
 GameObject:
   m_ObjectHideFlags: 0
@@ -4982,8 +4983,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 62766705}
-        m_MethodName: MoveDown
+      - m_Target: {fileID: 1516954979}
+        m_MethodName: SelectDown
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5627,7 +5628,7 @@ GameObject:
   - component: {fileID: 2037950164}
   - component: {fileID: 2037950167}
   m_Layer: 5
-  m_Name: Search Results SelectLeft Button
+  m_Name: Search Results MoveLeft Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5693,7 +5694,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 62766705}
+      - m_Target: {fileID: 1516954979}
         m_MethodName: MoveLeft
         m_Mode: 1
         m_Arguments:

@@ -5,6 +5,7 @@
 	"backgroundImageUrl": "https://cardgamesim.finoldigital.com/Mahjong/Background.png",
 	"cardBackImageUrl": "https://cardgamesim.finoldigital.com/Mahjong/CardBack.png",
 	"cardImageUrl": "https://cardgamesim.finoldigital.com/Mahjong/sets/{cardSet}/{cardId}.{cardImageFileType}",
+	"cardNameIsAtTop": false,
 	"cardPrimaryProperty": "suit",
 	"cardProperties": [
 		{"name": "type", "type": "string" },

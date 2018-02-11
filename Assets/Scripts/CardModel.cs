@@ -420,6 +420,17 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         HideHighlight();
     }
 
+    public void ShowNameLabel()
+    {
+        transform.GetChild(0).gameObject.SetActive(true);
+        GetComponentInChildren<Text>().text = Value.Name;
+    }
+
+    public void HideNameLabel()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
     void OnDestroy()
     {
         if (CardGameManager.IsQuitting)
@@ -450,10 +461,13 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             if (value == _isFacedown)
                 return;
             _isFacedown = value;
-            if (_isFacedown)
+            if (_isFacedown) {
+                HideNameLabel();
                 GetComponent<Image>().sprite = CardGameManager.Current.CardBackImageSprite;
+            }
             else
                 CardGameManager.Current.PutCardImage(this);
+
             if (IsOnline && hasAuthority)
                 CmdUpdateIsFacedown(_isFacedown);
         }

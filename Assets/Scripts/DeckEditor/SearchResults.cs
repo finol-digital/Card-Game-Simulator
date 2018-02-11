@@ -30,23 +30,6 @@ public class SearchResults : MonoBehaviour
         CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
     }
 
-    void Update()
-    {
-        if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
-            return;
-
-        if (Input.GetButtonDown(CardIn.FocusNameInput))
-            nameInputField.ActivateInputField();
-        else if (Input.GetButtonDown(CardIn.FilterInput))
-            ShowSearchMenu();
-        else if (Input.GetButtonDown(CardIn.PageInput)) {
-            if (Input.GetAxis(CardIn.PageInput) > 0)
-                PageRight();
-            else
-                PageLeft();
-        }
-    }
-
     public string SetNameInputField(string nameFilter)
     {
         nameInputField.text = nameFilter;
@@ -72,6 +55,7 @@ public class SearchResults : MonoBehaviour
 
     public void PageLeft()
     {
+        CardInfoViewer.Instance.SelectedCardModel = null;
         CurrentPageIndex--;
         if (CurrentPageIndex < 0)
             CurrentPageIndex = TotalPageCount;
@@ -80,6 +64,7 @@ public class SearchResults : MonoBehaviour
 
     public void PageRight()
     {
+        CardInfoViewer.Instance.SelectedCardModel = null;
         CurrentPageIndex++;
         if (CurrentPageIndex > TotalPageCount)
             CurrentPageIndex = 0;

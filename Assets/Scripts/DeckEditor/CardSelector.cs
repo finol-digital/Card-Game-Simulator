@@ -14,24 +14,29 @@ public class CardSelector : MonoBehaviour
 
         if (Input.GetButtonDown(CardIn.VerticalInput)) {
             if (Input.GetAxis(CardIn.VerticalInput) > 0)
-                MoveUp();
+                SelectUp();
             else
-                MoveDown();
+                SelectDown();
         }
         else if (Input.GetButtonDown(CardIn.HorizontalInput)) {
             if (Input.GetAxis(CardIn.HorizontalInput) > 0)
-                MoveRight();
+                SelectRight();
             else
-                MoveLeft();
+                SelectLeft();
         } else if (Input.GetButtonDown(CardIn.ColumnInput)) {
             if (Input.GetAxis(CardIn.ColumnInput) > 0)
                 ShiftRight();
             else
                 ShiftLeft();
+        } else if (Input.GetButtonDown(CardIn.PageInput)) {
+            if (Input.GetAxis(CardIn.PageInput) > 0)
+                PageRight();
+            else
+                PageLeft();
         }
     }
 
-    public void MoveDown()
+    public void SelectDown()
     {
         if (EventSystem.current.alreadySelecting)
             return;
@@ -54,7 +59,7 @@ public class CardSelector : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
     }
 
-    public void MoveUp()
+    public void SelectUp()
     {
         if (EventSystem.current.alreadySelecting)
             return;
@@ -77,7 +82,7 @@ public class CardSelector : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
     }
 
-    public void MoveLeft()
+    public void SelectLeft()
     {
         if (EventSystem.current.alreadySelecting)
             return;
@@ -101,7 +106,7 @@ public class CardSelector : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
     }
 
-    public void MoveRight()
+    public void SelectRight()
     {
         if (EventSystem.current.alreadySelecting)
             return;
@@ -173,5 +178,35 @@ public class CardSelector : MonoBehaviour
             }
         }
         EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
+    }
+
+    public void PageLeft()
+    {
+        results.PageLeft();
+    }
+
+    public void PageRight()
+    {
+        results.PageRight();
+    }
+
+    public void MoveLeft()
+    {
+        RectTransform rt = GetComponent<RectTransform>();
+        float aspectRatio = rt.rect.width / rt.rect.height;
+        if (aspectRatio > 1 && aspectRatio < 1.5f)
+            PageLeft();
+        else
+            SelectLeft();
+    }
+
+    public void MoveRight()
+    {
+        RectTransform rt = GetComponent<RectTransform>();
+        float aspectRatio = rt.rect.width / rt.rect.height;
+        if (aspectRatio > 1 && aspectRatio < 1.5f)
+            PageRight();
+        else
+            SelectRight();
     }
 }

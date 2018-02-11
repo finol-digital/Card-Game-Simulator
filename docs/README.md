@@ -1,9 +1,9 @@
 # Get CGS
 You can get CGS on your preferred device:
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
-- iOS via the [App Store](mailto:david@finoldigital.com?subject=GetCGS)
-- Mac x64 via [ZIP File](https://drive.google.com/uc?id=1ag7kjPRzweO5O5_Kj7q_yCj7xVkKdiaA&export=download)
-- Windows x64 via [ZIP File](https://drive.google.com/uc?id=1dPRqs9mtLmR5_0K4NbrfzinJJW7TQH51&export=download)
+- iOS via the [App Store](mailto:david@finoldigital.com?subject=GetCGSiOS)
+- Mac via [ZIP File](https://drive.google.com/uc?id=1ag7kjPRzweO5O5_Kj7q_yCj7xVkKdiaA&export=download)
+- Windowsx64 via [ZIP File](https://drive.google.com/uc?id=1dPRqs9mtLmR5_0K4NbrfzinJJW7TQH51&export=download)
 
 ## Get Custom Games
 CGS comes pre-packaged with these card games:
@@ -29,5 +29,8 @@ You can also define your own custom game(s) by following the [Custom Games Docum
 
 ## Use CGS
 You can use [keyboard shortcuts](KEYBOARD.md) when using CGS.
+
+## Feedback
+Please send any feature requests/bug reports/other feedback to <david@finoldigital.com>.
 
 *You may also be interested in our [Privacy Policy](PRIVACY.md).*

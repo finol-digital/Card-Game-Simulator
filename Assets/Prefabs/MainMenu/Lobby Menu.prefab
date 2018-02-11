@@ -425,7 +425,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 45
+  m_ScrollSensitivity: 30
   m_Viewport: {fileID: 224315769464567466}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 114802141035649906}
@@ -1125,7 +1125,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: No Active Game Sessions
+  m_Text: No Game Sessions Found
 --- !u!114 &114996335448904922
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1552,7 +1552,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 500, y: 150}
+  m_SizeDelta: {x: 800, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &224902411112113380
 RectTransform:

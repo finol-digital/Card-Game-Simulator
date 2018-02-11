@@ -77,6 +77,9 @@ public class CardGame
     public string CardNameIdentifier { get; set; } = "name";
 
     [JsonProperty]
+    public bool CardNameIsAtTop { get; set; } = true;
+
+    [JsonProperty]
     public string CardSetIdentifier { get; set; } = "set";
 
     [JsonProperty]
@@ -358,10 +361,16 @@ public class CardGame
         Card card = cardModel.Value;
         card.ModelsUsingImage.Add(cardModel);
 
-        if (card.ImageSprite != null)
+        if (card.ImageSprite != null) {
+            cardModel.HideNameLabel();
             cardModel.GetComponent<Image>().sprite = card.ImageSprite;
-        else if (!card.IsLoadingImage)
-            CardGameManager.Instance.StartCoroutine(GetAndSetImageSprite(card));
+        }
+        else {
+            cardModel.ShowNameLabel();
+            cardModel.GetComponent<Image>().sprite = CardBackImageSprite;
+            if (!card.IsLoadingImage)
+                CardGameManager.Instance.StartCoroutine(GetAndSetImageSprite(card));
+        }
     }
 
     public IEnumerator GetAndSetImageSprite(Card card)
@@ -375,10 +384,14 @@ public class CardGame
         if (newSprite != null)
             card.ImageSprite = newSprite;
         else
-            newSprite = CardGameManager.Current.CardBackImageSprite;
+            newSprite = CardBackImageSprite;
 
         foreach (CardModel cardModel in card.ModelsUsingImage) {
             if (!cardModel.IsFacedown) {
+                if (newSprite != CardBackImageSprite)
+                    cardModel.HideNameLabel();
+                else
+                    cardModel.ShowNameLabel();
                 cardModel.GetComponent<Image>().sprite = newSprite;
                 if (cardModel == CardInfoViewer.Instance.SelectedCardModel)
                     CardInfoViewer.Instance.cardImage.sprite = newSprite;

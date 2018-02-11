@@ -5,6 +5,7 @@
 	"backgroundImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/Background.png",
 	"cardBackImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/CardBack.png",
 	"cardImageUrl": "https://cardgamesim.finoldigital.com/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",
+	"cardNameIsAtTop": false,
 	"cardPrimaryProperty": "suit",
 	"cardProperties": [
 		{"name": "type", "type": "enum" },

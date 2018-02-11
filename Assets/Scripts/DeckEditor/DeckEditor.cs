@@ -63,6 +63,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public Scrollbar scrollBar;
     public Text nameText;
     public Text countText;
+    public SearchResults searchResults;
 
     private List<CardStack> _cardStacks;
     private int _currentCardStackIndex;
@@ -81,7 +82,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     void Update()
     {
-        if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+        if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
             return;
 
         if (Input.GetButtonDown(CardIn.SortInput))
@@ -92,6 +93,10 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             ShowDeckLoadMenu();
         else if (Input.GetButtonDown(CardIn.SaveInput))
             ShowDeckSaveMenu();
+        else if (Input.GetButtonDown(CardIn.FocusNameInput))
+            searchResults.nameInputField.ActivateInputField();
+        else if (Input.GetButtonDown(CardIn.FilterInput))
+            searchResults.ShowSearchMenu();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             CheckBackToMainMenu();
     }
