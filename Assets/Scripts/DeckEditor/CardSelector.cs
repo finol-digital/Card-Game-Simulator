@@ -190,11 +190,28 @@ public class CardSelector : MonoBehaviour
         results.PageRight();
     }
 
+    public void GoLeft()
+    {
+        RectTransform rt = GetComponent<RectTransform>();
+        if (rt.rect.width > rt.rect.height)
+            ShiftLeft();
+        else
+            PageLeft();
+    }
+
+    public void GoRight()
+    {
+        RectTransform rt = GetComponent<RectTransform>();
+        if (rt.rect.width > rt.rect.height)
+            ShiftRight();
+        else
+            PageRight();
+    }
+
     public void MoveLeft()
     {
         RectTransform rt = GetComponent<RectTransform>();
-        float aspectRatio = rt.rect.width / rt.rect.height;
-        if (aspectRatio > 1 && aspectRatio < 1.5f)
+        if (rt.rect.width > rt.rect.height)
             PageLeft();
         else
             SelectLeft();
@@ -203,8 +220,7 @@ public class CardSelector : MonoBehaviour
     public void MoveRight()
     {
         RectTransform rt = GetComponent<RectTransform>();
-        float aspectRatio = rt.rect.width / rt.rect.height;
-        if (aspectRatio > 1 && aspectRatio < 1.5f)
+        if (rt.rect.width > rt.rect.height)
             PageRight();
         else
             SelectRight();
