@@ -240,10 +240,9 @@ public class CardGame
             } catch (Exception e) {
                 Error+= e.Message;
             }
-            Debug.Log("loaded page " + page);
             yield return null;
         }
-        Debug.Log("done loading");
+        Debug.Log("cards loaded");
     }
 
     public void CreateEnumLookups()
