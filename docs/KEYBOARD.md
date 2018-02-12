@@ -72,7 +72,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Load**: *r* - Copies deck text to the text clipboard.
 - **Submit**: *Enter* - Save.
 
-## Search Filter Menu
+## Card Search/Filter Menu
 - **Cancel**: *Esc* - Cancel.
 - **FocusName**: *\`* - Focuses keyboard to the previous text input field.
 - **FocusText**: *Tab* - Focuses keyboard to the next text input field.
