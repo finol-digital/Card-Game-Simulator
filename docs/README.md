@@ -35,6 +35,6 @@ When joining a friend's game session, CGS will be set to use the same (custom or
 When navigating through CGS, you may find it useful to use [keyboard shortcuts](KEYBOARD.md).
 
 ## Feedback
-Please send any feature requests/bug reports/other feedback to <david@finoldigital.com>.
+See the [current roadmap](ROADMAP.md). Please send any additonal feature requests/bug reports/other feedback to <david@finoldigital.com>.
 
 *You may also be interested in our [Privacy Policy](PRIVACY.md).*
