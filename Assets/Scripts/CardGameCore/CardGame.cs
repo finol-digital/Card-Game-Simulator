@@ -205,39 +205,34 @@ public class CardGame
             yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
         if (!IsLoaded)
-            DoLoad(true);
+            Load(true);
         IsDownloading = false;
     }
 
-    public void Load()
-    {
-        if (IsLoaded || IsDownloading)
-            return;
-        DoLoad(false);
-    }
-
-    private void DoLoad(bool isDownloaded)
+    public void Load(bool didDownload = false)
     {
         try {
-            if (!isDownloaded)
+            if (!didDownload)
                 JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
             BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
             CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
             CreateEnumLookups();
             LoadJsonFromFile(CardsFilePath, LoadCardFromJToken, CardDataIdentifier);
             LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
-            IsLoaded = true;
 
-            if (!isDownloaded && AutoUpdate)
+            if (!didDownload && AutoUpdate)
                 CardGameManager.Instance.StartCoroutine(Download());
             if (AllCardsUrlPageCount > 1)
-                CardGameManager.Instance.StartCoroutine(RunLoadPages());
+                CardGameManager.Instance.StartCoroutine(LoadCardPages());
+
+            IsLoaded = true;
         } catch (Exception e) {
             Error+= e.Message;
+            IsLoaded = false;
         }
     }
 
-    public IEnumerator RunLoadPages()
+    public IEnumerator LoadCardPages()
     {
         for (int page = 2; page <= AllCardsUrlPageCount; page++) {
             try {
@@ -245,8 +240,10 @@ public class CardGame
             } catch (Exception e) {
                 Error+= e.Message;
             }
+            Debug.Log("loaded page " + page);
             yield return null;
         }
+        Debug.Log("done loading");
     }
 
     public void CreateEnumLookups()
