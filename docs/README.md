@@ -30,7 +30,7 @@ You can also define your own custom game(s) by following the [Custom Games Docum
 ## Use CGS
 When you start a game in CGS, CGS automatically hosts a new game session in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game.
 
-When joining a friend's game session, CGS will be set to use the same (custom or not) card game that the host has selected. If you do not already have that card game, CGS will download it when you join the session.
+When joining a friend's game session, CGS will be set to use the same (custom or not) card game that the host has selected. If you do not already have that card game, CGS will automatically download it.
 
 When navigating through CGS, you may find it useful to use [keyboard shortcuts](KEYBOARD.md).
 
