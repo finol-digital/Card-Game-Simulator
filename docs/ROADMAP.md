@@ -23,6 +23,7 @@
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
 - Show indication of when a deck is shuffled in *Play Mode*
+- Support zooming in/out in *Play Mode*
 - Allow cards to snap to each other when moving them in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
 - Allow players to share a deck in *Play Mode*
