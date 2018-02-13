@@ -46,7 +46,7 @@
   - Allow pre-fetching of card images
   - Set card image cache limit
 
-## Stretch
+## Icebox
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
 - Clear the background once a card enters the play area in *Play Mode*
