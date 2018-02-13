@@ -242,6 +242,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         else
             cardStack.UpdateLayout(transform as RectTransform, targetPosition);
 
+        if (cardStack.type == CardStackType.Area)
+            transform.SetAsLastSibling();
+
         Vector3[] stackCorners = new Vector3[4];
         ((RectTransform) cardStack.transform).GetWorldCorners(stackCorners);
         bool isOutYBounds = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
