@@ -350,13 +350,14 @@ public class CardGame
                 if (card.GetPropertyValueInt(entry.Key) > entry.Value)
                     propsMatch = false;
             foreach (KeyValuePair<string, int> entry in enumProperties) {
-                EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(entry.Key));;
+                EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(entry.Key));
                 if (enumDef == null) {
                     propsMatch = false;
                     continue;
                 }
                 if ((card.GetPropertyValueEnum(entry.Key) & entry.Value) == 0)
-                    propsMatch = (entry.Value >= 1 << (enumDef.Lookup.Count - 1)) && string.IsNullOrEmpty(card.GetPropertyValueString(entry.Key));
+                    propsMatch = propsMatch && CardProperties.FirstOrDefault(prop
+                                     => prop.Name.Equals(entry.key))?.Empty.Equals(card.GetPropertyValueString(entry.key));
             }
             if (propsMatch)
                 yield return card;
