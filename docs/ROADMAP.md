@@ -19,6 +19,7 @@
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
+- Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
 - Show connected players in the bottom-left corner of *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
