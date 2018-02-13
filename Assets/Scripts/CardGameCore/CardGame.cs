@@ -356,7 +356,7 @@ public class CardGame
                     continue;
                 }
                 if ((card.GetPropertyValueEnum(entry.Key) & entry.Value) == 0)
-                    propsMatch = propsMatch && CardProperties.FirstOrDefault(prop
+                    propsMatch = propsMatch && (entry.Value >= (1 << def.Values.Count)) && CardProperties.FirstOrDefault(prop
                                      => prop.Name.Equals(entry.key))?.Empty.Equals(card.GetPropertyValueString(entry.key));
             }
             if (propsMatch)
