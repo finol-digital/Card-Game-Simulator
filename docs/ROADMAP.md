@@ -15,6 +15,7 @@
 
 ## Features
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
+- Add links to restore default card games to the *Game Selection Menu*
 - Resize cards based off \<cardSize\>
 - Support multiple card backs
 - Support decimal card property data type
