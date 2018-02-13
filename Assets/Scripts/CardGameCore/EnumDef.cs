@@ -83,7 +83,7 @@ public class EnumDef
         int enumValue = 0;
         foreach(string stringValue in propertyValue.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries)) {
             int intValue;
-            if (Lookup.TryGetValue(stringValue, out intValue))
+            if (Lookup.TryGetValue(stringValue, out intValue) || TryParseInt(stringValue, out intValue))
                 enumValue |= intValue;
         }
         return enumValue;
