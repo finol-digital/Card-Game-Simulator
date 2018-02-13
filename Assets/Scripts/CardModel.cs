@@ -30,18 +30,18 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right);
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
-    public Dictionary<int, CardModel> DraggedClones { get; } = new Dictionary<int, CardModel>();
-    public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
-    public Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
-
     public bool DoesCloneOnDrag { get; set; }
     public OnDoubleClickDelegate DoubleClickAction { get; set; }
     public SecondaryDragDelegate SecondaryDragAction { get; set; }
     public CardDropZone DropTarget { get; set; }
 
-    public bool DidSelectOnDown { get; private set; }
-    public PointerEventData CurrentPointerEventData { get; private set; }
-    public DragPhase CurrentDragPhase { get; private set; }
+    protected Dictionary<int, CardModel> DraggedClones { get; } = new Dictionary<int, CardModel>();
+    protected Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
+    protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
+
+    protected bool DidSelectOnDown { get; private set; }
+    protected PointerEventData CurrentPointerEventData { get; private set; }
+    protected DragPhase CurrentDragPhase { get; private set; }
 
     [SyncVar]
     public Vector2 LocalPosition;
@@ -180,8 +180,11 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
             cardModel.SecondaryDragAction();
 
+        Vector2 removedOffset = cardModel.PointerPositions[eventData.pointerId] - cardModel.PointerDragOffsets[eventData.pointerId];
         cardModel.PointerPositions.Remove(eventData.pointerId);
         cardModel.PointerDragOffsets.Remove(eventData.pointerId);
+        foreach (int offsetKey in cardModel.PointerDragOffsets.Keys)
+            PointerDragOffsets[offsetKey] -= removedOffset;
 
         if (cardModel.IsProcessingSecondaryDragAction)
             return;
