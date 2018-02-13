@@ -83,7 +83,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Delete**: *Delete* - Clear.
 - **Submit**: *Enter* - Search!
 
-## Dice Creation Menu
+## Dice Menu
 - **Cancel**: *Esc* - Cancel.
 - **Submit**: *Enter* - Create dice.
 
