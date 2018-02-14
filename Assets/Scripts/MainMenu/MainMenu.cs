@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -64,23 +65,31 @@ public class MainMenu : MonoBehaviour
 
     public void SelectCardGame()
     {
+        if (Time.timeSinceLevelLoad < 0.1)
+            return;
         CardGameManager.Instance.Selector.Show();
     }
 
     public void StartGame()
     {
+        if (Time.timeSinceLevelLoad < 0.1)
+            return;
         CardGameManager.IsMultiplayer = false;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
     public void JoinGame()
     {
+        if (Time.timeSinceLevelLoad < 0.1)
+            return;
         CardGameManager.IsMultiplayer = true;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
     public void EditDeck()
     {
+        if (Time.timeSinceLevelLoad < 0.1)
+            return;
         SceneManager.LoadScene(DeckEditorSceneIndex);
     }
 

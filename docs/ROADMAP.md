@@ -2,16 +2,8 @@
 
 ## Bugs
 - Fix: Connection in *Play Mode* randomly drops. Debug statements are currently displayed to try to resolve
-- Fix: Moving a card with two fingers in *Play Mode* can cause the card to snap based off where you remove one of your fingers
-- Fix: Dragging a card in *Play Mode* does not cause it to go on top of other cards
-- Fix: Rotating the screen orientation in *Play Mode* can cause the card zone extensions to go off-center
-- Fix: Clicking on card images that have transparency does not register clicks in the correct location
-- Fix: Red highlight that warns when a card will be destroyed does not appear consistently
 - Fix: *Card Search/Filter Menu* in landscape mode does not use entire horizontal space
-- Fix: *Card Search/Filter Menu* does not filter on cards that have 0 values for a given enum property
-- Fix: *Card Search/Filter Menu* does not filter on cards that have >1 values for a given enum property
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
-- Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 
 ## Features
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
@@ -48,7 +40,11 @@
 
 ## Icebox
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
+- Fix: Rotating the screen orientation in *Play Mode* can cause the card zone extensions to go off-center
+- Fix: Clicking on card images that have transparency does not register clicks in the correct location
+- Fix: Red highlight that warns when a card will be destroyed does not appear consistently
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
+- Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Clear the background once a card enters the play area in *Play Mode*
 - Support different formats/game-types for custom card games
 - Support sideboards
