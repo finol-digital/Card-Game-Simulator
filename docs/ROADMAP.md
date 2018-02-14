@@ -2,8 +2,6 @@
 
 ## Bugs
 - Fix: Connection in *Play Mode* randomly drops. Debug statements are currently displayed to try to resolve
-- Fix: *Card Search/Filter Menu* in landscape mode does not use entire horizontal space
-- Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 
 ## Features
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
