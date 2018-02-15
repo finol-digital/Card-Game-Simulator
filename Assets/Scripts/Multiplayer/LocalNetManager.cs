@@ -14,7 +14,6 @@ public class LocalNetManager : NetworkManager
 
     public void SearchForHost()
     {
-        Debug.Log("CGSNet: Searching For Host");
         if (Discovery.running)
             Discovery.StopBroadcast();
         Discovery.Initialize();
@@ -24,8 +23,6 @@ public class LocalNetManager : NetworkManager
     public override void OnStartHost()
     {
         base.OnStartHost();
-        playController.netText.text = "Players: ";
-        Debug.Log("CGSNet: Starting Host");
         if (Discovery.running)
             Discovery.StopBroadcast();
         Discovery.Initialize();
@@ -43,11 +40,11 @@ public class LocalNetManager : NetworkManager
         base.OnStartClient(netClient);
         Debug.Log("CGSNet: Registering card spawn handler");
         ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
+        playController.netText.text = "Players: ";
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
     {
-        Debug.Log("CGSNet: Spawning card as directed by server");
         GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playController.playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.transform.localPosition = cardModel.LocalPosition;
@@ -59,7 +56,6 @@ public class LocalNetManager : NetworkManager
 
     public void UnSpawnCard(GameObject spawned)
     {
-        Debug.Log("CGSNet: Unspawning card as directed by server");
         CardModel cardModel = spawned?.GetComponent<CardModel>();
         if (cardModel != null && !cardModel.hasAuthority)
             Destroy(spawned);
