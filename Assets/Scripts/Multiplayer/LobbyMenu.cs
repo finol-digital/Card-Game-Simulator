@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.EventSystems;
@@ -46,7 +47,9 @@ public class LobbyMenu : SelectionPanel
         if (hostNames == null || hostNames.Equals(HostNames))
             return;
 
-        HostNames = hostNames;
+		HostNames.Clear ();
+		foreach (string hostname in hostNames)
+			HostNames.Add (hostname.Split (':').Last ());
         if (!HostNames.Contains(SelectedHost)) {
             SelectedHost = string.Empty;
             joinButton.interactable = false;

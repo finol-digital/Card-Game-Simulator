@@ -7,7 +7,7 @@ public class LobbyDiscovery : NetworkDiscovery
 
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
-        if (lobby == null || NetworkManager.singleton.isNetworkActive)
+		if (lobby == null || !lobby.gameObject.activeInHierarchy || NetworkManager.singleton.isNetworkActive)
             return;
 
         lobby.DisplayHosts(broadcastsReceived.Keys.ToList());
