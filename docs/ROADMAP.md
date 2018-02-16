@@ -41,7 +41,7 @@
 - Fix: Rotating the screen orientation in *Play Mode* can cause the card zone extensions to go off-center
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
-- Fix: Simultaneously releasing two fingers on play mode card in *Play Mode* displays an error on-screen
+- Fix: Update deck count when sending card through network in *Play Mode*
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
