@@ -12,6 +12,11 @@ public class LocalNetManager : NetworkManager
     public LobbyDiscovery Discovery => _discovery ??
                                          (_discovery = CardGameManager.Instance.gameObject.GetOrAddComponent<LobbyDiscovery>());
 
+    void Start()
+    {
+        connectionConfig.NetworkDropThreshold = 90;
+    }
+
     public void SearchForHost()
     {
         if (Discovery.running)
