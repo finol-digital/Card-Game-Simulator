@@ -67,7 +67,7 @@ public class CardGameManager : MonoBehaviour
 
     void HandleLog(string logString, string stackTrace, LogType type)
     {
-        Messenger.Show(logString);
+        //Messenger.Show(logString);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
