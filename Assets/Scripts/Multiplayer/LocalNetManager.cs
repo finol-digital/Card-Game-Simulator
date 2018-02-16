@@ -14,6 +14,7 @@ public class LocalNetManager : NetworkManager
 
     void Start()
     {
+        customConfig = true;
         connectionConfig.NetworkDropThreshold = 90;
     }
 
