@@ -16,7 +16,7 @@
 - Synchronize points across all connected players in *Play Mode*
 - Show indication of when a deck is shuffled in *Play Mode*
 - Support zooming in/out in *Play Mode*
-- Consolidate 4 zones viewer buttons to 2 buttons that change contextually in *Play Mode*
+- Consolidate 4 zones viewer buttons to 2 buttons that change contextually and make it only have 1 orientation in *Play Mode*
 - Allow cards to snap to each other when moving them in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
 - Allow players to share a deck in *Play Mode*
