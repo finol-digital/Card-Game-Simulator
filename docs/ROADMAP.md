@@ -7,9 +7,6 @@
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
 - Add links to restore default card games to the *Game Selection Menu*
 - Resize cards based off \<cardSize\>
-- Support multiple card backs
-- Support decimal card property data type
-- Support object card property data type
 - Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
 - Show connected players in the bottom-left corner of *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
@@ -46,6 +43,9 @@
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
+- Support multiple card backs
+- Support decimal card property data type
+- Support object card property data type
 - Clear the background once a card enters the play area in *Play Mode*
 - Support different formats/game-types for custom card games
 - Support sideboards
