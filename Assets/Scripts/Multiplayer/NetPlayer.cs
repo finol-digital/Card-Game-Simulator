@@ -43,6 +43,7 @@ public class NetPlayer : NetworkBehaviour
         Debug.Log("CGSNet: Local player moving card to server");
         cardModel.transform.SetParent(cardStack.transform);
         cardModel.LocalPosition = cardModel.transform.localPosition;
+        cardModel.Rotation = cardModel.transform.rotation;
         CmdSpawnCard(cardModel.Id, cardModel.LocalPosition, cardModel.Rotation, cardModel.IsFacedown);
         Destroy(cardModel.gameObject);
     }

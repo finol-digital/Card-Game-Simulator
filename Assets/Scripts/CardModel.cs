@@ -183,8 +183,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         Vector2 removedOffset = (Vector2)cardModel.transform.position - eventData.position - cardModel.PointerDragOffsets[eventData.pointerId];
         cardModel.PointerPositions.Remove(eventData.pointerId);
         cardModel.PointerDragOffsets.Remove(eventData.pointerId);
+        Vector2 otherOffset;
         foreach (int offsetKey in cardModel.PointerDragOffsets.Keys.ToList())
-            cardModel.PointerDragOffsets[offsetKey] -= removedOffset;
+            if (cardModel.PointerDragOffsets.TryGetValue(offsetKey, out otherOffset))
+                cardModel.PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
 
         if (cardModel.IsProcessingSecondaryDragAction)
             return;

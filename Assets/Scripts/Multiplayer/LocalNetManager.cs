@@ -38,14 +38,14 @@ public class LocalNetManager : NetworkManager
     public override void OnStartClient(NetworkClient netClient)
     {
         base.OnStartClient(netClient);
-        Debug.Log("CGSNet: Registering card spawn handler");
+        Debug.Log("CGSNet: Starting client");
         ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
         playController.netText.text = "Players: ";
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
     {
-        GameObject newCardGO = Instantiate(cardModelPrefab, position, Quaternion.identity, playController.playAreaContent);
+        GameObject newCardGO = Instantiate(cardModelPrefab, playController.playAreaContent);
         CardModel cardModel = newCardGO.GetComponent<CardModel>();
         cardModel.transform.localPosition = cardModel.LocalPosition;
         cardModel.transform.rotation = cardModel.Rotation;
