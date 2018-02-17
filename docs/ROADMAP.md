@@ -1,8 +1,5 @@
 # Roadmap
 
-## Bugs
-- Fix: Connection in *Play Mode* randomly drops. Debug statements are currently displayed to try to resolve
-
 ## Features
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
 - Add links to restore default card games to the *Game Selection Menu*
@@ -34,7 +31,7 @@
   - Allow pre-fetching of card images
   - Set card image cache limit
 
-## Icebox
+## Bugs
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
 - Fix: Rotating the screen orientation in *Play Mode* can cause the card zone extensions to go off-center
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
@@ -43,6 +40,8 @@
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
+
+## Icebox
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
