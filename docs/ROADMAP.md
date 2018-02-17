@@ -38,8 +38,10 @@
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
 - Fix: Update deck count when sending card through network in *Play Mode*
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
+- Fix: Rotation is not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
+- Fix: *Popup*s that Prompt/Ask can have the yes/no buttons displayed with the wrong message
 
 ## Icebox
 - Support multiple card backs

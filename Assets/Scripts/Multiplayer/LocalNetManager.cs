@@ -44,9 +44,8 @@ public class LocalNetManager : NetworkManager
     public override void OnStartClient(NetworkClient netClient)
     {
         base.OnStartClient(netClient);
-        Debug.Log("CGSNet: Starting client");
         ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
-        playController.netText.text = "Players: ";
+        playController.netText.text = "<multiplayer data>";
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
