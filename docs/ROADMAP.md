@@ -30,6 +30,8 @@
   - Rotate 90/180/270
   - Toggle facedown
   - Move to hand
+  - Move to top/bottom of deck
+  - Move to discard/delete
 - Allow card zones to be defined within certain segments of the play area (i.e. lands/creatures/etc)
 - Allow for contextual setting what card action to do when a card is double-clicked
 - Press and hold (or right-click) on a card to bring up a context menu with the full list of possible card actions
