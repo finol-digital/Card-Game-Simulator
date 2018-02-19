@@ -37,7 +37,7 @@ public class DeckLoadMenu : SelectionPanel
 
     void LateUpdate()
     {
-        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+        if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
         if (newDeckPanel.gameObject.activeSelf) {
