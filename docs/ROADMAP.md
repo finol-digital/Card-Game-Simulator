@@ -25,22 +25,22 @@
 
 ## Maple Features
 - Resize cards based off \<cardSize\>
-- Define actions that can be done on a card in *Play Mode*:
-  - Toggle rotation between 0 and 90
-  - Rotate 90
+- Define actions that can be done on a card:
+  - Toggle rotation between 0 and 90/180/270
+  - Rotate 90/180/270
   - Toggle facedown
   - Move to hand
 - Allow card zones to be defined within certain segments of the play area (i.e. lands/creatures/etc)
 - Allow for contextual setting what card action to do when a card is double-clicked
-- Press and hold (or right-click) on a card to bring up a context menu with the full list of card actions
-- Support special action buttons (i.e. button to reset rotation for all cards)
+- Press and hold (or right-click) on a card to bring up a context menu with the full list of possible card actions
+- Support special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Support zooming in/out
-- Allow cards to snap to each other when moving them in *Play Mode*
+- Allow cards to snap to each other when moving them
 - Support moving dice both individually and as a group
 - Support rolling dice both individually and as a group
 - Support different colored dice, potentially using groups based off dice color
 - Support tokens
-- Consider keyboard shortcuts for *Play Mode*
+- Consider keyboard shortcuts
 
 ## Bugs
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
