@@ -17,7 +17,7 @@ public class GameSelectionMenu : SelectionPanel
 
     void LateUpdate()
     {
-        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+        if (urlInput.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
         if (downloadPanel.gameObject.activeSelf) {
