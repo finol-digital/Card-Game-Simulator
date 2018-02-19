@@ -38,7 +38,6 @@
 
 ## Bugs
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
-- Fix: Typing in *Game Selection Menu* does not ignore keyboard shortcuts
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
 - Fix: Rotating the screen orientation in *Play Mode* can cause the card zone extensions to go off-center
