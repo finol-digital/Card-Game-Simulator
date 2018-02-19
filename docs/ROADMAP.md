@@ -3,24 +3,12 @@
 ## Features
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
 - Add links to restore default card games to the *Game Selection Menu*
-- Resize cards based off \<cardSize\>
 - Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
 - Show connected players in the bottom-left corner of *Play Mode*
-- Synchronize dice across all connected players in *Play Mode*
-- Synchronize points across all connected players in *Play Mode*
-- Show indication of when a deck is shuffled in *Play Mode*
-- Support zooming in/out in *Play Mode*
 - Consolidate 4 zones viewer buttons to 2 buttons that change contextually and make it only have 1 orientation in *Play Mode*
-- Allow cards to snap to each other when moving them in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
 - Allow players to share a deck in *Play Mode*
-- Allow card zones to be defined within certain spaces of the play area in *Play Mode*
-- Allow for setting different double-click actions in *Play Mode*
-- Press and hold (or right-click) to bring up card actions in *Play Mode*
-- Allow rolling multiple dice at once from the *Dice Menu* in *Play Mode*
-- Allow different colored dice in *Play Mode*
 - Support special action buttons in *Play Mode* (i.e. Reset rotation for all cards)
-- Add keyboard shortcuts for *Play Mode*
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
 - Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
@@ -30,6 +18,21 @@
   - Display keyboard shortcuts
   - Allow pre-fetching of card images
   - Set card image cache limit
+
+## Maple Features
+- Resize cards based off \<cardSize\>
+- Allow cards to snap to each other when moving them in *Play Mode*
+- Allow card zones to be defined within certain spaces of the play area in *Play Mode*
+- Allow for setting different double-click actions in *Play Mode*
+- Press and hold (or right-click) to bring up card actions in *Play Mode*
+- Synchronize dice across all connected players in *Play Mode*
+- Synchronize points across all connected players in *Play Mode*
+- Show indication of when a deck is shuffled in *Play Mode*
+- Support zooming in/out in *Play Mode*
+- Support rolling multiple dice at once from the *Dice Menu* in *Play Mode*
+- Support different colored dice in *Play Mode*
+- Support tokens
+- Add keyboard shortcuts for *Play Mode*
 
 ## Bugs
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*

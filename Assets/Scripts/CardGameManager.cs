@@ -46,7 +46,7 @@ public class CardGameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (!Directory.Exists(GamesFilePathBase)) {
+        if (!Directory.Exists(GamesFilePathBase) || Directory.GetDirectories(GamesFilePathBase).Length < 1) {
 #if !UNITY_ANDROID || UNITY_EDITOR
             UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
 #else
