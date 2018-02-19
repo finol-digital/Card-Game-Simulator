@@ -22,7 +22,7 @@ public class DeckSaveMenu : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+        if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
         if (Input.GetButtonDown(CardIn.SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
