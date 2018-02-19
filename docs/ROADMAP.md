@@ -11,6 +11,7 @@
 - Support special action buttons in *Play Mode* (i.e. Reset rotation for all cards)
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
+- Make shifting between columns in the *Deck Editor* also control scrolling as appropriate
 - Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
 - New Mahjong tile set, with default property to type instead of suit
 - Add *Settings/Help*:
