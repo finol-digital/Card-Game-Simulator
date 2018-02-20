@@ -74,7 +74,7 @@ public class LocalNetManager : NetworkManager
 
     public override void OnServerError(NetworkConnection conn, int errorCode)
     {
-        base.OnServerError(conn, errorCode);
+        //base.OnServerError(conn, errorCode);
         Debug.Log("Server error:" + errorCode);
     }
 
@@ -86,13 +86,13 @@ public class LocalNetManager : NetworkManager
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        base.OnServerDisconnect(conn);
+        //base.OnServerDisconnect(conn);
         Debug.Log("Server disconnected");
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
-        base.OnClientError(conn, errorCode);
+        //base.OnClientError(conn, errorCode);
         Debug.Log("Client error:" + errorCode);
     }
 
@@ -104,7 +104,7 @@ public class LocalNetManager : NetworkManager
 
     public override void OnClientDisconnect(NetworkConnection conn)
     {
-        base.OnClientDisconnect(conn);
+        //base.OnClientDisconnect(conn);
         Debug.Log("Client Disconnected");
     }
 }
