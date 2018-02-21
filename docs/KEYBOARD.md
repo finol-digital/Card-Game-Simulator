@@ -7,7 +7,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Sort**: *q* - Brings up the Game Selection Menu.
 - **New**: *e* - Start Game.
 - **Load**: *r* - Join Game.
-- **Save**: *t* - Deck Editor.
+- **Save**: *t* - Edit Deck.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode

@@ -9,6 +9,7 @@ public class PlayMode : MonoBehaviour
 {
     public const string MainMenuPrompt = "Go back to the main menu?";
 
+    public GameObject cardViewerPrefab;
     public GameObject lobbyPrefab;
     public GameObject deckLoadMenuPrefab;
     public GameObject searchMenuPrefab;
@@ -26,8 +27,8 @@ public class PlayMode : MonoBehaviour
     public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());
     private LobbyMenu _lobby;
 
-    public DiceMenu DiceCreator => _diceCreator ?? (_diceCreator = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
-    private DiceMenu _diceCreator;
+    public DiceMenu DiceManager => _diceManager ?? (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
+    private DiceMenu _diceManager;
 
     public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
     private CardSearchMenu _cardSearcher;
@@ -41,6 +42,8 @@ public class PlayMode : MonoBehaviour
 
     void Start()
     {
+        Instantiate(cardViewerPrefab);
+
         playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
 
@@ -77,7 +80,7 @@ public class PlayMode : MonoBehaviour
 
     public void ShowDiceMenu()
     {
-        DiceCreator.Show(playAreaContent);
+        DiceManager.Show(playAreaContent);
     }
 
     public void ShowCardsMenu()

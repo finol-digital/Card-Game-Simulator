@@ -1,6 +1,7 @@
 # Roadmap
 
 ## General Features
+- Consolidate 4 zones viewer buttons to 2 buttons that change contextually and make it only have 1 orientation in *Play Mode*
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
 - Add links to restore default card games to the *Game Selection Menu*
 - Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
@@ -8,7 +9,6 @@
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
 - Show indication of when a deck is shuffled in *Play Mode*
-- Consolidate 4 zones viewer buttons to 2 buttons that change contextually and make it only have 1 orientation in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
 - Allow players to share a deck in *Play Mode*
 - Create new zone for search results when adding cards from the *Card Search/Filter Menu* in *Play Mode*

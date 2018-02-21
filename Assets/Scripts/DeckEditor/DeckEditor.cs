@@ -54,6 +54,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         }
     }
 
+    public GameObject cardViewerPrefab;
     public GameObject cardModelPrefab;
     public GameObject cardStackPrefab;
     public GameObject deckLoadMenuPrefab;
@@ -72,6 +73,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     void OnEnable()
     {
+        Instantiate(cardViewerPrefab);
         CardGameManager.Instance.OnSceneActions.Add(ResetCardStacks);
     }
 
