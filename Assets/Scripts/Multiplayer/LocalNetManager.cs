@@ -38,7 +38,7 @@ public class LocalNetManager : NetworkManager
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
         base.OnServerAddPlayer(conn, playerControllerId);
-        Debug.Log("CGSNet: Host adds player: " + playerControllerId);
+        //Debug.Log("CGSNet: Host adds player: " + playerControllerId);
     }
 
     public override void OnStartClient(NetworkClient netClient)
