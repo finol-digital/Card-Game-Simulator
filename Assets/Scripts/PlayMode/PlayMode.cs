@@ -12,8 +12,8 @@ public class PlayMode : MonoBehaviour
     public GameObject cardViewerPrefab;
     public GameObject lobbyPrefab;
     public GameObject deckLoadMenuPrefab;
-    public GameObject searchMenuPrefab;
     public GameObject diceMenuPrefab;
+    public GameObject searchMenuPrefab;
     public GameObject extraZonePrefab;
     public GameObject discardZonePrefab;
     public GameObject deckZonePrefab;
@@ -27,14 +27,14 @@ public class PlayMode : MonoBehaviour
     public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());
     private LobbyMenu _lobby;
 
+    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+    private DeckLoadMenu _deckLoader;
+
     public DiceMenu DiceManager => _diceManager ?? (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
     private DiceMenu _diceManager;
 
     public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
     private CardSearchMenu _cardSearcher;
-
-    public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
-    private DeckLoadMenu _deckLoader;
 
     protected Deck LoadedDeck { get; private set; }
     protected StackedZone DeckZone { get; private set; }
@@ -78,6 +78,11 @@ public class PlayMode : MonoBehaviour
             zones.verticalScrollView : zones.horizontalScrollView;
     }
 
+    public void ShowDeckMenu()
+    {
+        DeckLoader.Show(LoadDeck);
+    }
+
     public void ShowDiceMenu()
     {
         DiceManager.Show(playAreaContent);
@@ -86,11 +91,6 @@ public class PlayMode : MonoBehaviour
     public void ShowCardsMenu()
     {
         CardSearcher.Show(null, null, AddCardsToHand);
-    }
-
-    public void ShowDeckMenu()
-    {
-        DeckLoader.Show(LoadDeck);
     }
 
     public void LoadDeck(Deck newDeck)
