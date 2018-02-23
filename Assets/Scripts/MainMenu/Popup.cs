@@ -7,13 +7,20 @@ public class Popup : MonoBehaviour
 {
     public const string CloseLabel = "Close";
     public const string CancelLabel = "Cancel";
+    
+    struct Message
+    {
+        public string Text;
+        public UnityAction NoAction;
+        public UnityAction YesAction;
+    };
 
     public Text messageText;
     public Button yesButton;
     public Button noButton;
     public Button cancelButton;
 
-    public Queue<string> MessageQueue { get; } = new Queue<string>();
+    public Queue<Message> MessageQueue { get; } = new Queue<Message>();
 
     public bool IsNewMessage { get; private set; }
 
@@ -30,8 +37,19 @@ public class Popup : MonoBehaviour
         IsNewMessage = false;
     }
 
-    public void Show(string message)
+    public void Show(string text)
     {
+        Prompt(text, null);
+    }
+
+    public void Prompt(string text, UnityAction yesAction)
+    {
+        Ask(text, null, yesAction);
+    }
+
+    public void Ask(string text, UnityAction noAction, UnityAction yesAction)
+    {
+        Message message = new Message() {Text = text, NoAction = noAction, YesAction = yesAction};
         if (gameObject.activeSelf) {
             MessageQueue.Enqueue(message);
             return;
@@ -42,33 +60,27 @@ public class Popup : MonoBehaviour
         DisplayMessage(message);
     }
 
-    public void Prompt(string message, UnityAction yesAction)
+    private void DisplayMessage(Message message)
     {
-        Show(message);
-        yesButton.gameObject.SetActive(true);
+        messageText.text = message.Text ?? string.Empty;
+        yesButton.gameObject.SetActive(message.YesAction != null);
+        noButton.gameObject.SetActive(message.NoAction != null);
+        
         yesButton.onClick.RemoveAllListeners();
         if (yesAction != null)
             yesButton.onClick.AddListener(yesAction);
         yesButton.onClick.AddListener(Close);
-        cancelButton.GetComponentInChildren<Text>().text = CancelLabel;
-    }
-
-    public void Ask(string message, UnityAction noAction, UnityAction yesAction)
-    {
-        Prompt(message, yesAction);
-        noButton.gameObject.SetActive(true);
+        
         noButton.onClick.RemoveAllListeners();
         if (noAction != null)
             noButton.onClick.AddListener(noAction);
         noButton.onClick.AddListener(Close);
-    }
-
-    private void DisplayMessage(string message)
-    {
-        messageText.text = message ?? string.Empty;
-        yesButton.gameObject.SetActive(false);
-        noButton.gameObject.SetActive(false);
-        cancelButton.GetComponentInChildren<Text>().text = CloseLabel;
+        
+        if (message.YesAction == null && message.NoAction == null)
+            cancelButton.GetComponentInChildren<Text>().text = CloseLabel;
+        else
+            cancelButton.GetComponentInChildren<Text>().text = CancelLabel;
+        
         IsNewMessage = true;
     }
 
