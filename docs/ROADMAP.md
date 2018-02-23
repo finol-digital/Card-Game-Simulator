@@ -1,8 +1,6 @@
 # Roadmap
 
 ## General Features
-- Fix: *Popup*s that Prompt/Ask can have the yes/no buttons displayed with the wrong message
-- Fix: Null pointer error when entering *Deck Editor*
 - Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
 - Add links to restore default card games to the *Game Selection Menu*
 - Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*

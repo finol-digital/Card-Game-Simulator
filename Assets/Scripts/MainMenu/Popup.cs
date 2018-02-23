@@ -7,22 +7,21 @@ public class Popup : MonoBehaviour
 {
     public const string CloseLabel = "Close";
     public const string CancelLabel = "Cancel";
-    
-    struct Message
-    {
-        public string Text;
-        public UnityAction NoAction;
-        public UnityAction YesAction;
-    };
 
     public Text messageText;
     public Button yesButton;
     public Button noButton;
     public Button cancelButton;
 
-    public Queue<Message> MessageQueue { get; } = new Queue<Message>();
+    protected struct Message
+    {
+        public string Text;
+        public UnityAction NoAction;
+        public UnityAction YesAction;
+    };
 
-    public bool IsNewMessage { get; private set; }
+    protected Queue<Message> MessageQueue { get; } = new Queue<Message>();
+    protected bool IsNewMessage { get; private set; }
 
     void LateUpdate()
     {
@@ -65,22 +64,22 @@ public class Popup : MonoBehaviour
         messageText.text = message.Text ?? string.Empty;
         yesButton.gameObject.SetActive(message.YesAction != null);
         noButton.gameObject.SetActive(message.NoAction != null);
-        
+
         yesButton.onClick.RemoveAllListeners();
-        if (yesAction != null)
-            yesButton.onClick.AddListener(yesAction);
+        if (message.YesAction != null)
+            yesButton.onClick.AddListener(message.YesAction);
         yesButton.onClick.AddListener(Close);
-        
+
         noButton.onClick.RemoveAllListeners();
-        if (noAction != null)
-            noButton.onClick.AddListener(noAction);
+        if (message.NoAction != null)
+            noButton.onClick.AddListener(message.NoAction);
         noButton.onClick.AddListener(Close);
-        
+
         if (message.YesAction == null && message.NoAction == null)
             cancelButton.GetComponentInChildren<Text>().text = CloseLabel;
         else
             cancelButton.GetComponentInChildren<Text>().text = CancelLabel;
-        
+
         IsNewMessage = true;
     }
 
