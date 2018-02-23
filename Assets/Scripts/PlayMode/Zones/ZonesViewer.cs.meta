@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 2655ea0c592824b4fa58764634469684
+timeCreated: 1519347679
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - extraZonePrefab: {fileID: 1070941818217934, guid: a3317236d95550446b012dc8cdfc9b94,
+      type: 2}
+  - discardZonePrefab: {fileID: 1210712962979136, guid: ed8d95212d819c6439470ec2257371df,
+      type: 2}
+  - deckZonePrefab: {fileID: 1622848851289832, guid: 52c6b7c51cfe1874590bd53a822b6ccc,
+      type: 2}
+  - handZonePrefab: {fileID: 1776893089054616, guid: e5f82870ec0d3ce4ca680215cd2a8aba,
+      type: 2}
+  - scrollView: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

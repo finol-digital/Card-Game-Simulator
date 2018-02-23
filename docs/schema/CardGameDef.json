@@ -291,7 +291,7 @@
 		},
 		"playAreaSize": {
 			"description": "playAreaSize indicates the width and height in inches of the play area in Play Mode.",
-			"default": { "x": 23.5, "y": 13.5 },
+			"default": { "x": 23.5, "y": 20.25 },
 			"$ref": "#/definitions/vector2"
 		},
 		"setCardsIdentifier": {
