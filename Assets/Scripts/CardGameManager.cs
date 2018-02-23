@@ -86,8 +86,8 @@ public class CardGameManager : MonoBehaviour
         CardGame newGame = new CardGame(Set.DefaultCode, gameUrl) {AutoUpdate = true};
         yield return newGame.Download();
         if (string.IsNullOrEmpty(newGame.Error)) {
-            CardGameManager.Instance.AllCardGames [newGame.Name] = newGame;
-            CardGameManager.Instance.SelectCardGame(newGame.Name);
+            AllCardGames [newGame.Name] = newGame;
+            SelectCardGame(newGame.Name);
         } else
             Debug.LogError(GameLoadErrorMessage + newGame.Error);
     }
