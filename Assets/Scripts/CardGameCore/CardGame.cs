@@ -222,8 +222,8 @@ public class CardGame
 
             if (!didDownload && AutoUpdate)
                 CardGameManager.Instance.StartCoroutine(Download());
-            if (AllCardsUrlPageCount > 1)
-                CardGameManager.Instance.StartCoroutine(LoadCardPages());
+            else if (AllCardsUrlPageCount > 1)
+                CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
 
             IsLoaded = true;
         } catch (Exception e) {
