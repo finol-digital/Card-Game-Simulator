@@ -7,6 +7,7 @@
 - Show connected players in the bottom-left corner of *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
+- Catch cards that would be deleted in *Play Mode* and instead add them to the Discard Zone
 - Show indication of when a deck is shuffled in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
 - Allow players to share a deck in *Play Mode*
