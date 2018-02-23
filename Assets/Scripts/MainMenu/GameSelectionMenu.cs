@@ -8,7 +8,6 @@ public class GameSelectionMenu : SelectionPanel
 {
     public const string DeleteMessage = "Please download additional card games before deleting.";
     public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
-    public const string GameLoadErrorMessage = "Failed to load game url! ";
 
     public RectTransform downloadPanel;
     public InputField urlInput;
