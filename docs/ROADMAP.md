@@ -49,7 +49,6 @@
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
-- Fix: Rotating the screen orientation in *Play Mode* can cause the card zone extensions to go off-center
 - Fix: Update deck count when sending card through network in *Play Mode*
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
 - Fix: Rotation is not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
