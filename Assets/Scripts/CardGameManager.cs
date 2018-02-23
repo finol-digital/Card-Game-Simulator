@@ -94,6 +94,11 @@ public class CardGameManager : MonoBehaviour
     
     public void SelectCardGame(string gameName, string gameUrl)
     {
+        if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
+            DownloadCardGame(gameUrl);
+            return;
+        }
+        SelectCardGame(gameName);
     }
 
     public void SelectCardGame(string gameName)
