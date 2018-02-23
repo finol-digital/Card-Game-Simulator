@@ -113,6 +113,13 @@ public class CardGameManager : MonoBehaviour
         CurrentGameName = gameName;
         DoGameSceneActions();
     }
+    
+    public IEnumerator LoadCards()
+    {
+        yield return Current.LoadCardPages();
+        if (!string.IsNullOrEmpty(Current.Error))
+            Debug.LogError(GameLoadErrorMessage + Current.Error);
+    }
 
     public void DoGameSceneActions()
     {
