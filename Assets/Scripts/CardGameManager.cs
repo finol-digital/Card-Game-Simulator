@@ -79,6 +79,21 @@ public class CardGameManager : MonoBehaviour
     {
         OnSceneActions.Clear();
     }
+    
+    public IEnumerator DownloadCardGame(string gameUrl)
+    {
+        CardGame newGame = new CardGame(Set.DefaultCode, gameUrl) {AutoUpdate = true};
+        yield return newGame.Download();
+        if (string.IsNullOrEmpty(newGame.Error)) {
+            CardGameManager.Instance.AllCardGames [newGame.Name] = newGame;
+            CardGameManager.Instance.SelectCardGame(newGame.Name);
+        } else
+            Debug.LogError(GameLoadErrorMessage + newGame.Error);
+    }
+    
+    public void SelectCardGame(string gameName, string gameUrl)
+    {
+    }
 
     public void SelectCardGame(string gameName)
     {
