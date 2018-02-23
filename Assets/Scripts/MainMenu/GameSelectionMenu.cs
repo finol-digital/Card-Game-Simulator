@@ -102,7 +102,7 @@ public class GameSelectionMenu : SelectionPanel
         urlInput.interactable = false;
         cancelButton.interactable = false;
         
-        yield return CardGameManager.Instance.DownloadGame(urlInput.text.Trim());
+        yield return CardGameManager.Instance.DownloadCardGame(urlInput.text.Trim());
 
         cancelButton.interactable = true;
         urlInput.interactable = true;
