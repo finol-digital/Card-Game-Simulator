@@ -204,8 +204,11 @@ public class CardGame
         foreach (DeckUrl deckUrl in DeckUrls)
             yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
-        if (!IsLoaded)
+        if (!IsLoaded) {
             Load(true);
+            if (AllCardsUrlPageCount > 1)
+                CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
+        }
         IsDownloading = false;
     }
 
@@ -220,10 +223,12 @@ public class CardGame
             LoadJsonFromFile(CardsFilePath, LoadCardFromJToken, CardDataIdentifier);
             LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
 
-            if (!didDownload && AutoUpdate)
-                CardGameManager.Instance.StartCoroutine(Download());
-            else if (AllCardsUrlPageCount > 1)
-                CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
+            if (!didDownload) {
+                if (AutoUpdate)
+                    CardGameManager.Instance.StartCoroutine(Download());
+                if (AllCardsUrlPageCount > 1)
+                    CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
+            }
 
             IsLoaded = true;
         } catch (Exception e) {
