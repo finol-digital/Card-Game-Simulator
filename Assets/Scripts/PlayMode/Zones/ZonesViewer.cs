@@ -14,7 +14,6 @@ public class ZonesViewer : MonoBehaviour
     public GameObject handZonePrefab;
     public ScrollRect scrollView;
     public GameObject extendButton;
-    public GameObject condenseButton;
     public GameObject showButton;
     public GameObject hideButton;
 
@@ -94,8 +93,9 @@ public class ZonesViewer : MonoBehaviour
             ((RectTransform)scrollView.transform.parent ).SetInsetAndSizeFromParentEdge(edge, inset, size);
             foreach (ExtensibleCardZone zone in AllZones)
                 zone.ResizeExtension();
-            extendButton.SetActive(!value);
-            condenseButton.SetActive(value);
+            extendButton.SetActive(!IsExtended);
+            showButton.SetActive(IsExtended && !IsVisible);
+            hideButton.SetActive(IsExtended && IsVisible);
         }
     }
 
@@ -106,8 +106,9 @@ public class ZonesViewer : MonoBehaviour
             RectTransform.Edge edge = RectTransform.Edge.Top;
             float size = GetComponent<RectTransform>().rect.height;
             ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, 0, scrollView.gameObject.activeSelf ? size : ScrollbarWidth);
-            showButton.SetActive(!value);
-            hideButton.SetActive(value);
+            extendButton.SetActive(!IsExtended);
+            showButton.SetActive(IsExtended && !IsVisible);
+            hideButton.SetActive(IsExtended && IsVisible);
         }
     }
 }
