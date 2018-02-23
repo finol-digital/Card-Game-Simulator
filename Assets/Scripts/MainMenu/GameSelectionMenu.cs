@@ -98,20 +98,14 @@ public class GameSelectionMenu : SelectionPanel
 
     public IEnumerator DownloadGame()
     {
-        CardGame newGame = new CardGame(Set.DefaultCode, urlInput.text.Trim()) {AutoUpdate = true};
         urlInput.text = string.Empty;
         urlInput.interactable = false;
         cancelButton.interactable = false;
-        yield return newGame.Download();
+        
+        yield return CardGameManager.Instance.DownloadGame(urlInput.text.Trim());
 
-        if (string.IsNullOrEmpty(newGame.Error)) {
-            CardGameManager.Instance.AllCardGames [newGame.Name] = newGame;
-            CardGameManager.Instance.SelectCardGame(newGame.Name);
-        } else
-            Debug.LogError(GameLoadErrorMessage + newGame.Error);
-
-        urlInput.interactable = true;
         cancelButton.interactable = true;
+        urlInput.interactable = true;
         HideDownloadPanel();
     }
 
