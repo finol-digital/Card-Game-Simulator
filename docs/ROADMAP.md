@@ -1,7 +1,6 @@
 # Roadmap
 
 ## General Features
-- Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards loaded" message appears after the game finishes loading
 - Add links to restore default card games to the *Game Selection Menu*
 - Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
 - Show connected players in the bottom-left corner of *Play Mode*
@@ -55,6 +54,7 @@
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 
 ## Icebox
+- Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards finished loading" message appears after the cards finish loading
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type

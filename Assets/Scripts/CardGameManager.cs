@@ -80,9 +80,10 @@ public class CardGameManager : MonoBehaviour
     {
         OnSceneActions.Clear();
     }
-    
+
     public IEnumerator DownloadCardGame(string gameUrl)
     {
+        //Messenger.Show("Game download has started");
         CardGame newGame = new CardGame(Set.DefaultCode, gameUrl) {AutoUpdate = true};
         yield return newGame.Download();
         if (string.IsNullOrEmpty(newGame.Error)) {
@@ -90,8 +91,9 @@ public class CardGameManager : MonoBehaviour
             SelectCardGame(newGame.Name);
         } else
             Debug.LogError(GameLoadErrorMessage + newGame.Error);
+        //Messenger.Show("Game download has finished");
     }
-    
+
     public void SelectCardGame(string gameName, string gameUrl)
     {
         if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
@@ -113,12 +115,14 @@ public class CardGameManager : MonoBehaviour
         CurrentGameName = gameName;
         DoGameSceneActions();
     }
-    
+
     public IEnumerator LoadCards()
     {
+        Messenger.Show("Cards are loading in the background. Performance may be affected in the meantime.");
         yield return Current.LoadCardPages();
         if (!string.IsNullOrEmpty(Current.Error))
             Debug.LogError(GameLoadErrorMessage + Current.Error);
+        Messenger.Show("All cards have finished loading.");
     }
 
     public void DoGameSceneActions()

@@ -247,7 +247,6 @@ public class CardGame
             }
             yield return null;
         }
-        Debug.Log("cards loaded");
     }
 
     public void CreateEnumLookups()
