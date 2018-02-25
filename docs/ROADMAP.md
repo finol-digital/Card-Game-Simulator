@@ -1,8 +1,6 @@
 # Roadmap
 
 ## General Features
-- Synchronize dice across all connected players in *Play Mode*
-- Synchronize points across all connected players in *Play Mode*
 - Catch cards that would be deleted in *Play Mode* and instead add them to the Discard Zone
 - Show indication of when a deck is shuffled in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
@@ -55,6 +53,8 @@
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
+- Synchronize dice across all connected players in *Play Mode*
+- Synchronize points across all connected players in *Play Mode*
 - Clear the background once a card enters the play area in *Play Mode*
 - Support different formats/game-types for custom card games
 - Support sideboards
