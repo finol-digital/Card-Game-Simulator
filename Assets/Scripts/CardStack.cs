@@ -68,7 +68,7 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             case CardStackType.Horizontal:
                 int newSiblingIndex = transform.childCount;
                 for (int i = 0; i < transform.childCount; i++) {
-                    if (type == CardStackType.Vertical ? targetPosition.y < transform.GetChild(i).position.y : targetPosition.x < transform.GetChild(i).position.x)
+                    if (type == CardStackType.Vertical ? targetPosition.y < transform.GetChild(i).position.y : targetPosition.x > transform.GetChild(i).position.x)
                         continue;
                     newSiblingIndex = i;
                     if (child.GetSiblingIndex() < newSiblingIndex)

@@ -1,18 +1,10 @@
 ﻿using System.Globalization;
-using UnityEngine.Networking;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class PointsCounter : NetworkBehaviour
+public class PointsCounter : MonoBehaviour
 {
     public Text pointsText;
-
-    [SyncVar]
-    private float _points;
-
-    void Start()
-    {
-        Count = CardGameManager.Current.GameStartPointsCount;
-    }
 
     public void Decrement()
     {
@@ -24,11 +16,11 @@ public class PointsCounter : NetworkBehaviour
         Count++;
     }
 
-    public float Count {
-        get { return _points; }
+    protected float Count {
+        get { return CGSNetManager.Instance.LocalPlayer.Points; }
         set {
-            _points = value;
-            pointsText.text = _points.ToString(CultureInfo.InvariantCulture);
+            CGSNetManager.Instance.LocalPlayer.Points = value;
+            pointsText.text = CGSNetManager.Instance.LocalPlayer.Points.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

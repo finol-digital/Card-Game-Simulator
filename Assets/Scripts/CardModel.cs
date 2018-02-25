@@ -25,9 +25,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
     public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive
-        && transform.parent == ((LocalNetManager)NetworkManager.singleton).playController.playAreaContent;
+        && transform.parent == ((CGSNetManager)NetworkManager.singleton).playController.playAreaContent;
     public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1
-        || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right);
+        || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right && CurrentPointerEventData.button == PointerEventData.InputButton.Middle);
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
     public bool DoesCloneOnDrag { get; set; }
@@ -78,7 +78,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        DidSelectOnDown = eventData.button != PointerEventData.InputButton.Right && CardInfoViewer.Instance.SelectedCardModel != this && CardInfoViewer.Instance.WasVisible;
+        DidSelectOnDown = eventData.button != PointerEventData.InputButton.Right && eventData.button != PointerEventData.InputButton.Middle
+            && CardInfoViewer.Instance.SelectedCardModel != this && CardInfoViewer.Instance.WasVisible;
         if (DidSelectOnDown)
             EventSystem.current.SetSelectedGameObject(gameObject, eventData);
 
@@ -90,7 +91,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId && eventData.button != PointerEventData.InputButton.Right && !eventData.dragging && !DraggedClones.ContainsKey(eventData.pointerId)) {
+        if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId && !eventData.dragging
+            && eventData.button != PointerEventData.InputButton.Right && eventData.button != PointerEventData.InputButton.Middle
+            && !DraggedClones.ContainsKey(eventData.pointerId)) {
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
                 DoubleClickAction(this);
             else if (PlaceHolder == null)
@@ -180,7 +183,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
             cardModel.SecondaryDragAction();
 
-        Vector2 removedOffset = (Vector2)cardModel.transform.position - eventData.position - cardModel.PointerDragOffsets[eventData.pointerId];
+        Vector2 removedOffset = Vector2.zero;
+        Vector2 pointerDragOffset;
+        if (cardModel.PointerDragOffsets.TryGetValue(eventData.pointerId, out pointerDragOffset))
+            removedOffset = (Vector2)cardModel.transform.position - eventData.position - pointerDragOffset;
         cardModel.PointerPositions.Remove(eventData.pointerId);
         cardModel.PointerDragOffsets.Remove(eventData.pointerId);
         Vector2 otherOffset;
@@ -215,7 +221,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public void UpdatePosition()
     {
 #if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
-        if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) || Input.GetMouseButtonUp(2))
             return;
 #endif
         bool isOnline = IsOnline;
@@ -292,7 +298,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         RpcUnspawn();
         NetworkServer.UnSpawn(gameObject);
-        LocalNetManager.Instance.UnSpawnCard(gameObject);
+        CGSNetManager.Instance.UnSpawnCard(gameObject);
     }
 
     [ClientRpc]

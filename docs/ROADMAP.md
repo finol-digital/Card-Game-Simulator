@@ -1,11 +1,6 @@
 # Roadmap
 
 ## General Features
-- Add links to restore default card games to the *Game Selection Menu*
-- Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
-- Show connected players in the bottom-left corner of *Play Mode*
-- Synchronize dice across all connected players in *Play Mode*
-- Synchronize points across all connected players in *Play Mode*
 - Catch cards that would be deleted in *Play Mode* and instead add them to the Discard Zone
 - Show indication of when a deck is shuffled in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
@@ -37,6 +32,7 @@
 - Support special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Support zooming in/out
 - Allow cards to snap to each other when moving them
+- Support grouping for cards
 - Support moving dice both individually and as a group
 - Support rolling dice both individually and as a group
 - Support different colored dice, potentially using groups based off dice color
@@ -54,10 +50,12 @@
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 
 ## Icebox
-- Show loading bar when loading/downloading a card game in the *Game Selection Menu*. Currently, a "cards finished loading" message appears after the cards finish loading
+- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
+- Synchronize dice across all connected players in *Play Mode*
+- Synchronize points across all connected players in *Play Mode*
 - Clear the background once a card enters the play area in *Play Mode*
 - Support different formats/game-types for custom card games
 - Support sideboards

@@ -1,18 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class NetPlayer : NetworkBehaviour
+public class CGSNetPlayer : NetworkBehaviour
 {
     public const string DeckLoadPrompt = "Would you like to join the game with your own deck?";
+
+    [SyncVar]
+    public float Points;
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        LocalNetManager.Instance.LocalPlayer = this;
+        CGSNetManager.Instance.LocalPlayer = this;
+        Points = CardGameManager.Current.GameStartPointsCount;
         if (!isServer)
-            CardGameManager.Instance.Messenger.Ask(DeckLoadPrompt, RequestHand, LocalNetManager.Instance.playController.ShowDeckMenu);
+            RequestCardGame();
+    }
+
+    public void RequestCardGame()
+    {
+        CmdSelectCardGame();
+    }
+
+    [Command]
+    public void CmdSelectCardGame()
+    {
+        TargetSelectCardGame(connectionToClient, CardGameManager.Current.Name, CardGameManager.Current.AutoUpdateUrl);
+    }
+
+    [TargetRpc]
+    public void TargetSelectCardGame(NetworkConnection target, string gameName, string gameUrl)
+    {
+        CardGameManager.Instance.SelectCardGame(gameName, gameUrl);
+        StartCoroutine(WaitToRequestHand());
+    }
+
+    public IEnumerator WaitToRequestHand()
+    {
+        while(CardGameManager.Current.IsDownloading)
+            yield return null;
+        CardGameManager.Instance.Messenger.Ask(DeckLoadPrompt, RequestHand, CGSNetManager.Instance.playController.ShowDeckMenu);
     }
 
     public void RequestHand()
@@ -23,7 +53,7 @@ public class NetPlayer : NetworkBehaviour
     [Command]
     public void CmdDealHand()
     {
-        List<Card> cards = LocalNetManager.Instance.playController.PopDeckCards(CardGameManager.Current.GameStartHandCount);
+        List<Card> cards = CGSNetManager.Instance.playController.PopDeckCards(CardGameManager.Current.GameStartHandCount);
         TargetDealCards(connectionToClient, cards.Select(card => card.Id).ToArray());
     }
 
@@ -31,7 +61,7 @@ public class NetPlayer : NetworkBehaviour
     public void TargetDealCards(NetworkConnection target, string[] cardIds)
     {
         List<Card> cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
-        LocalNetManager.Instance.playController.AddCardsToHand(cards);
+        CGSNetManager.Instance.playController.AddCardsToHand(cards);
     }
 
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
@@ -46,8 +76,8 @@ public class NetPlayer : NetworkBehaviour
     [Command]
     public void CmdSpawnCard(string cardId, Vector3 localPosition, Quaternion rotation, bool isFacedown)
     {
-        PlayMode controller = LocalNetManager.Instance.playController;
-        GameObject newCard = Instantiate(LocalNetManager.Instance.cardModelPrefab, controller.playAreaContent);
+        PlayMode controller = CGSNetManager.Instance.playController;
+        GameObject newCard = Instantiate(CGSNetManager.Instance.cardModelPrefab, controller.playAreaContent);
         CardModel cardModel = newCard.GetComponent<CardModel>();
         cardModel.Value = CardGameManager.Current.Cards[cardId];
         cardModel.transform.localPosition = localPosition;

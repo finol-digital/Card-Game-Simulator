@@ -8,6 +8,9 @@ public class GameSelectionMenu : SelectionPanel
 {
     public const string DeleteMessage = "Please download additional card games before deleting.";
     public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
+    public const string DominoesUrl = "https://cardgamesim.finoldigital.com/Dominoes/Dominoes.json";
+    public const string StandardUrl = "https://cardgamesim.finoldigital.com/Standard/Standard.json";
+    public const string MahjongUrl = "https://cardgamesim.finoldigital.com/Mahjong/Mahjong.json";
 
     public RectTransform downloadPanel;
     public InputField urlInput;
@@ -48,7 +51,7 @@ public class GameSelectionMenu : SelectionPanel
     {
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
-        Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.CurrentGameName);
+        Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
     }
 
     public void SelectGame(bool isOn, string gameName)
@@ -74,6 +77,24 @@ public class GameSelectionMenu : SelectionPanel
         downloadPanel.gameObject.SetActive(true);
     }
 
+    public void ApplyDominoes()
+    {
+        if (urlInput.interactable)
+            urlInput.text = DominoesUrl;
+    }
+
+    public void ApplyStandard()
+    {
+        if (urlInput.interactable)
+            urlInput.text = StandardUrl;
+    }
+
+    public void ApplyMahjong()
+    {
+        if (urlInput.interactable)
+            urlInput.text = MahjongUrl;
+    }
+
     public void Paste()
     {
         if (urlInput.interactable)
@@ -97,11 +118,13 @@ public class GameSelectionMenu : SelectionPanel
 
     public IEnumerator DownloadGame()
     {
+        string gameUrl = urlInput.text.Trim();
+
         urlInput.text = string.Empty;
         urlInput.interactable = false;
         cancelButton.interactable = false;
-        
-        yield return CardGameManager.Instance.DownloadCardGame(urlInput.text.Trim());
+
+        yield return CardGameManager.Instance.DownloadCardGame(gameUrl);
 
         cancelButton.interactable = true;
         urlInput.interactable = true;
