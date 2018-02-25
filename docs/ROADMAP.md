@@ -1,8 +1,6 @@
 # Roadmap
 
 ## General Features
-- Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
-- Show connected players in the bottom-left corner of *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
 - Catch cards that would be deleted in *Play Mode* and instead add them to the Discard Zone

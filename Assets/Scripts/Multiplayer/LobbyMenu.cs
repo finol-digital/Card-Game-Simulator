@@ -38,8 +38,8 @@ public class LobbyMenu : SelectionPanel
         SelectedHost = string.Empty;
         Rebuild(HostNames, SelectHost, SelectedHost);
 
-        LocalNetManager.Instance.Discovery.lobby = this;
-        LocalNetManager.Instance.SearchForHost();
+        CGSNetManager.Instance.Discovery.lobby = this;
+        CGSNetManager.Instance.SearchForHost();
     }
 
     public void DisplayHosts(List<string> hostNames)
@@ -68,7 +68,7 @@ public class LobbyMenu : SelectionPanel
     public IEnumerator WaitToShowDeckLoader()
     {
         yield return null;
-        LocalNetManager.Instance.playController.ShowDeckMenu();
+        CGSNetManager.Instance.playController.ShowDeckMenu();
     }
 
     public void SelectHost(bool isOn, string hostName)

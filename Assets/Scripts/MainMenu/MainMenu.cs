@@ -55,7 +55,7 @@ public class MainMenu : MonoBehaviour
     public void UpdateCurrentGameText()
     {
         if (currentGameText != null)
-            currentGameText.text = CardGameManager.CurrentGameName;
+            currentGameText.text = CardGameManager.Current.Name;
     }
 
     public void GoToMainMenu()

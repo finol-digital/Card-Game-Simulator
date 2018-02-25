@@ -25,7 +25,7 @@ public class CardGameManager : MonoBehaviour
     public const int PixelsPerInch = 100;
 
     public static string GamesFilePathBase => Application.persistentDataPath + "/games";
-    public static string CurrentGameName { get; private set; } = Set.DefaultCode;
+    public static CardGame Current { get; private set; } = new CardGame();
 
     public static bool IsMultiplayer { get; set; }
     public static bool IsQuitting { get; private set; }
@@ -59,7 +59,8 @@ public class CardGameManager : MonoBehaviour
             string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
             AllCardGames [gameName] = new CardGame(gameName, string.Empty);
         }
-        CurrentGameName = PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName);
+        CardGame currentGame;
+        Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName), out currentGame) ? currentGame : new CardGame();
 
         Application.logMessageReceived += HandleLog;
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -85,19 +86,20 @@ public class CardGameManager : MonoBehaviour
     {
         //Messenger.Show("Game download has started");
         CardGame newGame = new CardGame(Set.DefaultCode, gameUrl) {AutoUpdate = true};
+        Current = newGame;
         yield return newGame.Download();
-        if (string.IsNullOrEmpty(newGame.Error)) {
-            AllCardGames [newGame.Name] = newGame;
-            SelectCardGame(newGame.Name);
-        } else
+        if (string.IsNullOrEmpty(newGame.Error))
+            AllCardGames[newGame.Name] = newGame;
+        else
             Debug.LogError(GameLoadErrorMessage + newGame.Error);
+        SelectCardGame(newGame.Name);
         //Messenger.Show("Game download has finished");
     }
 
     public void SelectCardGame(string gameName, string gameUrl)
     {
         if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
-            DownloadCardGame(gameUrl);
+            StartCoroutine(DownloadCardGame(gameUrl));
             return;
         }
         SelectCardGame(gameName);
@@ -107,12 +109,13 @@ public class CardGameManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
             Debug.LogError(InvalidGameSelectionMessage);
-            CurrentGameName = Set.DefaultCode;
             Selector.Show();
             return;
         }
 
-        CurrentGameName = gameName;
+        CardGame currentGame;
+        Current = AllCardGames.TryGetValue(gameName, out currentGame) ? currentGame : new CardGame();
+
         DoGameSceneActions();
     }
 
@@ -133,7 +136,7 @@ public class CardGameManager : MonoBehaviour
         if (!string.IsNullOrEmpty(Current.Error))
             Debug.LogError(GameLoadErrorMessage + Current.Error);
         else
-            PlayerPrefs.SetString(PlayerPrefGameName, CurrentGameName);
+            PlayerPrefs.SetString(PlayerPrefGameName, Current.Name);
 
         if (BackgroundImage != null)
             BackgroundImage.sprite = Current.BackgroundImageSprite;
@@ -150,7 +153,7 @@ public class CardGameManager : MonoBehaviour
     {
         try {
             Directory.Delete(Current.FilePathBase, true);
-            AllCardGames.Remove(CurrentGameName);
+            AllCardGames.Remove(Current.Name);
             SelectCardGame(AllCardGames.Keys.First());
             Selector.Show();
         } catch (Exception ex) {
@@ -179,12 +182,6 @@ public class CardGameManager : MonoBehaviour
             }
             _instance = cardGameManager.GetOrAddComponent<CardGameManager>();
             return _instance;
-        }
-    }
-
-    public static CardGame Current {
-        get { CardGame currentGame;
-            return Instance.AllCardGames.TryGetValue(CurrentGameName, out currentGame) ? currentGame : new CardGame();
         }
     }
 

@@ -51,7 +51,7 @@ public class GameSelectionMenu : SelectionPanel
     {
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
-        Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.CurrentGameName);
+        Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
     }
 
     public void SelectGame(bool isOn, string gameName)

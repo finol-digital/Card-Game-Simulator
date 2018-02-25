@@ -171,7 +171,7 @@ public class PlayMode : MonoBehaviour
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
         if (NetworkManager.singleton.isNetworkActive)
-            LocalNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
+            CGSNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
         else
             SetPlayActions(cardStack, cardModel);
     }
@@ -189,12 +189,12 @@ public class PlayMode : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        if (NetworkManager.singleton.isNetworkActive || LocalNetManager.Instance.Discovery.running) {
+        if (NetworkManager.singleton.isNetworkActive || CGSNetManager.Instance.Discovery.running) {
             if (NetworkServer.active)
                 NetworkManager.singleton.StopHost();
             else if (NetworkManager.singleton.IsClientConnected())
                 NetworkManager.singleton.StopClient();
-            LocalNetManager.Instance.Discovery.StopBroadcast();
+            CGSNetManager.Instance.Discovery.StopBroadcast();
         }
 
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

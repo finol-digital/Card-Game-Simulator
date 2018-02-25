@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class LocalNetManager : NetworkManager
+public class CGSNetManager : NetworkManager
 {
-    public static LocalNetManager Instance => (LocalNetManager)singleton;
-    public NetPlayer LocalPlayer { get; set; }
+    public static CGSNetManager Instance => (CGSNetManager)singleton;
+    public CGSNetPlayer LocalPlayer { get; set; }
     public PlayMode playController;
     public GameObject cardModelPrefab;
 
@@ -38,14 +38,14 @@ public class LocalNetManager : NetworkManager
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
         base.OnServerAddPlayer(conn, playerControllerId);
-        //Debug.Log("CGSNet: Host adds player: " + playerControllerId);
+        playController.netText.text = NetworkServer.connections.Count.ToString();
     }
 
     public override void OnStartClient(NetworkClient netClient)
     {
         base.OnStartClient(netClient);
         ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
-        playController.netText.text = "<multiplayer data>";
+        playController.netText.text = netClient.serverIp;
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
@@ -66,40 +66,22 @@ public class LocalNetManager : NetworkManager
             Destroy(spawned);
     }
 
-    public override void OnStopHost()
-    {
-        base.OnStopHost();
-        Debug.Log("Host Stopped");
-    }
-
     public override void OnServerError(NetworkConnection conn, int errorCode)
     {
         //base.OnServerError(conn, errorCode);
         Debug.Log("Server error:" + errorCode);
     }
 
-    public override void OnStopServer()
-    {
-        base.OnStopServer();
-        Debug.Log("Server Stopped");
-    }
-
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         //base.OnServerDisconnect(conn);
-        Debug.Log("Server disconnected");
+        Debug.Log("Player disconnected");
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)
     {
         //base.OnClientError(conn, errorCode);
         Debug.Log("Client error:" + errorCode);
-    }
-
-    public override void OnStopClient()
-    {
-        base.OnStopClient();
-        Debug.Log("Client Stopped");
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)
