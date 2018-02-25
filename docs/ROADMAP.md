@@ -32,6 +32,7 @@
 - Support special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Support zooming in/out
 - Allow cards to snap to each other when moving them
+- Grouping for cards
 - Support moving dice both individually and as a group
 - Support rolling dice both individually and as a group
 - Support different colored dice, potentially using groups based off dice color
