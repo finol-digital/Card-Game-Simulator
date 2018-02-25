@@ -1,7 +1,6 @@
 # Roadmap
 
 ## General Features
-- Add links to restore default card games to the *Game Selection Menu*
 - Select (and download if needed) the host's selected card game when joining a game session in *Play Mode*
 - Show connected players in the bottom-left corner of *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
