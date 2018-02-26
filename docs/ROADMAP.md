@@ -2,9 +2,9 @@
 
 ## General Features
 - Catch cards that would be deleted in *Play Mode* and instead add them to the Discard Zone
+- Allow players to share a deck in *Play Mode*
 - Show indication of when a deck is shuffled in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
-- Allow players to share a deck in *Play Mode*
 - Create new zone for search results when adding cards from the *Card Search/Filter Menu* in *Play Mode*
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
