@@ -8,12 +8,67 @@ namespace Maple.Field
         : MonoBehaviour
     {
         // TODO: Manage max elevation based on active camera Z offset
+        const float MaxElevationRepresentation = 500f;
+
+        const float VolumeThickness = 0.001f;
 
         public IReadOnlyMapleContext RootContext;
 
         public WeakReference<IReadOnlyFieldCardContainer> FieldCardLink;
 
-        public float MaxElevationRepresentation = 500.0f;
+
+        void Start()
+        {
+            // Set up components
+
+            var volume = gameObject.AddComponent<BoxCollider>();
+            var spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
+
+
+            // Bind data (one-time data binding)
+
+            IReadOnlyFieldCardContainer model;
+
+            if (!FieldCardLink.TryGetTarget(out model))
+            {
+                Debug.LogWarning(
+                    "Field card resource is null."
+                    + " This presenter will destroy itself.");
+
+                Destroy(this);
+
+                return;
+            }
+
+            var cardDescription =
+                RootContext.CardDescriptions[model.CardDescriptionKey];
+
+            var viewModel = new {
+                CardName = cardDescription.Name_EN_US,
+                CardWidth = cardDescription.Width,
+                CardHeight = cardDescription.Height,
+                CardImage = Texture2D.whiteTexture
+            };
+
+            // - Represent card description
+
+            gameObject.name = viewModel.CardName;
+
+            volume.size = new Vector3(
+                x: viewModel.CardWidth,
+                y: viewModel.CardHeight,
+                z: VolumeThickness
+            );
+
+            spriteRenderer.sprite = Sprite.Create(
+                viewModel.CardImage,
+                new Rect(
+                    0f, 0f,
+                    viewModel.CardWidth, viewModel.CardHeight),
+                Vector2.one * 0.5f,
+                1f
+            );
+        }
 
 
         void Update()
@@ -29,17 +84,8 @@ namespace Maple.Field
             }
 
             var viewModel = new {
-                CardName =
-                    RootContext.CardDescriptions[model.CardDescriptionKey]
-                        .Name_EN_US,
-                CardGridElement =
-                    model.GridRecord
+                CardGridElement = model.GridRecord
             };
-
-            // Represent card description
-
-            gameObject.name = viewModel.CardName;
-
 
             // Represent card field grid element
 
@@ -51,7 +97,7 @@ namespace Maple.Field
                     viewModel.CardGridElement.X,
                     viewModel.CardGridElement.Y,
                     transform.localPosition.z),
-                t: Time.deltaTime);
+                t: Time.deltaTime * 4f);
 
 
             // - Represent Elevation
