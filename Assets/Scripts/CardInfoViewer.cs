@@ -29,6 +29,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     private int _selectedPropertyIndex;
     private bool _isVisible;
 
+    void Start()
+    {
+        ResetInfo();
+    }
+
     void Update()
     {
         infoPanel.anchorMin = IsVisible ?
