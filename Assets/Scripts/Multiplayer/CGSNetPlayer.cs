@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class CGSNetPlayer : NetworkBehaviour
 {
-    public const string DeckLoadPrompt = "Would you like to join the game with your own deck?";
+    public const string ShareDeckPrompt = "Would you like to share the host's deck?";
 
     [SyncVar]
     public float Points;
@@ -42,7 +42,7 @@ public class CGSNetPlayer : NetworkBehaviour
     {
         while(CardGameManager.Current.IsDownloading)
             yield return null;
-        CardGameManager.Instance.Messenger.Ask(DeckLoadPrompt, RequestDeck, CGSNetManager.Instance.playController.ShowDeckMenu);
+        CardGameManager.Instance.Messenger.Ask(ShareDeckPrompt, CGSNetManager.Instance.playController.ShowDeckMenu, RequestDeck);
     }
 
     public void RequestDeck()
