@@ -25,12 +25,8 @@ public class ZonesViewer : MonoBehaviour
 
     void Start()
     {
-        if (CardGameManager.Current.GameHasDiscardZone) {
-            DiscardZone = Instantiate(discardZonePrefab, scrollView.content).GetComponent<StackedZone>();
-            DiscardZone.Viewer = this;
-            AllZones.Add(DiscardZone);
-            ResizeContent();
-        }
+        if (CardGameManager.Current.GameHasDiscardZone)
+            CreateDiscard();
     }
 
     void OnRectTransformDimensionsChange()
@@ -48,6 +44,14 @@ public class ZonesViewer : MonoBehaviour
         foreach (ExtensibleCardZone zone in AllZones)
             height += ((RectTransform)zone.transform).rect.height;
         scrollView.content.sizeDelta = new Vector2(scrollView.content.sizeDelta.x, height);
+    }
+    
+    public void CreateDiscard()
+    {
+        DiscardZone = Instantiate(discardZonePrefab, scrollView.content).GetComponent<StackedZone>();
+        DiscardZone.Viewer = this;
+        AllZones.Add(DiscardZone);
+        ResizeContent();
     }
 
     public void CreateExtraZone(string name, List<Card> cards)
