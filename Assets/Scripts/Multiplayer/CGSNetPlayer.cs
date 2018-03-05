@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class CGSNetPlayer : NetworkBehaviour
 {
-    public const string ShareDeckPrompt = "Would you like to share the host's deck?";
+    public const string ShareDeckRequest = "Would you like to share the host's deck?";
 
     [SyncVar]
     public float Points;
@@ -42,23 +42,23 @@ public class CGSNetPlayer : NetworkBehaviour
     {
         while(CardGameManager.Current.IsDownloading)
             yield return null;
-        CardGameManager.Instance.Messenger.Ask(ShareDeckPrompt, CGSNetManager.Instance.playController.ShowDeckMenu, RequestDeck);
+        CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestDeck);
     }
 
     public void RequestDeck()
     {
-        CmdDealHand();
+        CmdShareDeck();
     }
 
     [Command]
-    public void CmdDealHand()
+    public void CmdShareDeck()
     {
         List<Card> cards = CGSNetManager.Instance.playController.PopDeckCards(CardGameManager.Current.GameStartHandCount);
-        TargetDealCards(connectionToClient, cards.Select(card => card.Id).ToArray());
+        TargetShareDeck(connectionToClient, cards.Select(card => card.Id).ToArray());
     }
 
     [TargetRpc]
-    public void TargetDealCards(NetworkConnection target, string[] cardIds)
+    public void TargetShareDeck(NetworkConnection target, string[] cardIds)
     {
         List<Card> cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
         CGSNetManager.Instance.playController.AddCardsToHand(cards);
