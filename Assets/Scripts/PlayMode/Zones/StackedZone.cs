@@ -26,6 +26,14 @@ public class StackedZone : ExtensibleCardZone
         ExtensionCardStack.OnAddCardActions.Add(OnAddCardModel);
         ExtensionCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
     }
+    
+    public void Sync(List<Card> cards)
+    {
+        for(int i = CardModels.Count; i > 0; i--)
+            PopCard();
+        foreach(Card card in cards)
+            AddCard(card);
+    }
 
     public override void AddCard(Card card)
     {
