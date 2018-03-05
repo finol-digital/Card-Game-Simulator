@@ -103,6 +103,7 @@ public class PlayMode : MonoBehaviour
         if (zones.HandZone == null)
             zones.CreateHand();
 
+        deckCards.Shuffle();
         StartCoroutine(WaitToDealDeck(deckCards));
     }
 
