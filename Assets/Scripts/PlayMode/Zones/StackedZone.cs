@@ -67,6 +67,7 @@ public class StackedZone : ExtensibleCardZone
         CardModel cardModel = CardModels [CardModels.Count - 1];
         Card card = cardModel.Value;
         CardModels.Remove(cardModel);
+        UpdateCountText();
         Destroy(cardModel.gameObject);
         return card;
     }
