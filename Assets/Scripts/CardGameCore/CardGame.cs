@@ -117,6 +117,9 @@ public class CardGame
 
     [JsonProperty]
     public List<GameBoardUrl> GameBoardUrls { get; set; } = new List<GameBoardUrl>();
+    
+    [JsonProperty]
+    public bool GameCatchesDiscard { get; set; } = true;
 
     [JsonProperty]
     public bool GameHasDiscardZone { get; set; }
