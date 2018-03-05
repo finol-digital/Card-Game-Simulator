@@ -181,6 +181,13 @@ public class PlayMode : MonoBehaviour
         cardModel.DoubleClickAction = CardModel.ToggleFacedown;
         cardModel.SecondaryDragAction = cardModel.Rotate;
     }
+    
+    public void CatchDiscard(Card card)
+    {
+        if (zones.DiscardZone == null)
+            zones.CreateDiscard();
+        zones.DiscardZone.AddCard(card);
+    }
 
     public void PromptBackToMainMenu()
     {
