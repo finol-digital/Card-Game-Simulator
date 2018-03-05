@@ -272,6 +272,11 @@
 			},
 			"type": "array"
 		},
+		"gameCatchesDiscard": {
+			"description": "When online in Play Mode, CGS will automatically place discarded cards into the discard zone.",
+			"default": true,
+			"type": "boolean"
+		},
 		"gameHasDiscardZone": {
 			"description": "If gameHasDiscardZone is set to true, a Discard Zone will be added to the Zones Viewer, to which cards will be sent when removed from the play area. If gameHasDiscardZone is set to false, cards will simply be deleted when removed from the play area.",
 			"type": "boolean"
