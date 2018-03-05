@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PlayMode : MonoBehaviour
 {
     public const string MainMenuPrompt = "Go back to the main menu?";
+    public const string DealHandPrompt = "Draw initial starting hand?";
 
     public GameObject cardViewerPrefab;
     public GameObject lobbyPrefab;
@@ -145,8 +146,12 @@ public class PlayMode : MonoBehaviour
         zones.scrollView.verticalScrollbar.value = 0;
         zones.CurrentDeckZone.Sync(deck);
 
-        if (!NetworkManager.singleton.isNetworkActive)
-            Deal(CardGameManager.Current.GameStartHandCount);
+        CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
+    }
+    
+    public void DealStartingHand()
+    {
+        Deal(CardGameManager.Current.GameStartHandCount);
     }
 
     public void Deal(int cardCount)
