@@ -35,17 +35,17 @@ public class CGSNetPlayer : NetworkBehaviour
     public void TargetSelectCardGame(NetworkConnection target, string gameName, string gameUrl)
     {
         CardGameManager.Instance.SelectCardGame(gameName, gameUrl);
-        StartCoroutine(WaitToRequestHand());
+        StartCoroutine(WaitToRequestDeck());
     }
 
-    public IEnumerator WaitToRequestHand()
+    public IEnumerator WaitToRequestDeck()
     {
         while(CardGameManager.Current.IsDownloading)
             yield return null;
-        CardGameManager.Instance.Messenger.Ask(DeckLoadPrompt, RequestHand, CGSNetManager.Instance.playController.ShowDeckMenu);
+        CardGameManager.Instance.Messenger.Ask(DeckLoadPrompt, RequestDeck, CGSNetManager.Instance.playController.ShowDeckMenu);
     }
 
-    public void RequestHand()
+    public void RequestDeck()
     {
         CmdDealHand();
     }
