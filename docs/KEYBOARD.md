@@ -12,6 +12,9 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 
 ## Play Mode
 - **Cancel**: *Esc* - Back to main menu.
+- **Load**: *r* - Brings up the deck load menu.
+- **Filter**: *f* - Brings up the search filter menu.
+- **Sort**: *q* - Brings up the dice menu.
 - **Draw**: *d* - Draw a card from your deck to your hand.
 
 ## Card Viewer
