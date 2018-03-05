@@ -200,7 +200,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (cardModel.PlaceHolder != null)
             cardModel.StartCoroutine(cardModel.MoveToPlaceHolder());
         else if (cardModel.ParentCardStack == null)
-            Destroy(cardModel.gameObject);
+            cardModel.Discard();
     }
 
     public static CardModel GetPointerDrag(PointerEventData eventData)
@@ -305,7 +305,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public void RpcUnspawn()
     {
         if (!isServer && !hasAuthority)
-            Destroy(gameObject);
+            Discard();
     }
 
     public IEnumerator MoveToPlaceHolder()
@@ -317,7 +317,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         }
 
         if (PlaceHolder == null) {
-            Destroy(gameObject);
+            Discard();
             yield break;
         }
 
@@ -459,6 +459,13 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public void HideNameLabel()
     {
         transform.GetChild(0).gameObject.SetActive(false);
+    }
+    
+    public void Discard()
+    {
+        if (CardGameManager.Current.GameCatchesDiscard && IsOnline)
+            CGSNetManager.Instance.CatchDiscard(Value);
+        Destroy(gameObject);
     }
 
     void OnDestroy()
