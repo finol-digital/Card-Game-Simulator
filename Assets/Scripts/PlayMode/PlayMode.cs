@@ -32,8 +32,6 @@ public class PlayMode : MonoBehaviour
     public DiceMenu DiceManager => _diceManager ?? (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
     private DiceMenu _diceManager;
 
-    protected Deck LoadedDeck { get; private set; }
-
     void Start()
     {
         Instantiate(cardViewerPrefab);
@@ -56,6 +54,12 @@ public class PlayMode : MonoBehaviour
 
         if (Input.GetButtonDown(CardIn.DrawInput))
             Deal(1);
+        if (Input.GetButtonDown(CardIn.LoadInput))
+            ShowDeckMenu();
+        if (Input.GetButtonDown(CardIn.FilterInput))
+            ShowCardsMenu();
+        if (Input.GetButtonDown(CardIn.SortInput))
+            ShowDiceMenu();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
             PromptBackToMainMenu();
     }
@@ -79,7 +83,6 @@ public class PlayMode : MonoBehaviour
     {
         if (deck == null)
             return;
-        LoadedDeck = deck;
 
         foreach (Card card in deck.Cards)
             foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards)
@@ -89,11 +92,18 @@ public class PlayMode : MonoBehaviour
         Dictionary<string, List<Card>> extraGroups = deck.GetExtraGroups();
         foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
             zones.CreateExtraZone(cardGroup.Key, cardGroup.Value);
-
+        
         zones.CreateDeck();
+        List<Card> deckCards = new List<Card>();
+        List<Card> extraCards = deck.GetExtraCards();
+        foreach (Card card in deck.Cards)
+            if (!extraCards.Contains(card))
+                deckCards.AddCard(card);
+        
         if (zones.HandZone == null)
             zones.CreateHand();
-        StartCoroutine(WaitToDealDeck());
+
+        StartCoroutine(WaitToDealDeck(deckCards));
     }
 
     public void CreateGameBoards(List<GameBoard> boards)
@@ -127,17 +137,12 @@ public class PlayMode : MonoBehaviour
         rt.localScale = Vector3.one;
     }
 
-    public IEnumerator WaitToDealDeck()
+    public IEnumerator WaitToDealDeck(List<Card> deck)
     {
         yield return null;
 
         zones.scrollView.verticalScrollbar.value = 0;
-
-        List<Card> extraCards = LoadedDeck.GetExtraCards();
-        foreach (Card card in LoadedDeck.Cards)
-            if (!extraCards.Contains(card))
-                zones.CurrentDeckZone.AddCard(card);
-        zones.CurrentDeckZone.Shuffle();
+        zones.CurrentDeckZone.Sync(deck);
 
         if (!NetworkManager.singleton.isNetworkActive)
             Deal(CardGameManager.Current.GameStartHandCount);
