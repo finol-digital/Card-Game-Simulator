@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(CardStack))]
 public class StackedZone : ExtensibleCardZone
 {
-    public int Count => CardModels.Count;
+    public override int Count => CardModels.Count;
 
     public CardDropZone DropZone { get; private set; }
     public CardStack ZoneCardStack { get; private set; }
@@ -58,6 +58,12 @@ public class StackedZone : ExtensibleCardZone
         CardModels.Remove(cardModel);
         UpdateCountText();
     }
+    
+    public override void Clear()
+    {
+        for(int i = Count; i > 0; i--)
+            PopCard();
+    }
 
     public Card PopCard()
     {
@@ -103,18 +109,5 @@ public class StackedZone : ExtensibleCardZone
             cardModel.transform.SetSiblingIndex(siblingIndex);
             siblingIndex++;
         }
-    }
-
-    public override void Sync(List<Card> cards)
-    {
-        for(int i = Count; i > 0; i--)
-            PopCard();
-        foreach(Card card in cards)
-            AddCard(card);
-    }
-
-    public override void UpdateCountText()
-    {
-        countText.text = CardModels.Count.ToString();
     }
 }
