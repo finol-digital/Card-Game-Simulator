@@ -56,6 +56,13 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
         UpdateCountText();
     }
+    
+    public virtual void Sync(List<Card> cards)
+    {
+        extensionContent.DestroyAllChildren();
+        foreach(Card card in cards)
+            AddCard(card);
+    }
 
     public virtual void UpdateCountText()
     {
