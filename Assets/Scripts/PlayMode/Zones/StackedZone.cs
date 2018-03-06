@@ -27,14 +27,6 @@ public class StackedZone : ExtensibleCardZone
         ExtensionCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
     }
 
-    public void Sync(List<Card> cards)
-    {
-        for(int i = Count; i > 0; i--)
-            PopCard();
-        foreach(Card card in cards)
-            AddCard(card);
-    }
-
     public override void AddCard(Card card)
     {
         CardModel newCardModel = Instantiate(cardModelPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform).GetOrAddComponent<CardModel>();
@@ -92,13 +84,7 @@ public class StackedZone : ExtensibleCardZone
         ZoneCardStack.enabled = !IsExtended;
         Display();
     }
-
-    public void Shuffle()
-    {
-        CardModels.Shuffle();
-        Display();
-    }
-
+    
     public void Display()
     {
         Transform parent = ZoneCardStack.transform;
@@ -117,6 +103,14 @@ public class StackedZone : ExtensibleCardZone
             cardModel.transform.SetSiblingIndex(siblingIndex);
             siblingIndex++;
         }
+    }
+
+    public override void Sync(List<Card> cards)
+    {
+        for(int i = Count; i > 0; i--)
+            PopCard();
+        foreach(Card card in cards)
+            AddCard(card);
     }
 
     public override void UpdateCountText()
