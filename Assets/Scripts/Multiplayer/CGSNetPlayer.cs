@@ -11,6 +11,8 @@ public class CGSNetPlayer : NetworkBehaviour
     [SyncVar]
     public float Points;
 
+    public List<Card> CurrentDeck { get; } = new List<Card>();
+
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -53,15 +55,15 @@ public class CGSNetPlayer : NetworkBehaviour
     [Command]
     public void CmdShareDeck()
     {
-        List<Card> cards = CGSNetManager.Instance.playController.PopDeckCards(CardGameManager.Current.GameStartHandCount);
-        TargetShareDeck(connectionToClient, cards.Select(card => card.Id).ToArray());
+        List<Card> deckCards = CGSNetManager.Instance.LocalPlayer.CurrentDeck;
+        TargetShareDeck(connectionToClient, deckCards.Select(card => card.Id).ToArray());
     }
 
     [TargetRpc]
     public void TargetShareDeck(NetworkConnection target, string[] cardIds)
     {
         List<Card> cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
-        CGSNetManager.Instance.playController.AddCardsToHand(cards);
+        CGSNetManager.Instance.playController.LoadDeck(cards);
     }
 
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)

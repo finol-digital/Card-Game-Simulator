@@ -93,14 +93,20 @@ public class PlayMode : MonoBehaviour
         Dictionary<string, List<Card>> extraGroups = deck.GetExtraGroups();
         foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
             zones.CreateExtraZone(cardGroup.Key, cardGroup.Value);
-        
-        zones.CreateDeck();
+
         List<Card> deckCards = new List<Card>();
         List<Card> extraCards = deck.GetExtraCards();
         foreach (Card card in deck.Cards)
             if (!extraCards.Contains(card))
-                deckCards.AddCard(card);
-        
+                deckCards.Add(card);
+
+        LoadDeck(deckCards);
+    }
+
+    public void LoadDeck(List<Card> deckCards)
+    {
+        zones.CreateDeck();
+
         if (zones.HandZone == null)
             zones.CreateHand();
 
@@ -146,9 +152,10 @@ public class PlayMode : MonoBehaviour
         zones.scrollView.verticalScrollbar.value = 0;
         zones.CurrentDeckZone.Sync(deck);
 
-        CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
+        if (CardGameManager.Current.GameStartHandCount > 0)
+            CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
     }
-    
+
     public void DealStartingHand()
     {
         Deal(CardGameManager.Current.GameStartHandCount);
@@ -192,7 +199,7 @@ public class PlayMode : MonoBehaviour
         cardModel.DoubleClickAction = CardModel.ToggleFacedown;
         cardModel.SecondaryDragAction = cardModel.Rotate;
     }
-    
+
     public void CatchDiscard(Card card)
     {
         if (zones.DiscardZone == null)
