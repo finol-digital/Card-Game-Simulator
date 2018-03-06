@@ -18,9 +18,9 @@ public class ZonesViewer : MonoBehaviour
     public GameObject showButton;
     public GameObject hideButton;
 
-    public StackedZone DiscardZone { get; private set; }
-    public StackedZone CurrentDeckZone { get; private set; }
-    public ExtensibleCardZone HandZone { get; private set; }
+    public StackedZone Discard { get; private set; }
+    public StackedZone CurrentDeck { get; private set; }
+    public ExtensibleCardZone Hand { get; private set; }
     public ExtensibleCardZone Results { get; private set; }
 
     protected List<ExtensibleCardZone> AllZones { get; } = new List<ExtensibleCardZone>();
@@ -50,9 +50,9 @@ public class ZonesViewer : MonoBehaviour
     
     public void CreateDiscard()
     {
-        DiscardZone = Instantiate(discardZonePrefab, scrollView.content).GetComponent<StackedZone>();
-        DiscardZone.Viewer = this;
-        AllZones.Add(DiscardZone);
+        Discard = Instantiate(discardZonePrefab, scrollView.content).GetComponent<StackedZone>();
+        Discard.Viewer = this;
+        AllZones.Add(Discard);
         ResizeContent();
     }
 
@@ -69,20 +69,20 @@ public class ZonesViewer : MonoBehaviour
 
     public void CreateDeck()
     {
-        CurrentDeckZone = Instantiate(deckZonePrefab, scrollView.content).GetComponent<StackedZone>();
-        CurrentDeckZone.Viewer = this;
-        AllZones.Add(CurrentDeckZone);
+        CurrentDeck = Instantiate(deckZonePrefab, scrollView.content).GetComponent<StackedZone>();
+        CurrentDeck.Viewer = this;
+        AllZones.Add(CurrentDeck);
         ResizeContent();
     }
 
     public void CreateHand()
     {
-        if (HandZone != null)
+        if (Hand != null)
             return;
 
-        HandZone = Instantiate(handZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
-        HandZone.Viewer = this;
-        AllZones.Add(HandZone);
+        Hand = Instantiate(handZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
+        Hand.Viewer = this;
+        AllZones.Add(Hand);
         ResizeContent();
         IsExtended = true;
         IsVisible = true;
