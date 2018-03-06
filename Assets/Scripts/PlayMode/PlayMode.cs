@@ -107,7 +107,7 @@ public class PlayMode : MonoBehaviour
     {
         zones.CreateDeck();
 
-        if (zones.HandZone == null)
+        if (zones.Hand == null)
             zones.CreateHand();
 
         deckCards.Shuffle();
@@ -179,11 +179,11 @@ public class PlayMode : MonoBehaviour
 
     public void AddCardsToHand(List<Card> cards)
     {
-        if (zones.HandZone == null)
+        if (zones.Hand == null)
             zones.CreateHand();
 
         foreach (Card card in cards)
-            zones.HandZone.AddCard(card);
+            zones.Hand.AddCard(card);
     }
 
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
@@ -202,9 +202,9 @@ public class PlayMode : MonoBehaviour
 
     public void CatchDiscard(Card card)
     {
-        if (zones.DiscardZone == null)
+        if (zones.Discard == null)
             zones.CreateDiscard();
-        zones.DiscardZone.AddCard(card);
+        zones.Discard.AddCard(card);
     }
 
     public void PromptBackToMainMenu()
