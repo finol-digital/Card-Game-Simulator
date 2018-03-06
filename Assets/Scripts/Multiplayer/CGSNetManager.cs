@@ -5,8 +5,9 @@ public class CGSNetManager : NetworkManager
 {
     public static CGSNetManager Instance => (CGSNetManager)singleton;
     public CGSNetPlayer LocalPlayer { get; set; }
-    public PlayMode playController;
+    
     public GameObject cardModelPrefab;
+    public PlayMode playController;
 
     private LobbyDiscovery _discovery;
     public LobbyDiscovery Discovery => _discovery ??
