@@ -65,6 +65,13 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         UpdateCountText();
     }
 
+    public virtual void Shuffle()
+    {
+        List<Card> cards = new List<Card>();
+        cards.Shuffle();
+        Sync(cards);
+    }
+
     public virtual void ToggleExtension()
     {
         IsExtended = !IsExtended;
