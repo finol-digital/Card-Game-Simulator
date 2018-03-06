@@ -27,7 +27,7 @@ public class CGSNetData : NetworkBehaviour
     }
     
     [Command]
-    CmdAddDeck(GameObject owner, List<string> cardIds)
+    public void CmdAddDeck(GameObject owner, List<string> cardIds)
     {
         decks.Add(new NetDeck(owner, cardIds));
     }
@@ -38,7 +38,7 @@ public class CGSNetData : NetworkBehaviour
     }
     
     [Command]
-    CmdAddScore(GameObject owner, int point)
+    public void CmdAddScore(GameObject owner, int points)
     {
         scoreboard.Add(new NetScore(owner, points));
     }
