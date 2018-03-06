@@ -1,11 +1,10 @@
 # Roadmap
 
 ## General Features
-- Catch cards that would be deleted in *Play Mode* and instead add them to the Discard Zone
 - Allow players to share a deck in *Play Mode*
-- Show indication of when a deck is shuffled in *Play Mode*
-- Allow automatic deletion of empty decks in *Play Mode*
 - Create new zone for search results when adding cards from the *Card Search/Filter Menu* in *Play Mode*
+- Allow automatic deletion of empty decks in *Play Mode*
+- Show indication of when a deck is shuffled in *Play Mode*
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
 - Make shifting between columns in the *Deck Editor* also control scrolling as appropriate
@@ -43,7 +42,6 @@
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
-- Fix: Update deck count when sending card through network in *Play Mode*
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
 - Fix: Value, Image, Position, and Rotation are not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
