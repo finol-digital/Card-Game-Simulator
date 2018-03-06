@@ -16,10 +16,9 @@ public class PlayMode : MonoBehaviour
     public GameObject searchMenuPrefab;
     public GameObject diceMenuPrefab;
 
-    public Text netText;
-    public PointsCounter points;
     public ZonesViewer zones;
     public RectTransform playAreaContent;
+    public Text netText;
 
     public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());
     private LobbyMenu _lobby;
