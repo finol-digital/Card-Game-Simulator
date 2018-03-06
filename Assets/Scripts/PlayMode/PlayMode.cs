@@ -72,7 +72,7 @@ public class PlayMode : MonoBehaviour
 
     public void ShowCardsMenu()
     {
-        CardSearcher.Show(null, null, AddCardsToHand);
+        CardSearcher.Show(null, null, DisplayResults);
     }
 
     public void ShowDiceMenu()
@@ -150,7 +150,7 @@ public class PlayMode : MonoBehaviour
         yield return null;
 
         zones.scrollView.verticalScrollbar.value = 0;
-        zones.CurrentDeckZone.Sync(deck);
+        zones.CurrentDeck.Sync(deck);
 
         if (CardGameManager.Current.GameStartHandCount > 0)
             CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
@@ -169,11 +169,11 @@ public class PlayMode : MonoBehaviour
     public List<Card> PopDeckCards(int cardCount)
     {
         List<Card> cards = new List<Card>(cardCount);
-        if (zones.CurrentDeckZone == null)
+        if (zones.CurrentDeck == null)
             return cards;
 
-        for (int i = 0; i < cardCount && zones.CurrentDeckZone.Count > 0; i++)
-            cards.Add(zones.CurrentDeckZone.PopCard());
+        for (int i = 0; i < cardCount && zones.CurrentDeck.Count > 0; i++)
+            cards.Add(zones.CurrentDeck.PopCard());
         return cards;
     }
 
@@ -205,6 +205,13 @@ public class PlayMode : MonoBehaviour
         if (zones.Discard == null)
             zones.CreateDiscard();
         zones.Discard.AddCard(card);
+    }
+    
+    public void DisplayResults(List<Card> cards)
+    {
+        if (zones.Results == null)
+            zones.CreateResults();
+        zones.Results.Sync(cards);
     }
 
     public void PromptBackToMainMenu()
