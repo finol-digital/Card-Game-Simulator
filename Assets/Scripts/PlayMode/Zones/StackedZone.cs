@@ -78,6 +78,12 @@ public class StackedZone : ExtensibleCardZone
         return card;
     }
 
+    public override void Shuffle()
+    {
+        CardModels.Shuffle();
+        Display();
+    }
+
     public void ToggleExtension(CardModel cardModel)
     {
         ToggleExtension();
