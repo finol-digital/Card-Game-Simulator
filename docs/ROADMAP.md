@@ -3,7 +3,6 @@
 ## General Features
 - Allow players to share a deck in *Play Mode*
 - Create new zone for search results when adding cards from the *Card Search/Filter Menu* in *Play Mode*
-- Allow automatic deletion of empty decks in *Play Mode*
 - Show indication of when a deck is shuffled in *Play Mode*
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
@@ -54,6 +53,7 @@
 - Support object card property data type
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
+- Allow automatic deletion of empty decks in *Play Mode*
 - Clear the background once a card enters the play area in *Play Mode*
 - Support different formats/game-types for custom card games
 - Support sideboards
