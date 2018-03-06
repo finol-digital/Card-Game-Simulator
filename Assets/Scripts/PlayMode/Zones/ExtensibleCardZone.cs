@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
+    public virtual int Count => extensionContent.childCount;
+
     public GameObject cardModelPrefab;
     public List<CardDropZone> cardDropZones;
     public RectTransform extension;
@@ -57,16 +59,10 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         UpdateCountText();
     }
     
-    public virtual void Sync(List<Card> cards)
+    public virtual void Clear()
     {
         extensionContent.DestroyAllChildren();
-        foreach(Card card in cards)
-            AddCard(card);
-    }
-
-    public virtual void UpdateCountText()
-    {
-        countText.text = extensionContent.childCount.ToString();
+        UpdateCountText();
     }
 
     public virtual void ToggleExtension()
@@ -88,5 +84,17 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         extension.anchorMax = new Vector2(extension.anchorMin.x, 1);
         extension.offsetMin = new Vector2(extension.offsetMin.x, 0);
         extension.offsetMax = new Vector2(extension.offsetMax.x, 0);
+    }
+
+    public void Sync(List<Card> cards)
+    {
+        Clear();
+        foreach(Card card in cards)
+            AddCard(card);
+    }
+
+    public void UpdateCountText()
+    {
+        countText.text = Count.ToString();
     }
 }
