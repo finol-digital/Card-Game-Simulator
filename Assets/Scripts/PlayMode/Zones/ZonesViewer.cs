@@ -12,6 +12,7 @@ public class ZonesViewer : MonoBehaviour
     public GameObject discardZonePrefab;
     public GameObject deckZonePrefab;
     public GameObject handZonePrefab;
+    public GameObject resultsZonePrefab;
     public ScrollRect scrollView;
     public GameObject extendButton;
     public GameObject showButton;
@@ -20,6 +21,7 @@ public class ZonesViewer : MonoBehaviour
     public StackedZone DiscardZone { get; private set; }
     public StackedZone CurrentDeckZone { get; private set; }
     public ExtensibleCardZone HandZone { get; private set; }
+    public ExtensibleCardZone Results { get; private set; }
 
     protected List<ExtensibleCardZone> AllZones { get; } = new List<ExtensibleCardZone>();
 
@@ -84,6 +86,17 @@ public class ZonesViewer : MonoBehaviour
         ResizeContent();
         IsExtended = true;
         IsVisible = true;
+    }
+
+    public void CreateResults()
+    {
+        if (Results != null)
+            return;
+
+        Results = Instantiate(resultsZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
+        Results.Viewer = this;
+        AllZones.Add(Results);
+        ResizeContent();
     }
 
     public bool IsExtended {
