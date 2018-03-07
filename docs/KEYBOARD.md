@@ -36,7 +36,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Filter**: *f* - Brings up the search filter menu.
 - **FocusName**: *\`* - Focuses keyboard to the search name input field.
 
-## Pop-up
+## Popup
 - **Cancel**: *Esc* - Cancel/Close.
 - **No**: *n* - No.
 - **Submit**: *Enter* - Yes/Close.
@@ -52,7 +52,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Delete**: *Delete* - Delete selected card game.
 - **Submit**: *Enter* - OK/Download.
 
-## Multi-player Lobby
+## LAN Lobby
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through sessions.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
