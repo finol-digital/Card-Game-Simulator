@@ -1549,10 +1549,9 @@ MonoBehaviour:
     type: 2}
   diceMenuPrefab: {fileID: 1257987102104264, guid: 0a553e85694d0e64ca920258e2fdd78d,
     type: 2}
-  netText: {fileID: 1284800461}
-  points: {fileID: 974077056}
   zones: {fileID: 1426326036}
   playAreaContent: {fileID: 217919977}
+  netText: {fileID: 1284800461}
 --- !u!1 &758454744
 GameObject:
   m_ObjectHideFlags: 0
@@ -3097,9 +3096,9 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
-  playController: {fileID: 709840748}
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 2}
+  playController: {fileID: 709840748}
 --- !u!4 &1243243123
 Transform:
   m_ObjectHideFlags: 0
@@ -3279,6 +3278,8 @@ MonoBehaviour:
   deckZonePrefab: {fileID: 1622848851289832, guid: 52c6b7c51cfe1874590bd53a822b6ccc,
     type: 2}
   handZonePrefab: {fileID: 1776893089054616, guid: e5f82870ec0d3ce4ca680215cd2a8aba,
+    type: 2}
+  resultsZonePrefab: {fileID: 1289401509893336, guid: b62cf2ffb128be84b82a8681c6e389db,
     type: 2}
   scrollView: {fileID: 1101303135}
   extendButton: {fileID: 253294374}
@@ -4265,7 +4266,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.000022652654}
+  m_AnchoredPosition: {x: 0, y: 0.000022888184}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1904102581

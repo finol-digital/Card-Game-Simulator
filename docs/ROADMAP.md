@@ -2,7 +2,6 @@
 
 ## General Features
 - Allow players to share a deck in *Play Mode*
-- Create new zone for search results when adding cards from the *Card Search/Filter Menu* in *Play Mode*
 - Show indication of when a deck is shuffled in *Play Mode*
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*

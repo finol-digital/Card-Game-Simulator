@@ -25,6 +25,8 @@ public class CardGame
     public string GameBoardsFilePath => FilePathBase + "/boards";
 
     public float CardAspectRatio => CardSize.y > 0 ? Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
+    public IReadOnlyDictionary<string, Card> Cards => LoadedCards;
+    public IReadOnlyDictionary<string, Set> Sets => LoadedSets;
 
     [JsonProperty]
     public string Name { get; set; }
@@ -149,12 +151,12 @@ public class CardGame
     [JsonProperty]
     public string SetNameIdentifier { get; set; } = "name";
 
-    public Dictionary<string, Card> Cards { get; } = new Dictionary<string, Card>();
-    public Dictionary<string, Set> Sets { get; } = new Dictionary<string, Set>();
-
     public bool IsDownloading { get; private set; }
     public bool IsLoaded { get; private set; }
     public string Error { get; private set; }
+
+    protected Dictionary<string, Card> LoadedCards { get; } = new Dictionary<string, Card>();
+    protected Dictionary<string, Set> LoadedSets { get; } = new Dictionary<string, Set>();
 
     private Sprite _backgroundImageSprite;
     private Sprite _cardBackImageSprite;
@@ -302,9 +304,9 @@ public class CardGame
         }
 
         Card newCard = new Card(cardId, cardName, cardSet, cardProperties);
-        Cards [newCard.Id] = newCard;
+        LoadedCards [newCard.Id] = newCard;
         if (!Sets.ContainsKey(cardSet))
-            Sets [cardSet] = new Set(cardSet);
+            LoadedSets [cardSet] = new Set(cardSet);
     }
 
     public void LoadSetFromJToken(JToken setJToken, string defaultSetCode)
@@ -315,7 +317,7 @@ public class CardGame
         string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
         string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSetCode;
         if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
-            Sets [setCode] = new Set(setCode, setName);
+            LoadedSets [setCode] = new Set(setCode, setName);
         JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
 
         if (cards == null)

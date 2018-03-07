@@ -203,6 +203,12 @@ public class PlayMode : MonoBehaviour
     {
         if (zones.Discard == null)
             zones.CreateDiscard();
+        StartCoroutine(WaitToDiscard(card));
+    }
+
+    public IEnumerator WaitToDiscard(Card card)
+    {
+        yield return null;
         zones.Discard.AddCard(card);
     }
 
