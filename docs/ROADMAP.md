@@ -7,7 +7,6 @@
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
 - Make shifting between columns in the *Deck Editor* also control scrolling as appropriate
 - Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
-- New Mahjong tile set, with default property to type instead of suit
 - Add *Options Menu*:
   - Include a link to a card game's rules from within CGS
   - Display keyboard shortcuts
@@ -52,6 +51,7 @@
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
+- New Mahjong tile set, with default property to type instead of suit
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
