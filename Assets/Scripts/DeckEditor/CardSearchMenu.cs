@@ -43,19 +43,19 @@ public class CardSearchMenu : MonoBehaviour
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
-        if (Input.GetButtonDown(CardIn.SubmitInput)) {
+        if (Input.GetButtonDown(Inputs.Submit)) {
             Search();
             Hide();
         }
-        else if (Input.GetButtonDown(CardIn.FocusNameInput) || Input.GetButtonDown(CardIn.FocusTextInput))
+        else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetButtonDown(Inputs.FocusText))
             FocusInputField();
-        else if (Input.GetButtonDown(CardIn.VerticalInput) || Input.GetButtonDown(CardIn.HorizontalInput))
+        else if (Input.GetButtonDown(Inputs.Vertical) || Input.GetButtonDown(Inputs.Horizontal))
             FocusToggle();
-        else if (Input.GetButtonDown(CardIn.NewInput) && ActiveToggle != null)
+        else if (Input.GetButtonDown(Inputs.New) && ActiveToggle != null)
             ToggleEnum();
-        else if (Input.GetButtonDown(CardIn.DeleteInput) && ActiveInputField == null)
+        else if (Input.GetButtonDown(Inputs.Delete) && ActiveInputField == null)
             PromptClearFilters();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             Hide();
     }
 
@@ -67,7 +67,7 @@ public class CardSearchMenu : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonDown(CardIn.FocusNameInput)) { // up
+        if (Input.GetButtonDown(Inputs.FocusName)) { // up
             InputField previous = InputFields.Last();
             for (int i = 0; i < InputFields.Count; i++) {
                 if (ActiveInputField == InputFields[i]) {
@@ -97,9 +97,9 @@ public class CardSearchMenu : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonDown(CardIn.VerticalInput)) {
+        if (Input.GetButtonDown(Inputs.Vertical)) {
             Transform currentPanel = ActiveToggle.transform.parent;
-            if (Input.GetAxis(CardIn.VerticalInput) > 0) { // up
+            if (Input.GetAxis(Inputs.Vertical) > 0) { // up
                 Toggle previous = Toggles.Last();
                 for (int i = 0; i < Toggles.Count; i++) {
                     if (ActiveToggle == Toggles[i]) {
@@ -120,8 +120,8 @@ public class CardSearchMenu : MonoBehaviour
                         next = Toggles[i];
                 }
             }
-        } else if (Input.GetButton(CardIn.HorizontalInput)) {
-            if (Input.GetAxis(CardIn.HorizontalInput) > 0) { // right
+        } else if (Input.GetButton(Inputs.Horizontal)) {
+            if (Input.GetAxis(Inputs.Horizontal) > 0) { // right
                 Toggle next = Toggles.First();
                 for (int i = Toggles.Count - 1; i >= 0; i--) {
                     if (ActiveToggle == Toggles[i]) {
@@ -168,11 +168,11 @@ public class CardSearchMenu : MonoBehaviour
         InputFields.Clear();
         Toggles.Clear();
 
-        nameInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
+        nameInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
         InputFields.Add(nameInputField);
-        idInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
+        idInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
         InputFields.Add(idInputField);
-        setCodeInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
+        setCodeInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
         InputFields.Add(setCodeInputField);
 
         propertyFiltersContent.sizeDelta = new Vector2(propertyFiltersContent.sizeDelta.x, PropertyPanelHeight * CardGameManager.Current.CardProperties.Count + (PropertyPanelHeight * 3));
@@ -186,7 +186,7 @@ public class CardSearchMenu : MonoBehaviour
                 newPanel = CreateStringPropertyFilterPanel(property.Name);
             FilterPanels.Add(newPanel);
             foreach(InputField inputField in newPanel.GetComponentsInChildren<InputField>()) {
-                inputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return CardIn.FilterFocusNameInput(addedChar); };
+                inputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
                 InputFields.Add(inputField);
             }
             foreach(Toggle toggle in newPanel.GetComponentsInChildren<Toggle>())

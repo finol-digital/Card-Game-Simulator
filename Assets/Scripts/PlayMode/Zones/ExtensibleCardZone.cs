@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
-    public virtual int Count => extensionContent.childCount;
+    public virtual IReadOnlyList<Card> Cards => extensionContent.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Value).ToList();
 
     public GameObject cardModelPrefab;
     public List<CardDropZone> cardDropZones;
@@ -58,7 +59,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
         UpdateCountText();
     }
-    
+
     public virtual void Clear()
     {
         extensionContent.DestroyAllChildren();
@@ -102,6 +103,6 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public void UpdateCountText()
     {
-        countText.text = Count.ToString();
+        countText.text = Cards.Count.ToString();
     }
 }

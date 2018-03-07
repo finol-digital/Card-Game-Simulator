@@ -10,7 +10,6 @@ public class CGSNetPlayer : NetworkBehaviour
 
     [SyncVar]
     public float Points;
-
     public List<Card> CurrentDeck { get; } = new List<Card>();
 
     public override void OnStartLocalPlayer()

@@ -26,9 +26,9 @@ public class DiceMenu : MonoBehaviour
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
-        if (Input.GetButtonDown(CardIn.SubmitInput))
+        if (Input.GetButtonDown(Inputs.Submit))
             CreateAndHide();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             Hide();
     }
 

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(CardStack))]
 public class StackedZone : ExtensibleCardZone
 {
-    public override int Count => CardModels.Count;
+    public override IReadOnlyList<Card> Cards => CardModels.Select(cardModel => cardModel.Value).ToList();
 
     public CardDropZone DropZone { get; private set; }
     public CardStack ZoneCardStack { get; private set; }
@@ -58,10 +59,10 @@ public class StackedZone : ExtensibleCardZone
         CardModels.Remove(cardModel);
         UpdateCountText();
     }
-    
+
     public override void Clear()
     {
-        for(int i = Count; i > 0; i--)
+        for(int i = Cards.Count; i > 0; i--)
             PopCard();
     }
 
@@ -96,7 +97,7 @@ public class StackedZone : ExtensibleCardZone
         ZoneCardStack.enabled = !IsExtended;
         Display();
     }
-    
+
     public void Display()
     {
         Transform parent = ZoneCardStack.transform;

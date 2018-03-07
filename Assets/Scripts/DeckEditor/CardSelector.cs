@@ -12,24 +12,24 @@ public class CardSelector : MonoBehaviour
         if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(CardIn.VerticalInput)) {
-            if (Input.GetAxis(CardIn.VerticalInput) > 0)
+        if (Input.GetButtonDown(Inputs.Vertical)) {
+            if (Input.GetAxis(Inputs.Vertical) > 0)
                 SelectUp();
             else
                 SelectDown();
         }
-        else if (Input.GetButtonDown(CardIn.HorizontalInput)) {
-            if (Input.GetAxis(CardIn.HorizontalInput) > 0)
+        else if (Input.GetButtonDown(Inputs.Horizontal)) {
+            if (Input.GetAxis(Inputs.Horizontal) > 0)
                 SelectRight();
             else
                 SelectLeft();
-        } else if (Input.GetButtonDown(CardIn.ColumnInput)) {
-            if (Input.GetAxis(CardIn.ColumnInput) > 0)
+        } else if (Input.GetButtonDown(Inputs.Column)) {
+            if (Input.GetAxis(Inputs.Column) > 0)
                 ShiftRight();
             else
                 ShiftLeft();
-        } else if (Input.GetButtonDown(CardIn.PageInput)) {
-            if (Input.GetAxis(CardIn.PageInput) > 0)
+        } else if (Input.GetButtonDown(Inputs.Page)) {
+            if (Input.GetAxis(Inputs.Page) > 0)
                 PageRight();
             else
                 PageLeft();

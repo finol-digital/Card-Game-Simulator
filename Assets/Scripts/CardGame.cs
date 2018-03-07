@@ -6,24 +6,25 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public delegate void LoadJTokenDelegate(JToken jToken,string defaultValue);
 
 [JsonObject(MemberSerialization.OptIn)]
 public class CardGame
 {
+    public const string BackgroundImageFileName = "Background";
+    public const string CardBackImageFileName = "CardBack";
+
     public string FilePathBase => CardGameManager.GamesFilePathBase + "/" + Name;
     public string ConfigFilePath => FilePathBase + "/" + Name + ".json";
     public string CardsFilePath => FilePathBase + "/AllCards.json";
     public string SetsFilePath => FilePathBase + "/AllSets.json";
-    public const string BackgroundImageFileName = "Background";
     public string BackgroundImageFilePath => FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType;
-    public const string CardBackImageFileName = "CardBack";
     public string CardBackImageFilePath => FilePathBase +"/" + CardBackImageFileName + "." + CardBackImageFileType;
     public string DecksFilePath => FilePathBase + "/decks";
     public string GameBoardsFilePath => FilePathBase + "/boards";
-    public float AspectRatio => CardSize.y > 0 ? Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
+
+    public float CardAspectRatio => CardSize.y > 0 ? Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
 
     [JsonProperty]
     public string Name { get; set; }
@@ -117,7 +118,7 @@ public class CardGame
 
     [JsonProperty]
     public List<GameBoardUrl> GameBoardUrls { get; set; } = new List<GameBoardUrl>();
-    
+
     [JsonProperty]
     public bool GameCatchesDiscard { get; set; } = true;
 

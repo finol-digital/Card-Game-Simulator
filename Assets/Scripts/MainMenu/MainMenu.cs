@@ -38,17 +38,17 @@ public class MainMenu : MonoBehaviour
 
         if (currentGameText == null)
             GoToMainMenu();
-        else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+        else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(multiplayerButton?.gameObject);
-        else if (Input.GetButtonDown(CardIn.SortInput))
+        else if (Input.GetButtonDown(Inputs.Sort))
             SelectCardGame();
-        else if (Input.GetButtonDown(CardIn.NewInput))
+        else if (Input.GetButtonDown(Inputs.New))
             StartGame();
-        else if (Input.GetButtonDown(CardIn.LoadInput))
+        else if (Input.GetButtonDown(Inputs.Load))
             JoinGame();
-        else if (Input.GetButtonDown(CardIn.SaveInput))
+        else if (Input.GetButtonDown(Inputs.Save))
             EditDeck();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }
 

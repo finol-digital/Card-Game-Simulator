@@ -25,13 +25,13 @@ public class Popup : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetButtonDown(CardIn.SubmitInput) && yesButton.gameObject.activeInHierarchy)
+        if (Input.GetButtonDown(Inputs.Submit) && yesButton.gameObject.activeInHierarchy)
             yesButton.onClick?.Invoke();
-        else if (!IsNewMessage && Input.GetButtonDown(CardIn.SubmitInput) && !yesButton.gameObject.activeInHierarchy)
+        else if (!IsNewMessage && Input.GetButtonDown(Inputs.Submit) && !yesButton.gameObject.activeInHierarchy)
             Close();
-        else if (Input.GetButtonDown(CardIn.NoInput) && noButton.gameObject.activeInHierarchy)
+        else if (Input.GetButtonDown(Inputs.No) && noButton.gameObject.activeInHierarchy)
             noButton.onClick?.Invoke();
-        else if (!IsNewMessage && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput)))
+        else if (!IsNewMessage && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel)))
             Close();
         IsNewMessage = false;
     }

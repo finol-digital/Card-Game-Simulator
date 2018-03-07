@@ -49,22 +49,22 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         if (!IsVisible || SelectedCardModel == null || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(CardIn.SubmitInput) && SelectedCardModel.DoubleClickAction != null)
+        if (Input.GetButtonDown(Inputs.Submit) && SelectedCardModel.DoubleClickAction != null)
             SelectedCardModel.DoubleClickAction(SelectedCardModel);
-        else if (Input.GetButtonDown(CardIn.CardViewerInput)) {
-            if (Input.GetAxis(CardIn.CardViewerInput) > 0)
+        else if (Input.GetButtonDown(Inputs.CardViewer)) {
+            if (Input.GetAxis(Inputs.CardViewer) > 0)
                 IncrementProperty();
             else
                 DecrementProperty();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             SelectedCardModel = null;
     }
 
     public void ResetInfo()
     {
-        cardImage.gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.AspectRatio;
-        zoomPanel.GetChild(0).gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.AspectRatio;
+        cardImage.gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.CardAspectRatio;
+        zoomPanel.GetChild(0).gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.CardAspectRatio;
 
         int selectedPropertyIndex = 0;
         PropertyOptions.Clear();

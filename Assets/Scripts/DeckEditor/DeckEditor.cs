@@ -90,19 +90,19 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
             return;
 
-        if (Input.GetButtonDown(CardIn.SortInput))
+        if (Input.GetButtonDown(Inputs.Sort))
             Sort();
-        else if (Input.GetButtonDown(CardIn.NewInput))
+        else if (Input.GetButtonDown(Inputs.New))
             PromptForClear();
-        else if (Input.GetButtonDown(CardIn.LoadInput))
+        else if (Input.GetButtonDown(Inputs.Load))
             ShowDeckLoadMenu();
-        else if (Input.GetButtonDown(CardIn.SaveInput))
+        else if (Input.GetButtonDown(Inputs.Save))
             ShowDeckSaveMenu();
-        else if (Input.GetButtonDown(CardIn.FocusNameInput))
+        else if (Input.GetButtonDown(Inputs.FocusName))
             searchResults.nameInputField.ActivateInputField();
-        else if (Input.GetButtonDown(CardIn.FilterInput))
+        else if (Input.GetButtonDown(Inputs.Filter))
             searchResults.ShowSearchMenu();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             CheckBackToMainMenu();
     }
 

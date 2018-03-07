@@ -52,15 +52,15 @@ public class PlayMode : MonoBehaviour
         if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(CardIn.DrawInput))
+        if (Input.GetButtonDown(Inputs.Draw))
             Deal(1);
-        if (Input.GetButtonDown(CardIn.LoadInput))
+        if (Input.GetButtonDown(Inputs.Load))
             ShowDeckMenu();
-        if (Input.GetButtonDown(CardIn.FilterInput))
+        if (Input.GetButtonDown(Inputs.Filter))
             ShowCardsMenu();
-        if (Input.GetButtonDown(CardIn.SortInput))
+        if (Input.GetButtonDown(Inputs.Sort))
             ShowDiceMenu();
-        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             PromptBackToMainMenu();
     }
 
@@ -171,7 +171,7 @@ public class PlayMode : MonoBehaviour
         if (zones.CurrentDeck == null)
             return cards;
 
-        for (int i = 0; i < cardCount && zones.CurrentDeck.Count > 0; i++)
+        for (int i = 0; i < cardCount && zones.CurrentDeck.Cards.Count > 0; i++)
             cards.Add(zones.CurrentDeck.PopCard());
         return cards;
     }
@@ -205,7 +205,7 @@ public class PlayMode : MonoBehaviour
             zones.CreateDiscard();
         zones.Discard.AddCard(card);
     }
-    
+
     public void DisplayResults(List<Card> cards)
     {
         if (zones.Results == null)

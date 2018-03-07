@@ -41,30 +41,30 @@ public class DeckLoadMenu : SelectionPanel
             return;
 
         if (newDeckPanel.gameObject.activeSelf) {
-            if (Input.GetButtonDown(CardIn.SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+            if (Input.GetButtonDown(Inputs.Submit) && EventSystem.current.currentSelectedGameObject == null)
                 DoSaveDontOverwrite();
-            else if (Input.GetButtonDown(CardIn.NewInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(Inputs.New) && EventSystem.current.currentSelectedGameObject == null)
                 textInputField.text = string.Empty;
-            else if (Input.GetButtonDown(CardIn.FocusNameInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(Inputs.FocusName) && EventSystem.current.currentSelectedGameObject == null)
                 nameInputField.ActivateInputField();
-            else if (Input.GetButtonDown(CardIn.FocusTextInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(Inputs.FocusText) && EventSystem.current.currentSelectedGameObject == null)
                 textInputField.ActivateInputField();
-            else if (Input.GetButtonDown(CardIn.SaveInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(Inputs.Save) && EventSystem.current.currentSelectedGameObject == null)
                 PasteClipboardIntoText();
-            else if (Input.GetButtonDown(CardIn.DeleteInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(Inputs.Delete) && EventSystem.current.currentSelectedGameObject == null)
                 textInputField.text = string.Empty;
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 HideNewDeckPanel();
         } else {
-            if (Input.GetButtonDown(CardIn.SubmitInput) && loadFromFileButton.interactable)
+            if (Input.GetButtonDown(Inputs.Submit) && loadFromFileButton.interactable)
                 LoadFromFileAndHide();
-            else if (Input.GetButtonDown(CardIn.NewInput))
+            else if (Input.GetButtonDown(Inputs.New))
                 ShowNewDeckPanel();
-            else if (Input.GetButtonDown(CardIn.DeleteInput) && deleteFileButton.interactable)
+            else if (Input.GetButtonDown(Inputs.Delete) && deleteFileButton.interactable)
                 PromptForDeleteFile();
-            else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
         }
     }

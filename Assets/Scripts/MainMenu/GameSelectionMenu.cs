@@ -23,26 +23,26 @@ public class GameSelectionMenu : SelectionPanel
             return;
 
         if (downloadPanel.gameObject.activeSelf) {
-            if (Input.GetButtonDown(CardIn.SubmitInput) && downloadButton.interactable)
+            if (Input.GetButtonDown(Inputs.Submit) && downloadButton.interactable)
                 StartDownload();
-            else if (Input.GetButtonDown(CardIn.SaveInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(Inputs.Save) && urlInput.interactable)
                 Paste();
-            else if (Input.GetButtonDown(CardIn.NewInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(Inputs.New) && urlInput.interactable)
                 Clear();
-            else if (Input.GetButtonDown(CardIn.FocusNameInput) && urlInput.interactable)
+            else if (Input.GetButtonDown(Inputs.FocusName) && urlInput.interactable)
                 urlInput.ActivateInputField();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 HideDownloadPanel();
         } else {
-            if (Input.GetButtonDown(CardIn.SubmitInput) && EventSystem.current.currentSelectedGameObject == null)
+            if (Input.GetButtonDown(Inputs.Submit) && EventSystem.current.currentSelectedGameObject == null)
                 Hide();
-            else if (Input.GetButtonDown(CardIn.LoadInput))
+            else if (Input.GetButtonDown(Inputs.Load))
                 ShowDownloadPanel();
-            else if (Input.GetButtonDown(CardIn.DeleteInput))
+            else if (Input.GetButtonDown(Inputs.Delete))
                 Delete();
-            else if (Input.GetButtonDown(CardIn.VerticalInput) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(CardIn.CancelInput))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
         }
     }
