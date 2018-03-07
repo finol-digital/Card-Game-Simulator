@@ -47,6 +47,8 @@ public class MainMenu : MonoBehaviour
             JoinGame();
         else if (Input.GetButtonDown(Inputs.Save))
             EditDeck();
+        else if (Input.GetButtonDown(Inputs.Filter))
+            ShowOptions();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }

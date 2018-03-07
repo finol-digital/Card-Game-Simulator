@@ -8,6 +8,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **New**: *e* - Start Game.
 - **Load**: *r* - Join Game.
 - **Save**: *t* - Edit Deck.
+- **Filter**: *f* - Brings up the options menu.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
@@ -35,7 +36,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Filter**: *f* - Brings up the search filter menu.
 - **FocusName**: *\`* - Focuses keyboard to the search name input field.
 
-## Popup
+## Pop-up
 - **Cancel**: *Esc* - Cancel/Close.
 - **No**: *n* - No.
 - **Submit**: *Enter* - Yes/Close.
@@ -51,7 +52,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Delete**: *Delete* - Delete selected card game.
 - **Submit**: *Enter* - OK/Download.
 
-## Multiplayer Lobby
+## Multi-player Lobby
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through sessions.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
@@ -91,4 +92,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Submit**: *Enter* - Create dice.
 
 ## Sort Menu
+- **Cancel**: *Esc* - Cancel.
+
+## Options Menu
 - **Cancel**: *Esc* - Cancel.
