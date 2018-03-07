@@ -8,11 +8,13 @@
 - Make shifting between columns in the *Deck Editor* also control scrolling as appropriate
 - Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
 - New Mahjong tile set, with default property to type instead of suit
-- Add *Settings/Help*:
+- Add *Options Menu*:
   - Include a link to a card game's rules from within CGS
   - Display keyboard shortcuts
   - Allow pre-fetching of card images
   - Set card image cache limit
+  - Credits
+  - Link to send questions/feedback to the developer
 
 ## Maple Features
 - Resize cards based off \<cardSize\>

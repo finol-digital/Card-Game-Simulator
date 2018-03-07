@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -74,7 +73,15 @@ public class MainMenu : MonoBehaviour
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
-        CardGameManager.IsMultiplayer = false;
+        CardGameManager.Instance.Discovery.HasReceivedBroadcast = false;
+        SceneManager.LoadScene(PlayModeSceneIndex);
+    }
+
+    public void PlayGame()
+    {
+        if (Time.timeSinceLevelLoad < 0.1)
+            return;
+        CardGameManager.Instance.Discovery.SearchForHost();
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
@@ -82,7 +89,7 @@ public class MainMenu : MonoBehaviour
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
-        CardGameManager.IsMultiplayer = true;
+        CardGameManager.Instance.Discovery.HasReceivedBroadcast = true;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
@@ -91,6 +98,13 @@ public class MainMenu : MonoBehaviour
         if (Time.timeSinceLevelLoad < 0.1)
             return;
         SceneManager.LoadScene(DeckEditorSceneIndex);
+    }
+
+    public void ShowOptions()
+    {
+        if (Time.timeSinceLevelLoad < 0.1)
+            return;
+
     }
 
     public void Quit()

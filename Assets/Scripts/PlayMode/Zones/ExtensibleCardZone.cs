@@ -68,7 +68,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public virtual void Shuffle()
     {
-        List<Card> cards = new List<Card>();
+        List<Card> cards = new List<Card>(Cards);
         cards.Shuffle();
         Sync(cards);
     }

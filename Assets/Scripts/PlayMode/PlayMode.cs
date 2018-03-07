@@ -36,7 +36,7 @@ public class PlayMode : MonoBehaviour
     {
         Instantiate(cardViewerPrefab);
 
-        if (CardGameManager.IsMultiplayer) {
+        if (CardGameManager.Instance.Discovery.HasReceivedBroadcast) {
             Lobby.cancelButton.onClick.RemoveAllListeners();
             Lobby.cancelButton.onClick.AddListener(BackToMainMenu);
             Lobby.Show();
@@ -226,12 +226,12 @@ public class PlayMode : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        if (NetworkManager.singleton.isNetworkActive || CGSNetManager.Instance.Discovery.running) {
+        if (NetworkManager.singleton.isNetworkActive || CardGameManager.Instance.Discovery.running) {
             if (NetworkServer.active)
                 NetworkManager.singleton.StopHost();
             else if (NetworkManager.singleton.IsClientConnected())
                 NetworkManager.singleton.StopClient();
-            CGSNetManager.Instance.Discovery.StopBroadcast();
+            CardGameManager.Instance.Discovery.StopBroadcast();
         }
 
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

@@ -26,12 +26,14 @@ public class CardGameManager : MonoBehaviour
 
     public static string GamesFilePathBase => Application.persistentDataPath + "/games";
     public static CardGame Current { get; private set; } = new CardGame();
-
-    public static bool IsMultiplayer { get; set; }
     public static bool IsQuitting { get; private set; }
 
     public Dictionary<string, CardGame> AllCardGames { get; } = new Dictionary<string, CardGame>();
     public List<GameSceneDelegate> OnSceneActions { get; } = new List<GameSceneDelegate>();
+
+    private LobbyDiscovery _discovery;
+    public LobbyDiscovery Discovery => _discovery ??
+                                         (_discovery = gameObject.GetOrAddComponent<LobbyDiscovery>());
 
     private static CardGameManager _instance;
     private GameSelectionMenu _selector;

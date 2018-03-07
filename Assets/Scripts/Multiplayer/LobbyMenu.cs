@@ -38,8 +38,8 @@ public class LobbyMenu : SelectionPanel
         SelectedHost = string.Empty;
         Rebuild(HostNames, SelectHost, SelectedHost);
 
-        CGSNetManager.Instance.Discovery.lobby = this;
-        CGSNetManager.Instance.SearchForHost();
+        CardGameManager.Instance.Discovery.lobby = this;
+        CardGameManager.Instance.Discovery.SearchForHost();
     }
 
     public void DisplayHosts(List<string> hostNames)

@@ -5,13 +5,9 @@ public class CGSNetManager : NetworkManager
 {
     public static CGSNetManager Instance => (CGSNetManager)singleton;
     public CGSNetPlayer LocalPlayer { get; set; }
-    
+
     public GameObject cardModelPrefab;
     public PlayMode playController;
-
-    private LobbyDiscovery _discovery;
-    public LobbyDiscovery Discovery => _discovery ??
-                                         (_discovery = CardGameManager.Instance.gameObject.GetOrAddComponent<LobbyDiscovery>());
 
     void Start()
     {
@@ -19,21 +15,10 @@ public class CGSNetManager : NetworkManager
         connectionConfig.NetworkDropThreshold = 90;
     }
 
-    public void SearchForHost()
-    {
-        if (Discovery.running)
-            Discovery.StopBroadcast();
-        Discovery.Initialize();
-        Discovery.StartAsClient();
-    }
-
     public override void OnStartHost()
     {
         base.OnStartHost();
-        if (Discovery.running)
-            Discovery.StopBroadcast();
-        Discovery.Initialize();
-        Discovery.StartAsServer();
+        CardGameManager.Instance.Discovery.StartHost();
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
