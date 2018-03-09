@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PointsCounter : MonoBehaviour
@@ -16,11 +15,13 @@ public class PointsCounter : MonoBehaviour
         Count++;
     }
 
-    protected float Count {
-        get { return CGSNetManager.Instance.LocalPlayer.Points; }
-        set {
-            CGSNetManager.Instance.LocalPlayer.Points = value;
-            pointsText.text = CGSNetManager.Instance.LocalPlayer.Points.ToString(CultureInfo.InvariantCulture);
-        }
+    public void UpdateText()
+    {
+        pointsText.text = Count.ToString();
+    }
+
+    protected int Count {
+        get { return CGSNetManager.Instance.LocalPlayer.CurrentScore; }
+        set { CGSNetManager.Instance.LocalPlayer.RequestScoreUpdate(value); }
     }
 }

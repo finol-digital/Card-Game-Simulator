@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
     public const int MainMenuSceneIndex = 1;
     public const int PlayModeSceneIndex = 2;
     public const int DeckEditorSceneIndex = 3;
+    public const int OptionsMenuSceneIndex = 3;
     public const string ExitPrompt = "Exit CGS?";
 
     public Text currentGameText;
@@ -106,7 +107,7 @@ public class MainMenu : MonoBehaviour
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
-
+        SceneManager.LoadScene(OptionsMenuSceneIndex);
     }
 
     public void Quit()

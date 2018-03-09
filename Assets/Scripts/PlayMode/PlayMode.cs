@@ -226,12 +226,11 @@ public class PlayMode : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        if (NetworkManager.singleton.isNetworkActive || CardGameManager.Instance.Discovery.running) {
+        if (NetworkManager.singleton.isNetworkActive) {
             if (NetworkServer.active)
                 NetworkManager.singleton.StopHost();
             else if (NetworkManager.singleton.IsClientConnected())
                 NetworkManager.singleton.StopClient();
-            CardGameManager.Instance.Discovery.StopBroadcast();
         }
 
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

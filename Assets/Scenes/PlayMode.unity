@@ -2362,7 +2362,7 @@ GameObject:
   - component: {fileID: 974077052}
   - component: {fileID: 974077056}
   m_Layer: 5
-  m_Name: Points
+  m_Name: Scoreboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3040,7 +3040,8 @@ MonoBehaviour:
   m_PlayerSpawnMethod: 0
   m_OfflineScene: 
   m_OnlineScene: 
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 1073801045010386, guid: 58d2c1bbaeb829d42a84b6ce2a2d0897, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 5
   m_ConnectionConfig:
@@ -3099,6 +3100,7 @@ MonoBehaviour:
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 2}
   playController: {fileID: 709840748}
+  pointsDisplay: {fileID: 974077056}
 --- !u!4 &1243243123
 Transform:
   m_ObjectHideFlags: 0

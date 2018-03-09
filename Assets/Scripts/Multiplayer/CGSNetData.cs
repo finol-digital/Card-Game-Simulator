@@ -4,14 +4,8 @@ using UnityEngine.Networking;
 
 public class CGSNetData : NetworkBehaviour
 {
-    public struct NetDeck {
-        public GameObject owner;
-        public string[] cardIds;
-        public NetDeck(GameObject owner, string[] cardIds) {
-            this.owner = owner;
-            this.cardIds = cardIds;
-        }
-    }
+    public const string NetworkWarningMessage = "Warning: Invalid network action detected";
+
     public struct NetScore {
         public GameObject owner;
         public int points;
@@ -20,32 +14,64 @@ public class CGSNetData : NetworkBehaviour
             this.points = points;
         }
     }
-
-    public class SyncListNetDeck : SyncListStruct<NetDeck> {}
-    public class SyncListNetScore : SyncListStruct<NetScore> {}
-
-    public SyncListNetDeck decks = new SyncListNetDeck();
-    public SyncListNetScore scoreboard = new SyncListNetScore();
-
-    public void RegisterDeck(GameObject owner, List<string> cardIds)
-    {
-        CmdAddDeck(owner, cardIds.ToArray());
+    public struct NetDeck {
+        public GameObject owner;
+        public string[] cardIds;
+        public NetDeck(GameObject owner, string[] cardIds) {
+            this.owner = owner;
+            this.cardIds = cardIds;
+        }
     }
 
-    [Command]
-    public void CmdAddDeck(GameObject owner, string[] cardIds)
+    public class SyncListNetScore : SyncListStruct<NetScore> { }
+    public class SyncListNetDeck : SyncListStruct<NetDeck> {}
+
+    public SyncListNetScore scoreboard = new SyncListNetScore();
+    public SyncListNetDeck decks = new SyncListNetDeck();
+
+    void Start()
     {
-        decks.Add(new NetDeck(owner, cardIds));
+        CGSNetManager.Instance.Data = this;
     }
 
     public void RegisterScore(GameObject owner, int points)
     {
-        CmdAddScore(owner, points);
+        if (NetworkManager.singleton.isNetworkActive && !isServer) {
+            Debug.LogWarning(NetworkWarningMessage);
+            return;
+        }
+
+        scoreboard.Add(new NetScore(owner, points));
+        owner.GetComponent<CGSNetPlayer>().scoreIndex = scoreboard.Count - 1;
+        RpcOnChangeScore(scoreboard.Count - 1);
     }
 
-    [Command]
-    public void CmdAddScore(GameObject owner, int points)
+    public void ChangeScore(int scoreIndex, int points)
     {
-        scoreboard.Add(new NetScore(owner, points));
+        if (NetworkManager.singleton.isNetworkActive && !isServer) {
+            Debug.LogWarning(NetworkWarningMessage);
+            return;
+        }
+
+        GameObject owner = scoreboard[scoreIndex].owner;
+        scoreboard[scoreIndex] = new NetScore(owner, points);
+        RpcOnChangeScore(scoreIndex);
+    }
+
+    [ClientRpc]
+    public void RpcOnChangeScore(int scoreIndex)
+    {
+        if (CGSNetManager.Instance.LocalPlayer.scoreIndex == scoreIndex)
+            CGSNetManager.Instance.pointsDisplay.UpdateText();
+    }
+
+    public void RegisterDeck(GameObject owner, List<string> cardIds)
+    {
+        if (NetworkManager.singleton.isNetworkActive && !isServer) {
+            Debug.LogWarning(NetworkWarningMessage);
+            return;
+        }
+
+        decks.Add(new NetDeck(owner, cardIds.ToArray()));
     }
 }

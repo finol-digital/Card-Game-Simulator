@@ -3,11 +3,16 @@ using UnityEngine.Networking;
 
 public class CGSNetManager : NetworkManager
 {
+    public const string PlayerCountMessage = "Number of connected players: ";
+    public const string HostIpMessage = "Host Ip: ";
+
     public static CGSNetManager Instance => (CGSNetManager)singleton;
     public CGSNetPlayer LocalPlayer { get; set; }
+    public CGSNetData Data { get; set; }
 
     public GameObject cardModelPrefab;
     public PlayMode playController;
+    public PointsCounter pointsDisplay;
 
     void Start()
     {
@@ -15,23 +20,28 @@ public class CGSNetManager : NetworkManager
         connectionConfig.NetworkDropThreshold = 90;
     }
 
-    public override void OnStartHost()
+    public override void OnStartServer()
     {
-        base.OnStartHost();
-        CardGameManager.Instance.Discovery.StartHost();
+        base.OnStartServer();
+        CardGameManager.Instance.Discovery.StartAsHost();
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
     {
         base.OnServerAddPlayer(conn, playerControllerId);
-        playController.netText.text = NetworkServer.connections.Count.ToString();
+        if (Data == null) {
+            Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CGSNetData>();
+            NetworkServer.Spawn(Data.gameObject);
+        }
+        Data.RegisterScore(conn.playerControllers[playerControllerId].gameObject, CardGameManager.Current.GameStartPointsCount);
+        playController.netText.text = PlayerCountMessage + NetworkServer.connections.Count.ToString();
     }
 
     public override void OnStartClient(NetworkClient netClient)
     {
         base.OnStartClient(netClient);
         ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
-        playController.netText.text = netClient.serverIp;
+        playController.netText.text = HostIpMessage + netClient.serverIp;
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
@@ -50,6 +60,13 @@ public class CGSNetManager : NetworkManager
         CardModel cardModel = spawned?.GetComponent<CardModel>();
         if (cardModel != null && !cardModel.hasAuthority)
             Destroy(spawned);
+    }
+
+    public override void OnStopServer()
+    {
+        base.OnStopServer();
+        if (CardGameManager.Instance.Discovery.running)
+            CardGameManager.Instance.Discovery.StopBroadcast();
     }
 
     public override void OnServerError(NetworkConnection conn, int errorCode)

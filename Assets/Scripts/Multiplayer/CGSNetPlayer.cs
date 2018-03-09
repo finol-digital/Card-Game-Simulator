@@ -7,16 +7,18 @@ using UnityEngine.Networking;
 public class CGSNetPlayer : NetworkBehaviour
 {
     public const string ShareDeckRequest = "Would you like to share the host's deck?";
+    public const string ShareScoreRequest = "Also share score?";
 
-    [SyncVar]
-    public float Points;
-    public List<Card> CurrentDeck { get; } = new List<Card>();
+    public int CurrentScore => CGSNetManager.Instance.Data.scoreboard.Count > 0 ? CGSNetManager.Instance.Data.scoreboard[scoreIndex].points : 0;
+
+    [SyncVar(hook ="OnChangeScoreIndex")]
+    public int scoreIndex;
+    public SyncListInt decks = new SyncListInt();
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
         CGSNetManager.Instance.LocalPlayer = this;
-        Points = CardGameManager.Current.GameStartPointsCount;
         if (!isServer)
             RequestCardGame();
     }
@@ -36,7 +38,24 @@ public class CGSNetPlayer : NetworkBehaviour
     public void TargetSelectCardGame(NetworkConnection target, string gameName, string gameUrl)
     {
         CardGameManager.Instance.SelectCardGame(gameName, gameUrl);
+        CGSNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
         StartCoroutine(WaitToRequestDeck());
+    }
+
+    public void RequestScoreUpdate(int points)
+    {
+        CmdUpdateScore(points);
+    }
+
+    [Command]
+    public void CmdUpdateScore(int points)
+    {
+        CGSNetManager.Instance.Data.ChangeScore(scoreIndex, points);
+    }
+
+    public void OnChangeScoreIndex(int scoreIndex)
+    {
+        CGSNetManager.Instance.pointsDisplay.UpdateText();
     }
 
     public IEnumerator WaitToRequestDeck()
@@ -54,7 +73,7 @@ public class CGSNetPlayer : NetworkBehaviour
     [Command]
     public void CmdShareDeck()
     {
-        List<Card> deckCards = CGSNetManager.Instance.LocalPlayer.CurrentDeck;
+        IReadOnlyList<Card> deckCards = CGSNetManager.Instance.playController.zones.CurrentDeck.Cards;
         TargetShareDeck(connectionToClient, deckCards.Select(card => card.Id).ToArray());
     }
 
@@ -63,6 +82,7 @@ public class CGSNetPlayer : NetworkBehaviour
     {
         List<Card> cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
         CGSNetManager.Instance.playController.LoadDeck(cards);
+        //CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => {}, RequestSharedScore);
     }
 
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
