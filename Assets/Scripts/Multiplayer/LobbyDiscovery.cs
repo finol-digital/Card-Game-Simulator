@@ -29,7 +29,7 @@ public class LobbyDiscovery : NetworkDiscovery
     public void SearchForHost()
     {
         if (hostId == -1) {
-            CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
+            CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
             return;
         }
 
