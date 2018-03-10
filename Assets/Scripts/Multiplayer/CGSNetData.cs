@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -27,11 +26,17 @@ public class CGSNetData : NetworkBehaviour
     public class SyncListNetDeck : SyncListStruct<NetDeck> {}
 
     public SyncListNetScore scoreboard = new SyncListNetScore();
-    public SyncListNetDeck decks = new SyncListNetDeck();
+    public SyncListNetDeck cardStacks = new SyncListNetDeck();
 
     void Start()
     {
         CGSNetManager.Instance.Data = this;
+    }
+
+    public override void OnStartClient()
+    {
+        scoreboard.Callback = OnScoreChanged;
+        cardStacks.Callback = OnDeckChanged;
     }
 
     public void RegisterScore(GameObject owner, int points)
@@ -43,7 +48,6 @@ public class CGSNetData : NetworkBehaviour
 
         scoreboard.Add(new NetScore(owner, points));
         owner.GetComponent<CGSNetPlayer>().scoreIndex = scoreboard.Count - 1;
-        RpcOnChangeScore(scoreboard.Count - 1);
     }
 
     public void ChangeScore(int scoreIndex, int points)
@@ -55,23 +59,43 @@ public class CGSNetData : NetworkBehaviour
 
         GameObject owner = scoreboard[scoreIndex].owner;
         scoreboard[scoreIndex] = new NetScore(owner, points);
-        RpcOnChangeScore(scoreIndex);
     }
 
-    [ClientRpc]
-    public void RpcOnChangeScore(int scoreIndex)
+    private void OnScoreChanged(SyncListNetScore.Operation op, int scoreIndex)
     {
-        if (CGSNetManager.Instance.LocalPlayer.scoreIndex == scoreIndex)
-            CGSNetManager.Instance.pointsDisplay.UpdateText();
+        if (op == SyncList<NetScore>.Operation.OP_ADD)
+            return;
+
+        CGSNetManager.Instance.LocalPlayer.OnChangeScore(scoreIndex);
     }
 
-    public void RegisterDeck(GameObject owner, List<string> cardIds)
+    public void RegisterDeck(GameObject owner, string[] cardIds)
     {
         if (NetworkManager.singleton.isNetworkActive && !isServer) {
             Debug.LogWarning(NetworkWarningMessage);
             return;
         }
 
-        decks.Add(new NetDeck(owner, cardIds.ToArray()));
+        cardStacks.Add(new NetDeck(owner, cardIds));
+        owner.GetComponent<CGSNetPlayer>().deckIndex = cardStacks.Count - 1;
+    }
+
+    public void ChangeDeck(int deckIndex, string[] cardIds)
+    {
+        if (NetworkManager.singleton.isNetworkActive && !isServer) {
+            Debug.LogWarning(NetworkWarningMessage);
+            return;
+        }
+
+        GameObject owner = cardStacks[deckIndex].owner;
+        cardStacks[deckIndex] = new NetDeck(owner, cardIds);
+    }
+
+    private void OnDeckChanged(SyncListNetDeck.Operation op, int deckIndex)
+    {
+        if (op == SyncList<NetDeck>.Operation.OP_ADD)
+            return;
+
+        CGSNetManager.Instance.LocalPlayer.OnChangeDeck(deckIndex);
     }
 }

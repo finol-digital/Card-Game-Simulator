@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -94,15 +95,21 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         extension.offsetMax = new Vector2(extension.offsetMax.x, 0);
     }
 
-    public void Sync(List<Card> cards)
-    {
-        Clear();
-        foreach(Card card in cards)
-            AddCard(card);
-    }
-
     public void UpdateCountText()
     {
         countText.text = Cards.Count.ToString();
+    }
+
+    public void Sync(List<Card> cards)
+    {
+        StartCoroutine(WaitToSync(cards));
+    }
+
+    public IEnumerator WaitToSync(List<Card> cards)
+    {
+        yield return null;
+        Clear();
+        foreach (Card card in cards)
+            AddCard(card);
     }
 }

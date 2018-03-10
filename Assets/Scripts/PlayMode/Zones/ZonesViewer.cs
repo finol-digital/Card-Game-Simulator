@@ -8,22 +8,22 @@ public class ZonesViewer : MonoBehaviour
     public const float Height = 300f;
     public const float ScrollbarWidth = 80f;
 
-    public GameObject extraZonePrefab;
+    public GameObject resultsZonePrefab;
     public GameObject discardZonePrefab;
+    public GameObject extraZonePrefab;
     public GameObject deckZonePrefab;
     public GameObject handZonePrefab;
-    public GameObject resultsZonePrefab;
     public ScrollRect scrollView;
     public GameObject extendButton;
     public GameObject showButton;
     public GameObject hideButton;
 
+    public ExtensibleCardZone Results { get; private set; }
     public StackedZone Discard { get; private set; }
+    protected List<ExtensibleCardZone> ExtraZones { get; } = new List<ExtensibleCardZone>();
     public StackedZone CurrentDeck { get; private set; }
     public ExtensibleCardZone Hand { get; private set; }
-    public ExtensibleCardZone Results { get; private set; }
 
-    protected List<ExtensibleCardZone> AllZones { get; } = new List<ExtensibleCardZone>();
 
     void Start()
     {
@@ -43,16 +43,52 @@ public class ZonesViewer : MonoBehaviour
     public void ResizeContent()
     {
         float height = Height;
-        foreach (ExtensibleCardZone zone in AllZones)
+        int siblingIndex = 3;
+        if (Results != null) {
+            height += ((RectTransform)Results.transform).rect.height;
+            Results.transform.SetSiblingIndex(siblingIndex);
+            siblingIndex++;
+        }
+        if (Discard != null) {
+            height += ((RectTransform)Discard.transform).rect.height;
+            Discard.transform.SetSiblingIndex(siblingIndex);
+            siblingIndex++;
+        }
+        foreach (ExtensibleCardZone zone in ExtraZones) {
             height += ((RectTransform)zone.transform).rect.height;
+            zone.transform.SetSiblingIndex(siblingIndex);
+            siblingIndex++;
+        }
+        if (CurrentDeck != null) {
+            height += ((RectTransform)CurrentDeck.transform).rect.height;
+            CurrentDeck.transform.SetSiblingIndex(siblingIndex);
+            siblingIndex++;
+        }
+        if (Hand != null) {
+            height += ((RectTransform)Hand.transform).rect.height;
+            Hand.transform.SetSiblingIndex(siblingIndex);
+            siblingIndex++;
+        }
         scrollView.content.sizeDelta = new Vector2(scrollView.content.sizeDelta.x, height);
     }
-    
+
+    public void CreateResults()
+    {
+        if (Results != null)
+            return;
+
+        Results = Instantiate(resultsZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
+        Results.Viewer = this;
+        ResizeContent();
+    }
+
     public void CreateDiscard()
     {
+        if (Discard != null)
+            return;
+
         Discard = Instantiate(discardZonePrefab, scrollView.content).GetComponent<StackedZone>();
         Discard.Viewer = this;
-        AllZones.Add(Discard);
         ResizeContent();
     }
 
@@ -63,15 +99,17 @@ public class ZonesViewer : MonoBehaviour
         foreach (Card card in cards)
             extraZone.AddCard(card);
         extraZone.Viewer = this;
-        AllZones.Add(extraZone);
+        ExtraZones.Add(extraZone);
         ResizeContent();
     }
 
     public void CreateDeck()
     {
+        if (CurrentDeck != null)
+            Destroy(CurrentDeck);
+
         CurrentDeck = Instantiate(deckZonePrefab, scrollView.content).GetComponent<StackedZone>();
         CurrentDeck.Viewer = this;
-        AllZones.Add(CurrentDeck);
         ResizeContent();
     }
 
@@ -82,21 +120,16 @@ public class ZonesViewer : MonoBehaviour
 
         Hand = Instantiate(handZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
         Hand.Viewer = this;
-        AllZones.Add(Hand);
         ResizeContent();
         IsExtended = true;
         IsVisible = true;
     }
 
-    public void CreateResults()
+    public void ResetButtons()
     {
-        if (Results != null)
-            return;
-
-        Results = Instantiate(resultsZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
-        Results.Viewer = this;
-        AllZones.Add(Results);
-        ResizeContent();
+        extendButton.SetActive(!IsExtended);
+        showButton.SetActive(IsExtended && !IsVisible);
+        hideButton.SetActive(IsExtended && IsVisible);
     }
 
     public bool IsExtended {
@@ -107,12 +140,14 @@ public class ZonesViewer : MonoBehaviour
             RectTransform.Edge edge = RectTransform.Edge.Right;
             float size = Width;
             float inset = value ? 0 : -(size - ScrollbarWidth);
-            ((RectTransform)scrollView.transform.parent ).SetInsetAndSizeFromParentEdge(edge, inset, size);
-            foreach (ExtensibleCardZone zone in AllZones)
+            ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, inset, size);
+            Results?.ResizeExtension();
+            Discard?.ResizeExtension();
+            foreach (ExtensibleCardZone zone in ExtraZones)
                 zone.ResizeExtension();
-            extendButton.SetActive(!IsExtended);
-            showButton.SetActive(IsExtended && !IsVisible);
-            hideButton.SetActive(IsExtended && IsVisible);
+            CurrentDeck?.ResizeExtension();
+            Hand?.ResizeExtension();
+            ResetButtons();
         }
     }
 
@@ -123,9 +158,7 @@ public class ZonesViewer : MonoBehaviour
             RectTransform.Edge edge = RectTransform.Edge.Top;
             float size = GetComponent<RectTransform>().rect.height;
             ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, 0, scrollView.gameObject.activeSelf ? size : ScrollbarWidth);
-            extendButton.SetActive(!IsExtended);
-            showButton.SetActive(IsExtended && !IsVisible);
-            hideButton.SetActive(IsExtended && IsVisible);
+            ResetButtons();
         }
     }
 }

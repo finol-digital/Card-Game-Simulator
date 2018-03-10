@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.Networking;
 
 public class LobbyDiscovery : NetworkDiscovery
@@ -9,32 +10,29 @@ public class LobbyDiscovery : NetworkDiscovery
     public LobbyMenu lobby;
     public bool HasReceivedBroadcast { get; set; }
 
-    void Start()
-    {
-        Initialize();
-    }
-
     public void StartAsHost()
     {
-        if (hostId == -1) {
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
             CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
             return;
         }
 
         if (running)
             StopBroadcast();
+        Initialize();
         StartAsServer();
     }
 
     public void SearchForHost()
     {
-        if (hostId == -1) {
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
             CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
             return;
         }
 
         if (running)
             StopBroadcast();
+        Initialize();
         StartAsClient();
     }
 

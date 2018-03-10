@@ -13,8 +13,8 @@ public class PlayMode : MonoBehaviour
     public GameObject cardViewerPrefab;
     public GameObject lobbyPrefab;
     public GameObject deckLoadMenuPrefab;
-    public GameObject searchMenuPrefab;
     public GameObject diceMenuPrefab;
+    public GameObject searchMenuPrefab;
 
     public ZonesViewer zones;
     public RectTransform playAreaContent;
@@ -26,11 +26,11 @@ public class PlayMode : MonoBehaviour
     public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
     private DeckLoadMenu _deckLoader;
 
-    public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
-    private CardSearchMenu _cardSearcher;
-
     public DiceMenu DiceManager => _diceManager ?? (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
     private DiceMenu _diceManager;
+
+    public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
+    private CardSearchMenu _cardSearcher;
 
     void Start()
     {
@@ -69,14 +69,14 @@ public class PlayMode : MonoBehaviour
         DeckLoader.Show(LoadDeck);
     }
 
-    public void ShowCardsMenu()
-    {
-        CardSearcher.Show(null, null, DisplayResults);
-    }
-
     public void ShowDiceMenu()
     {
         DiceManager.Show(playAreaContent);
+    }
+
+    public void ShowCardsMenu()
+    {
+        CardSearcher.Show(null, null, DisplayResults);
     }
 
     public void LoadDeck(Deck deck)
@@ -102,7 +102,7 @@ public class PlayMode : MonoBehaviour
         LoadDeck(deckCards);
     }
 
-    public void LoadDeck(List<Card> deckCards)
+    public void LoadDeck(List<Card> deckCards, bool isSharedDeck = false)
     {
         zones.CreateDeck();
 
@@ -110,6 +110,9 @@ public class PlayMode : MonoBehaviour
             zones.CreateHand();
 
         deckCards.Shuffle();
+        if (!isSharedDeck)
+            CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
+
         StartCoroutine(WaitToDealDeck(deckCards));
     }
 
