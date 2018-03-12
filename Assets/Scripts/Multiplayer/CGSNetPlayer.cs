@@ -9,7 +9,7 @@ public class CGSNetPlayer : NetworkBehaviour
     public const string ShareDeckRequest = "Would you like to share the host's deck?";
     public const string ShareScoreRequest = "Also share score?";
 
-    public int CurrentScore => CGSNetManager.Instance.Data.scoreboard.Count > 0 ? CGSNetManager.Instance.Data.scoreboard[scoreIndex].points : 0;
+    public int CurrentScore => CGSNetManager.Instance.Data.scores.Count > 0 ? CGSNetManager.Instance.Data.scores[scoreIndex].points : 0;
     public List<Card> CurrentDeck => CGSNetManager.Instance.Data.cardStacks.Count > 0 ?
         CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList() : new List<Card>();
 

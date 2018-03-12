@@ -13,20 +13,20 @@ public class CGSNetData : NetworkBehaviour
             this.points = points;
         }
     }
-    public struct NetDeck {
+    public struct NetCardStack {
         public GameObject owner;
         public string[] cardIds;
-        public NetDeck(GameObject owner, string[] cardIds) {
+        public NetCardStack(GameObject owner, string[] cardIds) {
             this.owner = owner;
             this.cardIds = cardIds;
         }
     }
 
     public class SyncListNetScore : SyncListStruct<NetScore> { }
-    public class SyncListNetDeck : SyncListStruct<NetDeck> {}
+    public class SyncListNetCardStack : SyncListStruct<NetCardStack> {}
 
-    public SyncListNetScore scoreboard = new SyncListNetScore();
-    public SyncListNetDeck cardStacks = new SyncListNetDeck();
+    public SyncListNetScore scores = new SyncListNetScore();
+    public SyncListNetCardStack cardStacks = new SyncListNetCardStack();
 
     void Start()
     {
@@ -35,7 +35,7 @@ public class CGSNetData : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        scoreboard.Callback = OnScoreChanged;
+        scores.Callback = OnScoreChanged;
         cardStacks.Callback = OnDeckChanged;
     }
 
@@ -46,8 +46,8 @@ public class CGSNetData : NetworkBehaviour
             return;
         }
 
-        scoreboard.Add(new NetScore(owner, points));
-        owner.GetComponent<CGSNetPlayer>().scoreIndex = scoreboard.Count - 1;
+        scores.Add(new NetScore(owner, points));
+        owner.GetComponent<CGSNetPlayer>().scoreIndex = scores.Count - 1;
     }
 
     public void ChangeScore(int scoreIndex, int points)
@@ -57,8 +57,8 @@ public class CGSNetData : NetworkBehaviour
             return;
         }
 
-        GameObject owner = scoreboard[scoreIndex].owner;
-        scoreboard[scoreIndex] = new NetScore(owner, points);
+        GameObject owner = scores[scoreIndex].owner;
+        scores[scoreIndex] = new NetScore(owner, points);
     }
 
     private void OnScoreChanged(SyncListNetScore.Operation op, int scoreIndex)
@@ -76,7 +76,7 @@ public class CGSNetData : NetworkBehaviour
             return;
         }
 
-        cardStacks.Add(new NetDeck(owner, cardIds));
+        cardStacks.Add(new NetCardStack(owner, cardIds));
         owner.GetComponent<CGSNetPlayer>().deckIndex = cardStacks.Count - 1;
     }
 
@@ -88,12 +88,12 @@ public class CGSNetData : NetworkBehaviour
         }
 
         GameObject owner = cardStacks[deckIndex].owner;
-        cardStacks[deckIndex] = new NetDeck(owner, cardIds);
+        cardStacks[deckIndex] = new NetCardStack(owner, cardIds);
     }
 
-    private void OnDeckChanged(SyncListNetDeck.Operation op, int deckIndex)
+    private void OnDeckChanged(SyncListNetCardStack.Operation op, int deckIndex)
     {
-        if (op == SyncList<NetDeck>.Operation.OP_ADD)
+        if (op == SyncList<NetCardStack>.Operation.OP_ADD)
             return;
 
         CGSNetManager.Instance.LocalPlayer.OnChangeDeck(deckIndex);
