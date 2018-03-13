@@ -45,9 +45,9 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through games.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
-- **Load**: *r* - Brings up download game url input.
+- **New**: *e* - Brings up OR clears the download url input field.
+- **Load**: *r* - Brings up OR clears the download url input field.
 - **Save**: *t* - Pastes clipboard into the url input field.
-- **New**: *e* - Clears the url input field.
 - **FocusName**: *\`* - Focuses keyboard to the url input field.
 - **Delete**: *Delete* - Delete selected card game.
 - **Submit**: *Enter* - OK/Download.

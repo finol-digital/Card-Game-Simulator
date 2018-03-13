@@ -25,10 +25,10 @@ public class GameSelectionMenu : SelectionPanel
         if (downloadPanel.gameObject.activeSelf) {
             if (Input.GetButtonDown(Inputs.Submit) && downloadButton.interactable)
                 StartDownload();
+            else if ((Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load)) && urlInput.interactable)
+                Clear();
             else if (Input.GetButtonDown(Inputs.Save) && urlInput.interactable)
                 Paste();
-            else if (Input.GetButtonDown(Inputs.New) && urlInput.interactable)
-                Clear();
             else if (Input.GetButtonDown(Inputs.FocusName) && urlInput.interactable)
                 urlInput.ActivateInputField();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
@@ -36,7 +36,7 @@ public class GameSelectionMenu : SelectionPanel
         } else {
             if (Input.GetButtonDown(Inputs.Submit) && EventSystem.current.currentSelectedGameObject == null)
                 Hide();
-            else if (Input.GetButtonDown(Inputs.Load))
+            else if (Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load))
                 ShowDownloadPanel();
             else if (Input.GetButtonDown(Inputs.Delete))
                 Delete();
