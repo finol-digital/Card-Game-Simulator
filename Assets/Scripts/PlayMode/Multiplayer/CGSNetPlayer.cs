@@ -12,6 +12,7 @@ public class CGSNetPlayer : NetworkBehaviour
     public int CurrentScore => CGSNetManager.Instance.Data.scores.Count > 0 ? CGSNetManager.Instance.Data.scores[scoreIndex].points : 0;
     public List<Card> CurrentDeck => CGSNetManager.Instance.Data.cardStacks.Count > 0 ?
         CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList() : new List<Card>();
+    public string[] CurrentDeckCardIds => CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds;
 
     [SyncVar(hook ="OnChangeScore")]
     public int scoreIndex;
@@ -139,5 +140,23 @@ public class CGSNetPlayer : NetworkBehaviour
         controller.SetPlayActions(controller.playAreaContent.GetComponent<CardStack>(), cardModel);
         NetworkServer.SpawnWithClientAuthority(newCard, gameObject);
         cardModel.RpcHideHighlight();
+    }
+
+    void Update()
+    {
+        if (!isLocalPlayer || CGSNetManager.Instance.Data == null || CGSNetManager.Instance.Data.cardStacks == null || CGSNetManager.Instance.Data.cardStacks.Count < 1)
+            return;
+
+        IReadOnlyList<Card> localDeck = CGSNetManager.Instance.playController.zones.CurrentDeck?.Cards;
+        if (localDeck == null)
+            return;
+
+        bool deckMatches = localDeck.Count == CurrentDeckCardIds.Length;
+        for (int i = 0; deckMatches && i < localDeck.Count; i++)
+            if (!localDeck[i].Id.Equals(CurrentDeckCardIds[i]))
+                deckMatches = false;
+
+        if (!deckMatches)
+            CmdUpdateDeck(localDeck.Select(card => card.Id).ToArray());
     }
 }

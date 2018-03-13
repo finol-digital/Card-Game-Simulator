@@ -22,7 +22,7 @@ public class CGSNetData : NetworkBehaviour
         }
     }
 
-    public class SyncListNetScore : SyncListStruct<NetScore> { }
+    public class SyncListNetScore : SyncListStruct<NetScore> {}
     public class SyncListNetCardStack : SyncListStruct<NetCardStack> {}
 
     public SyncListNetScore scores = new SyncListNetScore();

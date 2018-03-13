@@ -1,7 +1,6 @@
 # Roadmap
 
 ## General Features
-- Allow players to share a deck in *Play Mode*
 - Share discard pile between all players who share a deck
 - Show indication of when a deck is shuffled in *Play Mode*
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*

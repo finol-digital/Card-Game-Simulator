@@ -5,34 +5,33 @@ using UnityEngine;
 [RequireComponent(typeof(CardStack))]
 public class StackedZone : ExtensibleCardZone
 {
+    public bool IsFaceup { get; set; }
+
     public override IReadOnlyList<Card> Cards => CardModels.Select(cardModel => cardModel.Value).ToList();
-
-    public CardDropZone DropZone { get; private set; }
-    public CardStack ZoneCardStack { get; private set; }
-    public CardStack ExtensionCardStack { get; private set; }
-
     protected List<CardModel> CardModels { get; } = new List<CardModel>();
 
-    public bool isFaceup;
+    protected CardStack ExtensionCardStack => _extensionCardStack ?? (_extensionCardStack = extensionContent.gameObject.GetOrAddComponent<CardStack>());
+    private CardStack _extensionCardStack;
+
+    protected CardStack ZoneCardStack => _zoneCardStack ?? (_zoneCardStack = GetComponent<CardStack>());
+    private CardStack _zoneCardStack;
+
+    protected CardDropZone DropZone => _dropZone ?? (_dropZone = gameObject.GetOrAddComponent<CardDropZone>());
+    private CardDropZone _dropZone;
 
     public override void OnStart()
     {
-        DropZone = gameObject.GetOrAddComponent<CardDropZone>();
-
-        ZoneCardStack = GetComponent<CardStack>();
-        ZoneCardStack.OnAddCardActions.Add(OnAddCardModel);
-        ZoneCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
-
-        ExtensionCardStack = extensionContent.GetComponent<CardStack>();
         ExtensionCardStack.OnAddCardActions.Add(OnAddCardModel);
         ExtensionCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
+        ZoneCardStack.OnAddCardActions.Add(OnAddCardModel);
+        ZoneCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
     }
 
     public override void AddCard(Card card)
     {
         CardModel newCardModel = Instantiate(cardModelPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform).GetOrAddComponent<CardModel>();
         newCardModel.Value = card;
-        newCardModel.IsFacedown = !isFaceup;
+        newCardModel.IsFacedown = !IsFaceup;
         OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, newCardModel);
     }
 
@@ -48,8 +47,10 @@ public class StackedZone : ExtensibleCardZone
             cardModel.IsFacedown = false;
 
         int cardIndex = CardModels.Count;
-        if (cardStack == ExtensionCardStack)
-            cardIndex = cardModel.transform.GetSiblingIndex();
+        if (cardStack == ExtensionCardStack) {
+            int transformIndex = cardModel.transform.GetSiblingIndex();
+            cardIndex = transformIndex >= 0 && transformIndex < CardModels.Count ? transformIndex : CardModels.Count;
+        }
         CardModels.Insert(cardIndex, cardModel);
         UpdateCountText();
     }
@@ -62,8 +63,10 @@ public class StackedZone : ExtensibleCardZone
 
     public override void Clear()
     {
-        for(int i = Cards.Count; i > 0; i--)
-            PopCard();
+        foreach (CardModel cardModel in CardModels)
+            Destroy(cardModel.gameObject);
+        CardModels.Clear();
+        UpdateCountText();
     }
 
     public Card PopCard()
@@ -107,7 +110,7 @@ public class StackedZone : ExtensibleCardZone
         int siblingIndex = IsExtended ? 0 : 3;
         foreach (CardModel cardModel in CardModels) {
             cardModel.transform.SetParent(parent);
-            cardModel.IsFacedown = !IsExtended && !isFaceup;
+            cardModel.IsFacedown = !IsExtended && !IsFaceup;
             if (IsExtended)
                 continue;
             ((RectTransform)cardModel.transform).anchorMin = new Vector2(0.5f, 0.5f);

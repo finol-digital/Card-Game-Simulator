@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -102,12 +101,6 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public void Sync(List<Card> cards)
     {
-        StartCoroutine(WaitToSync(cards));
-    }
-
-    public IEnumerator WaitToSync(List<Card> cards)
-    {
-        yield return null;
         Clear();
         foreach (Card card in cards)
             AddCard(card);

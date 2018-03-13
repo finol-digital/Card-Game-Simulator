@@ -84,11 +84,6 @@ public class PlayMode : MonoBehaviour
         if (deck == null)
             return;
 
-        foreach (Card card in deck.Cards)
-            foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards)
-                if (card.Id.Equals(boardCard.Card))
-                    CreateGameBoards(boardCard.Boards);
-
         Dictionary<string, List<Card>> extraGroups = deck.GetExtraGroups();
         foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
             zones.CreateExtraZone(cardGroup.Key, cardGroup.Value);
@@ -100,6 +95,11 @@ public class PlayMode : MonoBehaviour
                 deckCards.Add(card);
 
         LoadDeck(deckCards);
+
+        foreach (Card card in deck.Cards)
+            foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards)
+                if (card.Id.Equals(boardCard.Card))
+                    CreateGameBoards(boardCard.Boards);
     }
 
     public void LoadDeck(List<Card> deckCards, bool isSharedDeck = false)
@@ -113,7 +113,11 @@ public class PlayMode : MonoBehaviour
         if (!isSharedDeck)
             CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
 
-        StartCoroutine(WaitToDealDeck(deckCards));
+        zones.scrollView.verticalScrollbar.value = 0;
+        zones.CurrentDeck.Sync(deckCards);
+
+        if (CardGameManager.Current.GameStartHandCount > 0)
+            CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
     }
 
     public void CreateGameBoards(List<GameBoard> boards)
@@ -145,17 +149,6 @@ public class PlayMode : MonoBehaviour
             newBoard.AddComponent<Image>().sprite = boardImageSprite;
 
         rt.localScale = Vector3.one;
-    }
-
-    public IEnumerator WaitToDealDeck(List<Card> deck)
-    {
-        yield return null;
-
-        zones.scrollView.verticalScrollbar.value = 0;
-        zones.CurrentDeck.Sync(deck);
-
-        if (CardGameManager.Current.GameStartHandCount > 0)
-            CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
     }
 
     public void DealStartingHand()
@@ -206,12 +199,6 @@ public class PlayMode : MonoBehaviour
     {
         if (zones.Discard == null)
             zones.CreateDiscard();
-        StartCoroutine(WaitToDiscard(card));
-    }
-
-    public IEnumerator WaitToDiscard(Card card)
-    {
-        yield return null;
         zones.Discard.AddCard(card);
     }
 

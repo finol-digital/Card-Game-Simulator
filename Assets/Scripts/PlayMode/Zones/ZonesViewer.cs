@@ -89,6 +89,7 @@ public class ZonesViewer : MonoBehaviour
 
         Discard = Instantiate(discardZonePrefab, scrollView.content).GetComponent<StackedZone>();
         Discard.Viewer = this;
+        Discard.IsFaceup = true;
         ResizeContent();
     }
 
@@ -106,7 +107,7 @@ public class ZonesViewer : MonoBehaviour
     public void CreateDeck()
     {
         if (CurrentDeck != null)
-            Destroy(CurrentDeck);
+            Destroy(CurrentDeck.gameObject);
 
         CurrentDeck = Instantiate(deckZonePrefab, scrollView.content).GetComponent<StackedZone>();
         CurrentDeck.Viewer = this;

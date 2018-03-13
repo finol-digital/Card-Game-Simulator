@@ -52,7 +52,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a88bd459dba0be449622f9c07ed8e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Points: 0
+  scoreIndex: 0
+  deckIndex: 0
 --- !u!114 &114797580129434228
 MonoBehaviour:
   m_ObjectHideFlags: 1

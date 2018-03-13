@@ -29,11 +29,15 @@ public class Deck : IEquatable<Deck>
     {
     }
 
-    public Deck(string name, DeckFileType fileType)
+    public Deck(string name, DeckFileType fileType) : this(name, fileType, new List<Card>())
+    {
+    }
+
+    public Deck(string name, DeckFileType fileType, List<Card> cards)
     {
         Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : DefaultName;
         FileType = fileType;
-        Cards = new List<Card>();
+        Cards = new List<Card>(cards);
     }
 
     public static Deck Parse(string name, DeckFileType type, string text)

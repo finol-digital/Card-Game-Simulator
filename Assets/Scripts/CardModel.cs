@@ -52,11 +52,42 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     [SyncVar]
     private string _id;
     public string Id => _id;
+    public Card Value {
+        get {
+            Card cardValue;
+            if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out cardValue))
+                return Card.Blank;
+            return cardValue;
+        }
+        set {
+            _id = value != null ? value.Id : string.Empty;
+            gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
+            CardGameManager.Current.PutCardImage(this);
+        }
+    }
 
     [SyncVar]
     private bool _isFacedown;
+    public bool IsFacedown {
+        get { return _isFacedown; }
+        set {
+            if (value == _isFacedown)
+                return;
+            _isFacedown = value;
+            if (_isFacedown) {
+                HideNameLabel();
+                image.sprite = CardGameManager.Current.CardBackImageSprite;
+            } else
+                CardGameManager.Current.PutCardImage(this);
+
+            if (IsOnline && hasAuthority)
+                CmdUpdateIsFacedown(_isFacedown);
+        }
+    }
+
     private Image _image;
     public Image image => _image ?? (_image = GetComponent<Image>());
+    public bool HasImage => image.sprite != CardGameManager.Current.CardBackImageSprite;
 
     private Outline _outline;
     private Text _nameText;
@@ -224,8 +255,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) || Input.GetMouseButtonUp(2))
             return;
 #endif
-        bool isOnline = IsOnline;
-        if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (isOnline && !hasAuthority))
+        if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !hasAuthority))
             return;
 
         Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList()) + UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
@@ -238,7 +268,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
 
         LocalPosition = transform.localPosition;
-        if (isOnline)
+        if (IsOnline)
             CmdUpdateLocalPosition(LocalPosition);
     }
 
@@ -460,7 +490,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         transform.GetChild(0).gameObject.SetActive(false);
     }
-    
+
     public void Discard()
     {
         if (CardGameManager.Current.GameCatchesDiscard)
@@ -477,39 +507,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (PlaceHolder != null)
             Destroy(PlaceHolder.gameObject);
     }
-
-    public Card Value {
-        get {
-            Card cardValue;
-            if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out cardValue))
-                return Card.Blank;
-            return cardValue;
-        }
-        set {
-            _id = value != null ? value.Id : string.Empty;
-            gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
-            CardGameManager.Current.PutCardImage(this);
-        }
-    }
-
-    public bool IsFacedown {
-        get { return _isFacedown; }
-        set {
-            if (value == _isFacedown)
-                return;
-            _isFacedown = value;
-            if (_isFacedown) {
-                HideNameLabel();
-                image.sprite = CardGameManager.Current.CardBackImageSprite;
-            }
-            else
-                CardGameManager.Current.PutCardImage(this);
-
-            if (IsOnline && hasAuthority)
-                CmdUpdateIsFacedown(_isFacedown);
-        }
-    }
-    public bool HasImage => image.sprite != CardGameManager.Current.CardBackImageSprite;
 
     public RectTransform PlaceHolder {
         get { return _placeHolder; }
