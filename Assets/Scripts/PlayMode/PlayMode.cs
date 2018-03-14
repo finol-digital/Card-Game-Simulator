@@ -32,9 +32,14 @@ public class PlayMode : MonoBehaviour
     public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
     private CardSearchMenu _cardSearcher;
 
-    void Start()
+    IEnumerator Start()
     {
         Instantiate(cardViewerPrefab);
+
+        playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
+        playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
+
+        yield return new WaitForSeconds(3);
 
         if (CardGameManager.Instance.Discovery.HasReceivedBroadcast) {
             Lobby.cancelButton.onClick.RemoveAllListeners();
@@ -42,9 +47,6 @@ public class PlayMode : MonoBehaviour
             Lobby.Show();
         } else
             Lobby.Host();
-
-        playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
-        playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
     }
 
     void Update()

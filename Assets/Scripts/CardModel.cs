@@ -493,7 +493,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void Discard()
     {
-        if (CardGameManager.Current.GameCatchesDiscard)
+        if (DropTarget == null && CardGameManager.Current.GameCatchesDiscard)
             CGSNetManager.Instance?.playController.CatchDiscard(Value);
         Destroy(gameObject);
     }

@@ -92,6 +92,7 @@ public class MainMenu : MonoBehaviour
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
+        CardGameManager.Instance.Discovery.SearchForHost();
         CardGameManager.Instance.Discovery.HasReceivedBroadcast = true;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
