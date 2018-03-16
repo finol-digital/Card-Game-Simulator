@@ -32,6 +32,8 @@ public class LobbyDiscovery : NetworkDiscovery
 
         if (running)
             StopBroadcast();
+        Network.Disconnect();
+        NetworkServer.Reset();
         Initialize();
         StartAsClient();
     }
@@ -43,5 +45,12 @@ public class LobbyDiscovery : NetworkDiscovery
             return;
 
         lobby.DisplayHosts(broadcastsReceived.Keys.ToList());
+    }
+
+    void OnDestroy()
+    {
+        if (running)
+            StopBroadcast();
+        Network.Disconnect();
     }
 }

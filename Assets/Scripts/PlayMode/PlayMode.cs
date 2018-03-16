@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
@@ -32,14 +31,12 @@ public class PlayMode : MonoBehaviour
     public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
     private CardSearchMenu _cardSearcher;
 
-    IEnumerator Start()
+    void Start()
     {
         Instantiate(cardViewerPrefab);
 
         playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
-
-        yield return new WaitForSeconds(3);
 
         if (CardGameManager.Instance.Discovery.HasReceivedBroadcast) {
             Lobby.cancelButton.onClick.RemoveAllListeners();

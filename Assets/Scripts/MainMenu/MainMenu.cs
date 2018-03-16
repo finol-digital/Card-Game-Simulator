@@ -29,6 +29,11 @@ public class MainMenu : MonoBehaviour
             exitButton.gameObject.SetActive(false);
 #endif
         versionText.text = "Ver. " + Application.version;
+
+        if (CardGameManager.Instance.Discovery.running)
+            CardGameManager.Instance.Discovery.StopBroadcast();
+        CardGameManager.Instance.Discovery.HasReceivedBroadcast = false;
+        CardGameManager.Instance.Discovery.SearchForHost();
     }
 
     void Update()
@@ -76,6 +81,8 @@ public class MainMenu : MonoBehaviour
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
+        if (CardGameManager.Instance.Discovery.running)
+            CardGameManager.Instance.Discovery.StopBroadcast();
         CardGameManager.Instance.Discovery.HasReceivedBroadcast = false;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
@@ -84,7 +91,6 @@ public class MainMenu : MonoBehaviour
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
-        CardGameManager.Instance.Discovery.SearchForHost();
         SceneManager.LoadScene(PlayModeSceneIndex);
     }
 
@@ -92,7 +98,6 @@ public class MainMenu : MonoBehaviour
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
-        CardGameManager.Instance.Discovery.SearchForHost();
         CardGameManager.Instance.Discovery.HasReceivedBroadcast = true;
         SceneManager.LoadScene(PlayModeSceneIndex);
     }

@@ -68,8 +68,8 @@ MonoBehaviour:
   m_BroadcastKey: 2222
   m_BroadcastVersion: 1
   m_BroadcastSubVersion: 1
-  m_BroadcastInterval: 1000
-  m_UseNetworkManager: 1
+  m_BroadcastInterval: 500
+  m_UseNetworkManager: 0
   m_BroadcastData: CGSNet
   m_ShowGUI: 0
   m_OffsetX: 0
