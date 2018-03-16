@@ -36,6 +36,9 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Filter**: *f* - Brings up the search filter menu.
 - **FocusName**: *\`* - Focuses keyboard to the search name input field.
 
+## Options Menu
+- **Cancel**: *Esc* - Back to main menu.
+
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
 - **No**: *n* - No.
@@ -90,9 +93,3 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 ## Dice Menu
 - **Cancel**: *Esc* - Cancel.
 - **Submit**: *Enter* - Create dice.
-
-## Sort Menu
-- **Cancel**: *Esc* - Cancel.
-
-## Options Menu
-- **Cancel**: *Esc* - Cancel.
