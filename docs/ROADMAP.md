@@ -1,10 +1,6 @@
 # Roadmap
 
 ## General Features
-- Share discard pile between all players who share a deck
-- Fix: Error message appears when connecting as a client in *Play Mode*
-- Fix: Error message appears when dragging a card out and releasing it back in *Play Mode*
-- Fix: Only host can control score
 - Show indication of when a deck is shuffled in *Play Mode*
 - Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Make shifting between columns in the *Deck Editor* also control scrolling as appropriate
@@ -18,6 +14,9 @@
   - Link to send questions/feedback to the developer
 
 ## Bugs
+- Fix: Error message appears when connecting as a client in *Play Mode*
+- Fix: Error message appears when dragging a card out and releasing it back in *Play Mode*
+- Fix: Only host can control score
 - Fix: Vertical Input is sometimes ignored on the *Main Menu*
 - Fix: Enter button is ignored on Android keyboard
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
@@ -55,6 +54,7 @@
 - Support decimal card property data type
 - Support object card property data type
 - New Mahjong tile set, with default property to type instead of suit
+- Share discard pile between all players who share a deck in *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
