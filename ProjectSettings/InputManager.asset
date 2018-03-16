@@ -73,8 +73,8 @@ InputManager:
     m_Name: Column
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: z
-    positiveButton: x
+    negativeButton: home
+    positiveButton: end
     altNegativeButton: 
     altPositiveButton: 
     gravity: 3

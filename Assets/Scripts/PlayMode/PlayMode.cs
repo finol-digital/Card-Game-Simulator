@@ -36,6 +36,7 @@ public class PlayMode : MonoBehaviour
         Instantiate(cardViewerPrefab);
 
         playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
+        playAreaContent.localPosition = -(playAreaContent.sizeDelta / 4.0f);
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
 
         if (CardGameManager.Instance.Discovery.HasReceivedBroadcast) {

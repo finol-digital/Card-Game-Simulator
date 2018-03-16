@@ -28,7 +28,7 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Vertical**: *down*, *up* - Scroll through the deck editor.
 - **Horizontal**: *left*, *right* - Scroll through search results.
 - **Page**: *PgUp*, *PgDn* - Page through search results.
-- **Column**: *z*, *x* - Shift through stacks in the deck editor.
+- **Column**: *home*, *end* - Shift through stacks in the deck editor.
 - **Sort**: *q* - Brings up the sort menu.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the deck load menu.
@@ -48,8 +48,8 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through games.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
-- **New**: *e* - Brings up OR clears the download url input field.
-- **Load**: *r* - Brings up OR clears the download url input field.
+- **New**: *e* - Brings up or clears the download url input field.
+- **Load**: *r* - Brings up or clears the download url input field.
 - **Save**: *t* - Pastes clipboard into the url input field.
 - **FocusName**: *\`* - Focuses keyboard to the url input field.
 - **Delete**: *Delete* - Delete selected card game.

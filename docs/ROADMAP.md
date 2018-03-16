@@ -7,9 +7,6 @@
 - Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
 - Add *Options Menu*:
   - Include a link to a card game's rules from within CGS
-  - Display keyboard shortcuts
-  - Allow pre-fetching of card images
-  - Set card image cache limit
   - Credits
   - Link to send questions/feedback to the developer
 
@@ -50,6 +47,7 @@
 
 ## Icebox (CGS v3+)
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
+- Support Android Search button
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
@@ -60,6 +58,9 @@
 - Allow automatic deletion of empty decks in *Play Mode*
 - Clear the background once a card enters the play area in *Play Mode*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
+- Display keyboard shortcuts in *Options Menu*
+- Allow pre-fetching of card images in *Options Menu*
+- Set card image cache limit in *Options Menu*
 - Support different formats/game-types for custom card games
 - Support sideboards
 - Support multiple languages (Spanish,Chinese)
