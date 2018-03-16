@@ -1,16 +1,13 @@
 # Roadmap
 
-## General Features
+## Minimum Viable Product (CGS v1)
 - Show indication of when a deck is shuffled in *Play Mode*
-- Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 - Make shifting between columns in the *Deck Editor* also control scrolling as appropriate
 - Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
 - Add *Options Menu*:
   - Include a link to a card game's rules from within CGS
   - Credits
   - Link to send questions/feedback to the developer
-
-## Bugs
 - Fix: Error message appears when connecting as a client in *Play Mode*
 - Fix: Error message appears when dragging a card out and releasing it back in *Play Mode*
 - Fix: Only host can control score
@@ -22,6 +19,7 @@
 - Fix: Value, Image, Position, and Rotation are not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
+- Fix: Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 
 ## Maple (CGS v2)
 - Resize cards based off \<cardSize\>
