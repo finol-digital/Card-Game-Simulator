@@ -299,6 +299,11 @@
 			"default": { "x": 23.5, "y": 20.25 },
 			"$ref": "#/definitions/vector2"
 		},
+		"rulesUrl": {
+			"description": "rulesUrl should link to this game's online rulebook. This link is accessed in CGS by Main Menu -> Options -> View Online Rules.",
+			"type": "string",
+			"format": "uri"
+		},
 		"setCardsIdentifier": {
 			"description": "When defining a set in AllSets.json, you can also define cards to include in that set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
 			"default": "cards",

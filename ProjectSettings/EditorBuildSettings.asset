@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DeckEditor.unity
     guid: 4a3dcbf813c22ce469339d872532b53e
+  - enabled: 1
+    path: Assets/Scenes/OptionsMenu.unity
+    guid: d0ad91ae2c8122a42a71f2d450c4778c

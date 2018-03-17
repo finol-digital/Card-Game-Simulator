@@ -140,6 +140,9 @@ public class CardGame
     public Vector2 PlayAreaSize { get; set; } = new Vector2(23.5f, 20.25f);
 
     [JsonProperty]
+    public string RulesUrl { get; set; } = "";
+
+    [JsonProperty]
     public string SetCardsIdentifier { get; set; } = "cards";
 
     [JsonProperty]

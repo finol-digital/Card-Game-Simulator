@@ -1,10 +1,6 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Add *Options Menu*:
-  - Include a link to a card game's rules from within CGS
-  - Credits
-  - Link to send questions/feedback to the developer
 - Fix: Error message appears when connecting as a client in *Play Mode*
 - Fix: Error message appears when dragging a card out and releasing it back in *Play Mode*
 - Fix: Only host can control score
