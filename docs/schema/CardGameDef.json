@@ -99,7 +99,7 @@
 			"type": "string"
 		},
 		"cardNameIsAtTop": {
-			"description": "cardNameIsAtTop is used to determine if a label needs to be put at the top of a card when other cards are stacked on top it.",
+			"description": "cardNameIsAtTop indicates whether the card's name appears at the top of its image. If false, CGS puts a label at the top of the card when other cards are stacked on top it.",
 			"default": "true",
 			"type": "boolean"
 		},
