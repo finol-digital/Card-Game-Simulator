@@ -40,5 +40,6 @@
 			"red": "Red"
 		}}
 	],
-	"name": "Standard Playing Cards"
+	"name": "Standard Playing Cards",
+	"rulesUrl": "https://www.bicyclecards.com/rules/"
 }

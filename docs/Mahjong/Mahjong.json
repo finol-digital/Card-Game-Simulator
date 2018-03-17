@@ -17,5 +17,6 @@
 	],
 	"deckMaxCount": 144,
 	"gameStartHandCount": 13,
-	"name": "Mahjong"
+	"name": "Mahjong",
+	"rulesUrl": "http://mahjong.wikidot.com/basic-rules"
 }

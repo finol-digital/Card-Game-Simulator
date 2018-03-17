@@ -18,7 +18,11 @@ public class OptionsMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+        if (Input.GetButtonDown(Inputs.Sort))
+            ViewRules();
+        else if (Input.GetButtonDown(Inputs.New))
+            ContactDeveloper();
+        else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             BackToMainMenu();
     }
 

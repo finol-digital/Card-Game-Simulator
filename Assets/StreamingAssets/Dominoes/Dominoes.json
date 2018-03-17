@@ -37,5 +37,6 @@
 		}}
 	],
 	"gameStartHandCount": 7,
-	"name": "Dominoes"
+	"name": "Dominoes",
+	"rulesUrl": "http://www.dominorules.com/introduction"
 }
