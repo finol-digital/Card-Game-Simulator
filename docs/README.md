@@ -6,7 +6,7 @@ You can get CGS on your preferred device:
 - Windowsx64 via [ZIP File](https://drive.google.com/uc?id=1dPRqs9mtLmR5_0K4NbrfzinJJW7TQH51&export=download)
 
 ## Get Custom Games
-CGS comes pre-packaged with 3 default card games, but users can also create and share their own custom card games!
+In addition to CGS's pre-packaged games, users can create and share their own custom card games!
 
 You can download additional games by pressing the top button of the Main Menu:
 
