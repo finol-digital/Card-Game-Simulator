@@ -11,6 +11,8 @@
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
 - Fix: Value, Image, Position, and Rotation are not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
 - Fix: Show indication of when a deck is shuffled in *Play Mode*
+- Fix: CGS appears unresponsive when loading a deck in *Play Mode*
+- Fix: Hand container does not reorient after removing a card from hand in *Play Mode*
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
@@ -47,6 +49,7 @@
 - Support object card property data type
 - New Mahjong tile set, with default property to type instead of suit
 - Share discard pile between all players who share a deck in *Play Mode*
+- Resize zones based off \<cardSize\> in *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
 - Synchronize points across all connected players in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
