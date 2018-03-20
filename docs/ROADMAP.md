@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
+- Fix: Default games are not copied on first launch.
 - Fix: Error message appears when connecting as a client in *Play Mode*
 - Fix: Error message appears when dragging a card out and releasing it back in *Play Mode*
 - Fix: Only host can control score

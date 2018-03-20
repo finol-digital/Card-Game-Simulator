@@ -49,24 +49,34 @@ public class CardGameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (!Directory.Exists(GamesFilePathBase) || Directory.GetDirectories(GamesFilePathBase).Length < 1) {
-#if !UNITY_ANDROID || UNITY_EDITOR
-            UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
-#else
-            UnityExtensionMethods.ExtractAndroidStreamingAssets(GamesFilePathBase);
-#endif
-        }
+        FindCardGames();
+        if (AllCardGames.Count < 1)
+            CreateDefaultCardGames();
 
-        foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase)) {
-            string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
-            AllCardGames [gameName] = new CardGame(gameName, string.Empty);
-        }
         CardGame currentGame;
         Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName), out currentGame) ? currentGame : new CardGame();
 
         Application.logMessageReceived += HandleLog;
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    private void CreateDefaultCardGames()
+    {
+#if !UNITY_ANDROID || UNITY_EDITOR
+        UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
+#else
+        UnityExtensionMethods.ExtractAndroidStreamingAssets(GamesFilePathBase);
+#endif
+        FindCardGames();
+    }
+
+    private void FindCardGames()
+    {
+        foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase)) {
+            string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
+            AllCardGames[gameName] = new CardGame(gameName, string.Empty);
+        }
     }
 
     void HandleLog(string logString, string stackTrace, LogType type)
