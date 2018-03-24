@@ -73,6 +73,9 @@ public class CardGameManager : MonoBehaviour
 
     private void FindCardGames()
     {
+        if (!Directory.Exists(GamesFilePathBase))
+            return;
+
         foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase)) {
             string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
             AllCardGames[gameName] = new CardGame(gameName, string.Empty);
