@@ -66,6 +66,7 @@ public class CardGameManager : MonoBehaviour
 #if !UNITY_ANDROID || UNITY_EDITOR
         UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
 #else
+        Messenger.Show("Creating 1");
         UnityExtensionMethods.ExtractAndroidStreamingAssets(GamesFilePathBase);
 #endif
         FindCardGames();

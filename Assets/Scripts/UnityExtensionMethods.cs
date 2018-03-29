@@ -10,7 +10,7 @@ using UnityEngine;
 public static class ThreadSafeRandom
 {
     [ThreadStatic] private static System.Random _local;
-    public static System.Random ThisThreadsRandom => _local ?? 
+    public static System.Random ThisThreadsRandom => _local ??
         (_local = new System.Random(unchecked(Environment.TickCount * 31 + System.Threading.Thread.CurrentThread.ManagedThreadId)));
 }
 
@@ -104,32 +104,31 @@ static public class UnityExtensionMethods
 
         ZipFile zf = null;
         try {
-            using (FileStream fs = File.OpenRead(Application.dataPath)) {
-                zf = new ZipFile(fs);
-                foreach (ZipEntry zipEntry in zf) {
-                    if (!zipEntry.IsFile)
-                        continue;
+            zf = new ZipFile(File.OpenRead(Application.dataPath));
+            foreach (ZipEntry zipEntry in zf) {
+                if (!zipEntry.IsFile)
+                    continue;
 
-                    string name = zipEntry.Name;
-                    if (!name.StartsWith(AndroidStreamingAssetsDirectory) || name.EndsWith(MetaExtension) ||
-                        name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) continue;
+                string name = zipEntry.Name;
+                if (!name.StartsWith(AndroidStreamingAssetsDirectory) || name.EndsWith(MetaExtension) ||
+                    name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) continue;
 
-                    name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
-                    string relativeDir = Path.GetDirectoryName(name);
-                    if (!createdDirectories.Contains(relativeDir)) {
-                        Directory.CreateDirectory(targetPath + relativeDir);
-                        createdDirectories.Add(relativeDir);
-                    }
+                name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
+                string relativeDir = Path.GetDirectoryName(name);
+                if (!createdDirectories.Contains(relativeDir)) {
+                    Directory.CreateDirectory(targetPath + relativeDir);
+                    createdDirectories.Add(relativeDir);
+                }
 
-                    byte[] buffer = new byte[4096];
-                    using (Stream zipStream = zf.GetInputStream(zipEntry))
-                    using (FileStream streamWriter = File.Create(targetPath + name)) {
+                byte[] buffer = new byte[4096];
+                using (Stream zipStream = zf.GetInputStream(zipEntry)) {
+                    using (FileStream streamWriter = File.Create(targetPath + name))
                         StreamUtils.Copy(zipStream, streamWriter, buffer);
-                    }
                 }
             }
-        }
-        finally {
+        } catch (Exception e) {
+            Debug.LogError(e.Message);
+        } finally {
             if (zf != null) {
                 zf.IsStreamOwner = true;
                 zf.Close();
