@@ -16,7 +16,6 @@
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
-- Fix: Make shifting between columns in the *Deck Editor* also control scrolling as appropriate
 - Fix: Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
 
 ## Maple (CGS v2)

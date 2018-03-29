@@ -148,10 +148,12 @@ public class CardSelector : MonoBehaviour
             if (editorCards[i] == CardInfoViewer.Instance.SelectedCardModel)
                 startParent = editorCards[i].transform.parent;
             if (startParent != editorCards[i].transform.parent) {
+                editor.scrollRect.horizontalNormalizedPosition = editorCards[i].transform.parent.GetSiblingIndex() / (editorCards[i].transform.parent.parent.childCount - 1f);
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
                 return;
             }
         }
+        editor.scrollRect.horizontalNormalizedPosition = 1;
         EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
     }
 
@@ -173,10 +175,12 @@ public class CardSelector : MonoBehaviour
             if (editorCards[i] == CardInfoViewer.Instance.SelectedCardModel)
                 startParent = editorCards[i].transform.parent;
             if (startParent != editorCards[i].transform.parent) {
+                editor.scrollRect.horizontalNormalizedPosition = editorCards[i].transform.parent.GetSiblingIndex() / (editorCards[i].transform.parent.parent.childCount - 1f);
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
                 return;
             }
         }
+        editor.scrollRect.horizontalNormalizedPosition = 0;
         EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
     }
 

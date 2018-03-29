@@ -59,9 +59,9 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public GameObject cardStackPrefab;
     public GameObject deckLoadMenuPrefab;
     public GameObject deckSaveMenuPrefab;
-    public RectTransform layoutArea;
     public RectTransform layoutContent;
-    public Scrollbar scrollBar;
+    public CardDropZone dropZone;
+    public ScrollRect scrollRect;
     public Text nameText;
     public Text countText;
     public SearchResults searchResults;
@@ -79,7 +79,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     void Start()
     {
-        layoutArea.gameObject.GetOrAddComponent<CardDropZone>().dropHandler = this;
+        dropZone.dropHandler = this;
     }
 
     void Update()
@@ -126,7 +126,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         for (int i = 0; i < CardStackCount; i++) {
             CardStack newCardStack = Instantiate(cardStackPrefab, layoutContent).GetOrAddComponent<CardStack>();
             newCardStack.type = CardStackType.Vertical;
-            newCardStack.scrollRectContainer = layoutArea.gameObject.GetOrAddComponent<ScrollRect>();
+            newCardStack.scrollRectContainer = scrollRect;
             newCardStack.DoesImmediatelyRelease = true;
             newCardStack.OnAddCardActions.Add(OnAddCardModel);
             newCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
@@ -167,9 +167,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
                     maxCopiesInStack++;
             }
         }
-
-        float newSpot = cardStackPrefab.GetComponent<RectTransform>().rect.width * (CurrentCardStackIndex + ((CurrentCardStackIndex < CardStacks.Count / 2f) ? 0f : 1f)) / layoutContent.sizeDelta.x;
-        scrollBar.value = Mathf.Clamp01(newSpot);
+        scrollRect.horizontalNormalizedPosition = CurrentCardStackIndex / (CardStacks.Count - 1f);
 
         OnAddCardModel(CardStacks [CurrentCardStackIndex], newCardModel);
     }
@@ -226,7 +224,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         foreach (CardStack stack in CardStacks)
             stack.transform.DestroyAllChildren();
         CurrentCardStackIndex = 0;
-        scrollBar.value = 0;
+        scrollRect.horizontalNormalizedPosition = 0;
 
         CardInfoViewer.Instance.IsVisible = false;
         SavedDeck = null;
