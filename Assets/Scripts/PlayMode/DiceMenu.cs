@@ -61,7 +61,8 @@ public class DiceMenu : MonoBehaviour
 
     public void CreateAndHide()
     {
-        Die die = Instantiate(diePrefab, Target).GetOrAddComponent<Die>();
+        Die die = Instantiate(diePrefab, Target.parent).GetOrAddComponent<Die>();
+        die.transform.SetParent(Target);
         die.Min = Min;
         die.Max = Max;
         Hide();
