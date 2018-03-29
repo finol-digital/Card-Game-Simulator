@@ -23,7 +23,7 @@ public class GameSelectionMenu : SelectionPanel
             return;
 
         if (downloadPanel.gameObject.activeSelf) {
-            if (Input.GetButtonDown(Inputs.Submit) && downloadButton.interactable)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && downloadButton.interactable)
                 StartDownload();
             else if ((Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load)) && urlInput.interactable)
                 Clear();
@@ -34,7 +34,7 @@ public class GameSelectionMenu : SelectionPanel
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 HideDownloadPanel();
         } else {
-            if (Input.GetButtonDown(Inputs.Submit) && EventSystem.current.currentSelectedGameObject == null)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
                 Hide();
             else if (Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load))
                 ShowDownloadPanel();
@@ -42,6 +42,8 @@ public class GameSelectionMenu : SelectionPanel
                 Delete();
             else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
+            else if (Input.GetButtonDown(Inputs.Page))
+                ScrollPage(Input.GetAxis(Inputs.Page) < 0);
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
         }

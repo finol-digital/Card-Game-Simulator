@@ -41,7 +41,7 @@ public class DeckLoadMenu : SelectionPanel
             return;
 
         if (newDeckPanel.gameObject.activeSelf) {
-            if (Input.GetButtonDown(Inputs.Submit) && EventSystem.current.currentSelectedGameObject == null)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
                 DoSaveDontOverwrite();
             else if (Input.GetButtonDown(Inputs.New) && EventSystem.current.currentSelectedGameObject == null)
                 textInputField.text = string.Empty;
@@ -56,7 +56,7 @@ public class DeckLoadMenu : SelectionPanel
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 HideNewDeckPanel();
         } else {
-            if (Input.GetButtonDown(Inputs.Submit) && loadFromFileButton.interactable)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && loadFromFileButton.interactable)
                 LoadFromFileAndHide();
             else if (Input.GetButtonDown(Inputs.New))
                 ShowNewDeckPanel();
@@ -64,6 +64,8 @@ public class DeckLoadMenu : SelectionPanel
                 PromptForDeleteFile();
             else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
+            else if (Input.GetButtonDown(Inputs.Page))
+                ScrollPage(Input.GetAxis(Inputs.Page) < 0);
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
         }

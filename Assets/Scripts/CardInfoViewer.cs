@@ -49,7 +49,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         if (!IsVisible || SelectedCardModel == null || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(Inputs.Submit) && SelectedCardModel.DoubleClickAction != null)
+        if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)
             SelectedCardModel.DoubleClickAction(SelectedCardModel);
         else if (Input.GetButtonDown(Inputs.CardViewer)) {
             if (Input.GetAxis(Inputs.CardViewer) > 0)

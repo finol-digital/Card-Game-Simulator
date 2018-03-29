@@ -4,8 +4,7 @@
 - Fix: Error message appears when connecting as a client in *Play Mode*
 - Fix: Error message appears when dragging a card out and releasing it back in *Play Mode*
 - Fix: Only host can control score
-- Fix: Vertical Input is sometimes ignored on the *Main Menu*
-- Fix: Enter button is ignored on Android keyboard
+- Fix: Vertical Input does not navigate correctly in *Main Menu*, *Game Selection Menu*, *LAN Lobby*, *Deck Load Menu*
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
 - Fix: Creating dice in *Play Mode* places dice in the center of the play area instead of the center of the player's view
@@ -16,7 +15,6 @@
 - Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
-- Fix: Allow PgUp and PgDn to control scrolling, as per [Keyboard Shortcuts](KEYBOARD.md)
 
 ## Maple (CGS v2)
 - Resize cards based off \<cardSize\>

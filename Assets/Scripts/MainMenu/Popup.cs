@@ -25,9 +25,9 @@ public class Popup : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetButtonDown(Inputs.Submit) && yesButton.gameObject.activeInHierarchy)
+        if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && yesButton.gameObject.activeInHierarchy)
             yesButton.onClick?.Invoke();
-        else if (!IsNewMessage && Input.GetButtonDown(Inputs.Submit) && !yesButton.gameObject.activeInHierarchy)
+        else if (!IsNewMessage && (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && !yesButton.gameObject.activeInHierarchy)
             Close();
         else if (Input.GetButtonDown(Inputs.No) && noButton.gameObject.activeInHierarchy)
             noButton.onClick?.Invoke();

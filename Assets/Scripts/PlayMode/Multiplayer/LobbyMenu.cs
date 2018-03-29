@@ -19,12 +19,14 @@ public class LobbyMenu : SelectionPanel
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
-        if (Input.GetButtonDown(Inputs.Submit) && joinButton.interactable)
+        if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && joinButton.interactable)
             Join();
         else if (Input.GetButtonDown(Inputs.New))
             Host();
         else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
             EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
+        else if (Input.GetButtonDown(Inputs.Page))
+            ScrollPage(Input.GetAxis(Inputs.Page) < 0);
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             Hide();
     }

@@ -50,4 +50,9 @@ public class SelectionPanel : MonoBehaviour
         yield return null;
         scrollBar.value = Mathf.Clamp01(scrollBarValue);
     }
+
+    public void ScrollPage(bool scrollUp)
+    {
+        scrollBar.value = Mathf.Clamp01(scrollBar.value + (scrollUp ? 0.1f : -0.1f));
+    }
 }

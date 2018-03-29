@@ -12,6 +12,7 @@ public class CardSearchMenu : MonoBehaviour
     public const string ClearFiltersPrompt = "Clear Filters?";
     public float PropertyPanelHeight => ((RectTransform)stringPropertyPanel.transform).rect.height;
 
+    public Scrollbar scrollbar;
     public InputField nameInputField;
     public InputField idInputField;
     public InputField setCodeInputField;
@@ -43,10 +44,11 @@ public class CardSearchMenu : MonoBehaviour
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
-        if (Input.GetButtonDown(Inputs.Submit)) {
+        if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) {
             Search();
             Hide();
-        }
+        } else if (Input.GetButtonDown(Inputs.Page))
+            scrollbar.value = Mathf.Clamp01(scrollbar.value + (Input.GetAxis(Inputs.Page) < 0 ? 0.1f : -0.1f));
         else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetButtonDown(Inputs.FocusText))
             FocusInputField();
         else if (Input.GetButtonDown(Inputs.Vertical) || Input.GetButtonDown(Inputs.Horizontal))

@@ -25,7 +25,7 @@ public class DeckSaveMenu : MonoBehaviour
         if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
-        if (Input.GetButtonDown(Inputs.Submit) && EventSystem.current.currentSelectedGameObject == null)
+        if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
             AttemptSaveAndHide();
         else if (Input.GetButtonDown(Inputs.FocusName))
             nameInputField.ActivateInputField();
