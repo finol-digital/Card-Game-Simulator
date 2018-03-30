@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public delegate void OnSelectDelegate (bool isOn, string selection);
@@ -62,6 +63,35 @@ public class SelectionPanel : MonoBehaviour
 
     public void ScrollToggles(bool scrollUp)
     {
+        if (EventSystem.current.alreadySelecting || Toggles.Count < 1)
+            return;
 
+        if (!Toggles.Contains(EventSystem.current.currentSelectedGameObject)) {
+            EventSystem.current.SetSelectedGameObject(Toggles[0]);
+            return;
+        }
+
+        if (scrollUp) {
+            for (int i = Toggles.Count -1; i >= 0; i--) {
+                if (!EventSystem.current.currentSelectedGameObject.Equals(Toggles[i]))
+                    continue;
+                i--;
+                if (i < 0)
+                    i = Toggles.Count - 1;
+                EventSystem.current.SetSelectedGameObject(Toggles[i]);
+                return;
+            }
+
+        } else {
+            for (int i = 0; i < Toggles.Count; i++) {
+                if (!EventSystem.current.currentSelectedGameObject.Equals(Toggles[i]))
+                    continue;
+                i++;
+                if (i == Toggles.Count)
+                    i = 0;
+                EventSystem.current.SetSelectedGameObject(Toggles[i]);
+                return;
+            }
+        }
     }
 }

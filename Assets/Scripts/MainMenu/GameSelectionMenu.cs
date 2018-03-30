@@ -40,8 +40,8 @@ public class GameSelectionMenu : SelectionPanel
                 ShowDownloadPanel();
             else if (Input.GetButtonDown(Inputs.Delete))
                 Delete();
-            else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
-                EventSystem.current.SetSelectedGameObject(selectionContent.GetChild(0)?.gameObject);
+            else if (Input.GetButtonDown(Inputs.Vertical))
+                ScrollToggles(Input.GetAxis(Inputs.Vertical) > 0);
             else if (Input.GetButtonDown(Inputs.Page))
                 ScrollPage(Input.GetAxis(Inputs.Page) < 0);
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
