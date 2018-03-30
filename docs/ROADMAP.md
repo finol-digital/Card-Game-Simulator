@@ -2,7 +2,6 @@
 
 ## Minimum Viable Product (CGS v1)
 - Fix: Error message appears when connecting as a client in *Play Mode*
-- Fix: Error message appears when dragging a card out and releasing it back in *Play Mode*
 - Fix: Only host can control score
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
