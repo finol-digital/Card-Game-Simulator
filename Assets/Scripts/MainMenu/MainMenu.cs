@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,7 +13,7 @@ public class MainMenu : MonoBehaviour
     public const string ExitPrompt = "Exit CGS?";
 
     public Text currentGameText;
-    public Button multiplayerButton;
+    public List<GameObject> buttons;
     public Button exitButton;
     public Text versionText;
 
@@ -43,8 +44,8 @@ public class MainMenu : MonoBehaviour
 
         if (currentGameText == null)
             GoToMainMenu();
-        else if (Input.GetButtonDown(Inputs.Vertical) && EventSystem.current.currentSelectedGameObject == null)
-            EventSystem.current.SetSelectedGameObject(multiplayerButton?.gameObject);
+        else if (Input.GetButtonDown(Inputs.Vertical) && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
+            EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
         else if (Input.GetButtonDown(Inputs.Sort))
             SelectCardGame();
         else if (Input.GetButtonDown(Inputs.New))

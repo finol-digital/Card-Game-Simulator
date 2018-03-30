@@ -11,6 +11,8 @@ public class SelectionPanel : MonoBehaviour
     public RectTransform selectionTemplate;
     public Scrollbar scrollBar;
 
+    protected List<GameObject> Toggles { get; } = new List<GameObject>();
+
     public void Rebuild(List<string> options, OnSelectDelegate valueChange, string currentValue = "")
     {
         if (options == null)
@@ -20,17 +22,19 @@ public class SelectionPanel : MonoBehaviour
         if (currentValue == null)
             currentValue = string.Empty;
 
+        Toggles.Clear();
         selectionContent.DestroyAllChildren();
         selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
 
         foreach (string option in options) {
-            GameObject selection = Instantiate(selectionTemplate.gameObject, selectionContent);
-            selection.SetActive(true);
-            selection.transform.localScale = Vector3.one;
-            selection.GetComponentInChildren<Text>().text = option;
-            selection.GetComponent<Toggle>().interactable = true;
-            selection.GetComponent<Toggle>().isOn = option.Equals(currentValue);
-            selection.GetComponent<Toggle>().onValueChanged.AddListener(isOn => valueChange(isOn, option));
+            Toggle toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
+            toggle.gameObject.SetActive(true);
+            toggle.transform.localScale = Vector3.one;
+            toggle.GetComponentInChildren<Text>().text = option;
+            toggle.interactable = true;
+            toggle.isOn = option.Equals(currentValue);
+            toggle.onValueChanged.AddListener(isOn => valueChange(isOn, option));
+            Toggles.Add(toggle.gameObject);
         }
 
         selectionTemplate.gameObject.SetActive(options.Count < 1);
@@ -54,5 +58,10 @@ public class SelectionPanel : MonoBehaviour
     public void ScrollPage(bool scrollUp)
     {
         scrollBar.value = Mathf.Clamp01(scrollBar.value + (scrollUp ? 0.1f : -0.1f));
+    }
+
+    public void ScrollToggles(bool scrollUp)
+    {
+
     }
 }
