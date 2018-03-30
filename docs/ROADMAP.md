@@ -55,5 +55,8 @@
 - Support different formats/game-types for custom card games
 - Support sideboards
 - Support multiple languages (Spanish,Chinese)
+- Support different resolutions and languages for card images
+- Google Play Instant
+- Console versions (Switch, ps4, xbone)
 - Support game-specific rules enforcement
 

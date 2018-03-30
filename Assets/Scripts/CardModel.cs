@@ -116,8 +116,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         CurrentPointerEventData = eventData;
 
-        PointerPositions [eventData.pointerId] = eventData.position;
-        PointerDragOffsets [eventData.pointerId] = ((Vector2)transform.position) - eventData.position;
+        PointerPositions[eventData.pointerId] = eventData.position;
+        PointerDragOffsets[eventData.pointerId] = ((Vector2)transform.position) - eventData.position;
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -161,8 +161,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (DoesCloneOnDrag) {
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
-            DraggedClones [eventData.pointerId] = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
-            cardModel = DraggedClones [eventData.pointerId];
+            DraggedClones[eventData.pointerId] = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
+            cardModel = DraggedClones[eventData.pointerId];
             cardModel.HideHighlight();
             cardModel.Value = Value;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
@@ -171,7 +171,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         cardModel.CurrentPointerEventData = eventData;
         cardModel.CurrentDragPhase = DragPhase.Begin;
-        cardModel.PointerPositions [eventData.pointerId] = eventData.position;
+        cardModel.PointerPositions[eventData.pointerId] = eventData.position;
 
         cardModel.UpdatePosition();
         if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
@@ -189,7 +189,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         cardModel.CurrentPointerEventData = eventData;
         cardModel.CurrentDragPhase = DragPhase.Drag;
-        cardModel.PointerPositions [eventData.pointerId] = eventData.position;
+        cardModel.PointerPositions[eventData.pointerId] = eventData.position;
 
         cardModel.UpdatePosition();
         if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
@@ -287,13 +287,14 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             transform.SetAsLastSibling();
 
         Vector3[] stackCorners = new Vector3[4];
-        ((RectTransform) cardStack.transform).GetWorldCorners(stackCorners);
-        bool isOutYBounds = targetPosition.y < stackCorners [0].y || targetPosition.y > stackCorners [1].y;
-        bool isOutXBounds = targetPosition.x < stackCorners [0].x || targetPosition.y > stackCorners [2].x;
+        ((RectTransform)cardStack.transform).GetWorldCorners(stackCorners);
+        bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
+        bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
         if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
             || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
             || (cardStack.type == CardStackType.Vertical && isOutXBounds)
-            || ((cardStack.type == CardStackType.Horizontal || cardStack.type == CardStackType.Area) && isOutYBounds))
+            || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
+            || (cardStack.type == CardStackType.Area && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
             ParentToCanvas(targetPosition);
     }
 
@@ -326,16 +327,16 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     [Command]
     void CmdUnspawnCard()
     {
-        RpcUnspawn();
-        NetworkServer.UnSpawn(gameObject);
-        CGSNetManager.Instance.UnSpawnCard(gameObject);
+        RpcUnspawnCard();
     }
 
     [ClientRpc]
-    public void RpcUnspawn()
+    public void RpcUnspawnCard()
     {
         if (!isServer && !hasAuthority)
             Discard();
+        else if (isServer)
+            NetworkServer.UnSpawn(gameObject);
     }
 
     public IEnumerator MoveToPlaceHolder()
