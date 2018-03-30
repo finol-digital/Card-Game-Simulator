@@ -10,7 +10,6 @@
 - Fix: Show indication of when a deck is shuffled in *Play Mode*
 - Fix: CGS appears unresponsive when loading a deck in *Play Mode*
 - Fix: Hand container does not reorient after removing a card from hand in *Play Mode*
-- Fix: *Card Search/Filter Menu* toggles selected enum value when you press enter
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Track each card's specific set/id as necessary when saving a deck in the *Deck Editor*
 

@@ -322,6 +322,9 @@ public class CardSearchMenu : MonoBehaviour
 
     public void SetEnumPropertyFilter(string propertyName, int filterValue, bool isOn)
     {
+        if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
+            return;
+
         bool isStored = EnumPropertyFilters.ContainsKey(propertyName);
         int storedFilter = 0;
         if (isStored)
@@ -437,7 +440,10 @@ public class CardSearchMenu : MonoBehaviour
         }
     }
     public InputField ActiveInputField {
-        get { return EventSystem.current.currentSelectedGameObject?.GetComponent<InputField>(); }
+        get {
+            return EventSystem.current.currentSelectedGameObject != null
+                ? EventSystem.current.currentSelectedGameObject?.GetComponent<InputField>() : null;
+        }
         set {
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(value.gameObject);
@@ -445,7 +451,10 @@ public class CardSearchMenu : MonoBehaviour
     }
 
     public Toggle ActiveToggle {
-        get { return EventSystem.current.currentSelectedGameObject?.GetComponent<Toggle>(); }
+        get {
+            return EventSystem.current.currentSelectedGameObject != null
+                ? EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>() : null;
+        }
         set {
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(value.gameObject);
