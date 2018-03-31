@@ -27,7 +27,7 @@ public class CardStack : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void OnPointerEnter(PointerEventData eventData)
     {
         CardModel cardModel = CardModel.GetPointerDrag(eventData);
-        if (cardModel != null)
+        if (cardModel != null && (type != CardStackType.Area || cardModel.transform.parent != transform))
             cardModel.PlaceHolderCardStack = this;
     }
 

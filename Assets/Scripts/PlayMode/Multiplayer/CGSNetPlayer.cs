@@ -35,6 +35,7 @@ public class CGSNetPlayer : NetworkBehaviour
     [Command]
     public void CmdSelectCardGame()
     {
+        CGSNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
         TargetSelectCardGame(connectionToClient, CardGameManager.Current.Name, CardGameManager.Current.AutoUpdateUrl);
     }
 
@@ -42,7 +43,6 @@ public class CGSNetPlayer : NetworkBehaviour
     public void TargetSelectCardGame(NetworkConnection target, string gameName, string gameUrl)
     {
         CardGameManager.Instance.SelectCardGame(gameName, gameUrl);
-        CGSNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
         StartCoroutine(WaitToRequestDeck());
     }
 
@@ -59,7 +59,8 @@ public class CGSNetPlayer : NetworkBehaviour
 
     public void OnChangeScore(int scoreIndex)
     {
-        CGSNetManager.Instance.pointsDisplay.UpdateText();
+        if (CGSNetManager.Instance.Data != null)
+            CGSNetManager.Instance.pointsDisplay.UpdateText();
     }
 
     public void RequestDeckUpdate(List<Card> deckCards)
@@ -113,7 +114,18 @@ public class CGSNetPlayer : NetworkBehaviour
     {
         this.deckIndex = deckIndex;
         CGSNetManager.Instance.playController.LoadDeck(CurrentDeck, true);
-        //CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => {}, RequestSharedScore);
+        CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => {}, RequestSharedScore);
+    }
+
+    public void RequestSharedScore()
+    {
+        CmdShareScore();
+    }
+
+    [Command]
+    public void CmdShareScore()
+    {
+        scoreIndex = deckIndex;
     }
 
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)

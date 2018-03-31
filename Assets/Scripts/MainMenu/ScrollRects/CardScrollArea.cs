@@ -26,7 +26,7 @@ public class CardScrollArea : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             return;
 
         CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel != null && cardModel.ParentCardStack == null)
+        if (cardModel != null && (cardModel.ParentCardStack == null || cardModel.ParentCardStack.type == CardStackType.Area))
             StartCoroutine(MoveScrollbar());
     }
 

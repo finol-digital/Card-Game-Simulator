@@ -1,11 +1,10 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Fix: Error message appears when connecting as a client in *Play Mode*
-- Fix: Only host can control score
+- Fix: Value, Image, Position, and Rotation are not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
+- Fix: Cards in *Play Mode* are occasionally unnecessarily added to discard
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Red highlight that warns when a card will be destroyed does not appear consistently
-- Fix: Value, Image, Position, and Rotation are not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
 - Fix: Show indication of when a deck is shuffled in *Play Mode*
 - Fix: CGS appears unresponsive when loading a deck in *Play Mode*
 - Fix: Hand container does not reorient after removing a card from hand in *Play Mode*
