@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     public const int DeckEditorSceneIndex = 3;
     public const int OptionsMenuSceneIndex = 4;
     public const string ExitPrompt = "Exit CGS?";
+    public const string VersionMessage = "Ver. ";
 
     public Text currentGameText;
     public List<GameObject> buttons;
@@ -29,7 +30,7 @@ public class MainMenu : MonoBehaviour
         if (exitButton != null)
             exitButton.gameObject.SetActive(false);
 #endif
-        versionText.text = "Ver. " + Application.version;
+        versionText.text = VersionMessage + Application.version;
 
         if (CardGameManager.Instance.Discovery.running)
             CardGameManager.Instance.Discovery.StopBroadcast();
