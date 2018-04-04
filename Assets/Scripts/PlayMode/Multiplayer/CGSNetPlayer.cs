@@ -144,9 +144,7 @@ public class CGSNetPlayer : NetworkBehaviour
         GameObject newCard = Instantiate(CGSNetManager.Instance.cardModelPrefab, controller.playAreaContent);
         CardModel cardModel = newCard.GetComponent<CardModel>();
         cardModel.Value = CardGameManager.Current.Cards[cardId];
-        cardModel.transform.localPosition = localPosition;
         cardModel.LocalPosition = localPosition;
-        cardModel.transform.rotation = rotation;
         cardModel.Rotation = rotation;
         cardModel.IsFacedown = isFacedown;
         controller.SetPlayActions(controller.playAreaContent.GetComponent<CardStack>(), cardModel);
