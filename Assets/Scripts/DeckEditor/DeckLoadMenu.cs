@@ -58,6 +58,8 @@ public class DeckLoadMenu : SelectionPanel
         } else {
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && loadFromFileButton.interactable)
                 LoadFromFileAndHide();
+            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObect))
+                EventSystem.current.currentSelectedGameObect.GetComponent<Toggle>().isOn = true;
             else if (Input.GetButtonDown(Inputs.New))
                 ShowNewDeckPanel();
             else if (Input.GetButtonDown(Inputs.Delete) && deleteFileButton.interactable)
