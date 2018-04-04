@@ -34,7 +34,9 @@ public class GameSelectionMenu : SelectionPanel
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 HideDownloadPanel();
         } else {
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
+            if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObect))
+                EventSystem.current.currentSelectedGameObect.GetComponent<Toggle>().isOn = true;
+            else if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
                 Hide();
             else if (Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load))
                 ShowDownloadPanel();
