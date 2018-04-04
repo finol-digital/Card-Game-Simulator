@@ -25,7 +25,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
     public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive
-        && transform.parent == ((CGSNetManager)NetworkManager.singleton).playController.playAreaContent;
+        && transform.parent == CGSNetManager.Instance.playController.playAreaContent;
     public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1
         || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right && CurrentPointerEventData.button == PointerEventData.InputButton.Middle);
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
@@ -43,11 +43,11 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     protected Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
     protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
-    [SyncVar]
-    public Vector2 LocalPosition;
+    [SyncVar(hook ="OnChangeLocalPosition")]
+    public Vector2 localPosition;
 
-    [SyncVar]
-    public Quaternion Rotation;
+    [SyncVar(hook ="OnChangeRotation")]
+    public Quaternion rotation;
 
     [SyncVar]
     private string _id;
@@ -97,6 +97,13 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
+        if (IsOnline) {
+            if (Vector2.zero != localPosition)
+                OnChangeLocalPosition(localPosition);
+            if (Quaternion.Identity != rotation)
+                OnChangeRotation(rotation);
+        }
+        
         if (!IsFacedown)
             CardGameManager.Current.PutCardImage(this);
         else
@@ -267,9 +274,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (PlaceHolderCardStack != null)
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
 
-        LocalPosition = transform.localPosition;
         if (IsOnline)
-            CmdUpdateLocalPosition(LocalPosition);
+            localPosition = transform.localPosition;
     }
 
     public void UpdateCardStackPosition(Vector2 targetPosition)
@@ -297,15 +303,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             || (cardStack.type == CardStackType.Area && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
             ParentToCanvas(targetPosition);
     }
-
-    [Command]
-    void CmdUpdateLocalPosition(Vector2 localPosition)
-    {
-        RpcUpdateLocalPosition(localPosition);
-    }
-
-    [ClientRpc]
-    void RpcUpdateLocalPosition(Vector2 localPosition)
+    
+    public void OnChangeLocalPosition(Vector2 localPosition)
     {
         if (!hasAuthority)
             transform.localPosition = localPosition;
@@ -380,19 +379,11 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         Vector2 currDir = CurrentPointerEventData.position - referencePoint;
         transform.Rotate(0, 0, Vector2.SignedAngle(prevDir, currDir));
 
-        Rotation = transform.rotation;
         if (IsOnline)
-            CmdUpdateRotation(Rotation);
+            rotation = transform.rotation;
     }
-
-    [Command]
-    void CmdUpdateRotation(Quaternion rotation)
-    {
-        RpcUpdateRotation(rotation);
-    }
-
-    [ClientRpc]
-    void RpcUpdateRotation(Quaternion rotation)
+    
+    public void OnChangeRotation(Quaternion rotation)
     {
         if (!hasAuthority)
             transform.rotation = rotation;
@@ -404,9 +395,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             return;
 
         cardModel.transform.rotation = Quaternion.identity;
-        cardModel.Rotation = cardModel.transform.rotation;
         if (cardModel.IsOnline)
-            cardModel.CmdUpdateRotation(cardModel.Rotation);
+            cardModel.rotation = cardModel.transform.rotation;
     }
 
     public static void ShowCard(CardStack cardStack, CardModel cardModel)
