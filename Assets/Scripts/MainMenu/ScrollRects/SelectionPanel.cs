@@ -10,7 +10,7 @@ public class SelectionPanel : MonoBehaviour
 {
     public RectTransform selectionContent;
     public RectTransform selectionTemplate;
-    public Scrollbar scrollBar;
+    public ScrollRect scrollRect;
 
     protected List<GameObject> Toggles { get; } = new List<GameObject>();
 
@@ -42,23 +42,14 @@ public class SelectionPanel : MonoBehaviour
         selectionTemplate.GetComponent<Toggle>().isOn = options.Count > 0;
 
         float index = options.IndexOf(currentValue);
-        if (index < 0)
-            return;
-
-        float newSpot = selectionTemplate.GetComponent<RectTransform>().rect.height
-            * (index + ((index < options.Count / 2f) ? 0f : 1f)) / selectionContent.sizeDelta.y;
-        StartCoroutine(WaitToMoveScrollbar(1 - Mathf.Clamp01(newSpot)));
-    }
-
-    public IEnumerator WaitToMoveScrollbar(float scrollBarValue)
-    {
-        yield return null;
-        scrollBar.value = Mathf.Clamp01(scrollBarValue);
+        if (index > 0 && index < options.Count && options.Count > 1)
+            scrollRect.verticalNormalizedPosition = 1f - (index / (options.Count - 1f));
     }
 
     public void ScrollPage(bool scrollUp)
     {
-        scrollBar.value = Mathf.Clamp01(scrollBar.value + (scrollUp ? 0.1f : -0.1f));
+        scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition 
+            + (scrollUp ? 0.1f : -0.1f));
     }
 
     public void ScrollToggles(bool scrollUp)
@@ -68,6 +59,7 @@ public class SelectionPanel : MonoBehaviour
 
         if (!Toggles.Contains(EventSystem.current.currentSelectedGameObject)) {
             EventSystem.current.SetSelectedGameObject(Toggles[0]);
+            scrollRect.verticalNormalizedPosition = 1f;
             return;
         }
 
@@ -79,6 +71,7 @@ public class SelectionPanel : MonoBehaviour
                 if (i < 0)
                     i = Toggles.Count - 1;
                 EventSystem.current.SetSelectedGameObject(Toggles[i]);
+                scrollRect.verticalNormalizedPosition = 1f - (i / (Toggles.Count - 1f));
                 return;
             }
 
@@ -90,6 +83,7 @@ public class SelectionPanel : MonoBehaviour
                 if (i == Toggles.Count)
                     i = 0;
                 EventSystem.current.SetSelectedGameObject(Toggles[i]);
+                scrollRect.verticalNormalizedPosition = 1f - (i / (Toggles.Count - 1f));
                 return;
             }
         }
