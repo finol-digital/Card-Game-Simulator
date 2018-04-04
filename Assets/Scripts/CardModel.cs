@@ -24,7 +24,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public static readonly Color SelectedHighlightColor = new Color(0.39f, 0.29f, 0.79f);
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
-    public bool IsOnline => NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive
+    public bool IsOnline => CGSNetManager.Instance != null && CGSNetManager.Instance.isNetworkActive
         && transform.parent == CGSNetManager.Instance.playController.playAreaContent;
     public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1
         || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right && CurrentPointerEventData.button == PointerEventData.InputButton.Middle);
