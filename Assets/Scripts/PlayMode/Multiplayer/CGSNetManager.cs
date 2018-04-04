@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 public class CGSNetManager : NetworkManager
 {
     public const string PlayerCountMessage = "Number of connected players: ";
-    public const string HostIpMessage = "Host Ip: ";
+    public const string ConnectionIdMessage = "Connection Id: ";
 
     public static CGSNetManager Instance => (CGSNetManager)singleton;
     public CGSNetPlayer LocalPlayer { get; set; }
@@ -41,25 +41,24 @@ public class CGSNetManager : NetworkManager
     {
         base.OnStartClient(netClient);
         ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
-        playController.netText.text = HostIpMessage + netClient.serverIp;
+    }
+    
+    public override void OnClientConnect(NetworkConnection connection)
+    {
+        base.OnClientConnect(connection);
+        playController.netText.text = ConnectionIdMessage + connection.connectionId;
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
     {
         GameObject newCardGO = Instantiate(cardModelPrefab, playController.playAreaContent);
-        CardModel cardModel = newCardGO.GetComponent<CardModel>();
-        cardModel.transform.localPosition = cardModel.LocalPosition;
-        cardModel.transform.rotation = cardModel.Rotation;
-        cardModel.HideHighlight();
-        playController.SetPlayActions(playController.playAreaContent.GetComponent<CardStack>(), cardModel);
+        playController.SetPlayActions(playController.playAreaContent.GetComponent<CardStack>(), newCardGO.GetComponent<CardModel>());
         return newCardGO;
     }
 
     public void UnSpawnCard(GameObject spawned)
     {
-        CardModel cardModel = spawned?.GetComponent<CardModel>();
-        if (cardModel != null && !cardModel.hasAuthority)
-            Destroy(spawned);
+        Destroy(spawned);
     }
 
     public override void OnStopServer()
