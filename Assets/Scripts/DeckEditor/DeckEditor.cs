@@ -167,7 +167,8 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
                     maxCopiesInStack++;
             }
         }
-        scrollRect.horizontalNormalizedPosition = CurrentCardStackIndex / (CardStacks.Count - 1f);
+        scrollRect.horizontalNormalizedPosition = CardStacks.Count > 1 ? 
+            CurrentCardStackIndex / (CardStacks.Count - 1f) : 0f;
 
         OnAddCardModel(CardStacks [CurrentCardStackIndex], newCardModel);
     }
