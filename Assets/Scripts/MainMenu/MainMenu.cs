@@ -20,15 +20,13 @@ public class MainMenu : MonoBehaviour
 
     void OnEnable()
     {
-        if (currentGameText != null)
-            CardGameManager.Instance.OnSceneActions.Add(UpdateCurrentGameText);
+        CardGameManager.Instance.OnSceneActions.Add(UpdateCurrentGameText);
     }
 
     void Start()
     {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        if (exitButton != null)
-            exitButton.gameObject.SetActive(false);
+        exitButton.gameObject.SetActive(false);
 #endif
         versionText.text = VersionMessage + Application.version;
 
@@ -43,10 +41,10 @@ public class MainMenu : MonoBehaviour
         if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (currentGameText == null)
-            GoToMainMenu();
+        if (Input.GetKeyDown(Inputs.BluetoothReturn))
+            EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
         else if (Input.GetButtonDown(Inputs.Vertical) && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
-            EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
+            EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
         else if (Input.GetButtonDown(Inputs.Sort))
             SelectCardGame();
         else if (Input.GetButtonDown(Inputs.New))
@@ -63,13 +61,7 @@ public class MainMenu : MonoBehaviour
 
     public void UpdateCurrentGameText()
     {
-        if (currentGameText != null)
-            currentGameText.text = CardGameManager.Current.Name;
-    }
-
-    public void GoToMainMenu()
-    {
-        SceneManager.LoadScene(MainMenuSceneIndex);
+        currentGameText.text = CardGameManager.Current.Name;
     }
 
     public void SelectCardGame()

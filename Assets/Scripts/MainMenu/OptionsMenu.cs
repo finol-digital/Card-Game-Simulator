@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,16 +13,21 @@ public class OptionsMenu : MonoBehaviour
     public const string WebsiteUrl = "https://cardgamesim.finoldigital.com";
     public const string KeyboardUrl = "https://cardgamesim.finoldigital.com/KEYBOARD.html";
 
+    public List<GameObject> buttons;
     public Text versionText;
 
     void Start()
     {
-        versionText.text = "Ver. " + Application.version;
+        versionText.text = MainMenu.VersionMessage + Application.version;
     }
 
     void Update()
     {
-        if (Input.GetButtonDown(Inputs.Sort))
+        if (Input.GetKeyDown(Inputs.BluetoothReturn))
+            EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
+        else if (Input.GetButtonDown(Inputs.Vertical) && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
+            EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
+        else if (Input.GetButtonDown(Inputs.Sort))
             ViewRules();
         else if (Input.GetButtonDown(Inputs.New))
             ViewWebsite();

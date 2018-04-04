@@ -470,12 +470,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 941064309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49fc900b90bc87e4f91d1bfa3ed95f14, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f52e9ca081ffc34686e65329a952a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGameText: {fileID: 0}
-  multiplayerButton: {fileID: 0}
-  exitButton: {fileID: 0}
   versionText: {fileID: 1672633402}
 --- !u!1001 &1471381903
 Prefab:

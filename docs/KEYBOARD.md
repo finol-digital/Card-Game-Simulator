@@ -38,10 +38,12 @@ If [your CGS device](README.md#get-cgs) has a keyboard, you can use these keyboa
 
 ## Options Menu
 - **Cancel**: *Esc* - Back to main menu.
+- **Vertical**: *down*, *up* - Scroll through options.
 - **Sort**: *q* - Link to view online rules.
 - **New**: *e* - Link to the CGS website.
 - **Load**: *r* - Link to this webpage.
 - **Save**: *t* - Email <david@finoldigital.com>.
+- **Submit**: *Enter* - Click on selected button.
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
