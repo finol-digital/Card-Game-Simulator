@@ -100,10 +100,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline) {
             if (Vector2.zero != localPosition)
                 OnChangeLocalPosition(localPosition);
-            if (Quaternion.Identity != rotation)
+            if (Quaternion.identity != rotation)
                 OnChangeRotation(rotation);
         }
-        
+
         if (!IsFacedown)
             CardGameManager.Current.PutCardImage(this);
         else
@@ -303,7 +303,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             || (cardStack.type == CardStackType.Area && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
             ParentToCanvas(targetPosition);
     }
-    
+
     public void OnChangeLocalPosition(Vector2 localPosition)
     {
         if (!hasAuthority)
@@ -382,7 +382,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline)
             rotation = transform.rotation;
     }
-    
+
     public void OnChangeRotation(Quaternion rotation)
     {
         if (!hasAuthority)

@@ -881,7 +881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionContent: {fileID: 224911321035638492}
   selectionTemplate: {fileID: 224926330859894296}
-  scrollBar: {fileID: 114802141035649906}
+  scrollRect: {fileID: 114188681332653896}
   cancelButton: {fileID: 114358460174254236}
   joinButton: {fileID: 114455682759418232}
 --- !u!114 &114752885090116452

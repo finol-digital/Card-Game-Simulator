@@ -859,7 +859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionContent: {fileID: 224937724690924458}
   selectionTemplate: {fileID: 224513094372486550}
-  scrollBar: {fileID: 114551414685404242}
+  scrollRect: {fileID: 114606226609976292}
   loadCancelButton: {fileID: 114440245882454988}
   deleteFileButton: {fileID: 114582670716232018}
   loadFromFileButton: {fileID: 114827358892291670}

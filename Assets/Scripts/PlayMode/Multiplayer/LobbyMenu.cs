@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -20,8 +21,8 @@ public class LobbyMenu : SelectionPanel
 
         if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && joinButton.interactable)
             Join();
-        else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObect))
-            EventSystem.current.currentSelectedGameObect.GetComponent<Toggle>().isOn = true;
+        else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
+            EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
         else if (Input.GetButtonDown(Inputs.New))
             Host();
         else if (Input.GetButtonDown(Inputs.Vertical))
