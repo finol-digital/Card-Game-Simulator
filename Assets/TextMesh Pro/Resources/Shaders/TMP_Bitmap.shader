@@ -48,12 +48,10 @@ SubShader{
 		#pragma vertex vert
 		#pragma fragment frag
 
+		#pragma multi_compile __ UNITY_UI_CLIP_RECT
+		#pragma multi_compile __ UNITY_UI_ALPHACLIP
+
 		#include "UnityCG.cginc"
-
-
-	#if UNITY_VERSION < 530
-		bool _UseClipRect;
-	#endif
 
 		struct appdata_t {
 			float4 vertex		: POSITION;
@@ -125,17 +123,14 @@ SubShader{
 			fixed4 c = tex2D(_MainTex, i.texcoord0);
 			c = fixed4 (tex2D(_FaceTex, i.texcoord1).rgb * i.color.rgb, i.color.a * c.a);
 
-			#if UNITY_VERSION < 530
-				if (_UseClipRect)
-				{
-					// Alternative implementation to UnityGet2DClipping with support for softness.
-					half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(i.mask.xy)) * i.mask.zw);
-					c *= m.x * m.y;
-				}
-			#else
-				// Alternative implementation to UnityGet2DClipping with support for softness.
+			// Alternative implementation to UnityGet2DClipping with support for softness.
+			#if UNITY_UI_CLIP_RECT
 				half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(i.mask.xy)) * i.mask.zw);
 				c *= m.x * m.y;
+			#endif
+
+			#if UNITY_UI_ALPHACLIP
+				clip(c.a - 0.001);
 			#endif
 
 			return c;

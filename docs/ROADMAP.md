@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Fix: Value, Image, Position, and Rotation are not immediately applied when joining a session and spawning pre-existing cards in *Play Mode*
+- Fix: Red highlight that warns when a card will be discarded does not appear consistently
 - Fix: Cards in *Play Mode* are occasionally unnecessarily added to discard
 - Fix: No indication of when a deck is shuffled in *Play Mode*
 - Fix: CGS appears unresponsive when loading a deck in *Play Mode*
@@ -9,7 +9,6 @@
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Each card's specific set/id is not tracked when saving a deck in the *Deck Editor*
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
-- Fix: Red highlight that warns when a card will be discarded does not appear consistently
 
 ## Maple (CGS v2)
 - Resize cards based off \<cardSize\>

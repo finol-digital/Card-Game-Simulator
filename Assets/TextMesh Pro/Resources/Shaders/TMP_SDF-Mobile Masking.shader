@@ -90,6 +90,9 @@ SubShader {
 		#pragma shader_feature __ UNDERLAY_ON UNDERLAY_INNER
 		//#pragma shader_feature __ ALPHA_MASK_ON
 
+		#pragma multi_compile __ UNITY_UI_CLIP_RECT
+		#pragma multi_compile __ UNITY_UI_ALPHACLIP
+
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		#include "TMPro_Properties.cginc"
@@ -212,32 +215,19 @@ SubShader {
 			c += float4(_UnderlayColor.rgb * _UnderlayColor.a, _UnderlayColor.a) * (1 - saturate(d - input.underlayParam.y)) * sd * (1 - c.a);
 		#endif
 
-		#if UNITY_VERSION < 530
-			// Unity 5.2 2D Rect Mask Support
-			if (_UseClipRect)
-			{
-				half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
-				c *= m.x * m.y;
-
-				float a = abs(_MaskInverse - tex2D(_MaskTex, input.texcoord0.zw).a);
-				float t = a + (1 - _MaskWipeControl) * _MaskEdgeSoftness - _MaskWipeControl;
-				a = saturate(t / _MaskEdgeSoftness);
-				c.rgb = lerp(_MaskEdgeColor.rgb*c.a, c.rgb, a);
-				c *= a;
-			}
-		#else
-			// Alternative implementation to UnityGet2DClipping with support for softness.
+		// Alternative implementation to UnityGet2DClipping with support for softness.
+		#if UNITY_UI_CLIP_RECT	
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			c *= m.x * m.y;
-
-			//#if ALPHA_MASK_ON
-			float a = abs(_MaskInverse - tex2D(_MaskTex, input.texcoord0.zw).a);
-			float t = a + (1 - _MaskWipeControl) * _MaskEdgeSoftness - _MaskWipeControl;
-			a = saturate(t / _MaskEdgeSoftness);
-			c.rgb = lerp(_MaskEdgeColor.rgb*c.a, c.rgb, a);
-			c *= a;
-			//#endif
 		#endif
+
+		//#if ALPHA_MASK_ON
+		float a = abs(_MaskInverse - tex2D(_MaskTex, input.texcoord0.zw).a);
+		float t = a + (1 - _MaskWipeControl) * _MaskEdgeSoftness - _MaskWipeControl;
+		a = saturate(t / _MaskEdgeSoftness);
+		c.rgb = lerp(_MaskEdgeColor.rgb*c.a, c.rgb, a);
+		c *= a;
+		//#endif
 
 		#if (UNDERLAY_ON | UNDERLAY_INNER)
 			c *= input.texcoord1.z;
