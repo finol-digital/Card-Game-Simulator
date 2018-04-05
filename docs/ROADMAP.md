@@ -1,9 +1,10 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
+- Fix: Plugin errors for JSON.net and sharpziplib
 - Fix: Red highlight that warns when a card will be discarded does not appear consistently
 - Fix: Cards in *Play Mode* are occasionally unnecessarily added to discard
-- Fix: No indication of when a deck is shuffled in *Play Mode*
+- Fix: No indication of when a deck is shuffled in *Play Mode*s
 - Fix: CGS appears unresponsive when loading a deck in *Play Mode*
 - Fix: Hand container does not reorient after removing a card from hand in *Play Mode*
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
