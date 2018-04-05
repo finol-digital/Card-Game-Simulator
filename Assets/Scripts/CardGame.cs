@@ -241,7 +241,7 @@ public class CardGame
 
             IsLoaded = true;
         } catch (Exception e) {
-            Error+= e.Message;
+            Error+= e.Message + e.StackTrace + Environment.NewLine;
             IsLoaded = false;
         }
     }
@@ -252,7 +252,7 @@ public class CardGame
             try {
                 LoadJsonFromFile(CardsFilePath + page, LoadCardFromJToken, CardDataIdentifier);
             } catch (Exception e) {
-                Error+= e.Message;
+                Error+= e.Message + e.StackTrace + Environment.NewLine;
             }
             yield return null;
         }

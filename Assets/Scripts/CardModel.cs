@@ -306,7 +306,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnChangeLocalPosition(Vector2 localPosition)
     {
-        if (!hasAuthority)
+        if (IsOnline && !hasAuthority)
             transform.localPosition = localPosition;
     }
 
@@ -385,7 +385,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnChangeRotation(Quaternion rotation)
     {
-        if (!hasAuthority)
+        if (IsOnline && !hasAuthority)
             transform.rotation = rotation;
     }
 

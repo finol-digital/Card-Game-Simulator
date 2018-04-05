@@ -1,8 +1,8 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Fix: Plugin errors for JSON.net and sharpziplib
-- Fix: Red highlight that warns when a card will be discarded does not appear consistently
+- Fix: card search enum layout
+- Fix: On mobile data, error when going back to main menu
 - Fix: Cards in *Play Mode* are occasionally unnecessarily added to discard
 - Fix: No indication of when a deck is shuffled in *Play Mode*s
 - Fix: CGS appears unresponsive when loading a deck in *Play Mode*
@@ -36,6 +36,7 @@
 ## Icebox (CGS v3+)
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Support Android Search button
+- Support Native Share Intent on mobile for loading and sharing decks
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
