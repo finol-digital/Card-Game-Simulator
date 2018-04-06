@@ -21,7 +21,7 @@ public class CardDropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerExit(PointerEventData eventData)
     {
         CardModel cardModel = CardModel.GetPointerDrag(eventData);
-        if (cardModel != null)
+        if (cardModel != null && cardModel.DropTarget == this)
             cardModel.DropTarget = null;
     }
 
