@@ -1,7 +1,6 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Fix: Cards in *Play Mode* are occasionally unnecessarily added to discard
 - Fix: No indication of when a deck is shuffled in *Play Mode*s
 - Fix: CGS appears unresponsive when loading a deck in *Play Mode*
 - Fix: Hand container does not reorient after removing a card from hand in *Play Mode*
@@ -39,6 +38,7 @@
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
+- Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
 - Share discard pile between all players who share a deck in *Play Mode*
 - Resize zones based off \<cardSize\> in *Play Mode*
