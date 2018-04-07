@@ -122,7 +122,11 @@ public class ZonesViewer : MonoBehaviour
         Hand = Instantiate(handZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
         Hand.Viewer = this;
         ResizeContent();
-        IsExtended = true;
+        Vector2 size = ((RectTransform)transform).sizeDelta;
+        bool isPortrait = size.y > size.x;
+        if (isPortrait)
+            Hand.ToggleExtension();
+        IsExtended = !isPortrait;
         IsVisible = true;
     }
 
