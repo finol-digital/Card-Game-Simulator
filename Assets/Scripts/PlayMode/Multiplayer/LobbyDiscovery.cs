@@ -12,7 +12,8 @@ public class LobbyDiscovery : NetworkDiscovery
 
     public void StartAsHost()
     {
-        if (Application.internetReachability == NetworkReachability.NotReachable) {
+        if (Application.internetReachability == NetworkReachability.NotReachable
+            || Network.player.ipAddress == "0.0.0.0" || Network.player.ipAddress == "0.0.0.0.0.0") {
             CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
             return;
         }
@@ -25,7 +26,8 @@ public class LobbyDiscovery : NetworkDiscovery
 
     public void SearchForHost()
     {
-        if (Application.internetReachability == NetworkReachability.NotReachable) {
+        if (Application.internetReachability == NetworkReachability.NotReachable
+            || Network.player.ipAddress == "0.0.0.0" || Network.player.ipAddress == "0.0.0.0.0.0") {
             CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
             return;
         }

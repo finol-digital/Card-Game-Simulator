@@ -1,7 +1,6 @@
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Fix: On mobile data, error when going back to main menu
 - Fix: No indication of when a deck is shuffled in *Play Mode*
 - Fix: CGS appears unresponsive when loading a deck in *Play Mode*
 - Fix: Hand container does not reorient after removing a card from hand in *Play Mode*
@@ -10,6 +9,7 @@
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 
 ## Maple (CGS v2)
+- Support zooming in/out
 - Resize cards based off \<cardSize\>
 - Define actions that can be done on a card:
   - Toggle rotation between 0 and 90/180/270
@@ -22,7 +22,6 @@
 - Allow for contextual setting what card action to do when a card is double-clicked
 - Press and hold (or right-click) on a card to bring up a context menu with the full list of possible card actions
 - Support special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Support zooming in/out
 - Allow cards to snap to each other when moving them
 - Support grouping for cards
 - Support moving dice both individually and as a group
