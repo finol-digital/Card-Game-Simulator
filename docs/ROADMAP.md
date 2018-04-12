@@ -8,7 +8,7 @@
 - Fix: Each card's specific set/id is not tracked when saving a deck in the *Deck Editor*
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Android icon
-- Fix: Card Search Menu enums
+- Fix: *Card Search Menu* enums
 
 ## Maple (CGS v2)
 - Support zooming in/out
