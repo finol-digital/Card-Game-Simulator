@@ -10,8 +10,8 @@ public class OptionsMenu : MonoBehaviour
     public const string NoRulesErrorMessage = "This card game has not correctly set a link to an online rulebook.";
     public const string DeveloperEmail = "david@finoldigital.com";
     public const string EmailSubject = "Card Game Simulator Feedback";
-    public const string WebsiteUrl = "https://cardgamesim.finoldigital.com";
-    public const string KeyboardUrl = "https://cardgamesim.finoldigital.com/KEYBOARD.html";
+    public const string WebsiteUrl = "https://www.cardgamesimulator.com";
+    public const string KeyboardUrl = "https://www.cardgamesimulator.com/KEYBOARD.html";
 
     public List<GameObject> buttons;
     public Text versionText;
