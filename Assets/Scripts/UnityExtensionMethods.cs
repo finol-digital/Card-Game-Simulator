@@ -183,7 +183,9 @@ static public class UnityExtensionMethods
         if (!File.Exists(imageFilePath))
             yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
 
-        yield return CreateSprite(imageFilePath);
+        WWW loader = new WWW(imageFilePath);
+        yield return loader;
+        yield return CreateSprite(loader.texture);
     }
 
     public static Sprite CreateSprite(string textureFilePath)
@@ -193,6 +195,14 @@ static public class UnityExtensionMethods
 
         Texture2D newTexture = new Texture2D(2, 2);
         newTexture.LoadImage(File.ReadAllBytes(textureFilePath));
-        return Sprite.Create(newTexture, new Rect(0, 0, newTexture.width, newTexture.height), new Vector2(0.5f, 0.5f));
+        return CreateSprite(newTexture);
+    }
+
+    public static Sprite CreateSprite(Texture2D texture)
+    {
+        if (texture == null)
+            return null;
+
+        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
     }
 }
