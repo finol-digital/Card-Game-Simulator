@@ -59,4 +59,5 @@
 - Google Play Instant
 - Console versions (Switch, ps4, xbone)
 - Support game-specific rules enforcement
+- Add link to rules from somewhere within *Play Mode*
 
