@@ -53,6 +53,7 @@
 - Set card image cache limit in *Options Menu*
 - Support different formats/game-types for custom card games
 - Support sideboards
+- Track personal collection of cards and show which cards you're missing for certain decks
 - Support multiple languages (Spanish,Chinese)
 - Support different resolutions and languages for card images
 - Google Play Instant
