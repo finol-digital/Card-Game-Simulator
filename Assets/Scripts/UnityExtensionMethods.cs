@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +18,7 @@ static public class UnityExtensionMethods
 {
     public const string AndroidStreamingAssetsDirectory = "assets/";
     public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
+    public const string FilePrefix = "file://";
     public const string MetaExtension = ".meta";
     public const string ZipExtension = ".zip";
 
@@ -183,7 +184,7 @@ static public class UnityExtensionMethods
         if (!File.Exists(imageFilePath))
             yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
 
-        WWW loader = new WWW(imageFilePath);
+        WWW loader = new WWW(FilePrefix + imageFilePath);
         yield return loader;
         yield return CreateSprite(loader.texture);
     }
