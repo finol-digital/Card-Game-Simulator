@@ -141,9 +141,19 @@
 			"default": { "x": 2.5, "y": 3.5 },
 			"$ref": "#/definitions/vector2"
 		},
+		"deckFileTxtId": {
+			"description": "When saving a deck as txt, different cards may share the same name, and if they do, the *Card:<deckFileTxtId>* will be used to uniquely identify cards.",
+			"enum": ["id", "set"],
+			"default": "set",
+			"type": "string"
+		},
+		"deckFileTxtIdRequired": {
+			"description": "If deckFileTxtIdRequired is set to true, *Card:<deckFileTxtId>* will appear on every line for deck files saved as txt.",
+			"type": "boolean"
+		},
 		"deckFileType": {
 			"description": "When saving a deck, the formatting for how it is saved and loaded is defined by the deckFileType. dec refers to the old MTGO deck file format. hsd refers to the Hearthstone deck string format. ydk refers to the YGOPRO deck file format. txt parses each line for the following: <Quantity> [*Card:Id*] *Card:Name* (*Card:SetCode*)",
-			"enum": ["dec", "hsd", "ydk", "txt"],
+			"enum": ["txt", "dec", "hsd", "ydk"],
 			"default": "txt",
 			"type": "string"
 		},
