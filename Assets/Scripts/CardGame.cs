@@ -98,6 +98,12 @@ public class CardGame
     public Vector2 CardSize { get; set; } = new Vector2(2.5f, 3.5f);
 
     [JsonProperty]
+    public DeckFileTxtId DeckFileTxtId { get; set; } = DeckFileTxtId.Set;
+
+    [JsonProperty]
+    public bool DeckFileTxtIdRequired { get; set; }
+
+    [JsonProperty]
     public DeckFileType DeckFileType { get; set; } = DeckFileType.Txt;
 
     [JsonProperty]
