@@ -13,7 +13,7 @@ public class DeckLoadMenu : SelectionPanel
 {
     public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
     public const string HsdInstructions = "#Paste the deck string/code here";
-    public const string TxtInstructions = "#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+    public const string TxtInstructions = "### Instructions\n#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
     public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
 
     public const string DeletePrompt = "Are you sure you would like to delete this deck?";

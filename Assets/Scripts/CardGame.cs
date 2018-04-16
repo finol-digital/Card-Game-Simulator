@@ -164,6 +164,8 @@ public class CardGame
     public bool IsLoaded { get; private set; }
     public string Error { get; private set; }
 
+    public HashSet<string> CardNames { get; } = new HashSet<string>();
+
     protected Dictionary<string, Card> LoadedCards { get; } = new Dictionary<string, Card>();
     protected Dictionary<string, Set> LoadedSets { get; } = new Dictionary<string, Set>();
 
@@ -313,7 +315,12 @@ public class CardGame
         }
 
         Card newCard = new Card(cardId, cardName, cardSet, cardProperties);
+        if (CardNames.Contains(cardName))
+            newCard.IsReprint = true;
+        else
+            CardNames.Add(cardName);
         LoadedCards [newCard.Id] = newCard;
+        
         if (!Sets.ContainsKey(cardSet))
             LoadedSets [cardSet] = new Set(cardSet);
     }

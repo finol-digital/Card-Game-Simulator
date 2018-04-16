@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 
 public enum DeckFileType
 {
@@ -317,9 +318,25 @@ public class Deck : IEquatable<Deck>
 
     public string ToTxt()
     {
-        string text = "# " + CardGameManager.Current.Name + " Deck List: " + Name + Environment.NewLine;
+        StringBuilder text = new StringBuilder();
+        text.AppendFormat("### {0} Deck List: {1} {2}", CardGameManager.Current.Name, Name, Environment.NewLine);
         Dictionary<Card, int> cardCounts = GetCardCounts();
-        return cardCounts.Keys.Aggregate(text, (current, card) => current + (cardCounts[card] + " " + card.Name + Environment.NewLine));
+        foreach(KeyValuePair<Card, int> cardCount in cardCounts) {
+            bool isDeckFileTxtIdRequired = CardGameManager.Current.DeckFileTxtIdRequired || cardCount.Key.IsReprint;
+            text.Append(cardCount.Value);
+            text.Append(" ");
+            if (isDeckFileTxtIdRequired && CardGameManager.Current.DeckFileTxtId == DeckFileTxtId.Id) {
+                text.AppendFormat("[{0}]", cardCount.Key.Id);
+                text.Append(" ");
+            }
+            text.Append(cardCount.Key.Name);
+            if (isDeckFileTxtIdRequired && CardGameManager.Current.DeckFileTxtId == DeckFileTxtId.Set) {
+                text.Append(" ");
+                text.AppendFormat("({0})", cardCount.Key.SetCode);
+            }
+            text.AppendLine();
+        }
+        return text.ToString();
     }
 
     public override string ToString()

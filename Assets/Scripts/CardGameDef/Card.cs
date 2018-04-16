@@ -12,6 +12,8 @@ public class Card : IComparable<Card>, IEquatable<Card>
     public string SetCode { get; private set; }
     protected Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
 
+    public bool IsReprint { get; set; }
+
     public HashSet<CardModel> ModelsUsingImage { get; private set; }
     public bool IsLoadingImage { get; set; }
 
