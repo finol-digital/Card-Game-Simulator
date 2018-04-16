@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -9,6 +9,12 @@ public enum DeckFileType
     Hsd,
     Txt,
     Ydk
+}
+
+public enum DeckFileTxtId
+{
+    Id,
+    Set
 }
 
 public class Deck : IEquatable<Deck>
