@@ -3,6 +3,7 @@
 ## Minimum Viable Product (CGS v1)
 - Fix: No indication of when a deck is shuffled in *Play Mode*
 - Fix: Hand container does not reorient after removing a card from hand in *Play Mode*
+- Fix: Always allow host to move cards in the play area
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Android icon
@@ -32,7 +33,7 @@
 
 ## Icebox (CGS v3+)
 - Support Native Share Intent on mobile for loading and sharing decks
-- Open url/json with *Game Download Menu*; open deck lists with *Deck Load Menu*
+- Open url with *Game Download Menu*; open deck lists with *Deck Load Menu*
 - Support Android Search button
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Synchronize points across teams in *Play Mode*
