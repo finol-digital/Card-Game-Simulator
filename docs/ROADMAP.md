@@ -37,21 +37,22 @@
 - Support Android Search button
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Synchronize points across teams in *Play Mode*
+- Share discard pile between all players who share a deck in *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
+- Clear the background once a card enters the play area in *Play Mode*
 - Support multiple card backs
 - Support decimal card property data type
 - Support object card property data type
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
-- Share discard pile between all players who share a deck in *Play Mode*
 - Resize zones based off \<cardSize\> in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
-- Clear the background once a card enters the play area in *Play Mode*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
 - Display keyboard shortcuts in *Options Menu*
 - Allow pre-fetching of card images in *Options Menu*
 - Set card image cache limit in *Options Menu*
 - Support different formats/game-types for custom card games
+- Support more than 1 card face
 - Support sideboards
 - Track personal collection of cards and show which cards you're missing for certain decks
 - Support multiple languages (Spanish,Chinese)
