@@ -158,13 +158,13 @@
 			"type": "string"
 		},
 		"deckMaxCount": {
-			"description": "deckMaxCount is used to decide how many card slots should appear in the deck editor, when the custom game is selected.",
+			"description": "deckMaxCount is used to decide how many card slots should appear in the deck editor.",
 			"default": 75,
 			"minimum": 0,
 			"type": "integer"
 		},
 		"deckUrls": {
-			"description": "If the 'decks/' folder does not exist, CGS will go through each DeckUrl, and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'",
+			"description": "CGS will go through each DeckUrl, and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'",
 			"items": {
 				"title": "DeckUrl",
 				"type": "object",
@@ -288,7 +288,7 @@
 			"type": "boolean"
 		},
 		"gameHasDiscardZone": {
-			"description": "If gameHasDiscardZone is set to true, a Discard Zone will be added to the Zones Viewer, to which cards will be sent when removed from the play area. If gameHasDiscardZone is set to false, cards will simply be deleted when removed from the play area.",
+			"description": "If gameHasDiscardZone is set to true, a discard zone will be added to the automatically be added to the Zones Viewer.",
 			"type": "boolean"
 		},
 		"gameStartHandCount": {
