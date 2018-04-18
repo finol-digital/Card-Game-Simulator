@@ -41,6 +41,7 @@
 - Synchronize dice across all connected players in *Play Mode*
 - Clear the background once a card enters the play area in *Play Mode*
 - Support multiple card backs
+- Support more than 1 card face
 - Support decimal card property data type
 - Support object card property data type
 - Deck Editor Search Results Text-Only View
@@ -52,7 +53,6 @@
 - Allow pre-fetching of card images in *Options Menu*
 - Set card image cache limit in *Options Menu*
 - Support different formats/game-types for custom card games
-- Support more than 1 card face
 - Support sideboards
 - Track personal collection of cards and show which cards you're missing for certain decks
 - Support multiple languages (Spanish,Chinese)
