@@ -112,6 +112,7 @@ public class ZonesViewer : MonoBehaviour
         CurrentDeck = Instantiate(deckZonePrefab, scrollView.content).GetComponent<StackedZone>();
         CurrentDeck.Viewer = this;
         ResizeContent();
+        IsVisible = true;
     }
 
     public void CreateHand()
@@ -127,7 +128,6 @@ public class ZonesViewer : MonoBehaviour
         if (isPortrait)
             Hand.ToggleExtension();
         IsExtended = !isPortrait;
-        IsVisible = true;
     }
 
     public void ResetButtons()

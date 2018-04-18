@@ -12,23 +12,24 @@ public class LobbyDiscovery : NetworkDiscovery
 
     public void StartAsHost()
     {
-        if (Application.internetReachability == NetworkReachability.NotReachable || string.IsNullOrEmpty(Network.player.ipAddress)
-            || "0.0.0.0".Equals(Network.player.ipAddress) || "0.0.0.0.0.0".Equals(Network.player.ipAddress)) {
+        if (Application.internetReachability != NetworkReachability.ReachableViaLocalAreaNetwork) {
             CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
             return;
         }
 
         if (running)
             StopBroadcast();
-        Initialize();
-        StartAsServer();
+        
+        bool started = Initialize() && StartAsServer();
+        if (!started)
+            CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
     }
 
     public void SearchForHost()
     {
-        if (Application.internetReachability == NetworkReachability.NotReachable || string.IsNullOrEmpty(Network.player.ipAddress)
-            || "0.0.0.0".Equals(Network.player.ipAddress) || "0.0.0.0.0.0".Equals(Network.player.ipAddress)) {
-            CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
+        if (Application.internetReachability != NetworkReachability.ReachableViaLocalAreaNetwork) {
+            if (Application.internetReachability != NetworkReachability.ReachableViaCarrierDataNetwork)
+                CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
             return;
         }
 
@@ -36,8 +37,10 @@ public class LobbyDiscovery : NetworkDiscovery
             StopBroadcast();
         Network.Disconnect();
         NetworkServer.Reset();
-        Initialize();
-        StartAsClient();
+
+        bool started = Initialize() && StartAsClient();
+        if (!started)
+            CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
     }
 
     public override void OnReceivedBroadcast(string fromAddress, string data)
@@ -47,12 +50,5 @@ public class LobbyDiscovery : NetworkDiscovery
             return;
 
         lobby.DisplayHosts(broadcastsReceived.Keys.ToList());
-    }
-
-    void OnDestroy()
-    {
-        if (running)
-            StopBroadcast();
-        Network.Disconnect();
     }
 }

@@ -47,6 +47,8 @@ public class CGSNetManager : NetworkManager
     {
         base.OnClientConnect(connection);
         playController.netText.text = ConnectionIdMessage + connection.connectionId;
+        if (CardGameManager.Instance.Discovery.running)
+            CardGameManager.Instance.Discovery.StopBroadcast();
     }
 
     public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)

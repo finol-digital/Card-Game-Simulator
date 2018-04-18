@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
@@ -106,18 +108,15 @@ public class PlayMode : MonoBehaviour
     {
         zones.CreateDeck();
 
-        if (zones.Hand == null)
-            zones.CreateHand();
-
         deckCards.Shuffle();
+
         if (!isSharedDeck)
             CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
 
         zones.scrollView.verticalScrollbar.value = 0;
         zones.CurrentDeck.Sync(deckCards);
 
-        if (CardGameManager.Current.GameStartHandCount > 0)
-            CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
+        StartCoroutine(WaitToDealStartingHand());
     }
 
     public void CreateGameBoards(List<GameBoard> boards)
@@ -149,6 +148,21 @@ public class PlayMode : MonoBehaviour
             newBoard.AddComponent<Image>().sprite = boardImageSprite;
 
         rt.localScale = Vector3.one;
+    }
+
+    public IEnumerator WaitToDealStartingHand()
+    {
+        IReadOnlyList<Card> deckCards = zones.CurrentDeck.Cards;
+        bool loaded = false;
+        while (!loaded) {
+            yield return null;
+            loaded = deckCards.Where(card => card.IsLoadingImage).ToList().Count == 0;
+        }
+
+        if (zones.Hand == null)
+            zones.CreateHand();
+        if (CardGameManager.Current.GameStartHandCount > 0)
+            CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
     }
 
     public void DealStartingHand()
@@ -222,6 +236,9 @@ public class PlayMode : MonoBehaviour
             else if (NetworkManager.singleton.IsClientConnected())
                 NetworkManager.singleton.StopClient();
         }
+
+        if (CardGameManager.Instance.Discovery.running)
+            CardGameManager.Instance.Discovery.StopBroadcast();
 
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
     }

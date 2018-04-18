@@ -2181,7 +2181,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter URL in the textbox
+  m_Text: Download Card Game
 --- !u!114 &114683642608769760
 MonoBehaviour:
   m_ObjectHideFlags: 1

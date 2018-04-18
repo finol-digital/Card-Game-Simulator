@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -13,11 +14,16 @@ public class Popup : MonoBehaviour
     public Button noButton;
     public Button cancelButton;
 
-    protected struct Message
+    protected struct Message : IEquatable<Message>
     {
         public string Text;
         public UnityAction NoAction;
         public UnityAction YesAction;
+
+        public bool Equals(Message other)
+        {
+            return !string.IsNullOrEmpty(Text) && Text.Equals(other.Text);
+        }
     };
 
     protected Queue<Message> MessageQueue { get; } = new Queue<Message>();
@@ -50,7 +56,8 @@ public class Popup : MonoBehaviour
     {
         Message message = new Message() {Text = text, NoAction = noAction, YesAction = yesAction};
         if (gameObject.activeSelf) {
-            MessageQueue.Enqueue(message);
+            if (!MessageQueue.Contains(message))
+                MessageQueue.Enqueue(message);
             return;
         }
 
