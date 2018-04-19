@@ -141,6 +141,11 @@
 			"default": { "x": 2.5, "y": 3.5 },
 			"$ref": "#/definitions/vector2"
 		},
+		"deckFileHsdId": {
+			"description": "When saving or loading a deck as hsd, deckFileHsdId refers to the *Card:Property* used to uniquely identify each card and is stored as a varint within the deck string.",
+			"default": "dbfId",
+			"type": "string"
+		},
 		"deckFileTxtId": {
 			"description": "When saving a deck as txt, different cards may share the same name, and if they do, the *Card:<deckFileTxtId>* will be used to uniquely identify cards.",
 			"enum": ["id", "set"],
@@ -298,11 +303,6 @@
 		"gameStartPointsCount": {
 			"description": "gameStartPointsCount indicates how many points are assigned to each player, when that player loads a deck in Play Mode.",
 			"type": "integer"
-		},
-		"hsdPropertyId": {
-			"description": "When saving or loading a deck with the hsd deckFileType, hsdPropertyId refers to the *Card:Property* used to uniquely identify each card and is stored as a varint within the deck string.",
-			"default": "dbfId",
-			"type": "string"
 		},
 		"playAreaSize": {
 			"description": "playAreaSize indicates the width and height in inches of the play area in Play Mode.",
