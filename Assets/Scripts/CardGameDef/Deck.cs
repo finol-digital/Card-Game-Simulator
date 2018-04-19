@@ -113,21 +113,21 @@ public class Deck : IEquatable<Deck>
 
         int numHeroes = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numHeroes; i++)
-            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+            AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
         int numSingleCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numSingleCards; i++)
-            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+            AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
         int numDoubleCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numDoubleCards; i++)
-            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, (int)VarInt.Read(bytes, ref offset, out length), 2);
+            AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 2);
 
         int numMultiCards = (int)VarInt.Read(bytes, ref offset, out length);
         for (int i = 0; i < numMultiCards; i++) {
             int id = (int)VarInt.Read(bytes, ref offset, out length);
             int count = (int)VarInt.Read(bytes, ref offset, out length);
-            AddCardsByPropertyInt(CardGameManager.Current.HsdPropertyId, id, count);
+            AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, id, count);
         }
 
         Sort();
@@ -280,19 +280,19 @@ public class Deck : IEquatable<Deck>
 
             VarInt.Write(ms, extraCards.Count);
             foreach (Card card in extraCards)
-                VarInt.Write(ms, card.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
+                VarInt.Write(ms, card.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
 
             VarInt.Write(ms, singleCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
 
             VarInt.Write(ms, doubleCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
 
             VarInt.Write(ms, nCopy.Count);
             foreach (KeyValuePair<Card, int> cardCount in nCopy) {
-                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.HsdPropertyId));
+                VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
                 VarInt.Write(ms, cardCount.Value);
             }
 
