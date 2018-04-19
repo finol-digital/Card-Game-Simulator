@@ -35,7 +35,7 @@
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation in *Deck Editor* to keep viewing the currently selected card
 - Support Native Share Intent on mobile for loading and sharing decks
-- Open url with *Game Download Menu*; open deck lists with *Deck Load Menu*
+- Open url with *Game Download Menu*; open deck lists with prompt to save deck
 - Support Android Search button
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Synchronize points across teams in *Play Mode*
