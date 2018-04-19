@@ -2,7 +2,6 @@
 
 ## Minimum Viable Product (CGS v1)
 - Fix: No indication of when a deck is shuffled in *Play Mode*
-- Fix: Always allow host to move cards in the play area
 - Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Android icon
@@ -31,6 +30,7 @@
 - Consider keyboard shortcuts
 
 ## Icebox (CGS v3+)
+- Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation in *Deck Editor* to keep viewing the currently selected card
