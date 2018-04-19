@@ -32,6 +32,7 @@
 - Consider keyboard shortcuts
 
 ## Icebox (CGS v3+)
+- Add option to restart game in *Play Mode*
 - Support Native Share Intent on mobile for loading and sharing decks
 - Open url with *Game Download Menu*; open deck lists with *Deck Load Menu*
 - Support Android Search button
