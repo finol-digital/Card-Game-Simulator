@@ -265,7 +265,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !hasAuthority))
             return;
 
-        Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList()) + UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
+        Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
+        targetPosition = targetPosition + UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
         if (ParentCardStack != null)
             UpdateCardStackPosition(targetPosition);
         else
@@ -300,7 +301,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
             || (cardStack.type == CardStackType.Vertical && isOutXBounds)
             || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
-            || (cardStack.type == CardStackType.Area && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
+            || (cardStack.type == CardStackType.Area 
+                && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
             ParentToCanvas(targetPosition);
     }
 
