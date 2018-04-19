@@ -315,6 +315,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline && hasAuthority)
             CmdUnspawnCard();
         CardStack prevParentStack = ParentCardStack;
+        if (CurrentDragPhase == DragPhase.Drag)
+            prevParentStack.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
         transform.SetParent(CardGameManager.TopCardCanvas.transform);
         transform.SetAsLastSibling();
         if (prevParentStack != null)
