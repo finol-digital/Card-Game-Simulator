@@ -98,6 +98,9 @@ public class CardGame
     public Vector2 CardSize { get; set; } = new Vector2(2.5f, 3.5f);
 
     [JsonProperty]
+    public string DeckFileHsdId { get; set; } = "dbfId";
+
+    [JsonProperty]
     public DeckFileTxtId DeckFileTxtId { get; set; } = DeckFileTxtId.Set;
 
     [JsonProperty]
@@ -138,9 +141,6 @@ public class CardGame
 
     [JsonProperty]
     public int GameStartPointsCount { get; set; }
-
-    [JsonProperty]
-    public string HsdPropertyId { get; set; } = "dbfId";
 
     [JsonProperty]
     public Vector2 PlayAreaSize { get; set; } = new Vector2(23.5f, 20.25f);
