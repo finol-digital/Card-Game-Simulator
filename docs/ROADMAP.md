@@ -48,6 +48,7 @@
 - Support object card property data type
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
+- Define order and enums for Mahjong properties
 - Resize zones based off \<cardSize\> in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
