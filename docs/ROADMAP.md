@@ -32,8 +32,7 @@
 - Add option to restart game in *Play Mode*
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation in *Deck Editor* to keep viewing the currently selected card
-- Support Native Share Intent on mobile for loading and sharing decks
-- Support Custom Url Schemes for downloading and selecting card games
+- Support deep links for games and decks through https://docs.branch.io/
 - Support Android Search button
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Synchronize points across teams in *Play Mode*
