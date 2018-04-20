@@ -239,7 +239,10 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void UpdatePosition()
     {
-#if (!UNITY_ANDROID && !UNITY_IOS) || UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        if (SecondaryDragAction != Rotate && IsProcessingSecondaryDragAction)
+            return;
+#else
         if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) || Input.GetMouseButtonUp(2))
             return;
 #endif
