@@ -2,7 +2,6 @@
 
 ## Minimum Viable Product (CGS v1)
 - Fix: No indication of when a deck is shuffled in *Play Mode*
-- Fix: Dragging cards from the search results in the *Deck Editor* sometimes causes the card image to get "stuck" on the screen
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Android icon
 - Fix: *Card Search Menu* enums
