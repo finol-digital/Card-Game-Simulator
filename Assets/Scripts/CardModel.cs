@@ -39,7 +39,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public PointerEventData CurrentPointerEventData { get; private set; }
     public DragPhase CurrentDragPhase { get; private set; }
 
-    protected Dictionary<int, CardModel> DraggedClones { get; } = new Dictionary<int, CardModel>();
     protected Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
     protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
@@ -130,8 +129,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerUp(PointerEventData eventData)
     {
         if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId && !eventData.dragging
-            && eventData.button != PointerEventData.InputButton.Right && eventData.button != PointerEventData.InputButton.Middle
-            && !DraggedClones.ContainsKey(eventData.pointerId)) {
+            && eventData.button != PointerEventData.InputButton.Right && eventData.button != PointerEventData.InputButton.Middle) {
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
                 DoubleClickAction(this);
             else if (PlaceHolder == null)
@@ -162,45 +160,42 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline && !hasAuthority)
             return;
 
-        EventSystem.current.SetSelectedGameObject(null, eventData);
-
-        CardModel cardModel = this;
         if (DoesCloneOnDrag) {
-            PointerPositions.Remove(eventData.pointerId);
-            PointerDragOffsets.Remove(eventData.pointerId);
-            DraggedClones[eventData.pointerId] = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform).GetOrAddComponent<CardModel>();
-            cardModel = DraggedClones[eventData.pointerId];
+            GameObject newGameObject = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform);
+            eventData.pointerPress = newGameObject;
+            eventData.pointerDrag = newGameObject;
+            newGameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            CardModel cardModel = newGameObject.GetOrAddComponent<CardModel>();
             cardModel.HideHighlight();
             cardModel.Value = Value;
+            cardModel.DoesCloneOnDrag = false;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
-            cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            cardModel.OnBeginDrag(eventData);
+            return;
         }
 
-        cardModel.CurrentPointerEventData = eventData;
-        cardModel.CurrentDragPhase = DragPhase.Begin;
-        cardModel.PointerPositions[eventData.pointerId] = eventData.position;
+        EventSystem.current.SetSelectedGameObject(null, eventData);
+        CurrentPointerEventData = eventData;
+        CurrentDragPhase = DragPhase.Begin;
+        PointerPositions[eventData.pointerId] = eventData.position;
 
-        cardModel.UpdatePosition();
-        if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
-            cardModel.SecondaryDragAction();
+        UpdatePosition();
+        if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
+            SecondaryDragAction();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (IsOnline && !hasAuthority)
             return;
+            
+        CurrentPointerEventData = eventData;
+        CurrentDragPhase = DragPhase.Drag;
+        PointerPositions[eventData.pointerId] = eventData.position;
 
-        CardModel cardModel;
-        if (!DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
-            cardModel = this;
-
-        cardModel.CurrentPointerEventData = eventData;
-        cardModel.CurrentDragPhase = DragPhase.Drag;
-        cardModel.PointerPositions[eventData.pointerId] = eventData.position;
-
-        cardModel.UpdatePosition();
-        if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
-            cardModel.SecondaryDragAction();
+        UpdatePosition();
+        if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
+            SecondaryDragAction();
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -208,52 +203,38 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline && !hasAuthority)
             return;
 
-        CardModel cardModel;
-        if (!DraggedClones.TryGetValue(eventData.pointerId, out cardModel))
-            cardModel = this;
-        else
-            DraggedClones.Remove(eventData.pointerId);
+        CurrentPointerEventData = eventData;
+        CurrentDragPhase = DragPhase.End;
 
-        cardModel.CurrentPointerEventData = eventData;
-        cardModel.CurrentDragPhase = DragPhase.End;
-
-        cardModel.UpdatePosition();
-        if (cardModel.SecondaryDragAction != null && cardModel.IsProcessingSecondaryDragAction)
-            cardModel.SecondaryDragAction();
+        UpdatePosition();
+        if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
+            SecondaryDragAction();
 
         Vector2 removedOffset = Vector2.zero;
         Vector2 pointerDragOffset;
-        if (cardModel.PointerDragOffsets.TryGetValue(eventData.pointerId, out pointerDragOffset))
-            removedOffset = (Vector2)cardModel.transform.position - eventData.position - pointerDragOffset;
-        cardModel.PointerPositions.Remove(eventData.pointerId);
-        cardModel.PointerDragOffsets.Remove(eventData.pointerId);
+        if (PointerDragOffsets.TryGetValue(eventData.pointerId, out pointerDragOffset))
+            removedOffset = (Vector2)transform.position - eventData.position - pointerDragOffset;
+        PointerPositions.Remove(eventData.pointerId);
+        PointerDragOffsets.Remove(eventData.pointerId);
         Vector2 otherOffset;
-        foreach (int offsetKey in cardModel.PointerDragOffsets.Keys.ToList())
-            if (cardModel.PointerDragOffsets.TryGetValue(offsetKey, out otherOffset))
-                cardModel.PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
+        foreach (int offsetKey in PointerDragOffsets.Keys.ToList())
+            if (PointerDragOffsets.TryGetValue(offsetKey, out otherOffset))
+                PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
 
-        if (cardModel.IsProcessingSecondaryDragAction)
+        if (IsProcessingSecondaryDragAction)
             return;
 
-        if (cardModel.PlaceHolder != null)
-            cardModel.StartCoroutine(cardModel.MoveToPlaceHolder());
-        else if (cardModel.ParentCardStack == null)
-            cardModel.Discard();
+        if (PlaceHolder != null)
+            StartCoroutine(MoveToPlaceHolder());
+        else if (ParentCardStack == null)
+            Discard();
     }
 
     public static CardModel GetPointerDrag(PointerEventData eventData)
     {
         if (eventData.pointerDrag == null)
             return null;
-
-        CardModel cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-        if (cardModel == null)
-            return null;
-
-        CardModel draggedCardModel;
-        if (cardModel.DraggedClones.TryGetValue(eventData.pointerId, out draggedCardModel))
-            cardModel = draggedCardModel;
-        return cardModel;
+        return eventData.pointerDrag.GetComponent<CardModel>();
     }
 
     public void UpdatePosition()
@@ -488,8 +469,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void Discard()
     {
-        if (DropTarget == null && CardGameManager.Current.GameCatchesDiscard)
-            CGSNetManager.Instance?.playController.CatchDiscard(Value);
+        if (DropTarget == null && CardGameManager.Current.GameCatchesDiscard && CGSNetManager.Instance != null)
+            CGSNetManager.Instance.playController.CatchDiscard(Value);
         Destroy(gameObject);
     }
 
