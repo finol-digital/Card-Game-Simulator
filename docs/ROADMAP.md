@@ -2,8 +2,9 @@
 
 ## Minimum Viable Product (CGS v1)
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
-- Fix: Android icon
-- Fix: *Card Search Menu* enums
+- Fix: Pressing Enter on game selection button in the *Main Menu* is ignored
+- Fix: Icon shows Unity logo instead of CGS logo
+- Fix: *Card Search Menu* enums distorted
 
 ## Maple (CGS v2)
 - Support zooming in/out
@@ -59,7 +60,9 @@
 - Support different resolutions and languages for card images
 - Google Play Instant
 - Console versions (Switch, ps4, xbone)
+- Support encryption of game information
+- Partner with other companies to provide licensed games
 - Support game-specific rules enforcement
 - Add link to rules from somewhere within *Play Mode*
-- Create tool to automatically convert games and decks from OCTGN to CGS
+- Create tool to automatically convert games and decks from OCTGN/LackeyCCG to CGS
 
