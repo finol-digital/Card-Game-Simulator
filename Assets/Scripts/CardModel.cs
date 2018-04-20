@@ -26,8 +26,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public bool IsOnline => CGSNetManager.Instance != null && CGSNetManager.Instance.isNetworkActive
         && transform.parent == CGSNetManager.Instance.playController.playAreaContent;
-    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1
-        || (CurrentPointerEventData != null && CurrentPointerEventData.button == PointerEventData.InputButton.Right && CurrentPointerEventData.button == PointerEventData.InputButton.Middle);
+    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null && 
+        (CurrentPointerEventData.button == PointerEventData.InputButton.Middle || CurrentPointerEventData.button == PointerEventData.InputButton.Right));
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
     public bool DoesCloneOnDrag { get; set; }
@@ -115,7 +115,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        DidSelectOnDown = eventData.button != PointerEventData.InputButton.Right && eventData.button != PointerEventData.InputButton.Middle
+        DidSelectOnDown = eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right
             && CardInfoViewer.Instance.SelectedCardModel != this && CardInfoViewer.Instance.WasVisible;
         if (DidSelectOnDown)
             EventSystem.current.SetSelectedGameObject(gameObject, eventData);
@@ -129,7 +129,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerUp(PointerEventData eventData)
     {
         if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId && !eventData.dragging
-            && eventData.button != PointerEventData.InputButton.Right && eventData.button != PointerEventData.InputButton.Middle) {
+            && eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right) {
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
                 DoubleClickAction(this);
             else if (PlaceHolder == null)

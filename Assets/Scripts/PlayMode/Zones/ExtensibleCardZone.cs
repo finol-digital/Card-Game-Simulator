@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     public RectTransform extensionContent;
     public Text labelText;
     public Text countText;
+    public Text statusText;
 
     public ZonesViewer Viewer { get; set; }
     public bool IsExtended { get; private set; }
@@ -68,9 +70,20 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public virtual void Shuffle()
     {
+        StopAllCoroutines();
         List<Card> cards = new List<Card>(Cards);
         cards.Shuffle();
         Sync(cards);
+        StartCoroutine(DisplayShuffle());
+    }
+
+    public IEnumerator DisplayShuffle()
+    {
+        if (statusText != null) {
+            statusText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1);
+            statusText.gameObject.SetActive(false);
+        }
     }
 
     public virtual void ToggleExtension()

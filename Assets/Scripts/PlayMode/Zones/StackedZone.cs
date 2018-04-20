@@ -84,8 +84,10 @@ public class StackedZone : ExtensibleCardZone
 
     public override void Shuffle()
     {
+        StopAllCoroutines();
         CardModels.Shuffle();
         Display();
+        StartCoroutine(DisplayShuffle());
     }
 
     public void ToggleExtension(CardModel cardModel)
