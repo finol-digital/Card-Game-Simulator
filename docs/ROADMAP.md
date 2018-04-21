@@ -2,9 +2,7 @@
 
 ## Minimum Viable Product (CGS v1)
 - Fix: Clicking on card images that have transparency does not register clicks in the correct location
-- Fix: Pressing Enter on game selection button in the *Main Menu* is ignored
 - Fix: Icon shows Unity logo instead of CGS logo
-- Fix: *Card Search Menu* enums distorted
 
 ## Maple (CGS v2)
 - Support zooming in/out
@@ -50,6 +48,7 @@
 - Resize zones based off \<cardSize\> in *Play Mode*
 - Allow automatic deletion of empty decks in *Play Mode*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
+- Organize cards by category when saving a deck in the *Deck Editor*
 - Display keyboard shortcuts in *Options Menu*
 - Allow pre-fetching of card images in *Options Menu*
 - Set card image cache limit in *Options Menu*

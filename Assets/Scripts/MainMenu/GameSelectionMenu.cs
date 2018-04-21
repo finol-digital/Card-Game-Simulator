@@ -17,7 +17,7 @@ public class GameSelectionMenu : SelectionPanel
     public Button cancelButton;
     public Button downloadButton;
 
-    void LateUpdate()
+    void Update()
     {
         if (urlInput.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
