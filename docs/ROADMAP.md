@@ -61,7 +61,7 @@
 - Console versions (Switch, ps4, xbone)
 - Support encryption of game information
 - Partner with other companies to provide licensed games
-- Support game-specific rules enforcement
 - Add link to rules from somewhere within *Play Mode*
 - Create tool to automatically convert games and decks from OCTGN/LackeyCCG to CGS
+- Support game-specific rules enforcement
 
