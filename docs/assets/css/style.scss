@@ -3,10 +3,6 @@
 
 @import "{{ site.theme }}";
 html {background-color: #f2f2f2;}
-header_wrap {background-color: #404040;}
-header img {
-    border: 0;
-}
-h1 a {
-    color: white;
-}
+#header_wrap {background-color: #404040;}
+header img {border: 0;}
+h1 a {color: white;}
