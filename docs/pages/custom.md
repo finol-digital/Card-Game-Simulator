@@ -1,5 +1,5 @@
 # Defining Custom Games
-Card Game Simulator allows users to [download custom card games to use within the application](index.md#get-custom-games).
+Card Game Simulator allows users to [download custom card games to use within the application](index.html#create-custom-games).
 
 ## CGS games directory
 Custom games are defined by creating a new folder within the persistent games data directory. The location of this persistent data directory varies depending on platform. Some examples include:
