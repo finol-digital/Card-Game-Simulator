@@ -45,6 +45,7 @@ permalink: roadmap.html
 - Support custom card backgrounds (Hearthstone)
 - Support decimal card property data type
 - Support object card property data type
+- Add display name to card properties
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
 - Define order and enums for Mahjong properties
