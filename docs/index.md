@@ -13,15 +13,15 @@ With CGS, users can create and share their own custom card games!
 
 You can download additional games by pressing the top button of the Main Menu:
 
-![Main Menu Image](screenshots/mainmenu.png)
+![Main Menu Image](assets/img/mainmenu.png)
 
 In the Game Selection Menu, press "Download":
 
-![Game Selection Menu Image](screenshots/gameselection.png)
+![Game Selection Menu Image](assets/img/gameselection.png)
 
 Then, enter the CGS AutoUpdate URL for the game you would like to download:
 
-![Game Download Menu Image](screenshots/gamedownload.png)
+![Game Download Menu Image](assets/img/gamedownload.png)
 
 For example, the CGS AutoUpdate URL for Hearthstone is: https://hearthstone.finoldigital.com/
 
