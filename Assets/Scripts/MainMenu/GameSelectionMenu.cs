@@ -8,9 +8,9 @@ public class GameSelectionMenu : SelectionPanel
 {
     public const string DeleteMessage = "Please download additional card games before deleting.";
     public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
-    public const string DominoesUrl = "https://cardgamesim.finoldigital.com/Dominoes/Dominoes.json";
-    public const string StandardUrl = "https://cardgamesim.finoldigital.com/Standard/Standard.json";
-    public const string MahjongUrl = "https://cardgamesim.finoldigital.com/Mahjong/Mahjong.json";
+    public const string DominoesUrl = "https://cardgamesim.finoldigital.com/games/Dominoes/Dominoes.json";
+    public const string StandardUrl = "https://cardgamesim.finoldigital.com/games/Standard/Standard.json";
+    public const string MahjongUrl = "https://cardgamesim.finoldigital.com/games/Mahjong/Mahjong.json";
 
     public RectTransform downloadPanel;
     public InputField urlInput;
