@@ -20,7 +20,6 @@ public enum DragPhase
 public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public const float MovementSpeed = 600f;
-    public const float AlphaHitTestMinimumThreshold = 0.1f;
     public static readonly Color SelectedHighlightColor = new Color(0.39f, 0.29f, 0.79f);
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
@@ -96,6 +95,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void Start()
     {
+        ((RectTransform)transform).sizeDelta = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize;
+
         if (IsOnline) {
             if (Vector2.zero != localPosition)
                 OnChangeLocalPosition(localPosition);
@@ -107,7 +108,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             CardGameManager.Current.PutCardImage(this);
         else
             image.sprite = CardGameManager.Current.CardBackImageSprite;
-        image.alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
+        //image.alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
 
         _outline = GetComponent<Outline>();
         _nameText = GetComponentInChildren<Text>();
@@ -309,6 +310,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             prevParentStack.OnRemove(this);
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         transform.position = targetPosition;
+        transform.localScale = Vector3.one;
     }
 
     [Command]

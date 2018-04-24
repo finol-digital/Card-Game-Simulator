@@ -5,12 +5,9 @@ permalink: roadmap.html
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Fix: Clicking on card images that have transparency does not register clicks in the correct location
 - Fix: Icon shows Unity logo instead of CGS logo
 
 ## Maple (CGS v2)
-- Support zooming in/out
-- Resize cards based off \<cardSize\>
 - Define actions that can be done on a card:
   - Toggle rotation between 0 and 90/180/270
   - Rotate 90/180/270
@@ -42,8 +39,10 @@ permalink: roadmap.html
 - Share discard pile between all players who share a deck in *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
 - Clear the background once a card enters the play area in *Play Mode*
+- Add link to rules from somewhere within *Play Mode*
 - Support multiple card backs
 - Support more than 1 card face
+- Support custom card backgrounds (Hearthstone)
 - Support decimal card property data type
 - Support object card property data type
 - Deck Editor Search Results Text-Only View
@@ -65,7 +64,7 @@ permalink: roadmap.html
 - Console versions (Switch, ps4, xbone)
 - Support encryption of game information
 - Partner with other companies to provide licensed games
-- Add link to rules from somewhere within *Play Mode*
 - Create tool to automatically convert games and decks from OCTGN/LackeyCCG to CGS
+- Add ability to create a new card game from within CGS
 - Support game-specific rules enforcement
 

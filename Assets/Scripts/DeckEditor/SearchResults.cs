@@ -13,7 +13,7 @@ public class SearchResults : MonoBehaviour
     public Text filtersText;
     public Text countText;
 
-    public int CardsPerPage => Mathf.FloorToInt(layoutArea.rect.width / (deckEditor.cardModelPrefab.GetComponent<RectTransform>().rect.width + layoutArea.gameObject.GetOrAddComponent<HorizontalLayoutGroup>().spacing));
+    public int CardsPerPage => Mathf.FloorToInt(layoutArea.rect.width / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + layoutArea.gameObject.GetOrAddComponent<HorizontalLayoutGroup>().spacing));
     public int TotalPageCount => CardsPerPage == 0 ? 0 : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
 
     public CardSearchMenu CardSearcher => _cardSearcher ??

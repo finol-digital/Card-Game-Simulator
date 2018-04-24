@@ -230,6 +230,7 @@ MonoBehaviour:
   extensionContent: {fileID: 224401239774813296}
   labelText: {fileID: 114197743801475352}
   countText: {fileID: 114390940532534970}
+  statusText: {fileID: 0}
 --- !u!114 &114390940532534970
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -495,7 +496,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 10
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0

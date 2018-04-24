@@ -11,9 +11,9 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
     public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
     public const string ChangeIndicator = "*";
-    public const int CardStackSize = 8;
 
-    public int CardStackCount => Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardStackSize);
+    public int CardsPerStack => Mathf.FloorToInt(8 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / 350f));
+    public int CardStackCount => Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardsPerStack);
     public List<CardStack> CardStacks => _cardStacks ?? (_cardStacks = new List<CardStack>());
     public int CurrentCardStackIndex {
         get {
@@ -131,6 +131,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             newCardStack.OnAddCardActions.Add(OnAddCardModel);
             newCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
             CardStacks.Add(newCardStack);
+            newCardStack.GetComponent<VerticalLayoutGroup>().spacing = -300 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / 350f);
         }
         layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardStacks.Count, layoutContent.sizeDelta.y);
     }
@@ -155,7 +156,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         if (card == null || CardStacks.Count < 1)
             return;
 
-        int maxCopiesInStack = CardStackSize;
+        int maxCopiesInStack = CardsPerStack;
         CardModel newCardModel = null;
         while (newCardModel == null) {
             if (CardStacks [CurrentCardStackIndex].transform.childCount < maxCopiesInStack) {

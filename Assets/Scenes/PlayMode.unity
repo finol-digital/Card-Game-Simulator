@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 8
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -39,6 +39,7 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -54,11 +55,10 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
-    m_TextureWidth: 1024
-    m_TextureHeight: 1024
+    m_AtlasSize: 1024
     m_AO: 0
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
@@ -3273,15 +3273,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2655ea0c592824b4fa58764634469684, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  extraZonePrefab: {fileID: 1070941818217934, guid: a3317236d95550446b012dc8cdfc9b94,
+  resultsZonePrefab: {fileID: 1289401509893336, guid: b62cf2ffb128be84b82a8681c6e389db,
     type: 2}
   discardZonePrefab: {fileID: 1210712962979136, guid: ed8d95212d819c6439470ec2257371df,
+    type: 2}
+  extraZonePrefab: {fileID: 1070941818217934, guid: a3317236d95550446b012dc8cdfc9b94,
     type: 2}
   deckZonePrefab: {fileID: 1622848851289832, guid: 52c6b7c51cfe1874590bd53a822b6ccc,
     type: 2}
   handZonePrefab: {fileID: 1776893089054616, guid: e5f82870ec0d3ce4ca680215cd2a8aba,
-    type: 2}
-  resultsZonePrefab: {fileID: 1289401509893336, guid: b62cf2ffb128be84b82a8681c6e389db,
     type: 2}
   scrollView: {fileID: 1101303135}
   extendButton: {fileID: 253294374}
@@ -3632,7 +3632,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1507733844}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5267278cc7412354cb55ab29d57d8328, type: 3}
+  m_Script: {fileID: 11500000, guid: 030a61f41d770e048a36743f08169396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Content: {fileID: 217919977}
@@ -3655,6 +3655,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  _minZoom: 0.1
+  _maxZoom: 10
+  _zoomLerpSpeed: 10
 --- !u!1 &1508039170
 GameObject:
   m_ObjectHideFlags: 0
