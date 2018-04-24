@@ -1,3 +1,7 @@
+---
+permalink: roadmap.html
+---
+
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)

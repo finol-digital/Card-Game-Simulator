@@ -1,3 +1,7 @@
+---
+permalink: custom.html
+---
+
 # Defining Custom Games
 Card Game Simulator allows users to [download custom card games to use within the application](index.html#create-custom-games).
 

@@ -1,3 +1,7 @@
+---
+permalink: keyboard.html
+---
+
 # CGS Keyboard Shortcuts
 If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these keyboard shortcuts.
 
