@@ -1,4 +1,6 @@
-![GGS Logo](screenshots/CGSLogo.png)
+---
+layout: home
+---
 
 # Play Anywhere
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
