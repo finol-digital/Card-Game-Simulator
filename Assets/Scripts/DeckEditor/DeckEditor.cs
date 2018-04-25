@@ -11,8 +11,9 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
     public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
     public const string ChangeIndicator = "*";
-
-    public int CardsPerStack => Mathf.FloorToInt(8 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / 350f));
+    
+    public float PreHeight => cardModelPrefab.GetComponent<RectTransform>().rect.height;
+    public int CardsPerStack => Mathf.FloorToInt(8 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight));
     public int CardStackCount => Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardsPerStack);
     public List<CardStack> CardStacks => _cardStacks ?? (_cardStacks = new List<CardStack>());
     public int CurrentCardStackIndex {
@@ -108,14 +109,9 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public void LabelCardsInStacks()
     {
-        foreach (CardStack cardStack in CardStacks) {
-            foreach (CardModel cardModel in cardStack.GetComponentsInChildren<CardModel>()) {
-                if (cardModel.transform.GetSiblingIndex() == cardStack.transform.childCount - 1 && cardModel.HasImage)
-                    cardModel.HideNameLabel();
-                else
+        foreach (CardStack cardStack in CardStacks)
+            foreach (CardModel cardModel in cardStack.GetComponentsInChildren<CardModel>())
                     cardModel.ShowNameLabel();
-            }
-        }
     }
 
     public void ResetCardStacks()
@@ -131,9 +127,11 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             newCardStack.OnAddCardActions.Add(OnAddCardModel);
             newCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
             CardStacks.Add(newCardStack);
-            newCardStack.GetComponent<VerticalLayoutGroup>().spacing = -300 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / 350f);
+            newCardStack.GetComponent<VerticalLayoutGroup>().spacing = -cardStackPrefab.GetComponent<VerticalLayoutGroup>().spacing
+                * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight);
         }
-        layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardStacks.Count, layoutContent.sizeDelta.y);
+        layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardStacks.Count, 
+            layoutContent.sizeDelta.y);
     }
 
     public void OnDrop(CardModel cardModel)
