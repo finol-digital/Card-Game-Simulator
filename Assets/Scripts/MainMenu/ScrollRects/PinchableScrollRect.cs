@@ -72,6 +72,10 @@ public class PinchableScrollRect : SecondaryScrollView
     
     bool IsTouchingCard(Touch touch)
     {
+        CardModel[] cardModels = content.GetComponentsInChildren<CardModel>();
+        foreach(CardModel cardModel in cardModels)
+            if (cardModel.PointerPositions.Values.Contains(touch.position))
+                return true;
         return false;
     }
 
