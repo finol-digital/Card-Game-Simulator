@@ -108,7 +108,6 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             CardGameManager.Current.PutCardImage(this);
         else
             image.sprite = CardGameManager.Current.CardBackImageSprite;
-        //image.alphaHitTestMinimumThreshold = AlphaHitTestMinimumThreshold;
 
         _outline = GetComponent<Outline>();
         _nameText = GetComponentInChildren<Text>();

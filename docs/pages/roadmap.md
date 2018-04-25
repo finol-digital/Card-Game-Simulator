@@ -70,6 +70,7 @@ permalink: roadmap.html
 - Create tool to automatically convert games and decks from OCTGN/LackeyCCG to CGS
 - Add ability to create a new card game from within CGS
 - Support game-specific rules enforcement
+- Tech: Set up build server
 - Tech: Add unit tests
 - Tech: Use namespaces
 - Tech: Review with Resharper
