@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class PinchableScrollRect : SecondaryScrollView
 {
-    public const float MinZoom = .75f;
+    public const float MinZoom = 0.75f;
     public const float MaxZoom = 1.5f;
-    public const float ZoomLerpSpeed = 5f;
-    public const float MouseWheelSensitivity = .1f;
+    public const float ZoomLerpSpeed = 7.5f;
+    public const float MouseWheelSensitivity = 0.1f;
 
     private float _currentZoom = 1;
     private bool _isPinching = false;
@@ -32,23 +32,18 @@ public class PinchableScrollRect : SecondaryScrollView
 
     void Update()
     {
-        if (Input.touchCount == 2)
-        {
-            if (!_isPinching)
-            {
+        if (Input.touchCount == 2) {
+            if (!_isPinching) {
                 _isPinching = true;
                 OnPinchStart();
             }
             OnPinch();
-        }
-        else
-        {
+        } else {
             _isPinching = false;
             if (Input.touchCount == 0)
-            {
                 _blockPan = false;
-            }
         }
+        
         //pc input
         float scrollWheelInput = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Abs(scrollWheelInput) > float.Epsilon)
@@ -57,7 +52,7 @@ public class PinchableScrollRect : SecondaryScrollView
             _currentZoom = Mathf.Clamp(_currentZoom, MinZoom, MaxZoom);
             _startPinchScreenPosition = (Vector2)Input.mousePosition;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(content, _startPinchScreenPosition, null, out _startPinchCenterPosition);
-            Vector2 pivotPosition = new Vector3(content.pivot.x * content.rect.size.x, content.pivot.y * content.rect.size.y);
+            Vector2 pivotPosition = new Vector2(content.pivot.x * content.rect.size.x, content.pivot.y * content.rect.size.y);
             Vector2 posFromBottomLeft = pivotPosition + _startPinchCenterPosition;
             SetPivot(content, new Vector2(posFromBottomLeft.x / content.rect.width, posFromBottomLeft.y / content.rect.height));
         }
@@ -102,11 +97,20 @@ public class PinchableScrollRect : SecondaryScrollView
     {
         if (rectTransform == null)
             return;
+        
+        List<Transform> children = new List<Transform>();
+        for(int i = 0; i < rectTransform.childCount; i++)
+            children.Add(rectTransform.GetChild(i));
+        foreach(Transform child in children)
+            child.SetParent(null);
 
         Vector2 size = rectTransform.rect.size;
         Vector2 deltaPivot = rectTransform.pivot - pivot;
         Vector3 deltaPosition = new Vector3(deltaPivot.x * size.x, deltaPivot.y * size.y) * rectTransform.localScale.x;
         rectTransform.pivot = pivot;
         rectTransform.localPosition -= deltaPosition;
+        
+        foreach(Transform child in children)
+            child.SetParent(rectTransform);
     }
 }
