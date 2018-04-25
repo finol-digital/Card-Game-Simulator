@@ -6,7 +6,7 @@
  {
      float _minZoom = .75f;
      float _maxZoom = 1.5f;
-     float _zoomLerpSpeed = 1f;
+     float _zoomLerpSpeed = 5f;
      float _currentZoom = 1;
      bool _isPinching = false;
      float _startPinchDist;
