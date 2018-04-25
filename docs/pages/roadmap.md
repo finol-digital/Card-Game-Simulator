@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## Minimum Viable Product (CGS v1)
 - Fix: Icon shows Unity logo instead of CGS logo
+- Fix: Improve play area zoom
 
 ## Maple (CGS v2)
 - Define actions that can be done on a card:
@@ -17,7 +18,7 @@ permalink: roadmap.html
   - Move to discard/delete
 - Allow card zones to be defined within certain segments of the play area (i.e. lands/creatures/etc)
 - Allow for contextual setting what card action to do when a card is double-clicked
-- Press and hold (or right-click) on a card to bring up a context menu with the full list of possible card actions
+- Add context menu with the full list of possible card actions
 - Support special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Allow cards to snap to each other when moving them
 - Support grouping for cards
@@ -28,17 +29,17 @@ permalink: roadmap.html
 - Consider keyboard shortcuts
 
 ## Icebox (CGS v3+)
+- Clear the background once a card enters the play area in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
-- Allow rotation in *Deck Editor* to keep viewing the currently selected card
+- Allow rotation to keep viewing the currently selected card
 - Support deep links for games and decks through https://docs.branch.io/
 - Support Android Search button
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Synchronize points across teams in *Play Mode*
 - Share discard pile between all players who share a deck in *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
-- Clear the background once a card enters the play area in *Play Mode*
 - Add link to rules from somewhere within *Play Mode*
 - Support multiple card backs
 - Support more than 1 card face

@@ -35,6 +35,6 @@ When joining a friend's game session, CGS will be set to use the same card game 
 When navigating through CGS, you may find it useful to use [keyboard shortcuts](keyboard.html).
 
 ## Feedback
-See the [current roadmap](roadmap.html). Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com>.
+See the [current roadmap](roadmap.html). Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or [contact us on facebook](https://www.facebook.com/cardgamesimulator/).
 
 *You may also be interested in our [Privacy Policy](PRIVACY.html).*
