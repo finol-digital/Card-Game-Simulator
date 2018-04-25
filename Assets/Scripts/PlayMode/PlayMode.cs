@@ -197,6 +197,7 @@ public class PlayMode : MonoBehaviour
 
     public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
     {
+        CardGameManager.Instance.BackgroundImage.gameObject.SetActive(false);
         if (NetworkManager.singleton.isNetworkActive)
             CGSNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
         else
