@@ -29,7 +29,6 @@ permalink: roadmap.html
 - Consider keyboard shortcuts
 
 ## Icebox (CGS v3+)
-- Clear the background once a card enters the play area in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
