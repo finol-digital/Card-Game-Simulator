@@ -127,7 +127,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             newCardStack.OnAddCardActions.Add(OnAddCardModel);
             newCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
             CardStacks.Add(newCardStack);
-            newCardStack.GetComponent<VerticalLayoutGroup>().spacing = -cardStackPrefab.GetComponent<VerticalLayoutGroup>().spacing
+            newCardStack.GetComponent<VerticalLayoutGroup>().spacing = cardStackPrefab.GetComponent<VerticalLayoutGroup>().spacing
                 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight);
         }
         layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardStacks.Count, 
