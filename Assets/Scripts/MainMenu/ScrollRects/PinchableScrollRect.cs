@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +9,8 @@ public class PinchableScrollRect : SecondaryScrollView
     public const float MaxZoom = 1.5f;
     public const float ZoomLerpSpeed = 7.5f;
     public const float MouseWheelSensitivity = 0.1f;
+    
+    public List<Touch> Touches { get; private set; } = new List<Touch>();
 
     private float _currentZoom = 1;
     private bool _isPinching = false;
@@ -32,19 +34,25 @@ public class PinchableScrollRect : SecondaryScrollView
 
     void Update()
     {
-        if (Input.touchCount == 2) {
+        // Touch input
+        Touches = new List<Touch>(Input.touches);
+        for (int i = Touches.count - 1; i >= 0; i--) {
+            if (IsTouchingCard(Touches[i]))
+                Touches.RemoveAt(i);
+        }
+        if (Touches.count == 2) {
             if (!_isPinching) {
                 _isPinching = true;
-                OnPinchStart();
+                OnStartPinch();
             }
             OnPinch();
         } else {
             _isPinching = false;
-            if (Input.touchCount == 0)
+            if (Touches.count == 0)
                 _blockPan = false;
         }
         
-        //pc input
+        // Mouse input
         float scrollWheelInput = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Abs(scrollWheelInput) > float.Epsilon)
         {
@@ -56,20 +64,22 @@ public class PinchableScrollRect : SecondaryScrollView
             Vector2 posFromBottomLeft = pivotPosition + _startPinchCenterPosition;
             SetPivot(content, new Vector2(posFromBottomLeft.x / content.rect.width, posFromBottomLeft.y / content.rect.height));
         }
-        //pc input end
 
+        // Scale to zoom
         if (Mathf.Abs(content.localScale.x - _currentZoom) > 0.001f)
             content.localScale = Vector3.Lerp(content.localScale, Vector3.one * _currentZoom, ZoomLerpSpeed * Time.deltaTime);
     }
-
-    void OnPinchStart()
+    
+    bool IsTouchingCard(Touch touch)
     {
-        Vector2 pos1 = Input.touches[0].position;
-        Vector2 pos2 = Input.touches[1].position;
+        return false;
+    }
 
-        _startPinchDist = Distance(pos1, pos2) * content.localScale.x;
+    void OnStartPinch()
+    {
+        _startPinchDist = Distance(Touches[0].position, Touches[1].position) * content.localScale.x;
         _startPinchZoom = _currentZoom;
-        _startPinchScreenPosition = (pos1 + pos2) / 2;
+        _startPinchScreenPosition = (Touches[0].position + Touches[1].position) / 2;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(content, _startPinchScreenPosition, null, out _startPinchCenterPosition);
 
         Vector2 pivotPosition = new Vector3(content.pivot.x * content.rect.size.x, content.pivot.y * content.rect.size.y);
@@ -81,7 +91,7 @@ public class PinchableScrollRect : SecondaryScrollView
 
     void OnPinch()
     {
-        float currentPinchDist = Distance(Input.touches[0].position, Input.touches[1].position) * content.localScale.x;
+        float currentPinchDist = Distance(Touches[0].position, Touches[1].position) * content.localScale.x;
         _currentZoom = (currentPinchDist / _startPinchDist) * _startPinchZoom;
         _currentZoom = Mathf.Clamp(_currentZoom, MinZoom, MaxZoom);
     }
@@ -98,6 +108,7 @@ public class PinchableScrollRect : SecondaryScrollView
         if (rectTransform == null)
             return;
         
+        // Prevent children from being moved
         List<Transform> children = new List<Transform>();
         for(int i = 0; i < rectTransform.childCount; i++)
             children.Add(rectTransform.GetChild(i));
