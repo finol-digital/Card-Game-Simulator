@@ -38,7 +38,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public PointerEventData CurrentPointerEventData { get; private set; }
     public DragPhase CurrentDragPhase { get; private set; }
 
-    protected Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
+    public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
     protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
     [SyncVar(hook ="OnChangeLocalPosition")]

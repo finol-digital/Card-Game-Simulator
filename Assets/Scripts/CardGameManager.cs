@@ -218,7 +218,7 @@ public class CardGameManager : MonoBehaviour
             return _messenger;
         }
     }
-    private Image BackgroundImage {
+    public Image BackgroundImage {
         get {
             if (_backgroundImage == null && GameObject.FindGameObjectWithTag(BackgroundImageTag) != null)
                 _backgroundImage = GameObject.FindGameObjectWithTag(BackgroundImageTag).GetOrAddComponent<Image>();
