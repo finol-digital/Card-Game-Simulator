@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## Minimum Viable Product (CGS v1)
 - Fix: Icon shows Unity logo instead of CGS logo
-- Fix: Improve play area zoom
 
 ## Maple (CGS v2)
 - Define actions that can be done on a card:
