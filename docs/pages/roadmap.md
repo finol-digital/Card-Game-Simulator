@@ -4,37 +4,45 @@ permalink: roadmap.html
 
 # Roadmap
 
-## Minimum Viable Product (CGS v1)
+## Current Sprint
 - Fix: Network local position off when zoomed
-- Fix: Crash when quitting on Windows
 - Fix: Sign apk with appropriate keystore
+- Release v1 to the Play Store
+  - Add tablet screenshots to indicate designed for tablets
+- Release v1 to the App Store
+- Release v1 to the Mac Store
+- Release v1 to the Windows Store
+- Fix: Crash when quitting on Windows Surface Book
 
-## Maple (CGS v2)
-- Define actions that can be done on a card:
-  - Toggle rotation between 0 and 90/180/270
-  - Rotate 90/180/270
-  - Toggle facedown
-  - Move to hand
-  - Move to top/bottom of deck
-  - Move to discard/delete
-- Allow card zones to be defined within certain segments of the play area (i.e. lands/creatures/etc)
-- Allow for contextual setting what card action to do when a card is double-clicked
-- Add context menu with the full list of possible card actions
-- Support special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Allow cards to snap to each other when moving them
-- Support grouping for cards
-- Support moving dice both individually and as a group
-- Support rolling dice both individually and as a group
-- Support different colored dice, potentially using groups based off dice color
-- Support tokens
-- Consider keyboard shortcuts
-
-## Icebox (CGS v3+)
+## Backlog
+- Tech: Set up build server
+- Tech: Add unit tests
+- Tech: Use namespaces
+- Tech: Review with Resharper
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation to keep viewing the currently selected card
 - Support deep links for games and decks through https://docs.branch.io/
+  - Facebook link and first homepage link should use this
+- Card Grouping
+  - Define card zones in play area
+     - Card zones can define what actions are possible in that zone
+- Card Actions
+  - Define
+    - Toggle rotation between 0 and 90/180/270
+    - Rotate 90/180/270
+    - Toggle facedown
+    - Move to hand
+    - Move to top/bottom of deck
+    - Move to discard/delete
+  - Double-clicking takes a default action, based on the zone the card is in
+  - Single-click show menu with all possible actions at the bottom
+  - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Allow cards to snap to each other when moving them
+- Consider keyboard shortcuts
+
+## Icebox
 - Support Android Search button
 - Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Synchronize points across teams in *Play Mode*
@@ -46,6 +54,8 @@ permalink: roadmap.html
 - Support custom card backgrounds (Hearthstone)
 - Support decimal card property data type
 - Support object card property data type
+- Support grouping of dice
+- Support different colored dice
 - Add display name to card properties
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
@@ -64,14 +74,11 @@ permalink: roadmap.html
 - Support multiple languages (Spanish,Chinese)
 - Support different resolutions and languages for card images
 - Google Play Instant
+- Linux version
 - Console versions (Switch, ps4, xbone)
 - Support encryption of game information
 - Partner with other companies to provide licensed games
 - Create tool to automatically convert games and decks from OCTGN/LackeyCCG to CGS
 - Add ability to create a new card game from within CGS
 - Support game-specific rules enforcement
-- Tech: Set up build server
-- Tech: Add unit tests
-- Tech: Use namespaces
-- Tech: Review with Resharper
 
