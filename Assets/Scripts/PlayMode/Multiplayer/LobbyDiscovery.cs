@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,6 +20,14 @@ public class LobbyDiscovery : NetworkDiscovery
 
         if (running)
             StopBroadcast();
+
+        StartCoroutine(WaitToStartBroadcast());
+    }
+
+    // Wait a frame to get it to start broadcasting; there should be a better way to check if it's ok to start
+    IEnumerator WaitToStartBroadcast()
+    {
+        yield return null;
         
         bool started = Initialize() && StartAsServer();
         if (!started)
