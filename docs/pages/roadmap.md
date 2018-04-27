@@ -5,8 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## Minimum Viable Product (CGS v1)
-- Fix: Icon shows Unity logo instead of CGS logo
-- Fix: Online local position off when zoomed
+- Fix: Network local position off when zoomed
 - Fix: Crash when quitting on Windows
 
 ## Maple (CGS v2)
