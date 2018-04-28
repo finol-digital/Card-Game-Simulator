@@ -10,9 +10,9 @@ permalink: roadmap.html
 - Release v1 to the Play Store
   - Add tablet screenshots to indicate designed for tablets
 - Release v1 to the App Store
- - Create Apple Developer Id for Finol Digital
- - Screenshots for iPhone and iPad
- - Create listing with sku, app-id, and description
+  - Create Apple Developer Id for Finol Digital
+  - Screenshots for iPhone and iPad
+  - Create listing with new sku and app-id
 - Release v1 to the Mac Store
 - Release v1 to the Windows Store
 - Fix: Crash when quitting on Windows Surface Book
