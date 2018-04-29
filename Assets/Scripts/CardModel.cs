@@ -295,8 +295,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         RectTransform parentRT = transform.parent as RectTransform;
         if (parentRT == null)
             return transform.position;
-        Debug.LogWarning((Vector2)transform.localPosition);
-        Debug.LogWarning(parentRT.pivot * parentRT.rect.size);
+        Debug.LogWarning((Vector2)transform.localPosition + " " + parentRT.pivot * parentRT.rect.size);
         return (Vector2)transform.localPosition - (parentRT.pivot * parentRT.rect.size);
     }
 
@@ -304,8 +303,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         if (IsOnline && !hasAuthority) {
             RectTransform parentRT = (RectTransform)transform.parent;
-            Debug.LogWarning((Vector2)transform.localPosition);
-            Debug.LogWarning(parentRT.pivot * parentRT.rect.size);
+            Debug.LogWarning((Vector2)transform.localPosition + " " + parentRT.pivot * parentRT.rect.size);
             transform.localPosition = localPosition + (parentRT.pivot * parentRT.rect.size);
         }
     }

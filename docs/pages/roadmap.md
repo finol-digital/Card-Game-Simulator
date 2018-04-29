@@ -28,7 +28,7 @@ permalink: roadmap.html
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation to keep viewing the currently selected card
 - Support deep links for games and decks through https://docs.branch.io/
-  - Facebook link and first homepage link should use this
+  - Facebook link and homepage banner image link should use this
 - Card Grouping
   - Define card zones in play area
      - Card zones can define what actions are possible in that zone
