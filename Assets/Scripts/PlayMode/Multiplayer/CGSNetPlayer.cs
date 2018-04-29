@@ -131,20 +131,20 @@ public class CGSNetPlayer : NetworkBehaviour
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
     {
         cardModel.transform.SetParent(cardStack.transform);
-        cardModel.localPosition = cardModel.transform.localPosition;
+        cardModel.position = cardModel.GetChangedPosition();
         cardModel.rotation = cardModel.transform.rotation;
-        CmdSpawnCard(cardModel.Id, cardModel.localPosition, cardModel.rotation, cardModel.IsFacedown);
+        CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.IsFacedown);
         Destroy(cardModel.gameObject);
     }
 
     [Command]
-    public void CmdSpawnCard(string cardId, Vector3 localPosition, Quaternion rotation, bool isFacedown)
-    {
+    public void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
+    { 
         PlayMode controller = CGSNetManager.Instance.playController;
         GameObject newCard = Instantiate(CGSNetManager.Instance.cardModelPrefab, controller.playAreaContent);
         CardModel cardModel = newCard.GetComponent<CardModel>();
         cardModel.Value = CardGameManager.Current.Cards[cardId];
-        cardModel.localPosition = localPosition;
+        cardModel.position = position;
         cardModel.rotation = rotation;
         cardModel.IsFacedown = isFacedown;
         controller.SetPlayActions(controller.playAreaContent.GetComponent<CardStack>(), cardModel);

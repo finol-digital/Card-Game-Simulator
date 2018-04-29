@@ -41,8 +41,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
     protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
-    [SyncVar(hook ="OnChangeLocalPosition")]
-    public Vector2 localPosition;
+    [SyncVar(hook ="OnChangePosition")]
+    public Vector2 position;
 
     [SyncVar(hook ="OnChangeRotation")]
     public Quaternion rotation;
@@ -98,8 +98,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         ((RectTransform)transform).sizeDelta = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize;
 
         if (IsOnline) {
-            if (Vector2.zero != localPosition)
-                OnChangeLocalPosition(localPosition);
+            if (Vector2.zero != position)
+                OnChangePosition(position);
             if (Quaternion.identity != rotation)
                 OnChangeRotation(rotation);
         }
@@ -260,7 +260,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
 
         if (IsOnline)
-            localPosition = transform.localPosition;
+            position = GetChangedPosition();
     }
 
     public void UpdateCardStackPosition(Vector2 targetPosition)
@@ -290,10 +290,24 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             ParentToCanvas(targetPosition);
     }
 
-    public void OnChangeLocalPosition(Vector2 localPosition)
+    public Vector2 GetChangedPosition()
     {
-        if (IsOnline && !hasAuthority)
-            transform.localPosition = localPosition;
+        RectTransform parentRT = transform.parent as RectTransform;
+        if (parentRT == null)
+            return transform.position;
+        Debug.LogWarning((Vector2)transform.localPosition);
+        Debug.LogWarning(parentRT.pivot * parentRT.rect.size);
+        return (Vector2)transform.localPosition - (parentRT.pivot * parentRT.rect.size);
+    }
+
+    public void OnChangePosition(Vector2 localPosition)
+    {
+        if (IsOnline && !hasAuthority) {
+            RectTransform parentRT = (RectTransform)transform.parent;
+            Debug.LogWarning((Vector2)transform.localPosition);
+            Debug.LogWarning(parentRT.pivot * parentRT.rect.size);
+            transform.localPosition = localPosition + (parentRT.pivot * parentRT.rect.size);
+        }
     }
 
     public void ParentToCanvas(Vector3 targetPosition)

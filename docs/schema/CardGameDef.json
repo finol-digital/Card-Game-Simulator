@@ -74,6 +74,10 @@
 			"type": "string",
 			"format": "uri"
 		},
+		"cardClearsBackground": {
+			"description": "If cardClearsBackground is true, CGS will clear the background in Play Mode whenever a card is put in the play area.",
+			"type": "boolean"
+		},
 		"cardDataIdentifier": {
 			"description": "If cardDataIdentifier is set to a non-empty string, AllCards.json will be parsed as a JSON object: {\"!cardDataIdentifier\":{\"$ref\":\"AllCards.json\"}}",
 			"type": "string"

@@ -4,6 +4,7 @@
 	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/Dominoes.json",
 	"backgroundImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/Background.png",
 	"cardBackImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/CardBack.png",
+	"cardClearsBackground": true,
 	"cardImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",
 	"cardNameIsAtTop": false,
 	"cardPrimaryProperty": "suit",

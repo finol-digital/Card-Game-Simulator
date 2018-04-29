@@ -68,6 +68,9 @@ public class CardGame
     public string CardBackImageUrl { get; set; } = "";
 
     [JsonProperty]
+    public bool CardClearsBackground { get; set; }
+
+    [JsonProperty]
     public string CardDataIdentifier { get; set; } = "";
 
     [JsonProperty]

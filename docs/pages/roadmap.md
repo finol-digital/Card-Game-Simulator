@@ -13,9 +13,10 @@ permalink: roadmap.html
   - Create Apple Developer Id for Finol Digital
   - Screenshots for iPhone and iPad
   - Create listing with new sku and app-id
-- Release v1 to the Mac Store
-- Release v1 to the Windows Store
+- Release v1 to the Mac App Store
+- Release v1 to the Microsoft Store
 - Fix: Crash when quitting on Windows Surface Book
+- Fix: Connection to host is occasionally lost
 
 ## Backlog
 - Tech: Set up build server
