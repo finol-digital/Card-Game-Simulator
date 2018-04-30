@@ -292,20 +292,23 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public Vector2 GetChangedPosition()
     {
-        RectTransform parentRT = transform.parent as RectTransform;
-        if (parentRT == null)
+        RectTransform playArea = transform.parent as RectTransform;
+        if (playArea == null)
             return transform.position;
-        Debug.LogWarning((Vector2)transform.localPosition + " " + parentRT.pivot * parentRT.rect.size);
-        return (Vector2)transform.localPosition - (parentRT.pivot * parentRT.rect.size);
+        Debug.LogWarning("Sending");
+        Debug.LogWarning((Vector2)transform.localPosition + " " + playArea.pivot * playArea.rect.size);
+        return (Vector2)transform.localPosition - (playArea.pivot * playArea.rect.size);
     }
 
-    public void OnChangePosition(Vector2 localPosition)
+    public void OnChangePosition(Vector2 position)
     {
-        if (IsOnline && !hasAuthority) {
-            RectTransform parentRT = (RectTransform)transform.parent;
-            Debug.LogWarning((Vector2)transform.localPosition + " " + parentRT.pivot * parentRT.rect.size);
-            transform.localPosition = localPosition + (parentRT.pivot * parentRT.rect.size);
-        }
+        if (!IsOnline || hasAuthority)
+            return;
+        
+        RectTransform playArea = (RectTransform)transform.parent;
+        Debug.LogWarning("Received");
+        Debug.LogWarning(position + " " + playArea.pivot * playArea.rect.size);
+        transform.localPosition = position + (playArea.pivot * playArea.rect.size);
     }
 
     public void ParentToCanvas(Vector3 targetPosition)
