@@ -246,8 +246,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/David/Documents/GitHub/Card Game Simulator/cgs.keystore
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: C:/Users/david/Documents/GitHub/Card-Game-Simulator/finoldigital.keystore
+  AndroidKeyaliasName: cgs
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
