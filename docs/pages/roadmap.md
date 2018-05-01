@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## Current Sprint
+- Fix: Clear button in *New Deck Menu*
 - Fix: Sign apk with appropriate keystore
 - Release v1 to the Play Store
   - Add tablet screenshots to indicate designed for tablets
@@ -22,6 +23,7 @@ permalink: roadmap.html
 - Tech: Add unit tests
 - Tech: Use namespaces
 - Tech: Review with Resharper
+- Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
