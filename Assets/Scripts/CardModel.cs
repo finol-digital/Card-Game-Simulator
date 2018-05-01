@@ -99,9 +99,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         if (IsOnline) {
             if (Vector2.zero != position)
-                OnChangePosition(position);
+                ((RectTransform)transform).anchoredPosition = position;
             if (Quaternion.identity != rotation)
-                OnChangeRotation(rotation);
+                transform.rotation = rotation;
         }
 
         if (!IsFacedown)
@@ -258,9 +258,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         if (PlaceHolderCardStack != null)
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
-
+        
         if (IsOnline)
-            position = GetChangedPosition();
+            CmdUpdatePosition(((RectTransform)transform).anchoredPosition);
     }
 
     public void UpdateCardStackPosition(Vector2 targetPosition)
@@ -290,25 +290,16 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             ParentToCanvas(targetPosition);
     }
 
-    public Vector2 GetChangedPosition()
+    [Command]
+    void CmdUpdatePosition(Vector2 position)
     {
-        RectTransform playArea = transform.parent as RectTransform;
-        if (playArea == null)
-            return transform.position;
-        Debug.LogWarning("Sending");
-        Debug.LogWarning((Vector2)transform.localPosition + " " + playArea.pivot * playArea.rect.size);
-        return (Vector2)transform.localPosition - (playArea.pivot * playArea.rect.size);
+        this.position = position;
     }
 
     public void OnChangePosition(Vector2 position)
     {
-        if (!IsOnline || hasAuthority)
-            return;
-        
-        RectTransform playArea = (RectTransform)transform.parent;
-        Debug.LogWarning("Received");
-        Debug.LogWarning(position + " " + playArea.pivot * playArea.rect.size);
-        transform.localPosition = position + (playArea.pivot * playArea.rect.size);
+        if (!hasAuthority)
+            ((RectTransform)transform).anchoredPosition = position;
     }
 
     public void ParentToCanvas(Vector3 targetPosition)
@@ -384,12 +375,18 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         transform.Rotate(0, 0, Vector2.SignedAngle(prevDir, currDir));
 
         if (IsOnline)
-            rotation = transform.rotation;
+            CmdUpdateRotation(transform.rotation);
+    }
+
+    [Command]
+    public void CmdUpdateRotation(Quaternion rotation)
+    {
+        this.rotation = rotation;
     }
 
     public void OnChangeRotation(Quaternion rotation)
     {
-        if (IsOnline && !hasAuthority)
+        if (!hasAuthority)
             transform.rotation = rotation;
     }
 
@@ -400,7 +397,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         cardModel.transform.rotation = Quaternion.identity;
         if (cardModel.IsOnline)
-            cardModel.rotation = cardModel.transform.rotation;
+            cardModel.CmdUpdateRotation(cardModel.transform.rotation);
     }
 
     public static void ShowCard(CardStack cardStack, CardModel cardModel)

@@ -131,7 +131,7 @@ public class CGSNetPlayer : NetworkBehaviour
     public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
     {
         cardModel.transform.SetParent(cardStack.transform);
-        cardModel.position = cardModel.GetChangedPosition();
+        cardModel.position = ((RectTransform)cardModel.transform).anchoredPosition;
         cardModel.rotation = cardModel.transform.rotation;
         CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.IsFacedown);
         Destroy(cardModel.gameObject);
