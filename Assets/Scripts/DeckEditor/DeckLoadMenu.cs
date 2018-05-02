@@ -194,6 +194,11 @@ public class DeckLoadMenu : SelectionPanel
         nameInputField.text = UnityExtensionMethods.GetSafeFileName(deckName);
     }
 
+    public void Clear()
+    {
+        textInputField.text = string.Empty;
+    }
+
     public void PasteClipboardIntoText()
     {
         textInputField.text = UniClipboard.GetText();

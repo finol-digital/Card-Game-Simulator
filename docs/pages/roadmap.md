@@ -5,7 +5,6 @@ permalink: roadmap.html
 # Roadmap
 
 ## Current Sprint
-- Fix: Clear button in *New Deck Menu*
 - Fix: Sign apk with appropriate keystore
 - Release v1 to the Play Store
   - Add tablet screenshots to indicate designed for tablets
