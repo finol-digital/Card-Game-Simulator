@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "com.unity.ads": "exclude",
-    "com.unity.textmeshpro": "1.2.2"
+    "com.unity.textmeshpro": "1.2.2",
+    "com.unity.assetbundlebrowser": "1.5.0",
+    "com.unity.package-manager-ui": "1.8.8"
   }
 }
