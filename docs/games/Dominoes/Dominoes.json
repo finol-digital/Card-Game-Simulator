@@ -16,7 +16,7 @@
 	"cardSize": { "x": 1, "y": 2 },
 	"deckUrls": [
 		{"name": "Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Six%20Dominoes.txt"},
-		{"name": "Double Nine Dominoes", "url": "https://cardgamesim.finoldigital.com/Dominoes/games/decks/Double%20Nine%20Dominoes.txt"},
+		{"name": "Double Nine Dominoes", "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Nine%20Dominoes.txt"},
 		{"name": "Wooden Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Wooden%20Double%20Six%20Dominoes.txt"}
 	],
 	"enums": [
