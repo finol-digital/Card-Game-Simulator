@@ -8,8 +8,8 @@ Card Game Simulator allows users to [download custom card games to use within th
 ## CGS games directory
 Custom games are defined by creating a new folder within the persistent games data directory. The location of this persistent data directory varies depending on platform. Some examples include:
 - Android: /Data/Data/com.finoldigital.cardgamesim/files/games/
-- Windows: C:/Users/\<Username\>/AppData/LocalLow/Finol Digital/Card Game Simulator/games/
-- Mac: ~/Library/Application Support/Finol Digital/Card Game Simulator/games/
+- Windows: C:/Users/\<Username\>/AppData/LocalLow/Finol Digital LLC/Card Game Simulator/games/
+- Mac: ~/Library/Application Support/Finol Digital LLC/Card Game Simulator/games/
 
 ## Custom game folder structure
 The structure of this custom game folder is:

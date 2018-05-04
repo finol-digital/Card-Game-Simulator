@@ -5,9 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## Current Sprint
-- Fix: Sign apk with appropriate keystore
 - Release v1 to the Play Store
-  - Add tablet screenshots to indicate designed for tablets
 - Release v1 to the App Store
   - Create Apple Developer Id for Finol Digital
   - Screenshots for iPhone and iPad
