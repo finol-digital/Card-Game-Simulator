@@ -5,7 +5,6 @@ permalink: roadmap.html
 # Roadmap
 
 ## Current Sprint
-- Release v1 to the Play Store
 - Release v1 to the App Store
   - Create Apple Developer Id for Finol Digital
   - Screenshots for iPhone and iPad
