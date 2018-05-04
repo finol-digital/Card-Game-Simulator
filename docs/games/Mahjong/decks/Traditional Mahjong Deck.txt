@@ -1,4 +1,4 @@
-# Mahjong Deck List: Standard Mahjong Deck
+### Mahjong Deck: Traditional Mahjong Deck
 4 1 Circle
 4 2 Circle
 4 3 Circle

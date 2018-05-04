@@ -319,7 +319,7 @@ public class Deck : IEquatable<Deck>
     public string ToTxt()
     {
         StringBuilder text = new StringBuilder();
-        text.AppendFormat("### {0} Deck List: {1} {2}", CardGameManager.Current.Name, Name, Environment.NewLine);
+        text.AppendFormat("### {0} Deck: {1} {2}", CardGameManager.Current.Name, Name, Environment.NewLine);
         Dictionary<Card, int> cardCounts = GetCardCounts();
         foreach(KeyValuePair<Card, int> cardCount in cardCounts) {
             bool isDeckFileTxtIdRequired = CardGameManager.Current.DeckFileTxtIdRequired || cardCount.Key.IsReprint;
