@@ -314,6 +314,9 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (prevParentStack != null)
             prevParentStack.OnRemove(this);
         GetComponent<CanvasGroup>().blocksRaycasts = false;
+        ((RectTransform)transform).anchorMax = 0.5f * Vector2.one;
+        ((RectTransform)transform).anchorMin = 0.5f * Vector2.one;
+        ((RectTransform)transform).pivot = 0.5f * Vector2.one;
         transform.position = targetPosition;
         transform.localScale = Vector3.one;
     }
