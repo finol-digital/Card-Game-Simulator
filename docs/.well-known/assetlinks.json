@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.finoldigital.cardgamesim",
+    "sha256_cert_fingerprints":
+    ["A7:53:80:0B:DB:F6:7F:3A:B4:E3:93:4D:B8:91:F3:7B:3D:DA:52:59:46:1B:3B:E7:59:A2:67:40:E5:79:DD:F5"]
+  }
+}]

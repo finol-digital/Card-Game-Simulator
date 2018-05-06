@@ -44,8 +44,10 @@ public class LobbyDiscovery : NetworkDiscovery
 
         if (running)
             StopBroadcast();
+#if UNITY_ANDROID
         Network.Disconnect();
         NetworkServer.Reset();
+#endif
 
         bool started = Initialize() && StartAsClient();
         if (!started)
