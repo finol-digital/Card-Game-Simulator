@@ -704,8 +704,8 @@ PlayerSettings:
       EnterpriseAuthentication: False
       HumanInterfaceDevice: False
       InputInjectionBrokered: False
-      InternetClient: True
-      InternetClientServer: True
+      InternetClient: False
+      InternetClientServer: False
       Location: False
       Microphone: False
       MusicLibrary: False

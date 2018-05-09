@@ -11,6 +11,7 @@ permalink: roadmap.html
   - Create listing with new sku and app-id
 - Release v1 to the Mac App Store
 - Release v1 to the Microsoft Store
+- Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Fix: Crash when quitting on Windows Surface Book
 - Fix: Connection to host is occasionally lost
 ### Done
@@ -21,7 +22,6 @@ permalink: roadmap.html
 - Tech: Add unit tests
 - Tech: Use namespaces
 - Tech: Review with Resharper
-- Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes

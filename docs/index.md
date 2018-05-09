@@ -17,11 +17,11 @@ You can download additional games by pressing the top button of the Main Menu:
 
 In the Game Selection Menu, press "Download":
 
-![Game Selection Menu Image](assets/img/gameselection.png)
+![Game Selection Menu Image](assets/img/selectionmenu.png)
 
 Then, enter the CGS AutoUpdate URL for the game you would like to download:
 
-![Game Download Menu Image](assets/img/gamedownload.png)
+![Game Download Menu Image](assets/img/downloadmenu.png)
 
 For example, the CGS AutoUpdate URL for Hearthstone is: https://hearthstone.finoldigital.com/
 
