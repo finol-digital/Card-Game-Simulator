@@ -26,7 +26,7 @@ permalink: roadmap.html
   - Facebook link and homepage banner image link should use this
 - Card Grouping
   - Define card zones in play area
-     - Card zones can define what actions are possible in that zone
+    - Card zones can define what actions are possible in that zone
 - Card Actions
   - Define
     - Toggle rotation between 0 and 90/180/270
