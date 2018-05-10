@@ -7,13 +7,13 @@ permalink: roadmap.html
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
-- Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Fix: Crash when quitting on Windows Surface Book
 - Fix: Connection to host is occasionally lost
 ### Done
 - Update Deck Txt File Format
 
 ## Backlog
+- Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Tech: Set up build server
 - Tech: Add unit tests
 - Tech: Use namespaces
