@@ -6,11 +6,7 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Release v1 to the App Store
-  - Create Apple Developer Id for Finol Digital
-  - Screenshots for iPhone and iPad
-  - Create listing with new sku and app-id
 - Release v1 to the Mac App Store
-- Release v1 to the Microsoft Store
 - Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Fix: Crash when quitting on Windows Surface Book
 - Fix: Connection to host is occasionally lost

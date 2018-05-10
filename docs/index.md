@@ -4,9 +4,9 @@ layout: home
 
 # Play Anywhere
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
-- iOS via the [TestFlight Beta](mailto:david@finoldigital.com?subject=GetCGSiOSBeta)
-- Mac via [ZIP File](https://drive.google.com/uc?id=1ag7kjPRzweO5O5_Kj7q_yCj7xVkKdiaA&export=download)
-- Windowsx64 via [ZIP File](https://drive.google.com/uc?id=1dPRqs9mtLmR5_0K4NbrfzinJJW7TQH51&export=download)
+- iOS via the [TestFlight Beta](mailto:david@finoldigital.com?subject=GetCGSiOSBeta) (App Store Pending)
+- Mac via a [ZIP File](https://drive.google.com/uc?id=1ag7kjPRzweO5O5_Kj7q_yCj7xVkKdiaA&export=download) (App Store Pending)
+- Windows via the [Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
 
 ## Create Custom Games
 With CGS, users can create and share their own custom card games!
