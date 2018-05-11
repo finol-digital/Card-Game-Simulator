@@ -56,6 +56,7 @@ permalink: roadmap.html
 - Support grouping of dice
 - Support different colored dice
 - Add display name to card properties
+- Online vs local matchmaking
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
 - Define order and enums for Mahjong properties
