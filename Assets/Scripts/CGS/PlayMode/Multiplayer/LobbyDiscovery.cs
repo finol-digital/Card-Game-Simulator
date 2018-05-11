@@ -28,7 +28,7 @@ public class LobbyDiscovery : NetworkDiscovery
     IEnumerator WaitToStartBroadcast()
     {
         yield return null;
-        
+
         bool started = Initialize() && StartAsServer();
         if (!started)
             CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
@@ -46,8 +46,8 @@ public class LobbyDiscovery : NetworkDiscovery
             StopBroadcast();
 #if UNITY_ANDROID
         Network.Disconnect();
-        NetworkServer.Reset();
 #endif
+        NetworkServer.Reset();
 
         bool started = Initialize() && StartAsClient();
         if (!started)
@@ -57,7 +57,7 @@ public class LobbyDiscovery : NetworkDiscovery
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
         HasReceivedBroadcast = true;
-		if (lobby == null || !lobby.gameObject.activeInHierarchy || NetworkManager.singleton.isNetworkActive)
+        if (lobby == null || !lobby.gameObject.activeInHierarchy || NetworkManager.singleton.isNetworkActive)
             return;
 
         lobby.DisplayHosts(broadcastsReceived.Keys.ToList());
