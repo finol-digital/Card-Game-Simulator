@@ -7,7 +7,6 @@ permalink: roadmap.html
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
-- Fix: Crash when quitting on Windows Surface Book
 - Fix: Connection to host is occasionally lost
 ###### Done
 - Update Deck Txt File Format
