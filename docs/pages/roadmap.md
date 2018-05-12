@@ -7,6 +7,13 @@ permalink: roadmap.html
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
+- Fix: Pasting in Universal Windows Platform
+- Fix: Downloading game in UWP
+- Make double click on *Deck Editor* search result do zoom if in portrait orientation
+- Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
+- Allow rotation to keep viewing the currently selected card
+- Support deep links for games and decks through https://docs.branch.io/
+  - Facebook link and homepage banner image link should use this
 - Fix: Connection to host is occasionally lost
 - DONE: Update Deck Txt File Format
 
@@ -17,10 +24,6 @@ permalink: roadmap.html
 - Tech: Review with Resharper
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
-- Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
-- Allow rotation to keep viewing the currently selected card
-- Support deep links for games and decks through https://docs.branch.io/
-  - Facebook link and homepage banner image link should use this
 - Card Grouping
   - Define card zones in play area
     - Card zones can define what actions are possible in that zone
@@ -45,6 +48,7 @@ permalink: roadmap.html
 - Share discard pile between all players who share a deck in *Play Mode*
 - Synchronize dice across all connected players in *Play Mode*
 - Add link to rules from somewhere within *Play Mode*
+- Show hotkeys from within *Play Mode*
 - Support multiple card backs
 - Support more than 1 card face
 - Support custom card backgrounds (Hearthstone)
@@ -72,6 +76,8 @@ permalink: roadmap.html
 - Support different resolutions and languages for card images
 - Google Play Instant
 - Linux version
+- Release Android version to Amazon and Samsung marketplaces, potentially also https://f-droid.org/
+- Release Standalone versions to Steam
 - Console versions (Switch, ps4, xbone)
 - Support encryption of game information
 - Partner with other companies to provide licensed games
