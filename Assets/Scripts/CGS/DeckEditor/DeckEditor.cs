@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using CardGameDef;
 
 public delegate string OnDeckNameChangeDelegate(string newName);
 

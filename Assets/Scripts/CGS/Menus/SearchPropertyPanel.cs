@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CardGameDef;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SearchPropertyPanel : MonoBehaviour

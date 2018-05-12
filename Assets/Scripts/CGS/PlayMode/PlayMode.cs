@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using CardGameDef;
 
 public class PlayMode : MonoBehaviour
 {

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
+using CardGameDef;
 
 public delegate void OnDoubleClickDelegate(CardModel cardModel);
 public delegate void SecondaryDragDelegate();

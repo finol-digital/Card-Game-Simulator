@@ -988,7 +988,7 @@ MonoBehaviour:
   - {fileID: 1827941569}
   - {fileID: 832790424}
   - {fileID: 232815869}
-  versionText: {fileID: 0}
+  versionText: {fileID: 1384169144}
 --- !u!1001 &1384169142
 Prefab:
   m_ObjectHideFlags: 0
@@ -1094,6 +1094,12 @@ RectTransform:
   m_PrefabParentObject: {fileID: 224286176950024756, guid: 559af45b52e2b1a4eb27b4a0410e0686,
     type: 2}
   m_PrefabInternal: {fileID: 1384169142}
+--- !u!114 &1384169144 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114023108066783562, guid: 559af45b52e2b1a4eb27b4a0410e0686,
+    type: 2}
+  m_PrefabInternal: {fileID: 1384169142}
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!1 &1404100290
 GameObject:
   m_ObjectHideFlags: 0

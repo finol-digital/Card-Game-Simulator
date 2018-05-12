@@ -8,14 +8,12 @@ permalink: roadmap.html
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
 - Fix: Connection to host is occasionally lost
-###### Done
-- Update Deck Txt File Format
+- DONE: Update Deck Txt File Format
 
 ## Backlog
 - Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Tech: Set up build server
 - Tech: Add unit tests
-- Tech: Use namespaces
 - Tech: Review with Resharper
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
