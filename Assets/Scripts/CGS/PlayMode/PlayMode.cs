@@ -13,7 +13,7 @@ public class PlayMode : MonoBehaviour
     public const string DealHandPrompt = "Draw initial starting hand?";
 
     public GameObject cardViewerPrefab;
-    public GameObject lobbyPrefab;
+    public GameObject lobbyMenuPrefab;
     public GameObject deckLoadMenuPrefab;
     public GameObject diceMenuPrefab;
     public GameObject searchMenuPrefab;
@@ -22,7 +22,7 @@ public class PlayMode : MonoBehaviour
     public RectTransform playAreaContent;
     public Text netText;
 
-    public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyPrefab).GetOrAddComponent<LobbyMenu>());
+    public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
     private LobbyMenu _lobby;
 
     public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
@@ -42,11 +42,13 @@ public class PlayMode : MonoBehaviour
         playAreaContent.localPosition = -(playAreaContent.sizeDelta / 4.0f);
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
 
-        if (CardGameManager.Instance.Discovery.HasReceivedBroadcast) {
+        if (CardGameManager.Instance.Discovery.HasReceivedBroadcast)
+        {
             Lobby.cancelButton.onClick.RemoveAllListeners();
             Lobby.cancelButton.onClick.AddListener(BackToMainMenu);
             Lobby.Show();
-        } else
+        }
+        else
             Lobby.Host();
     }
 
@@ -57,11 +59,11 @@ public class PlayMode : MonoBehaviour
 
         if (Input.GetButtonDown(Inputs.Draw))
             Deal(1);
-        if (Input.GetButtonDown(Inputs.Load))
+        else if (Input.GetButtonDown(Inputs.Load))
             ShowDeckMenu();
-        if (Input.GetButtonDown(Inputs.Filter))
+        else if (Input.GetButtonDown(Inputs.Filter))
             ShowCardsMenu();
-        if (Input.GetButtonDown(Inputs.Sort))
+        else if (Input.GetButtonDown(Inputs.Sort))
             ShowDiceMenu();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             PromptBackToMainMenu();
@@ -155,7 +157,8 @@ public class PlayMode : MonoBehaviour
     {
         IReadOnlyList<Card> deckCards = zones.CurrentDeck.Cards;
         bool loaded = false;
-        while (!loaded) {
+        while (!loaded)
+        {
             yield return null;
             loaded = deckCards.Where(card => card.IsLoadingImage).ToList().Count == 0;
         }
@@ -234,7 +237,8 @@ public class PlayMode : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        if (NetworkManager.singleton.isNetworkActive) {
+        if (NetworkManager.singleton.isNetworkActive)
+        {
             if (NetworkServer.active)
                 NetworkManager.singleton.StopHost();
             else if (NetworkManager.singleton.IsClientConnected())

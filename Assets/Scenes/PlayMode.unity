@@ -368,7 +368,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.00012207031, y: 0}
   m_SizeDelta: {x: 2350, y: 2025}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &217919978
@@ -1541,7 +1541,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardViewerPrefab: {fileID: 1205983077926924, guid: 04f1873b7f6a8324887109e8e76da3d7,
     type: 2}
-  lobbyPrefab: {fileID: 1652207733575986, guid: 61b579ded7c51a4409a9f5bee03d3dff,
+  lobbyMenuPrefab: {fileID: 1652207733575986, guid: 61b579ded7c51a4409a9f5bee03d3dff,
     type: 2}
   deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
     type: 2}
@@ -3655,9 +3655,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  _minZoom: 0.1
-  _maxZoom: 10
-  _zoomLerpSpeed: 10
 --- !u!1 &1508039170
 GameObject:
   m_ObjectHideFlags: 0
