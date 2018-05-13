@@ -43,15 +43,9 @@ permalink: roadmap.html
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Allow cards to snap to each other when moving them
 - Consider keyboard shortcuts
+- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 
 ## Icebox
-- Support Android Search button
-- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
-- Synchronize points across teams in *Play Mode*
-- Share discard pile between all players who share a deck in *Play Mode*
-- Synchronize dice across all connected players in *Play Mode*
-- Add link to rules from somewhere within *Play Mode*
-- Show hotkeys from within *Play Mode*
 - Support boolean card property data type
 - Support decimal card property data type
 - Support object card property data type
@@ -64,6 +58,11 @@ permalink: roadmap.html
 - Support grouping of dice
 - Support different colored dice
 - Add display name to card properties
+- Synchronize dice across all connected players in *Play Mode*
+- Add link to rules from somewhere within *Play Mode*
+- Show hotkeys from within *Play Mode*
+- Synchronize points across teams in *Play Mode*
+- Share discard pile between all players who share a deck in *Play Mode*
 - Online vs local matchmaking (Split Play Game to Play Local and Play Online)
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
