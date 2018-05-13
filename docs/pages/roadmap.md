@@ -4,6 +4,9 @@ permalink: roadmap.html
 
 # Roadmap
 
+## What's New
+- Updated Deck Txt File Format
+
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
@@ -14,8 +17,8 @@ permalink: roadmap.html
 - Allow rotation to keep viewing the currently selected card
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
-- Fix: Connection to host is occasionally lost
-- DONE: Update Deck Txt File Format
+- Switch play area double click from toggle facedown to toggle tap
+- Make shared deck prompt to draw starting hand 
 
 ## Backlog
 - Tech: Enforce https through GitHub Pages instead of CloudFlare
@@ -49,15 +52,19 @@ permalink: roadmap.html
 - Synchronize dice across all connected players in *Play Mode*
 - Add link to rules from somewhere within *Play Mode*
 - Show hotkeys from within *Play Mode*
-- Support multiple card backs
-- Support more than 1 card face
-- Support custom card backgrounds (Hearthstone)
+- Support boolean card property data type
 - Support decimal card property data type
 - Support object card property data type
+- Support object list enum card property data type
+- Support object enum card property data type
+- Support object enum list card property data type
+- Support custom card backgrounds (Hearthstone)
+- Support multiple card backs
+- Support more than 1 card face
 - Support grouping of dice
 - Support different colored dice
 - Add display name to card properties
-- Online vs local matchmaking
+- Online vs local matchmaking (Split Play Game to Play Local and Play Online)
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set, with default property to type instead of suit
 - Define order and enums for Mahjong properties
