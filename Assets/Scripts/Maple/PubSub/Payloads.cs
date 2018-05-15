@@ -14,7 +14,7 @@ namespace Maple.PubSub
 
 
         /// <summary>
-        /// This payload is expected at Ingress.Input.FingerSlide
+        /// This payload is expected at Ingress.Input.FingerSlide.
         /// </summary>
         public FingerSlidePayload(
             Vector2 startPoint,

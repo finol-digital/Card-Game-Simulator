@@ -1,6 +1,6 @@
 ﻿namespace Maple
 {
-    public struct CardDescription
+    public struct CardDefinition
     {
         public string Name_EN_US { get; }
 
@@ -15,10 +15,10 @@
         public float Height { get; }
 
 
-        public CardDescription(string name_en_us)
+        public CardDefinition(string name_en_us)
             : this(name_en_us, 0.0635f, 0.0889f) { }
 
-        public CardDescription(
+        public CardDefinition(
             string name_en_us,
             float width,
             float height)

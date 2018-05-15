@@ -5,15 +5,23 @@ namespace Maple.Field
     public class MapleFieldManager
         : MonoBehaviour, IMapleField
     {
+        /// <summary>
+        /// The injected parent Maple context.
+        /// </summary>
         public IReadOnlyMapleContext RootContext;
-        public MapleFieldContext FieldContext;
+
+        /// <summary>
+        /// The injected context of this subsystem.
+        /// </summary>
+        public MapleFieldContext Context;
 
 
         void Start()
         {
-            var FieldCardPresentersMngr =
+            var presentersMngr =
                 gameObject.AddComponent<FieldCardPresentersManager>();
-            FieldCardPresentersMngr.RootContext = RootContext;
+
+            presentersMngr.RootContext = RootContext;
         }
 
 
@@ -28,11 +36,11 @@ namespace Maple.Field
         {
             FieldCardTransaction call;
 
-            while (FieldContext.FieldCardTransactionStream.TryTake(out call))  // FIXME: throttle consumption rate / move to background thread
+            while (Context.FieldCardTransactionStream.TryTake(out call))  // FIXME: throttle consumption rate / move to background thread
             {
                 // Inject current context into call
 
-                call.Context = FieldContext;
+                call.Context = Context;
 
 
                 // Execute call
@@ -45,8 +53,8 @@ namespace Maple.Field
                 {
                     Debug.LogException(e);
                     Debug.LogWarning(
-                        "Exception thrown during call execution. "
-                        + "Proceeding to execute remaining calls");
+                        "Exception thrown during call execution."
+                        + " Proceeding to execute remaining calls");
                 }
             }
         }
@@ -54,6 +62,6 @@ namespace Maple.Field
 
         public FieldCardTransaction.TransactionHandle SpawnFieldCard(
             int cardDefinitionId) =>
-            FieldContext.PushSpawnFieldCardTransaction(cardDefinitionId);
+            Context.PushSpawnFieldCardTransaction(cardDefinitionId);
     }
 }

@@ -18,17 +18,17 @@ namespace Maple.PubSub
         /// </summary>
         public IEnumerable<object> TakeMessages()
         {
+            var messagesBuffer = new List<object>();
             var throttle = Inbox.Count;
-            var messages = new List<object>();
 
             for (int i = 1; i <= throttle; i++)
             {
                 object objTemp;
                 if (Inbox.TryDequeue(out objTemp))
-                    messages.Add(objTemp);
+                    messagesBuffer.Add(objTemp);
             }
 
-            return messages;
+            return messagesBuffer;
         }
     }
 }

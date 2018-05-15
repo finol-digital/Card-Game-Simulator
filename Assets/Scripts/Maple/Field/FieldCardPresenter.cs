@@ -14,7 +14,7 @@ namespace Maple.Field
 
         public IReadOnlyMapleContext RootContext;
 
-        public WeakReference<IReadOnlyFieldCardContainer> FieldCardLink;
+        public WeakReference<IReadOnlyFieldCardBox> FieldCardLink;
 
 
         void Start()
@@ -27,7 +27,7 @@ namespace Maple.Field
 
             // Bind data (one-time data binding)
 
-            IReadOnlyFieldCardContainer model;
+            IReadOnlyFieldCardBox model;
 
             if (!FieldCardLink.TryGetTarget(out model))
             {
@@ -40,17 +40,17 @@ namespace Maple.Field
                 return;
             }
 
-            var cardDescription =
-                RootContext.CardDescriptions[model.CardDescriptionKey];
+            var cardDef =
+                RootContext.CardDefinitions[model.CardDefinitionKey];
 
             var viewModel = new {
-                CardName = cardDescription.Name_EN_US,
-                CardWidth = cardDescription.Width,
-                CardHeight = cardDescription.Height,
+                CardName = cardDef.Name_EN_US,
+                CardWidth = cardDef.Width,
+                CardHeight = cardDef.Height,
                 CardImage = Texture2D.whiteTexture
             };
 
-            // - Represent card description
+            // - Represent card definition
 
             gameObject.name = viewModel.CardName;
 
@@ -73,7 +73,7 @@ namespace Maple.Field
 
         void Update()
         {
-            IReadOnlyFieldCardContainer model;
+            IReadOnlyFieldCardBox model;
 
             if (!FieldCardLink.TryGetTarget(out model))
             {
@@ -106,7 +106,7 @@ namespace Maple.Field
                 x: transform.localPosition.x,
                 y: transform.localPosition.y,
                 z: ((float)viewModel.CardGridElement.Elevation
-                        / FieldGridElement.MaxElevation)
+                        / FieldGridData.MaxElevation)
                     / MaxElevationRepresentation);
 
 

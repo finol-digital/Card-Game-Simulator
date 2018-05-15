@@ -3,6 +3,6 @@
     public interface IMapleField
     {
         FieldCardTransaction.TransactionHandle SpawnFieldCard(
-            int cardDescriptionKey);
+            int cardDefinitionKey);
     }
 }

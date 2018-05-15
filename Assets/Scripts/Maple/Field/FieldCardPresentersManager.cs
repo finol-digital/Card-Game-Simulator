@@ -10,7 +10,7 @@ namespace Maple.Field
         public IReadOnlyMapleContext RootContext;
 
 
-        public IReadOnlyMapleFieldContext FieldContext =>
+        public IReadOnlyMapleFieldContext Context =>
             RootContext.FieldContext;
 
         /// <summary>
@@ -23,8 +23,8 @@ namespace Maple.Field
         /// <summary>
         /// Tracking information buffer for storing discovered new field cards.
         /// </summary>
-        Queue<Tuple<Guid, WeakReference<IReadOnlyFieldCardContainer>>> newFieldCardInfos  { get; } =
-            new Queue<Tuple<Guid, WeakReference<IReadOnlyFieldCardContainer>>>();
+        Queue<Tuple<Guid, WeakReference<IReadOnlyFieldCardBox>>> newFieldCardInfos  { get; } =
+            new Queue<Tuple<Guid, WeakReference<IReadOnlyFieldCardBox>>>();
 
         /// <summary>
         /// Tracking information Buffer for storing discovered deleted field cards.
@@ -39,26 +39,26 @@ namespace Maple.Field
 
             // - Discover new field card info
 
-            foreach (var fieldCardEntry in FieldContext.FieldCardStore)
+            foreach (var fieldCardEntry in Context.FieldCardStore)
                 if (!Children.ContainsKey(fieldCardEntry.Key))
                     newFieldCardInfos.Enqueue(
-                        new Tuple<Guid, WeakReference<IReadOnlyFieldCardContainer>>(
+                        new Tuple<Guid, WeakReference<IReadOnlyFieldCardBox>>(
                             fieldCardEntry.Key,
-                            new WeakReference<IReadOnlyFieldCardContainer>(
+                            new WeakReference<IReadOnlyFieldCardBox>(
                                 fieldCardEntry.Value)));
 
 
             // - Discover deleted field info
 
             foreach (var fieldCardKey in Children.Keys)
-                if (!FieldContext.FieldCardStore.ContainsKey(fieldCardKey))
+                if (!Context.FieldCardStore.ContainsKey(fieldCardKey))
                     deletedFieldCardKeys.Enqueue(fieldCardKey);
 
 
             // Spawn child Field Card Presenters
 
             foreach (var info in newFieldCardInfos)
-                SpawnCardPresenter(
+                SpawnPresenter(
                     fieldCardKey: info.Item1,
                     fieldCardLink: info.Item2);
 
@@ -66,7 +66,7 @@ namespace Maple.Field
             // Destroy child Field Card Presenters
 
             foreach (var key in deletedFieldCardKeys)
-                DestroyCardPresenter(
+                DestroyPresenter(
                     fieldCardKey: key);
         }
 
@@ -80,34 +80,34 @@ namespace Maple.Field
         }
 
 
-        FieldCardPresenter SpawnCardPresenter(
+        FieldCardPresenter SpawnPresenter(
             Guid fieldCardKey,
-            WeakReference<IReadOnlyFieldCardContainer> fieldCardLink)
+            WeakReference<IReadOnlyFieldCardBox> fieldCardLink)
         {
             Debug.Log(
                 "Spawning child Card Presenter");
 
             // Create
 
-            var newCardPresenterEntity = new GameObject("Card Presenter");
-            newCardPresenterEntity.transform.parent = this.transform;
+            var newPresenterGameObject = new GameObject("Card Presenter");
+            newPresenterGameObject.transform.parent = this.transform;
 
-            var newCardPresenter =
-                newCardPresenterEntity.AddComponent<FieldCardPresenter>();
-            newCardPresenter.RootContext = RootContext;
-            newCardPresenter.FieldCardLink = fieldCardLink;
+            var newPresenter =
+                newPresenterGameObject.AddComponent<FieldCardPresenter>();
+            newPresenter.RootContext = RootContext;
+            newPresenter.FieldCardLink = fieldCardLink;
 
 
             // Manage
 
-            Children.Add(fieldCardKey, newCardPresenter);
+            Children.Add(fieldCardKey, newPresenter);
 
 
-            return newCardPresenter;
+            return newPresenter;
         }
 
 
-        void DestroyCardPresenter(Guid fieldCardKey)
+        void DestroyPresenter(Guid fieldCardKey)
         {
             Debug.Log(
                 "Destroying child Card Presenter");

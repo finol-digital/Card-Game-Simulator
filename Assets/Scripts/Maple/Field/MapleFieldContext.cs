@@ -7,7 +7,7 @@ namespace Maple.Field
     public class MapleFieldContext
         : IReadOnlyMapleFieldContext
     {
-        IReadOnlyDictionary<Guid, IReadOnlyFieldCardContainer> IReadOnlyMapleFieldContext.FieldCardStore =>
+        IReadOnlyDictionary<Guid, IReadOnlyFieldCardBox> IReadOnlyMapleFieldContext.FieldCardStore =>
             ReadonlyFieldCardCache;
 
 
@@ -20,11 +20,11 @@ namespace Maple.Field
 
 
         public FieldCardTransaction.TransactionHandle PushSpawnFieldCardTransaction(
-            int cardDescriptionKey)
+            int cardDefinitionKey)
         {
             var spawnFieldCardTransaction = new FieldCardTransaction(
-                (context, _) => new WeakReference<IReadOnlyFieldCardContainer>(
-                        context.CreateFieldCard(cardDescriptionKey)));
+                (context, _) => new WeakReference<IReadOnlyFieldCardBox>(
+                        context.CreateFieldCard(cardDefinitionKey)));
 
             PushFieldCardTransaction(spawnFieldCardTransaction);
 
@@ -43,16 +43,16 @@ namespace Maple.Field
         // Field Card Store
         //
 
-        ConcurrentDictionary<Guid, FieldCardContainer> FieldCardStore { get; } =
-            new ConcurrentDictionary<Guid, FieldCardContainer>();
+        ConcurrentDictionary<Guid, FieldCardBox> FieldCardStore { get; } =
+            new ConcurrentDictionary<Guid, FieldCardBox>();
 
-        ConcurrentDictionary<Guid, IReadOnlyFieldCardContainer> ReadonlyFieldCardCache { get; } =
-            new ConcurrentDictionary<Guid, IReadOnlyFieldCardContainer>();
+        ConcurrentDictionary<Guid, IReadOnlyFieldCardBox> ReadonlyFieldCardCache { get; } =
+            new ConcurrentDictionary<Guid, IReadOnlyFieldCardBox>();
 
 
-        FieldCardContainer CreateFieldCard(int cardDescriptionKey)
+        FieldCardBox CreateFieldCard(int cardDefinitionKey)
         {
-            var newFieldCard = new FieldCardContainer(cardDescriptionKey);
+            var newFieldCard = new FieldCardBox(cardDefinitionKey);
             var newFieldCardKey = Guid.NewGuid();  // FIXME: Must check for used IDs
 
             if (!FieldCardStore.TryAdd(
@@ -62,67 +62,10 @@ namespace Maple.Field
 
             if (!ReadonlyFieldCardCache.TryAdd(
                     newFieldCardKey,
-                    (IReadOnlyFieldCardContainer)newFieldCard))
+                    (IReadOnlyFieldCardBox)newFieldCard))
                 throw new Exception();
 
             return newFieldCard;
-        }
-    }
-
-
-    public class FieldCardTransaction
-    {
-        public delegate WeakReference<IReadOnlyFieldCardContainer> FieldCardProcedure(
-            MapleFieldContext Context,
-            IReadOnlyFieldCardContainer FieldCard);
-
-
-        public MapleFieldContext Context;
-
-        public IReadOnlyFieldCardContainer FieldCard;
-
-
-        public TransactionHandle Handle { get; }
-
-        public bool IsComplete { get; private set; }
-
-        FieldCardProcedure Procedure { get; }
-
-
-        public FieldCardTransaction(FieldCardProcedure procedure)
-        {
-            Procedure = procedure;
-            Handle = new TransactionHandle(this);
-        }
-
-
-        public WeakReference<IReadOnlyFieldCardContainer> Execute()
-        {
-            var result = Procedure(Context, FieldCard);
-            IsComplete = true;
-
-            return result;
-        }
-
-
-        public class TransactionHandle
-        {
-            public WeakReference<IReadOnlyFieldCardContainer> Result { get; private set; }
-
-            public bool IsComplete => Transaction.IsComplete;
-
-            FieldCardTransaction Transaction { get; }
-
-
-            public TransactionHandle(FieldCardTransaction transaction)
-            {
-                Transaction = transaction;
-            }
-
-
-            public void SetComplete(
-                WeakReference<IReadOnlyFieldCardContainer> result) =>
-                Result = result;
         }
     }
 }

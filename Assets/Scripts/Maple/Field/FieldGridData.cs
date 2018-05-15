@@ -1,6 +1,6 @@
 ﻿namespace Maple.Field
 {
-    public struct FieldGridElement
+    public struct FieldGridData
     {
         public const ulong MaxElevation = ulong.MaxValue;
 

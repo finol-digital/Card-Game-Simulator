@@ -5,7 +5,7 @@ namespace Maple
 {
     public interface IReadOnlyMapleContext
     {
-        IReadOnlyList<CardDescription> CardDescriptions { get; }
+        IReadOnlyList<CardDefinition> CardDefinitions { get; }
         IReadOnlyMapleFieldContext FieldContext { get; }
     }
 }

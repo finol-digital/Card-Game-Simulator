@@ -10,8 +10,8 @@ namespace Maple
         /// Holds immutable reference information for cards.
         /// Guaranteed to never change for the lifetime of this context.
         /// </summary>
-        public IReadOnlyList<CardDescription> CardDescriptions { get; } =
-            new List<CardDescription>();
+        public IReadOnlyList<CardDefinition> CardDefinitions { get; } =
+            new List<CardDefinition>();
 
 
         public MapleFieldContext FieldSubContext { get; } =
@@ -24,16 +24,16 @@ namespace Maple
         }
 
 
-        public MapleContext(IEnumerable<CardDescription> cardDefinitions)
+        public MapleContext(IEnumerable<CardDefinition> cardDefinitions)
         {
             // Populate Card Definitions table
 
-            var cardDefinitionsCopyBuffer = new List<CardDescription>();
+            var cardDefinitionsCopyBuffer = new List<CardDefinition>();
 
             foreach (var cardDefinition in cardDefinitions)
                 cardDefinitionsCopyBuffer.Add(cardDefinition);
 
-            CardDescriptions = cardDefinitionsCopyBuffer;
+            CardDefinitions = cardDefinitionsCopyBuffer;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Maple
         {
             var FieldMngr = gameObject.AddComponent<MapleFieldManager>();
             FieldMngr.RootContext = (IReadOnlyMapleContext)Context;
-            FieldMngr.FieldContext = Context.FieldSubContext;
+            FieldMngr.Context = Context.FieldSubContext;
 
             _field = (IMapleField)FieldMngr;
         }
