@@ -43,7 +43,8 @@ public class CardGameManager : MonoBehaviour
 
     void Awake()
     {
-        if (_instance != null && _instance != this) {
+        if (_instance != null && _instance != this)
+        {
             Destroy(gameObject);
             return;
         }
@@ -55,7 +56,8 @@ public class CardGameManager : MonoBehaviour
             CreateDefaultCardGames();
 
         CardGame currentGame;
-        Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName), out currentGame) ? currentGame : new CardGame();
+        Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName), out currentGame)
+             ? currentGame : new CardGame();
 
         Application.logMessageReceived += HandleLog;
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -77,7 +79,8 @@ public class CardGameManager : MonoBehaviour
         if (!Directory.Exists(GamesFilePathBase))
             return;
 
-        foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase)) {
+        foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase))
+        {
             string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
             AllCardGames[gameName] = new CardGame(gameName, string.Empty);
         }
@@ -102,7 +105,7 @@ public class CardGameManager : MonoBehaviour
     public IEnumerator DownloadCardGame(string gameUrl)
     {
         //Messenger.Show("Game download has started");
-        CardGame newGame = new CardGame(Set.DefaultCode, gameUrl) {AutoUpdate = true};
+        CardGame newGame = new CardGame(Set.DefaultCode, gameUrl) { AutoUpdate = true };
         Current = newGame;
         yield return newGame.Download();
         if (string.IsNullOrEmpty(newGame.Error))
@@ -115,7 +118,8 @@ public class CardGameManager : MonoBehaviour
 
     public void SelectCardGame(string gameName, string gameUrl)
     {
-        if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
+        if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName))
+        {
             StartCoroutine(DownloadCardGame(gameUrl));
             return;
         }
@@ -124,7 +128,8 @@ public class CardGameManager : MonoBehaviour
 
     public void SelectCardGame(string gameName)
     {
-        if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName)) {
+        if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName))
+        {
             Debug.LogError(InvalidGameSelectionMessage);
             Selector.Show();
             return;
@@ -160,7 +165,7 @@ public class CardGameManager : MonoBehaviour
         CardInfoViewer.Instance?.ResetInfo();
 
         for (int i = OnSceneActions.Count - 1; i >= 0; i--)
-            if (OnSceneActions [i] == null)
+            if (OnSceneActions[i] == null)
                 OnSceneActions.RemoveAt(i);
         foreach (GameSceneDelegate action in OnSceneActions)
             action();
@@ -168,12 +173,15 @@ public class CardGameManager : MonoBehaviour
 
     public void DeleteGame()
     {
-        try {
+        try
+        {
             Directory.Delete(Current.FilePathBase, true);
             AllCardGames.Remove(Current.Name);
             SelectCardGame(AllCardGames.Keys.First());
             Selector.Show();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Debug.LogError(GameDeleteErrorMessage + ex.Message);
         }
     }
@@ -188,13 +196,16 @@ public class CardGameManager : MonoBehaviour
         IsQuitting = true;
     }
 
-    public static CardGameManager Instance {
-        get {
+    public static CardGameManager Instance
+    {
+        get
+        {
             if (IsQuitting) return null;
             if (_instance != null) return _instance;
             GameObject cardGameManager = GameObject.FindGameObjectWithTag(CardGameManagerTag);
-            if (cardGameManager == null) {
-                cardGameManager = new GameObject(CardGameManagerTag) {tag = CardGameManagerTag};
+            if (cardGameManager == null)
+            {
+                cardGameManager = new GameObject(CardGameManagerTag) { tag = CardGameManagerTag };
                 cardGameManager.transform.position = Vector3.zero;
             }
             _instance = cardGameManager.GetOrAddComponent<CardGameManager>();
@@ -202,8 +213,10 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public GameSelectionMenu Selector {
-        get {
+    public GameSelectionMenu Selector
+    {
+        get
+        {
             if (_selector != null) return _selector;
             _selector = Instantiate(Resources.Load<GameObject>(SelectorPrefabName)).GetOrAddComponent<GameSelectionMenu>();
             _selector.transform.SetParent(null);
@@ -211,24 +224,30 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public Popup Messenger {
-        get {
+    public Popup Messenger
+    {
+        get
+        {
             if (_messenger != null) return _messenger;
             _messenger = Instantiate(Resources.Load<GameObject>(MessengerPrefabName)).GetOrAddComponent<Popup>();
             _messenger.transform.SetParent(transform);
             return _messenger;
         }
     }
-    public Image BackgroundImage {
-        get {
+    public Image BackgroundImage
+    {
+        get
+        {
             if (_backgroundImage == null && GameObject.FindGameObjectWithTag(BackgroundImageTag) != null)
                 _backgroundImage = GameObject.FindGameObjectWithTag(BackgroundImageTag).GetOrAddComponent<Image>();
             return _backgroundImage;
         }
     }
 
-    public static Canvas TopCardCanvas {
-        get {
+    public static Canvas TopCardCanvas
+    {
+        get
+        {
             Canvas topCanvas = null;
             foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(CardCanvasTag))
                 if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
@@ -237,8 +256,10 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    public static Canvas TopMenuCanvas {
-        get {
+    public static Canvas TopMenuCanvas
+    {
+        get
+        {
             Canvas topCanvas = null;
             foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(MenuCanvasTag))
                 if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))

@@ -111,9 +111,11 @@ public class MainMenu : MonoBehaviour
     }
 
     public void Quit()
-    {
+    {   
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_WSA
+        System.Diagnostics.Process.GetCurrentProcess().Kill();
 #else
         Application.Quit();
 #endif

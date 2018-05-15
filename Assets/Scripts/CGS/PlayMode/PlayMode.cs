@@ -237,6 +237,9 @@ public class PlayMode : MonoBehaviour
 
     public void BackToMainMenu()
     {
+        if (CardGameManager.Instance.Discovery.running)
+            CardGameManager.Instance.Discovery.StopBroadcast();
+
         if (NetworkManager.singleton.isNetworkActive)
         {
             if (NetworkServer.active)
@@ -244,9 +247,7 @@ public class PlayMode : MonoBehaviour
             else if (NetworkManager.singleton.IsClientConnected())
                 NetworkManager.singleton.StopClient();
         }
-
-        if (CardGameManager.Instance.Discovery.running)
-            CardGameManager.Instance.Discovery.StopBroadcast();
+        NetworkManager.Shutdown();
 
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
     }

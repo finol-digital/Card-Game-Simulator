@@ -17,6 +17,7 @@ public class CGSNetManager : NetworkManager
     void Start()
     {
         customConfig = true;
+        maxDelay = 0.1f;
         connectionConfig.NetworkDropThreshold = 90;
     }
 

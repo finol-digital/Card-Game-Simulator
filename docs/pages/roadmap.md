@@ -6,12 +6,12 @@ permalink: roadmap.html
 
 ## What's New
 - Updated Deck Txt File Format
+- Fix: Pasting in Universal Windows Platform
+- Fix: Downloading game in UWP
 
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
-- Fix: Pasting in Universal Windows Platform
-- Fix: Downloading game in UWP
 - Make double click on *Deck Editor* search result do zoom if in portrait orientation
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation to keep viewing the currently selected card
@@ -58,6 +58,7 @@ permalink: roadmap.html
 - Support grouping of dice
 - Support different colored dice
 - Add display name to card properties
+- Automatically roll dice on phone shake
 - Synchronize dice across all connected players in *Play Mode*
 - Add link to rules from somewhere within *Play Mode*
 - Show hotkeys from within *Play Mode*

@@ -7,15 +7,18 @@ public class UniClipboard
 {
     static IBoard _board;
 
-    static IBoard Board {
-        get {
-            if (_board == null) {
-#if UNITY_EDITOR || UNITY_STANDALONE
-                _board = new EditorBoard();
-#elif UNITY_ANDROID
+    static IBoard Board
+    {
+        get
+        {
+            if (_board == null)
+            {
+#if UNITY_ANDROID && !UNITY_STANDALONE
                 _board = new AndroidBoard();
-#elif UNITY_IOS
+#elif UNITY_IOS && !UNITY_STANDALONE
                 _board = new IOSBoard ();
+#else
+                _board = new EditorBoard();
 #endif
             }
             return _board;
@@ -38,19 +41,6 @@ internal interface IBoard
     void SetText(string str);
 
     string GetText();
-}
-
-internal class EditorBoard : IBoard
-{
-    public void SetText(string str)
-    {
-        GUIUtility.systemCopyBuffer = str;
-    }
-
-    public string GetText()
-    {
-        return GUIUtility.systemCopyBuffer;
-    }
 }
 
 #if UNITY_ANDROID
@@ -90,3 +80,16 @@ internal class IOSBoard : IBoard
     }
 }
 #endif
+
+internal class EditorBoard : IBoard
+{
+    public void SetText(string str)
+    {
+        GUIUtility.systemCopyBuffer = str;
+    }
+
+    public string GetText()
+    {
+        return GUIUtility.systemCopyBuffer;
+    }
+}
