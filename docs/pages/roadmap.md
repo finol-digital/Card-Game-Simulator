@@ -15,10 +15,10 @@ permalink: roadmap.html
 - Make double click on *Deck Editor* search result do zoom if in portrait orientation
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation to keep viewing the currently selected card
-- Support deep links for games and decks through https://docs.branch.io/
-  - Facebook link and homepage banner image link should use this
 - Switch play area double click from toggle facedown to toggle tap
 - Make shared deck prompt to draw starting hand 
+- Support deep links for games and decks through https://docs.branch.io/
+  - Facebook link and homepage banner image link should use this
 
 ## Backlog
 - Tech: Enforce https through GitHub Pages instead of CloudFlare
