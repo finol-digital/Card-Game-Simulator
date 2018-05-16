@@ -4,14 +4,14 @@ namespace Maple.Field
 {
     public class FieldCardTransaction
     {
-        public delegate WeakReference<IReadOnlyFieldCardBox> FieldCardProcedure(
+        public delegate WeakReference<IFieldCardReader> FieldCardProcedure(
             MapleFieldContext Context,
-            IReadOnlyFieldCardBox FieldCard);
+            IFieldCardReader FieldCard);
 
 
         public MapleFieldContext Context;
 
-        public IReadOnlyFieldCardBox FieldCard;
+        public IFieldCardReader FieldCard;
 
 
         public TransactionHandle Handle { get; }
@@ -28,7 +28,7 @@ namespace Maple.Field
         }
 
 
-        public WeakReference<IReadOnlyFieldCardBox> Execute()
+        public WeakReference<IFieldCardReader> Execute()
         {
             var result = Procedure(Context, FieldCard);
             IsComplete = true;
@@ -39,7 +39,7 @@ namespace Maple.Field
 
         public class TransactionHandle
         {
-            public WeakReference<IReadOnlyFieldCardBox> Result { get; private set; }
+            public WeakReference<IFieldCardReader> Result { get; private set; }
 
             public bool IsComplete => Transaction.IsComplete;
 
@@ -53,7 +53,7 @@ namespace Maple.Field
 
 
             public void SetComplete(
-                WeakReference<IReadOnlyFieldCardBox> result) =>
+                WeakReference<IFieldCardReader> result) =>
                 Result = result;
         }
     }

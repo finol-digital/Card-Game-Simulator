@@ -5,6 +5,6 @@ namespace Maple.Field
 {
     public interface IReadOnlyMapleFieldContext
     {
-        IReadOnlyDictionary<Guid, IReadOnlyFieldCardBox> FieldCardStore { get; }
+        IReadOnlyDictionary<Guid, IFieldCardReader> FieldCardStore { get; }
     }
 }

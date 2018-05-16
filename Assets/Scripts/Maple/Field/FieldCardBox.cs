@@ -1,22 +1,24 @@
 ﻿namespace Maple.Field
 {
     public class FieldCardBox
-        :IReadOnlyFieldCardBox
+        :IFieldCardReader
     {
         public int CardDefinitionKey { get; }
 
         public FieldGridData GridRecord { get; set; }
-
-        int IReadOnlyFieldCardBox.CardDefinitionKey =>
-            CardDefinitionKey;
-
-        FieldGridData IReadOnlyFieldCardBox.GridRecord =>
-            GridRecord;
 
 
         public FieldCardBox(int cardDefinitionId)
         {
             CardDefinitionKey = cardDefinitionId;
         }
+
+
+        int IFieldCardReader.ReadCardDefinitionKey() =>
+            CardDefinitionKey;
+
+
+        FieldGridData IFieldCardReader.ReadGridRecord() =>
+            GridRecord;
     }
 }

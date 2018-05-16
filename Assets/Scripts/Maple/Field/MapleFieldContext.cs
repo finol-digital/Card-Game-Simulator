@@ -7,7 +7,7 @@ namespace Maple.Field
     public class MapleFieldContext
         : IReadOnlyMapleFieldContext
     {
-        IReadOnlyDictionary<Guid, IReadOnlyFieldCardBox> IReadOnlyMapleFieldContext.FieldCardStore =>
+        IReadOnlyDictionary<Guid, IFieldCardReader> IReadOnlyMapleFieldContext.FieldCardStore =>
             ReadonlyFieldCardCache;
 
 
@@ -23,7 +23,7 @@ namespace Maple.Field
             int cardDefinitionKey)
         {
             var spawnFieldCardTransaction = new FieldCardTransaction(
-                (context, _) => new WeakReference<IReadOnlyFieldCardBox>(
+                (context, _) => new WeakReference<IFieldCardReader>(
                         context.CreateFieldCard(cardDefinitionKey)));
 
             PushFieldCardTransaction(spawnFieldCardTransaction);
@@ -46,8 +46,8 @@ namespace Maple.Field
         ConcurrentDictionary<Guid, FieldCardBox> FieldCardStore { get; } =
             new ConcurrentDictionary<Guid, FieldCardBox>();
 
-        ConcurrentDictionary<Guid, IReadOnlyFieldCardBox> ReadonlyFieldCardCache { get; } =
-            new ConcurrentDictionary<Guid, IReadOnlyFieldCardBox>();
+        ConcurrentDictionary<Guid, IFieldCardReader> ReadonlyFieldCardCache { get; } =
+            new ConcurrentDictionary<Guid, IFieldCardReader>();
 
 
         FieldCardBox CreateFieldCard(int cardDefinitionKey)
@@ -62,7 +62,7 @@ namespace Maple.Field
 
             if (!ReadonlyFieldCardCache.TryAdd(
                     newFieldCardKey,
-                    (IReadOnlyFieldCardBox)newFieldCard))
+                    (IFieldCardReader)newFieldCard))
                 throw new Exception();
 
             return newFieldCard;

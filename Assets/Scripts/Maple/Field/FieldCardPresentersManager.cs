@@ -23,8 +23,8 @@ namespace Maple.Field
         /// <summary>
         /// Tracking information buffer for storing discovered new field cards.
         /// </summary>
-        Queue<Tuple<Guid, WeakReference<IReadOnlyFieldCardBox>>> newFieldCardInfos  { get; } =
-            new Queue<Tuple<Guid, WeakReference<IReadOnlyFieldCardBox>>>();
+        Queue<Tuple<Guid, WeakReference<IFieldCardReader>>> newFieldCardInfos  { get; } =
+            new Queue<Tuple<Guid, WeakReference<IFieldCardReader>>>();
 
         /// <summary>
         /// Tracking information Buffer for storing discovered deleted field cards.
@@ -42,9 +42,9 @@ namespace Maple.Field
             foreach (var fieldCardEntry in Context.FieldCardStore)
                 if (!Children.ContainsKey(fieldCardEntry.Key))
                     newFieldCardInfos.Enqueue(
-                        new Tuple<Guid, WeakReference<IReadOnlyFieldCardBox>>(
+                        new Tuple<Guid, WeakReference<IFieldCardReader>>(
                             fieldCardEntry.Key,
-                            new WeakReference<IReadOnlyFieldCardBox>(
+                            new WeakReference<IFieldCardReader>(
                                 fieldCardEntry.Value)));
 
 
@@ -82,7 +82,7 @@ namespace Maple.Field
 
         FieldCardPresenter SpawnPresenter(
             Guid fieldCardKey,
-            WeakReference<IReadOnlyFieldCardBox> fieldCardLink)
+            WeakReference<IFieldCardReader> fieldCardLink)
         {
             Debug.Log(
                 "Spawning child Card Presenter");

@@ -14,7 +14,7 @@ namespace Maple.Field
 
         public IReadOnlyMapleContext RootContext;
 
-        public WeakReference<IReadOnlyFieldCardBox> FieldCardLink;
+        public WeakReference<IFieldCardReader> FieldCardLink;
 
 
         void Start()
@@ -27,7 +27,7 @@ namespace Maple.Field
 
             // Bind data (one-time data binding)
 
-            IReadOnlyFieldCardBox model;
+            IFieldCardReader model;
 
             if (!FieldCardLink.TryGetTarget(out model))
             {
@@ -41,7 +41,7 @@ namespace Maple.Field
             }
 
             var cardDef =
-                RootContext.CardDefinitions[model.CardDefinitionKey];
+                RootContext.CardDefinitions[model.ReadCardDefinitionKey()];
 
             var viewModel = new {
                 CardName = cardDef.Name_EN_US,
@@ -73,7 +73,7 @@ namespace Maple.Field
 
         void Update()
         {
-            IReadOnlyFieldCardBox model;
+            IFieldCardReader model;
 
             if (!FieldCardLink.TryGetTarget(out model))
             {
@@ -84,7 +84,7 @@ namespace Maple.Field
             }
 
             var viewModel = new {
-                CardGridElement = model.GridRecord
+                CardGridData = model.ReadGridRecord()
             };
 
             // Represent card field grid element
@@ -94,8 +94,8 @@ namespace Maple.Field
             transform.localPosition = Vector3.Lerp(
                 a: transform.localPosition,
                 b: new Vector3(
-                    viewModel.CardGridElement.X,
-                    viewModel.CardGridElement.Y,
+                    viewModel.CardGridData.X,
+                    viewModel.CardGridData.Y,
                     transform.localPosition.z),
                 t: Time.deltaTime * 4f);
 
@@ -105,7 +105,7 @@ namespace Maple.Field
             transform.localPosition = new Vector3(
                 x: transform.localPosition.x,
                 y: transform.localPosition.y,
-                z: ((float)viewModel.CardGridElement.Elevation
+                z: ((float)viewModel.CardGridData.Elevation
                         / FieldGridData.MaxElevation)
                     / MaxElevationRepresentation);
 
@@ -116,7 +116,7 @@ namespace Maple.Field
                 a: transform.localEulerAngles,
                 b: new Vector3(
                     transform.localEulerAngles.x,
-                    viewModel.CardGridElement.RotationDegrees,
+                    viewModel.CardGridData.RotationDegrees,
                     transform.localEulerAngles.z),
                 t: Time.deltaTime);
         }
