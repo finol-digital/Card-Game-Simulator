@@ -6,10 +6,10 @@ permalink: roadmap.html
 
 ## What's New
 - Updated Deck Txt File Format
-- Fix: Pasting in Universal Windows Platform
-- Fix: Downloading game in UWP
 - CGS will prompt you to draw a starting hand when you load a deck to play
 - Double clicking on a card in play will toggle its rotation
+- Fix: Pasting in Universal Windows Platform
+- Fix: Downloading game in UWP
 
 ## Current Sprint
 - Release v1 to the App Store
