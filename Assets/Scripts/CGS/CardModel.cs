@@ -404,6 +404,18 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             cardModel.CmdUpdateRotation(cardModel.transform.rotation);
     }
 
+    public static void ToggleRotation90(CardModel cardModel)
+    {
+        if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
+            return;
+    
+        bool isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
+        cardModel.transform.rotation = isVertical ?
+            Quaternion.AngleAxis(90, Vector3.back) : Quaternion.identity;
+        if (cardModel.IsOnline)
+            cardModel.CmdUpdateRotation(cardModel.transform.rotation);
+    }
+
     public static void ShowCard(CardStack cardStack, CardModel cardModel)
     {
         if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))

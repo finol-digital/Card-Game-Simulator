@@ -204,7 +204,7 @@ public class PlayMode : MonoBehaviour
 
     public void SetPlayActions(CardStack cardStack, CardModel cardModel)
     {
-        cardModel.DoubleClickAction = CardModel.ToggleFacedown;
+        cardModel.DoubleClickAction = CardModel.ToggleRotation90;
         cardModel.SecondaryDragAction = cardModel.Rotate;
     }
 
