@@ -23,6 +23,7 @@ permalink: roadmap.html
 ## Backlog
 - Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Tech: Set up build server
+- Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
 - Allow any player to move cards in the play area, instead of just the player who put it there
