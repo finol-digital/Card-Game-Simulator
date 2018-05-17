@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Updated Deck Txt File Format
 - Fix: Pasting in Universal Windows Platform
 - Fix: Downloading game in UWP
+- CGS will prompt you to draw a starting hand when you load a deck to play
 
 ## Current Sprint
 - Release v1 to the App Store
@@ -16,7 +17,6 @@ permalink: roadmap.html
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Allow rotation to keep viewing the currently selected card
 - Switch play area double click from toggle facedown to toggle tap
-- Make shared deck prompt to draw starting hand 
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
 

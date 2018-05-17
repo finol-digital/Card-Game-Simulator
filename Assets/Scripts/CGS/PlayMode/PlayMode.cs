@@ -118,8 +118,7 @@ public class PlayMode : MonoBehaviour
 
         zones.scrollView.verticalScrollbar.value = 0;
         zones.CurrentDeck.Sync(deckCards);
-
-        StartCoroutine(WaitToDealStartingHand());
+        StartCoroutine(zones.CurrentDeck.WaitForLoad(DealDeck));
     }
 
     public void CreateGameBoards(List<GameBoard> boards)
@@ -153,18 +152,11 @@ public class PlayMode : MonoBehaviour
         rt.localScale = Vector3.one;
     }
 
-    public IEnumerator WaitToDealStartingHand()
+    public void DealDeck()
     {
-        IReadOnlyList<Card> deckCards = zones.CurrentDeck.Cards;
-        bool loaded = false;
-        while (!loaded)
-        {
-            yield return null;
-            loaded = deckCards.Where(card => card.IsLoadingImage).ToList().Count == 0;
-        }
-
         if (zones.Hand == null)
             zones.CreateHand();
+
         if (CardGameManager.Current.GameStartHandCount > 0)
             CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
     }
@@ -247,7 +239,6 @@ public class PlayMode : MonoBehaviour
             else if (NetworkManager.singleton.IsClientConnected())
                 NetworkManager.singleton.StopClient();
         }
-        NetworkManager.Shutdown();
 
         SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
     }

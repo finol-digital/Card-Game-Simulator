@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using CardGameDef;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+
+
 
 public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 {
@@ -118,5 +121,17 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
         Clear();
         foreach (Card card in cards)
             AddCard(card);
+    }
+
+    public IEnumerator WaitForLoad(UnityAction action)
+    {
+        IReadOnlyList<Card> deckCards = Cards;
+        bool loaded = false;
+        while (!loaded)
+        {
+            yield return null;
+            loaded = deckCards.Where(card => card.IsLoadingImage).ToList().Count == 0;
+        }
+        action();
     }
 }
