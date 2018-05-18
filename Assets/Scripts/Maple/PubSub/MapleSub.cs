@@ -9,7 +9,7 @@ namespace Maple.PubSub
             new ConcurrentQueue<object>();
 
 
-        public void RecieveMessage(object message) =>
+        public void ReceiveMessage(object message) =>
             Inbox.Enqueue(message);
 
 

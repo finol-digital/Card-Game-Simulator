@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using static UnityEngine.Debug;
 
 namespace Maple.PubSub
 {
@@ -49,9 +50,9 @@ namespace Maple.PubSub
                         }
                         catch (Exception e)
                         {
-                            UnityEngine.Debug.LogException(e);
+                            LogException(e);
 
-                            UnityEngine.Debug.Log(
+                            Log(
                                 "Failed to publish"
                                 + $" message: {message}"
                                 + $" outletName: {outletName}");
