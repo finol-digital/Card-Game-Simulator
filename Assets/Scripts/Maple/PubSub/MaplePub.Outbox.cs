@@ -7,7 +7,7 @@ namespace Maple.PubSub
     {
         class Outbox
         {
-            ConcurrentBag<WeakReference<MapleSub>> Subs { get; } =
+            ConcurrentBag<WeakReference<MapleSub>> SubRefs { get; } =
                 new ConcurrentBag<WeakReference<MapleSub>>();
 
             ConcurrentQueue<object> Messages { get; } =
@@ -15,7 +15,7 @@ namespace Maple.PubSub
 
 
             public void EnlistSub(MapleSub sub) =>
-                Subs.Add(new WeakReference<MapleSub>(sub));
+                SubRefs.Add(new WeakReference<MapleSub>(sub));
 
 
             public void AddMessage(object message) =>
@@ -27,20 +27,21 @@ namespace Maple.PubSub
             /// </summary>
             public void SendMessages()
             {
-                var messagesConsumeLimit = Messages.Count;
 
-                int limitCounter = 0;
-                object msgTemp;
+                object messageBuffer;
+                var throttle = Messages.Count;
+                var limitCounter = 0;
+
                 while (
-                    limitCounter++ <= messagesConsumeLimit
-                    && Messages.TryDequeue(out msgTemp)
-                    && msgTemp != null)
+                    limitCounter++ <= throttle
+                    && Messages.TryDequeue(out messageBuffer)
+                    && messageBuffer != null)
                 {
-                    foreach (var sub in Subs)
+                    foreach (var subRef in SubRefs)
                     {
-                        MapleSub realSub;
-                        if (sub.TryGetTarget(out realSub))
-                            realSub?.RecieveMessage(msgTemp);
+                        MapleSub sub;
+                        if (subRef.TryGetTarget(out sub))
+                            sub?.ReceiveMessage(messageBuffer);
                     }
                 }
             }

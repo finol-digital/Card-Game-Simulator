@@ -16,8 +16,8 @@ namespace Maple.PubSub
                 Log("Starting Maple PubSub publication service");
 
                 PublicationThread = new Thread(new ThreadStart(ServiceLoop));
-                PublicationThread.IsBackground = true;
                 PublicationThread.Name = "Maple PubSub Publication Service";
+                PublicationThread.IsBackground = true;
                 PublicationThread.Start();
 
 
@@ -27,7 +27,7 @@ namespace Maple.PubSub
                     {
                         if (state == PlayModeStateChange.EnteredEditMode)
                         {
-                                Log($"Stopping Maple PubSub");
+                                Log("Stopping Maple PubSub.");
                                 PublicationThread.Abort();
                         }
                     };
