@@ -14,9 +14,9 @@ permalink: roadmap.html
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
+- Allow rotation to keep viewing the currently selected card
 - Make double click on *Deck Editor* search result do zoom if in portrait orientation
 - Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
-- Allow rotation to keep viewing the currently selected card
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
 
