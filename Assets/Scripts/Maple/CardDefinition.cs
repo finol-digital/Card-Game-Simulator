@@ -1,4 +1,6 @@
-﻿namespace Maple
+﻿using UnityEngine;
+
+namespace Maple
 {
     public struct CardDefinition
     {
@@ -14,18 +16,21 @@
         /// </summary>
         public float Height { get; }
 
+        public Sprite FrontFace { get; }
 
         public CardDefinition(string name_en_us)
-            : this(name_en_us, 0.0635f, 0.0889f) { }
+            : this(name_en_us, 0.0635f, 0.0889f, null) { }
 
         public CardDefinition(
             string name_en_us,
             float width,
-            float height)
+            float height,
+            Sprite frontFace)
         {
             Name_EN_US = name_en_us;
             Width = width;
             Height = height;
+            FrontFace = frontFace;
         }
     }
 }

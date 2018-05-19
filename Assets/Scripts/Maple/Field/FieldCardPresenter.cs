@@ -47,7 +47,7 @@ namespace Maple.Field
                 CardName = cardDef.Name_EN_US,
                 CardWidth = cardDef.Width,
                 CardHeight = cardDef.Height,
-                CardImage = Texture2D.whiteTexture
+                CardImage = cardDef.FrontFace
             };
 
             // - Represent card definition
@@ -60,14 +60,7 @@ namespace Maple.Field
                 z: VolumeThickness
             );
 
-            spriteRenderer.sprite = Sprite.Create(
-                viewModel.CardImage,
-                new Rect(
-                    0f, 0f,
-                    viewModel.CardWidth, viewModel.CardHeight),
-                Vector2.one * 0.5f,
-                1f
-            );
+            spriteRenderer.sprite = viewModel.CardImage;
         }
 
 
