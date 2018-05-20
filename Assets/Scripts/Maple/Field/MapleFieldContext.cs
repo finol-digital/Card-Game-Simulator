@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using static UnityEngine.Debug;
 
 namespace Maple.Field
 {
@@ -20,11 +21,11 @@ namespace Maple.Field
 
 
         public FieldCardTransaction.TransactionHandle PushSpawnFieldCardTransaction(
-            int cardDefinitionKey)
+            string cardDefinitionId)
         {
             var spawnFieldCardTransaction = new FieldCardTransaction(
                 (context, _) => new WeakReference<IFieldCardReader>(
-                        context.CreateFieldCard(cardDefinitionKey)));
+                        context.CreateFieldCard(cardDefinitionId)));
 
             PushFieldCardTransaction(spawnFieldCardTransaction);
 
@@ -50,9 +51,11 @@ namespace Maple.Field
             new ConcurrentDictionary<Guid, IFieldCardReader>();
 
 
-        FieldCardBox CreateFieldCard(int cardDefinitionKey)
+        FieldCardBox CreateFieldCard(string cardDefinitionId)
         {
-            var newFieldCard = new FieldCardBox(cardDefinitionKey);
+            Log($"Creating field card from {cardDefinitionId}...");
+
+            var newFieldCard = new FieldCardBox(cardDefinitionId);
             var newFieldCardKey = Guid.NewGuid();  // FIXME: Must check for used IDs
 
             if (!FieldCardStore.TryAdd(

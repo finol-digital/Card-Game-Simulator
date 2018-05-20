@@ -2,7 +2,7 @@
 {
     public interface IFieldCardReader
     {
-        int ReadCardDefinitionKey();
+        string ReadCardDefinitionId();
         FieldGridData ReadGridRecord();
     }
 }

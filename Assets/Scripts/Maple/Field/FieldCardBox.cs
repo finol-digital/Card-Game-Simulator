@@ -3,19 +3,19 @@
     public class FieldCardBox
         :IFieldCardReader
     {
-        public int CardDefinitionKey { get; }
+        public string CardDefinitionId { get; }
 
         public FieldGridData GridRecord { get; set; }
 
 
-        public FieldCardBox(int cardDefinitionId)
+        public FieldCardBox(string cardDefinitionId)
         {
-            CardDefinitionKey = cardDefinitionId;
+            CardDefinitionId = cardDefinitionId;
         }
 
 
-        int IFieldCardReader.ReadCardDefinitionKey() =>
-            CardDefinitionKey;
+        string IFieldCardReader.ReadCardDefinitionId() =>
+            CardDefinitionId;
 
 
         FieldGridData IFieldCardReader.ReadGridRecord() =>
