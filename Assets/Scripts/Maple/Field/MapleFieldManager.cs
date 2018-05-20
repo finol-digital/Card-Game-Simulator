@@ -61,7 +61,7 @@ namespace Maple.Field
 
 
         public FieldCardTransaction.TransactionHandle SpawnFieldCard(
-            int cardDefinitionId) =>
+            string cardDefinitionId) =>
             Context.PushSpawnFieldCardTransaction(cardDefinitionId);
     }
 }

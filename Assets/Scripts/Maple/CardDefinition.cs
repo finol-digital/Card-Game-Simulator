@@ -4,7 +4,7 @@ namespace Maple
 {
     public struct CardDefinition
     {
-        public string Name_EN_US { get; }
+        public string Id { get; }
 
         /// <summary>
         /// Card width in meters. Defaults to 0.0635 meters (2.5")
@@ -18,16 +18,16 @@ namespace Maple
 
         public Sprite FrontFace { get; }
 
-        public CardDefinition(string name_en_us)
-            : this(name_en_us, 0.0635f, 0.0889f, null) { }
+        public CardDefinition(string id, Sprite frontFace)
+            : this(id, 0.0635f, 0.0889f, frontFace) { }
 
         public CardDefinition(
-            string name_en_us,
+            string id,
             float width,
             float height,
             Sprite frontFace)
         {
-            Name_EN_US = name_en_us;
+            Id = id;
             Width = width;
             Height = height;
             FrontFace = frontFace;

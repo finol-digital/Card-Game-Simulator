@@ -41,10 +41,10 @@ namespace Maple.Field
             }
 
             var cardDef =
-                RootContext.CardDefinitions[model.ReadCardDefinitionKey()];
+                RootContext.CardDefinitionsTable[model.ReadCardDefinitionId()];
 
             var viewModel = new {
-                CardName = cardDef.Name_EN_US,
+                CardName = cardDef.Id,
                 CardWidth = cardDef.Width,
                 CardHeight = cardDef.Height,
                 CardImage = cardDef.FrontFace
@@ -71,8 +71,8 @@ namespace Maple.Field
             if (!FieldCardLink.TryGetTarget(out model))
             {
                 Debug.LogWarning(
-                    "Field card resource is null. "
-                    + "This presenter will remain alive, but will not update.");
+                    "Field card resource is null."
+                    + " This presenter will remain alive, but will not update.");
                 return;  // TODO: fail gracefully
             }
 
