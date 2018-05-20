@@ -12,23 +12,29 @@ public class CardSelector : MonoBehaviour
         if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(Inputs.Vertical)) {
+        if (Input.GetButtonDown(Inputs.Vertical))
+        {
             if (Input.GetAxis(Inputs.Vertical) > 0)
                 SelectUp();
             else
                 SelectDown();
         }
-        else if (Input.GetButtonDown(Inputs.Horizontal)) {
+        else if (Input.GetButtonDown(Inputs.Horizontal))
+        {
             if (Input.GetAxis(Inputs.Horizontal) > 0)
                 SelectRight();
             else
                 SelectLeft();
-        } else if (Input.GetButtonDown(Inputs.Column)) {
+        }
+        else if (Input.GetButtonDown(Inputs.Column))
+        {
             if (Input.GetAxis(Inputs.Column) > 0)
                 ShiftRight();
             else
                 ShiftLeft();
-        } else if (Input.GetButtonDown(Inputs.Page)) {
+        }
+        else if (Input.GetButtonDown(Inputs.Page))
+        {
             if (Input.GetAxis(Inputs.Page) > 0)
                 PageRight();
             else
@@ -42,12 +48,14 @@ public class CardSelector : MonoBehaviour
             return;
 
         List<CardModel> editorCards = editor.CardModels;
-        if (editorCards.Count < 1) {
+        if (editorCards.Count < 1)
+        {
             EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
-        for (int i = 0; i < editorCards.Count; i++) {
+        for (int i = 0; i < editorCards.Count; i++)
+        {
             if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
                 continue;
             i++;
@@ -65,12 +73,14 @@ public class CardSelector : MonoBehaviour
             return;
 
         List<CardModel> editorCards = editor.CardModels;
-        if (editorCards.Count < 1) {
+        if (editorCards.Count < 1)
+        {
             EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
-        for (int i = editorCards.Count - 1; i >= 0; i--) {
+        for (int i = editorCards.Count - 1; i >= 0; i--)
+        {
             if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
                 continue;
             i--;
@@ -87,16 +97,19 @@ public class CardSelector : MonoBehaviour
         if (EventSystem.current.alreadySelecting)
             return;
 
-        if (results.layoutArea.childCount < 1) {
+        if (results.layoutArea.childCount < 1)
+        {
             EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
-        for (int i = results.layoutArea.childCount - 1; i >= 0; i--) {
+        for (int i = results.layoutArea.childCount - 1; i >= 0; i--)
+        {
             if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
                 continue;
             i--;
-            if (i < 0) {
+            if (i < 0)
+            {
                 results.PageLeft();
                 i = results.layoutArea.childCount - 1;
             }
@@ -111,16 +124,19 @@ public class CardSelector : MonoBehaviour
         if (EventSystem.current.alreadySelecting)
             return;
 
-        if (results.layoutArea.childCount < 1) {
+        if (results.layoutArea.childCount < 1)
+        {
             EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
-        for (int i = 0; i < results.layoutArea.childCount; i++) {
+        for (int i = 0; i < results.layoutArea.childCount; i++)
+        {
             if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
                 continue;
             i++;
-            if (i == results.layoutArea.childCount) {
+            if (i == results.layoutArea.childCount)
+            {
                 results.PageRight();
                 i = 0;
             }
@@ -136,18 +152,21 @@ public class CardSelector : MonoBehaviour
             return;
 
         List<CardModel> editorCards = editor.CardModels;
-        if (editorCards.Count < 1) {
+        if (editorCards.Count < 1)
+        {
             EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
         Transform startParent = null;
-        for (int i = editorCards.Count - 1; i >= 0; i--) {
+        for (int i = editorCards.Count - 1; i >= 0; i--)
+        {
             if (startParent == null && editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
                 continue;
             if (editorCards[i] == CardInfoViewer.Instance.SelectedCardModel)
                 startParent = editorCards[i].transform.parent;
-            if (startParent != editorCards[i].transform.parent) {
+            if (startParent != editorCards[i].transform.parent)
+            {
                 editor.scrollRect.horizontalNormalizedPosition = editorCards[i].transform.parent.GetSiblingIndex() / (editorCards[i].transform.parent.parent.childCount - 1f);
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
                 return;
@@ -163,18 +182,21 @@ public class CardSelector : MonoBehaviour
             return;
 
         List<CardModel> editorCards = editor.CardModels;
-        if (editorCards.Count < 1) {
+        if (editorCards.Count < 1)
+        {
             EventSystem.current.SetSelectedGameObject(null);
             return;
         }
 
         Transform startParent = null;
-        for (int i = 0; i < editorCards.Count; i++) {
+        for (int i = 0; i < editorCards.Count; i++)
+        {
             if (startParent == null && editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
                 continue;
             if (editorCards[i] == CardInfoViewer.Instance.SelectedCardModel)
                 startParent = editorCards[i].transform.parent;
-            if (startParent != editorCards[i].transform.parent) {
+            if (startParent != editorCards[i].transform.parent)
+            {
                 editor.scrollRect.horizontalNormalizedPosition = editorCards[i].transform.parent.GetSiblingIndex() / (editorCards[i].transform.parent.parent.childCount - 1f);
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
                 return;

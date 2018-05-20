@@ -12,13 +12,15 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
     public const string SaveChangesPrompt = "You have unsaved changes. Would you like to save?";
     public const string ChangeIndicator = "*";
-    
+
     public float PreHeight => cardModelPrefab.GetComponent<RectTransform>().rect.height;
     public int CardsPerStack => Mathf.FloorToInt(8 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight));
     public int CardStackCount => Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardsPerStack);
     public List<CardStack> CardStacks => _cardStacks ?? (_cardStacks = new List<CardStack>());
-    public int CurrentCardStackIndex {
-        get {
+    public int CurrentCardStackIndex
+    {
+        get
+        {
             if (_currentCardStackIndex < 0 || _currentCardStackIndex >= CardStacks.Count)
                 _currentCardStackIndex = 0;
             return _currentCardStackIndex;
@@ -28,8 +30,10 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
     public DeckSaveMenu DeckSaver => _deckSaver ?? (_deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>());
 
-    public List<CardModel> CardModels {
-        get {
+    public List<CardModel> CardModels
+    {
+        get
+        {
             List<CardModel> cardModels = new List<CardModel>();
             foreach (CardStack stack in CardStacks)
                 foreach (CardModel cardModel in stack.GetComponentsInChildren<CardModel>())
@@ -37,8 +41,10 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             return cardModels;
         }
     }
-    public Deck CurrentDeck {
-        get {
+    public Deck CurrentDeck
+    {
+        get
+        {
             Deck deck = new Deck(SavedDeck != null ? SavedDeck.Name : Deck.DefaultName, CardGameManager.Current.DeckFileType);
             foreach (CardStack stack in CardStacks)
                 foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
@@ -47,8 +53,10 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         }
     }
     public Deck SavedDeck { get; private set; }
-    public bool HasChanged {
-        get {
+    public bool HasChanged
+    {
+        get
+        {
             Deck currentDeck = CurrentDeck;
             if (currentDeck.Cards.Count < 1)
                 return false;
@@ -112,7 +120,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         foreach (CardStack cardStack in CardStacks)
             foreach (CardModel cardModel in cardStack.GetComponentsInChildren<CardModel>())
-                    cardModel.ShowNameLabel();
+                cardModel.ShowNameLabel();
     }
 
     public void ResetCardStacks()
@@ -120,7 +128,8 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         Clear();
         layoutContent.DestroyAllChildren();
         CardStacks.Clear();
-        for (int i = 0; i < CardStackCount; i++) {
+        for (int i = 0; i < CardStackCount; i++)
+        {
             CardStack newCardStack = Instantiate(cardStackPrefab, layoutContent).GetOrAddComponent<CardStack>();
             newCardStack.type = CardStackType.Vertical;
             newCardStack.scrollRectContainer = scrollRect;
@@ -131,7 +140,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
             newCardStack.GetComponent<VerticalLayoutGroup>().spacing = cardStackPrefab.GetComponent<VerticalLayoutGroup>().spacing
                 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight);
         }
-        layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardStacks.Count, 
+        layoutContent.sizeDelta = new Vector2(cardStackPrefab.GetComponent<RectTransform>().rect.width * CardStacks.Count,
             layoutContent.sizeDelta.y);
     }
 
@@ -157,20 +166,24 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
         int maxCopiesInStack = CardsPerStack;
         CardModel newCardModel = null;
-        while (newCardModel == null) {
-            if (CardStacks [CurrentCardStackIndex].transform.childCount < maxCopiesInStack) {
-                newCardModel = Instantiate(cardModelPrefab, CardStacks [CurrentCardStackIndex].transform).GetOrAddComponent<CardModel>();
+        while (newCardModel == null)
+        {
+            if (CardStacks[CurrentCardStackIndex].transform.childCount < maxCopiesInStack)
+            {
+                newCardModel = Instantiate(cardModelPrefab, CardStacks[CurrentCardStackIndex].transform).GetOrAddComponent<CardModel>();
                 newCardModel.Value = card;
-            } else {
+            }
+            else
+            {
                 CurrentCardStackIndex++;
                 if (CurrentCardStackIndex == 0)
                     maxCopiesInStack++;
             }
         }
-        scrollRect.horizontalNormalizedPosition = CardStacks.Count > 1 ? 
+        scrollRect.horizontalNormalizedPosition = CardStacks.Count > 1 ?
             CurrentCardStackIndex / (CardStacks.Count - 1f) : 0f;
 
-        OnAddCardModel(CardStacks [CurrentCardStackIndex], newCardModel);
+        OnAddCardModel(CardStacks[CurrentCardStackIndex], newCardModel);
     }
 
     public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
@@ -283,7 +296,8 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
 
     public void CheckBackToMainMenu()
     {
-        if (HasChanged) {
+        if (HasChanged)
+        {
             CardGameManager.Instance.Messenger.Ask(SaveChangesPrompt, BackToMainMenu, ShowDeckSaveMenu);
             return;
         }

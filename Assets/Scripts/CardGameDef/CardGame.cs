@@ -464,7 +464,10 @@ namespace CardGameDef
                         cardModel.ShowNameLabel();
                     cardModel.image.sprite = newSprite;
                     if (cardModel == CardInfoViewer.Instance.SelectedCardModel)
+                    {
                         CardInfoViewer.Instance.cardImage.sprite = newSprite;
+                        CardInfoViewer.Instance.zoomImage.sprite = newSprite;
+                    }
                 }
             }
             card.IsLoadingImage = false;

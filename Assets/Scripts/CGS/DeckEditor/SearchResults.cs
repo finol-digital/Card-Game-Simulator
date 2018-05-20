@@ -56,7 +56,8 @@ public class SearchResults : MonoBehaviour
 
     public void PageLeft()
     {
-        CardInfoViewer.Instance.SelectedCardModel = null;
+        if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
+            CardInfoViewer.Instance.SelectedCardModel = null;
         CurrentPageIndex--;
         if (CurrentPageIndex < 0)
             CurrentPageIndex = TotalPageCount;
@@ -65,7 +66,8 @@ public class SearchResults : MonoBehaviour
 
     public void PageRight()
     {
-        CardInfoViewer.Instance.SelectedCardModel = null;
+        if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
+            CardInfoViewer.Instance.SelectedCardModel = null;
         CurrentPageIndex++;
         if (CurrentPageIndex > TotalPageCount)
             CurrentPageIndex = 0;
@@ -76,15 +78,19 @@ public class SearchResults : MonoBehaviour
     {
         layoutArea.DestroyAllChildren();
 
-        for (int i = 0; i < CardsPerPage && CurrentPageIndex >= 0 && CurrentPageIndex * CardsPerPage + i < AllResults.Count; i++) {
-            string cardId = AllResults [CurrentPageIndex * CardsPerPage + i].Id;
+        for (int i = 0; i < CardsPerPage && CurrentPageIndex >= 0 && CurrentPageIndex * CardsPerPage + i < AllResults.Count; i++)
+        {
+            string cardId = AllResults[CurrentPageIndex * CardsPerPage + i].Id;
             if (!CardGameManager.Current.Cards.ContainsKey(cardId))
                 continue;
-            Card cardToShow = CardGameManager.Current.Cards [cardId];
+            Card cardToShow = CardGameManager.Current.Cards[cardId];
             CardModel cardModelToShow = Instantiate(deckEditor.cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
             cardModelToShow.Value = cardToShow;
             cardModelToShow.DoesCloneOnDrag = true;
-            cardModelToShow.DoubleClickAction = deckEditor.AddCardModel;
+            if (((RectTransform)deckEditor.transform).rect.width > ((RectTransform)deckEditor.transform).rect.height)
+                cardModelToShow.DoubleClickAction = deckEditor.AddCardModel;
+            else
+                cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
         }
 
         countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);
@@ -103,7 +109,8 @@ public class SearchResults : MonoBehaviour
     public List<Card> AllResults
     {
         get { return _allResults ?? (_allResults = new List<Card>()); }
-        set {
+        set
+        {
             _allResults = value;
             CurrentPageIndex = 0;
             UpdateSearchResultsPanel();

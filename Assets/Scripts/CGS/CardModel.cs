@@ -26,7 +26,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public bool IsOnline => CGSNetManager.Instance != null && CGSNetManager.Instance.isNetworkActive
         && transform.parent == CGSNetManager.Instance.playController.playAreaContent;
-    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null && 
+    public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
         (CurrentPointerEventData.button == PointerEventData.InputButton.Middle || CurrentPointerEventData.button == PointerEventData.InputButton.Right));
     public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
@@ -42,23 +42,26 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
     protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
-    [SyncVar(hook ="OnChangePosition")]
+    [SyncVar(hook = "OnChangePosition")]
     public Vector2 position;
 
-    [SyncVar(hook ="OnChangeRotation")]
+    [SyncVar(hook = "OnChangeRotation")]
     public Quaternion rotation;
 
     [SyncVar]
     private string _id;
     public string Id => _id;
-    public Card Value {
-        get {
+    public Card Value
+    {
+        get
+        {
             Card cardValue;
             if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out cardValue))
                 return Card.Blank;
             return cardValue;
         }
-        set {
+        set
+        {
             _id = value != null ? value.Id : string.Empty;
             gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
             CardGameManager.Current.PutCardImage(this);
@@ -67,16 +70,20 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     [SyncVar]
     private bool _isFacedown;
-    public bool IsFacedown {
+    public bool IsFacedown
+    {
         get { return _isFacedown; }
-        set {
+        set
+        {
             if (value == _isFacedown)
                 return;
             _isFacedown = value;
-            if (_isFacedown) {
+            if (_isFacedown)
+            {
                 HideNameLabel();
                 image.sprite = CardGameManager.Current.CardBackImageSprite;
-            } else
+            }
+            else
                 CardGameManager.Current.PutCardImage(this);
 
             if (IsOnline && hasAuthority)
@@ -98,7 +105,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         ((RectTransform)transform).sizeDelta = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize;
 
-        if (IsOnline) {
+        if (IsOnline)
+        {
             if (Vector2.zero != position)
                 ((RectTransform)transform).anchoredPosition = position;
             if (Quaternion.identity != rotation)
@@ -130,7 +138,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerUp(PointerEventData eventData)
     {
         if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId && !eventData.dragging
-            && eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right) {
+            && eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right)
+        {
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
                 DoubleClickAction(this);
             else if (PlaceHolder == null)
@@ -153,7 +162,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnDeselect(BaseEventData eventData)
     {
-        CardInfoViewer.Instance.IsVisible = false;
+        if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
+            CardInfoViewer.Instance.IsVisible = false;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -161,7 +171,8 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         if (IsOnline && !hasAuthority)
             return;
 
-        if (DoesCloneOnDrag) {
+        if (DoesCloneOnDrag)
+        {
             GameObject newGameObject = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform);
             eventData.pointerPress = newGameObject;
             eventData.pointerDrag = newGameObject;
@@ -189,7 +200,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         if (IsOnline && !hasAuthority)
             return;
-            
+
         CurrentPointerEventData = eventData;
         CurrentDragPhase = DragPhase.Drag;
         PointerPositions[eventData.pointerId] = eventData.position;
@@ -259,7 +270,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
         if (PlaceHolderCardStack != null)
             PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
-        
+
         if (IsOnline)
             CmdUpdatePosition(((RectTransform)transform).anchoredPosition);
     }
@@ -286,7 +297,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
             || (cardStack.type == CardStackType.Vertical && isOutXBounds)
             || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
-            || (cardStack.type == CardStackType.Area 
+            || (cardStack.type == CardStackType.Area
                 && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
             ParentToCanvas(targetPosition);
     }
@@ -339,13 +350,15 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public IEnumerator MoveToPlaceHolder()
     {
-        while (PlaceHolder != null && Vector3.Distance(transform.position, PlaceHolder.position) > 1) {
+        while (PlaceHolder != null && Vector3.Distance(transform.position, PlaceHolder.position) > 1)
+        {
             float step = MovementSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, PlaceHolder.position, step);
             yield return null;
         }
 
-        if (PlaceHolder == null) {
+        if (PlaceHolder == null)
+        {
             Discard();
             yield break;
         }
@@ -408,7 +421,7 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
-    
+
         bool isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
         cardModel.transform.rotation = isVertical ?
             Quaternion.AngleAxis(90, Vector3.back) : Quaternion.identity;
@@ -516,27 +529,34 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             Destroy(PlaceHolder.gameObject);
     }
 
-    public RectTransform PlaceHolder {
+    public RectTransform PlaceHolder
+    {
         get { return _placeHolder; }
-        private set {
+        private set
+        {
             if (_placeHolder != null)
                 Destroy(_placeHolder.gameObject);
             _placeHolder = value;
-            if (_placeHolder == null) {
+            if (_placeHolder == null)
+            {
                 if (ParentCardStack == null && DropTarget == null)
                     WarnHighlight();
                 _placeHolderCardStack = null;
-            } else
+            }
+            else
                 HideHighlight();
         }
     }
 
-    public CardStack PlaceHolderCardStack {
+    public CardStack PlaceHolderCardStack
+    {
         get { return _placeHolderCardStack; }
-        set {
+        set
+        {
             _placeHolderCardStack = value;
 
-            if (_placeHolderCardStack == null) {
+            if (_placeHolderCardStack == null)
+            {
                 PlaceHolder = null;
                 return;
             }

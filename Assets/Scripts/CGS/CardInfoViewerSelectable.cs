@@ -21,6 +21,7 @@ public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISel
         if (ignoreDeselect)
             return;
 
-        CardInfoViewer.Instance.IsVisible = false;
+        if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
+            CardInfoViewer.Instance.IsVisible = false;
     }
 }

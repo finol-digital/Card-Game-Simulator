@@ -17,6 +17,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public RectTransform infoPanel;
     public RectTransform zoomPanel;
     public Image cardImage;
+    public Image zoomImage;
     public Text nameText;
     public Text idText;
     public Dropdown propertySelection;
@@ -52,7 +53,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
         if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)
             SelectedCardModel.DoubleClickAction(SelectedCardModel);
-        else if (Input.GetButtonDown(Inputs.CardViewer)) {
+        else if (Input.GetButtonDown(Inputs.CardViewer))
+        {
             if (Input.GetAxis(Inputs.CardViewer) > 0)
                 IncrementProperty();
             else
@@ -70,7 +72,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         int selectedPropertyIndex = 0;
         PropertyOptions.Clear();
         PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
-        foreach (PropertyDef propDef in CardGameManager.Current.CardProperties) {
+        foreach (PropertyDef propDef in CardGameManager.Current.CardProperties)
+        {
             PropertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
             if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
                 selectedPropertyIndex = PropertyOptions.Count - 1;
@@ -95,7 +98,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         if (SelectedCardModel != null)
             contentText.text = SelectedPropertyIndex != 0 ?
                 SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName)
-                : CardGameManager.Current.Sets [SelectedCardModel.Value.SetCode].ToString();
+                : CardGameManager.Current.Sets[SelectedCardModel.Value.SetCode].ToString();
         else
             contentText.text = string.Empty;
     }
@@ -112,13 +115,19 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void OnDeselect(BaseEventData eventData)
     {
-        IsVisible = false;
+        if (!zoomPanel.gameObject.activeSelf)
+            IsVisible = false;
+    }
+
+    public void ShowCardZoomed(CardModel cardModel)
+    {
+        SelectedCardModel = cardModel;
+        ShowCardZoomed();
     }
 
     public void ShowCardZoomed()
     {
         zoomPanel.gameObject.SetActive(true);
-        zoomPanel.GetChild(0).GetComponent<Image>().sprite = cardImage.sprite;
     }
 
     public void HideCardZoomed()
@@ -126,17 +135,23 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         zoomPanel.gameObject.SetActive(false);
     }
 
-    public static CardInfoViewer Instance {
-        get {
-            if (_instance != null) return _instance;
+    public static CardInfoViewer Instance
+    {
+        get
+        {
+            if (_instance != null)
+                return _instance;
+
             GameObject cardInfoViewer = GameObject.FindWithTag(CardInfoViewerTag);
             _instance = cardInfoViewer?.GetOrAddComponent<CardInfoViewer>();
             return _instance;
         }
     }
 
-    public string SelectedPropertyName {
-        get {
+    public string SelectedPropertyName
+    {
+        get
+        {
             string selectedName = SetLabel;
             if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
                 selectedName = PropertyOptions[SelectedPropertyIndex].text;
@@ -144,9 +159,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
     }
 
-    public int SelectedPropertyIndex {
+    public int SelectedPropertyIndex
+    {
         get { return _selectedPropertyIndex; }
-        set {
+        set
+        {
             _selectedPropertyIndex = value;
             if (_selectedPropertyIndex < 0)
                 _selectedPropertyIndex = PropertyOptions.Count - 1;
@@ -158,19 +175,23 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
     }
 
-    public CardModel SelectedCardModel {
+    public CardModel SelectedCardModel
+    {
         get { return _selectedCardModel; }
-        set {
+        set
+        {
             if (_selectedCardModel != null)
                 _selectedCardModel.HideHighlight();
 
             _selectedCardModel = value;
 
-            if (_selectedCardModel == null) {
+            if (_selectedCardModel == null)
+            {
                 IsVisible = false;
                 return;
             }
             cardImage.sprite = _selectedCardModel.GetComponent<Image>().sprite;
+            zoomImage.sprite = cardImage.sprite;
             nameText.text = _selectedCardModel.Value.Name;
             idText.text = _selectedCardModel.Value.Id;
             SetContentText();
@@ -179,9 +200,11 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         }
     }
 
-    public bool IsVisible {
+    public bool IsVisible
+    {
         get { return _isVisible; }
-        set {
+        set
+        {
             _isVisible = value;
             if (!_isVisible && zoomPanel != null)
                 zoomPanel.gameObject.SetActive(false);
