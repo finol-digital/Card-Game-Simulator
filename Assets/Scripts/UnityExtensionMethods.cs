@@ -25,12 +25,13 @@ static public class UnityExtensionMethods
     static public void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
-        while (n > 1) {
+        while (n > 1)
+        {
             n--;
             int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
-            T value = list [k];
-            list [k] = list [n];
-            list [n] = value;
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
         }
     }
 
@@ -41,21 +42,23 @@ static public class UnityExtensionMethods
             return component;
 
         Transform transform = go.transform.parent;
-        while (transform != null && component == null) {
+        while (transform != null && component == null)
+        {
             component = transform.gameObject.GetComponent<T>();
             transform = transform.parent;
         }
         return component;
     }
 
-    static public T GetOrAddComponent<T>(this GameObject go) where T: Component
+    static public T GetOrAddComponent<T>(this GameObject go) where T : Component
     {
         return go.GetComponent<T>() ?? go.AddComponent<T>();
     }
 
     static public void DestroyAllChildren(this Transform parent)
     {
-        for (int i = parent.transform.childCount - 1; i >= 0; i--) {
+        for (int i = parent.transform.childCount - 1; i >= 0; i--)
+        {
             Transform child = parent.GetChild(i);
             child.SetParent(null);
             UnityEngine.Object.Destroy(child.gameObject);
@@ -104,9 +107,11 @@ static public class UnityExtensionMethods
         HashSet<string> createdDirectories = new HashSet<string>();
 
         ZipFile zf = null;
-        try {
+        try
+        {
             zf = new ZipFile(File.OpenRead(Application.dataPath));
-            foreach (ZipEntry zipEntry in zf) {
+            foreach (ZipEntry zipEntry in zf)
+            {
                 if (!zipEntry.IsFile)
                     continue;
 
@@ -116,21 +121,28 @@ static public class UnityExtensionMethods
 
                 name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
                 string relativeDir = Path.GetDirectoryName(name);
-                if (!createdDirectories.Contains(relativeDir)) {
+                if (!createdDirectories.Contains(relativeDir))
+                {
                     Directory.CreateDirectory(targetPath + relativeDir);
                     createdDirectories.Add(relativeDir);
                 }
 
                 byte[] buffer = new byte[4096];
-                using (Stream zipStream = zf.GetInputStream(zipEntry)) {
+                using (Stream zipStream = zf.GetInputStream(zipEntry))
+                {
                     using (FileStream streamWriter = File.Create(targetPath + name))
                         StreamUtils.Copy(zipStream, streamWriter, buffer);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Debug.LogError(e.Message);
-        } finally {
-            if (zf != null) {
+        }
+        finally
+        {
+            if (zf != null)
+            {
                 zf.IsStreamOwner = true;
                 zf.Close();
             }
@@ -172,7 +184,8 @@ static public class UnityExtensionMethods
             yield break;
 
         object result = null;
-        while (coroutine.MoveNext()) {
+        while (coroutine.MoveNext())
+        {
             result = coroutine.Current;
             yield return result;
         }
