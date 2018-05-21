@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 62766699}
   - component: {fileID: 62766704}
   - component: {fileID: 62766703}
+  - component: {fileID: 62766705}
   m_Layer: 5
   m_Name: DeckEditor Canvas
   m_TagString: CardCanvas
@@ -389,6 +390,20 @@ MonoBehaviour:
   nameText: {fileID: 779102099}
   countText: {fileID: 836546759}
   searchResults: {fileID: 62766703}
+--- !u!114 &62766705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 62766698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3941f64aa1e57d744bdf4a88d8d70bfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSwipeLength: 0.5
+  triggerSwipeAtMinLength: 1
+  useEightDirections: 0
 --- !u!1 &64640897
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,7 +644,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000060785107, y: 0}
+  m_AnchoredPosition: {x: 0.000019838804, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &179835150
@@ -722,7 +737,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00003001748, y: 0}
+  m_AnchoredPosition: {x: -0.000012209412, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &196520020
@@ -2473,7 +2488,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00003001748, y: 0}
+  m_AnchoredPosition: {x: 0.0000060964912, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &796070842
@@ -2598,7 +2613,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000068414505, y: 0}
+  m_AnchoredPosition: {x: 0.0000045800166, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &836546758
@@ -2689,7 +2704,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: -12.5}
+  m_AnchoredPosition: {x: 0, y: -12.5}
   m_SizeDelta: {x: 1820, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &943351771
@@ -2951,8 +2966,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 335690431}
   m_HandleRect: {fileID: 335690429}
   m_Direction: 0
-  m_Value: 0.00000711987
-  m_Size: 0.99057966
+  m_Value: 0
+  m_Size: 0.68935287
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -7,6 +7,25 @@ public class CardSelector : MonoBehaviour
     public DeckEditor editor;
     public SearchResults results;
 
+    void Start()
+    {
+        SwipeManager.OnSwipeDetected += UpdateSwipes;
+    }
+
+    public void UpdateSwipes(Swipe direction, Vector2 swipeVelocity)
+    {
+        if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf || CardGameManager.TopMenuCanvas != null)
+            return;
+
+        switch (direction)
+        {
+            case Swipe.Down: SelectUp(); break;
+            case Swipe.Up: SelectDown(); break;
+            case Swipe.Right: SelectLeft(); break;
+            case Swipe.Left: SelectRight(); break;
+        }
+    }
+
     void Update()
     {
         if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)

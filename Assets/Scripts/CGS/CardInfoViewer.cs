@@ -132,6 +132,8 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void HideCardZoomed()
     {
+        if (SwipeManager.IsSwiping())
+            return;
         zoomPanel.gameObject.SetActive(false);
     }
 

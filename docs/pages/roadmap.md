@@ -9,14 +9,13 @@ permalink: roadmap.html
 - CGS will prompt you to draw a starting hand when you load a deck to play
 - Double clicking on a card in play will toggle its rotation
 - Double clicking on a card in the Deck Editor search results will zoom on that card
+- Swiping while zooomed on a card will select the next card
 - Fix: Pasting in Universal Windows Platform
 - Fix: Downloading game in UWP
 
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
-- Allow rotation to keep viewing the currently selected card
-- Process horizontal/vertical input on *Card Viewer Zoom*, allowing horizontal/vertical swipes
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
 
@@ -72,6 +71,7 @@ permalink: roadmap.html
 - Allow automatic deletion of empty decks in *Play Mode*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*
 - Organize cards by category when saving a deck in the *Deck Editor*
+- Allow rotation to keep viewing the currently selected card
 - Display keyboard shortcuts in *Options Menu*
 - Allow pre-fetching of card images in *Options Menu*
 - Set card image cache limit in *Options Menu*
