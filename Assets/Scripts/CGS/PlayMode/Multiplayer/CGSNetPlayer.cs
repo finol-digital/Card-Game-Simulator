@@ -15,7 +15,7 @@ public class CGSNetPlayer : NetworkBehaviour
         CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList() : new List<Card>();
     public string[] CurrentDeckCardIds => CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds;
 
-    [SyncVar(hook ="OnChangeScore")]
+    [SyncVar(hook = "OnChangeScore")]
     public int scoreIndex;
     [SyncVar(hook = "OnChangeDeck")]
     public int deckIndex;
@@ -94,7 +94,7 @@ public class CGSNetPlayer : NetworkBehaviour
 
     public IEnumerator WaitToRequestDeck()
     {
-        while(CardGameManager.Current.IsDownloading)
+        while (CardGameManager.Current.IsDownloading)
             yield return null;
         CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
     }
@@ -115,7 +115,7 @@ public class CGSNetPlayer : NetworkBehaviour
     {
         this.deckIndex = deckIndex;
         CGSNetManager.Instance.playController.LoadDeck(CurrentDeck, true);
-        CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => {}, RequestSharedScore);
+        CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => { }, RequestSharedScore);
     }
 
     public void RequestSharedScore()
@@ -140,7 +140,7 @@ public class CGSNetPlayer : NetworkBehaviour
 
     [Command]
     public void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
-    { 
+    {
         PlayMode controller = CGSNetManager.Instance.playController;
         GameObject newCard = Instantiate(CGSNetManager.Instance.cardModelPrefab, controller.playAreaContent);
         CardModel cardModel = newCard.GetComponent<CardModel>();

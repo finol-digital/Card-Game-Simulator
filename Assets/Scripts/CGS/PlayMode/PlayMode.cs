@@ -118,7 +118,7 @@ public class PlayMode : MonoBehaviour
 
         zones.scrollView.verticalScrollbar.value = 0;
         zones.CurrentDeck.Sync(deckCards);
-        StartCoroutine(zones.CurrentDeck.WaitForLoad(DealDeck));
+        StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
     }
 
     public void CreateGameBoards(List<GameBoard> boards)
@@ -152,7 +152,7 @@ public class PlayMode : MonoBehaviour
         rt.localScale = Vector3.one;
     }
 
-    public void DealDeck()
+    public void CreateHand()
     {
         if (zones.Hand == null)
             zones.CreateHand();
