@@ -44,10 +44,18 @@ public class LobbyDiscovery : NetworkDiscovery
 
         if (running)
             StopBroadcast();
-#if UNITY_ANDROID
+#if !UNITY_WSA
         Network.Disconnect();
 #endif
         NetworkServer.Reset();
+
+        StartCoroutine(WaitToStartListening());
+    }
+
+    // Wait a frame to get it to start broadcasting; there should be a better way to check if it's ok to start
+    IEnumerator WaitToStartListening()
+    {
+        yield return null;
 
         bool started = Initialize() && StartAsClient();
         if (!started)
