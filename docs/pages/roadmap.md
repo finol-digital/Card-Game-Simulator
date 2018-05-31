@@ -16,15 +16,23 @@ permalink: roadmap.html
 ## Current Sprint
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
+- Make horizontal swipes on the main menu cycle through card games
+- Support boolean card property data type
+- Support string list card property data type
+- Rename current enum to stringEnum?
+- Support object enum card property data type
+- Support object enum list card property data type
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
+  - Share button in the *Game Selection Menu* uses this
+- Update documentation for second section of homepage (text and images)
 
 ## Backlog
-- Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Tech: Set up build server
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
+- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Card Grouping
@@ -43,15 +51,9 @@ permalink: roadmap.html
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Allow cards to snap to each other when moving them
 - Consider keyboard shortcuts
-- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 
 ## Icebox
-- Support boolean card property data type
 - Support decimal card property data type
-- Support object card property data type
-- Support object list enum card property data type
-- Support object enum card property data type
-- Support object enum list card property data type
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
 - Support more than 1 card face

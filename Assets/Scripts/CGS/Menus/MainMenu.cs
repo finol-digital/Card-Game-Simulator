@@ -13,15 +13,9 @@ public class MainMenu : MonoBehaviour
     public const string ExitPrompt = "Exit CGS?";
     public const string VersionMessage = "Ver. ";
 
-    public Text currentGameText;
     public List<GameObject> buttons;
     public Button exitButton;
     public Text versionText;
-
-    void OnEnable()
-    {
-        CardGameManager.Instance.OnSceneActions.Add(UpdateCurrentGameText);
-    }
 
     void Start()
     {
@@ -57,11 +51,6 @@ public class MainMenu : MonoBehaviour
             ShowOptions();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
-    }
-
-    public void UpdateCurrentGameText()
-    {
-        currentGameText.text = CardGameManager.Current.Name;
     }
 
     public void SelectCardGame()
