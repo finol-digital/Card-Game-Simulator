@@ -13,13 +13,12 @@ permalink: roadmap.html
 - Make horizontal swipes on the main menu cycle through card games
 - Support boolean card property data type
 - Support string list card property data type
-- Rename current enum to stringEnum?
 - Support object enum card property data type
 - Support object enum list card property data type
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
   - Share button in the *Game Selection Menu* uses this
-- Update documentation for second section of homepage (text and images)
+- Update documentation for second section of homepage and store listings (text and images)
 
 ## Backlog
 - Tech: Set up build server
