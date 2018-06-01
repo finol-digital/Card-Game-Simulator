@@ -5,13 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Updated Deck Txt File Format
-- CGS will prompt you to draw a starting hand when you load a deck to play
-- Double clicking on a card in play will toggle its rotation
-- Double clicking on a card in the Deck Editor search results will zoom on that card
-- Swiping while zooomed on a card will select the next card
-- Fix: Pasting in Universal Windows Platform
-- Fix: Downloading game in UWP
+- The Game Selection Menu is now accessible by clicking on the banner on the Main Menu
 
 ## Current Sprint
 - Release v1 to the App Store
