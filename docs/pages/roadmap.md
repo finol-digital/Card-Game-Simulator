@@ -8,13 +8,14 @@ permalink: roadmap.html
 - The Game Selection Menu is now accessible by clicking on the banner on the Main Menu
 
 ## Current Sprint
-- Release v1 to the App Store
-- Release v1 to the Mac App Store
 - Make horizontal swipes on the main menu cycle through card games
 - Support boolean card property data type
 - Support string list card property data type
 - Support object enum card property data type
 - Support object enum list card property data type
+- Fix: NetworkDiscovery error on iOS sleep
+- Release v1 to the App Store
+- Release v1 to the Mac App Store
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
   - Share button in the *Game Selection Menu* uses this
