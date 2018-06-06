@@ -7,57 +7,53 @@ public class CardSelector : MonoBehaviour
     public DeckEditor editor;
     public SearchResults results;
 
-    void Start()
-    {
-        SwipeManager.OnSwipeDetected += UpdateSwipes;
-    }
-
-    public void UpdateSwipes(Swipe direction, Vector2 swipeVelocity)
-    {
-        if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf || CardGameManager.TopMenuCanvas != null)
-            return;
-
-        switch (direction)
-        {
-            case Swipe.Down: SelectUp(); break;
-            case Swipe.Up: SelectDown(); break;
-            case Swipe.Right: SelectLeft(); break;
-            case Swipe.Left: SelectRight(); break;
-        }
-    }
-
     void Update()
     {
-        if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+        if (CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(Inputs.Vertical))
+        if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && SwipeManager.DetectSwipe())
         {
-            if (Input.GetAxis(Inputs.Vertical) > 0)
+            if (SwipeManager.IsSwipingDown())
                 SelectUp();
-            else
+            else if (SwipeManager.IsSwipingUp())
                 SelectDown();
-        }
-        else if (Input.GetButtonDown(Inputs.Horizontal))
-        {
-            if (Input.GetAxis(Inputs.Horizontal) > 0)
-                SelectRight();
-            else
+            else if (SwipeManager.IsSwipingRight())
                 SelectLeft();
+            else if (SwipeManager.IsSwipingLeft())
+                SelectRight();
         }
-        else if (Input.GetButtonDown(Inputs.Column))
+
+        if (Input.anyKeyDown)
         {
-            if (Input.GetAxis(Inputs.Column) > 0)
-                ShiftRight();
-            else
-                ShiftLeft();
-        }
-        else if (Input.GetButtonDown(Inputs.Page))
-        {
-            if (Input.GetAxis(Inputs.Page) > 0)
-                PageRight();
-            else
-                PageLeft();
+            if (Input.GetButtonDown(Inputs.Vertical))
+            {
+                if (Input.GetAxis(Inputs.Vertical) > 0)
+                    SelectUp();
+                else
+                    SelectDown();
+            }
+            else if (Input.GetButtonDown(Inputs.Horizontal))
+            {
+                if (Input.GetAxis(Inputs.Horizontal) > 0)
+                    SelectRight();
+                else
+                    SelectLeft();
+            }
+            else if (Input.GetButtonDown(Inputs.Column))
+            {
+                if (Input.GetAxis(Inputs.Column) > 0)
+                    ShiftRight();
+                else
+                    ShiftLeft();
+            }
+            else if (Input.GetButtonDown(Inputs.Page))
+            {
+                if (Input.GetAxis(Inputs.Page) > 0)
+                    PageRight();
+                else
+                    PageLeft();
+            }
         }
     }
 

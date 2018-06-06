@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using CardGameDef;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -42,6 +44,14 @@ public class GameSelectionMenu : SelectionPanel
                 ShowDownloadPanel();
             else if (Input.GetButtonDown(Inputs.Delete))
                 Delete();
+            else if (Input.GetButtonDown(Inputs.Horizontal))
+            {
+                if (Input.GetAxis(Inputs.Horizontal) < 0)
+                    CardGameManager.Instance.SelectLeft();
+                else
+                    CardGameManager.Instance.SelectRight();
+                Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
+            }
             else if (Input.GetButtonDown(Inputs.Vertical))
                 ScrollToggles(Input.GetAxis(Inputs.Vertical) > 0);
             else if (Input.GetButtonDown(Inputs.Page))

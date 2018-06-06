@@ -5,26 +5,33 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Updated Deck Txt File Format
-- CGS will prompt you to draw a starting hand when you load a deck to play
-- Double clicking on a card in play will toggle its rotation
-- Double clicking on a card in the Deck Editor search results will zoom on that card
-- Swiping while zooomed on a card will select the next card
-- Fix: Pasting in Universal Windows Platform
-- Fix: Downloading game in UWP
+- The Game Selection Menu is now accessible by clicking on the banner on the Main Menu
+- You can cycle through card games in the Main Menu by using keyboard shortcuts
+- Added support for different types of card metadata
 
 ## Current Sprint
+- Instead of specifying page_num, add ability to find it from json response
+- Support boolean card property data type
+- Rename to stringEnum
+- Support string list card property data type
+- Support object card property data type
+- Support object enum card property data type
+- Support object list card property data type
+- Support object enum list card property data type
+- Fix: NetworkDiscovery error on iOS sleep
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
+  - Share button in the *Game Selection Menu* uses this
+- Update documentation for second section of homepage and store listings (text and images)
 
 ## Backlog
-- Tech: Enforce https through GitHub Pages instead of CloudFlare
 - Tech: Set up build server
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
+- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Card Grouping
@@ -43,21 +50,14 @@ permalink: roadmap.html
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Allow cards to snap to each other when moving them
 - Consider keyboard shortcuts
-- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
 
 ## Icebox
-- Support boolean card property data type
-- Support decimal card property data type
-- Support object card property data type
-- Support object list enum card property data type
-- Support object enum card property data type
-- Support object enum list card property data type
+- Support Number card property data type (decimals)
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
 - Support more than 1 card face
 - Support grouping of dice
 - Support different colored dice
-- Add display name to card properties
 - Automatically roll dice on phone shake
 - Synchronize dice across all connected players in *Play Mode*
 - Add link to rules from somewhere within *Play Mode*
@@ -66,7 +66,7 @@ permalink: roadmap.html
 - Share discard pile between all players who share a deck in *Play Mode*
 - Online vs local matchmaking (Split Play Game to Play Local and Play Online)
 - Deck Editor Search Results Text-Only View
-- New Mahjong tile set, with default property to type instead of suit
+- New Mahjong tile set
 - Define order and enums for Mahjong properties
 - Allow automatic deletion of empty decks in *Play Mode*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*

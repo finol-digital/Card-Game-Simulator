@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114614180611090904}
   - component: {fileID: 114214761007353596}
   - component: {fileID: 114208327254760074}
+  - component: {fileID: 114356562771634316}
   m_Layer: 0
   m_Name: Card Game Manager
   m_TagString: CardGameManager
@@ -75,6 +76,20 @@ MonoBehaviour:
   m_OffsetX: 0
   m_OffsetY: 0
   lobby: {fileID: 0}
+--- !u!114 &114356562771634316
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1565440365293990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3941f64aa1e57d744bdf4a88d8d70bfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minSwipeLength: 1
+  triggerSwipeAtMinLength: 1
+  useEightDirections: 0
 --- !u!114 &114614180611090904
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -25,6 +25,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public Text contentText;
 
     public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
+    public Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
 
     private static CardInfoViewer _instance;
     private CardModel _selectedCardModel;
@@ -72,9 +73,12 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         int selectedPropertyIndex = 0;
         PropertyOptions.Clear();
         PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
+        DisplayNameLookup.Clear();
         foreach (PropertyDef propDef in CardGameManager.Current.CardProperties)
         {
-            PropertyOptions.Add(new Dropdown.OptionData() { text = propDef.Name });
+            string displayName = !string.IsNullOrEmpty(propDef.Display) ? propDef.Display : propDef.Name;
+            PropertyOptions.Add(new Dropdown.OptionData() { text = displayName });
+            DisplayNameLookup[displayName] = propDef.Name;
             if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
                 selectedPropertyIndex = PropertyOptions.Count - 1;
         }
@@ -156,8 +160,19 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
         {
             string selectedName = SetLabel;
             if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
-                selectedName = PropertyOptions[SelectedPropertyIndex].text;
+                DisplayNameLookup.TryGetValue(SelectedPropertyDisplay, out selectedName);
             return selectedName;
+        }
+    }
+
+    public string SelectedPropertyDisplay
+    {
+        get
+        {
+            string selectedDisplay = SetLabel;
+            if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
+                selectedDisplay = PropertyOptions[SelectedPropertyIndex].text;
+            return selectedDisplay;
         }
     }
 
@@ -172,7 +187,7 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             if (_selectedPropertyIndex >= PropertyOptions.Count)
                 _selectedPropertyIndex = 0;
             propertySelection.value = _selectedPropertyIndex;
-            labelText.text = SelectedPropertyName;
+            labelText.text = SelectedPropertyDisplay;
             SetContentText();
         }
     }
