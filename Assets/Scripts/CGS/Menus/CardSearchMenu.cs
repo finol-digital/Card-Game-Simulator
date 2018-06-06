@@ -184,9 +184,9 @@ public class CardSearchMenu : MonoBehaviour
             if (EnumDef.IsEnumProperty(property.Name))
                 newPanel = CreateEnumPropertyFilterPanel(property);
             else if (property.Type == PropertyType.Integer)
-                newPanel = CreateIntegerPropertyFilterPanel(property.Name);
+                newPanel = CreateIntegerPropertyFilterPanel(property.Name, property.Display);
             else //if (property.Type == PropertyType.String)
-                newPanel = CreateStringPropertyFilterPanel(property.Name);
+                newPanel = CreateStringPropertyFilterPanel(property.Name, property.Display);
             FilterPanels.Add(newPanel);
             foreach(InputField inputField in newPanel.GetComponentsInChildren<InputField>()) {
                 inputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
@@ -197,13 +197,13 @@ public class CardSearchMenu : MonoBehaviour
         }
     }
 
-    public GameObject CreateStringPropertyFilterPanel(string propertyName)
+    public GameObject CreateStringPropertyFilterPanel(string propertyName, string displayName)
     {
         GameObject newPanel = Instantiate(stringPropertyPanel.gameObject, propertyFiltersContent);
         newPanel.gameObject.SetActive(true);
 
         SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
-        config.nameLabelText.text = propertyName;
+        config.nameLabelText.text = !string.IsNullOrEmpty(displayName) ? displayName : propertyName;
         string storedFilter;
         if (StringPropertyFilters.TryGetValue(propertyName, out storedFilter))
             config.stringInputField.text = storedFilter;
@@ -213,13 +213,13 @@ public class CardSearchMenu : MonoBehaviour
         return newPanel;
     }
 
-    public GameObject CreateIntegerPropertyFilterPanel(string propertyName)
+    public GameObject CreateIntegerPropertyFilterPanel(string propertyName, string displayName)
     {
         GameObject newPanel = Instantiate(integerPropertyPanel.gameObject, propertyFiltersContent);
         newPanel.gameObject.SetActive(true);
 
         SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
-        config.nameLabelText.text = propertyName;
+        config.nameLabelText.text = !string.IsNullOrEmpty(displayName) ? displayName : propertyName;
         int storedFilter;
 
         if (IntMinPropertyFilters.TryGetValue(propertyName, out storedFilter))
@@ -239,7 +239,7 @@ public class CardSearchMenu : MonoBehaviour
         newPanel.gameObject.SetActive(true);
 
         SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
-        config.nameLabelText.text = property.Name;
+        config.nameLabelText.text = !string.IsNullOrEmpty(property.Display) ? property.Display : property.Name;
         int storedFilter;
         EnumPropertyFilters.TryGetValue(property.Name, out storedFilter);
 
@@ -396,8 +396,8 @@ public class CardSearchMenu : MonoBehaviour
                         if (IntMaxPropertyFilters.ContainsKey(property.Name))
                             filters += property.Name + "<=" + IntMaxPropertyFilters[property.Name] + "; ";
                         break;
-                    case PropertyType.Enum:
-                    case PropertyType.EnumList:
+                    case PropertyType.StringEnum:
+                    case PropertyType.StringEnumList:
                         if (!EnumPropertyFilters.ContainsKey(property.Name))
                             break;
                         EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));

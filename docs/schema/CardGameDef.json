@@ -27,6 +27,11 @@
 			"default": 1,
 			"type": "integer"
 		},
+		"allCardsUrlPageCountIdentifier": {
+			"description": "When downloading AllCards.json from allCardsUrl, if <allCardsUrlPageCountIdentifier> is not empty, CGS will set allCardsUrlPageCount to the response value of <allCardsUrlPageCountIdentifier> from <allCardsUrl>.",
+			"default": 1,
+			"type": "string"
+		},
 		"allCardsUrlPageIdentifier": {
 			"description": "If allCardsUrlPageCount > 1, CGS will use <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page after the first page.",
 			"default": "?page=",
@@ -93,6 +98,10 @@
 			"type": "string"
 		},
 		"cardImageUrl": {
+			"description": "cardImageProperty is the *Card:Property* which points to the image for this card. If <cardImageProperty> is empty, <cardImageUrl> will be used instead.",
+			"type": "string",
+		},
+		"cardImageUrl": {
 			"description": "cardImageUrl indicates a parameterized url from which CGS downloads missing card image files. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {card.<property>}=*Card:<property>*, {cardImageFileType}=<cardImageFileType>",
 			"type": "string",
 			"format": "uri"
@@ -121,9 +130,13 @@
 						"description": "The name of the property: This name can be referenced to lookup a card's property",
 						"type": "string"
 					},
+					"display": {
+						"description": "The name of the property as it is displayed to the end user",
+						"type": "string"
+					},
 					"type": {
 						"description": "The type of the property",
-						"enum": ["string", "integer", "enum", "enumList"],
+						"enum": ["object", "escapedString", "string", "integer", "boolean", "stringEnum", "stringList", "stringEnumList", "objectEnum", "objectList", "objectEnumList"],
 						"default": "string",
 						"type": "string"
 					},

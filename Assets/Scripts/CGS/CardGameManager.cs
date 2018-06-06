@@ -29,7 +29,7 @@ public class CardGameManager : MonoBehaviour
     public static CardGame Current { get; private set; } = new CardGame();
     public static bool IsQuitting { get; private set; }
 
-    public Dictionary<string, CardGame> AllCardGames { get; } = new Dictionary<string, CardGame>();
+    public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
     public List<GameSceneDelegate> OnSceneActions { get; } = new List<GameSceneDelegate>();
 
     private LobbyDiscovery _discovery;
@@ -59,7 +59,8 @@ public class CardGameManager : MonoBehaviour
         Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName), out currentGame)
              ? currentGame : new CardGame();
 
-        Application.logMessageReceived += HandleLog;
+        if (Debug.isDebugBuild)
+            Application.logMessageReceived += ShowLogToUser;
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
@@ -86,10 +87,9 @@ public class CardGameManager : MonoBehaviour
         }
     }
 
-    void HandleLog(string logString, string stackTrace, LogType type)
+    void ShowLogToUser(string logString, string stackTrace, LogType type)
     {
-        if (type != LogType.Log)
-            Messenger.Show(logString);
+        Messenger.Show(logString);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -114,6 +114,36 @@ public class CardGameManager : MonoBehaviour
             Debug.LogError(GameLoadErrorMessage + newGame.Error);
         SelectCardGame(newGame.Name);
         //Messenger.Show("Game download has finished");
+    }
+
+    public void SelectLeft()
+    {
+        string prevGameName = AllCardGames.Keys.Last();
+        SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
+        bool found = false;
+        while (!found && allCardGamesEnum.MoveNext())
+        {
+            if (!allCardGamesEnum.Current.Key.Equals(Current.Name))
+                prevGameName = allCardGamesEnum.Current.Key;
+            else
+                found = true;
+        }
+        SelectCardGame(prevGameName);
+    }
+
+    public void SelectRight()
+    {
+        string nextGameName = Current.Name;
+        SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
+        bool found = false;
+        while (!found && allCardGamesEnum.MoveNext())
+            if (allCardGamesEnum.Current.Key.Equals(Current.Name))
+                found = true;
+        if (allCardGamesEnum.MoveNext())
+            nextGameName = allCardGamesEnum.Current.Key;
+        else if (found)
+            nextGameName = AllCardGames.Keys.First();
+        SelectCardGame(nextGameName);
     }
 
     public void SelectCardGame(string gameName, string gameUrl)

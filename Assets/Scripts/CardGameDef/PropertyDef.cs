@@ -5,10 +5,18 @@ namespace CardGameDef
 {
     public enum PropertyType
     {
+        Object,
+        EscapedString,
         String,
+        Number,
         Integer,
-        Enum,
-        EnumList
+        Boolean,
+        StringEnum,
+        StringList,
+        StringEnumList,
+        ObjectEnum,
+        ObjectList,
+        ObjectEnumList
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -16,6 +24,9 @@ namespace CardGameDef
     {
         [JsonProperty]
         public string Name { get; set; }
+
+        [JsonProperty]
+        public string Display { get; set; }
 
         [JsonProperty]
         public PropertyType Type { get; set; }

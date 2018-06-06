@@ -82,6 +82,9 @@ namespace CardGameDef
         public string CardImageFileType { get; set; } = "png";
 
         [JsonProperty]
+        public string CardImageProperty { get; set; } = "";
+
+        [JsonProperty]
         public string CardImageUrl { get; set; } = "";
 
         [JsonProperty]
@@ -318,7 +321,7 @@ namespace CardGameDef
                 PropertyDefValuePair newPropertyEntry = new PropertyDefValuePair() { Def = property };
                 try
                 {
-                    if (property.Type == PropertyType.EnumList)
+                    if (property.Type == PropertyType.StringEnumList)
                     {
                         string listValue = string.Empty;
                         foreach (JToken jToken in cardJToken[property.Name])
@@ -328,6 +331,10 @@ namespace CardGameDef
                             listValue += jToken.Value<string>() ?? string.Empty;
                         }
                         newPropertyEntry.Value = listValue;
+                    }
+                    else if (property.Type == PropertyType.EscapedString)
+                    {
+                        newPropertyEntry.Value = (cardJToken.Value<string>(property.Name) ?? string.Empty).Replace("\\", "");
                     }
                     else
                     {

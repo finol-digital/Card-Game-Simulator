@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using CardGameDef;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -37,10 +39,17 @@ public class MainMenu : MonoBehaviour
 
         if (Input.GetKeyDown(Inputs.BluetoothReturn))
             EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
+        else if (Input.GetButtonDown(Inputs.Horizontal))
+        {
+            if (Input.GetAxis(Inputs.Horizontal) < 0)
+                CardGameManager.Instance.SelectLeft();
+            else
+                CardGameManager.Instance.SelectRight();
+        }
         else if (Input.GetButtonDown(Inputs.Vertical) && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
             EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
         else if (Input.GetButtonDown(Inputs.Sort))
-            SelectCardGame();
+            ShowGameSelectionMenu();
         else if (Input.GetButtonDown(Inputs.New))
             StartGame();
         else if (Input.GetButtonDown(Inputs.Load))
@@ -53,7 +62,7 @@ public class MainMenu : MonoBehaviour
             CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
     }
 
-    public void SelectCardGame()
+    public void ShowGameSelectionMenu()
     {
         if (Time.timeSinceLevelLoad < 0.1)
             return;
@@ -100,7 +109,7 @@ public class MainMenu : MonoBehaviour
     }
 
     public void Quit()
-    {   
+    {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_WSA

@@ -6,12 +6,17 @@ permalink: roadmap.html
 
 ## What's New
 - The Game Selection Menu is now accessible by clicking on the banner on the Main Menu
+- You can cycle through card games in the Main Menu by using keyboard shortcuts
+- Added support for different types of card metadata
 
 ## Current Sprint
-- Make horizontal swipes on the main menu cycle through card games
+- Instead of specifying page_num, add ability to find it from json response
 - Support boolean card property data type
+- Rename to stringEnum
 - Support string list card property data type
+- Support object card property data type
 - Support object enum card property data type
+- Support object list card property data type
 - Support object enum list card property data type
 - Fix: NetworkDiscovery error on iOS sleep
 - Release v1 to the App Store
@@ -47,13 +52,12 @@ permalink: roadmap.html
 - Consider keyboard shortcuts
 
 ## Icebox
-- Support decimal card property data type
+- Support Number card property data type (decimals)
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
 - Support more than 1 card face
 - Support grouping of dice
 - Support different colored dice
-- Add display name to card properties
 - Automatically roll dice on phone shake
 - Synchronize dice across all connected players in *Play Mode*
 - Add link to rules from somewhere within *Play Mode*
@@ -62,7 +66,7 @@ permalink: roadmap.html
 - Share discard pile between all players who share a deck in *Play Mode*
 - Online vs local matchmaking (Split Play Game to Play Local and Play Online)
 - Deck Editor Search Results Text-Only View
-- New Mahjong tile set, with default property to type instead of suit
+- New Mahjong tile set
 - Define order and enums for Mahjong properties
 - Allow automatic deletion of empty decks in *Play Mode*
 - Create *Sort Menu* when you click on the sort button in the *Deck Editor*

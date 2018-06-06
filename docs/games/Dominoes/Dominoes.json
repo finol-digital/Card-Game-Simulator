@@ -8,34 +8,58 @@
 	"cardImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",
 	"cardNameIsAtTop": false,
 	"cardPrimaryProperty": "suit",
-	"cardProperties": [
-		{"name": "type", "type": "enum" },
-		{"name": "suit", "type": "enum" },
-		{"name": "rank", "type": "integer" }
+	"cardProperties": [{
+			"name": "type",
+			"type": "stringEnum"
+		},
+		{
+			"name": "suit",
+			"type": "stringEnum"
+		},
+		{
+			"name": "rank",
+			"type": "integer"
+		}
 	],
-	"cardSize": { "x": 1, "y": 2 },
-	"deckUrls": [
-		{"name": "Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Six%20Dominoes.txt"},
-		{"name": "Double Nine Dominoes", "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Nine%20Dominoes.txt"},
-		{"name": "Wooden Double Six Dominoes", "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Wooden%20Double%20Six%20Dominoes.txt"}
+	"cardSize": {
+		"x": 1,
+		"y": 2
+	},
+	"deckUrls": [{
+			"name": "Double Six Dominoes",
+			"url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Six%20Dominoes.txt"
+		},
+		{
+			"name": "Double Nine Dominoes",
+			"url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Nine%20Dominoes.txt"
+		},
+		{
+			"name": "Wooden Double Six Dominoes",
+			"url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Wooden%20Double%20Six%20Dominoes.txt"
+		}
 	],
-	"enums": [
-		{"property": "type",  "values": {
-			"0x1": "single",
-			"0x2": "double"
-		}},
-		{"property": "suit",  "values": {
-			"0x1": "0",
-			"0x2": "1",
-			"0x4": "2",
-			"0x8": "3",
-			"0x10": "4",
-			"0x20": "5",
-			"0x40": "6",
-			"0x80": "7",
-			"0x100": "8",
-			"0x200": "9"
-		}}
+	"enums": [{
+			"property": "type",
+			"values": {
+				"0x1": "single",
+				"0x2": "double"
+			}
+		},
+		{
+			"property": "suit",
+			"values": {
+				"0x1": "0",
+				"0x2": "1",
+				"0x4": "2",
+				"0x8": "3",
+				"0x10": "4",
+				"0x20": "5",
+				"0x40": "6",
+				"0x80": "7",
+				"0x100": "8",
+				"0x200": "9"
+			}
+		}
 	],
 	"gameStartHandCount": 7,
 	"name": "Dominoes",

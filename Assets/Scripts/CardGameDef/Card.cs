@@ -25,6 +25,9 @@ namespace CardGameDef
         {
             get
             {
+                if (!string.IsNullOrEmpty(CardGameManager.Current.CardImageProperty))
+                    return GetPropertyValueString(CardGameManager.Current.CardImageProperty);
+
                 string url = CardGameManager.Current.CardImageUrl;
                 url = url.Replace("{cardId}", Id);
                 url = url.Replace("{cardName}", Name);
@@ -100,8 +103,8 @@ namespace CardGameDef
             {
                 switch (property.Def.Type)
                 {
-                    case PropertyType.Enum:
-                    case PropertyType.EnumList:
+                    case PropertyType.StringEnum:
+                    case PropertyType.StringEnumList:
                     case PropertyType.Integer:
                         int thisValue = GetPropertyValueInt(property.Def.Name);
                         int otherValue = other.GetPropertyValueInt(property.Def.Name);

@@ -7,6 +7,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Main Menu
 - **Cancel**: *Esc* - Exit CGS.
+- **Horizontal**: *left*, *right* - Scroll through card games.
 - **Vertical**: *down*, *up* - Scroll through main menu options.
 - **Sort**: *q* - Brings up the Game Selection Menu.
 - **New**: *e* - Start Game.
@@ -56,6 +57,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Game Selection Menu
 - **Cancel**: *Esc* - Cancel.
+- **Horizontal**: *left*, *right* - Scroll through card games.
 - **Vertical**: *down*, *up* - Scroll through games.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
 - **New**: *e* - Brings up or clears the download url input field.

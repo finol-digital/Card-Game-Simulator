@@ -3,42 +3,63 @@
 	"allSetsUrl": "https://cardgamesim.finoldigital.com/games/Standard/AllSets.json",
 	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Standard/Standard.json",
 	"cardImageUrl": "https://cardgamesim.finoldigital.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
-	"cardProperties": [
-		{"name": "rank", "type": "enum" },
-		{"name": "suit", "type": "enum" },
-		{"name": "color", "type": "enum" }
+	"cardProperties": [{
+			"name": "rank",
+			"type": "stringEnum"
+		},
+		{
+			"name": "suit",
+			"type": "stringEnum"
+		},
+		{
+			"name": "color",
+			"type": "stringEnum"
+		}
 	],
-	"deckUrls": [
-		{"name": "Standard 52-card Deck", "url": "https://cardgamesim.finoldigital.com/games/Standard/decks/Standard%2052-card%20Deck.txt"},
-		{"name": "Standard Deck with Jokers", "url": "https://cardgamesim.finoldigital.com/games/Standard/decks/Standard%20Deck%20with%20Jokers.txt"}
+	"deckUrls": [{
+			"name": "Standard 52-card Deck",
+			"url": "https://cardgamesim.finoldigital.com/games/Standard/decks/Standard%2052-card%20Deck.txt"
+		},
+		{
+			"name": "Standard Deck with Jokers",
+			"url": "https://cardgamesim.finoldigital.com/games/Standard/decks/Standard%20Deck%20with%20Jokers.txt"
+		}
 	],
-	"enums": [
-		{"property": "rank",  "values": {
-			"1": "Ace",
-			"2": "2",
-			"3": "3",
-			"4": "4",
-			"5": "5",
-			"6": "6",
-			"7": "7",
-			"8": "8",
-			"9": "9",
-			"10": "10",
-			"11": "Jack",
-			"12": "Queen",
-			"13": "King",
-			"0": "Joker"
-		}},
-		{"property": "suit",  "values": {
-			"clubs": "Clubs",
-			"diamonds": "Diamonds",
-			"hearts": "Hearts",
-			"spades": "Spades"
-		}},
-		{"property": "color",  "values": {
-			"black": "Black",
-			"red": "Red"
-		}}
+	"enums": [{
+			"property": "rank",
+			"values": {
+				"1": "Ace",
+				"2": "2",
+				"3": "3",
+				"4": "4",
+				"5": "5",
+				"6": "6",
+				"7": "7",
+				"8": "8",
+				"9": "9",
+				"10": "10",
+				"11": "Jack",
+				"12": "Queen",
+				"13": "King",
+				"0": "Joker"
+			}
+		},
+		{
+			"property": "suit",
+			"values": {
+				"clubs": "Clubs",
+				"diamonds": "Diamonds",
+				"hearts": "Hearts",
+				"spades": "Spades"
+			}
+		},
+		{
+			"property": "color",
+			"values": {
+				"black": "Black",
+				"red": "Red"
+			}
+		}
 	],
 	"name": "Standard Playing Cards",
 	"rulesUrl": "https://www.bicyclecards.com/rules/"
