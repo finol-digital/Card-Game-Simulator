@@ -25,10 +25,11 @@ namespace CardGameDef
         {
             get
             {
-                if (!string.IsNullOrEmpty(CardGameManager.Current.CardImageProperty))
-                    return GetPropertyValueString(CardGameManager.Current.CardImageProperty);
+                string url = GetPropertyValueString(CardGameManager.Current.CardImageProperty);
+                if (!string.IsNullOrEmpty(url) && !url.Equals(CardGameManager.Current.CardImageUrl))
+                    return url;
 
-                string url = CardGameManager.Current.CardImageUrl;
+                url = CardGameManager.Current.CardImageUrl;
                 url = url.Replace("{cardId}", Id);
                 url = url.Replace("{cardName}", Name);
                 url = url.Replace("{cardSet}", SetCode);

@@ -32,7 +32,7 @@ public class SwipeManager : MonoBehaviour
     #region Inspector Variables
 
     [Tooltip("Min swipe distance (inches) to register as swipe")]
-    [SerializeField] float minSwipeLength = 0.5f;
+    [SerializeField] float minSwipeLength = 1f;
 
     [Tooltip("If true, a swipe is counted when the min swipe length is reached. If false, a swipe is counted when the touch/click ends.")]
     [SerializeField] bool triggerSwipeAtMinLength = false;
