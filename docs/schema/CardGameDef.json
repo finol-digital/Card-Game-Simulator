@@ -23,17 +23,21 @@
 			"format": "uri"
 		},
 		"allCardsUrlPageCount": {
-			"description": "When downloading AllCards.json from allCardsUrl, CGS will use <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page after the first page.",
+			"description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page.",
 			"default": 1,
 			"type": "integer"
 		},
 		"allCardsUrlPageCountIdentifier": {
-			"description": "When downloading AllCards.json from allCardsUrl, if <allCardsUrlPageCountIdentifier> is not empty, CGS will set allCardsUrlPageCount to the response value of <allCardsUrlPageCountIdentifier> from <allCardsUrl>.",
-			"default": 1,
+			"description": "If allCardsUrlPageCountIdentifier is set, CGS will set the allCardsUrlPageCount to the response value of <allCardsUrlPageCountIdentifier> from <allCardsUrl>.",
 			"type": "string"
 		},
+		"allCardsUrlPageCountDivisor": {
+			"description": "allCardsUrlPageCountDivisor can be set to the # of cards per page, ie: allCardsUrlPageCount = <allCardsUrlPageCountIdentifier pointing to total # of cards>/<allCardsUrlPageCountDivisor>. ",
+			"default": 1,
+			"type": "integer"
+		},
 		"allCardsUrlPageIdentifier": {
-			"description": "If allCardsUrlPageCount > 1, CGS will use <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page after the first page.",
+			"description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page.",
 			"default": "?page=",
 			"type": "string"
 		},
@@ -97,9 +101,9 @@
 			"default": "png",
 			"type": "string"
 		},
-		"cardImageUrl": {
+		"cardImageProperty": {
 			"description": "cardImageProperty is the *Card:Property* which points to the image for this card. If <cardImageProperty> is empty, <cardImageUrl> will be used instead.",
-			"type": "string",
+			"type": "string"
 		},
 		"cardImageUrl": {
 			"description": "cardImageUrl indicates a parameterized url from which CGS downloads missing card image files. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {card.<property>}=*Card:<property>*, {cardImageFileType}=<cardImageFileType>",
@@ -325,6 +329,10 @@
 			"description": "playAreaSize indicates the width and height in inches of the play area in Play Mode.",
 			"default": { "x": 23.5, "y": 20.25 },
 			"$ref": "#/definitions/vector2"
+		},
+		"reprintsInCardObjectList": {
+			"description": "If reprintsInCardObjectList is set to true, each card will be duplicated with each set in the object list at <cardSetIdentifier>. The objects should have id=setCode",
+			"type": "boolean"
 		},
 		"rulesUrl": {
 			"description": "rulesUrl should link to this game's online rulebook. This link is accessed in CGS by Main Menu -> Options -> View Online Rules.",

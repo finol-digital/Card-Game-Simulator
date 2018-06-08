@@ -10,14 +10,6 @@ permalink: roadmap.html
 - Added support for different types of card metadata
 
 ## Current Sprint
-- Instead of specifying page_num, add ability to find it from json response
-- Support boolean card property data type
-- Rename to stringEnum
-- Support string list card property data type
-- Support object card property data type
-- Support object enum card property data type
-- Support object list card property data type
-- Support object enum list card property data type
 - Fix: NetworkDiscovery error on iOS sleep
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
@@ -52,7 +44,10 @@ permalink: roadmap.html
 - Consider keyboard shortcuts
 
 ## Icebox
+- Add rate limit for how often to update allCards and allSets
 - Support Number card property data type (decimals)
+- Enhace boolean card property data type
+- Add identifiers for object card property data types
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
 - Support more than 1 card face

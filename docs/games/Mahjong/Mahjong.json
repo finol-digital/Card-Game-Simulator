@@ -9,14 +9,17 @@
 	"cardPrimaryProperty": "type",
 	"cardProperties": [{
 			"name": "type",
+			"display": "Type",
 			"type": "stringEnum"
 		},
 		{
 			"name": "suit",
+			"display": "Suit",
 			"type": "stringEnum"
 		},
 		{
 			"name": "rank",
+			"display": "Rank",
 			"type": "string"
 		}
 	],
@@ -28,21 +31,21 @@
 	"enums": [{
 			"property": "type",
 			"values": {
-				"simple": "simple",
-				"honor": "honor",
-				"bonus": "bonus"
+				"simple": "Simple",
+				"honor": "Honor",
+				"bonus": "Bonus"
 			}
 		},
 		{
 			"property": "suit",
 			"values": {
-				"circle": "circle",
-				"bamboo": "bamboo",
-				"character": "character",
-				"wind": "wind",
-				"dragon": "dragon",
-				"flower": "flower",
-				"season": "season"
+				"circle": "Circle",
+				"bamboo": "Bamboo",
+				"character": "Character",
+				"wind": "Wind",
+				"dragon": "Dragon",
+				"flower": "Flower",
+				"season": "Season"
 			}
 		}
 	],

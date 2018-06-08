@@ -407,12 +407,12 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
             transform.rotation = rotation;
     }
 
-    public static void ResetRotation(CardStack cardStack, CardModel cardModel)
+    public static void Rotate90(CardModel cardModel)
     {
         if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
             return;
 
-        cardModel.transform.rotation = Quaternion.identity;
+        cardModel.transform.rotation *= Quaternion.Euler(0, 0, -90);
         if (cardModel.IsOnline)
             cardModel.CmdUpdateRotation(cardModel.transform.rotation);
     }
@@ -425,6 +425,16 @@ public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandle
         bool isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
         cardModel.transform.rotation = isVertical ?
             Quaternion.AngleAxis(90, Vector3.back) : Quaternion.identity;
+        if (cardModel.IsOnline)
+            cardModel.CmdUpdateRotation(cardModel.transform.rotation);
+    }
+
+    public static void ResetRotation(CardStack cardStack, CardModel cardModel)
+    {
+        if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
+            return;
+
+        cardModel.transform.rotation = Quaternion.identity;
         if (cardModel.IsOnline)
             cardModel.CmdUpdateRotation(cardModel.transform.rotation);
     }

@@ -5,14 +5,17 @@
 	"cardImageUrl": "https://cardgamesim.finoldigital.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
 	"cardProperties": [{
 			"name": "rank",
+			"display": "Rank",
 			"type": "stringEnum"
 		},
 		{
 			"name": "suit",
+			"display": "Suit",
 			"type": "stringEnum"
 		},
 		{
 			"name": "color",
+			"display": "Color",
 			"type": "stringEnum"
 		}
 	],
