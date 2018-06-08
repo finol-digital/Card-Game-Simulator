@@ -57,14 +57,19 @@ public class PlayMode : MonoBehaviour
         if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
             return;
 
-        if (Input.GetButtonDown(Inputs.Draw))
-            Deal(1);
-        else if (Input.GetButtonDown(Inputs.Load))
+        if (Input.GetButtonDown(Inputs.Load))
             ShowDeckMenu();
+        else if (Input.GetButtonDown(Inputs.Save))
+            ShowDiceMenu();
         else if (Input.GetButtonDown(Inputs.Filter))
             ShowCardsMenu();
-        else if (Input.GetButtonDown(Inputs.Sort))
-            ShowDiceMenu();
+        else if (Input.GetButtonDown(Inputs.Horizontal))
+        {
+            if (Input.GetAxis(Inputs.Horizontal) > 0)
+                Deal(1);
+            else
+                Burn(1);
+        }
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             PromptBackToMainMenu();
     }
@@ -171,6 +176,12 @@ public class PlayMode : MonoBehaviour
         AddCardsToHand(PopDeckCards(cardCount));
     }
 
+    public void Burn(int cardCount)
+    {
+        foreach(Card card in PopDeckCards(cardCount))
+            CatchDiscard(card);
+    }
+
     public List<Card> PopDeckCards(int cardCount)
     {
         List<Card> cards = new List<Card>(cardCount);
@@ -204,7 +215,7 @@ public class PlayMode : MonoBehaviour
 
     public void SetPlayActions(CardStack cardStack, CardModel cardModel)
     {
-        cardModel.DoubleClickAction = CardModel.ToggleRotation90;
+        cardModel.DoubleClickAction = CardModel.Rotate90;
         cardModel.SecondaryDragAction = cardModel.Rotate;
     }
 

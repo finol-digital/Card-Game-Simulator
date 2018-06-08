@@ -5,12 +5,12 @@ namespace CardGameDef
 {
     public enum PropertyType
     {
-        Object,
-        EscapedString,
         String,
-        Number,
-        Integer,
+        EscapedString,
         Boolean,
+        Integer,
+        Number,
+        Object,
         StringEnum,
         StringList,
         StringEnumList,

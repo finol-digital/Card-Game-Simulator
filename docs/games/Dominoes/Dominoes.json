@@ -10,14 +10,17 @@
 	"cardPrimaryProperty": "suit",
 	"cardProperties": [{
 			"name": "type",
+			"display": "Type",
 			"type": "stringEnum"
 		},
 		{
 			"name": "suit",
+			"display": "Suit",
 			"type": "stringEnum"
 		},
 		{
 			"name": "rank",
+			"display": "Rank",
 			"type": "integer"
 		}
 	],
@@ -41,8 +44,8 @@
 	"enums": [{
 			"property": "type",
 			"values": {
-				"0x1": "single",
-				"0x2": "double"
+				"0x1": "Single",
+				"0x2": "Double"
 			}
 		},
 		{

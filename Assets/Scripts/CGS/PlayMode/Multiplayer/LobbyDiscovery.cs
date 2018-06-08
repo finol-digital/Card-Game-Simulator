@@ -37,7 +37,7 @@ public class LobbyDiscovery : NetworkDiscovery
     public void SearchForHost()
     {
         if (Application.internetReachability != NetworkReachability.ReachableViaLocalAreaNetwork) {
-            if (Application.internetReachability != NetworkReachability.ReachableViaCarrierDataNetwork)
+            if (Debug.isDebugBuild) //(Application.internetReachability != NetworkReachability.ReachableViaCarrierDataNetwork)
                 CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
             return;
         }

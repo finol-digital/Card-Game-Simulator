@@ -390,12 +390,8 @@ public class CardSearchMenu : MonoBehaviour
                 filters += "set:" + SetCodeFilter + "; ";
             foreach (PropertyDef property in CardGameManager.Current.CardProperties) {
                 switch (property.Type) {
-                    case PropertyType.Integer:
-                        if (IntMinPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + ">=" + IntMinPropertyFilters[property.Name] + "; ";
-                        if (IntMaxPropertyFilters.ContainsKey(property.Name))
-                            filters += property.Name + "<=" + IntMaxPropertyFilters[property.Name] + "; ";
-                        break;
+                    case PropertyType.ObjectEnum:
+                    case PropertyType.ObjectEnumList:
                     case PropertyType.StringEnum:
                     case PropertyType.StringEnumList:
                         if (!EnumPropertyFilters.ContainsKey(property.Name))
@@ -404,6 +400,18 @@ public class CardSearchMenu : MonoBehaviour
                         if (enumDef != null)
                             filters += property.Name + ":=" + EnumPropertyFilters[property.Name] + "; ";
                         break;
+                    case PropertyType.Integer:
+                        if (IntMinPropertyFilters.ContainsKey(property.Name))
+                            filters += property.Name + ">=" + IntMinPropertyFilters[property.Name] + "; ";
+                        if (IntMaxPropertyFilters.ContainsKey(property.Name))
+                            filters += property.Name + "<=" + IntMaxPropertyFilters[property.Name] + "; ";
+                        break;
+                    case PropertyType.Object:
+                    case PropertyType.ObjectList:
+                    case PropertyType.Number:
+                    case PropertyType.Boolean:
+                    case PropertyType.StringList:
+                    case PropertyType.EscapedString:
                     case PropertyType.String:
                     default:
                         if (StringPropertyFilters.ContainsKey(property.Name))

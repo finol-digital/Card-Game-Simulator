@@ -7,7 +7,6 @@ public static class Inputs
     public const string CardViewer = "CardViewer";
     public const string Column = "Column";
     public const string Delete = "Delete";
-    public const string Draw = "Draw";
     public const string Filter = "Filter";
     public const string FocusName = "FocusName";
     public const string FocusText = "FocusText";

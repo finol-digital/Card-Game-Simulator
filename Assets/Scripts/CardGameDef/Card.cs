@@ -104,12 +104,20 @@ namespace CardGameDef
             {
                 switch (property.Def.Type)
                 {
+                    case PropertyType.ObjectEnum:
+                    case PropertyType.ObjectEnumList:
                     case PropertyType.StringEnum:
                     case PropertyType.StringEnumList:
                     case PropertyType.Integer:
                         int thisValue = GetPropertyValueInt(property.Def.Name);
                         int otherValue = other.GetPropertyValueInt(property.Def.Name);
                         return thisValue.CompareTo(otherValue);
+                    case PropertyType.Object:
+                    case PropertyType.ObjectList:
+                    case PropertyType.Number:
+                    case PropertyType.Boolean:
+                    case PropertyType.StringList:
+                    case PropertyType.EscapedString:
                     case PropertyType.String:
                     default:
                         return string.Compare(property.Value, other.Properties[property.Def.Name].Value, StringComparison.Ordinal);

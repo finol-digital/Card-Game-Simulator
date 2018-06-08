@@ -7,48 +7,48 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Main Menu
 - **Cancel**: *Esc* - Exit CGS.
-- **Horizontal**: *left*, *right* - Scroll through card games.
-- **Vertical**: *down*, *up* - Scroll through main menu options.
+- **Horizontal**: *left*, *right* - Select previous/next card game.
+- **Vertical**: *down*, *up* - Scroll through Main Menu buttons.
 - **Sort**: *q* - Brings up the Game Selection Menu.
 - **New**: *e* - Start Game.
 - **Load**: *r* - Join Game.
 - **Save**: *t* - Edit Deck.
-- **Filter**: *f* - Brings up the options menu.
+- **Filter**: *f* - Brings up the Options Menu.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
-- **Cancel**: *Esc* - Back to main menu.
-- **Load**: *r* - Brings up the deck load menu.
-- **Filter**: *f* - Brings up the search filter menu.
-- **Sort**: *q* - Brings up the dice menu.
-- **Draw**: *d* - Draw a card from your deck to your hand.
+- **Cancel**: *Esc* - Back to Main Menu.
+- **Load**: *r* - Brings up the Deck Load Menu.
+- **Save**: *q* - Brings up the Dice Menu.
+- **Filter**: *f* - Brings up the Card Search/Filter Menu.
+- **Horizontal**: *left*, *right* - Move the top card of the deck. Left to discard, Right to hand.
 
 ## Card Viewer
-- **Cancel**: *Esc* - Hide the card viewer.
-- **CardViewer**: *c*, *v* - Scroll through properties in the card viewer.
+- **Cancel**: *Esc* - Hide the Card Viewer.
+- **CardViewer**: *c*, *v* - Scroll through properties in the Card Viewer.
 - **Submit**: *Enter* - Double-click on selected card.
 
 ## Deck Editor
-- **Cancel**: *Esc* - Back to main menu.
-- **Vertical**: *down*, *up* - Scroll through the deck editor.
-- **Horizontal**: *left*, *right* - Scroll through search results.
+- **Cancel**: *Esc* - Back to Main Menu.
+- **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
+- **Horizontal**: *left*, *right* - Scroll through cards in the search results.
 - **Page**: *PgUp*, *PgDn* - Page through search results.
 - **Column**: *home*, *end* - Shift through stacks in the deck editor.
-- **Sort**: *q* - Brings up the sort menu.
+- **Sort**: *q* - Sorts the deck editor.
 - **New**: *e* - Clears the deck editor.
-- **Load**: *r* - Brings up the deck load menu.
-- **Save**: *t* - Brings up the deck save menu.
-- **Filter**: *f* - Brings up the search filter menu.
+- **Load**: *r* - Brings up the Deck Load Menu.
+- **Save**: *t* - Brings up the Deck Save Menu.
+- **Filter**: *f* - Brings up the Card Search/Filter Menu.
 - **FocusName**: *\`* - Focuses keyboard to the search name input field.
 
 ## Options Menu
-- **Cancel**: *Esc* - Back to main menu.
+- **Cancel**: *Esc* - Back to Main Menu.
 - **Vertical**: *down*, *up* - Scroll through options.
 - **Sort**: *q* - Link to view online rules.
 - **New**: *e* - Link to the CGS website.
 - **Load**: *r* - Link to this webpage.
 - **Save**: *t* - Email <david@finoldigital.com>.
-- **Submit**: *Enter* - Click on selected button.
+- **Submit**: *Enter* - Click on selected option.
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
@@ -57,9 +57,10 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Game Selection Menu
 - **Cancel**: *Esc* - Cancel.
-- **Horizontal**: *left*, *right* - Scroll through card games.
-- **Vertical**: *down*, *up* - Scroll through games.
+- **Horizontal**: *left*, *right* - Select previous/next card game.
+- **Vertical**: *down*, *up* - Scroll through card games.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
+- **Sort**: *q* - Share selected card game.
 - **New**: *e* - Brings up or clears the download url input field.
 - **Load**: *r* - Brings up or clears the download url input field.
 - **Save**: *t* - Pastes clipboard into the url input field.
@@ -91,6 +92,10 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Load**: *r* - Copies deck text to the text clipboard.
 - **Submit**: *Enter* - Save.
 
+## Dice Menu
+- **Cancel**: *Esc* - Cancel.
+- **Submit**: *Enter* - Create dice.
+
 ## Card Search/Filter Menu
 - **Cancel**: *Esc* - Cancel.
 - **FocusName**: *\`* - Focuses keyboard to the previous text input field.
@@ -101,7 +106,3 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **New**: *e* - Toggles selected enum value.
 - **Delete**: *Delete* - Clear.
 - **Submit**: *Enter* - Search!
-
-## Dice Menu
-- **Cancel**: *Esc* - Cancel.
-- **Submit**: *Enter* - Create dice.
