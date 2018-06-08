@@ -221,7 +221,7 @@ namespace CardGameDef
                 Directory.Delete(initialDirectory, true);
             }
 
-            string cardsUrl = AllCardsUrlPageCount + (AllCardsUrlPageCount > 1 ? AllCardsUrlPageIdentifier + "1" : string.Empty);
+            string cardsUrl = AllCardsUrl + (AllCardsUrlPageCount > 1 ? AllCardsUrlPageIdentifier + "1" : string.Empty);
             yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, CardsFilePath
                                                              + (AllCardsZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
             if (AllCardsZipped)
@@ -406,7 +406,7 @@ namespace CardGameDef
                 foreach (JToken jToken in cardJToken[CardSetIdentifier])
                 {
                     JObject setObject = jToken as JObject;
-                    setCodes.Add(setObject?.Value<string>("id") ?? Set.DefaultCode);
+                    setCodes.Add(setObject?.Value<string>(SetCodeIdentifier) ?? Set.DefaultCode);
                 }
             }
             else
@@ -414,7 +414,7 @@ namespace CardGameDef
 
             foreach(string cardSet in setCodes)
             {
-                Card newCard = new Card(setCodes.Count > 1 ? cardId + "." + cardSet : cardId, cardName, cardSet, cardProperties);
+                Card newCard = new Card(setCodes.Count > 1 ? (cardId + "_" + cardSet) : cardId, cardName, cardSet, cardProperties);
                 if (CardNames.Contains(cardName))
                     newCard.IsReprint = true;
                 else
