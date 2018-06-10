@@ -10,6 +10,8 @@ permalink: roadmap.html
 - Added support for different types of card metadata
 
 ## Current Sprint
+- Fix: Clicking on zoom icon can register swipe
+- Fix: Loading deck on UWP
 - Fix: NetworkDiscovery error on iOS sleep
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
@@ -23,7 +25,7 @@ permalink: roadmap.html
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
-- Show loading bar when loading/downloading a card game. Currently, a "cards finished loading" message appears after the cards finish loading
+- Show loading bar when loading/downloading a card game
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
 - Card Grouping
