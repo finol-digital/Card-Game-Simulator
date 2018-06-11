@@ -79,6 +79,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through decks.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
+- **Sort**: *q* - Share selected deck.
 - **New**: *e* - Brings up the deck text editor.
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
 - **FocusText**: *Tab* - Focuses keyboard to the deck text input field.

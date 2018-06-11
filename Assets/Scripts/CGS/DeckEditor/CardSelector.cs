@@ -9,7 +9,7 @@ public class CardSelector : MonoBehaviour
 
     void Update()
     {
-        if (CardGameManager.TopMenuCanvas != null)
+        if (CardGameManager.TopMenuCanvas != null || editor.searchResults.nameInputField.isFocused)
             return;
 
         if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && SwipeManager.DetectSwipe())

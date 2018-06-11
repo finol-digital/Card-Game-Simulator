@@ -22,7 +22,7 @@ public class DeckLoadMenu : SelectionPanel
     public const string DeckLoadErrorMessage = "There was an error while loading the deck: ";
     public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
-    public Button loadCancelButton;
+    public Button shareFileButton;
     public Button deleteFileButton;
     public Button loadFromFileButton;
 
@@ -30,7 +30,6 @@ public class DeckLoadMenu : SelectionPanel
     public InputField nameInputField;
     public TMPro.TextMeshProUGUI instructionsText;
     public TMPro.TMP_InputField textInputField;
-    public Button saveCancelButton;
 
     public OnDeckLoadedDelegate LoadCallback { get; private set; }
     public string SelectedFileName { get; private set; }
@@ -41,7 +40,8 @@ public class DeckLoadMenu : SelectionPanel
         if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
-        if (newDeckPanel.gameObject.activeSelf) {
+        if (newDeckPanel.gameObject.activeSelf)
+        {
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
                 DoSaveDontOverwrite();
             else if (Input.GetButtonDown(Inputs.New) && EventSystem.current.currentSelectedGameObject == null)
@@ -56,11 +56,15 @@ public class DeckLoadMenu : SelectionPanel
                 textInputField.text = string.Empty;
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 HideNewDeckPanel();
-        } else {
+        }
+        else
+        {
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && loadFromFileButton.interactable)
                 LoadFromFileAndHide();
             else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
+            else if (Input.GetButtonDown(Inputs.Sort) && shareFileButton.interactable)
+                Share();
             else if (Input.GetButtonDown(Inputs.New))
                 ShowNewDeckPanel();
             else if (Input.GetButtonDown(Inputs.Delete) && deleteFileButton.interactable)
@@ -85,7 +89,8 @@ public class DeckLoadMenu : SelectionPanel
 
         nameInputField.text = originalName ?? Deck.DefaultName;
         textInputField.text = originalText ?? string.Empty;
-        switch (CardGameManager.Current.DeckFileType) {
+        switch (CardGameManager.Current.DeckFileType)
+        {
             case DeckFileType.Dec:
                 instructionsText.text = DecInstructions;
                 break;
@@ -112,26 +117,30 @@ public class DeckLoadMenu : SelectionPanel
 
         Rebuild(DeckFiles.Keys.ToList(), SelectFile, SelectedFileName);
 
-        loadFromFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
+        shareFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
         deleteFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
+        loadFromFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
     }
 
     public void SelectFile(bool isSelected, string deckFileName)
     {
-        if (!isSelected || string.IsNullOrEmpty(deckFileName)) {
+        if (!isSelected || string.IsNullOrEmpty(deckFileName))
+        {
             SelectedFileName = string.Empty;
-            loadFromFileButton.interactable = false;
+            shareFileButton.interactable = false;
             deleteFileButton.interactable = false;
+            loadFromFileButton.interactable = false;
             return;
         }
 
         bool isDoubleSelect = SelectedFileName.Equals(deckFileName);
         SelectedFileName = deckFileName;
 
-        loadFromFileButton.interactable = true;
+        shareFileButton.interactable = true;
         deleteFileButton.interactable = true;
+        loadFromFileButton.interactable = true;
 
-        if(isDoubleSelect)
+        if (isDoubleSelect)
             LoadFromFileAndHide();
     }
 
@@ -155,6 +164,11 @@ public class DeckLoadMenu : SelectionPanel
         return fileType;
     }
 
+    public void Share()
+    {
+        CardGameManager.Instance.Messenger.Show("Share functionality is coming soon.");
+    }
+
     public void PromptForDeleteFile()
     {
         CardGameManager.Instance.Messenger.Prompt(DeletePrompt, DeleteFile);
@@ -162,9 +176,12 @@ public class DeckLoadMenu : SelectionPanel
 
     public void DeleteFile()
     {
-        try {
+        try
+        {
             File.Delete(DeckFiles[SelectedFileName]);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Debug.LogError(DeckDeleteErrorMessage + e.Message);
         }
         SelectedFileName = string.Empty;
@@ -174,9 +191,12 @@ public class DeckLoadMenu : SelectionPanel
     public void LoadFromFileAndHide()
     {
         string deckText = string.Empty;
-        try {
+        try
+        {
             deckText = File.ReadAllText(DeckFiles[SelectedFileName]);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Debug.LogError(DeckLoadErrorMessage + e.Message);
         }
 
@@ -223,11 +243,14 @@ public class DeckLoadMenu : SelectionPanel
     public void DoSave()
     {
         Deck filePathFinder = new Deck(nameInputField.text, CardGameManager.Current.DeckFileType);
-        try {
+        try
+        {
             if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
                 Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
             File.WriteAllText(filePathFinder.FilePath, textInputField.text);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Debug.LogError(DeckSaveErrorMessage + e.Message);
         }
         BuildDeckFileSelectionOptions();

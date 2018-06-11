@@ -11,11 +11,11 @@ layout: home
 ## Create Custom Games
 With CGS, users can create and share their own custom card games!
 
-You can download additional games by pressing the top button of the Main Menu:
+You can download additional games by hitting the top banner of the Main Menu:
 
 ![Main Menu Image](assets/img/mainmenu.png)
 
-In the Game Selection Menu, press "Download":
+In the Game Selection Menu, hit the "Download" button in the top-right:
 
 ![Game Selection Menu Image](assets/img/selectionmenu.png)
 

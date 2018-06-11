@@ -40,6 +40,8 @@ public class GameSelectionMenu : SelectionPanel
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
                 Hide();
+            else if (Input.GetButtonDown(Inputs.Sort))
+                Share();
             else if (Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load))
                 ShowDownloadPanel();
             else if (Input.GetButtonDown(Inputs.Delete))
@@ -76,6 +78,11 @@ public class GameSelectionMenu : SelectionPanel
         }
         else
             Hide();
+    }
+
+    public void Share()
+    {
+        CardGameManager.Instance.Messenger.Show("Share functionality is coming soon.");
     }
 
     public void Delete()

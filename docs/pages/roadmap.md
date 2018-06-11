@@ -10,15 +10,12 @@ permalink: roadmap.html
 - Added support for different types of card metadata
 
 ## Current Sprint
-- Fix: Clicking on zoom icon can register swipe
-- Fix: Loading deck on UWP
 - Fix: NetworkDiscovery error on iOS sleep
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
-  - Share button in the *Game Selection Menu* uses this
-- Update documentation for second section of homepage and store listings (text and images)
+  - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Backlog
 - Tech: Set up build server
