@@ -19,7 +19,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 ## Play Mode
 - **Cancel**: *Esc* - Back to Main Menu.
 - **Load**: *r* - Brings up the Deck Load Menu.
-- **Save**: *q* - Brings up the Dice Menu.
+- **Save**: *t* - Brings up the Dice Menu.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
 - **Horizontal**: *left*, *right* - Move the top card of the deck. Left to discard, Right to hand.
 
