@@ -13,7 +13,6 @@ public static class Inputs
     public const string Horizontal = "Horizontal";
     public const string Load = "Load";
     public const string New = "New";
-    public const string No = "No";
     public const string Page = "Page";
     public const string Save = "Save";
     public const string Sort = "Sort";

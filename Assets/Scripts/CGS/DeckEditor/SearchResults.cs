@@ -42,13 +42,6 @@ public class SearchResults : MonoBehaviour
         CardSearcher.NameFilter = nameFilter;
     }
 
-    public void SetFiltersText(string filters)
-    {
-        if (string.IsNullOrEmpty(filters))
-            filters = EmptyFilterText;
-        filtersText.text = filters;
-    }
-
     public void Search()
     {
         CardSearcher.Search();
@@ -98,11 +91,15 @@ public class SearchResults : MonoBehaviour
 
     public void ShowSearchMenu()
     {
-        CardSearcher.Show(SetNameInputField, SetFiltersText, ShowResults);
+        CardSearcher.Show(SetNameInputField, ShowResults);
     }
 
-    public void ShowResults(List<Card> results)
+    public void ShowResults(string filters, List<Card> results)
     {
+        if (string.IsNullOrEmpty(filters))
+            filters = EmptyFilterText;
+        filtersText.text = filters;
+
         AllResults = results;
     }
 

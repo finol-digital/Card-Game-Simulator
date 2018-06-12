@@ -2686,7 +2686,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114126704938545522}
-        m_MethodName: PromptClearFilters
+        m_MethodName: ClearFilters
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

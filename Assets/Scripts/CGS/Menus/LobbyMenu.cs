@@ -51,10 +51,11 @@ public class LobbyMenu : SelectionPanel
         if (hostNames == null || hostNames.Equals(HostNames))
             return;
 
-		HostNames.Clear ();
-		foreach (string hostname in hostNames)
-			HostNames.Add (hostname.Split (':').Last ());
-        if (!HostNames.Contains(SelectedHost)) {
+        HostNames.Clear();
+        foreach (string hostname in hostNames)
+            HostNames.Add(hostname.Split(':').Last());
+        if (!HostNames.Contains(SelectedHost))
+        {
             SelectedHost = string.Empty;
             joinButton.interactable = false;
         }

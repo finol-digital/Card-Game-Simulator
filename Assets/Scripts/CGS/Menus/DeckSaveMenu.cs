@@ -84,11 +84,14 @@ public class DeckSaveMenu : MonoBehaviour
 
     public static void SaveToFile(Deck deck, OnDeckSavedDelegate deckSaveCallback = null)
     {
-        try {
+        try
+        {
             if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
                 Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
             File.WriteAllText(deck.FilePath, deck.ToString());
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Debug.LogError(DeckSaveErrorMessage + e.Message);
         }
         deckSaveCallback?.Invoke(deck);

@@ -86,7 +86,7 @@ public class PlayMode : MonoBehaviour
 
     public void ShowCardsMenu()
     {
-        CardSearcher.Show(null, null, DisplayResults);
+        CardSearcher.Show(null, DisplayResults);
     }
 
     public void LoadDeck(Deck deck)
@@ -226,7 +226,7 @@ public class PlayMode : MonoBehaviour
         zones.Discard.AddCard(card);
     }
 
-    public void DisplayResults(List<Card> cards)
+    public void DisplayResults(string filters, List<Card> cards)
     {
         if (zones.Results == null)
             zones.CreateResults();

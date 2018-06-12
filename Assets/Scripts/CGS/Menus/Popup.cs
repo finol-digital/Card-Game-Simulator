@@ -35,7 +35,7 @@ public class Popup : MonoBehaviour
             yesButton.onClick?.Invoke();
         else if (!IsNewMessage && (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && !yesButton.gameObject.activeInHierarchy)
             Close();
-        else if (Input.GetButtonDown(Inputs.No) && noButton.gameObject.activeInHierarchy)
+        else if (Input.GetButtonDown(Inputs.Delete) && noButton.gameObject.activeInHierarchy)
             noButton.onClick?.Invoke();
         else if (!IsNewMessage && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel)))
             Close();

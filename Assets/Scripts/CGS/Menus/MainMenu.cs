@@ -12,7 +12,6 @@ public class MainMenu : MonoBehaviour
     public const int PlayModeSceneIndex = 2;
     public const int DeckEditorSceneIndex = 3;
     public const int OptionsMenuSceneIndex = 4;
-    public const string ExitPrompt = "Exit CGS?";
     public const string VersionMessage = "Ver. ";
 
     public List<GameObject> buttons;
@@ -59,7 +58,7 @@ public class MainMenu : MonoBehaviour
         else if (Input.GetButtonDown(Inputs.Filter))
             ShowOptions();
         else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
-            CardGameManager.Instance.Messenger.Prompt(ExitPrompt, Quit);
+            Quit();
     }
 
     public void ShowGameSelectionMenu()

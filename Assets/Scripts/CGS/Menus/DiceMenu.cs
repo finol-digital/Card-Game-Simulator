@@ -73,17 +73,21 @@ public class DiceMenu : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public int Min {
+    public int Min
+    {
         get { return _min; }
-        set {
+        set
+        {
             _min = value;
             minText.text = _min.ToString();
         }
     }
 
-    public int Max {
+    public int Max
+    {
         get { return _max; }
-        set {
+        set
+        {
             _max = value;
             maxText.text = _max.ToString();
         }

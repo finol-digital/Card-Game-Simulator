@@ -24,7 +24,8 @@ public class GameSelectionMenu : SelectionPanel
         if (urlInput.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
-        if (downloadPanel.gameObject.activeSelf) {
+        if (downloadPanel.gameObject.activeSelf)
+        {
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && downloadButton.interactable)
                 StartDownload();
             else if ((Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load)) && urlInput.interactable)
@@ -35,7 +36,9 @@ public class GameSelectionMenu : SelectionPanel
                 urlInput.ActivateInputField();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 HideDownloadPanel();
-        } else {
+        }
+        else
+        {
             if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
@@ -72,7 +75,8 @@ public class GameSelectionMenu : SelectionPanel
 
     public void SelectGame(bool isOn, string gameName)
     {
-        if (isOn) {
+        if (isOn)
+        {
             gameObject.SetActive(true);
             CardGameManager.Instance.SelectCardGame(gameName);
         }

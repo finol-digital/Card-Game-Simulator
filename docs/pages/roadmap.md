@@ -25,9 +25,33 @@ permalink: roadmap.html
 - Show loading bar when loading/downloading a card game
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
+- Support Android TV and tvOS
+- Highlight selected buttons in orange instead of purple
+- Support Controller:
+  - LEFT-STICK: Horizontal/Vertical
+  - D-PAD: Horizontal/Vertical
+  - SELECT: Cancel
+  - START: New
+  - A: Submit
+  - B: Cancel
+  - X: Load
+  - Y: Save
+  - RIGHT-STICK: Column/Page
+  - L1: Sort
+  - R1: Filter
+  - L2: FocusName
+  - R2: FocusText
+  - L3: Toggle CardViewer with FocusName/Text
+  - R3: Delete
+- Add rate limit for how often to update allCards and allSets
+- Support Number card property data type (decimals)
+- Enhance boolean card property data type
+- Enhance object card property data type
+- Add identifiers for object card property data types
 - Card Grouping
   - Define card zones in play area
     - Card zones can define what actions are possible in that zone
+- Allow cards to snap to each other when moving them
 - Card Actions
   - Define
     - Toggle rotation between 0 and 90/180/270
@@ -39,14 +63,8 @@ permalink: roadmap.html
   - Double-clicking takes a default action, based on the zone the card is in
   - Single-click show menu with all possible actions at the bottom
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Allow cards to snap to each other when moving them
-- Consider keyboard shortcuts
 
 ## Icebox
-- Add rate limit for how often to update allCards and allSets
-- Support Number card property data type (decimals)
-- Enhace boolean card property data type
-- Add identifiers for object card property data types
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
 - Support more than 1 card face
