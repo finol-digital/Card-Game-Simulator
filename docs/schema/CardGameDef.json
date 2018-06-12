@@ -69,7 +69,7 @@
 			"type": "string"
 		},
 		"backgroundImageUrl": {
-			"description": "If backgroundImageUrl is a valid url, CGS will download the image at that url and save it as Background.<backgroundImageFileType>. CGS will attempt to display the  Background.<backgroundImageFileType> in the background anytime the custom card game is selected by the user. If it is unable to read Background.<backgroundImageFileType>, CGS will simply display the CGS logo in the background.",
+			"description": "If backgroundImageUrl is a valid url, CGS will download the image at that url and save it as Background.<backgroundImageFileType>. CGS will attempt to display the Background.<backgroundImageFileType> in the background anytime the custom card game is selected by the user. If it is unable to read Background.<backgroundImageFileType>, CGS will simply display the CGS logo in the background.",
 			"type": "string",
 			"format": "uri"
 		},
@@ -140,7 +140,7 @@
 					},
 					"type": {
 						"description": "The type of the property",
-						"enum": ["object", "escapedString", "string", "integer", "boolean", "stringEnum", "stringList", "stringEnumList", "objectEnum", "objectList", "objectEnumList"],
+						"enum": ["string", "escapedString", "boolean", "integer", "number", "object", "stringEnum", "stringList", "stringEnumList", "objectEnum", "objectList", "objectEnumList"],
 						"default": "string",
 						"type": "string"
 					},
