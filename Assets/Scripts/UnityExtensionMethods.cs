@@ -151,11 +151,24 @@ static public class UnityExtensionMethods
 
     public static void ExtractZip(string zipPath, string targetDir)
     {
+        if (!File.Exists(zipPath))
+            return;
+
         if (!Directory.Exists(targetDir))
             Directory.CreateDirectory(targetDir);
 
         FastZip fastZip = new FastZip();
         fastZip.ExtractZip(zipPath, targetDir, null);
+    }
+
+    public static void UnwrapFile(string filePath)
+    {
+        if (!File.Exists(filePath))
+            return;
+
+        string fileContents = File.ReadAllText(filePath);
+        string unwrappedContent = fileContents.TrimStart('(').TrimEnd(')');
+        File.WriteAllText(filePath, unwrappedContent);
     }
 
     public static IEnumerator SaveUrlToFile(string url, string filePath)

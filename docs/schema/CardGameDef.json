@@ -41,8 +41,12 @@
 			"default": "?page=",
 			"type": "string"
 		},
-		"allCardsZipped": {
-			"description": "If allCardsUrl points to a zipped file, set allCardsZipped to true, and CGS will unzip the file and then save the unzipped file as AllCards.json.",
+		"allCardsUrlWrapped": {
+			"description": "If allCardsUrl points to file(s) enclosed by extra parentheses, set allCardsUrlWrapped to true, and CGS will trim the parentheses.",
+			"type": "boolean"
+		},
+		"allCardsUrlZipped": {
+			"description": "If allCardsUrl points to zipped file(s), set allCardsUrlZipped to true, and CGS will unzip the file(s).",
 			"type": "boolean"
 		},
 		"allSetsUrl": {
@@ -50,8 +54,12 @@
 			"type": "string",
 			"format": "uri"
 		},
-		"allSetsZipped": {
-			"description": "If allSetsUrl points to a zipped file, set allSetsZipped to true, and CGS will unzip the file and then save the unzipped file as AllSets.json.",
+		"allSetsUrlWrapped": {
+			"description": "If allSetsUrl points to a file enclosed by extra parentheses, set allSetsUrlWrapped to true, and CGS will trim the parentheses.",
+			"type": "boolean"
+		},
+		"allSetsUrlZipped": {
+			"description": "If allSetsUrl points to a zipped file, set allSetsUrlZipped to true, and CGS will unzip the file.",
 			"type": "boolean"
 		},
 		"autoUpdate": {

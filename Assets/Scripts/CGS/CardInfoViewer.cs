@@ -99,10 +99,12 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     public void SetContentText()
     {
+        Set currentSet = null;
         if (SelectedCardModel != null)
             contentText.text = SelectedPropertyIndex != 0 ?
                 SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName)
-                : CardGameManager.Current.Sets[SelectedCardModel.Value.SetCode].ToString();
+                : (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out currentSet)
+                    ? currentSet : Set.Default).ToString();
         else
             contentText.text = string.Empty;
     }

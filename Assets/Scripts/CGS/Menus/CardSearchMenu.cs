@@ -43,6 +43,9 @@ public class CardSearchMenu : MonoBehaviour
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
+        if (ActiveInputField != null && ActiveInputField.isFocused)
+            return;
+
         if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
         {
             Search();
