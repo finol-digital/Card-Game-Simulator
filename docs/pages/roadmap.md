@@ -43,6 +43,7 @@ permalink: roadmap.html
   - R2: FocusText
   - L3: Toggle CardViewer with FocusName/Text
   - R3: Delete
+- Fix: Allow FocusName/FocusText even if input field is already focused
 - Add rate limit for how often to update allCards and allSets
 - Support Number card property data type (decimals)
 - Enhance boolean card property data type
