@@ -80,8 +80,8 @@ PlayerSettings:
   usePlayerLog: 1
   bakeCollisionMeshes: 0
   forceSingleInstance: 0
-  resizableWindow: 1
-  useMacAppStoreValidation: 0
+  resizableWindow: 0
+  useMacAppStoreValidation: 1
   macAppStoreCategory: public.app-category.games
   gpuSkinning: 0
   graphicsJobs: 0
@@ -118,7 +118,7 @@ PlayerSettings:
     5:4: 1
     16:10: 1
     16:9: 1
-    Others: 1
+    Others: 0
   bundleVersion: 1.2.2
   preloadedAssets: []
   metroInputSource: 0
@@ -156,7 +156,7 @@ PlayerSettings:
     Standalone: com.finoldigital.CardGameSimulator
     iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 0
+    Standalone: 1
     iOS: 0
   AndroidBundleVersionCode: 43
   AndroidMinSdkVersion: 16
