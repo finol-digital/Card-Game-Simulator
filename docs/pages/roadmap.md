@@ -96,7 +96,6 @@ permalink: roadmap.html
 - Support different resolutions and languages for card images
 - Google Play Instant
 - Linux version
-- Release Android version to Amazon and Samsung marketplaces, potentially also https://f-droid.org/
 - Release Standalone versions to Steam
 - Console versions (Switch, ps4, xbone)
 - Support encryption of game information
