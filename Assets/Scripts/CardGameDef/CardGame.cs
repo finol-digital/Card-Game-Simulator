@@ -44,6 +44,8 @@ namespace CardGameDef
 
         [JsonProperty]
         public int AllCardsUrlPageCountDivisor { get; set; } = 1;
+        [JsonProperty]
+        public int AllCardsUrlPageCountStartIndex { get; set; } = 1;
 
         [JsonProperty]
         public string AllCardsUrlPageIdentifier { get; set; } = "?page=";
@@ -227,13 +229,16 @@ namespace CardGameDef
                 Directory.Delete(initialDirectory, true);
             }
 
-            string cardsUrl = AllCardsUrl + (AllCardsUrlPageCount > 1 ? AllCardsUrlPageIdentifier + "1" : string.Empty);
-            yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, CardsFilePath
-                                                             + (AllCardsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
-            for (int page = 2; page <= AllCardsUrlPageCount; page++)
-                yield return UnityExtensionMethods.SaveUrlToFile(AllCardsUrl + AllCardsUrlPageIdentifier + page, CardsFilePath + page);
-            yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, SetsFilePath
-                                                             + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty));
+            for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
+            {
+                string cardsUrl = AllCardsUrl + (AllCardsUrlPageCount > 1 ? AllCardsUrlPageIdentifier + page : string.Empty);
+                string cardsFile = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty)
+                    + (AllCardsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
+                yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile);
+            }
+
+            string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
+            yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
 
             yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
             yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
@@ -245,11 +250,8 @@ namespace CardGameDef
                 yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
             if (!IsLoaded)
-            {
                 Load(true);
-                if (AllCardsUrlPageCount > 1)
-                    CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
-            }
+
             IsDownloading = false;
         }
 
@@ -260,30 +262,17 @@ namespace CardGameDef
                 if (!didDownload)
                     JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
 
+                CreateEnumLookups();
+
+                CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
+
+                LoadSets();
+
                 BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
                 CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
 
-                CreateEnumLookups();
-
-                if (AllCardsUrlZipped)
-                    UnityExtensionMethods.ExtractZip(CardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
-                if (AllCardsUrlWrapped)
-                    UnityExtensionMethods.UnwrapFile(CardsFilePath);
-                LoadJsonFromFile(CardsFilePath, LoadCardFromJToken, CardDataIdentifier);
-
-                if (AllSetsUrlZipped)
-                    UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
-                if (AllSetsUrlWrapped)
-                    UnityExtensionMethods.UnwrapFile(SetsFilePath);
-                LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
-
-                if (!didDownload)
-                {
-                    if (AutoUpdate)
-                        CardGameManager.Instance.StartCoroutine(Download());
-                    if (AllCardsUrlPageCount > 1)
-                        CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
-                }
+                if (AutoUpdate && !didDownload)
+                    CardGameManager.Instance.StartCoroutine(Download());
 
                 IsLoaded = true;
             }
@@ -294,17 +283,25 @@ namespace CardGameDef
             }
         }
 
-        public IEnumerator LoadCardPages()
+        private void CreateEnumLookups()
         {
-            for (int page = 2; page <= AllCardsUrlPageCount; page++)
+            foreach (EnumDef enumDef in Enums)
+                foreach (string key in enumDef.Values.Keys)
+                    enumDef.CreateLookup(key);
+        }
+
+        public IEnumerator LoadCards()
+        {
+            for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
             {
+                string cardsFilePath = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
                 try
                 {
                     if (AllCardsUrlZipped)
-                        UnityExtensionMethods.ExtractZip(CardsFilePath + page + UnityExtensionMethods.ZipExtension, FilePathBase);
+                        UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
                     if (AllCardsUrlWrapped)
-                        UnityExtensionMethods.UnwrapFile(CardsFilePath + page);
-                    LoadJsonFromFile(CardsFilePath + page, LoadCardFromJToken, CardDataIdentifier);
+                        UnityExtensionMethods.UnwrapFile(cardsFilePath);
+                    LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier);
                 }
                 catch (Exception e)
                 {
@@ -314,11 +311,13 @@ namespace CardGameDef
             }
         }
 
-        public void CreateEnumLookups()
+        private void LoadSets()
         {
-            foreach (EnumDef enumDef in Enums)
-                foreach (string key in enumDef.Values.Keys)
-                    enumDef.CreateLookup(key);
+            if (AllSetsUrlZipped)
+                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+            if (AllSetsUrlWrapped)
+                UnityExtensionMethods.UnwrapFile(SetsFilePath);
+            LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
         }
 
         public void LoadJsonFromFile(string file, LoadJTokenDelegate load, string dataId)
@@ -330,10 +329,12 @@ namespace CardGameDef
             foreach (JToken jToken in !string.IsNullOrEmpty(dataId) ? root[dataId] : root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues())
                 load(jToken, Set.DefaultCode);
 
-            if (!string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier) && root[AllCardsUrlPageCountIdentifier] != null)
+            if (!string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier) && root.Value<int>(AllCardsUrlPageCountIdentifier) > 0)
+            {
                 AllCardsUrlPageCount = root.Value<int>(AllCardsUrlPageCountIdentifier);
-            if (AllCardsUrlPageCountDivisor > 0)
-                AllCardsUrlPageCount = UnityEngine.Mathf.CeilToInt(((float)AllCardsUrlPageCount) / AllCardsUrlPageCountDivisor);
+                if (AllCardsUrlPageCountDivisor > 0)
+                    AllCardsUrlPageCount = UnityEngine.Mathf.CeilToInt(((float)AllCardsUrlPageCount) / AllCardsUrlPageCountDivisor);
+            }
         }
 
         public void LoadCardFromJToken(JToken cardJToken, string defaultSetCode)

@@ -32,7 +32,12 @@
 			"type": "string"
 		},
 		"allCardsUrlPageCountDivisor": {
-			"description": "allCardsUrlPageCountDivisor can be set to the # of cards per page, ie: allCardsUrlPageCount = <allCardsUrlPageCountIdentifier pointing to total # of cards>/<allCardsUrlPageCountDivisor>. ",
+			"description": "allCardsUrlPageCountDivisor can be set to the # of cards per page, ie: allCardsUrlPageCount = <allCardsUrlPageCountIdentifier pointing to total # of cards>/<allCardsUrlPageCountDivisor>.",
+			"default": 1,
+			"type": "integer"
+		},
+		"allCardsUrlPageCountStartIndex": {
+			"description": "allCardsUrlPageCountStartIndex is used to identify the first page of <allCardsUrlPageCount>.",
 			"default": 1,
 			"type": "integer"
 		},
