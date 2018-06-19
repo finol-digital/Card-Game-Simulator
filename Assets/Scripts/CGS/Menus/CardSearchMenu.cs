@@ -43,6 +43,12 @@ public class CardSearchMenu : MonoBehaviour
         if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
             return;
 
+        if (Input.GetButtonDown(Inputs.FocusName) || Input.GetButtonDown(Inputs.FocusText))
+        {
+            FocusInputField();
+            return;
+        }
+
         if (ActiveInputField != null && ActiveInputField.isFocused)
             return;
 
@@ -53,8 +59,6 @@ public class CardSearchMenu : MonoBehaviour
         }
         else if (Input.GetButtonDown(Inputs.Page))
             scrollbar.value = Mathf.Clamp01(scrollbar.value + (Input.GetAxis(Inputs.Page) < 0 ? 0.1f : -0.1f));
-        else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetButtonDown(Inputs.FocusText))
-            FocusInputField();
         else if (Input.GetButtonDown(Inputs.Vertical) || Input.GetButtonDown(Inputs.Horizontal))
             FocusToggle();
         else if (Input.GetButtonDown(Inputs.New) && ActiveToggle != null)

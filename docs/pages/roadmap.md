@@ -8,9 +8,17 @@ permalink: roadmap.html
 - The Game Selection Menu is now accessible by clicking on the banner on the Main Menu
 - You can cycle through card games in the Main Menu by using keyboard shortcuts
 - Added support for different types of card metadata
+- Fix: Download and load additional card pages on initial download
+- Fix: Allow FocusName/FocusText keyboard shortcuts while input field is already focused
 
 ## Current Sprint
+- Fix: iPad keyboard
+  - Make zx be alt for column, and cv be alt for page
+  - Get rid of current cv by mapping functionality to page
 - Fix: NetworkDiscovery error on iOS sleep
+- In Deck Editor, make search button clear filters and only do search by name in name input field
+  - Show name filter in filters bar 
+  - Show condensed value of enum filters in filters bar
 - Release v1 to the App Store
 - Release v1 to the Mac App Store
 - Support deep links for games and decks through https://docs.branch.io/
@@ -22,9 +30,34 @@ permalink: roadmap.html
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
+- Fix: UWP join and host
+- Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
+- Add rate limit for how often to update allCards and allSets
+- Support Number card property data type (decimals)
+- Enhance boolean card property data type
+- Enhance object card property data type
+- Add identifiers for object card property data types
 - Show loading bar when loading/downloading a card game
-- Allow any player to move cards in the play area, instead of just the player who put it there
 - Add option to restart game in *Play Mode*
+- Allow any player to move cards in the play area, instead of just the player who put it there
+- Allow cards to snap to each other when moving them
+- Increase maximum zoom out
+- Have card info viewer only go down a sliver on press in play mode; second press can bring it down like normal
+- Have view for only hand vs view for only field
+- Card Grouping
+  - Define card zones in play area
+    - Card zones can define what actions are possible in that zone
+- Card Actions
+  - Define
+    - Toggle rotation between 0 and 90/180/270
+    - Rotate 90/180/270
+    - Toggle facedown
+    - Move to hand
+    - Move to top/bottom of deck
+    - Move to discard/delete
+  - Double-clicking takes a default action, based on the zone the card is in
+  - Single-click show menu with all possible actions at the bottom
+  - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Support Android TV and tvOS
 - Highlight selected buttons in orange instead of purple
 - Support Controller:
@@ -41,29 +74,8 @@ permalink: roadmap.html
   - R1: Filter
   - L2: FocusName
   - R2: FocusText
-  - L3: Toggle CardViewer with FocusName/Text
+  - L3: Submit
   - R3: Delete
-- Fix: Allow FocusName/FocusText even if input field is already focused
-- Add rate limit for how often to update allCards and allSets
-- Support Number card property data type (decimals)
-- Enhance boolean card property data type
-- Enhance object card property data type
-- Add identifiers for object card property data types
-- Card Grouping
-  - Define card zones in play area
-    - Card zones can define what actions are possible in that zone
-- Allow cards to snap to each other when moving them
-- Card Actions
-  - Define
-    - Toggle rotation between 0 and 90/180/270
-    - Rotate 90/180/270
-    - Toggle facedown
-    - Move to hand
-    - Move to top/bottom of deck
-    - Move to discard/delete
-  - Double-clicking takes a default action, based on the zone the card is in
-  - Single-click show menu with all possible actions at the bottom
-  - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 
 ## Icebox
 - Support custom card backgrounds (Hearthstone)

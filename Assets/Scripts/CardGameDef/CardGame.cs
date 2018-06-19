@@ -235,6 +235,9 @@ namespace CardGameDef
                 string cardsFile = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty)
                     + (AllCardsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
                 yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile);
+                // Sometimes, we need to get the AllCardsUrlPageCount from the first page of AllCardsUrl
+                if (page == AllCardsUrlPageCountStartIndex && !string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
+                    LoadCard(page);
             }
 
             string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
@@ -265,16 +268,16 @@ namespace CardGameDef
                 CreateEnumLookups();
 
                 CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
-
                 LoadSets();
 
                 BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
                 CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
 
+                IsLoaded = true;
+
+                // Kick off auto-update in the background, even though it won't load until next time the app restarts
                 if (AutoUpdate && !didDownload)
                     CardGameManager.Instance.StartCoroutine(Download());
-
-                IsLoaded = true;
             }
             catch (Exception e)
             {
@@ -294,20 +297,25 @@ namespace CardGameDef
         {
             for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
             {
-                string cardsFilePath = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
-                try
-                {
-                    if (AllCardsUrlZipped)
-                        UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
-                    if (AllCardsUrlWrapped)
-                        UnityExtensionMethods.UnwrapFile(cardsFilePath);
-                    LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier);
-                }
-                catch (Exception e)
-                {
-                    Error += e.Message + e.StackTrace + Environment.NewLine;
-                }
+                LoadCard(page);
                 yield return null;
+            }
+        }
+
+        private void LoadCard(int page)
+        {
+            string cardsFilePath = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
+            try
+            {
+                if (AllCardsUrlZipped)
+                    UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+                if (AllCardsUrlWrapped)
+                    UnityExtensionMethods.UnwrapFile(cardsFilePath);
+                LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier);
+            }
+            catch (Exception e)
+            {
+                Error += e.Message + e.StackTrace + Environment.NewLine;
             }
         }
 
