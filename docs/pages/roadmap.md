@@ -12,13 +12,10 @@ permalink: roadmap.html
 - Fix: Allow FocusName/FocusText keyboard shortcuts while input field is already focused
 
 ## Current Sprint
-- Fix: iPad keyboard
-  - Make zx be alt for column, and cv be alt for page
-  - Get rid of current cv by mapping functionality to page
-- Fix: NetworkDiscovery error on iOS sleep
 - In Deck Editor, make search button clear filters and only do search by name in name input field
   - Show name filter in filters bar 
   - Show condensed value of enum filters in filters bar
+- Fix: NetworkDiscovery error on iOS sleep
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
@@ -29,6 +26,8 @@ permalink: roadmap.html
 - Tech: Review with Resharper
 - Fix: UWP join and host
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
+- Make zx be alt for column, and cv be alt for page
+- Get rid of current cv by mapping functionality to page
 - Add rate limit for how often to update allCards and allSets
 - Support Number card property data type (decimals)
 - Enhance boolean card property data type
