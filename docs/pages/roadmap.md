@@ -19,14 +19,11 @@ permalink: roadmap.html
 - In Deck Editor, make search button clear filters and only do search by name in name input field
   - Show name filter in filters bar 
   - Show condensed value of enum filters in filters bar
-- Release v1 to the App Store
-- Release v1 to the Mac App Store
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Backlog
-- Tech: Set up build server
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
