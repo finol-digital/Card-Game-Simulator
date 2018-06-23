@@ -14,7 +14,7 @@ public class LobbyDiscovery : NetworkDiscovery
     public void StartAsHost()
     {
         if (Application.internetReachability != NetworkReachability.ReachableViaLocalAreaNetwork) {
-            CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
+            Debug.LogError(BroadcastErrorMessage);
             return;
         }
 
@@ -31,14 +31,13 @@ public class LobbyDiscovery : NetworkDiscovery
 
         bool started = Initialize() && StartAsServer();
         if (!started)
-            CardGameManager.Instance.Messenger.Show(BroadcastErrorMessage);
+            Debug.LogError(BroadcastErrorMessage);
     }
 
     public void SearchForHost()
     {
         if (Application.internetReachability != NetworkReachability.ReachableViaLocalAreaNetwork) {
-            if (Debug.isDebugBuild) //(Application.internetReachability != NetworkReachability.ReachableViaCarrierDataNetwork)
-                CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
+            Debug.LogError(ListenErrorMessage);
             return;
         }
 
@@ -59,7 +58,7 @@ public class LobbyDiscovery : NetworkDiscovery
 
         bool started = Initialize() && StartAsClient();
         if (!started)
-            CardGameManager.Instance.Messenger.Show(ListenErrorMessage);
+            Debug.LogError(ListenErrorMessage);
     }
 
     public override void OnReceivedBroadcast(string fromAddress, string data)
