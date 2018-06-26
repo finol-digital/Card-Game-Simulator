@@ -74,6 +74,7 @@ permalink: roadmap.html
   - R3: Delete
 
 ## Icebox
+- Add displayEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
 - Support more than 1 card face
