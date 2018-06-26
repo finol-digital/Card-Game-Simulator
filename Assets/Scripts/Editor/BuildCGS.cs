@@ -1,4 +1,4 @@
-
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,9 +23,13 @@ class BuildCGS
     static void Android()
     {
 #if UNITY_EDITOR_OSX
-EditorPrefs.SetString("AndroidSdkRoot", "/Applications/Android/sdk");
-EditorPrefs.SetString("AndroidNdkRoot", "/Applications/android-ndk-r13b");
+        EditorPrefs.SetString("AndroidSdkRoot", "/Applications/Android/sdk");
+        EditorPrefs.SetString("AndroidNdkRoot", "/Applications/android-ndk-r13b");
+#elif UNITY_EDITOR_WIN
+        EditorPrefs.SetString("AndroidSdkRoot", "C:/Users/Public/android-sdk");
+        EditorPrefs.SetString("AndroidNdkRoot", "C:/Users/Public/android-ndk-r13b");
 #endif
+
         PlayerSettings.Android.keystorePass = Environment.GetCommandLineArgs().Last();
         PlayerSettings.Android.keyaliasPass = Environment.GetCommandLineArgs().Last();
 
