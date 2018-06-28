@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +8,7 @@ using UnityEditor;
 class BuildCGS
 {
     public const string AndroidBuildPath = "builds/CGS.apk";
+    public const string iOSBuildPath = "builds/iOS";
 
     public static string[] BuildScenes
     {
@@ -37,6 +38,16 @@ class BuildCGS
         buildPlayerOptions.scenes = BuildScenes;
         buildPlayerOptions.locationPathName = AndroidBuildPath;
         buildPlayerOptions.target = BuildTarget.Android;
+        buildPlayerOptions.options = BuildOptions.None;
+        BuildPipeline.BuildPlayer(buildPlayerOptions);
+    }
+    
+    static void iOS()
+    {
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
+        buildPlayerOptions.scenes = BuildScenes;
+        buildPlayerOptions.locationPathName = iOSBuildPath;
+        buildPlayerOptions.target = BuildTarget.iOS;
         buildPlayerOptions.options = BuildOptions.None;
         BuildPipeline.BuildPlayer(buildPlayerOptions);
     }
