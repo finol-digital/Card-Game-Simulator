@@ -81,7 +81,7 @@ PlayerSettings:
   bakeCollisionMeshes: 0
   forceSingleInstance: 0
   resizableWindow: 0
-  useMacAppStoreValidation: 1
+  useMacAppStoreValidation: 0
   macAppStoreCategory: public.app-category.games
   gpuSkinning: 0
   graphicsJobs: 0
