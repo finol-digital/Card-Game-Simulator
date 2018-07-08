@@ -64,6 +64,7 @@
 			}
 		}
 	],
+	"gameStartHandCount": 2,
 	"name": "Standard Playing Cards",
 	"rulesUrl": "https://www.bicyclecards.com/rules/"
 }
