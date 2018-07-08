@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PinchableScrollRect : SecondaryScrollView
 {
-    public const float MinZoom = 0.75f;
+    public const float MinZoom = 0.66f;
     public const float MaxZoom = 1.5f;
     public const float ZoomLerpSpeed = 7.5f;
     public const float MouseWheelSensitivity = 0.1f;

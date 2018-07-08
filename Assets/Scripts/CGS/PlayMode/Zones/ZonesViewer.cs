@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using CardGameDef;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +8,8 @@ public class ZonesViewer : MonoBehaviour
     public const float Width = 350f;
     public const float Height = 300f;
     public const float ScrollbarWidth = 80f;
+    
+    public bool IsPortrait => ((RectTransform)transform).sizeDelta.y > ((RectTransform)transform).sizeDelta.x;
 
     public GameObject resultsZonePrefab;
     public GameObject discardZonePrefab;
@@ -24,7 +26,6 @@ public class ZonesViewer : MonoBehaviour
     protected List<ExtensibleCardZone> ExtraZones { get; } = new List<ExtensibleCardZone>();
     public StackedZone CurrentDeck { get; private set; }
     public ExtensibleCardZone Hand { get; private set; }
-
 
     void Start()
     {
@@ -124,11 +125,7 @@ public class ZonesViewer : MonoBehaviour
         Hand = Instantiate(handZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
         Hand.Viewer = this;
         ResizeContent();
-        Vector2 size = ((RectTransform)transform).sizeDelta;
-        bool isPortrait = size.y > size.x;
-        if (isPortrait)
-            Hand.ToggleExtension();
-        IsExtended = !isPortrait;
+        IsExtended = !IsPortrait;
     }
 
     public void ResetButtons()

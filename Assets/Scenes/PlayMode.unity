@@ -366,11 +366,11 @@ RectTransform:
   m_Father: {fileID: 892208554}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.00012207031, y: 0}
-  m_SizeDelta: {x: 2350, y: 2025}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 3600, y: 2400}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &217919978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2511,7 +2511,7 @@ Prefab:
     - target: {fileID: 224195897976681678, guid: 0c899029c826d4547920b5a2851303dc,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 224195897976681678, guid: 0c899029c826d4547920b5a2851303dc,
         type: 2}

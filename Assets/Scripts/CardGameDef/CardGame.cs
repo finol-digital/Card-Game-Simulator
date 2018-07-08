@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -165,7 +165,7 @@ namespace CardGameDef
         public int GameStartPointsCount { get; set; }
 
         [JsonProperty]
-        public UnityEngine.Vector2 PlayAreaSize { get; set; } = new UnityEngine.Vector2(23.5f, 20.25f);
+        public UnityEngine.Vector2 PlayAreaSize { get; set; } = new UnityEngine.Vector2(36f, 24f);
 
         [JsonProperty]
         public bool ReprintsInCardObjectList { get; set; }
