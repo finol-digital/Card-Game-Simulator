@@ -24,8 +24,10 @@ permalink: roadmap.html
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
+- Fix: Swipe registered on zoom attempt
 - Fix: UWP join and host
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
+- Group cards in the deck editor with a number instead of stacking them
 - Make zx be alt for column, and cv be alt for page
 - Get rid of current cv by mapping functionality to page
 - Add rate limit for how often to update allCards and allSets
