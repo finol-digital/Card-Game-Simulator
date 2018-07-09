@@ -15,13 +15,13 @@ public class MainMenu : MonoBehaviour
     public const string VersionMessage = "Ver. ";
 
     public List<GameObject> buttons;
-    public Button exitButton;
+    public GameObject quitButton;
     public Text versionText;
 
     void Start()
     {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        exitButton.gameObject.SetActive(false);
+        quitButton.SetActive(false);
 #endif
         versionText.text = VersionMessage + Application.version;
 

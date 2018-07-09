@@ -31,7 +31,7 @@ permalink: roadmap.html
 - Enhance boolean card property data type
 - Enhance object card property data type
 - Add identifiers for object card property data types
-- Show loading bar when loading/downloading a card game
+- Show loading indicator when loading/downloading a card game
 - Add option to restart game in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
