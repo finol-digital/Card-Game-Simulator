@@ -25,15 +25,15 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
-- **CardViewer**: *c*, *v* - Scroll through properties in the Card Viewer.
+- **Page**: *PgUp*, *PgDn* OR *c*, *v* - Scroll through properties in the Card Viewer.
 - **Submit**: *Enter* - Double-click on selected card.
 
 ## Deck Editor
 - **Cancel**: *Esc* - Back to Main Menu.
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **Horizontal**: *left*, *right* - Scroll through cards in the search results.
-- **Page**: *PgUp*, *PgDn* - Page through search results.
-- **Column**: *home*, *end* - Shift through stacks in the deck editor.
+- **Page**: *PgUp*, *PgDn* OR *c*, *v* - Page through search results.
+- **Column**: *home*, *end* OR *z*, *x* - Shift through stacks in the deck editor.
 - **Sort**: *q* - Sorts the deck editor.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the Deck Load Menu.

@@ -10,6 +10,7 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Highlight selected buttons in orange instead of purple
+- Double-click on selection to load it
 - In Deck Editor, make search button clear filters and only do search by name in name input field
   - Show name filter in filters bar (in quotes)
   - Show condensed value of enum filters in filters bar
