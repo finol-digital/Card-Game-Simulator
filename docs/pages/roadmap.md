@@ -15,11 +15,11 @@ permalink: roadmap.html
   - Show name filter in filters bar (in quotes)
   - Show condensed value of enum filters in filters bar
 - Group cards in the deck editor with a number instead of stacking them
-
-## Backlog
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
+
+## Backlog
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
