@@ -5,31 +5,26 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- The Game Selection Menu is now accessible by clicking on the banner on the Main Menu
-- You can cycle through card games in the Main Menu by using keyboard shortcuts
-- Added support for different types of card metadata
-- Fix: Download and load additional card pages on initial download
-- Fix: Allow FocusName/FocusText keyboard shortcuts while input field is already focused
+- Improve deck loading process
+- Increase maximum zoom out
 
 ## Current Sprint
+- Highlight selected buttons in orange instead of purple
 - In Deck Editor, make search button clear filters and only do search by name in name input field
-  - Show name filter in filters bar 
+  - Show name filter in filters bar (in quotes)
   - Show condensed value of enum filters in filters bar
-- Fix: NetworkDiscovery error on iOS sleep
+- Group cards in the deck editor with a number instead of stacking them
+
+## Backlog
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
-
-## Backlog
 - Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
-- Fix: Swipe registered on zoom attempt
 - Fix: UWP join and host
+- Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
-- Group cards in the deck editor with a number instead of stacking them
-- Make zx be alt for column, and cv be alt for page
-- Get rid of current cv by mapping functionality to page
 - Add rate limit for how often to update allCards and allSets
 - Support Number card property data type (decimals)
 - Enhance boolean card property data type
@@ -39,9 +34,8 @@ permalink: roadmap.html
 - Add option to restart game in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
-- Increase maximum zoom out
-- Have card info viewer only go down a sliver on press in play mode; second press can bring it down like normal
 - Have view for only hand vs view for only field
+- Have card info viewer only go down a sliver on press in play mode; second press can bring it down like normal
 - Card Grouping
   - Define card zones in play area
     - Card zones can define what actions are possible in that zone
@@ -56,8 +50,6 @@ permalink: roadmap.html
   - Double-clicking takes a default action, based on the zone the card is in
   - Single-click show menu with all possible actions at the bottom
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Support Android TV and tvOS
-- Highlight selected buttons in orange instead of purple
 - Support Controller:
   - LEFT-STICK: Horizontal/Vertical
   - D-PAD: Horizontal/Vertical
@@ -74,6 +66,7 @@ permalink: roadmap.html
   - R2: FocusText
   - L3: Submit
   - R3: Delete
+- Support Android TV and tvOS
 
 ## Icebox
 - Add displayEmptyFirst property to put the empty enum value at the front of the list in the card search menu

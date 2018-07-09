@@ -4,7 +4,6 @@ public static class Inputs
 {
     public const KeyCode BluetoothReturn = (KeyCode)10;
     public const string Cancel = "Cancel";
-    public const string CardViewer = "CardViewer";
     public const string Column = "Column";
     public const string Delete = "Delete";
     public const string Filter = "Filter";

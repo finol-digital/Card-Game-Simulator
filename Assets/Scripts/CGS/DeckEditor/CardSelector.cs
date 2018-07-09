@@ -47,7 +47,7 @@ public class CardSelector : MonoBehaviour
                 else
                     ShiftLeft();
             }
-            else if (Input.GetButtonDown(Inputs.Page))
+            else if (Input.GetButtonDown(Inputs.Page) && !CardInfoViewer.Instance.IsVisible)
             {
                 if (Input.GetAxis(Inputs.Page) > 0)
                     PageRight();

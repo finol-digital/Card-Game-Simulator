@@ -54,9 +54,9 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
         if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)
             SelectedCardModel.DoubleClickAction(SelectedCardModel);
-        else if (Input.GetButtonDown(Inputs.CardViewer))
+        else if (Input.GetButtonDown(Inputs.Page))
         {
-            if (Input.GetAxis(Inputs.CardViewer) > 0)
+            if (Input.GetAxis(Inputs.Page) > 0)
                 IncrementProperty();
             else
                 DecrementProperty();
