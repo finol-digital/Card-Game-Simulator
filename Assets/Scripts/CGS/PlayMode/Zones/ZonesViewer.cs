@@ -8,7 +8,7 @@ public class ZonesViewer : MonoBehaviour
     public const float Width = 350f;
     public const float Height = 300f;
     public const float ScrollbarWidth = 80f;
-    
+
     public bool IsPortrait => ((RectTransform)transform).sizeDelta.y > ((RectTransform)transform).sizeDelta.x;
 
     public GameObject resultsZonePrefab;
@@ -46,27 +46,32 @@ public class ZonesViewer : MonoBehaviour
     {
         float height = Height;
         int siblingIndex = 3;
-        if (Results != null) {
+        if (Results != null)
+        {
             height += ((RectTransform)Results.transform).rect.height;
             Results.transform.SetSiblingIndex(siblingIndex);
             siblingIndex++;
         }
-        if (Discard != null) {
+        if (Discard != null)
+        {
             height += ((RectTransform)Discard.transform).rect.height;
             Discard.transform.SetSiblingIndex(siblingIndex);
             siblingIndex++;
         }
-        foreach (ExtensibleCardZone zone in ExtraZones) {
+        foreach (ExtensibleCardZone zone in ExtraZones)
+        {
             height += ((RectTransform)zone.transform).rect.height;
             zone.transform.SetSiblingIndex(siblingIndex);
             siblingIndex++;
         }
-        if (CurrentDeck != null) {
+        if (CurrentDeck != null)
+        {
             height += ((RectTransform)CurrentDeck.transform).rect.height;
             CurrentDeck.transform.SetSiblingIndex(siblingIndex);
             siblingIndex++;
         }
-        if (Hand != null) {
+        if (Hand != null)
+        {
             height += ((RectTransform)Hand.transform).rect.height;
             Hand.transform.SetSiblingIndex(siblingIndex);
             siblingIndex++;
@@ -135,9 +140,10 @@ public class ZonesViewer : MonoBehaviour
         hideButton.SetActive(IsExtended && IsVisible);
     }
 
-    public bool IsExtended {
+    public bool IsExtended
+    {
         get {
-            return ((RectTransform)scrollView.transform.parent).anchoredPosition.x < 1 ;
+            return ((RectTransform)scrollView.transform.parent).anchoredPosition.x < 1;
         }
         set {
             RectTransform.Edge edge = RectTransform.Edge.Right;
@@ -154,7 +160,8 @@ public class ZonesViewer : MonoBehaviour
         }
     }
 
-    public bool IsVisible {
+    public bool IsVisible
+    {
         get { return scrollView.gameObject.activeSelf; }
         set {
             scrollView.gameObject.SetActive(value);

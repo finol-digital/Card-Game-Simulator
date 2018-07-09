@@ -83,7 +83,8 @@ public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
 
     public IEnumerator DisplayShuffle()
     {
-        if (statusText != null) {
+        if (statusText != null)
+        {
             statusText.gameObject.SetActive(true);
             yield return new WaitForSeconds(1);
             statusText.gameObject.SetActive(false);

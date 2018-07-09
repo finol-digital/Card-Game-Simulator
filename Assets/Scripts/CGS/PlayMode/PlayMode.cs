@@ -162,17 +162,17 @@ public class PlayMode : MonoBehaviour
             zones.CreateHand();
 
         if (CardGameManager.Current.GameStartHandCount > 0)
-            CardGameManager.Instance.Messenger.Prompt(DealHandPrompt, DealStartingHand);
+            CardGameManager.Instance.Messenger.Ask(DealHandPrompt, () => { }, DealStartingHand);
     }
 
     public void DealStartingHand()
     {
         if (zones.Hand == null)
             return;
- 
+
         if (!zones.Hand.IsExtended)
             zones.Hand.ToggleExtension();
-        
+
         Deal(CardGameManager.Current.GameStartHandCount);
     }
 
@@ -183,7 +183,7 @@ public class PlayMode : MonoBehaviour
 
     public void Burn(int cardCount)
     {
-        foreach(Card card in PopDeckCards(cardCount))
+        foreach (Card card in PopDeckCards(cardCount))
             CatchDiscard(card);
     }
 

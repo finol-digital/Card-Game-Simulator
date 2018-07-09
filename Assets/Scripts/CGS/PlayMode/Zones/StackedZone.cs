@@ -48,7 +48,8 @@ public class StackedZone : ExtensibleCardZone
             cardModel.IsFacedown = false;
 
         int cardIndex = CardModels.Count;
-        if (cardStack == ExtensionCardStack) {
+        if (cardStack == ExtensionCardStack)
+        {
             int transformIndex = cardModel.transform.GetSiblingIndex();
             cardIndex = transformIndex >= 0 && transformIndex < CardModels.Count ? transformIndex : CardModels.Count;
         }
@@ -75,7 +76,7 @@ public class StackedZone : ExtensibleCardZone
         if (CardModels.Count < 1)
             return Card.Blank;
 
-        CardModel cardModel = CardModels [CardModels.Count - 1];
+        CardModel cardModel = CardModels[CardModels.Count - 1];
         Card card = cardModel.Value;
         CardModels.Remove(cardModel);
         Destroy(cardModel.gameObject);
@@ -111,7 +112,8 @@ public class StackedZone : ExtensibleCardZone
             parent = ExtensionCardStack.transform;
 
         int siblingIndex = IsExtended ? 0 : 3;
-        foreach (CardModel cardModel in CardModels) {
+        foreach (CardModel cardModel in CardModels)
+        {
             cardModel.transform.SetParent(parent);
             cardModel.IsFacedown = !IsExtended && !IsFaceup;
             if (IsExtended)
