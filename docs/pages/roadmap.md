@@ -7,9 +7,9 @@ permalink: roadmap.html
 ## What's New
 - Improve deck loading process
 - Increase maximum zoom out
+- Highlight selected buttons in orange and pressed in purple
 
 ## Current Sprint
-- Highlight selected buttons in orange instead of purple
 - Double-click on selection to load it
 - In Deck Editor, make search button clear filters and only do search by name in name input field
   - Show name filter in filters bar (in quotes)
