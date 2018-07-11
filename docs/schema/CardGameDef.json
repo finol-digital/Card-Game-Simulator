@@ -23,7 +23,7 @@
 			"format": "uri"
 		},
 		"allCardsUrlPageCount": {
-			"description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page.",
+			"description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl> with <allCardsUrlPageIdentifier>+<page> for each page.",
 			"default": 1,
 			"type": "integer"
 		},
@@ -37,13 +37,17 @@
 			"type": "integer"
 		},
 		"allCardsUrlPageCountStartIndex": {
-			"description": "allCardsUrlPageCountStartIndex is used to identify the first page of <allCardsUrlPageCount>.",
+			"description": "allCardsUrlPageCountStartIndex is used to identify the first page of allCardsUrlPageCount.",
 			"default": 1,
 			"type": "integer"
 		},
 		"allCardsUrlPageIdentifier": {
-			"description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl>+<allCardsUrlPageIdentifier>+<page> for each page.",
+			"description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl> with <allCardsUrlPageIdentifier>+<page> for each page.",
 			"default": "?page=",
+			"type": "string"
+		},
+		"allCardsUrlPostBodyContent": {
+			"description": "If allCardsUrlPostBodyContent is set, CGS will make a POST to <allCardsUrl> with a JSON body that contains <allCardsUrlPostBodyContent>. If not set, CGS will just GET from <allCardsUrl>.",
 			"type": "string"
 		},
 		"allCardsUrlWrapped": {

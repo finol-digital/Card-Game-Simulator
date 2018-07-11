@@ -171,7 +171,7 @@ static public class UnityExtensionMethods
         File.WriteAllText(filePath, unwrappedContent);
     }
 
-    public static IEnumerator SaveUrlToFile(string url, string filePath)
+    public static IEnumerator SaveUrlToFile(string url, string filePath, string postJsonBody = null)
     {
         if (string.IsNullOrEmpty(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
             yield break;
@@ -182,6 +182,13 @@ static public class UnityExtensionMethods
             yield break;
 
         WWW loader = new WWW(url);
+        if (postJsonBody != null)
+        {
+            Dictionary<string, string> postHeader = new Dictionary<string, string>();
+            postHeader["Content-Type"] = "application/json";
+            loader = new WWW(url, System.Text.Encoding.UTF8.GetBytes(postJsonBody), postHeader);
+        }
+
         yield return loader;
         if (!string.IsNullOrEmpty(loader.error))
             yield break;

@@ -44,11 +44,15 @@ namespace CardGameDef
 
         [JsonProperty]
         public int AllCardsUrlPageCountDivisor { get; set; } = 1;
+
         [JsonProperty]
         public int AllCardsUrlPageCountStartIndex { get; set; } = 1;
 
         [JsonProperty]
         public string AllCardsUrlPageIdentifier { get; set; } = "?page=";
+
+        [JsonProperty]
+        public string AllCardsUrlPostBodyContent { get; set; } = "";
 
         [JsonProperty]
         public bool AllCardsUrlWrapped { get; set; }
@@ -231,13 +235,26 @@ namespace CardGameDef
 
             for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
             {
-                string cardsUrl = AllCardsUrl + (AllCardsUrlPageCount > 1 ? AllCardsUrlPageIdentifier + page : string.Empty);
-                string cardsFile = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty)
-                    + (AllCardsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
-                yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile);
+                string cardsUrl = AllCardsUrl;
+                if (AllCardsUrlPageCount > 1 && string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
+                    cardsUrl += AllCardsUrlPageIdentifier + page;
+                string cardsFile = CardsFilePath;
+                if (page != AllCardsUrlPageCountStartIndex)
+                    cardsFile += page.ToString();
+                if (AllCardsUrlZipped)
+                    cardsFile += UnityExtensionMethods.ZipExtension;
+                string jsonBody = null;
+                if (!string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
+                {
+                    jsonBody = "{" + AllCardsUrlPostBodyContent;
+                    if (AllCardsUrlPageCount > 1)
+                        jsonBody += AllCardsUrlPageIdentifier + page;
+                    jsonBody += "}";
+                }
+                yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody);
                 // Sometimes, we need to get the AllCardsUrlPageCount from the first page of AllCardsUrl
                 if (page == AllCardsUrlPageCountStartIndex && !string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
-                    LoadCard(page);
+                    LoadCards(page);
             }
 
             string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
@@ -293,16 +310,16 @@ namespace CardGameDef
                     enumDef.CreateLookup(key);
         }
 
-        public IEnumerator LoadCards()
+        public IEnumerator LoadAllCards()
         {
             for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
             {
-                LoadCard(page);
+                LoadCards(page);
                 yield return null;
             }
         }
 
-        private void LoadCard(int page)
+        private void LoadCards(int page)
         {
             string cardsFilePath = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
             try

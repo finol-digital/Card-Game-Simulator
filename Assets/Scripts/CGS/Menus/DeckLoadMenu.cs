@@ -33,7 +33,7 @@ public class DeckLoadMenu : SelectionPanel
 
     public OnDeckLoadedDelegate LoadCallback { get; private set; }
     public string SelectedFileName { get; private set; }
-    public Dictionary<string, string> DeckFiles { get; } = new Dictionary<string, string>();
+    public SortedDictionary<string, string> DeckFiles { get; } = new SortedDictionary<string, string>();
 
     void LateUpdate()
     {
@@ -122,9 +122,9 @@ public class DeckLoadMenu : SelectionPanel
         loadFromFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
     }
 
-    public void SelectFile(bool isSelected, string deckFileName)
+    public void SelectFile(bool isOn, string deckFileName)
     {
-        if (!isSelected || string.IsNullOrEmpty(deckFileName))
+        if (string.IsNullOrEmpty(deckFileName))
         {
             SelectedFileName = string.Empty;
             shareFileButton.interactable = false;
@@ -133,14 +133,14 @@ public class DeckLoadMenu : SelectionPanel
             return;
         }
 
-        bool isDoubleSelect = SelectedFileName.Equals(deckFileName);
-        SelectedFileName = deckFileName;
-
-        shareFileButton.interactable = true;
-        deleteFileButton.interactable = true;
-        loadFromFileButton.interactable = true;
-
-        if (isDoubleSelect)
+        if (isOn)
+        {
+            SelectedFileName = deckFileName;
+            shareFileButton.interactable = true;
+            deleteFileButton.interactable = true;
+            loadFromFileButton.interactable = true;
+        }
+        else if (SelectedFileName.Equals(deckFileName))
             LoadFromFileAndHide();
     }
 

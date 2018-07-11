@@ -174,7 +174,7 @@ public class CardGameManager : MonoBehaviour
     public IEnumerator LoadCards()
     {
         //Messenger.Show("Cards are loading in the background. Performance may be affected in the meantime.");
-        yield return Current.LoadCards();
+        yield return Current.LoadAllCards();
         if (!string.IsNullOrEmpty(Current.Error))
             Debug.LogError(GameLoadErrorMessage + Current.Error);
         //Messenger.Show("All cards have finished loading.");

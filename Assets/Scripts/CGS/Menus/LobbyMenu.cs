@@ -78,11 +78,16 @@ public class LobbyMenu : SelectionPanel
 
     public void SelectHost(bool isOn, string hostName)
     {
-        if (!isOn || string.IsNullOrEmpty(hostName))
+        if (string.IsNullOrEmpty(hostName))
             return;
 
-        SelectedHost = hostName;
-        joinButton.interactable = true;
+        if (isOn)
+        {
+            SelectedHost = hostName;
+            joinButton.interactable = true;
+        }
+        else if (SelectedHost.Equals(hostName))
+            Join();
     }
 
     public void Join()
