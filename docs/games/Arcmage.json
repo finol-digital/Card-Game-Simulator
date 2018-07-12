@@ -12,6 +12,7 @@
 	"cardDataIdentifier": "items",
 	"cardIdIdentifier": "guid",
 	"cardImageUrl": "http://aminduna.arcmage.org{card.png}",
+	"cardSetIdentifier": "serie",
 	"cardPrimaryProperty": "ruleText",
 	"cardProperties": [{
 			"name": "faction",

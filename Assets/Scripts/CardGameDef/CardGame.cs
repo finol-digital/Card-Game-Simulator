@@ -247,8 +247,7 @@ namespace CardGameDef
                 if (!string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
                 {
                     jsonBody = "{" + AllCardsUrlPostBodyContent;
-                    if (AllCardsUrlPageCount > 1)
-                        jsonBody += AllCardsUrlPageIdentifier + page;
+                    jsonBody += AllCardsUrlPageIdentifier + page;
                     jsonBody += "}";
                 }
                 yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody);
@@ -449,7 +448,9 @@ namespace CardGameDef
                 foreach (JToken jToken in cardJToken[CardSetIdentifier])
                 {
                     JObject setObject = jToken as JObject;
-                    setCodes.Add(setObject?.Value<string>(SetCodeIdentifier) ?? Set.DefaultCode);
+                    string setCode = setObject?.Value<string>(SetCodeIdentifier);
+                    if (setCode != null)
+                        setCodes.Add(setCode);
                 }
             }
             else
