@@ -80,7 +80,7 @@
 			"type": "string"
 		},
 		{
-			"name": "jpeg",
+			"name": "png",
 			"type": "string"
 		}
 	],
