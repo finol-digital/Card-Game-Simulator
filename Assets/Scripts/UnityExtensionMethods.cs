@@ -174,12 +174,18 @@ static public class UnityExtensionMethods
     public static IEnumerator SaveUrlToFile(string url, string filePath, string postJsonBody = null)
     {
         if (string.IsNullOrEmpty(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+        {
+            Debug.LogWarning("SaveUrlToFile::UrlInvalid:" + url);
             yield break;
+        }
 
         string directory = Path.GetDirectoryName(filePath);
         string fileName = Path.GetFileName(filePath);
         if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
+        {
+            Debug.LogWarning("SaveUrlToFile::FilepathInvalid:" + filePath);
             yield break;
+        }
 
         WWW loader = new WWW(url);
         if (postJsonBody != null)
@@ -191,7 +197,10 @@ static public class UnityExtensionMethods
 
         yield return loader;
         if (!string.IsNullOrEmpty(loader.error))
+        {
+            Debug.LogError(loader.error);
             yield break;
+        }
 
         if (!Directory.Exists(directory))
             Directory.CreateDirectory(directory);

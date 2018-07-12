@@ -347,14 +347,14 @@
 			"default": { "x": 36, "y": 24 },
 			"$ref": "#/definitions/vector2"
 		},
-		"reprintsInCardObjectList": {
-			"description": "If reprintsInCardObjectList is set to true, each card will be duplicated with each set in the object list at <cardSetIdentifier>. The objects should have id=setCode",
-			"type": "boolean"
-		},
 		"rulesUrl": {
 			"description": "rulesUrl should link to this game's online rulebook. This link is accessed in CGS by Main Menu -> Options -> View Online Rules.",
 			"type": "string",
 			"format": "uri"
+		},
+		"setsInCardObject": {
+			"description": "If setsInCardObject is set to true, <cardSetIdentifier> should point to an object or a list of objects. The objects should have setCodeIdentifier set. If it is a list, the card wil be duplicated for each set.",
+			"type": "boolean"
 		},
 		"setCardsIdentifier": {
 			"description": "When defining a set in AllSets.json, you can also define cards to include in that set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",

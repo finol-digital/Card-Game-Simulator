@@ -149,8 +149,8 @@
 	"gameHasDiscardZone": true,
 	"gameStartHandCount": 7,
 	"name": "Arcmage",
-	"reprintsInCardObjectList": true,
 	"rulesUrl": "https://arcmage.org/rules/",
+	"setsInCardObject": true,
 	"setCodeIdentifier": "id",
 	"setDataIdentifier": "series"
 }

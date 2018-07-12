@@ -172,10 +172,10 @@ namespace CardGameDef
         public UnityEngine.Vector2 PlayAreaSize { get; set; } = new UnityEngine.Vector2(36f, 24f);
 
         [JsonProperty]
-        public bool ReprintsInCardObjectList { get; set; }
+        public string RulesUrl { get; set; } = "";
 
         [JsonProperty]
-        public string RulesUrl { get; set; } = "";
+        public bool SetsInCardObject { get; set; }
 
         [JsonProperty]
         public string SetCardsIdentifier { get; set; } = "cards";
@@ -364,11 +364,17 @@ namespace CardGameDef
         public void LoadCardFromJToken(JToken cardJToken, string defaultSetCode)
         {
             if (cardJToken == null)
+            {
+                UnityEngine.Debug.LogWarning("LoadCardFromJToken::NullCardJToken");
                 return;
+            }
 
             string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
             if (string.IsNullOrEmpty(cardId))
+            {
+                UnityEngine.Debug.LogWarning("LoadCardFromJToken::InvalidCardId:" + cardJToken.ToString());
                 return;
+            }
 
             string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
             Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
@@ -443,13 +449,19 @@ namespace CardGameDef
             }
 
             HashSet<string> setCodes = new HashSet<string>();
-            if (ReprintsInCardObjectList)
+            if (SetsInCardObject)
             {
-                foreach (JToken jToken in cardJToken[CardSetIdentifier])
+                JToken setContainer = cardJToken[CardSetIdentifier];
+                List<JToken> setJTokens = (setContainer as JArray)?.ToList() ?? new List<JToken>();
+                if (setJTokens.Count == 0)
+                    setJTokens.Add(setContainer);
+                foreach (JToken jToken in setJTokens)
                 {
                     JObject setObject = jToken as JObject;
                     string setCode = setObject?.Value<string>(SetCodeIdentifier);
-                    if (setCode != null)
+                    if (setCode == null)
+                        UnityEngine.Debug.LogWarning("LoadCardFromJToken::InvalidSetObject:" + setContainer.ToString());
+                    else
                         setCodes.Add(setCode);
                 }
             }
