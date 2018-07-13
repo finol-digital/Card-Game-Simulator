@@ -73,14 +73,11 @@ public class GameSelectionMenu : SelectionPanel
         Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
     }
 
-    public void SelectGame(bool isOn, string gameName)
+    public void SelectGame(Toggle toggle, string gameName)
     {
-        if (isOn)
-        {
-            gameObject.SetActive(true);
+        if (toggle.isOn)
             CardGameManager.Instance.SelectCardGame(gameName);
-        }
-        else
+        else if (!toggle.group.AnyTogglesOn())
             Hide();
     }
 

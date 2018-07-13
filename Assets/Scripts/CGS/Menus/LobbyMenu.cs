@@ -76,17 +76,17 @@ public class LobbyMenu : SelectionPanel
         CGSNetManager.Instance.playController.ShowDeckMenu();
     }
 
-    public void SelectHost(bool isOn, string hostName)
+    public void SelectHost(Toggle toggle, string hostName)
     {
         if (string.IsNullOrEmpty(hostName))
             return;
 
-        if (isOn)
+        if (toggle.isOn)
         {
             SelectedHost = hostName;
             joinButton.interactable = true;
         }
-        else if (SelectedHost.Equals(hostName))
+        else if (!toggle.group.AnyTogglesOn() && SelectedHost.Equals(hostName))
             Join();
     }
 

@@ -51,13 +51,13 @@ public class CardGameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
-        FindCardGames();
-        if (AllCardGames.Count < 1)
+        if (!Directory.Exists(GamesFilePathBase))
             CreateDefaultCardGames();
+        LookupCardGames();
 
         CardGame currentGame;
         Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName), out currentGame)
-             ? currentGame : new CardGame();
+             ? currentGame : AllCardGames.First().Value;
 
         if (Debug.isDebugBuild)
             Application.logMessageReceived += ShowLogToUser;
@@ -67,18 +67,17 @@ public class CardGameManager : MonoBehaviour
 
     private void CreateDefaultCardGames()
     {
-#if !UNITY_ANDROID || UNITY_EDITOR
-        UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
-#else
+#if UNITY_ANDROID && !UNITY_EDITOR
         UnityExtensionMethods.ExtractAndroidStreamingAssets(GamesFilePathBase);
+#else
+        UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
 #endif
-        FindCardGames();
     }
 
-    private void FindCardGames()
+    private void LookupCardGames()
     {
-        if (!Directory.Exists(GamesFilePathBase))
-            return;
+        if (!Directory.Exists(GamesFilePathBase) || Directory.GetDirectories(GamesFilePathBase).Length < 1)
+            CreateDefaultCardGames();
 
         foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase))
         {

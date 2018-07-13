@@ -198,7 +198,7 @@ static public class UnityExtensionMethods
         yield return loader;
         if (!string.IsNullOrEmpty(loader.error))
         {
-            Debug.LogError(loader.error);
+            Debug.LogError(url + ":" + loader.error);
             yield break;
         }
 

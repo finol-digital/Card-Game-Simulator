@@ -39,6 +39,9 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
 
     void Update()
     {
+        if (IsVisible && EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
+            EventSystem.current.SetSelectedGameObject(gameObject);
+
         infoPanel.anchorMin = IsVisible ?
             new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, VisibleYMin, AnimationSpeed * Time.deltaTime)) :
             new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, HiddenYmin, AnimationSpeed * Time.deltaTime));

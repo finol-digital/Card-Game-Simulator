@@ -122,7 +122,7 @@ public class DeckLoadMenu : SelectionPanel
         loadFromFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
     }
 
-    public void SelectFile(bool isOn, string deckFileName)
+    public void SelectFile(Toggle toggle, string deckFileName)
     {
         if (string.IsNullOrEmpty(deckFileName))
         {
@@ -133,14 +133,14 @@ public class DeckLoadMenu : SelectionPanel
             return;
         }
 
-        if (isOn)
+        if (toggle.isOn)
         {
             SelectedFileName = deckFileName;
             shareFileButton.interactable = true;
             deleteFileButton.interactable = true;
             loadFromFileButton.interactable = true;
         }
-        else if (SelectedFileName.Equals(deckFileName))
+        else if (!toggle.group.AnyTogglesOn() && SelectedFileName.Equals(deckFileName))
             LoadFromFileAndHide();
     }
 
