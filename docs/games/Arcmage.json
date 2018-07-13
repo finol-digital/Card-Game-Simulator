@@ -11,7 +11,8 @@
 	"cardBackImageUrl": "https://arcmage.org/wp-content/uploads/2018/07/back-213x300.png",
 	"cardDataIdentifier": "items",
 	"cardIdIdentifier": "guid",
-	"cardImageUrl": "http://aminduna.arcmage.org{card.png}",
+	"cardImageFileType": "jpg",
+	"cardImageUrl": "http://aminduna.arcmage.org{card.jpeg}",
 	"cardSetIdentifier": "serie",
 	"cardPrimaryProperty": "ruleText",
 	"cardProperties": [{
@@ -80,7 +81,7 @@
 			"type": "string"
 		},
 		{
-			"name": "png",
+			"name": "jpeg",
 			"type": "string"
 		}
 	],
