@@ -11,6 +11,7 @@ permalink: roadmap.html
 - Increase maximum zoom out
 
 ## Current Sprint
+- Add link to json schema validator
 - In Deck Editor, make search button clear filters and only do search by name in name input field
   - Show name filter in filters bar (in quotes)
   - Show condensed value of enum filters in filters bar

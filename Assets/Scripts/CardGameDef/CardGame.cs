@@ -257,7 +257,8 @@ namespace CardGameDef
             }
 
             string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
-            yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
+            if (!string.IsNullOrEmpty(AllSetsUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
 
             yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
             yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
