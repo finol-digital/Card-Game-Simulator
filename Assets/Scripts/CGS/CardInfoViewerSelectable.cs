@@ -18,7 +18,7 @@ public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISel
 
     public void OnDeselect(BaseEventData eventData)
     {
-        if (ignoreDeselect)
+        if (ignoreDeselect || CardInfoViewer.Instance == null)
             return;
 
         if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
