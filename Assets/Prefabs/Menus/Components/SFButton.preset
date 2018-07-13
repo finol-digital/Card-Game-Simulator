@@ -70,11 +70,11 @@ Preset:
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_Colors.m_HighlightedColor.r
-    value: 0.88235295
+    value: 1
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_Colors.m_HighlightedColor.g
-    value: 0.42745098
+    value: 0.4509804
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_Colors.m_HighlightedColor.b

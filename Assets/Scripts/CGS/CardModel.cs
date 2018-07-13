@@ -21,7 +21,7 @@ public enum DragPhase
 public class CardModel : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public const float MovementSpeed = 600f;
-    public static readonly Color SelectedHighlightColor = new Color(0.39f, 0.29f, 0.79f);
+    public static readonly Color SelectedHighlightColor = new Color(1f, 0.45f, 0f);
     public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
 
     public bool IsOnline => CGSNetManager.Instance != null && CGSNetManager.Instance.isNetworkActive
