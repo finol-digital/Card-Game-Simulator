@@ -82,7 +82,7 @@ PlayerSettings:
   forceSingleInstance: 0
   resizableWindow: 0
   useMacAppStoreValidation: 0
-  macAppStoreCategory: public.app-category.games
+  macAppStoreCategory: public.app-category.card-games
   gpuSkinning: 0
   graphicsJobs: 0
   xboxPIXTextureCapture: 0
