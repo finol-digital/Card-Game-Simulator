@@ -1,0 +1,46 @@
+#!/usr/bin/perl
+
+
+#BEGIN APPLY ENTITLEMENTS
+UNITYENTITLEMENTSTOOL:
+my $EntitlementsPublishFile = $ARGV[0];
+my $EntitlementsPublishTarget = $ARGV[1];
+my $EntitlementsPublishFileName = $ARGV[0]; chop($EntitlementsPublishFileName); chop($EntitlementsPublishFileName); chop($EntitlementsPublishFileName);
+my $EntitlementsPackageFile = $EntitlementsPublishFileName . 'pkg';
+if ((($EntitlementsPublishTarget eq "standaloneOSXIntel") || ($EntitlementsPublishTarget eq "standaloneOSXUniversal") || ($EntitlementsPublishTarget eq "Unsupported build target!")) && ($EntitlementsPublishFile =~ /.app$/) && (-d $EntitlementsPublishFile) && ($^O == "darwin")) {
+    system("/bin/chmod -R a+rwx \"$EntitlementsPublishFile\"");
+    system("defaults write \"$EntitlementsPublishFile/Contents/Info.plist\" \"CFBundleIdentifier\" -string \"com.finoldigital.CardGameSimulator\"");
+    system("defaults write \"$EntitlementsPublishFile/Contents/Info.plist\" \"LSApplicationCategoryType\" -string \"public.app-category.card-games\"");
+    system("defaults write \"$EntitlementsPublishFile/Contents/Info.plist\" \"CFBundleVersion\" -string \"1.3.0\"");
+    system("defaults write \"$EntitlementsPublishFile/Contents/Info.plist\" \"CFBundleShortVersionString\" -string \"1.3.0\"");
+    system("find \"$jEntitlementsPublishFile\" -name \*.meta -exec rm -r \"{{}}\" \\;");
+    system("/usr/sbin/chown -RH \"finoldigital:staff\" \"$EntitlementsPublishFile\"");
+    system("/bin/chmod -RH u+w,go-w,a+rX \"$EntitlementsPublishFile\"");
+    my $CodesignEnvironment = $ENV{'CODESIGN_ALLOCATE'};
+    $ENV{'CODESIGN_ALLOCATE'}="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/codesign_allocate";
+    recursiveCodesign("$EntitlementsPublishFile/Contents/Frameworks");
+    recursiveCodesign("$EntitlementsPublishFile/Contents/Plugins");
+    system("/usr/bin/codesign --force --timestamp=none --sign \"Developer ID Application: Finol Digital LLC (49G524X5NY)\" --entitlements \"/Users/finoldigital/Documents/GitHub/Card-Game-Simulator/Assets/Editor/entitlements.entitlements\" \"$EntitlementsPublishFile\"");
+    system("rm -R \"$EntitlementsPublishFileName (Untouched).app\"");
+    system("cp -R \"$EntitlementsPublishFile\" \"$EntitlementsPublishFileName (Untouched).app\"");
+    system("/usr/bin/productbuild --component \"$EntitlementsPublishFile\" /Applications --sign \"3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)\" --product \"$EntitlementsPublishFile/Contents/Info.plist\" \"$EntitlementsPackageFile\"");
+    $ENV{'CODESIGN_ALLOCATE'}=$CodesignEnvironment;
+}
+
+sub recursiveCodesign {
+    my $dirName = shift;
+    opendir my($dh), $dirName or return;
+    my @files = readdir($dh);
+    closedir $dh;
+    foreach my $currentFile (@files) {
+        next if $currentFile =~ /^\.{1,2}$/;
+        if ( lc($currentFile) =~ /.bundle$/ or lc($currentFile) =~ /.dylib$/ or lc($currentFile) =~ /.a$/ or lc($currentFile) =~ /.so$/ or lc($currentFile) =~ /.lib$/ or (-f "$dirName/$currentFile" && $currentFile =~ /^[^.]*$/ && `file "$dirName/$currentFile"` =~ /Mach-O/) ) {
+            system("/usr/bin/codesign --force --timestamp=none --sign \"Developer ID Application: Finol Digital LLC (49G524X5NY)\" --entitlements \"/Users/finoldigital/Documents/GitHub/Card-Game-Simulator/Assets/Editor/entitlements.entitlements\" \"$dirName/$currentFile\"");
+        }
+        if (-d "$dirName/$currentFile") {
+            recursiveCodesign("$dirName/$currentFile");
+        }
+    }
+}
+#END APPLY ENTITLEMENTS
+
