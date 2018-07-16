@@ -91,7 +91,7 @@ namespace CardGameDef
             if (tokens.Count > 0 && int.TryParse(tokens[0], out cardCount))
                 tokens.RemoveAt(0);
             string cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
-            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(null, cardName, null, null, null, null, null);
+            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(new CardSearchFilters() { Name = cardName });
             foreach (Card card in cards)
             {
                 if (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase))
@@ -190,7 +190,7 @@ namespace CardGameDef
                 cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
             }
 
-            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(cardId, cardName, cardSet, null, null, null, null);
+            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(new CardSearchFilters() { Id = cardId, Name = cardName, SetCode = cardSet });
             foreach (Card card in cards)
             {
                 if (!card.Id.Equals(cardId) && (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) ||

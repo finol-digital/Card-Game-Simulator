@@ -1804,7 +1804,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114126704938545522}
-        m_MethodName: set_NameFilter
+        m_MethodName: SetNameFilter
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2022,7 +2022,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114126704938545522}
-        m_MethodName: set_SetCodeFilter
+        m_MethodName: SetCodeFilter
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2344,7 +2344,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114126704938545522}
-        m_MethodName: set_IdFilter
+        m_MethodName: SetIdFilter
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

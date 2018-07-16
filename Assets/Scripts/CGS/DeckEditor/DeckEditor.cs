@@ -97,7 +97,7 @@ public class DeckEditor : MonoBehaviour, ICardDropHandler
         if (!CardGameManager.Current.CardNameIsAtTop)
             LabelCardsInStacks();
 
-        if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
+        if (CardInfoViewer.Instance.IsVisible || CardGameManager.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
             return;
 
         if (Input.GetButtonDown(Inputs.Sort))

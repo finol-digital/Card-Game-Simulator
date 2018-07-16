@@ -500,40 +500,33 @@ namespace CardGameDef
                 LoadCardFromJToken(jToken, setCode);
         }
 
-        public IEnumerable<Card> FilterCards(string id, string name, string setCode, Dictionary<string, string> stringProperties, Dictionary<string, int> intMinProperties, Dictionary<string, int> intMaxProperties, Dictionary<string, int> enumProperties)
+        public IEnumerable<Card> FilterCards(CardSearchFilters filters)
         {
-            if (id == null)
-                id = string.Empty;
-            if (name == null)
-                name = string.Empty;
-            if (setCode == null)
-                setCode = string.Empty;
-            if (stringProperties == null)
-                stringProperties = new Dictionary<string, string>();
-            if (intMinProperties == null)
-                intMinProperties = new Dictionary<string, int>();
-            if (intMaxProperties == null)
-                intMaxProperties = new Dictionary<string, int>();
-            if (enumProperties == null)
-                enumProperties = new Dictionary<string, int>();
+            if (filters == null)
+            {
+                UnityEngine.Debug.LogWarning("FilterCards::NullFilters");
+                yield break;
+            }
 
             foreach (Card card in Cards.Values)
             {
-                if (!name.ToLower().Split(' ').All(card.Name.ToLower().Contains))
+                if (!string.IsNullOrEmpty(filters.Name) && !filters.Name.ToLower().Split(' ').All(card.Name.ToLower().Contains))
                     continue;
-                if (!card.Id.ToLower().Contains(id.ToLower()) || !card.SetCode.ToLower().Contains(setCode.ToLower()))
+                if (!string.IsNullOrEmpty(filters.Id) && !card.Id.ToLower().Contains(filters.Id.ToLower()))
+                    continue;
+                if (!string.IsNullOrEmpty(filters.SetCode) && !card.SetCode.ToLower().Contains(filters.SetCode.ToLower()))
                     continue;
                 bool propsMatch = true;
-                foreach (KeyValuePair<string, string> entry in stringProperties)
+                foreach (KeyValuePair<string, string> entry in filters.StringProperties)
                     if (!card.GetPropertyValueString(entry.Key).ToLower().Contains(entry.Value.ToLower()))
                         propsMatch = false;
-                foreach (KeyValuePair<string, int> entry in intMinProperties)
+                foreach (KeyValuePair<string, int> entry in filters.IntMinProperties)
                     if (card.GetPropertyValueInt(entry.Key) < entry.Value)
                         propsMatch = false;
-                foreach (KeyValuePair<string, int> entry in intMaxProperties)
+                foreach (KeyValuePair<string, int> entry in filters.IntMaxProperties)
                     if (card.GetPropertyValueInt(entry.Key) > entry.Value)
                         propsMatch = false;
-                foreach (KeyValuePair<string, int> entry in enumProperties)
+                foreach (KeyValuePair<string, int> entry in filters.EnumProperties)
                 {
                     EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(entry.Key));
                     if (enumDef == null)
