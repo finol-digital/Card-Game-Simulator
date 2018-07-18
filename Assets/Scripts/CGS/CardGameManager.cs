@@ -12,20 +12,32 @@ public delegate void GameSceneDelegate();
 
 public class CardGameManager : MonoBehaviour
 {
-    public const string CardGameManagerTag = "CardGameManager";
-    public const string BackgroundImageTag = "Background";
-    public const string CardCanvasTag = "CardCanvas";
-    public const string MenuCanvasTag = "MenuCanvas";
-    public const string SelectorPrefabName = "Game Selection Menu";
     public const string PlayerPrefGameName = "DefaultGame";
-    public const string FirstGameName = "Standard Playing Cards";
+    public const string SelectorPrefabName = "Game Selection Menu";
     public const string MessengerPrefabName = "Popup";
     public const string InvalidGameSelectionMessage = "Could not select the card game because the name is not recognized in the list of card games! Try selecting a different card game.";
     public const string GameLoadErrorMessage = "Error loading game!: ";
     public const string GameDeleteErrorMessage = "Error deleting game!: ";
     public const int PixelsPerInch = 100;
 
-    public static string GamesFilePathBase => Application.persistentDataPath + "/games";
+    public static CardGameManager Instance
+    {
+        get
+        {
+            if (IsQuitting) return null;
+            if (_instance != null) return _instance;
+            GameObject cardGameManager = GameObject.FindGameObjectWithTag(Tags.CardGameManager);
+            if (cardGameManager == null)
+            {
+                cardGameManager = new GameObject(Tags.CardGameManager) { tag = Tags.CardGameManager };
+                cardGameManager.transform.position = Vector3.zero;
+            }
+            _instance = cardGameManager.GetOrAddComponent<CardGameManager>();
+            return _instance;
+        }
+    }
+    private static CardGameManager _instance;
+
     public static CardGame Current { get; private set; } = new CardGame();
     public static bool IsQuitting { get; private set; }
 
@@ -36,10 +48,64 @@ public class CardGameManager : MonoBehaviour
     public LobbyDiscovery Discovery => _discovery ??
                                          (_discovery = gameObject.GetOrAddComponent<LobbyDiscovery>());
 
-    private static CardGameManager _instance;
     private GameSelectionMenu _selector;
+    public GameSelectionMenu Selector
+    {
+        get
+        {
+            if (_selector != null) return _selector;
+            _selector = Instantiate(Resources.Load<GameObject>(SelectorPrefabName)).GetOrAddComponent<GameSelectionMenu>();
+            _selector.transform.SetParent(null);
+            return _selector;
+        }
+    }
+
     private Popup _messenger;
+    public Popup Messenger
+    {
+        get
+        {
+            if (_messenger != null) return _messenger;
+            _messenger = Instantiate(Resources.Load<GameObject>(MessengerPrefabName)).GetOrAddComponent<Popup>();
+            _messenger.transform.SetParent(transform);
+            return _messenger;
+        }
+    }
     private Image _backgroundImage;
+
+    public Image BackgroundImage
+    {
+        get
+        {
+            if (_backgroundImage == null && GameObject.FindGameObjectWithTag(Tags.BackgroundImage) != null)
+                _backgroundImage = GameObject.FindGameObjectWithTag(Tags.BackgroundImage).GetOrAddComponent<Image>();
+            return _backgroundImage;
+        }
+    }
+
+    public static Canvas TopCardCanvas
+    {
+        get
+        {
+            Canvas topCanvas = null;
+            foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(Tags.CardCanvas))
+                if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
+                    topCanvas = canvas.GetComponent<Canvas>();
+            return topCanvas;
+        }
+    }
+
+    public static Canvas TopMenuCanvas
+    {
+        get
+        {
+            Canvas topCanvas = null;
+            foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(Tags.MenuCanvas))
+                if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
+                    topCanvas = canvas.GetComponent<Canvas>();
+            return topCanvas;
+        }
+    }
 
     void Awake()
     {
@@ -51,12 +117,12 @@ public class CardGameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (!Directory.Exists(GamesFilePathBase))
+        if (!Directory.Exists(CardGame.GamesDirectoryPath))
             CreateDefaultCardGames();
         LookupCardGames();
 
         CardGame currentGame;
-        Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName, FirstGameName), out currentGame)
+        Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName), out currentGame)
              ? currentGame : AllCardGames.First().Value;
 
         if (Debug.isDebugBuild)
@@ -68,20 +134,20 @@ public class CardGameManager : MonoBehaviour
     private void CreateDefaultCardGames()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        UnityExtensionMethods.ExtractAndroidStreamingAssets(GamesFilePathBase);
+        UnityExtensionMethods.ExtractAndroidStreamingAssets(CardGame.GamesDirectoryPath);
 #else
-        UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, GamesFilePathBase);
+        UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, CardGame.GamesDirectoryPath);
 #endif
     }
 
     private void LookupCardGames()
     {
-        if (!Directory.Exists(GamesFilePathBase) || Directory.GetDirectories(GamesFilePathBase).Length < 1)
+        if (!Directory.Exists(CardGame.GamesDirectoryPath) || Directory.GetDirectories(CardGame.GamesDirectoryPath).Length < 1)
             CreateDefaultCardGames();
 
-        foreach (string gameDirectory in Directory.GetDirectories(GamesFilePathBase))
+        foreach (string gameDirectory in Directory.GetDirectories(CardGame.GamesDirectoryPath))
         {
-            string gameName = gameDirectory.Substring(GamesFilePathBase.Length + 1);
+            string gameName = gameDirectory.Substring(CardGame.GamesDirectoryPath.Length + 1);
             AllCardGames[gameName] = new CardGame(gameName, string.Empty);
         }
     }
@@ -204,7 +270,7 @@ public class CardGameManager : MonoBehaviour
     {
         try
         {
-            Directory.Delete(Current.FilePathBase, true);
+            Directory.Delete(Current.GameFolderPath, true);
             AllCardGames.Remove(Current.Name);
             SelectCardGame(AllCardGames.Keys.First());
             Selector.Show();
@@ -223,77 +289,5 @@ public class CardGameManager : MonoBehaviour
     void OnApplicationQuit()
     {
         IsQuitting = true;
-    }
-
-    public static CardGameManager Instance
-    {
-        get
-        {
-            if (IsQuitting) return null;
-            if (_instance != null) return _instance;
-            GameObject cardGameManager = GameObject.FindGameObjectWithTag(CardGameManagerTag);
-            if (cardGameManager == null)
-            {
-                cardGameManager = new GameObject(CardGameManagerTag) { tag = CardGameManagerTag };
-                cardGameManager.transform.position = Vector3.zero;
-            }
-            _instance = cardGameManager.GetOrAddComponent<CardGameManager>();
-            return _instance;
-        }
-    }
-
-    public GameSelectionMenu Selector
-    {
-        get
-        {
-            if (_selector != null) return _selector;
-            _selector = Instantiate(Resources.Load<GameObject>(SelectorPrefabName)).GetOrAddComponent<GameSelectionMenu>();
-            _selector.transform.SetParent(null);
-            return _selector;
-        }
-    }
-
-    public Popup Messenger
-    {
-        get
-        {
-            if (_messenger != null) return _messenger;
-            _messenger = Instantiate(Resources.Load<GameObject>(MessengerPrefabName)).GetOrAddComponent<Popup>();
-            _messenger.transform.SetParent(transform);
-            return _messenger;
-        }
-    }
-    public Image BackgroundImage
-    {
-        get
-        {
-            if (_backgroundImage == null && GameObject.FindGameObjectWithTag(BackgroundImageTag) != null)
-                _backgroundImage = GameObject.FindGameObjectWithTag(BackgroundImageTag).GetOrAddComponent<Image>();
-            return _backgroundImage;
-        }
-    }
-
-    public static Canvas TopCardCanvas
-    {
-        get
-        {
-            Canvas topCanvas = null;
-            foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(CardCanvasTag))
-                if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
-                    topCanvas = canvas.GetComponent<Canvas>();
-            return topCanvas;
-        }
-    }
-
-    public static Canvas TopMenuCanvas
-    {
-        get
-        {
-            Canvas topCanvas = null;
-            foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(MenuCanvasTag))
-                if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
-                    topCanvas = canvas.GetComponent<Canvas>();
-            return topCanvas;
-        }
     }
 }

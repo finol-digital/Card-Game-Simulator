@@ -17,7 +17,7 @@ public class DeckSaveMenu : MonoBehaviour
     public TMPro.TMP_Text textOutputArea;
 
     public Deck CurrentDeck { get; private set; }
-    public OnDeckNameChangeDelegate NameChangeCallback { get; private set; }
+    public OnNameChangeDelegate NameChangeCallback { get; private set; }
     public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
     public bool DoesAutoOverwrite { get; private set; }
 
@@ -36,7 +36,7 @@ public class DeckSaveMenu : MonoBehaviour
             Hide();
     }
 
-    public void Show(Deck deckToShow, OnDeckNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
+    public void Show(Deck deckToShow, OnNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
     {
         gameObject.SetActive(true);
         transform.SetAsLastSibling();

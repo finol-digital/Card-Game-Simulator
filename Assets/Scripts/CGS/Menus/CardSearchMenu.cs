@@ -21,7 +21,7 @@ public class CardSearchMenu : MonoBehaviour
     public SearchPropertyPanel integerPropertyPanel;
     public SearchPropertyPanel enumPropertyPanel;
 
-    public OnDeckNameChangeDelegate NameChangeCallback { get; set; }
+    public OnNameChangeDelegate NameChangeCallback { get; set; }
     public OnSearchDelegate SearchCallback { get; set; }
 
     public List<GameObject> FilterPanels { get; } = new List<GameObject>();
@@ -30,6 +30,34 @@ public class CardSearchMenu : MonoBehaviour
 
     public CardSearchFilters Filters { get; } = new CardSearchFilters();
     public List<Card> Results { get; } = new List<Card>();
+
+    public InputField ActiveInputField
+    {
+        get
+        {
+            return EventSystem.current.currentSelectedGameObject != null
+                ? EventSystem.current.currentSelectedGameObject?.GetComponent<InputField>() : null;
+        }
+        set
+        {
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(value.gameObject);
+        }
+    }
+
+    public Toggle ActiveToggle
+    {
+        get
+        {
+            return EventSystem.current.currentSelectedGameObject != null
+                ? EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>() : null;
+        }
+        set
+        {
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(value.gameObject);
+        }
+    }
 
     void LateUpdate()
     {
@@ -179,7 +207,7 @@ public class CardSearchMenu : MonoBehaviour
         ActiveToggle.isOn = !ActiveToggle.isOn;
     }
 
-    public void Show(OnDeckNameChangeDelegate nameChangeCallback, OnSearchDelegate searchCallback)
+    public void Show(OnNameChangeDelegate nameChangeCallback, OnSearchDelegate searchCallback)
     {
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
@@ -315,7 +343,10 @@ public class CardSearchMenu : MonoBehaviour
 
     public void SetNameFilter(string name)
     {
-        Filters.Name = name;
+        Filters.Name = NameChangeCallback != null ? NameChangeCallback(name) : name;
+
+        if (!nameInputField.text.Equals(Filters.Name))
+            nameInputField.text = Filters.Name;
     }
 
     public void SetIdFilter(string id)
@@ -393,6 +424,9 @@ public class CardSearchMenu : MonoBehaviour
         foreach (Toggle toggle in GetComponentsInChildren<Toggle>())
             toggle.isOn = false;
 
+        Filters.Name = string.Empty;
+        Filters.Id = string.Empty;
+        Filters.SetCode = string.Empty;
         Filters.StringProperties.Clear();
         Filters.IntMinProperties.Clear();
         Filters.IntMaxProperties.Clear();
@@ -402,6 +436,14 @@ public class CardSearchMenu : MonoBehaviour
     public void ClearSearch()
     {
         ClearFilters();
+        Search();
+    }
+
+    public void ClearSearchName()
+    {
+        string name = Filters.Name;
+        ClearFilters();
+        SetNameFilter(name);
         Search();
     }
 
@@ -417,33 +459,5 @@ public class CardSearchMenu : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
-    }
-
-    public InputField ActiveInputField
-    {
-        get
-        {
-            return EventSystem.current.currentSelectedGameObject != null
-                ? EventSystem.current.currentSelectedGameObject?.GetComponent<InputField>() : null;
-        }
-        set
-        {
-            if (!EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(value.gameObject);
-        }
-    }
-
-    public Toggle ActiveToggle
-    {
-        get
-        {
-            return EventSystem.current.currentSelectedGameObject != null
-                ? EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>() : null;
-        }
-        set
-        {
-            if (!EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(value.gameObject);
-        }
     }
 }

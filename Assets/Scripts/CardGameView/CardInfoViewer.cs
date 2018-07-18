@@ -6,13 +6,26 @@ using UnityEngine.EventSystems;
 
 public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
 {
-    public const string CardInfoViewerTag = "CardInfoViewer";
     public const string SetLabel = "Set";
     public const float VisibleYMin = 0.625f;
     public const float VisibleYMax = 1;
     public const float HiddenYmin = 1.025f;
     public const float HiddenYMax = 1.4f;
     public const float AnimationSpeed = 5.0f;
+
+    public static CardInfoViewer Instance
+    {
+        get
+        {
+            if (_instance != null)
+                return _instance;
+
+            GameObject cardInfoViewer = GameObject.FindWithTag(Tags.CardInfoViewer);
+            _instance = cardInfoViewer?.GetOrAddComponent<CardInfoViewer>();
+            return _instance;
+        }
+    }
+    private static CardInfoViewer _instance;
 
     public RectTransform infoPanel;
     public RectTransform zoomPanel;
@@ -27,10 +40,90 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
     public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
     public Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
 
-    private static CardInfoViewer _instance;
-    private CardModel _selectedCardModel;
+
+    public string SelectedPropertyName
+    {
+        get
+        {
+            string selectedName = SetLabel;
+            if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
+                DisplayNameLookup.TryGetValue(SelectedPropertyDisplay, out selectedName);
+            return selectedName;
+        }
+    }
+    public string SelectedPropertyDisplay
+    {
+        get
+        {
+            string selectedDisplay = SetLabel;
+            if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
+                selectedDisplay = PropertyOptions[SelectedPropertyIndex].text;
+            return selectedDisplay;
+        }
+    }
+    public int SelectedPropertyIndex
+    {
+        get { return _selectedPropertyIndex; }
+        set
+        {
+            _selectedPropertyIndex = value;
+            if (_selectedPropertyIndex < 0)
+                _selectedPropertyIndex = PropertyOptions.Count - 1;
+            if (_selectedPropertyIndex >= PropertyOptions.Count)
+                _selectedPropertyIndex = 0;
+            propertySelection.value = _selectedPropertyIndex;
+            labelText.text = SelectedPropertyDisplay;
+            SetContentText();
+        }
+    }
     private int _selectedPropertyIndex;
+
+    public CardModel SelectedCardModel
+    {
+        get { return _selectedCardModel; }
+        set
+        {
+            if (_selectedCardModel != null)
+                _selectedCardModel.HideHighlight();
+
+            _selectedCardModel = value;
+
+            if (_selectedCardModel == null)
+            {
+                IsVisible = false;
+                return;
+            }
+            cardImage.sprite = _selectedCardModel.GetComponent<Image>().sprite;
+            zoomImage.sprite = cardImage.sprite;
+            nameText.text = _selectedCardModel.Value.Name;
+            idText.text = _selectedCardModel.Value.Id;
+            SetContentText();
+
+            IsVisible = true;
+        }
+    }
+    private CardModel _selectedCardModel;
+
+    public bool IsVisible
+    {
+        get { return _isVisible; }
+        set
+        {
+            _isVisible = value;
+            if (!_isVisible && zoomPanel != null)
+                zoomPanel.gameObject.SetActive(false);
+
+            if (SelectedCardModel == null)
+                return;
+
+            if (_isVisible)
+                SelectedCardModel.ShowHighlight();
+            else
+                SelectedCardModel.HideHighlight();
+        }
+    }
     private bool _isVisible;
+    public bool WasVisible => infoPanel.anchorMax.y < (HiddenYMax + VisibleYMax) / 2.0f;
 
     void Start()
     {
@@ -145,100 +238,4 @@ public class CardInfoViewer : MonoBehaviour, IPointerDownHandler, ISelectHandler
             return;
         zoomPanel.gameObject.SetActive(false);
     }
-
-    public static CardInfoViewer Instance
-    {
-        get
-        {
-            if (_instance != null)
-                return _instance;
-
-            GameObject cardInfoViewer = GameObject.FindWithTag(CardInfoViewerTag);
-            _instance = cardInfoViewer?.GetOrAddComponent<CardInfoViewer>();
-            return _instance;
-        }
-    }
-
-    public string SelectedPropertyName
-    {
-        get
-        {
-            string selectedName = SetLabel;
-            if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
-                DisplayNameLookup.TryGetValue(SelectedPropertyDisplay, out selectedName);
-            return selectedName;
-        }
-    }
-
-    public string SelectedPropertyDisplay
-    {
-        get
-        {
-            string selectedDisplay = SetLabel;
-            if (SelectedPropertyIndex >= 1 && SelectedPropertyIndex < PropertyOptions.Count)
-                selectedDisplay = PropertyOptions[SelectedPropertyIndex].text;
-            return selectedDisplay;
-        }
-    }
-
-    public int SelectedPropertyIndex
-    {
-        get { return _selectedPropertyIndex; }
-        set
-        {
-            _selectedPropertyIndex = value;
-            if (_selectedPropertyIndex < 0)
-                _selectedPropertyIndex = PropertyOptions.Count - 1;
-            if (_selectedPropertyIndex >= PropertyOptions.Count)
-                _selectedPropertyIndex = 0;
-            propertySelection.value = _selectedPropertyIndex;
-            labelText.text = SelectedPropertyDisplay;
-            SetContentText();
-        }
-    }
-
-    public CardModel SelectedCardModel
-    {
-        get { return _selectedCardModel; }
-        set
-        {
-            if (_selectedCardModel != null)
-                _selectedCardModel.HideHighlight();
-
-            _selectedCardModel = value;
-
-            if (_selectedCardModel == null)
-            {
-                IsVisible = false;
-                return;
-            }
-            cardImage.sprite = _selectedCardModel.GetComponent<Image>().sprite;
-            zoomImage.sprite = cardImage.sprite;
-            nameText.text = _selectedCardModel.Value.Name;
-            idText.text = _selectedCardModel.Value.Id;
-            SetContentText();
-
-            IsVisible = true;
-        }
-    }
-
-    public bool IsVisible
-    {
-        get { return _isVisible; }
-        set
-        {
-            _isVisible = value;
-            if (!_isVisible && zoomPanel != null)
-                zoomPanel.gameObject.SetActive(false);
-
-            if (SelectedCardModel == null)
-                return;
-
-            if (_isVisible)
-                SelectedCardModel.ShowHighlight();
-            else
-                SelectedCardModel.HideHighlight();
-        }
-    }
-    public bool WasVisible => infoPanel.anchorMax.y < (HiddenYMax + VisibleYMax) / 2.0f;
 }

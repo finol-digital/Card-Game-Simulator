@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class LobbyMenu : SelectionPanel
 {
-    public Button cancelButton;
     public Button joinButton;
 
     public List<string> HostNames { get; private set; } = new List<string>();
@@ -33,10 +33,13 @@ public class LobbyMenu : SelectionPanel
             Hide();
     }
 
-    public void Show()
+    public void Show(UnityAction cancelAction)
     {
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
+
+        cancelButton.onClick.RemoveAllListeners();
+        cancelButton.onClick.AddListener(cancelAction);
 
         HostNames.Clear();
         SelectedHost = string.Empty;
@@ -63,17 +66,19 @@ public class LobbyMenu : SelectionPanel
         Rebuild(HostNames, SelectHost, SelectedHost);
     }
 
-    public void Host()
+    public void Host(UnityAction cancelAction = null)
     {
         NetworkManager.singleton.StartHost();
-        NetworkManager.singleton.StartCoroutine(WaitToShowDeckLoader());
+        NetworkManager.singleton.StartCoroutine(WaitToShowDeckLoader(cancelAction));
         Hide();
     }
 
-    public IEnumerator WaitToShowDeckLoader()
+    public IEnumerator WaitToShowDeckLoader(UnityAction cancelAction)
     {
         yield return null;
         CGSNetManager.Instance.playController.ShowDeckMenu();
+        CGSNetManager.Instance.playController.DeckLoader.cancelButton.onClick.RemoveAllListeners();
+        CGSNetManager.Instance.playController.DeckLoader.cancelButton.onClick.AddListener(cancelAction);
     }
 
     public void SelectHost(Toggle toggle, string hostName)

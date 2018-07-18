@@ -39,7 +39,12 @@ public class SearchResults : MonoBehaviour
 
     public void SetNameFilter(string nameFilter)
     {
-        CardSearcher.Filters.Name = nameFilter;
+        CardSearcher.SetNameFilter(nameFilter);
+    }
+
+    public void ClearSearchName()
+    {
+        CardSearcher.ClearSearchName();
     }
 
     public void Search()

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using CardGameDef;
 
-public delegate string OnDeckNameChangeDelegate(string newName);
+public delegate string OnNameChangeDelegate(string newName);
 
 public class DeckEditor : MonoBehaviour, ICardDropHandler
 {

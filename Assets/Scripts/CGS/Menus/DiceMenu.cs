@@ -10,10 +10,29 @@ public class DiceMenu : MonoBehaviour
     public Text minText;
     public Text maxText;
 
-    protected RectTransform Target { get; set; }
-
+    public int Min
+    {
+        get { return _min; }
+        set
+        {
+            _min = value;
+            minText.text = _min.ToString();
+        }
+    }
     private int _min;
+
+    public int Max
+    {
+        get { return _max; }
+        set
+        {
+            _max = value;
+            maxText.text = _max.ToString();
+        }
+    }
     private int _max;
+
+    protected RectTransform Target { get; set; }
 
     void Start()
     {
@@ -71,25 +90,5 @@ public class DiceMenu : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
-    }
-
-    public int Min
-    {
-        get { return _min; }
-        set
-        {
-            _min = value;
-            minText.text = _min.ToString();
-        }
-    }
-
-    public int Max
-    {
-        get { return _max; }
-        set
-        {
-            _max = value;
-            maxText.text = _max.ToString();
-        }
     }
 }

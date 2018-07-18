@@ -16,7 +16,6 @@ public class GameSelectionMenu : SelectionPanel
 
     public RectTransform downloadPanel;
     public InputField urlInput;
-    public Button cancelButton;
     public Button downloadButton;
 
     void Update()

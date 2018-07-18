@@ -20,7 +20,7 @@ namespace CardGameDef
         public bool IsLoadingImage { get; set; }
 
         public string ImageFileName => UnityExtensionMethods.GetSafeFileName(Id + "." + CardGameManager.Current.CardImageFileType);
-        public string ImageFilePath => UnityExtensionMethods.GetSafeFilePath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
+        public string ImageFilePath => UnityExtensionMethods.GetSafeFilePath(CardGameManager.Current.GameFolderPath + "/sets/" + SetCode + "/") + ImageFileName;
         public string ImageWebUrl
         {
             get

@@ -42,13 +42,9 @@ public class PlayMode : MonoBehaviour
         playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
 
         if (CardGameManager.Instance.Discovery.HasReceivedBroadcast)
-        {
-            Lobby.cancelButton.onClick.RemoveAllListeners();
-            Lobby.cancelButton.onClick.AddListener(BackToMainMenu);
-            Lobby.Show();
-        }
+            Lobby.Show(BackToMainMenu);
         else
-            Lobby.Host();
+            Lobby.Host(BackToMainMenu);
     }
 
     void Update()

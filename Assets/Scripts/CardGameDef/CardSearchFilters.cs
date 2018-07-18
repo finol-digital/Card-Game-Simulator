@@ -22,6 +22,8 @@ namespace CardGameDef
 		public override string ToString()
 		{
             string filters = string.Empty;
+            if (!string.IsNullOrEmpty(Name))
+                filters += "name:\"" + Name + "\"; ";
             if (!string.IsNullOrEmpty(Id))
                 filters += "id:" + Id + "; ";
             if (!string.IsNullOrEmpty(SetCode))
@@ -38,7 +40,12 @@ namespace CardGameDef
                             break;
                         EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
                         if (enumDef != null)
-                            filters += property.Name + ":=" + EnumProperties[property.Name] + "; ";
+                        {
+                            string filterValue = enumDef.GetStringFromLookupFlags(EnumProperties[property.Name]);
+                            if (filterValue.Contains(' '))
+                                filterValue = "\'" + filterValue + "\'";
+                            filters += property.Name + ":" + filterValue + "; ";
+                        }
                         break;
                     case PropertyType.Integer:
                         if (IntMinProperties.ContainsKey(property.Name))
@@ -55,7 +62,7 @@ namespace CardGameDef
                     case PropertyType.String:
                     default:
                         if (StringProperties.ContainsKey(property.Name))
-                            filters += property.Name + ":" + StringProperties[property.Name] + "; ";
+                            filters += property.Name + ":\"" + StringProperties[property.Name] + "\"; ";
                         break;
                 }
             }

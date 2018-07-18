@@ -202,6 +202,7 @@ public class DeckLoadMenu : SelectionPanel
 
         Deck newDeck = Deck.Parse(SelectedFileName, CardGameManager.Current.DeckFileType, deckText);
         LoadCallback?.Invoke(newDeck);
+        ResetCancelButton();
         Hide();
     }
 
@@ -260,6 +261,12 @@ public class DeckLoadMenu : SelectionPanel
     public void HideNewDeckPanel()
     {
         newDeckPanel.gameObject.SetActive(false);
+    }
+
+    public void ResetCancelButton()
+    {
+        cancelButton.onClick.RemoveAllListeners();
+        cancelButton.onClick.AddListener(Hide);
     }
 
     public void Hide()

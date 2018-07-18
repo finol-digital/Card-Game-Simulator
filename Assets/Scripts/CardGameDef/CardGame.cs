@@ -17,14 +17,16 @@ namespace CardGameDef
         public const string BackgroundImageFileName = "Background";
         public const string CardBackImageFileName = "CardBack";
 
-        public string FilePathBase => CardGameManager.GamesFilePathBase + "/" + Name;
-        public string ConfigFilePath => FilePathBase + "/" + Name + ".json";
-        public string CardsFilePath => FilePathBase + "/AllCards.json";
-        public string SetsFilePath => FilePathBase + "/AllSets.json";
-        public string BackgroundImageFilePath => FilePathBase + "/" + BackgroundImageFileName + "." + BackgroundImageFileType;
-        public string CardBackImageFilePath => FilePathBase + "/" + CardBackImageFileName + "." + CardBackImageFileType;
-        public string DecksFilePath => FilePathBase + "/decks";
-        public string GameBoardsFilePath => FilePathBase + "/boards";
+        public static string GamesDirectoryPath => UnityEngine.Application.persistentDataPath + "/games";
+        
+        public string GameFolderPath => GamesDirectoryPath + "/" + Name;
+        public string ConfigFilePath => GameFolderPath + "/" + Name + ".json";
+        public string CardsFilePath => GameFolderPath + "/AllCards.json";
+        public string SetsFilePath => GameFolderPath + "/AllSets.json";
+        public string BackgroundImageFilePath => GameFolderPath + "/" + BackgroundImageFileName + "." + BackgroundImageFileType;
+        public string CardBackImageFilePath => GameFolderPath + "/" + CardBackImageFileName + "." + CardBackImageFileType;
+        public string DecksFilePath => GameFolderPath + "/decks";
+        public string GameBoardsFilePath => GameFolderPath + "/boards";
 
         public float CardAspectRatio => CardSize.y > 0 ? UnityEngine.Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
         public IReadOnlyDictionary<string, Card> Cards => LoadedCards;
@@ -214,7 +216,7 @@ namespace CardGameDef
                 yield break;
             IsDownloading = true;
 
-            string initialDirectory = FilePathBase;
+            string initialDirectory = GameFolderPath;
             yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
             try
             {
@@ -227,7 +229,7 @@ namespace CardGameDef
                 IsDownloading = false;
                 yield break;
             }
-            if (!initialDirectory.Equals(FilePathBase))
+            if (!initialDirectory.Equals(GameFolderPath))
             {
                 CardGameManager.Instance.StartCoroutine(UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath));
                 Directory.Delete(initialDirectory, true);
@@ -325,7 +327,7 @@ namespace CardGameDef
             try
             {
                 if (AllCardsUrlZipped)
-                    UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+                    UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, GameFolderPath);
                 if (AllCardsUrlWrapped)
                     UnityExtensionMethods.UnwrapFile(cardsFilePath);
                 LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier);
@@ -339,7 +341,7 @@ namespace CardGameDef
         private void LoadSets()
         {
             if (AllSetsUrlZipped)
-                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, FilePathBase);
+                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, GameFolderPath);
             if (AllSetsUrlWrapped)
                 UnityExtensionMethods.UnwrapFile(SetsFilePath);
             LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
