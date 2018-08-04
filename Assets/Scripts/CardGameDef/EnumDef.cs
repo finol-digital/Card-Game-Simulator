@@ -20,11 +20,6 @@ namespace CardGameDef
 
         public Dictionary<string, int> Lookup { get; } = new Dictionary<string, int>();
 
-        public static bool IsEnumProperty(string propertyName)
-        {
-            return CardGameManager.Current.Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
-        }
-
         public static bool TryParseInt(string number, out int intValue)
         {
             bool isHex = number.StartsWith(Hex);

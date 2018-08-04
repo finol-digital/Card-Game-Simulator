@@ -5,22 +5,27 @@ namespace CardGameDef
 {
     public class CardSearchFilters
     {
-		public string Id { get; set; } = "";
+        public string Id { get; set; } = "";
 
-		public string Name { get; set; } = "";
+        public string Name { get; set; } = "";
 
-		public string SetCode { get; set; } = "";
+        public string SetCode { get; set; } = "";
 
-		public Dictionary<string, string> StringProperties { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> StringProperties { get; } = new Dictionary<string, string>();
 
-		public Dictionary<string, int> IntMinProperties { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> IntMinProperties { get; } = new Dictionary<string, int>();
 
-		public Dictionary<string, int> IntMaxProperties { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> IntMaxProperties { get; } = new Dictionary<string, int>();
 
-		public Dictionary<string, int> EnumProperties { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> EnumProperties { get; } = new Dictionary<string, int>();
 
-		public override string ToString()
-		{
+        public override string ToString()
+        {
+            return ToString(CardGame.Invalid);
+        }
+
+        public string ToString(CardGame forGame)
+        {
             string filters = string.Empty;
             if (!string.IsNullOrEmpty(Name))
                 filters += "name:\"" + Name + "\"; ";
@@ -28,7 +33,7 @@ namespace CardGameDef
                 filters += "id:" + Id + "; ";
             if (!string.IsNullOrEmpty(SetCode))
                 filters += "set:" + SetCode + "; ";
-            foreach (PropertyDef property in CardGameManager.Current.CardProperties)
+            foreach (PropertyDef property in forGame.CardProperties)
             {
                 switch (property.Type)
                 {
@@ -38,7 +43,7 @@ namespace CardGameDef
                     case PropertyType.StringEnumList:
                         if (!EnumProperties.ContainsKey(property.Name))
                             break;
-                        EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
+                        EnumDef enumDef = forGame.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
                         if (enumDef != null)
                         {
                             string filterValue = enumDef.GetStringFromLookupFlags(EnumProperties[property.Name]);
@@ -67,6 +72,6 @@ namespace CardGameDef
                 }
             }
             return filters;
-		}
+        }
     }
 }

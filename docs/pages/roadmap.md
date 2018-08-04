@@ -14,7 +14,6 @@ permalink: roadmap.html
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Backlog
-- Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
 - Tech: Update TMP default text settings

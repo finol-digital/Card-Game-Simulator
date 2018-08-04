@@ -2,18 +2,21 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class TitleScreen : MonoBehaviour
+namespace CGS.Menus
 {
-    public Text versionText;
-
-    void Start()
+    public class TitleScreen : MonoBehaviour
     {
-        versionText.text = MainMenu.VersionMessage + Application.version;
-    }
+        public Text versionText;
 
-    void Update ()
-    {
-        if (Input.anyKeyDown)
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+        void Start()
+        {
+            versionText.text = MainMenu.VersionMessage + Application.version;
+        }
+
+        void Update()
+        {
+            if (Input.anyKeyDown)
+                SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+        }
     }
 }

@@ -1,27 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
+namespace CardGameView
 {
-    public bool ignoreDeselect = false;
-
-    public void OnPointerDown(PointerEventData eventData)
+    public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
-        EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-    }
+        public bool ignoreDeselect = false;
 
-    public void OnSelect(BaseEventData eventData)
-    {
-        if (CardInfoViewer.Instance.WasVisible)
-            CardInfoViewer.Instance.IsVisible = true;
-    }
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+        }
 
-    public void OnDeselect(BaseEventData eventData)
-    {
-        if (ignoreDeselect || CardInfoViewer.Instance == null)
-            return;
+        public void OnSelect(BaseEventData eventData)
+        {
+            if (CardInfoViewer.Instance.WasVisible)
+                CardInfoViewer.Instance.IsVisible = true;
+        }
 
-        if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
-            CardInfoViewer.Instance.IsVisible = false;
+        public void OnDeselect(BaseEventData eventData)
+        {
+            if (ignoreDeselect || CardInfoViewer.Instance == null)
+                return;
+
+            if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
+                CardInfoViewer.Instance.IsVisible = false;
+        }
     }
 }

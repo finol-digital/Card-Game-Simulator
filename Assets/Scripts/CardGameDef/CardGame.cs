@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using CardGameDef;
 
 namespace CardGameDef
 {
@@ -17,8 +16,10 @@ namespace CardGameDef
         public const string BackgroundImageFileName = "Background";
         public const string CardBackImageFileName = "CardBack";
 
+        public static readonly CardGame Invalid = new CardGame(null);
+
         public static string GamesDirectoryPath => UnityEngine.Application.persistentDataPath + "/games";
-        
+
         public string GameFolderPath => GamesDirectoryPath + "/" + Name;
         public string ConfigFilePath => GameFolderPath + "/" + Name + ".json";
         public string CardsFilePath => GameFolderPath + "/AllCards.json";
@@ -191,6 +192,7 @@ namespace CardGameDef
         [JsonProperty]
         public string SetNameIdentifier { get; set; } = "name";
 
+        public UnityEngine.MonoBehaviour CoroutineRunner { get; set; }
         public bool IsDownloading { get; private set; }
         public bool IsLoaded { get; private set; }
         public string Error { get; private set; }
@@ -200,11 +202,23 @@ namespace CardGameDef
         protected Dictionary<string, Card> LoadedCards { get; } = new Dictionary<string, Card>();
         protected Dictionary<string, Set> LoadedSets { get; } = new Dictionary<string, Set>();
 
+        public UnityEngine.Sprite BackgroundImageSprite
+        {
+            get { return _backgroundImageSprite ?? (_backgroundImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(BackgroundImageFileName)); }
+            private set { _backgroundImageSprite = value; }
+        }
         private UnityEngine.Sprite _backgroundImageSprite;
+
+        public UnityEngine.Sprite CardBackImageSprite
+        {
+            get { return _cardBackImageSprite ?? (_cardBackImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(CardBackImageFileName)); }
+            private set { _cardBackImageSprite = value; }
+        }
         private UnityEngine.Sprite _cardBackImageSprite;
 
-        public CardGame(string name = Set.DefaultCode, string url = "")
+        public CardGame(UnityEngine.MonoBehaviour coroutineRunner, string name = Set.DefaultCode, string url = "")
         {
+            CoroutineRunner = coroutineRunner;
             Name = name ?? Set.DefaultCode;
             AutoUpdateUrl = url ?? string.Empty;
             Error = string.Empty;
@@ -229,9 +243,12 @@ namespace CardGameDef
                 IsDownloading = false;
                 yield break;
             }
+
+            // If the name of the game doesn't match our initial game name, we need to move to the new directory and delete the old one
             if (!initialDirectory.Equals(GameFolderPath))
             {
-                CardGameManager.Instance.StartCoroutine(UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath));
+                // Downloading the config file twice is slightly inefficient, but it shouldn't cause a noticeable difference for the user
+                yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
                 Directory.Delete(initialDirectory, true);
             }
 
@@ -286,7 +303,8 @@ namespace CardGameDef
 
                 CreateEnumLookups();
 
-                CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.LoadCards());
+                if (CoroutineRunner != null)
+                    CoroutineRunner.StartCoroutine(CGS.CardGameManager.Instance.LoadCards());
                 LoadSets();
 
                 BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
@@ -295,8 +313,8 @@ namespace CardGameDef
                 IsLoaded = true;
 
                 // Kick off auto-update in the background, even though it won't load until next time the app restarts
-                if (AutoUpdate && !didDownload)
-                    CardGameManager.Instance.StartCoroutine(Download());
+                if (AutoUpdate && !didDownload && CoroutineRunner != null)
+                    CoroutineRunner.StartCoroutine(Download());
             }
             catch (Exception e)
             {
@@ -310,6 +328,11 @@ namespace CardGameDef
             foreach (EnumDef enumDef in Enums)
                 foreach (string key in enumDef.Values.Keys)
                     enumDef.CreateLookup(key);
+        }
+
+        public bool IsEnumProperty(string propertyName)
+        {
+            return Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
         }
 
         public IEnumerator LoadAllCards()
@@ -473,11 +496,10 @@ namespace CardGameDef
 
             foreach (string cardSet in setCodes)
             {
-                Card newCard = new Card(setCodes.Count > 1 ? (cardId + "_" + cardSet) : cardId, cardName, cardSet, cardProperties);
-                if (CardNames.Contains(cardName))
-                    newCard.IsReprint = true;
-                else
+                bool isReprint = CardNames.Contains(cardName);
+                if (!isReprint)
                     CardNames.Add(cardName);
+                Card newCard = new Card(this, setCodes.Count > 1 ? (cardId + "_" + cardSet) : cardId, cardName, cardSet, cardProperties, isReprint);
                 LoadedCards[newCard.Id] = newCard;
                 if (!Sets.ContainsKey(cardSet))
                     LoadedSets[cardSet] = new Set(cardSet);
@@ -487,19 +509,20 @@ namespace CardGameDef
         public void LoadSetFromJToken(JToken setJToken, string defaultSetCode)
         {
             if (setJToken == null)
+            {
+                UnityEngine.Debug.LogWarning("LoadSetFromJToken::NullToken");
                 return;
+            }
 
             string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
             string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSetCode;
             if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
                 LoadedSets[setCode] = new Set(setCode, setName);
+
             JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
-
-            if (cards == null)
-                return;
-
-            foreach (JToken jToken in cards)
-                LoadCardFromJToken(jToken, setCode);
+            if (cards != null)
+                foreach (JToken jToken in cards)
+                    LoadCardFromJToken(jToken, setCode);
         }
 
         public IEnumerable<Card> FilterCards(CardSearchFilters filters)
@@ -530,7 +553,7 @@ namespace CardGameDef
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in filters.EnumProperties)
                 {
-                    EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(entry.Key));
+                    EnumDef enumDef = Enums.FirstOrDefault(def => def.Property.Equals(entry.Key));
                     if (enumDef == null)
                     {
                         propsMatch = false;
@@ -543,79 +566,6 @@ namespace CardGameDef
                 if (propsMatch)
                     yield return card;
             }
-        }
-
-        public void PutCardImage(CardModel cardModel)
-        {
-            Card card = cardModel.Value;
-            card.ModelsUsingImage.Add(cardModel);
-
-            if (card.ImageSprite != null)
-            {
-                cardModel.HideNameLabel();
-                cardModel.image.sprite = card.ImageSprite;
-            }
-            else
-            {
-                cardModel.ShowNameLabel();
-                cardModel.image.sprite = CardBackImageSprite;
-                if (!card.IsLoadingImage)
-                    CardGameManager.Instance.StartCoroutine(GetAndSetImageSprite(card));
-            }
-        }
-
-        public IEnumerator GetAndSetImageSprite(Card card)
-        {
-            if (card.IsLoadingImage)
-                yield break;
-
-            card.IsLoadingImage = true;
-            UnityEngine.Sprite newSprite = null;
-            yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(
-                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(card.ImageFilePath, card.ImageWebUrl)
-                , output => newSprite = output);
-            if (newSprite != null)
-                card.ImageSprite = newSprite;
-            else
-                newSprite = CardBackImageSprite;
-
-            foreach (CardModel cardModel in card.ModelsUsingImage)
-            {
-                if (!cardModel.IsFacedown)
-                {
-                    if (newSprite != CardBackImageSprite)
-                        cardModel.HideNameLabel();
-                    else
-                        cardModel.ShowNameLabel();
-                    cardModel.image.sprite = newSprite;
-                    if (cardModel == CardInfoViewer.Instance.SelectedCardModel)
-                    {
-                        CardInfoViewer.Instance.cardImage.sprite = newSprite;
-                        CardInfoViewer.Instance.zoomImage.sprite = newSprite;
-                    }
-                }
-            }
-            card.IsLoadingImage = false;
-        }
-
-        public void RemoveCardImage(CardModel cardModel)
-        {
-            Card card = cardModel.Value;
-            card.ModelsUsingImage.Remove(cardModel);
-            if (card.ModelsUsingImage.Count < 1)
-                card.ImageSprite = null;
-        }
-
-        public UnityEngine.Sprite BackgroundImageSprite
-        {
-            get { return _backgroundImageSprite ?? (_backgroundImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(BackgroundImageFileName)); }
-            private set { _backgroundImageSprite = value; }
-        }
-
-        public UnityEngine.Sprite CardBackImageSprite
-        {
-            get { return _cardBackImageSprite ?? (_cardBackImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(CardBackImageFileName)); }
-            private set { _cardBackImageSprite = value; }
         }
     }
 }
