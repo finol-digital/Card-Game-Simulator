@@ -222,7 +222,7 @@ namespace CGS.Play
 
         public void SetPlayActions(CardStack cardStack, CardModel cardModel)
         {
-            cardModel.DoubleClickAction = CardModel.Rotate90;
+            cardModel.DoubleClickAction = CardActions.Rotate90;
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 

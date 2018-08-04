@@ -7,14 +7,12 @@ using CGS.Play.Multiplayer;
 using CGS.Play.Zones;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 
 namespace CardGameView
 {
-    public delegate void OnDoubleClickDelegate(CardModel cardModel);
-    public delegate void SecondaryDragDelegate();
-
     public enum DragPhase
     {
         Begin,
@@ -36,8 +34,8 @@ namespace CardGameView
         public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
         public bool DoesCloneOnDrag { get; set; }
-        public OnDoubleClickDelegate DoubleClickAction { get; set; }
-        public SecondaryDragDelegate SecondaryDragAction { get; set; }
+        public CardAction DoubleClickAction { get; set; }
+        public UnityAction SecondaryDragAction { get; set; }
         public CardDropZone DropTarget { get; set; }
 
         public bool DidSelectOnDown { get; private set; }
@@ -498,64 +496,6 @@ namespace CardGameView
         {
             if (!hasAuthority)
                 transform.rotation = rotation;
-        }
-
-        public static void Rotate90(CardModel cardModel)
-        {
-            if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
-                return;
-
-            cardModel.transform.rotation *= Quaternion.Euler(0, 0, -90);
-            if (cardModel.IsOnline)
-                cardModel.CmdUpdateRotation(cardModel.transform.rotation);
-        }
-
-        public static void ToggleRotation90(CardModel cardModel)
-        {
-            if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
-                return;
-
-            bool isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
-            cardModel.transform.rotation = isVertical ?
-                Quaternion.AngleAxis(90, Vector3.back) : Quaternion.identity;
-            if (cardModel.IsOnline)
-                cardModel.CmdUpdateRotation(cardModel.transform.rotation);
-        }
-
-        public static void ResetRotation(CardStack cardStack, CardModel cardModel)
-        {
-            if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
-                return;
-
-            cardModel.transform.rotation = Quaternion.identity;
-            if (cardModel.IsOnline)
-                cardModel.CmdUpdateRotation(cardModel.transform.rotation);
-        }
-
-        public static void ShowCard(CardStack cardStack, CardModel cardModel)
-        {
-            if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
-                return;
-
-            cardModel.IsFacedown = false;
-        }
-
-        public static void HideCard(CardStack cardStack, CardModel cardModel)
-        {
-            if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
-                return;
-
-            cardModel.IsFacedown = true;
-            EventSystem.current.SetSelectedGameObject(null, cardModel.CurrentPointerEventData);
-        }
-
-        public static void ToggleFacedown(CardModel cardModel)
-        {
-            if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
-                return;
-
-            cardModel.IsFacedown = !cardModel.IsFacedown;
-            EventSystem.current.SetSelectedGameObject(null, cardModel.CurrentPointerEventData);
         }
 
         [Command]

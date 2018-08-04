@@ -54,9 +54,9 @@ namespace CGS.Play.Zones
             if (cardModel == null)
                 return;
 
-            CardModel.ShowCard(cardStack, cardModel);
-            CardModel.ResetRotation(cardStack, cardModel);
-            cardModel.DoubleClickAction = CardModel.ToggleFacedown;
+            CardActions.ShowFaceup(cardModel);
+            CardActions.ResetRotation(cardModel);
+            cardModel.DoubleClickAction = CardActions.FlipFace;
             cardModel.SecondaryDragAction = null;
 
             UpdateCountText();
