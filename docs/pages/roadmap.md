@@ -5,24 +5,18 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Improve deck loading process
-- Double-click on selection to load it
-- Highlight selected buttons in orange and pressed in purple
-- Increase maximum zoom out
+- Stream-lined menu navigation
 
 ## Current Sprint
-- In Deck Editor, make search button clear filters and only do search by name in name input field
-  - Show name filter in filters bar (in quotes)
-  - Show condensed value of enum filters in filters bar
 - Group cards in the deck editor with a number instead of stacking them
 - Support deep links for games and decks through https://docs.branch.io/
   - Facebook link and homepage banner image link should use this
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Backlog
-- Tech: Finalize namespaces
 - Tech: Add unit tests
 - Tech: Review with Resharper
+- Tech: Update TMP default text settings
 - Fix: UWP join and host
 - Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated

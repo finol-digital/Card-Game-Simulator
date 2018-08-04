@@ -9,10 +9,10 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Exit CGS.
 - **Horizontal**: *left*, *right* - Select previous/next card game.
 - **Vertical**: *down*, *up* - Scroll through Main Menu buttons.
-- **Sort**: *q* - Brings up the Game Selection Menu.
-- **New**: *e* - Start Game.
-- **Load**: *r* - Join Game.
-- **Save**: *t* - Edit Deck.
+- **Sort**: *q* or *j* - Brings up the Game Selection Menu.
+- **New**: *e* or *k* - Start Game.
+- **Load**: *r* or *l* - Join Game.
+- **Save**: *t* or *;* - Edit Deck.
 - **Filter**: *f* - Brings up the Options Menu.
 - **Submit**: *Enter* - Click on selected button.
 
@@ -52,7 +52,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
-- **No**: *n* - No.
+- **Delete**: *Delete* - No.
 - **Submit**: *Enter* - Yes/Close.
 
 ## Game Selection Menu

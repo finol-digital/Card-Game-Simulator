@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
@@ -7,51 +8,70 @@ namespace CardGameDef
 {
     public class Card : IComparable<Card>, IEquatable<Card>
     {
-        public static readonly Card Blank = new Card(string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>());
+        public static readonly Card Blank = new Card(CardGame.Invalid,
+            string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
         public string Id { get; private set; }
         public string Name { get; private set; }
         public string SetCode { get; private set; }
         protected Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
+        public bool IsReprint { get; private set; }
+        public bool IsLoadingImage { get; private set; }
 
-        public bool IsReprint { get; set; }
-
-        public HashSet<CardModel> ModelsUsingImage { get; private set; }
-        public bool IsLoadingImage { get; set; }
-
-        public string ImageFileName => UnityExtensionMethods.GetSafeFileName(Id + "." + CardGameManager.Current.CardImageFileType);
-        public string ImageFilePath => UnityExtensionMethods.GetSafeFilePath(CardGameManager.Current.FilePathBase + "/sets/" + SetCode + "/") + ImageFileName;
+        public string ImageFileName => UnityExtensionMethods.GetSafeFileName(Id + "." + SourceGame.CardImageFileType);
+        public string ImageFilePath => UnityExtensionMethods.GetSafeFilePath(SourceGame.GameFolderPath + "/sets/" + SetCode + "/") + ImageFileName;
         public string ImageWebUrl
         {
             get
             {
-                string url = GetPropertyValueString(CardGameManager.Current.CardImageProperty);
-                if (!string.IsNullOrEmpty(url) && !url.Equals(CardGameManager.Current.CardImageUrl))
+                string url = GetPropertyValueString(SourceGame.CardImageProperty);
+                if (!string.IsNullOrEmpty(url) && !url.Equals(SourceGame.CardImageUrl))
                     return url;
 
-                url = CardGameManager.Current.CardImageUrl;
+                url = SourceGame.CardImageUrl;
                 url = url.Replace("{cardId}", Id);
                 url = url.Replace("{cardName}", Name);
                 url = url.Replace("{cardSet}", SetCode);
                 Regex rgx = new Regex("{card\\.(?<property>\\w+)}");
                 foreach (Match match in rgx.Matches(url))
                     url = url.Replace(match.Value, GetPropertyValueString(match.Groups["property"].Value));
-                url = url.Replace("{cardImageFileType}", CardGameManager.Current.CardImageFileType);
+                url = url.Replace("{cardImageFileType}", SourceGame.CardImageFileType);
                 return url;
             }
         }
 
+        public UnityEngine.Sprite ImageSprite
+        {
+            get { return _imageSprite; }
+            set
+            {
+                if (_imageSprite != null)
+                {
+                    UnityEngine.Object.Destroy(_imageSprite.texture);
+                    UnityEngine.Object.Destroy(_imageSprite);
+                }
+                _imageSprite = value;
+                foreach (ICardDisplay cardDisplay in DisplaysUsingImage)
+                    cardDisplay.SetImageSprite(_imageSprite);
+            }
+        }
         private UnityEngine.Sprite _imageSprite;
 
-        public Card(string id, string name, string setCode, Dictionary<string, PropertyDefValuePair> properties)
+        protected HashSet<ICardDisplay> DisplaysUsingImage { get; private set; }
+
+        protected CardGame SourceGame { get; private set; }
+
+        public Card(CardGame sourceGame, string id, string name, string setCode, Dictionary<string, PropertyDefValuePair> properties, bool isReprint)
         {
+            SourceGame = sourceGame ?? CardGame.Invalid;
             Id = id.Clone() as string;
             Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : string.Empty;
             SetCode = !string.IsNullOrEmpty(setCode) ? setCode.Clone() as string : Set.DefaultCode;
             Properties = properties ?? new Dictionary<string, PropertyDefValuePair>();
             Properties = CloneProperties();
-            ModelsUsingImage = new HashSet<CardModel>();
+            IsReprint = isReprint;
             IsLoadingImage = false;
+            DisplaysUsingImage = new HashSet<ICardDisplay>();
         }
 
         public Dictionary<string, PropertyDefValuePair> CloneProperties()
@@ -65,7 +85,7 @@ namespace CardGameDef
             if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
                 return string.Empty;
 
-            EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
+            EnumDef enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
             if (enumDef == null || string.IsNullOrEmpty(property.Value))
                 return !string.IsNullOrEmpty(property.Value) ? property.Value : property.Def.Empty ?? string.Empty;
             return enumDef.GetStringFromPropertyValue(property.Value);
@@ -89,10 +109,47 @@ namespace CardGameDef
             if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
                 return 0;
 
-            EnumDef enumDef = CardGameManager.Current.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
+            EnumDef enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
             if (enumDef == null)
                 return 0;
             return enumDef.GetEnumFromPropertyValue(property.Value);
+        }
+
+        public void RegisterDisplay(ICardDisplay cardDisplay)
+        {
+            DisplaysUsingImage.Add(cardDisplay);
+            if (ImageSprite != null)
+                cardDisplay.SetImageSprite(ImageSprite);
+            else if (!IsLoadingImage)
+            {
+                if (SourceGame.CoroutineRunner != null)
+                    SourceGame.CoroutineRunner.StartCoroutine(GetAndSetImageSprite());
+                else
+                    UnityEngine.Debug.LogWarning("RegisterDisplay::NoImageOrImageLoader");
+            }
+        }
+
+        public IEnumerator GetAndSetImageSprite()
+        {
+            if (IsLoadingImage)
+                yield break;
+
+            IsLoadingImage = true;
+            UnityEngine.Sprite newSprite = null;
+            yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(
+                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl)
+                , output => newSprite = output);
+            if (newSprite != null)
+                ImageSprite = newSprite;
+            IsLoadingImage = false;
+        }
+
+        public void UnregisterDisplay(ICardDisplay cardDisplay)
+        {
+            cardDisplay.SetImageSprite(null);
+            DisplaysUsingImage.Remove(cardDisplay);
+            if (DisplaysUsingImage.Count < 1)
+                ImageSprite = null;
         }
 
         public int CompareTo(Card other)
@@ -100,6 +157,7 @@ namespace CardGameDef
             if (other == null)
                 return -1;
 
+            // TODO: FIXME: THIS IS NONDETERMINISTIC
             foreach (PropertyDefValuePair property in Properties.Values)
             {
                 switch (property.Def.Type)
@@ -129,20 +187,6 @@ namespace CardGameDef
         public bool Equals(Card other)
         {
             return other != null && Id.Equals(other.Id);
-        }
-
-        public UnityEngine.Sprite ImageSprite
-        {
-            get { return _imageSprite; }
-            set
-            {
-                if (_imageSprite != null)
-                {
-                    UnityEngine.Object.Destroy(_imageSprite.texture);
-                    UnityEngine.Object.Destroy(_imageSprite);
-                }
-                _imageSprite = value;
-            }
         }
     }
 }

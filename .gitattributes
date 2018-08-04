@@ -1,0 +1,12 @@
+# Auto detect text files and perform LF normalization
+*        text=auto
+
+*.cs     text diff=csharp
+*.csproj text merge=union
+*.sln    text merge=union eol=crlf
+
+*.meta text
+*.prefab text
+*.preset text
+*.json text
+*.asset text

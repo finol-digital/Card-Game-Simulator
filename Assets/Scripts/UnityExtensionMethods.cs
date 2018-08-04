@@ -175,7 +175,7 @@ static public class UnityExtensionMethods
     {
         if (string.IsNullOrEmpty(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
         {
-            Debug.LogWarning("SaveUrlToFile::UrlInvalid:" + url);
+            Debug.LogWarning("SaveUrlToFile::UrlInvalid:" + url + "," + filePath);
             yield break;
         }
 
@@ -183,7 +183,7 @@ static public class UnityExtensionMethods
         string fileName = Path.GetFileName(filePath);
         if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
         {
-            Debug.LogWarning("SaveUrlToFile::FilepathInvalid:" + filePath);
+            Debug.LogWarning("SaveUrlToFile::FilepathInvalid:" + url + ","  + filePath);
             yield break;
         }
 
@@ -198,7 +198,7 @@ static public class UnityExtensionMethods
         yield return loader;
         if (!string.IsNullOrEmpty(loader.error))
         {
-            Debug.LogError(loader.error);
+            Debug.LogError(url + ":" + loader.error);
             yield break;
         }
 

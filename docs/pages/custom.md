@@ -34,7 +34,7 @@ The structure of this custom game folder is:
 ## JSON File Structure
 When downloading a custom game from a url, the data that is being downloaded is the contents of the \<name\>.json file. CGS generates the rest of the folder structure based off the information in that file. 
 
-You can create your own json and validate against these schema:
+You can create your own json and [validate](https://jsonschemalint.com/#/version/draft-06/markup/json) against these schema:
 - [CardGameDef](schema/CardGameDef.json)
 - [AllCards](schema/AllCards.json)
 - [AllSets](schema/AllSets.json)

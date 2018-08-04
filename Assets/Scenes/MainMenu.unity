@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.88235295, g: 0.42745098, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.4509804, b: 0, a: 1}
     m_PressedColor: {r: 0.38875425, g: 0.28925174, b: 0.78676474, a: 1}
     m_DisabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
     m_ColorMultiplier: 1
@@ -876,7 +876,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0, g: 0.54901963, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.88235295, g: 0.42745098, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.4509804, b: 0, a: 1}
     m_PressedColor: {r: 0.38875425, g: 0.28925174, b: 0.78676474, a: 1}
     m_DisabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
     m_ColorMultiplier: 1
@@ -1233,7 +1233,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0, g: 0.54901963, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.88235295, g: 0.42745098, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.4509804, b: 0, a: 1}
     m_PressedColor: {r: 0.38875425, g: 0.28925174, b: 0.78676474, a: 1}
     m_DisabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
     m_ColorMultiplier: 1
@@ -1359,7 +1359,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0, g: 0.54901963, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.88235295, g: 0.42745098, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.4509804, b: 0, a: 1}
     m_PressedColor: {r: 0.38875425, g: 0.28925174, b: 0.78676474, a: 1}
     m_DisabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
     m_ColorMultiplier: 1
@@ -1562,7 +1562,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0, g: 0.54901963, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.88235295, g: 0.42745098, b: 0, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.4509804, b: 0, a: 1}
     m_PressedColor: {r: 0.38875425, g: 0.28925174, b: 0.78676474, a: 1}
     m_DisabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
     m_ColorMultiplier: 1

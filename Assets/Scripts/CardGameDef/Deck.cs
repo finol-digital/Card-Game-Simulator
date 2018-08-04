@@ -6,6 +6,8 @@ using System.Text;
 
 namespace CardGameDef
 {
+    public delegate string OnNameChangeDelegate(string newName);
+    
     public enum DeckFileType
     {
         Dec,
@@ -24,40 +26,34 @@ namespace CardGameDef
     {
         public const string DefaultName = "Untitled";
 
-        public string FilePath => CardGameManager.Current.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
+        public string FilePath => SourceGame.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
 
         public string Name { get; set; }
         public DeckFileType FileType { get; private set; }
         public List<Card> Cards { get; private set; }
 
-        public Deck() : this(DefaultName)
-        {
-        }
+        protected CardGame SourceGame { get; private set; }
 
-        public Deck(string name) : this(name, DeckFileType.Txt)
+        public Deck(CardGame sourceGame, string name = DefaultName, DeckFileType fileType = DeckFileType.Txt, List<Card> cards = null)
         {
-        }
-
-        public Deck(string name, DeckFileType fileType) : this(name, fileType, new List<Card>())
-        {
-        }
-
-        public Deck(string name, DeckFileType fileType, List<Card> cards)
-        {
+            SourceGame = sourceGame ?? CardGame.Invalid;
             Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : DefaultName;
             FileType = fileType;
-            Cards = new List<Card>(cards);
+            if (cards != null)
+                Cards = new List<Card>(cards);
+            else
+                Cards = new List<Card>();
         }
 
-        public static Deck Parse(string name, DeckFileType type, string text)
+        public static Deck Parse(CardGame cardGame, string deckName, DeckFileType deckFileType, string deckText)
         {
-            Deck newDeck = new Deck(name, type);
-            if (string.IsNullOrEmpty(text))
+            Deck newDeck = new Deck(cardGame, deckName, deckFileType);
+            if (string.IsNullOrEmpty(deckText))
                 return newDeck;
 
-            foreach (string line in text.Split('\n').Select(x => x.Trim()))
+            foreach (string line in deckText.Split('\n').Select(x => x.Trim()))
             {
-                switch (type)
+                switch (deckFileType)
                 {
                     case DeckFileType.Dec:
                         newDeck.LoadDec(line);
@@ -91,7 +87,7 @@ namespace CardGameDef
             if (tokens.Count > 0 && int.TryParse(tokens[0], out cardCount))
                 tokens.RemoveAt(0);
             string cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
-            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(null, cardName, null, null, null, null, null);
+            IEnumerable<Card> cards = SourceGame.FilterCards(new CardSearchFilters() { Name = cardName });
             foreach (Card card in cards)
             {
                 if (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase))
@@ -119,22 +115,22 @@ namespace CardGameDef
 
             int numHeroes = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numHeroes; i++)
-                AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
             int numSingleCards = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numSingleCards; i++)
-                AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
             int numDoubleCards = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numDoubleCards; i++)
-                AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 2);
+                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 2);
 
             int numMultiCards = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numMultiCards; i++)
             {
                 int id = (int)VarInt.Read(bytes, ref offset, out length);
                 int count = (int)VarInt.Read(bytes, ref offset, out length);
-                AddCardsByPropertyInt(CardGameManager.Current.DeckFileHsdId, id, count);
+                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, id, count);
             }
 
             Sort();
@@ -142,7 +138,7 @@ namespace CardGameDef
 
         public void AddCardsByPropertyInt(string propertyName, int propertyValue, int count)
         {
-            Card card = CardGameManager.Current.Cards.Values.FirstOrDefault(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue);
+            Card card = SourceGame.Cards.Values.FirstOrDefault(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue);
             for (int i = 0; card != null && i < count; i++)
                 Cards.Add(card);
         }
@@ -152,8 +148,8 @@ namespace CardGameDef
             if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
                 return;
 
-            if (CardGameManager.Current.Cards.ContainsKey(line))
-                Cards.Add(CardGameManager.Current.Cards[line]);
+            if (SourceGame.Cards.ContainsKey(line))
+                Cards.Add(SourceGame.Cards[line]);
         }
 
         public void LoadTxt(string line)
@@ -180,7 +176,7 @@ namespace CardGameDef
                 if (tokens.Count > 0 && tokens[tokens.Count - 1].StartsWith("(") && tokens[tokens.Count - 1].EndsWith(")"))
                 {
                     string inParens = tokens[tokens.Count - 1].Substring(1, tokens[tokens.Count - 1].Length - 2);
-                    if (CardGameManager.Current.Sets.ContainsKey(inParens))
+                    if (SourceGame.Sets.ContainsKey(inParens))
                     {
                         cardSet = inParens;
                         tokens.RemoveAt(tokens.Count - 1);
@@ -190,7 +186,7 @@ namespace CardGameDef
                 cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
             }
 
-            IEnumerable<Card> cards = CardGameManager.Current.FilterCards(cardId, cardName, cardSet, null, null, null, null);
+            IEnumerable<Card> cards = SourceGame.FilterCards(new CardSearchFilters() { Id = cardId, Name = cardName, SetCode = cardSet });
             foreach (Card card in cards)
             {
                 if (!card.Id.Equals(cardId) && (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) ||
@@ -230,9 +226,9 @@ namespace CardGameDef
             Dictionary<string, List<Card>> extraGroups = new Dictionary<string, List<Card>>();
             foreach (Card card in Cards)
             {
-                foreach (ExtraDef extraDef in CardGameManager.Current.Extras)
+                foreach (ExtraDef extraDef in SourceGame.Extras)
                 {
-                    if (EnumDef.IsEnumProperty(extraDef.Property) ? !card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
+                    if (SourceGame.IsEnumProperty(extraDef.Property) ? !card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
                                                                     : !card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value))
                         continue;
                     string groupName = !string.IsNullOrEmpty(extraDef.Group) ? extraDef.Group : ExtraDef.DefaultExtraGroup;
@@ -296,20 +292,20 @@ namespace CardGameDef
 
                 VarInt.Write(ms, extraCards.Count);
                 foreach (Card card in extraCards)
-                    VarInt.Write(ms, card.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
+                    VarInt.Write(ms, card.GetPropertyValueInt(SourceGame.DeckFileHsdId));
 
                 VarInt.Write(ms, singleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
+                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileHsdId));
 
                 VarInt.Write(ms, doubleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
+                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileHsdId));
 
                 VarInt.Write(ms, nCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in nCopy)
                 {
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(CardGameManager.Current.DeckFileHsdId));
+                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileHsdId));
                     VarInt.Write(ms, cardCount.Value);
                 }
 
@@ -336,20 +332,20 @@ namespace CardGameDef
         public string ToTxt()
         {
             StringBuilder text = new StringBuilder();
-            text.AppendFormat("### {0} Deck: {1} {2}", CardGameManager.Current.Name, Name, Environment.NewLine);
+            text.AppendFormat("### {0} Deck: {1} {2}", SourceGame.Name, Name, Environment.NewLine);
             Dictionary<Card, int> cardCounts = GetCardCounts();
             foreach (KeyValuePair<Card, int> cardCount in cardCounts)
             {
-                bool isDeckFileTxtIdRequired = CardGameManager.Current.DeckFileTxtIdRequired || cardCount.Key.IsReprint;
+                bool isDeckFileTxtIdRequired = SourceGame.DeckFileTxtIdRequired || cardCount.Key.IsReprint;
                 text.Append(cardCount.Value);
                 text.Append(" ");
-                if (isDeckFileTxtIdRequired && CardGameManager.Current.DeckFileTxtId == DeckFileTxtId.Id)
+                if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Id)
                 {
                     text.AppendFormat("[{0}]", cardCount.Key.Id);
                     text.Append(" ");
                 }
                 text.Append(cardCount.Key.Name);
-                if (isDeckFileTxtIdRequired && CardGameManager.Current.DeckFileTxtId == DeckFileTxtId.Set)
+                if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Set)
                 {
                     text.Append(" ");
                     text.AppendFormat("({0})", cardCount.Key.SetCode);

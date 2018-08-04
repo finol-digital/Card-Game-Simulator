@@ -1,27 +1,30 @@
 using UnityEngine;
 
-public class ScreenRotationManager : MonoBehaviour
+namespace CGS
 {
-    void OnApplicationFocus(bool haveFocus)
+    public class ScreenRotationManager : MonoBehaviour
     {
-        if (haveFocus)
-          ToggleAutoRotation();
-    }
+        void OnApplicationFocus(bool haveFocus)
+        {
+            if (haveFocus)
+                ToggleAutoRotation();
+        }
 
-    public static void ToggleAutoRotation()
-    {
-        bool autoRotationOn = IsAutoRotationOn;
-        Screen.autorotateToPortrait = autoRotationOn;
-        Screen.autorotateToPortraitUpsideDown = autoRotationOn;
-        Screen.autorotateToLandscapeLeft = autoRotationOn;
-        Screen.autorotateToLandscapeRight = autoRotationOn;
-        Screen.orientation = ScreenOrientation.AutoRotation;
-    }
+        public static void ToggleAutoRotation()
+        {
+            bool autoRotationOn = IsAutoRotationOn;
+            Screen.autorotateToPortrait = autoRotationOn;
+            Screen.autorotateToPortraitUpsideDown = autoRotationOn;
+            Screen.autorotateToLandscapeLeft = autoRotationOn;
+            Screen.autorotateToLandscapeRight = autoRotationOn;
+            Screen.orientation = ScreenOrientation.AutoRotation;
+        }
 
-    public static bool IsAutoRotationOn
-    {
-		get {
-            bool isAutoRotationOn = true;
+        public static bool IsAutoRotationOn
+        {
+            get
+            {
+                bool isAutoRotationOn = true;
 #if UNITY_ANDROID && !UNITY_EDITOR
 			using (AndroidJavaClass actClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
 				AndroidJavaObject context = actClass.GetStatic<AndroidJavaObject>("currentActivity");
@@ -30,7 +33,8 @@ public class ScreenRotationManager : MonoBehaviour
 				isAutoRotationOn = rotationOn==1;
 			}
 #endif
-            return isAutoRotationOn;
-		}
+                return isAutoRotationOn;
+            }
+        }
     }
 }
