@@ -5,3 +5,8 @@
 
 *.csproj text merge=union
 *.sln    text merge=union eol=crlf
+
+## Unity ##
+*.meta merge=unityyamlmerge eol=lf
+*.prefab filter=lfs diff=lfs merge=lfs eol=lf -text
+*.unity filter=lfs diff=lfs merge=lfs eol=lf -text
