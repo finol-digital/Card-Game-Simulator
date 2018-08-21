@@ -23,7 +23,7 @@ Then, enter the CGS AutoUpdate URL for the game you would like to download:
 
 ![Game Download Menu Image](assets/img/downloadmenu.png)
 
-For example, the CGS AutoUpdate URL for Hearthstone is: https://hearthstone.finoldigital.com/
+For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: https://arcmage.finoldigital.com/
 
 You can also define your own custom game(s) by following the [Custom Games Documentation](custom.html).
 
