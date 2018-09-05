@@ -28,6 +28,9 @@ For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: http
 You can also define your own custom game(s) by following the [Custom Games Documentation](custom.html).
 
 ## Use CGS
+
+[Click here for a tutorial video!](https://youtu.be/pFaHJ2QTYuo)
+
 When you play a game in CGS, CGS hosts game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game.
 
 When joining a friend's game session, CGS will be set to use the same card game that the host has selected. If you do not already have that card game, CGS will automatically download it.
