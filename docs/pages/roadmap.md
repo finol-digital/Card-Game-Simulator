@@ -26,6 +26,7 @@ permalink: roadmap.html
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Show loading indicator when loading/downloading a card game
+- Introduce In-App Card Editor
 - Add option to restart game in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
