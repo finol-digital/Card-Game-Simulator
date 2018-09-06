@@ -10,13 +10,15 @@ permalink: roadmap.html
 ## Current Sprint
 - Group cards in the deck editor with a number instead of stacking them
 - Support deep links for games and decks through https://docs.branch.io/
-  - Facebook link and homepage banner image link should use this
+  - Link from cgs.link
+  - Facebook link and homepage banner image link should use this link
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Backlog
 - Tech: Add unit tests
 - Tech: Review with Resharper
 - Tech: Update TMP default text settings
+- Tech: Apply MPL Header to source files as necessary
 - Fix: UWP join and host
 - Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
