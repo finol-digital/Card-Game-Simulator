@@ -4,7 +4,7 @@ layout: home
 
 # Play Anywhere
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
-- iOS via the [TestFlight Beta](mailto:david@finoldigital.com?subject=GetCGSiOSBeta) (App Store Pending)
+- iOS via the [App Store](https://itunes.apple.com/us/app/card-game-simulator/id1392877362?ls=1&mt=8)
 - Mac via the [Mac App Store](https://itunes.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
 - Windows via the [Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
 
