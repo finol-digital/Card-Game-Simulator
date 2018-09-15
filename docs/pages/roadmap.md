@@ -10,8 +10,6 @@ permalink: roadmap.html
 ## Current Sprint
 - Group cards in the deck editor with a number instead of stacking them
 - Support deep links for games and decks through https://docs.branch.io/
-  - Link from cgs.link
-  - Facebook link and homepage banner image link should use this link
   - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Backlog
