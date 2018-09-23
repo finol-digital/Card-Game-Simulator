@@ -15,7 +15,9 @@ You can select card games by hitting the top banner of the Main Menu:
 
 ![Main Menu Image](assets/img/mainmenu.png)
 
-In the Game Selection Menu, you can select & share card games you have already downloaded:
+In the Game Selection Menu, you can manage your card games.
+
+Sharing a card game create a CGS Deep Link that you can send to other people, so that they can click on it and get access to that card game.
 
 ![Game Selection Menu Image](assets/img/selectionmenu.png)
 
