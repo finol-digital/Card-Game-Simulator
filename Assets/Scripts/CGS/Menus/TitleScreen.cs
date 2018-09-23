@@ -11,7 +11,9 @@ namespace CGS.Menus
         void Start()
         {
             versionText.text = MainMenu.VersionMessage + Application.version;
+#if UNITY_ANDROID || UNITY_IOS
             Branch.initSession(CallbackWithBranchUniversalObject);
+#endif
         }
 
         void CallbackWithBranchUniversalObject(BranchUniversalObject buo, BranchLinkProperties linkProps, string error)
@@ -32,6 +34,9 @@ namespace CGS.Menus
 
         void Update()
         {
+            if (CardGameManager.TopMenuCanvas != null)
+                return;
+
             if (Input.anyKeyDown)
                 SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }
