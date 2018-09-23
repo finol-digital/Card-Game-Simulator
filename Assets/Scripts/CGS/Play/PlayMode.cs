@@ -8,7 +8,7 @@ using CGS.Play.Multiplayer;
 using CGS.Play.Zones;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
+using Mirror;
 using UnityEngine.UI;
 
 namespace CGS.Play

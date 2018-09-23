@@ -5,7 +5,7 @@ using CGS.Play.Multiplayer;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.Networking;
+using Mirror;
 using UnityEngine.UI;
 
 namespace CGS.Menus

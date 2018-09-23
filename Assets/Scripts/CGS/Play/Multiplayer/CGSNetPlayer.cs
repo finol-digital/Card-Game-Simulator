@@ -4,7 +4,7 @@ using System.Linq;
 using CardGameDef;
 using CardGameView;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 
 namespace CGS.Play.Multiplayer
 {

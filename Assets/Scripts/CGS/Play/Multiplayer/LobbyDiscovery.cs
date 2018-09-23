@@ -2,11 +2,11 @@
 using System.Linq;
 using CGS.Menus;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 
 namespace CGS.Play.Multiplayer
 {
-    public class LobbyDiscovery : NetworkDiscovery
+    public class LobbyDiscovery : UnityEngine.Networking.NetworkDiscovery
     {
         public const string BroadcastErrorMessage = "Unable to broadcast game session. Other players may not be able to join this game.";
         public const string ListenErrorMessage = "Error: Unable to listen for game sessions.";

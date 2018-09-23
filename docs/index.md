@@ -8,24 +8,24 @@ layout: home
 - Mac via the [Mac App Store](https://itunes.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
 - Windows via the [Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
 
-## Create Custom Games
+## Create & Share Custom Games
 With CGS, users can create and share their own custom card games!
 
-You can download additional games by hitting the top banner of the Main Menu:
+You can select card games by hitting the top banner of the Main Menu:
 
 ![Main Menu Image](assets/img/mainmenu.png)
 
-In the Game Selection Menu, hit the "Download" button in the top-right:
+In the Game Selection Menu, you can select & share card games you have already downloaded:
 
 ![Game Selection Menu Image](assets/img/selectionmenu.png)
 
-Then, enter the CGS AutoUpdate URL for the game you would like to download:
-
-![Game Download Menu Image](assets/img/downloadmenu.png)
+You can also click the "Download" button in the top-right to manually enter the CGS AutoUpdate URL for the game you would like to download.
 
 For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: https://arcmage.finoldigital.com/
 
-You can also define your own custom game(s) by following the [Custom Games Documentation](custom.html).
+![Game Download Menu Image](assets/img/downloadmenu.png)
+
+You can also create your own custom game(s) by following the [Custom Games Documentation](custom.html).
 
 ## Use CGS
 

@@ -1,6 +1,6 @@
 ﻿using CardGameView;
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 
 namespace CGS.Play.Multiplayer
 {
@@ -16,13 +16,6 @@ namespace CGS.Play.Multiplayer
         public GameObject cardModelPrefab;
         public PlayMode playController;
         public PointsCounter pointsDisplay;
-
-        void Start()
-        {
-            customConfig = true;
-            maxDelay = 0.1f;
-            connectionConfig.NetworkDropThreshold = 90;
-        }
 
         public override void OnStartServer()
         {

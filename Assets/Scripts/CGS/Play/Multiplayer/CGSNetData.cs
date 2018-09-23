@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.Networking;
+using Mirror;
 
 namespace CGS.Play.Multiplayer
 {
@@ -28,8 +28,8 @@ namespace CGS.Play.Multiplayer
             }
         }
 
-        public class SyncListNetScore : SyncListStruct<NetScore> { }
-        public class SyncListNetCardStack : SyncListStruct<NetCardStack> { }
+        public class SyncListNetScore : SyncListSTRUCT<NetScore> { }
+        public class SyncListNetCardStack : SyncListSTRUCT<NetCardStack> { }
 
         public SyncListNetScore scores = new SyncListNetScore();
         public SyncListNetCardStack cardStacks = new SyncListNetCardStack();

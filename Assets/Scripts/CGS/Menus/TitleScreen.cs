@@ -11,6 +11,23 @@ namespace CGS.Menus
         void Start()
         {
             versionText.text = MainMenu.VersionMessage + Application.version;
+            Branch.initSession(CallbackWithBranchUniversalObject);
+        }
+
+        void CallbackWithBranchUniversalObject(BranchUniversalObject buo, BranchLinkProperties linkProps, string error)
+        {
+            if (error != null)
+            {
+                Debug.LogError(error);
+                return;
+            }
+
+            if (linkProps.controlParams.Count > 0)
+            {
+                CardGameManager.Instance.Messenger.Show("Deeplink params : "
+                                    + buo.ToJsonString()
+                                    + linkProps.ToJsonString());
+            }
         }
 
         void Update()
