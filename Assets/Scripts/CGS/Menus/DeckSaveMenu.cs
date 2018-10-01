@@ -71,6 +71,12 @@ namespace CGS.Menus
             CardGameManager.Instance.Messenger.Show(DeckCopiedMessage);
         }
 
+        public void EnableSubmit()
+        {
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(null);
+        }
+
         public void AttemptSaveAndHide()
         {
             Deck filePathFinder = new Deck(CardGameManager.Current, nameInputField.text, CardGameManager.Current.DeckFileType);

@@ -86,17 +86,17 @@ namespace CGS.Menus
                 Hide();
         }
 
-        public void Share()
-        {
-            CardGameManager.Instance.Messenger.Show("Share functionality is coming soon.");
-        }
-
         public void Delete()
         {
             if (CardGameManager.Instance.AllCardGames.Count > 1)
                 CardGameManager.Instance.Messenger.Prompt(DeletePrompt, CardGameManager.Instance.DeleteGame);
             else
                 CardGameManager.Instance.Messenger.Show(DeleteMessage);
+        }
+
+        public void Share()
+        {
+            CardGameManager.Instance.Messenger.Show("Share functionality is coming soon.");
         }
 
         public void ShowDownloadPanel()

@@ -5,12 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Stream-lined menu navigation
+- Added "Share" buttons to the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Current Sprint
 - Group cards in the deck editor with a number instead of stacking them
-- Support deep links for games and decks through https://docs.branch.io/
-  - Share buttons in the *Game Selection Menu* and the *Deck Load Menu*
 
 ## Backlog
 - Tech: Travis CI for build automation
@@ -20,11 +18,12 @@ permalink: roadmap.html
 - Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Add rate limit for how often to update allCards and allSets
+  - Also set up to update immediately instead of on next load
+- Show loading indicator when loading/downloading a card game
 - Support Number card property data type (decimals)
 - Enhance boolean card property data type
 - Enhance object card property data type
 - Add identifiers for object card property data types
-- Show loading indicator when loading/downloading a card game
 - Introduce In-App Card Editor
 - Add option to restart game in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there

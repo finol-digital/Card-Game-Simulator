@@ -10,6 +10,9 @@ namespace CGS.Menus
 {
     public class TitleScreen : MonoBehaviour
     {
+        public const string GameName = "GameName";
+        public const string GameUrl = "GameUrl";
+
         public Text versionText;
 
         void Start()
@@ -28,11 +31,15 @@ namespace CGS.Menus
                 return;
             }
 
-            if (linkProps.controlParams.Count > 0)
+            string gameName, gameUrl;
+            if (linkProps.controlParams.TryGetValue(GameName, out gameName) && CardGameManager.Instance.AllCardGames.ContainsKey(gameName))
+                CardGameManager.Instance.SelectCardGame(gameName);
+            else if (linkProps.controlParams.TryGetValue(GameUrl, out gameUrl) && !string.IsNullOrEmpty(gameUrl))
             {
-                CardGameManager.Instance.Messenger.Show("Deeplink params : "
-                                    + buo.ToJsonString()
-                                    + linkProps.ToJsonString());
+                CardGameManager.Instance.Selector.Show();
+                CardGameManager.Instance.Selector.ShowDownloadPanel();
+                CardGameManager.Instance.Selector.urlInput.text = gameUrl;
+                CardGameManager.Instance.Selector.StartDownload();
             }
         }
 

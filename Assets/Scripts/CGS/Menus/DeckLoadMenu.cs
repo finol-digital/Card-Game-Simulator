@@ -28,8 +28,8 @@ namespace CGS.Menus
         public const string DeckLoadErrorMessage = "There was an error while loading the deck: ";
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
-        public Button shareFileButton;
         public Button deleteFileButton;
+        public Button shareFileButton;
         public Button loadFromFileButton;
 
         public RectTransform newDeckPanel;
@@ -170,11 +170,6 @@ namespace CGS.Menus
             return fileType;
         }
 
-        public void Share()
-        {
-            CardGameManager.Instance.Messenger.Show("Share functionality is coming soon.");
-        }
-
         public void PromptForDeleteFile()
         {
             CardGameManager.Instance.Messenger.Prompt(DeletePrompt, DeleteFile);
@@ -192,6 +187,11 @@ namespace CGS.Menus
             }
             SelectedFileName = string.Empty;
             BuildDeckFileSelectionOptions();
+        }
+
+        public void Share()
+        {
+            CardGameManager.Instance.Messenger.Show("Share functionality is coming soon.");
         }
 
         public void LoadFromFileAndHide()
@@ -230,6 +230,12 @@ namespace CGS.Menus
         public void PasteClipboardIntoText()
         {
             textInputField.text = UniClipboard.GetText();
+        }
+
+        public void EnableSubmit()
+        {
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(null);
         }
 
         public void DoSaveDontOverwrite()
