@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,15 +37,23 @@ namespace CGS.Menus
 
         void LateUpdate()
         {
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && yesButton.gameObject.activeInHierarchy)
-                yesButton.onClick?.Invoke();
-            else if (!IsNewMessage && (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && !yesButton.gameObject.activeInHierarchy)
-                Close();
+            if (IsNewMessage)
+            {
+                IsNewMessage = false;
+                return;
+            }
+
+            if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
+            {
+                if (yesButton.gameObject.activeInHierarchy)
+                    yesButton.onClick?.Invoke();
+                else
+                    Close();
+            }
             else if (Input.GetButtonDown(Inputs.Delete) && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
-            else if (!IsNewMessage && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel)))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Close();
-            IsNewMessage = false;
         }
 
         public void Show(string text)

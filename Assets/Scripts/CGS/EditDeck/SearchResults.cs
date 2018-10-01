@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+using System.Collections.Generic;
 using CardGameDef;
 using CardGameView;
 using CGS.Menus;
@@ -18,7 +22,7 @@ namespace CGS.EditDeck
         public Text filtersText;
         public Text countText;
 
-        public int CardsPerPage => Mathf.FloorToInt(layoutArea.rect.width / 
+        public int CardsPerPage => Mathf.FloorToInt(layoutArea.rect.width /
         (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + layoutArea.gameObject.GetOrAddComponent<HorizontalLayoutGroup>().spacing));
         public int TotalPageCount => CardsPerPage == 0 ? 0 : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
 

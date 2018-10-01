@@ -16,8 +16,6 @@ permalink: roadmap.html
 - Tech: Travis CI for build automation
 - Tech: Add unit tests
 - Tech: Review with Resharper
-- Tech: Apply MPL Header to source files as necessary
-- Tech: Update TMP default text settings
 - Fix: UWP join and host
 - Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
