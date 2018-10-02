@@ -19,11 +19,11 @@ namespace CGS.Menus
         {
             versionText.text = MainMenu.VersionMessage + Application.version;
 #if UNITY_ANDROID || UNITY_IOS
-            Branch.initSession(CallbackWithBranchUniversalObject);
+            Branch.initSession(BranchCallbackWithBranchUniversalObject);
 #endif
         }
 
-        void CallbackWithBranchUniversalObject(BranchUniversalObject buo, BranchLinkProperties linkProps, string error)
+        void BranchCallbackWithBranchUniversalObject(BranchUniversalObject buo, BranchLinkProperties linkProps, string error)
         {
             if (error != null)
             {

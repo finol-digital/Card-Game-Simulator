@@ -16,6 +16,10 @@ namespace CGS.Menus
     {
         public const string DeleteMessage = "Please download additional card games before deleting.";
         public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
+        public const string ShareTitle = "Card Game Simulator - {0}";
+        public const string ShareDescription = "Play {0} on CGS!";
+        public const string ShareMessage = "Get CGS for {0}: {1}";
+        public const string ShareMessage2 = "Share link copied to clipboard: {0}";
         public const string DominoesUrl = "https://cardgamesim.finoldigital.com/games/Dominoes/Dominoes.json";
         public const string StandardUrl = "https://cardgamesim.finoldigital.com/games/Standard/Standard.json";
         public const string MahjongUrl = "https://cardgamesim.finoldigital.com/games/Mahjong/Mahjong.json";
@@ -96,7 +100,35 @@ namespace CGS.Menus
 
         public void Share()
         {
-            CardGameManager.Instance.Messenger.Show("Share functionality is coming soon.");
+            BranchUniversalObject universalObject = new BranchUniversalObject();
+            universalObject.contentIndexMode = 1;
+            universalObject.canonicalIdentifier = CardGameManager.Current.Name + "+" + CardGameManager.Current.AutoUpdateUrl;
+            universalObject.title = string.Format(ShareTitle, CardGameManager.Current.Name);
+            universalObject.contentDescription = string.Format(ShareDescription, CardGameManager.Current.Name);
+            universalObject.imageUrl = CardGameManager.Current.BackgroundImageUrl;
+            universalObject.metadata.AddCustomMetadata(TitleScreen.GameName, CardGameManager.Current.Name);
+            universalObject.metadata.AddCustomMetadata(TitleScreen.GameUrl, CardGameManager.Current.AutoUpdateUrl);
+            BranchLinkProperties linkProperties = new BranchLinkProperties();
+            linkProperties.controlParams.Add(TitleScreen.GameName, CardGameManager.Current.Name);
+            linkProperties.controlParams.Add(TitleScreen.GameUrl, CardGameManager.Current.AutoUpdateUrl);
+            Branch.getShortURL(universalObject, linkProperties, BranchCallbackWithUrl);
+        }
+
+        public void BranchCallbackWithUrl(string url, string error)
+        {
+            if (error != null)
+            {
+                Debug.LogError(error);
+                return;
+            }
+
+            string shareText = string.Format(ShareMessage, CardGameManager.Current.Name, url);
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            (new NativeShare()).SetText(shareText).Share();
+#else
+            UniClipboard.SetText(url);
+            CardGameManager.Instance.Messenger.Show(string.Format(ShareMessage2, url));
+#endif
         }
 
         public void ShowDownloadPanel()
