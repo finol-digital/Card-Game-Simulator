@@ -19,7 +19,7 @@ namespace CGS.Menus
         public const string ShareTitle = "Card Game Simulator - {0}";
         public const string ShareDescription = "Play {0} on CGS!";
         public const string ShareMessage = "Get CGS for {0}: {1}";
-        public const string ShareMessage2 = "Share link copied to clipboard: {0}";
+        public const string ShareMessage2 = "Share functionality only available on Android/iOS.";
         public const string DominoesUrl = "https://cardgamesim.finoldigital.com/games/Dominoes/Dominoes.json";
         public const string StandardUrl = "https://cardgamesim.finoldigital.com/games/Standard/Standard.json";
         public const string MahjongUrl = "https://cardgamesim.finoldigital.com/games/Mahjong/Mahjong.json";
@@ -111,7 +111,11 @@ namespace CGS.Menus
             BranchLinkProperties linkProperties = new BranchLinkProperties();
             linkProperties.controlParams.Add(TitleScreen.GameName, CardGameManager.Current.Name);
             linkProperties.controlParams.Add(TitleScreen.GameUrl, CardGameManager.Current.AutoUpdateUrl);
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             Branch.getShortURL(universalObject, linkProperties, BranchCallbackWithUrl);
+#else
+            CardGameManager.Instance.Messenger.Show(string.Format(ShareMessage2));
+#endif
         }
 
         public void BranchCallbackWithUrl(string url, string error)
@@ -122,13 +126,8 @@ namespace CGS.Menus
                 return;
             }
 
-            string shareText = string.Format(ShareMessage, CardGameManager.Current.Name, url);
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            (new NativeShare()).SetText(shareText).Share();
-#else
-            UniClipboard.SetText(url);
-            CardGameManager.Instance.Messenger.Show(string.Format(ShareMessage2, url));
-#endif
+            NativeShare nativeShare = new NativeShare();
+            nativeShare.SetText(string.Format(ShareMessage, CardGameManager.Current.Name, url)).Share();
         }
 
         public void ShowDownloadPanel()

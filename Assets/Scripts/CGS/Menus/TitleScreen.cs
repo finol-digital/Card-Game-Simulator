@@ -18,7 +18,7 @@ namespace CGS.Menus
         void Start()
         {
             versionText.text = MainMenu.VersionMessage + Application.version;
-#if UNITY_ANDROID || UNITY_IOS
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             Branch.initSession(BranchCallbackWithBranchUniversalObject);
 #endif
         }

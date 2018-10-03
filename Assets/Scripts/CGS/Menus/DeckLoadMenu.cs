@@ -25,7 +25,6 @@ namespace CGS.Menus
 
         public const string DeletePrompt = "Are you sure you would like to delete this deck?";
         public const string DeckDeleteErrorMessage = "There was an error while attempting to delete the deck: ";
-        public const string ShareMessage = "Deck text copied to clipboard";
         public const string DeckLoadErrorMessage = "There was an error while loading the deck: ";
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
@@ -197,7 +196,7 @@ namespace CGS.Menus
             (new NativeShare()).SetText(shareText).Share();
 #else
             UniClipboard.SetText(shareText);
-            CardGameManager.Instance.Messenger.Show(ShareMessage);
+            CardGameManager.Instance.Messenger.Show(DeckSaveMenu.DeckCopiedMessage);
 #endif
         }
 
