@@ -5,7 +5,7 @@
 #import "UnityAppController.h"
 
 
-static NSString *_branchKey = @"";
+static NSString *_branchKey = @"key_live_mnzYrzoSgtqi3gAyzkVzqppkxFnNY1jn";
 static BranchUnityWrapper *_wrapper = [BranchUnityWrapper sharedInstance];
 
 

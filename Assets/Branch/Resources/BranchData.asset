@@ -17,9 +17,11 @@ MonoBehaviour:
   liveAppLinks:
   - cgs.link
   - cardgamesim-alternate.app.link
-  testBranchKey: 
-  testBranchUri: 
+  testBranchKey: key_test_oez3AweOkBwlZaqsxiJvCgmawslU9R0Z
+  testBranchUri: cardgamesim
   testAndroidPathPrefix: 
-  testAppLinks: []
+  testAppLinks:
+  - cardgamesim.test-app.link
+  - cardgamesim-alternate.test-app.link
   simulateFreshInstalls: 0
   testMode: 0
