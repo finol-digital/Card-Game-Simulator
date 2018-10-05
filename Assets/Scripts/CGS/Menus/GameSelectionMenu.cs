@@ -106,11 +106,11 @@ namespace CGS.Menus
             universalObject.title = string.Format(ShareTitle, CardGameManager.Current.Name);
             universalObject.contentDescription = string.Format(ShareDescription, CardGameManager.Current.Name);
             universalObject.imageUrl = CardGameManager.Current.BackgroundImageUrl;
-            universalObject.metadata.AddCustomMetadata(TitleScreen.GameName, CardGameManager.Current.Name);
-            universalObject.metadata.AddCustomMetadata(TitleScreen.GameUrl, CardGameManager.Current.AutoUpdateUrl);
+            universalObject.metadata.AddCustomMetadata(CardGameManager.GameName, CardGameManager.Current.Name);
+            universalObject.metadata.AddCustomMetadata(CardGameManager.GameUrl, CardGameManager.Current.AutoUpdateUrl);
             BranchLinkProperties linkProperties = new BranchLinkProperties();
-            linkProperties.controlParams.Add(TitleScreen.GameName, CardGameManager.Current.Name);
-            linkProperties.controlParams.Add(TitleScreen.GameUrl, CardGameManager.Current.AutoUpdateUrl);
+            linkProperties.controlParams.Add(CardGameManager.GameName, CardGameManager.Current.Name);
+            linkProperties.controlParams.Add(CardGameManager.GameUrl, CardGameManager.Current.AutoUpdateUrl);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             Branch.getShortURL(universalObject, linkProperties, BranchCallbackWithUrl);
 #else

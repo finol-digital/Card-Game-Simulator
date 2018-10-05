@@ -10,37 +10,14 @@ namespace CGS.Menus
 {
     public class TitleScreen : MonoBehaviour
     {
-        public const string GameName = "GameName";
-        public const string GameUrl = "GameUrl";
-
         public Text versionText;
 
         void Start()
         {
             versionText.text = MainMenu.VersionMessage + Application.version;
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            Branch.initSession(BranchCallbackWithBranchUniversalObject);
+            Branch.initSession(CardGameManager.Instance.BranchCallbackWithParams);
 #endif
-        }
-
-        void BranchCallbackWithBranchUniversalObject(BranchUniversalObject buo, BranchLinkProperties linkProps, string error)
-        {
-            if (error != null)
-            {
-                Debug.LogError(error);
-                return;
-            }
-
-            string gameName, gameUrl;
-            if (linkProps.controlParams.TryGetValue(GameName, out gameName) && CardGameManager.Instance.AllCardGames.ContainsKey(gameName))
-                CardGameManager.Instance.SelectCardGame(gameName);
-            else if (linkProps.controlParams.TryGetValue(GameUrl, out gameUrl) && !string.IsNullOrEmpty(gameUrl))
-            {
-                CardGameManager.Instance.Selector.Show();
-                CardGameManager.Instance.Selector.ShowDownloadPanel();
-                CardGameManager.Instance.Selector.urlInput.text = gameUrl;
-                CardGameManager.Instance.Selector.StartDownload();
-            }
         }
 
         void Update()

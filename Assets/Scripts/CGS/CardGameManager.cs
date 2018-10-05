@@ -21,6 +21,8 @@ namespace CGS
 {
     public class CardGameManager : MonoBehaviour
     {
+        public const string GameName = "GameName";
+        public const string GameUrl = "GameUrl";
         public const string PlayerPrefGameName = "DefaultGame";
         public const string SelectorPrefabName = "Game Selection Menu";
         public const string MessengerPrefabName = "Popup";
@@ -174,6 +176,26 @@ namespace CGS
         void OnSceneUnloaded(Scene scene)
         {
             OnSceneActions.Clear();
+        }
+
+        public void BranchCallbackWithParams(Dictionary<string, object> parameters, string error)
+        {
+            if (error != null)
+            {
+                Debug.LogError(error);
+                return;
+            }
+
+            object gameName, gameUrl;
+            if (parameters.TryGetValue(GameName, out gameName) && (gameName is string) && AllCardGames.ContainsKey((string)gameName))
+                SelectCardGame((string)gameName);
+            else if (parameters.TryGetValue(GameUrl, out gameUrl) && (gameUrl is string) && !string.IsNullOrEmpty((string)gameUrl))
+            {
+                Selector.Show();
+                Selector.ShowDownloadPanel();
+                Selector.urlInput.text = (string)gameUrl;
+                Selector.StartDownload();
+            }
         }
 
         public IEnumerator DownloadCardGame(string gameUrl)
