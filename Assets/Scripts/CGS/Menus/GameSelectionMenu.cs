@@ -5,10 +5,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+using CardGameDef;
 
 namespace CGS.Menus
 {
@@ -28,9 +29,10 @@ namespace CGS.Menus
         public InputField urlInput;
         public Button downloadButton;
 
-        void Update()
+        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
+        void LateUpdate()
         {
-            if (urlInput.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            if (urlInput.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if (downloadPanel.gameObject.activeSelf)

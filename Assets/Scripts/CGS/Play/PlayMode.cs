@@ -5,15 +5,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Mirror;
+
 using CardGameDef;
 using CardGameView;
 using CGS.Menus;
 using CGS.Play.Multiplayer;
 using CGS.Play.Zones;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using Mirror;
-using UnityEngine.UI;
 
 namespace CGS.Play
 {
@@ -59,7 +60,7 @@ namespace CGS.Play
 
         void Update()
         {
-            if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+            if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
             if (Input.GetButtonDown(Inputs.Load))

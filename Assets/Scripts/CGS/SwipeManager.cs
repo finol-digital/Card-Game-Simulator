@@ -1,8 +1,8 @@
 ﻿// TODO: EITHER COMPLETELY REFACTOR OR REPLACE THIS CLASS
 
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace CGS
 {

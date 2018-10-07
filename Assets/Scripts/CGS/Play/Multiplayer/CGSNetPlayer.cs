@@ -5,10 +5,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
-using CardGameView;
 using UnityEngine;
 using Mirror;
+
+using CardGameDef;
+using CardGameView;
 
 namespace CGS.Play.Multiplayer
 {

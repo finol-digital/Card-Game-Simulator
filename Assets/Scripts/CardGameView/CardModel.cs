@@ -5,15 +5,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
-using CGS;
-using CGS.Play.Multiplayer;
-using CGS.Play.Zones;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using Mirror;
+
+using CardGameDef;
+using CGS;
+using CGS.Play.Multiplayer;
 
 namespace CardGameView
 {
@@ -40,7 +40,7 @@ namespace CardGameView
         public bool DoesCloneOnDrag { get; set; }
         public CardAction DoubleClickAction { get; set; }
         public UnityAction SecondaryDragAction { get; set; }
-        public CardDropZone DropTarget { get; set; }
+        public CardDropArea DropTarget { get; set; }
 
         public bool DidSelectOnDown { get; private set; }
         public PointerEventData CurrentPointerEventData { get; private set; }
@@ -416,7 +416,7 @@ namespace CardGameView
             CardStack prevParentStack = ParentCardStack;
             if (CurrentDragPhase == DragPhase.Drag)
                 prevParentStack.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
-            transform.SetParent(CardGameManager.TopCardCanvas.transform);
+            transform.SetParent(CardGameManager.Instance.TopCardCanvas.transform);
             transform.SetAsLastSibling();
             if (prevParentStack != null)
                 prevParentStack.OnRemove(this);

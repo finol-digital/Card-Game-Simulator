@@ -4,10 +4,11 @@
 
 using System;
 using System.IO;
-using CardGameDef;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+using CardGameDef;
 
 namespace CGS.Menus
 {
@@ -27,9 +28,10 @@ namespace CGS.Menus
         public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
         public bool DoesAutoOverwrite { get; private set; }
 
+        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
         void LateUpdate()
         {
-            if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)

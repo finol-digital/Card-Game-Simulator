@@ -4,9 +4,10 @@
 
 using System.Collections;
 using System.Linq;
-using CGS.Menus;
 using UnityEngine;
 using Mirror;
+
+using CGS.Menus;
 
 namespace CGS.Play.Multiplayer
 {

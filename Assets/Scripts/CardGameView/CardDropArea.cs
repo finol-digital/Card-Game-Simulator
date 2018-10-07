@@ -4,18 +4,17 @@
 
 using UnityEngine;
 using UnityEngine.EventSystems;
-using CardGameView;
 
-namespace CGS.Play.Zones
+namespace CardGameView
 {
     public interface ICardDropHandler
     {
         void OnDrop(CardModel cardModel);
     }
 
-    public class CardDropZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
+    public class CardDropArea : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
     {
-        // HACK: UNITY CAN'T PASS INTERFACES THROUGH UI, SO THIS WILL NEED TO BE SET THROUGH CODE
+        // HACK: UNITY CAN'T PASS INTERFACES THROUGH UI, SO THIS NEEDS TO BE SET THROUGH CODE
         public ICardDropHandler dropHandler;
 
         public void OnPointerEnter(PointerEventData eventData)

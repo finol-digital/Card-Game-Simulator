@@ -3,11 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameDef;
-using CGS;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
+using CardGameDef;
+using CGS;
 
 namespace CardGameView
 {
@@ -145,7 +146,7 @@ namespace CardGameView
 
         void LateUpdate()
         {
-            if (!IsVisible || SelectedCardModel == null || !Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+            if (!IsVisible || SelectedCardModel == null || !Input.anyKeyDown || CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)

@@ -5,12 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Added "Share" buttons to the *Game Selection Menu* and the *Deck Load Menu*
-
-## Current Sprint
+- Show loading indicator when downloading a card game
+- Change Card Info Viewer from animated to static
 - Group cards in the deck editor with a number instead of stacking them
 
-## Backlog
+## Current Sprint
 - Tech: Travis CI for build automation
 - Tech: Add unit tests
 - Tech: Review with Resharper
@@ -19,7 +18,8 @@ permalink: roadmap.html
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Add rate limit for how often to update allCards and allSets
   - Also set up to update immediately instead of on next load
-- Show loading indicator when loading/downloading a card game
+
+## Backlog
 - Support Number card property data type (decimals)
 - Enhance boolean card property data type
 - Enhance object card property data type

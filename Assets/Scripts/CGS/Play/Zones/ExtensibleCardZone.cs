@@ -5,11 +5,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
-using CardGameView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+
+using CardGameDef;
+using CardGameView;
 
 namespace CGS.Play.Zones
 {
@@ -18,7 +19,7 @@ namespace CGS.Play.Zones
         public virtual IReadOnlyList<Card> Cards => extensionContent.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Value).ToList();
 
         public GameObject cardModelPrefab;
-        public List<CardDropZone> cardDropZones;
+        public List<CardDropArea> cardDropZones;
         public RectTransform extension;
         public RectTransform extensionContent;
         public Text labelText;
@@ -30,7 +31,7 @@ namespace CGS.Play.Zones
 
         void Start()
         {
-            foreach (CardDropZone dropZone in cardDropZones)
+            foreach (CardDropArea dropZone in cardDropZones)
                 dropZone.dropHandler = this;
             OnStart();
         }

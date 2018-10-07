@@ -7,10 +7,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CardGameDef;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+using CardGameDef;
 
 namespace CGS.Menus
 {
@@ -41,9 +42,10 @@ namespace CGS.Menus
         public string SelectedFileName { get; private set; }
         public SortedDictionary<string, string> DeckFiles { get; } = new SortedDictionary<string, string>();
 
+        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
         void LateUpdate()
         {
-            if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if (newDeckPanel.gameObject.activeSelf)

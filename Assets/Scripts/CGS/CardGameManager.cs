@@ -7,15 +7,16 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+
 using CardGameDef;
 using CardGameView;
 using CGS.Menus;
 using CGS.Play;
 using CGS.Play.Multiplayer;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using UnityEngine.Events;
 
 namespace CGS
 {
@@ -26,9 +27,13 @@ namespace CGS
         public const string PlayerPrefGameName = "DefaultGame";
         public const string SelectorPrefabName = "Game Selection Menu";
         public const string MessengerPrefabName = "Popup";
+        public const string SpinnerPrefabName = "Spinner";
         public const string InvalidGameSelectionMessage = "Could not select the card game because the name is not recognized in the list of card games! Try selecting a different card game.";
         public const string GameLoadErrorMessage = "Error loading game!: ";
         public const string GameDeleteErrorMessage = "Error deleting game!: ";
+        public const string CardsLoadedMessage = "{0} cards loaded!";
+        public const string CardsLoadingMessage = "{0} cards loading...";
+        public const int CardsLoadingMessageThreshold = 60;
         public const int PixelsPerInch = 100;
 
         public static CardGameManager Instance
@@ -82,6 +87,18 @@ namespace CGS
         }
         private Popup _messenger;
 
+        public SpinningLoadingPanel Spinner
+        {
+            get
+            {
+                if (_spinner != null) return _spinner;
+                _spinner = Instantiate(Resources.Load<GameObject>(SpinnerPrefabName)).GetOrAddComponent<SpinningLoadingPanel>();
+                _spinner.transform.SetParent(transform);
+                return _spinner;
+            }
+        }
+        private SpinningLoadingPanel _spinner;
+
         public Image BackgroundImage
         {
             get
@@ -93,7 +110,8 @@ namespace CGS
         }
         private Image _backgroundImage;
 
-        public static Canvas TopCardCanvas
+        // TODO: IMPROVE PERFORMANCE; MAYBE TRACK THIS USING OBSERVER PATTERN?
+        public Canvas TopCardCanvas
         {
             get
             {
@@ -105,7 +123,8 @@ namespace CGS
             }
         }
 
-        public static Canvas TopMenuCanvas
+        // TODO: IMPROVE PERFORMANCE; MAYBE TRACK THIS USING OBSERVER PATTERN?
+        public Canvas TopMenuCanvas
         {
             get
             {
@@ -190,17 +209,12 @@ namespace CGS
             if (parameters.TryGetValue(GameName, out gameName) && (gameName is string) && AllCardGames.ContainsKey((string)gameName))
                 SelectCardGame((string)gameName);
             else if (parameters.TryGetValue(GameUrl, out gameUrl) && (gameUrl is string) && !string.IsNullOrEmpty((string)gameUrl))
-            {
-                Selector.Show();
-                Selector.ShowDownloadPanel();
-                Selector.urlInput.text = (string)gameUrl;
-                Selector.StartDownload();
-            }
+                DownloadCardGame((string)gameUrl);
         }
 
         public IEnumerator DownloadCardGame(string gameUrl)
         {
-            //Messenger.Show("Game download has started");
+            Spinner.Show();
             CardGame newGame = new CardGame(this, Set.DefaultCode, gameUrl) { AutoUpdate = true };
             Current = newGame;
             yield return newGame.Download();
@@ -209,7 +223,7 @@ namespace CGS
             else
                 Debug.LogError(GameLoadErrorMessage + newGame.Error);
             SelectCardGame(newGame.Name);
-            //Messenger.Show("Game download has finished");
+            Spinner.Hide();
         }
 
         public void SelectLeft()
@@ -288,11 +302,9 @@ namespace CGS
 
         public IEnumerator LoadCards()
         {
-            //Messenger.Show("Cards are loading in the background. Performance may be affected in the meantime.");
             yield return Current.LoadAllCards();
             if (!string.IsNullOrEmpty(Current.Error))
                 Debug.LogError(GameLoadErrorMessage + Current.Error);
-            //Messenger.Show("All cards have finished loading.");
         }
 
         public void DeleteGame()

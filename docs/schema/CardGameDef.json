@@ -132,11 +132,6 @@
 			"default": "name",
 			"type": "string"
 		},
-		"cardNameIsAtTop": {
-			"description": "cardNameIsAtTop indicates whether the card's name appears at the top of its image. If false, CGS puts a label at the top of the card when other cards are stacked on top it.",
-			"default": "true",
-			"type": "boolean"
-		},
 		"cardPrimaryProperty": {
 			"description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
 			"type": "string"

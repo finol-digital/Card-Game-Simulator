@@ -116,9 +116,6 @@ namespace CardGameDef
         public string CardNameIdentifier { get; set; } = "name";
 
         [JsonProperty]
-        public bool CardNameIsAtTop { get; set; } = true;
-
-        [JsonProperty]
         public string CardSetIdentifier { get; set; } = "set";
 
         [JsonProperty]
@@ -344,8 +341,12 @@ namespace CardGameDef
             for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
             {
                 LoadCards(page);
+                if (page == AllCardsUrlPageCountStartIndex && AllCardsUrlPageCount > CGS.CardGameManager.CardsLoadingMessageThreshold)
+                    CGS.CardGameManager.Instance.Messenger.Show(string.Format(CGS.CardGameManager.CardsLoadingMessage, Name));
                 yield return null;
             }
+            if (AllCardsUrlPageCount > CGS.CardGameManager.CardsLoadingMessageThreshold)
+                CGS.CardGameManager.Instance.Messenger.Show(string.Format(CGS.CardGameManager.CardsLoadedMessage, Name));
         }
 
         private void LoadCards(int page)

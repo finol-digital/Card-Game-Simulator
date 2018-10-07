@@ -4,10 +4,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
+using CardGameDef;
 
 namespace CGS.Menus
 {
@@ -65,9 +66,10 @@ namespace CGS.Menus
             }
         }
 
+        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
         void LateUpdate()
         {
-            if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            if (!Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if (Input.GetButtonDown(Inputs.FocusName) || Input.GetButtonDown(Inputs.FocusText))

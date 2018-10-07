@@ -3,14 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameDef;
-using CardGameView;
-using CGS.Menus;
-using CGS.Play.Zones;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+
+using CardGameDef;
+using CardGameView;
+using CGS.Menus;
 
 namespace CGS.EditDeck
 {
@@ -77,7 +77,7 @@ namespace CGS.EditDeck
         public GameObject deckLoadMenuPrefab;
         public GameObject deckSaveMenuPrefab;
         public RectTransform layoutContent;
-        public CardDropZone dropZone;
+        public CardDropArea dropZone;
         public ScrollRect scrollRect;
         public Text nameText;
         public Text countText;
@@ -101,7 +101,7 @@ namespace CGS.EditDeck
 
         void Update()
         {
-            if (CardInfoViewer.Instance.IsVisible || CardGameManager.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
+            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.Sort))

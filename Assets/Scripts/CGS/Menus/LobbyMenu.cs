@@ -5,12 +5,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CGS.Play.Multiplayer;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using Mirror;
 using UnityEngine.UI;
+using Mirror;
+
+using CGS.Play.Multiplayer;
 
 namespace CGS.Menus
 {
@@ -21,9 +22,10 @@ namespace CGS.Menus
         public List<string> HostNames { get; private set; } = new List<string>();
         public string SelectedHost { get; private set; } = "";
 
-        void Update()
+        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
+        void LateUpdate()
         {
-            if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            if (!Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && joinButton.interactable)

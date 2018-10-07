@@ -3,9 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameView;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
+using CardGameView;
 
 namespace CGS.EditDeck
 {
@@ -16,7 +17,7 @@ namespace CGS.EditDeck
 
         void Update()
         {
-            if (CardGameManager.TopMenuCanvas != null || editor.searchResults.nameInputField.isFocused)
+            if (CardGameManager.Instance.TopMenuCanvas != null || editor.searchResults.nameInputField.isFocused)
                 return;
 
             if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && SwipeManager.DetectSwipe())

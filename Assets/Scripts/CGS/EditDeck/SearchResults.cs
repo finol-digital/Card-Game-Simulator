@@ -3,11 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
 using CardGameDef;
 using CardGameView;
 using CGS.Menus;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace CGS.EditDeck
 {
@@ -28,11 +29,20 @@ namespace CGS.EditDeck
 
         public CardSearchMenu CardSearcher => _cardSearcher ??
                                               (_cardSearcher = Instantiate(cardSearchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
+        private CardSearchMenu _cardSearcher;
+        public List<Card> AllResults
+        {
+            get { return _allResults ?? (_allResults = new List<Card>()); }
+            set
+            {
+                _allResults = value;
+                CurrentPageIndex = 0;
+                UpdateSearchResultsPanel();
+            }
+        }
+        private List<Card> _allResults;
 
         public int CurrentPageIndex { get; set; }
-
-        private CardSearchMenu _cardSearcher;
-        private List<Card> _allResults;
 
         void OnEnable()
         {
@@ -115,17 +125,6 @@ namespace CGS.EditDeck
             filtersText.text = filters;
 
             AllResults = results;
-        }
-
-        public List<Card> AllResults
-        {
-            get { return _allResults ?? (_allResults = new List<Card>()); }
-            set
-            {
-                _allResults = value;
-                CurrentPageIndex = 0;
-                UpdateSearchResultsPanel();
-            }
         }
     }
 }

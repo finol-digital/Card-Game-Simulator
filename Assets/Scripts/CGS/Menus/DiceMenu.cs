@@ -2,9 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using CGS.Play;
 using UnityEngine;
 using UnityEngine.UI;
+
+using CGS.Play;
 
 namespace CGS.Menus
 {
@@ -47,9 +48,10 @@ namespace CGS.Menus
             Max = DefaultMax;
         }
 
+        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
         void LateUpdate()
         {
-            if (!Input.anyKeyDown || gameObject != CardGameManager.TopMenuCanvas?.gameObject)
+            if (!Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))

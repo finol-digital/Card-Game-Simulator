@@ -22,7 +22,7 @@ namespace CGS.Menus
 
         void Update()
         {
-            if (CardGameManager.TopMenuCanvas != null)
+            if (CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
             if (Input.anyKeyDown)

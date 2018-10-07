@@ -4,11 +4,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+using CardGameDef;
 
 namespace CGS.Menus
 {
@@ -27,7 +28,7 @@ namespace CGS.Menus
         void Start()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        quitButton.SetActive(false);
+            quitButton.SetActive(false);
 #endif
             versionText.text = VersionMessage + Application.version;
 
@@ -39,7 +40,7 @@ namespace CGS.Menus
 
         void Update()
         {
-            if (!Input.anyKeyDown || CardGameManager.TopMenuCanvas != null)
+            if (!Input.anyKeyDown || CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
@@ -118,9 +119,9 @@ namespace CGS.Menus
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_WSA
-        System.Diagnostics.Process.GetCurrentProcess().Kill();
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
 #else
-        Application.Quit();
+            Application.Quit();
 #endif
         }
     }

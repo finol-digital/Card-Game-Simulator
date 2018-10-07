@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace CardGameDef
 {
@@ -14,9 +13,9 @@ namespace CardGameDef
         public string Id { get; private set; }
 
         [JsonProperty]
-        public Vector2 OffsetMin { get; private set; }
+        public UnityEngine.Vector2 OffsetMin { get; private set; }
 
         [JsonProperty]
-        public Vector2 Size { get; private set; }
+        public UnityEngine.Vector2 Size { get; private set; }
     }
 }

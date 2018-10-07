@@ -4,9 +4,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+
 using CardGameDef;
 using CardGameView;
-using UnityEngine;
 
 namespace CGS.Play.Zones
 {
@@ -24,8 +25,8 @@ namespace CGS.Play.Zones
         protected CardStack ZoneCardStack => _zoneCardStack ?? (_zoneCardStack = GetComponent<CardStack>());
         private CardStack _zoneCardStack;
 
-        protected CardDropZone DropZone => _dropZone ?? (_dropZone = gameObject.GetOrAddComponent<CardDropZone>());
-        private CardDropZone _dropZone;
+        protected CardDropArea DropZone => _dropZone ?? (_dropZone = gameObject.GetOrAddComponent<CardDropArea>());
+        private CardDropArea _dropZone;
 
         public override void OnStart()
         {

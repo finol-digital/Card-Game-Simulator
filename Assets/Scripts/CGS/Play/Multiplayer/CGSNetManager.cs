@@ -2,9 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using CardGameView;
 using UnityEngine;
 using Mirror;
+
+using CardGameView;
 
 namespace CGS.Play.Multiplayer
 {
@@ -74,25 +75,25 @@ namespace CGS.Play.Multiplayer
 
         public override void OnServerError(NetworkConnection conn, int errorCode)
         {
-            //base.OnServerError(conn, errorCode);
-            Debug.Log("Server error:" + errorCode);
+            base.OnServerError(conn, errorCode);
+            Debug.LogError("Server error:" + errorCode);
         }
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
-            //base.OnServerDisconnect(conn);
-            Debug.Log("Player disconnected");
+            base.OnServerDisconnect(conn);
+            Debug.Log("Server disconnected");
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)
         {
-            //base.OnClientError(conn, errorCode);
-            Debug.Log("Client error:" + errorCode);
+            base.OnClientError(conn, errorCode);
+            Debug.LogError("Client error:" + errorCode);
         }
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
-            //base.OnClientDisconnect(conn);
+            base.OnClientDisconnect(conn);
             Debug.Log("Client Disconnected");
         }
     }

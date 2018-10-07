@@ -3,9 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameDef;
 using UnityEngine;
 using UnityEngine.UI;
+
+using CardGameDef;
 
 namespace CGS.Play.Zones
 {
@@ -16,6 +17,41 @@ namespace CGS.Play.Zones
         public const float ScrollbarWidth = 80f;
 
         public bool IsPortrait => ((RectTransform)transform).sizeDelta.y > ((RectTransform)transform).sizeDelta.x;
+
+        public bool IsExtended
+        {
+            get
+            {
+                return ((RectTransform)scrollView.transform.parent).anchoredPosition.x < 1;
+            }
+            set
+            {
+                RectTransform.Edge edge = RectTransform.Edge.Right;
+                float size = Width;
+                float inset = value ? 0 : -(size - ScrollbarWidth);
+                ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, inset, size);
+                Results?.ResizeExtension();
+                Discard?.ResizeExtension();
+                foreach (ExtensibleCardZone zone in ExtraZones)
+                    zone.ResizeExtension();
+                CurrentDeck?.ResizeExtension();
+                Hand?.ResizeExtension();
+                ResetButtons();
+            }
+        }
+
+        public bool IsVisible
+        {
+            get { return scrollView.gameObject.activeSelf; }
+            set
+            {
+                scrollView.gameObject.SetActive(value);
+                RectTransform.Edge edge = RectTransform.Edge.Top;
+                float size = GetComponent<RectTransform>().rect.height;
+                ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, 0, scrollView.gameObject.activeSelf ? size : ScrollbarWidth);
+                ResetButtons();
+            }
+        }
 
         public GameObject resultsZonePrefab;
         public GameObject discardZonePrefab;
@@ -144,41 +180,6 @@ namespace CGS.Play.Zones
             extendButton.SetActive(!IsExtended);
             showButton.SetActive(IsExtended && !IsVisible);
             hideButton.SetActive(IsExtended && IsVisible);
-        }
-
-        public bool IsExtended
-        {
-            get
-            {
-                return ((RectTransform)scrollView.transform.parent).anchoredPosition.x < 1;
-            }
-            set
-            {
-                RectTransform.Edge edge = RectTransform.Edge.Right;
-                float size = Width;
-                float inset = value ? 0 : -(size - ScrollbarWidth);
-                ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, inset, size);
-                Results?.ResizeExtension();
-                Discard?.ResizeExtension();
-                foreach (ExtensibleCardZone zone in ExtraZones)
-                    zone.ResizeExtension();
-                CurrentDeck?.ResizeExtension();
-                Hand?.ResizeExtension();
-                ResetButtons();
-            }
-        }
-
-        public bool IsVisible
-        {
-            get { return scrollView.gameObject.activeSelf; }
-            set
-            {
-                scrollView.gameObject.SetActive(value);
-                RectTransform.Edge edge = RectTransform.Edge.Top;
-                float size = GetComponent<RectTransform>().rect.height;
-                ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, 0, scrollView.gameObject.activeSelf ? size : ScrollbarWidth);
-                ResetButtons();
-            }
         }
     }
 }
