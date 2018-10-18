@@ -64,7 +64,6 @@ namespace CardGameDef
                         break;
                     case PropertyType.Object:
                     case PropertyType.ObjectList:
-                    case PropertyType.Number:
                     case PropertyType.Boolean:
                     case PropertyType.StringList:
                     case PropertyType.EscapedString:

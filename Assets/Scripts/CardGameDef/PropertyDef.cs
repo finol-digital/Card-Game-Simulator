@@ -13,7 +13,6 @@ namespace CardGameDef
         EscapedString,
         Boolean,
         Integer,
-        Number,
         Object,
         StringEnum,
         StringList,

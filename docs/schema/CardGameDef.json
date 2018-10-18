@@ -152,7 +152,7 @@
 					},
 					"type": {
 						"description": "The type of the property",
-						"enum": ["string", "escapedString", "boolean", "integer", "number", "object", "stringEnum", "stringList", "stringEnumList", "objectEnum", "objectList", "objectEnumList"],
+						"enum": ["string", "escapedString", "boolean", "integer", "object", "stringEnum", "stringList", "stringEnumList", "objectEnum", "objectList", "objectEnumList"],
 						"default": "string",
 						"type": "string"
 					},

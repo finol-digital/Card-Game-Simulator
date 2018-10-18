@@ -14,7 +14,6 @@ permalink: roadmap.html
 - Group cards in the deck editor with a number instead of stacking them
 - Add rate limit for how often to update allCards and allSets
   - Also set up to update immediately instead of on next load
-- Support Number card property data type (decimals)
 - Enhance boolean card property data type
 - Enhance object card property data type
 - Add identifiers for object card property data types

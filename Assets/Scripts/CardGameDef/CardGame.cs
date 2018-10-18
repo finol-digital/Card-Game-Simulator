@@ -463,7 +463,6 @@ namespace CardGameDef
                             newPropertyEntry.Value = (cardJToken.Value<string>(property.Name) ?? string.Empty).Replace("\\", "");
                             break;
                         case PropertyType.StringEnum:
-                        case PropertyType.Number:
                         case PropertyType.Integer:
                         case PropertyType.Boolean:
                         case PropertyType.String:
