@@ -42,10 +42,13 @@ namespace CGS.Menus
         public string SelectedFileName { get; private set; }
         public SortedDictionary<string, string> DeckFiles { get; } = new SortedDictionary<string, string>();
 
-        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
-        void LateUpdate()
+        private bool _wasDown;
+        private bool _wasUp;
+        private bool _wasPage;
+
+        void Update()
         {
-            if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (nameInputField.isFocused || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if (newDeckPanel.gameObject.activeSelf)
@@ -54,9 +57,9 @@ namespace CGS.Menus
                     DoSaveDontOverwrite();
                 else if (Input.GetButtonDown(Inputs.New) && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.text = string.Empty;
-                else if (Input.GetButtonDown(Inputs.FocusName) && EventSystem.current.currentSelectedGameObject == null)
+                else if ((Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0) && EventSystem.current.currentSelectedGameObject == null)
                     nameInputField.ActivateInputField();
-                else if (Input.GetButtonDown(Inputs.FocusText) && EventSystem.current.currentSelectedGameObject == null)
+                else if ((Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0) && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.ActivateInputField();
                 else if (Input.GetButtonDown(Inputs.Save) && EventSystem.current.currentSelectedGameObject == null)
                     PasteClipboardIntoText();
@@ -67,6 +70,14 @@ namespace CGS.Menus
             }
             else
             {
+                if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+                {
+                    if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                        SelectPrevious();
+                    else if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+                        SelectNext();
+                }
+
                 if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && loadFromFileButton.interactable)
                     LoadFromFileAndHide();
                 else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
@@ -77,13 +88,15 @@ namespace CGS.Menus
                     ShowNewDeckPanel();
                 else if (Input.GetButtonDown(Inputs.Delete) && deleteFileButton.interactable)
                     PromptForDeleteFile();
-                else if (Input.GetButtonDown(Inputs.Vertical))
-                    ScrollToggles(Input.GetAxis(Inputs.Vertical) > 0);
-                else if (Input.GetButtonDown(Inputs.Page))
-                    ScrollPage(Input.GetAxis(Inputs.Page) < 0);
+                else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
+                    ScrollPage(Input.GetAxis(Inputs.Page));
                 else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                     Hide();
             }
+
+            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
+            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
+            _wasPage = Input.GetAxis(Inputs.Page) != 0;
         }
 
         public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null, string originalText = null)

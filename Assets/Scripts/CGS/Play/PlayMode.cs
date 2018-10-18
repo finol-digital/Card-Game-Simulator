@@ -69,13 +69,6 @@ namespace CGS.Play
                 ShowDiceMenu();
             else if (Input.GetButtonDown(Inputs.Filter))
                 ShowCardsMenu();
-            else if (Input.GetButtonDown(Inputs.Horizontal))
-            {
-                if (Input.GetAxis(Inputs.Horizontal) > 0)
-                    Deal(1);
-                else
-                    Burn(1);
-            }
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 PromptBackToMainMenu();
         }

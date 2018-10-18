@@ -13,13 +13,45 @@ InputManager:
     positiveButton: right
     altNegativeButton: a
     altPositiveButton: d
-    gravity: 3
+    gravity: 1000
     dead: 0.001
-    sensitivity: 3
+    sensitivity: 1000
     snap: 1
     invert: 0
     type: 0
     axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Horizontal
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 1
+    invert: 0
+    type: 2
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Horizontal
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 1
+    invert: 0
+    type: 2
+    axis: 5
     joyNum: 0
   - serializedVersion: 3
     m_Name: Vertical
@@ -29,13 +61,45 @@ InputManager:
     positiveButton: up
     altNegativeButton: s
     altPositiveButton: w
-    gravity: 3
+    gravity: 1000
     dead: 0.001
-    sensitivity: 3
+    sensitivity: 1000
     snap: 1
     invert: 0
     type: 0
     axis: 1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Vertical
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 0
+    invert: 1
+    type: 2
+    axis: 1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Vertical
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 1
+    invert: 0
+    type: 2
+    axis: 6
     joyNum: 0
   - serializedVersion: 3
     m_Name: Column
@@ -45,13 +109,29 @@ InputManager:
     positiveButton: end
     altNegativeButton: z
     altPositiveButton: x
-    gravity: 3
+    gravity: 1000
     dead: 0.001
-    sensitivity: 3
+    sensitivity: 1000
     snap: 1
     invert: 0
     type: 0
     axis: 2
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Column
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 3
     joyNum: 0
   - serializedVersion: 3
     m_Name: Page
@@ -61,13 +141,29 @@ InputManager:
     positiveButton: page down
     altNegativeButton: c
     altPositiveButton: v
-    gravity: 3
+    gravity: 1000
     dead: 0.001
-    sensitivity: 3
+    sensitivity: 1000
     snap: 1
     invert: 0
     type: 0
     axis: 3
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Page
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 4
     joyNum: 0
   - serializedVersion: 3
     m_Name: Mouse ScrollWheel
@@ -92,7 +188,7 @@ InputManager:
     negativeButton: 
     positiveButton: return
     altNegativeButton: 
-    altPositiveButton: joystick button 0
+    altPositiveButton: enter
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
@@ -106,9 +202,9 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: enter
+    positiveButton: joystick button 0
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: joystick button 8
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
@@ -134,6 +230,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: Cancel
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 6
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: FocusName
     descriptiveName: 
     descriptiveNegativeName: 
@@ -148,6 +260,22 @@ InputManager:
     invert: 0
     type: 0
     axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: FocusName
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 8
     joyNum: 0
   - serializedVersion: 3
     m_Name: FocusText
@@ -166,6 +294,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: FocusText
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.5
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 9
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: Filter
     descriptiveName: 
     descriptiveNegativeName: 
@@ -173,6 +317,22 @@ InputManager:
     positiveButton: f
     altNegativeButton: 
     altPositiveButton: \
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Filter
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 5
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
@@ -198,6 +358,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: Sort
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 4
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: New
     descriptiveName: 
     descriptiveNegativeName: 
@@ -205,6 +381,22 @@ InputManager:
     positiveButton: e
     altNegativeButton: 
     altPositiveButton: k
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: New
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 7
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
@@ -230,6 +422,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: Load
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 2
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: Save
     descriptiveName: 
     descriptiveNegativeName: 
@@ -246,6 +454,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: Save
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 3
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: Delete
     descriptiveName: 
     descriptiveNegativeName: 
@@ -253,6 +477,22 @@ InputManager:
     positiveButton: delete
     altNegativeButton: 
     altPositiveButton: backspace
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Delete
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: joystick button 9
+    altNegativeButton: 
+    altPositiveButton: 
     gravity: 1000
     dead: 0.001
     sensitivity: 1000

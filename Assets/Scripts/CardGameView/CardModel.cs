@@ -29,7 +29,7 @@ namespace CardGameView
     {
         public const float MovementSpeed = 600f;
         public static readonly Color SelectedHighlightColor = new Color(1f, 0.45f, 0f);
-        public static readonly Vector2 OutlineHighlightDistance = new Vector2(10, 10);
+        public static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
 
         public bool IsOnline => CGSNetManager.Instance != null && CGSNetManager.Instance.isNetworkActive
             && transform.parent == CGSNetManager.Instance.playController.playAreaContent;
@@ -77,6 +77,18 @@ namespace CardGameView
         }
 
         [SyncVar]
+        private int _quantity;
+        public int Quantity
+        {
+            get { return _quantity; }
+            set
+            {
+                _quantity = value;
+                IsQuantityVisible = _quantity > 1;
+            }
+        }
+
+        [SyncVar]
         private bool _isFacedown;
         public bool IsFacedown
         {
@@ -95,46 +107,6 @@ namespace CardGameView
                     CmdUpdateIsFacedown(_isFacedown);
             }
         }
-
-        public Image image => _image ?? (_image = GetComponent<Image>());
-        private Image _image;
-
-        public CanvasGroup canvasGroup => _canvasGroup ?? (_canvasGroup = GetComponent<CanvasGroup>());
-        private CanvasGroup _canvasGroup;
-
-        public bool IsHighlighted
-        {
-            get { return outline.effectColor == SelectedHighlightColor; }
-            set
-            {
-                if (value)
-                {
-                    outline.effectColor = SelectedHighlightColor;
-                    outline.effectDistance = OutlineHighlightDistance;
-                }
-                else
-                {
-                    bool isOthers = IsOnline && !hasAuthority;
-                    outline.effectColor = isOthers ? Color.yellow : Color.black;
-                    outline.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
-                }
-            }
-        }
-        protected Outline outline => _outline ?? (_outline = GetComponent<Outline>());
-        private Outline _outline;
-
-        public bool HasNameLabel
-        {
-            get { return transform.GetChild(0).gameObject.activeSelf; }
-            set
-            {
-                transform.GetChild(0).gameObject.SetActive(value);
-                if (value)
-                    nameText.text = Value.Name;
-            }
-        }
-        public Text nameText => _nameText ?? (_nameText = GetComponentInChildren<Text>());
-        private Text _nameText;
 
         public RectTransform PlaceHolder
         {
@@ -179,6 +151,58 @@ namespace CardGameView
         }
         private CardStack _placeHolderCardStack;
 
+        public bool IsNameVisible
+        {
+            get { return nameLabel.activeSelf; }
+            set
+            {
+                nameLabel.SetActive(value);
+                if (value)
+                    nameText.text = Value.Name;
+            }
+        }
+        public GameObject nameLabel;
+        public Text nameText;
+
+        public bool IsQuantityVisible
+        {
+            get { return quantityLabel.activeSelf; }
+            set
+            {
+                quantityLabel.SetActive(value);
+                quantityText.text = Quantity.ToString();
+            }
+        }
+        public GameObject quantityLabel;
+        public Text quantityText;
+
+        public bool IsHighlighted
+        {
+            get { return outline.effectColor == SelectedHighlightColor; }
+            set
+            {
+                if (value)
+                {
+                    outline.effectColor = SelectedHighlightColor;
+                    outline.effectDistance = OutlineHighlightDistance;
+                }
+                else
+                {
+                    bool isOthers = IsOnline && !hasAuthority;
+                    outline.effectColor = isOthers ? Color.yellow : Color.black;
+                    outline.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+                }
+            }
+        }
+        protected Outline outline => _outline ?? (_outline = GetComponent<Outline>());
+        private Outline _outline;
+
+        public Image image => _image ?? (_image = GetComponent<Image>());
+        private Image _image;
+
+        public CanvasGroup canvasGroup => _canvasGroup ?? (_canvasGroup = GetComponent<CanvasGroup>());
+        private CanvasGroup _canvasGroup;
+
         void Start()
         {
             ((RectTransform)transform).sizeDelta = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize;
@@ -191,7 +215,8 @@ namespace CardGameView
                     transform.rotation = rotation;
             }
 
-            HasNameLabel = !IsFacedown;
+            IsNameVisible = !IsFacedown;
+            Quantity = 1;
             if (!IsFacedown)
                 Value.RegisterDisplay(this);
         }
@@ -205,7 +230,7 @@ namespace CardGameView
             }
 
             image.sprite = imageSprite;
-            HasNameLabel = false;
+            IsNameVisible = false;
         }
 
         private void RemoveImageSprite()
@@ -214,7 +239,7 @@ namespace CardGameView
                 return;
             image.sprite = CardGameManager.Current.CardBackImageSprite;
             if (!IsFacedown)
-                HasNameLabel = true;
+                IsNameVisible = true;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -251,13 +276,13 @@ namespace CardGameView
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (!IsFacedown)
+            if (CardInfoViewer.Instance != null && !IsFacedown)
                 CardInfoViewer.Instance.SelectedCardModel = this;
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-            if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
+            if (CardInfoViewer.Instance != null && !CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
                 CardInfoViewer.Instance.IsVisible = false;
         }
 

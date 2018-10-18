@@ -38,6 +38,12 @@ namespace CGS.Menus
         public CardSearchFilters Filters { get; } = new CardSearchFilters();
         public List<Card> Results { get; } = new List<Card>();
 
+        private bool _wasDown;
+        private bool _wasUp;
+        private bool _wasLeft;
+        private bool _wasRight;
+        private bool _wasPage;
+
         public InputField ActiveInputField
         {
             get
@@ -66,13 +72,13 @@ namespace CGS.Menus
             }
         }
 
-        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
-        void LateUpdate()
+        void Update()
         {
-            if (!Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
-            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetButtonDown(Inputs.FocusText))
+            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0
+                    || Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0)
             {
                 FocusInputField();
                 return;
@@ -81,21 +87,29 @@ namespace CGS.Menus
             if (ActiveInputField != null && ActiveInputField.isFocused)
                 return;
 
+            if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0
+                    || Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
+                FocusToggle();
+            else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
+                scrollbar.value = Mathf.Clamp01(scrollbar.value + (Input.GetAxis(Inputs.Page) < 0 ? 0.1f : -0.1f));
+
             if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
             {
                 Search();
                 Hide();
             }
-            else if (Input.GetButtonDown(Inputs.Page))
-                scrollbar.value = Mathf.Clamp01(scrollbar.value + (Input.GetAxis(Inputs.Page) < 0 ? 0.1f : -0.1f));
-            else if (Input.GetButtonDown(Inputs.Vertical) || Input.GetButtonDown(Inputs.Horizontal))
-                FocusToggle();
             else if (Input.GetButtonDown(Inputs.New) && ActiveToggle != null)
                 ToggleEnum();
             else if (Input.GetButtonDown(Inputs.Delete) && ActiveInputField == null)
                 ClearFilters();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
+
+            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
+            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
+            _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
+            _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
+            _wasPage = Input.GetAxis(Inputs.Page) != 0;
         }
 
         public void FocusInputField()
@@ -107,7 +121,7 @@ namespace CGS.Menus
                 return;
             }
 
-            if (Input.GetButtonDown(Inputs.FocusName))
+            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
             { // up
                 InputField previous = InputFields.Last();
                 for (int i = 0; i < InputFields.Count; i++)
@@ -145,10 +159,10 @@ namespace CGS.Menus
                 return;
             }
 
-            if (Input.GetButtonDown(Inputs.Vertical))
+            if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
             {
                 Transform currentPanel = ActiveToggle.transform.parent;
-                if (Input.GetAxis(Inputs.Vertical) > 0)
+                if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
                 { // up
                     Toggle previous = Toggles.Last();
                     for (int i = 0; i < Toggles.Count; i++)
@@ -162,7 +176,7 @@ namespace CGS.Menus
                             previous = Toggles[i];
                     }
                 }
-                else
+                else if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
                 { // down
                     Toggle next = Toggles.First();
                     for (int i = Toggles.Count - 1; i >= 0; i--)
@@ -177,9 +191,9 @@ namespace CGS.Menus
                     }
                 }
             }
-            else if (Input.GetButton(Inputs.Horizontal))
+            else if (Input.GetButton(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
             {
-                if (Input.GetAxis(Inputs.Horizontal) > 0)
+                if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
                 { // right
                     Toggle next = Toggles.First();
                     for (int i = Toggles.Count - 1; i >= 0; i--)
@@ -192,7 +206,7 @@ namespace CGS.Menus
                         next = Toggles[i];
                     }
                 }
-                else
+                else if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
                 { // left
                     Toggle previous = Toggles.Last();
                     for (int i = 0; i < Toggles.Count; i++)

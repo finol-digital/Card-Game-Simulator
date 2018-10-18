@@ -21,9 +21,10 @@ namespace CGS.EditDeck
         public const string ChangeIndicator = "*";
 
         public float PreHeight => cardModelPrefab.GetComponent<RectTransform>().rect.height;
-        public int CardsPerStack => Mathf.FloorToInt(8 * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight));
+        public int CardsPerStack => Mathf.FloorToInt((CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight) * 4);
         public int CardStackCount => Mathf.CeilToInt((float)CardGameManager.Current.DeckMaxCount / CardsPerStack);
         public List<CardStack> CardStacks => _cardStacks ?? (_cardStacks = new List<CardStack>());
+        private List<CardStack> _cardStacks;
         public int CurrentCardStackIndex
         {
             get
@@ -34,8 +35,11 @@ namespace CGS.EditDeck
             }
             set { _currentCardStackIndex = value; }
         }
+        private int _currentCardStackIndex;
         public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+        private DeckLoadMenu _deckLoader;
         public DeckSaveMenu DeckSaver => _deckSaver ?? (_deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>());
+        private DeckSaveMenu _deckSaver;
 
         public List<CardModel> CardModels
         {
@@ -83,11 +87,6 @@ namespace CGS.EditDeck
         public Text countText;
         public SearchResults searchResults;
 
-        private List<CardStack> _cardStacks;
-        private int _currentCardStackIndex;
-        private DeckLoadMenu _deckLoader;
-        private DeckSaveMenu _deckSaver;
-
         void OnEnable()
         {
             Instantiate(cardViewerPrefab);
@@ -112,7 +111,7 @@ namespace CGS.EditDeck
                 ShowDeckLoadMenu();
             else if (Input.GetButtonDown(Inputs.Save))
                 ShowDeckSaveMenu();
-            else if (Input.GetButtonDown(Inputs.FocusName))
+            else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
                 searchResults.nameInputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Filter))
                 searchResults.ShowSearchMenu();

@@ -15,6 +15,15 @@ namespace CGS.EditDeck
         public DeckEditor editor;
         public SearchResults results;
 
+        private bool _wasDown;
+        private bool _wasUp;
+        private bool _wasLeft;
+        private bool _wasRight;
+        private bool _wasPageLeft;
+        private bool _wasPageRight;
+        private bool _wasColumnLeft;
+        private bool _wasColumnRight;
+
         void Update()
         {
             if (CardGameManager.Instance.TopMenuCanvas != null || editor.searchResults.nameInputField.isFocused)
@@ -32,37 +41,44 @@ namespace CGS.EditDeck
                     SelectRight();
             }
 
-            if (Input.anyKeyDown)
+            if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
             {
-                if (Input.GetButtonDown(Inputs.Vertical))
-                {
-                    if (Input.GetAxis(Inputs.Vertical) > 0)
-                        SelectUp();
-                    else
-                        SelectDown();
-                }
-                else if (Input.GetButtonDown(Inputs.Horizontal))
-                {
-                    if (Input.GetAxis(Inputs.Horizontal) > 0)
-                        SelectRight();
-                    else
-                        SelectLeft();
-                }
-                else if (Input.GetButtonDown(Inputs.Column))
-                {
-                    if (Input.GetAxis(Inputs.Column) > 0)
-                        ShiftRight();
-                    else
-                        ShiftLeft();
-                }
-                else if (Input.GetButtonDown(Inputs.Page) && !CardInfoViewer.Instance.IsVisible)
-                {
-                    if (Input.GetAxis(Inputs.Page) > 0)
-                        PageRight();
-                    else
-                        PageLeft();
-                }
+                if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                    SelectUp();
+                else if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+                    SelectDown();
             }
+            else if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
+            {
+                if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
+                    SelectRight();
+                else if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
+                    SelectLeft();
+            }
+
+            if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !CardInfoViewer.Instance.IsVisible)
+            {
+                if (Input.GetAxis(Inputs.Page) > 0 && !_wasPageRight)
+                    PageRight();
+                else if (Input.GetAxis(Inputs.Page) < 0 && !_wasPageLeft)
+                    PageLeft();
+            }
+            else if (Input.GetButtonDown(Inputs.Column) || Input.GetAxis(Inputs.Column) != 0)
+            {
+                if (Input.GetAxis(Inputs.Column) > 0 && !_wasColumnRight)
+                    ShiftRight();
+                else if (Input.GetAxis(Inputs.Column) < 0 && !_wasColumnLeft)
+                    ShiftLeft();
+            }
+
+            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
+            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
+            _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
+            _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
+            _wasPageLeft = Input.GetAxis(Inputs.Page) < 0;
+            _wasPageRight = Input.GetAxis(Inputs.Page) > 0;
+            _wasColumnLeft = Input.GetAxis(Inputs.Column) < 0;
+            _wasColumnRight = Input.GetAxis(Inputs.Column) > 0;
         }
 
         public void SelectDown()
@@ -88,6 +104,8 @@ namespace CGS.EditDeck
                 return;
             }
             EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
+            if (CardInfoViewer.Instance?.SelectedCardModel != null)
+                CardInfoViewer.Instance.IsVisible = true;
         }
 
         public void SelectUp()
@@ -113,6 +131,8 @@ namespace CGS.EditDeck
                 return;
             }
             EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
+            if (CardInfoViewer.Instance?.SelectedCardModel != null)
+                CardInfoViewer.Instance.IsVisible = true;
         }
 
         public void SelectLeft()
@@ -140,6 +160,8 @@ namespace CGS.EditDeck
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            if (CardInfoViewer.Instance?.SelectedCardModel != null)
+                CardInfoViewer.Instance.IsVisible = true;
         }
 
         public void SelectRight()
@@ -167,6 +189,8 @@ namespace CGS.EditDeck
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            if (CardInfoViewer.Instance?.SelectedCardModel != null)
+                CardInfoViewer.Instance.IsVisible = true;
         }
 
         public void ShiftLeft()
@@ -197,6 +221,8 @@ namespace CGS.EditDeck
             }
             editor.scrollRect.horizontalNormalizedPosition = 1;
             EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
+            if (CardInfoViewer.Instance?.SelectedCardModel != null)
+                CardInfoViewer.Instance.IsVisible = true;
         }
 
         public void ShiftRight()
@@ -227,6 +253,8 @@ namespace CGS.EditDeck
             }
             editor.scrollRect.horizontalNormalizedPosition = 0;
             EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
+            if (CardInfoViewer.Instance?.SelectedCardModel != null)
+                CardInfoViewer.Instance.IsVisible = true;
         }
 
         public void PageLeft()

@@ -29,10 +29,15 @@ namespace CGS.Menus
         public InputField urlInput;
         public Button downloadButton;
 
-        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
-        void LateUpdate()
+        private bool _wasDown;
+        private bool _wasUp;
+        private bool _wasLeft;
+        private bool _wasRight;
+        private bool _wasPage;
+
+        void Update()
         {
-            if (urlInput.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (urlInput.isFocused || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if (downloadPanel.gameObject.activeSelf)
@@ -43,13 +48,29 @@ namespace CGS.Menus
                     Clear();
                 else if (Input.GetButtonDown(Inputs.Save) && urlInput.interactable)
                     Paste();
-                else if (Input.GetButtonDown(Inputs.FocusName) && urlInput.interactable)
+                else if ((Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0) && urlInput.interactable)
                     urlInput.ActivateInputField();
                 else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                     HideDownloadPanel();
             }
             else
             {
+                if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+                {
+                    if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                        SelectPrevious();
+                    else if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+                        SelectNext();
+                }
+                else if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
+                {
+                    if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
+                        CardGameManager.Instance.SelectLeft();
+                    else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
+                        CardGameManager.Instance.SelectRight();
+                    Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
+                }
+
                 if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
                     EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
                 else if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
@@ -60,21 +81,17 @@ namespace CGS.Menus
                     ShowDownloadPanel();
                 else if (Input.GetButtonDown(Inputs.Delete))
                     Delete();
-                else if (Input.GetButtonDown(Inputs.Horizontal))
-                {
-                    if (Input.GetAxis(Inputs.Horizontal) < 0)
-                        CardGameManager.Instance.SelectLeft();
-                    else
-                        CardGameManager.Instance.SelectRight();
-                    Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
-                }
-                else if (Input.GetButtonDown(Inputs.Vertical))
-                    ScrollToggles(Input.GetAxis(Inputs.Vertical) > 0);
-                else if (Input.GetButtonDown(Inputs.Page))
-                    ScrollPage(Input.GetAxis(Inputs.Page) < 0);
+                else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
+                    ScrollPage(Input.GetAxis(Inputs.Page));
                 else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                     Hide();
             }
+
+            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
+            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
+            _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
+            _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
+            _wasPage = Input.GetAxis(Inputs.Page) != 0;
         }
 
         public void Show()

@@ -21,17 +21,17 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Load**: *r* - Brings up the Deck Load Menu.
 - **Save**: *t* - Brings up the Dice Menu.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
-- **Horizontal**: *left*, *right* - Move the top card of the deck. Left to discard, Right to hand.
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
 - **Page**: *PgUp*, *PgDn* OR *c*, *v* - Scroll through properties in the Card Viewer.
+- **Delete**: *Delete* - Zoom on selected card.
 - **Submit**: *Enter* - Double-click on selected card.
 
 ## Deck Editor
 - **Cancel**: *Esc* - Back to Main Menu.
-- **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **Horizontal**: *left*, *right* - Scroll through cards in the search results.
+- **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **Page**: *PgUp*, *PgDn* OR *c*, *v* - Page through search results.
 - **Column**: *home*, *end* OR *z*, *x* - Shift through stacks in the deck editor.
 - **Sort**: *q* - Sorts the deck editor.
@@ -102,8 +102,8 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **FocusName**: *\`* - Focuses keyboard to the previous text input field.
 - **FocusText**: *Tab* - Focuses keyboard to the next text input field.
 - **Page**: *PgUp*, *PgDn* - Move the scrollbar.
-- **Vertical**: *down*, *up* - Focuses to the next enum row.
 - **Horizontal**: *left*, *right* - Scroll through enum values.
+- **Vertical**: *down*, *up* - Focuses to the next enum row.
 - **New**: *e* - Toggles selected enum value.
 - **Delete**: *Delete* - Clear.
 - **Submit**: *Enter* - Search!

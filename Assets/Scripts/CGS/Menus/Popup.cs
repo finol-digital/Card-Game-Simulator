@@ -35,7 +35,7 @@ namespace CGS.Menus
         protected Queue<Message> MessageQueue { get; } = new Queue<Message>();
         protected bool IsNewMessage { get; private set; }
 
-        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
+        // Popup needs to update last to consume the input over what it covers
         void LateUpdate()
         {
             if (IsNewMessage)

@@ -22,11 +22,22 @@ namespace CGS.Menus
         public List<string> HostNames { get; private set; } = new List<string>();
         public string SelectedHost { get; private set; } = "";
 
-        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
-        void LateUpdate()
+        private bool _wasDown;
+        private bool _wasUp;
+        private bool _wasPage;
+
+        void Update()
         {
-            if (!Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
+
+            if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+            {
+                if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                    SelectPrevious();
+                else if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+                    SelectNext();
+            }
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && joinButton.interactable)
                 Join();
@@ -34,12 +45,14 @@ namespace CGS.Menus
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Input.GetButtonDown(Inputs.New))
                 Host();
-            else if (Input.GetButtonDown(Inputs.Vertical))
-                ScrollToggles(Input.GetAxis(Inputs.Vertical) > 0);
-            else if (Input.GetButtonDown(Inputs.Page))
-                ScrollPage(Input.GetAxis(Inputs.Page) < 0);
+            else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
+                ScrollPage(Input.GetAxis(Inputs.Page));
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
+
+            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
+            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
+            _wasPage = Input.GetAxis(Inputs.Page) != 0;
         }
 
         public void Show(UnityAction cancelAction)

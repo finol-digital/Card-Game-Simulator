@@ -29,10 +29,12 @@ namespace CGS.Menus
 
         void Update()
         {
+            if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+                    && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
+                EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
+
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
                 EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
-            else if (Input.GetButtonDown(Inputs.Vertical) && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
             else if (Input.GetButtonDown(Inputs.Sort))
                 ViewRules();
             else if (Input.GetButtonDown(Inputs.New))

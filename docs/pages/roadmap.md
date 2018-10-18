@@ -7,23 +7,25 @@ permalink: roadmap.html
 ## What's New
 - Show loading indicator when downloading a card game
 - Change Card Info Viewer from animated to static
-- Group cards in the deck editor with a number instead of stacking them
+- Improve Deck Editor Layout
+- Add xbox controller support on windows
 
 ## Current Sprint
+- Group cards in the deck editor with a number instead of stacking them
+- Add rate limit for how often to update allCards and allSets
+  - Also set up to update immediately instead of on next load
+- Support Number card property data type (decimals)
+- Enhance boolean card property data type
+- Enhance object card property data type
+- Add identifiers for object card property data types
 - Tech: Travis CI for build automation
 - Tech: Add unit tests
 - Tech: Review with Resharper
 - Fix: UWP join and host
 - Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
-- Add rate limit for how often to update allCards and allSets
-  - Also set up to update immediately instead of on next load
 
 ## Backlog
-- Support Number card property data type (decimals)
-- Enhance boolean card property data type
-- Enhance object card property data type
-- Add identifiers for object card property data types
 - Introduce In-App Card Editor
 - Add option to restart game in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there
@@ -44,22 +46,6 @@ permalink: roadmap.html
   - Double-clicking takes a default action, based on the zone the card is in
   - Single-click show menu with all possible actions at the bottom
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Support Controller:
-  - LEFT-STICK: Horizontal/Vertical
-  - D-PAD: Horizontal/Vertical
-  - SELECT: Cancel
-  - START: New
-  - A: Submit
-  - B: Cancel
-  - X: Load
-  - Y: Save
-  - RIGHT-STICK: Column/Page
-  - L1: Sort
-  - R1: Filter
-  - L2: FocusName
-  - R2: FocusText
-  - L3: Submit
-  - R3: Delete
 - Support Android TV and tvOS
 
 ## Icebox

@@ -25,6 +25,9 @@ namespace CGS.Menus
         public GameObject quitButton;
         public Text versionText;
 
+        private bool _wasLeft;
+        private bool _wasRight;
+
         void Start()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -40,20 +43,22 @@ namespace CGS.Menus
 
         void Update()
         {
-            if (!Input.anyKeyDown || CardGameManager.Instance.TopMenuCanvas != null)
+            if (CardGameManager.Instance.TopMenuCanvas != null)
                 return;
+
+            if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+                    && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
+                EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
+            if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
+            {
+                if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
+                    CardGameManager.Instance.SelectLeft();
+                else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
+                    CardGameManager.Instance.SelectRight();
+            }
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
                 EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
-            else if (Input.GetButtonDown(Inputs.Horizontal))
-            {
-                if (Input.GetAxis(Inputs.Horizontal) < 0)
-                    CardGameManager.Instance.SelectLeft();
-                else
-                    CardGameManager.Instance.SelectRight();
-            }
-            else if (Input.GetButtonDown(Inputs.Vertical) && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
             else if (Input.GetButtonDown(Inputs.Sort))
                 ShowGameSelectionMenu();
             else if (Input.GetButtonDown(Inputs.New))
@@ -66,6 +71,9 @@ namespace CGS.Menus
                 ShowOptions();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Quit();
+
+            _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
+            _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
         }
 
         public void ShowGameSelectionMenu()

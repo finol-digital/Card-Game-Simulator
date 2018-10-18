@@ -48,13 +48,12 @@ public class SelectionPanel : MonoBehaviour
             scrollRect.verticalNormalizedPosition = 1f - (index / (options.Count - 1f));
     }
 
-    public void ScrollPage(bool scrollUp)
+    public void ScrollPage(float scrollDirection)
     {
-        scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition
-            + (scrollUp ? 0.1f : -0.1f));
+        scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDirection < 0 ? 0.1f : -0.1f));
     }
 
-    public void ScrollToggles(bool scrollUp)
+    public void SelectPrevious()
     {
         if (EventSystem.current.alreadySelecting || Toggles.Count < 1)
             return;
@@ -66,34 +65,41 @@ public class SelectionPanel : MonoBehaviour
             return;
         }
 
-        if (scrollUp)
+        for (int i = Toggles.Count - 1; i >= 0; i--)
         {
-            for (int i = Toggles.Count - 1; i >= 0; i--)
-            {
-                if (!EventSystem.current.currentSelectedGameObject.Equals(Toggles[i]))
-                    continue;
-                i--;
-                if (i < 0)
-                    i = Toggles.Count - 1;
-                EventSystem.current.SetSelectedGameObject(Toggles[i]);
-                scrollRect.verticalNormalizedPosition = 1f - (i / (Toggles.Count - 1f));
-                return;
-            }
-
+            if (!EventSystem.current.currentSelectedGameObject.Equals(Toggles[i]))
+                continue;
+            i--;
+            if (i < 0)
+                i = Toggles.Count - 1;
+            EventSystem.current.SetSelectedGameObject(Toggles[i]);
+            scrollRect.verticalNormalizedPosition = 1f - (i / (Toggles.Count - 1f));
+            return;
         }
-        else
+    }
+
+    public void SelectNext()
+    {
+        if (EventSystem.current.alreadySelecting || Toggles.Count < 1)
+            return;
+
+        if (!Toggles.Contains(EventSystem.current.currentSelectedGameObject))
         {
-            for (int i = 0; i < Toggles.Count; i++)
-            {
-                if (!EventSystem.current.currentSelectedGameObject.Equals(Toggles[i]))
-                    continue;
-                i++;
-                if (i == Toggles.Count)
-                    i = 0;
-                EventSystem.current.SetSelectedGameObject(Toggles[i]);
-                scrollRect.verticalNormalizedPosition = 1f - (i / (Toggles.Count - 1f));
-                return;
-            }
+            EventSystem.current.SetSelectedGameObject(Toggles[0]);
+            scrollRect.verticalNormalizedPosition = 1f;
+            return;
+        }
+
+        for (int i = 0; i < Toggles.Count; i++)
+        {
+            if (!EventSystem.current.currentSelectedGameObject.Equals(Toggles[i]))
+                continue;
+            i++;
+            if (i == Toggles.Count)
+                i = 0;
+            EventSystem.current.SetSelectedGameObject(Toggles[i]);
+            scrollRect.verticalNormalizedPosition = 1f - (i / (Toggles.Count - 1f));
+            return;
         }
     }
 

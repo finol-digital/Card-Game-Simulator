@@ -15,11 +15,6 @@ namespace CardGameView
     public class CardInfoViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
         public const string SetLabel = "Set";
-        public const float VisibleYMin = 0.625f;
-        public const float VisibleYMax = 1;
-        public const float HiddenYmin = 1.025f;
-        public const float HiddenYMax = 1.4f;
-        public const float AnimationSpeed = 5.0f;
 
         public static CardInfoViewer Instance
         {
@@ -35,7 +30,7 @@ namespace CardGameView
         }
         private static CardInfoViewer _instance;
 
-        public RectTransform infoPanel;
+        public CanvasGroup infoPanel;
         public RectTransform zoomPanel;
         public Image cardImage;
         public Image zoomImage;
@@ -106,6 +101,8 @@ namespace CardGameView
                     SetContentText();
                     selectedCard.RegisterDisplay(this);
                 }
+                else if (!EventSystem.current.alreadySelecting)
+                    EventSystem.current.SetSelectedGameObject(null);
                 IsVisible = _selectedCardModel != null;
             }
         }
@@ -113,18 +110,22 @@ namespace CardGameView
 
         public bool IsVisible
         {
-            get { return _isVisible; }
+            get { return infoPanel.alpha > 0; }
             set
             {
-                _isVisible = value;
-                if (!_isVisible && zoomPanel != null)
+                bool isVisible = value;
+                infoPanel.alpha = isVisible ? 1 : 0;
+                infoPanel.interactable = isVisible;
+                infoPanel.blocksRaycasts = isVisible;
+                if (!isVisible && zoomPanel != null)
                     zoomPanel.gameObject.SetActive(false);
                 if (SelectedCardModel != null)
-                    SelectedCardModel.IsHighlighted = _isVisible;
+                    SelectedCardModel.IsHighlighted = isVisible;
             }
         }
-        private bool _isVisible;
-        public bool WasVisible => infoPanel.anchorMax.y < (HiddenYMax + VisibleYMax) / 2.0f;
+        public bool WasVisible { get; private set; }
+
+        private bool _wasPage;
 
         void Start()
         {
@@ -133,33 +134,28 @@ namespace CardGameView
 
         void Update()
         {
-            if (IsVisible && EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(gameObject);
-
-            infoPanel.anchorMin = IsVisible ?
-                new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, VisibleYMin, AnimationSpeed * Time.deltaTime)) :
-                new Vector2(infoPanel.anchorMin.x, Mathf.Lerp(infoPanel.anchorMin.y, HiddenYmin, AnimationSpeed * Time.deltaTime));
-            infoPanel.anchorMax = IsVisible ?
-                new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, VisibleYMax, AnimationSpeed * Time.deltaTime)) :
-                new Vector2(infoPanel.anchorMax.x, Mathf.Lerp(infoPanel.anchorMax.y, HiddenYMax, AnimationSpeed * Time.deltaTime));
-        }
-
-        void LateUpdate()
-        {
-            if (!IsVisible || SelectedCardModel == null || !Input.anyKeyDown || CardGameManager.Instance.TopMenuCanvas != null)
+            WasVisible = IsVisible;
+            if (!IsVisible || SelectedCardModel == null || CardGameManager.Instance.TopMenuCanvas != null)
                 return;
+
+            if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(gameObject);
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)
                 SelectedCardModel.DoubleClickAction(SelectedCardModel);
-            else if (Input.GetButtonDown(Inputs.Page))
+            else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
             {
                 if (Input.GetAxis(Inputs.Page) > 0)
                     IncrementProperty();
                 else
                     DecrementProperty();
             }
+            if (Input.GetButtonDown(Inputs.Delete))
+                ToggleCardZoomed();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 SelectedCardModel = null;
+
+            _wasPage = Input.GetAxis(Inputs.Page) != 0;
         }
 
         public void ResetInfo()
@@ -237,6 +233,14 @@ namespace CardGameView
         public void ShowCardZoomed()
         {
             zoomPanel.gameObject.SetActive(true);
+        }
+
+        public void ToggleCardZoomed()
+        {
+            if (!zoomPanel.gameObject.activeSelf)
+                ShowCardZoomed();
+            else
+                HideCardZoomed();
         }
 
         public void HideCardZoomed()

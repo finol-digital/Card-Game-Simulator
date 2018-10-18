@@ -28,15 +28,14 @@ namespace CGS.Menus
         public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
         public bool DoesAutoOverwrite { get; private set; }
 
-        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
-        void LateUpdate()
+        void Update()
         {
             if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
                 AttemptSaveAndHide();
-            else if (Input.GetButtonDown(Inputs.FocusName))
+            else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
                 nameInputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Load) && EventSystem.current.currentSelectedGameObject == null)
                 CopyTextToClipboard();

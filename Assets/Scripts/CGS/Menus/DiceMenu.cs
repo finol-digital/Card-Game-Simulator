@@ -48,8 +48,7 @@ namespace CGS.Menus
             Max = DefaultMax;
         }
 
-        // LateUpdate for menus that appear on top of other scenes and therefore need to update last
-        void LateUpdate()
+        void Update()
         {
             if (!Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
