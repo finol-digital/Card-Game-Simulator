@@ -2,8 +2,6 @@ language: generic
 os: osx
 osx_image: xcode10
 
-install:
-  - . ./Scripts/install.sh
+install: ./Scripts/install.sh
 
-script:
-  - . ./Scripts/build.sh
+script: travis_wait 30 ./Scripts/build.sh
