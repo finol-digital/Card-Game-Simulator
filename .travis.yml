@@ -4,4 +4,4 @@ osx_image: xcode10
 
 install: . ./Scripts/install.sh
 
-script: travis_wait 30 . ./Scripts/build.sh
+script: travis_wait 120 . ./Scripts/build.sh
