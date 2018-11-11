@@ -2,6 +2,10 @@ language: generic
 os: osx
 osx_image: xcode10
 
+branches:
+  only:
+  - master
+
 install: . ./Scripts/install.sh
 
-script: travis_wait 120 . ./Scripts/build.sh
+script: travis_wait 30 . ./Scripts/build.sh
