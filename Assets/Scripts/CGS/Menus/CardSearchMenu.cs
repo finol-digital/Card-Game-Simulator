@@ -90,8 +90,8 @@ namespace CGS.Menus
             if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0
                     || Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
                 FocusToggle();
-            else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
-                scrollbar.value = Mathf.Clamp01(scrollbar.value + (Input.GetAxis(Inputs.Page) < 0 ? 0.1f : -0.1f));
+            else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPage)
+                scrollbar.value = Mathf.Clamp01(scrollbar.value + (Input.GetAxis(Inputs.PageVertical) < 0 ? 0.1f : -0.1f));
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
             {
@@ -109,7 +109,7 @@ namespace CGS.Menus
             _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
             _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
             _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
-            _wasPage = Input.GetAxis(Inputs.Page) != 0;
+            _wasPage = Input.GetAxis(Inputs.PageVertical) != 0;
         }
 
         public void FocusInputField()

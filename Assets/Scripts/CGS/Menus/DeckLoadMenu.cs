@@ -88,15 +88,15 @@ namespace CGS.Menus
                     ShowNewDeckPanel();
                 else if (Input.GetButtonDown(Inputs.Delete) && deleteFileButton.interactable)
                     PromptForDeleteFile();
-                else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
-                    ScrollPage(Input.GetAxis(Inputs.Page));
+                else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPage)
+                    ScrollPage(Input.GetAxis(Inputs.PageVertical));
                 else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                     Hide();
             }
 
             _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
             _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
-            _wasPage = Input.GetAxis(Inputs.Page) != 0;
+            _wasPage = Input.GetAxis(Inputs.PageVertical) != 0;
         }
 
         public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null, string originalText = null)

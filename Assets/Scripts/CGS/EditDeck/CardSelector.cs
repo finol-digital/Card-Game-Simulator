@@ -21,8 +21,8 @@ namespace CGS.EditDeck
         private bool _wasRight;
         private bool _wasPageLeft;
         private bool _wasPageRight;
-        private bool _wasColumnLeft;
-        private bool _wasColumnRight;
+        private bool _wasPageDown;
+        private bool _wasPageUp;
 
         void Update()
         {
@@ -56,29 +56,29 @@ namespace CGS.EditDeck
                     SelectLeft();
             }
 
-            if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !CardInfoViewer.Instance.IsVisible)
+            if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !CardInfoViewer.Instance.IsVisible)
             {
-                if (Input.GetAxis(Inputs.Page) > 0 && !_wasPageRight)
-                    PageRight();
-                else if (Input.GetAxis(Inputs.Page) < 0 && !_wasPageLeft)
-                    PageLeft();
+                if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageUp)
+                    PageUp();
+                else if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageDown)
+                    PageDown();
             }
-            else if (Input.GetButtonDown(Inputs.Column) || Input.GetAxis(Inputs.Column) != 0)
+            else if (Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0)
             {
-                if (Input.GetAxis(Inputs.Column) > 0 && !_wasColumnRight)
-                    ShiftRight();
-                else if (Input.GetAxis(Inputs.Column) < 0 && !_wasColumnLeft)
-                    ShiftLeft();
+                if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageRight)
+                    PageRight();
+                else if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageLeft)
+                    PageLeft();
             }
 
             _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
             _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
             _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
             _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
-            _wasPageLeft = Input.GetAxis(Inputs.Page) < 0;
-            _wasPageRight = Input.GetAxis(Inputs.Page) > 0;
-            _wasColumnLeft = Input.GetAxis(Inputs.Column) < 0;
-            _wasColumnRight = Input.GetAxis(Inputs.Column) > 0;
+            _wasPageLeft = Input.GetAxis(Inputs.PageVertical) < 0;
+            _wasPageRight = Input.GetAxis(Inputs.PageVertical) > 0;
+            _wasPageDown = Input.GetAxis(Inputs.PageHorizontal) < 0;
+            _wasPageUp = Input.GetAxis(Inputs.PageHorizontal) > 0;
         }
 
         public void SelectDown()
@@ -193,7 +193,7 @@ namespace CGS.EditDeck
                 CardInfoViewer.Instance.IsVisible = true;
         }
 
-        public void ShiftLeft()
+        public void PageDown()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -225,7 +225,7 @@ namespace CGS.EditDeck
                 CardInfoViewer.Instance.IsVisible = true;
         }
 
-        public void ShiftRight()
+        public void PageUp()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -271,7 +271,7 @@ namespace CGS.EditDeck
         {
             RectTransform rt = GetComponent<RectTransform>();
             if (rt.rect.width > rt.rect.height)
-                ShiftLeft();
+                PageDown();
             else
                 PageLeft();
         }
@@ -280,7 +280,7 @@ namespace CGS.EditDeck
         {
             RectTransform rt = GetComponent<RectTransform>();
             if (rt.rect.width > rt.rect.height)
-                ShiftRight();
+                PageUp();
             else
                 PageRight();
         }

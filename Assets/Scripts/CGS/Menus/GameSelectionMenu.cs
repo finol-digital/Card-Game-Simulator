@@ -81,8 +81,8 @@ namespace CGS.Menus
                     ShowDownloadPanel();
                 else if (Input.GetButtonDown(Inputs.Delete))
                     Delete();
-                else if ((Input.GetButtonDown(Inputs.Page) || Input.GetAxis(Inputs.Page) != 0) && !_wasPage)
-                    ScrollPage(Input.GetAxis(Inputs.Page));
+                else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPage)
+                    ScrollPage(Input.GetAxis(Inputs.PageVertical));
                 else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                     Hide();
             }
@@ -91,7 +91,7 @@ namespace CGS.Menus
             _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
             _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
             _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
-            _wasPage = Input.GetAxis(Inputs.Page) != 0;
+            _wasPage = Input.GetAxis(Inputs.PageVertical) != 0;
         }
 
         public void Show()

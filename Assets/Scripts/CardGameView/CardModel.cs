@@ -216,7 +216,8 @@ namespace CardGameView
             }
 
             IsNameVisible = !IsFacedown;
-            Quantity = 1;
+            if (Quantity == 0)
+                Quantity = 1;
             if (!IsFacedown)
                 Value.RegisterDisplay(this);
         }

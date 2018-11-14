@@ -10,7 +10,6 @@ namespace CGS
     {
         public const KeyCode BluetoothReturn = (KeyCode)10;
         public const string Cancel = "Cancel";
-        public const string Column = "Column";
         public const string Delete = "Delete";
         public const string Filter = "Filter";
         public const string FocusName = "FocusName";
@@ -18,7 +17,8 @@ namespace CGS
         public const string Horizontal = "Horizontal";
         public const string Load = "Load";
         public const string New = "New";
-        public const string Page = "Page";
+        public const string PageHorizontal = "PageHorizontal";
+        public const string PageVertical = "PageVertical";
         public const string Save = "Save";
         public const string Sort = "Sort";
         public const string Submit = "Submit";

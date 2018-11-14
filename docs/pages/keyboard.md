@@ -24,7 +24,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
-- **Page**: *PgUp*, *PgDn* OR *c*, *v* - Scroll through properties in the Card Viewer.
+- **PageVertical**: *PgUp*, *PgDn* OR *c*, *v* - Scroll through properties in the Card Viewer.
 - **Delete**: *Delete* - Zoom on selected card.
 - **Submit**: *Enter* - Double-click on selected card.
 
@@ -32,8 +32,8 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Back to Main Menu.
 - **Horizontal**: *left*, *right* - Scroll through cards in the search results.
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
-- **Page**: *PgUp*, *PgDn* OR *c*, *v* - Page through search results.
-- **Column**: *home*, *end* OR *z*, *x* - Shift through stacks in the deck editor.
+- **PageHorizontal**: *home*, *end* OR *z*, *x* - Page through search results.
+- **PageVertical**: *PgUp*, *PgDn* OR *c*, *v* - Shift through stacks in the deck editor.
 - **Sort**: *q* - Sorts the deck editor.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the Deck Load Menu.
@@ -59,7 +59,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Cancel.
 - **Horizontal**: *left*, *right* - Select previous/next card game.
 - **Vertical**: *down*, *up* - Scroll through card games.
-- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
+- **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Sort**: *q* - Share selected card game.
 - **New**: *e* - Brings up or clears the download url input field.
 - **Load**: *r* - Brings up or clears the download url input field.
@@ -71,14 +71,14 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 ## LAN Lobby
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through sessions.
-- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
+- **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **New**: *e* - Host new session.
 - **Submit**: *Enter* - Join selected session.
 
 ## Deck Load Menu
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through decks.
-- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
+- **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Sort**: *q* - Share selected deck.
 - **New**: *e* - Brings up the deck text editor.
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
@@ -101,7 +101,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Cancel.
 - **FocusName**: *\`* - Focuses keyboard to the previous text input field.
 - **FocusText**: *Tab* - Focuses keyboard to the next text input field.
-- **Page**: *PgUp*, *PgDn* - Move the scrollbar.
+- **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Horizontal**: *left*, *right* - Scroll through enum values.
 - **Vertical**: *down*, *up* - Focuses to the next enum row.
 - **New**: *e* - Toggles selected enum value.
