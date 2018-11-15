@@ -1,19 +1,38 @@
 #! /bin/sh
 
+UNITY_PATH=/Applications/Unity/Unity.app/Contents/MacOS/Unity
 project="Card Game Simulator"
 
+echo "Activating Unity license"
+${UNITY_PATH} \
+    -logFile "${TRAVIS_BUILD_DIR}/unity.activation.log" \
+    -username ${UNITY_USER} \
+    -password ${UNITY_PWD} \
+    -batchmode \
+    -noUpm \
+    -quit
+echo "Unity activation log"
+cat "${TRAVIS_BUILD_DIR}/unity.activation.log"
+
 echo "Attempting to build $project for OS X"
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
+${UNITY_PATH} \
   -batchmode \
   -nographics \
   -silent-crashes \
-  -logFile $(pwd)/unity.log \
-  -projectPath $(pwd) \
-  -buildOSXUniversalPlayer "$(pwd)/builds/osx/$project.app" \
+  -logFile "$(TRAVIS_BUILD_DIR)/unity.build.osx.log" \
+  -projectPath "$(TRAVIS_BUILD_DIR)" \
+  -buildOSXUniversalPlayer "$(TRAVIS_BUILD_DIR)/builds/osx/$project.app" \
   -quit
-
 echo 'Logs from build'
-cat $(pwd)/unity.log
+cat "$(TRAVIS_BUILD_DIR)/unity.build.osx.log"
 
-echo 'Attempting to zip build'
-zip -r $(pwd)/builds/mac.zip $(pwd)/builds/osx/
+echo "Returning Unity license"
+${UNITY_PATH} \
+    -logFile "${TRAVIS_BUILD_DIR}/unity.returnlicense.log" \
+    -batchmode \
+    -returnlicense \
+    -quit
+cat "$(TRAVIS_BUILD_DIR)/unity.returnlicense.log"
+
+echo 'Attempting to zip OS X build'
+zip -r "$(TRAVIS_BUILD_DIR)/builds/mac.zip" "$(TRAVIS_BUILD_DIR)/builds/osx/"
