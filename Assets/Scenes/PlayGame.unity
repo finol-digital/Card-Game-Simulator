@@ -568,7 +568,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 709840748}
-        m_MethodName: ShowDeckMenu
+        m_MethodName: ViewRules
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

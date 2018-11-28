@@ -9,6 +9,7 @@ permalink: roadmap.html
 - Change Card Info Viewer from animated to static
 - Improve Deck Editor Layout
 - Add xbox controller support on windows
+- Tease Cards Explorer
 
 ## Current Sprint
 - Group cards in the deck editor with a number instead of stacking them
@@ -17,6 +18,7 @@ permalink: roadmap.html
 - Enhance boolean card property data type
 - Enhance object card property data type
 - Add identifiers for object card property data types
+- Introduce In-App Card Editor
 - Tech: Travis CI for build automation
 - Tech: Add unit tests
 - Tech: Review with Resharper
@@ -25,7 +27,6 @@ permalink: roadmap.html
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 
 ## Backlog
-- Introduce In-App Card Editor
 - Add option to restart game in *Play Mode*
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
