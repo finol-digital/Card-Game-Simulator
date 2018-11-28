@@ -6,6 +6,7 @@ project="Card Game Simulator"
 echo "Activating Unity license"
 ${UNITY_PATH} \
     -logFile "${pwd}/unity.activation.log" \
+    -serial ${UNITY_SERIAL} \
     -username ${UNITY_USER} \
     -password ${UNITY_PWD} \
     -batchmode \
