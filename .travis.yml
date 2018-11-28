@@ -8,4 +8,4 @@ branches:
 
 install: . ./Scripts/install.sh
 
-script: travis_wait 30 . ./Scripts/build.sh
+script: . ./Scripts/build.sh
