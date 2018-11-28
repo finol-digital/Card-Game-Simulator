@@ -13,7 +13,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
 - **Save**: *t* or *;* - Edit Deck.
-- **Filter**: *f* - Brings up the Options Menu.
+- **Filter**: *f* - Explore Cards.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
@@ -41,14 +41,9 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
 - **FocusName**: *\`* - Focuses keyboard to the search name input field.
 
-## Options Menu
+## Cards Explorer
 - **Cancel**: *Esc* - Back to Main Menu.
-- **Vertical**: *down*, *up* - Scroll through options.
-- **Sort**: *q* - Link to view online rules.
-- **New**: *e* - Link to the CGS website.
-- **Load**: *r* - Link to this webpage.
-- **Save**: *t* - Email <david@finoldigital.com>.
-- **Submit**: *Enter* - Click on selected option.
+- More Coming Soon!
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.

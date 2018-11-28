@@ -18,7 +18,8 @@ namespace CGS.Menus
         public const int MainMenuSceneIndex = 1;
         public const int PlayModeSceneIndex = 2;
         public const int DeckEditorSceneIndex = 3;
-        public const int OptionsMenuSceneIndex = 4;
+        public const int CardsExplorerSceneIndex = 4;
+        public const int OptionsMenuSceneIndex = 5;
         public const string VersionMessage = "Ver. ";
 
         public List<GameObject> buttons;
@@ -68,7 +69,7 @@ namespace CGS.Menus
             else if (Input.GetButtonDown(Inputs.Save))
                 EditDeck();
             else if (Input.GetButtonDown(Inputs.Filter))
-                ShowOptions();
+                ExploreCards();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Quit();
 
@@ -113,6 +114,13 @@ namespace CGS.Menus
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
             SceneManager.LoadScene(DeckEditorSceneIndex);
+        }
+
+        public void ExploreCards()
+        {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
+            CardGameManager.Instance.Messenger.Show("Coming Soon!");
         }
 
         public void ShowOptions()

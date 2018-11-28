@@ -56,7 +56,6 @@ permalink: roadmap.html
 - Support different colored dice
 - Automatically roll dice on phone shake
 - Synchronize dice across all connected players in *Play Mode*
-- Add link to rules from somewhere within *Play Mode*
 - Show hotkeys from within *Play Mode*
 - Synchronize points across teams in *Play Mode*
 - Share discard pile between all players who share a deck in *Play Mode*

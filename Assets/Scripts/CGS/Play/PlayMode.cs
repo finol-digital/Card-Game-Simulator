@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +72,14 @@ namespace CGS.Play
                 ShowCardsMenu();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 PromptBackToMainMenu();
+        }
+
+        public void ViewRules()
+        {
+            if (Uri.IsWellFormedUriString(CardGameManager.Current.RulesUrl, UriKind.Absolute))
+                Application.OpenURL(CardGameManager.Current.RulesUrl);
+            else
+                CardGameManager.Instance.Messenger.Show(OptionsMenu.NoRulesErrorMessage);
         }
 
         public void ShowDeckMenu()

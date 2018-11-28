@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 
 using CardGameView;
 
-namespace CGS.EditDeck
+namespace CGS.Decks
 {
     public class CardSelector : MonoBehaviour
     {

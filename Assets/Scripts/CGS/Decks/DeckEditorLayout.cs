@@ -6,7 +6,7 @@ using UnityEngine;
 
 using CardGameView;
 
-namespace CGS.EditDeck
+namespace CGS.Decks
 {
     public class DeckEditorLayout : MonoBehaviour
     {

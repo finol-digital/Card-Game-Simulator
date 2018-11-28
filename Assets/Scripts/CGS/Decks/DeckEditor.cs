@@ -12,7 +12,7 @@ using CardGameDef;
 using CardGameView;
 using CGS.Menus;
 
-namespace CGS.EditDeck
+namespace CGS.Decks
 {
     public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
