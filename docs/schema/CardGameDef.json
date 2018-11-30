@@ -1,6 +1,7 @@
 {
-	"$schema": "http://json-schema.org/schema#",
-	"id": "https://cardgamesim.finoldigital.com/schema/CardGameDef.json",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://cardgamesim.finoldigital.com/schema/CardGameDef.json",
+  "title": "CGS Custom Game",
 	"description": "A custom card game definition to be used within Card Game Simulator",
 	"definitions": {
 		"vector2": {
@@ -18,7 +19,7 @@
 			"type": "string"
 		},
 		"allCardsUrl": {
-			"description": "From allCardsUrl, CGS downloads the json that contains info about the cards for the game. If CGS is able to successfully download this file, it will save it as AllCards.json.",
+			"description": "From allCardsUrl, CGS downloads the json that contains info about the Cards for the game. If CGS is able to successfully download this file, it will save it as AllCards.json.",
 			"type": "string",
 			"format": "uri"
 		},
@@ -59,7 +60,7 @@
 			"type": "boolean"
 		},
 		"allSetsUrl": {
-			"description": "From allSetsUrl, CGS downloads the json that contains info about the sets for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
+			"description": "From allSetsUrl, CGS downloads the json that contains info about the Sets for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
 			"type": "string",
 			"format": "uri"
 		},
@@ -105,21 +106,21 @@
 			"type": "boolean"
 		},
 		"cardDataIdentifier": {
-			"description": "If cardDataIdentifier is set to a non-empty string, AllCards.json will be parsed as a JSON object: {\"!cardDataIdentifier\":{\"$ref\":\"AllCards.json\"}}",
+			"description": "If cardDataIdentifier is set to a non-empty string, AllCards.json will be parsed as a JSON object: {\"@cardDataIdentifier\":{\"$ref\":\"AllCards.json\"}}",
 			"type": "string"
 		},
 		"cardIdIdentifier": {
-			"description": "Every card must have a unique card id. When defining a card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by cardIdIdentifier. Most custom games will likely want to keep the default cardIdIdentifier.",
+			"description": "Every Card must have a unique id. When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by cardIdIdentifier. Most custom games will likely want to keep the default cardIdIdentifier.",
 			"default": "id",
 			"type": "string"
 		},
 		"cardImageFileType": {
-			"description": "cardImageFileType is the file type extension for the image files that CGS downloads for each individual card.",
+			"description": "cardImageFileType is the file type extension for the image files that CGS downloads for each individual Card.",
 			"default": "png",
 			"type": "string"
 		},
 		"cardImageProperty": {
-			"description": "cardImageProperty is the *Card:Property* which points to the image for this card. If <cardImageProperty> is empty, <cardImageUrl> will be used instead.",
+			"description": "cardImageProperty is the *Card:Property* which points to the image for this Card. If <cardImageProperty> is empty, <cardImageUrl> will be used instead.",
 			"type": "string"
 		},
 		"cardImageUrl": {
@@ -128,7 +129,7 @@
 			"format": "uri"
 		},
 		"cardNameIdentifier": {
-			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:Name* mapped to the field defined by cardNameIdentifier. Most custom games will likely want to keep the default cardNameIdentifier.",
+			"description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Name* mapped to the field defined by cardNameIdentifier. Most custom games will likely want to keep the default cardNameIdentifier.",
 			"default": "name",
 			"type": "string"
 		},
@@ -143,7 +144,7 @@
 				"type": "object",
 				"properties": {
 					"name": {
-						"description": "The name of the property: This name can be referenced to lookup a card's property",
+						"description": "The name of the property: This name can be referenced to lookup a Card's property",
 						"type": "string"
 					},
 					"display": {
@@ -165,7 +166,7 @@
 			"type": "array"
 		},
 		"cardSetIdentifier": {
-			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. Most custom games will likely want to keep the default cardSetIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
+			"description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. Most custom games will likely want to keep the default cardSetIdentifier. If no mapping is created for the Set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
 			"default": "set",
 			"type": "string"
 		},
@@ -175,12 +176,12 @@
 			"$ref": "#/definitions/vector2"
 		},
 		"deckFileHsdId": {
-			"description": "When saving or loading a deck as hsd, deckFileHsdId refers to the *Card:Property* used to uniquely identify each card and is stored as a varint within the deck string.",
+			"description": "When saving or loading a deck as hsd, deckFileHsdId refers to the *Card:Property* used to uniquely identify each Card and is stored as a varint within the deck string.",
 			"default": "dbfId",
 			"type": "string"
 		},
 		"deckFileTxtId": {
-			"description": "When saving a deck as txt, different cards may share the same name, and if they do, the *Card:<deckFileTxtId>* will be used to uniquely identify cards.",
+			"description": "When saving a deck as txt, different Cards may share the same name, and if they do, the *Card:<deckFileTxtId>* will be used to uniquely identify Cards.",
 			"enum": ["id", "set"],
 			"default": "set",
 			"type": "string"
@@ -348,25 +349,25 @@
 			"format": "uri"
 		},
 		"setsInCardObject": {
-			"description": "If setsInCardObject is set to true, <cardSetIdentifier> should point to an object or a list of objects. The objects should have setCodeIdentifier set. If it is a list, the card wil be duplicated for each set.",
+			"description": "If setsInCardObject is set to true, <cardSetIdentifier> should point to an object or a list of objects. If it is a list, the Card wil be duplicated for each Set. These Set definitions follow the rules for AllSets.json. ",
 			"type": "boolean"
 		},
 		"setCardsIdentifier": {
-			"description": "When defining a set in AllSets.json, you can also define cards to include in that set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
+			"description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
 			"default": "cards",
 			"type": "string"
 		},
 		"setCodeIdentifier": {
-			"description": "When defining a set in AllSets.json, you can have the *Set:Code* mapped to the field defined by setCodeIdentifier. Most custom games will likely want to keep the default setCodeIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
+			"description": "When defining a Set in AllSets.json, you can have the *Set:Code* mapped to the field defined by setCodeIdentifier. Most custom games will likely want to keep the default setCodeIdentifier. If no mapping is created for the Set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
 			"default": "code",
 			"type": "string"
 		},
 		"setDataIdentifier": {
-			"description": "If setDataIdentifier is set to a non-empty string, AllSets.json will be parsed as a JSON object: {\"!setDataIdentifier\":{\"$ref\":\"AllSets.json\"}}",
+			"description": "If setDataIdentifier is set to a non-empty string, AllSets.json will be parsed as a JSON object: {\"@setDataIdentifier\":{\"$ref\":\"AllSets.json\"}}",
 			"type": "string"
 		},
 		"setNameIdentifier": {
-			"description": "When defining a set in AllSets.json, you can have the *Set:Name* mapped to the field defined by setNameIdentifier. Most custom games will likely want to keep the default setNameIdentifier.",
+			"description": "When defining a Set in AllSets.json, you can have the *Set:Name* mapped to the field defined by setNameIdentifier. Most custom games will likely want to keep the default setNameIdentifier.",
 			"default": "name",
 			"type": "string"
 		}

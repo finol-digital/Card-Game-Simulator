@@ -1,25 +1,29 @@
 {
-	"$schema": "http://json-schema.org/schema#",
-	"id": "https://cardgamesim.finoldigital.com/schema/AllCards.json",
-	"description": "Lists out card information. You should have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://cardgamesim.finoldigital.com/schema/AllCards.json",
+  "title": "CGS Custom Game - Cards",
+	"description": "Lists out Card information. You should have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.",
 	"items": {
 		"title": "Card",
 		"type": "object",
 		"properties": {
-			"!CardGameDef.json#/properties/cardIdIdentifier": {
+			"@CardGameDef.json#/properties/cardIdIdentifier": {
+        "description": "The id of the Card",
 				"type": "string"
 			},
-			"!CardGameDef.json#/properties/cardNameIdentifier": {
+			"@CardGameDef.json#/properties/cardNameIdentifier": {
+        "description": "The name of the Card",
 				"type": "string"
 			},
-			"!CardGameDef.json#/properties/cardSetIdentifier": {
+			"@CardGameDef.json#/properties/cardSetIdentifier": {
+        "description": "The code for the Card's Set",
 				"type": "string"
 			}
 		},
 		"additionalProperties": {
-			"description": "!CardGameDef.json#/properties/cardProperties"
+			"$ref": "@CardGameDef.json#/properties/cardProperties"
 		},
-		"required": ["!CardGameDef.json#/properties/cardIdIdentifier"]
+		"required": ["@CardGameDef.json#/properties/cardIdIdentifier"]
 	},
 	"type": "array",
 	"uniqueItems": true

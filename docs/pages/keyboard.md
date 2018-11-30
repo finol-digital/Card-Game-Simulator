@@ -13,7 +13,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
 - **Save**: *t* or *;* - Edit Deck.
-- **Filter**: *f* - Explore Cards.
+- **Filter**: *f* or *\\*- Explore Cards.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
