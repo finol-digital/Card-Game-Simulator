@@ -15,7 +15,8 @@
 			"!CardGameDef.json#/properties/setCardsIdentifier": {
 				"$ref": "AllCards.json"
 			}
-		}
+		},
+		"required": ["!CardGameDef.json#/properties/cardIdIdentifier"]
 	},
 	"type": "array",
 	"uniqueItems": true

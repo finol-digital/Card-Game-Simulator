@@ -70,7 +70,7 @@ namespace CardGameDef
             SourceGame = sourceGame ?? CardGame.Invalid;
             Id = id.Clone() as string;
             Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : string.Empty;
-            SetCode = !string.IsNullOrEmpty(setCode) ? setCode.Clone() as string : Set.DefaultCode;
+            SetCode = !string.IsNullOrEmpty(setCode) ? setCode.Clone() as string : sourceGame.SetCodeDefault;
             Properties = properties ?? new Dictionary<string, PropertyDefValuePair>();
             Properties = CloneProperties();
             IsReprint = isReprint;

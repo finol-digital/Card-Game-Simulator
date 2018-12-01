@@ -215,7 +215,7 @@ namespace CGS
         public IEnumerator DownloadCardGame(string gameUrl)
         {
             Spinner.Show();
-            CardGame newGame = new CardGame(this, Set.DefaultCode, gameUrl) { AutoUpdate = true };
+            CardGame newGame = new CardGame(this, CardGame.DefaultName, gameUrl) { AutoUpdate = true };
             Current = newGame;
             yield return newGame.Download();
             if (string.IsNullOrEmpty(newGame.Error))

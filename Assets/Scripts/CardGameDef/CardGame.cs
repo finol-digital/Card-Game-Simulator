@@ -19,6 +19,7 @@ namespace CardGameDef
     {
         public const string BackgroundImageFileName = "Background";
         public const string CardBackImageFileName = "CardBack";
+        public const string DefaultName = "_INVALID_";
 
         public static readonly CardGame Invalid = new CardGame(null);
 
@@ -185,10 +186,16 @@ namespace CardGameDef
         public string SetCardsIdentifier { get; set; } = "cards";
 
         [JsonProperty]
+        public string SetCodeDefault { get; set; } = Set.DefaultCode;
+
+        [JsonProperty]
         public string SetCodeIdentifier { get; set; } = "code";
 
         [JsonProperty]
         public string SetDataIdentifier { get; set; } = "";
+
+        [JsonProperty]
+        public string SetNameDefault { get; set; } = Set.DefaultName;
 
         [JsonProperty]
         public string SetNameIdentifier { get; set; } = "name";
@@ -217,10 +224,10 @@ namespace CardGameDef
         }
         private UnityEngine.Sprite _cardBackImageSprite;
 
-        public CardGame(UnityEngine.MonoBehaviour coroutineRunner, string name = Set.DefaultCode, string url = "")
+        public CardGame(UnityEngine.MonoBehaviour coroutineRunner, string name = DefaultName, string url = "")
         {
             CoroutineRunner = coroutineRunner;
-            Name = name ?? Set.DefaultCode;
+            Name = name ?? DefaultName;
             AutoUpdateUrl = url ?? string.Empty;
             Error = string.Empty;
         }
@@ -373,6 +380,8 @@ namespace CardGameDef
             if (AllSetsUrlWrapped)
                 UnityExtensionMethods.UnwrapFile(SetsFilePath);
             LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
+            if (!LoadedSets.ContainsKey(SetCodeDefault))
+                LoadedSets[SetCodeDefault] = new Set(SetCodeDefault, SetNameDefault);
         }
 
         public void LoadJsonFromFile(string file, LoadJTokenDelegate load, string dataId)
@@ -382,7 +391,7 @@ namespace CardGameDef
 
             JToken root = JToken.Parse(File.ReadAllText(file));
             foreach (JToken jToken in !string.IsNullOrEmpty(dataId) ? root[dataId] : root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues())
-                load(jToken, Set.DefaultCode);
+                load(jToken, SetCodeDefault);
 
             if (!string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier) && root.Value<int>(AllCardsUrlPageCountIdentifier) > 0)
             {
@@ -506,7 +515,7 @@ namespace CardGameDef
                 Card newCard = new Card(this, setCodes.Count > 1 ? (cardId + "_" + cardSet) : cardId, cardName, cardSet, cardProperties, isReprint);
                 LoadedCards[newCard.Id] = newCard;
                 if (!Sets.ContainsKey(cardSet))
-                    LoadedSets[cardSet] = new Set(cardSet);
+                    LoadedSets[cardSet] = new Set(cardSet, cardSet);
             }
         }
 
@@ -514,14 +523,19 @@ namespace CardGameDef
         {
             if (setJToken == null)
             {
-                UnityEngine.Debug.LogWarning("LoadSetFromJToken::NullToken");
+                UnityEngine.Debug.LogWarning("LoadSetFromJToken::NullSetJToken");
                 return;
             }
 
-            string setCode = setJToken.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
-            string setName = setJToken.Value<string>(SetNameIdentifier) ?? defaultSetCode;
-            if (!string.IsNullOrEmpty(setCode) && !string.IsNullOrEmpty(setName))
-                LoadedSets[setCode] = new Set(setCode, setName);
+            string setCode = setJToken.Value<string>(SetCodeIdentifier);
+            string setName = setJToken.Value<string>(SetNameIdentifier);
+            if (string.IsNullOrEmpty(setCode) || string.IsNullOrEmpty(setName))
+            {
+                UnityEngine.Debug.LogWarning("LoadSetFromJToken::EmptySetCodeOrName");
+                return;
+            }
+
+            LoadedSets[setCode] = new Set(setCode, setName);
 
             JArray cards = setJToken.Value<JArray>(SetCardsIdentifier);
             if (cards != null)

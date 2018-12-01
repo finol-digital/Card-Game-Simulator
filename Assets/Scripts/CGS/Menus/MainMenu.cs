@@ -120,7 +120,7 @@ namespace CGS.Menus
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            CardGameManager.Instance.Messenger.Show("Coming Soon!");
+            SceneManager.LoadScene(CardsExplorerSceneIndex);
         }
 
         public void ShowOptions()

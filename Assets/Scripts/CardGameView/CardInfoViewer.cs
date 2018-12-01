@@ -192,14 +192,22 @@ namespace CardGameView
 
         public void SetContentText()
         {
-            Set currentSet = null;
-            if (SelectedCardModel != null)
-                contentText.text = SelectedPropertyIndex != 0 ?
-                    SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName)
-                    : (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out currentSet)
-                        ? currentSet : Set.Default).ToString();
-            else
+            if (SelectedCardModel == null)
+            {
                 contentText.text = string.Empty;
+                return;
+            }
+
+            string newContentTextValue = string.Empty;
+            if (SelectedPropertyIndex == 0)
+            {
+                Set currentSet;
+                if (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out currentSet))
+                    newContentTextValue = currentSet.ToString();
+            }
+            else
+                newContentTextValue = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
+            contentText.text = newContentTextValue;
         }
 
         public void SetImageSprite(Sprite imageSprite)

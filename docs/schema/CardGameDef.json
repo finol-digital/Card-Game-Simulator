@@ -165,7 +165,7 @@
 			"type": "array"
 		},
 		"cardSetIdentifier": {
-			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. Most custom games will likely want to keep the default cardSetIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
+			"description": "When defining a card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. Most custom games will likely want to keep the default cardSetIdentifier. If the mapping is missing, CGS will use <setCodeDefault>.",
 			"default": "set",
 			"type": "string"
 		},
@@ -356,13 +356,23 @@
 			"default": "cards",
 			"type": "string"
 		},
+		"setCodeDefault": {
+			"description": "If a Card does not specify its Set, it will be included in the Set with *Set:Code* specified by setCodeDefault. This Set's name is specified by setNameDefault.",
+			"default": "_CGSDEFAULT_",
+			"type": "string"
+		},
 		"setCodeIdentifier": {
-			"description": "When defining a set in AllSets.json, you can have the *Set:Code* mapped to the field defined by setCodeIdentifier. Most custom games will likely want to keep the default setCodeIdentifier. If no mapping is created for the set, CGS will use _CGSDEFAULT_ as the default *Set:Code*.",
+			"description": "When defining a set in AllSets.json, you can have the *Set:Code* mapped to the field defined by setCodeIdentifier. Most custom games will likely want to keep the default setCodeIdentifier.",
 			"default": "code",
 			"type": "string"
 		},
 		"setDataIdentifier": {
 			"description": "If setDataIdentifier is set to a non-empty string, AllSets.json will be parsed as a JSON object: {\"!setDataIdentifier\":{\"$ref\":\"AllSets.json\"}}",
+			"type": "string"
+		},
+		"setNameDefault": {
+			"description": "If a Card does not specify its Set, it will be included in the Set with *Set:Code* specified by setCodeDefault. This Set's name is specified by setNameDefault.",
+			"default": "_CGSDEFAULT_",
 			"type": "string"
 		},
 		"setNameIdentifier": {

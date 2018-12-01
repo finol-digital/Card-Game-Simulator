@@ -4,13 +4,18 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using CardGameView;
+using CGS.Menus;
 
 namespace CGS.Cards
 {
     public class CardsExplorer : MonoBehaviour
     {
-
+        public void BackToMainMenu()
+        {
+            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+        }
     }
 }
