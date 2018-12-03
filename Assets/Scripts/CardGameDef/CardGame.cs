@@ -405,8 +405,10 @@ namespace CardGameDef
             if (AllSetsUrlWrapped)
                 UnityExtensionMethods.UnwrapFile(SetsFilePath);
             LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
-            if (!LoadedSets.ContainsKey(SetCodeDefault))
-                LoadedSets[SetCodeDefault] = new Set(SetCodeDefault, SetNameDefault);
+
+            Set defaultSet;
+            if (LoadedSets.TryGetValue(SetCodeDefault, out defaultSet))
+                defaultSet.Name = SetNameDefault;
         }
 
         public void LoadJsonFromFile(string file, LoadJTokenDelegate load, string dataId)
