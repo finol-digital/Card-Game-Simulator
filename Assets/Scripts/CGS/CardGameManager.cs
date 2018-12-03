@@ -151,14 +151,12 @@ namespace CGS
                 CreateDefaultCardGames();
             LookupCardGames();
 
-            CardGame currentGame;
-            Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName), out currentGame)
-                 ? currentGame : AllCardGames.First().Value;
-
             if (Debug.isDebugBuild)
                 Application.logMessageReceived += ShowLogToUser;
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
+
+            ResetToPreferredCardGame();
         }
 
         private void CreateDefaultCardGames()
@@ -177,8 +175,11 @@ namespace CGS
 
             foreach (string gameDirectory in Directory.GetDirectories(CardGame.GamesDirectoryPath))
             {
-                string gameName = gameDirectory.Substring(CardGame.GamesDirectoryPath.Length + 1);
-                AllCardGames[gameName] = new CardGame(this, gameName, string.Empty);
+                // Note that gameDirectoryName can be different from newCardGame.Name, if the name has special characters like / or :
+                string gameDirectoryName = gameDirectory.Substring(CardGame.GamesDirectoryPath.Length + 1);
+                CardGame newCardGame = new CardGame(this, gameDirectoryName, string.Empty);
+                newCardGame.ReadProperties();
+                AllCardGames[newCardGame.Name] = newCardGame;
             }
         }
 
@@ -210,6 +211,13 @@ namespace CGS
                 SelectCardGame((string)gameName);
             else if (parameters.TryGetValue(GameUrl, out gameUrl) && (gameUrl is string) && !string.IsNullOrEmpty((string)gameUrl))
                 DownloadCardGame((string)gameUrl);
+        }
+
+        public void ResetToPreferredCardGame()
+        {
+            CardGame currentGame;
+            Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName), out currentGame)
+                 ? currentGame : AllCardGames.First().Value;
         }
 
         public IEnumerator DownloadCardGame(string gameUrl)
@@ -281,13 +289,18 @@ namespace CGS
 
         public void DoGameSceneActions()
         {
-            if (!Current.IsLoaded)
+            if (!Current.HasLoaded)
                 Current.Load();
 
             if (!string.IsNullOrEmpty(Current.Error))
+            {
                 Debug.LogError(GameLoadErrorMessage + Current.Error);
-            else
-                PlayerPrefs.SetString(PlayerPrefGameName, Current.Name);
+                ResetToPreferredCardGame();
+                Selector.Show();
+                return;
+            }
+
+            PlayerPrefs.SetString(PlayerPrefGameName, Current.Name);
 
             if (BackgroundImage != null)
                 BackgroundImage.sprite = Current.BackgroundImageSprite;
@@ -311,7 +324,7 @@ namespace CGS
         {
             try
             {
-                Directory.Delete(Current.GameFolderPath, true);
+                Directory.Delete(Current.GameDirectoryPath, true);
                 AllCardGames.Remove(Current.Name);
                 SelectCardGame(AllCardGames.Keys.First());
                 Selector.Show();

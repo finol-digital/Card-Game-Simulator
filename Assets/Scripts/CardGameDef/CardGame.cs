@@ -25,14 +25,14 @@ namespace CardGameDef
 
         public static string GamesDirectoryPath => UnityEngine.Application.persistentDataPath + "/games";
 
-        public string GameFolderPath => GamesDirectoryPath + "/" + Name;
-        public string ConfigFilePath => GameFolderPath + "/" + Name + ".json";
-        public string CardsFilePath => GameFolderPath + "/AllCards.json";
-        public string SetsFilePath => GameFolderPath + "/AllSets.json";
-        public string BackgroundImageFilePath => GameFolderPath + "/" + BackgroundImageFileName + "." + BackgroundImageFileType;
-        public string CardBackImageFilePath => GameFolderPath + "/" + CardBackImageFileName + "." + CardBackImageFileType;
-        public string DecksFilePath => GameFolderPath + "/decks";
-        public string GameBoardsFilePath => GameFolderPath + "/boards";
+        public string GameDirectoryPath => GamesDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name);
+        public string GameFilePath => GameDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name) + ".json";
+        public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
+        public string SetsFilePath => GameDirectoryPath + "/AllSets.json";
+        public string BackgroundImageFilePath => GameDirectoryPath + "/" + BackgroundImageFileName + "." + UnityExtensionMethods.GetSafeFileName(BackgroundImageFileType);
+        public string CardBackImageFilePath => GameDirectoryPath + "/" + CardBackImageFileName + "." + UnityExtensionMethods.GetSafeFileName(CardBackImageFileType);
+        public string DecksFilePath => GameDirectoryPath + "/decks";
+        public string GameBoardsFilePath => GameDirectoryPath + "/boards";
 
         public float CardAspectRatio => CardSize.y > 0 ? UnityEngine.Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
         public IReadOnlyDictionary<string, Card> Cards => LoadedCards;
@@ -201,8 +201,10 @@ namespace CardGameDef
         public string SetNameIdentifier { get; set; } = "name";
 
         public UnityEngine.MonoBehaviour CoroutineRunner { get; set; }
+        public bool HasReadProperties { get; private set; }
         public bool IsDownloading { get; private set; }
-        public bool IsLoaded { get; private set; }
+        public bool HasDownloaded { get; private set; }
+        public bool HasLoaded { get; private set; }
         public string Error { get; private set; }
 
         public HashSet<string> CardNames { get; } = new HashSet<string>();
@@ -232,32 +234,48 @@ namespace CardGameDef
             Error = string.Empty;
         }
 
+        public void ReadProperties()
+        {
+            try
+            {
+                // We need to read the <name>.json file, but reading it can cause <name> to change, so account for that
+                string gameFilePath = GameFilePath;
+                string gameDirectoryPath = GameDirectoryPath;
+                JsonConvert.PopulateObject(File.ReadAllText(GameFilePath), this);
+                if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath))
+                {
+                    string tempGameFilePath = gameDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name) + ".json";
+                    File.Move(gameFilePath, tempGameFilePath);
+                }
+                if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath))
+                    Directory.Move(gameDirectoryPath, GameDirectoryPath);
+                HasReadProperties = true;
+            }
+            catch (Exception e)
+            {
+                Error += e.Message + e.StackTrace + Environment.NewLine;
+                HasReadProperties = false;
+            }
+        }
+
         public IEnumerator Download()
         {
             if (IsDownloading)
                 yield break;
             IsDownloading = true;
 
-            string initialDirectory = GameFolderPath;
-            yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
-            try
+            // First get the <name>.json file and read it if we need to determine where to pull the rest of the data from
+            yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, GameFilePath);
+            if (!HasReadProperties)
             {
-                if (!IsLoaded)
-                    JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
-            }
-            catch (Exception e)
-            {
-                Error += e.Message;
-                IsDownloading = false;
-                yield break;
-            }
-
-            // If the name of the game doesn't match our initial game name, we need to move to the new directory and delete the old one
-            if (!initialDirectory.Equals(GameFolderPath))
-            {
-                // Downloading the config file twice is slightly inefficient, but it shouldn't cause a noticeable difference for the user
-                yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, ConfigFilePath);
-                Directory.Delete(initialDirectory, true);
+                ReadProperties();
+                if (!HasReadProperties)
+                {
+                    // ReadProperties() should have already populated the Error
+                    IsDownloading = false;
+                    HasDownloaded = false;
+                    yield break;
+                }
             }
 
             for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
@@ -296,21 +314,35 @@ namespace CardGameDef
             foreach (DeckUrl deckUrl in DeckUrls)
                 yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
-            if (!IsLoaded)
-                Load(true);
 
             IsDownloading = false;
+            HasDownloaded = true;
+            if (!HasLoaded)
+                Load();
         }
 
-        public void Load(bool didDownload = false)
+        public void Load()
         {
+            // We should had already read the <name>.json, but we need to be sure
+            if (!HasReadProperties)
+            {
+                ReadProperties();
+                if (!HasReadProperties)
+                {
+                    // ReadProperties() should have already populated the Error
+                    HasLoaded = false;
+                    return;
+                }
+            }
+
+            // These enum lookups need to be set up before we load cards and sets
+            foreach (EnumDef enumDef in Enums)
+                foreach (string key in enumDef.Values.Keys)
+                    enumDef.CreateLookup(key);
+
+            // The main load action is to load cards and sets, but we should also load the background and cardback images now
             try
             {
-                if (!didDownload)
-                    JsonConvert.PopulateObject(File.ReadAllText(ConfigFilePath), this);
-
-                CreateEnumLookups();
-
                 if (CoroutineRunner != null)
                     CoroutineRunner.StartCoroutine(CGS.CardGameManager.Instance.LoadCards());
                 LoadSets();
@@ -318,24 +350,17 @@ namespace CardGameDef
                 BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
                 CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
 
-                IsLoaded = true;
-
-                // Kick off auto-update in the background, even though it won't load until next time the app restarts
-                if (AutoUpdate && !didDownload && CoroutineRunner != null)
-                    CoroutineRunner.StartCoroutine(Download());
+                HasLoaded = true;
             }
             catch (Exception e)
             {
                 Error += e.Message + e.StackTrace + Environment.NewLine;
-                IsLoaded = false;
+                HasLoaded = false;
             }
-        }
 
-        private void CreateEnumLookups()
-        {
-            foreach (EnumDef enumDef in Enums)
-                foreach (string key in enumDef.Values.Keys)
-                    enumDef.CreateLookup(key);
+            // Kick off auto-update in the background, even though it won't load until next time the app restarts
+            if (AutoUpdate && !HasDownloaded && CoroutineRunner != null)
+                CoroutineRunner.StartCoroutine(Download());
         }
 
         public bool IsEnumProperty(string propertyName)
@@ -362,7 +387,7 @@ namespace CardGameDef
             try
             {
                 if (AllCardsUrlZipped)
-                    UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, GameFolderPath);
+                    UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, GameDirectoryPath);
                 if (AllCardsUrlWrapped)
                     UnityExtensionMethods.UnwrapFile(cardsFilePath);
                 LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier);
@@ -376,7 +401,7 @@ namespace CardGameDef
         private void LoadSets()
         {
             if (AllSetsUrlZipped)
-                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, GameFolderPath);
+                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, GameDirectoryPath);
             if (AllSetsUrlWrapped)
                 UnityExtensionMethods.UnwrapFile(SetsFilePath);
             LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
@@ -528,12 +553,12 @@ namespace CardGameDef
             }
 
             string setCode = setJToken.Value<string>(SetCodeIdentifier);
-            string setName = setJToken.Value<string>(SetNameIdentifier);
-            if (string.IsNullOrEmpty(setCode) || string.IsNullOrEmpty(setName))
+            if (string.IsNullOrEmpty(setCode))
             {
-                UnityEngine.Debug.LogWarning("LoadSetFromJToken::EmptySetCodeOrName");
+                UnityEngine.Debug.LogWarning("LoadSetFromJToken::EmptySetCode");
                 return;
             }
+            string setName = setJToken.Value<string>(SetNameIdentifier) ?? setCode;
 
             LoadedSets[setCode] = new Set(setCode, setName);
 

@@ -67,7 +67,7 @@ static public class UnityExtensionMethods
 
     public static Vector2 CalculateMean(List<Vector2> list)
     {
-        if (list == null)
+        if (list == null || list.Count == 0)
             return Vector2.zero;
         return list.Aggregate(Vector2.zero, (current, vector) => current + vector) / list.Count;
     }
