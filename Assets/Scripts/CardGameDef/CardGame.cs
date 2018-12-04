@@ -314,7 +314,6 @@ namespace CardGameDef
             foreach (DeckUrl deckUrl in DeckUrls)
                 yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
-
             IsDownloading = false;
             HasDownloaded = true;
             if (!HasLoaded)
@@ -323,7 +322,7 @@ namespace CardGameDef
 
         public void Load()
         {
-            // We should had already read the <name>.json, but we need to be sure
+            // We should have already read the <name>.json, but we need to be sure
             if (!HasReadProperties)
             {
                 ReadProperties();
@@ -439,7 +438,7 @@ namespace CardGameDef
             string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
             if (string.IsNullOrEmpty(cardId))
             {
-                UnityEngine.Debug.LogWarning("LoadCardFromJToken::InvalidCardId:" + cardJToken.ToString());
+                UnityEngine.Debug.LogWarning("LoadCardFromJToken::EmptyCardId");
                 return;
             }
 
@@ -499,8 +498,8 @@ namespace CardGameDef
                             newPropertyEntry.Value = (cardJToken.Value<string>(property.Name) ?? string.Empty).Replace("\\", "");
                             break;
                         case PropertyType.StringEnum:
-                        case PropertyType.Integer:
                         case PropertyType.Boolean:
+                        case PropertyType.Integer:
                         case PropertyType.String:
                         default:
                             newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
@@ -595,6 +594,9 @@ namespace CardGameDef
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in filters.IntMaxProperties)
                     if (card.GetPropertyValueInt(entry.Key) > entry.Value)
+                        propsMatch = false;
+                foreach (KeyValuePair<string, bool> entry in filters.BoolProperties)
+                    if (card.GetPropertyValueBool(entry.Key) != entry.Value)
                         propsMatch = false;
                 foreach (KeyValuePair<string, int> entry in filters.EnumProperties)
                 {

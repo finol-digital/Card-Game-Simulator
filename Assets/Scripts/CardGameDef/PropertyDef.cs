@@ -11,8 +11,8 @@ namespace CardGameDef
     {
         String,
         EscapedString,
-        Boolean,
         Integer,
+        Boolean,
         Object,
         StringEnum,
         StringList,

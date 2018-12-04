@@ -24,7 +24,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
-- **PageVertical**: *PgUp*, *PgDn* OR *c*, *v* - Scroll through properties in the Card Viewer.
+- **PageHorizontal**: *Home*, *End* OR *c*, *v* - Scroll through properties in the Card Viewer.
 - **Delete**: *Delete* - Zoom on selected card.
 - **Submit**: *Enter* - Double-click on selected card.
 
@@ -32,8 +32,8 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Back to Main Menu.
 - **Horizontal**: *left*, *right* - Scroll through cards in the search results.
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
-- **PageHorizontal**: *home*, *end* OR *z*, *x* - Page through search results.
-- **PageVertical**: *PgUp*, *PgDn* OR *c*, *v* - Shift through stacks in the deck editor.
+- **PageHorizontal**: *Home*, *End* OR *c*, *v* - Page through search results.
+- **PageVertical**: *PgUp*, *PgDn* OR *z*, *x* - Shift through stacks in the deck editor.
 - **Sort**: *q* - Sorts the deck editor.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the Deck Load Menu.

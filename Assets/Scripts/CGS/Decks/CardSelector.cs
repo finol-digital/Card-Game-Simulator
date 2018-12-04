@@ -19,10 +19,10 @@ namespace CGS.Decks
         private bool _wasUp;
         private bool _wasLeft;
         private bool _wasRight;
-        private bool _wasPageLeft;
-        private bool _wasPageRight;
         private bool _wasPageDown;
         private bool _wasPageUp;
+        private bool _wasPageLeft;
+        private bool _wasPageRight;
 
         void Update()
         {
@@ -56,18 +56,18 @@ namespace CGS.Decks
                     SelectLeft();
             }
 
-            if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !CardInfoViewer.Instance.IsVisible)
+            if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
             {
-                if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageUp)
+                if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
                     PageUp();
-                else if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageDown)
+                else if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
                     PageDown();
             }
-            else if (Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0)
+            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0) && !CardInfoViewer.Instance.IsVisible)
             {
-                if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageRight)
+                if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
                     PageRight();
-                else if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageLeft)
+                else if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
                     PageLeft();
             }
 
@@ -75,10 +75,10 @@ namespace CGS.Decks
             _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
             _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
             _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
-            _wasPageLeft = Input.GetAxis(Inputs.PageVertical) < 0;
-            _wasPageRight = Input.GetAxis(Inputs.PageVertical) > 0;
-            _wasPageDown = Input.GetAxis(Inputs.PageHorizontal) < 0;
-            _wasPageUp = Input.GetAxis(Inputs.PageHorizontal) > 0;
+            _wasPageDown = Input.GetAxis(Inputs.PageVertical) < 0;
+            _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
+            _wasPageLeft = Input.GetAxis(Inputs.PageHorizontal) < 0;
+            _wasPageRight = Input.GetAxis(Inputs.PageHorizontal) > 0;
         }
 
         public void SelectDown()
@@ -267,7 +267,7 @@ namespace CGS.Decks
             results.PageRight();
         }
 
-        public void GoLeft()
+        public void DecrementPage()
         {
             RectTransform rt = GetComponent<RectTransform>();
             if (rt.rect.width > rt.rect.height)
@@ -276,7 +276,7 @@ namespace CGS.Decks
                 PageLeft();
         }
 
-        public void GoRight()
+        public void IncrementPage()
         {
             RectTransform rt = GetComponent<RectTransform>();
             if (rt.rect.width > rt.rect.height)

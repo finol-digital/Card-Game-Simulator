@@ -107,6 +107,18 @@ namespace CardGameDef
             return intValue;
         }
 
+        public bool GetPropertyValueBool(string propertyName)
+        {
+            PropertyDefValuePair property;
+            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+                return false;
+
+            return "true".Equals(property.Value, StringComparison.OrdinalIgnoreCase)
+                || "yes".Equals(property.Value, StringComparison.OrdinalIgnoreCase)
+                || "y".Equals(property.Value, StringComparison.OrdinalIgnoreCase)
+                || "1".Equals(property.Value, StringComparison.OrdinalIgnoreCase);
+        }
+
         public int GetPropertyValueEnum(string propertyName)
         {
             PropertyDefValuePair property;
@@ -170,13 +182,16 @@ namespace CardGameDef
                     case PropertyType.ObjectEnumList:
                     case PropertyType.StringEnum:
                     case PropertyType.StringEnumList:
+                    case PropertyType.Boolean:
+                        bool thisBool = GetPropertyValueBool(property.Def.Name);
+                        bool otherBool = other.GetPropertyValueBool(property.Def.Name);
+                        return otherBool.CompareTo(thisBool);
                     case PropertyType.Integer:
-                        int thisValue = GetPropertyValueInt(property.Def.Name);
-                        int otherValue = other.GetPropertyValueInt(property.Def.Name);
-                        return thisValue.CompareTo(otherValue);
+                        int thisInt = GetPropertyValueInt(property.Def.Name);
+                        int otherInt = other.GetPropertyValueInt(property.Def.Name);
+                        return thisInt.CompareTo(otherInt);
                     case PropertyType.Object:
                     case PropertyType.ObjectList:
-                    case PropertyType.Boolean:
                     case PropertyType.StringList:
                     case PropertyType.EscapedString:
                     case PropertyType.String:

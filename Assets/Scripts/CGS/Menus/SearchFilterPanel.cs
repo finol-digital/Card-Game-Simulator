@@ -9,14 +9,14 @@ using CardGameDef;
 
 namespace CGS.Menus
 {
-    public class SearchPropertyPanel : MonoBehaviour
+    public class SearchFilterPanel : MonoBehaviour
     {
         public Text nameLabelText;
         public InputField stringInputField;
         public Text stringPlaceHolderText;
         public InputField integerMinInputField;
         public InputField integerMaxInputField;
-        public RectTransform enumContent;
-        public Toggle enumToggle;
+        public RectTransform toggleGroupContainer;
+        public Toggle toggle;
     }
 }

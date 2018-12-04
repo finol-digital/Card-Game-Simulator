@@ -16,17 +16,16 @@ namespace CGS.Menus
 
     public class CardSearchMenu : MonoBehaviour
     {
-        public const string ClearFiltersPrompt = "Clear Filters?";
-        public float PropertyPanelHeight => ((RectTransform)stringPropertyPanel.transform).rect.height;
+        public float PropertyPanelHeight => ((RectTransform)stringFilterPanel.transform).rect.height;
 
         public Scrollbar scrollbar;
         public InputField nameInputField;
         public InputField idInputField;
         public InputField setCodeInputField;
         public RectTransform propertyFiltersContent;
-        public SearchPropertyPanel stringPropertyPanel;
-        public SearchPropertyPanel integerPropertyPanel;
-        public SearchPropertyPanel enumPropertyPanel;
+        public SearchFilterPanel stringFilterPanel;
+        public SearchFilterPanel integerFilterPanel;
+        public SearchFilterPanel toggleFilterPanel;
 
         public OnNameChangeDelegate NameChangeCallback { get; set; }
         public OnSearchDelegate SearchCallback { get; set; }
@@ -236,9 +235,9 @@ namespace CGS.Menus
             NameChangeCallback = nameChangeCallback;
             SearchCallback = searchCallback;
 
-            stringPropertyPanel.gameObject.SetActive(false);
-            integerPropertyPanel.gameObject.SetActive(false);
-            enumPropertyPanel.gameObject.SetActive(false);
+            stringFilterPanel.gameObject.SetActive(false);
+            integerFilterPanel.gameObject.SetActive(false);
+            toggleFilterPanel.gameObject.SetActive(false);
             for (int i = FilterPanels.Count - 1; i >= 0; i--)
             {
                 Destroy(FilterPanels[i].gameObject);
@@ -260,6 +259,8 @@ namespace CGS.Menus
                 GameObject newPanel;
                 if (CardGameManager.Current.IsEnumProperty(property.Name))
                     newPanel = CreateEnumPropertyFilterPanel(property);
+                else if (property.Type == PropertyType.Boolean)
+                    newPanel = CreateBooleanPropertyFilterPanel(property.Name, property.Display);
                 else if (property.Type == PropertyType.Integer)
                     newPanel = CreateIntegerPropertyFilterPanel(property.Name, property.Display);
                 else //if (property.Type == PropertyType.String)
@@ -277,10 +278,10 @@ namespace CGS.Menus
 
         public GameObject CreateStringPropertyFilterPanel(string propertyName, string displayName)
         {
-            GameObject newPanel = Instantiate(stringPropertyPanel.gameObject, propertyFiltersContent);
+            GameObject newPanel = Instantiate(stringFilterPanel.gameObject, propertyFiltersContent);
             newPanel.gameObject.SetActive(true);
 
-            SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
+            SearchFilterPanel config = newPanel.GetComponent<SearchFilterPanel>();
             config.nameLabelText.text = !string.IsNullOrEmpty(displayName) ? displayName : propertyName;
             string storedFilter;
             if (Filters.StringProperties.TryGetValue(propertyName, out storedFilter))
@@ -293,10 +294,10 @@ namespace CGS.Menus
 
         public GameObject CreateIntegerPropertyFilterPanel(string propertyName, string displayName)
         {
-            GameObject newPanel = Instantiate(integerPropertyPanel.gameObject, propertyFiltersContent);
+            GameObject newPanel = Instantiate(integerFilterPanel.gameObject, propertyFiltersContent);
             newPanel.gameObject.SetActive(true);
 
-            SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
+            SearchFilterPanel config = newPanel.GetComponent<SearchFilterPanel>();
             config.nameLabelText.text = !string.IsNullOrEmpty(displayName) ? displayName : propertyName;
             int storedFilter;
 
@@ -311,34 +312,84 @@ namespace CGS.Menus
             return newPanel;
         }
 
-        public GameObject CreateEnumPropertyFilterPanel(PropertyDef property)
+        public GameObject CreateBooleanPropertyFilterPanel(string propertyName, string displayName)
         {
-            GameObject newPanel = Instantiate(enumPropertyPanel.gameObject, propertyFiltersContent);
+            GameObject newPanel = Instantiate(toggleFilterPanel.gameObject, propertyFiltersContent);
             newPanel.gameObject.SetActive(true);
 
-            SearchPropertyPanel config = newPanel.GetComponent<SearchPropertyPanel>();
+            SearchFilterPanel config = newPanel.GetComponent<SearchFilterPanel>();
+            config.nameLabelText.text = !string.IsNullOrEmpty(displayName) ? displayName : propertyName + "?";
+            bool hasFilter = false;
+            bool storedFilter;
+            if (Filters.BoolProperties.TryGetValue(propertyName, out storedFilter))
+                hasFilter = true;
+
+            Toggle toggle;
+            float toggleWidth;
+            RectTransform toggleImageTransform;
+            Vector3 toggleLocalPosition = config.toggle.transform.localPosition;
+            float panelWidth = 0;
+
+            toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();
+            toggle.isOn = hasFilter && storedFilter;
+            toggle.onValueChanged.AddListener(isOn => SetBoolPropertyFilter(propertyName, true, isOn));
+            toggle.GetComponentInChildren<Text>().text = "true";
+            toggle.transform.localPosition = toggleLocalPosition;
+            toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
+            toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
+            toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
+            toggleLocalPosition.x += toggleWidth;
+            panelWidth += toggleWidth;
+
+            toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();
+            toggle.isOn = hasFilter && !storedFilter;
+            toggle.onValueChanged.AddListener(isOn => SetBoolPropertyFilter(propertyName, false, isOn));
+            toggle.GetComponentInChildren<Text>().text = "false";
+            toggle.transform.localPosition = toggleLocalPosition;
+            toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
+            toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
+            toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
+            toggleLocalPosition.x += toggleWidth;
+            panelWidth += toggleWidth;
+
+            config.toggle.gameObject.SetActive(false);
+            config.toggleGroupContainer.sizeDelta = new Vector2(panelWidth, config.toggleGroupContainer.sizeDelta.y);
+
+            return newPanel;
+        }
+
+        public GameObject CreateEnumPropertyFilterPanel(PropertyDef property)
+        {
+            GameObject newPanel = Instantiate(toggleFilterPanel.gameObject, propertyFiltersContent);
+            newPanel.gameObject.SetActive(true);
+
+            SearchFilterPanel config = newPanel.GetComponent<SearchFilterPanel>();
             config.nameLabelText.text = !string.IsNullOrEmpty(property.Display) ? property.Display : property.Name;
             int storedFilter;
             Filters.EnumProperties.TryGetValue(property.Name, out storedFilter);
-
             EnumDef enumDef = CardGameManager.Current.Enums.First(def => def.Property.Equals(property.Name));
-            Vector3 localPosition = config.enumToggle.transform.localPosition;
+
+            Toggle toggle;
+            float toggleWidth;
+            RectTransform toggleImageTransform;
+            Vector3 toggleLocalPosition = config.toggle.transform.localPosition;
             float panelWidth = 0;
+
             foreach (KeyValuePair<string, string> enumValue in enumDef.Values)
             {
                 int lookupKey;
                 if (!enumDef.Lookup.TryGetValue(enumValue.Key, out lookupKey))
                     lookupKey = enumDef.CreateLookup(enumValue.Key);
-                Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
-                newToggle.isOn = (storedFilter & lookupKey) != 0;
-                newToggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(property.Name, lookupKey, isOn));
-                newToggle.GetComponentInChildren<Text>().text = enumValue.Value;
-                newToggle.transform.localPosition = localPosition;
-                float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 25;
-                RectTransform imageTransform = (RectTransform)newToggle.GetComponentInChildren<Image>().transform;
-                imageTransform.sizeDelta = new Vector2(width, imageTransform.sizeDelta.y);
-                localPosition.x += width;
-                panelWidth += width;
+                toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();
+                toggle.isOn = (storedFilter & lookupKey) != 0;
+                toggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(property.Name, lookupKey, isOn));
+                toggle.GetComponentInChildren<Text>().text = enumValue.Value;
+                toggle.transform.localPosition = toggleLocalPosition;
+                toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
+                toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
+                toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
+                toggleLocalPosition.x += toggleWidth;
+                panelWidth += toggleWidth;
             }
 
             if (!string.IsNullOrEmpty(property.Empty))
@@ -346,19 +397,19 @@ namespace CGS.Menus
                 int lookupKey;
                 if (!enumDef.Lookup.TryGetValue(property.Empty, out lookupKey))
                     lookupKey = enumDef.CreateLookup(property.Empty);
-                Toggle newToggle = Instantiate(config.enumToggle.gameObject, config.enumContent).GetOrAddComponent<Toggle>();
-                newToggle.isOn = (storedFilter & lookupKey) != 0;
-                newToggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(property.Name, lookupKey, isOn));
-                newToggle.GetComponentInChildren<Text>().text = property.Empty;
-                newToggle.transform.localPosition = localPosition;
-                float width = newToggle.GetComponentInChildren<Text>().preferredWidth + 25;
-                RectTransform imageTransform = (RectTransform)newToggle.GetComponentInChildren<Image>().transform;
-                imageTransform.sizeDelta = new Vector2(width, imageTransform.sizeDelta.y);
-                localPosition.x += width;
-                panelWidth += width;
+                toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();
+                toggle.isOn = (storedFilter & lookupKey) != 0;
+                toggle.onValueChanged.AddListener(isOn => SetEnumPropertyFilter(property.Name, lookupKey, isOn));
+                toggle.GetComponentInChildren<Text>().text = property.Empty;
+                toggle.transform.localPosition = toggleLocalPosition;
+                toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
+                toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
+                toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
+                toggleLocalPosition.x += toggleWidth;
+                panelWidth += toggleWidth;
             }
-            config.enumToggle.gameObject.SetActive(false);
-            config.enumContent.sizeDelta = new Vector2(panelWidth, config.enumContent.sizeDelta.y);
+            config.toggle.gameObject.SetActive(false);
+            config.toggleGroupContainer.sizeDelta = new Vector2(panelWidth, config.toggleGroupContainer.sizeDelta.y);
 
             return newPanel;
         }
@@ -419,6 +470,17 @@ namespace CGS.Menus
             Filters.IntMaxProperties[propertyName] = intValue;
         }
 
+        public void SetBoolPropertyFilter(string propertyName, bool filterValue, bool isOn)
+        {
+            if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
+                return;
+
+            if (isOn)
+                Filters.BoolProperties[propertyName] = filterValue;
+            else if (Filters.BoolProperties.ContainsKey(propertyName))
+                Filters.BoolProperties.Remove(propertyName);
+        }
+
         public void SetEnumPropertyFilter(string propertyName, int filterValue, bool isOn)
         {
             if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
@@ -452,6 +514,7 @@ namespace CGS.Menus
             Filters.StringProperties.Clear();
             Filters.IntMinProperties.Clear();
             Filters.IntMaxProperties.Clear();
+            Filters.BoolProperties.Clear();
             Filters.EnumProperties.Clear();
         }
 

@@ -5,19 +5,15 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Show loading indicator when downloading a card game
-- Change Card Info Viewer from animated to static
-- Improve Deck Editor Layout
-- Add xbox controller support on windows
-- Tease Cards Explorer
+- Added Cards Explorer
+- Enhanced boolean card property data type
 
 ## Current Sprint
+- Enhance object card property data type
+- Add identifiers for object card property data types
 - Group cards in the deck editor with a number instead of stacking them
 - Add rate limit for how often to update allCards and allSets
   - Also set up to update immediately instead of on next load
-- Enhance boolean card property data type
-- Enhance object card property data type
-- Add identifiers for object card property data types
 - Introduce In-App Card Editor
 - Tech: Travis CI for build automation
 - Tech: Add unit tests

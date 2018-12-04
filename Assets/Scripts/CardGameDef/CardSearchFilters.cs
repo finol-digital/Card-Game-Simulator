@@ -21,6 +21,8 @@ namespace CardGameDef
 
         public Dictionary<string, int> IntMaxProperties { get; } = new Dictionary<string, int>();
 
+        public Dictionary<string, bool> BoolProperties { get; } = new Dictionary<string, bool>();
+
         public Dictionary<string, int> EnumProperties { get; } = new Dictionary<string, int>();
 
         public override string ToString()
@@ -56,6 +58,10 @@ namespace CardGameDef
                             filters += property.Name + ":" + filterValue + "; ";
                         }
                         break;
+                    case PropertyType.Boolean:
+                        if (BoolProperties.ContainsKey(property.Name))
+                            filters += (BoolProperties[property.Name] ? "IS " : "NOT ") + property.Name + "; ";
+                        break;
                     case PropertyType.Integer:
                         if (IntMinProperties.ContainsKey(property.Name))
                             filters += property.Name + ">=" + IntMinProperties[property.Name] + "; ";
@@ -64,7 +70,6 @@ namespace CardGameDef
                         break;
                     case PropertyType.Object:
                     case PropertyType.ObjectList:
-                    case PropertyType.Boolean:
                     case PropertyType.StringList:
                     case PropertyType.EscapedString:
                     case PropertyType.String:
