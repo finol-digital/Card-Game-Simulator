@@ -9,8 +9,9 @@ permalink: roadmap.html
 - Enhanced boolean card property data type
 
 ## Current Sprint
-- Add rate limit for how often to update allCards and allSets
-  - Also set up to update immediately instead of on next load
+- Replace autoUpdate with autoUpdateRate to set how often to update allCards and allSets
+  - Also reload updates immediately instead of on next startup
+  - Show option to delete game when you fail to load it
 - Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
@@ -19,6 +20,7 @@ permalink: roadmap.html
 - Group cards in the Deck Editor with a number instead of stacking them
 - Add Card Editor
 - Tech: Travis CI for build automation
+- Tech: WSATestCertificate?
 - Tech: Add unit tests
 - Tech: Review with Resharper
 - Fix: UWP join and host
