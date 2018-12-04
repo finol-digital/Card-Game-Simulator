@@ -3,7 +3,7 @@ permalink: custom.html
 ---
 
 # Defining Custom Games
-Card Game Simulator allows users to [download custom card games to use within the application](index.html#create-custom-games).
+Card Game Simulator allows users to [download custom card games to use within the application](index.html#create-share-custom-games).
 
 ## CGS games directory
 Custom games are defined by creating a new folder within the persistent games data directory. The location of this persistent data directory varies depending on platform. Some examples include:
@@ -34,7 +34,7 @@ The structure of this custom game folder is:
 ## JSON File Structure
 When downloading a custom game from a url, the data that is being downloaded is the contents of the \<name\>.json file. CGS generates the rest of the folder structure based off the information in that file. 
 
-You can create your own json and [validate](https://jsonschemalint.com/#/version/draft-06/markup/json) against these schema:
+You can create your own json and [validate](https://www.jsonschemavalidator.net/) against these schema:
 - [CardGameDef](schema/CardGameDef.json)
 - [AllCards](schema/AllCards.json)
 - [AllSets](schema/AllSets.json)

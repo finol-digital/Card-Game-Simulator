@@ -5,12 +5,15 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Added Cards Explorer
+- Introduced Cards Explorer
 - Enhanced boolean card property data type
 
 ## Current Sprint
+- Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
+- Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
+- Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Add rate limit for how often to update allCards and allSets
   - Also set up to update immediately instead of on next load
 - Group cards in the deck editor with a number instead of stacking them
@@ -45,7 +48,6 @@ permalink: roadmap.html
 - Support Android TV and tvOS
 
 ## Icebox
-- Add displayEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
 - Support more than 1 card face
