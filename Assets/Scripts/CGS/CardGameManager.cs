@@ -22,6 +22,7 @@ namespace CGS
 {
     public class CardGameManager : MonoBehaviour
     {
+        public const bool VerboseLogMessenger = false;
         public const string GameName = "GameName";
         public const string GameUrl = "GameUrl";
         public const string PlayerPrefGameName = "DefaultGame";
@@ -185,7 +186,8 @@ namespace CGS
 
         void ShowLogToUser(string logString, string stackTrace, LogType type)
         {
-            Messenger.Show(logString);
+            if (VerboseLogMessenger || !LogType.Log.Equals(type))
+                Messenger.Show(logString);
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)

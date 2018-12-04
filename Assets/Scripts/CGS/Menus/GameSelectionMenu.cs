@@ -149,6 +149,11 @@ namespace CGS.Menus
             nativeShare.SetText(string.Format(ShareMessage, CardGameManager.Current.Name, url)).Share();
         }
 
+        public void ShowNewPanel()
+        {
+            CardGameManager.Instance.Messenger.Show("Custom Card Game Creator Coming Soon!");
+        }
+
         public void ShowDownloadPanel()
         {
             downloadPanel.gameObject.SetActive(true);
