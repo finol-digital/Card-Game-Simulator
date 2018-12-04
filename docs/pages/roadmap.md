@@ -11,10 +11,10 @@ permalink: roadmap.html
 ## Current Sprint
 - Enhance object card property data type
 - Add identifiers for object card property data types
-- Group cards in the deck editor with a number instead of stacking them
 - Add rate limit for how often to update allCards and allSets
   - Also set up to update immediately instead of on next load
-- Introduce In-App Card Editor
+- Group cards in the deck editor with a number instead of stacking them
+- Add Card Editor
 - Tech: Travis CI for build automation
 - Tech: Add unit tests
 - Tech: Review with Resharper
