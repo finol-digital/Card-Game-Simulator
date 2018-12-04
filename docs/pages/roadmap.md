@@ -16,7 +16,7 @@ permalink: roadmap.html
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
-- Group cards in the deck editor with a number instead of stacking them
+- Group cards in the Deck Editor with a number instead of stacking them
 - Add Card Editor
 - Tech: Travis CI for build automation
 - Tech: Add unit tests
