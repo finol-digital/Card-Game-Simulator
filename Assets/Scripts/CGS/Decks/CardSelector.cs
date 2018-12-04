@@ -31,10 +31,10 @@ namespace CGS.Decks
 
             if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && SwipeManager.DetectSwipe())
             {
-                if (SwipeManager.IsSwipingDown())
-                    SelectUp();
-                else if (SwipeManager.IsSwipingUp())
+                if (SwipeManager.IsSwipingUp())
                     SelectDown();
+                else if (SwipeManager.IsSwipingDown())
+                    SelectUp();
                 else if (SwipeManager.IsSwipingRight())
                     SelectLeft();
                 else if (SwipeManager.IsSwipingLeft())
@@ -43,32 +43,33 @@ namespace CGS.Decks
 
             if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
             {
-                if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
-                    SelectUp();
-                else if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+
+                if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
                     SelectDown();
+                else if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                    SelectUp();
             }
             else if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
             {
-                if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
-                    SelectRight();
-                else if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
+                if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
                     SelectLeft();
+                else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
+                    SelectRight();
             }
 
             if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
             {
-                if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
-                    PageUp();
-                else if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
+                if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
                     PageDown();
+                else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
+                    PageUp();
             }
             else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0) && !CardInfoViewer.Instance.IsVisible)
             {
-                if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
-                    PageRight();
-                else if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
+                if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
                     PageLeft();
+                else if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
+                    PageRight();
             }
 
             _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
