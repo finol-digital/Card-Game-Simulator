@@ -1,55 +1,58 @@
 {
-	"allCardsUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/AllCards.json",
-	"allSetsUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/AllSets.json",
-	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/Mahjong.json",
-	"backgroundImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/Background.png",
-	"cardBackImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/CardBack.png",
-	"cardImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/sets/{cardSet}/{cardId}.{cardImageFileType}",
-	"cardNameIsAtTop": false,
-	"cardPrimaryProperty": "type",
-	"cardProperties": [{
-			"name": "type",
-			"display": "Type",
-			"type": "stringEnum"
-		},
-		{
-			"name": "suit",
-			"display": "Suit",
-			"type": "stringEnum"
-		},
-		{
-			"name": "rank",
-			"display": "Rank",
-			"type": "string"
-		}
-	],
-	"deckUrls": [{
-		"name": "Traditional Mahjong Deck",
-		"url": "https://cardgamesim.finoldigital.com/games/Mahjong/decks/Traditional%20Mahjong%20Deck.txt"
-	}],
-	"deckMaxCount": 144,
-	"enums": [{
-			"property": "type",
-			"values": {
-				"simple": "Simple",
-				"honor": "Honor",
-				"bonus": "Bonus"
-			}
-		},
-		{
-			"property": "suit",
-			"values": {
-				"circle": "Circle",
-				"bamboo": "Bamboo",
-				"character": "Character",
-				"wind": "Wind",
-				"dragon": "Dragon",
-				"flower": "Flower",
-				"season": "Season"
-			}
-		}
-	],
-	"gameStartHandCount": 13,
-	"name": "Mahjong",
-	"rulesUrl": "http://mahjong.wikidot.com/basic-rules"
+  "allCardsUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/AllCards.json",
+  "allSetsUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/AllSets.json",
+  "autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/Mahjong.json",
+  "backgroundImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/Background.png",
+  "cardBackImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/CardBack.png",
+  "cardImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/sets/{cardSet}/{cardId}.{cardImageFileType}",
+  "cardPrimaryProperty": "type",
+  "cardProperties": [
+    {
+      "name": "type",
+      "display": "Type",
+      "type": "stringEnum"
+    },
+    {
+      "name": "suit",
+      "display": "Suit",
+      "type": "stringEnum"
+    },
+    {
+      "name": "rank",
+      "display": "Rank",
+      "type": "string"
+    }
+  ],
+  "deckUrls": [
+    {
+      "name": "Traditional Mahjong Deck",
+      "url": "https://cardgamesim.finoldigital.com/games/Mahjong/decks/Traditional%20Mahjong%20Deck.txt"
+    }
+  ],
+  "deckMaxCount": 144,
+  "enums": [
+    {
+      "property": "type",
+      "values": {
+        "simple": "Simple",
+        "honor": "Honor",
+        "bonus": "Bonus"
+      }
+    },
+    {
+      "property": "suit",
+      "values": {
+        "circle": "Circle",
+        "bamboo": "Bamboo",
+        "character": "Character",
+        "wind": "Wind",
+        "dragon": "Dragon",
+        "flower": "Flower",
+        "season": "Season"
+      }
+    }
+  ],
+  "gameStartHandCount": 13,
+  "name": "Mahjong",
+  "rulesUrl": "http://mahjong.wikidot.com/basic-rules"
 }

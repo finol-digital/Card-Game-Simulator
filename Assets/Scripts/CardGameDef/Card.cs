@@ -36,7 +36,7 @@ namespace CardGameDef
                 url = url.Replace("{cardId}", Id);
                 url = url.Replace("{cardName}", Name);
                 url = url.Replace("{cardSet}", SetCode);
-                Regex rgx = new Regex("{card\\.(?<property>\\w+)}");
+                Regex rgx = new Regex("{card_(?<property>\\w+)}");
                 foreach (Match match in rgx.Matches(url))
                     url = url.Replace(match.Value, GetPropertyValueString(match.Groups["property"].Value));
                 url = url.Replace("{cardImageFileType}", SourceGame.CardImageFileType);
