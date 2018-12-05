@@ -33,7 +33,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Horizontal**: *left*, *right* - Scroll through cards in the search results.
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
 - **PageHorizontal**: *Home*, *End* OR *c*, *v* - Page through search results.
-- **PageVertical**: *PgUp*, *PgDn* OR *z*, *x* - Shift through stacks in the deck editor.
+- **PageVertical**: *PgUp*, *PgDn* OR *z*, *x* - Move through stacks in the deck editor.
 - **Sort**: *q* - Sorts the deck editor.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the Deck Load Menu.

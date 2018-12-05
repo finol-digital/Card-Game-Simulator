@@ -12,13 +12,14 @@ permalink: roadmap.html
 - Replace autoUpdate with autoUpdateRate to set how often to update allCards and allSets
   - Also reload updates immediately instead of on next startup
   - Show option to delete game when you fail to load it
-- Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Group cards in the Deck Editor with a number instead of stacking them
+- Enhance Cards Explorer
 - Add Card Editor
+- Add Game Creator
 - Tech: Travis CI for build automation
 - Tech: WSATestCertificate?
 - Tech: Add unit tests
