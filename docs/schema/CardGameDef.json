@@ -19,7 +19,7 @@
   "type": "object",
   "properties": {
     "name": {
-      "description": "This name is the name of the custom card game as it appears to the user, and CGS will create the data for this card game in a folder with this name.",
+      "description": "This name is the name of the custom card game as it appears to the user. This name is required for the *Game:Id*.",
       "type": "string"
     },
     "allCardsUrl": {
@@ -76,12 +76,13 @@
       "description": "If allSetsUrl points to a zipped file, set allSetsUrlZipped to true, and CGS will unzip the file.",
       "type": "boolean"
     },
-    "autoUpdate": {
-      "description": "If autoUpdate is true, CGS will re-download <name>.json, AllCards.json, and AllSets.json every time the user starts to play that custom card game.",
-      "type": "boolean"
+    "autoUpdateRate": {
+      "description": "autoUpdateRate indicates how many days to use cached files instead of re-downloading. autoUpdateRate=0 will re-download files at every opportunity. autoUpdate<0 will never attempt to download anything.",
+      "default": 30,
+      "type": "integer"
     },
     "autoUpdateUrl": {
-      "description": "autoUpdateUrl should correspond to the url from which users download <name>.json. CGS will automatically re-download the custom game from this url if autoUpdate is set to true.",
+      "description": "autoUpdateUrl indicates the url from which users download *Game:Name*.json, and CGS will automatically re-download the custom game from this url every <autoUpdateRate> days. This url is required for the *Game:Id*. You should host *Game:Name*.json at this url, but if you do not, you can set autoUpdateRate to -1, and there should be no issues.",
       "type": "string",
       "format": "uri"
     },
@@ -413,7 +414,8 @@
     }
   },
   "required": [
-    "name"
+    "name",
+    "autoUpdateUrl"
   ],
   "additionalProperties": false
 }

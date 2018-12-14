@@ -39,8 +39,8 @@ namespace CGS.Menus
         public TMPro.TMP_InputField textInputField;
 
         public OnDeckLoadedDelegate LoadCallback { get; private set; }
-        public string SelectedFileName { get; private set; }
-        public SortedDictionary<string, string> DeckFiles { get; } = new SortedDictionary<string, string>();
+        public string SelectedFilePath { get; private set; }
+        public SortedList<string, string> DeckFiles { get; } = new SortedList<string, string>();
 
         private bool _wasDown;
         private bool _wasUp;
@@ -104,7 +104,7 @@ namespace CGS.Menus
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
             LoadCallback = loadCallback;
-            SelectedFileName = string.Empty;
+            SelectedFilePath = string.Empty;
 
             BuildDeckFileSelectionOptions();
 
@@ -134,20 +134,20 @@ namespace CGS.Menus
             string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath) ? Directory.GetFiles(CardGameManager.Current.DecksFilePath) : new string[0];
             foreach (string file in files)
                 if (GetFileTypeFromPath(file) == CardGameManager.Current.DeckFileType)
-                    DeckFiles[GetNameFromPath((file))] = file;
+                    DeckFiles[file] = GetNameFromPath((file));
 
-            Rebuild(DeckFiles.Keys.ToList(), SelectFile, SelectedFileName);
+            Rebuild(DeckFiles, SelectFile, SelectedFilePath);
 
-            shareFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
-            deleteFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
-            loadFromFileButton.interactable = !string.IsNullOrEmpty(SelectedFileName);
+            shareFileButton.interactable = !string.IsNullOrEmpty(SelectedFilePath);
+            deleteFileButton.interactable = !string.IsNullOrEmpty(SelectedFilePath);
+            loadFromFileButton.interactable = !string.IsNullOrEmpty(SelectedFilePath);
         }
 
-        public void SelectFile(Toggle toggle, string deckFileName)
+        public void SelectFile(Toggle toggle, string deckFilePath)
         {
-            if (string.IsNullOrEmpty(deckFileName))
+            if (string.IsNullOrEmpty(deckFilePath))
             {
-                SelectedFileName = string.Empty;
+                SelectedFilePath = string.Empty;
                 shareFileButton.interactable = false;
                 deleteFileButton.interactable = false;
                 loadFromFileButton.interactable = false;
@@ -156,12 +156,12 @@ namespace CGS.Menus
 
             if (toggle.isOn)
             {
-                SelectedFileName = deckFileName;
+                SelectedFilePath = deckFilePath;
                 shareFileButton.interactable = true;
                 deleteFileButton.interactable = true;
                 loadFromFileButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && SelectedFileName.Equals(deckFileName))
+            else if (!toggle.group.AnyTogglesOn() && SelectedFilePath.Equals(deckFilePath))
                 LoadFromFileAndHide();
         }
 
@@ -194,13 +194,13 @@ namespace CGS.Menus
         {
             try
             {
-                File.Delete(DeckFiles[SelectedFileName]);
+                File.Delete(SelectedFilePath);
             }
             catch (Exception e)
             {
                 Debug.LogError(DeckDeleteErrorMessage + e.Message);
             }
-            SelectedFileName = string.Empty;
+            SelectedFilePath = string.Empty;
             BuildDeckFileSelectionOptions();
         }
 
@@ -220,7 +220,7 @@ namespace CGS.Menus
             string deckText = string.Empty;
             try
             {
-                deckText = File.ReadAllText(DeckFiles[SelectedFileName]);
+                deckText = File.ReadAllText(SelectedFilePath);
             }
             catch (Exception e)
             {
@@ -231,7 +231,7 @@ namespace CGS.Menus
 
         public void LoadFromFileAndHide()
         {
-            Deck newDeck = Deck.Parse(CardGameManager.Current, SelectedFileName, CardGameManager.Current.DeckFileType, GetDeckText());
+            Deck newDeck = Deck.Parse(CardGameManager.Current, DeckFiles[SelectedFilePath], CardGameManager.Current.DeckFileType, GetDeckText());
             LoadCallback?.Invoke(newDeck);
             ResetCancelButton();
             Hide();

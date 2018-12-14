@@ -25,7 +25,7 @@ namespace CardGameDef
 
         public static string GamesDirectoryPath => UnityEngine.Application.persistentDataPath + "/games";
 
-        public string GameDirectoryPath => GamesDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name);
+        public string GameDirectoryPath => GamesDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Id);
         public string GameFilePath => GameDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name) + ".json";
         public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
         public string SetsFilePath => GameDirectoryPath + "/AllSets.json";
@@ -37,6 +37,13 @@ namespace CardGameDef
         public float CardAspectRatio => CardSize.y > 0 ? UnityEngine.Mathf.Abs(CardSize.x / CardSize.y) : 0.715f;
         public IReadOnlyDictionary<string, Card> Cards => LoadedCards;
         public IReadOnlyDictionary<string, Set> Sets => LoadedSets;
+
+
+        // *Game:Id* = *Game:Name*@<base64(*Game:AutoUpdateUrl*)>
+        // Since urls must be unique, this id will also be unique and human-recognizable
+        public string Id => Name + EncodedUrl;
+        public string EncodedUrl => !string.IsNullOrEmpty(AutoUpdateUrl) ?
+            "@" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(AutoUpdateUrl)) : "";
 
         [JsonProperty]
         public string Name { get; set; }
@@ -226,6 +233,20 @@ namespace CardGameDef
         }
         private UnityEngine.Sprite _cardBackImageSprite;
 
+        // TODO: C#7 Tuple
+        public static Tuple<string, string> Decode(string gameId)
+        {
+            string name = gameId;
+            string url = string.Empty;
+            int delimiterIdx = gameId.LastIndexOf('@');
+            if (delimiterIdx != -1)
+            {
+                name = gameId.Substring(0, delimiterIdx);
+                url = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(gameId.Substring(delimiterIdx + 1).Replace('_', '/')));
+            }
+            return new Tuple<string, string>(name, url);
+        }
+
         public CardGame(UnityEngine.MonoBehaviour coroutineRunner, string name = DefaultName, string url = "")
         {
             CoroutineRunner = coroutineRunner;
@@ -238,7 +259,7 @@ namespace CardGameDef
         {
             try
             {
-                // We need to read the <name>.json file, but reading it can cause <name> to change, so account for that
+                // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name* to change, so account for that
                 string gameFilePath = GameFilePath;
                 string gameDirectoryPath = GameDirectoryPath;
                 JsonConvert.PopulateObject(File.ReadAllText(GameFilePath), this);
@@ -264,7 +285,7 @@ namespace CardGameDef
                 yield break;
             IsDownloading = true;
 
-            // First get the <name>.json file and read it if we need to determine where to pull the rest of the data from
+            // First get the *Game:Name*.json file and read it if we need to determine where to pull the rest of the data from
             yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, GameFilePath);
             if (!HasReadProperties)
             {
@@ -322,7 +343,7 @@ namespace CardGameDef
 
         public void Load()
         {
-            // We should have already read the <name>.json, but we need to be sure
+            // We should have already read the *Game:Name*.json, but we need to be sure
             if (!HasReadProperties)
             {
                 ReadProperties();

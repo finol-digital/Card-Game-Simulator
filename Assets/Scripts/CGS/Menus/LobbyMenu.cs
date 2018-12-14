@@ -19,7 +19,7 @@ namespace CGS.Menus
     {
         public Button joinButton;
 
-        public List<string> HostNames { get; private set; } = new List<string>();
+        public SortedList<string, string> HostNames { get; private set; } = new SortedList<string, string>();
         public string SelectedHost { get; private set; } = "";
 
         private bool _wasDown;
@@ -71,15 +71,15 @@ namespace CGS.Menus
             CardGameManager.Instance.Discovery.SearchForHost();
         }
 
-        public void DisplayHosts(List<string> hostNames)
+        public void DisplayHosts(List<string> hosts)
         {
-            if (hostNames == null || hostNames.Equals(HostNames))
+            if (hosts == null || hosts.Equals(HostNames.Keys.ToList()))
                 return;
 
             HostNames.Clear();
-            foreach (string hostname in hostNames)
-                HostNames.Add(hostname.Split(':').Last());
-            if (!HostNames.Contains(SelectedHost))
+            foreach (string host in hosts)
+                HostNames[host] = host.Split(':').Last();
+            if (!HostNames.ContainsValue(SelectedHost))
             {
                 SelectedHost = string.Empty;
                 joinButton.interactable = false;
@@ -103,23 +103,27 @@ namespace CGS.Menus
             CGSNetManager.Instance.playController.DeckLoader.cancelButton.onClick.AddListener(cancelAction);
         }
 
-        public void SelectHost(Toggle toggle, string hostName)
+        public void SelectHost(Toggle toggle, string host)
         {
-            if (string.IsNullOrEmpty(hostName))
+            if (string.IsNullOrEmpty(host))
+            {
+                SelectedHost = string.Empty;
+                joinButton.interactable = false;
                 return;
+            }
 
             if (toggle.isOn)
             {
-                SelectedHost = hostName;
+                SelectedHost = host;
                 joinButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && SelectedHost.Equals(hostName))
+            else if (!toggle.group.AnyTogglesOn() && SelectedHost.Equals(host))
                 Join();
         }
 
         public void Join()
         {
-            NetworkManager.singleton.networkAddress = SelectedHost;
+            NetworkManager.singleton.networkAddress = HostNames[SelectedHost];
             NetworkManager.singleton.StartClient();
             Hide();
         }

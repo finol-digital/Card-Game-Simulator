@@ -45,13 +45,13 @@ namespace CGS.Play.Multiplayer
         public void CmdSelectCardGame()
         {
             CGSNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
-            TargetSelectCardGame(connectionToClient, CardGameManager.Current.Name, CardGameManager.Current.AutoUpdateUrl);
+            TargetSelectCardGame(connectionToClient, CardGameManager.Current.Id);
         }
 
         [TargetRpc]
-        public void TargetSelectCardGame(NetworkConnection target, string gameName, string gameUrl)
+        public void TargetSelectCardGame(NetworkConnection target, string gameId)
         {
-            CardGameManager.Instance.SelectCardGame(gameName, gameUrl);
+            CardGameManager.Instance.SelectCardGame(gameId);
             StartCoroutine(WaitToRequestDeck());
         }
 

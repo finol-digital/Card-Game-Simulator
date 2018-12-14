@@ -13,8 +13,8 @@ Custom games are defined by creating a new folder within the persistent games da
 
 ## Custom game folder structure
 The structure of this custom game folder is:
-- \<name\>/
-  - \<name\>.json
+- *Game:Id*/
+  - *Game:Name*.json
   - AllCards.json
   - AllSets.json
   - Background.\<backgroundImageFileType\>
@@ -32,7 +32,7 @@ The structure of this custom game folder is:
     * ...
 
 ## JSON File Structure
-When downloading a custom game from a url, the data that is being downloaded is the contents of the \<name\>.json file. CGS generates the rest of the folder structure based off the information in that file. 
+The GGS AutoUpdate Url that is used to download a card game is actually a pointer to the *Game:Name*.json file. CGS generates the rest of the folder structure based off that file. 
 
 You can create your own json and [validate](https://www.jsonschemavalidator.net/) against these schema:
 - [CardGameDef](schema/CardGameDef.json)

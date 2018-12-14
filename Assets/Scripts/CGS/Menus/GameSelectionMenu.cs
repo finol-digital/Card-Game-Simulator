@@ -19,8 +19,8 @@ namespace CGS.Menus
         public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
         public const string ShareTitle = "Card Game Simulator - {0}";
         public const string ShareDescription = "Play {0} on CGS!";
-        public const string ShareMessage = "Get CGS for {0}: {1}";
-        public const string ShareMessage2 = "Share functionality only available on Android/iOS.";
+        public const string ShareBranchMessage = "Get CGS for {0}: {1}";
+        public const string ShareUrlMessage = "The CGS AutoUpdate Url for {0} has been copied to the clipboard: {1}";
         public const string DominoesUrl = "https://cardgamesim.finoldigital.com/games/Dominoes/Dominoes.json";
         public const string StandardUrl = "https://cardgamesim.finoldigital.com/games/Standard/Standard.json";
         public const string MahjongUrl = "https://cardgamesim.finoldigital.com/games/Mahjong/Mahjong.json";
@@ -68,7 +68,7 @@ namespace CGS.Menus
                         CardGameManager.Instance.SelectLeft();
                     else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
                         CardGameManager.Instance.SelectRight();
-                    Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
+                    Rebuild(CardGameManager.Instance.GamesListing, SelectGame, CardGameManager.Current.Id);
                 }
 
                 if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
@@ -98,13 +98,13 @@ namespace CGS.Menus
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
-            Rebuild(CardGameManager.Instance.AllCardGames.Keys.ToList(), SelectGame, CardGameManager.Current.Name);
+            Rebuild(CardGameManager.Instance.GamesListing, SelectGame, CardGameManager.Current.Id);
         }
 
-        public void SelectGame(Toggle toggle, string gameName)
+        public void SelectGame(Toggle toggle, string gameId)
         {
             if (toggle.isOn)
-                CardGameManager.Instance.SelectCardGame(gameName);
+                CardGameManager.Instance.SelectCardGame(gameId);
             else if (!toggle.group.AnyTogglesOn())
                 Hide();
         }
@@ -119,22 +119,25 @@ namespace CGS.Menus
 
         public void Share()
         {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            ShareBranch();
+#else
+            ShareUrl();
+#endif
+        }
+
+        public void ShareBranch()
+        {
             BranchUniversalObject universalObject = new BranchUniversalObject();
             universalObject.contentIndexMode = 1;
-            universalObject.canonicalIdentifier = CardGameManager.Current.Name + "+" + CardGameManager.Current.AutoUpdateUrl;
+            universalObject.canonicalIdentifier = CardGameManager.Current.Id;
             universalObject.title = string.Format(ShareTitle, CardGameManager.Current.Name);
             universalObject.contentDescription = string.Format(ShareDescription, CardGameManager.Current.Name);
             universalObject.imageUrl = CardGameManager.Current.BackgroundImageUrl;
-            universalObject.metadata.AddCustomMetadata(CardGameManager.GameName, CardGameManager.Current.Name);
-            universalObject.metadata.AddCustomMetadata(CardGameManager.GameUrl, CardGameManager.Current.AutoUpdateUrl);
+            universalObject.metadata.AddCustomMetadata(CardGameManager.GameId, CardGameManager.Current.Id);
             BranchLinkProperties linkProperties = new BranchLinkProperties();
-            linkProperties.controlParams.Add(CardGameManager.GameName, CardGameManager.Current.Name);
-            linkProperties.controlParams.Add(CardGameManager.GameUrl, CardGameManager.Current.AutoUpdateUrl);
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            linkProperties.controlParams.Add(CardGameManager.GameId, CardGameManager.Current.Id);
             Branch.getShortURL(universalObject, linkProperties, BranchCallbackWithUrl);
-#else
-            CardGameManager.Instance.Messenger.Show(string.Format(ShareMessage2));
-#endif
         }
 
         public void BranchCallbackWithUrl(string url, string error)
@@ -146,7 +149,13 @@ namespace CGS.Menus
             }
 
             NativeShare nativeShare = new NativeShare();
-            nativeShare.SetText(string.Format(ShareMessage, CardGameManager.Current.Name, url)).Share();
+            nativeShare.SetText(string.Format(ShareBranchMessage, CardGameManager.Current.Name, url)).Share();
+        }
+
+        public void ShareUrl()
+        {
+            UniClipboard.SetText(CardGameManager.Current.AutoUpdateUrl);
+            CardGameManager.Instance.Messenger.Show(string.Format(ShareUrlMessage, CardGameManager.Current.Name, CardGameManager.Current.AutoUpdateUrl));
         }
 
         public void ShowNewPanel()

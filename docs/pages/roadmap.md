@@ -5,13 +5,14 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Introduced Cards Explorer
-- Enhanced boolean card property data type
-
-## Current Sprint
+- Set AutoUpdateUrl as part of a game's unique id
+- Desktop: Share AutoUpdate Url
+- Fix: Share only selects game; it does not download
 - Replace autoUpdate with autoUpdateRate to set how often to update allCards and allSets
   - Also reload updates immediately instead of on next startup
   - Show option to delete game when you fail to load it
+
+## Current Sprint
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
@@ -84,7 +85,8 @@ permalink: roadmap.html
 - Console versions (Switch, ps4, xbone)
 - Support encryption of game information
 - Partner with other companies to provide licensed games
-- Create tool to automatically convert games and decks from OCTGN/LackeyCCG to CGS
+- Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG
+- Magic Set Editor + Cockatrice integration
 - Add ability to create a new card game from within CGS
 - Support game-specific rules enforcement
 

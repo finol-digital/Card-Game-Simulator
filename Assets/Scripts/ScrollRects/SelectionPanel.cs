@@ -15,35 +15,35 @@ public class SelectionPanel : MonoBehaviour
 
     protected List<GameObject> Toggles { get; } = new List<GameObject>();
 
-    public void Rebuild(List<string> options, OnSelectDelegate changeValue, string currentValue = "")
+    public void Rebuild(SortedList<string, string> options, OnSelectDelegate changeKey, string currentKey = "")
     {
         if (options == null)
-            options = new List<string>();
-        if (changeValue == null)
-            changeValue = delegate { };
-        if (currentValue == null)
-            currentValue = string.Empty;
+            options = new SortedList<string, string>();
+        if (changeKey == null)
+            changeKey = delegate { };
+        if (currentKey == null)
+            currentKey = string.Empty;
 
         Toggles.Clear();
         selectionContent.DestroyAllChildren();
         selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
 
-        foreach (string option in options)
+        foreach (KeyValuePair<string, string> option in options)
         {
             Toggle toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
             toggle.gameObject.SetActive(true);
             toggle.transform.localScale = Vector3.one;
-            toggle.GetComponentInChildren<Text>().text = option;
+            toggle.GetComponentInChildren<Text>().text = option.Value;
             toggle.interactable = true;
-            toggle.isOn = option.Equals(currentValue);
-            toggle.onValueChanged.AddListener(isOn => changeValue(toggle, option));
+            toggle.isOn = option.Key.Equals(currentKey);
+            toggle.onValueChanged.AddListener(isOn => changeKey(toggle, option.Key));
             Toggles.Add(toggle.gameObject);
         }
 
         selectionTemplate.gameObject.SetActive(options.Count < 1);
         selectionTemplate.GetComponent<Toggle>().isOn = options.Count > 0;
 
-        float index = options.IndexOf(currentValue);
+        float index = options.IndexOfKey(currentKey);
         if (index > 0 && index < options.Count && options.Count > 1)
             scrollRect.verticalNormalizedPosition = 1f - (index / (options.Count - 1f));
     }

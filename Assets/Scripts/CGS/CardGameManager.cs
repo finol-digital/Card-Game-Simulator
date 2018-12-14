@@ -23,13 +23,13 @@ namespace CGS
     public class CardGameManager : MonoBehaviour
     {
         public const bool VerboseLogMessenger = false;
-        public const string GameName = "GameName";
-        public const string GameUrl = "GameUrl";
-        public const string PlayerPrefGameName = "DefaultGame";
+        public const string GameId = "GameId";
+        public const string PlayerPrefDefaultGame = "DefaultGame";
         public const string SelectorPrefabName = "Game Selection Menu";
         public const string MessengerPrefabName = "Popup";
         public const string SpinnerPrefabName = "Spinner";
-        public const string InvalidGameSelectionMessage = "Could not select the card game because the name is not recognized in the list of card games! Try selecting a different card game.";
+        public const string InvalidGameSelectionMessage = "Could not select the card game because it is not recognized! Try selecting a different card game?";
+        public const string BranchLinkErrorMessage = "Link Broken! Unable to select card game!";
         public const string GameLoadErrorMessage = "Error loading game!: ";
         public const string GameDeleteErrorMessage = "Error deleting game!: ";
         public const string CardsLoadedMessage = "{0} cards loaded!";
@@ -60,6 +60,8 @@ namespace CGS
 
         public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
         public List<UnityAction> OnSceneActions { get; } = new List<UnityAction>();
+
+        public SortedList<string, string> GamesListing => new SortedList<string, string>(AllCardGames.ToDictionary( game => game.Key, game => game.Value.Name));
 
         public LobbyDiscovery Discovery => _discovery ?? (_discovery = gameObject.GetOrAddComponent<LobbyDiscovery>());
         private LobbyDiscovery _discovery;
@@ -176,11 +178,14 @@ namespace CGS
 
             foreach (string gameDirectory in Directory.GetDirectories(CardGame.GamesDirectoryPath))
             {
-                // Note that gameDirectoryName can be different from newCardGame.Name, if the name has special characters like / or :
                 string gameDirectoryName = gameDirectory.Substring(CardGame.GamesDirectoryPath.Length + 1);
-                CardGame newCardGame = new CardGame(this, gameDirectoryName, string.Empty);
+                // TODO: C#7 Tuple
+                var tuple = CardGame.Decode(gameDirectoryName);
+                string gameName = tuple.Item1;
+                string gameUrl = tuple.Item2;
+                CardGame newCardGame = new CardGame(this, gameName, gameUrl);
                 newCardGame.ReadProperties();
-                AllCardGames[newCardGame.Name] = newCardGame;
+                AllCardGames[newCardGame.Id] = newCardGame;
             }
         }
 
@@ -208,17 +213,20 @@ namespace CGS
                 return;
             }
 
-            object gameName, gameUrl;
-            if (parameters.TryGetValue(GameName, out gameName) && (gameName is string) && AllCardGames.ContainsKey((string)gameName))
-                SelectCardGame((string)gameName);
-            else if (parameters.TryGetValue(GameUrl, out gameUrl) && (gameUrl is string) && !string.IsNullOrEmpty((string)gameUrl))
-                DownloadCardGame((string)gameUrl);
+            object gameId;
+            if (!parameters.TryGetValue(GameId, out gameId))
+            {
+                Debug.LogError(BranchLinkErrorMessage);
+                Messenger.Show(BranchLinkErrorMessage);
+            }
+            else
+                SelectCardGame((string)gameId);
         }
 
         public void ResetToPreferredCardGame()
         {
             CardGame currentGame;
-            Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefGameName), out currentGame)
+            Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefDefaultGame), out currentGame)
                  ? currentGame : AllCardGames.First().Value;
         }
 
@@ -229,63 +237,61 @@ namespace CGS
             Current = newGame;
             yield return newGame.Download();
             if (string.IsNullOrEmpty(newGame.Error))
-                AllCardGames[newGame.Name] = newGame;
+                AllCardGames[newGame.Id] = newGame;
             else
                 Debug.LogError(GameLoadErrorMessage + newGame.Error);
-            SelectCardGame(newGame.Name);
+            SelectCardGame(newGame.Id);
             Spinner.Hide();
         }
 
         public void SelectLeft()
         {
-            string prevGameName = AllCardGames.Keys.Last();
+            string prevGameId = AllCardGames.Keys.Last();
             SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
             bool found = false;
             while (!found && allCardGamesEnum.MoveNext())
             {
-                if (!allCardGamesEnum.Current.Key.Equals(Current.Name))
-                    prevGameName = allCardGamesEnum.Current.Key;
+                if (!allCardGamesEnum.Current.Key.Equals(Current.Id))
+                    prevGameId = allCardGamesEnum.Current.Key;
                 else
                     found = true;
             }
-            SelectCardGame(prevGameName);
+            SelectCardGame(prevGameId);
         }
 
         public void SelectRight()
         {
-            string nextGameName = Current.Name;
+            string nextGameId = Current.Id;
             SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
             bool found = false;
             while (!found && allCardGamesEnum.MoveNext())
-                if (allCardGamesEnum.Current.Key.Equals(Current.Name))
+                if (allCardGamesEnum.Current.Key.Equals(Current.Id))
                     found = true;
             if (allCardGamesEnum.MoveNext())
-                nextGameName = allCardGamesEnum.Current.Key;
+                nextGameId = allCardGamesEnum.Current.Key;
             else if (found)
-                nextGameName = AllCardGames.Keys.First();
-            SelectCardGame(nextGameName);
+                nextGameId = AllCardGames.Keys.First();
+            SelectCardGame(nextGameId);
         }
 
-        public void SelectCardGame(string gameName, string gameUrl)
+        public void SelectCardGame(string gameId)
         {
-            if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName))
+            if (string.IsNullOrEmpty(gameId) || !AllCardGames.ContainsKey(gameId))
             {
-                StartCoroutine(DownloadCardGame(gameUrl));
-                return;
-            }
-            SelectCardGame(gameName);
-        }
-
-        public void SelectCardGame(string gameName)
-        {
-            if (string.IsNullOrEmpty(gameName) || !AllCardGames.ContainsKey(gameName))
-            {
-                Debug.LogError(InvalidGameSelectionMessage);
-                Selector.Show();
+                // TODO: C#7 Tuple
+                string gameUrl = CardGame.Decode(gameId).Item2;
+                if (!Uri.IsWellFormedUriString(gameUrl, UriKind.Absolute))
+                {
+                    Debug.LogError(InvalidGameSelectionMessage);
+                    Messenger.Show(InvalidGameSelectionMessage);
+                    Selector.Show();
+                }
+                else
+                    StartCoroutine(DownloadCardGame(gameUrl));
                 return;
             }
 
-            Current = AllCardGames[gameName];
+            Current = AllCardGames[gameId];
             DoGameSceneActions();
         }
 
@@ -302,7 +308,7 @@ namespace CGS
                 return;
             }
 
-            PlayerPrefs.SetString(PlayerPrefGameName, Current.Name);
+            PlayerPrefs.SetString(PlayerPrefDefaultGame, Current.Id);
 
             if (BackgroundImage != null)
                 BackgroundImage.sprite = Current.BackgroundImageSprite;
