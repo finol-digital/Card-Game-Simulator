@@ -5,12 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-
-
-## Current Sprint
 - Fix: Always showing branch link broken error message
 - Fix: After downloading game, there were zero cards (cards load ok on next game)
-- Fix: Run SetupGameScene after deleting a game (it did not update banner)
+- Fix: Setup Game Scene after deleting a game
+
+## Current Sprint
+- Reorganize Main Menu
 - Rename backgroundImage to bannerImage
 - Enhance Cards Explorer
 - Enhance object card property data type
@@ -22,8 +22,8 @@ permalink: roadmap.html
 - Add Game Creator
 - Tech: Travis CI for build automation
 - Tech: WSATestCertificate?
-- Tech: Add unit tests
 - Tech: Review with Resharper/Rider
+- Tech: Add unit tests
 - Fix: UWP join and host
 - Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
@@ -50,6 +50,7 @@ permalink: roadmap.html
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 
 ## Icebox
+- Tech: Remove Unity references from CardGameDef by creating and using ICardGameLoader instead of CoroutineRunner
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)

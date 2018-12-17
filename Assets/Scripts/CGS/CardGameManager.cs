@@ -28,8 +28,8 @@ namespace CGS
         public const string SelectorPrefabName = "Game Selection Menu";
         public const string MessengerPrefabName = "Popup";
         public const string SpinnerPrefabName = "Spinner";
-        public const string InvalidGameSelectionMessage = "Could not select the card game because it is not recognized! Try selecting a different card game?";
-        public const string BranchLinkErrorMessage = "Link Broken! Unable to select the desired card game! ";
+        public const string GameSelectionErrorPrompt = "Could not select the card game because it is not recognized! Try selecting a different card game?";
+        public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string GameDownLoadErrorMessage = "Error downloading game!: ";
         public const string GameLoadErrorMessage = "Error loading game!: ";
         public const string GameLoadErrorPrompt = "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
@@ -211,18 +211,13 @@ namespace CGS
         {
             if (error != null)
             {
-                Debug.LogError(BranchLinkErrorMessage + error);
-                Messenger.Show(BranchLinkErrorMessage);
+                Debug.LogError(BranchCallbackErrorMessage + error);
+                Messenger.Show(BranchCallbackErrorMessage + error);
                 return;
             }
 
             object gameId;
-            if (!parameters.TryGetValue(GameId, out gameId))
-            {
-                Debug.LogError(BranchLinkErrorMessage);
-                Messenger.Show(BranchLinkErrorMessage);
-            }
-            else
+            if (parameters.TryGetValue(GameId, out gameId))
                 SelectCardGame((string)gameId);
         }
 
@@ -239,7 +234,7 @@ namespace CGS
 
             CardGame newGame = new CardGame(this, CardGame.DefaultName, gameUrl);
             yield return newGame.Download();
-            newGame.Load();
+            newGame.Load(UpdateCardGame, LoadCards);
 
             if (string.IsNullOrEmpty(newGame.Error))
             {
@@ -253,6 +248,47 @@ namespace CGS
             }
 
             Spinner.Hide();
+        }
+
+        public IEnumerator UpdateCardGame(CardGame cardGame)
+        {
+            if (cardGame == null)
+                cardGame = Current;
+
+            Spinner.Show();
+            yield return cardGame.Download();
+            Spinner.Hide();
+
+            // Notify about the failed update, but otherwise ignore errors
+            if (!string.IsNullOrEmpty(cardGame.Error))
+            {
+                Debug.LogError(GameDownLoadErrorMessage + cardGame.Error);
+                Messenger.Show(GameDownLoadErrorMessage + cardGame.Error);
+                cardGame.ClearError();
+            }
+
+            cardGame.Load(UpdateCardGame, LoadCards);
+            if (cardGame == Current)
+                SetupGameScene();
+        }
+
+        public IEnumerator LoadCards(CardGame cardGame)
+        {
+            if (cardGame == null)
+                cardGame = Current;
+
+            for (int page = cardGame.AllCardsUrlPageCountStartIndex; page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount; page++)
+            {
+                cardGame.LoadCards(page);
+                if (page == cardGame.AllCardsUrlPageCountStartIndex && cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
+                    Messenger.Show(string.Format(CardsLoadingMessage, cardGame.Name));
+                yield return null;
+            }
+
+            if (!string.IsNullOrEmpty(cardGame.Error))
+                Debug.LogError(GameLoadErrorMessage + cardGame.Error);
+            else if (cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
+                Messenger.Show(string.Format(CardsLoadedMessage, cardGame.Name));
         }
 
         public void SelectLeft()
@@ -293,8 +329,8 @@ namespace CGS
                 string gameUrl = CardGame.Decode(gameId).Item2;
                 if (!Uri.IsWellFormedUriString(gameUrl, UriKind.Absolute))
                 {
-                    Debug.LogError(InvalidGameSelectionMessage);
-                    Messenger.Show(InvalidGameSelectionMessage);
+                    Debug.LogError(GameSelectionErrorPrompt);
+                    Messenger.Show(GameSelectionErrorPrompt);
                     Selector.Show();
                 }
                 else
@@ -310,7 +346,7 @@ namespace CGS
         {
             if (!Current.HasLoaded)
             {
-                Current.Load();
+                Current.Load(UpdateCardGame, LoadCards);
                 if (Current.IsDownloading)
                     return;
             }
@@ -322,7 +358,7 @@ namespace CGS
                 return;
             }
 
-            // Now is the safest time to set this game as the default preferred game for the player
+            // Now is the safest time to set this game as the preferred default game for the player
             PlayerPrefs.SetString(PlayerPrefDefaultGame, Current.Id);
 
             if (BackgroundImage != null)
@@ -336,36 +372,11 @@ namespace CGS
                 action();
         }
 
-        public IEnumerator UpdateCardGame()
-        {
-            Spinner.Show();
-
-            yield return Current.Download();
-
-            Spinner.Hide();
-
-            // Notify about the failed update, but otherwise ignore errors
-            if (!string.IsNullOrEmpty(Current.Error))
-            {
-                Debug.LogError(GameDownLoadErrorMessage + Current.Error);
-                Messenger.Show(GameDownLoadErrorMessage + Current.Error);
-                Current.ClearError();
-            }
-
-            Current.Load();
-            SetupGameScene();
-        }
-
-        public IEnumerator LoadCards()
-        {
-            yield return Current.LoadAllCards();
-            if (!string.IsNullOrEmpty(Current.Error))
-                Debug.LogError(GameLoadErrorMessage + Current.Error);
-        }
-
         public void IgnoreErroredGame()
         {
+            Current.ClearError();
             ResetToPreferredCardGame();
+            SetupGameScene();
             Selector.Show();
         }
 
@@ -376,6 +387,7 @@ namespace CGS
                 Directory.Delete(Current.GameDirectoryPath, true);
                 AllCardGames.Remove(Current.Id);
                 ResetToPreferredCardGame();
+                SetupGameScene();
                 Selector.Show();
             }
             catch (Exception ex)
