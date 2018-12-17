@@ -5,14 +5,13 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- autoUpdate now indicates how often to update
-  - Updates reload immediately instead of on next startup
-  - Failing to load will prompt for game deletion
-- Set autoUpdateUrl as part of a game's unique id
-- Desktop: Share autoUpdateUrl
-- Fix: Share selects game but does not download from autoUpdateUrl
+
 
 ## Current Sprint
+- Fix: Always showing branch link broken error message
+- Fix: After downloading game, there were zero cards (cards load ok on next game)
+- Fix: Run SetupGameScene after deleting a game (it did not update banner)
+- Rename backgroundImage to bannerImage
 - Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
