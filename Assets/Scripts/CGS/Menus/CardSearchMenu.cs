@@ -378,7 +378,7 @@ namespace CGS.Menus
             foreach (KeyValuePair<string, string> enumValue in enumDef.Values)
             {
                 int lookupKey;
-                if (!enumDef.Lookup.TryGetValue(enumValue.Key, out lookupKey))
+                if (!enumDef.Lookups.TryGetValue(enumValue.Key, out lookupKey))
                     lookupKey = enumDef.CreateLookup(enumValue.Key);
                 toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();
                 toggle.isOn = (storedFilter & lookupKey) != 0;
@@ -395,7 +395,7 @@ namespace CGS.Menus
             if (!string.IsNullOrEmpty(property.Empty))
             {
                 int lookupKey;
-                if (!enumDef.Lookup.TryGetValue(property.Empty, out lookupKey))
+                if (!enumDef.Lookups.TryGetValue(property.Empty, out lookupKey))
                     lookupKey = enumDef.CreateLookup(property.Empty);
                 toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();
                 toggle.isOn = (storedFilter & lookupKey) != 0;

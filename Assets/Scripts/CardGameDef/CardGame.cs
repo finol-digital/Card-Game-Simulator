@@ -38,6 +38,8 @@ namespace CardGameDef
         public IReadOnlyDictionary<string, Card> Cards => LoadedCards;
         public IReadOnlyDictionary<string, Set> Sets => LoadedSets;
 
+        // Note: this property can throw an exception
+        public int DaysSinceUpdate => (int)DateTime.Today.Subtract(File.GetLastWriteTime(GameFilePath).Date).TotalDays;
 
         // *Game:Id* = *Game:Name*@<base64(*Game:AutoUpdateUrl*)>
         // Since urls must be unique, this id will also be unique and human-recognizable
@@ -85,7 +87,7 @@ namespace CardGameDef
         public bool AllSetsUrlZipped { get; set; }
 
         [JsonProperty]
-        public bool AutoUpdate { get; set; }
+        public int AutoUpdate { get; set; } = 30;
 
         [JsonProperty]
         public string AutoUpdateUrl { get; set; }
@@ -255,6 +257,11 @@ namespace CardGameDef
             Error = string.Empty;
         }
 
+        public bool IsEnumProperty(string propertyName)
+        {
+            return Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
+        }
+
         public void ReadProperties()
         {
             try
@@ -287,16 +294,13 @@ namespace CardGameDef
 
             // First get the *Game:Name*.json file and read it if we need to determine where to pull the rest of the data from
             yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, GameFilePath);
+            ReadProperties();
             if (!HasReadProperties)
             {
-                ReadProperties();
-                if (!HasReadProperties)
-                {
-                    // ReadProperties() should have already populated the Error
-                    IsDownloading = false;
-                    HasDownloaded = false;
-                    yield break;
-                }
+                // ReadProperties() should have already populated the Error
+                IsDownloading = false;
+                HasDownloaded = false;
+                yield break;
             }
 
             for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
@@ -326,8 +330,11 @@ namespace CardGameDef
             if (!string.IsNullOrEmpty(AllSetsUrl))
                 yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
 
-            yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
-            yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
+            if (!string.IsNullOrEmpty(BackgroundImageUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
+
+            if (!string.IsNullOrEmpty(CardBackImageUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
 
             foreach (GameBoardUrl boardUrl in GameBoardUrls)
                 yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
@@ -337,32 +344,37 @@ namespace CardGameDef
 
             IsDownloading = false;
             HasDownloaded = true;
-            if (!HasLoaded)
-                Load();
+            HasLoaded = false;
         }
 
         public void Load()
         {
-            // We should have already read the *Game:Name*.json, but we need to be sure
-            if (!HasReadProperties)
-            {
-                ReadProperties();
-                if (!HasReadProperties)
-                {
-                    // ReadProperties() should have already populated the Error
-                    HasLoaded = false;
-                    return;
-                }
-            }
-
-            // These enum lookups need to be set up before we load cards and sets
-            foreach (EnumDef enumDef in Enums)
-                foreach (string key in enumDef.Values.Keys)
-                    enumDef.CreateLookup(key);
-
-            // The main load action is to load cards and sets, but we should also load the background and cardback images now
             try
             {
+                // We should have already read the *Game:Name*.json, but we need to be sure
+                if (!HasReadProperties)
+                {
+                    ReadProperties();
+                    if (!HasReadProperties)
+                    {
+                        // ReadProperties() should have already populated the Error
+                        HasLoaded = false;
+                        return;
+                    }
+                }
+
+                // Don't waste time loading if we need to update first
+                if (AutoUpdate >= 0 && DaysSinceUpdate >= AutoUpdate && CoroutineRunner != null)
+                {
+                    CoroutineRunner.StartCoroutine(CGS.CardGameManager.Instance.UpdateCardGame());
+                    return;
+                }
+
+                // These enum lookups need to be initialized before we load cards and sets
+                foreach (EnumDef enumDef in Enums)
+                    enumDef.InitializeLookups();
+
+                // The main load action is to load cards and sets, but we should also load the background and cardback images now
                 if (CoroutineRunner != null)
                     CoroutineRunner.StartCoroutine(CGS.CardGameManager.Instance.LoadCards());
                 LoadSets();
@@ -377,15 +389,6 @@ namespace CardGameDef
                 Error += e.Message + e.StackTrace + Environment.NewLine;
                 HasLoaded = false;
             }
-
-            // Kick off auto-update in the background, even though it won't load until next time the app restarts
-            if (AutoUpdate && !HasDownloaded && CoroutineRunner != null)
-                CoroutineRunner.StartCoroutine(Download());
-        }
-
-        public bool IsEnumProperty(string propertyName)
-        {
-            return Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
         }
 
         public IEnumerator LoadAllCards()
@@ -634,6 +637,11 @@ namespace CardGameDef
                 if (propsMatch)
                     yield return card;
             }
+        }
+
+        public void ClearError()
+        {
+            Error = string.Empty;
         }
     }
 }

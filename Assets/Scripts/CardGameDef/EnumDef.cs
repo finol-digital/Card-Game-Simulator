@@ -22,7 +22,7 @@ namespace CardGameDef
         [JsonProperty]
         public Dictionary<string, string> Values { get; private set; }
 
-        public Dictionary<string, int> Lookup { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> Lookups { get; } = new Dictionary<string, int>();
 
         public static bool TryParseInt(string number, out int intValue)
         {
@@ -30,16 +30,23 @@ namespace CardGameDef
             return int.TryParse(isHex ? number.Substring(Hex.Length) : number, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
         }
 
+        public void InitializeLookups()
+        {
+            Lookups.Clear();
+            foreach (string key in Values.Keys)
+                CreateLookup(key);
+        }
+
         public int CreateLookup(string key)
         {
-            if (string.IsNullOrEmpty(key) || Lookup.ContainsKey(key))
+            if (string.IsNullOrEmpty(key) || Lookups.ContainsKey(key))
                 return 0;
 
             int intValue;
             if (!key.StartsWith(Hex) || !TryParseInt(key, out intValue))
-                intValue = 1 << Lookup.Count;
+                intValue = 1 << Lookups.Count;
 
-            Lookup[key] = intValue;
+            Lookups[key] = intValue;
             return intValue;
         }
 
@@ -49,7 +56,7 @@ namespace CardGameDef
             foreach (KeyValuePair<string, string> enumValue in Values)
             {
                 int lookupValue;
-                if (!Lookup.TryGetValue(enumValue.Key, out lookupValue) || (lookupValue & flags) == 0)
+                if (!Lookups.TryGetValue(enumValue.Key, out lookupValue) || (lookupValue & flags) == 0)
                     continue;
                 if (!string.IsNullOrEmpty(stringValue))
                     stringValue += Delimiter;
@@ -70,7 +77,7 @@ namespace CardGameDef
                     stringValue += Delimiter;
                 int lookupFlags;
                 string mappedValue;
-                if (Lookup.TryGetValue(splitValue, out lookupFlags) || TryParseInt(splitValue, out lookupFlags))
+                if (Lookups.TryGetValue(splitValue, out lookupFlags) || TryParseInt(splitValue, out lookupFlags))
                     stringValue += GetStringFromLookupFlags(lookupFlags);
                 else
                     stringValue += Values.TryGetValue(splitValue, out mappedValue) ? mappedValue : splitValue;
@@ -87,7 +94,7 @@ namespace CardGameDef
             foreach (string stringValue in propertyValue.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries))
             {
                 int intValue;
-                if (Lookup.TryGetValue(stringValue, out intValue) || TryParseInt(stringValue, out intValue))
+                if (Lookups.TryGetValue(stringValue, out intValue) || TryParseInt(stringValue, out intValue))
                     enumValue |= intValue;
             }
             return enumValue;

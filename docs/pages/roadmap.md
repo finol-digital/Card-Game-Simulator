@@ -5,26 +5,26 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Set AutoUpdateUrl as part of a game's unique id
-- Desktop: Share AutoUpdate Url
-- Fix: Share only selects game; it does not download
-- Replace autoUpdate with autoUpdateRate to set how often to update allCards and allSets
-  - Also reload updates immediately instead of on next startup
-  - Show option to delete game when you fail to load it
+- autoUpdate now indicates how often to update
+  - Updates reload immediately instead of on next startup
+  - Failing to load will prompt for game deletion
+- Set autoUpdateUrl as part of a game's unique id
+- Desktop: Share autoUpdateUrl
+- Fix: Share selects game but does not download from autoUpdateUrl
 
 ## Current Sprint
+- Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Group cards in the Deck Editor with a number instead of stacking them
-- Enhance Cards Explorer
 - Add Card Editor
 - Add Game Creator
 - Tech: Travis CI for build automation
 - Tech: WSATestCertificate?
 - Tech: Add unit tests
-- Tech: Review with Resharper
+- Tech: Review with Resharper/Rider
 - Fix: UWP join and host
 - Fix: NetworkDiscovery error on iOS sleep
 - Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
@@ -51,6 +51,7 @@ permalink: roadmap.html
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 
 ## Icebox
+- Apply autoUpdate to cached card images
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs

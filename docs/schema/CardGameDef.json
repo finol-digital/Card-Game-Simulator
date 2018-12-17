@@ -76,13 +76,13 @@
       "description": "If allSetsUrl points to a zipped file, set allSetsUrlZipped to true, and CGS will unzip the file.",
       "type": "boolean"
     },
-    "autoUpdateRate": {
-      "description": "autoUpdateRate indicates how many days to use cached files instead of re-downloading. autoUpdateRate=0 will re-download files at every opportunity. autoUpdate<0 will never attempt to download anything.",
+    "autoUpdate": {
+      "description": "autoUpdate indicates how many days to use cached files instead of re-downloading. autoUpdate=0 will re-download files at every opportunity. autoUpdate<0 will never attempt to download anything.",
       "default": 30,
       "type": "integer"
     },
     "autoUpdateUrl": {
-      "description": "autoUpdateUrl indicates the url from which users download *Game:Name*.json, and CGS will automatically re-download the custom game from this url every <autoUpdateRate> days. This url is required for the *Game:Id*. You should host *Game:Name*.json at this url, but if you do not, you can set autoUpdateRate to -1, and there should be no issues.",
+      "description": "autoUpdateUrl indicates the url from which users download *Game:Name*.json, and CGS will automatically re-download the custom game from this url every <autoUpdate> days. This url is required for the *Game:Id*. You should host *Game:Name*.json at this url, but if you do not, you can set autoUpdate to -1, and there should be no issues.",
       "type": "string",
       "format": "uri"
     },
