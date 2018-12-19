@@ -33,6 +33,8 @@ namespace CGS.Menus
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             quitButton.SetActive(false);
+#else
+            quitButton.SetActive(true);
 #endif
             versionText.text = VersionMessage + Application.version;
 

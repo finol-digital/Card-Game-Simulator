@@ -17,7 +17,7 @@ The structure of this custom game folder is:
   - *Game:Name*.json
   - AllCards.json
   - AllSets.json
-  - Background.\<backgroundImageFileType\>
+  - Banner.\<bannerImageFileType\>
   - CardBack.\<cardBackImageFileType\>
   - boards/
     * *GameBoard:Id*.\<gameBoardFileType\>

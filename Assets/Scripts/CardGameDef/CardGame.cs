@@ -18,7 +18,7 @@ namespace CardGameDef
     [JsonObject(MemberSerialization.OptIn)]
     public class CardGame
     {
-        public const string BackgroundImageFileName = "Background";
+        public const string BannerImageFileName = "Banner";
         public const string CardBackImageFileName = "CardBack";
         public const string DefaultName = "_INVALID_";
 
@@ -30,7 +30,7 @@ namespace CardGameDef
         public string GameFilePath => GameDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name) + ".json";
         public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
         public string SetsFilePath => GameDirectoryPath + "/AllSets.json";
-        public string BackgroundImageFilePath => GameDirectoryPath + "/" + BackgroundImageFileName + "." + UnityExtensionMethods.GetSafeFileName(BackgroundImageFileType);
+        public string BannerImageFilePath => GameDirectoryPath + "/" + BannerImageFileName + "." + UnityExtensionMethods.GetSafeFileName(BannerImageFileType);
         public string CardBackImageFilePath => GameDirectoryPath + "/" + CardBackImageFileName + "." + UnityExtensionMethods.GetSafeFileName(CardBackImageFileType);
         public string DecksFilePath => GameDirectoryPath + "/decks";
         public string GameBoardsFilePath => GameDirectoryPath + "/boards";
@@ -91,10 +91,10 @@ namespace CardGameDef
         public string AutoUpdateUrl { get; set; }
 
         [JsonProperty]
-        public string BackgroundImageFileType { get; set; } = "png";
+        public string BannerImageFileType { get; set; } = "png";
 
         [JsonProperty]
-        public string BackgroundImageUrl { get; set; } = "";
+        public string BannerImageUrl { get; set; } = "";
 
         [JsonProperty]
         public string CardBackImageFileType { get; set; } = "png";
@@ -219,12 +219,12 @@ namespace CardGameDef
         protected Dictionary<string, Card> LoadedCards { get; } = new Dictionary<string, Card>();
         protected Dictionary<string, Set> LoadedSets { get; } = new Dictionary<string, Set>();
 
-        public UnityEngine.Sprite BackgroundImageSprite
+        public UnityEngine.Sprite BannerImageSprite
         {
-            get { return _backgroundImageSprite ?? (_backgroundImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(BackgroundImageFileName)); }
-            private set { _backgroundImageSprite = value; }
+            get { return _bannerImageSprite ?? (_bannerImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(BannerImageFileName)); }
+            private set { _bannerImageSprite = value; }
         }
-        private UnityEngine.Sprite _backgroundImageSprite;
+        private UnityEngine.Sprite _bannerImageSprite;
 
         public UnityEngine.Sprite CardBackImageSprite
         {
@@ -277,7 +277,7 @@ namespace CardGameDef
                     Directory.Move(gameDirectoryPath, GameDirectoryPath);
 
                 // We're being greedy about loading these now, since these could be shown before the game is selected
-                BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
+                BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
                 CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
 
                 HasReadProperties = true;
@@ -337,8 +337,8 @@ namespace CardGameDef
             if (!string.IsNullOrEmpty(AllSetsUrl))
                 yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
 
-            if (!string.IsNullOrEmpty(BackgroundImageUrl))
-                yield return UnityExtensionMethods.SaveUrlToFile(BackgroundImageUrl, BackgroundImageFilePath);
+            if (!string.IsNullOrEmpty(BannerImageUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl, BannerImageFilePath);
 
             if (!string.IsNullOrEmpty(CardBackImageUrl))
                 yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
@@ -387,7 +387,7 @@ namespace CardGameDef
             LoadSets();
 
             // We also re-load the background and cardback images now in case they've changed since we ReadProperties
-            BackgroundImageSprite = UnityExtensionMethods.CreateSprite(BackgroundImageFilePath);
+            BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
             CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
 
             // Only considered as loaded if none of the steps failed

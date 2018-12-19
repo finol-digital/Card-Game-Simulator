@@ -17,6 +17,7 @@ namespace CGS.Play.Multiplayer
         public const string ListenErrorMessage = "Error: Unable to listen for game sessions.";
 
         public LobbyMenu lobby;
+        // TODO: INSTEAD OF THIS, CHECK A IS_SEARCHING VARIABLE
         public bool HasReceivedBroadcast { get; set; }
 
         public void StartAsHost()
@@ -73,7 +74,6 @@ namespace CGS.Play.Multiplayer
 
         public override void OnReceivedBroadcast(string fromAddress, string data)
         {
-            HasReceivedBroadcast = true;
             if (lobby == null || !lobby.gameObject.activeInHierarchy || NetworkManager.singleton.isNetworkActive)
                 return;
 

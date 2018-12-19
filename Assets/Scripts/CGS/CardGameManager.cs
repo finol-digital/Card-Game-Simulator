@@ -104,17 +104,6 @@ namespace CGS
         }
         private SpinningLoadingPanel _spinner;
 
-        public Image BackgroundImage
-        {
-            get
-            {
-                if (_backgroundImage == null && GameObject.FindGameObjectWithTag(Tags.BackgroundImage) != null)
-                    _backgroundImage = GameObject.FindGameObjectWithTag(Tags.BackgroundImage).GetOrAddComponent<Image>();
-                return _backgroundImage;
-            }
-        }
-        private Image _backgroundImage;
-
         // TODO: IMPROVE PERFORMANCE; MAYBE TRACK THIS USING OBSERVER PATTERN?
         public Canvas TopCardCanvas
         {
@@ -361,10 +350,9 @@ namespace CGS
             // Now is the safest time to set this game as the preferred default game for the player
             PlayerPrefs.SetString(PlayerPrefDefaultGame, Current.Id);
 
-            if (BackgroundImage != null)
-                BackgroundImage.sprite = Current.BackgroundImageSprite;
+            // We treat the CardInfoViewer specially for now...
             CardInfoViewer.Instance?.ResetInfo();
-
+            // Otherwise, each scene element is responsible for registering with OnSceneActions
             for (int i = OnSceneActions.Count - 1; i >= 0; i--)
                 if (OnSceneActions[i] == null)
                     OnSceneActions.RemoveAt(i);

@@ -2,7 +2,7 @@
   "allCardsUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/AllCards.json",
   "allSetsUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/AllSets.json",
   "autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/Dominoes.json",
-  "backgroundImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/Background.png",
+  "bannerImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/Banner.png",
   "cardBackImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/CardBack.png",
   "cardClearsBackground": true,
   "cardImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",

@@ -86,13 +86,13 @@
       "type": "string",
       "format": "uri"
     },
-    "backgroundImageFileType": {
-      "description": "backgroundImageFileType is the file type extension for the image file that CGS downloads from backgroundImageUrl.",
+    "bannerImageFileType": {
+      "description": "bannerImageFileType is the file type extension for the image file that CGS downloads from bannerImageUrl.",
       "default": "png",
       "type": "string"
     },
-    "backgroundImageUrl": {
-      "description": "If backgroundImageUrl is a valid url, CGS will download the image at that url and save it as Background.<backgroundImageFileType>. CGS will attempt to display the Background.<backgroundImageFileType> in the background anytime the custom card game is selected by the user. If it is unable to read Background.<backgroundImageFileType>, CGS will simply display the CGS logo in the background.",
+    "bannerImageUrl": {
+      "description": "If bannerImageUrl is a valid url, CGS will download the image at that url and save it as Banner.<bannerImageFileType>. CGS will attempt to display the Banner.<bannerImageFileType> as an identifier to the user. If it is unable to read Banner.<bannerImageFileType>, CGS will simply display the CGS logo in the background.",
       "type": "string",
       "format": "uri"
     },

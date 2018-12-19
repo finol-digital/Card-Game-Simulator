@@ -8,15 +8,16 @@ permalink: roadmap.html
 - Fix: Always showing branch link broken error message
 - Fix: After downloading game, there were zero cards (cards load ok on next game)
 - Fix: Setup Game Scene after deleting a game
+- Rename backgroundImage to bannerImage
 
 ## Current Sprint
 - Reorganize Main Menu
-- Rename backgroundImage to bannerImage
 - Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
+- Have # of stacks in the Deck Editor grow dynamically
 - Group cards in the Deck Editor with a number instead of stacking them
 - Add Card Editor
 - Add Game Creator
@@ -26,7 +27,7 @@ permalink: roadmap.html
 - Tech: Add unit tests
 - Fix: UWP join and host
 - Fix: NetworkDiscovery error on iOS sleep
-- Fix: Card dissapears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
+- Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 
 ## Backlog
 - Add option to restart game in *Play Mode*

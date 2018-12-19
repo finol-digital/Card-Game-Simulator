@@ -133,7 +133,7 @@ namespace CGS.Menus
             universalObject.canonicalIdentifier = CardGameManager.Current.Id;
             universalObject.title = string.Format(ShareTitle, CardGameManager.Current.Name);
             universalObject.contentDescription = string.Format(ShareDescription, CardGameManager.Current.Name);
-            universalObject.imageUrl = CardGameManager.Current.BackgroundImageUrl;
+            universalObject.imageUrl = CardGameManager.Current.BannerImageUrl;
             universalObject.metadata.AddCustomMetadata(CardGameManager.GameId, CardGameManager.Current.Id);
             BranchLinkProperties linkProperties = new BranchLinkProperties();
             linkProperties.controlParams.Add(CardGameManager.GameId, CardGameManager.Current.Id);

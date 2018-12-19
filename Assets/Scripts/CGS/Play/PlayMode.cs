@@ -218,8 +218,9 @@ namespace CGS.Play
 
         public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
         {
-            if (CardGameManager.Current.CardClearsBackground)
-                CardGameManager.Instance.BackgroundImage.gameObject.SetActive(false);
+            // TODO: RESTORE THIS
+            //if (CardGameManager.Current.CardClearsBackground)
+            //    CardGameManager.Instance.BannerImage.gameObject.SetActive(false);
 
             if (NetworkManager.singleton.isNetworkActive)
                 CGSNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);

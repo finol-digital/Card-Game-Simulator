@@ -6,7 +6,7 @@
   "allCardsUrlPostBodyContent": "\"ruleSet\":{\"guid\":\"208cbc77-4110-51b7-9afd-1c0c4e96f4ad\"},\"pageSize\":50",
   "allSetsUrl": "http://aminduna.arcmage.org/api/CardOptions",
   "autoUpdateUrl": "https://arcmage.finoldigital.com/",
-  "backgroundImageUrl": "https://arcmage.org/wp-content/uploads/2018/06/logo2.png",
+  "bannerImageUrl": "https://arcmage.org/wp-content/uploads/2018/06/logo2.png",
   "cardBackImageUrl": "https://arcmage.org/wp-content/uploads/2018/07/back-213x300.png",
   "cardDataIdentifier": "items",
   "cardIdIdentifier": "guid",
