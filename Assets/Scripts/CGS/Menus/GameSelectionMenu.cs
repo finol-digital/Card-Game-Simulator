@@ -65,9 +65,9 @@ namespace CGS.Menus
                 else if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
                 {
                     if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
-                        CardGameManager.Instance.SelectLeft();
+                        CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
                     else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
-                        CardGameManager.Instance.SelectRight();
+                        CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
                     Rebuild(CardGameManager.Instance.GamesListing, SelectGame, CardGameManager.Current.Id);
                 }
 
@@ -104,7 +104,7 @@ namespace CGS.Menus
         public void SelectGame(Toggle toggle, string gameId)
         {
             if (toggle.isOn)
-                CardGameManager.Instance.SelectCardGame(gameId);
+                CardGameManager.Instance.Select(gameId);
             else if (!toggle.group.AnyTogglesOn())
                 Hide();
         }
@@ -112,7 +112,7 @@ namespace CGS.Menus
         public void Delete()
         {
             if (CardGameManager.Instance.AllCardGames.Count > 1)
-                CardGameManager.Instance.Messenger.Prompt(DeletePrompt, CardGameManager.Instance.DeleteGame);
+                CardGameManager.Instance.Messenger.Prompt(DeletePrompt, CardGameManager.Instance.DeleteCurrent);
             else
                 CardGameManager.Instance.Messenger.Show(DeleteMessage);
         }

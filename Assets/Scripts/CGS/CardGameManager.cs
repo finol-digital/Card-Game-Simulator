@@ -63,6 +63,39 @@ namespace CGS
         public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
         public List<UnityAction> OnSceneActions { get; } = new List<UnityAction>();
 
+        public CardGame Previous
+        {
+            get
+            {
+                CardGame previous = AllCardGames.Values.LastOrDefault() ?? CardGame.Invalid;
+                SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
+                bool found = false;
+                while (!found && allCardGamesEnum.MoveNext())
+                {
+                    if (allCardGamesEnum.Current.Value != Current)
+                        previous = allCardGamesEnum.Current.Value;
+                    else
+                        found = true;
+                }
+                return previous;
+            }
+        }
+        public CardGame Next
+        {
+            get
+            {
+                CardGame next = AllCardGames.Values.FirstOrDefault() ?? CardGame.Invalid;
+                SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
+                bool found = false;
+                while (!found && allCardGamesEnum.MoveNext())
+                    if (allCardGamesEnum.Current.Value == Current)
+                        found = true;
+                if (allCardGamesEnum.MoveNext())
+                    next = allCardGamesEnum.Current.Value;
+                return next;
+            }
+        }
+
         public SortedList<string, string> GamesListing => new SortedList<string, string>(AllCardGames.ToDictionary(game => game.Key, game => game.Value.Name));
 
         public LobbyDiscovery Discovery => _discovery ?? (_discovery = gameObject.GetOrAddComponent<LobbyDiscovery>());
@@ -150,7 +183,7 @@ namespace CGS
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-            ResetToPreferredCardGame();
+            ResetCurrentToDefault();
         }
 
         private void CreateDefaultCardGames()
@@ -188,7 +221,7 @@ namespace CGS
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            SetupGameScene();
+            ResetGameScene();
         }
 
         void OnSceneUnloaded(Scene scene)
@@ -207,10 +240,10 @@ namespace CGS
 
             object gameId;
             if (parameters.TryGetValue(GameId, out gameId))
-                SelectCardGame((string)gameId);
+                Select((string)gameId);
         }
 
-        public void ResetToPreferredCardGame()
+        public void ResetCurrentToDefault()
         {
             CardGame currentGame;
             Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefDefaultGame), out currentGame) && string.IsNullOrEmpty(currentGame.Error)
@@ -228,12 +261,17 @@ namespace CGS
             if (string.IsNullOrEmpty(newGame.Error))
             {
                 AllCardGames[newGame.Id] = newGame;
-                SelectCardGame(newGame.Id);
+                Select(newGame.Id);
             }
             else
             {
                 Debug.LogError(GameDownLoadErrorMessage + Current.Error);
                 Messenger.Show(GameDownLoadErrorMessage + Current.Error);
+                try
+                {
+                    if (Directory.Exists(newGame.GameDirectoryPath))
+                        Directory.Delete(newGame.GameDirectoryPath, true);
+                } catch {};
             }
 
             Spinner.Hide();
@@ -258,7 +296,7 @@ namespace CGS
 
             cardGame.Load(UpdateCardGame, LoadCards);
             if (cardGame == Current)
-                SetupGameScene();
+                ResetGameScene();
         }
 
         public IEnumerator LoadCards(CardGame cardGame)
@@ -280,37 +318,7 @@ namespace CGS
                 Messenger.Show(string.Format(CardsLoadedMessage, cardGame.Name));
         }
 
-        public void SelectLeft()
-        {
-            string prevGameId = AllCardGames.Keys.Last();
-            SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
-            bool found = false;
-            while (!found && allCardGamesEnum.MoveNext())
-            {
-                if (!allCardGamesEnum.Current.Key.Equals(Current.Id))
-                    prevGameId = allCardGamesEnum.Current.Key;
-                else
-                    found = true;
-            }
-            SelectCardGame(prevGameId);
-        }
-
-        public void SelectRight()
-        {
-            string nextGameId = Current.Id;
-            SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
-            bool found = false;
-            while (!found && allCardGamesEnum.MoveNext())
-                if (allCardGamesEnum.Current.Key.Equals(Current.Id))
-                    found = true;
-            if (allCardGamesEnum.MoveNext())
-                nextGameId = allCardGamesEnum.Current.Key;
-            else if (found)
-                nextGameId = AllCardGames.Keys.First();
-            SelectCardGame(nextGameId);
-        }
-
-        public void SelectCardGame(string gameId)
+        public void Select(string gameId)
         {
             if (string.IsNullOrEmpty(gameId) || !AllCardGames.ContainsKey(gameId))
             {
@@ -328,10 +336,10 @@ namespace CGS
             }
 
             Current = AllCardGames[gameId];
-            SetupGameScene();
+            ResetGameScene();
         }
 
-        public void SetupGameScene()
+        public void ResetGameScene()
         {
             if (!Current.HasLoaded)
             {
@@ -343,7 +351,7 @@ namespace CGS
             if (!string.IsNullOrEmpty(Current.Error))
             {
                 Debug.LogError(GameLoadErrorMessage + Current.Error);
-                Messenger.Ask(GameLoadErrorPrompt, IgnoreErroredGame, DeleteGame);
+                Messenger.Ask(GameLoadErrorPrompt, IgnoreCurrentErroredGame, DeleteCurrent);
                 return;
             }
 
@@ -360,22 +368,22 @@ namespace CGS
                 action();
         }
 
-        public void IgnoreErroredGame()
+        public void IgnoreCurrentErroredGame()
         {
             Current.ClearError();
-            ResetToPreferredCardGame();
-            SetupGameScene();
+            ResetCurrentToDefault();
+            ResetGameScene();
             Selector.Show();
         }
 
-        public void DeleteGame()
+        public void DeleteCurrent()
         {
             try
             {
                 Directory.Delete(Current.GameDirectoryPath, true);
                 AllCardGames.Remove(Current.Id);
-                ResetToPreferredCardGame();
-                SetupGameScene();
+                ResetCurrentToDefault();
+                ResetGameScene();
                 Selector.Show();
             }
             catch (Exception ex)

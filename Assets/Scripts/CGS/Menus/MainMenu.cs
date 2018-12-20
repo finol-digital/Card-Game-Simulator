@@ -5,9 +5,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 using CardGameDef;
 
@@ -19,29 +19,31 @@ namespace CGS.Menus
         public const int PlayModeSceneIndex = 2;
         public const int DeckEditorSceneIndex = 3;
         public const int CardsExplorerSceneIndex = 4;
-        public const int OptionsMenuSceneIndex = 5;
         public const string VersionMessage = "Ver. ";
 
-        public List<GameObject> buttons;
+        public Image currentBannerImage;
+        public Image previousCardImage;
+        public Image nextCardImage;
+        public List<GameObject> selectableButtons;
         public GameObject quitButton;
         public Text versionText;
 
         private bool _wasLeft;
         private bool _wasRight;
 
+        void OnEnable()
+        {
+            CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
+        }
+
         void Start()
         {
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if (UNITY_ANDROID || UNITY_IOS)
             quitButton.SetActive(false);
 #else
             quitButton.SetActive(true);
 #endif
             versionText.text = VersionMessage + Application.version;
-
-            if (CardGameManager.Instance.Discovery.running)
-                CardGameManager.Instance.Discovery.StopBroadcast();
-            CardGameManager.Instance.Discovery.HasReceivedBroadcast = false;
-            CardGameManager.Instance.Discovery.SearchForHost();
         }
 
         void Update()
@@ -49,16 +51,18 @@ namespace CGS.Menus
             if (CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
-            if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
-                    && !buttons.Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.SetSelectedGameObject(buttons[1].gameObject);
-            if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
+            if ((Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0) &&
+                    (EventSystem.current.currentSelectedGameObject == null
+                    || EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
                 if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
-                    CardGameManager.Instance.SelectLeft();
+                    SelectPrevious();
                 else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
-                    CardGameManager.Instance.SelectRight();
+                    SelectNext();
             }
+            else if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+                    && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
+                EventSystem.current.SetSelectedGameObject(selectableButtons[1].gameObject);
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
                 EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
@@ -79,6 +83,23 @@ namespace CGS.Menus
             _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
         }
 
+        public void ResetGameSelectionCarousel()
+        {
+            currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
+            previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
+            nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
+        }
+
+        public void SelectPrevious()
+        {
+            CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
+        }
+
+        public void SelectNext()
+        {
+            CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
+        }
+
         public void ShowGameSelectionMenu()
         {
             if (Time.timeSinceLevelLoad < 0.1)
@@ -90,16 +111,7 @@ namespace CGS.Menus
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            if (CardGameManager.Instance.Discovery.running)
-                CardGameManager.Instance.Discovery.StopBroadcast();
-            CardGameManager.Instance.Discovery.HasReceivedBroadcast = false;
-            SceneManager.LoadScene(PlayModeSceneIndex);
-        }
-
-        public void PlayGame()
-        {
-            if (Time.timeSinceLevelLoad < 0.1)
-                return;
+            CardGameManager.Instance.Discovery.Stop();
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 
@@ -107,7 +119,7 @@ namespace CGS.Menus
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            CardGameManager.Instance.Discovery.HasReceivedBroadcast = true;
+            CardGameManager.Instance.Discovery.SearchForHost();
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 
@@ -123,13 +135,6 @@ namespace CGS.Menus
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
             SceneManager.LoadScene(CardsExplorerSceneIndex);
-        }
-
-        public void ShowOptions()
-        {
-            if (Time.timeSinceLevelLoad < 0.1)
-                return;
-            SceneManager.LoadScene(OptionsMenuSceneIndex);
         }
 
         public void Quit()

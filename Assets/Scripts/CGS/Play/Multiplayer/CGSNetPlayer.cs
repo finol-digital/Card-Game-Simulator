@@ -51,7 +51,7 @@ namespace CGS.Play.Multiplayer
         [TargetRpc]
         public void TargetSelectCardGame(NetworkConnection target, string gameId)
         {
-            CardGameManager.Instance.SelectCardGame(gameId);
+            CardGameManager.Instance.Select(gameId);
             StartCoroutine(WaitToRequestDeck());
         }
 

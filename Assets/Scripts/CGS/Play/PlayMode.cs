@@ -53,7 +53,7 @@ namespace CGS.Play
             playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
             playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
 
-            if (CardGameManager.Instance.Discovery.HasReceivedBroadcast)
+            if (CardGameManager.Instance.Discovery.IsSearching)
                 Lobby.Show(BackToMainMenu);
             else
                 Lobby.Host(BackToMainMenu);
@@ -255,8 +255,7 @@ namespace CGS.Play
 
         public void BackToMainMenu()
         {
-            if (CardGameManager.Instance.Discovery.running)
-                CardGameManager.Instance.Discovery.StopBroadcast();
+            CardGameManager.Instance.Discovery.Stop();
 
             if (NetworkManager.singleton.isNetworkActive)
             {

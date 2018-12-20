@@ -17,8 +17,7 @@ namespace CGS.Play.Multiplayer
         public const string ListenErrorMessage = "Error: Unable to listen for game sessions.";
 
         public LobbyMenu lobby;
-        // TODO: INSTEAD OF THIS, CHECK A IS_SEARCHING VARIABLE
-        public bool HasReceivedBroadcast { get; set; }
+        public bool IsSearching { get; private set; }
 
         public void StartAsHost()
         {
@@ -60,6 +59,8 @@ namespace CGS.Play.Multiplayer
             NetworkServer.Reset();
 
             StartCoroutine(WaitToStartListening());
+
+            IsSearching = true;
         }
 
         // Wait a frame to get it to start broadcasting; there should be a better way to check if it's ok to start
@@ -78,6 +79,13 @@ namespace CGS.Play.Multiplayer
                 return;
 
             lobby.DisplayHosts(broadcastsReceived.Keys.ToList());
+        }
+
+        public void Stop()
+        {
+            if (running)
+                StopBroadcast();
+            IsSearching = false;
         }
     }
 }

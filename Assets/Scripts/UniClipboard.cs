@@ -13,9 +13,9 @@ public class UniClipboard
         {
             if (_board == null)
             {
-#if UNITY_ANDROID && !UNITY_STANDALONE
+#if UNITY_ANDROID && !UNITY_EDITOR
                 _board = new AndroidBoard();
-#elif UNITY_IOS && !UNITY_STANDALONE
+#elif UNITY_IOS && !UNITY_EDITOR
                 _board = new IOSBoard ();
 #else
                 _board = new EditorBoard();

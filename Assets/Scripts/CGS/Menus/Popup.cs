@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 namespace CGS.Menus
 {
@@ -78,6 +79,8 @@ namespace CGS.Menus
             }
 
             gameObject.SetActive(true);
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(gameObject);
             transform.SetAsLastSibling();
             DisplayMessage(message);
         }
@@ -108,6 +111,9 @@ namespace CGS.Menus
 
         public void Close()
         {
+            if (!EventSystem.current.alreadySelecting && EventSystem.current.currentSelectedGameObject == gameObject)
+                EventSystem.current.SetSelectedGameObject(null);
+
             if (MessageQueue.Count > 0)
                 DisplayMessage(MessageQueue.Dequeue());
             else
