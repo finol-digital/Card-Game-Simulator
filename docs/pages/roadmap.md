@@ -6,13 +6,13 @@ permalink: roadmap.html
 
 ## What's New
 - Reorganize Main Menu
+- Enhance Cards Explorer
 - Rename backgroundImage to bannerImage
 - Fix: Always showing branch link broken error message
 - Fix: After downloading game, there were zero cards (cards load ok on next game)
 - Fix: Setup Game Scene after deleting a game
 
 ## Current Sprint
-- Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty

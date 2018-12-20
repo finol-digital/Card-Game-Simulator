@@ -53,9 +53,6 @@ namespace CGS.Play.Multiplayer
 
             if (running)
                 StopBroadcast();
-#if !UNITY_WSA
-            Network.Disconnect();
-#endif
             NetworkServer.Reset();
 
             StartCoroutine(WaitToStartListening());
