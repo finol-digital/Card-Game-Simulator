@@ -6,16 +6,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using CardGameDef;
 using CardGameView;
-using CGS.Menus;
 
 namespace CGS.Cards
 {
     public class CardsExplorer : MonoBehaviour
     {
+        void Update()
+        {
+            if (CardInfoViewer.Instance?.IsVisible ?? false || CardGameManager.Instance.TopMenuCanvas != null)
+                return;
+
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+                BackToMainMenu();
+        }
+
         public void BackToMainMenu()
         {
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(CGS.Menu.MainMenu.MainMenuSceneIndex);
         }
     }
 }

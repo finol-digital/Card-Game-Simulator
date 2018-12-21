@@ -7,8 +7,6 @@ using System.Linq;
 using UnityEngine;
 using Mirror;
 
-using CGS.Menus;
-
 namespace CGS.Play.Multiplayer
 {
     public class LobbyDiscovery : UnityEngine.Networking.NetworkDiscovery

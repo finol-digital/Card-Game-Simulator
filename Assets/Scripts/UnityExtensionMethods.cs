@@ -6,6 +6,7 @@ using System.Linq;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public static class ThreadSafeRandom
 {
@@ -183,34 +184,38 @@ static public class UnityExtensionMethods
         string fileName = Path.GetFileName(filePath);
         if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
         {
-            Debug.LogWarning("SaveUrlToFile::FilepathInvalid:" + url + ","  + filePath);
+            Debug.LogWarning("SaveUrlToFile::FilepathInvalid:" + url + "," + filePath);
             yield break;
         }
 
-        WWW loader = new WWW(url);
+        UnityWebRequest www = (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST"));
         if (postJsonBody != null)
         {
-            Dictionary<string, string> postHeader = new Dictionary<string, string>();
-            postHeader["Content-Type"] = "application/json";
-            loader = new WWW(url, System.Text.Encoding.UTF8.GetBytes(postJsonBody), postHeader);
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(postJsonBody);
+            www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            www.SetRequestHeader("Content-Type", "application/json");
         }
+        yield return www.SendWebRequest();
 
-        yield return loader;
-        if (!string.IsNullOrEmpty(loader.error))
+        if (www.isNetworkError || www.isHttpError)
         {
-            Debug.LogError(url + ":" + loader.error);
+            Debug.Log(www.error);
             yield break;
         }
 
         if (!Directory.Exists(directory))
             Directory.CreateDirectory(directory);
-        File.WriteAllBytes(directory + "/" + fileName, loader.bytes);
+        File.WriteAllBytes(directory + "/" + fileName, www.downloadHandler.data);
     }
 
     public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
     {
         if (coroutine == null || output == null)
+        {
+            Debug.LogWarning("RunOutputCoroutine::ParamsInvalid:" + coroutine + "," + output);
             yield break;
+        }
 
         object result = null;
         while (coroutine.MoveNext())
@@ -226,15 +231,27 @@ static public class UnityExtensionMethods
         if (!File.Exists(imageFilePath))
             yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
 
-        WWW loader = new WWW(FilePrefix + imageFilePath);
-        yield return loader;
-        yield return CreateSprite(loader.texture);
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath);
+        yield return www.SendWebRequest();
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+            yield return null;
+        }
+        else
+        {
+            Texture2D texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            yield return CreateSprite(texture);
+        }
     }
 
     public static Sprite CreateSprite(string textureFilePath)
     {
         if (!File.Exists(textureFilePath))
+        {
+            Debug.LogWarning("CreateSprite::TextureFileMissing");
             return null;
+        }
 
         Texture2D newTexture = new Texture2D(2, 2);
         newTexture.LoadImage(File.ReadAllBytes(textureFilePath));
@@ -244,7 +261,10 @@ static public class UnityExtensionMethods
     public static Sprite CreateSprite(Texture2D texture)
     {
         if (texture == null)
+        {
+            Debug.LogWarning("CreateSprite::TextureNull");
             return null;
+        }
 
         return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
     }

@@ -14,8 +14,7 @@ using UnityEngine.Events;
 
 using CardGameDef;
 using CardGameView;
-using CGS.Menus;
-using CGS.Play;
+using CGS.Menu;
 using CGS.Play.Multiplayer;
 
 namespace CGS

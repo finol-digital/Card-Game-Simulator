@@ -10,7 +10,6 @@ using UnityEngine.SceneManagement;
 
 using CardGameDef;
 using CardGameView;
-using CGS.Menus;
 
 namespace CGS.Decks
 {
@@ -301,7 +300,7 @@ namespace CGS.Decks
 
         public void BackToMainMenu()
         {
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(CGS.Menu.MainMenu.MainMenuSceneIndex);
         }
     }
 }

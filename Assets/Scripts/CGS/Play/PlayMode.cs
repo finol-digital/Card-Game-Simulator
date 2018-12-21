@@ -13,7 +13,8 @@ using Mirror;
 
 using CardGameDef;
 using CardGameView;
-using CGS.Menus;
+using CGS.Cards;
+using CGS.Decks;
 using CGS.Play.Multiplayer;
 using CGS.Play.Zones;
 
@@ -23,6 +24,7 @@ namespace CGS.Play
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string DealHandPrompt = "Draw initial starting hand?";
+        public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
         public GameObject cardViewerPrefab;
         public GameObject lobbyMenuPrefab;
@@ -79,7 +81,7 @@ namespace CGS.Play
             if (Uri.IsWellFormedUriString(CardGameManager.Current.RulesUrl, UriKind.Absolute))
                 Application.OpenURL(CardGameManager.Current.RulesUrl);
             else
-                CardGameManager.Instance.Messenger.Show(OptionsMenu.NoRulesErrorMessage);
+                CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
         }
 
         public void ShowDeckMenu()
@@ -265,7 +267,7 @@ namespace CGS.Play
                     NetworkManager.singleton.StopClient();
             }
 
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(CGS.Menu.MainMenu.MainMenuSceneIndex);
         }
     }
 }
