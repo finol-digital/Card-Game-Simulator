@@ -222,14 +222,30 @@ namespace CardGameDef
         public UnityEngine.Sprite BannerImageSprite
         {
             get { return _bannerImageSprite ?? (_bannerImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(BannerImageFileName)); }
-            private set { _bannerImageSprite = value; }
+            private set
+            {
+                if (_bannerImageSprite != null)
+                {
+                    UnityEngine.Object.Destroy(_bannerImageSprite.texture);
+                    UnityEngine.Object.Destroy(_bannerImageSprite);
+                }
+                _bannerImageSprite = value;
+            }
         }
         private UnityEngine.Sprite _bannerImageSprite;
 
         public UnityEngine.Sprite CardBackImageSprite
         {
             get { return _cardBackImageSprite ?? (_cardBackImageSprite = UnityEngine.Resources.Load<UnityEngine.Sprite>(CardBackImageFileName)); }
-            private set { _cardBackImageSprite = value; }
+            private set
+            {
+                if (_cardBackImageSprite != null)
+                {
+                    UnityEngine.Object.Destroy(_cardBackImageSprite.texture);
+                    UnityEngine.Object.Destroy(_cardBackImageSprite);
+                }
+                _cardBackImageSprite = value;
+            }
         }
         private UnityEngine.Sprite _cardBackImageSprite;
 
@@ -277,8 +293,10 @@ namespace CardGameDef
                     Directory.Move(gameDirectoryPath, GameDirectoryPath);
 
                 // We're being greedy about loading these now, since these could be shown before the game is selected
-                BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
-                CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
+                if (File.Exists(BannerImageFilePath))
+                    BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
+                if (File.Exists(CardBackImageFilePath))
+                    CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
 
                 HasReadProperties = true;
             }
@@ -386,9 +404,11 @@ namespace CardGameDef
                 CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
             LoadSets();
 
-            // We also re-load the background and cardback images now in case they've changed since we ReadProperties
-            BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
-            CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
+            // We also re-load the banner and cardback images now in case they've changed since we ReadProperties
+            if (File.Exists(BannerImageFilePath))
+                BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
+            if (File.Exists(CardBackImageFilePath))
+                CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
 
             // Only considered as loaded if none of the steps failed
             if (string.IsNullOrEmpty(Error))

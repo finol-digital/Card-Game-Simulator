@@ -198,9 +198,9 @@ static public class UnityExtensionMethods
         }
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
         {
-            Debug.Log(www.error);
+            Debug.LogWarning("SaveUrlToFile::www.Error:" + www.error);
             yield break;
         }
 
@@ -226,6 +226,7 @@ static public class UnityExtensionMethods
         output(result as T);
     }
 
+    // Note: Memory Leak Potential
     public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageFilePath, string backUpImageUrl)
     {
         if (!File.Exists(imageFilePath))
@@ -233,7 +234,7 @@ static public class UnityExtensionMethods
 
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath);
         yield return www.SendWebRequest();
-        if (www.isNetworkError || www.isHttpError)
+        if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
         {
             Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
             yield return null;
@@ -245,6 +246,7 @@ static public class UnityExtensionMethods
         }
     }
 
+    // Note: Memory Leak Potential
     public static Sprite CreateSprite(string textureFilePath)
     {
         if (!File.Exists(textureFilePath))
@@ -258,6 +260,7 @@ static public class UnityExtensionMethods
         return CreateSprite(newTexture);
     }
 
+    // Note: Memory Leak Potential
     public static Sprite CreateSprite(Texture2D texture)
     {
         if (texture == null)

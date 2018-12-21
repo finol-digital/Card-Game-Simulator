@@ -8,14 +8,15 @@ permalink: roadmap.html
 - Reorganize Main Menu
 - Enhance Cards Explorer
 - Tech: Rename backgroundImage to bannerImage
+- Tech: Upgrade to Unity 2018.3
 - Fix: Always showing branch link broken error message
 - Fix: After downloading game, there were zero cards (cards load ok on next game)
 - Fix: Setup Game Scene after deleting a game
 
 ## Current Sprint
-- Tech: Rename CardInfoViewer to CardViewer
 - Tech: C# 7 Value Tuples and Dictionary.TryGetValue(inline declaration)
 - Fix: CGS fails to start when no internet? Check error paths, and switch from www to unitywebrequest.
+- Fix: Too many cards in deck editor search results initial startup
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
@@ -55,6 +56,10 @@ permalink: roadmap.html
 
 ## Icebox
 - Tech: Remove Unity references from CardGameDef by creating and using ICardGameLoader instead of CoroutineRunner
+- Tech: Restore CardClearsBackground
+- Tech: Replace SwipeManager
+- Tech: Redo TopCardCanvas and TopMenuCanvas for performance
+- Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag)
 - Apply autoUpdate to cached card images
 - Add copy to clipboard buttons next to labels in the Card Viewer
 - Support Android TV and tvOS

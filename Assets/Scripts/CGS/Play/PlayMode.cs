@@ -160,7 +160,7 @@ namespace CGS.Play
 
             string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
                                    CardGameManager.Current.GameBoardFileType;
-            Sprite boardImageSprite = UnityExtensionMethods.CreateSprite(boardFilepath);
+            Sprite boardImageSprite = System.IO.File.Exists(boardFilepath) ? UnityExtensionMethods.CreateSprite(boardFilepath) : null;
             if (boardImageSprite != null)
                 newBoard.AddComponent<Image>().sprite = boardImageSprite;
 
