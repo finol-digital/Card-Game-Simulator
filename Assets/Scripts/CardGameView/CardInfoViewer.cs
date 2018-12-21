@@ -199,14 +199,10 @@ namespace CardGameView
             }
 
             string newContentTextValue = string.Empty;
-            if (SelectedPropertyIndex == 0)
-            {
-                Set currentSet;
-                if (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out currentSet))
-                    newContentTextValue = currentSet.ToString();
-            }
-            else
+            if (SelectedPropertyIndex != 0)
                 newContentTextValue = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
+            else if (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out Set currentSet))
+                newContentTextValue = currentSet.ToString();
             contentText.text = newContentTextValue;
         }
 

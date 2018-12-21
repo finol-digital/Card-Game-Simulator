@@ -85,8 +85,7 @@ namespace CardGameDef
 
         public string GetPropertyValueString(string propertyName)
         {
-            PropertyDefValuePair property;
-            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
                 return string.Empty;
 
             EnumDef enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
@@ -97,8 +96,7 @@ namespace CardGameDef
 
         public int GetPropertyValueInt(string propertyName)
         {
-            PropertyDefValuePair property;
-            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
                 return 0;
 
             int intValue;
@@ -109,8 +107,7 @@ namespace CardGameDef
 
         public bool GetPropertyValueBool(string propertyName)
         {
-            PropertyDefValuePair property;
-            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
                 return false;
 
             return "true".Equals(property.Value, StringComparison.OrdinalIgnoreCase)
@@ -121,8 +118,7 @@ namespace CardGameDef
 
         public int GetPropertyValueEnum(string propertyName)
         {
-            PropertyDefValuePair property;
-            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out property))
+            if (string.IsNullOrEmpty(propertyName) || !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
                 return 0;
 
             EnumDef enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));

@@ -283,8 +283,7 @@ namespace CGS.Cards
 
             SearchFilterPanel config = newPanel.GetComponent<SearchFilterPanel>();
             config.nameLabelText.text = !string.IsNullOrEmpty(displayName) ? displayName : propertyName;
-            string storedFilter;
-            if (Filters.StringProperties.TryGetValue(propertyName, out storedFilter))
+            if (Filters.StringProperties.TryGetValue(propertyName, out string storedFilter))
                 config.stringInputField.text = storedFilter;
             config.stringPlaceHolderText.text = "Enter " + propertyName + "...";
             config.stringInputField.onValueChanged.AddListener(text => SetStringPropertyFilter(propertyName, text));
@@ -365,7 +364,7 @@ namespace CGS.Cards
 
             SearchFilterPanel config = newPanel.GetComponent<SearchFilterPanel>();
             config.nameLabelText.text = !string.IsNullOrEmpty(property.Display) ? property.Display : property.Name;
-            int storedFilter;
+            int storedFilter = 0;
             Filters.EnumProperties.TryGetValue(property.Name, out storedFilter);
             EnumDef enumDef = CardGameManager.Current.Enums.First(def => def.Property.Equals(property.Name));
 
@@ -377,7 +376,7 @@ namespace CGS.Cards
 
             foreach (KeyValuePair<string, string> enumValue in enumDef.Values)
             {
-                int lookupKey;
+                int lookupKey = 0;
                 if (!enumDef.Lookups.TryGetValue(enumValue.Key, out lookupKey))
                     lookupKey = enumDef.CreateLookup(enumValue.Key);
                 toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();
@@ -394,7 +393,7 @@ namespace CGS.Cards
 
             if (!string.IsNullOrEmpty(property.Empty))
             {
-                int lookupKey;
+                int lookupKey = 0;
                 if (!enumDef.Lookups.TryGetValue(property.Empty, out lookupKey))
                     lookupKey = enumDef.CreateLookup(property.Empty);
                 toggle = Instantiate(config.toggle.gameObject, config.toggleGroupContainer).GetOrAddComponent<Toggle>();

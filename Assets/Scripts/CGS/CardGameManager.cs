@@ -202,11 +202,8 @@ namespace CGS
             foreach (string gameDirectory in Directory.GetDirectories(CardGame.GamesDirectoryPath))
             {
                 string gameDirectoryName = gameDirectory.Substring(CardGame.GamesDirectoryPath.Length + 1);
-                // TODO: C#7 Tuple
-                var tuple = CardGame.Decode(gameDirectoryName);
-                string gameName = tuple.Item1;
-                string gameUrl = tuple.Item2;
-                CardGame newCardGame = new CardGame(this, gameName, gameUrl);
+                (string name, string url) game = CardGame.Decode(gameDirectoryName);
+                CardGame newCardGame = new CardGame(this, game.name, game.url);
                 newCardGame.ReadProperties();
                 AllCardGames[newCardGame.Id] = newCardGame;
             }
@@ -237,16 +234,15 @@ namespace CGS
                 return;
             }
 
-            object gameId;
-            if (parameters.TryGetValue(GameId, out gameId))
+            if (parameters.TryGetValue(GameId, out object gameId) && gameId is string)
                 Select((string)gameId);
         }
 
         public void ResetCurrentToDefault()
         {
-            CardGame currentGame;
-            Current = AllCardGames.TryGetValue(PlayerPrefs.GetString(PlayerPrefDefaultGame), out currentGame) && string.IsNullOrEmpty(currentGame.Error)
-                 ? currentGame : (AllCardGames.FirstOrDefault().Value ?? CardGame.Invalid);
+            string preferredGameId = PlayerPrefs.GetString(PlayerPrefDefaultGame);
+            Current = AllCardGames.TryGetValue(preferredGameId, out CardGame currentGame) && string.IsNullOrEmpty(currentGame.Error)
+                ? currentGame : (AllCardGames.FirstOrDefault().Value ?? CardGame.Invalid);
         }
 
         public IEnumerator DownloadCardGame(string gameUrl)
@@ -270,7 +266,8 @@ namespace CGS
                 {
                     if (Directory.Exists(newGame.GameDirectoryPath))
                         Directory.Delete(newGame.GameDirectoryPath, true);
-                } catch {};
+                }
+                catch { };
             }
 
             Spinner.Hide();
@@ -321,8 +318,7 @@ namespace CGS
         {
             if (string.IsNullOrEmpty(gameId) || !AllCardGames.ContainsKey(gameId))
             {
-                // TODO: C#7 Tuple
-                string gameUrl = CardGame.Decode(gameId).Item2;
+                (_, string gameUrl) = CardGame.Decode(gameId);
                 if (!Uri.IsWellFormedUriString(gameUrl, UriKind.Absolute))
                 {
                     Debug.LogError(GameSelectionErrorPrompt);

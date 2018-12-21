@@ -6,17 +6,17 @@ permalink: roadmap.html
 
 ## What's New
 - Reorganize Main Menu
-- Enhance Cards Explorer
-- Tech: Rename backgroundImage to bannerImage
 - Tech: Upgrade to Unity 2018.3
+- Tech: Update to C# 7
+- Tech: Rename backgroundImage to bannerImage
 - Fix: Always showing branch link broken error message
 - Fix: After downloading game, there were zero cards (cards load ok on next game)
 - Fix: Setup Game Scene after deleting a game
 
 ## Current Sprint
-- Tech: C# 7 Value Tuples and Dictionary.TryGetValue(inline declaration)
-- Fix: CGS fails to start when no internet? Check error paths, and switch from www to unitywebrequest.
-- Fix: Too many cards in deck editor search results initial startup
+- Enhance Cards Explorer
+- Fix: CGS fails to start when no internet? Check error paths.
+- Fix: Too many cards in deck editor search results initial startup. Also check layout in portrait mode.
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty

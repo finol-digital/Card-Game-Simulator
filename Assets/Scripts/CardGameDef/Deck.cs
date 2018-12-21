@@ -217,7 +217,7 @@ namespace CardGameDef
             Dictionary<Card, int> cardCounts = new Dictionary<Card, int>();
             foreach (Card card in Cards)
             {
-                int currentCount;
+                int currentCount = 0;
                 cardCounts.TryGetValue(card, out currentCount);
                 currentCount++;
                 cardCounts[card] = currentCount;

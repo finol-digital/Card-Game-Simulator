@@ -62,8 +62,7 @@ namespace CardGameView
         {
             get
             {
-                Card cardValue;
-                if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out cardValue))
+                if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out Card cardValue))
                     return Card.Blank;
                 return cardValue;
             }
@@ -344,14 +343,12 @@ namespace CardGameView
                 SecondaryDragAction();
 
             Vector2 removedOffset = Vector2.zero;
-            Vector2 pointerDragOffset;
-            if (PointerDragOffsets.TryGetValue(eventData.pointerId, out pointerDragOffset))
+            if (PointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
                 removedOffset = (Vector2)transform.position - eventData.position - pointerDragOffset;
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
-            Vector2 otherOffset;
             foreach (int offsetKey in PointerDragOffsets.Keys.ToList())
-                if (PointerDragOffsets.TryGetValue(offsetKey, out otherOffset))
+                if (PointerDragOffsets.TryGetValue(offsetKey, out Vector2 otherOffset))
                     PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
 
             if (IsProcessingSecondaryDragAction)

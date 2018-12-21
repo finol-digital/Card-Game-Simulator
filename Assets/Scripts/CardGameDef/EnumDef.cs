@@ -55,12 +55,12 @@ namespace CardGameDef
             string stringValue = string.Empty;
             foreach (KeyValuePair<string, string> enumValue in Values)
             {
-                int lookupValue;
-                if (!Lookups.TryGetValue(enumValue.Key, out lookupValue) || (lookupValue & flags) == 0)
-                    continue;
-                if (!string.IsNullOrEmpty(stringValue))
-                    stringValue += Delimiter;
-                stringValue += enumValue.Value;
+                if (Lookups.TryGetValue(enumValue.Key, out int lookupValue) && ((lookupValue & flags) != 0))
+                {
+                    if (!string.IsNullOrEmpty(stringValue))
+                        stringValue += Delimiter;
+                    stringValue += enumValue.Value;
+                }
             }
             return stringValue;
         }
@@ -75,12 +75,10 @@ namespace CardGameDef
             {
                 if (!string.IsNullOrEmpty(stringValue))
                     stringValue += Delimiter;
-                int lookupFlags;
-                string mappedValue;
-                if (Lookups.TryGetValue(splitValue, out lookupFlags) || TryParseInt(splitValue, out lookupFlags))
+                if (Lookups.TryGetValue(splitValue, out int lookupFlags) || TryParseInt(splitValue, out lookupFlags))
                     stringValue += GetStringFromLookupFlags(lookupFlags);
                 else
-                    stringValue += Values.TryGetValue(splitValue, out mappedValue) ? mappedValue : splitValue;
+                    stringValue += Values.TryGetValue(splitValue, out string mappedValue) ? mappedValue : splitValue;
             }
             return stringValue;
         }
@@ -93,8 +91,7 @@ namespace CardGameDef
             int enumValue = 0;
             foreach (string stringValue in propertyValue.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries))
             {
-                int intValue;
-                if (Lookups.TryGetValue(stringValue, out intValue) || TryParseInt(stringValue, out intValue))
+                if (Lookups.TryGetValue(stringValue, out int intValue) || TryParseInt(stringValue, out intValue))
                     enumValue |= intValue;
             }
             return enumValue;

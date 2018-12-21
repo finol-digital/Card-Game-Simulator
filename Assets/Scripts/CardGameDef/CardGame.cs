@@ -249,8 +249,7 @@ namespace CardGameDef
         }
         private UnityEngine.Sprite _cardBackImageSprite;
 
-        // TODO: C#7 Tuple
-        public static Tuple<string, string> Decode(string gameId)
+        public static (string name, string url) Decode(string gameId)
         {
             string name = gameId;
             string url = string.Empty;
@@ -260,7 +259,7 @@ namespace CardGameDef
                 name = gameId.Substring(0, delimiterIdx);
                 url = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(gameId.Substring(delimiterIdx + 1).Replace('_', '/')));
             }
-            return new Tuple<string, string>(name, url);
+            return (name, url);
         }
 
         public CardGame(UnityEngine.MonoBehaviour coroutineRunner, string name = DefaultName, string url = "")
@@ -435,8 +434,7 @@ namespace CardGameDef
             if (File.Exists(SetsFilePath))
                 LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
 
-            Set defaultSet;
-            if (LoadedSets.TryGetValue(SetCodeDefault, out defaultSet))
+            if (LoadedSets.TryGetValue(SetCodeDefault, out Set defaultSet))
                 defaultSet.Name = SetNameDefault;
         }
 
