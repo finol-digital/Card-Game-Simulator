@@ -45,8 +45,8 @@ namespace CGS.Play.Multiplayer
 
         public override void OnStartClient()
         {
-            scores.Callback = OnScoreChanged;
-            cardStacks.Callback = OnDeckChanged;
+            scores.Callback += OnScoreChanged;
+            cardStacks.Callback += OnDeckChanged;
         }
 
         public void RegisterScore(GameObject owner, int points)
@@ -73,7 +73,7 @@ namespace CGS.Play.Multiplayer
             scores[scoreIndex] = new NetScore(owner, points);
         }
 
-        private void OnScoreChanged(SyncListNetScore.Operation op, int scoreIndex)
+        private void OnScoreChanged(SyncListNetScore.Operation op, int scoreIndex, NetScore scoreValue)
         {
             if (op == SyncList<NetScore>.Operation.OP_ADD)
                 return;
@@ -105,7 +105,7 @@ namespace CGS.Play.Multiplayer
             cardStacks[deckIndex] = new NetCardStack(owner, cardIds);
         }
 
-        private void OnDeckChanged(SyncListNetCardStack.Operation op, int deckIndex)
+        private void OnDeckChanged(SyncListNetCardStack.Operation op, int deckIndex, NetCardStack deckValue)
         {
             if (op == SyncList<NetCardStack>.Operation.OP_ADD)
                 return;

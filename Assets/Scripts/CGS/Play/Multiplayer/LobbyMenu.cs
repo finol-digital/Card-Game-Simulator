@@ -86,19 +86,10 @@ namespace CGS.Play.Multiplayer
             Rebuild(HostNames, SelectHost, SelectedHost);
         }
 
-        public void Host(UnityAction cancelAction = null)
+        public void Host()
         {
-            NetworkManager.singleton.StartHost();
-            NetworkManager.singleton.StartCoroutine(WaitToShowDeckLoader(cancelAction));
+            // TODO: NetworkManager.singleton.StartHost();
             Hide();
-        }
-
-        public IEnumerator WaitToShowDeckLoader(UnityAction cancelAction)
-        {
-            yield return null;
-            CGSNetManager.Instance.playController.ShowDeckMenu();
-            CGSNetManager.Instance.playController.DeckLoader.cancelButton.onClick.RemoveAllListeners();
-            CGSNetManager.Instance.playController.DeckLoader.cancelButton.onClick.AddListener(cancelAction);
         }
 
         public void SelectHost(Toggle toggle, string host)

@@ -58,7 +58,7 @@ namespace CGS.Play
             if (CardGameManager.Instance.IsSearching)
                 Lobby.Show(BackToMainMenu);
             else
-                Lobby.Host(BackToMainMenu);
+                ShowDeckMenu(); // TODO: LOBBY HOST
         }
 
         void Update()
@@ -87,6 +87,9 @@ namespace CGS.Play
         public void ShowDeckMenu()
         {
             DeckLoader.Show(LoadDeck);
+            // TODO: BETTER MANAGE THE CANCEL/BACK
+            DeckLoader.cancelButton.onClick.RemoveAllListeners();
+            DeckLoader.cancelButton.onClick.AddListener(BackToMainMenu);
         }
 
         public void ShowDiceMenu()

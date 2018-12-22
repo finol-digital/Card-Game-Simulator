@@ -29,6 +29,7 @@ namespace CGS
         public const string SpinnerPrefabName = "Spinner";
         public const string GameSelectionErrorPrompt = "Could not select the card game because it is not recognized! Try selecting a different card game?";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
+        public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
         public const string GameDownLoadErrorMessage = "Error downloading game!: ";
         public const string GameLoadErrorMessage = "Error loading game!: ";
         public const string GameLoadErrorPrompt = "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
@@ -233,8 +234,13 @@ namespace CGS
                 return;
             }
 
-            if (parameters.TryGetValue(GameId, out object gameId) && gameId is string)
-                Select((string)gameId);
+            if (parameters.TryGetValue(GameId, out object gameId))
+            {
+                if(gameId is string)
+                    Select((string)gameId);
+                else
+                    Debug.LogWarning(BranchCallbackWarning);
+            }
         }
 
         public void ResetCurrentToDefault()

@@ -28,15 +28,15 @@ namespace CGS.Play.Multiplayer
             // TODO: CardGameManager.Instance.Discovery.StartAsHost();
         }
 
-        public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
+        public override void OnServerAddPlayer(NetworkConnection conn)
         {
-            base.OnServerAddPlayer(conn, playerControllerId);
+            base.OnServerAddPlayer(conn);
             if (Data == null)
             {
                 Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CGSNetData>();
                 NetworkServer.Spawn(Data.gameObject);
             }
-            Data.RegisterScore(conn.playerControllers[playerControllerId].gameObject, CardGameManager.Current.GameStartPointsCount);
+            Data.RegisterScore(conn.playerController.gameObject, CardGameManager.Current.GameStartPointsCount);
             playController.netText.text = PlayerCountMessage + NetworkServer.connections.Count.ToString();
         }
 
@@ -52,7 +52,7 @@ namespace CGS.Play.Multiplayer
             playController.netText.text = ConnectionIdMessage + connection.connectionId;
         }
 
-        public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
+        public GameObject SpawnCard(Vector3 position, System.Guid assetId)
         {
             GameObject newCardGO = Instantiate(cardModelPrefab, playController.playAreaContent);
             playController.SetPlayActions(playController.playAreaContent.GetComponent<CardStack>(), newCardGO.GetComponent<CardModel>());
@@ -67,32 +67,8 @@ namespace CGS.Play.Multiplayer
         public override void OnStopServer()
         {
             base.OnStopServer();
-            // TODO: CardGameManager.Instance.Discovery.sTOP();
+            // TODO: CardGameManager.Instance.Discovery.Stop();
             Debug.Log("Server stopped");
-        }
-
-        public override void OnServerError(NetworkConnection conn, int errorCode)
-        {
-            base.OnServerError(conn, errorCode);
-            Debug.LogError("Server error:" + errorCode);
-        }
-
-        public override void OnServerDisconnect(NetworkConnection conn)
-        {
-            base.OnServerDisconnect(conn);
-            Debug.Log("Server disconnected");
-        }
-
-        public override void OnClientError(NetworkConnection conn, int errorCode)
-        {
-            base.OnClientError(conn, errorCode);
-            Debug.LogError("Client error:" + errorCode);
-        }
-
-        public override void OnClientDisconnect(NetworkConnection conn)
-        {
-            base.OnClientDisconnect(conn);
-            Debug.Log("Client Disconnected");
         }
     }
 }
