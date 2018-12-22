@@ -25,7 +25,7 @@ namespace CGS.Play.Multiplayer
         public override void OnStartServer()
         {
             base.OnStartServer();
-            CardGameManager.Instance.Discovery.StartAsHost();
+            // TODO: CardGameManager.Instance.Discovery.StartAsHost();
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
@@ -50,8 +50,6 @@ namespace CGS.Play.Multiplayer
         {
             base.OnClientConnect(connection);
             playController.netText.text = ConnectionIdMessage + connection.connectionId;
-            if (CardGameManager.Instance.Discovery.running)
-                CardGameManager.Instance.Discovery.StopBroadcast();
         }
 
         public GameObject SpawnCard(Vector3 position, NetworkHash128 assetId)
@@ -69,8 +67,8 @@ namespace CGS.Play.Multiplayer
         public override void OnStopServer()
         {
             base.OnStopServer();
-            if (CardGameManager.Instance.Discovery.running)
-                CardGameManager.Instance.Discovery.StopBroadcast();
+            // TODO: CardGameManager.Instance.Discovery.sTOP();
+            Debug.Log("Server stopped");
         }
 
         public override void OnServerError(NetworkConnection conn, int errorCode)

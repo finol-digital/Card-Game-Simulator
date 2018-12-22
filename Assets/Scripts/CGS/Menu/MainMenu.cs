@@ -111,7 +111,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            CardGameManager.Instance.Discovery.Stop();
+            CardGameManager.Instance.IsSearching = false;
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 
@@ -119,7 +119,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            CardGameManager.Instance.Discovery.SearchForHost();
+            CardGameManager.Instance.IsSearching = true;
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 

@@ -65,8 +65,8 @@ namespace CGS.Play.Multiplayer
             SelectedHost = string.Empty;
             Rebuild(HostNames, SelectHost, SelectedHost);
 
-            CardGameManager.Instance.Discovery.lobby = this;
-            CardGameManager.Instance.Discovery.SearchForHost();
+            // TODO: CardGameManager.Instance.Discovery.lobby = this;
+            // TODO: CardGameManager.Instance.Discovery.SearchForHost();
         }
 
         public void DisplayHosts(List<string> hosts)

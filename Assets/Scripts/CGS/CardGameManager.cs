@@ -59,9 +59,11 @@ namespace CGS
         public static CardGame Current { get; private set; } = CardGame.Invalid;
         public static bool IsQuitting { get; private set; } = false;
 
-        public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
-        public List<UnityAction> OnSceneActions { get; } = new List<UnityAction>();
+        // TODO: Network Discovery
+        public bool IsSearching { get; set; }
 
+        public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
+        public SortedList<string, string> GamesListing => new SortedList<string, string>(AllCardGames.ToDictionary(game => game.Key, game => game.Value.Name));
         public CardGame Previous
         {
             get
@@ -95,10 +97,7 @@ namespace CGS
             }
         }
 
-        public SortedList<string, string> GamesListing => new SortedList<string, string>(AllCardGames.ToDictionary(game => game.Key, game => game.Value.Name));
-
-        public LobbyDiscovery Discovery => _discovery ?? (_discovery = gameObject.GetOrAddComponent<LobbyDiscovery>());
-        private LobbyDiscovery _discovery;
+        public List<UnityAction> OnSceneActions { get; } = new List<UnityAction>();
 
         public GameSelectionMenu Selector
         {
