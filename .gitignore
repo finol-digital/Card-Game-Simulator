@@ -5,6 +5,7 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /Assets/AssetStoreTools*
+/.gradle/
 
 # Visual Studio cache
 /.vs/

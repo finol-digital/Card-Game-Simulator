@@ -14,9 +14,8 @@ permalink: roadmap.html
 - Fix: Setup Game Scene after deleting a game
 
 ## Current Sprint
-- Enhance Cards Explorer
-- Fix: CGS fails to start when no internet? Check error paths.
 - Fix: Too many cards in deck editor search results initial startup. Also check layout in portrait mode.
+- Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
