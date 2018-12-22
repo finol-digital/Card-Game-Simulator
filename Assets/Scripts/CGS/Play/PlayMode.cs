@@ -131,8 +131,8 @@ namespace CGS.Play
 
             deckCards.Shuffle();
 
-            if (!isSharedDeck)
-                CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
+            // TODO: if (!isSharedDeck)
+            // TODO:    CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
 
             zones.scrollView.verticalScrollbar.value = 0;
             zones.CurrentDeck.Sync(deckCards);

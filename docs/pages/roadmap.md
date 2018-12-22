@@ -14,7 +14,9 @@ permalink: roadmap.html
 - Fix: Setup Game Scene after deleting a game
 
 ## Current Sprint
-- Fix: Too many cards in deck editor search results initial startup. Also check layout in portrait mode.
+- Fix: Too many cards in deck editor search results initial startup
+- Fix: Deck Editor layout
+- Tech: Unable to delete file Library/ScriptAssemblies/Assembly-CSharp.pdb: Sharing violation on path Library/ScriptAssemblies/Assembly-CSharp.pdb
 - Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
@@ -28,11 +30,11 @@ permalink: roadmap.html
 - Tech: WSATestCertificate?
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
-- Fix: UWP join and host
-- Fix: NetworkDiscovery error on iOS sleep
+- Fix: Restore networking capability
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 
 ## Backlog
+- Fix: Zoom out in Play Mode has card disappear
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
