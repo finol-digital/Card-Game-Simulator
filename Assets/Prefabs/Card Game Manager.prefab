@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 114614180611090904}
   - component: {fileID: 114208327254760074}
   - component: {fileID: 114356562771634316}
-  - component: {fileID: 114214761007353596}
   m_Layer: 0
   m_Name: Card Game Manager
   m_TagString: CardGameManager
@@ -73,26 +72,3 @@ MonoBehaviour:
   minSwipeLength: 1
   triggerSwipeAtMinLength: 1
   useEightDirections: 0
---- !u!114 &114214761007353596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565440365293990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aab6f7970b6174146adbd24a9b607499, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BroadcastPort: 47777
-  m_BroadcastKey: 2222
-  m_BroadcastVersion: 1
-  m_BroadcastSubVersion: 1
-  m_BroadcastInterval: 500
-  m_UseNetworkManager: 0
-  m_BroadcastData: CGSNet
-  m_ShowGUI: 0
-  m_OffsetX: 0
-  m_OffsetY: 0
-  lobby: {fileID: 0}
