@@ -17,5 +17,13 @@ namespace CardGameDef
 
         [JsonProperty]
         public UnityEngine.Vector2 Size { get; private set; }
+
+        [JsonConstructor]
+        public GameBoard(string id, UnityEngine.Vector2 offsetMin, UnityEngine.Vector2 size)
+        {
+            Id = id ?? string.Empty;
+            OffsetMin = offsetMin;
+            Size = size;
+        }
     }
 }

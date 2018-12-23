@@ -37,9 +37,18 @@ namespace CardGameDef
         [JsonProperty]
         public string Empty { get; set; }
 
+        [JsonConstructor]
+        public PropertyDef(string name, string display, PropertyType type, string empty)
+        {
+            Name = name ?? string.Empty;
+            Type = type;
+            Display = display ?? string.Empty;
+            Empty = empty ?? string.Empty;
+        }
+
         public object Clone()
         {
-            PropertyDef ret = new PropertyDef() { Name = Name.Clone() as string, Type = Type, Empty = Empty };
+            PropertyDef ret = new PropertyDef(Name, Display, Type, Empty);
             return ret;
         }
     }

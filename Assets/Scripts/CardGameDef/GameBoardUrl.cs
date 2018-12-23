@@ -14,5 +14,12 @@ namespace CardGameDef
 
         [JsonProperty]
         public string Url { get; private set; }
+
+        [JsonConstructor]
+        public GameBoardUrl(string id, string url)
+        {
+            Id = id ?? string.Empty;
+            Url = url ?? string.Empty;
+        }
     }
 }

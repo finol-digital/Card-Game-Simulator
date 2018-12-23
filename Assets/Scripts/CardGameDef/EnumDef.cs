@@ -30,6 +30,13 @@ namespace CardGameDef
             return int.TryParse(isHex ? number.Substring(Hex.Length) : number, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
         }
 
+        [JsonConstructor]
+        public EnumDef(string property, Dictionary<string, string> values)
+        {
+            Property = property ?? string.Empty;
+            Values = values ?? new Dictionary<string, string>();
+        }
+
         public void InitializeLookups()
         {
             Lookups.Clear();

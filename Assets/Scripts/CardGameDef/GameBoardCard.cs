@@ -15,5 +15,12 @@ namespace CardGameDef
 
         [JsonProperty]
         public List<GameBoard> Boards { get; private set; }
+
+        [JsonConstructor]
+        public GameBoardCard(string card, List<GameBoard> boards)
+        {
+            Card = card ?? string.Empty;
+            Boards = boards ?? new List<GameBoard>();
+        }
     }
 }

@@ -19,5 +19,13 @@ namespace CardGameDef
 
         [JsonProperty]
         public string Value { get; private set; }
+
+        [JsonConstructor]
+        public ExtraDef(string group, string property, string value)
+        {
+            Group = group ?? DefaultExtraGroup;
+            Property = property ?? string.Empty;
+            Value = value ?? string.Empty;
+        }
     }
 }
