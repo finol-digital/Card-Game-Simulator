@@ -2,12 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using Newtonsoft.Json;
 
 namespace CardGameDef
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DeckUrl
+    public class DeckUrl : ICloneable
     {
         [JsonProperty]
         public string Name { get; private set; }
@@ -20,6 +21,12 @@ namespace CardGameDef
         {
             Name = name ?? string.Empty;
             Url = url ?? string.Empty;
+        }
+
+        public object Clone()
+        {
+            DeckUrl ret = new DeckUrl(Name, Url);
+            return ret;
         }
     }
 }

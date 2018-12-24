@@ -115,7 +115,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.9.0
+  bundleVersion: 1.9.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -156,12 +156,12 @@ PlayerSettings:
   buildNumber:
     Standalone: 0
     iOS: 0
-  AndroidBundleVersionCode: 56
+  AndroidBundleVersionCode: 57
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0
   aotOptions: 
-  stripEngineCode: 1
+  stripEngineCode: 0
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
   ForceInternetPermission: 1
@@ -241,7 +241,7 @@ PlayerSettings:
   clonedFromGUID: 00000000000000000000000000000000
   templatePackageId: 
   templateDefaultScene: 
-  AndroidTargetArchitectures: 5
+  AndroidTargetArchitectures: 7
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: finoldigital.keystore
@@ -737,7 +737,7 @@ PlayerSettings:
   il2cppCompilerConfiguration:
     Android: 2
   managedStrippingLevel:
-    Android: 3
+    Android: 1
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   additionalIl2CppArgs: 
@@ -750,12 +750,12 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.8.0.0
-  metroCertificatePath: Assets\WSATestCertificate.pfx
+  metroPackageVersion: 1.9.1.0
+  metroCertificatePath: 
   metroCertificatePassword: 
-  metroCertificateSubject: Finol Digital LLC
-  metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 80381ce8c203d501
+  metroCertificateSubject: 
+  metroCertificateIssuer: 
+  metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Play your favorite card games!
   wsaImages: {}
   metroTileShortName: CGS
@@ -774,31 +774,50 @@ PlayerSettings:
   platformCapabilities:
     WindowsStoreApps:
       AllJoyn: False
+      Appointments: False
+      BackgroundMediaPlayback: False
       BlockedChatMessages: False
       Bluetooth: False
       Chat: False
       CodeGeneration: False
+      Contacts: False
       EnterpriseAuthentication: False
       HumanInterfaceDevice: False
       InputInjectionBrokered: False
       InternetClient: True
       InternetClientServer: True
       Location: False
+      LowLevelDevices: False
       Microphone: False
       MusicLibrary: False
       Objects3D: False
+      OfflineMapsManagement: False
       PhoneCall: False
+      PhoneCallHistoryPublic: False
       PicturesLibrary: False
+      PointOfService: False
       PrivateNetworkClientServer: False
       Proximity: False
+      RecordedCallsFolder: False
+      RemoteSystem: False
       RemovableStorage: False
       SharedUserCertificates: False
       SpatialPerception: False
+      SystemManagement: False
       UserAccountInformation: False
+      UserDataTasks: False
+      UserNotificationListener: False
       VideosLibrary: False
       VoipCall: False
       WebCam: False
-  metroTargetDeviceFamilies: {}
+  metroTargetDeviceFamilies:
+    Desktop: False
+    Holographic: False
+    IoT: False
+    IoTHeadless: False
+    Mobile: False
+    Team: False
+    Xbox: False
   metroFTAName: 
   metroFTAFileTypes: []
   metroProtocolName: 

@@ -25,10 +25,11 @@ permalink: roadmap.html
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Have # of stacks in the Deck Editor grow dynamically
 - Group cards in the Deck Editor with a number instead of stacking them
+- Add copy to clipboard buttons next to labels in the Card Viewer
+- Add copy button to Popups
 - Add Card Editor
 - Add Game Creator
 - Tech: Travis CI for build automation
-- Tech: WSATestCertificate?
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
 - Fix: Restore networking capability
@@ -63,7 +64,6 @@ permalink: roadmap.html
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
 - Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag)
 - Apply autoUpdate to cached card images
-- Add copy to clipboard buttons next to labels in the Card Viewer
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
