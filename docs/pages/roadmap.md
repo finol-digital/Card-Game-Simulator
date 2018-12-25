@@ -18,6 +18,7 @@ permalink: roadmap.html
 - Fix: Deck Editor Layout
 - Fix: Too many cards in deck editor search results initial startup
 - Tech: Unable to delete file Library/ScriptAssemblies/Assembly-CSharp.pdb: Sharing violation on path Library/ScriptAssemblies/Assembly-CSharp.pdb
+- Show progress while downloading game
 - Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types

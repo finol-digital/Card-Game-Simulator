@@ -21,12 +21,10 @@ namespace CGS
 {
     public class CardGameManager : MonoBehaviour
     {
+        // Show all Debug.Log() to help with debugging?
         public const bool IsMessengerDebugLogVerbose = false;
         public const string GameId = "GameId";
         public const string PlayerPrefDefaultGame = "DefaultGame";
-        public const string SelectorPrefabName = "Game Selection Menu";
-        public const string MessengerPrefabName = "Popup";
-        public const string SpinnerPrefabName = "Spinner";
         public const string GameSelectionErrorPrompt = "Could not select the card game because it is not recognized! Try selecting a different card game?";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
@@ -43,15 +41,10 @@ namespace CGS
         {
             get
             {
-                if (IsQuitting) return null;
-                if (_instance != null) return _instance;
-                GameObject cardGameManager = GameObject.FindGameObjectWithTag(Tags.CardGameManager);
-                if (cardGameManager == null)
-                {
-                    cardGameManager = new GameObject(Tags.CardGameManager) { tag = Tags.CardGameManager };
-                    cardGameManager.transform.position = Vector3.zero;
-                }
-                _instance = cardGameManager.GetOrAddComponent<CardGameManager>();
+                if (IsQuitting)
+                    return null;
+                if (_instance == null)
+                    _instance = GameObject.FindGameObjectWithTag(Tags.CardGameManager).GetComponent<CardGameManager>();
                 return _instance;
             }
         }
@@ -105,7 +98,7 @@ namespace CGS
             get
             {
                 if (_selector != null) return _selector;
-                _selector = Instantiate(Resources.Load<GameObject>(SelectorPrefabName)).GetOrAddComponent<GameSelectionMenu>();
+                _selector = Instantiate(Resources.Load<GameObject>("Game Selection Menu")).GetOrAddComponent<GameSelectionMenu>();
                 _selector.transform.SetParent(null);
                 return _selector;
             }
@@ -117,7 +110,7 @@ namespace CGS
             get
             {
                 if (_messenger != null) return _messenger;
-                _messenger = Instantiate(Resources.Load<GameObject>(MessengerPrefabName)).GetOrAddComponent<Popup>();
+                _messenger = Instantiate(Resources.Load<GameObject>("Popup")).GetOrAddComponent<Popup>();
                 _messenger.transform.SetParent(transform);
                 return _messenger;
             }
@@ -129,7 +122,7 @@ namespace CGS
             get
             {
                 if (_spinner != null) return _spinner;
-                _spinner = Instantiate(Resources.Load<GameObject>(SpinnerPrefabName)).GetOrAddComponent<SpinningLoadingPanel>();
+                _spinner = Instantiate(Resources.Load<GameObject>("Spinner")).GetOrAddComponent<SpinningLoadingPanel>();
                 _spinner.transform.SetParent(transform);
                 return _spinner;
             }
@@ -227,7 +220,7 @@ namespace CGS
 
         public void BranchCallbackWithParams(Dictionary<string, object> parameters, string error)
         {
-            if (error != null)
+            if (!string.IsNullOrEmpty(error))
             {
                 Debug.LogError(BranchCallbackErrorMessage + error);
                 Messenger.Show(BranchCallbackErrorMessage + error);
