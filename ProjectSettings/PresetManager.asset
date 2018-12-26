@@ -6,14 +6,6 @@ PresetManager:
   m_DefaultList:
   - type:
       m_NativeTypeID: 114
-      m_ManagedTypePPtr: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c,
-        type: 3}
-      m_ManagedTypeFallback: 
-    defaultPresets:
-    - m_Preset: {fileID: 2655988077585873504, guid: 172cd679d8b73894f9384587e0de18da,
-        type: 2}
-  - type:
-      m_NativeTypeID: 114
       m_ManagedTypePPtr: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c,
         type: 3}
       m_ManagedTypeFallback: 

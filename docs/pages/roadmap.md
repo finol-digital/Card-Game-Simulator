@@ -5,19 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Reorganize Main Menu
-- Tech: Upgrade to Unity 2018.3
-- Tech: Update to C# 7
-- Tech: Rename backgroundImage to bannerImage
-- Fix: Always showing branch link broken error message
-- Fix: After downloading game, there were zero cards (cards load ok on next game)
-- Fix: Setup Game Scene after deleting a game
-
-## Current Sprint
 - Fix: Screen Rotation Manager
 - Fix: Deck Editor Layout
 - Fix: Too many cards in deck editor search results initial startup
-- Tech: Unable to delete file Library/ScriptAssemblies/Assembly-CSharp.pdb: Sharing violation on path Library/ScriptAssemblies/Assembly-CSharp.pdb
+
+## Current Sprint
 - Show progress while downloading game
 - Enhance Cards Explorer
 - Enhance object card property data type
@@ -30,6 +22,7 @@ permalink: roadmap.html
 - Add copy button to Popups
 - Add Card Editor
 - Add Game Creator
+- Tech: Unable to delete file Library/ScriptAssemblies/Assembly-CSharp.pdb: Sharing violation on path Library/ScriptAssemblies/Assembly-CSharp.pdb
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
@@ -82,6 +75,7 @@ permalink: roadmap.html
 - Define order and enums for Mahjong properties
 - Allow automatic deletion of empty decks in Play Mode
 - Create Sort Menu when you click on the sort button in the Deck Editor
+- Support default sort and filters
 - Organize cards by category when saving a deck in the Deck Editor
 - Allow rotation to keep viewing the currently selected card
 - Display keyboard shortcuts in-app

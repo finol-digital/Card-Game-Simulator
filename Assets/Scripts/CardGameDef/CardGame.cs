@@ -323,6 +323,21 @@ namespace CardGameDef
                 yield break;
             }
 
+            if (!string.IsNullOrEmpty(BannerImageUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl, BannerImageFilePath);
+
+            if (!string.IsNullOrEmpty(CardBackImageUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
+
+            foreach (GameBoardUrl boardUrl in GameBoardUrls)
+                yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
+
+            foreach (DeckUrl deckUrl in DeckUrls)
+                yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
+
+            string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
+            if (!string.IsNullOrEmpty(AllSetsUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
 
             if (!string.IsNullOrEmpty(AllCardsUrl))
             {
@@ -349,22 +364,6 @@ namespace CardGameDef
                         LoadCards(page);
                 }
             }
-
-            string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
-            if (!string.IsNullOrEmpty(AllSetsUrl))
-                yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
-
-            if (!string.IsNullOrEmpty(BannerImageUrl))
-                yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl, BannerImageFilePath);
-
-            if (!string.IsNullOrEmpty(CardBackImageUrl))
-                yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
-
-            foreach (GameBoardUrl boardUrl in GameBoardUrls)
-                yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
-
-            foreach (DeckUrl deckUrl in DeckUrls)
-                yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
             IsDownloading = false;
             HasDownloaded = true;

@@ -50,6 +50,11 @@ namespace CGS.Decks
             CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
         }
 
+        void Start()
+        {
+            UpdateSearchResultsPanel();
+        }
+
         public string SetNameInputField(string nameFilter)
         {
             nameInputField.text = nameFilter;

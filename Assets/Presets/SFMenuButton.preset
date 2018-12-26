@@ -6,7 +6,7 @@ Preset:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SFButton
+  m_Name: SFMenuButton
   m_TargetType:
     m_NativeTypeID: 114
     m_ManagedTypePPtr: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c,
