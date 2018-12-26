@@ -22,7 +22,6 @@ permalink: roadmap.html
 - Add copy button to Popups
 - Add Card Editor
 - Add Game Creator
-- Tech: Unable to delete file Library/ScriptAssemblies/Assembly-CSharp.pdb: Sharing violation on path Library/ScriptAssemblies/Assembly-CSharp.pdb
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
