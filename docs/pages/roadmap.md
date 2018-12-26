@@ -16,7 +16,7 @@ permalink: roadmap.html
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
-- Have # of stacks in the Deck Editor grow dynamically
+- Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Group cards in the Deck Editor with a number instead of stacking them
 - Add copy to clipboard buttons next to labels in the Card Viewer
 - Add copy button to Popups
@@ -37,7 +37,7 @@ permalink: roadmap.html
 - Have view for only hand vs view for only field
 - Have card info viewer only go down a sliver on press in play mode; second press can bring it down like normal
 - Card Grouping
-  - Define card zones in play area
+  - Define card zones in play area (remove gameHasDiscard/gameCatchesDiscard?)
     - Card zones can define what actions are possible in that zone
 - Card Actions
   - Define
@@ -57,6 +57,7 @@ permalink: roadmap.html
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
 - Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag)
+- Highlight card that is currently being moved
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)
