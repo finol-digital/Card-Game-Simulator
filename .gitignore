@@ -36,6 +36,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 *.keystore
+*.pfx*
 
 #OS
 .DS_Store
