@@ -5,12 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: Screen Rotation Manager
-- Fix: Deck Editor Layout
-- Fix: Too many cards in deck editor search results on initial startup
+- Streamlined UI
+- Fix: Screen Rotation and Deck Editor Layout
 
 ## Current Sprint
-- Downloading a game shows progress
+- Streamline Game Download Process
 - Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
