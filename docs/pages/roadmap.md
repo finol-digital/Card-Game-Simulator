@@ -5,12 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Downloading a game shows progress
 - Fix: Screen Rotation Manager
 - Fix: Deck Editor Layout
 - Fix: Too many cards in deck editor search results on initial startup
 
 ## Current Sprint
+- Downloading a game shows progress
 - Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
@@ -57,6 +57,7 @@ permalink: roadmap.html
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
 - Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag)
 - Highlight card that is currently being moved
+- Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)

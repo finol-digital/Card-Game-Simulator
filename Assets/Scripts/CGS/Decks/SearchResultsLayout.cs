@@ -10,12 +10,12 @@ namespace CGS.Decks
 {
     public class SearchResultsLayout : MonoBehaviour
     {
-        public const float WidthCheck = 1199f;
+        public const float MinWidth = 1200;
 
-        public static readonly Vector2 SearchNamePortraitPosition = new Vector2(15f, 450f);
-        public static readonly Vector2 SearchNameLandscapePosition = new Vector2(15f, 367.5f);
+        public static readonly Vector2 SearchNamePortraitPosition = new Vector2(15, 450);
+        public static readonly Vector2 SearchNameLandscapePosition = new Vector2(15, 367.5f);
 
-        public Vector2 PageButtonsPortraitPosition => new Vector2(GetComponent<RectTransform>().rect.width - pageButtons.rect.width, 450f);
+        public static readonly Vector2 PageButtonsPortraitPosition = new Vector2(0, 447.5f);
         public static readonly Vector2 PageButtonsLandscapePosition = new Vector2(675, 367.5f);
 
         public RectTransform searchName;
@@ -28,16 +28,26 @@ namespace CGS.Decks
             if (!gameObject.activeInHierarchy)
                 return;
 
-            RectTransform rt = GetComponent<RectTransform>();
-            float aspectRatio = rt.rect.width / rt.rect.height;
-            pageButtons.gameObject.SetActive(aspectRatio < 1 || aspectRatio >= 1.5f);
+            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
+            {
+                searchName.anchoredPosition = SearchNamePortraitPosition;
+                pageButtons.anchorMin = Vector2.right;
+                pageButtons.anchorMax = Vector2.right;
+                pageButtons.pivot = Vector2.right;
+                pageButtons.anchoredPosition = PageButtonsPortraitPosition;
+            }
+            else // Landscape
+            {
+                searchName.anchoredPosition = SearchNameLandscapePosition;
+                pageButtons.anchorMin = Vector2.zero;
+                pageButtons.anchorMax = Vector2.zero;
+                pageButtons.pivot = Vector2.zero;
+                pageButtons.anchoredPosition = PageButtonsLandscapePosition;
+            }
 
-            searchName.anchoredPosition = GetComponent<RectTransform>().rect.width < WidthCheck ? SearchNamePortraitPosition : SearchNameLandscapePosition;
-            pageButtons.anchoredPosition = GetComponent<RectTransform>().rect.width < WidthCheck ? PageButtonsPortraitPosition : PageButtonsLandscapePosition;
-
+            // TODO: CORRECTLY RE-MAP TO CURRENT PAGE
             searchResults.CurrentPageIndex = 0;
             searchResults.UpdateSearchResultsPanel();
-
             if (CardInfoViewer.Instance != null)
                 CardInfoViewer.Instance.IsVisible = false;
         }
