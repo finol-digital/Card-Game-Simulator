@@ -16,7 +16,7 @@ namespace CGS.Decks
         public static readonly Vector2 SearchNameLandscapePosition = new Vector2(15, 367.5f);
 
         public static readonly Vector2 PageButtonsPortraitPosition = new Vector2(0, 447.5f);
-        public static readonly Vector2 PageButtonsLandscapePosition = new Vector2(675, 367.5f);
+        public static readonly Vector2 PageButtonsLandscapePosition = new Vector2(650, 367.5f);
 
         public RectTransform searchName;
         public RectTransform pageButtons;
