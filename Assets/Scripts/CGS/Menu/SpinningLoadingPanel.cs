@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CGS.Menu
 {
@@ -10,16 +11,12 @@ namespace CGS.Menu
     {
         public const float RotateSpeed = 200f;
         public RectTransform progressCircle;
-
-        void Start()
-        {
-            if (progressCircle == null)
-                progressCircle = (RectTransform)transform.GetChild(transform.childCount - 1);
-        }
+        public Text progressText;
 
         void Update()
         {
             progressCircle.Rotate(0f, 0f, RotateSpeed * Time.deltaTime);
+            progressText.text = CardGameManager.Current.DownloadStatus;
         }
 
         public void Show()

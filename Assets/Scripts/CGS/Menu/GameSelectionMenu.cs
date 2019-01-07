@@ -215,6 +215,7 @@ namespace CGS.Menu
             urlInput.interactable = false;
             cancelButton.interactable = false;
 
+            // If user attempts to download a game they already have, we should just update that game
             CardGame existingGame = null;
             foreach (CardGame cardGame in CardGameManager.Instance.AllCardGames.Values)
                 if (gameUrl.Equals(cardGame.AutoUpdateUrl))

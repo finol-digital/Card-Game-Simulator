@@ -5,11 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Enhance Cards Explorer
+- Streamline Game Download Process
 - Fix: Update game if user attempts to download a game that has already been downloaded
 
 ## Current Sprint
-- Streamline Game Download Process
-- Enhance Cards Explorer
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty

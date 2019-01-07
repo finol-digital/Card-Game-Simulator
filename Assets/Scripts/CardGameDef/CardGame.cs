@@ -210,6 +210,7 @@ namespace CardGameDef
         public UnityEngine.MonoBehaviour CoroutineRunner { get; set; }
         public bool HasReadProperties { get; private set; }
         public bool IsDownloading { get; private set; }
+        public string DownloadStatus { get; private set; } = "N / A";
         public bool HasDownloaded { get; private set; }
         public bool HasLoaded { get; private set; }
         public string Error { get; private set; }
@@ -313,6 +314,7 @@ namespace CardGameDef
             IsDownloading = true;
 
             // We should always first get the *Game:Name*.json file and read it before doing anything else
+            DownloadStatus = "Downloading: CardGameDef...";
             yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, GameFilePath);
             ReadProperties();
             if (!HasReadProperties)
@@ -323,18 +325,23 @@ namespace CardGameDef
                 yield break;
             }
 
+            DownloadStatus = "Downloading: Banner";
             if (!string.IsNullOrEmpty(BannerImageUrl))
                 yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl, BannerImageFilePath);
 
+            DownloadStatus = "Downloading: CardBack";
             if (!string.IsNullOrEmpty(CardBackImageUrl))
                 yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl, CardBackImageFilePath);
 
+            DownloadStatus = "Downloading: Boards";
             foreach (GameBoardUrl boardUrl in GameBoardUrls)
                 yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
 
+            DownloadStatus = "Downloading: Decks";
             foreach (DeckUrl deckUrl in DeckUrls)
                 yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
+            DownloadStatus = "Downloading: AllSets.json";
             string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
             if (!string.IsNullOrEmpty(AllSetsUrl))
                 yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
@@ -343,6 +350,7 @@ namespace CardGameDef
             {
                 for (int page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
                 {
+                    DownloadStatus = $"Downloading: Cards: {page,5} / {AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount}";
                     string cardsUrl = AllCardsUrl;
                     if (AllCardsUrlPageCount > 1 && string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
                         cardsUrl += AllCardsUrlPageIdentifier + page;
@@ -366,6 +374,7 @@ namespace CardGameDef
             }
 
             IsDownloading = false;
+            DownloadStatus = "Complete!";
             HasDownloaded = true;
             HasLoaded = false;
         }

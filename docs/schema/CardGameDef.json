@@ -231,7 +231,7 @@
       "type": "integer"
     },
     "deckUrls": {
-      "description": "CGS will go through each DeckUrl, and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'",
+      "description": "CGS will go through each DeckUrl and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'",
       "items": {
         "title": "DeckUrl",
         "type": "object",
@@ -268,7 +268,7 @@
       "type": "array"
     },
     "extras": {
-      "description": "Describes extra cards separate from the main deck: The hsd deckFileType treats all extra cards as Heroes, and the ydk deckFileType treats all extra cards as extra deck cards",
+      "description": "Describes extra cards separate from the main deck: The hsd deckFileType treats all extra cards as Heroes, and the ydk deckFileType treats all extra cards as extra deck cards.",
       "items": {
         "title": "ExtraDef",
         "type": "object",
@@ -331,7 +331,7 @@
       "type": "array"
     },
     "gameBoardUrls": {
-      "description": "If the 'boards/' folder does not exist, CGS will go through each GameBoardUrl, and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardFileType>'",
+      "description": "CGS will go through each GameBoardUrl and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardFileType>'",
       "items": {
         "title": "GameBoardUrl",
         "type": "object",
@@ -375,12 +375,12 @@
       "$ref": "#/definitions/vector2"
     },
     "rulesUrl": {
-      "description": "rulesUrl should link to this game's online rulebook. This link is accessed in CGS by Main Menu -> Options -> View Online Rules.",
+      "description": "rulesUrl should link to this game's online rulebook.",
       "type": "string",
       "format": "uri"
     },
     "setsInCardObject": {
-      "description": "If setsInCardObject is set to true, <cardSetIdentifier> should point to an object or a list of objects. If it is a list, the Card wil be duplicated for each Set. These Set definitions follow the rules for AllSets.json. ",
+      "description": "If setsInCardObject is set to true, <cardSetIdentifier> should point to an object or a list of objects. If it is a list, the Card wil be duplicated for each Set. These Set definitions follow the rules for AllSets.json.",
       "type": "boolean"
     },
     "setCardsIdentifier": {

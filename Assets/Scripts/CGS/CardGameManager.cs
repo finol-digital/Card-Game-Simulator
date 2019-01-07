@@ -28,7 +28,7 @@ namespace CGS
         public const string GameSelectionErrorPrompt = "Could not select the card game because it is not recognized! Try selecting a different card game?";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
-        public const string GameDownLoadErrorMessage = "Error downloading game!: ";
+        public const string GameDownloadErrorMessage = "Error downloading game!: ";
         public const string GameLoadErrorMessage = "Error loading game!: ";
         public const string GameLoadErrorPrompt = "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
         public const string GameDeleteErrorMessage = "Error deleting game!: ";
@@ -259,8 +259,8 @@ namespace CGS
             }
             else
             {
-                Debug.LogError(GameDownLoadErrorMessage + Current.Error);
-                Messenger.Show(GameDownLoadErrorMessage + Current.Error);
+                Debug.LogError(GameDownloadErrorMessage + Current.Error);
+                Messenger.Show(GameDownloadErrorMessage + Current.Error);
                 try
                 {
                     if (Directory.Exists(newGame.GameDirectoryPath))
@@ -284,8 +284,8 @@ namespace CGS
             // Notify about the failed update, but otherwise ignore errors
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
-                Debug.LogError(GameDownLoadErrorMessage + cardGame.Error);
-                Messenger.Show(GameDownLoadErrorMessage + cardGame.Error);
+                Debug.LogError(GameDownloadErrorMessage + cardGame.Error);
+                Messenger.Show(GameDownloadErrorMessage + cardGame.Error);
                 cardGame.ClearError();
             }
 
