@@ -5,8 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Streamlined UI
-- Fix: Screen Rotation and Deck Editor Layout
+- Fix: Update game if user attempts to download a game that has already been downloaded
 
 ## Current Sprint
 - Streamline Game Download Process

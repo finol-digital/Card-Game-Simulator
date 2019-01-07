@@ -236,6 +236,7 @@ namespace CGS
             }
         }
 
+        // Note: Does NOT Reset Game Scene
         public void ResetCurrentToDefault()
         {
             string preferredGameId = PlayerPrefs.GetString(PlayerPrefDefaultGame);

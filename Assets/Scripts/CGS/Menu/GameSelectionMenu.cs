@@ -215,7 +215,18 @@ namespace CGS.Menu
             urlInput.interactable = false;
             cancelButton.interactable = false;
 
-            yield return CardGameManager.Instance.DownloadCardGame(gameUrl);
+            CardGame existingGame = null;
+            foreach (CardGame cardGame in CardGameManager.Instance.AllCardGames.Values)
+                if (gameUrl.Equals(cardGame.AutoUpdateUrl))
+                    existingGame = cardGame;
+            if (existingGame != null)
+            {
+                yield return CardGameManager.Instance.UpdateCardGame(existingGame);
+                if (string.IsNullOrEmpty(existingGame.Error))
+                    CardGameManager.Instance.Select(existingGame.Id);
+            }
+            else
+                yield return CardGameManager.Instance.DownloadCardGame(gameUrl);
 
             cancelButton.interactable = true;
             urlInput.interactable = true;
