@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Enhance Cards Explorer
 - Streamline Game Download Process
 - Fix: Update game if user attempts to download a game that has already been downloaded
+- Fix: Double-click in Deck Editor causes move left/right?
 
 ## Current Sprint
 - Enhance object card property data type
@@ -56,6 +57,7 @@ permalink: roadmap.html
 - Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag)
 - Highlight card that is currently being moved
 - Keep current page when Deck Editor Layout changes
+- Double-click to add card to Deck Editor when in Landscape
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)

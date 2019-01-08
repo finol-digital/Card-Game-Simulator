@@ -8,16 +8,15 @@ using UnityEngine.UI;
 
 using CardGameDef;
 using CardGameView;
-using CGS.Cards;
 
-namespace CGS.Decks
+namespace CGS.Cards
 {
     public class SearchResults : MonoBehaviour
     {
         public const string EmptyFilterText = "*";
 
         public GameObject cardSearchMenuPrefab;
-        public DeckEditor deckEditor;
+        public GameObject cardModelPrefab;
         public RectTransform layoutArea;
         public InputField nameInputField;
         public Text filtersText;
@@ -106,12 +105,13 @@ namespace CGS.Decks
                 if (!CardGameManager.Current.Cards.ContainsKey(cardId))
                     continue;
                 Card cardToShow = CardGameManager.Current.Cards[cardId];
-                CardModel cardModelToShow = Instantiate(deckEditor.cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
+                CardModel cardModelToShow = Instantiate(cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
                 cardModelToShow.Value = cardToShow;
                 cardModelToShow.DoesCloneOnDrag = true;
-                if (((RectTransform)deckEditor.transform).rect.width > ((RectTransform)deckEditor.transform).rect.height)
-                    cardModelToShow.DoubleClickAction = deckEditor.AddCardModel;
-                else
+                // TODO: RESTORE THE BELOW COMMENTED LINES
+                // if (((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
+                //    cardModelToShow.DoubleClickAction = deckEditor.AddCardModel;
+                //else
                     cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
             }
 

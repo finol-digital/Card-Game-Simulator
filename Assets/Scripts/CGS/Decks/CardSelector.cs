@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 using CardGameView;
+using CGS.Cards;
 
 namespace CGS.Decks
 {

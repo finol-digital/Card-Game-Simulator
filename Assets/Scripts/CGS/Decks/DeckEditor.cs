@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 
 using CardGameDef;
 using CardGameView;
+using CGS.Cards;
 
 namespace CGS.Decks
 {

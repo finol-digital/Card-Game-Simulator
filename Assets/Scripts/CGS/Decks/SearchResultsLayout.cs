@@ -5,6 +5,7 @@
 using UnityEngine;
 
 using CardGameView;
+using CGS.Cards;
 
 namespace CGS.Decks
 {

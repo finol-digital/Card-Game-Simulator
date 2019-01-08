@@ -13,9 +13,17 @@ namespace CGS.Cards
 {
     public class CardsExplorer : MonoBehaviour
     {
+        public GameObject cardViewerPrefab;
+        public GameObject cardModelPrefab;
+
+        void OnEnable()
+        {
+            Instantiate(cardViewerPrefab);
+        }
+
         void Update()
         {
-            if (CardInfoViewer.Instance?.IsVisible ?? false || CardGameManager.Instance.TopMenuCanvas != null)
+            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))

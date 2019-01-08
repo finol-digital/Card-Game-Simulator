@@ -1,14 +1,13 @@
 fileFormatVersion: 2
 guid: a9d50b4fa3784ef4d8dc39a6b43af545
-timeCreated: 1519347068
-licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
   - cardSearchMenuPrefab: {fileID: 1332435347197338, guid: 3193cd5bbf6276147a6652aff7dca225,
-      type: 2}
-  - deckEditor: {instanceID: 0}
+      type: 3}
+  - cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
+      type: 3}
   - layoutArea: {instanceID: 0}
   - nameInputField: {instanceID: 0}
   - filtersText: {instanceID: 0}
