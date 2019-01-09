@@ -141,8 +141,6 @@ namespace CGS.Menu
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-#elif UNITY_WSA
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
 #else
             Application.Quit();
 #endif

@@ -5,11 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Enhance Cards Explorer
-- Streamline Game Download Process
-- Fix: Update game if user attempts to download a game that has already been downloaded
+- Fix: UWP Exit Crash
 
 ## Current Sprint
+- Fix: Game download status update
 - Fix: Cards Explorer Vertical Layout
 - Fix: Double-click in Deck Editor causes move left/right?
 - Double-click to add card to Deck Editor when in Landscape
