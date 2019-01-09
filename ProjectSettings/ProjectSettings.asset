@@ -82,7 +82,7 @@ PlayerSettings:
   bakeCollisionMeshes: 0
   forceSingleInstance: 0
   resizableWindow: 0
-  useMacAppStoreValidation: 0
+  useMacAppStoreValidation: 1
   macAppStoreCategory: public.app-category.card-games
   gpuSkinning: 0
   graphicsJobs: 0
@@ -154,7 +154,7 @@ PlayerSettings:
     Standalone: com.finoldigital.CardGameSimulator
     iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 0
+    Standalone: 1
     iOS: 0
   AndroidBundleVersionCode: 59
   AndroidMinSdkVersion: 16
