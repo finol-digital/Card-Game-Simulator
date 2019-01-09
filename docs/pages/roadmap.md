@@ -8,9 +8,11 @@ permalink: roadmap.html
 - Enhance Cards Explorer
 - Streamline Game Download Process
 - Fix: Update game if user attempts to download a game that has already been downloaded
-- Fix: Double-click in Deck Editor causes move left/right?
 
 ## Current Sprint
+- Fix: Cards Explorer Vertical Layout
+- Fix: Double-click in Deck Editor causes move left/right?
+- Double-click to add card to Deck Editor when in Landscape
 - Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
@@ -20,7 +22,8 @@ permalink: roadmap.html
 - Add copy to clipboard buttons next to labels in the Card Viewer
 - Add copy button to Popups
 - Add Card Editor
-- Add Game Creator
+- Create Sort Menu for the Deck Editor and Cards Explorer
+- Support default sort and filters
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
@@ -57,7 +60,6 @@ permalink: roadmap.html
 - Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag)
 - Highlight card that is currently being moved
 - Keep current page when Deck Editor Layout changes
-- Double-click to add card to Deck Editor when in Landscape
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)
@@ -74,9 +76,7 @@ permalink: roadmap.html
 - Deck Editor Search Results Text-Only View
 - New Mahjong tile set
 - Define order and enums for Mahjong properties
-- Allow automatic deletion of empty decks in Play Mode
-- Create Sort Menu when you click on the sort button in the Deck Editor
-- Support default sort and filters
+- Allow automatic deletion of empty zones in Play Mode
 - Organize cards by category when saving a deck in the Deck Editor
 - Allow rotation to keep viewing the currently selected card
 - Display keyboard shortcuts in-app

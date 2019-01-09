@@ -43,7 +43,12 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Cards Explorer
 - **Cancel**: *Esc* - Back to Main Menu.
-- More Coming Soon!
+- **Horizontal**: *left*, *right* - Navigate cards horizontally.
+- **Vertical**: *down*, *up* - Navigate cards vertically.
+- **PageHorizontal**: *Home*, *End* OR *c*, *v* - Page through search results.
+- **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
+- **Filter**: *f* - Brings up the Card Search/Filter Menu.
+- **FocusName**: *\`* - Focuses keyboard to the search name input field.
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.

@@ -33,7 +33,7 @@ namespace CardGameView
         public void OnPointerEnter(PointerEventData eventData)
         {
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
-            if (cardModel != null && (type != CardStackType.Area || cardModel.transform.parent != transform))
+            if (cardModel != null && (type != CardStackType.Area || cardModel.transform.parent != transform) && !cardModel.IsStatic)
                 cardModel.PlaceHolderCardStack = this;
         }
 

@@ -18,12 +18,35 @@ namespace CGS.Cards
         public GameObject cardSearchMenuPrefab;
         public GameObject cardModelPrefab;
         public RectTransform layoutArea;
+        public LayoutGroup layoutGroup;
         public InputField nameInputField;
         public Text filtersText;
         public Text countText;
 
-        public int CardsPerPage => Mathf.FloorToInt(layoutArea.rect.width /
-        (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + layoutArea.gameObject.GetOrAddComponent<HorizontalLayoutGroup>().spacing));
+        public int CardsPerRow
+        {
+            get
+            {
+                float horizontalSpacing = 0;
+                if (layoutGroup is HorizontalLayoutGroup)
+                    horizontalSpacing = ((HorizontalLayoutGroup)layoutGroup).spacing;
+                else if (layoutGroup is GridLayoutGroup)
+                    horizontalSpacing = ((GridLayoutGroup)layoutGroup).spacing.x;
+                return Mathf.FloorToInt(layoutArea.rect.width /
+                    (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + horizontalSpacing));
+            }
+        }
+        public int CardsPerPage
+        {
+            get
+            {
+                int rowsPerPage = 1;
+                if (layoutGroup is GridLayoutGroup)
+                    rowsPerPage = Mathf.FloorToInt(layoutArea.rect.height /
+                        (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y + ((GridLayoutGroup)layoutGroup).spacing.y));
+                return CardsPerRow * rowsPerPage;
+            }
+        }
         public int TotalPageCount => CardsPerPage == 0 ? 0 : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
 
         public CardSearchMenu CardSearcher => _cardSearcher ??
@@ -105,14 +128,15 @@ namespace CGS.Cards
                 if (!CardGameManager.Current.Cards.ContainsKey(cardId))
                     continue;
                 Card cardToShow = CardGameManager.Current.Cards[cardId];
-                CardModel cardModelToShow = Instantiate(cardModelPrefab, layoutArea).GetOrAddComponent<CardModel>();
+                CardModel cardModelToShow = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
                 cardModelToShow.Value = cardToShow;
-                cardModelToShow.DoesCloneOnDrag = true;
+                cardModelToShow.IsStatic = true;
+                cardModelToShow.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
                 // TODO: RESTORE THE BELOW COMMENTED LINES
                 // if (((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
                 //    cardModelToShow.DoubleClickAction = deckEditor.AddCardModel;
                 //else
-                    cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
+                cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
             }
 
             countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);

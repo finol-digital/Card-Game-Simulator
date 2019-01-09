@@ -15,6 +15,7 @@ namespace CGS.Cards
     {
         public GameObject cardViewerPrefab;
         public GameObject cardModelPrefab;
+        public SearchResults searchResults;
 
         void OnEnable()
         {
@@ -26,7 +27,11 @@ namespace CGS.Cards
             if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
+                searchResults.nameInputField.ActivateInputField();
+            else if (Input.GetButtonDown(Inputs.Filter))
+                searchResults.ShowSearchMenu();
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 BackToMainMenu();
         }
 

@@ -37,6 +37,7 @@ namespace CardGameView
             (CurrentPointerEventData.button == PointerEventData.InputButton.Middle || CurrentPointerEventData.button == PointerEventData.InputButton.Right));
         public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
+        public bool IsStatic { get; set; }
         public bool DoesCloneOnDrag { get; set; }
         public CardAction DoubleClickAction { get; set; }
         public UnityAction SecondaryDragAction { get; set; }
@@ -383,14 +384,17 @@ namespace CardGameView
             targetPosition = targetPosition + UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
             if (ParentCardStack != null)
                 UpdateCardStackPosition(targetPosition);
-            else
+            else if (!IsStatic)
                 transform.position = targetPosition;
 
-            if (PlaceHolderCardStack != null)
-                PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
+            if (!IsStatic)
+            {
+                if (PlaceHolderCardStack != null)
+                    PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
 
-            if (IsOnline)
-                CmdUpdatePosition(((RectTransform)transform).anchoredPosition);
+                if (IsOnline)
+                    CmdUpdatePosition(((RectTransform)transform).anchoredPosition);
+            }
         }
 
         public void UpdateCardStackPosition(Vector2 targetPosition)
@@ -401,23 +405,26 @@ namespace CardGameView
 
             if (!cardStack.DoesImmediatelyRelease && (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal))
                 cardStack.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
-            else
+            else if (!IsStatic)
                 cardStack.UpdateLayout(transform as RectTransform, targetPosition);
 
-            if (cardStack.type == CardStackType.Area)
-                transform.SetAsLastSibling();
+            if (!IsStatic)
+            {
+                if (cardStack.type == CardStackType.Area)
+                    transform.SetAsLastSibling();
 
-            Vector3[] stackCorners = new Vector3[4];
-            ((RectTransform)cardStack.transform).GetWorldCorners(stackCorners);
-            bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
-            bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
-            if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
-                || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
-                || (cardStack.type == CardStackType.Vertical && isOutXBounds)
-                || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
-                || (cardStack.type == CardStackType.Area
-                    && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
-                ParentToCanvas(targetPosition);
+                Vector3[] stackCorners = new Vector3[4];
+                ((RectTransform)cardStack.transform).GetWorldCorners(stackCorners);
+                bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
+                bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
+                if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
+                    || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
+                    || (cardStack.type == CardStackType.Vertical && isOutXBounds)
+                    || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
+                    || (cardStack.type == CardStackType.Area
+                        && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
+                    ParentToCanvas(targetPosition);
+            }
         }
 
         [Command]
