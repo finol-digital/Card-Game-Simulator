@@ -246,10 +246,12 @@ namespace CGS
 
         public IEnumerator DownloadCardGame(string gameUrl)
         {
-            Spinner.Show();
-
             CardGame newGame = new CardGame(this, CardGame.DefaultName, gameUrl);
+
+            Spinner.Show(newGame);
             yield return newGame.Download();
+            Spinner.Hide();
+
             newGame.Load(UpdateCardGame, LoadCards);
 
             if (string.IsNullOrEmpty(newGame.Error))
@@ -268,8 +270,6 @@ namespace CGS
                 }
                 catch { };
             }
-
-            Spinner.Hide();
         }
 
         public IEnumerator UpdateCardGame(CardGame cardGame)
@@ -277,7 +277,7 @@ namespace CGS
             if (cardGame == null)
                 cardGame = Current;
 
-            Spinner.Show();
+            Spinner.Show(cardGame);
             yield return cardGame.Download();
             Spinner.Hide();
 

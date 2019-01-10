@@ -5,6 +5,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using CardGameDef;
+
 namespace CGS.Menu
 {
     public class SpinningLoadingPanel : MonoBehaviour
@@ -13,19 +15,29 @@ namespace CGS.Menu
         public RectTransform progressCircle;
         public Text progressText;
 
+        private CardGame _downloadStatus;
+
         void Update()
         {
+            if (_downloadStatus == null)
+            {
+                Debug.LogError("SpinningLoadingPanel::MissingCardGame");
+                Hide();
+            }
+
             progressCircle.Rotate(0f, 0f, RotateSpeed * Time.deltaTime);
-            progressText.text = CardGameManager.Current.DownloadStatus;
+            progressText.text = _downloadStatus.DownloadStatus;
         }
 
-        public void Show()
+        public void Show(CardGame gameToDownload)
         {
             gameObject.SetActive(true);
+            _downloadStatus = gameToDownload;
         }
 
         public void Hide()
         {
+            _downloadStatus = null;
             gameObject.SetActive(false);
         }
     }

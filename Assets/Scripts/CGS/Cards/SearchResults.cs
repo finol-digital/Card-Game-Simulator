@@ -130,7 +130,7 @@ namespace CGS.Cards
                 Card cardToShow = CardGameManager.Current.Cards[cardId];
                 CardModel cardModelToShow = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
                 cardModelToShow.Value = cardToShow;
-                cardModelToShow.IsStatic = true;
+                cardModelToShow.IsStatic = layoutGroup is GridLayoutGroup;
                 cardModelToShow.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
                 // TODO: RESTORE THE BELOW COMMENTED LINES
                 // if (((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)

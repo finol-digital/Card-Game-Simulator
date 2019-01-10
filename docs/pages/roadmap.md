@@ -6,9 +6,9 @@ permalink: roadmap.html
 
 ## What's New
 - Fix: UWP Exit Crash
+- Fix: Game download status update
 
 ## Current Sprint
-- Fix: Game download status update
 - Fix: Cards Explorer Vertical Layout
 - Fix: Double-click in Deck Editor causes move left/right?
 - Double-click to add card to Deck Editor when in Landscape
