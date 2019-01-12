@@ -20,6 +20,7 @@ permalink: roadmap.html
 - Group cards in the Deck Editor with a number instead of stacking them
 - Add copy to clipboard buttons next to labels in the Card Viewer
 - Add copy button to Popups
+- Unify search filters with searchbar
 - Add Card Editor
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Support default sort and filters
@@ -60,6 +61,7 @@ permalink: roadmap.html
 - Highlight card that is currently being moved
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
+- Android Searchbar Widget
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs
