@@ -12,8 +12,9 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Sort**: *q* or *j* - Brings up the Game Selection Menu.
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
-- **Save**: *t* or *;* - Edit Deck.
-- **Filter**: *f* or *\\*- Explore Cards.
+- **Save**: *t* or *;* - Edit Decks.
+- **Filter**: *f* or *\\* - Explore Cards.
+- **Option**: *Delete* or *Backspace* - Brings up the Options Menu.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
@@ -25,7 +26,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
 - **PageHorizontal**: *Home*, *End* OR *c*, *v* - Scroll through properties in the Card Viewer.
-- **Delete**: *Delete* - Zoom on selected card.
+- **Option**: *Delete* - Zoom on selected card.
 - **Submit**: *Enter* - Double-click on selected card.
 
 ## Deck Editor
@@ -52,7 +53,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
-- **Delete**: *Delete* - No.
+- **Option**: *Delete* - No.
 - **Submit**: *Enter* - Yes/Close.
 
 ## Game Selection Menu
@@ -65,7 +66,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Load**: *r* - Brings up or clears the download url input field.
 - **Save**: *t* - Pastes clipboard into the url input field.
 - **FocusName**: *\`* - Focuses keyboard to the url input field.
-- **Delete**: *Delete* - Delete selected card game.
+- **Option**: *Delete* - Delete selected card game.
 - **Submit**: *Enter* - OK/Download.
 
 ## LAN Lobby
@@ -84,7 +85,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **FocusName**: *\`* - Focuses keyboard to the deck name input field.
 - **FocusText**: *Tab* - Focuses keyboard to the deck text input field.
 - **Save**: *t* - Pastes clipboard to the deck text input field.
-- **Delete**: *Delete* - Delete selected deck/Clears the deck text input field.
+- **Option**: *Delete* - Delete selected deck/Clears the deck text input field.
 - **Submit**: *Enter* - Load selected deck/Save.
 
 ## Deck Save Menu
@@ -105,5 +106,5 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Horizontal**: *left*, *right* - Scroll through enum values.
 - **Vertical**: *down*, *up* - Focuses to the next enum row.
 - **New**: *e* - Toggles selected enum value.
-- **Delete**: *Delete* - Clear.
+- **Option**: *Delete* - Clear.
 - **Submit**: *Enter* - Search!
