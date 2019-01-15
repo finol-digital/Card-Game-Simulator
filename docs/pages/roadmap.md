@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Add Settings
 - Fix: UWP Exit Crash
 - Fix: Game download status update
 
@@ -12,15 +13,15 @@ permalink: roadmap.html
 - Fix: Cards Explorer Vertical Layout
 - Fix: Double-click in Deck Editor causes move left/right?
 - Double-click to add card to Deck Editor when in Landscape
+- Unify search filters with searchbar
 - Enhance object card property data type
+- Group cards in the Deck Editor with a number instead of stacking them
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
-- Group cards in the Deck Editor with a number instead of stacking them
 - Add copy to clipboard buttons next to labels in the Card Viewer
 - Add copy button to Popups
-- Unify search filters with searchbar
 - Add Card Editor
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Support default sort and filters

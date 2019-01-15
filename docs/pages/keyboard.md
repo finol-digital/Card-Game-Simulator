@@ -7,14 +7,14 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Main Menu
 - **Cancel**: *Esc* - Exit CGS.
-- **Horizontal**: *left*, *right* - Select previous/next card game.
-- **Vertical**: *down*, *up* - Scroll through Main Menu buttons.
+- **Horizontal**/**Vertical**: ARROWS or WASD  - Navigate Main Menu buttons.
+- **PageVertical**/**PageHorizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
 - **Sort**: *q* or *j* - Brings up the Game Selection Menu.
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
 - **Save**: *t* or *;* - Edit Decks.
 - **Filter**: *f* or *\\* - Explore Cards.
-- **Option**: *Delete* or *Backspace* - Brings up the Options Menu.
+- **Option**: *Delete* or *Backspace* - Settings.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
@@ -25,7 +25,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
-- **PageHorizontal**: *Home*, *End* OR *c*, *v* - Scroll through properties in the Card Viewer.
+- **PageHorizontal**: *Home*, *End* - Scroll through properties in the Card Viewer.
 - **Option**: *Delete* - Zoom on selected card.
 - **Submit**: *Enter* - Double-click on selected card.
 
@@ -33,8 +33,8 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Back to Main Menu.
 - **Horizontal**: *left*, *right* - Scroll through cards in the search results.
 - **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
-- **PageHorizontal**: *Home*, *End* OR *c*, *v* - Page through search results.
-- **PageVertical**: *PgUp*, *PgDn* OR *z*, *x* - Move through stacks in the deck editor.
+- **PageHorizontal**: *Home*, *End* - Page through search results.
+- **PageVertical**: *PgUp*, *PgDn* - Move through stacks in the deck editor.
 - **Sort**: *q* - Sorts the deck editor.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the Deck Load Menu.
@@ -46,7 +46,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Back to Main Menu.
 - **Horizontal**: *left*, *right* - Navigate cards horizontally.
 - **Vertical**: *down*, *up* - Navigate cards vertically.
-- **PageHorizontal**: *Home*, *End* OR *c*, *v* - Page through search results.
+- **PageHorizontal**: *Home*, *End* - Page through search results.
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
 - **FocusName**: *\`* - Focuses keyboard to the search name input field.
@@ -108,3 +108,6 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **New**: *e* - Toggles selected enum value.
 - **Option**: *Delete* - Clear.
 - **Submit**: *Enter* - Search!
+
+## Settings
+- **Cancel**: *Esc* - Back to Main Menu.

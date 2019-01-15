@@ -19,6 +19,7 @@ namespace CGS.Menu
         public const int PlayModeSceneIndex = 2;
         public const int DeckEditorSceneIndex = 3;
         public const int CardsExplorerSceneIndex = 4;
+        public const int SettingsSceneIndex = 5;
         public const string VersionMessage = "Ver. ";
 
         public Image currentBannerImage;
@@ -51,6 +52,8 @@ namespace CGS.Menu
             if (CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
+            // TODO: PAGE HORIZONTAL AND VERTICAL
+
             if ((Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0) &&
                     (EventSystem.current.currentSelectedGameObject == null
                     || EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
@@ -62,7 +65,7 @@ namespace CGS.Menu
             }
             else if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
                     && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.SetSelectedGameObject(selectableButtons[1].gameObject);
+                EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
                 EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
@@ -76,6 +79,8 @@ namespace CGS.Menu
                 EditDeck();
             else if (Input.GetButtonDown(Inputs.Filter))
                 ExploreCards();
+            else if (Input.GetButtonDown(Inputs.Option))
+                ShowSettings();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Quit();
 
@@ -135,6 +140,13 @@ namespace CGS.Menu
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
             SceneManager.LoadScene(CardsExplorerSceneIndex);
+        }
+
+        public void ShowSettings()
+        {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
+            SceneManager.LoadScene(SettingsSceneIndex);
         }
 
         public void Quit() =>
