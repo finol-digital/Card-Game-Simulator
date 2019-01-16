@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 225568299236548108}
   - component: {fileID: 114876689799331718}
   - component: {fileID: 114835859699800120}
-  - component: {fileID: 4856562217182543655}
+  - component: {fileID: 7922782642915728652}
   m_Layer: 5
   m_Name: Card Model
   m_TagString: Untagged
@@ -352,13 +352,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da0cfd7bd166ba43bf3e99b8d74f2e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncInterval: 0.1
   position: {x: 0, y: 0}
   rotation: {x: 0, y: 0, z: 0, w: 0}
   nameLabel: {fileID: 1250748804858204}
   nameText: {fileID: 114564531454428652}
   quantityLabel: {fileID: 1927219771105912}
   quantityText: {fileID: 114713642428825760}
---- !u!114 &4856562217182543655
+--- !u!114 &7922782642915728652
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -367,13 +368,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1700305412181862}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Script: {fileID: 860895539, guid: 1f82cede440b8483ba106133169d4112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SceneId: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
-  m_AssetId: 3b506588d6983aa468c58a6d81eea204
+  m_AssetId: 
 --- !u!1 &1927219771105912
 GameObject:
   m_ObjectHideFlags: 0
