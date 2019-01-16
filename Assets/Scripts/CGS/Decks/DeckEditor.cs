@@ -89,7 +89,9 @@ namespace CGS.Decks
 
         void OnEnable()
         {
-            Instantiate(cardViewerPrefab);
+            Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
+            CardGameManager.Instance.OnSceneActions.Add(CardInfoViewer.Instance.ResetInfo);
+            searchResults.HorizontalDoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(ResetCardStacks);
         }
 

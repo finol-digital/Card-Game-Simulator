@@ -6,28 +6,29 @@ permalink: roadmap.html
 
 ## What's New
 - Add Settings
+- Double-click to add card to Deck Editor when in Landscape
 - Fix: UWP Exit Crash
 - Fix: Game download status update
+- Fix: Double-click with mouse triggered swipe
+- Fix: Cards Explorer Vertical Layout
 
 ## Current Sprint
-- Fix: Cards Explorer Vertical Layout
-- Fix: Double-click in Deck Editor causes move left/right?
-- Double-click to add card to Deck Editor when in Landscape
-- Unify search filters with searchbar
-- Enhance object card property data type
 - Group cards in the Deck Editor with a number instead of stacking them
+- Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
+- Press and hold to copy labels in the Card Viewer
+- Press and hold to copy Popups
+- Unify search filters with searchbar
+- Create Sort Menu for the Deck Editor and Cards Explorer
+- Support default sort and filters
+- Enhance object card property data type
 - Add identifiers for object card property data types
 - Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
 - Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
-- Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
-- Add copy to clipboard buttons next to labels in the Card Viewer
-- Add copy button to Popups
 - Add Card Editor
-- Create Sort Menu for the Deck Editor and Cards Explorer
-- Support default sort and filters
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
+- Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag), and make it non-static
 - Fix: Restore networking capability
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 
@@ -58,8 +59,7 @@ permalink: roadmap.html
 - Tech: Restore CardClearsBackground
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
-- Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag)
-- Highlight card that is currently being moved
+- Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
 - Android Searchbar Widget
@@ -75,7 +75,7 @@ permalink: roadmap.html
 - Synchronize points across teams in Play Mode
 - Share discard pile between all players who share a deck in Play Mode
 - Online vs local matchmaking (Split Play Game to Play Local and Play Online)
-- Deck Editor Search Results Text-Only View
+- Card Search Results Text-Only View
 - New Mahjong tile set
 - Define order and enums for Mahjong properties
 - Allow automatic deletion of empty zones in Play Mode

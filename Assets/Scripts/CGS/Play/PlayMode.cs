@@ -50,7 +50,8 @@ namespace CGS.Play
 
         void Start()
         {
-            Instantiate(cardViewerPrefab);
+            Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
+            CardGameManager.Instance.OnSceneActions.Add(CardInfoViewer.Instance.ResetInfo);
 
             playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
             playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);

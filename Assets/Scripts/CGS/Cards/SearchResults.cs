@@ -66,6 +66,8 @@ namespace CGS.Cards
 
         public int CurrentPageIndex { get; set; }
 
+        public CardAction HorizontalDoubleClickAction { get; set; }
+
         void OnEnable()
         {
             CardSearcher.SearchCallback = ShowResults;
@@ -132,11 +134,11 @@ namespace CGS.Cards
                 cardModelToShow.Value = cardToShow;
                 cardModelToShow.IsStatic = layoutGroup is GridLayoutGroup;
                 cardModelToShow.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
-                // TODO: RESTORE THE BELOW COMMENTED LINES
-                // if (((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
-                //    cardModelToShow.DoubleClickAction = deckEditor.AddCardModel;
-                //else
-                cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
+                if (HorizontalDoubleClickAction != null
+                        && ((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
+                    cardModelToShow.DoubleClickAction = HorizontalDoubleClickAction;
+                else
+                    cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
             }
 
             countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);
