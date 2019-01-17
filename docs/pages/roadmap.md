@@ -13,10 +13,11 @@ permalink: roadmap.html
 - Fix: Cards Explorer Vertical Layout
 
 ## Current Sprint
+- Fix: Error on app first start
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
-- Press and hold to copy labels in the Card Viewer
-- Press and hold to copy Popups
+- Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
+- Press and hold on Popups/Card Viewer to copy text
 - Unify search filters with searchbar
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Support default sort and filters
