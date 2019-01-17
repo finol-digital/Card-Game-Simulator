@@ -32,8 +32,8 @@ namespace CGS.Cards
                     horizontalSpacing = ((HorizontalLayoutGroup)layoutGroup).spacing;
                 else if (layoutGroup is GridLayoutGroup)
                     horizontalSpacing = ((GridLayoutGroup)layoutGroup).spacing.x;
-                return Mathf.FloorToInt(layoutArea.rect.width /
-                    (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + horizontalSpacing));
+                return Mathf.FloorToInt((layoutArea.rect.width - (layoutGroup is GridLayoutGroup ? ((GridLayoutGroup)layoutGroup).padding.left : 0))
+                    / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + horizontalSpacing));
             }
         }
         public int CardsPerPage

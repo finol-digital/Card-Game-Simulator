@@ -10,19 +10,44 @@ namespace CGS.Cards
 {
     public class CardsExplorerLayout : MonoBehaviour
     {
+        public const float MinWidth = 1200;
+        public const float CardsPortaitHeight = 5000;
+        public const float CardsLandscapeHeight = 2000;
 
-        public SearchResults searchResults;
+        public static readonly Vector2 SearchNameLandscapePosition = new Vector2(200, 0);
+        public static readonly Vector2 CardsViewPortraitOffset = new Vector2(0, -160);
+        public static readonly Vector2 CardsViewLandscapeOffset = new Vector2(0, -72.5f);
+
+        public RectTransform searchName;
+        public RectTransform searchFilters;
+        public RectTransform cardsView;
+        public RectTransform cardsViewContent;
 
         void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
 
-            // TODO: CORRECTLY RE-MAP TO CURRENT PAGE
-            searchResults.CurrentPageIndex = 0;
-            searchResults.UpdateSearchResultsPanel();
-            if (CardInfoViewer.Instance != null)
-                CardInfoViewer.Instance.IsVisible = false;
+            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
+            {
+                searchName.anchorMin = Vector2.one;
+                searchName.anchorMax = Vector2.one;
+                searchName.pivot = Vector2.one;
+                searchName.anchoredPosition = Vector2.zero;
+                searchFilters.anchoredPosition = new Vector2(0, -searchName.rect.height);
+                cardsView.offsetMax = CardsViewPortraitOffset;
+                cardsViewContent.sizeDelta = new Vector2(cardsViewContent.sizeDelta.x, CardsPortaitHeight);
+            }
+            else // Landscape
+            {
+                searchName.anchorMin = Vector2.up;
+                searchName.anchorMax = Vector2.up;
+                searchName.pivot = Vector2.up;
+                searchName.anchoredPosition = SearchNameLandscapePosition;
+                searchFilters.anchoredPosition = Vector2.zero;
+                cardsView.offsetMax = CardsViewLandscapeOffset;
+                cardsViewContent.sizeDelta = new Vector2(cardsViewContent.sizeDelta.x, CardsLandscapeHeight);
+            }
         }
 
     }
