@@ -32,8 +32,8 @@ namespace CGS.Cards
                     horizontalSpacing = ((HorizontalLayoutGroup)layoutGroup).spacing;
                 else if (layoutGroup is GridLayoutGroup)
                     horizontalSpacing = ((GridLayoutGroup)layoutGroup).spacing.x;
-                return Mathf.FloorToInt(layoutArea.rect.width /
-                    (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + horizontalSpacing));
+                return Mathf.FloorToInt((layoutArea.rect.width - (layoutGroup is GridLayoutGroup ? ((GridLayoutGroup)layoutGroup).padding.left : 0))
+                    / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + horizontalSpacing));
             }
         }
         public int CardsPerPage
@@ -65,6 +65,8 @@ namespace CGS.Cards
         private List<Card> _allResults;
 
         public int CurrentPageIndex { get; set; }
+
+        public CardAction HorizontalDoubleClickAction { get; set; }
 
         void OnEnable()
         {
@@ -130,13 +132,13 @@ namespace CGS.Cards
                 Card cardToShow = CardGameManager.Current.Cards[cardId];
                 CardModel cardModelToShow = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
                 cardModelToShow.Value = cardToShow;
-                cardModelToShow.IsStatic = true;
+                cardModelToShow.IsStatic = layoutGroup is GridLayoutGroup;
                 cardModelToShow.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
-                // TODO: RESTORE THE BELOW COMMENTED LINES
-                // if (((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
-                //    cardModelToShow.DoubleClickAction = deckEditor.AddCardModel;
-                //else
-                cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
+                if (HorizontalDoubleClickAction != null
+                        && ((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
+                    cardModelToShow.DoubleClickAction = HorizontalDoubleClickAction;
+                else
+                    cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
             }
 
             countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);

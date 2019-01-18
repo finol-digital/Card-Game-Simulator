@@ -99,7 +99,7 @@ namespace CGS.Cards
             }
             else if (Input.GetButtonDown(Inputs.New) && ActiveToggle != null)
                 ToggleEnum();
-            else if (Input.GetButtonDown(Inputs.Delete) && ActiveInputField == null)
+            else if (Input.GetButtonDown(Inputs.Option) && ActiveInputField == null)
                 ClearFilters();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();

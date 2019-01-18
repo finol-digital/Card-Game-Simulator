@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4141478508729322}
   - component: {fileID: 114224202775388726}
-  - component: {fileID: 4259088489286809427}
+  - component: {fileID: 8160515002420746677}
   m_Layer: 0
   m_Name: CGSNetData
   m_TagString: Untagged
@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 304d99bb280886a4c8b4a32e743996c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4259088489286809427
+  syncInterval: 0.1
+--- !u!114 &8160515002420746677
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,10 +54,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1073801045010386}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Script: {fileID: 860895539, guid: 1f82cede440b8483ba106133169d4112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SceneId: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
-  m_AssetId: 58d2c1bbaeb829d42a84b6ce2a2d0897
+  m_AssetId: 

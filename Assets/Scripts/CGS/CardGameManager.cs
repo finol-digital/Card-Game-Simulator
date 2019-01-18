@@ -13,7 +13,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 using CardGameDef;
-using CardGameView;
 using CGS.Menu;
 using CGS.Play.Multiplayer;
 
@@ -91,7 +90,7 @@ namespace CGS
             }
         }
 
-        public List<UnityAction> OnSceneActions { get; } = new List<UnityAction>();
+        public HashSet<UnityAction> OnSceneActions { get; } = new HashSet<UnityAction>();
 
         public GameSelectionMenu Selector
         {
@@ -229,7 +228,7 @@ namespace CGS
 
             if (parameters.TryGetValue(GameId, out object gameId))
             {
-                if(gameId is string)
+                if (gameId is string)
                     Select((string)gameId);
                 else
                     Debug.LogWarning(BranchCallbackWarning);
@@ -246,10 +245,12 @@ namespace CGS
 
         public IEnumerator DownloadCardGame(string gameUrl)
         {
-            Spinner.Show();
-
             CardGame newGame = new CardGame(this, CardGame.DefaultName, gameUrl);
+
+            Spinner.Show(newGame);
             yield return newGame.Download();
+            Spinner.Hide();
+
             newGame.Load(UpdateCardGame, LoadCards);
 
             if (string.IsNullOrEmpty(newGame.Error))
@@ -268,8 +269,6 @@ namespace CGS
                 }
                 catch { };
             }
-
-            Spinner.Hide();
         }
 
         public IEnumerator UpdateCardGame(CardGame cardGame)
@@ -277,7 +276,7 @@ namespace CGS
             if (cardGame == null)
                 cardGame = Current;
 
-            Spinner.Show();
+            Spinner.Show(cardGame);
             yield return cardGame.Download();
             Spinner.Hide();
 
@@ -352,12 +351,8 @@ namespace CGS
             // Now is the safest time to set this game as the preferred default game for the player
             PlayerPrefs.SetString(PlayerPrefDefaultGame, Current.Id);
 
-            // We treat the CardInfoViewer specially for now...
-            CardInfoViewer.Instance?.ResetInfo();
-            // Otherwise, each scene element is responsible for registering with OnSceneActions
-            for (int i = OnSceneActions.Count - 1; i >= 0; i--)
-                if (OnSceneActions[i] == null)
-                    OnSceneActions.RemoveAt(i);
+            // Each scene is responsible for adding to OnSceneActions, but they may not remove
+            OnSceneActions.RemoveWhere((action) => action == null);
             foreach (UnityAction action in OnSceneActions)
                 action();
         }

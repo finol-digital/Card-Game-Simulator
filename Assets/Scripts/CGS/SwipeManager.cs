@@ -113,7 +113,7 @@ namespace CGS
         /// </summary>
         public static bool DetectSwipe()
         {
-            if (GetTouchInput() || GetMouseInput())
+            if (GetTouchInput())
             {
                 // Swipe already ended, don't detect until a new swipe has begun
                 if (swipeEnded)
@@ -188,35 +188,6 @@ namespace CGS
                         secondPressPos = t.position;
                         return true;
                     }
-                }
-            }
-
-            return false;
-        }
-
-        static bool GetMouseInput()
-        {
-            // Swipe/Click started
-            if (Input.GetMouseButtonDown(0))
-            {
-                firstPressPos = (Vector2)Input.mousePosition;
-                swipeStartTime = Time.time;
-                swipeEnded = false;
-                // Swipe/Click ended
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                secondPressPos = (Vector2)Input.mousePosition;
-                return true;
-                // Still swiping/clicking
-            }
-            else
-            {
-                // Could count as a swipe if length is long enough
-                if (instance.triggerSwipeAtMinLength)
-                {
-                    secondPressPos = (Vector2)Input.mousePosition;
-                    return true;
                 }
             }
 

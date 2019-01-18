@@ -19,6 +19,7 @@ namespace CGS.Menu
         public const int PlayModeSceneIndex = 2;
         public const int DeckEditorSceneIndex = 3;
         public const int CardsExplorerSceneIndex = 4;
+        public const int SettingsSceneIndex = 5;
         public const string VersionMessage = "Ver. ";
 
         public Image currentBannerImage;
@@ -30,6 +31,10 @@ namespace CGS.Menu
 
         private bool _wasLeft;
         private bool _wasRight;
+        private bool _wasPageDown;
+        private bool _wasPageUp;
+        private bool _wasPageLeft;
+        private bool _wasPageRight;
 
         void OnEnable()
         {
@@ -51,7 +56,21 @@ namespace CGS.Menu
             if (CardGameManager.Instance.TopMenuCanvas != null)
                 return;
 
-            if ((Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0) &&
+            if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
+            {
+                if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
+                    SelectNext();
+                else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
+                    SelectPrevious();
+            }
+            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0))
+            {
+                if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
+                    SelectPrevious();
+                else if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
+                    SelectNext();
+            }
+            else if ((Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0) &&
                     (EventSystem.current.currentSelectedGameObject == null
                     || EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
@@ -62,7 +81,7 @@ namespace CGS.Menu
             }
             else if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
                     && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.SetSelectedGameObject(selectableButtons[1].gameObject);
+                EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
                 EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
@@ -76,11 +95,17 @@ namespace CGS.Menu
                 EditDeck();
             else if (Input.GetButtonDown(Inputs.Filter))
                 ExploreCards();
+            else if (Input.GetButtonDown(Inputs.Option))
+                ShowSettings();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Quit();
 
             _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
             _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
+            _wasPageDown = Input.GetAxis(Inputs.PageVertical) < 0;
+            _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
+            _wasPageLeft = Input.GetAxis(Inputs.PageHorizontal) < 0;
+            _wasPageRight = Input.GetAxis(Inputs.PageHorizontal) > 0;
         }
 
         public void ResetGameSelectionCarousel()
@@ -137,15 +162,19 @@ namespace CGS.Menu
             SceneManager.LoadScene(CardsExplorerSceneIndex);
         }
 
-        public void Quit()
+        public void ShowSettings()
         {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
+            SceneManager.LoadScene(SettingsSceneIndex);
+        }
+
+        public void Quit() =>
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-#elif UNITY_WSA
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
 #else
             Application.Quit();
 #endif
-        }
+
     }
 }

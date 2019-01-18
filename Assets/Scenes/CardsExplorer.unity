@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 21480367}
   - component: {fileID: 21480368}
   - component: {fileID: 21480369}
+  - component: {fileID: 21480370}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -146,7 +147,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000017103306}
+  m_AnchoredPosition: {x: 0, y: 0.00010492064}
   m_SizeDelta: {x: 0, y: 2000}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &21480368
@@ -187,6 +188,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   scrollRectContainer: {fileID: 294750918}
+--- !u!114 &21480370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21480366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96a22160b91787f419a8a34d9822fae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  searchResults: {fileID: 508283654}
 --- !u!224 &69563413 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2066893337513193984, guid: 22860eb3703ffc249b4c83706dc349c0,
@@ -279,7 +293,6 @@ GameObject:
   - component: {fileID: 294750918}
   - component: {fileID: 294750917}
   - component: {fileID: 294750916}
-  - component: {fileID: 294750919}
   m_Layer: 5
   m_Name: CardsExplorer Layout View
   m_TagString: Untagged
@@ -377,19 +390,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &294750919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 294750914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ee8ed6337b4104429c2334903ab2080, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  searchResults: {fileID: 508283654}
 --- !u!1 &360213795
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,6 +548,7 @@ GameObject:
   - component: {fileID: 508283653}
   - component: {fileID: 508283654}
   - component: {fileID: 508283655}
+  - component: {fileID: 508283656}
   m_Layer: 5
   m_Name: CardsExplorer Canvas
   m_TagString: Untagged
@@ -693,6 +694,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   results: {fileID: 508283654}
   scrollRect: {fileID: 294750918}
+--- !u!114 &508283656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508283648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee8ed6337b4104429c2334903ab2080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  searchName: {fileID: 1305742565}
+  searchFilters: {fileID: 8153404634505789880}
+  cardsView: {fileID: 294750915}
+  cardsViewContent: {fileID: 21480367}
 --- !u!1 &527494669
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,7 +781,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000022888184, y: 0}
+  m_AnchoredPosition: {x: 0.000015258789, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &878350434
@@ -1277,7 +1294,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 97360898}
   m_HandleRect: {fileID: 97360897}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0.9999999
   m_Size: 0.44264886
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2100,7 +2117,7 @@ PrefabInstance:
     - target: {fileID: 5501540324188080134, guid: 1367f90db1a6ed149a60700a3066b700,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000015257683
+      value: -0.000046273548
       objectReference: {fileID: 0}
     - target: {fileID: 5501540324188080134, guid: 1367f90db1a6ed149a60700a3066b700,
         type: 3}

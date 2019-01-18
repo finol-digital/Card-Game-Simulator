@@ -63,7 +63,7 @@ namespace CGS.Decks
                     textInputField.ActivateInputField();
                 else if (Input.GetButtonDown(Inputs.Save) && EventSystem.current.currentSelectedGameObject == null)
                     PasteClipboardIntoText();
-                else if (Input.GetButtonDown(Inputs.Delete) && EventSystem.current.currentSelectedGameObject == null)
+                else if (Input.GetButtonDown(Inputs.Option) && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.text = string.Empty;
                 else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                     HideNewDeckPanel();
@@ -86,7 +86,7 @@ namespace CGS.Decks
                     Share();
                 else if (Input.GetButtonDown(Inputs.New))
                     ShowNewDeckPanel();
-                else if (Input.GetButtonDown(Inputs.Delete) && deleteFileButton.interactable)
+                else if (Input.GetButtonDown(Inputs.Option) && deleteFileButton.interactable)
                     PromptForDeleteFile();
                 else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPage)
                     ScrollPage(Input.GetAxis(Inputs.PageVertical));

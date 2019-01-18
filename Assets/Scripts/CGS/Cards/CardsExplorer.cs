@@ -19,7 +19,8 @@ namespace CGS.Cards
 
         void OnEnable()
         {
-            Instantiate(cardViewerPrefab);
+            Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
+            CardGameManager.Instance.OnSceneActions.Add(CardInfoViewer.Instance.ResetInfo);
         }
 
         void Update()

@@ -150,7 +150,7 @@ namespace CardGameView
                 else
                     DecrementProperty();
             }
-            if (Input.GetButtonDown(Inputs.Delete))
+            if (Input.GetButtonDown(Inputs.Option))
                 ToggleCardZoomed();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 SelectedCardModel = null;

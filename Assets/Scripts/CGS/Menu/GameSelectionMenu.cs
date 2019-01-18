@@ -79,7 +79,7 @@ namespace CGS.Menu
                     Share();
                 else if (Input.GetButtonDown(Inputs.New) || Input.GetButtonDown(Inputs.Load))
                     ShowDownloadPanel();
-                else if (Input.GetButtonDown(Inputs.Delete))
+                else if (Input.GetButtonDown(Inputs.Option))
                     Delete();
                 else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPage)
                     ScrollPage(Input.GetAxis(Inputs.PageVertical));

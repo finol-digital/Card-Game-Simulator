@@ -11,8 +11,6 @@ namespace CGS.Decks
 {
     public class SearchResultsLayout : MonoBehaviour
     {
-        public const float MinWidth = 1200;
-
         public static readonly Vector2 SearchNamePortraitPosition = new Vector2(15, 450);
         public static readonly Vector2 SearchNameLandscapePosition = new Vector2(15, 367.5f);
 
@@ -29,7 +27,7 @@ namespace CGS.Decks
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
+            if (((RectTransform)transform).rect.width < CardsExplorerLayout.MinWidth) // Portrait
             {
                 searchName.anchoredPosition = SearchNamePortraitPosition;
                 pageButtons.anchorMin = Vector2.right;

@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CardsExplorer.unity
     guid: b581b5d0e6eaddf478a2bc30326a642a
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: 6b4e37afed86a9944a552009d50c7857
   m_configObjects: {}

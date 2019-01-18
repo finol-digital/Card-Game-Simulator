@@ -52,7 +52,7 @@ namespace CGS.Menu
                 else
                     Close();
             }
-            else if (Input.GetButtonDown(Inputs.Delete) && noButton.gameObject.activeInHierarchy)
+            else if (Input.GetButtonDown(Inputs.Option) && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Close();
