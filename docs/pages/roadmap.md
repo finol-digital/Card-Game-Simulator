@@ -14,6 +14,7 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Fix: Error on app first start
+- Fix: Apply Screen Orientation Settings
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
