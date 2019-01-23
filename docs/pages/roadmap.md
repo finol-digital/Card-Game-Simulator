@@ -17,6 +17,9 @@ permalink: roadmap.html
 - Fix: Apply Screen Orientation Settings
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
+- On selected card in Deck Editor and Cards Explorer, focus view on that card
+- Remove focus on add card, instead do select on add by drop
+- Remap card viewer and Deck Editor input
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 - Unify search filters with searchbar

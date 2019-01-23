@@ -8,7 +8,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 ## Main Menu
 - **Cancel**: *Esc* - Exit CGS.
 - **Horizontal**/**Vertical**: ARROWS or WASD  - Navigate Main Menu buttons.
-- **PageVertical**/**PageHorizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
+- **PageVertical**/**Horizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
 - **Sort**: *q* or *j* - Brings up the Game Selection Menu.
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
