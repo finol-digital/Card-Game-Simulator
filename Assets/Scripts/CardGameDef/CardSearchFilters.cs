@@ -68,8 +68,8 @@ namespace CardGameDef
                         if (IntMaxProperties.ContainsKey(property.Name))
                             filters += property.Name + "<=" + IntMaxProperties[property.Name] + "; ";
                         break;
-                    case PropertyType.Object:
-                    case PropertyType.ObjectList:
+                    case PropertyType.Object: // TODO: OBJECT
+                    case PropertyType.ObjectList: // TODO: OBJECT
                     case PropertyType.StringList:
                     case PropertyType.EscapedString:
                     case PropertyType.String:
