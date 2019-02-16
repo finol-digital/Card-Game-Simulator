@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## What's New
 - Enhance object card property data type
-- Add identifiers for object card property data types
 
 ## Current Sprint
 - Fix: Error on app first start
@@ -16,6 +15,9 @@ permalink: roadmap.html
 - Shuffle deck button
 - https://github.com/ValveSoftware/ArtifactDeckCode https://www.playartifact.com/d/ADCJbkV9LgCBBBKwQWMqrsCjkKqAoNUQoESAQpRQXUBSSYBh7MBjYFUcml1bXBoYW50IE1lZXBvIEphbms_
 - On change page in Cards Explorer, move to top of page
+- Remap card viewer and Deck Editor input
+- Fix Mac version
+- Windows .exe
 - Unify search filters with searchbar
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
@@ -24,7 +26,6 @@ permalink: roadmap.html
 - Edit Deck Name by clicking on container
 - Edit Deck List in the Deck Save Menu
 - Remove focus on add card, instead do select on add by drop
-- Remap card viewer and Deck Editor input
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 - Create Sort Menu for the Deck Editor and Cards Explorer

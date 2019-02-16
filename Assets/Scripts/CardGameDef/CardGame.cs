@@ -578,17 +578,26 @@ namespace CardGameDef
                         cardProperties[key] = newProperty;
                         break;
                     case PropertyType.ObjectList:
-                        listValue = string.Empty;
-                        foreach (JToken jToken in cardJToken[property.Name])
+                        foreach (PropertyDef childProperty in property.Properties)
                         {
-                            // TODO: Handle list (maybe by modifying the key?)
-                            PopulateCardProperties(cardProperties, jToken, property.Properties, key + PropertyDef.ObjectDelimiter);
-                            if (!string.IsNullOrEmpty(listValue))
-                                listValue += EnumDef.Delimiter;
-                            jObject = jToken as JObject;
-                            listValue += jObject?.ToString() ?? string.Empty;
+                            newProperty = new PropertyDefValuePair() { Def = childProperty };
+                            listValue = string.Empty;
+                            Dictionary<string, PropertyDefValuePair> values = new Dictionary<string, PropertyDefValuePair>();
+                            int i = 0;
+                            foreach (JToken jToken in cardJToken[property.Name])
+                            {
+                                PopulateCardProperty(values, jToken, childProperty, key + childProperty.Name + i);
+                                i++;
+                            }
+                            foreach (var entry in values)
+                            {
+                                if (!string.IsNullOrEmpty(listValue))
+                                    listValue += EnumDef.Delimiter;
+                                listValue += entry.Value.Value;
+                            }
+                            newProperty.Value = listValue;
+                            cardProperties[key + PropertyDef.ObjectDelimiter + childProperty.Name] = newProperty;
                         }
-                        newProperty.Value = listValue;
                         break;
                     case PropertyType.ObjectEnum:
                         jObject = cardJToken[property.Name] as JObject;
@@ -596,7 +605,9 @@ namespace CardGameDef
                         cardProperties[key] = newProperty;
                         break;
                     case PropertyType.Object:
-                        PopulateCardProperties(cardProperties, cardJToken[property.Name], property.Properties, key + PropertyDef.ObjectDelimiter);
+                        jObject = cardJToken[property.Name] as JObject;
+                        if (jObject != null && jObject.HasValues)
+                            PopulateCardProperties(cardProperties, cardJToken[property.Name], property.Properties, key + PropertyDef.ObjectDelimiter);
                         break;
                     case PropertyType.StringEnumList:
                     case PropertyType.StringList:
@@ -627,7 +638,8 @@ namespace CardGameDef
             }
             catch
             {
-                UnityEngine.Debug.LogWarning($"PopulateCardProperties::Failed:{property}:{cardJToken}");
+                string propertyName = property != null ? property.Name : string.Empty;
+                UnityEngine.Debug.LogWarning($"PopulateCardProperty::Failed:{propertyName}:{cardJToken}");
             }
         }
 

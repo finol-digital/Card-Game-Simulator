@@ -195,8 +195,7 @@ namespace CardGameView
                 return;
             }
 
-            // TODO: Handle list
-            if (propertyDef.Type == PropertyType.Object)
+            if (propertyDef.Type == PropertyType.Object || propertyDef.Type == PropertyType.ObjectList)
             {
                 foreach (PropertyDef childProperty in propertyDef.Properties)
                     AddProperty(childProperty, parentPrefix + propertyDef.Name + PropertyDef.ObjectDelimiter);
