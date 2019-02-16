@@ -8,16 +8,16 @@ permalink: roadmap.html
 - Enhance object card property data type
 
 ## Current Sprint
+- Remap card viewer and Deck Editor input
+- Fix: On change page in Cards Explorer, move to top of page
 - Fix: Error on app first start
 - Fix: Apply Screen Orientation Settings
 - Fix: Ensure no swipe on zoom
-- Fix: Zoom out in Play Mode has card disappear
-- Shuffle deck button
-- https://github.com/ValveSoftware/ArtifactDeckCode https://www.playartifact.com/d/ADCJbkV9LgCBBBKwQWMqrsCjkKqAoNUQoESAQpRQXUBSSYBh7MBjYFUcml1bXBoYW50IE1lZXBvIEphbms_
-- On change page in Cards Explorer, move to top of page
-- Remap card viewer and Deck Editor input
+- Fix: Zoom out in Play Mode makes card disappear
+- Add Shuffle deck button
 - Fix Mac version
 - Windows .exe
+- https://github.com/ValveSoftware/ArtifactDeckCode https://www.playartifact.com/d/ADCJbkV9LgCBBBKwQWMqrsCjkKqAoNUQoESAQpRQXUBSSYBh7MBjYFUcml1bXBoYW50IE1lZXBvIEphbms_
 - Unify search filters with searchbar
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them

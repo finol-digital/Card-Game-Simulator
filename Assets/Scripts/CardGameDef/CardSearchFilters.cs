@@ -39,45 +39,30 @@ namespace CardGameDef
                 filters += "id:" + Id + "; ";
             if (!string.IsNullOrEmpty(SetCode))
                 filters += "set:" + SetCode + "; ";
-            foreach (PropertyDef property in forGame.CardProperties)
+            foreach (var filter in StringProperties)
+                filters += $"{filter.Key}:\"{filter.Value}\"; ";
+            foreach (var filter in IntMinProperties)
+                filters += $"{filter.Key}>={filter.Value}; ";
+            foreach (var filter in IntMaxProperties)
+                filters += $"{filter.Key}<={filter.Value}; ";
+            foreach (var filter in BoolProperties)
             {
-                switch (property.Type)
+                if (filter.Value)
+                    filters += $"is:{filter.Key}; ";
+                else
+                    filters += $"not:{filter.Key}; ";
+            }
+            foreach (var filter in EnumProperties)
+            {
+                string filterValue = filter.Value.ToString();
+                EnumDef enumDef = forGame.Enums.FirstOrDefault(def => def.Property.Equals(filter.Key));
+                if (enumDef != null)
                 {
-                    case PropertyType.ObjectEnum:
-                    case PropertyType.ObjectEnumList:
-                    case PropertyType.StringEnum:
-                    case PropertyType.StringEnumList:
-                        if (!EnumProperties.ContainsKey(property.Name))
-                            break;
-                        EnumDef enumDef = forGame.Enums.FirstOrDefault(def => def.Property.Equals(property.Name));
-                        if (enumDef != null)
-                        {
-                            string filterValue = enumDef.GetStringFromLookupFlags(EnumProperties[property.Name]);
-                            if (filterValue.Contains(' '))
-                                filterValue = "\'" + filterValue + "\'";
-                            filters += property.Name + ":" + filterValue + "; ";
-                        }
-                        break;
-                    case PropertyType.Boolean:
-                        if (BoolProperties.ContainsKey(property.Name))
-                            filters += (BoolProperties[property.Name] ? "IS " : "NOT ") + property.Name + "; ";
-                        break;
-                    case PropertyType.Integer:
-                        if (IntMinProperties.ContainsKey(property.Name))
-                            filters += property.Name + ">=" + IntMinProperties[property.Name] + "; ";
-                        if (IntMaxProperties.ContainsKey(property.Name))
-                            filters += property.Name + "<=" + IntMaxProperties[property.Name] + "; ";
-                        break;
-                    case PropertyType.Object: // TODO: OBJECT
-                    case PropertyType.ObjectList: // TODO: OBJECT
-                    case PropertyType.StringList:
-                    case PropertyType.EscapedString:
-                    case PropertyType.String:
-                    default:
-                        if (StringProperties.ContainsKey(property.Name))
-                            filters += property.Name + ":\"" + StringProperties[property.Name] + "\"; ";
-                        break;
+                    filterValue = enumDef.GetStringFromLookupFlags(EnumProperties[filter.Key]);
+                    if (filterValue.Contains(' '))
+                        filterValue = "\'" + filterValue + "\'";
                 }
+                filters += $"{filter.Key}:{filterValue}; ";
             }
             return filters;
         }
