@@ -65,7 +65,7 @@ namespace CGS.Cards
                 else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
                     PageUp();
             }
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0) && !CardInfoViewer.Instance.IsVisible)
+            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0))
             {
                 if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
                     PageLeft();
@@ -101,7 +101,7 @@ namespace CGS.Cards
                 i+= results.CardsPerRow;
                 if (i >= results.layoutArea.childCount)
                 {
-                    results.PageRight();
+                    results.IncrementPage();
                     i = 0;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
@@ -130,7 +130,7 @@ namespace CGS.Cards
                 i-= results.CardsPerRow;
                 if (i < 0)
                 {
-                    results.PageLeft();
+                    results.DecrementPage();
                     i = results.layoutArea.childCount - 1;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
@@ -159,7 +159,7 @@ namespace CGS.Cards
                 i--;
                 if (i < 0)
                 {
-                    results.PageLeft();
+                    results.DecrementPage();
                     i = results.layoutArea.childCount - 1;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
@@ -188,7 +188,7 @@ namespace CGS.Cards
                 i++;
                 if (i == results.layoutArea.childCount)
                 {
-                    results.PageRight();
+                    results.IncrementPage();
                     i = 0;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
@@ -211,12 +211,12 @@ namespace CGS.Cards
 
         public void PageLeft()
         {
-            results.PageLeft();
+            results.DecrementPage();
         }
 
         public void PageRight()
         {
-            results.PageRight();
+            results.IncrementPage();
         }
     }
 }

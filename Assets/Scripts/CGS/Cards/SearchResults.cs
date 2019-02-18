@@ -100,7 +100,7 @@ namespace CGS.Cards
             CardSearcher.Search();
         }
 
-        public void PageLeft()
+        public void DecrementPage()
         {
             if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
                 CardInfoViewer.Instance.SelectedCardModel = null;
@@ -110,7 +110,7 @@ namespace CGS.Cards
             UpdateSearchResultsPanel();
         }
 
-        public void PageRight()
+        public void IncrementPage()
         {
             if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
                 CardInfoViewer.Instance.SelectedCardModel = null;

@@ -379,7 +379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -546,7 +546,7 @@ GameObject:
   - component: {fileID: 213237323}
   - component: {fileID: 213237326}
   m_Layer: 5
-  m_Name: Search Results MoveRight Buttton
+  m_Name: Search Results NavigateRight Buttton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -587,7 +587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -615,7 +615,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 62766705}
-        m_MethodName: MoveRight
+        m_MethodName: NavigateRight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -732,7 +732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1584,7 +1584,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -4}
+  m_AnchoredPosition: {x: -0.00024414062, y: -4}
   m_SizeDelta: {x: 1820, y: -8}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &943351771
@@ -1780,7 +1780,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 335690429}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2064,7 +2064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2092,7 +2092,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 62766705}
-        m_MethodName: SelectUp
+        m_MethodName: SelectEditorUp
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2244,7 +2244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2272,7 +2272,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 62766705}
-        m_MethodName: SelectDown
+        m_MethodName: SelectEditorDown
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2731,7 +2731,7 @@ GameObject:
   - component: {fileID: 2037950164}
   - component: {fileID: 2037950167}
   m_Layer: 5
-  m_Name: Search Results MoveLeft Button
+  m_Name: Search Results NavigateLeft Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2772,7 +2772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2800,7 +2800,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 62766705}
-        m_MethodName: MoveLeft
+        m_MethodName: NavigateLeft
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3423,7 +3423,7 @@ PrefabInstance:
     - target: {fileID: 5929643631529934288, guid: 43fd24ca732e28147a14138a0887fd70,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000015258789
+      value: 0.00033569336
       objectReference: {fileID: 0}
     - target: {fileID: 5929643631529934288, guid: 43fd24ca732e28147a14138a0887fd70,
         type: 3}
@@ -3433,7 +3433,7 @@ PrefabInstance:
     - target: {fileID: 5929643631065639555, guid: 43fd24ca732e28147a14138a0887fd70,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.00005340518
+      value: 0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 5929643631065639555, guid: 43fd24ca732e28147a14138a0887fd70,
         type: 3}
@@ -3562,7 +3562,7 @@ PrefabInstance:
     - target: {fileID: 8153404634787009405, guid: 87360c892c5a0bf49896d2facebbc54d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000076293945
+      value: 0.00022888184
       objectReference: {fileID: 0}
     - target: {fileID: 8153404634787009405, guid: 87360c892c5a0bf49896d2facebbc54d,
         type: 3}
@@ -3572,7 +3572,7 @@ PrefabInstance:
     - target: {fileID: 8153404634804677155, guid: 87360c892c5a0bf49896d2facebbc54d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000007629228
+      value: 0.00032806396
       objectReference: {fileID: 0}
     - target: {fileID: 8153404634804677155, guid: 87360c892c5a0bf49896d2facebbc54d,
         type: 3}

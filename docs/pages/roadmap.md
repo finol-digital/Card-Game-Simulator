@@ -6,9 +6,10 @@ permalink: roadmap.html
 
 ## What's New
 - Enhance object card property data type
+- Remap Card Viewer and Deck Editor input
 
 ## Current Sprint
-- Remap card viewer and Deck Editor input
+- Fix: Downloading game that already exists causes properties to be appear twice
 - Fix: On change page in Cards Explorer, move to top of page
 - Fix: Error on app first start
 - Fix: Apply Screen Orientation Settings
@@ -22,10 +23,10 @@ permalink: roadmap.html
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
-- On selected card in Deck Editor and Cards Explorer, focus view on that card
 - Edit Deck Name by clicking on container
 - Edit Deck List in the Deck Save Menu
-- Remove focus on add card, instead do select on add by drop
+- On selected card in Deck Editor and Cards Explorer, focus view on that card
+- Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 - Create Sort Menu for the Deck Editor and Cards Explorer

@@ -139,8 +139,6 @@ namespace CardGameView
         }
         public bool WasVisible { get; private set; }
 
-        private bool _wasPage;
-
         void Start()
         {
             ResetInfo();
@@ -157,19 +155,14 @@ namespace CardGameView
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)
                 SelectedCardModel.DoubleClickAction(SelectedCardModel);
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0) && !_wasPage)
-            {
-                if (Input.GetAxis(Inputs.PageHorizontal) > 0)
-                    IncrementProperty();
-                else
-                    DecrementProperty();
-            }
-            if (Input.GetButtonDown(Inputs.Option))
+            else if (Input.GetButtonDown(Inputs.Sort))
+                DecrementProperty();
+            else if (Input.GetButtonDown(Inputs.Filter))
+                IncrementProperty();
+            else if (Input.GetButtonDown(Inputs.Option))
                 ToggleCardZoomed();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 SelectedCardModel = null;
-
-            _wasPage = Input.GetAxis(Inputs.PageHorizontal) != 0;
         }
 
         public void ResetInfo()
