@@ -32,11 +32,7 @@ namespace CGS.Decks
 
             if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && SwipeManager.DetectSwipe())
             {
-                if (SwipeManager.IsSwipingUp())
-                    SelectResultsDown();
-                else if (SwipeManager.IsSwipingDown())
-                    SelectResultsUp();
-                else if (SwipeManager.IsSwipingRight())
+                if (SwipeManager.IsSwipingRight())
                     SelectResultsLeft();
                 else if (SwipeManager.IsSwipingLeft())
                     SelectResultsRight();
@@ -44,7 +40,6 @@ namespace CGS.Decks
 
             if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
             {
-
                 if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
                     SelectResultsDown();
                 else if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
