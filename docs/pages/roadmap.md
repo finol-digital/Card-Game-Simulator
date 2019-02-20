@@ -13,7 +13,6 @@ permalink: roadmap.html
 - Fix: Downloading game that already exists causes properties to be appear twice
 - Fix: Error on app first start
 - Fix: Apply Screen Orientation Settings
-- Fix: Ensure no swipe on zoom
 - Fix: Zoom out in Play Mode makes card disappear
 - Add Shuffle deck button
 - Fix Mac version
