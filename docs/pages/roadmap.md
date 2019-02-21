@@ -7,11 +7,11 @@ permalink: roadmap.html
 ## What's New
 - Enhance object card property data type
 - Remap Card Viewer and Deck Editor input
+- Fix: Error on app first start
 - Fix: On change page in Cards Explorer, move to top of page
 
 ## Current Sprint
 - Fix: Downloading game that already exists causes properties to be appear twice
-- Fix: Error on app first start
 - Fix: Apply Screen Orientation Settings
 - Fix: Zoom out in Play Mode makes card disappear
 - Add Shuffle deck button
