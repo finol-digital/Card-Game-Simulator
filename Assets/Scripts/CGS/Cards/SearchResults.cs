@@ -22,6 +22,7 @@ namespace CGS.Cards
         public InputField nameInputField;
         public Text filtersText;
         public Text countText;
+        public ScrollRect scrollRect;
 
         public int CardsPerRow
         {
@@ -100,7 +101,7 @@ namespace CGS.Cards
             CardSearcher.Search();
         }
 
-        public void PageLeft()
+        public void DecrementPage()
         {
             if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
                 CardInfoViewer.Instance.SelectedCardModel = null;
@@ -110,7 +111,7 @@ namespace CGS.Cards
             UpdateSearchResultsPanel();
         }
 
-        public void PageRight()
+        public void IncrementPage()
         {
             if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
                 CardInfoViewer.Instance.SelectedCardModel = null;
@@ -142,6 +143,9 @@ namespace CGS.Cards
             }
 
             countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);
+
+            if (scrollRect != null)
+                scrollRect.verticalNormalizedPosition = 1;
         }
 
         public void ShowSearchMenu()

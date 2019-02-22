@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace CardGameDef
@@ -25,30 +26,46 @@ namespace CardGameDef
     [JsonObject(MemberSerialization.OptIn)]
     public class PropertyDef : ICloneable
     {
-        [JsonProperty]
-        public string Name { get; set; }
+        public const string ObjectDelimiter = ".";
+        public const string EscapeCharacter = "\\";
 
         [JsonProperty]
-        public string Display { get; set; }
+        public string Name { get; set; }
 
         [JsonProperty]
         public PropertyType Type { get; set; }
 
         [JsonProperty]
-        public string Empty { get; set; }
+        public string Display { get; set; }
+
+        [JsonProperty]
+        public string DisplayEmpty { get; set; }
+
+        [JsonProperty]
+        public bool DisplayEmptyFirst { get; set; }
+
+        [JsonProperty]
+        public List<PropertyDef> Properties { get; set; }
 
         [JsonConstructor]
-        public PropertyDef(string name, string display, PropertyType type, string empty)
+        public PropertyDef(string name, PropertyType type, string display = "", string displayEmpty = "", bool displayEmptyFirst = false, List<PropertyDef> properties = null)
         {
             Name = name ?? string.Empty;
-            Type = type;
+            int objectDelimiterIdx = Name.IndexOf(ObjectDelimiter);
+            if (objectDelimiterIdx != -1)
+                Name = Name.Substring(0, objectDelimiterIdx);
+            Type = objectDelimiterIdx != -1 ? PropertyType.Object : type;
             Display = display ?? string.Empty;
-            Empty = empty ?? string.Empty;
+            DisplayEmpty = displayEmpty ?? string.Empty;
+            DisplayEmptyFirst = displayEmptyFirst;
+            Properties = properties != null ? new List<PropertyDef>(properties) : new List<PropertyDef>();
+            if (objectDelimiterIdx != -1)
+                Properties.Add(new PropertyDef(name.Substring(objectDelimiterIdx + 1), type, display, displayEmpty, displayEmptyFirst, properties));
         }
 
         public object Clone()
         {
-            PropertyDef ret = new PropertyDef(Name, Display, Type, Empty);
+            PropertyDef ret = new PropertyDef(Name, Type, Display, DisplayEmpty, DisplayEmptyFirst, Properties);
             return ret;
         }
     }

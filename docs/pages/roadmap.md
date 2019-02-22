@@ -5,27 +5,29 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Add Settings
-- Double-click to add card to Deck Editor when in Landscape
-- Fix: UWP Exit Crash
-- Fix: Game download status update
-- Fix: Double-click with mouse triggered swipe
-- Fix: Cards Explorer Vertical Layout
+- Enhanced object card property data type
+- Remapped Card Viewer and Deck Editor input
+- Fix: Error on app first start
+- Fix: Downloading game that already exists causes properties to be appear twice
+- Fix: On change page in Cards Explorer, move to top of page
+- Fix: Apply Screen Orientation Settings
+- Added Windows .exe
 
 ## Current Sprint
-- Fix: Error on app first start
-- Fix: Apply Screen Orientation Settings
+- Fix: Zoom out in Play Mode makes card disappear
+- Add Shuffle deck button
+- Unify search filters with searchbar
+- Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
+- Edit Deck Name by clicking on container
+- Edit Deck List in the Deck Save Menu
+- On selected card in Deck Editor and Cards Explorer, focus view on that card
+- Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
-- Unify search filters with searchbar
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Support default sort and filters
-- Enhance object card property data type
-- Add identifiers for object card property data types
-- Rename current display property to displayName, and add display bool to indicate whether to display at all, and rename empty to displayValueEmpty
-- Add displayValueEmptyFirst property to put the empty enum value at the front of the list in the card search menu
 - Add Card Editor
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
@@ -35,7 +37,6 @@ permalink: roadmap.html
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 
 ## Backlog
-- Fix: Zoom out in Play Mode has card disappear
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
@@ -57,14 +58,14 @@ permalink: roadmap.html
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 
 ## Icebox
-- Tech: Remove Unity references from CardGameDef by creating and using ICardGameLoader instead of CoroutineRunner
 - Tech: Restore CardClearsBackground
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
+- Support https://github.com/ValveSoftware/ArtifactDeckCode
+- Print proxy deck list as pdf
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
-- Android Searchbar Widget
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)
 - Support multiple card backs

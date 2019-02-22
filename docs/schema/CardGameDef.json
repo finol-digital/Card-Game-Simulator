@@ -152,10 +152,6 @@
             "description": "The name of the property: This name can be referenced to lookup a Card's property",
             "type": "string"
           },
-          "display": {
-            "description": "The name of the property as it is displayed to the end user",
-            "type": "string"
-          },
           "type": {
             "description": "The type of the property",
             "enum": [
@@ -174,13 +170,34 @@
             "default": "string",
             "type": "string"
           },
-          "empty": {
+          "display": {
+            "description": "The name of the property as it is displayed to the end user",
+            "type": "string"
+          },
+          "displayEmpty": {
             "description": "The value to display if the value is null or empty",
             "type": "string"
+          },
+          "displayEmptyFirst": {
+            "description": "List <displayEmpty> as the first option if this property is an enum?",
+            "type": "boolean"
+          },
+          "properties": {
+            "description": "If this property is an object, the properties for the object",
+            "$ref": "#/properties/cardProperties"
           }
-        }
+        },
+        "required": [
+          "name",
+          "type"
+        ]
       },
       "type": "array"
+    },
+    "cardPropertyIdentifier": {
+      "description": "When defining a Card in AllCards.json or AllSets.json, you can integrate objectEnum and objectEnumList properties with enums by using cardPropertyIdentifier. Most custom games will likely want to keep the default cardPropertyIdentifier.",
+      "default": "id",
+      "type": "string"
     },
     "cardSetIdentifier": {
       "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. If the mapping is missing, CGS will use <setCodeDefault>. Most custom games will likely want to keep the default cardSetIdentifier.",

@@ -8,7 +8,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 ## Main Menu
 - **Cancel**: *Esc* - Exit CGS.
 - **Horizontal**/**Vertical**: ARROWS or WASD  - Navigate Main Menu buttons.
-- **PageVertical**/**PageHorizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
+- **Page-Vertical/Horizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
 - **Sort**: *q* or *j* - Brings up the Game Selection Menu.
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
@@ -25,16 +25,16 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
-- **PageHorizontal**: *Home*, *End* - Scroll through properties in the Card Viewer.
+- **Sort**: *q* - Previous property.
+- **Filter**: *f* - Next property.
 - **Option**: *Delete* - Zoom on selected card.
 - **Submit**: *Enter* - Double-click on selected card.
 
 ## Deck Editor
 - **Cancel**: *Esc* - Back to Main Menu.
-- **Horizontal**: *left*, *right* - Scroll through cards in the search results.
-- **Vertical**: *down*, *up* - Scroll through cards in the deck editor.
-- **PageHorizontal**: *Home*, *End* - Page through search results.
-- **PageVertical**: *PgUp*, *PgDn* - Move through stacks in the deck editor.
+- **Horizontal**: *left*, *right* - Navigate search results.
+- **Vertical**: *down*, *up* - Page through search results.
+- **Page-Vertical/Horizontal**: ZXCV - Navigate deck editor.
 - **Sort**: *q* - Sorts the deck editor.
 - **New**: *e* - Clears the deck editor.
 - **Load**: *r* - Brings up the Deck Load Menu.

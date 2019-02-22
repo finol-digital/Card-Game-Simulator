@@ -147,7 +147,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00010492064}
+  m_AnchoredPosition: {x: 0, y: 0.000104856466}
   m_SizeDelta: {x: 0, y: 2000}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &21480368
@@ -456,7 +456,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -484,7 +484,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 508283654}
-        m_MethodName: PageLeft
+        m_MethodName: DecrementPage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -680,6 +680,7 @@ MonoBehaviour:
   nameInputField: {fileID: 1305742566}
   filtersText: {fileID: 4431493207861859438}
   countText: {fileID: 878350435}
+  scrollRect: {fileID: 294750918}
 --- !u!114 &508283655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,7 +782,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015258789, y: 0}
+  m_AnchoredPosition: {x: 0.000022888184, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &878350434
@@ -1268,7 +1269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1294,8 +1295,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 97360898}
   m_HandleRect: {fileID: 97360897}
   m_Direction: 2
-  m_Value: 0.9999999
-  m_Size: 0.44264886
+  m_Value: 0.99999994
+  m_Size: 0.2291666
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1405,7 +1406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1433,7 +1434,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 508283654}
-        m_MethodName: PageRight
+        m_MethodName: IncrementPage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2117,7 +2118,7 @@ PrefabInstance:
     - target: {fileID: 5501540324188080134, guid: 1367f90db1a6ed149a60700a3066b700,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000046273548
+      value: 0.000045776367
       objectReference: {fileID: 0}
     - target: {fileID: 5501540324188080134, guid: 1367f90db1a6ed149a60700a3066b700,
         type: 3}

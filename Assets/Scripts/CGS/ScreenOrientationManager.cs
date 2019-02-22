@@ -66,26 +66,37 @@ namespace CGS
 
         public static void ResetOrientation()
         {
-            bool autoRotationOn = !(DoesControllerLockToLandscape && IsControllerConnected)
-                && (PreferredScreenOrientation == ScreenOrientationPref.AutoRotate
-                    || (PreferredScreenOrientation == ScreenOrientationPref.OSControl && DoesOSWantAutoRotation));
-            Screen.autorotateToPortrait = autoRotationOn;
-            Screen.autorotateToPortraitUpsideDown = autoRotationOn;
-            Screen.autorotateToLandscapeLeft = autoRotationOn;
-            Screen.autorotateToLandscapeRight = autoRotationOn;
-            switch (PreferredScreenOrientation)
+            if (DoesControllerLockToLandscape && IsControllerConnected)
             {
-                case ScreenOrientationPref.Landscape:
-                    Screen.orientation = ScreenOrientation.Landscape;
-                    break;
-                case ScreenOrientationPref.Portrait:
-                    Screen.orientation = ScreenOrientation.Portrait;
-                    break;
-                case ScreenOrientationPref.OSControl:
-                case ScreenOrientationPref.AutoRotate:
-                default:
-                    Screen.orientation = ScreenOrientation.AutoRotation;
-                    break;
+                Screen.autorotateToPortrait = false;
+                Screen.autorotateToPortraitUpsideDown = false;
+                Screen.autorotateToLandscapeLeft = true;
+                Screen.autorotateToLandscapeRight = false;
+                Screen.orientation = ScreenOrientation.LandscapeLeft;
+            }
+            else
+            {
+                bool autoRotationOn = PreferredScreenOrientation == ScreenOrientationPref.AutoRotate
+                    || (PreferredScreenOrientation == ScreenOrientationPref.OSControl && DoesOSWantAutoRotation);
+                Screen.autorotateToPortrait = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
+                Screen.autorotateToPortraitUpsideDown = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
+                Screen.autorotateToLandscapeLeft = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
+                Screen.autorotateToLandscapeRight = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
+                switch (PreferredScreenOrientation)
+                {
+                    case ScreenOrientationPref.Landscape:
+                        Screen.orientation = ScreenOrientation.Landscape;
+                        break;
+                    case ScreenOrientationPref.Portrait:
+                        Screen.orientation = ScreenOrientation.Portrait;
+                        break;
+                    case ScreenOrientationPref.OSControl:
+                    case ScreenOrientationPref.AutoRotate:
+                    default:
+                        Screen.orientation = ScreenOrientation.AutoRotation;
+                        break;
+                }
+
             }
         }
 

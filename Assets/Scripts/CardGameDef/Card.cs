@@ -28,7 +28,7 @@ namespace CardGameDef
         {
             get
             {
-                string url = GetPropertyValueString(SourceGame.CardImageProperty);
+                string url = _imageWebUrl;
                 if (!string.IsNullOrEmpty(url) && !url.Equals(SourceGame.CardImageUrl))
                     return url;
 
@@ -42,7 +42,9 @@ namespace CardGameDef
                 url = url.Replace("{cardImageFileType}", SourceGame.CardImageFileType);
                 return url;
             }
+            set { _imageWebUrl = value; }
         }
+        private string _imageWebUrl;
 
         public UnityEngine.Sprite ImageSprite
         {
@@ -90,7 +92,7 @@ namespace CardGameDef
 
             EnumDef enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
             if (enumDef == null || string.IsNullOrEmpty(property.Value))
-                return !string.IsNullOrEmpty(property.Value) ? property.Value : property.Def.Empty ?? string.Empty;
+                return !string.IsNullOrEmpty(property.Value) ? property.Value : property.Def.DisplayEmpty ?? string.Empty;
             return enumDef.GetStringFromPropertyValue(property.Value);
         }
 

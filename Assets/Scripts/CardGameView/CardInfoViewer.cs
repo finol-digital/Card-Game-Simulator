@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -42,6 +43,19 @@ namespace CardGameView
 
         public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
         public Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
+
+        public int PrimaryPropertyIndex
+        {
+            get
+            {
+                int primaryPropertyIndex = 0;
+                for (int i = 0; i < PropertyOptions.Count; i++)
+                    if (DisplayNameLookup.TryGetValue(PropertyOptions[i].text, out string propertyName)
+                            && propertyName.Equals(CardGameManager.Current.CardPrimaryProperty))
+                        primaryPropertyIndex = i;
+                return primaryPropertyIndex;
+            }
+        }
 
         public string SelectedPropertyName
         {
@@ -125,8 +139,6 @@ namespace CardGameView
         }
         public bool WasVisible { get; private set; }
 
-        private bool _wasPage;
-
         void Start()
         {
             ResetInfo();
@@ -143,19 +155,14 @@ namespace CardGameView
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)
                 SelectedCardModel.DoubleClickAction(SelectedCardModel);
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0) && !_wasPage)
-            {
-                if (Input.GetAxis(Inputs.PageHorizontal) > 0)
-                    IncrementProperty();
-                else
-                    DecrementProperty();
-            }
-            if (Input.GetButtonDown(Inputs.Option))
+            else if (Input.GetButtonDown(Inputs.Sort))
+                DecrementProperty();
+            else if (Input.GetButtonDown(Inputs.Filter))
+                IncrementProperty();
+            else if (Input.GetButtonDown(Inputs.Option))
                 ToggleCardZoomed();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 SelectedCardModel = null;
-
-            _wasPage = Input.GetAxis(Inputs.PageHorizontal) != 0;
         }
 
         public void ResetInfo()
@@ -163,21 +170,35 @@ namespace CardGameView
             cardImage.gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.CardAspectRatio;
             zoomPanel.GetChild(0).gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.CardAspectRatio;
 
-            int selectedPropertyIndex = 0;
             PropertyOptions.Clear();
             PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
             DisplayNameLookup.Clear();
-            foreach (PropertyDef propDef in CardGameManager.Current.CardProperties)
-            {
-                string displayName = !string.IsNullOrEmpty(propDef.Display) ? propDef.Display : propDef.Name;
-                PropertyOptions.Add(new Dropdown.OptionData() { text = displayName });
-                DisplayNameLookup[displayName] = propDef.Name;
-                if (propDef.Name.Equals(CardGameManager.Current.CardPrimaryProperty))
-                    selectedPropertyIndex = PropertyOptions.Count - 1;
-            }
+            foreach (PropertyDef propertyDef in CardGameManager.Current.CardProperties)
+                AddProperty(propertyDef);
             propertySelection.options = PropertyOptions;
-            propertySelection.value = selectedPropertyIndex;
-            propertySelection.onValueChanged.Invoke(selectedPropertyIndex);
+            propertySelection.value = PrimaryPropertyIndex;
+            propertySelection.onValueChanged.Invoke(propertySelection.value);
+        }
+
+        public void AddProperty(PropertyDef propertyDef, string parentPrefix = "")
+        {
+            if (propertyDef == null || parentPrefix == null)
+            {
+                Debug.LogWarning("AddProperty::NullProperty");
+                return;
+            }
+
+            if (propertyDef.Type == PropertyType.Object || propertyDef.Type == PropertyType.ObjectList)
+            {
+                foreach (PropertyDef childProperty in propertyDef.Properties)
+                    AddProperty(childProperty, parentPrefix + propertyDef.Name + PropertyDef.ObjectDelimiter);
+            }
+            else
+            {
+                string displayName = !string.IsNullOrEmpty(propertyDef.Display) ? propertyDef.Display : propertyDef.Name;
+                PropertyOptions.Add(new Dropdown.OptionData() { text = displayName });
+                DisplayNameLookup[displayName] = parentPrefix + propertyDef.Name;
+            }
         }
 
         public void DecrementProperty()

@@ -133,6 +133,9 @@ namespace CardGameDef
         public List<PropertyDef> CardProperties { get; set; } = new List<PropertyDef>();
 
         [JsonProperty]
+        public string CardPropertyIdentifier { get; set; } = "id";
+
+        [JsonProperty]
         public UnityEngine.Vector2 CardSize { get; set; } = new UnityEngine.Vector2(2.5f, 3.5f);
 
         [JsonProperty]
@@ -276,6 +279,16 @@ namespace CardGameDef
             return Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
         }
 
+        public void ClearDefinitionLists()
+        {
+            CardProperties.Clear();
+            DeckUrls.Clear();
+            Enums.Clear();
+            Extras.Clear();
+            GameBoardCards.Clear();
+            GameBoardUrls.Clear();
+        }
+
         public void ReadProperties()
         {
             try
@@ -283,6 +296,7 @@ namespace CardGameDef
                 // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name* to change, so account for that
                 string gameFilePath = GameFilePath;
                 string gameDirectoryPath = GameDirectoryPath;
+                ClearDefinitionLists();
                 JsonConvert.PopulateObject(File.ReadAllText(GameFilePath), this);
                 if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath))
                 {
@@ -450,7 +464,7 @@ namespace CardGameDef
         {
             if (!File.Exists(file))
             {
-                UnityEngine.Debug.LogWarning("LoadJsonFromFile::NoFile");
+                UnityEngine.Debug.LogError("LoadJsonFromFile::NoFile");
                 return;
             }
 
@@ -474,96 +488,184 @@ namespace CardGameDef
             }
         }
 
-        // Note: Can throw Exception
         public void LoadCardFromJToken(JToken cardJToken, string defaultSetCode)
         {
             if (cardJToken == null)
             {
-                UnityEngine.Debug.LogWarning("LoadCardFromJToken::NullCardJToken");
+                UnityEngine.Debug.LogError("LoadCardFromJToken::NullCardJToken");
                 return;
             }
 
-            string cardId = cardJToken.Value<string>(CardIdIdentifier) ?? string.Empty;
-            if (string.IsNullOrEmpty(cardId))
+            Dictionary<string, PropertyDefValuePair> metaProperties = new Dictionary<string, PropertyDefValuePair>();
+            PropertyDef idDef = new PropertyDef(CardIdIdentifier, PropertyType.String);
+            PopulateCardProperty(metaProperties, cardJToken, idDef, idDef.Name);
+            string cardId = string.Empty;
+            if (metaProperties.TryGetValue(CardIdIdentifier, out PropertyDefValuePair cardIdEntry))
             {
-                UnityEngine.Debug.LogWarning("LoadCardFromJToken::EmptyCardId");
+                cardId = cardIdEntry.Value;
+                if (string.IsNullOrEmpty(cardId))
+                {
+                    UnityEngine.Debug.LogWarning("LoadCardFromJToken::MissingCardId");
+                    return;
+                }
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning("LoadCardFromJToken::ParseIdError");
                 return;
             }
 
-            string cardName = cardJToken.Value<string>(CardNameIdentifier) ?? string.Empty;
+            PropertyDef nameDef = new PropertyDef(CardNameIdentifier, PropertyType.String);
+            PopulateCardProperty(metaProperties, cardJToken, nameDef, nameDef.Name);
+            string cardName = string.Empty;
+            if (metaProperties.TryGetValue(CardNameIdentifier, out PropertyDefValuePair cardNameEntry))
+                cardName = cardNameEntry.Value ?? string.Empty;
+            else
+                UnityEngine.Debug.LogWarning("LoadCardFromJToken::ParseNameError");
+
             Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
-            foreach (PropertyDef property in CardProperties)
-            {
-                PropertyDefValuePair newPropertyEntry = new PropertyDefValuePair() { Def = property };
-                try
-                {
-                    string listValue = string.Empty;
-                    JObject jObject = null;
-                    switch (property.Type)
-                    {
-                        case PropertyType.ObjectEnumList:
-                            listValue = string.Empty;
-                            foreach (JToken jToken in cardJToken[property.Name])
-                            {
-                                if (!string.IsNullOrEmpty(listValue))
-                                    listValue += EnumDef.Delimiter;
-                                jObject = jToken as JObject;
-                                listValue += jObject?.Value<string>("id") ?? string.Empty;
-                            }
-                            newPropertyEntry.Value = listValue;
-                            break;
-                        case PropertyType.ObjectList:
-                            listValue = string.Empty;
-                            foreach (JToken jToken in cardJToken[property.Name])
-                            {
-                                if (!string.IsNullOrEmpty(listValue))
-                                    listValue += EnumDef.Delimiter;
-                                jObject = jToken as JObject;
-                                listValue += jObject?.ToString() ?? string.Empty;
-                            }
-                            newPropertyEntry.Value = listValue;
-                            break;
-                        case PropertyType.ObjectEnum:
-                            jObject = cardJToken[property.Name] as JObject;
-                            newPropertyEntry.Value = jObject.Value<string>("id") ?? string.Empty;
-                            break;
-                        case PropertyType.Object:
-                            jObject = cardJToken[property.Name] as JObject;
-                            newPropertyEntry.Value = jObject?.ToString() ?? string.Empty;
-                            break;
-                        case PropertyType.StringEnumList:
-                        case PropertyType.StringList:
-                            listValue = string.Empty;
-                            foreach (JToken jToken in cardJToken[property.Name])
-                            {
-                                if (!string.IsNullOrEmpty(listValue))
-                                    listValue += EnumDef.Delimiter;
-                                listValue += jToken.Value<string>() ?? string.Empty;
-                            }
-                            newPropertyEntry.Value = listValue;
-                            break;
-                        case PropertyType.EscapedString:
-                            newPropertyEntry.Value = (cardJToken.Value<string>(property.Name) ?? string.Empty).Replace("\\", "");
-                            break;
-                        case PropertyType.StringEnum:
-                        case PropertyType.Boolean:
-                        case PropertyType.Integer:
-                        case PropertyType.String:
-                        default:
-                            newPropertyEntry.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
-                            break;
-                    }
-                }
-                catch
-                {
-                    newPropertyEntry.Value = string.Empty;
-                }
-                cardProperties[property.Name] = newPropertyEntry;
-            }
+            PopulateCardProperties(cardProperties, cardJToken, CardProperties);
 
             HashSet<string> setCodes = new HashSet<string>();
+            PopulateSetCodes(setCodes, cardJToken, defaultSetCode);
+
+            foreach (string cardSet in setCodes)
+            {
+                bool isReprint = CardNames.Contains(cardName);
+                if (!isReprint)
+                    CardNames.Add(cardName);
+                Card newCard = new Card(this, setCodes.Count > 1 ? (cardId + "_" + cardSet) : cardId, cardName, cardSet, cardProperties, isReprint);
+
+                if (!string.IsNullOrEmpty(CardImageProperty))
+                {
+                    PropertyDef imageDef = new PropertyDef(CardImageProperty, PropertyType.String);
+                    PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDef.Name);
+                    if (metaProperties.TryGetValue(CardImageProperty, out PropertyDefValuePair cardImageEntry))
+                        newCard.ImageWebUrl = cardImageEntry.Value ?? string.Empty;
+                }
+
+                if (string.IsNullOrEmpty(CardImageProperty) || !string.IsNullOrEmpty(newCard.ImageWebUrl))
+                {
+                    LoadedCards[newCard.Id] = newCard;
+                    if (!Sets.ContainsKey(cardSet))
+                        LoadedSets[cardSet] = new Set(cardSet, cardSet);
+                }
+                else
+                    UnityEngine.Debug.LogWarning("LoadCardFromJToken::MissingCardImageWebUrl");
+            }
+        }
+
+        public void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken, List<PropertyDef> propertyDefs, string keyPrefix = "")
+        {
+            if (cardProperties == null || cardJToken == null || propertyDefs == null)
+            {
+                UnityEngine.Debug.LogError($"PopulateCardProperties::NullInput:{cardProperties}:{propertyDefs}:{cardJToken}");
+                return;
+            }
+
+            foreach (PropertyDef property in propertyDefs)
+                PopulateCardProperty(cardProperties, cardJToken, property, keyPrefix + property.Name);
+        }
+
+        public void PopulateCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken, PropertyDef property, string key)
+        {
+            try
+            {
+                PropertyDefValuePair newProperty = new PropertyDefValuePair() { Def = property };
+                string listValue = string.Empty;
+                JObject jObject = null;
+                switch (property.Type)
+                {
+                    case PropertyType.ObjectEnumList:
+                        listValue = string.Empty;
+                        foreach (JToken jToken in cardJToken[property.Name])
+                        {
+                            if (!string.IsNullOrEmpty(listValue))
+                                listValue += EnumDef.Delimiter;
+                            jObject = jToken as JObject;
+                            listValue += jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty;
+                        }
+                        newProperty.Value = listValue;
+                        cardProperties[key] = newProperty;
+                        break;
+                    case PropertyType.ObjectList:
+                        foreach (PropertyDef childProperty in property.Properties)
+                        {
+                            newProperty = new PropertyDefValuePair() { Def = childProperty };
+                            listValue = string.Empty;
+                            Dictionary<string, PropertyDefValuePair> values = new Dictionary<string, PropertyDefValuePair>();
+                            int i = 0;
+                            foreach (JToken jToken in cardJToken[property.Name])
+                            {
+                                PopulateCardProperty(values, jToken, childProperty, key + childProperty.Name + i);
+                                i++;
+                            }
+                            foreach (var entry in values)
+                            {
+                                if (!string.IsNullOrEmpty(listValue))
+                                    listValue += EnumDef.Delimiter;
+                                listValue += entry.Value.Value;
+                            }
+                            newProperty.Value = listValue;
+                            cardProperties[key + PropertyDef.ObjectDelimiter + childProperty.Name] = newProperty;
+                        }
+                        break;
+                    case PropertyType.ObjectEnum:
+                        jObject = cardJToken[property.Name] as JObject;
+                        newProperty.Value = jObject.Value<string>(CardPropertyIdentifier) ?? string.Empty;
+                        cardProperties[key] = newProperty;
+                        break;
+                    case PropertyType.Object:
+                        jObject = cardJToken[property.Name] as JObject;
+                        if (jObject != null && jObject.HasValues)
+                            PopulateCardProperties(cardProperties, cardJToken[property.Name], property.Properties, key + PropertyDef.ObjectDelimiter);
+                        break;
+                    case PropertyType.StringEnumList:
+                    case PropertyType.StringList:
+                        listValue = string.Empty;
+                        foreach (JToken jToken in cardJToken[property.Name])
+                        {
+                            if (!string.IsNullOrEmpty(listValue))
+                                listValue += EnumDef.Delimiter;
+                            listValue += jToken.Value<string>() ?? string.Empty;
+                        }
+                        newProperty.Value = listValue;
+                        cardProperties[key] = newProperty;
+                        break;
+                    case PropertyType.EscapedString:
+                        newProperty.Value = (cardJToken.Value<string>(property.Name) ?? string.Empty)
+                            .Replace(PropertyDef.EscapeCharacter, string.Empty);
+                        cardProperties[key] = newProperty;
+                        break;
+                    case PropertyType.StringEnum:
+                    case PropertyType.Boolean:
+                    case PropertyType.Integer:
+                    case PropertyType.String:
+                    default:
+                        newProperty.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
+                        cardProperties[key] = newProperty;
+                        break;
+                }
+            }
+            catch
+            {
+                string propertyName = property != null ? property.Name : string.Empty;
+                UnityEngine.Debug.LogWarning($"PopulateCardProperty::Failed:{propertyName}:{cardJToken}");
+            }
+        }
+
+        // NOTE: THROWS EXCEPTION
+        public void PopulateSetCodes(HashSet<string> setCodes, JToken cardJToken, string defaultSetCode)
+        {
+            if (setCodes == null || cardJToken == null || string.IsNullOrEmpty(defaultSetCode))
+            {
+                UnityEngine.Debug.LogError($"PopulateSetCodes::MissingInput:{setCodes}:{defaultSetCode}:{cardJToken}");
+                return;
+            }
+
             if (SetsInCardObject)
             {
+                // NOTE: THROWS EXCEPTION
                 JToken setContainer = cardJToken[CardSetIdentifier];
                 List<JToken> setJTokens = (setContainer as JArray)?.ToList() ?? new List<JToken>();
                 if (setJTokens.Count == 0)
@@ -573,39 +675,27 @@ namespace CardGameDef
                     JObject setObject = jToken as JObject;
                     string setCode = setObject?.Value<string>(SetCodeIdentifier);
                     if (setCode == null)
-                        UnityEngine.Debug.LogWarning("LoadCardFromJToken::InvalidSetObject:" + setContainer.ToString());
+                        UnityEngine.Debug.LogError("PopulateSetCodes::InvalidSetObject:" + setContainer.ToString());
                     else
                         setCodes.Add(setCode);
                 }
             }
             else
                 setCodes.Add(cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode);
-
-            foreach (string cardSet in setCodes)
-            {
-                bool isReprint = CardNames.Contains(cardName);
-                if (!isReprint)
-                    CardNames.Add(cardName);
-                Card newCard = new Card(this, setCodes.Count > 1 ? (cardId + "_" + cardSet) : cardId, cardName, cardSet, cardProperties, isReprint);
-                LoadedCards[newCard.Id] = newCard;
-                if (!Sets.ContainsKey(cardSet))
-                    LoadedSets[cardSet] = new Set(cardSet, cardSet);
-            }
         }
 
-        // Note: Can throw Exception
         public void LoadSetFromJToken(JToken setJToken, string defaultSetCode)
         {
             if (setJToken == null)
             {
-                UnityEngine.Debug.LogWarning("LoadSetFromJToken::NullSetJToken");
+                UnityEngine.Debug.LogError("LoadSetFromJToken::NullSetJToken");
                 return;
             }
 
             string setCode = setJToken.Value<string>(SetCodeIdentifier);
             if (string.IsNullOrEmpty(setCode))
             {
-                UnityEngine.Debug.LogWarning("LoadSetFromJToken::EmptySetCode");
+                UnityEngine.Debug.LogError("LoadSetFromJToken::EmptySetCode");
                 return;
             }
             string setName = setJToken.Value<string>(SetNameIdentifier) ?? setCode;
@@ -622,7 +712,7 @@ namespace CardGameDef
         {
             if (filters == null)
             {
-                UnityEngine.Debug.LogWarning("FilterCards::NullFilters");
+                UnityEngine.Debug.LogError("FilterCards::NullFilters");
                 yield break;
             }
 
@@ -657,7 +747,7 @@ namespace CardGameDef
                     }
                     if ((card.GetPropertyValueEnum(entry.Key) & entry.Value) == 0)
                         propsMatch = propsMatch && (entry.Value == (1 << enumDef.Values.Count)) && CardProperties.FirstOrDefault(prop
-                                         => prop.Name.Equals(entry.Key)).Empty.Equals(card.GetPropertyValueString(entry.Key));
+                                         => prop.Name.Equals(entry.Key)).DisplayEmpty.Equals(card.GetPropertyValueString(entry.Key));
                 }
                 if (propsMatch)
                     yield return card;
