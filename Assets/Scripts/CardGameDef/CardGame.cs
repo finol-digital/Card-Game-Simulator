@@ -279,6 +279,16 @@ namespace CardGameDef
             return Enums.Where(def => def.Property.Equals(propertyName)).ToList().Count > 0;
         }
 
+        public void ClearDefinitionLists()
+        {
+            CardProperties.Clear();
+            DeckUrls.Clear();
+            Enums.Clear();
+            Extras.Clear();
+            GameBoardCards.Clear();
+            GameBoardUrls.Clear();
+        }
+
         public void ReadProperties()
         {
             try
@@ -286,6 +296,7 @@ namespace CardGameDef
                 // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name* to change, so account for that
                 string gameFilePath = GameFilePath;
                 string gameDirectoryPath = GameDirectoryPath;
+                ClearDefinitionLists();
                 JsonConvert.PopulateObject(File.ReadAllText(GameFilePath), this);
                 if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath))
                 {
