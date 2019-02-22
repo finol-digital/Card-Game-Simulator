@@ -750,7 +750,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.12.0.0
+  metroPackageVersion: 1.13.0.0
   metroCertificatePath: WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
@@ -811,16 +811,16 @@ PlayerSettings:
       VoipCall: False
       WebCam: False
   metroTargetDeviceFamilies:
-    Desktop: False
+    Desktop: True
     Holographic: False
     IoT: False
     IoTHeadless: False
-    Mobile: False
+    Mobile: True
     Team: False
     Xbox: False
   metroFTAName: 
   metroFTAFileTypes: []
-  metroProtocolName: 
+  metroProtocolName: cardgamesim
   metroCompilationOverrides: 1
   XboxOneProductId: 
   XboxOneUpdateKey: 
