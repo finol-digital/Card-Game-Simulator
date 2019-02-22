@@ -14,6 +14,8 @@ permalink: roadmap.html
 - Added Windows .exe
 
 ## Current Sprint
+- Fix: Lock to Landscape
+- Fix: Improve loading of large AllCards.json
 - Fix: Zoom out in Play Mode makes card disappear
 - Add Shuffle deck button
 - Unify search filters with searchbar
