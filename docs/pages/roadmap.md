@@ -5,19 +5,17 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Enhance object card property data type
-- Remap Card Viewer and Deck Editor input
+- Enhanced object card property data type
+- Remapped Card Viewer and Deck Editor input
 - Fix: Error on app first start
 - Fix: Downloading game that already exists causes properties to be appear twice
 - Fix: On change page in Cards Explorer, move to top of page
 - Fix: Apply Screen Orientation Settings
+- Added Windows .exe
 
 ## Current Sprint
 - Fix: Zoom out in Play Mode makes card disappear
 - Add Shuffle deck button
-- Fix Mac version
-- Windows .exe
-- https://github.com/ValveSoftware/ArtifactDeckCode https://www.playartifact.com/d/ADCJbkV9LgCBBBKwQWMqrsCjkKqAoNUQoESAQpRQXUBSSYBh7MBjYFUcml1bXBoYW50IE1lZXBvIEphbms_
 - Unify search filters with searchbar
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
@@ -63,6 +61,7 @@ permalink: roadmap.html
 - Tech: Restore CardClearsBackground
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
+- Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Print proxy deck list as pdf
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
