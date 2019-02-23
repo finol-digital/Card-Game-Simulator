@@ -5,16 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Enhanced object card property data type
-- Remapped Card Viewer and Deck Editor input
-- Fix: Error on app first start
-- Fix: Downloading game that already exists causes properties to be appear twice
-- Fix: On change page in Cards Explorer, move to top of page
-- Fix: Apply Screen Orientation Settings
-- Added Windows .exe
+- Fix: Lock to Landscape
 
 ## Current Sprint
-- Fix: Lock to Landscape
+- Fix: Manually update existing game (DB)
 - Fix: Improve loading of large AllCards.json
 - Fix: Zoom out in Play Mode makes card disappear
 - Add Shuffle deck button

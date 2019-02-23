@@ -811,11 +811,11 @@ PlayerSettings:
       VoipCall: False
       WebCam: False
   metroTargetDeviceFamilies:
-    Desktop: True
+    Desktop: False
     Holographic: False
     IoT: False
     IoTHeadless: False
-    Mobile: True
+    Mobile: False
     Team: False
     Xbox: False
   metroFTAName: 

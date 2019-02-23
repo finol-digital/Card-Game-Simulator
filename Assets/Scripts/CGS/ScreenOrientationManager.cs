@@ -33,7 +33,7 @@ namespace CGS
 
         public static bool DoesControllerLockToLandscape
         {
-            get { return PlayerPrefs.GetInt(PlayerPrefControllerLockToLandscape, 1) == 1; }
+            get { return PlayerPrefs.GetInt(PlayerPrefControllerLockToLandscape, 0) == 1; }
             set
             {
                 if (value == DoesControllerLockToLandscape)
@@ -61,7 +61,7 @@ namespace CGS
             }
         }
 
-        public static bool IsControllerConnected => Input.GetJoystickNames().Length > 0;
+        public static bool IsControllerConnected => Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length > 0;
         public static bool WasControllerConnected { get; private set; }
 
         public static void ResetOrientation()
@@ -81,11 +81,11 @@ namespace CGS
                 Screen.autorotateToPortrait = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
                 Screen.autorotateToPortraitUpsideDown = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
                 Screen.autorotateToLandscapeLeft = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
-                Screen.autorotateToLandscapeRight = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
+                Screen.autorotateToLandscapeRight = autoRotationOn;
                 switch (PreferredScreenOrientation)
                 {
                     case ScreenOrientationPref.Landscape:
-                        Screen.orientation = ScreenOrientation.Landscape;
+                        Screen.orientation = ScreenOrientation.LandscapeLeft;
                         break;
                     case ScreenOrientationPref.Portrait:
                         Screen.orientation = ScreenOrientation.Portrait;
