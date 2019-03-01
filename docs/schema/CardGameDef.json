@@ -200,9 +200,26 @@
       "type": "string"
     },
     "cardSetIdentifier": {
-      "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. If the mapping is missing, CGS will use <setCodeDefault>. Most custom games will likely want to keep the default cardSetIdentifier.",
+      "description": "When defining a Card in AllCards.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. If the mapping is missing, CGS will use <setCodeDefault>. Most custom games will likely want to keep the default cardSetIdentifier.",
       "default": "set",
       "type": "string"
+    },
+    "cardSetIsObject": {
+      "description": "If cardSetIsObject is set to true, <cardSetIdentifier> should point to an object (or list of objects) that follows the rules for AllSets.json.",
+      "type": "boolean"
+    },
+    "cardSetNameIdentifier": {
+      "description": "When defining a Card in AllCards.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. That Set's name can be defined by cardSetNameIdentifier.",
+      "default": "setname",
+      "type": "string"
+    },
+    "cardSetsInList": {
+      "description": "If cardSetInList is set to true, Cards will be duplicated for each Set in <cardSetIdentifier>.",
+      "type": "boolean"
+    },
+    "cardSetsInListIsCsv": {
+      "description": "If cardSetsInListIsCsv is set to true, Cards will be duplicated for each Set found in the comma-separated list of <cardSetIdentifier>.",
+      "type": "boolean"
     },
     "cardSize": {
       "description": "cardSize indicates a card's width and height in inches.",
@@ -212,8 +229,8 @@
       },
       "$ref": "#/definitions/vector2"
     },
-    "deckFileHsdId": {
-      "description": "When saving or loading a deck as hsd, deckFileHsdId refers to the *Card:Property* used to uniquely identify each Card and is stored as a varint within the deck string.",
+    "deckFileAltId": {
+      "description": "When saving or loading a deck with <deckFileType> NOT txt, deckFileAltId refers to the *Card:Property* used to uniquely identify each Card. For hsd, this is stored as a varint within the deck string.",
       "default": "dbfId",
       "type": "string"
     },
@@ -395,10 +412,6 @@
       "description": "rulesUrl should link to this game's online rulebook.",
       "type": "string",
       "format": "uri"
-    },
-    "setsInCardObject": {
-      "description": "If setsInCardObject is set to true, <cardSetIdentifier> should point to an object or a list of objects. If it is a list, the Card wil be duplicated for each Set. These Set definitions follow the rules for AllSets.json.",
-      "type": "boolean"
     },
     "setCardsIdentifier": {
       "description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",

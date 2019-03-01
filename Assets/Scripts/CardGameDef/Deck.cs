@@ -119,22 +119,22 @@ namespace CardGameDef
 
             int numHeroes = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numHeroes; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
             int numSingleCards = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numSingleCards; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 1);
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int)VarInt.Read(bytes, ref offset, out length), 1);
 
             int numDoubleCards = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numDoubleCards; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, (int)VarInt.Read(bytes, ref offset, out length), 2);
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int)VarInt.Read(bytes, ref offset, out length), 2);
 
             int numMultiCards = (int)VarInt.Read(bytes, ref offset, out length);
             for (int i = 0; i < numMultiCards; i++)
             {
                 int id = (int)VarInt.Read(bytes, ref offset, out length);
                 int count = (int)VarInt.Read(bytes, ref offset, out length);
-                AddCardsByPropertyInt(SourceGame.DeckFileHsdId, id, count);
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, id, count);
             }
 
             Sort();
@@ -147,13 +147,19 @@ namespace CardGameDef
                 Cards.Add(card);
         }
 
+        public void AddCardsByPropertyString(string propertyName, string propertyValue, int count)
+        {
+            Card card = SourceGame.Cards.Values.FirstOrDefault(currCard => currCard.GetPropertyValueString(propertyName).Equals(propertyValue));
+            for (int i = 0; card != null && i < count; i++)
+                Cards.Add(card);
+        }
+
         public void LoadYdk(string line)
         {
             if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
                 return;
 
-            if (SourceGame.Cards.ContainsKey(line))
-                Cards.Add(SourceGame.Cards[line]);
+            AddCardsByPropertyString(SourceGame.DeckFileAltId, line, 1);
         }
 
         public void LoadTxt(string line)
@@ -296,20 +302,20 @@ namespace CardGameDef
 
                 VarInt.Write(ms, extraCards.Count);
                 foreach (Card card in extraCards)
-                    VarInt.Write(ms, card.GetPropertyValueInt(SourceGame.DeckFileHsdId));
+                    VarInt.Write(ms, card.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
                 VarInt.Write(ms, singleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileHsdId));
+                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
                 VarInt.Write(ms, doubleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileHsdId));
+                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
                 VarInt.Write(ms, nCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in nCopy)
                 {
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileHsdId));
+                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
                     VarInt.Write(ms, cardCount.Value);
                 }
 
@@ -325,9 +331,9 @@ namespace CardGameDef
             mainCards.RemoveAll(card => extraCards.Contains(card));
 
             text += "#main" + Environment.NewLine;
-            text = mainCards.Aggregate(text, (current, card) => current + (card.Id + Environment.NewLine));
+            text = mainCards.Aggregate(text, (current, card) => current + (card.GetPropertyValueString(SourceGame.DeckFileAltId) + Environment.NewLine));
             text += "#extra" + Environment.NewLine;
-            text = extraCards.Aggregate(text, (current, card) => current + (card.Id + Environment.NewLine));
+            text = extraCards.Aggregate(text, (current, card) => current + (card.GetPropertyValueString(SourceGame.DeckFileAltId) + Environment.NewLine));
 
             text += "!side" + Environment.NewLine;
             return text;

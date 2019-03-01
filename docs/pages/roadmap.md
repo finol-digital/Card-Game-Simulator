@@ -9,7 +9,7 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Fix: Manually update existing game (DB)
-- Fix: Improve loading of large AllCards.json
+- Fix: Improve loading of large AllCards.json (HS)
 - Fix: Zoom out in Play Mode makes card disappear
 - Add Shuffle deck button
 - Unify search filters with searchbar

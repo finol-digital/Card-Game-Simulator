@@ -127,6 +127,18 @@ namespace CardGameDef
         public string CardSetIdentifier { get; set; } = "set";
 
         [JsonProperty]
+        public bool CardSetIsObject { get; set; }
+
+        [JsonProperty]
+        public string CardSetNameIdentifier { get; set; } = "setname";
+
+        [JsonProperty]
+        public bool CardSetsInList { get; set; }
+
+        [JsonProperty]
+        public bool CardSetsInListIsCsv { get; set; }
+
+        [JsonProperty]
         public string CardPrimaryProperty { get; set; } = "";
 
         [JsonProperty]
@@ -139,7 +151,7 @@ namespace CardGameDef
         public UnityEngine.Vector2 CardSize { get; set; } = new UnityEngine.Vector2(2.5f, 3.5f);
 
         [JsonProperty]
-        public string DeckFileHsdId { get; set; } = "dbfId";
+        public string DeckFileAltId { get; set; } = "dbfId";
 
         [JsonProperty]
         public DeckFileTxtId DeckFileTxtId { get; set; } = DeckFileTxtId.Set;
@@ -188,9 +200,6 @@ namespace CardGameDef
 
         [JsonProperty]
         public string RulesUrl { get; set; } = "";
-
-        [JsonProperty]
-        public bool SetsInCardObject { get; set; }
 
         [JsonProperty]
         public string SetCardsIdentifier { get; set; } = "cards";
@@ -526,33 +535,35 @@ namespace CardGameDef
             Dictionary<string, PropertyDefValuePair> cardProperties = new Dictionary<string, PropertyDefValuePair>();
             PopulateCardProperties(cardProperties, cardJToken, CardProperties);
 
-            HashSet<string> setCodes = new HashSet<string>();
-            PopulateSetCodes(setCodes, cardJToken, defaultSetCode);
+            Dictionary<string, string> cardSets = new Dictionary<string, string>();
+            PopulateCardSets(cardSets, cardJToken, defaultSetCode);
 
-            foreach (string cardSet in setCodes)
+            string cardImageWebUrl = string.Empty;
+            if (!string.IsNullOrEmpty(CardImageProperty))
             {
-                bool isReprint = CardNames.Contains(cardName);
-                if (!isReprint)
-                    CardNames.Add(cardName);
-                Card newCard = new Card(this, setCodes.Count > 1 ? (cardId + "_" + cardSet) : cardId, cardName, cardSet, cardProperties, isReprint);
-
-                if (!string.IsNullOrEmpty(CardImageProperty))
-                {
-                    PropertyDef imageDef = new PropertyDef(CardImageProperty, PropertyType.String);
-                    PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDef.Name);
-                    if (metaProperties.TryGetValue(CardImageProperty, out PropertyDefValuePair cardImageEntry))
-                        newCard.ImageWebUrl = cardImageEntry.Value ?? string.Empty;
-                }
-
-                if (string.IsNullOrEmpty(CardImageProperty) || !string.IsNullOrEmpty(newCard.ImageWebUrl))
-                {
-                    LoadedCards[newCard.Id] = newCard;
-                    if (!Sets.ContainsKey(cardSet))
-                        LoadedSets[cardSet] = new Set(cardSet, cardSet);
-                }
-                else
-                    UnityEngine.Debug.LogWarning("LoadCardFromJToken::MissingCardImageWebUrl");
+                PropertyDef imageDef = new PropertyDef(CardImageProperty, PropertyType.String);
+                PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDef.Name);
+                if (metaProperties.TryGetValue(CardImageProperty, out PropertyDefValuePair cardImageEntry))
+                    cardImageWebUrl = cardImageEntry.Value ?? string.Empty;
             }
+
+            if (string.IsNullOrEmpty(CardImageProperty) || !string.IsNullOrEmpty(cardImageWebUrl))
+            {
+                foreach (var set in cardSets)
+                {
+                    bool isReprint = CardNames.Contains(cardName);
+                    if (!isReprint)
+                        CardNames.Add(cardName);
+                    string cardDuplicateId = cardSets.Count > 1 ? (cardId + PropertyDef.ObjectDelimiter + set.Key) : cardId;
+                    Card newCard = new Card(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint);
+                    newCard.ImageWebUrl = cardImageWebUrl;
+                    LoadedCards[newCard.Id] = newCard;
+                    if (!Sets.ContainsKey(set.Key))
+                        LoadedSets[set.Key] = new Set(set.Key, set.Value);
+                }
+            }
+            else
+                UnityEngine.Debug.LogWarning("LoadCardFromJToken::MissingCardImageWebUrl");
         }
 
         public void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken, List<PropertyDef> propertyDefs, string keyPrefix = "")
@@ -654,34 +665,55 @@ namespace CardGameDef
             }
         }
 
-        // NOTE: THROWS EXCEPTION
-        public void PopulateSetCodes(HashSet<string> setCodes, JToken cardJToken, string defaultSetCode)
+        public void PopulateCardSets(Dictionary<string, string> cardSets, JToken cardJToken, string defaultSetCode)
         {
-            if (setCodes == null || cardJToken == null || string.IsNullOrEmpty(defaultSetCode))
+            if (cardSets == null || cardJToken == null || string.IsNullOrEmpty(defaultSetCode))
             {
-                UnityEngine.Debug.LogError($"PopulateSetCodes::MissingInput:{setCodes}:{defaultSetCode}:{cardJToken}");
+                UnityEngine.Debug.LogError($"PopulateSetCodes::MissingInput:{cardSets}:{defaultSetCode}:{cardJToken}");
                 return;
             }
 
-            if (SetsInCardObject)
+            if (CardSetsInListIsCsv)
             {
-                // NOTE: THROWS EXCEPTION
-                JToken setContainer = cardJToken[CardSetIdentifier];
-                List<JToken> setJTokens = (setContainer as JArray)?.ToList() ?? new List<JToken>();
-                if (setJTokens.Count == 0)
-                    setJTokens.Add(setContainer);
-                foreach (JToken jToken in setJTokens)
+                // TODO: CardSetsInListIsCsv
+            }
+            else if (CardSetsInList)
+            {
+                List<JToken> setJTokens = new List<JToken>();
+                try { setJTokens = (cardJToken[CardSetIdentifier] as JArray)?.ToList() ?? new List<JToken>(); }
+                catch { UnityEngine.Debug.LogWarning($"PopulateSetCodes::BadCardSetIdentifier for {cardJToken.ToString()}"); }
+                foreach (JToken setJToken in setJTokens)
                 {
-                    JObject setObject = jToken as JObject;
-                    string setCode = setObject?.Value<string>(SetCodeIdentifier);
-                    if (setCode == null)
-                        UnityEngine.Debug.LogError("PopulateSetCodes::InvalidSetObject:" + setContainer.ToString());
+                    if (CardSetIsObject)
+                    {
+                        JObject setObject = setJToken as JObject;
+                        string setCode = setObject?.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
+                        string setName = setObject?.Value<string>(SetNameIdentifier) ?? setCode;
+                        cardSets[setCode] = setName;
+                    }
                     else
-                        setCodes.Add(setCode);
+                    {
+                        string code = setJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
+                        string name = setJToken.Value<string>(CardSetNameIdentifier) ?? code;
+                        cardSets[code] = name;
+                    }
                 }
             }
+            else if (CardSetIsObject)
+            {
+                JObject setObject = null;
+                try { setObject = cardJToken[CardSetIdentifier] as JObject; }
+                catch { UnityEngine.Debug.LogWarning($"PopulateSetCodes::BadCardSetIdentifier for {cardJToken.ToString()}"); }
+                string setCode = setObject?.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
+                string setName = setObject?.Value<string>(SetNameIdentifier) ?? setCode;
+                cardSets[setCode] = setName;
+            }
             else
-                setCodes.Add(cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode);
+            {
+                string code = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
+                string name = cardJToken.Value<string>(CardSetNameIdentifier) ?? code;
+                cardSets[code] = name;
+            }
         }
 
         public void LoadSetFromJToken(JToken setJToken, string defaultSetCode)

@@ -13,6 +13,7 @@
   "cardImageFileType": "jpg",
   "cardImageUrl": "http://aminduna.arcmage.org{card_jpeg}",
   "cardSetIdentifier": "serie",
+  "cardSetIsObject": true,
   "cardPrimaryProperty": "ruleText",
   "cardProperties": [
     {
@@ -160,7 +161,6 @@
   "gameStartHandCount": 7,
   "name": "Arcmage",
   "rulesUrl": "https://arcmage.org/rules/",
-  "setsInCardObject": true,
   "setCodeIdentifier": "id",
   "setDataIdentifier": "series"
 }

@@ -168,7 +168,7 @@ static public class UnityExtensionMethods
             return;
 
         string fileContents = File.ReadAllText(filePath);
-        string unwrappedContent = fileContents.TrimStart('(').TrimEnd(')');
+        string unwrappedContent = fileContents.TrimStart('(', '[', '{').TrimEnd(')', ']', '}');
         File.WriteAllText(filePath, unwrappedContent);
     }
 
