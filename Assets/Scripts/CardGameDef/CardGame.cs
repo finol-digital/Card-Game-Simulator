@@ -368,6 +368,10 @@ namespace CardGameDef
             string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
             if (!string.IsNullOrEmpty(AllSetsUrl))
                 yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl, setsFilePath);
+            if (AllSetsUrlZipped)
+                UnityExtensionMethods.ExtractZip(setsFilePath, GameDirectoryPath);
+            if (AllSetsUrlWrapped)
+                UnityExtensionMethods.UnwrapFile(SetsFilePath);
 
             if (!string.IsNullOrEmpty(AllCardsUrl))
             {
@@ -390,6 +394,11 @@ namespace CardGameDef
                         jsonBody += "}";
                     }
                     yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody);
+                    if (AllCardsUrlZipped)
+                        UnityExtensionMethods.ExtractZip(cardsFile, GameDirectoryPath);
+                    if (AllCardsUrlWrapped)
+                        UnityExtensionMethods.UnwrapFile(cardsFile.EndsWith(UnityExtensionMethods.ZipExtension)
+                            ? cardsFile.Remove(cardsFile.Length - UnityExtensionMethods.ZipExtension.Length) : cardsFile);
                     // Sometimes, we need to get the AllCardsUrlPageCount from the first page of AllCardsUrl
                     if (page == AllCardsUrlPageCountStartIndex && !string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
                         LoadCards(page);
@@ -448,22 +457,19 @@ namespace CardGameDef
         public void LoadCards(int page)
         {
             string cardsFilePath = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
-            if (AllCardsUrlZipped)
-                UnityExtensionMethods.ExtractZip(cardsFilePath + UnityExtensionMethods.ZipExtension, GameDirectoryPath);
-            if (AllCardsUrlWrapped)
-                UnityExtensionMethods.UnwrapFile(cardsFilePath);
+
             if (File.Exists(cardsFilePath))
                 LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier);
+            else
+                UnityEngine.Debug.Log("LoadCards::NOAllCards.json");
         }
 
         public void LoadSets()
         {
-            if (AllSetsUrlZipped)
-                UnityExtensionMethods.ExtractZip(SetsFilePath + UnityExtensionMethods.ZipExtension, GameDirectoryPath);
-            if (AllSetsUrlWrapped)
-                UnityExtensionMethods.UnwrapFile(SetsFilePath);
             if (File.Exists(SetsFilePath))
                 LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
+            else
+                UnityEngine.Debug.Log("LoadSets::NOAllSets.json");
 
             if (LoadedSets.TryGetValue(SetCodeDefault, out Set defaultSet))
                 defaultSet.Name = SetNameDefault;
@@ -675,7 +681,16 @@ namespace CardGameDef
 
             if (CardSetsInListIsCsv)
             {
-                // TODO: CardSetsInListIsCsv
+                string codesCsv = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
+                string namesCsv = cardJToken.Value<string>(CardSetNameIdentifier) ?? codesCsv;
+                string[] codes = codesCsv.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] names = namesCsv.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < codes.Length; i++)
+                {
+                    string code = codes[i];
+                    string name = i < names.Length ? names[i] : code;
+                    cardSets[code] = name;
+                }
             }
             else if (CardSetsInList)
             {

@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Enhanced Set Loading
 - Fix: Lock to Landscape
 
 ## Current Sprint

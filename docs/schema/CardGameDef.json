@@ -56,7 +56,7 @@
       "type": "string"
     },
     "allCardsUrlWrapped": {
-      "description": "If allCardsUrl points to file(s) enclosed by extra parentheses, set allCardsUrlWrapped to true, and CGS will trim the parentheses.",
+      "description": "If allCardsUrl points to file(s) enclosed by extra characters, set allCardsUrlWrapped to true, and CGS will trim the first and last characters.",
       "type": "boolean"
     },
     "allCardsUrlZipped": {
@@ -69,7 +69,7 @@
       "format": "uri"
     },
     "allSetsUrlWrapped": {
-      "description": "If allSetsUrl points to a file enclosed by extra parentheses, set allSetsUrlWrapped to true, and CGS will trim the parentheses.",
+      "description": "If allSetsUrl points to a file enclosed by extra characters, set allSetsUrlWrapped to true, and CGS will trim the first and last characters.",
       "type": "boolean"
     },
     "allSetsUrlZipped": {
