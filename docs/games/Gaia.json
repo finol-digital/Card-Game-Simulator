@@ -47,7 +47,6 @@
       "type": "string"
     }
   ],
-  "gameHasDiscardZone": true,
   "name": "Gaia",
   "rulesUrl": "http://arcmage.org/wiki/index.php?title=Original_Rules_Concept"
 }

@@ -157,7 +157,6 @@
       "value": "City"
     }
   ],
-  "gameHasDiscardZone": true,
   "gameStartHandCount": 7,
   "name": "Arcmage",
   "rulesUrl": "https://arcmage.org/rules/",

@@ -15,6 +15,8 @@ permalink: roadmap.html
 - Add Shuffle deck button
 - Unify search filters with searchbar
 - Android Searchbar Widget
+- Rollup printings
+- Support default filters
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck Name by clicking on container
@@ -24,7 +26,7 @@ permalink: roadmap.html
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 - Create Sort Menu for the Deck Editor and Cards Explorer
-- Support default sort and filters
+- Support default sort
 - Add Card Editor
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider

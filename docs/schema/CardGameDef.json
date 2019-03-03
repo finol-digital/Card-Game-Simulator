@@ -119,6 +119,10 @@
       "default": "id",
       "type": "string"
     },
+    "cardIdStop": {
+      "description": "Every Card must have a unique id. When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by cardIdIdentifier. Most custom games will likely want to keep the default cardIdIdentifier. If cardIdStop is set, any id that contains cardIdStop will be stopped at <cardIdStop>.",
+      "type": "string"
+    },
     "cardImageFileType": {
       "description": "cardImageFileType is the file type extension for the image files that CGS downloads for each individual Card.",
       "default": "png",

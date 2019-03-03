@@ -112,6 +112,9 @@ namespace CardGameDef
         public string CardIdIdentifier { get; set; } = "id";
 
         [JsonProperty]
+        public string CardIdStop { get; set; } = "";
+
+        [JsonProperty]
         public string CardImageFileType { get; set; } = "png";
 
         [JsonProperty]
@@ -523,6 +526,8 @@ namespace CardGameDef
                     UnityEngine.Debug.LogWarning("LoadCardFromJToken::MissingCardId");
                     return;
                 }
+                if (!string.IsNullOrEmpty(CardIdStop))
+                    cardId = cardId.Split(CardIdStop[0])[0];
             }
             else
             {
@@ -560,7 +565,8 @@ namespace CardGameDef
                     bool isReprint = CardNames.Contains(cardName);
                     if (!isReprint)
                         CardNames.Add(cardName);
-                    string cardDuplicateId = cardSets.Count > 1 ? (cardId + PropertyDef.ObjectDelimiter + set.Key) : cardId;
+                    string cardDuplicateId = cardSets.Count > 1 && isReprint
+                        ? (cardId + PropertyDef.ObjectDelimiter + set.Key) : cardId;
                     Card newCard = new Card(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint);
                     newCard.ImageWebUrl = cardImageWebUrl;
                     LoadedCards[newCard.Id] = newCard;
