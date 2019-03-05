@@ -673,7 +673,7 @@ namespace CardGameDef
             catch
             {
                 string propertyName = property != null ? property.Name : string.Empty;
-                UnityEngine.Debug.LogWarning($"PopulateCardProperty::Failed:{propertyName}:{cardJToken}");
+                UnityEngine.Debug.Log($"PopulateCardProperty::NO:{propertyName}:{cardJToken}");
             }
         }
 
