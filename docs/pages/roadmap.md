@@ -21,6 +21,7 @@ permalink: roadmap.html
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck Name by clicking on container
 - Edit Deck List in the Deck Save Menu
+- Tap to zoom on card property text in Deck Editor Card Viewer
 - On selected card in Deck Editor and Cards Explorer, focus view on that card
 - Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
@@ -61,6 +62,7 @@ permalink: roadmap.html
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
+- Support Deck Code from https://shadowverse-portal.com/
 - Print proxy deck list as pdf
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes

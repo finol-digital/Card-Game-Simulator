@@ -558,7 +558,7 @@ namespace CardGameDef
                     cardImageWebUrl = cardImageEntry.Value ?? string.Empty;
             }
 
-            if (string.IsNullOrEmpty(CardImageProperty) || !string.IsNullOrEmpty(cardImageWebUrl))
+            if (string.IsNullOrEmpty(CardImageProperty) || !string.IsNullOrEmpty(cardImageWebUrl) || !string.IsNullOrEmpty(CardImageUrl))
             {
                 foreach (var set in cardSets)
                 {
@@ -592,6 +592,12 @@ namespace CardGameDef
 
         public void PopulateCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken, PropertyDef property, string key)
         {
+            if (cardProperties == null || cardJToken == null || property == null)
+            {
+                UnityEngine.Debug.LogError($"PopulateCardProperty::MissingInput:{cardProperties}:{cardJToken}:{property}");
+                return;
+            }
+
             try
             {
                 PropertyDefValuePair newProperty = new PropertyDefValuePair() { Def = property };
@@ -627,7 +633,7 @@ namespace CardGameDef
                             {
                                 if (!string.IsNullOrEmpty(listValue))
                                     listValue += EnumDef.Delimiter;
-                                listValue += entry.Value.Value;
+                                listValue += entry.Value.Value.Replace(EnumDef.Delimiter, ", ");
                             }
                             newProperty.Value = listValue;
                             cardProperties[key + PropertyDef.ObjectDelimiter + childProperty.Name] = newProperty;
@@ -642,6 +648,8 @@ namespace CardGameDef
                         jObject = cardJToken[property.Name] as JObject;
                         if (jObject != null && jObject.HasValues)
                             PopulateCardProperties(cardProperties, cardJToken[property.Name], property.Properties, key + PropertyDef.ObjectDelimiter);
+                        else
+                            PopulateEmptyCardProperty(cardProperties, property, key);
                         break;
                     case PropertyType.StringEnumList:
                     case PropertyType.StringList:
@@ -672,16 +680,22 @@ namespace CardGameDef
             }
             catch
             {
-                string propertyName = property != null ? property.Name : string.Empty;
-                UnityEngine.Debug.Log($"PopulateCardProperty::NO:{propertyName}:{cardJToken}");
+                PopulateEmptyCardProperty(cardProperties, property, key);
             }
+        }
+
+        private void PopulateEmptyCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties, PropertyDef property, string key)
+        {
+            cardProperties[key] = new PropertyDefValuePair() { Def = property, Value = string.Empty };
+            foreach (PropertyDef childProperty in property.Properties)
+                PopulateEmptyCardProperty(cardProperties, childProperty, key + PropertyDef.ObjectDelimiter + childProperty.Name);
         }
 
         public void PopulateCardSets(Dictionary<string, string> cardSets, JToken cardJToken, string defaultSetCode)
         {
             if (cardSets == null || cardJToken == null || string.IsNullOrEmpty(defaultSetCode))
             {
-                UnityEngine.Debug.LogError($"PopulateSetCodes::MissingInput:{cardSets}:{defaultSetCode}:{cardJToken}");
+                UnityEngine.Debug.LogError($"PopulateCardSets::MissingInput:{cardSets}:{defaultSetCode}:{cardJToken}");
                 return;
             }
 
@@ -702,7 +716,7 @@ namespace CardGameDef
             {
                 List<JToken> setJTokens = new List<JToken>();
                 try { setJTokens = (cardJToken[CardSetIdentifier] as JArray)?.ToList() ?? new List<JToken>(); }
-                catch { UnityEngine.Debug.LogWarning($"PopulateSetCodes::BadCardSetIdentifier for {cardJToken.ToString()}"); }
+                catch { UnityEngine.Debug.LogWarning($"PopulateCardSets::BadCardSetIdentifier for {cardJToken.ToString()}"); }
                 foreach (JToken setJToken in setJTokens)
                 {
                     if (CardSetIsObject)
@@ -724,7 +738,7 @@ namespace CardGameDef
             {
                 JObject setObject = null;
                 try { setObject = cardJToken[CardSetIdentifier] as JObject; }
-                catch { UnityEngine.Debug.LogWarning($"PopulateSetCodes::BadCardSetIdentifier for {cardJToken.ToString()}"); }
+                catch { UnityEngine.Debug.LogWarning($"PopulateCardSets::BadCardSetIdentifier for {cardJToken.ToString()}"); }
                 string setCode = setObject?.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
                 string setName = setObject?.Value<string>(SetNameIdentifier) ?? setCode;
                 cardSets[setCode] = setName;

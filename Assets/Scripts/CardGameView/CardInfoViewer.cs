@@ -139,6 +139,9 @@ namespace CardGameView
         }
         public bool WasVisible { get; private set; }
 
+        // HACK: All Zooming should be re-done
+        public float ZoomTime { get; private set; }
+
         void Start()
         {
             ResetInfo();
@@ -163,6 +166,11 @@ namespace CardGameView
                 ToggleCardZoomed();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 SelectedCardModel = null;
+
+            if (zoomPanel.gameObject.activeSelf)
+                ZoomTime += Time.deltaTime;
+            else
+                ZoomTime = 0;
         }
 
         public void ResetInfo()

@@ -30,8 +30,12 @@ namespace CGS.Decks
             if (CardGameManager.Instance.TopMenuCanvas != null || editor.searchResults.nameInputField.isFocused)
                 return;
 
-            if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && SwipeManager.DetectSwipe())
+            if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && CardInfoViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
             {
+                if (SwipeManager.IsSwipingUp())
+                    SelectEditorUp();
+                else if (SwipeManager.IsSwipingDown())
+                    SelectEditorDown();
                 if (SwipeManager.IsSwipingRight())
                     SelectResultsLeft();
                 else if (SwipeManager.IsSwipingLeft())

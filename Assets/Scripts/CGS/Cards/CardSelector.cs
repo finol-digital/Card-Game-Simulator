@@ -30,7 +30,7 @@ namespace CGS.Cards
             if (CardGameManager.Instance.TopMenuCanvas != null || results.nameInputField.isFocused)
                 return;
 
-            if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && SwipeManager.DetectSwipe())
+            if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && CardInfoViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
             {
                 if (SwipeManager.IsSwipingRight())
                     SelectLeft();

@@ -733,7 +733,7 @@ PlayerSettings:
   webGLLinkerTarget: 0
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: Search;Results;Selector;Buttons;Group
+    1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER
     7: Search;Results;Selector;Buttons;Group
   platformArchitecture: {}
   scriptingBackend:

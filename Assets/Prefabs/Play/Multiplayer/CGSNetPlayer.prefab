@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4493576556417028}
   - component: {fileID: 114416027808059046}
-  - component: {fileID: 5528316716137943518}
+  - component: {fileID: 5854764439663770387}
   m_Layer: 0
   m_Name: CGSNetPlayer
   m_TagString: Untagged
@@ -47,7 +47,7 @@ MonoBehaviour:
   syncInterval: 0.1
   scoreIndex: 0
   deckIndex: 0
---- !u!114 &5528316716137943518
+--- !u!114 &5854764439663770387
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,10 +56,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1833244134286464}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 860895539, guid: 1f82cede440b8483ba106133169d4112, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
-  m_AssetId: 
+  m_AssetId: 576a15ab1b0e4f34c8981877e9ab8029
+  m_SceneId: 0

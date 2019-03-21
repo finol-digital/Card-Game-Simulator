@@ -28,9 +28,9 @@ namespace CGS.Play.Multiplayer
             // TODO: CardGameManager.Instance.Discovery.StartAsHost();
         }
 
-        public override void OnServerAddPlayer(NetworkConnection conn)
+        public override void OnServerAddPlayer(NetworkConnection conn, AddPlayerMessage message)
         {
-            base.OnServerAddPlayer(conn);
+            base.OnServerAddPlayer(conn, message);
             if (Data == null)
             {
                 Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CGSNetData>();
