@@ -20,7 +20,7 @@ namespace CGS.Menu
         public const int DeckEditorSceneIndex = 3;
         public const int CardsExplorerSceneIndex = 4;
         public const int SettingsSceneIndex = 5;
-        public const string VersionMessage = "Ver. ";
+        public const string VersionMessage = "VER ";
 
         public Image currentBannerImage;
         public Image previousCardImage;

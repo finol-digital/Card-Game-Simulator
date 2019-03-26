@@ -33,6 +33,7 @@ permalink: roadmap.html
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
 - Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag), and make it non-static
+- Tech: Use Json.Net schema
 - Fix: Restore networking capability
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 
@@ -63,6 +64,7 @@ permalink: roadmap.html
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
+- Support dual-faced cards (DFC)
 - Print proxy deck list as pdf
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
