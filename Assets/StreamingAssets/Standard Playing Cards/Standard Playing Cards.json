@@ -2,6 +2,8 @@
 	"allCardsUrl": "https://cardgamesim.finoldigital.com/games/Standard/AllCards.json",
 	"allSetsUrl": "https://cardgamesim.finoldigital.com/games/Standard/AllSets.json",
 	"autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Standard/Standard.json",
+	"bannerImageUrl": "https://cardgamesim.finoldigital.com/games/Standard/Banner.png",
+	"cardBackImageUrl": "https://cardgamesim.finoldigital.com/games/Standard/Banner.png",
 	"cardImageUrl": "https://cardgamesim.finoldigital.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
 	"cardProperties": [{
 			"name": "rank",
