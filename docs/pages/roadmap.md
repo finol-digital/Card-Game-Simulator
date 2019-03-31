@@ -5,13 +5,15 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Redesign of Title Screen and Main Menu
 - Enhanced Set Loading
 - Fix: Lock to Landscape
 
 ## Current Sprint
-- Fix: Manually update existing game (DB)
-- Fix: Improve loading of large AllCards.json (HS)
 - Fix: Zoom out in Play Mode makes card disappear
+- Fix: Restore networking capability
+- Fix: Messaging on game start
+- Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Add Shuffle deck button
 - Unify search filters with searchbar
 - Android Searchbar Widget
@@ -29,13 +31,12 @@ permalink: roadmap.html
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Support default sort
 - Add Card Editor
+- Tech: Optimize Card Game Loading
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
 - Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag), and make it non-static
 - Tech: Use Json.Net schema
-- Fix: Restore networking capability
-- Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 
 ## Backlog
 - Add option to restart game in Play Mode

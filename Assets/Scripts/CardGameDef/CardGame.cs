@@ -575,7 +575,7 @@ namespace CardGameDef
                 }
             }
             else
-                UnityEngine.Debug.LogWarning("LoadCardFromJToken::MissingCardImageWebUrl");
+                UnityEngine.Debug.Log("LoadCardFromJToken::MissingCardImageWebUrl"); // TODO: HANDLE DIFFERENTLY?
         }
 
         public void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken, List<PropertyDef> propertyDefs, string keyPrefix = "")

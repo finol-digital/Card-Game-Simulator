@@ -9,12 +9,14 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Exit CGS.
 - **Horizontal**/**Vertical**: ARROWS or WASD  - Navigate Main Menu buttons.
 - **Page-Vertical/Horizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
-- **Sort**: *q* or *j* - Brings up the Game Selection Menu.
+- **Sort**: *q* or *j* - Select previous card game.
+- **Filter**: *f* or *\\* - Select next card game.
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
 - **Save**: *t* or *;* - Edit Decks.
-- **Filter**: *f* or *\\* - Explore Cards.
-- **Option**: *Delete* or *Backspace* - Settings.
+- **Option**: *Delete* - Explore Cards.
+- **FocusName**: *\`* - Brings up the Game Selection Menu.
+- **FocusText**: *Tab* - Settings.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode

@@ -86,16 +86,20 @@ namespace CGS.Menu
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
                 EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
             else if (Input.GetButtonDown(Inputs.Sort))
-                ShowGameSelectionMenu();
+                SelectPrevious();
+            else if (Input.GetButtonDown(Inputs.Filter))
+                SelectNext();
             else if (Input.GetButtonDown(Inputs.New))
                 StartGame();
             else if (Input.GetButtonDown(Inputs.Load))
                 JoinGame();
             else if (Input.GetButtonDown(Inputs.Save))
                 EditDeck();
-            else if (Input.GetButtonDown(Inputs.Filter))
-                ExploreCards();
             else if (Input.GetButtonDown(Inputs.Option))
+                ExploreCards();
+            else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
+                ShowGameSelectionMenu();
+            else if (Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0)
                 ShowSettings();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Quit();
