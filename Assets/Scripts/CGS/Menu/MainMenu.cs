@@ -22,6 +22,9 @@ namespace CGS.Menu
         public const int SettingsSceneIndex = 5;
         public const string VersionMessage = "VER ";
 
+        public DownloadMenu downloadMenu;
+        public GameObject gameManagement;
+        public Image currentCardImage;
         public Image currentBannerImage;
         public Image previousCardImage;
         public Image nextCardImage;
@@ -35,6 +38,8 @@ namespace CGS.Menu
         private bool _wasPageUp;
         private bool _wasPageLeft;
         private bool _wasPageRight;
+        private bool _wasFocusName;
+        private bool _wasFocusText;
 
         void OnEnable()
         {
@@ -90,19 +95,44 @@ namespace CGS.Menu
             else if (Input.GetButtonDown(Inputs.Filter))
                 SelectNext();
             else if (Input.GetButtonDown(Inputs.New))
-                StartGame();
+            {
+                if (gameManagement.activeSelf)
+                    Download();
+                else
+                    StartGame();
+            }
             else if (Input.GetButtonDown(Inputs.Load))
-                JoinGame();
+            {
+                if (gameManagement.activeSelf)
+                    Download();
+                else
+                    JoinGame();
+            }
             else if (Input.GetButtonDown(Inputs.Save))
-                EditDeck();
+            {
+                if (gameManagement.activeSelf)
+                    Share();
+                else
+                    EditDeck();
+            }
             else if (Input.GetButtonDown(Inputs.Option))
-                ExploreCards();
-            else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
-                ShowGameSelectionMenu();
-            else if (Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0)
+            {
+                if (gameManagement.activeSelf)
+                    Delete();
+                else
+                    ExploreCards();
+            }
+            else if (Input.GetButtonDown(Inputs.FocusName) || (Input.GetAxis(Inputs.FocusName) > 0 && !_wasFocusName))
+                ToggleGameManagement();
+            else if (Input.GetButtonDown(Inputs.FocusText) || (Input.GetAxis(Inputs.FocusText) > 0 && !_wasFocusText))
                 ShowSettings();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
-                Quit();
+            {
+                if (EventSystem.current.currentSelectedGameObject == null)
+                    Quit();
+                else if (!EventSystem.current.alreadySelecting)
+                    EventSystem.current.SetSelectedGameObject(null);
+            }
 
             _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
             _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
@@ -110,30 +140,61 @@ namespace CGS.Menu
             _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
             _wasPageLeft = Input.GetAxis(Inputs.PageHorizontal) < 0;
             _wasPageRight = Input.GetAxis(Inputs.PageHorizontal) > 0;
+            _wasFocusName = Input.GetAxis(Inputs.FocusName) > 0;
+            _wasFocusText = Input.GetAxis(Inputs.FocusText) > 0;
         }
 
         public void ResetGameSelectionCarousel()
         {
+            currentCardImage.sprite = CardGameManager.Current.CardBackImageSprite;
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
             nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
         }
 
+        public void ToggleGameManagement()
+        {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
+            if (gameManagement.activeSelf)
+                gameManagement.SetActive(false);
+            else
+                gameManagement.SetActive(true);
+        }
+
         public void SelectPrevious()
         {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
         }
 
         public void SelectNext()
         {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
         }
 
-        public void ShowGameSelectionMenu()
+        public void Download()
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            CardGameManager.Instance.Selector.Show();
+            downloadMenu.Show();
+        }
+
+        public void Delete()
+        {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
+            CardGameManager.Instance.PromptDelete();
+        }
+
+        public void Share()
+        {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
+            CardGameManager.Instance.Share();
         }
 
         public void StartGame()

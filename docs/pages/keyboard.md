@@ -15,7 +15,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Load**: *r* or *l* - Join Game.
 - **Save**: *t* or *;* - Edit Decks.
 - **Option**: *Delete* - Explore Cards.
-- **FocusName**: *\`* - Brings up the Game Selection Menu.
+- **FocusName**: *\`* - Manage Card Games.
 - **FocusText**: *Tab* - Settings.
 - **Submit**: *Enter* - Click on selected button.
 
@@ -57,19 +57,6 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Cancel/Close.
 - **Option**: *Delete* - No.
 - **Submit**: *Enter* - Yes/Close.
-
-## Game Selection Menu
-- **Cancel**: *Esc* - Cancel.
-- **Horizontal**: *left*, *right* - Select previous/next card game.
-- **Vertical**: *down*, *up* - Scroll through card games.
-- **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
-- **Sort**: *q* - Share selected card game.
-- **New**: *e* - Brings up or clears the download url input field.
-- **Load**: *r* - Brings up or clears the download url input field.
-- **Save**: *t* - Pastes clipboard into the url input field.
-- **FocusName**: *\`* - Focuses keyboard to the url input field.
-- **Option**: *Delete* - Delete selected card game.
-- **Submit**: *Enter* - OK/Download.
 
 ## LAN Lobby
 - **Cancel**: *Esc* - Cancel.

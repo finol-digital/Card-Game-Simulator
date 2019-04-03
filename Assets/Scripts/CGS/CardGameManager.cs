@@ -24,15 +24,21 @@ namespace CGS
         public const bool IsMessengerDebugLogVerbose = false;
         public const string GameId = "GameId";
         public const string PlayerPrefDefaultGame = "DefaultGame";
-        public const string GameSelectionErrorPrompt = "Could not select the card game because it is not recognized! Try selecting a different card game?";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
-        public const string GameDownloadErrorMessage = "Error downloading game!: ";
-        public const string GameLoadErrorMessage = "Error loading game!: ";
-        public const string GameLoadErrorPrompt = "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
-        public const string GameDeleteErrorMessage = "Error deleting game!: ";
+        public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!";
+        public const string DownloadErrorMessage = "Error downloading game!: ";
+        public const string LoadErrorMessage = "Error loading game!: ";
+        public const string LoadErrorPrompt = "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
         public const string CardsLoadedMessage = "{0} cards loaded!";
         public const string CardsLoadingMessage = "{0} cards loading...";
+        public const string DeleteErrorMessage = "Error deleting game!: ";
+        public const string DeleteWarningMessage = "Please download additional card games before deleting.";
+        public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
+        public const string ShareTitle = "Card Game Simulator - {0}";
+        public const string ShareDescription = "Play {0} on CGS!";
+        public const string ShareBranchMessage = "Get CGS for {0}: {1}";
+        public const string ShareUrlMessage = "The CGS AutoUpdate Url for {0} has been copied to the clipboard: {1}";
         public const int CardsLoadingMessageThreshold = 60;
         public const int PixelsPerInch = 100;
 
@@ -92,24 +98,12 @@ namespace CGS
 
         public HashSet<UnityAction> OnSceneActions { get; } = new HashSet<UnityAction>();
 
-        public GameSelectionMenu Selector
-        {
-            get
-            {
-                if (_selector != null) return _selector;
-                _selector = Instantiate(Resources.Load<GameObject>("Game Selection Menu")).GetOrAddComponent<GameSelectionMenu>();
-                _selector.transform.SetParent(null);
-                return _selector;
-            }
-        }
-        private GameSelectionMenu _selector;
-
         public Popup Messenger
         {
             get
             {
                 if (_messenger != null) return _messenger;
-                _messenger = Instantiate(Resources.Load<GameObject>("Popup")).GetOrAddComponent<Popup>();
+                _messenger = Instantiate(Resources.Load<GameObject>("Modal")).GetOrAddComponent<Popup>();
                 _messenger.transform.SetParent(transform);
                 return _messenger;
             }
@@ -260,8 +254,8 @@ namespace CGS
             }
             else
             {
-                Debug.LogError(GameDownloadErrorMessage + Current.Error);
-                Messenger.Show(GameDownloadErrorMessage + Current.Error);
+                Debug.LogError(DownloadErrorMessage + Current.Error);
+                Messenger.Show(DownloadErrorMessage + Current.Error);
                 try
                 {
                     if (Directory.Exists(newGame.GameDirectoryPath))
@@ -283,8 +277,8 @@ namespace CGS
             // Notify about the failed update, but otherwise ignore errors
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
-                Debug.LogError(GameDownloadErrorMessage + cardGame.Error);
-                Messenger.Show(GameDownloadErrorMessage + cardGame.Error);
+                Debug.LogError(DownloadErrorMessage + cardGame.Error);
+                Messenger.Show(DownloadErrorMessage + cardGame.Error);
                 cardGame.ClearError();
             }
 
@@ -307,7 +301,7 @@ namespace CGS
             }
 
             if (!string.IsNullOrEmpty(cardGame.Error))
-                Debug.LogError(GameLoadErrorMessage + cardGame.Error);
+                Debug.LogError(LoadErrorMessage + cardGame.Error);
             else if (cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
                 Messenger.Show(string.Format(CardsLoadedMessage, cardGame.Name));
         }
@@ -319,9 +313,8 @@ namespace CGS
                 (_, string gameUrl) = CardGame.Decode(gameId);
                 if (!Uri.IsWellFormedUriString(gameUrl, UriKind.Absolute))
                 {
-                    Debug.LogError(GameSelectionErrorPrompt);
-                    Messenger.Show(GameSelectionErrorPrompt);
-                    Selector.Show();
+                    Debug.LogError(SelectionErrorMessage);
+                    Messenger.Show(SelectionErrorMessage);
                 }
                 else
                     StartCoroutine(DownloadCardGame(gameUrl));
@@ -343,8 +336,8 @@ namespace CGS
 
             if (!string.IsNullOrEmpty(Current.Error))
             {
-                Debug.LogError(GameLoadErrorMessage + Current.Error);
-                Messenger.Ask(GameLoadErrorPrompt, IgnoreCurrentErroredGame, DeleteCurrent);
+                Debug.LogError(LoadErrorMessage + Current.Error);
+                Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
                 return;
             }
 
@@ -362,23 +355,76 @@ namespace CGS
             Current.ClearError();
             ResetCurrentToDefault();
             ResetGameScene();
-            Selector.Show();
         }
 
-        public void DeleteCurrent()
+        public void PromptDelete()
         {
+            if (AllCardGames.Count > 1)
+                Messenger.Prompt(DeletePrompt, Delete);
+            else
+                Messenger.Show(DeleteWarningMessage);
+        }
+
+        public void Delete()
+        {
+            if (AllCardGames.Count < 1)
+            {
+                Debug.LogError(DeleteErrorMessage + DeleteWarningMessage);
+                return;
+            }
+
             try
             {
                 Directory.Delete(Current.GameDirectoryPath, true);
                 AllCardGames.Remove(Current.Id);
                 ResetCurrentToDefault();
                 ResetGameScene();
-                Selector.Show();
             }
             catch (Exception ex)
             {
-                Debug.LogError(GameDeleteErrorMessage + ex.Message);
+                Debug.LogError(DeleteErrorMessage + ex.Message);
             }
+        }
+
+        public void Share()
+        {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            ShareBranch();
+#else
+            ShareUrl();
+#endif
+        }
+
+        public void ShareBranch()
+        {
+            BranchUniversalObject universalObject = new BranchUniversalObject();
+            universalObject.contentIndexMode = 1;
+            universalObject.canonicalIdentifier = Current.Id;
+            universalObject.title = string.Format(ShareTitle, Current.Name);
+            universalObject.contentDescription = string.Format(ShareDescription, Current.Name);
+            universalObject.imageUrl = Current.BannerImageUrl;
+            universalObject.metadata.AddCustomMetadata(GameId, Current.Id);
+            BranchLinkProperties linkProperties = new BranchLinkProperties();
+            linkProperties.controlParams.Add(GameId, Current.Id);
+            Branch.getShortURL(universalObject, linkProperties, BranchCallbackWithUrl);
+        }
+
+        public void BranchCallbackWithUrl(string url, string error)
+        {
+            if (error != null)
+            {
+                Debug.LogError(error);
+                return;
+            }
+
+            NativeShare nativeShare = new NativeShare();
+            nativeShare.SetText(string.Format(ShareBranchMessage, Current.Name, url)).Share();
+        }
+
+        public void ShareUrl()
+        {
+            UniClipboard.SetText(Current.AutoUpdateUrl);
+            Messenger.Show(string.Format(ShareUrlMessage, Current.Name, Current.AutoUpdateUrl));
         }
 
         void OnDisable()

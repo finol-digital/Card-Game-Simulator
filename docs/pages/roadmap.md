@@ -10,9 +10,12 @@ permalink: roadmap.html
 - Fix: Lock to Landscape
 
 ## Current Sprint
+- Redesign Modal and Spinner
+- Examine cases of having only 1, 2, and 3 card games
+- Highlight current selected button in Main Menu
 - Fix: Zoom out in Play Mode makes card disappear
 - Fix: Restore networking capability
-- Fix: Messaging on game start
+- Fix: Error/Messaging on game start
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Add Shuffle deck button
 - Unify search filters with searchbar
