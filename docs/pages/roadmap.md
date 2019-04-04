@@ -7,17 +7,14 @@ permalink: roadmap.html
 ## What's New
 - Redesign of Title Screen and Main Menu
 - Enhanced Set Loading
+- Add Shuffle deck button
 - Fix: Lock to Landscape
 
 ## Current Sprint
-- Redesign Modal and Spinner
-- Examine cases of having only 1, 2, and 3 card games
+- Update branding and documentation with new logo
+- Redesign Modal(Popup/Messenger) and Spinner(ProgressBar)
 - Highlight current selected button in Main Menu
-- Fix: Zoom out in Play Mode makes card disappear
-- Fix: Restore networking capability
-- Fix: Error/Messaging on game start
-- Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
-- Add Shuffle deck button
+- Redesign Settings Menu
 - Unify search filters with searchbar
 - Android Searchbar Widget
 - Rollup printings
@@ -42,6 +39,10 @@ permalink: roadmap.html
 - Tech: Use Json.Net schema
 
 ## Backlog
+- Fix: Zoom in/out in Play Mode
+- Fix: Restore networking capability
+- Fix: Error/Messaging OnAwake in Play Mode
+- Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them

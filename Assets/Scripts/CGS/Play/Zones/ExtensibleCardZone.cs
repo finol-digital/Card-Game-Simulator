@@ -25,6 +25,7 @@ namespace CGS.Play.Zones
         public Text labelText;
         public Text countText;
         public Text statusText;
+        public GameObject shuffleButton;
 
         public ZonesViewer Viewer { get; set; }
         public bool IsExtended { get; private set; }
@@ -91,9 +92,13 @@ namespace CGS.Play.Zones
         {
             if (statusText != null)
             {
+                if (shuffleButton != null)
+                    shuffleButton.SetActive(false);
                 statusText.gameObject.SetActive(true);
                 yield return new WaitForSeconds(1);
                 statusText.gameObject.SetActive(false);
+                if (shuffleButton != null)
+                    shuffleButton.SetActive(true);
             }
         }
 
