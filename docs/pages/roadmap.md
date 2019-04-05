@@ -5,14 +5,14 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Redesign of Title Screen and Main Menu
-- Enhanced Set Loading
-- Add Shuffle deck button
 - Fix: Lock to Landscape
 
 ## Current Sprint
 - Update branding and documentation with new logo
+- Update Android icon and Standard cardback
+- Animate "Tap Anywhere to Start" text
 - Redesign Modal(Popup/Messenger) and Spinner(ProgressBar)
+- Complete Main Menu Carousel
 - Highlight current selected button in Main Menu
 - Redesign Settings Menu
 - Unify search filters with searchbar
@@ -41,7 +41,7 @@ permalink: roadmap.html
 ## Backlog
 - Fix: Zoom in/out in Play Mode
 - Fix: Restore networking capability
-- Fix: Error/Messaging OnAwake in Play Mode
+- Fix: Error/Messaging OnAwake/OnValidate in Play Mode
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
