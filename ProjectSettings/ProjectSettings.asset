@@ -25,8 +25,8 @@ PlayerSettings:
   m_SplashScreenDrawMode: 0
   m_SplashScreenBackgroundAnimationZoom: 1
   m_SplashScreenLogoAnimationZoom: 1
-  m_SplashScreenBackgroundLandscapeAspect: 1
-  m_SplashScreenBackgroundPortraitAspect: 1
+  m_SplashScreenBackgroundLandscapeAspect: 1.7777778
+  m_SplashScreenBackgroundPortraitAspect: 0.5625
   m_SplashScreenBackgroundLandscapeUvs:
     serializedVersion: 2
     x: 0
@@ -159,7 +159,7 @@ PlayerSettings:
     Standalone: com.finoldigital.CardGameSimulator
     iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 4
+    Standalone: 5
     iOS: 0
   AndroidBundleVersionCode: 62
   AndroidMinSdkVersion: 16
@@ -737,6 +737,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER
     7: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER
+    14: MIRROR;MIRROR_1726_OR_NEWER
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
