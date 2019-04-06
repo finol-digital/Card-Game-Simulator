@@ -33,9 +33,9 @@ namespace CGS.Decks
             if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && CardInfoViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
             {
                 if (SwipeManager.IsSwipingUp())
-                    SelectEditorUp();
-                else if (SwipeManager.IsSwipingDown())
                     SelectEditorDown();
+                else if (SwipeManager.IsSwipingDown())
+                    SelectEditorUp();
                 if (SwipeManager.IsSwipingRight())
                     SelectResultsLeft();
                 else if (SwipeManager.IsSwipingLeft())
@@ -162,17 +162,17 @@ namespace CGS.Decks
                 return;
             }
 
-            for (int i = editorCards.Count - 1; i >= 0; i--)
+            for (int i = 0; i < editorCards.Count; i++)
             {
                 if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
                     continue;
-                i--;
-                if (i < 0)
-                    i = editorCards.Count - 1;
+                i++;
+                if (i == editorCards.Count)
+                    i = 0;
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
                 return;
             }
-            EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
+            EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
             if (CardInfoViewer.Instance?.SelectedCardModel != null)
                 CardInfoViewer.Instance.IsVisible = true;
         }
@@ -189,17 +189,17 @@ namespace CGS.Decks
                 return;
             }
 
-            for (int i = 0; i < editorCards.Count; i++)
+            for (int i = editorCards.Count - 1; i >= 0; i--)
             {
                 if (editorCards[i] != CardInfoViewer.Instance.SelectedCardModel)
                     continue;
-                i++;
-                if (i == editorCards.Count)
-                    i = 0;
+                i--;
+                if (i < 0)
+                    i = editorCards.Count - 1;
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
                 return;
             }
-            EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
+            EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
             if (CardInfoViewer.Instance?.SelectedCardModel != null)
                 CardInfoViewer.Instance.IsVisible = true;
         }

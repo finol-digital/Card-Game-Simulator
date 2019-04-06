@@ -6,14 +6,15 @@ permalink: roadmap.html
 
 ## What's New
 - Fix: Lock to Landscape
+- Fix: Vertical buttons in Deck Editor
 
 ## Current Sprint
 - Update branding and documentation with new logo
 - Update Android icon and Standard cardback
 - Animate "Tap Anywhere to Start" text
-- Redesign Modal(Popup/Messenger) and Spinner(ProgressBar)
-- Complete Main Menu Carousel
 - Highlight current selected button in Main Menu
+- Complete Main Menu Carousel
+- Redesign Modal(Popup/Messenger) and Spinner(ProgressBar)
 - Redesign Settings Menu
 - Unify search filters with searchbar
 - Android Searchbar Widget
