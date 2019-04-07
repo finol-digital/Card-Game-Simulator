@@ -21,7 +21,7 @@ You can tap on the "Share" button to create a CGS Deep Link that you can send to
 
 ![Game Selection Menu Image](assets/img/selectionmenu.png)
 
-You can also tap the "Download" button in the top-right to manually enter the CGS AutoUpdate URL for the game you would like to download.
+You can also tap the "Download" button to manually enter the CGS AutoUpdate URL for the game you would like to download.
 
 For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: https://arcmage.finoldigital.com/
 

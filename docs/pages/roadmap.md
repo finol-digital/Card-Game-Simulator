@@ -10,7 +10,7 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Update branding and documentation with new logo
-- Update Android icon and Standard cardback
+- Update Android/iOS icon and Standard CardBack
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
