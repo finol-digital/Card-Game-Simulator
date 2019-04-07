@@ -9,7 +9,7 @@ permalink: roadmap.html
 - Fix: Vertical buttons in Deck Editor
 
 ## Current Sprint
-- Update branding and documentation with new logo
+- Update instructions for Apple devices
 - Update Android/iOS icon and Standard CardBack
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
