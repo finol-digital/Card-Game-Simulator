@@ -142,6 +142,11 @@
       "default": "name",
       "type": "string"
     },
+    "cardNameIsUnique": {
+      "description": "If cardNameIsUnique is true, different Cards are not allowed to have the same *Card:Name*. Cards with the same name will be treated as reprints, with the option to hide reprints available. If cardNameIsUnique false, DeckFileType.Txt will require <deckFileTxtId> for every Card. ",
+      "default": "true",
+      "type": "boolean"
+    },
     "cardPrimaryProperty": {
       "description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
       "type": "string"
@@ -246,10 +251,6 @@
       ],
       "default": "set",
       "type": "string"
-    },
-    "deckFileTxtIdRequired": {
-      "description": "If deckFileTxtIdRequired is set to true, *Card:<deckFileTxtId>* will appear on every line for deck files saved as txt.",
-      "type": "boolean"
     },
     "deckFileType": {
       "description": "When saving a deck, the formatting for how it is saved and loaded is defined by the deckFileType. dec refers to the old MTGO deck file format. hsd refers to the Hearthstone deck string format. ydk refers to the YGOPRO deck file format. txt parses each line for the following: <Quantity> [*Card:Id*] *Card:Name* (*Card:SetCode*)",

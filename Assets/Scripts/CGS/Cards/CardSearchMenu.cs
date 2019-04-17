@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using CardGameDef;
+using CGS.Menu;
 
 namespace CGS.Cards
 {
@@ -560,9 +561,11 @@ namespace CGS.Cards
         public void Search()
         {
             Results.Clear();
+            bool hideReprints = Settings.HideReprints;
             IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(Filters);
             foreach (Card card in cardSearcher)
-                Results.Add(card);
+                if (!hideReprints || !card.IsReprint)
+                    Results.Add(card);
             SearchCallback?.Invoke(Filters.ToString(CardGameManager.Current), Results);
         }
 

@@ -12,11 +12,20 @@ namespace CGS.Menu
 {
     public class Settings : MonoBehaviour
     {
+        public const string PlayerPrefHideReprints = "HideReprints";
+
+        public static bool HideReprints
+        {
+            get { return PlayerPrefs.GetInt(PlayerPrefHideReprints, 1) == 1; }
+            set { PlayerPrefs.SetInt(PlayerPrefHideReprints, value ? 1 : 0); }
+        }
+
         public Toggle screenOSControlToggle;
         public Toggle screenAutoRotateToggle;
         public Toggle screenPortraitToggle;
         public Toggle screenLandscapeToggle;
         public Toggle controllerLockToLandscapeToggle;
+        public Toggle hideReprintsToggle;
 
         void Start()
         {
@@ -38,6 +47,7 @@ namespace CGS.Menu
                     break;
             }
             controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
+            hideReprintsToggle.isOn = HideReprints;
         }
 
         void Update()
@@ -73,6 +83,11 @@ namespace CGS.Menu
         public void SetControllerLockToLandscape(bool controllerLockToLandscape)
         {
             ScreenOrientationManager.DoesControllerLockToLandscape = controllerLockToLandscape;
+        }
+
+        public void SetHideReprints(bool hideReprints)
+        {
+            HideReprints = hideReprints;
         }
 
         public void BackToMainMenu()

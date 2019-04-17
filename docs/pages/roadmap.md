@@ -5,6 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Hide Reprints in Search
+- Improve Error Handling
 - Fix: Lock to Landscape
 - Fix: Vertical buttons in Deck Editor
 
@@ -18,7 +20,6 @@ permalink: roadmap.html
 - Redesign Settings Menu
 - Unify search filters with searchbar
 - Android Searchbar Widget
-- Rollup printings
 - Support default filters
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
