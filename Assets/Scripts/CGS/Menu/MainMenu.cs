@@ -166,6 +166,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
+            gameManagement.SetActive(false);
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
         }
 
@@ -173,6 +174,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
+            gameManagement.SetActive(false);
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
         }
 
