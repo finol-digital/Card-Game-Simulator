@@ -9,6 +9,11 @@ namespace CardGameDef
 {
     public class CardSearchFilters
     {
+        public CardSearchFilters Parse(string input)
+        {
+            return null;
+        }
+
         public string Id { get; set; } = "";
 
         public string Name { get; set; } = "";

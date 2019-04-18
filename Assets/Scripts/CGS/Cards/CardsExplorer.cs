@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 using CardGameDef;
@@ -14,13 +15,13 @@ namespace CGS.Cards
     public class CardsExplorer : MonoBehaviour
     {
         public GameObject cardViewerPrefab;
-        public GameObject cardModelPrefab;
+        public Image bannerImage;
         public SearchResults searchResults;
 
         void OnEnable()
         {
-            Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
-            CardGameManager.Instance.OnSceneActions.Add(CardInfoViewer.Instance.ResetInfo);
+            Instantiate(cardViewerPrefab);
+            CardGameManager.Instance.OnSceneActions.Add(ResetBanner);
         }
 
         void Update()
@@ -29,11 +30,16 @@ namespace CGS.Cards
                 return;
 
             if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
-                searchResults.nameInputField.ActivateInputField();
+                searchResults.inputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Filter))
                 searchResults.ShowSearchMenu();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 BackToMainMenu();
+        }
+
+        public void ResetBanner()
+        {
+            bannerImage.sprite = CardGameManager.Current.BannerImageSprite;
         }
 
         public void BackToMainMenu()

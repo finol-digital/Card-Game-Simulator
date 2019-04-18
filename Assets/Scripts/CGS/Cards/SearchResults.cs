@@ -13,14 +13,11 @@ namespace CGS.Cards
 {
     public class SearchResults : MonoBehaviour
     {
-        public const string EmptyFilterText = "*";
-
         public GameObject cardSearchMenuPrefab;
         public GameObject cardModelPrefab;
         public RectTransform layoutArea;
         public LayoutGroup layoutGroup;
-        public InputField nameInputField;
-        public Text filtersText;
+        public InputField inputField;
         public Text countText;
         public ScrollRect scrollRect;
 
@@ -73,6 +70,7 @@ namespace CGS.Cards
         {
             CardSearcher.SearchCallback = ShowResults;
             CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
+            CardGameManager.Instance.OnSceneActions.Add(ResetPlaceholderText);
         }
 
         void Start()
@@ -80,10 +78,16 @@ namespace CGS.Cards
             UpdateSearchResultsPanel();
         }
 
+        public void ResetPlaceholderText()
+        {
+            if (inputField != null && inputField.placeholder is Text)
+                (inputField.placeholder as Text).text = $"Search {CardGameManager.Current.Name} cards";
+        }
+
         public string SetNameInputField(string nameFilter)
         {
-            nameInputField.text = nameFilter;
-            return nameInputField.text;
+            inputField.text = nameFilter;
+            return inputField.text;
         }
 
         public void SetNameFilter(string nameFilter)
@@ -155,10 +159,7 @@ namespace CGS.Cards
 
         public void ShowResults(string filters, List<Card> results)
         {
-            if (string.IsNullOrEmpty(filters))
-                filters = EmptyFilterText;
-            filtersText.text = filters;
-
+            inputField.text = filters;
             AllResults = results;
         }
     }

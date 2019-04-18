@@ -26,6 +26,8 @@ namespace CGS
         public const string PlayerPrefDefaultGame = "DefaultGame";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
+        public const string EmptyNameWarning = "Found game with missing name!";
+        public const string DefaultNameWarning = "Found game with default name. Deleting it.";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!";
         public const string DownloadErrorMessage = "Error downloading game!: ";
         public const string LoadErrorMessage = "Error loading game!: ";
@@ -189,9 +191,23 @@ namespace CGS
             {
                 string gameDirectoryName = gameDirectory.Substring(CardGame.GamesDirectoryPath.Length + 1);
                 (string name, string url) game = CardGame.Decode(gameDirectoryName);
-                CardGame newCardGame = new CardGame(this, game.name, game.url);
-                newCardGame.ReadProperties();
-                AllCardGames[newCardGame.Id] = newCardGame;
+                if (string.IsNullOrEmpty(name))
+                    Debug.LogWarning(EmptyNameWarning);
+                else if (name.Equals(CardGame.DefaultName))
+                {
+                    Debug.LogWarning(DefaultNameWarning);
+                    try { Directory.Delete(gameDirectory, true); }
+                    catch (Exception ex) { Debug.LogError(DeleteErrorMessage + ex.Message); }
+                }
+                else
+                {
+                    CardGame newCardGame = new CardGame(this, game.name, game.url);
+                    newCardGame.ReadProperties();
+                    if (!string.IsNullOrEmpty(newCardGame.Error))
+                        Debug.LogError(LoadErrorMessage + newCardGame.Error);
+                    else
+                        AllCardGames[newCardGame.Id] = newCardGame;
+                }
             }
         }
 
@@ -247,21 +263,20 @@ namespace CGS
 
             newGame.Load(UpdateCardGame, LoadCards);
 
-            if (string.IsNullOrEmpty(newGame.Error))
-            {
-                AllCardGames[newGame.Id] = newGame;
-                Select(newGame.Id);
-            }
-            else
+            if (!string.IsNullOrEmpty(newGame.Error))
             {
                 Debug.LogError(DownloadErrorMessage + Current.Error);
                 Messenger.Show(DownloadErrorMessage + Current.Error);
-                try
+                if (Directory.Exists(newGame.GameDirectoryPath))
                 {
-                    if (Directory.Exists(newGame.GameDirectoryPath))
-                        Directory.Delete(newGame.GameDirectoryPath, true);
+                    try { Directory.Delete(newGame.GameDirectoryPath, true); }
+                    catch (Exception ex) { Debug.LogError(DeleteErrorMessage + ex.Message); }
                 }
-                catch { };
+            }
+            else
+            {
+                AllCardGames[newGame.Id] = newGame;
+                Select(newGame.Id);
             }
         }
 

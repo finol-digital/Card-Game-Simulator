@@ -102,7 +102,7 @@ namespace CGS.Decks
 
         void Update()
         {
-            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
+            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null || searchResults.inputField.isFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.Sort))
@@ -114,7 +114,7 @@ namespace CGS.Decks
             else if (Input.GetButtonDown(Inputs.Save))
                 ShowDeckSaveMenu();
             else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
-                searchResults.nameInputField.ActivateInputField();
+                searchResults.inputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Filter))
                 searchResults.ShowSearchMenu();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))

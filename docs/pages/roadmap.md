@@ -5,22 +5,23 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Hide Reprints in Search
+- (Apple) Update instructional information
+- Redesign Settings Menu
+- Redesign Cards Explorer
+- Unify search filters with searchbar
+- Hide Reprints in Card Search
 - Improve Error Handling
 - Fix: Lock to Landscape
 - Fix: Vertical buttons in Deck Editor
 
 ## Current Sprint
-- Update instructions for Apple devices
+- Rollup FocusText buttons
 - Update Android/iOS icon and Standard CardBack
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
 - Redesign Modal(Popup/Messenger) and Spinner(ProgressBar)
-- Redesign Settings Menu
-- Unify search filters with searchbar
 - Android Searchbar Widget
-- Support default filters
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck Name by clicking on container
@@ -69,6 +70,7 @@ permalink: roadmap.html
 - Tech: Restore CardClearsBackground
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
+- Support default search filters
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
 - Support dual-faced cards (DFC)
