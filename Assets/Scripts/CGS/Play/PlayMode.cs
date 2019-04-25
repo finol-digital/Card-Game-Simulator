@@ -34,6 +34,7 @@ namespace CGS.Play
 
         public ZonesViewer zones;
         public RectTransform playAreaContent;
+        public Image currentBanner;
         public Text netText;
 
         public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
@@ -48,14 +49,15 @@ namespace CGS.Play
         public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
         private CardSearchMenu _cardSearcher;
 
-        void Start()
+        void OnEnable()
         {
             Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
-            CardGameManager.Instance.OnSceneActions.Add(CardInfoViewer.Instance.ResetInfo);
+            CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
+        }
 
-            playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
+        void Start()
+        {
             playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
-
             if (CardGameManager.Instance.IsSearching)
                 Lobby.Show(BackToMainMenu);
             else
@@ -77,6 +79,12 @@ namespace CGS.Play
                 PromptBackToMainMenu();
         }
 
+        public void ResetPlayArea()
+        {
+            playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
+            currentBanner.sprite = CardGameManager.Current.BannerImageSprite;
+        }
+
         public void ViewRules()
         {
             if (Uri.IsWellFormedUriString(CardGameManager.Current.RulesUrl, UriKind.Absolute))
@@ -89,8 +97,8 @@ namespace CGS.Play
         {
             DeckLoader.Show(LoadDeck);
             // TODO: BETTER MANAGE THE CANCEL/BACK
-            DeckLoader.cancelButton.onClick.RemoveAllListeners();
-            DeckLoader.cancelButton.onClick.AddListener(BackToMainMenu);
+            //DeckLoader.cancelButton.onClick.RemoveAllListeners();
+            //DeckLoader.cancelButton.onClick.AddListener(BackToMainMenu);
         }
 
         public void ShowDiceMenu()
@@ -100,7 +108,7 @@ namespace CGS.Play
 
         public void ShowCardsMenu()
         {
-            CardSearcher.Show(null, DisplayResults);
+            CardSearcher.Show(DisplayResults);
         }
 
         public void LoadDeck(Deck deck)

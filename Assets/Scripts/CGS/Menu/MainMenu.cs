@@ -20,7 +20,7 @@ namespace CGS.Menu
         public const int DeckEditorSceneIndex = 3;
         public const int CardsExplorerSceneIndex = 4;
         public const int SettingsSceneIndex = 5;
-        public const string VersionMessage = "VER ";
+        public const string VersionMessage = "VERSION ";
 
         public DownloadMenu downloadMenu;
         public GameObject gameManagement;
@@ -38,8 +38,8 @@ namespace CGS.Menu
         private bool _wasPageUp;
         private bool _wasPageLeft;
         private bool _wasPageRight;
-        private bool _wasFocusName;
-        private bool _wasFocusText;
+        private bool _wasFocusBack;
+        private bool _wasFocusNext;
 
         void OnEnable()
         {
@@ -122,9 +122,9 @@ namespace CGS.Menu
                 else
                     ExploreCards();
             }
-            else if (Input.GetButtonDown(Inputs.FocusName) || (Input.GetAxis(Inputs.FocusName) > 0 && !_wasFocusName))
+            else if (Input.GetButtonDown(Inputs.FocusBack) || (Input.GetAxis(Inputs.FocusBack) > 0 && !_wasFocusBack))
                 ToggleGameManagement();
-            else if (Input.GetButtonDown(Inputs.FocusText) || (Input.GetAxis(Inputs.FocusText) > 0 && !_wasFocusText))
+            else if (Input.GetButtonDown(Inputs.FocusNext) || (Input.GetAxis(Inputs.FocusNext) > 0 && !_wasFocusNext))
                 ShowSettings();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
             {
@@ -140,8 +140,8 @@ namespace CGS.Menu
             _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
             _wasPageLeft = Input.GetAxis(Inputs.PageHorizontal) < 0;
             _wasPageRight = Input.GetAxis(Inputs.PageHorizontal) > 0;
-            _wasFocusName = Input.GetAxis(Inputs.FocusName) > 0;
-            _wasFocusText = Input.GetAxis(Inputs.FocusText) > 0;
+            _wasFocusBack = Input.GetAxis(Inputs.FocusBack) > 0;
+            _wasFocusNext = Input.GetAxis(Inputs.FocusNext) > 0;
         }
 
         public void ResetGameSelectionCarousel()

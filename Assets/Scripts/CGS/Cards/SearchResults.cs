@@ -13,6 +13,9 @@ namespace CGS.Cards
 {
     public class SearchResults : MonoBehaviour
     {
+        public static string InputPrompt => $"Search {CardGameManager.Current.Name} cards";
+        public const string CountSeparator = " / ";
+
         public GameObject cardSearchMenuPrefab;
         public GameObject cardModelPrefab;
         public RectTransform layoutArea;
@@ -81,23 +84,18 @@ namespace CGS.Cards
         public void ResetPlaceholderText()
         {
             if (inputField != null && inputField.placeholder is Text)
-                (inputField.placeholder as Text).text = $"Search {CardGameManager.Current.Name} cards";
+                (inputField.placeholder as Text).text = InputPrompt;
         }
 
-        public string SetNameInputField(string nameFilter)
+        public string UpdateInputField(string input)
         {
-            inputField.text = nameFilter;
+            inputField.text = input;
             return inputField.text;
         }
 
-        public void SetNameFilter(string nameFilter)
+        public void SetInput(string input)
         {
-            CardSearcher.SetNameFilter(nameFilter);
-        }
-
-        public void ClearSearchName()
-        {
-            CardSearcher.ClearSearchName();
+            CardSearcher.SetFilters(input);
         }
 
         public void Search()
@@ -146,7 +144,7 @@ namespace CGS.Cards
                     cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
             }
 
-            countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);
+            countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);
 
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1;
@@ -154,7 +152,7 @@ namespace CGS.Cards
 
         public void ShowSearchMenu()
         {
-            CardSearcher.Show(SetNameInputField, ShowResults);
+            CardSearcher.Show(ShowResults);
         }
 
         public void ShowResults(string filters, List<Card> results)

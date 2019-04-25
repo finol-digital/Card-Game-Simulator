@@ -11,15 +11,10 @@ namespace CGS.Decks
 {
     public class SearchResultsLayout : MonoBehaviour
     {
-        public static readonly Vector2 SearchNamePortraitPosition = new Vector2(15, 450);
-        public static readonly Vector2 SearchNameLandscapePosition = new Vector2(15, 367.5f);
-
         public static readonly Vector2 PageButtonsPortraitPosition = new Vector2(0, 447.5f);
-        public static readonly Vector2 PageButtonsLandscapePosition = new Vector2(650, 367.5f);
+        public static readonly Vector2 PageButtonsLandscapePosition = new Vector2(1050, 375);
 
-        public RectTransform searchName;
         public RectTransform pageButtons;
-
         public SearchResults searchResults;
 
         void OnRectTransformDimensionsChange()
@@ -29,7 +24,6 @@ namespace CGS.Decks
 
             if (((RectTransform)transform).rect.width < CardsExplorerLayout.MinWidth) // Portrait
             {
-                searchName.anchoredPosition = SearchNamePortraitPosition;
                 pageButtons.anchorMin = Vector2.right;
                 pageButtons.anchorMax = Vector2.right;
                 pageButtons.pivot = Vector2.right;
@@ -37,7 +31,6 @@ namespace CGS.Decks
             }
             else // Landscape
             {
-                searchName.anchoredPosition = SearchNameLandscapePosition;
                 pageButtons.anchorMin = Vector2.zero;
                 pageButtons.anchorMax = Vector2.zero;
                 pageButtons.pivot = Vector2.zero;

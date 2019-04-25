@@ -13,8 +13,8 @@ namespace CGS.Decks
         public static readonly Vector2 DeckButtonsPortraitAnchor = new Vector2(0, 0.43f);
         public static readonly Vector2 DeckButtonsLandscapePosition = new Vector2(-650, 0);
 
-        public static readonly Vector2 SelectButtonsPortraitPosition = new Vector2(0, 8);
-        public static readonly Vector2 SelectButtonsLandscapePosition = new Vector2(-850, 8);
+        public static readonly Vector2 SelectButtonsPortraitPosition = new Vector2(0, 10);
+        public static readonly Vector2 SelectButtonsLandscapePosition = new Vector2(-350, 10);
 
         public RectTransform deckButtons;
         public RectTransform selectButtons;

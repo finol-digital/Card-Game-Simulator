@@ -14,9 +14,9 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **New**: *e* or *k* - Start Game.
 - **Load**: *r* or *l* - Join Game.
 - **Save**: *t* or *;* - Edit Decks.
-- **Option**: *Delete* - Explore Cards.
-- **FocusName**: *\`* - Manage Card Games.
-- **FocusText**: *Tab* - Settings.
+- **Option**: *Delete* or *Backspace* - Explore Cards.
+- **FocusBack**: *\`* or *\[* - Manage Card Games.
+- **FocusNext**: *Tab* or *\]* - Settings.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
@@ -42,7 +42,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Load**: *r* - Brings up the Deck Load Menu.
 - **Save**: *t* - Brings up the Deck Save Menu.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
-- **FocusName**: *\`* - Focuses keyboard to the search name input field.
+- **Focus**: *\`* or *Tab* - Focuses keyboard to the card search input field.
 
 ## Cards Explorer
 - **Cancel**: *Esc* - Back to Main Menu.
@@ -51,7 +51,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **PageHorizontal**: *Home*, *End* - Page through search results.
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
-- **FocusName**: *\`* - Focuses keyboard to the search name input field.
+- **Focus**: *\`* or *Tab* - Focuses keyboard to the card search input field.
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
@@ -71,15 +71,15 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Sort**: *q* - Share selected deck.
 - **New**: *e* - Brings up the deck text editor.
-- **FocusName**: *\`* - Focuses keyboard to the deck name input field.
-- **FocusText**: *Tab* - Focuses keyboard to the deck text input field.
+- **FocusBack**: *\`* - Focuses keyboard to the deck name input field.
+- **FocusNext**: *Tab* - Focuses keyboard to the deck text input field.
 - **Save**: *t* - Pastes clipboard to the deck text input field.
 - **Option**: *Delete* - Delete selected deck/Clears the deck text input field.
 - **Submit**: *Enter* - Load selected deck/Save.
 
 ## Deck Save Menu
 - **Cancel**: *Esc* - Cancel.
-- **FocusName**: *\`* - Focuses keyboard to the deck name input field.
+- **Focus**: *\`* or *Tab* - Focuses keyboard to the deck name input field.
 - **Load**: *r* - Copies deck text to the text clipboard.
 - **Submit**: *Enter* - Save.
 
@@ -89,8 +89,8 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Card Search/Filter Menu
 - **Cancel**: *Esc* - Cancel.
-- **FocusName**: *\`* - Focuses keyboard to the previous text input field.
-- **FocusText**: *Tab* - Focuses keyboard to the next text input field.
+- **FocusBack**: *\`* - Focuses keyboard to the previous text input field.
+- **FocusNext**: *Tab* - Focuses keyboard to the next text input field.
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **Horizontal**: *left*, *right* - Scroll through enum values.
 - **Vertical**: *down*, *up* - Focuses to the next enum row.

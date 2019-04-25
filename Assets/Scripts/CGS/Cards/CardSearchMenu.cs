@@ -28,7 +28,6 @@ namespace CGS.Cards
         public SearchFilterPanel integerFilterPanel;
         public SearchFilterPanel toggleFilterPanel;
 
-        public OnNameChangeDelegate NameChangeCallback { get; set; }
         public OnSearchDelegate SearchCallback { get; set; }
 
         public List<GameObject> FilterPanels { get; } = new List<GameObject>();
@@ -77,8 +76,8 @@ namespace CGS.Cards
             if (gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
-            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0
-                    || Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0)
+            if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0
+                    || Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)
             {
                 FocusInputField();
                 return;
@@ -121,7 +120,7 @@ namespace CGS.Cards
                 return;
             }
 
-            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
+            if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0)
             { // up
                 InputField previous = InputFields.Last();
                 for (int i = 0; i < InputFields.Count; i++)
@@ -229,11 +228,10 @@ namespace CGS.Cards
             ActiveToggle.isOn = !ActiveToggle.isOn;
         }
 
-        public void Show(OnNameChangeDelegate nameChangeCallback, OnSearchDelegate searchCallback)
+        public void Show(OnSearchDelegate searchCallback)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
-            NameChangeCallback = nameChangeCallback;
             SearchCallback = searchCallback;
 
             stringFilterPanel.gameObject.SetActive(false);
@@ -440,12 +438,14 @@ namespace CGS.Cards
             return toggleWidth;
         }
 
+        public void SetFilters(string input)
+        {
+            // TODO: Parse input and set filters
+        }
+
         public void SetNameFilter(string name)
         {
-            Filters.Name = NameChangeCallback != null ? NameChangeCallback(name) : name;
-
-            if (!nameInputField.text.Equals(Filters.Name))
-                nameInputField.text = Filters.Name;
+            Filters.Name = name;
         }
 
         public void SetIdFilter(string id)
@@ -547,14 +547,6 @@ namespace CGS.Cards
         public void ClearSearch()
         {
             ClearFilters();
-            Search();
-        }
-
-        public void ClearSearchName()
-        {
-            string name = Filters.Name;
-            ClearFilters();
-            SetNameFilter(name);
             Search();
         }
 

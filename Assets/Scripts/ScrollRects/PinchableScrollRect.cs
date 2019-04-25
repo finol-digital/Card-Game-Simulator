@@ -11,7 +11,7 @@ public class PinchableScrollRect : SecondaryScrollView
     public const float MaxZoom = 1.5f;
     public const float ZoomLerpSpeed = 7.5f;
     public const float MouseWheelSensitivity = 0.1f;
-    
+
     public List<Vector2> Touches { get; private set; } = new List<Vector2>();
 
     private float _currentZoom = 1;
@@ -38,22 +38,27 @@ public class PinchableScrollRect : SecondaryScrollView
     {
         // Touch input
         Touches = new List<Vector2>(Input.touches.Select(touch => touch.position));
-        for (int i = Touches.Count - 1; i >= 0; i--) {
+        for (int i = Touches.Count - 1; i >= 0; i--)
+        {
             if (IsTouchingCard(Touches[i]))
                 Touches.RemoveAt(i);
         }
-        if (Touches.Count == 2) {
-            if (!_isPinching) {
+        if (Touches.Count == 2)
+        {
+            if (!_isPinching)
+            {
                 _isPinching = true;
                 OnStartPinch();
             }
             OnPinch();
-        } else {
+        }
+        else
+        {
             _isPinching = false;
             if (Touches.Count == 0)
                 _blockPan = false;
         }
-        
+
         // Mouse input
         float scrollWheelInput = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Abs(scrollWheelInput) > float.Epsilon)
@@ -71,11 +76,11 @@ public class PinchableScrollRect : SecondaryScrollView
         if (Mathf.Abs(content.localScale.x - _currentZoom) > 0.001f)
             content.localScale = Vector3.Lerp(content.localScale, Vector3.one * _currentZoom, ZoomLerpSpeed * Time.deltaTime);
     }
-    
+
     bool IsTouchingCard(Vector2 position)
     {
         CardModel[] cardModels = content.GetComponentsInChildren<CardModel>();
-        foreach(CardModel cardModel in cardModels)
+        foreach (CardModel cardModel in cardModels)
             if (cardModel.PointerPositions.ContainsValue(position))
                 return true;
         return false;
@@ -113,21 +118,11 @@ public class PinchableScrollRect : SecondaryScrollView
     {
         if (rectTransform == null)
             return;
-        
-        // Prevent children from being moved
-        List<Transform> children = new List<Transform>();
-        for(int i = 0; i < rectTransform.childCount; i++)
-            children.Add(rectTransform.GetChild(i));
-        foreach(Transform child in children)
-            child.SetParent(null);
 
         Vector2 size = rectTransform.rect.size;
         Vector2 deltaPivot = rectTransform.pivot - pivot;
         Vector3 deltaPosition = new Vector3(deltaPivot.x * size.x, deltaPivot.y * size.y) * rectTransform.localScale.x;
         rectTransform.pivot = pivot;
         rectTransform.localPosition -= deltaPosition;
-        
-        foreach(Transform child in children)
-            child.SetParent(rectTransform);
     }
 }

@@ -57,9 +57,9 @@ namespace CGS.Decks
                     DoSaveDontOverwrite();
                 else if (Input.GetButtonDown(Inputs.New) && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.text = string.Empty;
-                else if ((Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0) && EventSystem.current.currentSelectedGameObject == null)
+                else if ((Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0) && EventSystem.current.currentSelectedGameObject == null)
                     nameInputField.ActivateInputField();
-                else if ((Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0) && EventSystem.current.currentSelectedGameObject == null)
+                else if ((Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0) && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.ActivateInputField();
                 else if (Input.GetButtonDown(Inputs.Save) && EventSystem.current.currentSelectedGameObject == null)
                     PasteClipboardIntoText();

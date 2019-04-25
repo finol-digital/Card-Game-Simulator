@@ -6,21 +6,25 @@ permalink: roadmap.html
 
 ## What's New
 - (Apple) Update instructional information
+- Update screenshots in docs/ and store listings
 - Redesign Settings Menu
 - Redesign Cards Explorer
+- Redesign Deck Editor
+- Redesign Play Mode
 - Unify search filters with searchbar
 - Hide Reprints in Card Search
 - Improve Error Handling
+- Fix: Pan & Zoom in Play Mode
 - Fix: Lock to Landscape
 - Fix: Vertical buttons in Deck Editor
 
 ## Current Sprint
-- Rollup FocusText buttons
 - Update Android/iOS icon and Standard CardBack
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
-- Redesign Modal(Popup/Messenger) and Spinner(ProgressBar)
+- Redesign Resources/Modal(Popup/Messenger) and Resources/ProgressBar(Spinner)
+- Redesign Prefabs/Menus/...
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
@@ -42,10 +46,10 @@ permalink: roadmap.html
 - Tech: Use Json.Net schema
 
 ## Backlog
-- Fix: Zoom in/out in Play Mode
 - Fix: Restore networking capability
 - Fix: Error/Messaging OnAwake/OnValidate in Play Mode
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
+- Redesign Play Mode
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
