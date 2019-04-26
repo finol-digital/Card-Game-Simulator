@@ -245,10 +245,15 @@ namespace CGS.Cards
             InputFields.Clear();
             Toggles.Clear();
 
+            nameInputField.text = Filters.Name;
             nameInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
             InputFields.Add(nameInputField);
+
+            idInputField.text = Filters.Id;
             idInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
             InputFields.Add(idInputField);
+
+            setCodeInputField.text = Filters.SetCode;
             setCodeInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
             InputFields.Add(setCodeInputField);
 
@@ -440,7 +445,7 @@ namespace CGS.Cards
 
         public void SetFilters(string input)
         {
-            // TODO: Parse input and set filters
+            Filters.Parse(input);
         }
 
         public void SetNameFilter(string name)
@@ -534,14 +539,7 @@ namespace CGS.Cards
             foreach (Toggle toggle in GetComponentsInChildren<Toggle>())
                 toggle.isOn = false;
 
-            Filters.Name = string.Empty;
-            Filters.Id = string.Empty;
-            Filters.SetCode = string.Empty;
-            Filters.StringProperties.Clear();
-            Filters.IntMinProperties.Clear();
-            Filters.IntMaxProperties.Clear();
-            Filters.BoolProperties.Clear();
-            Filters.EnumProperties.Clear();
+            Filters.Clear();
         }
 
         public void ClearSearch()
@@ -558,7 +556,7 @@ namespace CGS.Cards
             foreach (Card card in cardSearcher)
                 if (!hideReprints || !card.IsReprint)
                     Results.Add(card);
-            SearchCallback?.Invoke(Filters.ToString(CardGameManager.Current), Results);
+            SearchCallback?.Invoke(Filters.ToString(), Results);
         }
 
         public void Hide()

@@ -562,7 +562,7 @@ namespace CardGameDef
             {
                 foreach (var set in cardSets)
                 {
-                    bool isReprint = CardNames.Contains(cardName);
+                    bool isReprint = CardNameIsUnique && CardNames.Contains(cardName);
                     if (!isReprint)
                         CardNames.Add(cardName);
                     string cardDuplicateId = cardSets.Count > 1 && isReprint
@@ -785,7 +785,8 @@ namespace CardGameDef
 
             foreach (Card card in Cards.Values)
             {
-                if (!string.IsNullOrEmpty(filters.Name) && !filters.Name.ToLower().Split(' ').All(card.Name.ToLower().Contains))
+                if (!string.IsNullOrEmpty(filters.Name) && !filters.Name.ToLower().Split(new[] { CardSearchFilters.Delimiter },
+                        StringSplitOptions.RemoveEmptyEntries).All(card.Name.ToLower().Contains))
                     continue;
                 if (!string.IsNullOrEmpty(filters.Id) && !card.Id.ToLower().Contains(filters.Id.ToLower()))
                     continue;
