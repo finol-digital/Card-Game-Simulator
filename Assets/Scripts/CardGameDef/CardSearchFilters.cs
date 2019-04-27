@@ -21,7 +21,7 @@ namespace CardGameDef
         public const string Keyword_IntMin = ">=";
         public const string Keyword_IntMax = "<=";
         public const string Keyword_Enum = "=";
-        public const string KeywordWrap = "\"";
+        public const string Quote = "\"";
 
         public string Id { get; set; } = "";
 
@@ -60,10 +60,32 @@ namespace CardGameDef
 
             // If some search criteria has a space in it, then that criteria should be enclosed in quotes
             // Using this assumption, we find all quoted areas and replace the space(s) temporarily so that we treat it as 1 word
-            // TODO: CHECK INPUT
-
-            foreach (string token in input.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries))
+            // This may not be the best solution (definitely not the cleanest), but it should get the job done
+            StringBuilder processedInput = new StringBuilder();
+            string unprocessedInput = input;
+            while (unprocessedInput.Contains(Quote))
             {
+                int leftQuoteIndex = unprocessedInput.IndexOf(Quote); // Guaranteed to be found because we checked with Contains()
+                // If the left quote is the last character, then we obviously won't find a right quote
+                int rightQuoteIndex = leftQuoteIndex == unprocessedInput.Length - Quote.Length
+                    ? -1 : unprocessedInput.IndexOf(Quote, leftQuoteIndex + Quote.Length);
+                string beforeQuote = unprocessedInput.Substring(0, leftQuoteIndex);
+                string quotation = string.Empty;
+                if (rightQuoteIndex != -1) // If there's no right quote, then we don't have a quotation
+                {
+                    int startIndex = leftQuoteIndex + Quote.Length;
+                    quotation = unprocessedInput.Substring(startIndex, rightQuoteIndex - startIndex).Replace(Delimiter, Quote);
+                }
+                processedInput.Append(beforeQuote + quotation);
+                if (rightQuoteIndex == -1) // If there's no quotation, we'll finish by taking everything after the 1 quote
+                    unprocessedInput = unprocessedInput.Substring(leftQuoteIndex + Quote.Length);
+                else // Otherwise, we'll keep checking the rest of the input for quotations
+                    unprocessedInput = unprocessedInput.Substring(rightQuoteIndex + Quote.Length);
+            }
+            processedInput.Append(unprocessedInput);
+            foreach (string word in processedInput.ToString().Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string token = word.Replace(Quote, Delimiter); // Restore spaces that we temporarily replaced
                 if (token.StartsWith(Keyword_Id))
                     Id = token.Substring(Keyword_Id.Length);
                 else if (token.StartsWith(Keyword_Set))
@@ -91,17 +113,17 @@ namespace CardGameDef
 
             if (!string.IsNullOrEmpty(Id))
             {
-                string filterValue = Id.Contains(Delimiter) ? KeywordWrap + Id + KeywordWrap : Id;
+                string filterValue = Id.Contains(Delimiter) ? Quote + Id + Quote : Id;
                 filters.AppendFormat(KeywordFormat, Keyword_Id, filterValue);
             }
             if (!string.IsNullOrEmpty(SetCode))
             {
-                string filterValue = SetCode.Contains(Delimiter) ? KeywordWrap + SetCode + KeywordWrap : SetCode;
+                string filterValue = SetCode.Contains(Delimiter) ? Quote + SetCode + Quote : SetCode;
                 filters.AppendFormat(KeywordFormat, Keyword_Set, filterValue);
             }
             foreach (var filter in StringProperties)
             {
-                string filterValue = filter.Value.Contains(Delimiter) ? KeywordWrap + filter.Value + KeywordWrap : filter.Value;
+                string filterValue = filter.Value.Contains(Delimiter) ? Quote + filter.Value + Quote : filter.Value;
                 filters.AppendFormat(KeywordFormat, filter.Key + Keyword_String, filterValue);
             }
             foreach (var filter in BoolProperties)

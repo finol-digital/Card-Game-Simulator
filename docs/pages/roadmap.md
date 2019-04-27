@@ -25,6 +25,7 @@ permalink: roadmap.html
 - Complete Main Menu Carousel
 - Redesign Resources/Modal(Popup/Messenger) and Resources/ProgressBar(Spinner)
 - Redesign Prefabs/Menus/...
+- Create Sort Menu for the Deck Editor and Cards Explorer
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
@@ -35,8 +36,6 @@ permalink: roadmap.html
 - Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
-- Create Sort Menu for the Deck Editor and Cards Explorer
-- Support default sort
 - Add Card Editor
 - Tech: Optimize Card Game Loading
 - Tech: Travis CI for build automation
@@ -75,6 +74,7 @@ permalink: roadmap.html
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
 - Support default search filters
+- Support default sort
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
 - Support dual-faced cards (DFC)
