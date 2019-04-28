@@ -142,6 +142,11 @@ namespace CardGameView
         // HACK: All Zooming should be re-done
         public float ZoomTime { get; private set; }
 
+        void OnEnable()
+        {
+            CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
+        }
+
         void Start()
         {
             ResetInfo();

@@ -11,8 +11,8 @@ namespace CGS
         public const KeyCode BluetoothReturn = (KeyCode)10;
         public const string Cancel = "Cancel";
         public const string Filter = "Filter";
-        public const string FocusName = "FocusName";
-        public const string FocusText = "FocusText";
+        public const string FocusBack = "FocusBack";
+        public const string FocusNext = "FocusNext";
         public const string Horizontal = "Horizontal";
         public const string Load = "Load";
         public const string New = "New";

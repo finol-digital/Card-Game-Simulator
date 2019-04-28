@@ -346,7 +346,7 @@ namespace CardGameDef
             Dictionary<Card, int> cardCounts = GetCardCounts();
             foreach (KeyValuePair<Card, int> cardCount in cardCounts)
             {
-                bool isDeckFileTxtIdRequired = SourceGame.DeckFileTxtIdRequired || cardCount.Key.IsReprint;
+                bool isDeckFileTxtIdRequired = !SourceGame.CardNameIsUnique || cardCount.Key.IsReprint;
                 text.Append(cardCount.Value);
                 text.Append(" ");
                 if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Id)

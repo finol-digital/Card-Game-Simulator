@@ -30,8 +30,8 @@ namespace CGS.Menu
                 Clear();
             else if ((Input.GetButtonDown(Inputs.Filter) ||Input.GetButtonDown(Inputs.Save)) && urlInput.interactable)
                 Paste();
-            else if (((Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
-                || (Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0)) && urlInput.interactable)
+            else if (((Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0)
+                || (Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)) && urlInput.interactable)
                 urlInput.ActivateInputField();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) || Input.GetButtonDown(Inputs.Option))
                 Hide();

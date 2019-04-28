@@ -90,7 +90,6 @@ namespace CGS.Decks
         void OnEnable()
         {
             Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
-            CardGameManager.Instance.OnSceneActions.Add(CardInfoViewer.Instance.ResetInfo);
             searchResults.HorizontalDoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(ResetCardStacks);
         }
@@ -98,11 +97,12 @@ namespace CGS.Decks
         void Start()
         {
             dropZone.dropHandler = this;
+            ShowDeckLoadMenu();
         }
 
         void Update()
         {
-            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null || searchResults.nameInputField.isFocused)
+            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null || searchResults.inputField.isFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.Sort))
@@ -113,8 +113,9 @@ namespace CGS.Decks
                 ShowDeckLoadMenu();
             else if (Input.GetButtonDown(Inputs.Save))
                 ShowDeckSaveMenu();
-            else if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
-                searchResults.nameInputField.ActivateInputField();
+            else if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0
+                        || Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)
+                searchResults.inputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Filter))
                 searchResults.ShowSearchMenu();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))

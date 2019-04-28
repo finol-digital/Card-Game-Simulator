@@ -13,14 +13,14 @@ namespace CGS.Cards
 {
     public class SearchResults : MonoBehaviour
     {
-        public const string EmptyFilterText = "*";
+        public static string InputPrompt => $"Search {CardGameManager.Current.Name} cards";
+        public const string CountSeparator = " / ";
 
         public GameObject cardSearchMenuPrefab;
         public GameObject cardModelPrefab;
         public RectTransform layoutArea;
         public LayoutGroup layoutGroup;
-        public InputField nameInputField;
-        public Text filtersText;
+        public InputField inputField;
         public Text countText;
         public ScrollRect scrollRect;
 
@@ -73,6 +73,7 @@ namespace CGS.Cards
         {
             CardSearcher.SearchCallback = ShowResults;
             CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
+            CardGameManager.Instance.OnSceneActions.Add(ResetPlaceholderText);
         }
 
         void Start()
@@ -80,20 +81,21 @@ namespace CGS.Cards
             UpdateSearchResultsPanel();
         }
 
-        public string SetNameInputField(string nameFilter)
+        public void ResetPlaceholderText()
         {
-            nameInputField.text = nameFilter;
-            return nameInputField.text;
+            if (inputField != null && inputField.placeholder is Text)
+                (inputField.placeholder as Text).text = InputPrompt;
         }
 
-        public void SetNameFilter(string nameFilter)
+        public string UpdateInputField(string input)
         {
-            CardSearcher.SetNameFilter(nameFilter);
+            inputField.text = input;
+            return inputField.text;
         }
 
-        public void ClearSearchName()
+        public void SetInput(string input)
         {
-            CardSearcher.ClearSearchName();
+            CardSearcher.SetFilters(input);
         }
 
         public void Search()
@@ -142,7 +144,7 @@ namespace CGS.Cards
                     cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
             }
 
-            countText.text = (CurrentPageIndex + 1) + "/" + (TotalPageCount + 1);
+            countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);
 
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1;
@@ -150,15 +152,12 @@ namespace CGS.Cards
 
         public void ShowSearchMenu()
         {
-            CardSearcher.Show(SetNameInputField, ShowResults);
+            CardSearcher.Show(ShowResults);
         }
 
         public void ShowResults(string filters, List<Card> results)
         {
-            if (string.IsNullOrEmpty(filters))
-                filters = EmptyFilterText;
-            filtersText.text = filters;
-
+            inputField.text = filters;
             AllResults = results;
         }
     }

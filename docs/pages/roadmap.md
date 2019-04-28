@@ -5,21 +5,28 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- (Apple) Update instructional information
+- Update screenshots in docs/ and store listings
+- Redesign Settings Menu
+- Redesign Cards Explorer
+- Redesign Deck Editor
+- Redesign Play Mode
+- Unify search filters with searchbar
+- Hide Reprints in Card Search
+- Improve Error Handling
+- Fix: Pan & Zoom in Play Mode
 - Fix: Lock to Landscape
 - Fix: Vertical buttons in Deck Editor
 
 ## Current Sprint
-- Update instructions for Apple devices
 - Update Android/iOS icon and Standard CardBack
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
-- Redesign Modal(Popup/Messenger) and Spinner(ProgressBar)
-- Redesign Settings Menu
-- Unify search filters with searchbar
+- Redesign Resources/Modal(Popup/Messenger) and Resources/ProgressBar(Spinner)
+- Redesign Prefabs/Menus/...
+- Create Sort Menu for the Deck Editor and Cards Explorer
 - Android Searchbar Widget
-- Rollup printings
-- Support default filters
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck Name by clicking on container
@@ -29,8 +36,6 @@ permalink: roadmap.html
 - Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
-- Create Sort Menu for the Deck Editor and Cards Explorer
-- Support default sort
 - Add Card Editor
 - Tech: Optimize Card Game Loading
 - Tech: Travis CI for build automation
@@ -40,10 +45,10 @@ permalink: roadmap.html
 - Tech: Use Json.Net schema
 
 ## Backlog
-- Fix: Zoom in/out in Play Mode
 - Fix: Restore networking capability
 - Fix: Error/Messaging OnAwake/OnValidate in Play Mode
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
+- Redesign Play Mode
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
@@ -68,6 +73,8 @@ permalink: roadmap.html
 - Tech: Restore CardClearsBackground
 - Tech: Replace SwipeManager
 - Tech: Redo TopCardCanvas and TopMenuCanvas for performance
+- Support default search filters
+- Support default sort
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
 - Support dual-faced cards (DFC)

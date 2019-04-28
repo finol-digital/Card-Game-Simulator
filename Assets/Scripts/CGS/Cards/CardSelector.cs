@@ -27,7 +27,7 @@ namespace CGS.Cards
 
         void Update()
         {
-            if (CardGameManager.Instance.TopMenuCanvas != null || results.nameInputField.isFocused)
+            if (CardGameManager.Instance.TopMenuCanvas != null || results.inputField.isFocused)
                 return;
 
             if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && CardInfoViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())

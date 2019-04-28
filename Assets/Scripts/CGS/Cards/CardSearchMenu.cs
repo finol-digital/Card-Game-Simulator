@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using CardGameDef;
+using CGS.Menu;
 
 namespace CGS.Cards
 {
@@ -27,7 +28,6 @@ namespace CGS.Cards
         public SearchFilterPanel integerFilterPanel;
         public SearchFilterPanel toggleFilterPanel;
 
-        public OnNameChangeDelegate NameChangeCallback { get; set; }
         public OnSearchDelegate SearchCallback { get; set; }
 
         public List<GameObject> FilterPanels { get; } = new List<GameObject>();
@@ -76,8 +76,8 @@ namespace CGS.Cards
             if (gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
                 return;
 
-            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0
-                    || Input.GetButtonDown(Inputs.FocusText) || Input.GetAxis(Inputs.FocusText) != 0)
+            if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0
+                    || Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)
             {
                 FocusInputField();
                 return;
@@ -120,7 +120,7 @@ namespace CGS.Cards
                 return;
             }
 
-            if (Input.GetButtonDown(Inputs.FocusName) || Input.GetAxis(Inputs.FocusName) != 0)
+            if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0)
             { // up
                 InputField previous = InputFields.Last();
                 for (int i = 0; i < InputFields.Count; i++)
@@ -228,11 +228,10 @@ namespace CGS.Cards
             ActiveToggle.isOn = !ActiveToggle.isOn;
         }
 
-        public void Show(OnNameChangeDelegate nameChangeCallback, OnSearchDelegate searchCallback)
+        public void Show(OnSearchDelegate searchCallback)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
-            NameChangeCallback = nameChangeCallback;
             SearchCallback = searchCallback;
 
             stringFilterPanel.gameObject.SetActive(false);
@@ -246,10 +245,15 @@ namespace CGS.Cards
             InputFields.Clear();
             Toggles.Clear();
 
+            nameInputField.text = Filters.Name;
             nameInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
             InputFields.Add(nameInputField);
+
+            idInputField.text = Filters.Id;
             idInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
             InputFields.Add(idInputField);
+
+            setCodeInputField.text = Filters.SetCode;
             setCodeInputField.onValidateInput += delegate (string input, int charIndex, char addedChar) { return Inputs.FilterFocusNameInput(addedChar); };
             InputFields.Add(setCodeInputField);
 
@@ -439,12 +443,14 @@ namespace CGS.Cards
             return toggleWidth;
         }
 
+        public void SetFilters(string input)
+        {
+            Filters.Parse(input);
+        }
+
         public void SetNameFilter(string name)
         {
-            Filters.Name = NameChangeCallback != null ? NameChangeCallback(name) : name;
-
-            if (!nameInputField.text.Equals(Filters.Name))
-                nameInputField.text = Filters.Name;
+            Filters.Name = name;
         }
 
         public void SetIdFilter(string id)
@@ -533,14 +539,7 @@ namespace CGS.Cards
             foreach (Toggle toggle in GetComponentsInChildren<Toggle>())
                 toggle.isOn = false;
 
-            Filters.Name = string.Empty;
-            Filters.Id = string.Empty;
-            Filters.SetCode = string.Empty;
-            Filters.StringProperties.Clear();
-            Filters.IntMinProperties.Clear();
-            Filters.IntMaxProperties.Clear();
-            Filters.BoolProperties.Clear();
-            Filters.EnumProperties.Clear();
+            Filters.Clear();
         }
 
         public void ClearSearch()
@@ -549,21 +548,15 @@ namespace CGS.Cards
             Search();
         }
 
-        public void ClearSearchName()
-        {
-            string name = Filters.Name;
-            ClearFilters();
-            SetNameFilter(name);
-            Search();
-        }
-
         public void Search()
         {
             Results.Clear();
+            bool hideReprints = Settings.HideReprints;
             IEnumerable<Card> cardSearcher = CardGameManager.Current.FilterCards(Filters);
             foreach (Card card in cardSearcher)
-                Results.Add(card);
-            SearchCallback?.Invoke(Filters.ToString(CardGameManager.Current), Results);
+                if (!hideReprints || !card.IsReprint)
+                    Results.Add(card);
+            SearchCallback?.Invoke(Filters.ToString(), Results);
         }
 
         public void Hide()
