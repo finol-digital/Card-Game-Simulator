@@ -7,6 +7,12 @@ permalink: roadmap.html
 ## What's New
 - Add iOS Screenshots
 - Update Standard CardBack
+- Tech: Optimize Card Game Loading
+- Tech: Travis CI for build automation
+- Tech: Review with Resharper/Rider
+- Tech: Add unit tests
+- Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag), and make it non-static
+- Tech: Use Json.Net schema
 
 ## Current Sprint
 - Animate "Tap Anywhere to Start" text
@@ -26,12 +32,6 @@ permalink: roadmap.html
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 - Add Card Editor
-- Tech: Optimize Card Game Loading
-- Tech: Travis CI for build automation
-- Tech: Review with Resharper/Rider
-- Tech: Add unit tests
-- Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag), and make it non-static
-- Tech: Use Json.Net schema
 
 ## Backlog
 - Fix: Restore networking capability

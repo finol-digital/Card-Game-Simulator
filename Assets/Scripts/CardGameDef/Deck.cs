@@ -164,7 +164,7 @@ namespace CardGameDef
 
         public void LoadTxt(string line)
         {
-            if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
+            if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.StartsWith("//") || line.Equals("Sideboard", StringComparison.OrdinalIgnoreCase) || line.Equals("Sideboard:"))
                 return;
 
             int cardCount = 1;
