@@ -5,21 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- (Apple) Update instructional information
-- Update screenshots in docs/ and store listings
-- Redesign Settings Menu
-- Redesign Cards Explorer
-- Redesign Deck Editor
-- Redesign Play Mode
-- Unify search filters with searchbar
-- Hide Reprints in Card Search
-- Improve Error Handling
-- Fix: Pan & Zoom in Play Mode
-- Fix: Lock to Landscape
-- Fix: Vertical buttons in Deck Editor
+- Add iOS Screenshots
+- Update Standard CardBack
 
 ## Current Sprint
-- Update Android/iOS icon and Standard CardBack
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
