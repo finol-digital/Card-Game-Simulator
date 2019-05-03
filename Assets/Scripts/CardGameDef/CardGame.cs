@@ -233,7 +233,7 @@ namespace CardGameDef
         public HashSet<string> CardNames { get; } = new HashSet<string>();
 
         protected Dictionary<string, Card> LoadedCards { get; } = new Dictionary<string, Card>();
-        protected Dictionary<string, Set> LoadedSets { get; } = new Dictionary<string, Set>();
+        protected Dictionary<string, Set> LoadedSets { get; } = new Dictionary<string, Set>(StringComparer.OrdinalIgnoreCase);
 
         public UnityEngine.Sprite BannerImageSprite
         {

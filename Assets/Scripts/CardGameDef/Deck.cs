@@ -199,8 +199,8 @@ namespace CardGameDef
             IEnumerable<Card> cards = SourceGame.FilterCards(new CardSearchFilters() { Id = cardId, Name = cardName, SetCode = cardSet });
             foreach (Card card in cards)
             {
-                if (!card.Id.Equals(cardId) && (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase) ||
-                                                (!string.IsNullOrEmpty(cardSet) && !card.SetCode.Equals(cardSet))))
+                if (!card.Id.Equals(cardId) && (!string.Equals(card.Name.Trim(), cardName, StringComparison.OrdinalIgnoreCase) ||
+                                                (!string.IsNullOrEmpty(cardSet) && !cardSet.Equals(card.SetCode, StringComparison.OrdinalIgnoreCase))))
                     continue;
                 for (int i = 0; i < cardCount; i++)
                     Cards.Add(card);

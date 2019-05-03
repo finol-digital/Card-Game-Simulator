@@ -7,6 +7,7 @@ permalink: roadmap.html
 ## What's New
 - Add iOS Screenshots
 - Update Standard CardBack
+- Fix: Card size on zoom
 - Tech: Optimize Card Game Loading
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
@@ -32,6 +33,7 @@ permalink: roadmap.html
 - Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 - Add Card Editor
+- Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
 
 ## Backlog
 - Fix: Restore networking capability
