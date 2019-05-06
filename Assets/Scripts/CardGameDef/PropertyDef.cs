@@ -47,8 +47,11 @@ namespace CardGameDef
         [JsonProperty]
         public List<PropertyDef> Properties { get; set; }
 
+        [JsonProperty]
+        public string Delimiter { get; set; }
+
         [JsonConstructor]
-        public PropertyDef(string name, PropertyType type, string display = "", string displayEmpty = "", bool displayEmptyFirst = false, List<PropertyDef> properties = null)
+        public PropertyDef(string name, PropertyType type, string display = "", string displayEmpty = "", bool displayEmptyFirst = false, List<PropertyDef> properties = null, string delimiter = null)
         {
             Name = name ?? string.Empty;
             int objectDelimiterIdx = Name.IndexOf(ObjectDelimiter);
@@ -61,6 +64,7 @@ namespace CardGameDef
             Properties = properties != null ? new List<PropertyDef>(properties) : new List<PropertyDef>();
             if (objectDelimiterIdx != -1)
                 Properties.Add(new PropertyDef(name.Substring(objectDelimiterIdx + 1), type, display, displayEmpty, displayEmptyFirst, properties));
+            Delimiter = delimiter;
         }
 
         public object Clone()

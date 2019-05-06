@@ -194,6 +194,10 @@
           "properties": {
             "description": "If this property is an object, the properties for the object",
             "$ref": "#/properties/cardProperties"
+          },
+          "delimiter": {
+            "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimited",
+            "type": "string"
           }
         },
         "required": [

@@ -654,11 +654,23 @@ namespace CardGameDef
                     case PropertyType.StringEnumList:
                     case PropertyType.StringList:
                         listValue = string.Empty;
-                        foreach (JToken jToken in cardJToken[property.Name])
+                        if (string.IsNullOrEmpty(property.Delimiter))
                         {
-                            if (!string.IsNullOrEmpty(listValue))
-                                listValue += EnumDef.Delimiter;
-                            listValue += jToken.Value<string>() ?? string.Empty;
+                            foreach (JToken jToken in cardJToken[property.Name])
+                            {
+                                if (!string.IsNullOrEmpty(listValue))
+                                    listValue += EnumDef.Delimiter;
+                                listValue += jToken.Value<string>() ?? string.Empty;
+                            }
+                        }
+                        else
+                        {
+                            foreach (string token in (cardJToken.Value<string>(property.Name) ?? string.Empty).Split(new[] { property.Delimiter }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                if (!string.IsNullOrEmpty(listValue))
+                                    listValue += EnumDef.Delimiter;
+                                listValue += token;
+                            }
                         }
                         newProperty.Value = listValue;
                         cardProperties[key] = newProperty;

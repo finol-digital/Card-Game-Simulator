@@ -8,6 +8,8 @@ permalink: roadmap.html
 - Add iOS Screenshots
 - Update Standard CardBack
 - Fix: Card size on zoom
+- Fix: Load hand
+- Fix: Discard
 - Tech: Optimize Card Game Loading
 - Tech: Travis CI for build automation
 - Tech: Review with Resharper/Rider
