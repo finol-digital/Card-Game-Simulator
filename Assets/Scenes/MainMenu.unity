@@ -2599,7 +2599,7 @@ GameObject:
   - component: {fileID: 3853720417096223462}
   m_Layer: 5
   m_Name: DownloadMenu Canvas
-  m_TagString: MenuCanvas
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

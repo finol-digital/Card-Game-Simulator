@@ -5,9 +5,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using CGS.Menu;
+
 namespace CGS.Play
 {
-    public class DiceMenu : MonoBehaviour
+    public class DiceMenu : Modal
     {
         public const int DefaultMin = 1;
         public const int DefaultMax = 6;
@@ -40,7 +42,7 @@ namespace CGS.Play
 
         protected RectTransform Target { get; set; }
 
-        void Start()
+        protected override void OnStart()
         {
             Min = DefaultMin;
             Max = DefaultMax;
@@ -48,7 +50,7 @@ namespace CGS.Play
 
         void Update()
         {
-            if (!Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (!Input.anyKeyDown || !IsFocused)
                 return;
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))

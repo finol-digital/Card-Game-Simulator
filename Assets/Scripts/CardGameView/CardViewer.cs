@@ -13,23 +13,23 @@ using CGS;
 
 namespace CardGameView
 {
-    public class CardInfoViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
+    public class CardViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
         public const string SetLabel = "Set";
 
-        public static CardInfoViewer Instance
+        public static CardViewer Instance
         {
             get
             {
                 if (_instance != null)
                     return _instance;
 
-                GameObject cardInfoViewer = GameObject.FindWithTag(Tags.CardInfoViewer);
-                _instance = cardInfoViewer?.GetOrAddComponent<CardInfoViewer>();
+                GameObject cardViewer = GameObject.FindWithTag(Tags.CardViewer);
+                _instance = cardViewer?.GetOrAddComponent<CardViewer>();
                 return _instance;
             }
         }
-        private static CardInfoViewer _instance;
+        private static CardViewer _instance;
 
         public CanvasGroup infoPanel;
         public RectTransform zoomPanel;
@@ -155,7 +155,7 @@ namespace CardGameView
         void Update()
         {
             WasVisible = IsVisible;
-            if (!IsVisible || SelectedCardModel == null || CardGameManager.Instance.TopMenuCanvas != null)
+            if (!IsVisible || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)

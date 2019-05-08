@@ -11,8 +11,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Mirror;
 
+using CGS.Menu;
+
 namespace CGS.Play.Multiplayer
 {
+    [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
         public Button joinButton;
@@ -24,9 +27,16 @@ namespace CGS.Play.Multiplayer
         private bool _wasUp;
         private bool _wasPage;
 
+        private Modal _modal;
+
+        void Start()
+        {
+            _modal = GetComponent<Modal>();
+        }
+
         void Update()
         {
-            if (gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (!_modal.IsFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)

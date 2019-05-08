@@ -27,10 +27,10 @@ namespace CGS.Cards
 
         void Update()
         {
-            if (CardGameManager.Instance.TopMenuCanvas != null || results.inputField.isFocused)
+            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
                 return;
 
-            if (CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf && CardInfoViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
+            if (CardViewer.Instance.zoomPanel.gameObject.activeSelf && CardViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
             {
                 if (SwipeManager.IsSwipingRight())
                     SelectLeft();
@@ -91,7 +91,7 @@ namespace CGS.Cards
 
             for (int i = 0; i < results.layoutArea.childCount; i++)
             {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
+                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
                 i+= results.CardsPerRow;
                 if (i >= results.layoutArea.childCount)
@@ -103,8 +103,8 @@ namespace CGS.Cards
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardInfoViewer.Instance?.SelectedCardModel != null)
-                CardInfoViewer.Instance.IsVisible = true;
+            if (CardViewer.Instance?.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
         }
 
         public void SelectUp()
@@ -120,7 +120,7 @@ namespace CGS.Cards
 
             for (int i = results.layoutArea.childCount - 1; i >= 0; i--)
             {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
+                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
                 i-= results.CardsPerRow;
                 if (i < 0)
@@ -132,8 +132,8 @@ namespace CGS.Cards
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardInfoViewer.Instance?.SelectedCardModel != null)
-                CardInfoViewer.Instance.IsVisible = true;
+            if (CardViewer.Instance?.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
         }
 
         public void SelectLeft()
@@ -149,7 +149,7 @@ namespace CGS.Cards
 
             for (int i = results.layoutArea.childCount - 1; i >= 0; i--)
             {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
+                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
                 i--;
                 if (i < 0)
@@ -161,8 +161,8 @@ namespace CGS.Cards
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardInfoViewer.Instance?.SelectedCardModel != null)
-                CardInfoViewer.Instance.IsVisible = true;
+            if (CardViewer.Instance?.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
         }
 
         public void SelectRight()
@@ -178,7 +178,7 @@ namespace CGS.Cards
 
             for (int i = 0; i < results.layoutArea.childCount; i++)
             {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardInfoViewer.Instance.SelectedCardModel)
+                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
                 i++;
                 if (i == results.layoutArea.childCount)
@@ -190,8 +190,8 @@ namespace CGS.Cards
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardInfoViewer.Instance?.SelectedCardModel != null)
-                CardInfoViewer.Instance.IsVisible = true;
+            if (CardViewer.Instance?.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
         }
 
         public void PageDown()

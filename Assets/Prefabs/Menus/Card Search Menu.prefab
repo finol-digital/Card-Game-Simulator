@@ -1699,7 +1699,7 @@ GameObject:
   - component: {fileID: 114126704938545522}
   m_Layer: 5
   m_Name: Card Search Menu
-  m_TagString: MenuCanvas
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -20,13 +20,13 @@ namespace CGS.Cards
 
         void OnEnable()
         {
-            Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
+            Instantiate(cardViewerPrefab);
             CardGameManager.Instance.OnSceneActions.Add(ResetBanner);
         }
 
         void Update()
         {
-            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null || searchResults.inputField.isFocused)
+            if (CardViewer.Instance.IsVisible || CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0

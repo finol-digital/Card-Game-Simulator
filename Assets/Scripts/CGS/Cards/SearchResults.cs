@@ -105,8 +105,8 @@ namespace CGS.Cards
 
         public void DecrementPage()
         {
-            if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
-                CardInfoViewer.Instance.SelectedCardModel = null;
+            if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+                CardViewer.Instance.SelectedCardModel = null;
             CurrentPageIndex--;
             if (CurrentPageIndex < 0)
                 CurrentPageIndex = TotalPageCount;
@@ -115,8 +115,8 @@ namespace CGS.Cards
 
         public void IncrementPage()
         {
-            if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
-                CardInfoViewer.Instance.SelectedCardModel = null;
+            if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+                CardViewer.Instance.SelectedCardModel = null;
             CurrentPageIndex++;
             if (CurrentPageIndex > TotalPageCount)
                 CurrentPageIndex = 0;
@@ -141,7 +141,7 @@ namespace CGS.Cards
                         && ((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
                     cardModelToShow.DoubleClickAction = HorizontalDoubleClickAction;
                 else
-                    cardModelToShow.DoubleClickAction = CardInfoViewer.Instance.ShowCardZoomed;
+                    cardModelToShow.DoubleClickAction = CardViewer.Instance.ShowCardZoomed;
             }
 
             countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);

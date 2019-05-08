@@ -40,8 +40,8 @@ namespace CGS.Decks
             // TODO: CORRECTLY RE-MAP TO CURRENT PAGE
             searchResults.CurrentPageIndex = 0;
             searchResults.UpdateSearchResultsPanel();
-            if (CardInfoViewer.Instance != null)
-                CardInfoViewer.Instance.IsVisible = false;
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.IsVisible = false;
         }
 
     }

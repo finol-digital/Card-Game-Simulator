@@ -10,6 +10,7 @@ using CardGameDef;
 
 namespace CGS.Play.Zones
 {
+    [RequireComponent(typeof(Canvas))]
     public class ZonesViewer : MonoBehaviour
     {
         public const float Width = 350f;
@@ -71,6 +72,7 @@ namespace CGS.Play.Zones
 
         void Start()
         {
+            CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             if (CardGameManager.Current.GameHasDiscardZone)
                 CreateDiscard();
         }

@@ -9,7 +9,7 @@ using CardGameDef;
 
 namespace CGS.Menu
 {
-    public class SpinningLoadingPanel : MonoBehaviour
+    public class SpinningLoadingPanel : Modal
     {
         public const float RotateSpeed = 200f;
         public RectTransform progressCircle;

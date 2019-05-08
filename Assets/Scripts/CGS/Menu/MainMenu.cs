@@ -58,7 +58,7 @@ namespace CGS.Menu
 
         void Update()
         {
-            if (CardGameManager.Instance.TopMenuCanvas != null)
+            if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
             if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)

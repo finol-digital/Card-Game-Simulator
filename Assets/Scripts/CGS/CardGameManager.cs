@@ -100,6 +100,34 @@ namespace CGS
 
         public HashSet<UnityAction> OnSceneActions { get; } = new HashSet<UnityAction>();
 
+        public HashSet<Canvas> CardCanvases { get; } = new HashSet<Canvas>();
+        public Canvas CardCanvas
+        {
+            get
+            {
+                Canvas topCanvas = null;
+                CardCanvases.RemoveWhere((canvas) => canvas == null);
+                foreach (Canvas canvas in CardCanvases)
+                    if (canvas.gameObject.activeSelf && (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
+                        topCanvas = canvas;
+                return topCanvas;
+            }
+        }
+
+        public HashSet<Canvas> ModalCanvases { get; } = new HashSet<Canvas>();
+        public Canvas ModalCanvas
+        {
+            get
+            {
+                Canvas topCanvas = null;
+                ModalCanvases.RemoveWhere((canvas) => canvas == null);
+                foreach (Canvas canvas in ModalCanvases)
+                    if (canvas.gameObject.activeSelf && (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
+                        topCanvas = canvas;
+                return topCanvas;
+            }
+        }
+
         public Popup Messenger
         {
             get
@@ -123,32 +151,6 @@ namespace CGS
             }
         }
         private SpinningLoadingPanel _spinner;
-
-        // TODO: IMPROVE PERFORMANCE; MAYBE TRACK THIS USING OBSERVER PATTERN?
-        public Canvas TopCardCanvas
-        {
-            get
-            {
-                Canvas topCanvas = null;
-                foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(Tags.CardCanvas))
-                    if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
-                        topCanvas = canvas.GetComponent<Canvas>();
-                return topCanvas;
-            }
-        }
-
-        // TODO: IMPROVE PERFORMANCE; MAYBE TRACK THIS USING OBSERVER PATTERN?
-        public Canvas TopMenuCanvas
-        {
-            get
-            {
-                Canvas topCanvas = null;
-                foreach (GameObject canvas in GameObject.FindGameObjectsWithTag(Tags.MenuCanvas))
-                    if (canvas.activeSelf && (topCanvas == null || canvas.GetComponent<Canvas>().sortingOrder > topCanvas.sortingOrder))
-                        topCanvas = canvas.GetComponent<Canvas>();
-                return topCanvas;
-            }
-        }
 
         void Awake()
         {

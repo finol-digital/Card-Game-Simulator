@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 
 namespace CGS.Menu
 {
-    public class Popup : MonoBehaviour
+    public class Popup : Modal
     {
         public const string CloseLabel = "Close";
         public const string CancelLabel = "Cancel";

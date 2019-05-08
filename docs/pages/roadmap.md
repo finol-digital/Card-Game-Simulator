@@ -7,21 +7,20 @@ permalink: roadmap.html
 ## What's New
 - Add iOS Screenshots
 - Update Standard CardBack
+- Redesign Resources/Modal(Popup/Messenger) and Resources/ProgressBar(Spinner)
 - Fix: Card size on zoom
 - Fix: Load hand
 - Fix: Discard
 - Tech: Optimize Card Game Loading
 - Tech: Travis CI for build automation
+- Tech: Use Json.Net schema
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
-- Tech: Rename CardInfoViewer to CardViewer (Prefab, Script, Tag), and make it non-static
-- Tech: Use Json.Net schema
 
 ## Current Sprint
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
-- Redesign Resources/Modal(Popup/Messenger) and Resources/ProgressBar(Spinner)
 - Redesign Prefabs/Menus/...
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Android Searchbar Widget
@@ -65,7 +64,6 @@ permalink: roadmap.html
 ## Icebox
 - Tech: Restore CardClearsBackground
 - Tech: Replace SwipeManager
-- Tech: Redo TopCardCanvas and TopMenuCanvas for performance
 - Support default search filters
 - Support default sort
 - Support https://github.com/ValveSoftware/ArtifactDeckCode

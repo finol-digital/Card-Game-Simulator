@@ -15,7 +15,7 @@ namespace CGS.Cards
 {
     public delegate void OnSearchDelegate(string filters, List<Card> searchResults);
 
-    public class CardSearchMenu : MonoBehaviour
+    public class CardSearchMenu : Modal
     {
         public float PropertyPanelHeight => ((RectTransform)stringFilterPanel.transform).rect.height;
 
@@ -73,7 +73,7 @@ namespace CGS.Cards
 
         void Update()
         {
-            if (gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (!IsFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0

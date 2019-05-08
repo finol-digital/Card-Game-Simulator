@@ -14,6 +14,7 @@ using CGS.Cards;
 
 namespace CGS.Decks
 {
+    [RequireComponent(typeof(Canvas))]
     public class DeckEditor : MonoBehaviour, ICardDropHandler
     {
         public const string NewDeckPrompt = "Clear the editor and start a new Untitled deck?";
@@ -89,20 +90,21 @@ namespace CGS.Decks
 
         void OnEnable()
         {
-            Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
+            Instantiate(cardViewerPrefab);
             searchResults.HorizontalDoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(ResetCardStacks);
         }
 
         void Start()
         {
+            CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             dropZone.dropHandler = this;
             ShowDeckLoadMenu();
         }
 
         void Update()
         {
-            if (CardInfoViewer.Instance.IsVisible || CardGameManager.Instance.TopMenuCanvas != null || searchResults.inputField.isFocused)
+            if (CardViewer.Instance.IsVisible || CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.Sort))
@@ -209,7 +211,7 @@ namespace CGS.Decks
 
             cardModel.transform.SetParent(null);
             Destroy(cardModel.gameObject);
-            CardInfoViewer.Instance.IsVisible = false;
+            CardViewer.Instance.IsVisible = false;
 
             UpdateDeckStats();
         }
@@ -237,7 +239,7 @@ namespace CGS.Decks
             CurrentCardStackIndex = 0;
             scrollRect.horizontalNormalizedPosition = 0;
 
-            CardInfoViewer.Instance.IsVisible = false;
+            CardViewer.Instance.IsVisible = false;
             SavedDeck = null;
             UpdateDeckStats();
         }

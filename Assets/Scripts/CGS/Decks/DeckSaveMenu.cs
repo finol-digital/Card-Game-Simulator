@@ -9,12 +9,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using CardGameDef;
+using CGS.Menu;
 
 namespace CGS.Decks
 {
     public delegate void OnDeckSavedDelegate(Deck savedDeck);
 
-    public class DeckSaveMenu : MonoBehaviour
+    public class DeckSaveMenu : Modal
     {
         public const string DeckCopiedMessage = "The text for this deck has been copied to the clipboard.";
         public const string OverWriteDeckPrompt = "A deck with that name already exists. Overwrite?";
@@ -30,7 +31,7 @@ namespace CGS.Decks
 
         void Update()
         {
-            if (nameInputField.isFocused || !Input.anyKeyDown || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (!IsFocused || nameInputField.isFocused || !Input.anyKeyDown)
                 return;
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)

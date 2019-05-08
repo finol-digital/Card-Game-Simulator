@@ -246,7 +246,7 @@ namespace CardGameView
         public void OnPointerDown(PointerEventData eventData)
         {
             DidSelectOnDown = eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right
-                && CardInfoViewer.Instance.SelectedCardModel != this && CardInfoViewer.Instance.WasVisible;
+                && CardViewer.Instance.SelectedCardModel != this && CardViewer.Instance.WasVisible;
             if (DidSelectOnDown)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
 
@@ -277,14 +277,14 @@ namespace CardGameView
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (CardInfoViewer.Instance != null && !IsFacedown)
-                CardInfoViewer.Instance.SelectedCardModel = this;
+            if (CardViewer.Instance != null && !IsFacedown)
+                CardViewer.Instance.SelectedCardModel = this;
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-            if (CardInfoViewer.Instance != null && !CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
-                CardInfoViewer.Instance.IsVisible = false;
+            if (CardViewer.Instance != null && !CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+                CardViewer.Instance.IsVisible = false;
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -446,7 +446,7 @@ namespace CardGameView
             CardStack prevParentStack = ParentCardStack;
             if (CurrentDragPhase == DragPhase.Drag)
                 prevParentStack.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
-            transform.SetParent(CardGameManager.Instance.TopCardCanvas.transform);
+            transform.SetParent(CardGameManager.Instance.CardCanvas.transform);
             transform.SetAsLastSibling();
             if (prevParentStack != null)
                 prevParentStack.OnRemove(this);

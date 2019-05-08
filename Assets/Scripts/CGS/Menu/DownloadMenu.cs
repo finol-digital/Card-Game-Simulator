@@ -13,14 +13,14 @@ using CardGameDef;
 
 namespace CGS.Menu
 {
-    public class DownloadMenu : MonoBehaviour
+    public class DownloadMenu : Modal
     {
         public InputField urlInput;
         public Button downloadButton;
 
         void Update()
         {
-            if (urlInput.isFocused || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (!IsFocused || urlInput.isFocused)
                 return;
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) || Input.GetButtonDown(Inputs.New))

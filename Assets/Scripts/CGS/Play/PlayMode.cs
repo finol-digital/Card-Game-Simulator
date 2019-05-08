@@ -20,6 +20,7 @@ using CGS.Play.Zones;
 
 namespace CGS.Play
 {
+    [RequireComponent(typeof(Canvas))]
     public class PlayMode : MonoBehaviour
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
@@ -51,12 +52,13 @@ namespace CGS.Play
 
         void OnEnable()
         {
-            Instantiate(cardViewerPrefab); // TODO: HANDLE CARD VIEWER DIFFERENTLY
+            Instantiate(cardViewerPrefab);
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
 
         void Start()
         {
+            CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
             if (CardGameManager.Instance.IsSearching)
                 Lobby.Show(BackToMainMenu);
@@ -66,7 +68,7 @@ namespace CGS.Play
 
         void Update()
         {
-            if (CardInfoViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.Instance.TopMenuCanvas != null)
+            if (CardViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
             if (Input.GetButtonDown(Inputs.Load))

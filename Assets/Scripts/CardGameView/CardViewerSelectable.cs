@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace CardGameView
 {
-    public class CardInfoViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
+    public class CardViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
         public bool ignoreDeselect = false;
 
@@ -18,17 +18,17 @@ namespace CardGameView
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (CardInfoViewer.Instance.WasVisible)
-                CardInfoViewer.Instance.IsVisible = true;
+            if (CardViewer.Instance.WasVisible)
+                CardViewer.Instance.IsVisible = true;
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-            if (ignoreDeselect || CardInfoViewer.Instance == null)
+            if (ignoreDeselect || CardViewer.Instance == null)
                 return;
 
-            if (!CardInfoViewer.Instance.zoomPanel.gameObject.activeSelf)
-                CardInfoViewer.Instance.IsVisible = false;
+            if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+                CardViewer.Instance.IsVisible = false;
         }
     }
 }

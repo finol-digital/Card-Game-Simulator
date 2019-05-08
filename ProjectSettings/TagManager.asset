@@ -5,9 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - CardGameManager
-  - CardInfoViewer
-  - CardCanvas
-  - MenuCanvas
+  - CardViewer
   layers:
   - Default
   - TransparentFX

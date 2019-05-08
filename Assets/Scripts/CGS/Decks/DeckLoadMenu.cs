@@ -12,11 +12,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 using CardGameDef;
+using CGS.Menu;
 
 namespace CGS.Decks
 {
     public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
 
+    [RequireComponent(typeof(Modal))]
     public class DeckLoadMenu : SelectionPanel
     {
         public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
@@ -46,9 +48,16 @@ namespace CGS.Decks
         private bool _wasUp;
         private bool _wasPage;
 
+        private Modal _modal;
+
+        void Start()
+        {
+            _modal = GetComponent<Modal>();
+        }
+
         void Update()
         {
-            if (nameInputField.isFocused || gameObject != CardGameManager.Instance.TopMenuCanvas?.gameObject)
+            if (!_modal.IsFocused || nameInputField.isFocused)
                 return;
 
             if (newDeckPanel.gameObject.activeSelf)
