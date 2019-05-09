@@ -140,12 +140,12 @@ namespace CGS
         }
         private Dialog _messenger;
 
-        public SpinningLoadingPanel Spinner
+        public SpinningLoadingPanel Progress
         {
             get
             {
                 if (_spinner != null) return _spinner;
-                _spinner = Instantiate(Resources.Load<GameObject>("Spinner")).GetOrAddComponent<SpinningLoadingPanel>();
+                _spinner = Instantiate(Resources.Load<GameObject>("ProgressBar")).GetOrAddComponent<SpinningLoadingPanel>();
                 _spinner.transform.SetParent(transform);
                 return _spinner;
             }
@@ -259,9 +259,9 @@ namespace CGS
         {
             CardGame newGame = new CardGame(this, CardGame.DefaultName, gameUrl);
 
-            Spinner.Show(newGame);
+            Progress.Show(newGame);
             yield return newGame.Download();
-            Spinner.Hide();
+            Progress.Hide();
 
             newGame.Load(UpdateCardGame, LoadCards);
 
@@ -287,9 +287,9 @@ namespace CGS
             if (cardGame == null)
                 cardGame = Current;
 
-            Spinner.Show(cardGame);
+            Progress.Show(cardGame);
             yield return cardGame.Download();
-            Spinner.Hide();
+            Progress.Hide();
 
             // Notify about the failed update, but otherwise ignore errors
             if (!string.IsNullOrEmpty(cardGame.Error))
