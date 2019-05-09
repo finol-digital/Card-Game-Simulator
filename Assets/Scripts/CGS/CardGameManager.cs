@@ -128,17 +128,17 @@ namespace CGS
             }
         }
 
-        public Popup Messenger
+        public Dialog Messenger
         {
             get
             {
                 if (_messenger != null) return _messenger;
-                _messenger = Instantiate(Resources.Load<GameObject>("Modal")).GetOrAddComponent<Popup>();
+                _messenger = Instantiate(Resources.Load<GameObject>("Dialog")).GetOrAddComponent<Dialog>();
                 _messenger.transform.SetParent(transform);
                 return _messenger;
             }
         }
-        private Popup _messenger;
+        private Dialog _messenger;
 
         public SpinningLoadingPanel Spinner
         {

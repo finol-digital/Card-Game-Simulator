@@ -11,15 +11,11 @@ using UnityEngine.EventSystems;
 
 namespace CGS.Menu
 {
-    public class Popup : Modal
+    public class Dialog : Modal
     {
-        public const string CloseLabel = "Close";
-        public const string CancelLabel = "Cancel";
-
         public Text messageText;
-        public Button yesButton;
         public Button noButton;
-        public Button cancelButton;
+        public Button yesButton;
 
         protected struct Message : IEquatable<Message>
         {
@@ -89,7 +85,7 @@ namespace CGS.Menu
         {
             messageText.text = message.Text ?? string.Empty;
             yesButton.gameObject.SetActive(message.YesAction != null);
-            noButton.gameObject.SetActive(message.NoAction != null);
+            noButton.gameObject.SetActive(message.YesAction != null);
 
             yesButton.onClick.RemoveAllListeners();
             if (message.YesAction != null)
@@ -100,11 +96,6 @@ namespace CGS.Menu
             if (message.NoAction != null)
                 noButton.onClick.AddListener(message.NoAction);
             noButton.onClick.AddListener(Close);
-
-            if (message.YesAction == null && message.NoAction == null)
-                cancelButton.GetComponentInChildren<Text>().text = CloseLabel;
-            else
-                cancelButton.GetComponentInChildren<Text>().text = CancelLabel;
 
             IsNewMessage = true;
         }
