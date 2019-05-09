@@ -84,7 +84,6 @@ namespace CGS.Menu
         private void DisplayMessage(Message message)
         {
             messageText.text = message.Text ?? string.Empty;
-            yesButton.gameObject.SetActive(message.YesAction != null);
             noButton.gameObject.SetActive(message.YesAction != null);
 
             yesButton.onClick.RemoveAllListeners();

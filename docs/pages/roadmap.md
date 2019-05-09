@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Add iOS Screenshots
 - Update Standard CardBack
 - Redesign Resources/Modal(Popup/Messenger) and Resources/ProgressBar(Spinner)
+- Redesign Prefabs/Menus/...
 - Fix: Card size on zoom
 - Fix: Load hand
 - Fix: Discard
@@ -21,7 +22,6 @@ permalink: roadmap.html
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
-- Redesign Prefabs/Menus/...
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them

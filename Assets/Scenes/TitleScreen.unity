@@ -858,12 +858,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backgroundImage: {fileID: 345117222}
-  backgroundSpritePortrait: {fileID: 21300000, guid: 40e21610331ff374eb9e57a08eb7e0ad,
+  backgroundSpritePortrait: {fileID: 21300000, guid: 294e35a0d74d4435e8b023db1dd4552c,
     type: 3}
-  backgroundSpriteLandscape: {fileID: 21300000, guid: a2edc3b0880b0194d8060eed4bcf0b2a,
+  backgroundSpriteLandscape: {fileID: 21300000, guid: 551d6fc92ca02455fbbf5d23982723bf,
     type: 3}
   footerImage: {fileID: 1943692646}
-  footerSpritePortrait: {fileID: 21300000, guid: cad466c1d4d57eb4dab003133d7bce7f,
+  footerSpritePortrait: {fileID: 21300000, guid: 298aea84d189340cdbd40ad9800d8027,
     type: 3}
   footerSpriteLandscape: {fileID: 21300000, guid: 7ee797950f73e0e42b4110155610c58a,
     type: 3}
