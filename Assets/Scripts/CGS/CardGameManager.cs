@@ -140,17 +140,17 @@ namespace CGS
         }
         private Dialog _messenger;
 
-        public SpinningLoadingPanel Progress
+        public ProgressBar Progress
         {
             get
             {
                 if (_spinner != null) return _spinner;
-                _spinner = Instantiate(Resources.Load<GameObject>("ProgressBar")).GetOrAddComponent<SpinningLoadingPanel>();
+                _spinner = Instantiate(Resources.Load<GameObject>("ProgressBar")).GetOrAddComponent<ProgressBar>();
                 _spinner.transform.SetParent(transform);
                 return _spinner;
             }
         }
-        private SpinningLoadingPanel _spinner;
+        private ProgressBar _spinner;
 
         void Awake()
         {

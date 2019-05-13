@@ -9,10 +9,9 @@ using CardGameDef;
 
 namespace CGS.Menu
 {
-    public class SpinningLoadingPanel : Modal
+    public class ProgressBar : Modal
     {
-        public const float RotateSpeed = 200f;
-        public RectTransform progressCircle;
+        public Image progressBar;
         public Text progressText;
 
         private CardGame _downloadStatus;
@@ -21,11 +20,11 @@ namespace CGS.Menu
         {
             if (_downloadStatus == null)
             {
-                Debug.LogError("SpinningLoadingPanel::MissingCardGame");
+                Debug.LogError("ProgressBar::MissingCardGame");
                 Hide();
             }
 
-            progressCircle.Rotate(0f, 0f, RotateSpeed * Time.deltaTime);
+            progressBar.fillAmount = _downloadStatus.DownloadProgress;
             progressText.text = _downloadStatus.DownloadStatus;
         }
 
