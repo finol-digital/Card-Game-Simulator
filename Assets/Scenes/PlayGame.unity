@@ -1102,7 +1102,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Find Cards
+  m_Text: Cards
 --- !u!222 &586889633
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1894,7 +1894,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 71479e3961f37b64ab1bf69102048e0c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 364b003a1bd067f4fb41ea1adfe03b56, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3739,11 +3739,11 @@ RectTransform:
   - {fileID: 1858133998}
   - {fileID: 586889631}
   m_Father: {fileID: 1904102580}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -300}
+  m_AnchoredPosition: {x: 0, y: -200}
   m_SizeDelta: {x: 275, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1508039172
@@ -4129,11 +4129,11 @@ RectTransform:
   - {fileID: 758454745}
   - {fileID: 1926331874}
   m_Father: {fileID: 1904102580}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -200}
+  m_AnchoredPosition: {x: 0, y: -300}
   m_SizeDelta: {x: 275, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1697495551
@@ -4417,7 +4417,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 02d0520c647a26a4ba56139047bd3eda, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3a3032d8b2c3126459be2c1e3b6c06be, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4465,8 +4465,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 647795439}
-  - {fileID: 1697495550}
   - {fileID: 1508039171}
+  - {fileID: 1697495550}
   m_Father: {fileID: 537393499}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4569,7 +4569,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Use Dice
+  m_Text: Dice
 --- !u!222 &1926331876
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4908,7 +4908,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Load Deck
+  m_Text: Deck
 --- !u!222 &2128780128
 CanvasRenderer:
   m_ObjectHideFlags: 0
