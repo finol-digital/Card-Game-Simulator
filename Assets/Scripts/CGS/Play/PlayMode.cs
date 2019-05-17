@@ -98,9 +98,6 @@ namespace CGS.Play
         public void ShowDeckMenu()
         {
             DeckLoader.Show(LoadDeck);
-            // TODO: BETTER MANAGE THE CANCEL/BACK
-            //DeckLoader.cancelButton.onClick.RemoveAllListeners();
-            //DeckLoader.cancelButton.onClick.AddListener(BackToMainMenu);
         }
 
         public void ShowDiceMenu()

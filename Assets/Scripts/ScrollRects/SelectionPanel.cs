@@ -11,7 +11,6 @@ public class SelectionPanel : MonoBehaviour
     public RectTransform selectionContent;
     public RectTransform selectionTemplate;
     public ScrollRect scrollRect;
-    public Button cancelButton;
 
     protected List<GameObject> Toggles { get; } = new List<GameObject>();
 

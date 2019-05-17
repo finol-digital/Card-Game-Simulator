@@ -135,6 +135,7 @@ namespace CGS.Decks
                     instructionsText.text = TxtInstructions;
                     break;
             }
+            HideNewDeckPanel();
         }
 
         public void BuildDeckFileSelectionOptions()
@@ -242,7 +243,6 @@ namespace CGS.Decks
         {
             Deck newDeck = Deck.Parse(CardGameManager.Current, DeckFiles[SelectedFilePath], CardGameManager.Current.DeckFileType, GetDeckText());
             LoadCallback?.Invoke(newDeck);
-            ResetCancelButton();
             Hide();
         }
 
@@ -307,12 +307,6 @@ namespace CGS.Decks
         public void HideNewDeckPanel()
         {
             newDeckPanel.gameObject.SetActive(false);
-        }
-
-        public void ResetCancelButton()
-        {
-            cancelButton.onClick.RemoveAllListeners();
-            cancelButton.onClick.AddListener(Hide);
         }
 
         public void Hide()

@@ -68,9 +68,6 @@ namespace CGS.Play.Multiplayer
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
 
-            cancelButton.onClick.RemoveAllListeners();
-            cancelButton.onClick.AddListener(cancelAction);
-
             HostNames.Clear();
             SelectedHost = string.Empty;
             Rebuild(HostNames, SelectHost, SelectedHost);
