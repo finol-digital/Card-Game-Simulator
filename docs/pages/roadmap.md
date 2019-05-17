@@ -7,18 +7,15 @@ permalink: roadmap.html
 ## What's New
 - Add iOS Screenshots
 - Update Standard CardBack
-- Redesign Resources/Modal(Popup/Messenger) and Resources/ProgressBar(Spinner)
-- Redesign Prefabs/Menus/...
+- Redesign Menus
+
+## Current Sprint
 - Fix: Card size on zoom
-- Fix: Load hand
-- Fix: Discard
 - Tech: Optimize Card Game Loading
 - Tech: Travis CI for build automation
 - Tech: Use Json.Net schema
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
-
-## Current Sprint
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
