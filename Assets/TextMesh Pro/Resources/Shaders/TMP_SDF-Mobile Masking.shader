@@ -34,6 +34,7 @@ Properties {
 	_ScaleX				("Scale X", float) = 1
 	_ScaleY				("Scale Y", float) = 1
 	_PerspectiveFilter	("Perspective Correction", Range(0, 1)) = 0.875
+	_Sharpness			("Sharpness", Range(-1,1)) = 0
 
 	_VertexOffsetX		("Vertex OffsetX", float) = 0
 	_VertexOffsetY		("Vertex OffsetY", float) = 0
@@ -88,10 +89,10 @@ SubShader {
 		#pragma fragment PixShader
 		#pragma shader_feature __ OUTLINE_ON
 		#pragma shader_feature __ UNDERLAY_ON UNDERLAY_INNER
-		//#pragma shader_feature __ ALPHA_MASK_ON
 
 		#pragma multi_compile __ UNITY_UI_CLIP_RECT
 		#pragma multi_compile __ UNITY_UI_ALPHACLIP
+
 
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
@@ -136,7 +137,7 @@ SubShader {
 			pixelSize /= float2(_ScaleX, _ScaleY) * abs(mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy));
 			
 			float scale = rsqrt(dot(pixelSize, pixelSize));
-			scale *= abs(input.texcoord1.y) * _GradientScale * 1.5;
+			scale *= abs(input.texcoord1.y) * _GradientScale * (_Sharpness + 1);
 			if(UNITY_MATRIX_P[3][3] == 0) scale = lerp(abs(scale) * (1 - _PerspectiveFilter), scale, abs(dot(UnityObjectToWorldNormal(input.normal.xyz), normalize(WorldSpaceViewDir(vert)))));
 
 			float weight = lerp(_WeightNormal, _WeightBold, bold) / 4.0;
@@ -221,16 +222,18 @@ SubShader {
 			c *= m.x * m.y;
 		#endif
 
-		//#if ALPHA_MASK_ON
 		float a = abs(_MaskInverse - tex2D(_MaskTex, input.texcoord0.zw).a);
 		float t = a + (1 - _MaskWipeControl) * _MaskEdgeSoftness - _MaskWipeControl;
 		a = saturate(t / _MaskEdgeSoftness);
 		c.rgb = lerp(_MaskEdgeColor.rgb*c.a, c.rgb, a);
 		c *= a;
-		//#endif
 
 		#if (UNDERLAY_ON | UNDERLAY_INNER)
 			c *= input.texcoord1.z;
+		#endif
+
+    #if UNITY_UI_ALPHACLIP
+			clip(c.a - 0.001);
 		#endif
 
 			return c;
