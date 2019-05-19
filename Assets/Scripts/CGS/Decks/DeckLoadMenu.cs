@@ -10,6 +10,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 using CardGameDef;
 using CGS.Menu;
@@ -37,8 +38,8 @@ namespace CGS.Decks
 
         public RectTransform newDeckPanel;
         public InputField nameInputField;
-        public TMPro.TextMeshProUGUI instructionsText;
-        public TMPro.TMP_InputField textInputField;
+        public TextMeshProUGUI instructionsText;
+        public TMP_InputField textInputField;
 
         public OnDeckLoadedDelegate LoadCallback { get; private set; }
         public string SelectedFilePath { get; private set; }

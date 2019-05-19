@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 using CardGameDef;
 using CGS.Menu;
@@ -22,7 +23,7 @@ namespace CGS.Decks
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
         public InputField nameInputField;
-        public TMPro.TMP_Text textOutputArea;
+        public TMP_Text textOutputArea;
 
         public Deck CurrentDeck { get; private set; }
         public OnNameChangeDelegate NameChangeCallback { get; private set; }
