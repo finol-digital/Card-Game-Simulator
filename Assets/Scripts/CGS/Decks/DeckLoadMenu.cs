@@ -38,7 +38,7 @@ namespace CGS.Decks
 
         public RectTransform newDeckPanel;
         public InputField nameInputField;
-        public TextMeshProUGUI instructionsText;
+        public TMP_Text instructionsText;
         public TMP_InputField textInputField;
 
         public OnDeckLoadedDelegate LoadCallback { get; private set; }

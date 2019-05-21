@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224283993388209246}
   - component: {fileID: 222459792914563814}
-  - component: {fileID: 114422346768544342}
+  - component: {fileID: 3419679748981676750}
   m_Layer: 5
   m_Name: TextMeshPro Text
   m_TagString: Untagged
@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 905.29785, y: -30}
-  m_SizeDelta: {x: 1790.5957, y: 50}
+  m_AnchoredPosition: {x: 834.9316, y: -30}
+  m_SizeDelta: {x: 1649.8632, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222459792914563814
 CanvasRenderer:
@@ -47,7 +47,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1031104584519330}
   m_CullTransparentMesh: 0
---- !u!114 &114422346768544342
+--- !u!114 &3419679748981676750
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1031104584519330}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 1453722849, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -69,8 +69,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -79,7 +79,6 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
-  m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
@@ -135,7 +134,7 @@ MonoBehaviour:
   m_pageToDisplay: 1
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
-    textComponent: {fileID: 114422346768544342}
+    textComponent: {fileID: 3419679748981676750}
     characterCount: 0
     spriteCount: 0
     spaceCount: 0
@@ -624,8 +623,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 910.29785, y: -35}
-  m_SizeDelta: {x: 1810.5957, y: 60}
+  m_AnchoredPosition: {x: 839.9316, y: -35}
+  m_SizeDelta: {x: 1669.8632, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222811669999208612
 CanvasRenderer:
@@ -759,7 +758,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224522497544774812}
   - component: {fileID: 222082803344927434}
-  - component: {fileID: 114984592320075614}
+  - component: {fileID: 9110517320612465170}
   m_Layer: 5
   m_Name: TMP SubMeshUI [Anton SDF Material]
   m_TagString: Untagged
@@ -794,7 +793,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1632650978330218}
   m_CullTransparentMesh: 0
---- !u!114 &114984592320075614
+--- !u!114 &9110517320612465170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -803,7 +802,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1632650978330218}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 058cba836c1846c3aa1c5fd2e28aea77, type: 3}
+  m_Script: {fileID: 1908110080, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -859,7 +858,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 465.14893, y: -75}
+  m_AnchoredPosition: {x: 429.9658, y: -75}
   m_SizeDelta: {x: 175, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222376047092321528
@@ -1076,7 +1075,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224488586530223180}
   - component: {fileID: 222126170986115384}
-  - component: {fileID: 114172209537075710}
+  - component: {fileID: 2777891648287841661}
   m_Layer: 0
   m_Name: TMP SubMeshUI [Anton SDF Material]
   m_TagString: Untagged
@@ -1111,7 +1110,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826333461902334}
   m_CullTransparentMesh: 0
---- !u!114 &114172209537075710
+--- !u!114 &2777891648287841661
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1120,7 +1119,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1826333461902334}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 1453722849, guid: 89f0137620f6af44b9ba852b4190e64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
@@ -1133,8 +1132,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
+  m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1143,7 +1142,6 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
-  m_colorMode: 3
   m_fontColorGradient:
     topLeft: {r: 1, g: 1, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
@@ -1163,11 +1161,11 @@ MonoBehaviour:
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMin: 0
+  m_fontSizeMax: 0
   m_fontStyle: 0
   m_textAlignment: 257
-  m_isAlignmentEnumConverted: 1
+  m_isAlignmentEnumConverted: 0
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -1186,7 +1184,7 @@ MonoBehaviour:
   checkPaddingRequired: 0
   m_isRichText: 1
   m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
+  m_isOrthographic: 0
   m_isCullingEnabled: 0
   m_ignoreRectMaskCulling: 0
   m_ignoreCulling: 1
@@ -1199,7 +1197,7 @@ MonoBehaviour:
   m_pageToDisplay: 1
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
-    textComponent: {fileID: 114172209537075710}
+    textComponent: {fileID: 0}
     characterCount: 0
     spriteCount: 0
     spaceCount: 0
@@ -1207,14 +1205,14 @@ MonoBehaviour:
     linkCount: 0
     lineCount: 0
     pageCount: 0
-    materialCount: 1
+    materialCount: 0
   m_havePropertiesChanged: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
-  m_isInputParsingRequired: 0
+  m_isInputParsingRequired: 1
   m_inputSource: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_subTextObjects:
   - {fileID: 0}
   - {fileID: 0}
@@ -1340,7 +1338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nameInputField: {fileID: 114675554680320282}
-  textOutputArea: {fileID: 114422346768544342}
+  textOutputArea: {fileID: 3419679748981676750}
 --- !u!1 &1869457576940864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1802,7 +1800,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1307.9468
+      value: 1202.3973
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -2025,11 +2023,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5494847954400459795}
     m_Modifications:
-    - target: {fileID: 2135092052294433000, guid: a24def208a6cce74eb7f7d07e399041b,
-        type: 3}
-      propertyPath: m_Name
-      value: Close Button Variant
-      objectReference: {fileID: 0}
     - target: {fileID: 2135092052294433001, guid: a24def208a6cce74eb7f7d07e399041b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2134,6 +2127,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2135092052294433000, guid: a24def208a6cce74eb7f7d07e399041b,
+        type: 3}
+      propertyPath: m_Name
+      value: Close Button Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2135092052294433002, guid: a24def208a6cce74eb7f7d07e399041b,
         type: 3}
