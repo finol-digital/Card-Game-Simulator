@@ -18,7 +18,6 @@ before_install:
 - chmod a+x ./travis-build/*.sh
 
 install:
-- cat /etc/hosts
 - ./travis-build/install-unity.sh
 
 script:

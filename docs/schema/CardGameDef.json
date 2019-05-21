@@ -23,7 +23,7 @@
       "type": "string"
     },
     "allCardsUrl": {
-      "description": "From allCardsUrl, CGS downloads the json that contains info about the Cards for the game. If CGS is able to successfully download this file, it will save it as AllCards.json.",
+      "description": "From allCardsUrl, CGS downloads the json that contains the Card data for the game. If CGS is able to successfully download this file, it will save it as AllCards.json.",
       "type": "string",
       "format": "uri"
     },
@@ -64,7 +64,7 @@
       "type": "boolean"
     },
     "allSetsUrl": {
-      "description": "From allSetsUrl, CGS downloads the json that contains info about the Sets for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
+      "description": "From allSetsUrl, CGS downloads the json that contains the Set data for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
       "type": "string",
       "format": "uri"
     },
@@ -148,7 +148,7 @@
       "type": "boolean"
     },
     "cardPrimaryProperty": {
-      "description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Info Viewer, which appears whenever a user selects a card.",
+      "description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Viewer, which appears whenever a user selects a card.",
       "type": "string"
     },
     "cardProperties": {

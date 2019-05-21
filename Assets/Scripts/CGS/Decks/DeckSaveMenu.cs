@@ -41,7 +41,7 @@ namespace CGS.Decks
                         || Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)
                 nameInputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Load) && EventSystem.current.currentSelectedGameObject == null)
-                CopyTextToClipboard();
+                Share();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
         }
@@ -69,10 +69,15 @@ namespace CGS.Decks
             textOutputArea.text = newDeck.ToString();
         }
 
-        public void CopyTextToClipboard()
+        public void Share()
         {
-            UniClipboard.SetText(textOutputArea.text);
+            string shareText = textOutputArea.text;
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            (new NativeShare()).SetText(shareText).Share();
+#else
+            UniClipboard.SetText(shareText);
             CardGameManager.Instance.Messenger.Show(DeckCopiedMessage);
+#endif
         }
 
         public void EnableSubmit()
