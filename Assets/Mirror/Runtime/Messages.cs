@@ -3,9 +3,14 @@ using UnityEngine;
 
 namespace Mirror
 {
-    // This can't be an interface because users don't need to implement the
-    // serialization functions, we'll code generate it for them when they omit it.
-    public abstract class MessageBase
+    public interface IMessageBase
+    {
+        void Deserialize(NetworkReader reader);
+
+        void Serialize(NetworkWriter writer);
+    }
+
+    public abstract class MessageBase : IMessageBase
     {
         // De-serialize the contents of the reader into this message
         public virtual void Deserialize(NetworkReader reader) {}
@@ -94,12 +99,12 @@ namespace Mirror
 
         public override void Deserialize(NetworkReader reader)
         {
-            value = (int)reader.ReadPackedUInt32();
+            value = reader.ReadPackedInt32();
         }
 
         public override void Serialize(NetworkWriter writer)
         {
-            writer.WritePackedUInt32((uint)value);
+            writer.WritePackedInt32(value);
         }
     }
 
@@ -193,26 +198,32 @@ namespace Mirror
     class SpawnPrefabMessage : MessageBase
     {
         public uint netId;
+        public bool owner;
         public Guid assetId;
         public Vector3 position;
         public Quaternion rotation;
+        public Vector3 scale;
         public byte[] payload;
 
         public override void Deserialize(NetworkReader reader)
         {
             netId = reader.ReadPackedUInt32();
+            owner = reader.ReadBoolean();
             assetId = reader.ReadGuid();
             position = reader.ReadVector3();
             rotation = reader.ReadQuaternion();
+            scale = reader.ReadVector3();
             payload = reader.ReadBytesAndSize();
         }
 
         public override void Serialize(NetworkWriter writer)
         {
             writer.WritePackedUInt32(netId);
+            writer.Write(owner);
             writer.Write(assetId);
             writer.Write(position);
             writer.Write(rotation);
+            writer.Write(scale);
             writer.WriteBytesAndSize(payload);
         }
     }
@@ -220,26 +231,32 @@ namespace Mirror
     class SpawnSceneObjectMessage : MessageBase
     {
         public uint netId;
+        public bool owner;
         public ulong sceneId;
         public Vector3 position;
         public Quaternion rotation;
+        public Vector3 scale;
         public byte[] payload;
 
         public override void Deserialize(NetworkReader reader)
         {
             netId = reader.ReadPackedUInt32();
+            owner = reader.ReadBoolean();
             sceneId = reader.ReadUInt64();
             position = reader.ReadVector3();
             rotation = reader.ReadQuaternion();
+            scale = reader.ReadVector3();
             payload = reader.ReadBytesAndSize();
         }
 
         public override void Serialize(NetworkWriter writer)
         {
             writer.WritePackedUInt32(netId);
+            writer.Write(owner);
             writer.Write(sceneId);
             writer.Write(position);
             writer.Write(rotation);
+            writer.Write(scale);
             writer.WriteBytesAndSize(payload);
         }
     }
@@ -264,21 +281,6 @@ namespace Mirror
     }
 
     class ObjectHideMessage : MessageBase
-    {
-        public uint netId;
-
-        public override void Deserialize(NetworkReader reader)
-        {
-            netId = reader.ReadPackedUInt32();
-        }
-
-        public override void Serialize(NetworkWriter writer)
-        {
-            writer.WritePackedUInt32(netId);
-        }
-    }
-
-    class OwnerMessage : MessageBase
     {
         public uint netId;
 

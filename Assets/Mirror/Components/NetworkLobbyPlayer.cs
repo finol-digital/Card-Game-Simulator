@@ -10,39 +10,28 @@ namespace Mirror
     {
         public bool ShowLobbyGUI = true;
 
-        [SyncVar]
+        [SyncVar(hook=nameof(ReadyStateChanged))]
         public bool ReadyToBegin;
 
         [SyncVar]
         public int Index;
+
+        #region Unity Callbacks
 
         /// <summary>
         /// Do not use Start - Override OnStartrHost / OnStartClient instead!
         /// </summary>
         public void Start()
         {
-            if (isClient) SceneManager.sceneLoaded += ClientLoadedScene;
-
             if (NetworkManager.singleton as NetworkLobbyManager)
                 OnClientEnterLobby();
             else
                 Debug.LogError("LobbyPlayer could not find a NetworkLobbyManager. The LobbyPlayer requires a NetworkLobbyManager object to function. Make sure that there is one in the scene.");
         }
 
-        void OnDisable()
-        {
-            SceneManager.sceneLoaded -= ClientLoadedScene;
-        }
+        #endregion
 
-        public virtual void ClientLoadedScene(Scene arg0, LoadSceneMode arg1)
-        {
-            NetworkLobbyManager lobby = NetworkManager.singleton as NetworkLobbyManager;
-            if (lobby != null && SceneManager.GetActiveScene().name == lobby.LobbyScene)
-                return;
-
-            if (this != null && isLocalPlayer)
-                CmdSendLevelLoaded();
-        }
+        #region Commands
 
         [Command]
         public void CmdChangeReadyState(bool ReadyState)
@@ -52,14 +41,18 @@ namespace Mirror
             lobby?.ReadyStatusChanged();
         }
 
-        [Command]
-        public void CmdSendLevelLoaded()
+        #endregion
+
+        #region SyncVar Hooks
+
+        void ReadyStateChanged(bool NewReadyState)
         {
-            NetworkLobbyManager lobby = NetworkManager.singleton as NetworkLobbyManager;
-            lobby?.PlayerLoadedScene(GetComponent<NetworkIdentity>().connectionToClient);
+            OnClientReady(ReadyToBegin);
         }
 
-        #region lobby client virtuals
+        #endregion
+
+        #region Lobby Client Virtuals
 
         public virtual void OnClientEnterLobby() {}
 
@@ -69,7 +62,7 @@ namespace Mirror
 
         #endregion
 
-        #region optional UI
+        #region Optional UI
 
         public virtual void OnGUI()
         {
@@ -94,7 +87,7 @@ namespace Mirror
                 else
                     GUILayout.Label("Not Ready");
 
-                if (isServer && Index > 0 && GUILayout.Button("REMOVE"))
+                if (((isServer && Index > 0) || isServerOnly) && GUILayout.Button("REMOVE"))
                 {
                     // This button only shows on the Host for all players other than the Host
                     // Host and Players can't remove themselves (stop the client instead)

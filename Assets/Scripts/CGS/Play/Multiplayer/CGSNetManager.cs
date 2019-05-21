@@ -40,15 +40,10 @@ namespace CGS.Play.Multiplayer
             playController.netText.text = PlayerCountMessage + NetworkServer.connections.Count.ToString();
         }
 
-        public override void OnStartClient(NetworkClient netClient)
-        {
-            base.OnStartClient(netClient);
-            ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
-        }
-
         public override void OnClientConnect(NetworkConnection connection)
         {
             base.OnClientConnect(connection);
+            // TODO: OnStartClient - ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
             playController.netText.text = ConnectionIdMessage + connection.connectionId;
         }
 

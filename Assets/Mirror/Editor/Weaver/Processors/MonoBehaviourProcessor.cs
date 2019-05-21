@@ -1,5 +1,5 @@
 // this class only shows warnings in case we use SyncVars etc. for MonoBehaviour.
-using Mono.Cecil;
+using Mono.CecilX;
 
 namespace Mirror.Weaver
 {
@@ -24,7 +24,7 @@ namespace Mirror.Weaver
                     }
                 }
 
-                if (SyncObjectProcessor.ImplementsSyncObject(fd.FieldType))
+                if (SyncObjectInitializer.ImplementsSyncObject(fd.FieldType))
                 {
                     Weaver.Error(string.Format("Script {0} defines field {1} with type {2}, but it's not a NetworkBehaviour", td.FullName, fd.Name, Helpers.PrettyPrintType(fd.FieldType)));
                 }

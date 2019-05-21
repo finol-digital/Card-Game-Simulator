@@ -1,16 +1,17 @@
 // abstract transport layer component
 // note: not all transports need a port, so add it to yours if needed.
 using System;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Mirror
 {
     // UnityEvent definitions
-    [Serializable] public class UnityEventByteArray : UnityEvent<byte[]> {}
+    [Serializable] public class UnityEventArraySegment : UnityEvent<ArraySegment<byte>> {}
     [Serializable] public class UnityEventException : UnityEvent<Exception> {}
     [Serializable] public class UnityEventInt : UnityEvent<int> {}
-    [Serializable] public class UnityEventIntByteArray : UnityEvent<int, byte[]> {}
+    [Serializable] public class UnityEventIntArraySegment : UnityEvent<int, ArraySegment<byte>> {}
     [Serializable] public class UnityEventIntException : UnityEvent<int, Exception> {}
 
     public abstract class Transport : MonoBehaviour
@@ -28,7 +29,7 @@ namespace Mirror
 
         // client
         [HideInInspector] public UnityEvent OnClientConnected;
-        [HideInInspector] public UnityEventByteArray OnClientDataReceived;
+        [HideInInspector] public UnityEventArraySegment OnClientDataReceived;
         [HideInInspector] public UnityEventException OnClientError;
         [HideInInspector] public UnityEvent OnClientDisconnected;
 
@@ -39,10 +40,8 @@ namespace Mirror
 
         // server
         [HideInInspector] public UnityEventInt OnServerConnected;
-        [HideInInspector] public UnityEventIntByteArray OnServerDataReceived;
+        [HideInInspector] public UnityEventIntArraySegment OnServerDataReceived;
         [HideInInspector] public UnityEventIntException OnServerError;
-
-
         [HideInInspector] public UnityEventInt OnServerDisconnected;
 
         public abstract bool ServerActive();
@@ -50,7 +49,7 @@ namespace Mirror
         public abstract bool ServerSend(int connectionId, int channelId, byte[] data);
         public abstract bool ServerDisconnect(int connectionId);
 
-        [Obsolete("Use ServerGetClientAddress(int connectionId) instead")]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use ServerGetClientAddress(int connectionId) instead")]
         public virtual bool GetConnectionInfo(int connectionId, out string address)
         {
             address = ServerGetClientAddress(connectionId);

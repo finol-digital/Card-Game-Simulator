@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-using Mono.Cecil.Mdb;
-using Mono.Cecil.Pdb;
+using Mono.CecilX;
+using Mono.CecilX.Cil;
+using Mono.CecilX.Mdb;
+using Mono.CecilX.Pdb;
 
 namespace Mirror.Weaver
 {
@@ -38,7 +38,7 @@ namespace Mirror.Weaver
         public static string UnityEngineDLLDirectoryName()
         {
             string directoryName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
-            return directoryName != null ? directoryName.Replace(@"file:\", "") : null;
+            return directoryName?.Replace(@"file:\", "");
         }
 
         public static ISymbolReaderProvider GetSymbolReaderProvider(string inputFile)
@@ -87,7 +87,7 @@ namespace Mirror.Weaver
 
         public static ReaderParameters ReaderParameters(string assemblyPath, IEnumerable<string> extraPaths, IAssemblyResolver assemblyResolver, string unityEngineDLLPath, string mirrorNetDLLPath)
         {
-            ReaderParameters parameters = new ReaderParameters();
+            ReaderParameters parameters = new ReaderParameters() {ReadWrite = true};
             if (assemblyResolver == null)
                 assemblyResolver = new DefaultAssemblyResolver();
             AddSearchDirectoryHelper helper = new AddSearchDirectoryHelper(assemblyResolver);
@@ -97,7 +97,7 @@ namespace Mirror.Weaver
             helper.AddSearchDirectory(Path.GetDirectoryName(mirrorNetDLLPath));
             if (extraPaths != null)
             {
-                foreach (var path in extraPaths)
+                foreach (string path in extraPaths)
                     helper.AddSearchDirectory(path);
             }
             parameters.AssemblyResolver = assemblyResolver;

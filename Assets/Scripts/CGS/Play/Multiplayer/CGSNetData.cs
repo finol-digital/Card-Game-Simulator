@@ -32,8 +32,8 @@ namespace CGS.Play.Multiplayer
             }
         }
 
-        public class SyncListNetScore : SyncListSTRUCT<NetScore> { }
-        public class SyncListNetCardStack : SyncListSTRUCT<NetCardStack> { }
+        public class SyncListNetScore : SyncList<NetScore> { }
+        public class SyncListNetCardStack : SyncList<NetCardStack> { }
 
         public SyncListNetScore scores = new SyncListNetScore();
         public SyncListNetCardStack cardStacks = new SyncListNetCardStack();

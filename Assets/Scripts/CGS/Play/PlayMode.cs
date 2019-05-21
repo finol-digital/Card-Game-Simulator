@@ -272,7 +272,7 @@ namespace CGS.Play
             {
                 if (NetworkServer.active)
                     NetworkManager.singleton.StopHost();
-                else if (NetworkManager.singleton.IsClientConnected())
+                else if (NetworkClient.isConnected)
                     NetworkManager.singleton.StopClient();
             }
 

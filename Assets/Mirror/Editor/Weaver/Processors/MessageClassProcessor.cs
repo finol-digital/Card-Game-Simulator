@@ -1,6 +1,6 @@
 // this class generates OnSerialize/OnDeserialize when inheriting from MessageBase
-using Mono.Cecil;
-using Mono.Cecil.Cil;
+using Mono.CecilX;
+using Mono.CecilX.Cil;
 
 namespace Mirror.Weaver
 {
@@ -9,8 +9,6 @@ namespace Mirror.Weaver
         public static void Process(TypeDefinition td)
         {
             Weaver.DLog(td, "MessageClassProcessor Start");
-
-            Weaver.ResetRecursionCount();
 
             GenerateSerialization(td);
             if (Weaver.WeavingFailed)
@@ -70,7 +68,7 @@ namespace Mirror.Weaver
                     return;
                 }
 
-                MethodReference writeFunc = Weaver.GetWriteFunc(field.FieldType);
+                MethodReference writeFunc = Writers.GetWriteFunc(field.FieldType);
                 if (writeFunc != null)
                 {
                     serWorker.Append(serWorker.Create(OpCodes.Ldarg_1));
@@ -92,7 +90,7 @@ namespace Mirror.Weaver
         static void GenerateDeSerialization(TypeDefinition td)
         {
             Weaver.DLog(td, "  GenerateDeserialization");
-            foreach (var m in td.Methods)
+            foreach (MethodDefinition m in td.Methods)
             {
                 if (m.Name == "Deserialize")
                     return;
@@ -115,7 +113,7 @@ namespace Mirror.Weaver
                 if (field.IsStatic || field.IsPrivate || field.IsSpecialName)
                     continue;
 
-                MethodReference readerFunc = Weaver.GetReadFunc(field.FieldType);
+                MethodReference readerFunc = Readers.GetReadFunc(field.FieldType);
                 if (readerFunc != null)
                 {
                     serWorker.Append(serWorker.Create(OpCodes.Ldarg_0));
