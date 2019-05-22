@@ -8,11 +8,11 @@ permalink: roadmap.html
 - Add iOS Screenshots
 - Update Standard CardBack
 - Redesign Menus
+- Tech: Travis CI for build automation
 
 ## Current Sprint
 - Fix: Card size on zoom
 - Tech: Optimize Card Game Loading
-- Tech: Travis CI for build automation
 - Tech: Use Json.Net schema
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
