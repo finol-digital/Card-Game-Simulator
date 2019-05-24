@@ -772,6 +772,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ShowSearchMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 8035886151956225691, guid: f21d26d7d58ad754090ee1fa5ed1746c,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f21d26d7d58ad754090ee1fa5ed1746c, type: 3}
 --- !u!114 &208227997 stripped
@@ -1614,7 +1619,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.00006888577, y: 0}
+  m_AnchoredPosition: {x: 0.00006850044, y: 0}
   m_SizeDelta: {x: 1820, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &943351771
@@ -1884,16 +1889,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 62766702}
     m_Modifications:
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Back Button
-      objectReference: {fileID: 0}
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2012,6 +2007,16 @@ PrefabInstance:
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Back Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
@@ -2587,11 +2592,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 446946375}
     m_Modifications:
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Save Button
-      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2697,6 +2697,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Save Button
+      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -2748,11 +2753,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 446946375}
     m_Modifications:
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Load Button
-      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2857,6 +2857,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Load Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3428,11 +3433,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 446946375}
     m_Modifications:
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: New Button
-      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3537,6 +3537,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: New Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}

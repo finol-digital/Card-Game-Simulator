@@ -2514,11 +2514,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224207170848406008}
     m_Modifications:
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Load Button
-      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2623,6 +2618,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Load Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3144,11 +3144,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224207170848406008}
     m_Modifications:
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Share Button
-      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3253,6 +3248,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Share Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3464,11 +3464,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224207170848406008}
     m_Modifications:
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Delete Button
-      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3573,6 +3568,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Delete Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3792,6 +3792,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224207170848406008}
     m_Modifications:
+    - target: {fileID: 7317508625903915486, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: m_Name
+      value: New Button
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3897,41 +3902,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7317508625903915486, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: m_Name
-      value: New Button
-      objectReference: {fileID: 0}
-    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 114086429987633334}
-    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ShowNewDeckPanel
-      objectReference: {fileID: 0}
-    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -3966,6 +3936,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -0.000061035156
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 114086429987633334}
+    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowNewDeckPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834899, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
