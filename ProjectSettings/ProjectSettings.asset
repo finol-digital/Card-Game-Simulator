@@ -120,7 +120,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.15.0
+  bundleVersion: 1.16.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -161,7 +161,7 @@ PlayerSettings:
   buildNumber:
     Standalone: 6
     iOS: 0
-  AndroidBundleVersionCode: 63
+  AndroidBundleVersionCode: 64
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0
@@ -739,7 +739,7 @@ PlayerSettings:
     1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
     4: MIRROR;MIRROR_1726_OR_NEWER
     7: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
-    14: MIRROR;MIRROR_1726_OR_NEWER
+    14: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
@@ -767,7 +767,7 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 008fab5d2dbdd501
+  metroCertificateNotAfter: 008a47690231d601
   metroApplicationDescription: Play your favorite card games!
   wsaImages: {}
   metroTileShortName: CGS

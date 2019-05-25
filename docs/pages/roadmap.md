@@ -8,11 +8,11 @@ permalink: roadmap.html
 - Add iOS Screenshots
 - Update Standard CardBack
 - Redesign Menus
+- Tech: Travis CI for build automation
 
 ## Current Sprint
 - Fix: Card size on zoom
 - Tech: Optimize Card Game Loading
-- Tech: Travis CI for build automation
 - Tech: Use Json.Net schema
 - Tech: Review with Resharper/Rider
 - Tech: Add unit tests
@@ -23,9 +23,7 @@ permalink: roadmap.html
 - Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
-- Edit Deck Name by clicking on container
 - Edit Deck List in the Deck Save Menu
-- Replace copy with Share in Deck Save Menu
 - Tap to zoom on card property text in Deck Editor Card Viewer
 - On selected card in Deck Editor and Cards Explorer, focus view on that card
 - Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop

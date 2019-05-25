@@ -19,7 +19,7 @@ echo "Unity activation log:"
 cat $UNITY_ACTIVATION_LOG_FILE
 
 echo "Attempting to build $UNITY_PROJECT_NAME for OSX"
-${UNITY_PATH} \
+travis_wait ${UNITY_PATH} \
   -batchmode \
   -nographics \
   -silent-crashes \
