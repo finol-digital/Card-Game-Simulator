@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,7 +40,7 @@ class BuildCGS
         buildPlayerOptions.options = BuildOptions.None;
         BuildPipeline.BuildPlayer(buildPlayerOptions);
     }
-    
+
     static void iOS()
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
