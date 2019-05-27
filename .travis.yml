@@ -21,4 +21,4 @@ install:
 - ./travis-build/install-unity.sh
 
 script:
-- travis_wait ./travis-build/build.sh
+- travis_wait 50 ./travis-build/build.sh
