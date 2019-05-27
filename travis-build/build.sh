@@ -38,17 +38,17 @@ rc1=$?
 echo 'OSX build logs:'
 cat $OSX_LOG_FILE
 
-#echo "Attempting to build $UNITY_PROJECT_NAME for iOS"
-#${UNITY_PATH} \
-#    -batchmode \
-#    -silent-crashes \
-#    -logFile "$IOS_LOG_FILE" \
-#    -projectPath "$(pwd)" \
-#    -executeMethod BuildCGS.iOS \
-#    -quit
-#rc2=$?
-#echo 'iOS build logs:'
-#cat $IOS_LOG_FILE
+echo "Attempting to build $UNITY_PROJECT_NAME for iOS"
+${UNITY_PATH} \
+    -batchmode \
+    -silent-crashes \
+    -logFile "$IOS_LOG_FILE" \
+    -projectPath "$(pwd)" \
+    -executeMethod BuildCGS.iOS \
+    -quit
+rc2=$?
+echo 'iOS build logs:'
+cat $IOS_LOG_FILE
 
 echo "Returning Unity license"
 ${UNITY_PATH} \
@@ -59,7 +59,6 @@ ${UNITY_PATH} \
 echo "Unity return log:"
 cat $UNITY_RETURN_LOG_FILE
 
-#STATUS_CODE=$(($rc1|$rc2))
-STATUS_CODE=$rc1
+STATUS_CODE=$(($rc1|$rc2))
 echo "Finishing with code $STATUS_CODE"
 exit $STATUS_CODE
