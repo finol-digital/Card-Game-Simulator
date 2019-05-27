@@ -9,7 +9,7 @@ download() {
 #  package=$1
   url="$BASE_URL/$HASH/$package"
 
-  echo "Downloading from $url: "
+  echo "Downloading from $url"
   curl -o `basename "$package"` "$url"
 }
 
@@ -21,9 +21,7 @@ install() {
   sudo installer -dumplog -package `basename "$package"` -target /
 }
 
-# See $BASE_URL/$HASH/unity-$VERSION-osx.ini for complete list of packages
+# See $BASE_URL/$HASH/unity-$VERSION-osx.ini for a complete list of packages
 install "MacEditorInstaller/Unity-$VERSION.pkg"
 install "MacEditorTargetInstaller/UnitySetup-Mac-IL2CPP-Support-for-Editor-$VERSION.pkg"
-#install "MacEditorTargetInstaller/UnitySetup-iOS-Support-for-Editor-$VERSION.pkg"
-#install "MacEditorTargetInstaller/UnitySetup-Linux-Support-for-Editor-$VERSION.pkg"
-#install "MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-$VERSION.pkg"
+install "MacEditorTargetInstaller/UnitySetup-iOS-Support-for-Editor-$VERSION.pkg"
