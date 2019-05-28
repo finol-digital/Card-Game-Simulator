@@ -7,4 +7,10 @@ See: https://www.cardgamesimulator.com
 
 For additional resources, see: https://drive.google.com/open?id=1kVms-_CXRw1e4Ob18fRkS84MN_cxQGF5
 
-CGS is a Unity 2018.4 project, accepting pull requests!
+## Building and Running
+
+To build and run the project, you just need to clone the repo and run it in Unity 2018.4, available from https://unity3d.com/get-unity/download/archive
+
+## Contributing
+
+If you'd like to help out with the project, please contact <david@finoldigital.com>
