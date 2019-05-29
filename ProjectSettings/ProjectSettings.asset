@@ -159,7 +159,7 @@ PlayerSettings:
     Standalone: com.finoldigital.CardGameSimulator
     iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 6
+    Standalone: 7
     iOS: 0
   AndroidBundleVersionCode: 64
   AndroidMinSdkVersion: 16
@@ -737,7 +737,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
     1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
-    4: MIRROR;MIRROR_1726_OR_NEWER
+    4: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
     7: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
     14: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
   platformArchitecture: {}
