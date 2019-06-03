@@ -8,13 +8,14 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Fix: Card size on zoom
+- Fix: Card Search Menu integer in portrait
 - Fix: Restore networking capability
 - Fix: Error/Messaging OnAwake/OnValidate in Play Mode
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Tech: Google Play Instant
 - Tech: Use Json.Net schema
 - Tech: Review with Resharper/Rider
-- Tech: Add unit tests
+- Tech: https://jakubturek.com/continuous-delivery-with-travis-and-fastlane/ & https://medium.com/@mandarin_x/continuous-integration-for-unity-projects-using-travisci-5b25e691ab58
 - Redesign Play Mode
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
@@ -39,11 +40,11 @@ permalink: roadmap.html
 - Add Card Editor
 
 ## Backlog
+- Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
 - Create Sort Menu for the Deck Editor and Cards Explorer
-- Android Searchbar Widget
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck List in the Deck Save Menu
