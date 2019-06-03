@@ -5,37 +5,16 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Add iOS Screenshots
-- Update Standard CardBack
-- Redesign Menus
-- Tech: Travis CI for build automation
 
 ## Current Sprint
 - Fix: Card size on zoom
-- Tech: Optimize Card Game Loading
-- Tech: Use Json.Net schema
-- Tech: Review with Resharper/Rider
-- Tech: Add unit tests
-- Animate "Tap Anywhere to Start" text
-- Highlight current selected button in Main Menu
-- Complete Main Menu Carousel
-- Create Sort Menu for the Deck Editor and Cards Explorer
-- Android Searchbar Widget
-- Group cards in the Deck Editor with a number instead of stacking them
-- Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
-- Edit Deck List in the Deck Save Menu
-- Tap to zoom on card property text in Deck Editor Card Viewer
-- On selected card in Deck Editor and Cards Explorer, focus view on that card
-- Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
-- Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
-- Press and hold on Popups/Card Viewer to copy text
-- Add Card Editor
-- Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
-
-## Backlog
 - Fix: Restore networking capability
 - Fix: Error/Messaging OnAwake/OnValidate in Play Mode
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
+- Tech: Google Play Instant
+- Tech: Use Json.Net schema
+- Tech: Review with Resharper/Rider
+- Tech: Add unit tests
 - Redesign Play Mode
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
@@ -56,6 +35,23 @@ permalink: roadmap.html
   - Double-clicking takes a default action, based on the zone the card is in
   - Single-click show menu with all possible actions at the bottom
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
+- Add Card Editor
+
+## Backlog
+- Animate "Tap Anywhere to Start" text
+- Highlight current selected button in Main Menu
+- Complete Main Menu Carousel
+- Create Sort Menu for the Deck Editor and Cards Explorer
+- Android Searchbar Widget
+- Group cards in the Deck Editor with a number instead of stacking them
+- Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
+- Edit Deck List in the Deck Save Menu
+- Tap to zoom on card property text in Deck Editor Card Viewer
+- On selected card in Deck Editor and Cards Explorer, focus view on that card
+- Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
+- Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
+- Press and hold on Popups/Card Viewer to copy text
 
 ## Icebox
 - Tech: Restore CardClearsBackground
@@ -96,7 +92,6 @@ permalink: roadmap.html
 - Support svg images
 - Support multiple languages (Spanish,Chinese)
 - Support different resolutions and languages for card images
-- Google Play Instant
 - Linux version
 - Release Standalone versions to Steam
 - Console versions (Switch, ps4, xbone)
