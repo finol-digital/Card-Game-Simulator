@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.finoldigital.cardgamesim" xmlns:tools="http://schemas.android.com/tools" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:targetSandboxVersion="2" package="com.finoldigital.cardgamesim" xmlns:tools="http://schemas.android.com/tools" android:installLocation="auto">
   <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:anyDensity="true" />
   <application android:theme="@style/UnityThemeSelector" android:icon="@drawable/app_icon" android:label="@string/app_name" android:isGame="true" android:name="io.branch.unity.BranchUnityApp">
     <activity android:name="com.unity3d.player.UnityPlayerActivity" android:label="@string/app_name" android:screenOrientation="fullSensor" android:launchMode="singleTask">
@@ -27,8 +27,10 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="https" android:host="cgs.link" />
         <data android:scheme="https" android:host="cardgamesim-alternate.app.link" />
+        <data android:scheme="https" android:host="cardgamesim.finoldigital.com" />
       </intent-filter>
     </activity>
+    <meta-data android:name="default-url" android:value="https://cardgamesim.finoldigital.com/" />
     <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_mnzYrzoSgtqi3gAyzkVzqppkxFnNY1jn" />
     <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_oez3AweOkBwlZaqsxiJvCgmawslU9R0Z" />
     <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
