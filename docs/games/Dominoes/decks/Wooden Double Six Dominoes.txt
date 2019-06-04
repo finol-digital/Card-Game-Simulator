@@ -1,4 +1,4 @@
-# Dominoes Deck List: Wooden Double Six Dominoes
+### Dominoes Deck: Wooden Double Six Dominoes
 1 0-0 (WOOD)
 1 0-1 (WOOD)
 1 0-2 (WOOD)

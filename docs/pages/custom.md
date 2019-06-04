@@ -3,21 +3,21 @@ permalink: custom.html
 ---
 
 # Defining Custom Games
-Card Game Simulator allows users to [download custom card games to use within the application](index.html#create-custom-games).
+Card Game Simulator allows users to [download custom card games to use within the application](index.html#create--share-custom-games).
 
 ## CGS games directory
 Custom games are defined by creating a new folder within the persistent games data directory. The location of this persistent data directory varies depending on platform. Some examples include:
 - Android: /Data/Data/com.finoldigital.cardgamesim/files/games/
-- Windows: C:/Users/\<Username\>/AppData/LocalLow/Finol Digital/Card Game Simulator/games/
-- Mac: ~/Library/Application Support/Finol Digital/Card Game Simulator/games/
+- Mac: ~/Library/Application Support/Finol Digital LLC/Card Game Simulator/games/
+- Windows: C:\Users\\<user \>\AppData\Local\Packages\FinolDigitalLLC.CardGameSimulator_499qk536pdy94\LocalState\games
 
 ## Custom game folder structure
 The structure of this custom game folder is:
-- \<name\>/
-  - \<name\>.json
+- *Game:Id*/
+  - *Game:Name*.json
   - AllCards.json
   - AllSets.json
-  - Background.\<backgroundImageFileType\>
+  - Banner.\<bannerImageFileType\>
   - CardBack.\<cardBackImageFileType\>
   - boards/
     * *GameBoard:Id*.\<gameBoardFileType\>
@@ -32,7 +32,9 @@ The structure of this custom game folder is:
     * ...
 
 ## JSON File Structure
-When downloading a custom game from a url, the data that is being downloaded is the contents of the \<name\>.json file. CGS generates the rest of the folder structure based off the information in that file. You can create your own json and validate against these schema:
+The GGS AutoUpdate Url that is used to download a card game is actually a pointer to the *Game:Name*.json file. CGS generates the rest of the folder structure based off that file. 
+
+You can create your own json and [validate](https://www.jsonschemavalidator.net/) against these schema:
 - [CardGameDef](schema/CardGameDef.json)
 - [AllCards](schema/AllCards.json)
 - [AllSets](schema/AllSets.json)

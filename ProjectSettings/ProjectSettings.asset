@@ -25,8 +25,8 @@ PlayerSettings:
   m_SplashScreenDrawMode: 0
   m_SplashScreenBackgroundAnimationZoom: 1
   m_SplashScreenLogoAnimationZoom: 1
-  m_SplashScreenBackgroundLandscapeAspect: 1
-  m_SplashScreenBackgroundPortraitAspect: 1
+  m_SplashScreenBackgroundLandscapeAspect: 1.7777778
+  m_SplashScreenBackgroundPortraitAspect: 0.5625
   m_SplashScreenBackgroundLandscapeUvs:
     serializedVersion: 2
     x: 0
@@ -40,7 +40,7 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos:
-  - logo: {fileID: 21300000, guid: f9987eb70a987204cb6b930121e583b0, type: 3}
+  - logo: {fileID: 21300000, guid: dd9cc079cea5f3b4d87e05d4b2c2a2db, type: 3}
     duration: 2
   m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
@@ -54,7 +54,6 @@ PlayerSettings:
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
-  tizenShowActivityIndicatorOnLoading: -1
   iosAppInBackgroundBehavior: 0
   displayResolutionDialog: 1
   iosAllowHTTPDownload: 1
@@ -66,7 +65,9 @@ PlayerSettings:
   use32BitDisplayBuffer: 1
   preserveFramebufferAlpha: 0
   disableDepthAndStencilBuffers: 0
-  androidBlitType: 0
+  androidStartInFullscreen: 1
+  androidRenderOutsideSafeArea: 0
+  androidBlitType: 2
   defaultIsNativeResolution: 1
   macRetinaSupport: 1
   runInBackground: 1
@@ -82,7 +83,7 @@ PlayerSettings:
   forceSingleInstance: 0
   resizableWindow: 0
   useMacAppStoreValidation: 0
-  macAppStoreCategory: public.app-category.games
+  macAppStoreCategory: public.app-category.card-games
   gpuSkinning: 0
   graphicsJobs: 0
   xboxPIXTextureCapture: 0
@@ -99,9 +100,6 @@ PlayerSettings:
   xboxEnableGuest: 0
   xboxEnablePIXSampling: 0
   metalFramebufferOnly: 0
-  n3dsDisableStereoscopicView: 0
-  n3dsEnableSharedListOpt: 1
-  n3dsEnableVSync: 0
   xboxOneResolution: 0
   xboxOneSResolution: 0
   xboxOneXResolution: 3
@@ -110,22 +108,26 @@ PlayerSettings:
   xboxOneDisableEsram: 0
   xboxOnePresentImmediateThreshold: 0
   switchQueueCommandMemory: 0
-  videoMemoryForVertexBuffers: 0
-  psp2PowerMode: 0
-  psp2AcquireBGM: 1
+  switchQueueControlMemory: 16384
+  switchQueueComputeMemory: 262144
+  switchNVNShaderPoolsGranularity: 33554432
+  switchNVNDefaultPoolsGranularity: 16777216
+  switchNVNOtherPoolsGranularity: 16777216
+  vulkanEnableSetSRGBWrite: 0
   m_SupportedAspectRatios:
     4:3: 1
     5:4: 1
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.0.0
+  bundleVersion: 1.16.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
   xboxOneDisableKinectGpuReservation: 0
   xboxOneEnable7thCore: 0
+  isWsaHolographicRemotingEnabled: 0
   vrSettings:
     cardboard:
       depthFormat: 0
@@ -140,11 +142,12 @@ PlayerSettings:
     hololens:
       depthFormat: 1
       depthBufferSharingEnabled: 0
-    enable360StereoCapture: 0
     oculus:
       sharedDepthBuffer: 0
       dashSupport: 0
+    enable360StereoCapture: 0
   protectGraphicsMemory: 0
+  enableFrameTimingStats: 0
   useHDRDisplay: 0
   m_ColorGamuts: 00000000
   targetPixelDensity: 30
@@ -153,17 +156,17 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.finoldigital.cardgamesim
-    Standalone: com.FinolDigital.CardGameSim
-    iOS: com.finoldigital.CardGameSimTest
+    Standalone: com.finoldigital.CardGameSimulator
+    iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 0
+    Standalone: 7
     iOS: 0
-  AndroidBundleVersionCode: 38
+  AndroidBundleVersionCode: 64
   AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0
   aotOptions: 
-  stripEngineCode: 1
+  stripEngineCode: 0
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
   ForceInternetPermission: 1
@@ -174,7 +177,7 @@ PlayerSettings:
   StripUnusedMeshComponents: 0
   VertexChannelCompressionMask: 214
   iPhoneSdkVersion: 988
-  iOSTargetOSVersionString: 8.0
+  iOSTargetOSVersionString: 9.0
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
   tvOSTargetOSVersionString: 9.0
@@ -232,22 +235,24 @@ PlayerSettings:
   metalEditorSupport: 1
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 0
-  appleDeveloperTeamID: 7ZVQZCSW4G
+  appleDeveloperTeamID: 49G524X5NY
   iOSManualSigningProvisioningProfileID: 
   tvOSManualSigningProvisioningProfileID: 
   iOSManualSigningProvisioningProfileType: 0
   tvOSManualSigningProvisioningProfileType: 0
-  appleEnableAutomaticSigning: 0
+  appleEnableAutomaticSigning: 1
   iOSRequireARKit: 0
+  iOSAutomaticallyDetectAndAddCapabilities: 1
   appleEnableProMotion: 0
   clonedFromGUID: 00000000000000000000000000000000
   templatePackageId: 
   templateDefaultScene: 
-  AndroidTargetArchitectures: 1
+  AndroidTargetArchitectures: 7
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/david/Documents/GitHub/Card-Game-Simulator/finoldigital.keystore
+  AndroidKeystoreName: finoldigital.keystore
   AndroidKeyaliasName: cgs
+  AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
@@ -257,13 +262,13 @@ PlayerSettings:
   - width: 320
     height: 180
     banner: {fileID: 0}
-  androidGamepadSupportLevel: 0
+  androidGamepadSupportLevel: 1
   resolutionDialogBanner: {fileID: 0}
   m_BuildTargetIcons:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: b25b2f79681e5154a8f80dd9b5eca3ea, type: 3}
+      m_Icon: {fileID: 2800000, guid: 5845ad4b92e3f6d42a2b3155b4c22f32, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -342,36 +347,164 @@ PlayerSettings:
       m_Height: 36
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: f905fd53c680c1f42974de3fb98b1365, type: 3}
+      - {fileID: 2800000, guid: 92b0ed01ec6c7bf4381d90ff9bfe26c9, type: 3}
       m_Width: 432
       m_Height: 432
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: f2e69f9adbcaecf4a8c826dd96a22086, type: 3}
+      - {fileID: 2800000, guid: 37f81f8baa21be54786a5bcee28dca04, type: 3}
       m_Width: 324
       m_Height: 324
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: b2cdca1b415c7d54593b4b75489be871, type: 3}
+      - {fileID: 2800000, guid: 79afda6d15919a845a1f26ed5afa4b3d, type: 3}
       m_Width: 216
       m_Height: 216
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: d0f2d1c397f40cb4c843eb924e89f142, type: 3}
+      - {fileID: 2800000, guid: 0531e387251455e44a7e80f3357ac5ba, type: 3}
       m_Width: 162
       m_Height: 162
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 152598a2e94867a45b147bfad5a21bf2, type: 3}
+      - {fileID: 2800000, guid: d1c85cd33d5e40b42a8cba13a05edbc2, type: 3}
       m_Width: 108
       m_Height: 108
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 5f4bdaf01a174ca40a43130d156b5ebc, type: 3}
+      - {fileID: 2800000, guid: 5e2e6df3bc2d7414cacb31e5d6e6a86b, type: 3}
       m_Width: 81
       m_Height: 81
       m_Kind: 2
       m_SubKind: 
+  - m_BuildTarget: iPhone
+    m_Icons:
+    - m_Textures:
+      - {fileID: 2800000, guid: eab704433062f42e1b083b3963333f8f, type: 3}
+      m_Width: 1024
+      m_Height: 1024
+      m_Kind: 4
+      m_SubKind: App Store
+    - m_Textures:
+      - {fileID: 2800000, guid: 004cd3bd98a344417b8101d846b452fa, type: 3}
+      m_Width: 60
+      m_Height: 60
+      m_Kind: 2
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: 9ba743493884645f3a93f5e07ad6f3e4, type: 3}
+      m_Width: 40
+      m_Height: 40
+      m_Kind: 2
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: 9ba743493884645f3a93f5e07ad6f3e4, type: 3}
+      m_Width: 40
+      m_Height: 40
+      m_Kind: 2
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: 82f85943bf4c24bf994a685e92e2a690, type: 3}
+      m_Width: 20
+      m_Height: 20
+      m_Kind: 2
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: 6caaa02b1a4c64953a5481800de96f94, type: 3}
+      m_Width: 87
+      m_Height: 87
+      m_Kind: 1
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: 1177946eff57a4343b6b807de8470bba, type: 3}
+      m_Width: 58
+      m_Height: 58
+      m_Kind: 1
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: 73d1cba1ca6d1474fbbbad69af54e15e, type: 3}
+      m_Width: 29
+      m_Height: 29
+      m_Kind: 1
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: 1177946eff57a4343b6b807de8470bba, type: 3}
+      m_Width: 58
+      m_Height: 58
+      m_Kind: 1
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: 73d1cba1ca6d1474fbbbad69af54e15e, type: 3}
+      m_Width: 29
+      m_Height: 29
+      m_Kind: 1
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: 80384c970b103426ca1aaefec99df94c, type: 3}
+      m_Width: 120
+      m_Height: 120
+      m_Kind: 3
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: c9969b5a6621a4cd3b23834bdd192a7b, type: 3}
+      m_Width: 80
+      m_Height: 80
+      m_Kind: 3
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: c9969b5a6621a4cd3b23834bdd192a7b, type: 3}
+      m_Width: 80
+      m_Height: 80
+      m_Kind: 3
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: 6caaa02b1a4c64953a5481800de96f94, type: 3}
+      m_Width: 40
+      m_Height: 40
+      m_Kind: 3
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: 2e2fac9f6513740ad928d44d33c64f6d, type: 3}
+      m_Width: 180
+      m_Height: 180
+      m_Kind: 0
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: a11c4a679f9f541f38d144c0d8a2dec1, type: 3}
+      m_Width: 120
+      m_Height: 120
+      m_Kind: 0
+      m_SubKind: iPhone
+    - m_Textures:
+      - {fileID: 2800000, guid: a6fe696e9835847399bbe20afa27f2a3, type: 3}
+      m_Width: 167
+      m_Height: 167
+      m_Kind: 0
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: c841e5cb1e5f145b38b028ee9a1b457f, type: 3}
+      m_Width: 152
+      m_Height: 152
+      m_Kind: 0
+      m_SubKind: iPad
+    - m_Textures:
+      - {fileID: 2800000, guid: d1fe82eda44894cbe98b417d70422d1f, type: 3}
+      m_Width: 76
+      m_Height: 76
+      m_Kind: 0
+      m_SubKind: iPad
   m_BuildTargetBatching: []
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: AndroidPlayer
@@ -393,6 +526,10 @@ PlayerSettings:
     m_EncodingQuality: 1
   - m_BuildTarget: PS4
     m_EncodingQuality: 1
+  m_BuildTargetGroupLightmapSettings:
+  - m_BuildTarget: Android
+    m_TextureStreamingEnabled: 0
+    m_TextureStreamingPriority: 0
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
@@ -514,7 +651,12 @@ PlayerSettings:
   switchAllowsVideoCapturing: 1
   switchAllowsRuntimeAddOnContentInstall: 0
   switchDataLossConfirmation: 0
+  switchUserAccountLockEnabled: 0
+  switchSystemResourceMemory: 16777216
   switchSupportedNpadStyles: 3
+  switchNativeFsCacheSize: 32
+  switchIsHoldTypeHorizontal: 0
+  switchSupportedNpadCount: 8
   switchSocketConfigEnabled: 0
   switchTcpInitialSendBufferSize: 32
   switchTcpInitialReceiveBufferSize: 64
@@ -571,6 +713,7 @@ PlayerSettings:
   ps4pnGameCustomData: 1
   playerPrefsSupport: 0
   enableApplicationExit: 0
+  resetTempFolder: 1
   restrictedAudioUsageRights: 0
   ps4UseResolutionFallback: 0
   ps4ReprojectionSupport: 0
@@ -594,55 +737,10 @@ PlayerSettings:
   ps4attribEyeToEyeDistanceSettingVR: 0
   ps4IncludedModules: []
   monoEnv: 
-  psp2Splashimage: {fileID: 0}
-  psp2NPTrophyPackPath: 
-  psp2NPSupportGBMorGJP: 0
-  psp2NPAgeRating: 12
-  psp2NPTitleDatPath: 
-  psp2NPCommsID: 
-  psp2NPCommunicationsID: 
-  psp2NPCommsPassphrase: 
-  psp2NPCommsSig: 
-  psp2ParamSfxPath: 
-  psp2ManualPath: 
-  psp2LiveAreaGatePath: 
-  psp2LiveAreaBackroundPath: 
-  psp2LiveAreaPath: 
-  psp2LiveAreaTrialPath: 
-  psp2PatchChangeInfoPath: 
-  psp2PatchOriginalPackage: 
-  psp2PackagePassword: F69AzBlax3CF3EDNhm3soLBPh71Yexui
-  psp2KeystoneFile: 
-  psp2MemoryExpansionMode: 0
-  psp2DRMType: 0
-  psp2StorageType: 0
-  psp2MediaCapacity: 0
-  psp2DLCConfigPath: 
-  psp2ThumbnailPath: 
-  psp2BackgroundPath: 
-  psp2SoundPath: 
-  psp2TrophyCommId: 
-  psp2TrophyPackagePath: 
-  psp2PackagedResourcesPath: 
-  psp2SaveDataQuota: 10240
-  psp2ParentalLevel: 1
-  psp2ShortTitle: Not Set
-  psp2ContentID: IV0000-ABCD12345_00-0123456789ABCDEF
-  psp2Category: 0
-  psp2MasterVersion: 01.00
-  psp2AppVersion: 01.00
-  psp2TVBootMode: 0
-  psp2EnterButtonAssignment: 2
-  psp2TVDisableEmu: 0
-  psp2AllowTwitterDialog: 1
-  psp2Upgradable: 0
-  psp2HealthWarning: 0
-  psp2UseLibLocation: 0
-  psp2InfoBarOnStartup: 0
-  psp2InfoBarColor: 0
-  psp2ScriptOptimizationLevel: 0
-  splashScreenBackgroundSourceLandscape: {fileID: 0}
-  splashScreenBackgroundSourcePortrait: {fileID: 0}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 551d6fc92ca02455fbbf5d23982723bf,
+    type: 3}
+  splashScreenBackgroundSourcePortrait: {fileID: 21300000, guid: 294e35a0d74d4435e8b023db1dd4552c,
+    type: 3}
   spritePackerPolicy: 
   webGLMemorySize: 256
   webGLExceptionSupport: 1
@@ -656,14 +754,22 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 1
   webGLLinkerTarget: 0
+  webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: Search;Results;Selector;Buttons;Group
-    7: Search;Results;Selector;Buttons;Group;PLAY_INSTANT
+    1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
+    4: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
+    7: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;PLAY_INSTANT
+    14: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
+    Metro: 1
     Standalone: 1
-  il2cppCompilerConfiguration: {}
+  il2cppCompilerConfiguration:
+    Android: 2
+    Standalone: 1
+  managedStrippingLevel:
+    Android: 1
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   additionalIl2CppArgs: 
@@ -676,20 +782,21 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroPackageVersion: 1.15.0.0
+  metroCertificatePath: WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: Card Game Simulator
+  metroCertificateSubject: Finol Digital LLC
+  metroCertificateIssuer: Finol Digital LLC
+  metroCertificateNotAfter: 008a47690231d601
+  metroApplicationDescription: Play your favorite card games!
   wsaImages: {}
-  metroTileShortName: Card Game Simulator
-  metroCommandLineArgsFile: 
+  metroTileShortName: CGS
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
   metroWideTileShowName: 0
+  metroSupportStreamingInstall: 0
+  metroLastRequiredScene: 0
   metroDefaultTileSize: 1
   metroTileForegroundText: 2
   metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
@@ -699,53 +806,54 @@ PlayerSettings:
   platformCapabilities:
     WindowsStoreApps:
       AllJoyn: False
+      Appointments: False
+      BackgroundMediaPlayback: False
       BlockedChatMessages: False
       Bluetooth: False
       Chat: False
       CodeGeneration: False
+      Contacts: False
       EnterpriseAuthentication: False
       HumanInterfaceDevice: False
       InputInjectionBrokered: False
-      InternetClient: False
-      InternetClientServer: False
+      InternetClient: True
+      InternetClientServer: True
       Location: False
+      LowLevelDevices: False
       Microphone: False
       MusicLibrary: False
       Objects3D: False
+      OfflineMapsManagement: False
       PhoneCall: False
+      PhoneCallHistoryPublic: False
       PicturesLibrary: False
+      PointOfService: False
       PrivateNetworkClientServer: False
       Proximity: False
+      RecordedCallsFolder: False
+      RemoteSystem: False
       RemovableStorage: False
       SharedUserCertificates: False
       SpatialPerception: False
+      SystemManagement: False
       UserAccountInformation: False
+      UserDataTasks: False
+      UserNotificationListener: False
       VideosLibrary: False
       VoipCall: False
       WebCam: False
+  metroTargetDeviceFamilies:
+    Desktop: False
+    Holographic: False
+    IoT: False
+    IoTHeadless: False
+    Mobile: False
+    Team: False
+    Xbox: False
   metroFTAName: 
   metroFTAFileTypes: []
-  metroProtocolName: 
+  metroProtocolName: cardgamesim
   metroCompilationOverrides: 1
-  tizenProductDescription: 
-  tizenProductURL: 
-  tizenSigningProfileName: 
-  tizenGPSPermissions: 0
-  tizenMicrophonePermissions: 0
-  tizenDeploymentTarget: 
-  tizenDeploymentTargetType: -1
-  tizenMinOSVersion: 1
-  n3dsUseExtSaveData: 0
-  n3dsCompressStaticMem: 1
-  n3dsExtSaveDataNumber: 0x12345
-  n3dsStackSize: 131072
-  n3dsTargetPlatform: 2
-  n3dsRegion: 7
-  n3dsMediaSize: 0
-  n3dsLogoStyle: 3
-  n3dsTitle: GameName
-  n3dsProductCode: 
-  n3dsApplicationId: 0xFF3FF
   XboxOneProductId: 
   XboxOneUpdateKey: 
   XboxOneSandboxId: 
@@ -755,6 +863,7 @@ PlayerSettings:
   XboxOneGameOsOverridePath: 
   XboxOnePackagingOverridePath: 
   XboxOneAppManifestOverridePath: 
+  XboxOneVersion: 1.0.0.0
   XboxOnePackageEncryption: 0
   XboxOnePackageUpdateGranularity: 2
   XboxOneDescription: 
@@ -770,16 +879,36 @@ PlayerSettings:
   XboxOnePersistentLocalStorageSize: 0
   XboxOneXTitleMemory: 8
   xboxOneScriptCompiler: 0
+  XboxOneOverrideIdentityName: 
   vrEditorSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled: {}
+  luminIcon:
+    m_Name: 
+    m_ModelFolderPath: 
+    m_PortalFolderPath: 
+  luminCert:
+    m_CertPath: 
+    m_PrivateKeyPath: 
+  luminIsChannelApp: 0
+  luminVersion:
+    m_VersionCode: 1
+    m_VersionName: 
   facebookSdkVersion: 7.9.4
+  facebookAppId: 
+  facebookCookies: 1
+  facebookLogging: 1
+  facebookStatus: 1
+  facebookXfbml: 0
+  facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 3
   cloudProjectId: 
+  framebufferDepthMemorylessMode: 0
   projectName: 
   organizationId: 
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
+  legacyClampBlendShapeWeights: 0

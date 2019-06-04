@@ -1,0 +1,24 @@
+language: objective-c
+os: osx
+osx_image: xcode10
+
+rvm:
+- 2.2
+
+branches:
+  only:
+  - master
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
+before_install:
+- chmod a+x ./travis-build/*.sh
+
+install:
+- ./travis-build/install-unity.sh
+
+script:
+- travis_wait 50 ./travis-build/build.sh

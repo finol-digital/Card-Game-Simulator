@@ -1,0 +1,126 @@
+{
+  "allCardsUrl": "https://drive.google.com/uc?export=download&id=1M5wCsX39ZfMU9bopxQiMWIbNCgutaKz2",
+  "allSetsUrl": "https://drive.google.com/uc?export=download&id=1o2Ty7z1z5OG60Avl4EHLhtbJUbNxS44P",
+  "autoUpdateUrl": "https://drive.google.com/uc?export=download&id=1QwsI6K6XgLqN053gFOjMEI9L0FuJ19AH",
+  "bannerImageUrl": "https://drive.google.com/uc?export=download&id=1HKJVzz6BUDqbCPjtDEzagLWYA9he7rTU",
+  "cardImageProperty": "image",
+  "cardProperties": [
+    {
+      "name": "image",
+      "type": "string"
+    }
+  ],
+  "cardSize": {
+    "x": 1,
+    "y": 1
+  },
+  "deckUrls": [
+    {
+      "name": "axe",
+      "url": "https://drive.google.com/uc?export=download&id=1g3cIfhqopisV0couTEtkzKkXaqL9rBv1"
+    },
+    {
+      "name": "daia",
+      "url": "https://drive.google.com/uc?export=download&id=1FJ6ggccxenz0obS5HabAdf1gd7C0XXmN"
+    }
+  ],
+  "gameBoardCards": [
+    {
+      "card": "axe",
+      "boards": [
+        {
+          "id": "axe",
+          "offsetMin": {
+            "x": 0,
+            "y": 0
+          },
+          "size": {
+            "x": 8.5,
+            "y": 11
+          }
+        },
+        {
+          "id": "phases",
+          "offsetMin": {
+            "x": 8.5,
+            "y": 2.5
+          },
+          "size": {
+            "x": 5,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "positions",
+          "offsetMin": {
+            "x": 8.5,
+            "y": 6.5
+          },
+          "size": {
+            "x": 6.5,
+            "y": 4.5
+          }
+        }
+      ]
+    },
+    {
+      "card": "daia",
+      "boards": [
+        {
+          "id": "daia",
+          "offsetMin": {
+            "x": 0,
+            "y": 0
+          },
+          "size": {
+            "x": 8.5,
+            "y": 11
+          }
+        },
+        {
+          "id": "phases",
+          "offsetMin": {
+            "x": 8.5,
+            "y": 2.5
+          },
+          "size": {
+            "x": 5,
+            "y": 4.5
+          }
+        },
+        {
+          "id": "positions",
+          "offsetMin": {
+            "x": 8.5,
+            "y": 6.5
+          },
+          "size": {
+            "x": 6.5,
+            "y": 4.5
+          }
+        }
+      ]
+    }
+  ],
+  "gameBoardUrls": [
+    {
+      "id": "axe",
+      "url": "https://drive.google.com/uc?export=download&id=173uY4hpF0N3Ydv8lrN00-6UGRt5TzSdj"
+    },
+    {
+      "id": "daia",
+      "url": "https://drive.google.com/uc?export=download&id=1AyJTlCW3E_kKKexmuS-plXsPbm1B-oAL"
+    },
+    {
+      "id": "phases",
+      "url": "https://drive.google.com/uc?export=download&id=19V99rKIma4dLVKB0MCjCZ0kxqp-Xr9lZ"
+    },
+    {
+      "id": "positions",
+      "url": "https://drive.google.com/uc?export=download&id=1o4hDh773xUvnNgljIDe98tggZViQ9uBp"
+    }
+  ],
+  "gameStartPointsCount": 12,
+  "name": "Saga",
+  "rulesUrl": "http://saga.li/"
+}

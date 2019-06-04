@@ -11,6 +11,7 @@ Properties {
 	_MaskSoftnessY	("Mask SoftnessY", float) = 0
 
 	_ClipRect("Clip Rect", vector) = (-32767, -32767, 32767, 32767)
+	_Padding		("Padding", float) = 0
 
 	_StencilComp("Stencil Comparison", Float) = 8
 	_Stencil("Stencil ID", Float) = 0
@@ -51,6 +52,7 @@ SubShader{
 		#pragma multi_compile __ UNITY_UI_CLIP_RECT
 		#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
+
 		#include "UnityCG.cginc"
 
 		struct appdata_t {
@@ -61,7 +63,7 @@ SubShader{
 		};
 
 		struct v2f {
-			float4	vertex		: POSITION;
+			float4	vertex		: SV_POSITION;
 			fixed4	color		: COLOR;
 			float2	texcoord0	: TEXCOORD0;
 			float2	texcoord1	: TEXCOORD1;
@@ -116,12 +118,12 @@ SubShader{
 			return o;
 		}
 
-		fixed4 frag (v2f i) : COLOR
+		fixed4 frag (v2f i) : SV_Target
 		{
-			//fixed4 c = tex2D(_MainTex, i.texcoord0) * tex2D(_FaceTex, i.texcoord1) * i.color;
+			fixed4 c = tex2D(_MainTex, i.texcoord0) * tex2D(_FaceTex, i.texcoord1) * i.color;
 			
-			fixed4 c = tex2D(_MainTex, i.texcoord0);
-			c = fixed4 (tex2D(_FaceTex, i.texcoord1).rgb * i.color.rgb, i.color.a * c.a);
+			//fixed4 c = tex2D(_MainTex, i.texcoord0);
+			//c = fixed4 (tex2D(_FaceTex, i.texcoord1).rgb * i.color.rgb, i.color.a * c.a);
 
 			// Alternative implementation to UnityGet2DClipping with support for softness.
 			#if UNITY_UI_CLIP_RECT
