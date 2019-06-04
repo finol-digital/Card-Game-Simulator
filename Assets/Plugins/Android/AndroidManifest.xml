@@ -33,6 +33,7 @@
     <meta-data android:name="default-url" android:value="https://cardgamesim.finoldigital.com/" />
     <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_mnzYrzoSgtqi3gAyzkVzqppkxFnNY1jn" />
     <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_oez3AweOkBwlZaqsxiJvCgmawslU9R0Z" />
+    <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
     <provider android:name="com.yasirkula.unity.UnitySSContentProvider" android:authorities="com.finoldigital.cardgamesim" android:exported="false" android:grantUriPermissions="true" />
   </application>
   <uses-permission android:name="android.permission.INTERNET" />
