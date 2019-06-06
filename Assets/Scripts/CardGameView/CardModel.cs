@@ -491,6 +491,7 @@ namespace CardGameView
             CardStack prevParentStack = ParentCardStack;
             transform.SetParent(PlaceHolder.parent);
             transform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
+            transform.localScale = Vector3.one;
             if (prevParentStack != null)
                 prevParentStack.OnRemove(this);
             if (ParentCardStack != null)

@@ -5,9 +5,9 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Fix: Card size on zoom
 
 ## Current Sprint
-- Fix: Card size on zoom
 - Fix: Card Search Menu integer in portrait
 - Fix: LAN Lobby in portrait
 - Fix: Restore networking capability
