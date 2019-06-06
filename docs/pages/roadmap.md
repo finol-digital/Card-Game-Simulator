@@ -14,7 +14,6 @@ permalink: roadmap.html
 - Fix: Error/Messaging OnAwake/OnValidate in Play Mode
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Tech: Use Json.Net schema
-- Tech: Review with Resharper/Rider
 - Tech: Google Play Instant
 - Tech: https://jakubturek.com/continuous-delivery-with-travis-and-fastlane/ & https://medium.com/@mandarin_x/continuous-integration-for-unity-projects-using-travisci-5b25e691ab58
 - Redesign Play Mode
