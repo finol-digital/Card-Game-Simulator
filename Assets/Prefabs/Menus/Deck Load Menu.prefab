@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 222286385748084700}
   - component: {fileID: 114054994680228204}
   m_Layer: 5
-  m_Name: Instructions Text
+  m_Name: Title Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -356,7 +356,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -125}
-  m_SizeDelta: {x: 500, y: 125}
+  m_SizeDelta: {x: 400, y: 125}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &222286385748084700
 CanvasRenderer:
@@ -388,7 +388,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 9620f61733f65c749a22b0e4f59b6615, type: 3}
-    m_FontSize: 72
+    m_FontSize: 56
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 4
@@ -1094,7 +1094,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00004872453}
+  m_AnchoredPosition: {x: 0, y: 0.000050306746}
   m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &114562436159873448
@@ -2514,6 +2514,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224207170848406008}
     m_Modifications:
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Load Button
+      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2572,7 +2577,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1417.3802
+      value: 525
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -2618,11 +2623,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Load Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -2687,6 +2687,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 400962576706862966}
     m_Modifications:
+    - target: {fileID: 2135092052294433000, guid: a24def208a6cce74eb7f7d07e399041b,
+        type: 3}
+      propertyPath: m_Name
+      value: Close Button Variant
+      objectReference: {fileID: 0}
     - target: {fileID: 2135092052294433001, guid: a24def208a6cce74eb7f7d07e399041b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2791,11 +2796,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2135092052294433000, guid: a24def208a6cce74eb7f7d07e399041b,
-        type: 3}
-      propertyPath: m_Name
-      value: Close Button Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2135092052294433002, guid: a24def208a6cce74eb7f7d07e399041b,
         type: 3}
@@ -2937,16 +2937,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5235115289016548993, guid: 987a410d27ea7074e981d400767aded3,
-        type: 3}
-      propertyPath: m_Text
-      value: No Decks Saved
-      objectReference: {fileID: 0}
-    - target: {fileID: 5235115287894202190, guid: 987a410d27ea7074e981d400767aded3,
-        type: 3}
-      propertyPath: m_Group
-      value: 
-      objectReference: {fileID: 114562436159873448}
     - target: {fileID: 5235115287879633272, guid: 987a410d27ea7074e981d400767aded3,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2967,6 +2957,16 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5235115287894202190, guid: 987a410d27ea7074e981d400767aded3,
+        type: 3}
+      propertyPath: m_Group
+      value: 
+      objectReference: {fileID: 114562436159873448}
+    - target: {fileID: 5235115289016548993, guid: 987a410d27ea7074e981d400767aded3,
+        type: 3}
+      propertyPath: m_Text
+      value: No Decks Saved
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 987a410d27ea7074e981d400767aded3, type: 3}
 --- !u!224 &6081254067959915976 stripped
@@ -2986,6 +2986,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Scrollbar Vertical
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_Size
+      value: 0.99999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.000000059604645
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1829473602834048257, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
@@ -3092,31 +3117,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_Value
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_Size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 545336a218e4b2e43acf2260017946f3, type: 3}
 --- !u!114 &3160788693221041854 stripped
@@ -3144,6 +3144,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224207170848406008}
     m_Modifications:
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Share Button
+      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3202,7 +3207,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 987.4145
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3248,11 +3253,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Share Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3322,6 +3322,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Name InputField
       objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 114086429987633334}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 114086429987633334}
     - target: {fileID: 4658356562677211595, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3427,16 +3437,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
-        type: 3}
-      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 114086429987633334}
-    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
-        type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 114086429987633334}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4698c1a75d36a640afc1bea8b676ff4, type: 3}
 --- !u!224 &224711891735593956 stripped
@@ -3464,6 +3464,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224207170848406008}
     m_Modifications:
+    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_Name
+      value: Delete Button
+      objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3522,7 +3527,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 557.44867
+      value: 175
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3568,11 +3573,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
-        type: 3}
-      propertyPath: m_Name
-      value: Delete Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -3855,7 +3855,7 @@ PrefabInstance:
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 127.482895
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -3989,6 +3989,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 224055920836126120}
     m_Modifications:
+    - target: {fileID: 2135092052294433000, guid: a24def208a6cce74eb7f7d07e399041b,
+        type: 3}
+      propertyPath: m_Name
+      value: Close Button Variant
+      objectReference: {fileID: 0}
     - target: {fileID: 2135092052294433001, guid: a24def208a6cce74eb7f7d07e399041b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4093,11 +4098,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2135092052294433000, guid: a24def208a6cce74eb7f7d07e399041b,
-        type: 3}
-      propertyPath: m_Name
-      value: Close Button Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2135092052294433002, guid: a24def208a6cce74eb7f7d07e399041b,
         type: 3}
