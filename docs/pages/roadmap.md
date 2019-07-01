@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Fix: Card size on zoom
 - Fix: Card Search Menu integer in portrait
 - Fix: LAN Lobby in portrait
+- Tech: Improve data model
 
 ## Current Sprint
 - Fix: Restore networking capability
