@@ -63,7 +63,10 @@ namespace CGS.Play
             if (CardGameManager.Instance.IsSearching)
                 Lobby.Show(BackToMainMenu);
             else
-                ShowDeckMenu(); // TODO: LOBBY HOST
+            {
+                ShowDeckMenu();
+                Lobby.Host();
+            }
         }
 
         void Update()
@@ -124,8 +127,9 @@ namespace CGS.Play
             foreach (Card card in deck.Cards)
                 if (!extraCards.Contains(card))
                     deckCards.Add(card);
+            deckCards.Shuffle();
 
-            LoadDeck(deckCards);
+            LoadDeckCards(deckCards);
 
             foreach (Card card in deck.Cards)
                 foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards)
@@ -133,15 +137,11 @@ namespace CGS.Play
                         CreateGameBoards(boardCard.Boards);
         }
 
-        public void LoadDeck(List<Card> deckCards, bool isSharedDeck = false)
+        public void LoadDeckCards(List<Card> deckCards, bool isShared = false)
         {
             zones.CreateDeck();
-
-            deckCards.Shuffle();
-
-            // TODO: if (!isSharedDeck)
-            // TODO:    CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
-
+            if (!isShared)
+                CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
             zones.scrollView.verticalScrollbar.value = 0;
             zones.CurrentDeck.Sync(deckCards);
             StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));

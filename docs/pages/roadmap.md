@@ -8,10 +8,10 @@ permalink: roadmap.html
 - Fix: Card size on zoom
 - Fix: Card Search Menu integer in portrait
 - Fix: LAN Lobby in portrait
+- Fix: Restore networking capability
 - Tech: Improve data model
 
 ## Current Sprint
-- Fix: Restore networking capability
 - Fix: Error/Messaging OnAwake/OnValidate in Play Mode
 - Fix: Card disappears when being sent to host but the connnection is dropped and the card is never received by the host to be replicated
 - Tech: Use Json.Net schema

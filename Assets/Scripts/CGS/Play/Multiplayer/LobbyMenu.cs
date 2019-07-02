@@ -72,8 +72,8 @@ namespace CGS.Play.Multiplayer
             SelectedHost = string.Empty;
             Rebuild(HostNames, SelectHost, SelectedHost);
 
-            // TODO: CardGameManager.Instance.Discovery.lobby = this;
-            // TODO: CardGameManager.Instance.Discovery.SearchForHost();
+            CardGameManager.Instance.discovery.lobby = this;
+            CardGameManager.Instance.discovery.SearchForHost();
         }
 
         public void DisplayHosts(List<string> hosts)
@@ -95,7 +95,7 @@ namespace CGS.Play.Multiplayer
 
         public void Host()
         {
-            // TODO: NetworkManager.singleton.StartHost();
+            NetworkManager.singleton.StartHost();
             Hide();
         }
 

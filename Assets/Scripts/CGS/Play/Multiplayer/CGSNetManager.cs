@@ -25,7 +25,7 @@ namespace CGS.Play.Multiplayer
         public override void OnStartServer()
         {
             base.OnStartServer();
-            // TODO: CardGameManager.Instance.Discovery.StartAsHost();
+            CardGameManager.Instance.discovery.StartAsHost();
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn, AddPlayerMessage message)
@@ -43,7 +43,7 @@ namespace CGS.Play.Multiplayer
         public override void OnClientConnect(NetworkConnection connection)
         {
             base.OnClientConnect(connection);
-            // TODO: OnStartClient - ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
+            ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
             playController.netText.text = ConnectionIdMessage + connection.connectionId;
         }
 
@@ -62,7 +62,8 @@ namespace CGS.Play.Multiplayer
         public override void OnStopServer()
         {
             base.OnStopServer();
-            // TODO: CardGameManager.Instance.Discovery.Stop();
+            if (CardGameManager.Instance.discovery.running)
+                CardGameManager.Instance.discovery.StopBroadcast();
             Debug.Log("Server stopped");
         }
     }
