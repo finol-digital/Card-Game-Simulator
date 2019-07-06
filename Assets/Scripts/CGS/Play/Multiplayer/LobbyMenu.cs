@@ -78,18 +78,18 @@ namespace CGS.Play.Multiplayer
 
         public void DisplayHosts(List<string> hosts)
         {
-            if (hosts == null || hosts.Equals(HostNames.Keys.ToList()))
+            if (hosts == null || hosts.OrderBy(t => t).ToList().SequenceEqual(HostNames.Keys.ToList()))
                 return;
 
             HostNames.Clear();
             foreach (string host in hosts)
                 HostNames[host] = host.Split(':').Last();
+
             if (!HostNames.ContainsValue(SelectedHost))
             {
                 SelectedHost = string.Empty;
                 joinButton.interactable = false;
             }
-
             Rebuild(HostNames, SelectHost, SelectedHost);
         }
 

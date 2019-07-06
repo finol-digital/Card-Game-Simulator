@@ -35,6 +35,7 @@ namespace CGS.Play.Multiplayer
             bool started = Initialize() && StartAsServer();
             if (!started)
                 Debug.LogError(BroadcastErrorMessage);
+            Debug.Log("Starting Discovery Broadcast");
         }
 
         public void SearchForHost()
@@ -60,14 +61,16 @@ namespace CGS.Play.Multiplayer
             bool started = Initialize() && StartAsClient();
             if (!started)
                 Debug.LogError(ListenErrorMessage);
+            Debug.Log("Starting Discovery Listening");
         }
 
         public override void OnReceivedBroadcast(string fromAddress, string data)
         {
             HasReceivedBroadcast = true;
-            if (lobby == null || !lobby.gameObject.activeInHierarchy || NetworkManager.singleton.isNetworkActive)
+            if (lobby == null || !lobby.gameObject.activeInHierarchy)
                 return;
 
+            Debug.Log("Updating Lobby");
             lobby.DisplayHosts(broadcastsReceived.Keys.ToList());
         }
     }
