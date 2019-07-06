@@ -47,3 +47,4 @@ Assets/StreamingAssets/crashlytics-build.properties
 # Certificates
 *.keystore*
 *.pfx*
+*.pem

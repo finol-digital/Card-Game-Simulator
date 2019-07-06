@@ -122,7 +122,7 @@ namespace CGS.Play.Multiplayer
         public void TargetShareDeck(NetworkConnection target, int deckIndex)
         {
             this.deckIndex = deckIndex;
-            CGSNetManager.Instance.playController.LoadDeck(CurrentDeck, true);
+            CGSNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
             CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => { }, RequestSharedScore);
         }
 
@@ -157,7 +157,7 @@ namespace CGS.Play.Multiplayer
             cardModel.rotation = rotation;
             cardModel.IsFacedown = isFacedown;
             controller.SetPlayActions(controller.playAreaContent.GetComponent<CardStack>(), cardModel);
-            NetworkServer.SpawnWithClientAuthority(newCard, gameObject);
+            NetworkServer.SpawnWithClientAuthority(newCard, connectionToClient);
             cardModel.RpcHideHighlight();
         }
 

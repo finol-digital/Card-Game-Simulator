@@ -72,30 +72,30 @@ namespace CGS.Play.Multiplayer
             SelectedHost = string.Empty;
             Rebuild(HostNames, SelectHost, SelectedHost);
 
-            // TODO: CardGameManager.Instance.Discovery.lobby = this;
-            // TODO: CardGameManager.Instance.Discovery.SearchForHost();
+            CardGameManager.Instance.discovery.lobby = this;
+            CardGameManager.Instance.discovery.SearchForHost();
         }
 
         public void DisplayHosts(List<string> hosts)
         {
-            if (hosts == null || hosts.Equals(HostNames.Keys.ToList()))
+            if (hosts == null || hosts.OrderBy(t => t).ToList().SequenceEqual(HostNames.Keys.ToList()))
                 return;
 
             HostNames.Clear();
             foreach (string host in hosts)
                 HostNames[host] = host.Split(':').Last();
+
             if (!HostNames.ContainsValue(SelectedHost))
             {
                 SelectedHost = string.Empty;
                 joinButton.interactable = false;
             }
-
             Rebuild(HostNames, SelectHost, SelectedHost);
         }
 
         public void Host()
         {
-            // TODO: NetworkManager.singleton.StartHost();
+            NetworkManager.singleton.StartHost();
             Hide();
         }
 
