@@ -252,7 +252,7 @@ PlayerSettings:
   androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: finoldigital.keystore
   AndroidKeyaliasName: cgs
-  AndroidBuildApkPerCpuArchitecture: 1
+  AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
@@ -769,7 +769,7 @@ PlayerSettings:
     Android: 2
     Standalone: 1
   managedStrippingLevel:
-    Android: 3
+    Android: 1
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   additionalIl2CppArgs: 
