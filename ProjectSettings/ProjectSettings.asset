@@ -120,7 +120,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.17.3
+  bundleVersion: 1.17.4
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -161,12 +161,12 @@ PlayerSettings:
   buildNumber:
     Standalone: 8
     iOS: 0
-  AndroidBundleVersionCode: 69
+  AndroidBundleVersionCode: 70
   AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 0
   aotOptions: 
-  stripEngineCode: 0
+  stripEngineCode: 1
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
   ForceInternetPermission: 1
@@ -766,7 +766,7 @@ PlayerSettings:
     Metro: 1
     Standalone: 1
   il2cppCompilerConfiguration:
-    Android: 0
+    Android: 2
     Standalone: 1
   managedStrippingLevel:
     Android: 1
