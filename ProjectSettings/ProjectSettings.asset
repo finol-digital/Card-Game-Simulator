@@ -166,7 +166,7 @@ PlayerSettings:
   AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 0
   aotOptions: 
-  stripEngineCode: 1
+  stripEngineCode: 0
   iPhoneStrippingLevel: 0
   iPhoneScriptCallOptimization: 0
   ForceInternetPermission: 1
@@ -766,7 +766,7 @@ PlayerSettings:
     Metro: 1
     Standalone: 1
   il2cppCompilerConfiguration:
-    Android: 2
+    Android: 0
     Standalone: 1
   managedStrippingLevel:
     Android: 1

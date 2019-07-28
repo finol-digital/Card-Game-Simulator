@@ -21,7 +21,7 @@ namespace CGS
     public class CardGameManager : MonoBehaviour
     {
         // Show all Debug.Log() to help with debugging?
-        public const bool IsMessengerDebugLogVerbose = false;
+        public const bool IsMessengerDebugLogVerbose = true;
         public const string GameId = "GameId";
         public const string PlayerPrefDefaultGame = "DefaultGame";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
