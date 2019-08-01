@@ -49,4 +49,4 @@ Assets/StreamingAssets/crashlytics-build.properties
 *.pfx*
 *.pem
 
-.DS_Store
+*.DS_Store
