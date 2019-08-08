@@ -2,7 +2,7 @@ git_url("git@github.com:finol-digital/cgs-match-certs.git")
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(["com.finoldigital.CardGameSim", "com.finoldigital.CardGameSimulator"])
+app_identifier(["com.finoldigital.CardGameSim"])
 username("finoldigitalfastlane@gmail.com")
 
 # For all available options run `fastlane match --help`
