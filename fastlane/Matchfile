@@ -1,4 +1,4 @@
-git_url("git@github.com:finol-digital/cgs-match-certs.git")
+git_url("git@github.com:finol-digital/certificates.git")
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
