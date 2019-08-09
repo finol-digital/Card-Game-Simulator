@@ -48,3 +48,6 @@ Assets/StreamingAssets/crashlytics-build.properties
 *.keystore*
 *.pfx*
 *.pem
+*setup_ssh.sh
+
+*.DS_Store

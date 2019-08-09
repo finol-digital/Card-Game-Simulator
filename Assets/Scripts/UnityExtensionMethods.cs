@@ -200,7 +200,7 @@ static public class UnityExtensionMethods
 
         if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
         {
-            Debug.LogWarning("SaveUrlToFile::www.Error:" + www.error);
+            Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error);
             yield break;
         }
 
