@@ -16,9 +16,35 @@
 default_platform(:ios)
 
 platform :ios do
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  lane :beta do
+    keychain_name = "fastlane"
+    keychain_password = SecureRandom.base64
+    ENV["MATCH_KEYCHAIN_NAME"] = keychain_name
+    ENV["MATCH_KEYCHAIN_PASSWORD"] = keychain_password
+    create_keychain(
+      name: keychain_name,
+      password: keychain_password,
+      default_keychain: true,
+      lock_when_sleeps: true,
+      timeout: 3600,
+      unlock: true
+    )
+    match(
+      type: "appstore",
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      readonly: true
+    )
+    gym(scheme: "Unity-iPhone", clean: true)
+    pilot
+  end
+
   desc "Push a new release build to the App Store"
   lane :release do
     build_app(scheme: "Unity-iPhone")
     upload_to_app_store
   end
+
 end
