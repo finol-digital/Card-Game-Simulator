@@ -34,7 +34,7 @@ ${UNITY_PATH} \
   -projectPath "$(pwd)" \
   -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app" \
   -quit
-rc1=$?
+rc0=$?
 echo 'OSX build logs:'
 cat $OSX_LOG_FILE
 
@@ -46,7 +46,7 @@ ${UNITY_PATH} \
     -projectPath "$(pwd)" \
     -executeMethod BuildCGS.iOS \
     -quit
-rc2=$?
+rc1=$?
 echo 'iOS build logs:'
 cat $IOS_LOG_FILE
 
@@ -59,6 +59,6 @@ ${UNITY_PATH} \
 echo "Unity return log:"
 cat $UNITY_RETURN_LOG_FILE
 
-STATUS_CODE=$(($rc1|$rc2))
+STATUS_CODE=$(($rc0|$rc1))
 echo "Finishing with code $STATUS_CODE"
 exit $STATUS_CODE

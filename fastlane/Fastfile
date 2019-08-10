@@ -37,7 +37,11 @@ platform :ios do
       keychain_password: keychain_password,
       readonly: true
     )
-    gym(scheme: "Unity-iPhone", clean: true)
+    gym(
+      scheme: "Unity-iPhone", 
+      project: options[:project_path] + "Unity-iPhone.xcodeproj",
+      clean: true
+    )
     pilot
   end
 
