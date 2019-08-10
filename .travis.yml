@@ -15,10 +15,10 @@ notifications:
     on_failure: change
 
 before_install:
-- bundle install
 - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
 - chmod a+x ./travis-build/*.sh
 - . ./travis-build/setup_ssh.sh
+- bundle install
 
 install:
 - ./travis-build/install-unity.sh
