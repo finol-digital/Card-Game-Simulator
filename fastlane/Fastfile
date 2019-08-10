@@ -17,12 +17,17 @@ default_platform(:ios)
 
 platform :ios do
 
-  desc "Submit a new Beta Build to Apple TestFlight"
-  lane :beta do
+  desc "Synchronize certificates"
+  lane :certificates do
     keychain_name = "fastlane"
     keychain_password = SecureRandom.base64
     ENV["MATCH_KEYCHAIN_NAME"] = keychain_name
     ENV["MATCH_KEYCHAIN_PASSWORD"] = keychain_password
+    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+      delete_keychain(
+        name: keychain_name
+      )
+    end
     create_keychain(
       name: keychain_name,
       password: keychain_password,
@@ -37,18 +42,28 @@ platform :ios do
       keychain_password: keychain_password,
       readonly: true
     )
+  end
+
+  desc "Create CardGameSimulator.ipa"
+  lane :build do
+    certificates
     gym(
       scheme: "Unity-iPhone", 
-      project: options[:project_path] + "Unity-iPhone.xcodeproj",
+      project: ENV["TRAVIS_BUILD_DIR"] + "builds/iOS/Unity-iPhone.xcodeproj",
       clean: true
     )
+  end
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  lane :beta do
+    build
     pilot
   end
 
   desc "Push a new release build to the App Store"
   lane :release do
-    build_app(scheme: "Unity-iPhone")
-    upload_to_app_store
+    build
+    deliver
   end
 
 end
