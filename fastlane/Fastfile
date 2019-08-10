@@ -49,7 +49,7 @@ platform :ios do
     certificates
     gym(
       scheme: "Unity-iPhone", 
-      project: ENV["TRAVIS_BUILD_DIR"] + "builds/iOS/Unity-iPhone.xcodeproj",
+      project: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
       clean: true
     )
   end
