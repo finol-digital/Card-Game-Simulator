@@ -72,7 +72,7 @@ platform :ios do
       type: type,
       keychain_name: keychain_name,
       keychain_password: keychain_password,
-      readonly: true
+      readonly: false
     )
   end
 
