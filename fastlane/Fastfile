@@ -15,27 +15,36 @@
 
 default_platform(:ios)
 
+project = ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj"
+scheme = "Unity-iPhone"
+team_id = "49G524X5NY"
+profile = ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"]
+codesigning_identity = "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
+keychain_name = "fastlane"
+keychain_password = SecureRandom.base64
+def set_fastlane_keychain
+  ENV["MATCH_KEYCHAIN_NAME"] = keychain_name
+  ENV["MATCH_KEYCHAIN_PASSWORD"] = keychain_password
+  if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+    delete_keychain(
+      name: keychain_name
+    )
+  end
+  create_keychain(
+    name: keychain_name,
+    password: keychain_password,
+    default_keychain: true,
+    lock_when_sleeps: true,
+    timeout: 3600,
+    unlock: true
+  )
+end
+
 platform :ios do
 
   desc "Synchronize certificates"
   lane :certificates do
-    keychain_name = "fastlane"
-    keychain_password = SecureRandom.base64
-    ENV["MATCH_KEYCHAIN_NAME"] = keychain_name
-    ENV["MATCH_KEYCHAIN_PASSWORD"] = keychain_password
-    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
-      delete_keychain(
-        name: keychain_name
-      )
-    end
-    create_keychain(
-      name: keychain_name,
-      password: keychain_password,
-      default_keychain: true,
-      lock_when_sleeps: true,
-      timeout: 3600,
-      unlock: true
-    )
+    set_fastlane_keychain
     match(
       type: "appstore",
       keychain_name: keychain_name,
@@ -44,12 +53,22 @@ platform :ios do
     )
   end
 
-  desc "Create CardGameSimulator.ipa"
+  desc "Create ipa"
   lane :build do
+    disable_automatic_code_signing(
+      path: project,
+      team_id: team_id
+    )
     certificates
+    update_project_provisioning(
+      xcodeproj: project,
+      target_filter: scheme,
+      profile: profile,
+      code_signing_identity: codesigning_identity
+    )
     gym(
-      scheme: "Unity-iPhone", 
-      project: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
+      project: project,
+      scheme: scheme, 
       clean: true
     )
   end
