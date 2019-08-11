@@ -17,14 +17,47 @@ default_platform(:ios)
 
 platform :ios do
 
+  desc "Push a new release build to the App Store"
+  lane :release do
+    build(release: true)
+    deliver
+  end
+
+  desc "Submit a new Beta Build to Apple TestFlight"
+  lane :beta do
+    build
+    pilot
+  end
+
+  desc "Create 'Card Game Simulator.ipa'"
+  lane :build do |options|
+    project = ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj"
+    scheme = "Unity-iPhone"
+    code_signing_identity = (options[:release] ? "iPhone Distribution: Finol Digital LLC (49G524X5NY)" : "iPhone Development: Finol Digital LLC (49G524X5NY)")
+    disable_automatic_code_signing(
+      path: project,
+      team_id: "49G524X5NY"
+    )
+    certificates(release: options[:release])
+    update_project_provisioning(
+      xcodeproj: project,
+      target_filter: scheme,
+      code_signing_identity: code_signing_identity,
+      profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"]
+    )
+    gym(
+      project: project,
+      scheme: scheme, 
+      clean: true
+    )
+  end
+
   desc "Synchronize certificates"
-  lane :certificates do
+  lane :certificates do |options|
     keychain_name = "temporary_keychain"
     keychain_password = SecureRandom.base64
     if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
-      delete_keychain(
-        name: keychain_name
-      )
+      delete_keychain(name: keychain_name)
     end
     create_keychain(
       name: keychain_name,
@@ -34,46 +67,13 @@ platform :ios do
       timeout: 3600,
       unlock: true
     )
+    type = (options[:release] ? "appstore" : "development")
     match(
-      type: "appstore",
+      type: type,
       keychain_name: keychain_name,
       keychain_password: keychain_password,
       readonly: true
     )
-  end
-
-  desc "Create 'Card Game Simulator.ipa'"
-  lane :build do
-    project = ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj"
-    scheme = "Unity-iPhone"
-    disable_automatic_code_signing(
-      path: project,
-      team_id: "49G524X5NY"
-    )
-    certificates
-    update_project_provisioning(
-      xcodeproj: project,
-      target_filter: scheme,
-      profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
-      code_signing_identity: "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
-    )
-    gym(
-      project: project,
-      scheme: scheme, 
-      clean: true
-    )
-  end
-
-  desc "Submit a new Beta Build to Apple TestFlight"
-  lane :beta do
-    build
-    pilot
-  end
-
-  desc "Push a new release build to the App Store"
-  lane :release do
-    build
-    deliver
   end
 
 end
