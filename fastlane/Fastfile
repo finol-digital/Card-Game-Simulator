@@ -15,36 +15,25 @@
 
 default_platform(:ios)
 
-project = ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj"
-scheme = "Unity-iPhone"
-team_id = "49G524X5NY"
-profile = ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"]
-codesigning_identity = "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
-keychain_name = "fastlane"
-keychain_password = SecureRandom.base64
-def set_fastlane_keychain
-  ENV["MATCH_KEYCHAIN_NAME"] = keychain_name
-  ENV["MATCH_KEYCHAIN_PASSWORD"] = keychain_password
-  if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
-    delete_keychain(
-      name: keychain_name
-    )
-  end
-  create_keychain(
-    name: keychain_name,
-    password: keychain_password,
-    default_keychain: true,
-    lock_when_sleeps: true,
-    timeout: 3600,
-    unlock: true
-  )
-end
-
 platform :ios do
 
   desc "Synchronize certificates"
   lane :certificates do
-    set_fastlane_keychain
+    keychain_name = "temporary_keychain"
+    keychain_password = SecureRandom.base64
+    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+      delete_keychain(
+        name: keychain_name
+      )
+    end
+    create_keychain(
+      name: keychain_name,
+      password: keychain_password,
+      default_keychain: true,
+      lock_when_sleeps: true,
+      timeout: 3600,
+      unlock: true
+    )
     match(
       type: "appstore",
       keychain_name: keychain_name,
@@ -53,8 +42,13 @@ platform :ios do
     )
   end
 
-  desc "Create ipa"
+  desc "Create 'Card Game Simulator.ipa'"
   lane :build do
+    project = ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj"
+    scheme = "Unity-iPhone"
+    team_id = "49G524X5NY"
+    profile = ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"]
+    codesigning_identity = "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
     disable_automatic_code_signing(
       path: project,
       team_id: team_id
