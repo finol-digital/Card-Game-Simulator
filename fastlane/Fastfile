@@ -46,19 +46,16 @@ platform :ios do
   lane :build do
     project = ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj"
     scheme = "Unity-iPhone"
-    team_id = "49G524X5NY"
-    profile = ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"]
-    codesigning_identity = "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
     disable_automatic_code_signing(
       path: project,
-      team_id: team_id
+      team_id: "49G524X5NY"
     )
     certificates
     update_project_provisioning(
       xcodeproj: project,
       target_filter: scheme,
-      profile: profile,
-      code_signing_identity: codesigning_identity
+      profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
+      code_signing_identity: "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
     )
     gym(
       project: project,
