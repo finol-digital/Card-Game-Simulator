@@ -43,6 +43,7 @@ platform :ios do
     certificates(release: options[:release])
     code_signing_identity = (options[:release] ? "iPhone Distribution: Finol Digital LLC (49G524X5NY)" : "iPhone Development: Finol Digital LLC (49G524X5NY)")
     profile = (options[:release] ? ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"] : ENV["sigh_com.finoldigital.CardGameSim_development_profile-path"])
+    export_method = (options[:release] ? "app-store" : "development")
     update_project_provisioning(
       xcodeproj: project,
       target_filter: scheme,
@@ -51,16 +52,15 @@ platform :ios do
     )
     gym(
       project: project,
-      scheme: scheme, 
+      scheme: scheme,
+      export_method: export_method,
       clean: true
     )
   end
 
   desc "Synchronize certificates"
   lane :certificates do |options|
-    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
-      delete_keychain(name: keychain_name)
-    end
+    cleanup_keychain
     create_keychain(
       name: keychain_name,
       password: keychain_password,
@@ -76,6 +76,12 @@ platform :ios do
       keychain_password: keychain_password,
       readonly: true
     )
+  end
+
+  lane :cleanup_keychain do
+    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+      delete_keychain(name: keychain_name)
+    end
   end
 
   after_all do |lane, options|
