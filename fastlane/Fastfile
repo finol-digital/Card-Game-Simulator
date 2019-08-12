@@ -15,6 +15,9 @@
 
 default_platform(:ios)
 
+keychain_name = "temporary_keychain"
+keychain_password = SecureRandom.base64
+
 platform :ios do
 
   desc "Push a new release build to the App Store"
@@ -55,8 +58,6 @@ platform :ios do
 
   desc "Synchronize certificates"
   lane :certificates do |options|
-    keychain_name = "temporary_keychain"
-    keychain_password = SecureRandom.base64
     if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
       delete_keychain(name: keychain_name)
     end
@@ -75,6 +76,12 @@ platform :ios do
       keychain_password: keychain_password,
       readonly: true
     )
+  end
+
+  after_all do |lane, options|
+    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
+      delete_keychain(name: keychain_name)
+    end
   end
 
 end
