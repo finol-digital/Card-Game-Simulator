@@ -51,3 +51,5 @@ Assets/StreamingAssets/crashlytics-build.properties
 *setup_ssh.sh
 
 *.DS_Store
+fastlane/README.md
+fastlane/report.xml
