@@ -22,7 +22,7 @@ platform :ios do
 
   desc "Push a new release build to the App Store"
   lane :release do
-    build(release: true)
+    build
     deliver
   end
 
@@ -33,33 +33,32 @@ platform :ios do
   end
 
   desc "Create 'Card Game Simulator.ipa'"
-  lane :build do |options|
-    project = ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj"
-    scheme = "Unity-iPhone"
-    disable_automatic_code_signing(
-      path: project,
-      team_id: "49G524X5NY"
-    )
-    certificates(release: options[:release])
-    code_signing_identity = (options[:release] ? "iPhone Distribution: Finol Digital LLC (49G524X5NY)" : "iPhone Development: Finol Digital LLC (49G524X5NY)")
-    profile = (options[:release] ? ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"] : ENV["sigh_com.finoldigital.CardGameSim_development_profile-path"])
-    export_method = (options[:release] ? "app-store" : "development")
+  lane :build do
+    certificates
     update_project_provisioning(
-      xcodeproj: project,
-      target_filter: scheme,
-      code_signing_identity: code_signing_identity,
-      profile: profile
+      xcodeproj: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
+      target_filter: "Unity-iPhone",
+      profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
+      code_signing_identity: "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
     )
     gym(
-      project: project,
-      scheme: scheme,
-      export_method: export_method,
-      clean: true
+      project: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
+      scheme: "Unity-iPhone",
+      clean: true,
+      skip_profile_detection: true,
+      codesigning_identity: "iPhone Distribution: Finol Digital LLC (49G524X5NY)",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "com.finoldigital.CardGameSim" => "match AppStore com.finoldigital.CardGameSim"
+        }
+      }
     )
   end
 
   desc "Synchronize certificates"
-  lane :certificates do |options|
+  lane :certificates do
     cleanup_keychain
     create_keychain(
       name: keychain_name,
@@ -69,12 +68,11 @@ platform :ios do
       timeout: 3600,
       unlock: true
     )
-    type = (options[:release] ? "appstore" : "development")
     match(
-      type: type,
+      type: "appstore",
+      readonly: true,
       keychain_name: keychain_name,
-      keychain_password: keychain_password,
-      readonly: true
+      keychain_password: keychain_password
     )
   end
 
@@ -84,7 +82,7 @@ platform :ios do
     end
   end
 
-  after_all do |lane, options|
+  after_all do
     if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
       delete_keychain(name: keychain_name)
     end

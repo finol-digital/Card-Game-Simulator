@@ -39,6 +39,8 @@ sysinfo.txt
 
 # Builds
 *.apk
+*.ipa
+*.app.dSYM.zip
 *.unitypackage
 
 # Crashlytics generated file
