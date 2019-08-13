@@ -29,4 +29,4 @@ script:
 - travis_wait 50 ./travis-build/build.sh
 
 after_success:
-- fastlane ios beta
+- fastlane ios release
