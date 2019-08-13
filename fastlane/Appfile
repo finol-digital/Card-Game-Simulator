@@ -1,5 +1,5 @@
 app_identifier("com.finoldigital.CardGameSim") # The bundle identifier of your app
-apple_id("david@finoldigital.com") # Your Apple email address
+apple_id("finoldigitalfastlane@gmail.com") # Your Apple email address
 
 itc_team_id("119116991") # iTunes Connect Team ID
 team_id("49G524X5NY") # Developer Portal Team ID

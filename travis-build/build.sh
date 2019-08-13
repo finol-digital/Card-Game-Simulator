@@ -44,6 +44,7 @@ ${UNITY_PATH} \
     -silent-crashes \
     -logFile "$IOS_LOG_FILE" \
     -projectPath "$(pwd)" \
+    -buildTarget iOS \
     -executeMethod BuildCGS.iOS \
     -quit
 rc1=$?
