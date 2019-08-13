@@ -47,7 +47,7 @@ class BuildCGS
         buildPlayerOptions.scenes = BuildScenes;
         buildPlayerOptions.locationPathName = iOSBuildPath;
         buildPlayerOptions.target = BuildTarget.iOS;
-        buildPlayerOptions.options = BuildOptions.None;
+        buildPlayerOptions.options = BuildOptions.AcceptExternalModificationsToPlayer;
         BuildPipeline.BuildPlayer(buildPlayerOptions);
     }
 }
