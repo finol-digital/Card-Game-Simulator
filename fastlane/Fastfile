@@ -34,6 +34,7 @@ platform :ios do
 
   desc "Create 'Card Game Simulator.ipa'"
   lane :build do
+    disable_automatic_code_signing
     certificates
     update_project_provisioning(
       xcodeproj: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
