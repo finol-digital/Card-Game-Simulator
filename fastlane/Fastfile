@@ -32,9 +32,9 @@ platform :ios do
     pilot
   end
 
-  desc "Create 'Card Game Simulator.ipa'"
+  desc "Create CardGameSim.ipa"
   lane :build do
-    disable_automatic_code_signing
+    disable_automatic_code_signing(path: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj")
     certificates
     update_project_provisioning(
       xcodeproj: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
