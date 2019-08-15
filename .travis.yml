@@ -20,14 +20,18 @@ cache:
   - unity_download_cache
 
 before_install:
-- bundle install
 - chmod -R a+rw ./unity_download_cache
 - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
 - chmod a+x ./travis-build/*.sh
 - . ./travis-build/setup_ssh.sh
+- bundle install
 
 install:
 - ./travis-build/install-unity.sh
 
 script:
 - echo "Cache built!"
+
+env:
+  global:
+  - UNITY_DOWNLOAD_CACHE="${TRAVIS_BUILD_DIR}/unity_download_cache"
