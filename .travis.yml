@@ -30,7 +30,10 @@ install:
 - ./travis-build/install-unity.sh
 
 script:
-- echo "Cache built!"
+- travis_wait 40 ./travis-build/build.sh
+
+after_success:
+- fastlane ios release
 
 env:
   global:
