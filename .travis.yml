@@ -1,6 +1,7 @@
 language: objective-c
 os: osx
 osx_image: xcode10
+rvm: 2.3
 
 branches:
   only:
@@ -15,23 +16,27 @@ cache:
   bundler: true
   directories:
   - unity_download_cache
+  - unity_build_cache
 
 env:
   global:
   - UNITY_DOWNLOAD_CACHE="${TRAVIS_BUILD_DIR}/unity_download_cache"
+  - UNITY_BUILD_CACHE="${TRAVIS_BUILD_DIR}/unity_build_cache"
   
 jobs:
   include:
   - stage: prepare cache
-    script:
-    - chmod -R a+rw ./unity_download_cache
-    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
-    - chmod a+x ./travis-build/*.sh
-    - ./travis-build/setup_ssh.sh
-    - ./travis-build/install-unity.sh
-    rvm: 2.3
+    install: bundle install
+    script: chmod -R a+rw ./unity_download_cache
   - stage: build
+    before_install:
+    - chmod -R a+rw ./unity_build_cache
+    - chmod a+x ./travis-build/*.sh
+    install: ./travis-build/install-unity.sh
     script: travis_wait 50 ./travis-build/build.sh
   - stage: deploy
+    before_install:
+    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
+    - chmod a+x ./travis-build/setup_ssh.sh
+    install: ./travis-build/setup_ssh.sh
     script: fastlane ios release
-    rvm: 2.3

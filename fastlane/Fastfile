@@ -34,16 +34,16 @@ platform :ios do
 
   desc "Create CardGameSim.ipa"
   lane :build do
-    disable_automatic_code_signing(path: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj")
+    disable_automatic_code_signing(path: ENV["UNITY_BUILD_CACHE"] + "/iOS/Unity-iPhone.xcodeproj")
     certificates
     update_project_provisioning(
-      xcodeproj: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
+      xcodeproj: ENV["UNITY_BUILD_CACHE"] + "/iOS/Unity-iPhone.xcodeproj",
       target_filter: "Unity-iPhone",
       profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
       code_signing_identity: "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
     )
     gym(
-      project: ENV["TRAVIS_BUILD_DIR"] + "/builds/iOS/Unity-iPhone.xcodeproj",
+      project: ENV["UNITY_BUILD_CACHE"] + "/iOS/Unity-iPhone.xcodeproj",
       scheme: "Unity-iPhone",
       clean: true,
       skip_profile_detection: true,
