@@ -2,9 +2,6 @@ language: objective-c
 os: osx
 osx_image: xcode10
 
-rvm:
-- 2.3
-
 branches:
   only:
   - master
@@ -19,22 +16,22 @@ cache:
   directories:
   - unity_download_cache
 
-before_install:
-- chmod -R a+rw ./unity_download_cache
-- openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
-- chmod a+x ./travis-build/*.sh
-- . ./travis-build/setup_ssh.sh
-- bundle install
-
-install:
-- ./travis-build/install-unity.sh
-
-script:
-- travis_wait 40 ./travis-build/build.sh
-
-after_success:
-- fastlane ios release
-
 env:
   global:
   - UNITY_DOWNLOAD_CACHE="${TRAVIS_BUILD_DIR}/unity_download_cache"
+  
+jobs:
+  include:
+  - stage: prepare cache
+    script:
+    - chmod -R a+rw ./unity_download_cache
+    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
+    - chmod a+x ./travis-build/*.sh
+    - ./travis-build/setup_ssh.sh
+    - ./travis-build/install-unity.sh
+    rvm: 2.3
+  - stage: build
+    script: travis_wait 50 ./travis-build/build.sh
+  - stage: deploy
+    script: fastlane ios release
+    rvm: 2.3
