@@ -14,10 +14,14 @@ notifications:
     on_success: never
     on_failure: change
 
+cache:
+  bundler: true
+  directories:
+  - unity_download_cache
+
 before_install:
-- gem update --system
-- gem install bundler
 - bundle install
+- chmod -R a+rw ./unity_download_cache
 - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
 - chmod a+x ./travis-build/*.sh
 - . ./travis-build/setup_ssh.sh
@@ -26,7 +30,4 @@ install:
 - ./travis-build/install-unity.sh
 
 script:
-- travis_wait 50 ./travis-build/build.sh
-
-after_success:
-- fastlane ios release
+- echo "Cache built!"

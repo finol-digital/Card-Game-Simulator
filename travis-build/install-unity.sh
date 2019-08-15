@@ -5,20 +5,32 @@ BASE_URL=https://download.unity3d.com/download_unity
 VERSION=2018.4.0f1
 HASH=b6ffa8986c8d
 
-download() {
-#  package=$1
-  url="$BASE_URL/$HASH/$package"
+getFileName() {
+  echo "${UNITY_DOWNLOAD_CACHE}/`basename "$1"`"
+}
 
-  echo "Downloading from $url"
-  curl -o `basename "$package"` "$url"
+download() {
+  file=$1
+  url="$BASE_URL/$HASH/$file"
+  filePath=$(getFileName $file)
+  fileName=`basename "$file"`
+
+  if [ ! -e $filePath ] ; then
+    echo "Downloading $filePath from $url: "
+    curl --retry 5 -o "$filePath" "$url"
+  else
+    echo "$fileName exists in cache. Skipping download."
+  fi
 }
 
 install() {
   package=$1
+  filePath=$(getFileName $package)
+  
   download "$package"
 
-  echo "Installing "`basename "$package"`
-  sudo installer -dumplog -package `basename "$package"` -target /
+  echo "Installing $filePath"
+  sudo installer -dumplog -package "$filePath" -target /
 }
 
 # See $BASE_URL/$HASH/unity-$VERSION-osx.ini for a complete list of packages
