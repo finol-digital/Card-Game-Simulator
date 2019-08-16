@@ -13,7 +13,6 @@ notifications:
     on_failure: change
 
 cache:
-  bundler: true
   directories:
   - $HOME/unity_download_cache
   - $HOME/unity_build_cache
@@ -31,7 +30,10 @@ jobs:
     - chmod -R a+rw $HOME/unity_build_cache
     - chmod a+x ./travis-build/*.sh
     install: ./travis-build/install-unity.sh
-    script: travis_wait 40 ./travis-build/build.sh
+    script:
+    - travis_wait 40 ./travis-build/build.sh
+    - ls -al $HOME/unity_build_cache
+    - ls -al $HOME/unity_build_cache/iOS
   - stage: deploy
     before_install:
     - chmod -R a+rw $HOME/unity_build_cache
