@@ -22,12 +22,9 @@ env:
   global:
   - UNITY_DOWNLOAD_CACHE="${TRAVIS_BUILD_DIR}/unity_download_cache"
   - UNITY_BUILD_CACHE="${TRAVIS_BUILD_DIR}/unity_build_cache"
-  
+
 jobs:
   include:
-  - stage: prepare cache
-    install: bundle install
-    script: true
   - stage: build
     before_install:
     - chmod -R a+rw ./unity_download_cache
@@ -40,5 +37,6 @@ jobs:
     - chmod -R a+rw ./unity_build_cache
     - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
     - chmod a+x ./travis-build/setup_ssh.sh
-    install: ./travis-build/setup_ssh.sh
+    - ./travis-build/setup_ssh.sh
+    install: bundle install
     script: fastlane ios release
