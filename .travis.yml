@@ -15,26 +15,26 @@ notifications:
 cache:
   bundler: true
   directories:
-  - unity_download_cache
-  - unity_build_cache
+  - $HOME/unity_download_cache
+  - $HOME/unity_build_cache
 
 env:
   global:
-  - UNITY_DOWNLOAD_CACHE="${TRAVIS_BUILD_DIR}/unity_download_cache"
-  - UNITY_BUILD_CACHE="${TRAVIS_BUILD_DIR}/unity_build_cache"
+  - UNITY_DOWNLOAD_CACHE="$HOME/unity_download_cache"
+  - UNITY_BUILD_CACHE="$HOME/unity_build_cache"
 
 jobs:
   include:
   - stage: build
     before_install:
-    - chmod -R a+rw ./unity_download_cache
-    - chmod -R a+rw ./unity_build_cache
+    - chmod -R a+rw $HOME/unity_download_cache
+    - chmod -R a+rw $HOME/unity_build_cache
     - chmod a+x ./travis-build/*.sh
     install: ./travis-build/install-unity.sh
     script: travis_wait 40 ./travis-build/build.sh
   - stage: deploy
     before_install:
-    - chmod -R a+rw ./unity_build_cache
+    - chmod -R a+rw $HOME/unity_build_cache
     - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
     - chmod a+x ./travis-build/setup_ssh.sh
     - ./travis-build/setup_ssh.sh
