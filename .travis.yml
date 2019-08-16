@@ -36,7 +36,7 @@ jobs:
     - ls -al "${HOME}/unity_build_cache"
   - stage: deploy
     before_install:
-    - chmod -R a+rw $HOME/unity_build_cache
+    - chmod -R a+rw "${HOME}/unity_build_cache"
     - ls -al "${HOME}/unity_build_cache"
     - ls -al "${HOME}/unity_build_cache/iOS"
     - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
