@@ -4,10 +4,10 @@ UNITY_PROJECT_NAME="Card Game Simulator"
 
 if [ -z "${CI}" ]; then
     UNITY_PATH="/Applications/Unity/Hub/Editor/2018.4.0f1/Unity.app/Contents/MacOS/Unity"
-    UNITY_BUILD_DIR="${UNITY_BUILD_CACHE}"
+    UNITY_BUILD_DIR=$(pwd)/builds
 else
     UNITY_PATH="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
-    UNITY_BUILD_DIR=$(pwd)/builds
+    UNITY_BUILD_DIR="${UNITY_BUILD_CACHE}"
 fi
 UNITY_ACTIVATION_LOG_FILE=$UNITY_BUILD_DIR/unity.activation.log
 UNITY_RETURN_LOG_FILE=$UNITY_BUILD_DIR/unity.returnlicense.log
