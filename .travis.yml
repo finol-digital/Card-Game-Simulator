@@ -26,19 +26,19 @@ jobs:
   include:
   - stage: build
     before_install:
-    - chmod -R a+rw $HOME/unity_download_cache
-    - chmod -R a+rw $HOME/unity_build_cache
+    - chmod -R a+rw "${HOME}/unity_download_cache"
+    - chmod -R a+rw "${HOME}/unity_build_cache"
     - chmod a+x ./travis-build/*.sh
     install: ./travis-build/install-unity.sh
     script:
     - travis_wait 40 ./travis-build/build.sh
-    - ls -al $HOME/unity_build_cache
-    - ls -al $HOME/unity_build_cache/iOS
+    - ls -al "${HOME}/unity_download_cache"
+    - ls -al "${HOME}/unity_build_cache"
   - stage: deploy
     before_install:
     - chmod -R a+rw $HOME/unity_build_cache
-    - ls -al $HOME/unity_build_cache
-    - ls -al $HOME/unity_build_cache/iOS
+    - ls -al "${HOME}/unity_build_cache"
+    - ls -al "${HOME}/unity_build_cache/iOS"
     - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
     - chmod a+x ./travis-build/setup_ssh.sh
     - ./travis-build/setup_ssh.sh
