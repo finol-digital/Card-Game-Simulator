@@ -26,12 +26,13 @@ class BuildCGS
         EditorPrefs.SetString("AndroidNdkRoot", "C:/Users/Public/android-ndk-r13b");
 #endif
 
-        PlayerSettings.Android.keystorePass = Environment.GetCommandLineArgs().Last();
-        PlayerSettings.Android.keyaliasPass = Environment.GetCommandLineArgs().Last();
+        string [] buildArgs = Environment.GetCommandLineArgs();
+        PlayerSettings.Android.keystorePass = buildArgs[buildArgs.Length - 1];
+        PlayerSettings.Android.keyaliasPass = buildArgs[buildArgs.Length - 1];
 
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         buildPlayerOptions.scenes = BuildScenes;
-        buildPlayerOptions.locationPathName = Environment.GetCommandLineArgs()[1];
+        buildPlayerOptions.locationPathName = buildArgs[buildArgs.Length - 2];
         buildPlayerOptions.target = BuildTarget.Android;
         buildPlayerOptions.options = BuildOptions.None;
         BuildPipeline.BuildPlayer(buildPlayerOptions);
@@ -41,7 +42,7 @@ class BuildCGS
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         buildPlayerOptions.scenes = BuildScenes;
-        buildPlayerOptions.locationPathName = Environment.GetCommandLineArgs()[1];
+        buildPlayerOptions.locationPathName = Environment.GetCommandLineArgs().Last();
         buildPlayerOptions.target = BuildTarget.iOS;
         buildPlayerOptions.options = BuildOptions.AcceptExternalModificationsToPlayer;
         BuildPipeline.BuildPlayer(buildPlayerOptions);
