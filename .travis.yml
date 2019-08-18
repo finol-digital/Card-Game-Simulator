@@ -42,4 +42,4 @@ jobs:
     - chmod a+x ./travis-build/setup_ssh.sh
     - ./travis-build/setup_ssh.sh
     install: bundle install
-    script: fastlane ios release
+    script: travis_wait 50 fastlane ios release
