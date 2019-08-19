@@ -11,6 +11,6 @@ username("finoldigitalfastlane@gmail.com")
 # The docs are available on https://docs.fastlane.tools/actions/match
 
 for_platform :mac do
-  platform mac
+  platform "mac"
   app_identifier "com.finoldigital.CardGameSimulator"
 end
