@@ -6,3 +6,7 @@ team_id("49G524X5NY") # Developer Portal Team ID
 
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
+
+for_platform :mac do
+  app_identifier "com.finoldigital.CardGameSimulator"
+end

@@ -37,14 +37,20 @@ ExportedObj/
 # Unity3D generated file on crash reports
 sysinfo.txt
 
-# Builds
-*.apk
-*.ipa
-*.app.dSYM.zip
-*.unitypackage
-
 # Crashlytics generated file
 Assets/StreamingAssets/crashlytics-build.properties
+
+# Builds
+*.exe
+*.appx
+*.appxbundle
+*.appxupload
+*.apk
+*.ipa
+*.app
+*.pkg
+*.app.dSYM.zip
+*.unitypackage
 
 # Certificates
 *.keystore*
@@ -52,6 +58,9 @@ Assets/StreamingAssets/crashlytics-build.properties
 *.pem
 *setup_ssh.sh
 
-*.DS_Store
+# Fastlane
 fastlane/README.md
 fastlane/report.xml
+
+# OS
+*.DS_Store

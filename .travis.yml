@@ -34,12 +34,25 @@ jobs:
     - travis_wait 40 ./travis-build/build.sh
     - ls -al "${HOME}/unity_download_cache"
     - ls -al "${HOME}/unity_build_cache"
-  - stage: deploy
+  - stage: deploy mac
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
     - ls -al "${HOME}/unity_build_cache"
     - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
     - chmod a+x ./travis-build/setup_ssh.sh
     - ./travis-build/setup_ssh.sh
+    - fastlane mac certificates
+    - chmod -R a+xr "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
+    - codesign -f --deep -s '3rd Party Mac Developer Application: Finol Digital LLC' --entitlements "${TRAVIS_BUILD_DIR}/Assets/Editor/Card Game Simulator.entitlements" "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
+    - productbuild --component "${HOME}/unity_build_cache/OSX/Card Game Simulator.app" /Applications --sign "3rd Party Mac Developer Installer: Finol Digital LLC" "Card Game Simulator.pkg"
     install: bundle install
-    script: travis_wait 50 fastlane ios release
+    script: travis_wait 50 fastlane mac macupload
+#  - stage: deploy ios
+#    before_install:
+#    - chmod -R a+rw "${HOME}/unity_build_cache"
+#    - ls -al "${HOME}/unity_build_cache"
+#    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
+#    - chmod a+x ./travis-build/setup_ssh.sh
+#    - ./travis-build/setup_ssh.sh
+#    install: bundle install
+#    script: travis_wait 50 fastlane ios release

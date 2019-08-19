@@ -4,3 +4,8 @@
 
 submit_for_review true
 force true
+
+for_platform :mac do
+  platform: "osx"
+  pkg: "Card Game Simulator.pkg"
+end
