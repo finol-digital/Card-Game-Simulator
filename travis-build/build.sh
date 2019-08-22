@@ -35,7 +35,7 @@ $UNITY_PATH \
   -projectPath $(pwd) \
   -nographics \
   -silent-crashes \
-  -buildOSXUniversalPlayer $UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app
+  -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app"
 rc0=$?
 echo 'OSX build logs:'
 cat $OSX_LOG_FILE
@@ -48,7 +48,7 @@ $UNITY_PATH \
   -silent-crashes \
   -projectPath $(pwd) \
   -buildTarget iOS \
-  -executeMethod BuildCGS.iOS $UNITY_BUILD_DIR/iOS
+  -executeMethod BuildCGS.iOS "$UNITY_BUILD_DIR/iOS"
 rc1=$?
 echo 'iOS build logs:'
 cat $IOS_LOG_FILE
