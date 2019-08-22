@@ -35,8 +35,8 @@ echo "OSX certificate setup complete!"
 echo "Signing app..."
 sleep 10
 
-codesign -f --deep -s "3rd Party Mac Developer Application: Finol Digital LLC" --entitlements "${TRAVIS_BUILD_DIR}/Assets/Editor/Card Game Simulator.entitlements" "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
-productbuild --component "${HOME}/unity_build_cache/OSX/Card Game Simulator.app" /Applications --sign "3rd Party Mac Developer Installer: Finol Digital LLC" "Card Game Simulator.pkg"
+codesign -f --deep -s "Developer ID Application: Finol Digital LLC (49G524X5NY)" --entitlements "${TRAVIS_BUILD_DIR}/Assets/Editor/Card Game Simulator.entitlements" "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
+productbuild --component "${HOME}/unity_build_cache/OSX/Card Game Simulator.app" /Applications --sign "Developer ID Installer: Finol Digital LLC (49G524X5NY)" "Card Game Simulator.pkg"
 
 sleep 10
 echo "App signed!"
