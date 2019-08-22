@@ -2,6 +2,8 @@ KEY_CHAIN=osx.keychain
 APPLICATION_CERTIFICATE_P12=application.p12
 INSTALLER_CERTIFICATE_P12=installer.p12
 
+sleep 10
+
 echo "Setting up osx certificates..."
 
 # Recreate the certificates from the secure environment variable
@@ -28,3 +30,5 @@ security set-key-partition-list -S apple-tool:,apple: -s -k travis $KEY_CHAIN
 rm -fr *.p12
 
 echo "OSX certificate setup complete!"
+
+sleep 10
