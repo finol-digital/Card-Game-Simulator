@@ -30,7 +30,7 @@ namespace CGS.Decks
             if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused)
                 return;
 
-            if (CardViewer.Instance.zoomPanel.gameObject.activeSelf && CardViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
+            if (CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
             {
                 if (SwipeManager.IsSwipingUp())
                     SelectEditorDown();

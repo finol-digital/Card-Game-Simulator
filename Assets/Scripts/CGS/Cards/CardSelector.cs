@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -30,7 +29,7 @@ namespace CGS.Cards
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
                 return;
 
-            if (CardViewer.Instance.zoomPanel.gameObject.activeSelf && CardViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
+            if (CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
             {
                 if (SwipeManager.IsSwipingRight())
                     SelectLeft();

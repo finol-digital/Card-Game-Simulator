@@ -141,7 +141,7 @@ namespace CGS.Cards
                         && ((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
                     cardModelToShow.DoubleClickAction = HorizontalDoubleClickAction;
                 else
-                    cardModelToShow.DoubleClickAction = CardViewer.Instance.ShowCardZoomed;
+                    cardModelToShow.DoubleClickAction = CardViewer.Instance.ZoomOn;
             }
 
             countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);

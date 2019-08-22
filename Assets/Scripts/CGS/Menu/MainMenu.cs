@@ -3,24 +3,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-using CardGameDef;
-
 namespace CGS.Menu
 {
     public class MainMenu : MonoBehaviour
     {
+        public static string VersionMessage => $"VERSION {Application.version}";
+
         public const int MainMenuSceneIndex = 1;
         public const int PlayModeSceneIndex = 2;
         public const int DeckEditorSceneIndex = 3;
         public const int CardsExplorerSceneIndex = 4;
         public const int SettingsSceneIndex = 5;
-        public const string VersionMessage = "VERSION ";
 
         public DownloadMenu downloadMenu;
         public GameObject gameManagement;
@@ -53,13 +51,21 @@ namespace CGS.Menu
 #else
             quitButton.SetActive(true);
 #endif
-            versionText.text = VersionMessage + Application.version;
+            versionText.text = VersionMessage;
         }
 
         void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
+
+            if (SwipeManager.DetectSwipe())
+            {
+                if (SwipeManager.IsSwipingRight())
+                    SelectNext();
+                else if (SwipeManager.IsSwipingLeft())
+                    SelectPrevious();
+            }
 
             if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
             {

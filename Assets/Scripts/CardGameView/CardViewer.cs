@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -118,6 +117,7 @@ namespace CardGameView
                 else if (!EventSystem.current.alreadySelecting)
                     EventSystem.current.SetSelectedGameObject(null);
                 IsVisible = _selectedCardModel != null;
+                ZoomTime = 0;
             }
         }
         private CardModel _selectedCardModel;
@@ -139,7 +139,11 @@ namespace CardGameView
         }
         public bool WasVisible { get; private set; }
 
-        // HACK: All Zooming should be re-done
+        public bool Zoom
+        {
+            get { return zoomPanel.gameObject.activeSelf; }
+            set { if (ZoomTime > 0.5f || value) zoomPanel.gameObject.SetActive(value); }
+        }
         public float ZoomTime { get; private set; }
 
         void OnEnable()
@@ -168,11 +172,11 @@ namespace CardGameView
             else if (Input.GetButtonDown(Inputs.Filter))
                 IncrementProperty();
             else if (Input.GetButtonDown(Inputs.Option))
-                ToggleCardZoomed();
+                Zoom = !Zoom;
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 SelectedCardModel = null;
 
-            if (zoomPanel.gameObject.activeSelf)
+            if (Zoom)
                 ZoomTime += Time.deltaTime;
             else
                 ZoomTime = 0;
@@ -258,34 +262,14 @@ namespace CardGameView
 
         public void OnDeselect(BaseEventData eventData)
         {
-            if (!zoomPanel.gameObject.activeSelf)
+            if (!Zoom)
                 IsVisible = false;
         }
 
-        public void ShowCardZoomed(CardModel cardModel)
+        public void ZoomOn(CardModel cardModel)
         {
             SelectedCardModel = cardModel;
-            ShowCardZoomed();
-        }
-
-        public void ShowCardZoomed()
-        {
-            zoomPanel.gameObject.SetActive(true);
-        }
-
-        public void ToggleCardZoomed()
-        {
-            if (!zoomPanel.gameObject.activeSelf)
-                ShowCardZoomed();
-            else
-                HideCardZoomed();
-        }
-
-        public void HideCardZoomed()
-        {
-            if (SwipeManager.IsSwiping())
-                return;
-            zoomPanel.gameObject.SetActive(false);
+            Zoom = true;
         }
     }
 }

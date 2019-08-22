@@ -81,7 +81,7 @@ namespace CGS.Menu
 
         void Start()
         {
-            versionText.text = MainMenu.VersionMessage + Application.version;
+            versionText.text = MainMenu.VersionMessage;
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             Branch.initSession(CardGameManager.Instance.BranchCallbackWithParams);
 #endif
