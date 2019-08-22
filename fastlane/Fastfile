@@ -19,26 +19,6 @@ keychain_name = "temporary_keychain"
 keychain_password = SecureRandom.base64
 
 platform :mac do
-  desc "Synchronize certificates"
-  lane :certificates do
-    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
-      delete_keychain(name: keychain_name)
-    end
-    create_keychain(
-      name: keychain_name,
-      password: keychain_password,
-      default_keychain: true,
-      lock_when_sleeps: true,
-      timeout: 3600,
-      unlock: true
-    )
-    match(
-      type: "appstore",
-#      readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password
-    )
-  end
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do
     deliver
