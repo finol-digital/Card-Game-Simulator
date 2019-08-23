@@ -31,7 +31,7 @@ jobs:
     - chmod a+x ./travis-build/*.sh
     install: ./travis-build/install-unity.sh
     script:
-    - travis_wait 40 ./travis-build/build.sh
+    - travis_wait 45 ./travis-build/build.sh
     - ls -al "${HOME}/unity_download_cache"
     - ls -al "${HOME}/unity_build_cache"
 #  - stage: deploy ios
@@ -42,14 +42,13 @@ jobs:
 #    - chmod a+x ./travis-build/setup_ssh.sh
 #    - ./travis-build/setup_ssh.sh
 #    install: bundle install
-#    script: travis_wait 50 fastlane ios release
+#    script: travis_wait 45 fastlane ios release
   - stage: deploy mac
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
     - ls -al "${HOME}/unity_build_cache"
     - chmod -R a+xr "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
     - chmod +x ./travis-build/sign-osx-build.sh
+    - ./travis-build/sign-osx-build.sh
     install: bundle install
-    script:
-    - travis_wait 40 ./travis-build/sign-osx-build.sh
-    - fastlane mac macupload
+    script: travis_wait 45 fastlane mac macupload
