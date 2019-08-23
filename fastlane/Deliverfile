@@ -4,10 +4,10 @@
 
 submit_for_review true
 force true
+skip_screenshots true
+skip_metadata true
 
 for_platform :mac do
   platform "osx"
   pkg "Card Game Simulator.pkg"
-  skip_screenshots true
-  skip_metadata true
 end
