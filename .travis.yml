@@ -42,7 +42,7 @@ jobs:
     - chmod +x ./travis-build/sign-osx-build.sh
     install: bundle install
     script:
-    - travis_wait 40 ./travis-build/sign-osx-build.sh
+    - travis_wait 50 ./travis-build/sign-osx-build.sh
     - fastlane mac macupload
 #  - stage: deploy ios
 #    before_install:
