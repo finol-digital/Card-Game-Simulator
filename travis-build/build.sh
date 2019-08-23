@@ -11,8 +11,8 @@ else
 fi
 UNITY_ACTIVATION_LOG_FILE=$UNITY_BUILD_DIR/unity.activation.log
 UNITY_RETURN_LOG_FILE=$UNITY_BUILD_DIR/unity.returnlicense.log
-OSX_LOG_FILE=$UNITY_BUILD_DIR/OSX.log
 IOS_LOG_FILE=$UNITY_BUILD_DIR/iOS.log
+OSX_LOG_FILE=$UNITY_BUILD_DIR/OSX.log
 
 echo "Activating Unity license"
 $UNITY_PATH \
@@ -27,19 +27,6 @@ $UNITY_PATH \
 echo "Unity activation log:"
 cat $UNITY_ACTIVATION_LOG_FILE
 
-echo "Attempting to build $UNITY_PROJECT_NAME for OSX"
-$UNITY_PATH \
-  -quit \
-  -batchmode \
-  -logFile $OSX_LOG_FILE \
-  -projectPath $(pwd) \
-  -nographics \
-  -silent-crashes \
-  -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app"
-rc0=$?
-echo 'OSX build logs:'
-cat $OSX_LOG_FILE
-
 echo "Attempting to build $UNITY_PROJECT_NAME for iOS"
 $UNITY_PATH \
   -quit \
@@ -49,9 +36,22 @@ $UNITY_PATH \
   -projectPath $(pwd) \
   -buildTarget iOS \
   -executeMethod BuildCGS.iOS "$UNITY_BUILD_DIR/iOS"
-rc1=$?
+rc0=$?
 echo 'iOS build logs:'
 cat $IOS_LOG_FILE
+
+echo "Attempting to build $UNITY_PROJECT_NAME for OSX"
+$UNITY_PATH \
+  -quit \
+  -batchmode \
+  -logFile $OSX_LOG_FILE \
+  -projectPath $(pwd) \
+  -nographics \
+  -silent-crashes \
+  -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app"
+rc1=$?
+echo 'OSX build logs:'
+cat $OSX_LOG_FILE
 
 echo "Returning Unity license"
 $UNITY_PATH \

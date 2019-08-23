@@ -13,17 +13,10 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-default_platform(:mac)
+default_platform(:ios)
 
 keychain_name = "temporary_keychain"
 keychain_password = SecureRandom.base64
-
-platform :mac do
-  desc "Upload a new Mac version to the Mac App Store"
-  lane :macupload do
-    deliver
-  end
-end
 
 platform :ios do
 
@@ -96,4 +89,11 @@ platform :ios do
     end
   end
 
+end
+
+platform :mac do
+  desc "Upload a new Mac version to the Mac App Store"
+  lane :macupload do
+    deliver
+  end
 end
