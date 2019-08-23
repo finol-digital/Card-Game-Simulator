@@ -9,5 +9,4 @@ team_id("49G524X5NY") # Developer Portal Team ID
 
 for_platform :mac do
   app_identifier "com.finoldigital.CardGameSimulator"
-  apple_id "david@finoldigital.com"
 end
