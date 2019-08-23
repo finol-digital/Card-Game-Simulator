@@ -40,9 +40,10 @@ jobs:
     - ls -al "${HOME}/unity_build_cache"
     - chmod -R a+xr "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
     - chmod +x ./travis-build/sign-osx-build.sh
-    - travis_wait 20 ./travis-build/sign-osx-build.sh
     install: bundle install
-    script: travis_wait 30 fastlane mac macupload
+    script:
+    - travis_wait 40 ./travis-build/sign-osx-build.sh
+    - fastlane mac macupload
 #  - stage: deploy ios
 #    before_install:
 #    - chmod -R a+rw "${HOME}/unity_build_cache"
