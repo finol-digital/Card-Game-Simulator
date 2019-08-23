@@ -33,9 +33,14 @@ echo "Signing app..."
 sleep 10
 
 codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" --entitlements "${TRAVIS_BUILD_DIR}/Assets/Editor/Card Game Simulator.entitlements" "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
+
+sleep 10
+echo "Packaging app..."
+sleep 10
+
 productbuild --component "${HOME}/unity_build_cache/OSX/Card Game Simulator.app" /Applications --sign "3rd Party Mac Developer Installer: Finol Digital LLC (49G524X5NY)" "Card Game Simulator.pkg"
 STATUS_CODE=$?
 
 sleep 10
-echo "App signed! Finishing with code $STATUS_CODE"
+echo "App ready! Finishing with code $STATUS_CODE"
 exit $STATUS_CODE
