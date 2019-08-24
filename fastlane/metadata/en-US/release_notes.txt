@@ -1,3 +1,0 @@
-- Update Standard CardBack
-- Redesign Menus
-- Tech: Travis CI for build automation
