@@ -47,7 +47,6 @@ jobs:
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
     - ls -al "${HOME}/unity_build_cache"
-    - chmod -R a+xr "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
     - chmod +x ./travis-build/sign-osx-build.sh
     - ./travis-build/sign-osx-build.sh
     install: bundle install

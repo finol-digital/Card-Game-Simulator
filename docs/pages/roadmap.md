@@ -5,11 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: Card size on zoom
-- Fix: Card Search Menu integer in portrait
-- Fix: LAN Lobby in portrait
-- Fix: Restore networking capability
-- Tech: Automated deployment for mac and ios
+- Swipe on Main Menu to change card game
 
 ## Current Sprint
 - Fix: Server freezes when sharing deck
