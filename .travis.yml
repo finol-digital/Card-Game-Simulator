@@ -34,15 +34,15 @@ jobs:
     - travis_wait 45 ./travis-build/build.sh
     - ls -al "${HOME}/unity_download_cache"
     - ls -al "${HOME}/unity_build_cache"
-#  - stage: deploy ios
-#    before_install:
-#    - chmod -R a+rw "${HOME}/unity_build_cache"
-#    - ls -al "${HOME}/unity_build_cache"
-#    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
-#    - chmod a+x ./travis-build/setup_ssh.sh
-#    - ./travis-build/setup_ssh.sh
-#    install: bundle install
-#    script: travis_wait 45 fastlane ios release
+  - stage: deploy ios
+    before_install:
+    - chmod -R a+rw "${HOME}/unity_build_cache"
+    - ls -al "${HOME}/unity_build_cache"
+    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
+    - chmod a+x ./travis-build/setup_ssh.sh
+    - ./travis-build/setup_ssh.sh
+    install: bundle install
+    script: travis_wait 45 fastlane ios release
   - stage: deploy mac
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
