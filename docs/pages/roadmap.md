@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## What's New
 - Swipe on Main Menu to change card game
+- Add Erase/Paste icons
 
 ## Current Sprint
 - Fix: Server freezes when sharing deck
