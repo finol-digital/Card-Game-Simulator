@@ -7,6 +7,8 @@ permalink: roadmap.html
 ## What's New
 - Swipe on Main Menu to change card game
 - Add Erase/Paste icons
+- Press and hold on card to zoom on it (on release, check if hold was >x seconds?)
+- Tech: Update Unity version
 
 ## Current Sprint
 - Fix: Server freezes when sharing deck
@@ -42,7 +44,6 @@ permalink: roadmap.html
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
-- Press and hold on card to zoom on it (on release, check if hold was >x seconds?)
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
