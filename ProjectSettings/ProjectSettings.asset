@@ -782,12 +782,12 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.17.0.0
+  metroPackageVersion: 1.18.0.0
   metroCertificatePath: WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 00eff35e4253d601
+  metroCertificateNotAfter: 80d16339717cd601
   metroApplicationDescription: Play your favorite card games!
   wsaImages: {}
   metroTileShortName: CGS
