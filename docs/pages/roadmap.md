@@ -7,10 +7,12 @@ permalink: roadmap.html
 ## What's New
 - Swipe on Main Menu to change card game
 - Add Erase/Paste icons
-- Press and hold on card to zoom on it (on release, check if hold was >x seconds?)
 - Tech: Update Unity version
 
 ## Current Sprint
+- Press and hold on card to zoom on it
+- Add 3 modes to the Card Viewer
+- Swipe left/right in Cards Explorer to change pages
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Tech: Improve data model
@@ -51,7 +53,6 @@ permalink: roadmap.html
 - Tap to zoom on card property text in Deck Editor Card Viewer
 - On selected card in Deck Editor and Cards Explorer, focus view on that card
 - Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
-- Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 
 ## Icebox
