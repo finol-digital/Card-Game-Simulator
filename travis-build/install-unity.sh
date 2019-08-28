@@ -2,8 +2,8 @@
 
 # Refer to https://unity3d.com/get-unity/download/archive for unityhub://$VERSION/$HASH link
 BASE_URL=https://download.unity3d.com/download_unity
-VERSION=2018.4.0f1
-HASH=b6ffa8986c8d
+VERSION=2018.4.7f1
+HASH=b9a993fd1334
 
 getFileName() {
   echo ${UNITY_DOWNLOAD_CACHE}/`basename "$1"`

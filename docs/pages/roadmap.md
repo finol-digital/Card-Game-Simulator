@@ -5,13 +5,14 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: Card size on zoom
-- Fix: Card Search Menu integer in portrait
-- Fix: LAN Lobby in portrait
-- Fix: Restore networking capability
-- Tech: Automated deployment for mac and ios
+- Swipe on Main Menu to change card game
+- Add Erase/Paste icons
+- Tech: Update Unity version
 
 ## Current Sprint
+- Press and hold on card to zoom on it
+- Add 3 modes to the Card Viewer
+- Swipe left/right in Cards Explorer to change pages
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Tech: Improve data model
@@ -45,7 +46,6 @@ permalink: roadmap.html
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
-- Press and hold on card to zoom on it (on release, check if hold was >x seconds?)
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
@@ -53,7 +53,6 @@ permalink: roadmap.html
 - Tap to zoom on card property text in Deck Editor Card Viewer
 - On selected card in Deck Editor and Cards Explorer, focus view on that card
 - Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
-- Make Card Viewer be centered instead of top-justified, with darkened background (make popup background also darker)
 - Press and hold on Popups/Card Viewer to copy text
 
 ## Icebox
