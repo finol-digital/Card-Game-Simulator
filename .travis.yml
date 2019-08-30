@@ -3,10 +3,6 @@ os: osx
 osx_image: xcode10.2
 rvm: 2.3
 
-branches:
-  only:
-  - master
-
 notifications:
   email:
     on_success: never
@@ -21,6 +17,11 @@ env:
   global:
   - UNITY_DOWNLOAD_CACHE="$HOME/unity_download_cache"
   - UNITY_BUILD_CACHE="$HOME/unity_build_cache"
+
+stages:
+  - build
+  - name: deploy
+    if: branch = master
 
 jobs:
   include:
