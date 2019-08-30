@@ -10,4 +10,6 @@ skip_metadata true
 for_platform :mac do
   platform "osx"
   pkg "Card Game Simulator.pkg"
+  skip_metadata false
+  release_notes({ 'default' => "- Swipe on Main Menu to change card game\n- Add Erase/Paste icons\n- Tech: Update Unity version", 'en-US' => "- Swipe on Main Menu to change card game\n- Add Erase/Paste icons\n- Tech: Update Unity version" })
 end
