@@ -3,6 +3,10 @@ os: osx
 osx_image: xcode10.2
 rvm: 2.3
 
+branches:
+  only:
+  - master
+
 notifications:
   email:
     on_success: never
