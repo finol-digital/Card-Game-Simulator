@@ -5,14 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Swipe on Main Menu to change card game
-- Add Erase/Paste icons
-- Tech: Update Unity version
+- Swipe in Cards Explorer to change pages
 
 ## Current Sprint
 - Press and hold on card to zoom on it
 - Add 3 modes to the Card Viewer
-- Swipe left/right in Cards Explorer to change pages
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Tech: Improve data model

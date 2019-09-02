@@ -29,12 +29,22 @@ namespace CGS.Cards
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
                 return;
 
-            if (CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
+            if (SwipeManager.DetectSwipe())
             {
-                if (SwipeManager.IsSwipingRight())
-                    SelectLeft();
-                else if (SwipeManager.IsSwipingLeft())
-                    SelectRight();
+                if (CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f)
+                {
+                    if (SwipeManager.IsSwipingRight())
+                        SelectLeft();
+                    else if (SwipeManager.IsSwipingLeft())
+                        SelectRight();
+                }
+                else if (!CardViewer.Instance.Zoom)
+                {
+                    if (SwipeManager.IsSwipingRight())
+                        PageLeft();
+                    else if (SwipeManager.IsSwipingLeft())
+                        PageRight();
+                }
             }
 
             if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
