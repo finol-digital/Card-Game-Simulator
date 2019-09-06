@@ -33,7 +33,8 @@ namespace CGS.Cards
                     horizontalSpacing = ((HorizontalLayoutGroup)layoutGroup).spacing;
                 else if (layoutGroup is GridLayoutGroup)
                     horizontalSpacing = ((GridLayoutGroup)layoutGroup).spacing.x;
-                return Mathf.FloorToInt((layoutArea.rect.width - (layoutGroup is GridLayoutGroup ? ((GridLayoutGroup)layoutGroup).padding.left : 0))
+                return Mathf.FloorToInt((layoutArea.rect.width -
+                    (layoutGroup is GridLayoutGroup ? ((GridLayoutGroup)layoutGroup).padding.left + ((GridLayoutGroup)layoutGroup).padding.right : 0))
                     / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + horizontalSpacing));
             }
         }
@@ -43,8 +44,11 @@ namespace CGS.Cards
             {
                 int rowsPerPage = 1;
                 if (layoutGroup is GridLayoutGroup)
-                    rowsPerPage = Mathf.FloorToInt(layoutArea.rect.height /
+                {
+                    rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height -
+                        (((GridLayoutGroup)layoutGroup).padding.top + ((GridLayoutGroup)layoutGroup).padding.bottom)) /
                         (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y + ((GridLayoutGroup)layoutGroup).spacing.y));
+                }
                 return CardsPerRow * rowsPerPage;
             }
         }
@@ -141,7 +145,7 @@ namespace CGS.Cards
                         && ((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
                     cardModelToShow.DoubleClickAction = HorizontalDoubleClickAction;
                 else
-                    cardModelToShow.DoubleClickAction = CardViewer.Instance.ZoomOn;
+                    cardModelToShow.DoubleClickAction = CardViewer.Instance.MaximizeOn;
             }
 
             countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);

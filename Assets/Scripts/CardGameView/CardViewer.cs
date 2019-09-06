@@ -12,6 +12,13 @@ using CGS;
 
 namespace CardGameView
 {
+    public enum CardViewerMode
+    {
+        Minimal = 0,
+        Expanded = 1,
+        Maximal = 2
+    }
+
     public class CardViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
         public const string SetLabel = "Set";
@@ -30,15 +37,30 @@ namespace CardGameView
         }
         private static CardViewer _instance;
 
-        public CanvasGroup infoPanel;
+        public CardViewerMode Mode
+        {
+            get { return _mode; }
+            set
+            {
+                _mode = value;
+                IsVisible = IsVisible;
+            }
+        }
+        private CardViewerMode _mode;
+
+        public CanvasGroup minimal;
+        public CanvasGroup expanded;
+        public CanvasGroup maximal;
+
         public RectTransform zoomPanel;
-        public Image cardImage;
-        public Image zoomImage;
-        public Text nameText;
-        public Text idText;
-        public Dropdown propertySelection;
-        public Text labelText;
-        public Text contentText;
+
+        public List<AspectRatioFitter> cardAspectRatioFitters;
+        public List<Image> cardImages;
+        public List<Text> nameTexts;
+        public List<Text> idTexts;
+        public List<Dropdown> propertySelectors;
+        public List<Text> propertyLabelTexts;
+        public List<Text> propertyValueTexts;
 
         public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
         public Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
@@ -86,9 +108,11 @@ namespace CardGameView
                     _selectedPropertyIndex = PropertyOptions.Count - 1;
                 if (_selectedPropertyIndex >= PropertyOptions.Count)
                     _selectedPropertyIndex = 0;
-                propertySelection.value = _selectedPropertyIndex;
-                labelText.text = SelectedPropertyDisplay;
-                SetContentText();
+                foreach (Dropdown propertySelector in propertySelectors)
+                    propertySelector.value = _selectedPropertyIndex;
+                foreach (Text propertyLabelText in propertyLabelTexts)
+                    propertyLabelText.text = SelectedPropertyDisplay;
+                SetPropertyValueText();
             }
         }
         private int _selectedPropertyIndex;
@@ -109,9 +133,11 @@ namespace CardGameView
                 if (_selectedCardModel != null)
                 {
                     Card selectedCard = _selectedCardModel.Value;
-                    nameText.text = selectedCard.Name;
-                    idText.text = selectedCard.Id;
-                    SetContentText();
+                    foreach (Text nameText in nameTexts)
+                        nameText.text = selectedCard.Name;
+                    foreach (Text idText in idTexts)
+                        idText.text = selectedCard.Id;
+                    SetPropertyValueText();
                     selectedCard.RegisterDisplay(this);
                 }
                 else if (!EventSystem.current.alreadySelecting)
@@ -122,29 +148,36 @@ namespace CardGameView
         }
         private CardModel _selectedCardModel;
 
-        public bool IsVisible
-        {
-            get { return infoPanel.alpha > 0; }
-            set
-            {
-                bool isVisible = value;
-                infoPanel.alpha = isVisible ? 1 : 0;
-                infoPanel.interactable = isVisible;
-                infoPanel.blocksRaycasts = isVisible;
-                if (!isVisible && zoomPanel != null)
-                    zoomPanel.gameObject.SetActive(false);
-                if (SelectedCardModel != null)
-                    SelectedCardModel.IsHighlighted = isVisible;
-            }
-        }
-        public bool WasVisible { get; private set; }
-
         public bool Zoom
         {
             get { return zoomPanel.gameObject.activeSelf; }
             set { if (ZoomTime > 0.5f || value) zoomPanel.gameObject.SetActive(value); }
         }
         public float ZoomTime { get; private set; }
+
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            set
+            {
+                _isVisible = value;
+                minimal.alpha = _isVisible && _mode == CardViewerMode.Minimal ? 1 : 0;
+                minimal.interactable = _isVisible && _mode == CardViewerMode.Minimal;
+                minimal.blocksRaycasts = _isVisible && _mode == CardViewerMode.Minimal;
+                expanded.alpha = _isVisible && _mode == CardViewerMode.Expanded ? 1 : 0;
+                expanded.interactable = _isVisible && _mode == CardViewerMode.Expanded;
+                expanded.blocksRaycasts = _isVisible && _mode == CardViewerMode.Expanded;
+                maximal.alpha = _isVisible && _mode == CardViewerMode.Maximal ? 1 : 0;
+                maximal.interactable = _isVisible && _mode == CardViewerMode.Maximal;
+                maximal.blocksRaycasts = _isVisible && _mode == CardViewerMode.Maximal;
+                if (!_isVisible && zoomPanel != null)
+                    zoomPanel.gameObject.SetActive(false);
+                if (SelectedCardModel != null)
+                    SelectedCardModel.IsHighlighted = _isVisible;
+            }
+        }
+        private bool _isVisible;
+        public bool WasVisible { get; private set; }
 
         void OnEnable()
         {
@@ -174,7 +207,12 @@ namespace CardGameView
             else if (Input.GetButtonDown(Inputs.Option))
                 Zoom = !Zoom;
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
-                SelectedCardModel = null;
+            {
+                if (Mode == CardViewerMode.Maximal)
+                    Mode = CardViewerMode.Expanded;
+                else
+                    SelectedCardModel = null;
+            }
 
             if (Zoom)
                 ZoomTime += Time.deltaTime;
@@ -184,17 +222,21 @@ namespace CardGameView
 
         public void ResetInfo()
         {
-            cardImage.gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.CardAspectRatio;
-            zoomPanel.GetChild(0).gameObject.GetOrAddComponent<AspectRatioFitter>().aspectRatio = CardGameManager.Current.CardAspectRatio;
+            foreach (AspectRatioFitter cardAspectRatioFitter in cardAspectRatioFitters)
+                cardAspectRatioFitter.aspectRatio = CardGameManager.Current.CardAspectRatio;
 
             PropertyOptions.Clear();
             PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
             DisplayNameLookup.Clear();
             foreach (PropertyDef propertyDef in CardGameManager.Current.CardProperties)
                 AddProperty(propertyDef);
-            propertySelection.options = PropertyOptions;
-            propertySelection.value = PrimaryPropertyIndex;
-            propertySelection.onValueChanged.Invoke(propertySelection.value);
+
+            foreach (Dropdown propertySelector in propertySelectors)
+            {
+                propertySelector.options = PropertyOptions;
+                propertySelector.value = PrimaryPropertyIndex;
+                propertySelector.onValueChanged.Invoke(propertySelector.value);
+            }
         }
 
         public void AddProperty(PropertyDef propertyDef, string parentPrefix = "")
@@ -228,11 +270,12 @@ namespace CardGameView
             SelectedPropertyIndex++;
         }
 
-        public void SetContentText()
+        public void SetPropertyValueText()
         {
             if (SelectedCardModel == null)
             {
-                contentText.text = string.Empty;
+                foreach (Text propertyValueText in propertyValueTexts)
+                    propertyValueText.text = string.Empty;
                 return;
             }
 
@@ -241,13 +284,15 @@ namespace CardGameView
                 newContentTextValue = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
             else if (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out Set currentSet))
                 newContentTextValue = currentSet.ToString();
-            contentText.text = newContentTextValue;
+
+            foreach (Text propertyValueText in propertyValueTexts)
+                propertyValueText.text = newContentTextValue;
         }
 
         public void SetImageSprite(Sprite imageSprite)
         {
-            cardImage.sprite = imageSprite ?? CardGameManager.Current.CardBackImageSprite;
-            zoomImage.sprite = imageSprite ?? CardGameManager.Current.CardBackImageSprite;
+            foreach (Image cardImage in cardImages)
+                cardImage.sprite = imageSprite ?? CardGameManager.Current.CardBackImageSprite;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -266,10 +311,21 @@ namespace CardGameView
                 IsVisible = false;
         }
 
+        public void MaximizeOn(CardModel cardModel)
+        {
+            SelectedCardModel = cardModel;
+            Mode = CardViewerMode.Maximal;
+        }
+
         public void ZoomOn(CardModel cardModel)
         {
             SelectedCardModel = cardModel;
             Zoom = true;
+        }
+
+        public void SetMode(int mode)
+        {
+            Mode = (CardViewerMode)mode;
         }
     }
 }

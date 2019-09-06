@@ -8,8 +8,8 @@ permalink: roadmap.html
 - Swipe in Cards Explorer to change pages
 
 ## Current Sprint
-- Press and hold on card to zoom on it
 - Add 3 modes to the Card Viewer
+- Press and hold on card to zoom on it
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Tech: Improve data model
