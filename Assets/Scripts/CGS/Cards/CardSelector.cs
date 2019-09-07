@@ -102,16 +102,18 @@ namespace CGS.Cards
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
-                i+= results.CardsPerRow;
+                i += results.CardsPerRow;
                 if (i >= results.layoutArea.childCount)
                 {
                     results.IncrementPage();
                     i = 0;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            scrollRect.verticalNormalizedPosition = 0;
             if (CardViewer.Instance?.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -131,16 +133,18 @@ namespace CGS.Cards
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
-                i-= results.CardsPerRow;
+                i -= results.CardsPerRow;
                 if (i < 0)
                 {
                     results.DecrementPage();
                     i = results.layoutArea.childCount - 1;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            scrollRect.verticalNormalizedPosition = 0;
             if (CardViewer.Instance?.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -167,9 +171,11 @@ namespace CGS.Cards
                     i = results.layoutArea.childCount - 1;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            scrollRect.verticalNormalizedPosition = 0;
             if (CardViewer.Instance?.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -196,9 +202,11 @@ namespace CGS.Cards
                     i = 0;
                 }
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
                 return;
             }
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            scrollRect.verticalNormalizedPosition = 0;
             if (CardViewer.Instance?.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }

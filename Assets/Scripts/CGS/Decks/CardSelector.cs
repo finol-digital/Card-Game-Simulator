@@ -170,9 +170,11 @@ namespace CGS.Decks
                 if (i == editorCards.Count)
                     i = 0;
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+                editor.FocusScrollRectOn(editorCards[i]);
                 return;
             }
             EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
+            editor.FocusScrollRectOn(editorCards[0]);
             if (CardViewer.Instance?.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -197,9 +199,11 @@ namespace CGS.Decks
                 if (i < 0)
                     i = editorCards.Count - 1;
                 EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+                editor.FocusScrollRectOn(editorCards[i]);
                 return;
             }
             EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
+            editor.FocusScrollRectOn(editorCards[editorCards.Count - 1]);
             if (CardViewer.Instance?.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -225,8 +229,8 @@ namespace CGS.Decks
                     startParent = editorCards[i].transform.parent;
                 if (startParent != editorCards[i].transform.parent)
                 {
-                    editor.scrollRect.horizontalNormalizedPosition = editorCards[i].transform.parent.GetSiblingIndex() / (editorCards[i].transform.parent.parent.childCount - 1f);
                     EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+                    editor.FocusScrollRectOn(editorCards[i]);
                     return;
                 }
             }
@@ -257,8 +261,8 @@ namespace CGS.Decks
                     startParent = editorCards[i].transform.parent;
                 if (startParent != editorCards[i].transform.parent)
                 {
-                    editor.scrollRect.horizontalNormalizedPosition = editorCards[i].transform.parent.GetSiblingIndex() / (editorCards[i].transform.parent.parent.childCount - 1f);
                     EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+                    editor.FocusScrollRectOn(editorCards[i]);
                     return;
                 }
             }

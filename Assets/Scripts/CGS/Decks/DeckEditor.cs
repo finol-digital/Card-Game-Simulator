@@ -181,8 +181,6 @@ namespace CGS.Decks
                         maxCopiesInStack++;
                 }
             }
-            scrollRect.horizontalNormalizedPosition = CardStacks.Count > 1 ?
-                CurrentCardStackIndex / (CardStacks.Count - 1f) : 0f;
 
             OnAddCardModel(CardStacks[CurrentCardStackIndex], newCardModel);
         }
@@ -196,7 +194,20 @@ namespace CGS.Decks
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardStackScrollRect;
             cardModel.DoubleClickAction = DestroyCardModel;
 
+            FocusScrollRectOn(cardModel);
+
             UpdateDeckStats();
+        }
+
+        public void FocusScrollRectOn(CardModel cardModel)
+        {
+            if (cardModel == null || cardModel.ParentCardStack == null)
+                return;
+
+            int cardStackIndex = CardStacks.IndexOf(cardModel.ParentCardStack);
+            if (cardStackIndex > 0 && cardStackIndex < CardStacks.Count)
+                scrollRect.horizontalNormalizedPosition = CardStacks.Count > 1
+                    ? cardStackIndex / (CardStacks.Count - 1f) : 0f;
         }
 
         public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)

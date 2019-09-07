@@ -7,11 +7,10 @@ permalink: roadmap.html
 ## What's New
 - Swipe in Cards Explorer to change pages
 - Added 3 modes to the Card Viewer
+- Focus view on cards when you navigate with hotkeys
 
 ## Current Sprint
 - Press and hold on card to zoom on it
-- On selected card in Deck Editor and Cards Explorer, focus view on that card
-- Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Tech: Improve data model
