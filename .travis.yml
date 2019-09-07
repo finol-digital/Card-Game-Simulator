@@ -60,4 +60,3 @@ jobs:
 matrix:
   allow_failures:
     - env: ALLOW_DEPLOY_TIMEOUT=true
-  fast_finish: true
