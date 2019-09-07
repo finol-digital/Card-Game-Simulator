@@ -27,6 +27,7 @@ namespace CardGameView
     [RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(Outline))]
     public class CardModel : NetworkBehaviour, ICardDisplay, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        public const float ZoomHoldTime = 1.5f;
         public const float MovementSpeed = 600f;
         public static readonly Color SelectedHighlightColor = new Color(1f, 0.45f, 0f);
         public static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
@@ -43,6 +44,7 @@ namespace CardGameView
         public UnityAction SecondaryDragAction { get; set; }
         public CardDropArea DropTarget { get; set; }
 
+        public float HoldTime { get; private set; }
         public bool DidSelectOnDown { get; private set; }
         public PointerEventData CurrentPointerEventData { get; private set; }
         public DragPhase CurrentDragPhase { get; private set; }
@@ -243,11 +245,26 @@ namespace CardGameView
                 IsNameVisible = true;
         }
 
+        void Update()
+        {
+            if (PointerPositions.Count > 0 && CurrentDragPhase != DragPhase.Drag)
+                HoldTime += Time.deltaTime;
+            else
+                HoldTime = 0;
+            if (HoldTime > ZoomHoldTime)
+            {
+                CurrentPointerEventData = null;
+                PointerPositions.Clear();
+                PointerDragOffsets.Clear();
+                CardViewer.Instance?.ZoomOn(this);
+            }
+        }
+
         public void OnPointerDown(PointerEventData eventData)
         {
             DidSelectOnDown = eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right
                 && CardViewer.Instance.SelectedCardModel != this && CardViewer.Instance.WasVisible;
-            if (DidSelectOnDown)
+            if (DidSelectOnDown && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
 
             CurrentPointerEventData = eventData;
@@ -265,9 +282,10 @@ namespace CardGameView
                     DoubleClickAction(this);
                 else if (PlaceHolder == null)
                 {
-                    if (CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                    if (CardViewer.Instance != null && CardViewer.Instance.Mode == CardViewerMode.Maximal)
                         CardViewer.Instance.Mode = CardViewerMode.Expanded;
-                    EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+                    if (!EventSystem.current.alreadySelecting)
+                        EventSystem.current.SetSelectedGameObject(gameObject, eventData);
                 }
             }
 
@@ -287,7 +305,7 @@ namespace CardGameView
 
         public void OnDeselect(BaseEventData eventData)
         {
-            if (CardViewer.Instance != null && !CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+            if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
         }
 

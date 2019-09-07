@@ -25,7 +25,7 @@ namespace CGS.Cards
 
         void Update()
         {
-            if (CardViewer.Instance.IsVisible || CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
             if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0

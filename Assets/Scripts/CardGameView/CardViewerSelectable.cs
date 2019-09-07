@@ -27,7 +27,7 @@ namespace CardGameView
             if (ignoreDeselect || CardViewer.Instance == null)
                 return;
 
-            if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
+            if (!CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
         }
     }

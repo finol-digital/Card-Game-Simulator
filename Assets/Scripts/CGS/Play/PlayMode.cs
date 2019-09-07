@@ -71,7 +71,7 @@ namespace CGS.Play
 
         void Update()
         {
-            if (CardViewer.Instance.IsVisible || !Input.anyKeyDown || CardGameManager.Instance.ModalCanvas != null)
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
             if (Input.GetButtonDown(Inputs.Load))

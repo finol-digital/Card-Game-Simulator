@@ -54,7 +54,7 @@ namespace CardGameView
         public CanvasGroup expanded;
         public CanvasGroup maximal;
 
-        public RectTransform maximalContent;
+        public ScrollRect maximalScrollRect;
 
         public RectTransform zoomPanel;
 
@@ -186,19 +186,22 @@ namespace CardGameView
 
         void Update()
         {
+            if (Zoom)
+                ZoomTime += Time.deltaTime;
+            else
+                ZoomTime = 0;
             WasVisible = IsVisible;
-            if (!IsVisible || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
+            if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && SelectedCardModel.DoubleClickAction != null)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)))
             {
-
-                if (Mode == CardViewerMode.Maximal)
+                if (!Zoom && Mode == CardViewerMode.Maximal)
                     Mode = CardViewerMode.Expanded;
-                else
+                else if (SelectedCardModel.DoubleClickAction != null)
                     SelectedCardModel.DoubleClickAction(SelectedCardModel);
             }
             else if (Input.GetButtonDown(Inputs.Sort))
@@ -209,11 +212,6 @@ namespace CardGameView
                 Zoom = !Zoom;
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 SelectedCardModel = null;
-
-            if (Zoom)
-                ZoomTime += Time.deltaTime;
-            else
-                ZoomTime = 0;
         }
 
         public void ResetInfo()
@@ -280,7 +278,8 @@ namespace CardGameView
 
         public void OnSelect(BaseEventData eventData)
         {
-            IsVisible = true;
+            if (!Zoom)
+                IsVisible = true;
         }
 
         public void OnDeselect(BaseEventData eventData)
@@ -297,7 +296,11 @@ namespace CardGameView
 
         public void ZoomOn(CardModel cardModel)
         {
+            bool isVisible = IsVisible;
+            if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(gameObject);
             SelectedCardModel = cardModel;
+            IsVisible = isVisible;
             Zoom = true;
         }
 
@@ -332,13 +335,14 @@ namespace CardGameView
             propertyTexts.Clear();
             for (int i = 2; i < PropertyOptions.Count; i++)
             {
-                Text newPropertyText = Instantiate(propertyTextTemplate.gameObject, maximalContent).GetComponent<Text>();
+                Text newPropertyText = Instantiate(propertyTextTemplate.gameObject, maximalScrollRect.content).GetComponent<Text>();
                 newPropertyText.gameObject.SetActive(true);
                 newPropertyText.text = PropertyOptions[i].text + Delimiter
                     + (DisplayNameLookup.TryGetValue(PropertyOptions[i].text, out string propertyName)
                         ? SelectedCardModel.Value.GetPropertyValueString(propertyName) : string.Empty);
                 propertyTexts.Add(newPropertyText);
             }
+            maximalScrollRect.verticalNormalizedPosition = 1;
             ResetPropertyValueText();
         }
 

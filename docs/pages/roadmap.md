@@ -8,9 +8,9 @@ permalink: roadmap.html
 - Swipe in Cards Explorer to change pages
 - Added 3 modes to the Card Viewer
 - Focus view on cards when you navigate with hotkeys
+- Press and hold on card to zoom on it
 
 ## Current Sprint
-- Press and hold on card to zoom on it
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Tech: Improve data model
