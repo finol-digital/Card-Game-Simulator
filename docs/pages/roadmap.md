@@ -6,10 +6,12 @@ permalink: roadmap.html
 
 ## What's New
 - Swipe in Cards Explorer to change pages
+- Added 3 modes to the Card Viewer
 
 ## Current Sprint
-- Add 3 modes to the Card Viewer
 - Press and hold on card to zoom on it
+- On selected card in Deck Editor and Cards Explorer, focus view on that card
+- Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Tech: Improve data model
@@ -18,7 +20,6 @@ permalink: roadmap.html
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
 - Have view for only hand vs view for only field
-- Have card info viewer only go down a sliver on press in play mode; second press can bring it down like normal
 - Card Grouping
   - Define card zones in play area (remove gameHasDiscard/gameCatchesDiscard?)
     - Card zones can define what actions are possible in that zone
@@ -47,9 +48,6 @@ permalink: roadmap.html
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck List in the Deck Save Menu
-- Tap to zoom on card property text in Deck Editor Card Viewer
-- On selected card in Deck Editor and Cards Explorer, focus view on that card
-- Remove focus on add card and selectEditorLeft/Right, instead do select on add by drop
 - Press and hold on Popups/Card Viewer to copy text
 
 ## Icebox

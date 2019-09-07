@@ -264,7 +264,11 @@ namespace CardGameView
                 if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
                     DoubleClickAction(this);
                 else if (PlaceHolder == null)
+                {
+                    if (CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                        CardViewer.Instance.Mode = CardViewerMode.Expanded;
                     EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+                }
             }
 
             CurrentPointerEventData = eventData;
