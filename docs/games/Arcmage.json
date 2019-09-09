@@ -11,7 +11,7 @@
   "cardDataIdentifier": "items",
   "cardIdIdentifier": "guid",
   "cardImageFileType": "jpg",
-  "cardImageUrl": "http://aminduna.arcmage.org{card_jpeg}",
+  "cardImageUrl": "http://aminduna.arcmage.org{jpeg}",
   "cardSetIdentifier": "serie",
   "cardSetIsObject": true,
   "cardPrimaryProperty": "ruleText",

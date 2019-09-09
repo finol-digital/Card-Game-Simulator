@@ -133,7 +133,7 @@
       "type": "string"
     },
     "cardImageUrl": {
-      "description": "cardImageUrl defines a parameterized template url from which CGS downloads card image files if <cardImageProperty> is empty. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {card_<property>}=*Card:<property>*, {cardImageFileType}=<cardImageFileType>",
+      "description": "cardImageUrl defines a parameterized template url from which CGS downloads card image files if <cardImageProperty> is empty. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {cardImageFileType}=<cardImageFileType>, {<property>}=*Card:<property>* ",
       "type": "string",
       "format": "uri-template"
     },
@@ -196,7 +196,7 @@
             "$ref": "#/properties/cardProperties"
           },
           "delimiter": {
-            "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimited",
+            "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter",
             "type": "string"
           }
         },

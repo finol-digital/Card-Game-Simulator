@@ -63,7 +63,11 @@ namespace CardGameDef
             DisplayEmptyFirst = displayEmptyFirst;
             Properties = properties != null ? new List<PropertyDef>(properties) : new List<PropertyDef>();
             if (objectDelimiterIdx != -1)
+            {
+                if (type == PropertyType.Object || type == PropertyType.ObjectEnum || type == PropertyType.ObjectEnumList || type == PropertyType.ObjectList)
+                    Properties.Clear();
                 Properties.Add(new PropertyDef(name.Substring(objectDelimiterIdx + 1), type, display, displayEmpty, displayEmptyFirst, properties));
+            }
             Delimiter = delimiter;
         }
 
@@ -71,6 +75,11 @@ namespace CardGameDef
         {
             PropertyDef ret = new PropertyDef(Name, Type, Display, DisplayEmpty, DisplayEmptyFirst, Properties);
             return ret;
+        }
+
+        public override string ToString()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this);
         }
     }
 

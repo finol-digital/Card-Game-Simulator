@@ -401,7 +401,8 @@ namespace CardGameDef
                     if (!string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
                     {
                         jsonBody = "{" + AllCardsUrlPostBodyContent;
-                        jsonBody += AllCardsUrlPageIdentifier + page;
+                        if (AllCardsUrlPageCount > 1)
+                            jsonBody += AllCardsUrlPageIdentifier + page;
                         jsonBody += "}";
                     }
                     yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody);
@@ -497,7 +498,19 @@ namespace CardGameDef
             try
             {
                 JToken root = JToken.Parse(File.ReadAllText(file));
-                foreach (JToken jToken in !string.IsNullOrEmpty(dataId) ? root[dataId] : root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues())
+
+                IJEnumerable<JToken> dataContainer;
+                if (!string.IsNullOrEmpty(dataId))
+                {
+                    JToken childProcessor = root;
+                    foreach (String childName in dataId.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
+                        (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
+                    dataContainer = childProcessor;
+                }
+                else
+                    dataContainer = root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues();
+
+                foreach (JToken jToken in dataContainer)
                     load(jToken, SetCodeDefault);
 
                 if (!string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier) && root.Value<int>(AllCardsUrlPageCountIdentifier) > 0)
@@ -583,7 +596,7 @@ namespace CardGameDef
                 }
             }
             else
-                UnityEngine.Debug.Log("LoadCardFromJToken::MissingCardImageWebUrl"); // TODO: HANDLE DIFFERENTLY?
+                UnityEngine.Debug.Log("LoadCardFromJToken::MissingCardImage");
         }
 
         public void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken, List<PropertyDef> propertyDefs, string keyPrefix = "")
@@ -719,9 +732,20 @@ namespace CardGameDef
                 return;
             }
 
+            string dataIdentifier = CardSetIdentifier;
+            if (dataIdentifier.Contains('.'))
+            {
+                JToken childProcessor = cardJToken;
+                string[] parentNames = CardSetIdentifier.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < parentNames.Count() - 1; i++)
+                    (childProcessor as JObject)?.TryGetValue(parentNames[i], out childProcessor);
+                cardJToken = childProcessor;
+                dataIdentifier = parentNames[parentNames.Count() - 1];
+            }
+
             if (CardSetsInListIsCsv)
             {
-                string codesCsv = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
+                string codesCsv = cardJToken.Value<string>(dataIdentifier) ?? defaultSetCode;
                 string namesCsv = cardJToken.Value<string>(CardSetNameIdentifier) ?? codesCsv;
                 string[] codes = codesCsv.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 string[] names = namesCsv.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -735,7 +759,7 @@ namespace CardGameDef
             else if (CardSetsInList)
             {
                 List<JToken> setJTokens = new List<JToken>();
-                try { setJTokens = (cardJToken[CardSetIdentifier] as JArray)?.ToList() ?? new List<JToken>(); }
+                try { setJTokens = (cardJToken[dataIdentifier] as JArray)?.ToList() ?? new List<JToken>(); }
                 catch { UnityEngine.Debug.LogWarning($"PopulateCardSets::BadCardSetIdentifier for {cardJToken.ToString()}"); }
                 foreach (JToken setJToken in setJTokens)
                 {
@@ -748,7 +772,7 @@ namespace CardGameDef
                     }
                     else
                     {
-                        string code = setJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
+                        string code = setJToken.Value<string>(dataIdentifier) ?? defaultSetCode;
                         string name = setJToken.Value<string>(CardSetNameIdentifier) ?? code;
                         cardSets[code] = name;
                     }
@@ -757,7 +781,7 @@ namespace CardGameDef
             else if (CardSetIsObject)
             {
                 JObject setObject = null;
-                try { setObject = cardJToken[CardSetIdentifier] as JObject; }
+                try { setObject = cardJToken[dataIdentifier] as JObject; }
                 catch { UnityEngine.Debug.LogWarning($"PopulateCardSets::BadCardSetIdentifier for {cardJToken.ToString()}"); }
                 string setCode = setObject?.Value<string>(SetCodeIdentifier) ?? defaultSetCode;
                 string setName = setObject?.Value<string>(SetNameIdentifier) ?? setCode;
@@ -765,7 +789,7 @@ namespace CardGameDef
             }
             else
             {
-                string code = cardJToken.Value<string>(CardSetIdentifier) ?? defaultSetCode;
+                string code = cardJToken.Value<string>(dataIdentifier) ?? defaultSetCode;
                 string name = cardJToken.Value<string>(CardSetNameIdentifier) ?? code;
                 cardSets[code] = name;
             }
