@@ -43,6 +43,7 @@ permalink: roadmap.html
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
+- Further highlight selected card and de-highlight unselected
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)

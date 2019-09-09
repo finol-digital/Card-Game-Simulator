@@ -120,7 +120,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.18.0
+  bundleVersion: 1.19.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -159,9 +159,9 @@ PlayerSettings:
     Standalone: com.finoldigital.CardGameSimulator
     iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 9
+    Standalone: 10
     iOS: 0
-  AndroidBundleVersionCode: 72
+  AndroidBundleVersionCode: 73
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 0
@@ -782,7 +782,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.18.0.0
+  metroPackageVersion: 1.19.0.0
   metroCertificatePath: WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
