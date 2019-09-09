@@ -24,10 +24,10 @@ env:
 
 stages:
   - build
-  - name: deploy_mobile
+  - name: deploy mobile
     if: branch = master
-  - name: deploy_desktop
-    if: branch = master
+  - name: deploy desktop
+    if: branch = develop
 
 jobs:
   include:
@@ -41,7 +41,7 @@ jobs:
     - travis_wait 45 ./travis-build/build.sh
     - ls -al "${HOME}/unity_download_cache"
     - ls -al "${HOME}/unity_build_cache"
-  - stage: deploy_mobile
+  - stage: deploy mobile
     env: ALLOW_DEPLOY_TIMEOUT=true
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
@@ -51,7 +51,7 @@ jobs:
     - ./travis-build/setup_ssh.sh
     install: bundle install
     script: travis_wait 45 fastlane ios release
-  - stage: deploy_desktop
+  - stage: deploy desktop
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
     - ls -al "${HOME}/unity_build_cache"

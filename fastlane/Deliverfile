@@ -11,5 +11,6 @@ for_platform :mac do
   platform "osx"
   pkg "Card Game Simulator.pkg"
   skip_metadata false
-  release_notes({ 'default' => "- Swipe on Main Menu to change card game\n- Add Erase/Paste icons\n- Tech: Update Unity version", 'en-US' => "- Swipe on Main Menu to change card game\n- Add Erase/Paste icons\n- Tech: Update Unity version" })
+  run_precheck_before_submit false
+  release_notes({ 'default' => "- Swipe in Cards Explorer to change pages\n- Added 3 modes to the Card Viewer\n- Focus view on cards when you navigate with hotkeys\n- Press and hold on card to zoom on it" })
 end
