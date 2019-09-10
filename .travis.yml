@@ -27,7 +27,7 @@ stages:
   - name: deploy mobile
     if: branch = master
   - name: deploy desktop
-    if: branch = develop
+    if: branch = master
 
 jobs:
   include:
@@ -42,7 +42,9 @@ jobs:
     - ls -al "${HOME}/unity_download_cache"
     - ls -al "${HOME}/unity_build_cache"
   - stage: deploy mobile
-#    env: ALLOW_DEPLOY_TIMEOUT=true
+    env:
+    - ALLOW_DEPLOY_TIMEOUT=true
+    - UNITY_BUILD_CACHE="$HOME/unity_build_cache"
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
     - ls -al "${HOME}/unity_build_cache"
