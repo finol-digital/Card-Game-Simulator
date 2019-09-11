@@ -401,7 +401,7 @@ namespace CardGameDef
                     if (!string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
                     {
                         jsonBody = "{" + AllCardsUrlPostBodyContent;
-                        if (AllCardsUrlPageCount > 1)
+                        if (AllCardsUrlPageCount > 1 || !string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
                             jsonBody += AllCardsUrlPageIdentifier + page;
                         jsonBody += "}";
                     }
