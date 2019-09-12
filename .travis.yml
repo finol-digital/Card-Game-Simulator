@@ -24,9 +24,9 @@ env:
 
 stages:
   - build
-  - name: deploy mobile
-    if: branch = master
   - name: deploy desktop
+    if: branch = master
+  - name: deploy mobile
     if: branch = master
 
 jobs:
@@ -41,18 +41,6 @@ jobs:
     - travis_wait 45 ./travis-build/build.sh
     - ls -al "${HOME}/unity_download_cache"
     - ls -al "${HOME}/unity_build_cache"
-  - stage: deploy mobile
-    env:
-    - ALLOW_DEPLOY_TIMEOUT=true
-    - UNITY_BUILD_CACHE="$HOME/unity_build_cache"
-    before_install:
-    - chmod -R a+rw "${HOME}/unity_build_cache"
-    - ls -al "${HOME}/unity_build_cache"
-    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
-    - chmod a+x ./travis-build/setup_ssh.sh
-    - ./travis-build/setup_ssh.sh
-    install: bundle install
-    script: travis_wait 45 fastlane ios release
   - stage: deploy desktop
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
@@ -61,7 +49,12 @@ jobs:
     - ./travis-build/sign-osx-build.sh
     install: bundle install
     script: travis_wait 45 fastlane mac macupload
-
-matrix:
-  allow_failures:
-    - env: ALLOW_DEPLOY_TIMEOUT=true
+  - stage: deploy mobile
+    before_install:
+    - chmod -R a+rw "${HOME}/unity_build_cache"
+    - ls -al "${HOME}/unity_build_cache"
+    - openssl enc -aes-256-cbc -a -d -in ./travis-build/setup_ssh.sh.enc -out ./travis-build/setup_ssh.sh -k ${ENCRYPTION_PASSWORD}
+    - chmod a+x ./travis-build/setup_ssh.sh
+    - ./travis-build/setup_ssh.sh
+    install: bundle install
+    script: travis_wait 45 fastlane ios release
