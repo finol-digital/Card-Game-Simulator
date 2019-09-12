@@ -13,7 +13,6 @@ permalink: roadmap.html
 ## Current Sprint
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
-- Tech: Improve data model
 - Redesign Play Mode
 - Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
