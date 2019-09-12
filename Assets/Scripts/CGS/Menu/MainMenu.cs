@@ -62,9 +62,9 @@ namespace CGS.Menu
             if (SwipeManager.DetectSwipe())
             {
                 if (SwipeManager.IsSwipingRight())
-                    SelectNext();
-                else if (SwipeManager.IsSwipingLeft())
                     SelectPrevious();
+                else if (SwipeManager.IsSwipingLeft())
+                    SelectNext();
             }
 
             if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)

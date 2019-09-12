@@ -46,8 +46,8 @@ namespace CGS.Cards
                 if (layoutGroup is GridLayoutGroup)
                 {
                     rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height -
-                        (((GridLayoutGroup)layoutGroup).padding.top - ((GridLayoutGroup)layoutGroup).padding.bottom)) /
-                        (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y + ((GridLayoutGroup)layoutGroup).spacing.y));
+                        ((((GridLayoutGroup)layoutGroup).padding.top + ((GridLayoutGroup)layoutGroup).padding.bottom)))
+                        / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y + ((GridLayoutGroup)layoutGroup).spacing.y));
                 }
                 return CardsPerRow * rowsPerPage;
             }
