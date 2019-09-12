@@ -24,8 +24,8 @@ env:
 
 stages:
   - build
-#  - name: deploy desktop
-#    if: branch = master
+  - name: deploy desktop
+    if: branch = master
   - name: deploy mobile
     if: branch = master
 
@@ -41,14 +41,14 @@ jobs:
     - travis_wait 45 ./travis-build/build.sh
     - ls -al "${HOME}/unity_download_cache"
     - ls -al "${HOME}/unity_build_cache"
-#  - stage: deploy desktop
-#    before_install:
-#    - chmod -R a+rw "${HOME}/unity_build_cache"
-#    - ls -al "${HOME}/unity_build_cache"
-#    - chmod +x ./travis-build/sign-osx-build.sh
-#    - ./travis-build/sign-osx-build.sh
-#    install: bundle install
-#    script: travis_wait 45 fastlane mac macupload
+  - stage: deploy desktop
+    before_install:
+    - chmod -R a+rw "${HOME}/unity_build_cache"
+    - ls -al "${HOME}/unity_build_cache"
+    - chmod +x ./travis-build/sign-osx-build.sh
+    - ./travis-build/sign-osx-build.sh
+    install: bundle install
+    script: travis_wait 45 fastlane mac macupload
   - stage: deploy mobile
     before_install:
     - chmod -R a+rw "${HOME}/unity_build_cache"
