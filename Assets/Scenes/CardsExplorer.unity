@@ -166,7 +166,7 @@ MonoBehaviour:
     m_Left: 50
     m_Right: 50
     m_Top: 50
-    m_Bottom: 50
+    m_Bottom: 100
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
@@ -310,7 +310,7 @@ RectTransform:
   - {fileID: 1956308802}
   - {fileID: 1385403561}
   m_Father: {fileID: 508283652}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -626,8 +626,8 @@ RectTransform:
   - {fileID: 1198789063}
   - {fileID: 1782536895}
   - {fileID: 7858367718469537993}
-  - {fileID: 1606626926}
   - {fileID: 294750915}
+  - {fileID: 1606626926}
   - {fileID: 101628742}
   m_Father: {fileID: 0}
   m_RootOrder: 2

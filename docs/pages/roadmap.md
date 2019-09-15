@@ -5,13 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Swipe in Cards Explorer to change pages
-- Added 3 modes to the Card Viewer
-- Focus view on cards when you navigate with hotkeys
-- Press and hold on card to zoom on it
+- Add Clear button to Card Search Menu
+- Add Card Editor
 
 ## Current Sprint
-- Add Card Editor
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Redesign Play Mode
@@ -36,6 +33,7 @@ permalink: roadmap.html
 - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
 
 ## Backlog
+- Tech: GitHub Actions CI/CD with Android, Windows, and Linux
 - Tech: Use Json.Net schema
 - Tech: Google Play Instant
 - Android Searchbar Widget
@@ -88,9 +86,6 @@ permalink: roadmap.html
 - Support svg images
 - Support multiple languages (Spanish,Chinese)
 - Support different resolutions and languages for card images
-- Linux version
-- Release Standalone versions to Steam
-- Console versions (Switch, ps4, xbone)
 - Support encryption of game information
 - Partner with other companies to provide licensed games
 - Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG

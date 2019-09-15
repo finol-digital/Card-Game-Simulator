@@ -20,7 +20,7 @@ namespace CGS.Cards
         {
             Instantiate(cardViewerPrefab);
             CardViewer.Instance.Mode = CardViewerMode.Expanded;
-            CardGameManager.Instance.OnSceneActions.Add(ResetBanner);
+            CardGameManager.Instance.OnSceneActions.Add(ResetBannerAndResizeCards);
         }
 
         void Update()
@@ -37,9 +37,10 @@ namespace CGS.Cards
                 BackToMainMenu();
         }
 
-        public void ResetBanner()
+        public void ResetBannerAndResizeCards()
         {
             bannerImage.sprite = CardGameManager.Current.BannerImageSprite;
+            ((GridLayoutGroup)searchResults.layoutGroup).cellSize = CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
         }
 
         public void BackToMainMenu()

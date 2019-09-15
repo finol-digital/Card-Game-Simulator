@@ -28,14 +28,18 @@ namespace CGS.Cards
         {
             get
             {
-                float horizontalSpacing = 0;
+                float padding = 0;
+                float spacing = 0;
+                float cardWidth = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x;
                 if (layoutGroup is HorizontalLayoutGroup)
-                    horizontalSpacing = ((HorizontalLayoutGroup)layoutGroup).spacing;
+                    spacing = ((HorizontalLayoutGroup)layoutGroup).spacing;
                 else if (layoutGroup is GridLayoutGroup)
-                    horizontalSpacing = ((GridLayoutGroup)layoutGroup).spacing.x;
-                return Mathf.FloorToInt((layoutArea.rect.width -
-                    (layoutGroup is GridLayoutGroup ? ((GridLayoutGroup)layoutGroup).padding.left + ((GridLayoutGroup)layoutGroup).padding.right : 0))
-                    / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x + horizontalSpacing));
+                {
+                    padding = ((GridLayoutGroup)layoutGroup).padding.left + ((GridLayoutGroup)layoutGroup).padding.right;
+                    spacing = ((GridLayoutGroup)layoutGroup).spacing.x;
+                    cardWidth = ((GridLayoutGroup)layoutGroup).cellSize.x;
+                }
+                return Mathf.FloorToInt((layoutArea.rect.width - padding + spacing) / (cardWidth + spacing));
             }
         }
         public int CardsPerPage
@@ -45,9 +49,10 @@ namespace CGS.Cards
                 int rowsPerPage = 1;
                 if (layoutGroup is GridLayoutGroup)
                 {
-                    rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height -
-                        (((GridLayoutGroup)layoutGroup).padding.top - ((GridLayoutGroup)layoutGroup).padding.bottom))
-                        / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y + ((GridLayoutGroup)layoutGroup).spacing.y));
+                    GridLayoutGroup gridLayoutGroup = (GridLayoutGroup)layoutGroup;
+                    float padding = gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom;
+                    rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height - padding + gridLayoutGroup.spacing.y)
+                        / (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y));
                 }
                 return CardsPerRow * rowsPerPage;
             }
