@@ -31,7 +31,8 @@ namespace CGS.Cards
 
             if (SwipeManager.DetectSwipe())
             {
-                if (CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f)
+                if ((CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                    || CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f)
                 {
                     if (SwipeManager.IsSwipingRight())
                         SelectLeft();
