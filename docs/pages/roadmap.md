@@ -72,8 +72,6 @@ permalink: roadmap.html
 - Share discard pile between all players who share a deck in Play Mode
 - Online vs local matchmaking (Split Play Game to Play Local and Play Online)
 - Card Search Results Text-Only View
-- New Mahjong tile set
-- Define order and enums for Mahjong properties
 - Allow automatic deletion of empty zones in Play Mode
 - Organize cards by category when saving a deck in the Deck Editor
 - Allow rotation to keep viewing the currently selected card
