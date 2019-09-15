@@ -61,6 +61,7 @@ namespace CardGameView
         public List<AspectRatioFitter> cardAspectRatioFitters;
         public List<Image> cardImages;
         public List<Text> nameTexts;
+        public List<Text> uniqueIdTexts;
         public Text idText;
         public Text setText;
         public Text propertyTextTemplate;
@@ -218,6 +219,8 @@ namespace CardGameView
         {
             foreach (AspectRatioFitter cardAspectRatioFitter in cardAspectRatioFitters)
                 cardAspectRatioFitter.aspectRatio = CardGameManager.Current.CardAspectRatio;
+            foreach (Text text in uniqueIdTexts)
+                text.transform.parent.parent.gameObject.SetActive(!CardGameManager.Current.CardNameIsUnique);
 
             PropertyOptions.Clear();
             PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
@@ -326,6 +329,8 @@ namespace CardGameView
         {
             foreach (Text nameText in nameTexts)
                 nameText.text = SelectedCardModel.Value.Name;
+            foreach (Text uniqueId in uniqueIdTexts)
+                uniqueId.text = SelectedCardModel.Id;
             idText.text = IdLabel + Delimiter + SelectedCardModel.Id;
             setText.text = SetLabel + Delimiter
                 + (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out Set currentSet)
