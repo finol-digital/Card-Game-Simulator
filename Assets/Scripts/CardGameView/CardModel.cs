@@ -29,7 +29,7 @@ namespace CardGameView
     {
         public const float ZoomHoldTime = 1.5f;
         public const float MovementSpeed = 600f;
-        public static readonly Color SelectedHighlightColor = Color.green;
+        public static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
         public static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
 
         public bool IsOnline => CGSNetManager.Instance != null && CGSNetManager.Instance.isNetworkActive
