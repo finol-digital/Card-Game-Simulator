@@ -175,6 +175,9 @@ namespace CardGameView
         private bool _isVisible;
         public bool WasVisible { get; private set; }
 
+        private bool _wasPageDown;
+        private bool _wasPageUp;
+
         void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
@@ -198,6 +201,17 @@ namespace CardGameView
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
+            if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
+            {
+                if (CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                {
+                    if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
+                        maximalScrollRect.verticalNormalizedPosition = Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
+                    else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
+                        maximalScrollRect.verticalNormalizedPosition = Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
+                }
+            }
+
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)))
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)
@@ -212,7 +226,14 @@ namespace CardGameView
             else if (Input.GetButtonDown(Inputs.Option))
                 Zoom = !Zoom;
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            {
+                if (!Zoom && Mode == CardViewerMode.Maximal)
+                    Mode = CardViewerMode.Expanded;
                 SelectedCardModel = null;
+            }
+
+            _wasPageDown = Input.GetAxis(Inputs.PageVertical) < 0;
+            _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
         }
 
         public void ResetInfo()

@@ -5,7 +5,6 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Add Clear button to Card Search Menu
 - Add Card Editor
 
 ## Current Sprint

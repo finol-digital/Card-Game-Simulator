@@ -65,10 +65,13 @@ namespace CGS.Cards
 
             if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
             {
-                if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
-                    PageDown();
-                else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
-                    PageUp();
+                if (!CardViewer.Instance.IsVisible || CardViewer.Instance.Mode != CardViewerMode.Maximal)
+                {
+                    if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
+                        PageDown();
+                    else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
+                        PageUp();
+                }
             }
             else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0))
             {
