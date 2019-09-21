@@ -10,8 +10,6 @@ permalink: roadmap.html
 ## Current Sprint
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
-- Redesign Play Mode
-- Add option to restart game in Play Mode
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Allow cards to snap to each other when moving them
 - Have view for only hand vs view for only field
@@ -35,6 +33,7 @@ permalink: roadmap.html
 - Tech: GitHub Actions CI/CD with Android, Windows, and Linux
 - Tech: Use Json.Net schema
 - Tech: Google Play Instant
+- Navigate with hotkeys in SelectionPanel
 - Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
