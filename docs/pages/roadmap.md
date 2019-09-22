@@ -86,6 +86,5 @@ permalink: roadmap.html
 - Partner with other companies to provide licensed games
 - Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG
 - Magic Set Editor + Cockatrice integration
-- Add ability to create a new card game from within CGS
 - Support game-specific rules enforcement
 
