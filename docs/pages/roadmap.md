@@ -28,6 +28,7 @@ permalink: roadmap.html
   - Single-click show menu with all possible actions at the bottom
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
+- Slider to control zoom
 
 ## Backlog
 - Tech: GitHub Actions CI/CD with Android, Windows, and Linux
