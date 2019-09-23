@@ -14,3 +14,7 @@ To build and run the project, you just need to clone the repo and run it in Unit
 ## Contributing
 
 If you'd like to help out with the project, please contact <david@finoldigital.com>
+
+## License
+
+Code released under the [Mozilla Public License 2.0](LICENSE).
