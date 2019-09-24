@@ -36,7 +36,7 @@ permalink: roadmap.html
 - Tech: Google Play Instant
 - Navigate with hotkeys in SelectionPanel
 - Android Searchbar Widget
-- Animate "Tap Anywhere to Start" text
+- Animate "Tap Anywhere to Start" text and remove splash screen
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
 - Further highlight selected card and de-highlight unselected
