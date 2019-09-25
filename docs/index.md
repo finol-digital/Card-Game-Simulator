@@ -30,7 +30,7 @@ You can also create your own custom game(s) by following the [Custom Games Docum
 
 ## Use CGS
 
-[Click here for a tutorial video!](https://youtu.be/pFaHJ2QTYuo)
+{% include youtubePlayer.html id=9J01FMgO7Pc %}
 
 When you play a game in CGS, CGS hosts game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game.
 
