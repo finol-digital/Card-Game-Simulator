@@ -31,7 +31,7 @@ permalink: roadmap.html
 - Slider to control zoom
 
 ## Backlog
-- Tech: GitHub Actions CI/CD with Android, Windows, and Linux
+- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Tech: Use Json.Net schema
 - Tech: Google Play Instant
 - Navigate with hotkeys in SelectionPanel

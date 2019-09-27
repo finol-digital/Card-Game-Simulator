@@ -753,12 +753,13 @@ PlayerSettings:
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 1
-  webGLLinkerTarget: 0
+  webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
     1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
     4: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
     7: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
+    13: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
     14: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
   platformArchitecture: {}
   scriptingBackend:
@@ -778,6 +779,7 @@ PlayerSettings:
     Android: 6
     Metro: 6
     Standalone: 6
+    WebGL: 6
     iOS: 6
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
