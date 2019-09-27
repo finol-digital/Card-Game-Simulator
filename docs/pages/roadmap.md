@@ -33,6 +33,7 @@ permalink: roadmap.html
 ## Backlog
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Tech: Branch on desktop
+- Tech: Allow space and dash in deck filename on Windows and Android
 - Tech: Use Json.Net schema
 - Tech: Google Play Instant
 - Navigate with hotkeys in SelectionPanel
