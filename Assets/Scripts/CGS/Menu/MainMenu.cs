@@ -46,10 +46,10 @@ namespace CGS.Menu
 
         void Start()
         {
-#if (UNITY_ANDROID || UNITY_IOS)
-            quitButton.SetActive(false);
-#else
+#if UNITY_STANDALONE || UNITY_WSA
             quitButton.SetActive(true);
+#else
+            quitButton.SetActive(false);
 #endif
             versionText.text = VersionMessage;
         }
