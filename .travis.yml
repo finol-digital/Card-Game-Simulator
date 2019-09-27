@@ -25,9 +25,9 @@ env:
 stages:
   - build
   - name: deploy desktop
-    if: false
+    if: branch = master
   - name: deploy mobile
-    if: false
+    if: branch = master
 
 jobs:
   include:
