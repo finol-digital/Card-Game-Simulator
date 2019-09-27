@@ -5,4 +5,4 @@ title: Card Game Simulator
 description: Play your favorite card games!
 url: 'https://www.cardgamesimulator.com'
 theme: jekyll-theme-slate
-include: [".well-known", "*.unityweb" ]
+include: [".well-known", "play/Build/WebGL.data.unityweb", "play/Build/WebGL.wasm.code.unityweb", "play/Build/WebGL.wasm.framework.unityweb"]
