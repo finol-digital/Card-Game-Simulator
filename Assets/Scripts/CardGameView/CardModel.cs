@@ -46,6 +46,7 @@ namespace CardGameView
 
         public float HoldTime { get; private set; }
         public bool DidSelectOnDown { get; private set; }
+        public bool DidDrag { get; private set; }
         public PointerEventData CurrentPointerEventData { get; private set; }
         public DragPhase CurrentDragPhase { get; private set; }
 
@@ -247,7 +248,7 @@ namespace CardGameView
 
         void Update()
         {
-            if (PointerPositions.Count > 0 && CurrentDragPhase != DragPhase.Drag)
+            if (PointerPositions.Count > 0 && !DidDrag)
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
@@ -295,6 +296,8 @@ namespace CardGameView
 
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
+            if (DidDrag && PointerDragOffsets.Count == 0)
+                DidDrag = false;
         }
 
         public void OnSelect(BaseEventData eventData)
@@ -314,6 +317,7 @@ namespace CardGameView
             if (IsOnline && !hasAuthority)
                 return;
 
+            DidDrag = true;
             if (DoesCloneOnDrag)
             {
                 GameObject newGameObject = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform);

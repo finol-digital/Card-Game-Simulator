@@ -5,9 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Add Card Editor
+- Fix: Hold to Zoom
 
 ## Current Sprint
+- Add Card Editor
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Allow any player to move cards in the play area, instead of just the player who put it there
