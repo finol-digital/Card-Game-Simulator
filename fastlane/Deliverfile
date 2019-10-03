@@ -6,8 +6,8 @@ submit_for_review true
 force true
 skip_screenshots true
 release_notes({
-  'default' => "- Swipe in Cards Explorer to change pages\n- Added 3 modes to the Card Viewer\n- Focus view on cards when you navigate with hotkeys\n- Press and hold on card to zoom on it",
-  'en-US' => "- Swipe in Cards Explorer to change pages\n- Added 3 modes to the Card Viewer\n- Focus view on cards when you navigate with hotkeys\n- Press and hold on card to zoom on it"
+  'default' => "- Removed splash screen to speed up startup\n- Fixed: Hold Card to Zoom",
+  'en-US' => "- Removed splash screen to speed up startup\n- Fixed: Hold Card to Zoom"
 })
 run_precheck_before_submit false
 

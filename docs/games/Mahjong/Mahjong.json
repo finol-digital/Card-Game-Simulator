@@ -1,10 +1,10 @@
 {
-  "allCardsUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/AllCards.json",
-  "allSetsUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/AllSets.json",
-  "autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/Mahjong.json",
-  "bannerImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/Banner.png",
-  "cardBackImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/CardBack.png",
-  "cardImageUrl": "https://cardgamesim.finoldigital.com/games/Mahjong/sets/{cardSet}/{cardId}.{cardImageFileType}",
+  "allCardsUrl": "https://www.cardgamesimulator.com/games/Mahjong/AllCards.json",
+  "allSetsUrl": "https://www.cardgamesimulator.com/games/Mahjong/AllSets.json",
+  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Mahjong/Mahjong.json",
+  "bannerImageUrl": "https://www.cardgamesimulator.com/games/Mahjong/Banner.png",
+  "cardBackImageUrl": "https://www.cardgamesimulator.com/games/Mahjong/CardBack.png",
+  "cardImageUrl": "https://www.cardgamesimulator.com/games/Mahjong/sets/{cardSet}/{cardId}.{cardImageFileType}",
   "cardPrimaryProperty": "type",
   "cardProperties": [
     {
@@ -26,7 +26,7 @@
   "deckUrls": [
     {
       "name": "Traditional Mahjong Deck",
-      "url": "https://cardgamesim.finoldigital.com/games/Mahjong/decks/Traditional%20Mahjong%20Deck.txt"
+      "url": "https://www.cardgamesimulator.com/games/Mahjong/decks/Traditional%20Mahjong%20Deck.txt"
     }
   ],
   "deckMaxCount": 144,

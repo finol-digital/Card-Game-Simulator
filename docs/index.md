@@ -8,7 +8,7 @@ cgsYoutubeId: 9J01FMgO7Pc
 - iOS via the [App Store](https://itunes.apple.com/us/app/card-game-simulator/id1392877362?ls=1&mt=8)
 - Mac via the [Mac App Store](https://itunes.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
 - Windows via the [Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
-- Other Platforms via [zip archives](https://drive.google.com/open?id=1-wmC7UIpLn-7taJTdYRsYUYX17beXJ9R)
+- Web via [Unity WebGL](play/index.html) (Custom games and multiplayer unavailable)
 
 ## Create & Share Custom Games
 With CGS, users can create and share their own custom card games!

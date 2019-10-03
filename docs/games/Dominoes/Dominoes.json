@@ -1,11 +1,11 @@
 {
-  "allCardsUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/AllCards.json",
-  "allSetsUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/AllSets.json",
-  "autoUpdateUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/Dominoes.json",
-  "bannerImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/Banner.png",
-  "cardBackImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/CardBack.png",
+  "allCardsUrl": "https://www.cardgamesimulator.com/games/Dominoes/AllCards.json",
+  "allSetsUrl": "https://www.cardgamesimulator.com/games/Dominoes/AllSets.json",
+  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Dominoes/Dominoes.json",
+  "bannerImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/Banner.png",
+  "cardBackImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/CardBack.png",
   "cardClearsBackground": true,
-  "cardImageUrl": "https://cardgamesim.finoldigital.com/games/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",
+  "cardImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",
   "cardPrimaryProperty": "suit",
   "cardProperties": [
     {
@@ -31,15 +31,15 @@
   "deckUrls": [
     {
       "name": "Double Six Dominoes",
-      "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Six%20Dominoes.txt"
+      "url": "https://www.cardgamesimulator.com/games/Dominoes/decks/Double%20Six%20Dominoes.txt"
     },
     {
       "name": "Double Nine Dominoes",
-      "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Double%20Nine%20Dominoes.txt"
+      "url": "https://www.cardgamesimulator.com/games/Dominoes/decks/Double%20Nine%20Dominoes.txt"
     },
     {
       "name": "Wooden Double Six Dominoes",
-      "url": "https://cardgamesim.finoldigital.com/games/Dominoes/decks/Wooden%20Double%20Six%20Dominoes.txt"
+      "url": "https://www.cardgamesimulator.com/games/Dominoes/decks/Wooden%20Double%20Six%20Dominoes.txt"
     }
   ],
   "enums": [

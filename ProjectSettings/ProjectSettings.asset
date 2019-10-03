@@ -17,7 +17,7 @@ PlayerSettings:
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
-  m_ShowUnitySplashScreen: 1
+  m_ShowUnitySplashScreen: 0
   m_ShowUnitySplashLogo: 0
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
@@ -42,7 +42,8 @@ PlayerSettings:
   m_SplashScreenLogos:
   - logo: {fileID: 21300000, guid: dd9cc079cea5f3b4d87e05d4b2c2a2db, type: 3}
     duration: 2
-  m_VirtualRealitySplashScreen: {fileID: 0}
+  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 5845ad4b92e3f6d42a2b3155b4c22f32,
+    type: 3}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
@@ -120,7 +121,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.19.2
+  bundleVersion: 1.20.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -159,9 +160,9 @@ PlayerSettings:
     Standalone: com.finoldigital.CardGameSimulator
     iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 12
+    Standalone: 13
     iOS: 0
-  AndroidBundleVersionCode: 75
+  AndroidBundleVersionCode: 76
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 0
@@ -249,7 +250,7 @@ PlayerSettings:
   templateDefaultScene: 
   AndroidTargetArchitectures: 7
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 0}
+  androidSplashScreen: {fileID: 2800000, guid: d7e25eb23e0516a4ea0e0426fe90336d, type: 3}
   AndroidKeystoreName: finoldigital.keystore
   AndroidKeyaliasName: cgs
   AndroidBuildApkPerCpuArchitecture: 0
@@ -263,7 +264,8 @@ PlayerSettings:
     height: 180
     banner: {fileID: 0}
   androidGamepadSupportLevel: 1
-  resolutionDialogBanner: {fileID: 0}
+  resolutionDialogBanner: {fileID: 2800000, guid: d7e25eb23e0516a4ea0e0426fe90336d,
+    type: 3}
   m_BuildTargetIcons:
   - m_BuildTarget: 
     m_Icons:
@@ -767,7 +769,7 @@ PlayerSettings:
     Metro: 1
     Standalone: 1
   il2cppCompilerConfiguration:
-    Android: 2
+    Android: 1
     Standalone: 1
   managedStrippingLevel:
     Android: 1
@@ -784,14 +786,19 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.19.2.0
+  metroPackageVersion: 1.20.0.0
   metroCertificatePath: WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
   metroCertificateNotAfter: 80d16339717cd601
   metroApplicationDescription: Play your favorite card games!
-  wsaImages: {}
+  wsaImages:
+    131172: Assets/Sprites and Textures/UWP/SplashScreen.scale-100.png
+    131197: Assets/Sprites and Textures/UWP/SplashScreen.scale-125.png
+    131222: Assets/Sprites and Textures/UWP/SplashScreen.scale-150.png
+    131272: Assets/Sprites and Textures/UWP/SplashScreen.scale-200.png
+    131472: Assets/Sprites and Textures/UWP/SplashScreen.scale-400.png
   metroTileShortName: CGS
   metroTileShowName: 0
   metroMediumTileShowName: 0
@@ -802,9 +809,8 @@ PlayerSettings:
   metroDefaultTileSize: 1
   metroTileForegroundText: 2
   metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
-  metroSplashScreenBackgroundColor: {r: 0.12941177, g: 0.17254902, b: 0.21568628,
-    a: 1}
-  metroSplashScreenUseBackgroundColor: 0
+  metroSplashScreenBackgroundColor: {r: 0.2627451, g: 0.18039216, b: 0.08627451, a: 1}
+  metroSplashScreenUseBackgroundColor: 1
   platformCapabilities:
     WindowsStoreApps:
       AllJoyn: False

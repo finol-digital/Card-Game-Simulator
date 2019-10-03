@@ -438,9 +438,15 @@ namespace CardGameDef
             }
 
             // Don't waste time loading if we need to update first
+            bool shouldUpdate;
+#if UNITY_WEBGL
+            shouldUpdate = !HasDownloaded;
+#else
             int daysSinceUpdate = 0;
             try { daysSinceUpdate = (int)DateTime.Today.Subtract(File.GetLastWriteTime(GameFilePath).Date).TotalDays; } catch { };
-            if (AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && CoroutineRunner != null)
+            shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && CoroutineRunner != null;
+#endif
+            if (shouldUpdate)
             {
                 CoroutineRunner.StartCoroutine(updateCoroutine(this));
                 return;

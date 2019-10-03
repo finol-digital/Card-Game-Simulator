@@ -8,5 +8,9 @@ namespace CGS
     {
         public const string CardGameManager = "CardGameManager";
         public const string CardViewer = "CardViewer";
+        public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@aHR0cHM6Ly93d3cuY2FyZGdhbWVzaW11bGF0b3IuY29tL2dhbWVzL1N0YW5kYXJkL1N0YW5kYXJkLmpzb24=";
+        public const string StandardPlayingCardsJsonFileName = "Standard Playing Cards.json";
+        public const string StandPlayingCardsJsonFileContent = "{\"name\":\"Standard Playing Cards\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Standard/Standard.json\"}";
+
     }
 }

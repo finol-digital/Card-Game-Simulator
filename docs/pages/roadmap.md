@@ -5,7 +5,9 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: Hold to Zoom
+- Fixed: Hold Card to Zoom
+- Removed splash screen to speed up startup
+- Added WebGL build
 
 ## Current Sprint
 - Add Card Editor
@@ -39,7 +41,7 @@ permalink: roadmap.html
 - Tech: Google Play Instant
 - Navigate with hotkeys in SelectionPanel
 - Android Searchbar Widget
-- Animate "Tap Anywhere to Start" text and remove splash screen
+- Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
 - Further highlight selected card and de-highlight unselected

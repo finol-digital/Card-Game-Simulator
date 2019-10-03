@@ -178,6 +178,13 @@ namespace CGS
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityExtensionMethods.ExtractAndroidStreamingAssets(CardGame.GamesDirectoryPath);
+#elif UNITY_WEBGL
+            if (!Directory.Exists(CardGame.GamesDirectoryPath))
+                Directory.CreateDirectory(CardGame.GamesDirectoryPath);
+            string standardPlayingCardsDirectory = CardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
+            if (!Directory.Exists(standardPlayingCardsDirectory))
+                Directory.CreateDirectory(standardPlayingCardsDirectory);
+            File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName, Tags.StandPlayingCardsJsonFileContent);
 #else
             UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, CardGame.GamesDirectoryPath);
 #endif
