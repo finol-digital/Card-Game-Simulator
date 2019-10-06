@@ -246,6 +246,22 @@ static public class UnityExtensionMethods
         }
     }
 
+    public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageUrl)
+    {
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl);
+        yield return www.SendWebRequest();
+        if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
+        {
+            Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+            yield return null;
+        }
+        else
+        {
+            Texture2D texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            yield return CreateSprite(texture);
+        }
+    }
+
     // Note: Memory Leak Potential
     public static Sprite CreateSprite(string textureFilePath)
     {

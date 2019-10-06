@@ -158,9 +158,15 @@ namespace CardGameDef
 
             IsLoadingImage = true;
             UnityEngine.Sprite newSprite = null;
+#if UNITY_WEBGL
+            yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(
+                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(ImageWebUrl)
+                , output => newSprite = output);
+#else
             yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(
                 UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl)
                 , output => newSprite = output);
+#endif
             if (newSprite != null)
                 ImageSprite = newSprite;
             IsLoadingImage = false;

@@ -27,6 +27,7 @@ namespace CGS.Menu
         public Image previousCardImage;
         public Image nextCardImage;
         public List<GameObject> selectableButtons;
+        public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
 
@@ -46,6 +47,9 @@ namespace CGS.Menu
 
         void Start()
         {
+#if UNITY_WEBGL
+            joinButton.interactable = false;
+#endif
 #if UNITY_STANDALONE || UNITY_WSA
             quitButton.SetActive(true);
 #else
@@ -160,12 +164,14 @@ namespace CGS.Menu
 
         public void ToggleGameManagement()
         {
+#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
             if (gameManagement.activeSelf)
                 gameManagement.SetActive(false);
             else
                 gameManagement.SetActive(true);
+#endif
         }
 
         public void SelectPrevious()

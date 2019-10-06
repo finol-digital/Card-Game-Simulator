@@ -10,7 +10,6 @@ permalink: roadmap.html
 - Added WebGL build
 
 ## Current Sprint
-- Add Card Editor
 - Fix: Server freezes when sharing deck
 - Fix: Card dissappears when connection to server is dropped
 - Allow any player to move cards in the play area, instead of just the player who put it there
@@ -32,6 +31,7 @@ permalink: roadmap.html
   - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
 - Slider to control zoom
+- Add Card Editor
 
 ## Backlog
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux

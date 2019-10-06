@@ -550,6 +550,7 @@ MonoBehaviour:
   - {fileID: 479701394}
   - {fileID: 946053254}
   - {fileID: 1488130160}
+  joinButton: {fileID: 223206894}
   quitButton: {fileID: 1452764036}
   versionText: {fileID: 398350573}
 --- !u!1001 &223206891

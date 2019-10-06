@@ -185,6 +185,16 @@ namespace CGS
             if (!Directory.Exists(standardPlayingCardsDirectory))
                 Directory.CreateDirectory(standardPlayingCardsDirectory);
             File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName, Tags.StandPlayingCardsJsonFileContent);
+            string dominoesDirectory = CardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
+            if (!Directory.Exists(dominoesDirectory))
+                Directory.CreateDirectory(dominoesDirectory);
+            File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
+            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
+            string mahjongDirectory = CardGame.GamesDirectoryPath + "/" + Tags.MahjongDirectoryName;
+            if (!Directory.Exists(mahjongDirectory))
+                Directory.CreateDirectory(mahjongDirectory);
+            File.WriteAllText(mahjongDirectory + "/" + Tags.MahjongJsonFileName, Tags.MahjongJsonFileContent);
+            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.MahjongCardBackUrl, mahjongDirectory + "/CardBack.png"));
 #else
             UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, CardGame.GamesDirectoryPath);
 #endif
@@ -256,7 +266,7 @@ namespace CGS
         // Note: Does NOT Reset Game Scene
         public void ResetCurrentToDefault()
         {
-            string preferredGameId = PlayerPrefs.GetString(PlayerPrefDefaultGame);
+            string preferredGameId = PlayerPrefs.GetString(PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
             Current = AllCardGames.TryGetValue(preferredGameId, out CardGame currentGame) && string.IsNullOrEmpty(currentGame.Error)
                 ? currentGame : (AllCardGames.FirstOrDefault().Value ?? CardGame.Invalid);
         }
@@ -363,6 +373,11 @@ namespace CGS
                 Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
                 return;
             }
+
+#if UNITY_WEBGL
+            foreach(CardGame game in AllCardGames.Values)
+                game.ReadProperties();
+#endif
 
             // Now is the safest time to set this game as the preferred default game for the player
             PlayerPrefs.SetString(PlayerPrefDefaultGame, Current.Id);

@@ -1,3 +1,0 @@
-<IfModule mod_mime.c>
-  AddEncoding br .unityweb
-</IfModule>
