@@ -5,9 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fixed: Hold Card to Zoom
-- Removed splash screen to speed up startup
-- Added WebGL build
+- Fix: WebGL Start load deck
+- Add Arcmage to WebGL build
 
 ## Current Sprint
 - Fix: Server freezes when sharing deck
