@@ -1,0 +1,13 @@
+{
+"companyName": "Finol Digital LLC",
+"productName": "Card Game Simulator",
+"dataUrl": "playcgs.data.unityweb",
+"wasmCodeUrl": "playcgs.wasm.code.unityweb",
+"wasmFrameworkUrl": "playcgs.wasm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"backgroundUrl": "playcgs.jpg",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#FFFFFF"
+}
