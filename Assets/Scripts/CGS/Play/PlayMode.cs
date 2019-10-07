@@ -3,9 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -140,9 +138,11 @@ namespace CGS.Play
         public void LoadDeckCards(List<Card> deckCards, bool isShared = false)
         {
             zones.CreateDeck();
+            zones.scrollView.verticalScrollbar.value = 0;
+#if !UNITY_WEBGL
             if (!isShared)
                 CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
-            zones.scrollView.verticalScrollbar.value = 0;
+#endif
             zones.CurrentDeck.Sync(deckCards);
             StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
         }
