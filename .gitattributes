@@ -8,4 +8,3 @@
 *.preset text
 *.json text
 *.asset text
-*.unityweb filter=lfs diff=lfs merge=lfs -text
