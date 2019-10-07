@@ -5,7 +5,6 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: WebGL Start load deck
 - Add Arcmage to WebGL build
 
 ## Current Sprint
