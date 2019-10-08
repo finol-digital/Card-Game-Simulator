@@ -19,5 +19,9 @@ namespace CGS
         public const string MahjongJsonFileName = "Mahjong.json";
         public const string MahjongJsonFileContent = "{\"name\":\"Mahjong\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Mahjong/Mahjong.json\"}";
         public const string MahjongCardBackUrl = "https://www.cardgamesimulator.com/games/Mahjong/CardBack.png";
+        public const string ArcmageDirectoryName = "Arcmage@aHR0cHM6Ly93d3cuY2FyZGdhbWVzaW11bGF0b3IuY29tL2dhbWVzL0FyY21hZ2UvQXJjbWFnZS5qc29u";
+        public const string ArcmageJsonFileName = "Arcmage.json";
+        public const string ArcmageJsonFileContent = "{\"name\":\"Arcmage\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json\"}";
+        public const string ArcmageCardBackUrl = "https://www.cardgamesimulator.com/games/Arcmage/CardBack.png";
     }
 }
