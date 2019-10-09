@@ -1,17 +1,17 @@
 {
-  "allCardsUrl": "http://aminduna.arcmage.org/api/CardSearch",
+  "allCardsUrl": "https://aminduna.arcmage.org/api/CardSearch",
   "allCardsUrlPageCountIdentifier": "totalItems",
   "allCardsUrlPageCountDivisor": 50,
   "allCardsUrlPageIdentifier": ",\"pageNumber\":",
   "allCardsUrlPostBodyContent": "\"ruleSet\":{\"guid\":\"208cbc77-4110-51b7-9afd-1c0c4e96f4ad\"},\"pageSize\":50",
-  "allSetsUrl": "http://aminduna.arcmage.org/api/CardOptions",
+  "allSetsUrl": "https://aminduna.arcmage.org/api/CardOptions",
   "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json",
   "bannerImageUrl": "https://www.cardgamesimulator.com/games/Arcmage/Banner.png",
   "cardBackImageUrl": "https://www.cardgamesimulator.com/games/Arcmage/CardBack.png",
   "cardDataIdentifier": "items",
   "cardIdIdentifier": "guid",
   "cardImageFileType": "jpg",
-  "cardImageUrl": "http://aminduna.arcmage.org{jpeg}",
+  "cardImageUrl": "https://aminduna.arcmage.org{jpeg}",
   "cardSetIdentifier": "serie",
   "cardSetIsObject": true,
   "cardPrimaryProperty": "ruleText",
@@ -94,27 +94,27 @@
   "deckUrls": [
     {
       "name": "Gaian Love for Life",
-      "url": "http://aminduna.arcmage.org/WTactics/Decks/b9c3f75d-8aaa-437a-b0dd-3d973edb3083/deck.txt"
+      "url": "https://aminduna.arcmage.org/WTactics/Decks/b9c3f75d-8aaa-437a-b0dd-3d973edb3083/deck.txt"
     },
     {
       "name": "Brothers in Arms",
-      "url": "http://aminduna.arcmage.org/WTactics/Decks/6776ddb8-3ce0-470b-8d2c-afb26bd29359/deck.txt"
+      "url": "https://aminduna.arcmage.org/WTactics/Decks/6776ddb8-3ce0-470b-8d2c-afb26bd29359/deck.txt"
     },
     {
       "name": "Shadow League",
-      "url": "http://aminduna.arcmage.org/WTactics/Decks/25268444-33ad-42f8-8452-2089659bc91d/deck.txt"
+      "url": "https://aminduna.arcmage.org/WTactics/Decks/25268444-33ad-42f8-8452-2089659bc91d/deck.txt"
     },
     {
       "name": "The Uprising",
-      "url": "http://aminduna.arcmage.org/WTactics/Decks/ade9be8e-a414-4da9-a97a-e843a40aa2af/deck.txt"
+      "url": "https://aminduna.arcmage.org/WTactics/Decks/ade9be8e-a414-4da9-a97a-e843a40aa2af/deck.txt"
     },
     {
       "name": "Toll of Time",
-      "url": "http://aminduna.arcmage.org/WTactics/Decks/0aa069a0-5e59-40dc-a443-692a89e151a0/deck.txt"
+      "url": "https://aminduna.arcmage.org/WTactics/Decks/0aa069a0-5e59-40dc-a443-692a89e151a0/deck.txt"
     },
     {
       "name": "Uneasy Alliance",
-      "url": "http://aminduna.arcmage.org/WTactics/Decks/ed84714a-0570-4384-a303-f2ded1400bdd/deck.txt"
+      "url": "https://aminduna.arcmage.org/WTactics/Decks/ed84714a-0570-4384-a303-f2ded1400bdd/deck.txt"
     }
   ],
   "enums": [
