@@ -39,7 +39,8 @@ namespace CGS
         public const string ShareTitle = "Card Game Simulator - {0}";
         public const string ShareDescription = "Play {0} on CGS!";
         public const string ShareBranchMessage = "Get CGS for {0}: {1}";
-        public const string ShareUrlMessage = "The CGS AutoUpdate Url for {0} has been copied to the clipboard: {1}";
+        public const string ShareUrlMessage = "Copied the CGS AutoUpdate Url for {0}: {1}";
+        public const string ShareWarningMessage = "You must upload this card game to the web in order to share it. Please check the CGS website. ";
         public const int CardsLoadingMessageThreshold = 60;
         public const int PixelsPerInch = 100;
 
@@ -431,6 +432,12 @@ namespace CGS
 
         public void Share()
         {
+            if (!Current.IsExternal)
+            {
+                Messenger.Show(ShareWarningMessage);
+                return;
+            }
+
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             ShareBranch();
 #else

@@ -21,6 +21,7 @@ namespace CGS.Menu
         public const int SettingsSceneIndex = 5;
 
         public DownloadMenu downloadMenu;
+        public CreateMenu createMenu;
         public GameObject gameManagement;
         public Image currentCardImage;
         public Image currentBannerImage;
@@ -107,7 +108,7 @@ namespace CGS.Menu
             else if (Input.GetButtonDown(Inputs.New))
             {
                 if (gameManagement.activeSelf)
-                    Download();
+                    Create();
                 else
                     StartGame();
             }
@@ -195,6 +196,13 @@ namespace CGS.Menu
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
             downloadMenu.Show();
+        }
+
+        public void Create()
+        {
+            if (Time.timeSinceLevelLoad < 0.1)
+                return;
+            createMenu.Show();
         }
 
         public void Delete()

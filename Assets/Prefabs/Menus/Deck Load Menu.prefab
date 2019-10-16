@@ -436,7 +436,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1075.0703, y: -75}
+  m_AnchoredPosition: {x: 1162.8722, y: -75}
   m_SizeDelta: {x: 175, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222889514338867980
@@ -1015,7 +1015,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000013436287}
+  m_AnchoredPosition: {x: 0, y: 0.000027256305}
   m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &114562436159873448
@@ -1114,7 +1114,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 60
   m_TargetDisplay: 0
@@ -1227,7 +1227,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 645.04224, y: -75}
+  m_AnchoredPosition: {x: 697.72327, y: -75}
   m_SizeDelta: {x: 175, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222241677547883430
@@ -1558,7 +1558,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 127.51407, y: -115}
+  m_AnchoredPosition: {x: 145.07443, y: -115}
   m_SizeDelta: {x: 175, y: 80}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &222467590742150474
@@ -2182,7 +2182,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1505.0985, y: -75}
+  m_AnchoredPosition: {x: 1628.021, y: -75}
   m_SizeDelta: {x: 175, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7938395457793707204
@@ -2977,6 +2977,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scrollbar Vertical
       objectReference: {fileID: 0}
+    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_Value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_Size
+      value: 0.9999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1829473602834048257, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3080,31 +3105,6 @@ PrefabInstance:
     - target: {fileID: 1829473602834048257, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_Value
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_Size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
-        type: 3}
-      propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

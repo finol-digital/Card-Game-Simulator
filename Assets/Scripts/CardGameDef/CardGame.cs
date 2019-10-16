@@ -44,6 +44,7 @@ namespace CardGameDef
         public string Id => Name + EncodedUrl;
         public string EncodedUrl => !string.IsNullOrEmpty(AutoUpdateUrl) ?
             "@" + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(AutoUpdateUrl)) : "";
+        public bool IsExternal => !string.IsNullOrEmpty(AutoUpdateUrl) || !string.IsNullOrEmpty(AllCardsUrl) || !string.IsNullOrEmpty(AllSetsUrl);
 
         [JsonProperty]
         public string Name { get; set; }
