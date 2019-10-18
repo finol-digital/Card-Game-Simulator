@@ -16,6 +16,10 @@ namespace CGS.Menu
         public List<InputField> inputFields;
         public Button createButton;
 
+        public string GameName { get; set; }
+        public string BannerImageUrl { get; set; }
+        public string CardBackImageUrl { get; set; }
+
         void Update()
         {
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
@@ -41,18 +45,18 @@ namespace CGS.Menu
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
         }
-/*
-        public void Clear()
+
+        public void ValidateCreateButton()
         {
-            urlInput.text = string.Empty;
+            createButton.interactable = !string.IsNullOrEmpty(GameName) && !string.IsNullOrEmpty(BannerImageUrl) && !string.IsNullOrEmpty(CardBackImageUrl);
         }
 
-        public void Paste()
+        public void Create()
         {
-            if (urlInput.interactable)
-                urlInput.text = UniClipboard.GetText();
+            // TODO:
+            Hide();
         }
-*/
+
         public void Hide()
         {
             gameObject.SetActive(false);
