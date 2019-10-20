@@ -24,6 +24,7 @@ env:
 
 stages:
   - build
+    if: false
   - name: deploy desktop
     if: false
   - name: deploy mobile

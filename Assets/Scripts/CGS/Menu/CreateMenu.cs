@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +15,8 @@ namespace CGS.Menu
 {
     public class CreateMenu : Modal
     {
+        public const string CreateWarningMessage = "A game with that name already exists!";
+
         public List<InputField> inputFields;
         public Button createButton;
 
@@ -25,19 +29,11 @@ namespace CGS.Menu
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            /*
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) || Input.GetButtonDown(Inputs.New))
-                 && downloadButton.interactable)
-                StartDownload();
-            else if ((Input.GetButtonDown(Inputs.Sort) || Input.GetButtonDown(Inputs.Load)) && urlInput.interactable)
-                Clear();
-            else if ((Input.GetButtonDown(Inputs.Filter) ||Input.GetButtonDown(Inputs.Save)) && urlInput.interactable)
-                Paste();
-            else if (((Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0)
-                || (Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)) && urlInput.interactable)
-                urlInput.ActivateInputField();
+                 && createButton.interactable)
+                StartCreation();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) || Input.GetButtonDown(Inputs.Option))
-                Hide(); */
+                Hide();
         }
 
         public void Show()
@@ -46,15 +42,43 @@ namespace CGS.Menu
             transform.SetAsLastSibling();
         }
 
-        public void ValidateCreateButton()
+        public bool ValidateCreateButton()
         {
-            createButton.interactable = !string.IsNullOrEmpty(GameName) && !string.IsNullOrEmpty(BannerImageUrl) && !string.IsNullOrEmpty(CardBackImageUrl);
+            createButton.interactable = !string.IsNullOrEmpty(GameName) && !string.IsNullOrEmpty(BannerImageUrl) && !string.IsNullOrEmpty(CardBackImageUrl)
+                && Uri.IsWellFormedUriString(BannerImageUrl, UriKind.Absolute)&& Uri.IsWellFormedUriString(CardBackImageUrl, UriKind.Absolute);
+            return createButton.interactable;
         }
 
-        public void Create()
+        public void StartCreation()
         {
-            // TODO:
+            if (!ValidateCreateButton())
+                return;
+
+            string gameName = inputFields[0].text.Trim();
+            if (CardGameManager.Instance.AllCardGames.ContainsKey(gameName))
+            {
+                CardGameManager.Instance.Messenger.Show(CreateWarningMessage);
+                return;
+            }
+
+            CardGame newCardGame = new CardGame(CardGameManager.Instance, gameName);
+            newCardGame.BannerImageUrl = inputFields[1].text.Trim();
+            newCardGame.CardBackImageUrl = inputFields[2].text.Trim();
+            CardGameManager.Instance.AllCardGames[newCardGame.Id] = newCardGame;
+
+
+            string dominoesDirectory = CardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
+            if (!Directory.Exists(dominoesDirectory))
+                Directory.CreateDirectory(dominoesDirectory);
+            File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
+            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
+
             Hide();
+        }
+
+        public IEnumerator DownloadImages()
+        {
+            yield return null;
         }
 
         public void Hide()
