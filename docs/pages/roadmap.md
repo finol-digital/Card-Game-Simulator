@@ -8,28 +8,30 @@ permalink: roadmap.html
 - Add Arcmage to WebGL build
 
 ## Current Sprint
-- Fix: Server freezes when sharing deck
-- Fix: Card dissappears when connection to server is dropped
-- Allow any player to move cards in the play area, instead of just the player who put it there
-- Allow cards to snap to each other when moving them
-- Have view for only hand vs view for only field
-- Card Grouping
-  - Define card zones in play area (remove gameHasDiscard/gameCatchesDiscard?)
-    - Card zones can define what actions are possible in that zone
-- Card Actions
-  - Define
-    - Toggle rotation between 0 and 90/180/270
-    - Rotate 90/180/270
-    - Toggle facedown
-    - Move to hand
-    - Move to top/bottom of deck
-    - Move to discard/delete
-  - Double-clicking takes a default action, based on the zone the card is in
-  - Single-click show menu with all possible actions at the bottom
-  - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
-- Slider to control zoom
-- Add Card Editor
+- Add In-App Card Editor
+- Print deck as pdf
+- Play Mode Redesign
+  - Fix: Server freezes when sharing deck
+  - Fix: Card dissappears when connection to server is dropped
+  - Allow any player to move cards in the play area, instead of just the player who put it there
+  - Allow cards to snap to each other when moving them
+  - Have view for only hand vs view for only field
+  - Card Grouping
+    - Define card zones in play area (remove gameHasDiscard/gameCatchesDiscard?)
+      - Card zones can define what actions are possible in that zone
+  - Card Actions
+    - Define
+      - Toggle rotation between 0 and 90/180/270
+      - Rotate 90/180/270
+      - Toggle facedown
+      - Move to hand
+      - Move to top/bottom of deck
+      - Move to discard/delete
+    - Double-clicking takes a default action, based on the zone the card is in
+    - Single-click show menu with all possible actions at the bottom
+    - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+  - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
+  - Slider to control zoom
 
 ## Backlog
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
@@ -57,7 +59,6 @@ permalink: roadmap.html
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
 - Support dual-faced cards (DFC)
-- Print proxy deck list as pdf
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
