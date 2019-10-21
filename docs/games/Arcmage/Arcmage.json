@@ -24,8 +24,8 @@
     {
       "name": "cost",
       "display": "Cost",
-      "type": "string",
-      "empty": "NONE or N/A"
+      "displayEmpty": "NONE or N/A",
+      "type": "string"
     },
     {
       "name": "type",
@@ -35,8 +35,8 @@
     {
       "name": "subType",
       "display": "Sub-Type",
-      "type": "string",
-      "empty": "NONE or N/A"
+      "displayEmpty": "NONE or N/A",
+      "type": "string"
     },
     {
       "name": "ruleText",
@@ -51,26 +51,26 @@
     {
       "name": "loyalty",
       "display": "Loyalty",
-      "type": "integer",
-      "empty": "NONE or N/A"
+      "displayEmpty": "NONE or N/A",
+      "type": "integer"
     },
     {
       "name": "attack",
       "display": "Attack",
-      "type": "string",
-      "empty": "N / A"
+      "displayEmpty": "N / A",
+      "type": "string"
     },
     {
       "name": "defense",
       "display": "Defense",
-      "type": "string",
-      "empty": "N / A"
+      "displayEmpty": "N / A",
+      "type": "string"
     },
     {
       "name": "artist",
       "display": "Artist",
-      "type": "string",
-      "empty": "NONE or N/A"
+      "displayEmpty": "NONE or N/A",
+      "type": "string"
     },
     {
       "name": "status",
