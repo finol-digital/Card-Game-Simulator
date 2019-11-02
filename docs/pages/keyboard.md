@@ -50,6 +50,9 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Vertical**: *down*, *up* - Navigate cards vertically.
 - **PageHorizontal**: *Home*, *End* - Page through search results.
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
+- **Sort**: *q* - Sorts the cards.
+- **New**: *e* - Brings up the Card Creation Menu.
+- **Load**: *r* - Deletes the selected card.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
 - **Focus**: *\`* or *Tab* - Focuses keyboard to the card search input field.
 

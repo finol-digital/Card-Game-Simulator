@@ -7,6 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +19,8 @@ namespace CGS.Menu
     public class CreateMenu : Modal
     {
         public const string CreateWarningMessage = "A game with that name already exists!";
+        public const string CreationWarningMessage = "Failed to create the custom card game! ";
+        public const string CreationCleanupErrorMessage = "Failed to both create and cleanup during creation! ";
 
         public List<InputField> inputFields;
         public Button createButton;
@@ -43,42 +47,58 @@ namespace CGS.Menu
             transform.SetAsLastSibling();
         }
 
-        public bool ValidateCreateButton()
+        public void ValidateCreateButton()
         {
             createButton.interactable = !string.IsNullOrEmpty(GameName) && !string.IsNullOrEmpty(BannerImageUrl) && !string.IsNullOrEmpty(CardBackImageUrl)
-                && Uri.IsWellFormedUriString(BannerImageUrl, UriKind.Absolute)&& Uri.IsWellFormedUriString(CardBackImageUrl, UriKind.Absolute);
-            return createButton.interactable;
+                && Uri.IsWellFormedUriString(BannerImageUrl, UriKind.Absolute) && Uri.IsWellFormedUriString(CardBackImageUrl, UriKind.Absolute);
         }
 
         public void StartCreation()
         {
-            if (!ValidateCreateButton())
-                return;
+            StartCoroutine(CreateGame());
+        }
+
+        public IEnumerator CreateGame()
+        {
+            ValidateCreateButton();
+            if (!createButton.interactable)
+                yield break;
 
             string gameName = inputFields[0].text.Trim();
             if (CardGameManager.Instance.AllCardGames.ContainsKey(gameName))
             {
                 CardGameManager.Instance.Messenger.Show(CreateWarningMessage);
-                return;
+                yield break;
             }
 
             CardGame newCardGame = new CardGame(CardGameManager.Instance, gameName);
             newCardGame.BannerImageUrl = inputFields[1].text.Trim();
             newCardGame.CardBackImageUrl = inputFields[2].text.Trim();
-            CardGameManager.Instance.AllCardGames[newCardGame.Id] = newCardGame;
 
-            string dominoesDirectory = CardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
-            if (!Directory.Exists(dominoesDirectory))
-                Directory.CreateDirectory(dominoesDirectory);
-            File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
-            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
+            if (!Directory.Exists(newCardGame.GameDirectoryPath))
+                Directory.CreateDirectory(newCardGame.GameDirectoryPath);
+            var defaultContractResolver = new DefaultContractResolver() { NamingStrategy = new CamelCaseNamingStrategy() };
+            var jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                ContractResolver = defaultContractResolver,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            File.WriteAllText(newCardGame.GameFilePath, JsonConvert.SerializeObject(newCardGame, jsonSerializerSettings));
 
-            Hide();
-        }
+            yield return CardGameManager.Instance.UpdateCardGame(newCardGame);
 
-        public IEnumerator DownloadImages()
-        {
-            yield return null;
+            if (!string.IsNullOrEmpty(newCardGame.Error))
+            {
+                Debug.LogWarning(CreationWarningMessage + newCardGame.Error);
+                try { Directory.Delete(newCardGame.GameDirectoryPath, true); }
+                catch (Exception ex) { Debug.LogError(CreationCleanupErrorMessage + ex.Message); }
+            }
+            else
+            {
+                CardGameManager.Instance.AllCardGames[newCardGame.Id] = newCardGame;
+                CardGameManager.Instance.Select(newCardGame.Id);
+                Hide();
+            }
         }
 
         public void Hide()

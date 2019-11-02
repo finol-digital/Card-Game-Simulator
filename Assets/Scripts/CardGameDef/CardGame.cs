@@ -344,7 +344,8 @@ namespace CardGameDef
             // We should always first get the *Game:Name*.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: CardGameDef...";
-            yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, GameFilePath);
+            if (!string.IsNullOrEmpty(AutoUpdateUrl))
+                yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl, GameFilePath);
             ReadProperties();
             if (!HasReadProperties)
             {
