@@ -5,11 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Add Arcmage to WebGL build
+- Add Basic In-App Card Creation and Deletion
+- Print deck as pdf
 
 ## Current Sprint
-- Add In-App Card Editor
-- Print deck as pdf
 - Play Mode Redesign
   - Fix: Server freezes when sharing deck
   - Fix: Card dissappears when connection to server is dropped
