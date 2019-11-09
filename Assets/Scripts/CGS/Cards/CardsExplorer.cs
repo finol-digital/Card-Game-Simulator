@@ -56,7 +56,7 @@ namespace CGS.Cards
 
         public void ShowCardCreationMenu()
         {
-            CardCreator.Show();
+            CardCreator.Show(searchResults.Search);
         }
 
         public void BackToMainMenu()

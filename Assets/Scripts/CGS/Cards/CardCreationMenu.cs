@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 using CardGameDef;
@@ -17,11 +18,14 @@ namespace CGS.Cards
 {
     public class CardCreationMenu : Modal
     {
+        public const string ImageCreationFailedWarningMessage = "Failed to get the image! Unable to create the card.";
         public List<InputField> inputFields;
         public Button createButton;
 
         public string CardName { get; set; }
         public string CardImageUri { get; set; }
+
+        private UnityAction _onCreationCallback;
 
         void Update()
         {
@@ -35,10 +39,11 @@ namespace CGS.Cards
                 Hide();
         }
 
-        public void Show()
+        public void Show(UnityAction onCreationCallback)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
+            _onCreationCallback = onCreationCallback;
         }
 
         public void ValidateCreateButton()
@@ -58,19 +63,30 @@ namespace CGS.Cards
             if (!createButton.interactable)
                 yield break;
 
+            createButton.interactable = false;
+
             // TODO: DYNAMICALLY ASSIGN GLOBALLY UNIQUE ID
             Card newCard = new Card(CardGameManager.Current, UnityExtensionMethods.GetSafeFileName(CardName), CardName, Set.DefaultCode, null, false);
+            newCard.ImageWebUrl = CardImageUri;
             yield return UnityExtensionMethods.SaveUrlToFile(CardImageUri, newCard.ImageFilePath);
 
             if (!File.Exists(newCard.ImageFilePath))
             {
-                Debug.LogWarning("");
+                Debug.LogWarning(ImageCreationFailedWarningMessage);
+                yield break;
             }
-            else
-            {
 
-                Hide();
-            }
+            CardGameManager.Current.RegisterCard(newCard);
+            if (_onCreationCallback != null)
+                _onCreationCallback();
+
+            ValidateCreateButton();
+            Hide();
+        }
+
+        public void DeleteCard(Card card)
+        {
+            // TODO:
         }
 
         public void Hide()

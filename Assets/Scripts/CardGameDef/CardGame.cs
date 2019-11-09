@@ -827,6 +827,32 @@ namespace CardGameDef
                     LoadCardFromJToken(jToken, setCode);
         }
 
+        public void RegisterCard(Card card)
+        {
+            bool isReprint = CardNameIsUnique && CardNames.Contains(card.Name);
+            if (!isReprint)
+                CardNames.Add(card.Name);
+            LoadedCards[card.Id] = card;
+
+            if (!Sets.ContainsKey(card.SetCode))
+                LoadedSets[card.SetCode] = new Set(card.SetCode, card.SetCode);
+
+            WriteAllCardsJson();
+        }
+
+        private void WriteAllCardsJson()
+        {
+            string allCardsJson = "";
+            // TODO: POPULATE JSON
+            File.WriteAllText(CardsFilePath, allCardsJson);
+        }
+
+        public void UnregisterCard(string cardId)
+        {
+            LoadedCards.Remove(cardId);
+            WriteAllCardsJson();
+        }
+
         public IEnumerable<Card> FilterCards(CardSearchFilters filters)
         {
             if (filters == null)
