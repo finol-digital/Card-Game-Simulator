@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace CardGameDef
 {
@@ -827,7 +828,7 @@ namespace CardGameDef
                     LoadCardFromJToken(jToken, setCode);
         }
 
-        public void RegisterCard(Card card)
+        public void Add(Card card)
         {
             bool isReprint = CardNameIsUnique && CardNames.Contains(card.Name);
             if (!isReprint)
@@ -842,12 +843,23 @@ namespace CardGameDef
 
         private void WriteAllCardsJson()
         {
-            string allCardsJson = "";
-            // TODO: POPULATE JSON
+            var defaultContractResolver = new DefaultContractResolver() { NamingStrategy = new CamelCaseNamingStrategy() };
+            var jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                ContractResolver = defaultContractResolver,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            string allCardsJson = JsonConvert.SerializeObject(Cards.Values.ToList(), jsonSerializerSettings);
             File.WriteAllText(CardsFilePath, allCardsJson);
         }
 
-        public void UnregisterCard(string cardId)
+        public void Remove(Card card)
+        {
+            if (card != null && card.Id != null)
+                Remove(card.Id);
+        }
+
+        private void Remove(string cardId)
         {
             LoadedCards.Remove(cardId);
             WriteAllCardsJson();

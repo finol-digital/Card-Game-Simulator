@@ -76,17 +76,12 @@ namespace CGS.Cards
                 yield break;
             }
 
-            CardGameManager.Current.RegisterCard(newCard);
+            CardGameManager.Current.Add(newCard);
             if (_onCreationCallback != null)
                 _onCreationCallback();
 
             ValidateCreateButton();
             Hide();
-        }
-
-        public void DeleteCard(Card card)
-        {
-            // TODO:
         }
 
         public void Hide()

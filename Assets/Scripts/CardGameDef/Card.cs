@@ -7,16 +7,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace CardGameDef
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class Card : IComparable<Card>, IEquatable<Card>
     {
         public static readonly Card Blank = new Card(CardGame.Invalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
+        [JsonProperty]
         public string Id { get; private set; }
+        [JsonProperty]
         public string Name { get; private set; }
+        [JsonProperty]
         public string SetCode { get; private set; }
         protected Dictionary<string, PropertyDefValuePair> Properties { get; private set; }
         public bool IsReprint { get; private set; }
