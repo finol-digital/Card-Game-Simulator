@@ -84,6 +84,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Cancel.
 - **Focus**: *\`* or *Tab* - Focuses keyboard to the deck name input field.
 - **Load**: *r* - Copies deck text to the text clipboard.
+- **Save**: *t* - Creates a printable pdf of the deck.
 - **Submit**: *Enter* - Save.
 
 ## Dice Menu

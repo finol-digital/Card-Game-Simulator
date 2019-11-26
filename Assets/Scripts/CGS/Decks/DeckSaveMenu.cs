@@ -21,6 +21,7 @@ namespace CGS.Decks
         public const string DeckCopiedMessage = "The text for this deck has been copied to the clipboard.";
         public const string OverWriteDeckPrompt = "A deck with that name already exists. Overwrite?";
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
+        public const string DeckPrintErrorMessage = "There was an error printing the deck as pdf: ";
 
         public InputField nameInputField;
         public TMP_Text textOutputArea;
@@ -42,6 +43,8 @@ namespace CGS.Decks
                 nameInputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Load) && EventSystem.current.currentSelectedGameObject == null)
                 Share();
+            else if (Input.GetButtonDown(Inputs.Save) && EventSystem.current.currentSelectedGameObject == null)
+                PrintPdf();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
         }
@@ -78,6 +81,21 @@ namespace CGS.Decks
             UniClipboard.SetText(shareText);
             CardGameManager.Instance.Messenger.Show(DeckCopiedMessage);
 #endif
+        }
+
+        public void PrintPdf()
+        {
+            CurrentDeck.Name = nameInputField.text;
+            Deck deck = CurrentDeck;
+            try
+            {
+                deck.PrintPdf();
+                Application.OpenURL(deck.PrintPdfFilePath);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(DeckPrintErrorMessage + e.Message);
+            }
         }
 
         public void EnableSubmit()

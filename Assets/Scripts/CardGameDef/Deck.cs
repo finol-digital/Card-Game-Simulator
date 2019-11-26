@@ -7,6 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Drawing;
+using PdfSharp;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 
 namespace CardGameDef
 {
@@ -31,6 +36,8 @@ namespace CardGameDef
         public const string DefaultName = "Untitled";
 
         public string FilePath => SourceGame.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
+        public string PrintPdfDirectory => SourceGame.DecksFilePath + "/printpdf";
+        public string PrintPdfFilePath => PrintPdfDirectory + "/" + UnityExtensionMethods.GetSafeFileName(Name + ".pdf");
 
         public string Name { get; set; }
         public DeckFileType FileType { get; private set; }
@@ -391,5 +398,37 @@ namespace CardGameDef
         {
             return other != null && ToString().Equals(other.ToString());
         }
+
+        // NOTE: CAN THROW EXCEPTION
+        public void PrintPdf()
+        {
+            if (!Directory.Exists(PrintPdfDirectory))
+                Directory.CreateDirectory(PrintPdfDirectory);
+
+            PdfDocument document = new PdfDocument();
+            document.Info.Title = Name;
+
+            int cardsPerRow = 3; // TODO
+            int rowsPerPage = 3; // TODO
+            int cardsPerPage = cardsPerRow * rowsPerPage;
+            PdfPage page = null;
+            XGraphics gfx = null;
+            for (int cardNumber = 0; cardNumber < Cards.Count; cardNumber++)
+            {
+                if (page == null || cardNumber % cardsPerPage == 0)
+                {
+                    page = document.AddPage();
+                    gfx = XGraphics.FromPdfPage(page);
+                }
+                XImage image = XImage.FromFile(Cards[cardNumber].ImageFilePath);
+                const double dx = 250, dy = 140; // TODO
+                double width = image.PixelWidth * 72 / image.HorizontalResolution; // TODO
+                double height = image.PixelHeight * 72 / image.HorizontalResolution; // TODO
+                gfx.DrawImage(image, (dx - width) / 2, (dy - height) / 2, width, height); // TODO
+            }
+
+            document.Save(PrintPdfFilePath);
+        }
+
     }
 }

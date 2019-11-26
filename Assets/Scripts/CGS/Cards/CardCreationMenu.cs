@@ -65,8 +65,7 @@ namespace CGS.Cards
 
             createButton.interactable = false;
 
-            // TODO: DYNAMICALLY ASSIGN GLOBALLY UNIQUE ID
-            Card newCard = new Card(CardGameManager.Current, UnityExtensionMethods.GetSafeFileName(CardName), CardName, Set.DefaultCode, null, false);
+            Card newCard = new Card(CardGameManager.Current, Guid.NewGuid().ToString().ToUpper(), CardName, Set.DefaultCode, null, false);
             newCard.ImageWebUrl = CardImageUri;
             yield return UnityExtensionMethods.SaveUrlToFile(CardImageUri, newCard.ImageFilePath);
 
