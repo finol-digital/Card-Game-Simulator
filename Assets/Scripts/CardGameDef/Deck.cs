@@ -7,11 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
-using System.Drawing;
 using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
-using PdfSharp.Pdf.IO;
 
 namespace CardGameDef
 {
@@ -34,6 +32,10 @@ namespace CardGameDef
     public class Deck : IEquatable<Deck>
     {
         public const string DefaultName = "Untitled";
+        public const float PrintPdfWidth = 8.5f;
+        public const float PrintPdfHeight = 11f;
+        public const float PrintPdfMargin = 0.5f;
+        public const int PrintPdfPixelsPerInch = 72;
 
         public string FilePath => SourceGame.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
         public string PrintPdfDirectory => SourceGame.DecksFilePath + "/printpdf";
@@ -408,23 +410,29 @@ namespace CardGameDef
             PdfDocument document = new PdfDocument();
             document.Info.Title = Name;
 
-            int cardsPerRow = 3; // TODO
-            int rowsPerPage = 3; // TODO
+            int cardsPerRow = (int)Math.Floor((PrintPdfWidth - PrintPdfMargin * 2) / SourceGame.CardSize.x);
+            int rowsPerPage = (int)Math.Floor((PrintPdfHeight - PrintPdfMargin * 2) / SourceGame.CardSize.y);
             int cardsPerPage = cardsPerRow * rowsPerPage;
             PdfPage page = null;
             XGraphics gfx = null;
+            double px = PrintPdfMargin * PrintPdfPixelsPerInch, py = PrintPdfMargin * PrintPdfPixelsPerInch;
             for (int cardNumber = 0; cardNumber < Cards.Count; cardNumber++)
             {
                 if (page == null || cardNumber % cardsPerPage == 0)
                 {
                     page = document.AddPage();
+                    page.Size = PageSize.Letter;
                     gfx = XGraphics.FromPdfPage(page);
+                    py = PrintPdfMargin * PrintPdfPixelsPerInch;
                 }
                 XImage image = XImage.FromFile(Cards[cardNumber].ImageFilePath);
-                const double dx = 250, dy = 140; // TODO
-                double width = image.PixelWidth * 72 / image.HorizontalResolution; // TODO
-                double height = image.PixelHeight * 72 / image.HorizontalResolution; // TODO
-                gfx.DrawImage(image, (dx - width) / 2, (dy - height) / 2, width, height); // TODO
+                gfx.DrawImage(image, px, py, SourceGame.CardSize.x * PrintPdfPixelsPerInch, SourceGame.CardSize.y * PrintPdfPixelsPerInch);
+                px += SourceGame.CardSize.x * PrintPdfPixelsPerInch;
+                if ((cardNumber + 1) % cardsPerRow == 0)
+                {
+                    px = PrintPdfMargin * PrintPdfPixelsPerInch;
+                    py += SourceGame.CardSize.y * PrintPdfPixelsPerInch;
+                }
             }
 
             document.Save(PrintPdfFilePath);

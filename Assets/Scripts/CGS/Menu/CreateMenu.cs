@@ -72,6 +72,7 @@ namespace CGS.Menu
             }
 
             CardGame newCardGame = new CardGame(CardGameManager.Instance, gameName);
+            newCardGame.AutoUpdate = -1;
             newCardGame.BannerImageUrl = inputFields[1].text.Trim();
             newCardGame.CardBackImageUrl = inputFields[2].text.Trim();
 
