@@ -26,9 +26,9 @@ stages:
   - build
 #    if: false
   - name: deploy desktop
-#    if: false
-  - name: deploy mobile
     if: false
+  - name: deploy mobile
+#    if: false
 
 jobs:
   include:
