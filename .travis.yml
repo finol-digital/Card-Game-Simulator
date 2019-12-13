@@ -1,7 +1,7 @@
 language: objective-c
 os: osx
 osx_image: xcode10.2
-rvm: 2.3
+rvm: 2.6.0
 
 branches:
   only:
