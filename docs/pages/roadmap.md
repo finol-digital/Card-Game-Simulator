@@ -5,8 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Add Basic In-App Card Creation and Deletion
-- Print deck as pdf
+- Fix: Selection Panel Navigation
 
 ## Current Sprint
 - Play Mode Redesign
@@ -38,7 +37,6 @@ permalink: roadmap.html
 - Tech: Allow space and dash in deck filename on Windows and Android
 - Tech: Use Json.Net schema
 - Tech: Google Play Instant
-- Navigate with hotkeys in SelectionPanel
 - Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -89,7 +90,7 @@ namespace CGS.Decks
 
                 if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && loadFromFileButton.interactable)
                     LoadFromFileAndHide();
-                else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
+                else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject).Contains(EventSystem.current.currentSelectedGameObject))
                     EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
                 else if (Input.GetButtonDown(Inputs.Sort) && shareFileButton.interactable)
                     Share();

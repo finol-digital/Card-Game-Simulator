@@ -49,7 +49,7 @@ namespace CGS.Play.Multiplayer
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && joinButton.interactable)
                 Join();
-            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Contains(EventSystem.current.currentSelectedGameObject))
+            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject).Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Input.GetButtonDown(Inputs.New))
                 Host();
