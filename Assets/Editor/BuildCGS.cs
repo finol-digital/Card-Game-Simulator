@@ -16,6 +16,7 @@ class BuildCGS
         }
     }
 
+    [MenuItem("CGS/Build Android")]
     static void Android()
     {
 #if UNITY_EDITOR_OSX
@@ -38,6 +39,7 @@ class BuildCGS
         BuildPipeline.BuildPlayer(buildPlayerOptions);
     }
 
+    [MenuItem("CGS/Build iOS")]
     static void iOS()
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();

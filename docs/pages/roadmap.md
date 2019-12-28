@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## What's New
 - Fix: Selection Panel Navigation
+- Tech: Use NJsonSchema
 
 ## Current Sprint
 - Play Mode Redesign
@@ -30,12 +31,14 @@ permalink: roadmap.html
     - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
   - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
   - Slider to control zoom
+- Support jpg in game and card creation menus
+- Paste into game and card creation menus
+- Internal file browser for game and card creation menus
 
 ## Backlog
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Tech: Branch on desktop
 - Tech: Allow space and dash in deck filename on Windows and Android
-- Tech: Use Json.Net schema
 - Tech: Google Play Instant
 - Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
