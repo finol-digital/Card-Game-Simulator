@@ -34,10 +34,11 @@ namespace CardGameDef
             get
             {
                 string url = _imageWebUrl;
-                if (!string.IsNullOrEmpty(url) && !url.Equals(SourceGame.CardImageUrl))
+                string cardImageUrl = SourceGame.CardImageUrl;
+                if (!string.IsNullOrEmpty(url) && !url.Equals(cardImageUrl))
                     return url;
 
-                url = SourceGame.CardImageUrl;
+                url = cardImageUrl;
                 url = url.Replace("{cardId}", Id);
                 url = url.Replace("{cardName}", Name);
                 url = url.Replace("{cardSet}", SetCode);

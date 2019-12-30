@@ -3,30 +3,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace CardGameDef
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class DeckUrl : ICloneable
+    public class DeckUrl
     {
         [JsonProperty]
+        [Description("The name of the deck")]
         public string Name { get; private set; }
 
         [JsonProperty]
-        public string Url { get; private set; }
-
-        [JsonConstructor]
-        public DeckUrl(string name, string url)
-        {
-            Name = name ?? string.Empty;
-            Url = url ?? string.Empty;
-        }
-
-        public object Clone()
-        {
-            DeckUrl ret = new DeckUrl(Name, Url);
-            return ret;
-        }
+        [Description("The url from which to download the deck")]
+        public Uri Url { get; private set; }
     }
 }

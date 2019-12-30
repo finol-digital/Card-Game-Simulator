@@ -452,7 +452,7 @@ namespace CGS
             universalObject.canonicalIdentifier = Current.Id;
             universalObject.title = string.Format(ShareTitle, Current.Name);
             universalObject.contentDescription = string.Format(ShareDescription, Current.Name);
-            universalObject.imageUrl = Current.BannerImageUrl;
+            universalObject.imageUrl = Current.BannerImageUrl?.OriginalString;
             universalObject.metadata.AddCustomMetadata(GameId, Current.Id);
             BranchLinkProperties linkProperties = new BranchLinkProperties();
             linkProperties.controlParams.Add(GameId, Current.Id);
@@ -473,7 +473,7 @@ namespace CGS
 
         public void ShareUrl()
         {
-            UniClipboard.SetText(Current.AutoUpdateUrl);
+            UniClipboard.SetText(Current.AutoUpdateUrl?.OriginalString ?? string.Empty);
             Messenger.Show(string.Format(ShareUrlMessage, Current.Name, Current.AutoUpdateUrl));
         }
 

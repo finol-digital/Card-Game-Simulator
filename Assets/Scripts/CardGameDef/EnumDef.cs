@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
@@ -16,9 +17,11 @@ namespace CardGameDef
         public const string Delimiter = " | ";
 
         [JsonProperty]
+        [Description("Refers to a *Property:Name* in <cardProperties>")]
         public string Property { get; private set; }
 
         [JsonProperty]
+        [Description("Dictionary with string key-value pairs")]
         public Dictionary<string, string> Values { get; private set; }
 
         public Dictionary<string, int> Lookups { get; } = new Dictionary<string, int>();

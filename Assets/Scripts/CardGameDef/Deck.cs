@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -15,17 +18,25 @@ namespace CardGameDef
 {
     public delegate string OnNameChangeDelegate(string newName);
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DeckFileType
     {
+        [EnumMember(Value = "dec")]
         Dec,
+        [EnumMember(Value = "hsd")]
         Hsd,
+        [EnumMember(Value = "txt")]
         Txt,
+        [EnumMember(Value = "ydk")]
         Ydk
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DeckFileTxtId
     {
+        [EnumMember(Value = "id")]
         Id,
+        [EnumMember(Value = "set")]
         Set
     }
 

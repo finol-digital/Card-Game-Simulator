@@ -73,8 +73,7 @@ namespace CGS.Play.Zones
         void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
-            if (CardGameManager.Current.GameHasDiscardZone)
-                CreateDiscard();
+            CreateDiscard();
         }
 
         void OnRectTransformDimensionsChange()

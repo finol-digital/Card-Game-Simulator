@@ -3,23 +3,38 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CardGameDef
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum PropertyType
     {
+        [EnumMember(Value = "string")]
         String,
+        [EnumMember(Value = "escapedString")]
         EscapedString,
+        [EnumMember(Value = "integer")]
         Integer,
+        [EnumMember(Value = "boolean")]
         Boolean,
+        [EnumMember(Value = "object")]
         Object,
+        [EnumMember(Value = "stringEnum")]
         StringEnum,
+        [EnumMember(Value = "stringList")]
         StringList,
+        [EnumMember(Value = "stringEnumList")]
         StringEnumList,
+        [EnumMember(Value = "objectEnum")]
         ObjectEnum,
+        [EnumMember(Value = "objectList")]
         ObjectList,
+        [EnumMember(Value = "objectEnumList")]
         ObjectEnumList
     }
 
@@ -30,24 +45,33 @@ namespace CardGameDef
         public const string EscapeCharacter = "\\";
 
         [JsonProperty]
+        [JsonRequired]
+        [Description("The name of the property: This name can be referenced to lookup a Card's property")]
         public string Name { get; set; }
 
         [JsonProperty]
+        [JsonRequired]
+        [Description("The type of the property")]
+        [DefaultValue("string")]
         public PropertyType Type { get; set; }
 
         [JsonProperty]
+        [Description("The name of the property as it is displayed to the end user")]
         public string Display { get; set; }
 
         [JsonProperty]
+        [Description("The value to display if the value is null or empty")]
         public string DisplayEmpty { get; set; }
 
         [JsonProperty]
+        [Description("List <displayEmpty> as the first option if this property is an enum?")]
         public bool DisplayEmptyFirst { get; set; }
 
         [JsonProperty]
         public List<PropertyDef> Properties { get; set; }
 
         [JsonProperty]
+        [Description("If this property is a stringList or stringEnumList, the value will be delimited by this delimiter")]
         public string Delimiter { get; set; }
 
         [JsonConstructor]

@@ -90,8 +90,8 @@ namespace CGS.Play
 
         public void ViewRules()
         {
-            if (Uri.IsWellFormedUriString(CardGameManager.Current.RulesUrl, UriKind.Absolute))
-                Application.OpenURL(CardGameManager.Current.RulesUrl);
+            if (CardGameManager.Current.RulesUrl != null && CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
+                Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
             else
                 CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
         }
@@ -231,10 +231,6 @@ namespace CGS.Play
 
         public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
         {
-            // TODO: RESTORE THIS
-            //if (CardGameManager.Current.CardClearsBackground)
-            //    CardGameManager.Instance.BannerImage.gameObject.SetActive(false);
-
             if (NetworkManager.singleton.isNetworkActive)
                 CGSNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
             else

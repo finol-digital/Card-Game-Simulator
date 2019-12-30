@@ -64,7 +64,7 @@ namespace CGS.Menu
             if (!createButton.interactable)
                 yield break;
 
-            string gameName = inputFields[0].text.Trim();
+            string gameName = GameName.Trim();
             if (CardGameManager.Instance.AllCardGames.ContainsKey(gameName))
             {
                 CardGameManager.Instance.Messenger.Show(CreateWarningMessage);
@@ -73,8 +73,8 @@ namespace CGS.Menu
 
             CardGame newCardGame = new CardGame(CardGameManager.Instance, gameName);
             newCardGame.AutoUpdate = -1;
-            newCardGame.BannerImageUrl = inputFields[1].text.Trim();
-            newCardGame.CardBackImageUrl = inputFields[2].text.Trim();
+            newCardGame.BannerImageUrl = new Uri(BannerImageUrl);
+            newCardGame.CardBackImageUrl = new Uri(CardBackImageUrl);
 
             if (!Directory.Exists(newCardGame.GameDirectoryPath))
                 Directory.CreateDirectory(newCardGame.GameDirectoryPath);

@@ -586,7 +586,7 @@ namespace CardGameView
 
         public void Discard()
         {
-            if (DropTarget == null && CardGameManager.Current.GameCatchesDiscard && CGSNetManager.Instance != null)
+            if (DropTarget == null && CGSNetManager.Instance != null)
                 CGSNetManager.Instance.playController.CatchDiscard(Value);
             Destroy(gameObject);
         }

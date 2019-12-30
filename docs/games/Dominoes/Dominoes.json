@@ -4,7 +4,6 @@
   "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Dominoes/Dominoes.json",
   "bannerImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/Banner.png",
   "cardBackImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/CardBack.png",
-  "cardClearsBackground": true,
   "cardImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",
   "cardPrimaryProperty": "suit",
   "cardProperties": [

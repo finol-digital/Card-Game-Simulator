@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
+using System.ComponentModel;
 using Newtonsoft.Json;
 
 namespace CardGameDef
@@ -10,16 +12,11 @@ namespace CardGameDef
     public class GameBoardUrl
     {
         [JsonProperty]
+        [Description("The id of the board")]
         public string Id { get; private set; }
 
         [JsonProperty]
-        public string Url { get; private set; }
-
-        [JsonConstructor]
-        public GameBoardUrl(string id, string url)
-        {
-            Id = id ?? string.Empty;
-            Url = url ?? string.Empty;
-        }
+        [Description("The url from which to download the board image")]
+        public Uri Url { get; private set; }
     }
 }

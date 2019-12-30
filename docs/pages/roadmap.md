@@ -16,7 +16,7 @@ permalink: roadmap.html
   - Allow cards to snap to each other when moving them
   - Have view for only hand vs view for only field
   - Card Grouping
-    - Define card zones in play area (remove gameHasDiscard/gameCatchesDiscard?)
+    - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
       - Card zones can define what actions are possible in that zone
   - Card Actions
     - Define
@@ -52,7 +52,6 @@ permalink: roadmap.html
 - Press and hold on Popups/Card Viewer to copy text
 
 ## Icebox
-- Tech: Restore CardClearsBackground
 - Tech: Replace SwipeManager
 - Support default search filters
 - Support default sort
