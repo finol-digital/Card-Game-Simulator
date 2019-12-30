@@ -219,7 +219,7 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description("cardSize indicates a card's width and height in inches.")]
-        [DefaultValue("x: 2.5, y: 3.5")]
+        [DefaultValue("(x: 2.5, y: 3.5)")]
         public UnityEngine.Vector2 CardSize { get; set; } = new UnityEngine.Vector2(2.5f, 3.5f);
 
         [JsonProperty]
@@ -276,7 +276,7 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description("playAreaSize indicates the width and height in inches of the play area in Play Mode.")]
-        [DefaultValue("x: 36, y: 24")]
+        [DefaultValue("(x: 36, y: 24)")]
         public UnityEngine.Vector2 PlayAreaSize { get; set; } = new UnityEngine.Vector2(36f, 24f);
 
         [JsonProperty]

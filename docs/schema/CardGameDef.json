@@ -178,7 +178,7 @@
     },
     "cardSize": {
       "description": "cardSize indicates a card's width and height in inches.",
-      "default": "x: 2.5, y: 3.5",
+      "default": "(x: 2.5, y: 3.5)",
       "oneOf": [
         {
           "$ref": "#/definitions/Vector2"
@@ -265,7 +265,7 @@
     },
     "playAreaSize": {
       "description": "playAreaSize indicates the width and height in inches of the play area in Play Mode.",
-      "default": "x: 36, y: 24",
+      "default": "(x: 36, y: 24)",
       "oneOf": [
         {
           "$ref": "#/definitions/Vector2"
