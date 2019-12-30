@@ -9,6 +9,10 @@ permalink: roadmap.html
 - Tech: Use NJsonSchema
 
 ## Current Sprint
+- Support jpg in game and card creation menus
+- Preview images in game and card creation menus
+- Paste into game and card creation menus
+- Internal file browser for game and card creation menus
 - Play Mode Redesign
   - Fix: Server freezes when sharing deck
   - Fix: Card dissappears when connection to server is dropped
@@ -31,9 +35,6 @@ permalink: roadmap.html
     - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
   - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
   - Slider to control zoom
-- Support jpg in game and card creation menus
-- Paste into game and card creation menus
-- Internal file browser for game and card creation menus
 
 ## Backlog
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
