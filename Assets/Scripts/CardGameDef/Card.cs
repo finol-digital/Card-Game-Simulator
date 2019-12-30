@@ -37,7 +37,7 @@ namespace CardGameDef
                 string cardImageUrl = SourceGame.CardImageUrl;
                 if (!string.IsNullOrEmpty(url) && !url.Equals(cardImageUrl))
                     return url;
-
+                // NOTE: cardImageUrl uses this custom implementation of uri-template to allow for more versatility
                 url = cardImageUrl;
                 url = url.Replace("{cardId}", Id);
                 url = url.Replace("{cardName}", Name);
