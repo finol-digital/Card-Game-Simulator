@@ -37,4 +37,5 @@
     <provider android:name="com.yasirkula.unity.UnitySSContentProvider" android:authorities="com.finoldigital.cardgamesim" android:exported="false" android:grantUriPermissions="true" />
   </application>
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 </manifest>

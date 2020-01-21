@@ -6,49 +6,55 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-using CardGameDef;
-
 namespace CGS.Menu
 {
+    public delegate IEnumerator DownloadCoroutineDelegate(string url);
     public class DownloadMenu : Modal
     {
-        public InputField urlInput;
+        public Text labelText;
+        public InputField urlInputField;
         public Button downloadButton;
+
+        public DownloadCoroutineDelegate DownloadCoroutine { get; private set; }
 
         void Update()
         {
-            if (!IsFocused || urlInput.isFocused)
+            if (!IsFocused || urlInputField.isFocused)
                 return;
 
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) || Input.GetButtonDown(Inputs.New))
                  && downloadButton.interactable)
                 StartDownload();
-            else if ((Input.GetButtonDown(Inputs.Sort) || Input.GetButtonDown(Inputs.Load)) && urlInput.interactable)
+            else if ((Input.GetButtonDown(Inputs.Sort) || Input.GetButtonDown(Inputs.Load)) && urlInputField.interactable)
                 Clear();
-            else if ((Input.GetButtonDown(Inputs.Filter) ||Input.GetButtonDown(Inputs.Save)) && urlInput.interactable)
+            else if ((Input.GetButtonDown(Inputs.Filter) || Input.GetButtonDown(Inputs.Save)) && urlInputField.interactable)
                 Paste();
             else if (((Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0)
-                || (Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)) && urlInput.interactable)
-                urlInput.ActivateInputField();
+                || (Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)) && urlInputField.interactable)
+                urlInputField.ActivateInputField();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) || Input.GetButtonDown(Inputs.Option))
                 Hide();
         }
 
-        public void Show()
+        public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
+
+            labelText.text = label;
+            (urlInputField.placeholder as Text).text = prompt;
+            DownloadCoroutine = downloadCoroutine;
         }
 
         public void Clear()
         {
-            urlInput.text = string.Empty;
+            urlInputField.text = string.Empty;
         }
 
         public void Paste()
         {
-            if (urlInput.interactable)
-                urlInput.text = UniClipboard.GetText();
+            if (urlInputField.interactable)
+                urlInputField.text = UniClipboard.GetText();
         }
 
         public void CheckDownloadUrl(string url)
@@ -58,31 +64,19 @@ namespace CGS.Menu
 
         public void StartDownload()
         {
-            CardGameManager.Instance.StartCoroutine(DownloadGame());
+            CardGameManager.Instance.StartCoroutine(Download());
         }
 
-        public IEnumerator DownloadGame()
+        public IEnumerator Download()
         {
-            string gameUrl = urlInput.text.Trim();
+            string url = urlInputField.text.Trim();
 
-            urlInput.text = string.Empty;
-            urlInput.interactable = false;
+            urlInputField.text = string.Empty;
+            urlInputField.interactable = false;
 
-            // If user attempts to download a game they already have, we should just update that game
-            CardGame existingGame = null;
-            foreach (CardGame cardGame in CardGameManager.Instance.AllCardGames.Values)
-                if (gameUrl.Equals(cardGame.AutoUpdateUrl))
-                    existingGame = cardGame;
-            if (existingGame != null)
-            {
-                yield return CardGameManager.Instance.UpdateCardGame(existingGame);
-                if (string.IsNullOrEmpty(existingGame.Error))
-                    CardGameManager.Instance.Select(existingGame.Id);
-            }
-            else
-                yield return CardGameManager.Instance.DownloadCardGame(gameUrl);
+            yield return DownloadCoroutine(url);
 
-            urlInput.interactable = true;
+            urlInputField.interactable = true;
             Hide();
         }
 

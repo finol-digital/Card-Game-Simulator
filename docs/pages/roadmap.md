@@ -5,14 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Revamp Game Creation and Card Creation Menus
 - Fix: Selection Panel Navigation
 - Tech: Use NJsonSchema
 
 ## Current Sprint
-- Support jpg in game and card creation menus
-- Preview images in game and card creation menus
-- Paste into game and card creation menus
-- Internal file browser for game and card creation menus
 - Play Mode Redesign
   - Fix: Server freezes when sharing deck
   - Fix: Card dissappears when connection to server is dropped
@@ -51,6 +48,7 @@ permalink: roadmap.html
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck List in the Deck Save Menu
 - Press and hold on Popups/Card Viewer to copy text
+- Navigate games from Cards Browser
 
 ## Icebox
 - Tech: Replace SwipeManager

@@ -277,6 +277,23 @@ namespace CGS
                 ? currentGame : (AllCardGames.FirstOrDefault().Value ?? CardGame.Invalid);
         }
 
+        public IEnumerator GetCardGame(string gameUrl)
+        {
+            // If user attempts to download a game they already have, we should just update that game
+            CardGame existingGame = null;
+            foreach (CardGame cardGame in AllCardGames.Values)
+                if (gameUrl.Equals(cardGame.AutoUpdateUrl))
+                    existingGame = cardGame;
+            if (existingGame != null)
+            {
+                yield return UpdateCardGame(existingGame);
+                if (string.IsNullOrEmpty(existingGame.Error))
+                    Select(existingGame.Id);
+            }
+            else
+                yield return DownloadCardGame(gameUrl);
+        }
+
         public IEnumerator DownloadCardGame(string gameUrl)
         {
             CardGame newGame = new CardGame(this, CardGame.DefaultName, gameUrl);

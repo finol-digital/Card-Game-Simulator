@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using SFB;
 
 using CardGameDef;
 
@@ -18,16 +20,25 @@ namespace CGS.Menu
 {
     public class CreateMenu : Modal
     {
+        public const string OpenImage = "Open Image";
+        public const string OpenImageWarningMessage = "Image file not selected!";
         public const string CreateWarningMessage = "A game with that name already exists!";
         public const string CreationWarningMessage = "Failed to create the custom card game! ";
         public const string CreationCleanupErrorMessage = "Failed to both create and cleanup during creation! ";
 
+        public static readonly ExtensionFilter[] ImageExtensions = new[] {
+            new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
+            new ExtensionFilter("All Files", "*" )
+        };
+
         public List<InputField> inputFields;
+        public Image bannerImage;
+        public Image cardBackImage;
+
         public Button createButton;
 
         public string GameName { get; set; }
-        public string BannerImageUrl { get; set; }
-        public string CardBackImageUrl { get; set; }
+        private CardGame _game = new CardGame(null);
 
         void Update()
         {
@@ -47,10 +58,63 @@ namespace CGS.Menu
             transform.SetAsLastSibling();
         }
 
+        public void DownloadBannerImageFromWeb()
+        {
+
+        }
+        public void OpenBannerImageFromFile()
+        {
+            string[] paths = StandaloneFileBrowser.OpenFilePanel(OpenImage, string.Empty, ImageExtensions, false);
+            if (paths.Length < 1)
+            {
+                Debug.LogWarning(OpenImageWarningMessage);
+                return;
+            }
+
+            _game.BannerImageUrl = new Uri(paths[0]);
+            StartCoroutine(UpdateBannerImage());
+        }
+        private IEnumerator UpdateBannerImage()
+        {
+            // NOTE: Memory Leak Potential
+            UnityEngine.Sprite newSprite = null;
+            yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(
+                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(_game.BannerImageUrl?.AbsoluteUri)
+                , output => newSprite = output);
+            if (newSprite != null)
+                bannerImage.sprite = newSprite;
+        }
+
+        public void DownloadCardBackImageFromWeb()
+        {
+
+        }
+        public void OpenCardBackImageFromFile()
+        {
+            string[] paths = StandaloneFileBrowser.OpenFilePanel(OpenImage, string.Empty, ImageExtensions, false);
+            if (paths.Length < 1)
+            {
+                Debug.LogWarning(OpenImageWarningMessage);
+                return;
+            }
+
+            _game.CardBackImageUrl = new Uri(paths[0]);
+            StartCoroutine(UpdateCardBackImage());
+        }
+        private IEnumerator UpdateCardBackImage()
+        {
+            // NOTE: Memory Leak Potential
+            UnityEngine.Sprite newSprite = null;
+            yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(
+                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(_game.CardBackImageUrl?.AbsoluteUri)
+                , output => newSprite = output);
+            if (newSprite != null)
+                cardBackImage.sprite = newSprite;
+        }
+
         public void ValidateCreateButton()
         {
-            createButton.interactable = !string.IsNullOrEmpty(GameName) && !string.IsNullOrEmpty(BannerImageUrl) && !string.IsNullOrEmpty(CardBackImageUrl)
-                && Uri.IsWellFormedUriString(BannerImageUrl, UriKind.Absolute) && Uri.IsWellFormedUriString(CardBackImageUrl, UriKind.Absolute);
+            createButton.interactable = !string.IsNullOrEmpty(GameName);
         }
 
         public void StartCreation()
@@ -73,8 +137,8 @@ namespace CGS.Menu
 
             CardGame newCardGame = new CardGame(CardGameManager.Instance, gameName);
             newCardGame.AutoUpdate = -1;
-            newCardGame.BannerImageUrl = new Uri(BannerImageUrl);
-            newCardGame.CardBackImageUrl = new Uri(CardBackImageUrl);
+            newCardGame.BannerImageUrl = _game.BannerImageUrl;
+            newCardGame.CardBackImageUrl = _game.CardBackImageUrl;
 
             if (!Directory.Exists(newCardGame.GameDirectoryPath))
                 Directory.CreateDirectory(newCardGame.GameDirectoryPath);

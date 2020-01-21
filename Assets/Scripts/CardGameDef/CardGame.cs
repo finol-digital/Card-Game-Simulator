@@ -433,8 +433,8 @@ namespace CardGameDef
             // We should always first get the *Game:Name*.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: CardGameDef...";
-            if (AutoUpdateUrl != null && AutoUpdateUrl.IsWellFormedOriginalString())
-                yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl.OriginalString, GameFilePath);
+            if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
+                yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, GameFilePath);
             ReadProperties();
             if (!HasReadProperties)
             {
@@ -446,31 +446,31 @@ namespace CardGameDef
 
             DownloadProgress = 1f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Banner";
-            if (BannerImageUrl != null && BannerImageUrl.IsWellFormedOriginalString())
-                yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl.OriginalString, BannerImageFilePath);
+            if (BannerImageUrl != null && BannerImageUrl.IsAbsoluteUri)
+                yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl.AbsoluteUri, BannerImageFilePath);
 
             DownloadProgress = 2f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: CardBack";
-            if (CardBackImageUrl != null && CardBackImageUrl.IsWellFormedOriginalString())
-                yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl.OriginalString, CardBackImageFilePath);
+            if (CardBackImageUrl != null && CardBackImageUrl.IsAbsoluteUri)
+                yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl.AbsoluteUri, CardBackImageFilePath);
 
             DownloadProgress = 3f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Boards";
             foreach (GameBoardUrl boardUrl in GameBoardUrls)
-                if (!string.IsNullOrEmpty(boardUrl.Id) && boardUrl.Url != null && boardUrl.Url.IsWellFormedOriginalString())
-                    yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url.OriginalString, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
+                if (!string.IsNullOrEmpty(boardUrl.Id) && boardUrl.Url != null && boardUrl.Url.IsAbsoluteUri)
+                    yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url.AbsoluteUri, GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
 
             DownloadProgress = 4f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Decks";
             foreach (DeckUrl deckUrl in DeckUrls)
-                if (!string.IsNullOrEmpty(deckUrl.Name) && deckUrl.Url != null && deckUrl.Url.IsWellFormedOriginalString())
-                    yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url.OriginalString, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
+                if (!string.IsNullOrEmpty(deckUrl.Name) && deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
+                    yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
 
             DownloadProgress = 5f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: AllSets.json";
             string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
-            if (AllSetsUrl != null && AllSetsUrl.IsWellFormedOriginalString())
-                yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl.OriginalString, setsFilePath);
+            if (AllSetsUrl != null && AllSetsUrl.IsAbsoluteUri)
+                yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl.AbsoluteUri, setsFilePath);
             if (AllSetsUrlZipped)
                 UnityExtensionMethods.ExtractZip(setsFilePath, GameDirectoryPath);
             if (AllSetsUrlWrapped)

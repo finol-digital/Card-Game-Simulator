@@ -12,6 +12,9 @@ namespace CGS.Menu
 {
     public class MainMenu : MonoBehaviour
     {
+        public const string GameLabel = "Download Game";
+        public const string GamePrompt = "Enter CGS AutoUpdate URL...";
+
         public static string VersionMessage => $"VERSION {Application.version}";
 
         public const int MainMenuSceneIndex = 1;
@@ -195,7 +198,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            downloadMenu.Show();
+            downloadMenu.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame);
         }
 
         public void Create()
