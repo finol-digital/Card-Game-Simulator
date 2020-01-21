@@ -8,7 +8,7 @@ namespace Mirror.Examples.Additive
     public class ShootingTankBehaviour : NetworkBehaviour
     {
         [SyncVar]
-        public Quaternion Rotation;
+        public Quaternion rotation;
 
         NetworkAnimator networkAnimator;
 
@@ -27,7 +27,7 @@ namespace Mirror.Examples.Additive
                 ShootNearestPlayer();
 
             if (isClient)
-                transform.rotation = Quaternion.Slerp(transform.rotation, Rotation, turnSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotation, turnSpeed);
         }
 
         [Server]
@@ -38,7 +38,7 @@ namespace Mirror.Examples.Additive
 
             foreach (NetworkConnection networkConnection in netIdentity.observers.Values)
             {
-                GameObject tempTarget = networkConnection.playerController.gameObject;
+                GameObject tempTarget = networkConnection.identity.gameObject;
                 float tempDistance = Vector3.Distance(tempTarget.transform.position, transform.position);
 
                 if (target == null || distance > tempDistance)
@@ -51,7 +51,7 @@ namespace Mirror.Examples.Additive
             if (target != null)
             {
                 transform.LookAt(target.transform.position + Vector3.down);
-                Rotation = transform.rotation;
+                rotation = transform.rotation;
                 networkAnimator.SetTrigger("Fire");
             }
         }

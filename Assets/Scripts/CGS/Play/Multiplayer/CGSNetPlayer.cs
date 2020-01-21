@@ -157,7 +157,7 @@ namespace CGS.Play.Multiplayer
             cardModel.rotation = rotation;
             cardModel.IsFacedown = isFacedown;
             controller.SetPlayActions(controller.playAreaContent.GetComponent<CardStack>(), cardModel);
-            NetworkServer.SpawnWithClientAuthority(newCard, connectionToClient);
+            NetworkServer.Spawn(newCard, connectionToClient);
             cardModel.RpcHideHighlight();
         }
 

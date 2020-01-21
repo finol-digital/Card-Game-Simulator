@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Mirror
 {
     public static class FloatBytePacker
@@ -12,7 +14,7 @@ namespace Mirror
             int targetRange = maxTarget - minTarget; // max byte - min byte only fits into something bigger
             float valueRange = maxValue - minValue;
             float valueRelative = value - minValue;
-            return (byte)(minTarget + (byte)(valueRelative/valueRange * (float)targetRange));
+            return (byte)(minTarget + (byte)(valueRelative / valueRange * targetRange));
         }
 
         // ScaleByteToFloat(  0, byte.MinValue, byte.MaxValue, -1, 1) => -1
@@ -25,7 +27,7 @@ namespace Mirror
             float targetRange = maxTarget - minTarget;
             byte valueRange = (byte)(maxValue - minValue);
             byte valueRelative = (byte)(value - minValue);
-            return minTarget + ((float)valueRelative/(float)valueRange * targetRange);
+            return minTarget + (valueRelative / (float)valueRange * targetRange);
         }
 
         // eulerAngles have 3 floats, putting them into 2 bytes of [x,y],[z,0]
@@ -42,7 +44,7 @@ namespace Mirror
         }
 
         // see PackThreeFloatsIntoUShort for explanation
-        public static float[] UnpackUShortIntoThreeFloats(ushort combined, float minTarget, float maxTarget)
+        public static Vector3 UnpackUShortIntoThreeFloats(ushort combined, float minTarget, float maxTarget)
         {
             byte lower = (byte)(combined & 0x1F);
             byte middle = (byte)((combined >> 5) & 0x1F);
@@ -52,7 +54,7 @@ namespace Mirror
             float u = ScaleByteToFloat(lower, 0x00, 0x1F, minTarget, maxTarget);
             float v = ScaleByteToFloat(middle, 0x00, 0x1F, minTarget, maxTarget);
             float w = ScaleByteToFloat(upper, 0x00, 0x1F, minTarget, maxTarget);
-            return new float[]{u, v, w};
+            return new Vector3(u, v, w);
         }
     }
 }

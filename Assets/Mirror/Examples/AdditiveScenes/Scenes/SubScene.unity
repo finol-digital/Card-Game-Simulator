@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -79,7 +79,7 @@ LightmapSettings:
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVRFilteringMode: 1
+    m_PVRFilteringMode: 2
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -266,6 +266,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SceneId
       value: 15452677
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697694911122891659, guid: e1971f4a8c7661546bc509b44bd91b80,
+        type: 3}
+      propertyPath: castLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5697694911122891659, guid: e1971f4a8c7661546bc509b44bd91b80,
+        type: 3}
+      propertyPath: forceHidden
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1971f4a8c7661546bc509b44bd91b80, type: 3}
@@ -546,6 +556,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sphere
       objectReference: {fileID: 0}
+    - target: {fileID: 855244094988030908, guid: f6d08eb9a8e35d84fa30a7e3ae64181a,
+        type: 3}
+      propertyPath: castLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 855244094988030908, guid: f6d08eb9a8e35d84fa30a7e3ae64181a,
+        type: 3}
+      propertyPath: forceHidden
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 855244094988030909, guid: f6d08eb9a8e35d84fa30a7e3ae64181a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -630,10 +650,35 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5623359707189648430, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+    - target: {fileID: 5623359706949397433, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
         type: 3}
-      propertyPath: m_Name
-      value: Cube
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5623359706949397433, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5623359706949397433, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+        type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5623359707189648404, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+        type: 3}
+      propertyPath: m_SceneId
+      value: 4733130
+      objectReference: {fileID: 0}
+    - target: {fileID: 5623359707189648405, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+        type: 3}
+      propertyPath: castLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5623359707189648405, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+        type: 3}
+      propertyPath: forceHidden
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5623359707189648426, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
         type: 3}
@@ -690,25 +735,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5623359707189648404, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+    - target: {fileID: 5623359707189648430, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
         type: 3}
-      propertyPath: m_SceneId
-      value: 4733130
+      propertyPath: m_Name
+      value: Cube
       objectReference: {fileID: 0}
-    - target: {fileID: 5623359706949397433, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
+    - target: {fileID: 5623359707189648430, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
         type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5623359706949397433, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
-        type: 3}
-      propertyPath: m_ReceiveShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5623359706949397433, guid: 4ff300cf6bb3c6342a9552c4f18788c8,
-        type: 3}
-      propertyPath: m_ReflectionProbeUsage
-      value: 0
+      propertyPath: m_Icon
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ff300cf6bb3c6342a9552c4f18788c8, type: 3}
@@ -777,6 +812,16 @@ PrefabInstance:
     - target: {fileID: 6852530814182375316, guid: 12a4c14e672c00b4b840f937d824b890,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6852530814182375317, guid: 12a4c14e672c00b4b840f937d824b890,
+        type: 3}
+      propertyPath: castLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 6852530814182375317, guid: 12a4c14e672c00b4b840f937d824b890,
+        type: 3}
+      propertyPath: forceHidden
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6852530814182375318, guid: 12a4c14e672c00b4b840f937d824b890,

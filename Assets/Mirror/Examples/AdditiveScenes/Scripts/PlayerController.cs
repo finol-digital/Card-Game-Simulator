@@ -3,62 +3,51 @@ using UnityEngine;
 namespace Mirror.Examples.Additive
 {
     [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(NetworkTransform))]
     public class PlayerController : NetworkBehaviour
     {
-        CharacterController characterController;
+        public CharacterController characterController;
 
-        public float moveSpeed = 300f;
-        public float maxTurnSpeed = 90f;
-        public float turnSpeedAccel = 30f;
-        public float turnSpeedDecel = 30f;
-
-        public override void OnStartServer()
+        void OnValidate()
         {
-            base.OnStartServer();
-            playerColor = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            if (characterController == null)
+                characterController = GetComponent<CharacterController>();
         }
-
-        [SyncVar(hook = nameof(SetColor))]
-        public Color playerColor = Color.black;
-
-        void SetColor(Color color)
-        {
-            GetComponent<Renderer>().material.color = color;
-        }
-
-        Camera mainCam;
 
         public override void OnStartLocalPlayer()
         {
             base.OnStartLocalPlayer();
 
-            characterController = GetComponent<CharacterController>();
-
-            // Grab a refernce to the main camera so we can enable it again in OnDisable
-            mainCam = Camera.main;
-
-            // Turn off the main camera because the Player prefab has its own camera
-            mainCam.enabled = false;
-
-            // Enable the local player's camera
-            GetComponentInChildren<Camera>().enabled = true;
+            Camera.main.orthographic = false;
+            Camera.main.transform.SetParent(transform);
+            Camera.main.transform.localPosition = new Vector3(0f, 3f, -8f);
+            Camera.main.transform.localEulerAngles = new Vector3(10f, 0f, 0f);
         }
 
         void OnDisable()
         {
             if (isLocalPlayer)
             {
-                // Disable the local player's camera
-                GetComponentInChildren<Camera>().enabled = false;
-
-                // Re-enable the main camera when Stop is pressed in the HUD
-                if (mainCam != null) mainCam.enabled = true;
+                Camera.main.orthographic = true;
+                Camera.main.transform.SetParent(null);
+                Camera.main.transform.localPosition = new Vector3(0f, 70f, 0f);
+                Camera.main.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
             }
         }
 
-        float horizontal = 0f;
-        float vertical = 0f;
-        float turn = 0f;
+        [Header("Movement Settings")]
+        public float moveSpeed = 8f;
+        public float turnSensitivity = 5f;
+        public float maxTurnSpeed = 150f;
+
+        [Header("Diagnostics")]
+        public float horizontal = 0f;
+        public float vertical = 0f;
+        public float turn = 0f;
+        public float jumpSpeed = 0f;
+        public bool isGrounded = true;
+        public bool isFalling = false;
+        public Vector3 velocity;
 
         void Update()
         {
@@ -67,18 +56,25 @@ namespace Mirror.Examples.Additive
             horizontal = Input.GetAxis("Horizontal");
             vertical = Input.GetAxis("Vertical");
 
-            if (Input.GetKey(KeyCode.Q) && (turn > -maxTurnSpeed))
-                turn -= turnSpeedAccel;
-            else if (Input.GetKey(KeyCode.E) && (turn < maxTurnSpeed))
-                turn += turnSpeedAccel;
-            else
+            // Q and E cancel each other out, reducing the turn to zero
+            if (Input.GetKey(KeyCode.Q))
+                turn = Mathf.MoveTowards(turn, -maxTurnSpeed, turnSensitivity);
+            if (Input.GetKey(KeyCode.E))
+                turn = Mathf.MoveTowards(turn, maxTurnSpeed, turnSensitivity);
+            if (Input.GetKey(KeyCode.Q) && Input.GetKey(KeyCode.E))
+                turn = Mathf.MoveTowards(turn, 0, turnSensitivity);
+            if (!Input.GetKey(KeyCode.Q) && !Input.GetKey(KeyCode.E))
+                turn = Mathf.MoveTowards(turn, 0, turnSensitivity);
+
+            if (isGrounded)
+                isFalling = false;
+
+            if ((isGrounded || !isFalling) && jumpSpeed < 1f && Input.GetKey(KeyCode.Space))
+                jumpSpeed = Mathf.Lerp(jumpSpeed, 1f, 0.5f);
+            else if (!isGrounded)
             {
-                if (turn > turnSpeedDecel)
-                    turn -= turnSpeedDecel;
-                else if (turn < -turnSpeedDecel)
-                    turn += turnSpeedDecel;
-                else
-                    turn = 0f;
+                isFalling = true;
+                jumpSpeed = 0;
             }
         }
 
@@ -88,9 +84,18 @@ namespace Mirror.Examples.Additive
 
             transform.Rotate(0f, turn * Time.fixedDeltaTime, 0f);
 
-            Vector3 direction = Vector3.ClampMagnitude(new Vector3(horizontal, 0f, vertical), 1f) * moveSpeed;
+            Vector3 direction = new Vector3(horizontal, jumpSpeed, vertical);
+            direction = Vector3.ClampMagnitude(direction, 1f);
             direction = transform.TransformDirection(direction);
-            characterController.SimpleMove(direction * Time.fixedDeltaTime);
+            direction *= moveSpeed;
+
+            if (jumpSpeed > 0)
+                characterController.Move(direction * Time.fixedDeltaTime);
+            else
+                characterController.SimpleMove(direction);
+
+            isGrounded = characterController.isGrounded;
+            velocity = characterController.velocity;
         }
     }
 }

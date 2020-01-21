@@ -73,7 +73,7 @@ namespace CGS.Play.Multiplayer
             scores[scoreIndex] = new NetScore(owner, points);
         }
 
-        private void OnScoreChanged(SyncListNetScore.Operation op, int scoreIndex, NetScore scoreValue)
+        private void OnScoreChanged(SyncListNetScore.Operation op, int scoreIndex, NetScore oldScore, NetScore newScore)
         {
             if (op == SyncList<NetScore>.Operation.OP_ADD)
                 return;
@@ -105,7 +105,7 @@ namespace CGS.Play.Multiplayer
             cardStacks[deckIndex] = new NetCardStack(owner, cardIds);
         }
 
-        private void OnDeckChanged(SyncListNetCardStack.Operation op, int deckIndex, NetCardStack deckValue)
+        private void OnDeckChanged(SyncListNetCardStack.Operation op, int deckIndex, NetCardStack oldDeck, NetCardStack newDeck)
         {
             if (op == SyncList<NetCardStack>.Operation.OP_ADD)
                 return;

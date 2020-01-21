@@ -7,6 +7,7 @@ permalink: roadmap.html
 ## What's New
 - Revamp Game Creation and Card Creation Menus
 - Fix: Selection Panel Navigation
+- Tech: Upgrade Unity and Mirror versions
 - Tech: Use NJsonSchema
 
 ## Current Sprint

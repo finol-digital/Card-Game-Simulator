@@ -7,7 +7,7 @@ namespace Mirror.Weaver
     {
         public const string RpcPrefix = "InvokeRpc";
 
-        public static MethodDefinition ProcessRpcInvoke(TypeDefinition td, MethodDefinition md)
+        public static MethodDefinition ProcessRpcInvoke(TypeDefinition td, MethodDefinition md, MethodDefinition rpcCallFunc)
         {
             MethodDefinition rpc = new MethodDefinition(
                 RpcPrefix + md.Name,
@@ -23,11 +23,11 @@ namespace Mirror.Weaver
             rpcWorker.Append(rpcWorker.Create(OpCodes.Ldarg_0));
             rpcWorker.Append(rpcWorker.Create(OpCodes.Castclass, td));
 
-            if (!NetworkBehaviourProcessor.ProcessNetworkReaderParameters(td, md, rpcWorker, false))
+            if (!NetworkBehaviourProcessor.ProcessNetworkReaderParameters(md, rpcWorker, false))
                 return null;
 
             // invoke actual command function
-            rpcWorker.Append(rpcWorker.Create(OpCodes.Callvirt, md));
+            rpcWorker.Append(rpcWorker.Create(OpCodes.Callvirt, rpcCallFunc));
             rpcWorker.Append(rpcWorker.Create(OpCodes.Ret));
 
             NetworkBehaviourProcessor.AddInvokeParameters(rpc.Parameters);
@@ -35,17 +35,31 @@ namespace Mirror.Weaver
             return rpc;
         }
 
-        /* generates code like:
-        public void CallRpcTest (int param)
-        {
-            NetworkWriter writer = new NetworkWriter ();
-            writer.WritePackedUInt32((uint)param);
-            base.SendRPCInternal(typeof(class),"RpcTest", writer, 0);
-        }
+        /*
+         * generates code like:
+
+            public void RpcTest (int param)
+            {
+                NetworkWriter writer = new NetworkWriter ();
+                writer.WritePackedUInt32((uint)param);
+                base.SendRPCInternal(typeof(class),"RpcTest", writer, 0);
+            }
+            public void CallRpcTest (int param)
+            {
+                // whatever the user did before
+            }
+
+            Originally HLAPI put the send message code inside the Call function
+            and then proceeded to replace every call to RpcTest with CallRpcTest
+
+            This method moves all the user's code into the "Call" method
+            and replaces the body of the original method with the send message code.
+            This way we do not need to modify the code anywhere else,  and this works
+            correctly in dependent assemblies
         */
         public static MethodDefinition ProcessRpcCall(TypeDefinition td, MethodDefinition md, CustomAttribute ca)
         {
-            MethodDefinition rpc = new MethodDefinition("Call" +  md.Name, MethodAttributes.Public |
+            MethodDefinition rpc = new MethodDefinition("Call" + md.Name, MethodAttributes.Public |
                     MethodAttributes.HideBySig,
                     Weaver.voidType);
 
@@ -55,7 +69,12 @@ namespace Mirror.Weaver
                 rpc.Parameters.Add(new ParameterDefinition(pd.Name, ParameterAttributes.None, pd.ParameterType));
             }
 
-            ILProcessor rpcWorker = rpc.Body.GetILProcessor();
+            // move the old body to the new function
+            MethodBody newBody = rpc.Body;
+            rpc.Body = md.Body;
+            md.Body = newBody;
+
+            ILProcessor rpcWorker = md.Body.GetILProcessor();
 
             NetworkBehaviourProcessor.WriteSetupLocals(rpcWorker);
 
@@ -81,28 +100,30 @@ namespace Mirror.Weaver
             rpcWorker.Append(rpcWorker.Create(OpCodes.Ldc_I4, NetworkBehaviourProcessor.GetChannelId(ca)));
             rpcWorker.Append(rpcWorker.Create(OpCodes.Callvirt, Weaver.sendRpcInternal));
 
+            NetworkBehaviourProcessor.WriteRecycleWriter(rpcWorker);
+
             rpcWorker.Append(rpcWorker.Create(OpCodes.Ret));
 
             return rpc;
         }
 
-        public static bool ProcessMethodsValidateRpc(TypeDefinition td, MethodDefinition md, CustomAttribute ca)
+        public static bool ProcessMethodsValidateRpc(MethodDefinition md, CustomAttribute ca)
         {
             if (!md.Name.StartsWith("Rpc"))
             {
-                Weaver.Error("Rpc function [" + td.FullName + ":" + md.Name + "] doesnt have 'Rpc' prefix");
+                Weaver.Error($"{md} must start with Rpc.  Consider renaming it to Rpc{md.Name}");
                 return false;
             }
 
             if (md.IsStatic)
             {
-                Weaver.Error("ClientRpc function [" + td.FullName + ":" + md.Name + "] cant be a static method");
+                Weaver.Error($"{md} must not be static");
                 return false;
             }
 
             // validate
-            return NetworkBehaviourProcessor.ProcessMethodsValidateFunction(td, md, "Rpc") &&
-                   NetworkBehaviourProcessor.ProcessMethodsValidateParameters(td, md, ca, "Rpc");
+            return NetworkBehaviourProcessor.ProcessMethodsValidateFunction(md) &&
+                   NetworkBehaviourProcessor.ProcessMethodsValidateParameters(md, ca);
         }
     }
 }

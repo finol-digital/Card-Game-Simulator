@@ -17,10 +17,6 @@ namespace Mirror
     //    (probably even shorter)
     public static class MessagePacker
     {
-        // PackMessage is in hot path. caching the writer is really worth it to
-        // avoid large amounts of allocations.
-        static NetworkWriter packWriter = new NetworkWriter();
-
         public static int GetId<T>() where T : IMessageBase
         {
             // paul: 16 bits is enough to avoid collisions
@@ -29,39 +25,65 @@ namespace Mirror
             return typeof(T).FullName.GetStableHashCode() & 0xFFFF;
         }
 
-        // pack message before sending
-        // -> pass writer instead of byte[] so we can reuse it
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use Pack<T> instead")]
-        public static byte[] PackMessage(int msgType, MessageBase msg)
+        public static int GetId(Type type)
         {
-            // reset cached writer length and position
-            packWriter.SetLength(0);
-
-            // write message type
-            packWriter.Write((short)msgType);
-
-            // serialize message into writer
-            msg.Serialize(packWriter);
-
-            // return byte[]
-            return packWriter.ToArray();
+            return type.FullName.GetStableHashCode() & 0xFFFF;
         }
 
         // pack message before sending
-        public static byte[] Pack<T>(T message) where T : IMessageBase
+        // -> NetworkWriter passed as arg so that we can use .ToArraySegment
+        //    and do an allocation free send before recycling it.
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use Pack<T> instead")]
+        public static byte[] PackMessage(int msgType, MessageBase msg)
         {
-            // reset cached writer length and position
-            packWriter.SetLength(0);
+            NetworkWriter writer = NetworkWriterPool.GetWriter();
+            try
+            {
+                // write message type
+                writer.WriteInt16((short)msgType);
 
-            // write message type
-            int msgType = GetId<T>();
-            packWriter.Write((ushort)msgType);
+                // serialize message into writer
+                msg.Serialize(writer);
+
+                // return byte[]
+                return writer.ToArray();
+            }
+            finally
+            {
+                NetworkWriterPool.Recycle(writer);
+            }
+        }
+
+        // pack message before sending
+        // -> NetworkWriter passed as arg so that we can use .ToArraySegment
+        //    and do an allocation free send before recycling it.
+        public static void Pack<T>(T message, NetworkWriter writer) where T : IMessageBase
+        {
+            // if it is a value type,  just use typeof(T) to avoid boxing
+            // this works because value types cannot be derived
+            // if it is a reference type (for example IMessageBase),
+            // ask the message for the real type
+            int msgType = GetId(typeof(T).IsValueType ? typeof(T) : message.GetType());
+            writer.WriteUInt16((ushort)msgType);
 
             // serialize message into writer
-            message.Serialize(packWriter);
+            message.Serialize(writer);
+        }
 
-            // return byte[]
-            return packWriter.ToArray();
+        // helper function to pack message into a simple byte[] (which allocates)
+        // => useful for tests
+        // => useful for local client message enqueue
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static byte[] Pack<T>(T message) where T : IMessageBase
+        {
+            NetworkWriter writer = NetworkWriterPool.GetWriter();
+
+            Pack(message, writer);
+            byte[] data = writer.ToArray();
+
+            NetworkWriterPool.Recycle(writer);
+
+            return data;
         }
 
         // unpack a message we received
@@ -89,7 +111,7 @@ namespace Mirror
             // read message type (varint)
             try
             {
-                msgType = (int)messageReader.ReadUInt16();
+                msgType = messageReader.ReadUInt16();
                 return true;
             }
             catch (System.IO.EndOfStreamException)
@@ -99,7 +121,7 @@ namespace Mirror
             }
         }
 
-        internal static NetworkMessageDelegate MessageHandler<T>(Action<NetworkConnection, T> handler) where T : IMessageBase, new() => networkMessage =>
+        internal static NetworkMessageDelegate MessageHandler<T>(Action<NetworkConnection, T> handler, bool requireAuthenication) where T : IMessageBase, new() => networkMessage =>
         {
             // protect against DOS attacks if attackers try to send invalid
             // data packets to crash the server/client. there are a thousand
@@ -116,17 +138,29 @@ namespace Mirror
             T message = default;
             try
             {
+                if (requireAuthenication && !networkMessage.conn.isAuthenticated)
+                {
+                    // message requires authentication, but the connection was not authenticated
+                    Debug.LogWarning($"Closing connection: {networkMessage.conn}. Received message {typeof(T)} that required authentication, but the user has not authenticated yet");
+                    networkMessage.conn.Disconnect();
+                    return;
+                }
+
                 message = networkMessage.ReadMessage<T>();
             }
             catch (Exception exception)
             {
-                Debug.LogError("Closed connection: " + networkMessage.conn.connectionId + ". This can happen if the other side accidentally (or an attacker intentionally) sent invalid data. Reason: " + exception);
+                Debug.LogError("Closed connection: " + networkMessage.conn + ". This can happen if the other side accidentally (or an attacker intentionally) sent invalid data. Reason: " + exception);
                 networkMessage.conn.Disconnect();
+                return;
             }
-            if (message != default)
+            finally
             {
-                handler(networkMessage.conn, message);
+                // TODO: Figure out the correct channel
+                NetworkDiagnostics.OnReceive(message, networkMessage.channelId, networkMessage.reader.Length);
             }
+
+            handler(networkMessage.conn, message);
         };
     }
 }

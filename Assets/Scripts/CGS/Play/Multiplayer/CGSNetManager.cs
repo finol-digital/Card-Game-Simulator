@@ -22,21 +22,15 @@ namespace CGS.Play.Multiplayer
         public PlayMode playController;
         public PointsCounter pointsDisplay;
 
-        public override void OnStartServer()
+        public override void OnServerAddPlayer(NetworkConnection conn)
         {
-            base.OnStartServer();
-            CardGameManager.Instance.discovery.StartAsHost();
-        }
-
-        public override void OnServerAddPlayer(NetworkConnection conn, AddPlayerMessage message)
-        {
-            base.OnServerAddPlayer(conn, message);
+            base.OnServerAddPlayer(conn);
             if (Data == null)
             {
                 Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CGSNetData>();
                 NetworkServer.Spawn(Data.gameObject);
             }
-            Data.RegisterScore(conn.playerController.gameObject, CardGameManager.Current.GameStartPointsCount);
+            Data.RegisterScore(conn.identity.gameObject, CardGameManager.Current.GameStartPointsCount);
             playController.netText.text = PlayerCountMessage + NetworkServer.connections.Count.ToString();
         }
 
@@ -57,14 +51,6 @@ namespace CGS.Play.Multiplayer
         public void UnSpawnCard(GameObject spawned)
         {
             Destroy(spawned);
-        }
-
-        public override void OnStopServer()
-        {
-            base.OnStopServer();
-            if (CardGameManager.Instance.discovery.running)
-                CardGameManager.Instance.discovery.StopBroadcast();
-            Debug.Log("Server stopped");
         }
     }
 }

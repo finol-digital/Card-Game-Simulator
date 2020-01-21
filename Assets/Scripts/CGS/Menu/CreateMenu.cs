@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Networking;
 using SFB;
 
 using CardGameDef;
