@@ -7,6 +7,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Core;
 using UnityEngine;
 using UnityEngine.Networking;
+using SFB;
 
 public static class ThreadSafeRandom
 {
@@ -23,6 +24,11 @@ static public class UnityExtensionMethods
     public const string DirectorySeparator = "/";
     public const string MetaExtension = ".meta";
     public const string ZipExtension = ".zip";
+
+    public static readonly ExtensionFilter[] ImageExtensions = new[] {
+        new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
+        new ExtensionFilter("All Files", "*" )
+    };
 
     static public void Shuffle<T>(this IList<T> list)
     {

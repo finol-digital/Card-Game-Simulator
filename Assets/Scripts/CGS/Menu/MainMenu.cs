@@ -23,7 +23,7 @@ namespace CGS.Menu
         public const int CardsExplorerSceneIndex = 4;
         public const int SettingsSceneIndex = 5;
 
-        public DownloadMenu downloadMenu;
+        public GameObject downloadMenuPrefab;
         public CreateMenu createMenu;
         public GameObject gameManagement;
         public Image currentCardImage;
@@ -34,6 +34,10 @@ namespace CGS.Menu
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
+
+        public DownloadMenu Downloader => _downloader ??
+                                              (_downloader = Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>());
+        private DownloadMenu _downloader;
 
         private bool _wasLeft;
         private bool _wasRight;
@@ -198,7 +202,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            downloadMenu.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame);
+            Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame);
         }
 
         public void Create()

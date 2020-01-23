@@ -19,22 +19,25 @@ namespace CGS.Menu
 {
     public class CreateMenu : Modal
     {
-        public const string OpenImage = "Open Image";
-        public const string OpenImageWarningMessage = "Image file not selected!";
+        public const string DownloadBannerImage = "Download Banner Image";
+        public const string DownloadBannerImagePrompt = "Enter banner image url...";
+        public const string DownloadCardBackImage = "Download Card Back Image";
+        public const string DownloadCardBackImagePrompt = "Enter card back image url...";
+        public const string ImportImage = "Import Image";
+        public const string ImportImageWarningMessage = "No image file selected for import!";
         public const string CreateWarningMessage = "A game with that name already exists!";
         public const string CreationWarningMessage = "Failed to create the custom card game! ";
         public const string CreationCleanupErrorMessage = "Failed to both create and cleanup during creation! ";
 
-        public static readonly ExtensionFilter[] ImageExtensions = new[] {
-            new ExtensionFilter("Image Files", "png", "jpg", "jpeg" ),
-            new ExtensionFilter("All Files", "*" )
-        };
-
+        public GameObject downloadMenuPrefab;
         public List<InputField> inputFields;
         public Image bannerImage;
         public Image cardBackImage;
-
         public Button createButton;
+
+        public DownloadMenu Downloader => _downloader ??
+                                              (_downloader = Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>());
+        private DownloadMenu _downloader;
 
         public string GameName { get; set; }
         private CardGame _game = new CardGame(null);
@@ -47,6 +50,14 @@ namespace CGS.Menu
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) || Input.GetButtonDown(Inputs.New))
                  && createButton.interactable)
                 StartCreation();
+            if (Input.GetButtonDown(Inputs.Sort) && createButton.interactable)
+                DownloadBannerImageFromWeb();
+            if (Input.GetButtonDown(Inputs.Filter) && createButton.interactable)
+                ImportBannerImageFromFile();
+            if (Input.GetButtonDown(Inputs.Load) && createButton.interactable)
+                DownloadCardBackImageFromWeb();
+            if (Input.GetButtonDown(Inputs.Save) && createButton.interactable)
+                ImportCardBackImageFromFile();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) || Input.GetButtonDown(Inputs.Option))
                 Hide();
         }
@@ -59,18 +70,33 @@ namespace CGS.Menu
 
         public void DownloadBannerImageFromWeb()
         {
-
+            Downloader.Show(DownloadBannerImage, DownloadBannerImagePrompt, DownloadBannerImageFromWeb);
         }
-        public void OpenBannerImageFromFile()
+        public IEnumerator DownloadBannerImageFromWeb(string url)
         {
-            string[] paths = StandaloneFileBrowser.OpenFilePanel(OpenImage, string.Empty, ImageExtensions, false);
-            if (paths.Length < 1)
+            _game.BannerImageUrl = new Uri(url);
+            yield return UpdateBannerImage();
+        }
+        public void ImportBannerImageFromFile()
+        {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
+#else
+            string[] paths = StandaloneFileBrowser.OpenFilePanel(ImportImage, string.Empty, UnityExtensionMethods.ImageExtensions, false);
+            if (paths.Length > 0)
+                ImportBannerImageFromFile(paths[0]);
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
+#endif
+        }
+        public void ImportBannerImageFromFile(string uri)
+        {
+            if (string.IsNullOrEmpty(uri))
             {
-                Debug.LogWarning(OpenImageWarningMessage);
+                Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
-
-            _game.BannerImageUrl = new Uri(paths[0]);
+            _game.BannerImageUrl = new Uri(uri);
             StartCoroutine(UpdateBannerImage());
         }
         private IEnumerator UpdateBannerImage()
@@ -82,22 +108,39 @@ namespace CGS.Menu
                 , output => newSprite = output);
             if (newSprite != null)
                 bannerImage.sprite = newSprite;
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
         }
 
         public void DownloadCardBackImageFromWeb()
         {
-
+            Downloader.Show(DownloadCardBackImage, DownloadCardBackImagePrompt, DownloadCardBackImageFromWeb);
         }
-        public void OpenCardBackImageFromFile()
+        public IEnumerator DownloadCardBackImageFromWeb(string url)
         {
-            string[] paths = StandaloneFileBrowser.OpenFilePanel(OpenImage, string.Empty, ImageExtensions, false);
-            if (paths.Length < 1)
+            _game.CardBackImageUrl = new Uri(url);
+            yield return UpdateCardBackImage();
+        }
+        public void ImportCardBackImageFromFile()
+        {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
+#else
+            string[] paths = StandaloneFileBrowser.OpenFilePanel(ImportImage, string.Empty, UnityExtensionMethods.ImageExtensions, false);
+            if (paths.Length > 0)
+                ImportCardBackImageFromFile(paths[0]);
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
+#endif
+        }
+        public void ImportCardBackImageFromFile(string uri)
+        {
+            if (string.IsNullOrEmpty(uri))
             {
-                Debug.LogWarning(OpenImageWarningMessage);
+                Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
-
-            _game.CardBackImageUrl = new Uri(paths[0]);
+            _game.CardBackImageUrl = new Uri(uri);
             StartCoroutine(UpdateCardBackImage());
         }
         private IEnumerator UpdateCardBackImage()
@@ -109,6 +152,8 @@ namespace CGS.Menu
                 , output => newSprite = output);
             if (newSprite != null)
                 cardBackImage.sprite = newSprite;
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
         }
 
         public void ValidateCreateButton()

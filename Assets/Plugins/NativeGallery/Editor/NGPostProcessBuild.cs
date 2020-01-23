@@ -9,8 +9,8 @@ public class NGPostProcessBuild
 {
 	private const bool ENABLED = true;
 
-	private const string PHOTO_LIBRARY_USAGE_DESCRIPTION = "Import Photos of cards in CGS";
-	private const bool MINIMUM_TARGET_8_OR_ABOVE = false;
+	private const string PHOTO_LIBRARY_USAGE_DESCRIPTION = "Import Photos of cards into CGS";
+	private const bool MINIMUM_TARGET_8_OR_ABOVE = true;
 
 #if UNITY_IOS
 #pragma warning disable 0162

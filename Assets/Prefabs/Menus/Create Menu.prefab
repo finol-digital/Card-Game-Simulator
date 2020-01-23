@@ -371,7 +371,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 225, y: -525}
+  m_AnchoredPosition: {x: 925, y: -0}
   m_SizeDelta: {x: 350, y: 525}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &7032501897799178160
@@ -594,6 +594,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 545411f362f95ae408326da557746d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  downloadMenuPrefab: {fileID: 2330282487462195437, guid: 2d4784779890ecb41954d3181de7ad9e,
+    type: 3}
   inputFields:
   - {fileID: 2599742076912616912}
   bannerImage: {fileID: 5808374412478590082}
@@ -693,7 +695,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OpenBannerImageFromFile
+      value: ImportBannerImageFromFile
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -989,7 +991,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OpenCardBackImageFromFile
+      value: ImportCardBackImageFromFile
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
