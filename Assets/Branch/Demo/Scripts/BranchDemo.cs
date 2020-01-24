@@ -39,8 +39,11 @@ public class BranchDemo : MonoBehaviour {
 		// disable tracking of analytics for the user
 		Branch.setTrackingDisabled(false);
 
-		//init Branch with Dictionary
-//		Branch.initSession(CallbackWithParams);
+        //init Branch with Dictionary
+        //Branch.initSession(CallbackWithParams);
+
+        //Branch.setAppleSearchAdsDebugMode();
+        //Branch.delayInitToCheckForSearchAds();
 
 		//init Branch with BUO
 		Branch.initSession(CallbackWithBranchUniversalObject);
@@ -66,22 +69,6 @@ public class BranchDemo : MonoBehaviour {
 
 			Debug.Log("Universal Object: " + universalObject.ToJsonString());
 			Debug.Log("Link Properties: " + linkProperties.ToJsonString());
-
-			BranchEvent e = new BranchEvent ("MY_CUSTOM_EVENT");
-//			BranchEvent e = new BranchEvent (BranchEventType.COMPLETE_REGISTRATION);
-
-			e.SetAffiliation("my_affilation");
-			e.SetCoupon("my_coupon");
-			e.SetCurrency(BranchCurrencyType.USD);
-			e.SetTax(10.0f);
-			e.SetRevenue(100.0f);
-			e.SetShipping(1000.0f);
-			e.SetDescription("my_description");
-			e.SetSearchQuery("my_search_query");
-			e.AddCustomData("custom_data_key01", "custom_data_value01");
-			e.AddContentItem(universalObject);
-
-			Branch.sendEvent (e);
 		}
 	}
 
@@ -175,8 +162,21 @@ public class BranchDemo : MonoBehaviour {
 	}
 
 	public void OnBtn_SendBuyEvent() {
-		Branch.userCompletedAction("buy");
-		OnBtn_RefreshRewards();
+        BranchEvent e = new BranchEvent (BranchEventType.PURCHASE);
+
+        e.SetAlias("my_alias");
+        e.SetAffiliation("my_affilation");
+        e.SetCoupon("my_coupon");
+        e.SetCurrency(BranchCurrencyType.USD);
+        e.SetTax(10.0f);
+        e.SetRevenue(100.0f);
+        e.SetShipping(1000.0f);
+        e.SetDescription("my_description");
+        e.SetSearchQuery("my_search_query");
+
+        Branch.sendEvent(e);
+
+        OnBtn_RefreshRewards();
 	}
 
 	public void OnBtn_ShowRewardsHistory() {
@@ -204,14 +204,26 @@ public class BranchDemo : MonoBehaviour {
 	}
 
 	public void OnBtn_SendComplexEvent() {
-		Dictionary<string, object> parameters = new Dictionary<string, object>();
-		parameters.Add("name", "Alex");
-		parameters.Add("boolean", true);
-		parameters.Add("int", 1);
-		parameters.Add("double", 0.13415512301);
+        BranchEvent e = new BranchEvent("MY_COMPLEX_EVENT");
 
-		Branch.userCompletedAction("buy", parameters);
-		OnBtn_RefreshRewards();
+        e.SetAlias("my_alias");
+        e.SetAffiliation("my_affilation");
+        e.SetCoupon("my_coupon");
+        e.SetCurrency(BranchCurrencyType.USD);
+        e.SetTax(10.0f);
+        e.SetRevenue(100.0f);
+        e.SetShipping(1000.0f);
+        e.SetDescription("my_description");
+        e.SetSearchQuery("my_search_query");
+        e.AddCustomData("custom_data_key01", "custom_data_value01");
+        e.AddCustomData("custom_data_key02", "custom_data_value02");
+
+        if (universalObject != null)
+            e.AddContentItem(universalObject);
+
+        Branch.sendEvent(e);
+
+        OnBtn_RefreshRewards();
 	}
 
 	public void OnBtn_ShareLink() {
@@ -265,8 +277,14 @@ public class BranchDemo : MonoBehaviour {
 
 				if (error != null) {
 					Debug.LogError("Branch.shareLink failed: " + error);
-				} else if (parameters != null) {
-					Debug.Log("Branch.shareLink: " + parameters["sharedLink"].ToString() + " " + parameters["sharedChannel"].ToString());
+				} else {
+                    Debug.Log("Branch.shareLink success: ");
+
+                    if (parameters != null) {
+                        foreach (string key in parameters.Keys) {
+                            Debug.Log(key + "=" + parameters[key].ToString());
+                        }
+                    }
 				}
 			});
 		} catch(Exception e) {

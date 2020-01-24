@@ -29,9 +29,13 @@ public enum BranchEventType {
 	ADD_PAYMENT_INFO,
 	PURCHASE,
 	SPEND_CREDITS,
+    SUBSCRIBE,
+    START_TRIAL,
+    CLICK_AD,
+    VIEW_AD,
 
-	// Content events
-	SEARCH,
+    // Content events
+    SEARCH,
 	VIEW_ITEM,
 	VIEW_ITEMS,
 	RATE,
@@ -41,7 +45,10 @@ public enum BranchEventType {
 	COMPLETE_REGISTRATION,
 	COMPLETE_TUTORIAL,
 	ACHIEVE_LEVEL,
-	UNLOCK_ACHIEVEMENT
+	UNLOCK_ACHIEVEMENT,
+    INVITE,
+    LOGIN,
+    RESERVE
 }
 
 public enum BranchContentSchema {

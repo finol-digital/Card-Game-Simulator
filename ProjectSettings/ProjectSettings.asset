@@ -121,7 +121,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.21.0
+  bundleVersion: 1.22.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -163,7 +163,7 @@ PlayerSettings:
     Standalone: com.finoldigital.CardGameSimulator
     iOS: com.finoldigital.CardGameSim
   buildNumber:
-    Standalone: 14
+    Standalone: 15
     iOS: 0
   AndroidBundleVersionCode: 77
   AndroidMinSdkVersion: 16
@@ -762,11 +762,17 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   scriptingDefineSymbols:
-    1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
-    4: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
-    7: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;MIRROR_3_12_OR_NEWER;MIRROR_4_0_OR_NEWER;LITENETLIB4MIRROR
-    13: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
-    14: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER
+    1: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;LITENETLIB4MIRROR;MIRROR_3_12_OR_NEWER;MIRROR_4_0_OR_NEWER;CT_FB;CT_FB_PRO
+    4: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;CT_FB;CT_FB_PRO
+    7: Search;Results;Selector;Buttons;Group;MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;MIRROR_3_12_OR_NEWER;MIRROR_4_0_OR_NEWER;LITENETLIB4MIRROR;CT_FB;CT_FB_PRO
+    13: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;CT_FB;CT_FB_PRO
+    14: MIRROR;MIRROR_1726_OR_NEWER;MIRROR_3_0_OR_NEWER;LITENETLIB4MIRROR;MIRROR_3_12_OR_NEWER;MIRROR_4_0_OR_NEWER;CT_FB;CT_FB_PRO
+    19: CT_FB;CT_FB_PRO
+    21: CT_FB;CT_FB_PRO
+    25: CT_FB;CT_FB_PRO
+    26: CT_FB;CT_FB_PRO
+    27: CT_FB;CT_FB_PRO
+    28: CT_FB;CT_FB_PRO
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
@@ -777,6 +783,7 @@ PlayerSettings:
     Standalone: 1
   managedStrippingLevel:
     Android: 1
+    Standalone: 2
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   additionalIl2CppArgs: 
@@ -838,7 +845,7 @@ PlayerSettings:
       OfflineMapsManagement: False
       PhoneCall: False
       PhoneCallHistoryPublic: False
-      PicturesLibrary: False
+      PicturesLibrary: True
       PointOfService: False
       PrivateNetworkClientServer: False
       Proximity: False

@@ -329,17 +329,17 @@ public class BranchEditor : Editor {
 			unityActivityNode.RemoveChild(intentFilterNode);
 		}
 
-//		<intent-filter android:autoVerify="true">
-//			<action android:name="android.intent.action.VIEW" />
-//			<category android:name="android.intent.category.DEFAULT" />
-//			<category android:name="android.intent.category.BROWSABLE" />
-//			<data android:scheme="https" android:host="xxxx.app.link" />
-//			<data android:scheme="https" android:host="bnc.lt" android:pathPrefix="/pref" />
-//			<data android:scheme="https" android:host="custom.dom" android:pathPrefix="/pref" />
-//		</intent-filter>
+        //		<intent-filter android:autoVerify="true">
+        //			<action android:name="android.intent.action.VIEW" />
+        //			<category android:name="android.intent.category.DEFAULT" />
+        //			<category android:name="android.intent.category.BROWSABLE" />
+        //			<data android:scheme="https" android:host="xxxx.app.link" />
+        //			<data android:scheme="https" android:host="bnc.lt" android:pathPrefix="/pref" />
+        //			<data android:scheme="https" android:host="custom.dom" android:pathPrefix="/pref" />
+        //		</intent-filter>
 
-		// adding intent-filter
-		XmlElement ifElem = doc.CreateElement("intent-filter");
+        // adding intent-filter
+        XmlElement ifElem = doc.CreateElement("intent-filter");
 		ifElem.SetAttribute("android____autoVerify", "true");
 
 		XmlElement ifAction = doc.CreateElement("action");
@@ -371,14 +371,17 @@ public class BranchEditor : Editor {
 					ifElem.AppendChild(ifData);
 				}
 			}
-			else {
+			else if (!string.IsNullOrEmpty(BranchData.Instance.testAndroidPathPrefix)) {
 				XmlElement ifData = doc.CreateElement("data");
 				ifData.SetAttribute("android____scheme", "https");
 				ifData.SetAttribute("android____host", "bnc.lt");
 				ifData.SetAttribute("android____pathPrefix", BranchData.Instance.testAndroidPathPrefix);
 				ifElem.AppendChild(ifData);
 			}
-		}
+            else {
+                return;
+            }
+        }
 		else {
 			if (BranchData.Instance.liveAppLinks.Length > 0) {
 				foreach(string link in BranchData.Instance.liveAppLinks) {
@@ -395,14 +398,17 @@ public class BranchEditor : Editor {
 					ifElem.AppendChild(ifData);
 				}
 			}
-			else {
+			else if (!string.IsNullOrEmpty(BranchData.Instance.testAndroidPathPrefix)) {
 				XmlElement ifData = doc.CreateElement("data");
 				ifData.SetAttribute("android____scheme", "https");
 				ifData.SetAttribute("android____host", "bnc.lt");
 				ifData.SetAttribute("android____pathPrefix", BranchData.Instance.liveAndroidPathPrefix);
 				ifElem.AppendChild(ifData);
-			}
-		}
+            }
+            else {
+                return;
+            }
+        }
 
 		unityActivityNode.AppendChild(ifElem);
 	}

@@ -21,6 +21,17 @@ static NSString*const kBranchKeychainFirstInstalldKey = @"BranchKeychainFirstIns
 
 @implementation BNCApplication
 
+// BNCApplication checks a few values in keychain
+// Checking keychain from main thread early in the app lifecycle can deadlock.  INTENG-7291
++ (void)loadCurrentApplicationWithCompletion:(void (^)(BNCApplication *application))completion {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BNCApplication *tmp = [BNCApplication currentApplication];
+        if (completion) {
+            completion(tmp);
+        }
+    });
+}
+
 + (BNCApplication*) currentApplication {
     static BNCApplication *bnc_currentApplication = nil;
     static dispatch_once_t onceToken = 0;
@@ -101,7 +112,7 @@ static NSString*const kBranchKeychainFirstInstalldKey = @"BranchKeychainFirstIns
         forService:kBranchKeychainService
         key:kBranchKeychainFirstBuildKey
         cloudAccessGroup:nil];
-
+    if (error) BNCLogError(@"Keychain store: %@.", error);
     return firstBuildDate;
 }
 
@@ -136,7 +147,7 @@ static NSString*const kBranchKeychainFirstInstalldKey = @"BranchKeychainFirstIns
         forService:kBranchKeychainService
         key:kBranchKeychainFirstInstalldKey
         cloudAccessGroup:nil];
-
+    if (error) BNCLogError(@"Keychain store: %@.", error);
     return firstInstallDate;
 }
 

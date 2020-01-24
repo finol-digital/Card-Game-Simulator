@@ -7,14 +7,13 @@
 //
 
 #import "BranchUniversalObject.h"
-#import "BNCError.h"
+#import "NSError+Branch.h"
 #import "BranchConstants.h"
-#import "BNCFabricAnswers.h"
-#import "BNCDeviceInfo.h"
 #import "BNCLog.h"
 #import "BNCLocalization.h"
 #import "BNCEncodingUtils.h"
 #import "Branch.h"
+#import "BNCUserAgentCollector.h"
 
 #pragma mark BranchContentSchema
 
@@ -368,9 +367,9 @@ BranchCondition _Nonnull BranchConditionRefurbished   = @"REFURBISHED";
         BNCLogWarning(@"%@", error);
         return nil;
     }
-    // keep this operation outside of sync operation below.
-    NSString *UAString = [BNCDeviceInfo userAgentString];
-
+    
+    // user agent should be cached on startup
+    NSString *UAString = [BNCUserAgentCollector instance].userAgent;
     return [[Branch getInstance] getShortURLWithParams:[self getParamsForServerRequestWithAddedLinkProperties:linkProperties]
                                         andTags:linkProperties.tags
                                      andChannel:linkProperties.channel
@@ -482,7 +481,6 @@ BranchCondition _Nonnull BranchConditionRefurbished   = @"REFURBISHED";
             // Log share completed event
             if (completed && !activityError) {
                 [[BranchEvent customEventWithName:BNCShareCompletedEvent contentItem:self] logEvent];
-                [BNCFabricAnswers sendEventWithName:@"Branch Share" andAttributes:[self getDictionaryWithCompleteLinkProperties:linkProperties]];
             }
             if (completion)
                 completion(activityType, completed);
@@ -608,7 +606,7 @@ BranchCondition _Nonnull BranchConditionRefurbished   = @"REFURBISHED";
     } else {
         NSError *error = [NSError branchErrorWithCode:BNCSpotlightPublicIndexError
                                      localizedMessage:@"Publically indexed cannot be removed from Spotlight"];
-        completion(error);
+        if (completion) completion(error);
     }
 }
 

@@ -60,7 +60,7 @@ public class BranchUniversalObject {
 		contentIndexMode = 0;
 		localIndexMode = 0;
 		keywords = new List<string>();
-		expirationDate = null;
+		expirationDate = new DateTime(2200, 12, 30);
 	}
 
 	public void loadFromJson(string json) {
@@ -74,7 +74,10 @@ public class BranchUniversalObject {
 	public void loadFromDictionary(Dictionary<string, object> data) {
 		if (data == null)
 			return;
-		if (data.ContainsKey("$canonical_identifier") && data["$canonical_identifier"] != null) {
+
+        expirationDate = new DateTime(2200, 12, 30);
+
+        if (data.ContainsKey("$canonical_identifier") && data["$canonical_identifier"] != null) {
 			canonicalIdentifier = data["$canonical_identifier"].ToString();
 		}
 		if (data.ContainsKey("$canonical_url") && data["$canonical_url"] != null) {

@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
-using SFB;
+using Crosstales.FB;
 
 using CardGameDef;
 
@@ -82,11 +82,7 @@ namespace CGS.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
 #else
-            string[] paths = StandaloneFileBrowser.OpenFilePanel(ImportImage, string.Empty, UnityExtensionMethods.ImageExtensions, false);
-            if (paths.Length > 0)
-                ImportBannerImageFromFile(paths[0]);
-            else
-                Debug.LogWarning(ImportImageWarningMessage);
+            ImportBannerImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
         public void ImportBannerImageFromFile(string uri)
@@ -126,11 +122,7 @@ namespace CGS.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
 #else
-            string[] paths = StandaloneFileBrowser.OpenFilePanel(ImportImage, string.Empty, UnityExtensionMethods.ImageExtensions, false);
-            if (paths.Length > 0)
-                ImportCardBackImageFromFile(paths[0]);
-            else
-                Debug.LogWarning(ImportImageWarningMessage);
+            ImportCardBackImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
         public void ImportCardBackImageFromFile(string uri)

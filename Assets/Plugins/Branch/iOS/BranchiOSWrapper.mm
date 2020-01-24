@@ -5,7 +5,7 @@
 #import "UnityAppController.h"
 
 
-static NSString *_branchKey = @"key_live_mnzYrzoSgtqi3gAyzkVzqppkxFnNY1jn";
+static NSString *_branchKey = @"";
 static BranchUnityWrapper *_wrapper = [BranchUnityWrapper sharedInstance];
 
 
@@ -342,6 +342,7 @@ static callbackWithShareCompletion callbackWithShareCompletionForCallbackId(char
 
 void _setBranchKey(char *branchKey) {
     _branchKey = CreateNSString(branchKey);
+    [[Branch getInstance:_branchKey] registerPluginName:@"unity.ios" version:@"0.5.15"];
 }
 
 #pragma mark - InitSession methods
@@ -427,7 +428,7 @@ void _registerView(char *universalObjectJson) {
     BranchUniversalObject *obj = branchuniversalObjectFormDict(universalObjectDict);
     
     BranchEvent* event = [[BranchEvent alloc] initWithName:BranchStandardEventViewItem];
-    [event.contentItems addObject:obj];
+    [event.contentItems arrayByAddingObject:obj];
     [event logEvent];
 }
 
@@ -449,6 +450,11 @@ void _setRequestMetadata(char *key, char *value) {
 void _setTrackingDisabled(BOOL value) {
     [Branch setTrackingDisabled:value];
 }
+
+void _delayInitToCheckForSearchAds() {
+    [[Branch getInstance:_branchKey] delayInitToCheckForSearchAds];
+}
+
 
 #pragma mark - User Action methods
 

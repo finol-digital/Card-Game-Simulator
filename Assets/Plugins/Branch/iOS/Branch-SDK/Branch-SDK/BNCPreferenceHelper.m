@@ -11,7 +11,6 @@
 #import "BNCConfig.h"
 #import "Branch.h"
 #import "BNCLog.h"
-#import "BNCFabricAnswers.h"
 #import "BranchConstants.h"
 #import "NSString+Branch.h"
 
@@ -77,7 +76,6 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
             universalLinkUrl = _universalLinkUrl,
             externalIntentURI = _externalIntentURI,
             isDebug = _isDebug,
-            shouldWaitForInit = _shouldWaitForInit,
             retryCount = _retryCount,
             retryInterval = _retryInterval,
             timeout = _timeout,
@@ -110,6 +108,8 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
     _persistPrefsQueue = [[NSOperationQueue alloc] init];
     _persistPrefsQueue.maxConcurrentOperationCount = 1;
 
+    self.branchBlacklistURL = @"https://cdn.branch.io";
+    
     return self;
 }
 
@@ -511,10 +511,7 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
 
 - (void)clearInstrumentationDictionary {
     @synchronized (self) {
-        NSArray *keys = [_instrumentationDictionary allKeys];
-        for (NSUInteger i = 0 ; i < [keys count]; i++) {
-            [_instrumentationDictionary removeObjectForKey:keys[i]];
-        }
+        [_instrumentationDictionary removeAllObjects];
     }
 }
 
@@ -680,19 +677,6 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
 
 #pragma mark - Count Storage
 
-- (void)updateBranchViewCount:(NSString *)branchViewID {
-    NSInteger currentCount = [self getBranchViewCount:branchViewID] + 1;
-    [self writeObjectToDefaults:[BRANCH_PREFS_KEY_BRANCH_VIEW_USAGE_CNT stringByAppendingString:branchViewID] value:@(currentCount)];
-}
-
-- (NSInteger)getBranchViewCount:(NSString *)branchViewID {
-    NSInteger count = [self readIntegerFromDefaults:[BRANCH_PREFS_KEY_BRANCH_VIEW_USAGE_CNT stringByAppendingString:branchViewID]];
-    if (count == NSNotFound){
-        count = 0;
-    }
-    return count;
-}
-
 - (void)saveBranchAnalyticsData:(NSDictionary *)analyticsData {
     if (_sessionID) {
         if (!_savedAnalyticsData) {
@@ -779,6 +763,11 @@ static NSString * const BRANCH_PREFS_KEY_ANALYTICS_MANIFEST = @"bnc_branch_analy
         }];
         [_persistPrefsQueue addOperation:newPersistOp];
     }
+}
+
++ (void) clearAll {
+    NSURL *prefsURL = [self.URLForPrefsFile copy];
+    if (prefsURL) [[NSFileManager defaultManager] removeItemAtURL:prefsURL error:nil];
 }
 
 #pragma mark - Reading From Persistence

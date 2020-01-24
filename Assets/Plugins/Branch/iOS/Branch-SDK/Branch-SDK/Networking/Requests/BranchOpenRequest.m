@@ -14,10 +14,10 @@
 #import "NSMutableDictionary+Branch.h"
 #import "BNCEncodingUtils.h"
 #import "BNCCrashlyticsWrapper.h"
-#import "BNCFabricAnswers.h"
-#import "BNCDeviceInfo.h"
 #import "Branch.h"
 #import "BNCApplication.h"
+#import "BNCAppleReceipt.h"
+#import "BNCTuneUtility.h"
 
 @interface BranchOpenRequest ()
 @property (assign, nonatomic) BOOL isInstall;
@@ -65,6 +65,8 @@
     if (preferenceHelper.limitFacebookTracking)
         params[@"limit_facebook_tracking"] = (__bridge NSNumber*) kCFBooleanTrue;
 
+    [self safeSetValue:[NSNumber numberWithBool:[[BNCAppleReceipt sharedInstance] isTestFlight]] forKey:BRANCH_REQUEST_KEY_APPLE_TESTFLIGHT onDict:params];
+    
     NSMutableDictionary *cdDict = [[NSMutableDictionary alloc] init];
     BranchContentDiscoveryManifest *contentDiscoveryManifest = [BranchContentDiscoveryManifest getInstance];
     [cdDict bnc_safeSetObject:[contentDiscoveryManifest getManifestVersion] forKey:BRANCH_MANIFEST_VERSION_KEY];
@@ -97,42 +99,22 @@
 }
 
 typedef NS_ENUM(NSInteger, BNCUpdateState) {
-    BNCUpdateStateInstall       = 0,    // App was recently installed.
-    BNCUpdateStateNonUpdate     = 1,    // App was neither newly installed nor updated.
-    BNCUpdateStateUpdate        = 2,    // App was recently updated.
-
-//  BNCUpdateStateError         = 3,    // Error determining update state.
-//  BNCUpdateStateReinstall     = 4     // App was re-installed.
+    // Values 0-4 are deprecated and ignored by the server
+    BNCUpdateStateIgnored0 = 0,
+    BNCUpdateStateIgnored1 = 1,
+    BNCUpdateStateIgnored2 = 2,
+    BNCUpdateStateIgnored3 = 3,
+    BNCUpdateStateIgnored4 = 4,
+    
+    // App was migrated from Tune SDK to Branch SDK
+    BNCUpdateStateTuneMigration = 5
 };
 
-+ (NSNumber*) appUpdateState {
-
-    BNCPreferenceHelper *preferenceHelper = [BNCPreferenceHelper preferenceHelper];
-    BNCApplication *application = [BNCApplication currentApplication];
-    NSTimeInterval first_install_time   = application.firstInstallDate.timeIntervalSince1970;
-    NSTimeInterval latest_install_time  = application.currentInstallDate.timeIntervalSince1970;
-    NSTimeInterval latest_update_time   = application.currentBuildDate.timeIntervalSince1970;
-    NSTimeInterval previous_update_time = preferenceHelper.previousAppBuildDate.timeIntervalSince1970;
-    NSTimeInterval const kOneDay        = 1.0 * 24.0 * 60.0 * 60.0;
-
-    BNCUpdateState update_state = 0;
-    if (first_install_time <= 0.0 ||
-        latest_install_time <= 0.0 ||
-        latest_update_time <= 0.0 ||
-        previous_update_time > latest_update_time)
-        update_state = BNCUpdateStateNonUpdate; // Error: Send Non-update.
-    else
-    if ((latest_update_time - kOneDay) <= first_install_time && previous_update_time <= 0)
-        update_state = BNCUpdateStateInstall;
-    else
-    if (first_install_time < latest_install_time && previous_update_time <= 0)
-        update_state = BNCUpdateStateUpdate; // Re-install: Send Update.
-    else
-    if (latest_update_time > first_install_time && previous_update_time < latest_update_time)
-        update_state = BNCUpdateStateUpdate;
-    else
-        update_state = BNCUpdateStateNonUpdate;
-
++ (NSNumber *)appUpdateState {
+    BNCUpdateState update_state = BNCUpdateStateIgnored0;
+    if ([BNCTuneUtility isTuneDataPresent]) {
+        update_state = BNCUpdateStateTuneMigration;
+    }
     return @(update_state);
 }
 
@@ -223,12 +205,6 @@ typedef NS_ENUM(NSInteger, BNCUpdateState) {
         if (dataIsFromALinkClick && (self.isInstall || storedParamsAreEmpty)) {
             preferenceHelper.installParams = sessionData;
         }
-
-        if (dataIsFromALinkClick) {
-            NSString * eventName =
-                [@"Branch " stringByAppendingString:[[self getActionName] capitalizedString]];
-            [BNCFabricAnswers sendEventWithName:eventName andAttributes:sessionDataDict];
-        }
     }
 
     NSString *referringURL = nil;
@@ -263,15 +239,6 @@ typedef NS_ENUM(NSInteger, BNCUpdateState) {
     [cdManifest onBranchInitialised:data withUrl:referringURL];
     if ([cdManifest isCDEnabled]) {
         [[BranchContentDiscoverer getInstance] startDiscoveryTaskWithManifest:cdManifest];
-    }
-
-    // Check if there is any Branch View to show
-    NSObject *branchViewDict = data[BRANCH_RESPONSE_KEY_BRANCH_VIEW_DATA];
-    if ([branchViewDict isKindOfClass:[NSDictionary class]]) {
-        [[BranchViewHandler getInstance]
-            showBranchView:[self getActionName]
-            withBranchViewDictionary:(NSDictionary *)branchViewDict
-            andWithDelegate:nil];
     }
 
     if (self.callback) {
@@ -316,7 +283,6 @@ static BOOL openRequestWaitQueueIsSuspended = NO;
 
 + (void) waitForOpenResponseLock {
     BNCLogDebugSDK(@"Waiting for openRequestWaitQueue.");
-    [BNCDeviceInfo userAgentString];    //  Make sure we do this lock first to prevent a deadlock.
     dispatch_sync(openRequestWaitQueue, ^ {
         BNCLogDebugSDK(@"Finished waitForOpenResponseLock.");
     });

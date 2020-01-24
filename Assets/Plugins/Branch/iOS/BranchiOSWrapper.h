@@ -49,6 +49,7 @@ extern "C" {
     void _accountForFacebookSDKPreventingAppLaunch();
     void _setRequestMetadata(char *key, char *value);
     void _setTrackingDisabled(BOOL value);
+    void _delayInitToCheckForSearchAds();
     
     #pragma mark - User Action methods
 

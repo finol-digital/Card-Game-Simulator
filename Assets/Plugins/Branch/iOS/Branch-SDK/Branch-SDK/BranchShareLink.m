@@ -8,9 +8,8 @@
 
 #import "BranchShareLink.h"
 #import "BranchConstants.h"
-#import "BNCFabricAnswers.h"
 #import "BranchActivityItemProvider.h"
-#import "BNCDeviceInfo.h"
+#import "BNCUserAgentCollector.h"
 #import "BNCAvailability.h"
 #import "BNCLog.h"
 #import "Branch.h"
@@ -97,8 +96,6 @@ typedef NS_ENUM(NSInteger, BranchShareActivityItemType) {
     }
     if (completed && !error) {
         [[BranchEvent customEventWithName:BNCShareCompletedEvent contentItem:self.universalObject] logEvent];
-        NSDictionary *attributes = [self.universalObject getDictionaryWithCompleteLinkProperties:self.linkProperties];
-        [BNCFabricAnswers sendEventWithName:@"Branch Share" andAttributes:attributes];
     }
 }
 
@@ -260,17 +257,18 @@ typedef NS_ENUM(NSInteger, BranchShareActivityItemType) {
     // Because Facebook et al immediately scrape URLs, we add an additional parameter to the
     // existing list, telling the backend to ignore the first click.
 
-    NSDictionary *scrapers = @{
-        @"Facebook":    @1,
-        @"Twitter":     @1,
-        @"Slack":       @1,
-        @"Apple Notes": @1,
-        @"Skype":       @1,
-        @"SMS":         @1
-    };
+    NSSet*scrapers = [NSSet setWithArray:@[
+        @"Facebook",
+        @"Twitter",
+        @"Slack",
+        @"Apple Notes",
+        @"Skype",
+        @"SMS",
+        @"Apple Reminders"
+    ]];
     NSString *userAgentString = nil;
-    if (self.linkProperties.channel && scrapers[self.linkProperties.channel]) {
-        userAgentString = [BNCDeviceInfo userAgentString];
+    if (self.linkProperties.channel && [scrapers containsObject:self.linkProperties.channel]) {
+        userAgentString = [BNCUserAgentCollector instance].userAgent;
     }
     NSString *URLString =
         [[Branch getInstance]

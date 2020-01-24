@@ -10,7 +10,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using SFB;
+using Crosstales.FB;
 
 using CardGameDef;
 using CGS.Menu;
@@ -77,11 +77,7 @@ namespace CGS.Cards
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
 #else
-            string[] paths = StandaloneFileBrowser.OpenFilePanel(ImportImage, string.Empty, UnityExtensionMethods.ImageExtensions, false);
-            if (paths.Length > 0)
-                ImportCardImageFromFile(paths[0]);
-            else
-                Debug.LogWarning(ImportImageWarningMessage);
+            ImportCardImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
         public void ImportCardImageFromFile(string uri)

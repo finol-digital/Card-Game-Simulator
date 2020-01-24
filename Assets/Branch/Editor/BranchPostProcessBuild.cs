@@ -18,8 +18,8 @@ public class BranchPostProcessBuild {
 		if ( buildTarget == BuildTarget.iOS ) {
 			ChangeXcodePlist(pathToBuiltProject);
 			ChangeXcodeProject(pathToBuiltProject);
-		}
-
+            		ChangeEntitlements(pathToBuiltProject);
+        	}
 	}
 
 	public static void ChangeXcodePlist(string pathToBuiltProject) {
@@ -85,10 +85,10 @@ public class BranchPostProcessBuild {
 		}
 
 		// add new URI
-		if (BranchData.Instance.testMode) {
+		if (BranchData.Instance.testMode && !string.IsNullOrEmpty(BranchData.Instance.testBranchUri) ) {
 			urlSchemesArray.AddString(BranchData.Instance.testBranchUri);
 		}
-		else {
+		else if (!BranchData.Instance.testMode && !string.IsNullOrEmpty(BranchData.Instance.liveBranchUri)) {
 			urlSchemesArray.AddString(BranchData.Instance.liveBranchUri);
 		}
 
@@ -96,7 +96,42 @@ public class BranchPostProcessBuild {
 		File.WriteAllText(plistPath, plist.WriteToString());
 	}
 
-	public static void ChangeXcodeProject(string pathToBuiltProject) {
+    public static void ChangeEntitlements(string pathToBuiltProject)
+    {
+        //This is the default path to the default pbxproj file. Yours might be different
+        string projectPath = pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
+        //Default target name. Yours might be different
+        string targetName = "Unity-iPhone";
+        //Set the entitlements file name to what you want but make sure it has this extension
+        string entitlementsFileName = "branch_domains.entitlements";
+
+        var entitlements = new ProjectCapabilityManager(projectPath, entitlementsFileName, targetName);
+
+        entitlements.AddAssociatedDomains(BuildEntitlements());
+        //Apply
+        entitlements.WriteToFile();
+    }
+
+    private static string[] BuildEntitlements()
+    {
+        var links = BranchData.Instance.liveAppLinks;
+        if(BranchData.Instance.testMode)
+            links = BranchData.Instance.testAppLinks;
+
+        if (links == null)
+            return null;
+
+        string[] domains = new string[links.Length];
+        for (int i = 0; i < links.Length; i++)
+        {
+            domains[i] = "applinks:" + links[i];
+        }
+
+        return domains;
+       
+    }
+
+    public static void ChangeXcodeProject(string pathToBuiltProject) {
 		// Get xcodeproj
 		string pathToProject = pathToBuiltProject + "/Unity-iPhone.xcodeproj/project.pbxproj";
 		string[] lines = File.ReadAllLines(pathToProject);
@@ -113,16 +148,22 @@ public class BranchPostProcessBuild {
 		// Write all lines to new file and enable objective C exceptions
 		foreach (string line in lines) {
 			
-			if (line.Contains("GCC_ENABLE_OBJC_EXCEPTIONS") ) {
-				fCurrentXcodeProjFile.Write("\t\t\t\tGCC_ENABLE_OBJC_EXCEPTIONS = YES;\n");
+			if (line.Contains("GCC_ENABLE_OBJC_EXCEPTIONS")) {
+                fCurrentXcodeProjFile.Write("\t\t\t\tGCC_ENABLE_OBJC_EXCEPTIONS = YES;\n");
+            }
+            else if (line.Contains("GCC_ENABLE_CPP_EXCEPTIONS")) {
+                fCurrentXcodeProjFile.Write("\t\t\t\tGCC_ENABLE_CPP_EXCEPTIONS = YES;\n");
+            }
+            else if (line.Contains("CLANG_ENABLE_MODULES")) {
+				fCurrentXcodeProjFile.Write("\t\t\t\tCLANG_ENABLE_MODULES = YES;\n");
 			}
 			else {                          
 				fCurrentXcodeProjFile.WriteLine(line);
 			}
 		}
 
-		// Close file
-		fCurrentXcodeProjFile.Close();
+        // Close file
+        fCurrentXcodeProjFile.Close();
 
 		// Add frameworks
 		PBXProject proj = new PBXProject();
@@ -148,7 +189,11 @@ public class BranchPostProcessBuild {
 			proj.AddFrameworkToProject(target, "Security.framework", false);
 		}
 
-		#else
+        if (!proj.ContainsFramework(target, "WebKit.framework")) {
+            proj.AddFrameworkToProject(target, "WebKit.framework", false);
+        }
+
+#else
 
 		if (!proj.HasFramework("AdSupport.framework")) {
 			proj.AddFrameworkToProject(target, "AdSupport.framework", false);
@@ -166,9 +211,9 @@ public class BranchPostProcessBuild {
 			proj.AddFrameworkToProject(target, "Security.framework", false);
 		}
 
-		#endif
+#endif
 
-		File.WriteAllText(pathToProject, proj.WriteToString());
+        File.WriteAllText(pathToProject, proj.WriteToString());
 	}
 }
 #endif

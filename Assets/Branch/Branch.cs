@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 public class Branch : MonoBehaviour {
 
-	public static string sdkVersion = "0.4.11";
+	public static string sdkVersion = "0.5.15";
 
     public delegate void BranchCallbackWithParams(Dictionary<string, object> parameters, string error);
     public delegate void BranchCallbackWithUrl(string url, string error);
@@ -26,30 +26,6 @@ public class Branch : MonoBehaviour {
 		_getAutoInstance();
 	}
 
-    /**
-     * Just initialize session.
-     */
-    public static void initSession() {
-		if (_sessionCounter == 0) {
-			++_sessionCounter;
-			_isFirstSessionInited = true;
-
-			_initSession ();
-		}
-    }
-
-	/**
-     * Just initialize session, specifying whether is should be referrable.
-     */
-	public static void  initSession(bool isReferrable) {
-		if (_sessionCounter == 0) {
-			++_sessionCounter;
-			_isFirstSessionInited = true;
-
-			_initSessionAsReferrable (isReferrable);
-		}
-	}
-
 	/**
 	 * Initialize session and receive information about how it opened.
 	 */
@@ -64,21 +40,6 @@ public class Branch : MonoBehaviour {
 			_initSessionWithCallback (callbackId);
 		}
     }
-
-    /**
-	 * Initialize session and receive information about how it opened, specifying whether is should be referrable.
-	 */
-	public static void initSession(bool isReferrable, BranchCallbackWithParams callback) {
-		if (_sessionCounter == 0) {
-			++_sessionCounter;
-			_isFirstSessionInited = true;
-			autoInitCallbackWithParams = callback;
-
-			var callbackId = _getNextCallbackId ();
-			_branchCallbacks [callbackId] = callback;
-			_initSessionAsReferrableWithCallback (isReferrable, callbackId);
-		}
-	}
 
 	/**
      * Initialize session and receive information about how it opened.
@@ -268,6 +229,10 @@ public class Branch : MonoBehaviour {
 		_setTrackingDisabled(value);
 	}
 
+    public static void delayInitToCheckForSearchAds() {
+        _delayInitToCheckForSearchAds();
+    }
+
     #endregion
 
     #region User Action methods
@@ -420,9 +385,9 @@ public class Branch : MonoBehaviour {
 	#region Singleton
 
     public void Awake() {
-		var olderBranch = FindObjectOfType<Branch>();
+		var olderBranches = FindObjectsOfType<Branch>();
 
-		if (olderBranch != null && olderBranch != this) {
+		if (olderBranches != null && olderBranches.Length > 1) {
 			// someone's already here!
 			Destroy(gameObject);
 			return;
@@ -450,20 +415,17 @@ public class Branch : MonoBehaviour {
 			else if (autoInitCallbackWithBUO != null) {
 				initSession(autoInitCallbackWithBUO);
 			}
-			else {
-				initSession();
-			}
 		}
 		else {
 			closeSession();
 		}
 	}
 
-	#endregion
+    #endregion
 
-	#region Private methods
+    #region Private methods
 
-	#region Platform Loading Methods
+    #region Platform Loading Methods
 
 #if (UNITY_IOS || UNITY_IPHONE) && !UNITY_EDITOR
     
@@ -537,6 +499,9 @@ public class Branch : MonoBehaviour {
 
 	[DllImport ("__Internal")]
 	private static extern void _setTrackingDisabled(bool value);
+
+    [DllImport ("__Internal")]
+    private static extern void _delayInitToCheckForSearchAds();
 
     [DllImport ("__Internal")]
     private static extern void _userCompletedAction(string action);
@@ -678,6 +643,8 @@ public class Branch : MonoBehaviour {
 	    BranchAndroidWrapper.setTrackingDisabled(value);
     }
 
+    private static void _delayInitToCheckForSearchAds() {}
+
     private static void _userCompletedAction(string action) {
         BranchAndroidWrapper.userCompletedAction(action);
     }
@@ -736,7 +703,7 @@ public class Branch : MonoBehaviour {
 
 #else
 
-	private static void _setBranchKey(string branchKey) { }
+    private static void _setBranchKey(string branchKey) { }
     
 	private static void _getAutoInstance() { }
 
@@ -803,7 +770,9 @@ public class Branch : MonoBehaviour {
 	private static void _setRequestMetadata(string key, string val) { }
 
 	private static void _setTrackingDisabled(bool value) { }
-    
+
+    private static void _delayInitToCheckForSearchAds() { }
+
     private static void _userCompletedAction(string action) { }
     
     private static void _userCompletedActionWithState(string action, string stateDict) { }
