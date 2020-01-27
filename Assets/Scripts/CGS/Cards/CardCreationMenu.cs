@@ -75,7 +75,7 @@ namespace CGS.Cards
         public void ImportCardImageFromFile()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
+            NativeGallery.GetImageFromGallery(ImportCardImageFromFile, ImportImage);
 #else
             ImportCardImageFromFile(FileBrowser.OpenSingleFile());
 #endif

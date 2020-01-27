@@ -18,5 +18,12 @@ namespace CardGameDef
         [JsonProperty]
         [Description("The url from which to download the deck")]
         public Uri Url { get; private set; }
+
+        [JsonConstructor]
+        public DeckUrl(string name, Uri url)
+        {
+            Name = name ?? string.Empty;
+            Url = url;
+        }
     }
 }

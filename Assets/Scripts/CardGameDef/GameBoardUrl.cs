@@ -18,5 +18,12 @@ namespace CardGameDef
         [JsonProperty]
         [Description("The url from which to download the board image")]
         public Uri Url { get; private set; }
+
+        [JsonConstructor]
+        public GameBoardUrl(string id, Uri url)
+        {
+            Id = id ?? string.Empty;
+            Url = url;
+        }
     }
 }
