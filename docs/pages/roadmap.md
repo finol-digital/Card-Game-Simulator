@@ -35,9 +35,10 @@ permalink: roadmap.html
   - Slider to control zoom
 
 ## Backlog
-- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
+- Fix: File Selection on Windows
 - Tech: Branch on desktop
 - Tech: Allow space and dash in deck filename on Windows and Android
+- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Tech: Google Play Instant
 - Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
