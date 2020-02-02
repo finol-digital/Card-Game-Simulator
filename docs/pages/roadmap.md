@@ -12,7 +12,9 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Fix: File Selection on Windows
+- Fix: Allow space and dash in deck filename on Windows and Android
 - Fix: Load deck in Play Mode
+- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Play Mode Redesign
   - Fix: Server freezes when sharing deck
   - Fix: Card dissappears when connection to server is dropped
@@ -38,8 +40,6 @@ permalink: roadmap.html
 
 ## Backlog
 - Tech: Branch on desktop
-- Tech: Allow space and dash in deck filename on Windows and Android
-- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Tech: Google Play Instant
 - Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
