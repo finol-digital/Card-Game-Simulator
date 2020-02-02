@@ -24,11 +24,11 @@ env:
 
 stages:
   - build
-#    if: false
+    if: false
   - name: deploy desktop
     if: false
   - name: deploy mobile
-#    if: false
+    if: false
 
 jobs:
   include:

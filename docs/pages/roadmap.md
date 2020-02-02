@@ -11,6 +11,8 @@ permalink: roadmap.html
 - Tech: Use NJsonSchema
 
 ## Current Sprint
+- Fix: File Selection on Windows
+- Fix: Load deck in Play Mode
 - Play Mode Redesign
   - Fix: Server freezes when sharing deck
   - Fix: Card dissappears when connection to server is dropped
@@ -35,7 +37,6 @@ permalink: roadmap.html
   - Slider to control zoom
 
 ## Backlog
-- Fix: File Selection on Windows
 - Tech: Branch on desktop
 - Tech: Allow space and dash in deck filename on Windows and Android
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
