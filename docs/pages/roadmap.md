@@ -13,7 +13,6 @@ permalink: roadmap.html
 ## Current Sprint
 - Fix: File Selection on Windows
 - Fix: Allow space and dash in deck filename on Windows and Android
-- Fix: Load deck in Play Mode
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Play Mode Redesign
   - Fix: Server freezes when sharing deck

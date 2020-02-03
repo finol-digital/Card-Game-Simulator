@@ -121,7 +121,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.22.2
+  bundleVersion: 1.22.3
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -165,7 +165,7 @@ PlayerSettings:
   buildNumber:
     Standalone: 15
     iOS: 0
-  AndroidBundleVersionCode: 80
+  AndroidBundleVersionCode: 81
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 0
@@ -798,7 +798,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.22.2.0
+  metroPackageVersion: 1.22.3.0
   metroCertificatePath: WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
