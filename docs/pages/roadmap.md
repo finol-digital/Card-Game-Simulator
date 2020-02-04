@@ -11,9 +11,12 @@ permalink: roadmap.html
 - Tech: Use NJsonSchema
 
 ## Current Sprint
-- Fix: File Selection on Windows
+- Fix: File Selection on Windows and Mac
 - Fix: Allow space and dash in deck filename on Windows and Android
 - Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
+- Create Sort Menu for the Deck Editor and Cards Explorer
+- Group cards in the Deck Editor with a number instead of stacking them
+- Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Play Mode Redesign
   - Fix: Server freezes when sharing deck
   - Fix: Card dissappears when connection to server is dropped
@@ -45,9 +48,6 @@ permalink: roadmap.html
 - Highlight current selected button in Main Menu
 - Complete Main Menu Carousel
 - Further highlight selected card and de-highlight unselected
-- Create Sort Menu for the Deck Editor and Cards Explorer
-- Group cards in the Deck Editor with a number instead of stacking them
-- Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Edit Deck List in the Deck Save Menu
 - Press and hold on Popups/Card Viewer to copy text
 - Navigate games from Cards Browser
