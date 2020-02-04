@@ -140,7 +140,7 @@ namespace CGS.Play
             zones.scrollView.verticalScrollbar.value = 0;
 #if !UNITY_WEBGL
             if (!isShared)
-                CGSNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
+                CGSNetManager.Instance.LocalPlayer?.RequestNewDeck(deckCards);
 #endif
             zones.CurrentDeck.Sync(deckCards);
             StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
