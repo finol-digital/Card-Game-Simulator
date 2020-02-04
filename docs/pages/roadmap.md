@@ -13,7 +13,7 @@ permalink: roadmap.html
 ## Current Sprint
 - Fix: File Selection on Windows and Mac
 - Fix: Allow space and dash in deck filename on Windows and Android
-- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
+- Fix: Networking on iOS
 - Create Sort Menu for the Deck Editor and Cards Explorer
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
@@ -41,12 +41,13 @@ permalink: roadmap.html
   - Slider to control zoom
 
 ## Backlog
+- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
-- Complete Main Menu Carousel
+- Enhance Main Menu Carousel
 - Further highlight selected card and de-highlight unselected
 - Edit Deck List in the Deck Save Menu
 - Press and hold on Popups/Card Viewer to copy text

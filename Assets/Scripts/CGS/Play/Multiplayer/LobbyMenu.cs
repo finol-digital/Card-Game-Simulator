@@ -94,7 +94,7 @@ namespace CGS.Play.Multiplayer
 
         public void Host()
         {
-            NetworkManager.singleton.StartHost();
+            //TODO: FIXME ON IOS: NetworkManager.singleton.StartHost();
             Hide();
         }
 
