@@ -14,7 +14,7 @@ permalink: roadmap.html
 - Fix: File Selection on Windows and Mac
 - Fix: Allow space and dash in deck filename on Windows and Android
 - Fix: Networking on iOS
-- Create Sort Menu for the Deck Editor and Cards Explorer
+- Add sorting in the Deck Editor and Cards Explorer
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Play Mode Redesign
