@@ -14,7 +14,6 @@ permalink: roadmap.html
 - Fix: File Selection on Windows and Mac
 - Fix: Allow space and dash in deck filename on Windows and Android
 - Fix: Networking on iOS
-- Add sorting in the Deck Editor and Cards Explorer
 - Group cards in the Deck Editor with a number instead of stacking them
 - Have # of stacks in the Deck Editor grow dynamically (remove deckMaxCount?)
 - Play Mode Redesign
@@ -48,7 +47,7 @@ permalink: roadmap.html
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Enhance Main Menu Carousel
-- Further highlight selected card and de-highlight unselected
+- Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
 - Press and hold on Popups/Card Viewer to copy text
 - Navigate games from Cards Browser
