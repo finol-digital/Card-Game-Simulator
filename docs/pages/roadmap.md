@@ -57,6 +57,7 @@ permalink: roadmap.html
 
 ## Icebox
 - Tech: Replace SwipeManager
+- Rebrand tag line to "Create, Share, and Play"
 - Support default search filters
 - Support default sort
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
