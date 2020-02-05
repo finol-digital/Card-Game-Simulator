@@ -49,7 +49,6 @@ permalink: roadmap.html
 - Android Searchbar Widget
 - Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
-- Enhance Main Menu Carousel
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
 - Press and hold on Popups/Card Viewer to copy text
@@ -58,8 +57,13 @@ permalink: roadmap.html
 ## Icebox
 - Tech: Replace SwipeManager
 - Rebrand tag line to "Create, Share, and Play"
+- Card Search Results View Options
+  - Text-only
+  - Small Image
+  - Large Image
 - Support default search filters
 - Support default sort
+- Enhance Main Menu Carousel
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
 - Support dual-faced cards (DFC)
@@ -78,7 +82,6 @@ permalink: roadmap.html
 - Synchronize points across teams in Play Mode
 - Share discard pile between all players who share a deck in Play Mode
 - Online vs local matchmaking (Split Play Game to Play Local and Play Online)
-- Card Search Results Text-Only View
 - Allow automatic deletion of empty zones in Play Mode
 - Organize cards by category when saving a deck in the Deck Editor
 - Allow rotation to keep viewing the currently selected card
