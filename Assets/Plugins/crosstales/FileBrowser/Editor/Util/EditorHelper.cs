@@ -4,65 +4,59 @@ using UnityEditor;
 
 namespace Crosstales.FB.EditorUtil
 {
-    /// <summary>Editor helper class.</summary>
-    public abstract class EditorHelper : Common.EditorUtil.BaseEditorHelper
-    {
-        #region Static variables
+   /// <summary>Editor helper class.</summary>
+   public abstract class EditorHelper : Common.EditorUtil.BaseEditorHelper
+   {
+      #region Static variables
 
-        private static Texture2D logo_asset;
-        private static Texture2D logo_asset_small;
+      private static Texture2D logo_asset;
+      private static Texture2D logo_asset_small;
 
-        #endregion
-
-
-        #region Static properties
-
-        public static Texture2D Logo_Asset
-        {
-            get
-            {
-                return loadImage(ref logo_asset, "logo_asset_pro.png");
-            }
-        }
-
-        public static Texture2D Logo_Asset_Small
-        {
-            get
-            {
-                return loadImage(ref logo_asset_small, "logo_asset_small_pro.png");
-            }
-        }
-
-        #endregion
+      #endregion
 
 
-        #region Static methods
+      #region Static properties
 
-        /// <summary>Loads an image as Texture2D from 'Editor Default Resources'.</summary>
-        /// <param name="logo">Logo to load.</param>
-        /// <param name="fileName">Name of the image.</param>
-        /// <returns>Image as Texture2D from 'Editor Default Resources'.</returns>
-        private static Texture2D loadImage(ref Texture2D logo, string fileName)
-        {
-            if (logo == null)
-            {
+      public static Texture2D Logo_Asset
+      {
+         get { return loadImage(ref logo_asset, "logo_asset_pro.png"); }
+      }
+
+      public static Texture2D Logo_Asset_Small
+      {
+         get { return loadImage(ref logo_asset_small, "logo_asset_small_pro.png"); }
+      }
+
+      #endregion
+
+
+      #region Static methods
+
+      /// <summary>Loads an image as Texture2D from 'Editor Default Resources'.</summary>
+      /// <param name="logo">Logo to load.</param>
+      /// <param name="fileName">Name of the image.</param>
+      /// <returns>Image as Texture2D from 'Editor Default Resources'.</returns>
+      private static Texture2D loadImage(ref Texture2D logo, string fileName)
+      {
+         if (logo == null)
+         {
 #if CT_DEVELOP
-                logo = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets" + EditorConfig.ASSET_PATH + "Icons/" + fileName, typeof(Texture2D));
+            logo = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets" + EditorConfig.ASSET_PATH + "Icons/" + fileName, typeof(Texture2D));
 #else
                 logo = (Texture2D)EditorGUIUtility.Load("crosstales/FileBrowser/" + fileName);
 #endif
 
-                if (logo == null)
-                {
-                    Debug.LogWarning("Image not found: " + fileName);
-                }
+            if (logo == null)
+            {
+               Debug.LogWarning("Image not found: " + fileName);
             }
+         }
 
-            return logo;
-        }
+         return logo;
+      }
 
-        #endregion
-    }
+      #endregion
+   }
 }
 #endif
 // © 2019 crosstales LLC (https://www.crosstales.com)

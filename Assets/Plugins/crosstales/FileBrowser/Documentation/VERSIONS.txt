@@ -1,5 +1,10 @@
 ﻿# FileBrowser PRO - Release notes
 
+## 2020.1.1 - 29.01.2020
+* Linux integration improved
+* Support for Unity 2020
+* Updated to Common 2020.1.1
+
 ## 2020.1.0 - 10.01.2020
 * asmdef added
 * Editor integration improved

@@ -3,25 +3,25 @@ using UnityEditor;
 
 namespace Crosstales.FB.EditorTask
 {
-    /// <summary>Show the configuration window on the first launch.</summary>
-    [InitializeOnLoad]
-    public static class Launch
-    {
+   /// <summary>Show the configuration window on the first launch.</summary>
+   [InitializeOnLoad]
+   public static class Launch
+   {
+      #region Constructor
 
-        #region Constructor
+      static Launch()
+      {
+         bool launched = EditorPrefs.GetBool(EditorUtil.EditorConstants.KEY_LAUNCH);
 
-        static Launch()
-        {
-            bool launched = EditorPrefs.GetBool(EditorUtil.EditorConstants.KEY_LAUNCH);
+         if (!launched)
+         {
+            EditorIntegration.ConfigWindow.ShowWindow(2);
+            EditorPrefs.SetBool(EditorUtil.EditorConstants.KEY_LAUNCH, true);
+         }
+      }
 
-            if (!launched) {
-                EditorIntegration.ConfigWindow.ShowWindow(2);
-                EditorPrefs.SetBool(EditorUtil.EditorConstants.KEY_LAUNCH, true);
-            }
-        }
-
-        #endregion
-    }
+      #endregion
+   }
 }
 #endif
 // © 2019 crosstales LLC (https://www.crosstales.com)

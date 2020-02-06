@@ -1,67 +1,69 @@
 ﻿#if !UNITY_WSA || UNITY_EDITOR
 namespace Crosstales.Common.Util
 {
-    /// <summary>Specialized WebClient.</summary>
-    public class CTWebClient : System.Net.WebClient
-    {
-        #region Properties
+   /// <summary>Specialized WebClient.</summary>
+   public class CTWebClient : System.Net.WebClient
+   {
+      #region Properties
 
-        /// <summary>Timeout in milliseconds</summary>
-        public int Timeout { get; set; }
+      /// <summary>Timeout in milliseconds</summary>
+      public int Timeout { get; set; }
 
-        /// <summary>Connection limit for all WebClients</summary>
-        public int ConnectionLimit { get; set; }
+      /// <summary>Connection limit for all WebClients</summary>
+      public int ConnectionLimit { get; set; }
 
-        #endregion
-
-
-        #region Constructors
-
-        public CTWebClient() : this(5000) { }
-
-        public CTWebClient(int timeout, int connectionLimit = 20)
-        {
-            Timeout = timeout;
-            ConnectionLimit = connectionLimit;
-        }
-
-        #endregion
+      #endregion
 
 
-        #region Public methods
+      #region Constructors
 
-        public System.Net.WebRequest CTGetWebRequest(string uri)
-        {
-            return GetWebRequest(new System.Uri(uri));
-        }
+      public CTWebClient() : this(5000)
+      {
+      }
 
-        #endregion
+      public CTWebClient(int timeout, int connectionLimit = 20)
+      {
+         Timeout = timeout;
+         ConnectionLimit = connectionLimit;
+      }
+
+      #endregion
 
 
-        #region Overriden methods
+      #region Public methods
 
-        protected override System.Net.WebRequest GetWebRequest(System.Uri uri)
-        {
-            System.Net.WebRequest wr = base.GetWebRequest(uri);
+      public System.Net.WebRequest CTGetWebRequest(string uri)
+      {
+         return GetWebRequest(new System.Uri(uri));
+      }
 
-            if (wr != null && wr.GetType() == typeof(System.Net.HttpWebRequest))
+      #endregion
+
+
+      #region Overriden methods
+
+      protected override System.Net.WebRequest GetWebRequest(System.Uri uri)
+      {
+         System.Net.WebRequest wr = base.GetWebRequest(uri);
+
+         if (wr != null && wr.GetType() == typeof(System.Net.HttpWebRequest))
+         {
+            System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)base.GetWebRequest(uri);
+
+            if (request != null)
             {
-                System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)base.GetWebRequest(uri);
+               request.ServicePoint.ConnectionLimit = ConnectionLimit;
+               request.Timeout = Timeout;
 
-                if (request != null)
-                {
-                    request.ServicePoint.ConnectionLimit = ConnectionLimit;
-                    request.Timeout = Timeout;
-
-                    return request;
-                }
+               return request;
             }
+         }
 
-            return wr;
-        }
+         return wr;
+      }
 
-        #endregion
-    }
+      #endregion
+   }
 }
 #endif
 // © 2017-2020 crosstales LLC (https://www.crosstales.com)

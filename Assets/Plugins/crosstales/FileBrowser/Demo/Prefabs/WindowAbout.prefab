@@ -1114,7 +1114,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 2019.x.y
+  m_Text: 2020.x.y
 --- !u!114 &11453282
 MonoBehaviour:
   m_ObjectHideFlags: 1

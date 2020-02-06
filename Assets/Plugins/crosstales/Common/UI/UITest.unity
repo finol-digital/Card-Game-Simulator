@@ -3348,7 +3348,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11439620, guid: 02b02aea6f22a3042b2fcb591b3da486, type: 2}
       propertyPath: m_Text
-      value: 2020.1.0
+      value: 2020.1.1
       objectReference: {fileID: 0}
     - target: {fileID: 11447830, guid: 02b02aea6f22a3042b2fcb591b3da486, type: 2}
       propertyPath: m_Text

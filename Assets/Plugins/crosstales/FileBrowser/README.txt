@@ -1,4 +1,4 @@
-﻿# FileBrowser PRO 2020.1.0
+﻿# FileBrowser PRO 2020.1.1
 
 Thank you for buying our asset "File Browser PRO"! 
 If you have any questions about this asset, send us an email at [fb@crosstales.com](mailto:fb@crosstales.com). 
@@ -78,4 +78,4 @@ CH-8002 Zürich
 * [macOS-Demo](https://www.crosstales.com/media/data/assets/FileBrowser/downloads/FileBrowser_mac.zip)
 
 
-`Version: 10.01.2020`
+`Version: 29.01.2020`
