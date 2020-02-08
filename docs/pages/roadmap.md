@@ -17,6 +17,7 @@ permalink: roadmap.html
 - Layout cards in the Deck Editor more dynamically
   - Group unique cards by using a label to indicate how many copies of that card are in the deck
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
+- Playmats
 
 ## Sprint+1
 - Play Mode Redesign

@@ -24,6 +24,8 @@ static public class UnityExtensionMethods
     public const string MetaExtension = ".meta";
     public const string ZipExtension = ".zip";
 
+    public static string CacheDirectoryPath => Path.Combine(Application.persistentDataPath, "tmp");
+
     static public void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
@@ -96,6 +98,17 @@ static public class UnityExtensionMethods
         foreach (string directory in Directory.GetDirectories(sourceDir))
             if (!string.IsNullOrEmpty(directory))
                 CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
+    }
+
+    public static string CacheFile(string sourceFilePath)
+    {
+        if (!Directory.Exists(CacheDirectoryPath))
+            Directory.CreateDirectory(CacheDirectoryPath);
+
+        string fileName = Path.GetFileName(sourceFilePath);
+        string cacheFilePath = Path.Combine(CacheDirectoryPath, fileName);
+        File.Copy(sourceFilePath, cacheFilePath);
+        return cacheFilePath;
     }
 
     public static void ExtractAndroidStreamingAssets(string targetPath)
@@ -247,6 +260,7 @@ static public class UnityExtensionMethods
         }
     }
 
+    // Note: Memory Leak Potential
     public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageUrl)
     {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl);

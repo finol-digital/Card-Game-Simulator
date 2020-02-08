@@ -87,7 +87,11 @@ namespace CGS.Cards
                 Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
+#if UNITY_STANDALONE || UNITY_WSA
+            CardImageUri = new Uri(UnityExtensionMethods.CacheFile(uri));
+#else
             CardImageUri = new Uri(uri);
+#endif
             StartCoroutine(UpdateCardImage());
         }
         private IEnumerator UpdateCardImage()

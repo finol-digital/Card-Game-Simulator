@@ -92,7 +92,11 @@ namespace CGS.Menu
                 Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
+#if UNITY_STANDALONE || UNITY_WSA
+            _game.BannerImageUrl = new Uri(UnityExtensionMethods.CacheFile(uri));
+#else
             _game.BannerImageUrl = new Uri(uri);
+#endif
             StartCoroutine(UpdateBannerImage());
         }
         private IEnumerator UpdateBannerImage()
@@ -132,7 +136,11 @@ namespace CGS.Menu
                 Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
+#if UNITY_STANDALONE || UNITY_WSA
+            _game.BannerImageUrl = new Uri(UnityExtensionMethods.CacheFile(uri));
+#else
             _game.CardBackImageUrl = new Uri(uri);
+#endif
             StartCoroutine(UpdateCardBackImage());
         }
         private IEnumerator UpdateCardBackImage()
