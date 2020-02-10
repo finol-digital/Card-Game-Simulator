@@ -31,4 +31,4 @@ namespace Crosstales.FB.EditorTask
    }
 }
 #endif
-// © 2019 crosstales LLC (https://www.crosstales.com)
+// © 2019-2020 crosstales LLC (https://www.crosstales.com)

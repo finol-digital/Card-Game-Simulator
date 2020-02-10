@@ -12,7 +12,7 @@
       public const string ASSET_NAME_SHORT = "FB PRO";
 
       /// <summary>Version of the asset.</summary>
-      public const string ASSET_VERSION = "2020.1.1";
+      public const string ASSET_VERSION = "2020.2.0b1";
 
       /// <summary>Build number of the asset.</summary>
       public const int ASSET_BUILD = 20200129;
@@ -21,7 +21,7 @@
       public static readonly System.DateTime ASSET_CREATED = new System.DateTime(2017, 8, 1);
 
       /// <summary>Change date of the asset (YYYY, MM, DD).</summary>
-      public static readonly System.DateTime ASSET_CHANGED = new System.DateTime(2020, 1, 29);
+      public static readonly System.DateTime ASSET_CHANGED = new System.DateTime(2020, 2, 8);
 
       /// <summary>URL of the PRO asset in UAS.</summary>
       public const string ASSET_PRO_URL = "https://assetstore.unity.com/packages/slug/98713?aid=1011lNGT";

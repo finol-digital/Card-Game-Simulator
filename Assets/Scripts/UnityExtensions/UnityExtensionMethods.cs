@@ -24,8 +24,6 @@ static public class UnityExtensionMethods
     public const string MetaExtension = ".meta";
     public const string ZipExtension = ".zip";
 
-    public static string CacheDirectoryPath => Path.Combine(Application.persistentDataPath, "tmp");
-
     static public void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
@@ -100,14 +98,22 @@ static public class UnityExtensionMethods
                 CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
     }
 
+#if ENABLE_WINMD_SUPPORT
+    public static async System.Threading.Tasks.Task<string> CacheFileAsync(string sourceFilePath)
+#else
     public static string CacheFile(string sourceFilePath)
+#endif
     {
-        if (!Directory.Exists(CacheDirectoryPath))
-            Directory.CreateDirectory(CacheDirectoryPath);
-
         string fileName = Path.GetFileName(sourceFilePath);
-        string cacheFilePath = Path.Combine(CacheDirectoryPath, fileName);
+#if ENABLE_WINMD_SUPPORT
+        Windows.Storage.StorageFile sourceStorageFile = Crosstales.FB.FileBrowserWSAImpl.LastOpenFile;
+        Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
+        var cacheStorageFile = await sourceStorageFile.CopyAsync(cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
+        string cacheFilePath = cacheStorageFile.Path;
+#else
+        string cacheFilePath = Path.Combine(Application.temporaryCachePath, fileName);
         File.Copy(sourceFilePath, cacheFilePath);
+#endif
         return cacheFilePath;
     }
 

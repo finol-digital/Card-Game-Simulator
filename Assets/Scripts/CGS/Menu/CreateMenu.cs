@@ -85,14 +85,20 @@ namespace CGS.Menu
             ImportBannerImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
+#if ENABLE_WINMD_SUPPORT
+        public async void ImportBannerImageFromFile(string uri)
+#else
         public void ImportBannerImageFromFile(string uri)
+#endif
         {
             if (string.IsNullOrEmpty(uri))
             {
                 Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
-#if UNITY_STANDALONE || UNITY_WSA
+#if ENABLE_WINMD_SUPPORT
+            _game.BannerImageUrl = new Uri(await UnityExtensionMethods.CacheFileAsync(uri));
+#elif UNITY_STANDALONE
             _game.BannerImageUrl = new Uri(UnityExtensionMethods.CacheFile(uri));
 #else
             _game.BannerImageUrl = new Uri(uri);
@@ -129,15 +135,21 @@ namespace CGS.Menu
             ImportCardBackImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
+#if ENABLE_WINMD_SUPPORT
+        public async void ImportCardBackImageFromFile(string uri)
+#else
         public void ImportCardBackImageFromFile(string uri)
+#endif
         {
             if (string.IsNullOrEmpty(uri))
             {
                 Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
-#if UNITY_STANDALONE || UNITY_WSA
-            _game.BannerImageUrl = new Uri(UnityExtensionMethods.CacheFile(uri));
+#if ENABLE_WINMD_SUPPORT
+            _game.CardBackImageUrl = new Uri(await UnityExtensionMethods.CacheFileAsync(uri));
+#elif UNITY_STANDALONE
+            _game.CardBackImageUrl = new Uri(UnityExtensionMethods.CacheFile(uri));
 #else
             _game.CardBackImageUrl = new Uri(uri);
 #endif

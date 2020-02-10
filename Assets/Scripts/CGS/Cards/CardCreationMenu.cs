@@ -80,14 +80,20 @@ namespace CGS.Cards
             ImportCardImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
+#if ENABLE_WINMD_SUPPORT
+        public async void ImportCardImageFromFile(string uri)
+#else
         public void ImportCardImageFromFile(string uri)
+#endif
         {
             if (string.IsNullOrEmpty(uri))
             {
                 Debug.LogWarning(ImportImageWarningMessage);
                 return;
             }
-#if UNITY_STANDALONE || UNITY_WSA
+#if ENABLE_WINMD_SUPPORT
+            CardImageUri = new Uri(await UnityExtensionMethods.CacheFileAsync(uri));
+#elif UNITY_STANDALONE
             CardImageUri = new Uri(UnityExtensionMethods.CacheFile(uri));
 #else
             CardImageUri = new Uri(uri);

@@ -1,5 +1,14 @@
 ﻿# FileBrowser PRO - Release notes
 
+## 2020.2.0 - tbd
+* WSA - new properties and variables added (access them with in code with "ENABLE_WINMD_SUPPORT"):
+  * CurrentLocation: location of the file browser (default: PickerLocationId.ComputerFolder)
+  * CurrentViewMode: style of the file browser (default: PickerViewMode.List)
+  * LastOpenFile: Last file from the "OpenFiles"-dialog (StorageFile)
+  * LastOpenFiles: Last files from the "OpenFiles"-dialog (List<StorageFile>)
+  * LastOpenFolder: Last folder from the "OpenSingleFolder"-dialog (StorageFolder)
+  * LastSaveFile: Last file from the "SaveFile"-dialog (StorageFile)
+
 ## 2020.1.1 - 29.01.2020
 * Linux integration improved
 * Support for Unity 2020
