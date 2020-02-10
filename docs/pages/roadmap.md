@@ -5,15 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Revamp Game Creation and Card Creation Menus
-- Fix: Selection Panel Navigation
-- Tech: Upgrade Unity and Mirror versions
-- Tech: Use NJsonSchema
+- Fix: File Selection on Windows and Mac
 
 ## Current Sprint
-- Fix: File Selection on Windows and Mac
 - Fix: Allow space and dash in deck filename on Windows and Android
-- Fix: Networking on iOS
+- Fix: Networking
 - Layout cards in the Deck Editor more dynamically
   - Group unique cards by using a label to indicate how many copies of that card are in the deck
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
