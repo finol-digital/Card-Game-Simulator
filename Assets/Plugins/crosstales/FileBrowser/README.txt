@@ -78,4 +78,4 @@ CH-8002 Zürich
 * [macOS-Demo](https://www.crosstales.com/media/data/assets/FileBrowser/downloads/FileBrowser_mac.zip)
 
 
-`Version: 08.02.2020`
+`Version: 11.02.2020`
