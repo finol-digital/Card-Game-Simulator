@@ -1,10 +1,9 @@
 ﻿using System.Net;
 using System.Collections.Generic;
-using Mirror.LiteNetLib4Mirror;
 
 namespace CGS.Play.Multiplayer
 {
-    public class LobbyDiscovery : LiteNetLib4MirrorDiscovery
+    public class LobbyDiscovery
     {
         public LobbyMenu lobby;
 

@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 114614180611090904}
   - component: {fileID: 114208327254760074}
   - component: {fileID: 114356562771634316}
-  - component: {fileID: 2801859657585204568}
-  - component: {fileID: 7249180829821586900}
   m_Layer: 0
   m_Name: Card Game Manager
   m_TagString: CardGameManager
@@ -47,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6920e0423b49035438e0f18dd7c0581c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  discovery: {fileID: 7249180829821586900}
 --- !u!114 &114208327254760074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,92 +72,3 @@ MonoBehaviour:
   minSwipeLength: 1
   triggerSwipeAtMinLength: 1
   useEightDirections: 0
---- !u!114 &2801859657585204568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565440365293990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5671dcb80f9d69240b71f5612676a3fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnClientConnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientError:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerConnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerError:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  clientAddress: 127.0.0.1
-  serverIPv4BindAddress: 0.0.0.0
-  serverIPv6BindAddress: '::'
-  port: 7777
-  useUpnP: 1
-  maxConnections: 20
-  ipv6Enabled: 1
-  channels: 0204010300
-  authCode: 
-  updateTime: 15
-  pingInterval: 1000
-  disconnectTimeout: 5000
-  reconnectDelay: 500
-  maxConnectAttempts: 10
-  simulatePacketLoss: 0
-  simulationPacketLossChance: 10
-  simulateLatency: 0
-  simulationMinLatency: 30
-  simulationMaxLatency: 100
-  onClientSocketError:
-    m_PersistentCalls:
-      m_Calls: []
-  onServerSocketError:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &7249180829821586900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565440365293990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e520ffee43e728a48b91256d2d702235, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onDiscoveryResponse:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7249180829821586900}
-        m_MethodName: ProcessDiscoveryRequest
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  ports: 611e
-  lobby: {fileID: 0}

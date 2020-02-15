@@ -8,7 +8,6 @@ permalink: roadmap.html
 - Fix: File Selection on Windows and Mac
 
 ## Current Sprint
-- Fix: Allow space and dash in deck filename on Windows and Android
 - Fix: Networking
 - Layout cards in the Deck Editor more dynamically
   - Group unique cards by using a label to indicate how many copies of that card are in the deck
