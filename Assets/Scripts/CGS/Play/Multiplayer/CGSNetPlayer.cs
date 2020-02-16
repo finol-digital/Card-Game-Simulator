@@ -66,10 +66,10 @@ namespace CGS.Play.Multiplayer
             CGSNetManager.Instance.Data.ChangeScore(scoreIndex, points);
         }
 
-        public void OnChangeScore(int scoreIndex)
+        public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
         {
-            if (CGSNetManager.Instance.Data != null)
-                CGSNetManager.Instance.pointsDisplay.UpdateText();
+            //if (CGSNetManager.Instance.Data != null)
+            //    CGSNetManager.Instance.pointsDisplay?.UpdateText();
         }
 
         public void RequestDeckUpdate(List<Card> deckCards)
@@ -83,9 +83,9 @@ namespace CGS.Play.Multiplayer
             CGSNetManager.Instance.Data.ChangeDeck(deckIndex, cardIds);
         }
 
-        public void OnChangeDeck(int deckIndex)
+        public void OnChangeDeck(int oldDeckIndex, int newDeckIndex)
         {
-            if (this.deckIndex == deckIndex)
+            if (this.deckIndex == newDeckIndex)
                 CGSNetManager.Instance.playController.zones.CurrentDeck.Sync(CurrentDeck);
         }
 

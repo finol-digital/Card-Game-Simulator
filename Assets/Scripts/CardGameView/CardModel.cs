@@ -459,10 +459,10 @@ namespace CardGameView
             this.position = position;
         }
 
-        public void OnChangePosition(Vector2 position)
+        public void OnChangePosition(Vector2 oldPosition, Vector2 newPosition)
         {
             if (!hasAuthority)
-                ((RectTransform)transform).anchoredPosition = position;
+                ((RectTransform)transform).anchoredPosition = newPosition;
         }
 
         public void ParentToCanvas(Vector3 targetPosition)
@@ -553,10 +553,10 @@ namespace CardGameView
             this.rotation = rotation;
         }
 
-        public void OnChangeRotation(Quaternion rotation)
+        public void OnChangeRotation(Quaternion oldRotation, Quaternion newRotation)
         {
             if (!hasAuthority)
-                transform.rotation = rotation;
+                transform.rotation = newRotation;
         }
 
         [Command]

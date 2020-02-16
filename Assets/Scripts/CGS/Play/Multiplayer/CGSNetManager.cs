@@ -9,6 +9,7 @@ using CardGameView;
 
 namespace CGS.Play.Multiplayer
 {
+    [RequireComponent(typeof(CGSNetDiscovery))]
     public class CGSNetManager : NetworkManager
     {
         public const string PlayerCountMessage = "Number of connected players: ";
@@ -18,9 +19,10 @@ namespace CGS.Play.Multiplayer
         public CGSNetPlayer LocalPlayer { get; set; }
         public CGSNetData Data { get; set; }
 
+        public CGSNetDiscovery Discovery;
+
         public GameObject cardModelPrefab;
         public PlayMode playController;
-        public PointsCounter pointsDisplay;
 
         public override void OnServerAddPlayer(NetworkConnection conn)
         {

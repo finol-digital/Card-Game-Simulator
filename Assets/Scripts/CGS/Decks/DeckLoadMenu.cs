@@ -147,7 +147,7 @@ namespace CGS.Decks
                 if (GetFileTypeFromPath(file) == CardGameManager.Current.DeckFileType)
                     DeckFiles[file] = GetNameFromPath((file));
 
-            Rebuild(DeckFiles, SelectFile, SelectedFilePath);
+            Rebuild<string, string>(DeckFiles, SelectFile, SelectedFilePath);
 
             shareFileButton.interactable = !string.IsNullOrEmpty(SelectedFilePath);
             deleteFileButton.interactable = !string.IsNullOrEmpty(SelectedFilePath);

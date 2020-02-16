@@ -60,8 +60,7 @@ namespace CGS
         public static CardGame Current { get; private set; } = CardGame.Invalid;
         public static bool IsQuitting { get; private set; } = false;
 
-        public LobbyDiscovery discovery;
-        public bool IsSearching { get; set; }
+        public bool IsSearchingForServer { get; set; }
 
         public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
         public SortedList<string, string> GamesListing => new SortedList<string, string>(AllCardGames.ToDictionary(game => game.Key, game => game.Value.Name));

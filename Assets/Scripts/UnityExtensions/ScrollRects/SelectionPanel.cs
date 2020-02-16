@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public delegate void OnSelectDelegate(Toggle toggle, string selection);
+public delegate void OnSelectDelegate<T>(Toggle toggle, T selection);
 
 public class SelectionPanel : MonoBehaviour
 {
@@ -13,37 +13,34 @@ public class SelectionPanel : MonoBehaviour
 
     protected List<Toggle> Toggles { get; } = new List<Toggle>();
 
-    public void Rebuild(SortedList<string, string> options, OnSelectDelegate changeKey, string currentKey = "")
+    public void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select, TKey current)
     {
-        if (options == null)
-            options = new SortedList<string, string>();
-        if (changeKey == null)
-            changeKey = delegate { };
-        if (currentKey == null)
-            currentKey = string.Empty;
-
         Toggles.Clear();
         selectionContent.DestroyAllChildren();
         selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
 
-        foreach (KeyValuePair<string, string> option in options)
+        int currentSelectionIndex = -1;
+        int i = 0;
+        foreach (var option in options)
         {
             Toggle toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
             toggle.gameObject.SetActive(true);
             toggle.transform.localScale = Vector3.one;
-            toggle.GetComponentInChildren<Text>().text = option.Value;
+            toggle.GetComponentInChildren<Text>().text = option.Value.ToString();
             toggle.interactable = true;
-            toggle.isOn = option.Key.Equals(currentKey);
-            toggle.onValueChanged.AddListener(isOn => changeKey(toggle, option.Key));
+            toggle.isOn = option.Key.Equals(current);
+            toggle.onValueChanged.AddListener(isOn => select(toggle, option.Key));
             Toggles.Add(toggle);
+            if (toggle.isOn)
+                currentSelectionIndex = i;
+            i++;
         }
 
         selectionTemplate.gameObject.SetActive(options.Count < 1);
         selectionTemplate.GetComponent<Toggle>().isOn = options.Count > 0;
 
-        float index = options.IndexOfKey(currentKey);
-        if (index > 0 && index < options.Count && options.Count > 1)
-            scrollRect.verticalNormalizedPosition = 1f - (index / (options.Count - 1f));
+        if (currentSelectionIndex > 0 && currentSelectionIndex < options.Count && options.Count > 1)
+            scrollRect.verticalNormalizedPosition = 1f - (currentSelectionIndex / (options.Count - 1f));
     }
 
     public void ScrollPage(float scrollDirection)

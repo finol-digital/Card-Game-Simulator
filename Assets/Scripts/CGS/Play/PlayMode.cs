@@ -57,7 +57,7 @@ namespace CGS.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
-            if (CardGameManager.Instance.IsSearching)
+            if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show(BackToMainMenu);
             else
             {
@@ -265,6 +265,7 @@ namespace CGS.Play
         {
             if (NetworkManager.singleton.isNetworkActive)
             {
+                CGSNetManager.Instance.Discovery.StopDiscovery();
                 if (NetworkServer.active)
                     NetworkManager.singleton.StopHost();
                 else if (NetworkClient.isConnected)

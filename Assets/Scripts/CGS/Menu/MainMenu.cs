@@ -24,7 +24,7 @@ namespace CGS.Menu
         public const int SettingsSceneIndex = 5;
 
         public GameObject downloadMenuPrefab;
-        public CreateMenu createMenu;
+        public GameObject createMenuPrefab;
         public GameObject gameManagement;
         public Image currentCardImage;
         public Image currentBannerImage;
@@ -38,6 +38,9 @@ namespace CGS.Menu
         public DownloadMenu Downloader => _downloader ??
                                               (_downloader = Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>());
         private DownloadMenu _downloader;
+        public CreateMenu Creator => _creator ??
+                                              (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<CreateMenu>());
+        private CreateMenu _creator;
 
         private bool _wasLeft;
         private bool _wasRight;
@@ -209,7 +212,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            createMenu.Show();
+            Creator.Show();
         }
 
         public void Delete()
@@ -230,7 +233,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            CardGameManager.Instance.IsSearching = false;
+            CardGameManager.Instance.IsSearchingForServer = false;
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 
@@ -238,7 +241,7 @@ namespace CGS.Menu
         {
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            CardGameManager.Instance.IsSearching = true;
+            CardGameManager.Instance.IsSearchingForServer = true;
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 

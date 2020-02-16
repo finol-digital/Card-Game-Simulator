@@ -55,8 +55,6 @@ namespace Mirror
         static readonly Dictionary<Guid, SpawnHandlerDelegate> spawnHandlers = new Dictionary<Guid, SpawnHandlerDelegate>();
         static readonly Dictionary<Guid, UnSpawnDelegate> unspawnHandlers = new Dictionary<Guid, UnSpawnDelegate>();
 
-        // this is never called, and if we do call it in NetworkClient.Shutdown
-        // then the client's player object won't be removed after disconnecting!
         internal static void Shutdown()
         {
             ClearSpawners();
@@ -490,8 +488,9 @@ namespace Mirror
             // (Count is 0 if there were no components)
             if (msg.payload.Count > 0)
             {
-                NetworkReader payloadReader = new NetworkReader(msg.payload);
+                NetworkReader payloadReader = NetworkReaderPool.GetReader(msg.payload);
                 identity.OnUpdateVars(payloadReader, true);
+                NetworkReaderPool.Recycle(payloadReader);
             }
 
             NetworkIdentity.spawned[msg.netId] = identity;
@@ -685,7 +684,9 @@ namespace Mirror
 
             if (NetworkIdentity.spawned.TryGetValue(msg.netId, out NetworkIdentity localObject) && localObject != null)
             {
-                localObject.OnUpdateVars(new NetworkReader(msg.payload), false);
+                NetworkReader networkReader = NetworkReaderPool.GetReader(msg.payload);
+                localObject.OnUpdateVars(networkReader, false);
+                NetworkReaderPool.Recycle(networkReader);
             }
             else
             {
@@ -699,7 +700,9 @@ namespace Mirror
 
             if (NetworkIdentity.spawned.TryGetValue(msg.netId, out NetworkIdentity identity))
             {
-                identity.HandleRPC(msg.componentIndex, msg.functionHash, new NetworkReader(msg.payload));
+                NetworkReader networkReader = NetworkReaderPool.GetReader(msg.payload);
+                identity.HandleRPC(msg.componentIndex, msg.functionHash, networkReader);
+                NetworkReaderPool.Recycle(networkReader);
             }
         }
 
@@ -709,7 +712,9 @@ namespace Mirror
 
             if (NetworkIdentity.spawned.TryGetValue(msg.netId, out NetworkIdentity identity))
             {
-                identity.HandleSyncEvent(msg.componentIndex, msg.functionHash, new NetworkReader(msg.payload));
+                NetworkReader networkReader = NetworkReaderPool.GetReader(msg.payload);
+                identity.HandleSyncEvent(msg.componentIndex, msg.functionHash, networkReader);
+                NetworkReaderPool.Recycle(networkReader);
             }
             else
             {

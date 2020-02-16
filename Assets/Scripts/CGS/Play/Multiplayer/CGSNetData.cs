@@ -78,7 +78,7 @@ namespace CGS.Play.Multiplayer
             if (op == SyncList<NetScore>.Operation.OP_ADD)
                 return;
 
-            CGSNetManager.Instance.LocalPlayer.OnChangeScore(scoreIndex);
+            CGSNetManager.Instance.LocalPlayer.OnChangeScore(scoreIndex, scoreIndex);
         }
 
         public void RegisterDeck(GameObject owner, string[] cardIds)
@@ -110,7 +110,7 @@ namespace CGS.Play.Multiplayer
             if (op == SyncList<NetCardStack>.Operation.OP_ADD)
                 return;
 
-            CGSNetManager.Instance.LocalPlayer.OnChangeDeck(deckIndex);
+            CGSNetManager.Instance.LocalPlayer.OnChangeDeck(deckIndex, deckIndex);
         }
     }
 }

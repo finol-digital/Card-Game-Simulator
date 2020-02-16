@@ -613,7 +613,9 @@ namespace Mirror
             // doesn't think we need initialize anything.
             mode = NetworkManagerMode.Offline;
 
-            if (!string.IsNullOrEmpty(offlineScene) && SceneManager.GetActiveScene().name != offlineScene)
+            // If this is the host player, StopServer will already be changing scenes.
+            // Check loadingSceneAsync to ensure we don't double-invoke the scene change.
+            if (!string.IsNullOrEmpty(offlineScene) && SceneManager.GetActiveScene().name != offlineScene && loadingSceneAsync == null)
             {
                 ClientChangeScene(offlineScene, SceneOperation.Normal);
             }
@@ -642,12 +644,6 @@ namespace Mirror
                 StopServer();
                 print("OnApplicationQuit: stopped server");
             }
-
-            // stop transport (e.g. to shut down threads)
-            // (when pressing Stop in the Editor, Unity keeps threads alive
-            //  until we press Start again. so if Transports use threads, we
-            //  really want them to end now and not after next start)
-            Transport.activeTransport.Shutdown();
         }
 
         /// <summary>
@@ -814,6 +810,11 @@ namespace Mirror
             startPositions.Clear();
         }
 
+        // This is only set in ClientChangeScene below...never on server.
+        // We need to check this in OnClientSceneChanged called from FinishLoadSceneClientOnly
+        // to prevent AddPlayer message after loading/unloading additive scenes
+        SceneOperation clientSceneOperation = SceneOperation.Normal;
+
         internal void ClientChangeScene(string newSceneName, SceneOperation sceneOperation = SceneOperation.Normal, bool customHandling = false)
         {
             if (string.IsNullOrEmpty(newSceneName))
@@ -839,6 +840,9 @@ namespace Mirror
                 FinishLoadScene();
                 return;
             }
+
+            // cache sceneOperation so we know what was done in OnClientSceneChanged called from FinishLoadSceneClientOnly
+            clientSceneOperation = sceneOperation;
 
             switch (sceneOperation)
             {
@@ -1442,7 +1446,8 @@ namespace Mirror
             // always become ready.
             if (!ClientScene.ready) ClientScene.Ready(conn);
 
-            if (autoCreatePlayer && ClientScene.localPlayer == null)
+            // Only call AddPlayer for normal scene changes, not additive load/unload
+            if (clientSceneOperation == SceneOperation.Normal && autoCreatePlayer && ClientScene.localPlayer == null)
             {
                 // add player if existing one is null
                 ClientScene.AddPlayer();

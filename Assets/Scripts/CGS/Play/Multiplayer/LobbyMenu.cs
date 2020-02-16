@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,8 +19,9 @@ namespace CGS.Play.Multiplayer
     {
         public Button joinButton;
 
-        public SortedList<string, string> HostNames { get; private set; } = new SortedList<string, string>();
-        public string SelectedHost { get; private set; } = "";
+        public long? SelectedServerId { get; private set; } = null;
+        public IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
+        private readonly Dictionary<long, DiscoveryResponse> _discoveredServers = new Dictionary<long, DiscoveryResponse>();
 
         private bool _wasDown;
         private bool _wasUp;
@@ -68,58 +68,54 @@ namespace CGS.Play.Multiplayer
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
 
-            HostNames.Clear();
-            SelectedHost = string.Empty;
-            Rebuild(HostNames, SelectHost, SelectedHost);
+            CGSNetManager.Instance.Discovery.OnServerFound = OnDiscoveredServer;
+            CGSNetManager.Instance.Discovery.StartDiscovery();
 
-            CardGameManager.Instance.discovery.lobby = this;
+            _discoveredServers.Clear();
+            SelectedServerId = null;
+            Redisplay();
         }
 
-        public void DisplayHosts(HashSet<string> hosts)
+        public void OnDiscoveredServer(DiscoveryResponse info)
         {
-            if (hosts == null || hosts.OrderBy(t => t).ToList().SequenceEqual(HostNames.Keys.ToList()))
-                return;
+            _discoveredServers[info.serverId] = info;
+            Redisplay();
+        }
 
-            HostNames.Clear();
-            foreach (string host in hosts)
-                HostNames[host] = host.Split(':').Last();
-
-            if (!HostNames.ContainsValue(SelectedHost))
-            {
-                SelectedHost = string.Empty;
+        private void Redisplay()
+        {
+            if (SelectedServerId == null || !_discoveredServers.ContainsKey(SelectedServerId.GetValueOrDefault()))
                 joinButton.interactable = false;
-            }
-            Rebuild(HostNames, SelectHost, SelectedHost);
+            Rebuild<long, DiscoveryResponse>(_discoveredServers, SelectServer, SelectedServerId.GetValueOrDefault());
         }
 
         public void Host()
         {
-            //TODO: FIXME ON IOS: NetworkManager.singleton.StartHost();
+            NetworkManager.singleton.StartHost();
+            CGSNetManager.Instance.Discovery.AdvertiseServer();
             Hide();
         }
 
-        public void SelectHost(Toggle toggle, string host)
+        public void SelectServer(Toggle toggle, long serverId)
         {
-            if (string.IsNullOrEmpty(host))
-            {
-                SelectedHost = string.Empty;
-                joinButton.interactable = false;
-                return;
-            }
-
             if (toggle.isOn)
             {
-                SelectedHost = host;
+                SelectedServerId = serverId;
                 joinButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && SelectedHost.Equals(host))
+            else if (!toggle.group.AnyTogglesOn() && serverId == SelectedServerId)
                 Join();
         }
 
         public void Join()
         {
-            NetworkManager.singleton.networkAddress = HostNames[SelectedHost];
-            NetworkManager.singleton.StartClient();
+            if (SelectedServerId == null
+                || !DiscoveredServers.TryGetValue(SelectedServerId.GetValueOrDefault(), out DiscoveryResponse serverResponse) || serverResponse.uri == null)
+            {
+                Debug.LogWarning("Warning: Attempted to join a game without having selected a valid server! Ignoring...");
+                return;
+            }
+            NetworkManager.singleton.StartClient(serverResponse.uri);
             Hide();
         }
 
