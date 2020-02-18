@@ -6,13 +6,15 @@ permalink: roadmap.html
 
 ## What's New
 - Fix: File Selection on Windows and Mac
+- Fix: Networking
 
 ## Current Sprint
-- Fix: Networking
+- Fix: print pdf on windows
 - Layout cards in the Deck Editor more dynamically
   - Group unique cards by using a label to indicate how many copies of that card are in the deck
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
 - Playmats
+- Rebrand tag line to "Create, Share, and Play"
 
 ## Sprint+1
 - Play Mode Redesign
@@ -52,7 +54,6 @@ permalink: roadmap.html
 
 ## Icebox
 - Tech: Replace SwipeManager
-- Rebrand tag line to "Create, Share, and Play"
 - Card Search Results View Options
   - Text-only
   - Small Image

@@ -17,7 +17,7 @@ You can mange your card games by tapping the center card game in the Main Menu:
 
 ![Main Menu Image](assets/img/mainmenu.png)
 
-You can tap on the "Share" button to create a CGS Deep Link that you can send to other people, so that they can click on it and get access to that card game:
+You can then tap on the "Share" button to create a CGS Deep Link that you can send to other people, so that they can click on it and get access to that card game:
 
 ![Game Selection Menu Image](assets/img/selectionmenu.png)
 
