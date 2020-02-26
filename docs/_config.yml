@@ -2,7 +2,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
 title: Card Game Simulator
-description: Play your favorite card games!
+description: Create, Share, and Play card games with Card Game Simulator
 url: 'https://www.cardgamesimulator.com'
 theme: jekyll-theme-slate
 include: [".well-known", "*.htaccess"]

@@ -804,7 +804,7 @@ PlayerSettings:
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
   metroCertificateNotAfter: 80d16339717cd601
-  metroApplicationDescription: Play your favorite card games!
+  metroApplicationDescription: Create, Share, and Play
   wsaImages:
     131172: Assets/Sprites and Textures/UWP/SplashScreen.scale-100.png
     131197: Assets/Sprites and Textures/UWP/SplashScreen.scale-125.png
