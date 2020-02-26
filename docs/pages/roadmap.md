@@ -7,14 +7,15 @@ permalink: roadmap.html
 ## What's New
 - Fix: File Selection on Windows and Mac
 - Fix: Networking
+- Fix: Print pdf
+- Rebrand tag line to "Create, Share, and Play"
 
 ## Current Sprint
-- Fix: print pdf on windows
 - Layout cards in the Deck Editor more dynamically
-  - Group unique cards by using a label to indicate how many copies of that card are in the deck
+  - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
 - Playmats
-- Rebrand tag line to "Create, Share, and Play"
+- Reddit post with officially supported card games
 
 ## Sprint+1
 - Play Mode Redesign
