@@ -1,5 +1,11 @@
 <linker>
+  <assembly fullname="Assembly-CSharp-firstpass">
+    <type fullname="Didstopia.PDFSharp.Pdf*" preserve="all"/>
+  </assembly>
+  <assembly fullname="SixLabors.Core" preserve="all"/>
+  <assembly fullname="SixLabors.ImageSharp" preserve="all"/>
+  <assembly fullname="SixLabors.ImageSharp.Drawing" preserve="all"/>
   <assembly fullname="System.Core">
-    <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all" />
+    <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all"/>
   </assembly>
 </linker>

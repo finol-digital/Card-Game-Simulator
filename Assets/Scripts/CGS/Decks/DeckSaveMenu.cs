@@ -94,7 +94,7 @@ namespace CGS.Decks
             }
             catch (Exception e)
             {
-                Debug.LogError(DeckPrintErrorMessage + e.Message);
+                Debug.LogError(DeckPrintErrorMessage + e.Message + e.StackTrace);
                 CardGameManager.Instance.Messenger.Show(DeckPrintErrorMessage + e.Message);
             }
         }

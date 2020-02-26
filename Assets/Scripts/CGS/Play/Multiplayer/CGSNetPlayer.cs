@@ -31,9 +31,11 @@ namespace CGS.Play.Multiplayer
         public override void OnStartLocalPlayer()
         {
             base.OnStartLocalPlayer();
+            Debug.Log("CGSNetPlayer OnStartLocalPlayer...");
             CGSNetManager.Instance.LocalPlayer = this;
             if (!isServer)
                 RequestCardGame();
+            Debug.Log("CGSNetPlayer OnStartLocalPlayer!");
         }
 
         public void RequestCardGame()
@@ -68,7 +70,7 @@ namespace CGS.Play.Multiplayer
 
         public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
         {
-            //if (CGSNetManager.Instance.Data != null)
+            // TODO: if (CGSNetManager.Instance.Data != null)
             //    CGSNetManager.Instance.pointsDisplay?.UpdateText();
         }
 
@@ -104,7 +106,7 @@ namespace CGS.Play.Multiplayer
         {
             while (CardGameManager.Current.IsDownloading)
                 yield return null;
-            CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+            // TODO: CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
         }
 
         public void RequestSharedDeck()
@@ -123,7 +125,7 @@ namespace CGS.Play.Multiplayer
         {
             this.deckIndex = deckIndex;
             CGSNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
-            CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => { }, RequestSharedScore);
+            // TODO: CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => { }, RequestSharedScore);
         }
 
         public void RequestSharedScore()

@@ -5,7 +5,6 @@
 using System;
 using System.Net;
 using UnityEngine;
-using UnityEngine.Events;
 using Mirror;
 using Mirror.Discovery;
 

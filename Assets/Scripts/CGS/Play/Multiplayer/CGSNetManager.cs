@@ -27,6 +27,7 @@ namespace CGS.Play.Multiplayer
         public override void OnServerAddPlayer(NetworkConnection conn)
         {
             base.OnServerAddPlayer(conn);
+            Debug.Log("CGSNetManager OnServerAddPlayer...");
             if (Data == null)
             {
                 Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CGSNetData>();
@@ -34,13 +35,16 @@ namespace CGS.Play.Multiplayer
             }
             Data.RegisterScore(conn.identity.gameObject, CardGameManager.Current.GameStartPointsCount);
             playController.netText.text = PlayerCountMessage + NetworkServer.connections.Count.ToString();
+            Debug.Log("CGSNetManager OnServerAddPlayer!");
         }
 
         public override void OnClientConnect(NetworkConnection connection)
         {
             base.OnClientConnect(connection);
+            Debug.Log("CGSNetManager OnClientConnect...");
             ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
             playController.netText.text = ConnectionIdMessage + connection.connectionId;
+            Debug.Log("CGSNetManager OnClientConnect!");
         }
 
         public GameObject SpawnCard(Vector3 position, System.Guid assetId)

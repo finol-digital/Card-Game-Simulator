@@ -10,9 +10,9 @@ using System.Text;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using PdfSharp;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
+using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
+using Didstopia.PDFSharp.Pdf;
+using Didstopia.PDFSharp.Drawing;
 
 namespace CardGameDef
 {
@@ -418,6 +418,7 @@ namespace CardGameDef
             if (!Directory.Exists(PrintPdfDirectory))
                 Directory.CreateDirectory(PrintPdfDirectory);
 
+            ImageSource.ImageSourceImpl = new ImageSharpImageSource();
             PdfDocument document = new PdfDocument();
             document.Info.Title = Name;
 
@@ -432,7 +433,7 @@ namespace CardGameDef
                 if (page == null || cardNumber % cardsPerPage == 0)
                 {
                     page = document.AddPage();
-                    page.Size = PageSize.Letter;
+                    page.Size = Didstopia.PDFSharp.PageSize.Letter;
                     gfx = XGraphics.FromPdfPage(page);
                     py = PrintPdfMargin * PrintPdfPixelsPerInch;
                 }
@@ -447,6 +448,8 @@ namespace CardGameDef
             }
 
             document.Save(PrintPdfFilePath);
+            document.Close();
+            document.Dispose();
         }
 
     }

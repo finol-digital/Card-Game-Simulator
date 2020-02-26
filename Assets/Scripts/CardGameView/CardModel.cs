@@ -80,18 +80,6 @@ namespace CardGameView
         }
 
         [SyncVar]
-        private int _quantity;
-        public int Quantity
-        {
-            get { return _quantity; }
-            set
-            {
-                _quantity = value;
-                IsQuantityVisible = _quantity > 1;
-            }
-        }
-
-        [SyncVar]
         private bool _isFacedown;
         public bool IsFacedown
         {
@@ -167,18 +155,6 @@ namespace CardGameView
         public GameObject nameLabel;
         public Text nameText;
 
-        public bool IsQuantityVisible
-        {
-            get { return quantityLabel.activeSelf; }
-            set
-            {
-                quantityLabel.SetActive(value);
-                quantityText.text = Quantity.ToString();
-            }
-        }
-        public GameObject quantityLabel;
-        public Text quantityText;
-
         public bool IsHighlighted
         {
             get { return outline.effectColor == SelectedHighlightColor; }
@@ -219,8 +195,6 @@ namespace CardGameView
             }
 
             IsNameVisible = !IsFacedown;
-            if (Quantity == 0)
-                Quantity = 1;
             if (!IsFacedown)
                 Value.RegisterDisplay(this);
         }
