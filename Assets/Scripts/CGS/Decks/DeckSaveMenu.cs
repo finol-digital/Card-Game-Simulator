@@ -83,14 +83,22 @@ namespace CGS.Decks
 #endif
         }
 
+#if ENABLE_WINMD_SUPPORT
+        public async void PrintPdf()
+#else
         public void PrintPdf()
+#endif
         {
             CurrentDeck.Name = nameInputField.text;
             Deck deck = CurrentDeck;
             try
             {
                 Uri pdfUri = deck.PrintPdf();
+#if ENABLE_WINMD_SUPPORT
+                await Windows.System.Launcher.LaunchUriAsync(pdfUri);
+#else
                 Application.OpenURL(pdfUri.AbsoluteUri);
+#endif
             }
             catch (Exception e)
             {
