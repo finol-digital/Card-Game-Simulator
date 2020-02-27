@@ -413,7 +413,7 @@ namespace CardGameDef
         }
 
         // NOTE: CAN THROW EXCEPTION
-        public void PrintPdf()
+        public Uri PrintPdf()
         {
             if (!Directory.Exists(PrintPdfDirectory))
                 Directory.CreateDirectory(PrintPdfDirectory);
@@ -450,6 +450,8 @@ namespace CardGameDef
             document.Save(PrintPdfFilePath);
             document.Close();
             document.Dispose();
+
+            return new Uri(UnityExtensionMethods.FilePrefix + PrintPdfFilePath);
         }
 
     }

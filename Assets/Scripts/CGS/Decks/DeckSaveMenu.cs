@@ -89,8 +89,8 @@ namespace CGS.Decks
             Deck deck = CurrentDeck;
             try
             {
-                deck.PrintPdf();
-                Application.OpenURL(deck.PrintPdfFilePath);
+                Uri pdfUri = deck.PrintPdf();
+                Application.OpenURL(pdfUri.AbsoluteUri);
             }
             catch (Exception e)
             {
