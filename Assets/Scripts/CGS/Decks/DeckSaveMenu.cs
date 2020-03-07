@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -22,6 +23,8 @@ namespace CGS.Decks
         public const string OverWriteDeckPrompt = "A deck with that name already exists. Overwrite?";
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
         public const string DeckPrintErrorMessage = "There was an error printing the deck as pdf: ";
+        public const string DeckPrintOpenErrorMessage = "Unable to open the deck pdf! ";
+        public const string DeckPrintOpenPathErrorMessage = "Please check: ";
 
         public InputField nameInputField;
         public TMP_Text textOutputArea;
@@ -83,28 +86,52 @@ namespace CGS.Decks
 #endif
         }
 
-#if ENABLE_WINMD_SUPPORT
-        public async void PrintPdf()
-#else
         public void PrintPdf()
-#endif
         {
             CurrentDeck.Name = nameInputField.text;
             Deck deck = CurrentDeck;
+            Uri pdfUri = null;
             try
             {
-                Uri pdfUri = deck.PrintPdf();
-#if ENABLE_WINMD_SUPPORT
-                await Windows.System.Launcher.LaunchUriAsync(pdfUri);
-#else
-                Application.OpenURL(pdfUri.AbsoluteUri);
-#endif
+                pdfUri = deck.PrintPdf();
             }
             catch (Exception e)
             {
                 Debug.LogError(DeckPrintErrorMessage + e.Message + e.StackTrace);
                 CardGameManager.Instance.Messenger.Show(DeckPrintErrorMessage + e.Message);
             }
+            if (pdfUri == null || !pdfUri.IsAbsoluteUri)
+            {
+                Debug.LogError(DeckPrintOpenErrorMessage);
+                CardGameManager.Instance.Messenger.Show(DeckPrintOpenErrorMessage);
+            }
+            else
+            {
+                StartCoroutine(OpenPdf(pdfUri));
+            }
+        }
+        private IEnumerator OpenPdf(Uri pdfUri)
+        {
+            yield return null;
+#if ENABLE_WINMD_SUPPORT
+            bool success = false;
+            try
+            {
+                success = Windows.System.Launcher.LaunchUriAsync(pdfUri).GetAwaiter().GetResult();
+                if (!success)
+                {
+                    Debug.LogError(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
+                    CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message + e.StackTrace);
+                CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
+            }
+#else
+            Application.OpenURL(pdfUri.AbsoluteUri);
+#endif
         }
 
         public void EnableSubmit()
