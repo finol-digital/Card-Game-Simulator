@@ -1,0 +1,48 @@
+name: Build CGS
+
+on:
+  pull_request: {}
+  push: { branches: [master] }
+
+env:
+    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+    UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+
+jobs:
+  buildForAllPlatforms:
+    name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        unityVersion:
+          - 2018.4.16f1
+        targetPlatform:
+#          - Android # Build an Android .apk standalone app.
+#          - iOS # Build an iOS player.
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+#          - StandaloneWindows # Build a Windows standalone.
+#          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+#          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+#          - WSAPlayer # Build an Windows Store Apps player.
+#          - WebGL # WebGL.
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+#      - uses: actions/cache@v1.1.0
+#        with:
+#          path: ${{ matrix.projectPath }}/Library
+#          key: Library-${{ matrix.projectPath }}-${{ matrix.targetPlatform }}
+#          restore-keys: |
+#            Library-${{ matrix.projectPath }}-
+#            Library-
+      - uses: webbertakken/unity-builder@v0.11
+        with:
+          unityVersion: ${{ matrix.unityVersion }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Build
+          path: build
