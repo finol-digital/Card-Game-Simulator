@@ -58,6 +58,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Popup
 - **Cancel**: *Esc* - Cancel/Close.
+- **Save**: *t* - Share message.
 - **Option**: *Delete* - No.
 - **Submit**: *Enter* - Yes/Close.
 

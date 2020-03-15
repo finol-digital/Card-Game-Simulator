@@ -5,10 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: File Selection on Windows and Mac
-- Fix: Networking
-- Fix: Print pdf
-- Rebrand tag line to "Create, Share, and Play"
+- Tech: GitHub Actions CI/CD with mac, ios, Android, Windows, Web, and Linux (hosted thru github)
+- Added Share button to popups
 
 ## Current Sprint
 - Layout cards in the Deck Editor more dynamically
@@ -16,6 +14,7 @@ permalink: roadmap.html
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
 - Playmats
 - Reddit post with officially supported card games
+- Re-record training video (show on webpage and play store)
 
 ## Sprint+1
 - Play Mode Redesign
@@ -42,7 +41,6 @@ permalink: roadmap.html
   - Slider to control zoom
 
 ## Backlog
-- Tech: GitHub Actions CI/CD with Android, Windows, Web, and Linux
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Android Searchbar Widget
@@ -50,7 +48,6 @@ permalink: roadmap.html
 - Highlight current selected button in Main Menu
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
-- Press and hold on Popups/Card Viewer to copy text
 - Navigate games from Cards Browser
 
 ## Icebox

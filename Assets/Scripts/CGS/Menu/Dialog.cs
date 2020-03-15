@@ -50,6 +50,8 @@ namespace CGS.Menu
             }
             else if (Input.GetButtonDown(Inputs.Option) && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
+            else if (Input.GetButtonDown(Inputs.Save))
+                Share();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Close();
         }
@@ -97,6 +99,16 @@ namespace CGS.Menu
             noButton.onClick.AddListener(Close);
 
             IsNewMessage = true;
+        }
+
+        public void Share()
+        {
+            string shareText = messageText.text;
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            (new NativeShare()).SetText(shareText).Share();
+#else
+            UniClipboard.SetText(shareText);
+#endif
         }
 
         public void Close()
