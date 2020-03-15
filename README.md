@@ -1,5 +1,6 @@
 # Card Game Simulator
-[![Build Status](https://travis-ci.com/finol-digital/Card-Game-Simulator.svg?branch=develop)](https://travis-ci.com/finol-digital/Card-Game-Simulator)
+
+[![Actions Status](https://github.com/finol-digital/Card-Game-Simulator/workflows/build-cgs/badge.svg)](https://github.com/finol-digital/Card-Game-Simulator/actions)
 
 Public documentation for CGS is provided through Github Pages in the docs/ folder. 
 
