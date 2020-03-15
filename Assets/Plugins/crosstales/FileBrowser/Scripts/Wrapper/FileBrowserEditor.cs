@@ -26,6 +26,9 @@ namespace Crosstales.FB.Wrapper
 
       public override string[] OpenFiles(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
       {
+         if (Util.Helper.isMacOSEditor && extensions != null && extensions.Length > 1)
+            Debug.LogWarning("Multiple 'extensions' are not supported in the Editor.");
+
          if (multiselect)
             Debug.LogWarning("'multiselect' for files is not supported in the Editor.");
 

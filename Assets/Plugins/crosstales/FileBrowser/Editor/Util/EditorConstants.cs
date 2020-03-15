@@ -11,9 +11,6 @@ namespace Crosstales.FB.EditorUtil
       // Keys for the configuration of the asset
       public const string KEY_UPDATE_DATE = Util.Constants.KEY_PREFIX + "UPDATE_DATE";
 
-      public const string KEY_REMINDER_DATE = Util.Constants.KEY_PREFIX + "REMINDER_DATE";
-      public const string KEY_REMINDER_COUNT = Util.Constants.KEY_PREFIX + "REMINDER_COUNT";
-
       public const string KEY_LAUNCH = Util.Constants.KEY_PREFIX + "LAUNCH";
 
       // Default values

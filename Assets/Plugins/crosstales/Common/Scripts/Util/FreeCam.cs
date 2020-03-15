@@ -14,8 +14,7 @@ namespace Crosstales.Common.Util
    ///	right mouse  	- enable free look
    ///	mouse			- free look / rotation
    /// </summary>
-   //[HelpURL("https://www.crosstales.com/media/data/assets/radio/api/class_crosstales_1_1_radio_1_1_demo_1_1_util_1_1_platform_controller.html")]
-   public class FreeCam : MonoBehaviour
+ public class FreeCam : MonoBehaviour
    {
       #region Variables
 

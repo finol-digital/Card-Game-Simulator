@@ -359,6 +359,14 @@ namespace Crosstales.FB
       {
          if (extensions != null && extensions.Length > 0)
          {
+            //Debug.Log("Extension: " + extensions[0]);
+
+            if (extensions.Length == 1 && "*".Equals(extensions[0]))
+            {
+               //Debug.Log("Wildcard!");
+               return null;
+            }
+
             ExtensionFilter[] filter = new ExtensionFilter[extensions.Length];
 
             for (int ii = 0; ii < extensions.Length; ii++)
@@ -381,6 +389,7 @@ namespace Crosstales.FB
             return filter;
          }
 
+         //Debug.Log("Wildcard!");
          return null;
       }
 

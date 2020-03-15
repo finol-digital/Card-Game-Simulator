@@ -3,7 +3,6 @@
 namespace Crosstales.Common.Util
 {
    /// <summary>Random rotation changer.</summary>
-   //[HelpURL("https://www.crosstales.com/media/data/assets/radio/api/class_crosstales_1_1_radio_1_1_demo_1_1_util_1_1_random_rotator.html")] //TODO update URL
    public class RandomRotator : MonoBehaviour
    {
       #region Variables

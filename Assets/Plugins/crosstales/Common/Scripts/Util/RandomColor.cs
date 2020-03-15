@@ -3,8 +3,7 @@
 namespace Crosstales.Common.Util
 {
    /// <summary>Random color changer.</summary>
-   //[HelpURL("https://www.crosstales.com/media/data/assets/radio/api/class_crosstales_1_1_radio_1_1_demo_1_1_util_1_1_random_color.html")] //TODO update URL
-   public class RandomColor : MonoBehaviour
+ public class RandomColor : MonoBehaviour
    {
       #region Variables
 

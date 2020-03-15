@@ -73,8 +73,7 @@ namespace Crosstales.FB.Wrapper
 
 #if ENABLE_IL2CPP
                 //ofn.file = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUni(Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH));
-                ofn.file =
- System.Runtime.InteropServices.Marshal.StringToBSTR(Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH));
+                ofn.file = System.Runtime.InteropServices.Marshal.StringToBSTR(Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH));
 #else
                ofn.file = Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH);
 #endif
@@ -89,8 +88,8 @@ namespace Crosstales.FB.Wrapper
                if (NativeMethods.GetOpenFileName(ofn))
                {
 #if ENABLE_IL2CPP
-                    //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(ofn.file);
-                    string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ofn.file);
+                  //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(ofn.file);
+                  string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ofn.file);
 #else
                   string file = ofn.file;
 #endif
@@ -131,54 +130,7 @@ namespace Crosstales.FB.Wrapper
 
       public override string[] OpenFolders(string title, string directory, bool multiselect)
       {
-         if (Util.Config.DEBUG && !string.IsNullOrEmpty(title))
-            Debug.LogWarning("'title' is not supported under Windows.");
-
-         if (multiselect)
-            Debug.LogWarning("'multiselect' for folders is not supported under Windows.");
-
-         NativeMethods.BROWSEINFO bi = new NativeMethods.BROWSEINFO();
-
-         if (!string.IsNullOrEmpty(directory))
-            _initialPath = Util.Helper.ValidatePath(directory);
-
-         IntPtr pidl = IntPtr.Zero;
-         IntPtr bufferAddress = IntPtr.Zero;
-
-         string folder = string.Empty;
-         try
-         {
-            bufferAddress = System.Runtime.InteropServices.Marshal.AllocHGlobal(MAX_PATH_LENGTH);
-
-            bi.dlgOwner = currentWindow;
-            bi.pidlRoot = IntPtr.Zero;
-            bi.ulFlags = BIF_NEWDIALOGSTYLE | BIF_SHAREABLE;
-            bi.lpfn = onBrowseEvent;
-            bi.lParam = IntPtr.Zero;
-            bi.iImage = 0;
-
-            pidl = NativeMethods.SHBrowseForFolder(ref bi);
-
-            if (NativeMethods.SHGetPathFromIDList(pidl, bufferAddress))
-            {
-               folder = System.Runtime.InteropServices.Marshal.PtrToStringUni(bufferAddress);
-               _initialPath = folder;
-            }
-         }
-         catch (Exception ex)
-         {
-            Debug.LogError(ex);
-         }
-         finally
-         {
-            if (bufferAddress != IntPtr.Zero)
-               System.Runtime.InteropServices.Marshal.FreeHGlobal(bufferAddress);
-
-            if (pidl != IntPtr.Zero)
-               System.Runtime.InteropServices.Marshal.FreeCoTaskMem(pidl);
-         }
-
-         return new[] {folder};
+         return openFolders(title, directory, multiselect, false);
       }
 
       public override string SaveFile(string title, string directory, string defaultName, ExtensionFilter[] extensions)
@@ -202,8 +154,8 @@ namespace Crosstales.FB.Wrapper
                   sfn.initialDir = dir;
 
 #if ENABLE_IL2CPP
-                    //sfn.file = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUni(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
-                    sfn.file = System.Runtime.InteropServices.Marshal.StringToBSTR(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
+               //sfn.file = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUni(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
+               sfn.file = System.Runtime.InteropServices.Marshal.StringToBSTR(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
 #else
                sfn.file = fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length);
 #endif
@@ -218,11 +170,11 @@ namespace Crosstales.FB.Wrapper
                if (NativeMethods.GetSaveFileName(sfn))
                {
 #if ENABLE_IL2CPP
-                        //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(sfn.file);
-                        string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(sfn.file);
-                        string newFile = Util.Helper.ValidateFile(file);
-                        //return newFile.Substring(0, newFile.Length - 1);
-                        return newFile.Substring(0, newFile.Length);
+                  //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(sfn.file);
+                  string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(sfn.file);
+                  string newFile = Util.Helper.ValidateFile(file);
+                  //return newFile.Substring(0, newFile.Length - 1);
+                  return newFile.Substring(0, newFile.Length);
 #else
                   string file = sfn.file;
                   string newFile = Util.Helper.ValidateFile(file);
@@ -250,12 +202,7 @@ namespace Crosstales.FB.Wrapper
 
       public override void OpenFoldersAsync(string title, string directory, bool multiselect, Action<string[]> cb)
       {
-#if UNITY_EDITOR || UNITY_2018_4_OR_NEWER
-         Debug.LogWarning("'OpenFoldersAsync' is running synchronously in the Editor and Unity builds newer than 2018.4.");
-         cb.Invoke(OpenFolders(title, directory, multiselect));
-#else
-            new System.Threading.Thread(() => { cb.Invoke(OpenFolders(title, directory, multiselect)); }).Start();
-#endif
+         new System.Threading.Thread(() => { cb.Invoke(openFolders(title, directory, multiselect, true)); }).Start();
       }
 
       public override void SaveFileAsync(string title, string directory, string defaultName, ExtensionFilter[] extensions, Action<string> cb)
@@ -267,6 +214,66 @@ namespace Crosstales.FB.Wrapper
 
 
       #region Private methods
+
+      private string[] openFolders(string title, string directory, bool multiselect, bool isAsync)
+      {
+         if (Util.Config.DEBUG && !string.IsNullOrEmpty(title))
+            Debug.LogWarning("'title' is not supported under Windows.");
+
+         if (multiselect)
+            Debug.LogWarning("'multiselect' for folders is not supported under Windows.");
+
+         NativeMethods.BROWSEINFO bi = new NativeMethods.BROWSEINFO();
+
+         if (!string.IsNullOrEmpty(directory))
+            _initialPath = Util.Helper.ValidatePath(directory);
+
+         IntPtr pidl = IntPtr.Zero;
+         IntPtr bufferAddress = IntPtr.Zero;
+
+         string folder = string.Empty;
+         try
+         {
+            bufferAddress = System.Runtime.InteropServices.Marshal.AllocHGlobal(MAX_PATH_LENGTH);
+
+            bi.dlgOwner = currentWindow;
+            bi.pidlRoot = IntPtr.Zero;
+            if (isAsync)
+            {
+               bi.ulFlags = BIF_SHAREABLE;
+            }
+            else
+            {
+               bi.ulFlags = BIF_NEWDIALOGSTYLE | BIF_SHAREABLE;
+            }
+
+            bi.lpfn = onBrowseEvent;
+            bi.lParam = IntPtr.Zero;
+            bi.iImage = 0;
+
+            pidl = NativeMethods.SHBrowseForFolder(ref bi);
+
+            if (NativeMethods.SHGetPathFromIDList(pidl, bufferAddress))
+            {
+               folder = System.Runtime.InteropServices.Marshal.PtrToStringUni(bufferAddress);
+               _initialPath = folder;
+            }
+         }
+         catch (Exception ex)
+         {
+            Debug.LogError(ex);
+         }
+         finally
+         {
+            if (bufferAddress != IntPtr.Zero)
+               System.Runtime.InteropServices.Marshal.FreeHGlobal(bufferAddress);
+
+            if (pidl != IntPtr.Zero)
+               System.Runtime.InteropServices.Marshal.FreeCoTaskMem(pidl);
+         }
+
+         return new[] {folder};
+      }
 
       [AOT.MonoPInvokeCallback(typeof(NativeMethods.BrowseCallbackProc))]
       private static int onBrowseEvent(IntPtr hWnd, int msg, IntPtr lp, IntPtr lpData)

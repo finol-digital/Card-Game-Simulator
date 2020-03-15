@@ -144,7 +144,7 @@ namespace Crosstales.Common.Util
       public static bool SHOW_TB_BANNER = true;
 
       /// <summary>Show the TPB banner.</summary>
-      public static bool SHOW_TPB_BANNER = false; //TODO change as soon as it's in the UAS
+      public static bool SHOW_TPB_BANNER = true;
 
       /// <summary>Show the TPS banner.</summary>
       public static bool SHOW_TPS_BANNER = true;

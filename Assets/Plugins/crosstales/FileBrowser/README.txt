@@ -18,10 +18,19 @@ A wrapper for native file dialogs on Windows, macOS, Linux and UWP.
 
 
 
-##Notes:
+## Notes:
 
 ### macOS
 * Sync calls can throw exceptions in development builds after the panel loses and gains focus. Use async calls to avoid this.
+* Notarization and Mac App Store; to get your app through the Apples signing process, do one of the following things:
+
+1) Add the following key to the entitlement-file:
+<key>com.apple.security.cs.disable-library-validation</key><true/>
+
+2) Sign the libraries after building:
+codesign --deep --force --verify --verbose --timestamp --sign "Developer ID Application : YourCompanyName (0123456789)" "YourApp.app/Contents/Plugins/libProcessStart.bundle"
+codesign --deep --force --verify --verbose --timestamp --sign "Developer ID Application : YourCompanyName (0123456789)" "YourApp.app/Contents/Plugins/FileBrowser.bundle"
+
 
 ### Linux
 The library is tested under Ubuntu 18.04 with GTK3+.
@@ -78,4 +87,4 @@ CH-8002 Zürich
 * [macOS-Demo](https://www.crosstales.com/media/data/assets/FileBrowser/downloads/FileBrowser_mac.zip)
 
 
-`Version: 11.02.2020`
+`Version: 05.03.2020`

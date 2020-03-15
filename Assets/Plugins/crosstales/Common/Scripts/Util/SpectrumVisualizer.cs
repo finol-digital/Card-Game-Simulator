@@ -3,7 +3,6 @@
 namespace Crosstales.Common.Util
 {
    /// <summary>Simple spectrum visualizer.</summary>
-   //[HelpURL("https://www.crosstales.com/media/data/assets/radio/api/class_crosstales_1_1_radio_1_1_demo_1_1_util_1_1_spectrum_visualizer.html")] //TODO set URL
    public class SpectrumVisualizer : MonoBehaviour
    {
       #region Variables

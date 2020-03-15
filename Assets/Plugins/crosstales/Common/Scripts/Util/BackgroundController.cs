@@ -4,7 +4,6 @@ using UnityEngine;
 namespace Crosstales.Common.Util
 {
    /// <summary>Enables or disable game objects on Android or iOS in the background.</summary>
-   //[HelpURL("https://www.crosstales.com/media/data/assets/rtvoice/api/class_crosstales_1_1_common_1_1_util_1_1_background_controller.html")]
    public class BackgroundController : MonoBehaviour
    {
       #region Variables

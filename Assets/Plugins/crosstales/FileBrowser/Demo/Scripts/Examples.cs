@@ -50,6 +50,7 @@ namespace Crosstales.FB.Demo
 
          if ((Util.Helper.isWindowsPlatform || Util.Helper.isWindowsEditor) && Util.Config.NATIVE_WINDOWS && paths != null)
          {
+            Debug.Log("REBUILD");
             rebuildList(paths);
          }
       }
@@ -65,6 +66,9 @@ namespace Crosstales.FB.Demo
          //string path = FileBrowser.OpenSingleFile("Open single file", testPath, "txt", "jpg", "pdf");
          //string path = FileBrowser.OpenSingleFile("txt");
          string path = FileBrowser.OpenSingleFile();
+
+         //string text = System.IO.File.ReadAllText(path);
+         //Debug.Log(text);
 
          rebuildList(path);
       }
@@ -101,6 +105,9 @@ namespace Crosstales.FB.Demo
          //string path = FileBrowser.SaveFile("Save file", testPath, "MySaveFile", "bin", "txt", "cs");
          string path = FileBrowser.SaveFile("MySaveFile", "txt");
          //string path = FileBrowser.SaveFile();
+
+         //string text = "Hello, this is a test!";
+         //System.IO.File.WriteAllText(path, text);
 
          rebuildList(path);
       }
