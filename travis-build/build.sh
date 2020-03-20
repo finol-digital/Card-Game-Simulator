@@ -15,40 +15,58 @@ IOS_LOG_FILE=$UNITY_BUILD_DIR/iOS.log
 OSX_LOG_FILE=$UNITY_BUILD_DIR/OSX.log
 
 echo "Activating Unity license"
+#$UNITY_PATH \
+#  -quit \
+#  -batchmode \
+#  -logFile $UNITY_ACTIVATION_LOG_FILE \
+#  -silent-crashes \
+#  -serial ${UNITY_SERIAL} \
+#  -username ${UNITY_USER} \
+#  -password ${UNITY_PWD} \
+#  -noUpm
 $UNITY_PATH \
-  -quit \
-  -batchmode \
-  -logFile $UNITY_ACTIVATION_LOG_FILE \
-  -silent-crashes \
-  -serial ${UNITY_SERIAL} \
-  -username ${UNITY_USER} \
-  -password ${UNITY_PWD} \
-  -noUpm
+      -batchmode \
+      -nographics \
+      -logFile $UNITY_ACTIVATION_LOG_FILE \
+      -quit \
+      -serial "$UNITY_SERIAL" \
+      -username "$UNITY_USER" \
+      -password "$UNITY_PWD"
 echo "Unity activation log:"
 cat $UNITY_ACTIVATION_LOG_FILE
 
-echo "Attempting to build $UNITY_PROJECT_NAME for iOS"
-$UNITY_PATH \
-  -quit \
-  -batchmode \
-  -logFile $IOS_LOG_FILE \
-  -silent-crashes \
-  -projectPath $(pwd) \
-  -buildTarget iOS \
-  -executeMethod BuildCGS.iOS "$UNITY_BUILD_DIR/iOS"
-rc0=$?
-echo 'iOS build logs:'
-cat $IOS_LOG_FILE
+#echo "Attempting to build $UNITY_PROJECT_NAME for iOS"
+#$UNITY_PATH \
+#  -quit \
+#  -batchmode \
+#  -logFile $IOS_LOG_FILE \
+#  -silent-crashes \
+#  -projectPath $(pwd) \
+#  -buildTarget iOS \
+#  -executeMethod BuildCGS.iOS "$UNITY_BUILD_DIR/iOS"
+#rc0=$?
+#echo 'iOS build logs:'
+#cat $IOS_LOG_FILE
 
 echo "Attempting to build $UNITY_PROJECT_NAME for OSX"
+#$UNITY_PATH \
+#  -quit \
+#  -batchmode \
+#  -logFile $OSX_LOG_FILE \
+#  -projectPath $(pwd) \
+#  -nographics \
+#  -silent-crashes \
+#  -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app"
 $UNITY_PATH \
-  -quit \
-  -batchmode \
-  -logFile $OSX_LOG_FILE \
-  -projectPath $(pwd) \
-  -nographics \
-  -silent-crashes \
-  -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app"
+    -batchmode \
+    -logfile $OSX_LOG_FILE \
+    -quit \
+    -customBuildName "$UNITY_PROJECT_NAME" \
+    -projectPath $(pwd) \
+    -buildTarget "StandaloneOSX" \
+    -customBuildTarget "StandaloneOSX" \
+    -customBuildPath "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app" \
+    -executeMethod "UnityBuilderAction.Builder.BuildProject" 
 rc1=$?
 echo 'OSX build logs:'
 cat $OSX_LOG_FILE
@@ -63,6 +81,7 @@ $UNITY_PATH \
 echo "Unity return log:"
 cat $UNITY_RETURN_LOG_FILE
 
-STATUS_CODE=$(($rc0|$rc1))
+#STATUS_CODE=$(($rc0|$rc1))
+STATUS_CODE=$rc1
 echo "Finishing with code $STATUS_CODE"
 exit $STATUS_CODE
