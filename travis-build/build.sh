@@ -3,7 +3,7 @@
 UNITY_PROJECT_NAME="Card Game Simulator"
 
 if [ -z ${CI} ]; then
-  UNITY_PATH="/Applications/Unity/Hub/Editor/2018.4.0f1/Unity.app/Contents/MacOS/Unity"
+  UNITY_PATH="/Applications/Unity/Hub/Editor/2018.4.16f1/Unity.app/Contents/MacOS/Unity"
   UNITY_BUILD_DIR=$(pwd)/builds
 else
   UNITY_PATH="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
