@@ -13,7 +13,6 @@ permalink: roadmap.html
   - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
 - Playmats
-- Reddit post with officially supported card games
 - Re-record training video (show on webpage and play store)
 
 ## Sprint+1
