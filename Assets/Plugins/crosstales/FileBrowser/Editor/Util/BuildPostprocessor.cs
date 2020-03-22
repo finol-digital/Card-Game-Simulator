@@ -12,7 +12,7 @@ namespace Crosstales.FB.EditorUtil
       [PostProcessBuildAttribute(1)]
       public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
       {
-         if (EditorHelper.isMacOSPlatform)
+         if (Crosstales.Common.EditorUtil.BaseEditorHelper.isMacOSPlatform)
          {
             string[] files = Helper.GetFiles(pathToBuiltProject, true, "meta");
 
