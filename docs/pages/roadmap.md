@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Tech: GitHub Actions CI/CD with mac, ios, Android, Windows, Web, and Linux (hosted thru github)
+- Tech: GitHub Actions CI
 - Added Share button to popups
 
 ## Current Sprint
