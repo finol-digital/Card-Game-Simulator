@@ -22,8 +22,8 @@ jobs:
 #          - Android # Build an Android .apk standalone app.
 #          - iOS # Build an iOS player.
 #          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
-#          - StandaloneWindows # Build a Windows standalone.
-#          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneWindows # Build a Windows standalone.
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
           - StandaloneLinux64 # Build a Linux 64-bit standalone.
 #          - WSAPlayer # Build an Windows Store Apps player.
 #          - WebGL # WebGL.
