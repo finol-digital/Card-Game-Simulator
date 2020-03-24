@@ -3,7 +3,7 @@
 UNITY_PROJECT_NAME="Card Game Simulator"
 
 if [ -z ${CI} ]; then
-  UNITY_PATH="/Applications/Unity/Hub/Editor/2018.4.19f1/Unity.app/Contents/MacOS/Unity"
+  UNITY_PATH="/home/david/Unity/Hub/Editor/2018.4.19f1/Editor/Unity"
   UNITY_BUILD_DIR=$(pwd)/builds
 else
   UNITY_PATH="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
@@ -63,9 +63,9 @@ $UNITY_PATH \
     -quit \
     -customBuildName "$UNITY_PROJECT_NAME" \
     -projectPath $(pwd) \
-    -buildTarget "StandaloneOSX" \
-    -customBuildTarget "StandaloneOSX" \
-    -customBuildPath "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app" \
+    -buildTarget "StandaloneLinux64" \
+    -customBuildTarget "StandaloneLinux64" \
+    -customBuildPath "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.x86_64" \
     -executeMethod "UnityBuilderAction.Builder.BuildProject" 
 rc1=$?
 echo 'OSX build logs:'

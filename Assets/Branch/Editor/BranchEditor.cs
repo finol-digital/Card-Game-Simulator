@@ -109,7 +109,7 @@ public class BranchEditor : Editor {
 
 		StreamReader sr = new StreamReader(iosWrapperPath, Encoding.Default);
         
-		#if UNITY_EDITOR_OSX
+		#if UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX
 		string[] lines = sr.ReadToEnd().Split(new string[] { System.Environment.NewLine }, System.StringSplitOptions.None).ToArray();
 		#elif UNITY_EDITOR_WIN
 		string[] lines = sr.ReadToEnd().Split(new string[] { "\r\n", "\n", "\r" }, System.StringSplitOptions.None).ToArray();
