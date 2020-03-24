@@ -13,6 +13,7 @@ UNITY_ACTIVATION_LOG_FILE=$UNITY_BUILD_DIR/unity.activation.log
 UNITY_RETURN_LOG_FILE=$UNITY_BUILD_DIR/unity.returnlicense.log
 IOS_LOG_FILE=$UNITY_BUILD_DIR/iOS.log
 OSX_LOG_FILE=$UNITY_BUILD_DIR/OSX.log
+LINUX_LOG_FILE=$UNITY_BUILD_DIR/linux.log
 
 echo "Activating Unity license"
 #$UNITY_PATH \
@@ -48,7 +49,7 @@ cat $UNITY_ACTIVATION_LOG_FILE
 #echo 'iOS build logs:'
 #cat $IOS_LOG_FILE
 
-echo "Attempting to build $UNITY_PROJECT_NAME for OSX"
+#echo "Attempting to build $UNITY_PROJECT_NAME for OSX"
 #$UNITY_PATH \
 #  -quit \
 #  -batchmode \
@@ -57,19 +58,20 @@ echo "Attempting to build $UNITY_PROJECT_NAME for OSX"
 #  -nographics \
 #  -silent-crashes \
 #  -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app"
+echo "Attempting to build $UNITY_PROJECT_NAME for Linux"
 $UNITY_PATH \
     -batchmode \
-    -logfile $OSX_LOG_FILE \
+    -logfile $LINUX_LOG_FILE \
     -quit \
     -customBuildName "$UNITY_PROJECT_NAME" \
     -projectPath $(pwd) \
     -buildTarget "StandaloneLinux64" \
     -customBuildTarget "StandaloneLinux64" \
-    -customBuildPath "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.x86_64" \
+    -customBuildPath "$UNITY_BUILD_DIR/linux/$UNITY_PROJECT_NAME.x86_64" \
     -executeMethod "UnityBuilderAction.Builder.BuildProject" 
 rc1=$?
-echo 'OSX build logs:'
-cat $OSX_LOG_FILE
+echo 'Linux build logs:'
+cat $LINUX_LOG_FILE
 
 echo "Returning Unity license"
 $UNITY_PATH \
