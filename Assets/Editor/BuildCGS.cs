@@ -66,7 +66,7 @@ class BuildCGS
 
       // Support Android signing
       if (buildOptions.target == BuildTarget.Android) {
-        SetAndroidSdkNdk();
+//        SetAndroidSdkNdk();
         PlayerSettings.Android.keystorePass = options["keystorePass"];
         PlayerSettings.Android.keyaliasPass = options["keyaliasPass"];
         if (options.ContainsKey("androidAppBundle")) {
