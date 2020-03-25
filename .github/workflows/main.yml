@@ -19,7 +19,7 @@ jobs:
         unityVersion:
           - 2018.4.19f1
         targetPlatform:
-#          - Android # Build an Android .apk standalone app.
+          - Android # Build an Android .apk standalone app.
           - iOS # Build an iOS player.
           - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
           - StandaloneWindows # Build a Windows standalone.
@@ -42,6 +42,8 @@ jobs:
         with:
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: BuildsCGS.BuildProject
+          customParameters: -androidAppBundle -keystorePass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }} -keyaliasPass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}
       - uses: actions/upload-artifact@v1
         with:
           name: Build

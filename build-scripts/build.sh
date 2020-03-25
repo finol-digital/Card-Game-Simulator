@@ -13,7 +13,7 @@ UNITY_ACTIVATION_LOG_FILE=$UNITY_BUILD_DIR/unity.activation.log
 UNITY_RETURN_LOG_FILE=$UNITY_BUILD_DIR/unity.returnlicense.log
 IOS_LOG_FILE=$UNITY_BUILD_DIR/iOS.log
 OSX_LOG_FILE=$UNITY_BUILD_DIR/OSX.log
-LINUX_LOG_FILE=$UNITY_BUILD_DIR/linux.log
+ANDROID_LOG_FILE=$UNITY_BUILD_DIR/android.log
 
 echo "Activating Unity license"
 #$UNITY_PATH \
@@ -31,8 +31,8 @@ $UNITY_PATH \
       -logFile $UNITY_ACTIVATION_LOG_FILE \
       -quit \
       -serial "$UNITY_SERIAL" \
-      -username "$UNITY_USER" \
-      -password "$UNITY_PWD"
+      -username "$UNITY_EMAIL" \
+      -password "$UNITY_PASSWORD"
 echo "Unity activation log:"
 cat $UNITY_ACTIVATION_LOG_FILE
 
@@ -58,20 +58,21 @@ cat $UNITY_ACTIVATION_LOG_FILE
 #  -nographics \
 #  -silent-crashes \
 #  -buildOSXUniversalPlayer "$UNITY_BUILD_DIR/OSX/$UNITY_PROJECT_NAME.app"
-echo "Attempting to build $UNITY_PROJECT_NAME for Linux"
+echo "Attempting to build $UNITY_PROJECT_NAME for Android"
 $UNITY_PATH \
     -batchmode \
-    -logfile $LINUX_LOG_FILE \
+    -logfile $ANDROID_LOG_FILE \
     -quit \
     -customBuildName "$UNITY_PROJECT_NAME" \
     -projectPath $(pwd) \
-    -buildTarget "StandaloneLinux64" \
-    -customBuildTarget "StandaloneLinux64" \
-    -customBuildPath "$UNITY_BUILD_DIR/linux/$UNITY_PROJECT_NAME.x86_64" \
-    -executeMethod "UnityBuilderAction.Builder.BuildProject" 
+    -buildTarget "Android" \
+    -customBuildTarget "Android" \
+    -customBuildPath "$UNITY_BUILD_DIR/android/$UNITY_PROJECT_NAME.apk" \
+    -executeMethod "BuildCGS.BuildProject" \
+    -androidAppBundle -keystorePass "$UNITY_ANDROID_KEYSTORE_PASS" -keyaliasPass "$UNITY_ANDROID_KEYSTORE_PASS"
 rc1=$?
-echo 'Linux build logs:'
-cat $LINUX_LOG_FILE
+echo 'Android build logs:'
+cat $ANDROID_LOG_FILE
 
 echo "Returning Unity license"
 $UNITY_PATH \
