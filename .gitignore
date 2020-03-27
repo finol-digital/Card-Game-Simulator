@@ -56,7 +56,6 @@ Assets/StreamingAssets/crashlytics-build.properties
 *.keystore*
 *.pfx*
 *.pem
-*setup_ssh.sh
 
 # Fastlane
 fastlane/README.md

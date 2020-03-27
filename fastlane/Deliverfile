@@ -6,8 +6,8 @@ submit_for_review true
 force true
 skip_screenshots true
 release_notes({
-  'default' => "- Removed splash screen to speed up startup\n- Fixed: Hold Card to Zoom",
-  'en-US' => "- Removed splash screen to speed up startup\n- Fixed: Hold Card to Zoom"
+  'default' => "- Updates",
+  'en-US' => "- Updates"
 })
 run_precheck_before_submit false
 

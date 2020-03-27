@@ -4,7 +4,7 @@ echo "Setting up osx certificates..."
 sleep 10
 
 KEYCHAIN_FILE=osx.keychain
-KEYCHAIN_PASSWORD=travis
+KEYCHAIN_PASSWORD=cicd
 MAC_APPLICATION_CERTIFICATE_P12=mac_application.p12
 MAC_INSTALLER_CERTIFICATE_P12=mac_installer.p12
 
@@ -36,16 +36,16 @@ echo "OSX certificate setup complete!"
 echo "Signing app..."
 sleep 10
 
-chmod -R a+xr "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
+chmod -R a+xr "builds/OSX/Card Game Simulator.app"
 codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "builds/CardGameSimulator.app/Contents/Plugins/libProcessStart.bundle"
 codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "builds/CardGameSimulator.app/Contents/Plugins/FileBrowser.bundle"
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" --entitlements "${TRAVIS_BUILD_DIR}/Assets/Editor/Card Game Simulator.entitlements" "${HOME}/unity_build_cache/OSX/Card Game Simulator.app"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" --entitlements "Assets/Editor/Card Game Simulator.entitlements" "builds/OSX/Card Game Simulator.app"
 
 sleep 10
 echo "Packaging app..."
 sleep 10
 
-productbuild --component "${HOME}/unity_build_cache/OSX/Card Game Simulator.app" /Applications --sign "3rd Party Mac Developer Installer: Finol Digital LLC (49G524X5NY)" "Card Game Simulator.pkg"
+productbuild --component "builds/OSX/Card Game Simulator.app" /Applications --sign "3rd Party Mac Developer Installer: Finol Digital LLC (49G524X5NY)" "Card Game Simulator.pkg"
 STATUS_CODE=$?
 
 sleep 10

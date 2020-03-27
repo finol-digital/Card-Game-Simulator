@@ -1,7 +1,8 @@
-name: build-cgs
+name: Build and Release CGS
 on:
-  pull_request: {}
+  pull_request: { branches: [master] }
   push: { branches: [master] }
+  release: { types: [published] }
 env:
     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -16,7 +17,7 @@ jobs:
         unityVersion:
           - 2018.4.19f1
         targetPlatform:
-          - Android # Build an Android .apk standalone app.
+#          - Android # Build an Android .apk standalone app.
           - iOS # Build an iOS player.
           - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
           - StandaloneWindows # Build a Windows standalone.
@@ -46,3 +47,21 @@ jobs:
         with:
           name: cgs-builds
           path: builds
+  releaseToStore:
+    name: Release to Google Play and the App Store
+    runs-on: macOS-latest
+    needs: buildForAllPlatforms
+    if: github.event.release.published
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+      - uses: actions/download-artifact@v1
+        with:
+          name: cgs-builds
+          path: builds
+      - run: fastlane ios release
+      - run: |
+          chmod +x ./fastlane/sign-osx-build.sh
+          ./fastlane/sign-osx-build.sh
+          fastlane mac macupload
