@@ -9,6 +9,7 @@ permalink: roadmap.html
 - Added Share button to popups
 
 ## Current Sprint
+- Fix: New Deck and Save Deck views
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
