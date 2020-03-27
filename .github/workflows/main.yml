@@ -54,7 +54,6 @@ jobs:
     if: github.event.release.published
     env:
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-      FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
