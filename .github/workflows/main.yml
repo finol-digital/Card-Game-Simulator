@@ -63,9 +63,9 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-#      - run: fastlane android playstore
-      - run: fastlane ios release
+#      - run: bundle exec fastlane android playstore
+      - run: bundle exec fastlane ios release
 #      - run: |
 #          chmod +x fastlane/sign-osx-build.sh
 #          ./fastlane/sign-osx-build.sh
-#          fastlane mac macupload
+#          bundle exec fastlane mac macupload
