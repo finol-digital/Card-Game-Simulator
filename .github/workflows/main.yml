@@ -65,8 +65,8 @@ jobs:
           path: builds
       - run: |
           bundle install
-#          bundle exec fastlane android playstore
           bundle exec fastlane ios release
+#          bundle exec fastlane android playstore
 #          chmod +x fastlane/sign-osx-build.sh
 #          ./fastlane/sign-osx-build.sh
 #          bundle exec fastlane mac macupload
