@@ -65,10 +65,7 @@ jobs:
           path: builds
       - run: |
           export BUILD_DIR="`pwd`/builds"
-          echo $BUILD_DIR
-#      - uses: maierj/fastlane-action@v1.4.0
-#        with:
-#          lane: ios release
+          fastlane ios release
 #          fastlane android playstore
 #          chmod +x fastlane/sign-osx-build.sh
 #          ./fastlane/sign-osx-build.sh
