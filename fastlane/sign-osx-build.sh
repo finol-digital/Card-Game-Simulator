@@ -36,10 +36,10 @@ echo "OSX certificate setup complete!"
 echo "Signing app..."
 sleep 10
 
-chmod -R a+xr "${BUILD_DIR}/OSX/Card Game Simulator.app"
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "${BUILD_DIR}/OSX/CardGameSimulator.app/Contents/Plugins/libProcessStart.bundle"
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "${BUILD_DIR}/OSX/CardGameSimulator.app/Contents/Plugins/FileBrowser.bundle"
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" --entitlements "Assets/Editor/Card Game Simulator.entitlements" "${BUILD_DIR}/OSX/Card Game Simulator.app"
+chmod -R a+xr "${BUILD_DIR}/StandaloneOSX/Card Game Simulator.app"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "${BUILD_DIR}/StandaloneOSX/CardGameSimulator.app/Contents/Plugins/libProcessStart.bundle"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "${BUILD_DIR}/StandaloneOSX/CardGameSimulator.app/Contents/Plugins/FileBrowser.bundle"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" --entitlements "Assets/Editor/Card Game Simulator.entitlements" "${BUILD_DIR}/StandaloneOSX/Card Game Simulator.app"
 
 sleep 10
 echo "Packaging app..."
