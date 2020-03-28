@@ -62,7 +62,6 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: cgs-builds
-          path: builds
       - run: |
           fastlane ios release
 #          fastlane android playstore
