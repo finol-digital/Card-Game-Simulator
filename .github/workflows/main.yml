@@ -51,7 +51,7 @@ jobs:
     name: Release to Google Play and the App Store
     runs-on: macOS-latest
     needs: buildForAllPlatforms
-    if: github.event.release.published
+#    if: github.event.release.published
     env:
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
