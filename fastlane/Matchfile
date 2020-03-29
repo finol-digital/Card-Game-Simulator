@@ -1,5 +1,5 @@
 git_url(ENV["MATCH_URL"])
-clone_branch_directly(true)
+git_basic_authorization(Base64.strict_encode64("#{ENV['APPLE_CONNECT_EMAIL']}:#{ENV['MATCH_PERSONAL_ACCESS_TOKEN']}"))
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 

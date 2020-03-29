@@ -51,7 +51,7 @@ jobs:
     name: Release to Google Play and the App Store
     runs-on: macOS-latest
     needs: buildForAllPlatforms
-#    if: github.event.action == "published"
+#    if: github.event.action == 'published'
     env:
       APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
       APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
@@ -59,6 +59,7 @@ jobs:
       APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
       MATCH_URL: ${{ secrets.MATCH_URL }}
       BUILDS_PATH: ${{ format('{0}/builds', github.workspace) }}
       IOS_APP_ID: com.finoldigital.CardGameSim
