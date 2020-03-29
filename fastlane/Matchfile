@@ -1,4 +1,5 @@
 git_url(ENV["MATCH_URL"])
+clone_branch_directly(true)
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
