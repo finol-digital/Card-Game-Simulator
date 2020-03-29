@@ -65,7 +65,7 @@ jobs:
       IOS_APP_ID: com.finoldigital.CardGameSim
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       PROJECT_NAME: Card Game Simulator
-      RELEASE_NOTES: Update
+      RELEASE_NOTES: UPDATE
 #      RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - uses: actions/checkout@v2

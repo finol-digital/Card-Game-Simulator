@@ -47,7 +47,7 @@ platform :ios do
       scheme: "Unity-iPhone",
       clean: true,
       skip_profile_detection: true,
-      codesigning_identity: "iPhone Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})",
+      codesigning_identity: "Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})",
       export_method: "app-store",
       export_options: {
         method: "app-store",
