@@ -40,7 +40,7 @@ platform :ios do
       xcodeproj: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
       target_filter: "Unity-iPhone",
       profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
-      code_signing_identity: "iPhone Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})"
+      code_signing_identity: "Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})"
     )
     gym(
       project: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
