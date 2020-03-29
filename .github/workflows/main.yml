@@ -51,7 +51,7 @@ jobs:
     name: Release to Google Play and the App Store
     runs-on: macOS-latest
     needs: buildForAllPlatforms
-#    if: github.event.release.types.published.action == "published"
+#    if: github.event.action == "published"
     env:
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
@@ -66,7 +66,7 @@ jobs:
       - run: |
           export BUILD_DIR="`pwd`/builds"
           fastlane ios release
+#          fastlane android playstore
 #          chmod +x fastlane/sign-osx-build.sh
 #          ./fastlane/sign-osx-build.sh
 #          fastlane mac macupload
-#          fastlane android playstore
