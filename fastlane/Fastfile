@@ -32,7 +32,7 @@ platform :ios do
     pilot
   end
 
-  desc "Create CardGameSim.ipa"
+  desc "Create .ipa"
   lane :build do
     disable_automatic_code_signing(path: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj")
     certificates
@@ -40,19 +40,19 @@ platform :ios do
       xcodeproj: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
       target_filter: "Unity-iPhone",
       profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
-      code_signing_identity: "iPhone Distribution: Finol Digital LLC (49G524X5NY)"
+      code_signing_identity: "iPhone Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})"
     )
     gym(
       project: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
       scheme: "Unity-iPhone",
       clean: true,
       skip_profile_detection: true,
-      codesigning_identity: "iPhone Distribution: Finol Digital LLC (49G524X5NY)",
+      codesigning_identity: "iPhone Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})",
       export_method: "app-store",
       export_options: {
         method: "app-store",
         provisioningProfiles: {
-          "com.finoldigital.CardGameSim" => "match AppStore com.finoldigital.CardGameSim"
+          ENV["IOS_APP_ID"] => "match AppStore #{ENV['IOS_APP_ID']}"
         }
       }
     )

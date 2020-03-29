@@ -36,16 +36,16 @@ echo "OSX certificate setup complete!"
 echo "Signing app..."
 sleep 10
 
-chmod -R a+xr "${BUILDS_PATH}/StandaloneOSX/Card Game Simulator.app"
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "${BUILDS_PATH}/StandaloneOSX/CardGameSimulator.app/Contents/Plugins/libProcessStart.bundle"
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" "${BUILDS_PATH}/StandaloneOSX/CardGameSimulator.app/Contents/Plugins/FileBrowser.bundle"
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: Finol Digital LLC (49G524X5NY)" --entitlements "Assets/Editor/Card Game Simulator.entitlements" "${BUILDS_PATH}/StandaloneOSX/Card Game Simulator.app"
+chmod -R a+xr "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app/Contents/Plugins/libProcessStart.bundle"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app/Contents/Plugins/FileBrowser.bundle"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" --entitlements "Assets/Editor/${PROJECT_NAME}.entitlements" "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app"
 
 sleep 10
 echo "Packaging app..."
 sleep 10
 
-productbuild --component "${BUILDS_PATH}/OSX/Card Game Simulator.app" /Applications --sign "3rd Party Mac Developer Installer: Finol Digital LLC (49G524X5NY)" "Card Game Simulator.pkg"
+productbuild --component "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app" /Applications --sign "3rd Party Mac Developer Installer: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${PROJECT_NAME}.pkg"
 STATUS_CODE=$?
 
 sleep 10

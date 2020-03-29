@@ -1,9 +1,9 @@
-git_url("git@github.com:finol-digital/certificates.git")
+git_url(ENV["MATCH_URL"])
 
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier("com.finoldigital.CardGameSim")
-username("finoldigitalfastlane@gmail.com")
+app_identifier(ENV["IOS_APP_ID"])
+username(ENV["APPLE_CONNECT_EMAIL"])
 
 # For all available options run `fastlane match --help`
 # Remove the # in the beginning of the line to enable the other options

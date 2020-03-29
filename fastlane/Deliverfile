@@ -6,12 +6,12 @@ submit_for_review true
 force true
 skip_screenshots true
 release_notes({
-  'default' => "- Updates",
-  'en-US' => "- Updates"
+  'default' => ENV["RELEASE_NOTES"],
+  'en-US' => ENV["RELEASE_NOTES"]
 })
 run_precheck_before_submit false
 
 for_platform :mac do
   platform "osx"
-  pkg "Card Game Simulator.pkg"
+  pkg "#{ENV['PROJECT_NAME'].pkg"
 end
