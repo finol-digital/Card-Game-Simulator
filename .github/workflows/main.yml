@@ -65,6 +65,7 @@ jobs:
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       PROJECT_NAME: Card Game Simulator
       RELEASE_NOTES: Update
+#      RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -73,10 +74,9 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-      - run: ls $BUILDS_PATH
-#      - uses: maierj/fastlane-action@v1.4.0
-#        with:
-#          lane: 'release'
+      - uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: 'release'
 #          fastlane android playstore
 #          chmod +x fastlane/sign-osx-build.sh
 #          ./fastlane/sign-osx-build.sh
