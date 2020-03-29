@@ -63,7 +63,7 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-#      - run: export BUILD_DIR="`pwd`/builds"
+      - run: export BUILD_DIR="`pwd`/builds"
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'release'
