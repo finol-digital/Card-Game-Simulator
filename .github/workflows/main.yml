@@ -55,6 +55,7 @@ jobs:
     env:
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      BUILDS_PATH: ${{ github.workspace + "/builds" }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -63,10 +64,10 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-      - run: export BUILD_DIR="`pwd`/builds"
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'release'
+      - run: ls $BUILDS_PATH
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'release'
 #          fastlane android playstore
 #          chmod +x fastlane/sign-osx-build.sh
 #          ./fastlane/sign-osx-build.sh
