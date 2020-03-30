@@ -40,14 +40,14 @@ platform :ios do
       xcodeproj: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
       target_filter: "Unity-iPhone",
       profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
-      code_signing_identity: "Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})"
+      code_signing_identity: "Apple Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})"
     )
     gym(
       project: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
       scheme: "Unity-iPhone",
       clean: true,
       skip_profile_detection: true,
-      codesigning_identity: "Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})",
+      codesigning_identity: "Apple Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})",
       export_method: "app-store",
       export_options: {
         method: "app-store",
