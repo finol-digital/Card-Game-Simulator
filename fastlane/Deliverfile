@@ -13,5 +13,5 @@ run_precheck_before_submit false
 
 for_platform :mac do
   platform "osx"
-  pkg "#{ENV['PROJECT_NAME'].pkg"
+  pkg "#{ENV['PROJECT_NAME']}.pkg"
 end
