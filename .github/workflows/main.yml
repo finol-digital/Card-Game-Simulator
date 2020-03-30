@@ -75,6 +75,7 @@ jobs:
         with:
           name: cgs-builds
           path: builds
+      - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'release'
