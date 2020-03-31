@@ -15,9 +15,9 @@ jobs:
       fail-fast: false
       matrix:
         unityVersion:
-          - 2018.4.19f1
+          - 2018.4.20f1
         targetPlatform:
-#          - Android # Build an Android .apk standalone app.
+          - Android # Build an Android .apk standalone app.
           - iOS # Build an iOS player.
           - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
           - StandaloneWindows # Build a Windows standalone.
@@ -75,10 +75,10 @@ jobs:
           name: cgs-builds
           path: builds
       - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
+#      - run: fastlane android playstore
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'release'
-#          fastlane android playstore
 #          chmod +x fastlane/sign-osx-build.sh
 #          ./fastlane/sign-osx-build.sh
 #          fastlane mac macupload
