@@ -66,8 +66,6 @@ class BuildCGS
 
       // Support Android signing
       if (buildOptions.target == BuildTarget.Android) {
-        EditorPrefs.SetString("AndroidSdkRoot", "/opt/Unity/Editor/Data/PlaybackEngines/AndroidPlayer/SDK");
-        EditorPrefs.SetString("AndroidNdkRoot", "/opt/Unity/Editor/Data/PlaybackEngines/AndroidPlayer/NDK");
         PlayerSettings.Android.keystorePass = options["keystorePass"];
         PlayerSettings.Android.keyaliasPass = options["keyaliasPass"];
         if (options.ContainsKey("androidAppBundle")) {
