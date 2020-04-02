@@ -19,13 +19,15 @@ namespace CGS.Play.Multiplayer
 
     public class DiscoveryResponse : MessageBase
     {
+        public string gameName;
+        public string gameId;
         public long serverId;
         public IPEndPoint EndPoint { get; set; }
         public Uri uri;
 
         public override string ToString()
         {
-            return uri?.AbsoluteUri ?? "ERR";
+            return gameName + "\n" + uri.AbsoluteUri;
         }
     }
 
@@ -50,6 +52,8 @@ namespace CGS.Play.Multiplayer
             {
                 return new DiscoveryResponse
                 {
+                    gameName = CardGameManager.Current.Name,
+                    gameId = CardGameManager.Current.Id,
                     serverId = ServerId,
                     // the endpoint is populated by the client
                     uri = transport.ServerUri()

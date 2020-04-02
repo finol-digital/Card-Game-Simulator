@@ -9,6 +9,7 @@ public class SelectionPanel : MonoBehaviour
 {
     public RectTransform selectionContent;
     public RectTransform selectionTemplate;
+    public Text emptyText;
     public ScrollRect scrollRect;
 
     protected List<Toggle> Toggles { get; } = new List<Toggle>();
@@ -36,8 +37,16 @@ public class SelectionPanel : MonoBehaviour
             i++;
         }
 
-        selectionTemplate.gameObject.SetActive(options.Count < 1);
-        selectionTemplate.GetComponent<Toggle>().isOn = options.Count > 0;
+        if (emptyText == null)
+        {
+            selectionTemplate.gameObject.SetActive(options.Count < 1);
+            selectionTemplate.GetComponent<Toggle>().isOn = options.Count > 0;
+        }
+        else
+        {
+            selectionTemplate.gameObject.SetActive(false);
+            emptyText.gameObject.SetActive(options.Count < 1);
+        }
 
         if (currentSelectionIndex > 0 && currentSelectionIndex < options.Count && options.Count > 1)
             scrollRect.verticalNormalizedPosition = 1f - (currentSelectionIndex / (options.Count - 1f));
