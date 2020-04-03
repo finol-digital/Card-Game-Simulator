@@ -176,25 +176,30 @@ namespace CGS.Play.Multiplayer
 
         public void Join()
         {
-            /* TODO
-            string ser
-            if (IsInternetConnectedSource)
+            if (!IsInternetConnectionSource)
             {
-                SelectedServerId == null
-                || !DiscoveredServers.TryGetValue(SelectedServerId.GetValueOrDefault(), out DiscoveryResponse serverResponse)
-                || serverResponse.uri == null)
+                if (SelectedServerId == null
+                    || !DiscoveredServers.TryGetValue(SelectedServerId.GetValueOrDefault(), out DiscoveryResponse serverResponse)
+                    || serverResponse.uri == null)
+                {
+                    Debug.LogError("Warning: Attempted to join a game without having selected a valid server!");
+                    return;
+                }
+                NetworkManager.singleton.StartClient(serverResponse.uri);
+            }
+            else
             {
-                Debug.LogWarning("Warning: Attempted to join a game without having selected a valid server! Ignoring...");
-                return;
+                if (SelectedServerIp == null
+                    || !ListedServers.TryGetValue(SelectedServerIp, out ServerStatus serverResponse)
+                    || string.IsNullOrEmpty(serverResponse.ip))
+                {
+                    Debug.LogError("Warning: Attempted to join a game without having selected a valid server!");
+                    return;
+                }
+                NetworkManager.singleton.networkAddress = serverResponse.ip;
+                NetworkManager.singleton.StartClient();
             }
 
-            CGSNetManager.Instance.Discovery.StopDiscovery();
-            CGSNetManager.Instance.ListServer.Stop();
-
-                        NetworkManager.singleton.networkAddress = server.ip;
-                        NetworkManager.singleton.StartClient();
-            NetworkManager.singleton.StartClient(serverResponse.uri);
-*/
             Hide();
         }
 
