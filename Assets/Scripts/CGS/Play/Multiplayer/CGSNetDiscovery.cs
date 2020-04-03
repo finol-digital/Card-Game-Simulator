@@ -10,7 +10,7 @@ using Mirror.Discovery;
 
 namespace CGS.Play.Multiplayer
 {
-    public delegate void OnServerFoundDelegate(DiscoveryResponse response);
+    public delegate void OnServerDiscoveredDelegate(DiscoveryResponse response);
 
     public class DiscoveryRequest : MessageBase
     {
@@ -19,15 +19,14 @@ namespace CGS.Play.Multiplayer
 
     public class DiscoveryResponse : MessageBase
     {
-        public string gameName;
-        public string gameId;
         public long serverId;
         public IPEndPoint EndPoint { get; set; }
         public Uri uri;
+        public string gameName;
 
         public override string ToString()
         {
-            return gameName + "\n" + uri.AbsoluteUri;
+            return $"{gameName}\n{uri.AbsoluteUri}";
         }
     }
 
@@ -35,7 +34,7 @@ namespace CGS.Play.Multiplayer
     {
         public long ServerId { get; private set; }
         public Transport transport;
-        public OnServerFoundDelegate OnServerFound;
+        public OnServerDiscoveredDelegate OnServerFound;
 
         public void Start()
         {
@@ -44,7 +43,6 @@ namespace CGS.Play.Multiplayer
                 transport = Transport.activeTransport;
         }
 
-
         //protected override void ProcessClientRequest(DiscoveryRequest request, IPEndPoint endpoint) { base.ProcessClientRequest(request, endpoint); }
         protected override DiscoveryResponse ProcessRequest(DiscoveryRequest request, IPEndPoint endpoint)
         {
@@ -52,11 +50,10 @@ namespace CGS.Play.Multiplayer
             {
                 return new DiscoveryResponse
                 {
-                    gameName = CardGameManager.Current.Name,
-                    gameId = CardGameManager.Current.Id,
                     serverId = ServerId,
                     // the endpoint is populated by the client
-                    uri = transport.ServerUri()
+                    uri = transport.ServerUri(),
+                    gameName = CardGameManager.Current.Name
                 };
             }
             catch (NotImplementedException)

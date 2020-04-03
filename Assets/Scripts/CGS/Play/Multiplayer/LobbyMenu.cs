@@ -17,15 +17,24 @@ namespace CGS.Play.Multiplayer
     [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
+        public Toggle lanToggle;
+        public Toggle internetToggle;
         public Button joinButton;
+
+        public bool IsInternetConnectionSource { get; private set; } = false;
 
         public long? SelectedServerId { get; private set; } = null;
         public IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
         private readonly Dictionary<long, DiscoveryResponse> _discoveredServers = new Dictionary<long, DiscoveryResponse>();
 
+        public string SelectedServerIp { get; private set; } = null;
+        public IReadOnlyDictionary<string, ServerStatus> ListedServers => _listedServers;
+        private readonly Dictionary<string, ServerStatus> _listedServers = new Dictionary<string, ServerStatus>();
+
         private bool _wasDown;
         private bool _wasUp;
-        private bool _wasPage;
+        private bool _wasPageVertical;
+        private bool _wasPageHorizontal;
 
         private Modal _modal;
 
@@ -53,14 +62,17 @@ namespace CGS.Play.Multiplayer
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Input.GetButtonDown(Inputs.New))
                 Host();
-            else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPage)
+            else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPageVertical)
                 ScrollPage(Input.GetAxis(Inputs.PageVertical));
+            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0) && !_wasPageHorizontal)
+                ToggleConnectionSource();
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                 Hide();
 
             _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
             _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
-            _wasPage = Input.GetAxis(Inputs.PageVertical) != 0;
+            _wasPageVertical = Input.GetAxis(Inputs.PageVertical) != 0;
+            _wasPageHorizontal = Input.GetAxis(Inputs.PageHorizontal) != 0;
         }
 
         public void Show(UnityAction cancelAction)
@@ -68,11 +80,53 @@ namespace CGS.Play.Multiplayer
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
 
+            _discoveredServers.Clear();
+            SelectedServerId = null;
+
+            _listedServers.Clear();
+            SelectedServerIp = null;
+
             CGSNetManager.Instance.Discovery.OnServerFound = OnDiscoveredServer;
             CGSNetManager.Instance.Discovery.StartDiscovery();
 
-            _discoveredServers.Clear();
-            SelectedServerId = null;
+            CGSNetManager.Instance.ListServer.OnServerFound = OnListServer;
+            CGSNetManager.Instance.ListServer.StartClient();
+
+            Redisplay();
+        }
+
+        private void Redisplay()
+        {
+            if (!IsInternetConnectionSource)
+            {
+                if (SelectedServerId == null || !_discoveredServers.ContainsKey(SelectedServerId.GetValueOrDefault()))
+                    joinButton.interactable = false;
+                Rebuild<long, DiscoveryResponse>(_discoveredServers, SelectServer, SelectedServerId.GetValueOrDefault());
+            }
+            else
+            {
+                if (SelectedServerIp == null || !_listedServers.ContainsKey(SelectedServerIp))
+                    joinButton.interactable = false;
+                Rebuild<string, ServerStatus>(_listedServers, SelectServer, SelectedServerIp);
+            }
+        }
+
+        private void ToggleConnectionSource()
+        {
+            bool isInternetConnectionSource = !IsInternetConnectionSource;
+            lanToggle.isOn = !isInternetConnectionSource;
+            internetToggle.isOn = isInternetConnectionSource;
+        }
+
+        public void SetLanConnectionSource(bool isLanConnectionSource)
+        {
+            IsInternetConnectionSource = !isLanConnectionSource;
+            Redisplay();
+        }
+
+        public void SetInternetConnectionSource(bool isInternetConnectionSource)
+        {
+            IsInternetConnectionSource = isInternetConnectionSource;
             Redisplay();
         }
 
@@ -82,17 +136,19 @@ namespace CGS.Play.Multiplayer
             Redisplay();
         }
 
-        private void Redisplay()
+        public void OnListServer(ServerStatus info)
         {
-            if (SelectedServerId == null || !_discoveredServers.ContainsKey(SelectedServerId.GetValueOrDefault()))
-                joinButton.interactable = false;
-            Rebuild<long, DiscoveryResponse>(_discoveredServers, SelectServer, SelectedServerId.GetValueOrDefault());
+            _listedServers[info.ip] = info;
+            Redisplay();
         }
 
         public void Host()
         {
             NetworkManager.singleton.StartHost();
-            CGSNetManager.Instance.Discovery.AdvertiseServer();
+            if (!IsInternetConnectionSource)
+                CGSNetManager.Instance.Discovery.AdvertiseServer();
+            else
+                CGSNetManager.Instance.ListServer.StartGameServer();
             Hide();
         }
 
@@ -107,20 +163,48 @@ namespace CGS.Play.Multiplayer
                 Join();
         }
 
+        public void SelectServer(Toggle toggle, string serverIp)
+        {
+            if (toggle.isOn)
+            {
+                SelectedServerIp = serverIp;
+                joinButton.interactable = true;
+            }
+            else if (!toggle.group.AnyTogglesOn() && serverIp.Equals(SelectedServerId))
+                Join();
+        }
+
         public void Join()
         {
-            if (SelectedServerId == null
-                || !DiscoveredServers.TryGetValue(SelectedServerId.GetValueOrDefault(), out DiscoveryResponse serverResponse) || serverResponse.uri == null)
+            /* TODO
+            string ser
+            if (IsInternetConnectedSource)
+            {
+                SelectedServerId == null
+                || !DiscoveredServers.TryGetValue(SelectedServerId.GetValueOrDefault(), out DiscoveryResponse serverResponse)
+                || serverResponse.uri == null)
             {
                 Debug.LogWarning("Warning: Attempted to join a game without having selected a valid server! Ignoring...");
                 return;
             }
+
+            CGSNetManager.Instance.Discovery.StopDiscovery();
+            CGSNetManager.Instance.ListServer.Stop();
+
+                        NetworkManager.singleton.networkAddress = server.ip;
+                        NetworkManager.singleton.StartClient();
             NetworkManager.singleton.StartClient(serverResponse.uri);
+*/
             Hide();
         }
 
         public void Hide()
         {
+            if (!NetworkServer.active)
+            {
+                CGSNetManager.Instance.Discovery.StopDiscovery();
+                CGSNetManager.Instance.ListServer.Stop();
+            }
             gameObject.SetActive(false);
         }
     }

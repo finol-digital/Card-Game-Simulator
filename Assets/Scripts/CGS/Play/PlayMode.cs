@@ -266,6 +266,7 @@ namespace CGS.Play
             if (NetworkManager.singleton.isNetworkActive)
             {
                 CGSNetManager.Instance.Discovery.StopDiscovery();
+                CGSNetManager.Instance.ListServer.Stop();
                 if (NetworkServer.active)
                     NetworkManager.singleton.StopHost();
                 else if (NetworkClient.isConnected)

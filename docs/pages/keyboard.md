@@ -65,6 +65,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 ## LAN Lobby
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through sessions.
+- **PageHorizontal**: *Home*, *End* - Toggle between LAN and Internet.
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
 - **New**: *e* - Host new session.
 - **Submit**: *Enter* - Join selected session.
