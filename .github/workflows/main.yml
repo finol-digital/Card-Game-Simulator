@@ -29,13 +29,21 @@ jobs:
       - uses: actions/checkout@v2
         with:
           lfs: true
-      - run: |
+      - name: create android keystore
+        run: |
           echo "${{ secrets.UNITY_ANDROID_KEYSTORE }}" > finoldigital.keystore.asc
           gpg -d --passphrase "${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}" --batch finoldigital.keystore.asc > finoldigital.keystore
       - uses: actions/cache@v1.1.0
         with:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
+      - name: free disk space
+        run: |
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          df -h
       - uses: webbertakken/unity-builder@v0.11
         with:
           unityVersion: ${{ matrix.unityVersion }}
