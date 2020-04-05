@@ -24,15 +24,11 @@ jobs:
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
           - StandaloneLinux64 # Build a Linux 64-bit standalone.
 #          - WSAPlayer # Build an Windows Store Apps player.
-          - WebGL # WebGL.
+#          - WebGL # WebGL.
     steps:
       - uses: actions/checkout@v2
         with:
           lfs: true
-      - name: create android keystore
-        run: |
-          echo "${{ secrets.UNITY_ANDROID_KEYSTORE }}" > finoldigital.keystore.asc
-          gpg -d --passphrase "${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}" --batch finoldigital.keystore.asc > finoldigital.keystore
       - uses: actions/cache@v1.1.0
         with:
           path: Library
@@ -44,6 +40,10 @@ jobs:
           sudo apt clean
           docker rmi $(docker image ls -aq)
           df -h
+      - name: create android keystore
+        run: |
+          echo "${{ secrets.UNITY_ANDROID_KEYSTORE }}" > finoldigital.keystore.asc
+          gpg -d --passphrase "${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}" --batch finoldigital.keystore.asc > finoldigital.keystore
       - uses: webbertakken/unity-builder@v0.11
         with:
           unityVersion: ${{ matrix.unityVersion }}
@@ -82,11 +82,14 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-      - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
-#      - run: fastlane android playstore
       - uses: maierj/fastlane-action@v1.4.0
         with:
-          lane: 'release'
-#          chmod +x fastlane/sign-osx-build.sh
-#          ./fastlane/sign-osx-build.sh
-#          fastlane mac macupload
+          lane: 'android playstore'
+      - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
+      - uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: 'ios release'
+      - run: ./fastlane/sign-osx-build.sh
+      - uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: 'mac macupload'
