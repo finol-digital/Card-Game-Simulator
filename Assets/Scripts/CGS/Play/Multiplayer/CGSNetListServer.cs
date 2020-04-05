@@ -121,7 +121,10 @@ namespace CGS.Play.Multiplayer
 
             // list server only allows up to 128 bytes per message
             if (writer.BaseStream.Position <= 128)
+            {
+//                Debug.Log("[List Server] GameServer sending status......");
                 _gameServerToListenConnection.Send(((MemoryStream)writer.BaseStream).ToArray());
+            }
             else
                 Debug.LogError("[List Server] List Server will reject messages longer than 128 bytes. Please use a shorter title.");
         }
