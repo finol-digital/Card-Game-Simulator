@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3998856304284901778}
   - component: {fileID: 7366114127203556204}
   - component: {fileID: 814636625885804515}
-  - component: {fileID: 5823894451252158404}
   - component: {fileID: 3998856304284901777}
+  - component: {fileID: 5823894451252158404}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -85,18 +85,6 @@ MonoBehaviour:
   serverBroadcastListenPort: 47777
   ActiveDiscoveryInterval: 3
   transport: {fileID: 7366114127203556204}
---- !u!114 &5823894451252158404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3998856304284901776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1d021f335cd60049af824f822d56ffc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3998856304284901777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,8 +100,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 0
   runInBackground: 1
   startOnHeadless: 1
-  serverTickRate: 30
   showDebugMessages: 0
+  serverTickRate: 30
   offlineScene: 
   onlineScene: 
   transport: {fileID: 7366114127203556204}
@@ -131,3 +119,15 @@ MonoBehaviour:
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   playController: {fileID: 0}
+--- !u!114 &5823894451252158404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3998856304284901776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1d021f335cd60049af824f822d56ffc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

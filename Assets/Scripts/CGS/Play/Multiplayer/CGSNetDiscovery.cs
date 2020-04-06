@@ -23,10 +23,12 @@ namespace CGS.Play.Multiplayer
         public IPEndPoint EndPoint { get; set; }
         public Uri uri;
         public string gameName;
+        public int players;
+        public int capacity;
 
         public override string ToString()
         {
-            return $"{gameName}\n{uri.AbsoluteUri}";
+            return $"{gameName}\n{uri.AbsoluteUri} - {players}/{capacity}";
         }
     }
 
@@ -36,8 +38,9 @@ namespace CGS.Play.Multiplayer
         public Transport transport;
         public OnServerDiscoveredDelegate OnServerFound;
 
-        public void Start()
+        public override void Start()
         {
+            base.Start();
             ServerId = RandomLong();
             if (transport == null)
                 transport = Transport.activeTransport;
@@ -53,7 +56,9 @@ namespace CGS.Play.Multiplayer
                     serverId = ServerId,
                     // the endpoint is populated by the client
                     uri = transport.ServerUri(),
-                    gameName = CardGameManager.Current.Name
+                    gameName = CardGameManager.Current.Name,
+                    players = NetworkServer.connections.Count,
+                    capacity = NetworkManager.singleton.maxConnections
                 };
             }
             catch (NotImplementedException)

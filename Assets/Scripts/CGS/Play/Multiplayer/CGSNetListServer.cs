@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using UnityEngine;
+using Mirror;
 
 namespace CGS.Play.Multiplayer
 {
@@ -17,16 +18,20 @@ namespace CGS.Play.Multiplayer
     {
         public string ip;
         public string gameName;
+        public ushort players;
+        public ushort capacity;
 
-        public ServerStatus(string ip, string gameName)
+        public ServerStatus(string ip, string gameName, ushort players, ushort capacity)
         {
             this.ip = ip;
             this.gameName = gameName;
+            this.players = players;
+            this.capacity = capacity;
         }
 
         public override string ToString()
         {
-            return $"{gameName}\n{ip}";
+            return $"{gameName}\n{ip} - {players}/{capacity}";
         }
     }
 
@@ -38,15 +43,70 @@ namespace CGS.Play.Multiplayer
 
         public OnServerListedDelegate OnServerFound;
 
-        private Telepathy.Client _clientToListenConnection = new Telepathy.Client();
         private Telepathy.Client _gameServerToListenConnection = new Telepathy.Client();
+        private Telepathy.Client _clientToListenConnection = new Telepathy.Client();
+
+        public void StartGameServer()
+        {
+            Stop();
+            Debug.Log("[List Server] Starting game server...");
+//            InvokeRepeating(nameof(TickGameServer), 0, 1);
+            StartCoroutine(TickGameServer());
+        }
+
+//        void TickGameServer()
+        IEnumerator TickGameServer()
+        {
+            while (true)
+            {
+                if (_gameServerToListenConnection.Connected)
+                {
+//                    Debug.Log("[List Server] GameServer connected...");
+                    SendStatus();
+                }
+                else if (!_gameServerToListenConnection.Connecting)
+                {
+                    Debug.Log("[List Server] GameServer connecting...");
+                    _gameServerToListenConnection.Connect(ListServerIp, GameServerToListenPort);
+                }
+                else
+                    Debug.LogError("[List Server] GameServer is ticking but not connecting.");
+                yield return new WaitForSeconds(1.0f);
+            }
+        }
+
+        void SendStatus()
+        {
+            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+
+            // create message
+            writer.Write((ushort)NetworkServer.connections.Count);
+            writer.Write((ushort)NetworkManager.singleton.maxConnections);
+            byte[] gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
+            writer.Write((ushort)gameNameBytes.Length);
+            writer.Write(gameNameBytes);
+            writer.Flush();
+
+            // list server only allows up to 128 bytes per message
+            if (writer.BaseStream.Position <= 128)
+            {
+//                Debug.Log("[List Server] GameServer sending status......");
+                if(!_gameServerToListenConnection.Send(((MemoryStream)writer.BaseStream).ToArray()))
+                    Debug.LogError("[List Server] GameServer failed to send status!");
+            }
+            else
+                Debug.LogError("[List Server] List Server will reject messages longer than 128 bytes. Game Name is too long.");
+        }
 
         public void StartClient()
         {
             Stop();
+            Debug.Log("[List Server] Starting client...");
+//            InvokeRepeating(nameof(TickClient), 0, 1);
             StartCoroutine(TickClient());
         }
 
+//        void TickClient()
         IEnumerator TickClient()
         {
             while (true)
@@ -72,6 +132,8 @@ namespace CGS.Play.Multiplayer
                     Debug.Log("[List Server] Client connecting...");
                     _clientToListenConnection.Connect(ListServerIp, ClientToListenPort);
                 }
+                else
+                    Debug.LogError("[List Server] Client is ticking but not connecting.");
                 yield return new WaitForSeconds(1.0f);
             }
         }
@@ -84,58 +146,26 @@ namespace CGS.Play.Multiplayer
             byte ipBytesLength = reader.ReadByte();
             byte[] ipBytes = reader.ReadBytes(ipBytesLength);
             string ip = new IPAddress(ipBytes).ToString();
+            ushort players = reader.ReadUInt16();
+            ushort capacity = reader.ReadUInt16();
             ushort gameNameLength = reader.ReadUInt16();
             string gameName = Encoding.UTF8.GetString(reader.ReadBytes(gameNameLength));
-            return new ServerStatus(ip, gameName);
-        }
-
-        public void StartGameServer()
-        {
-            Stop();
-            StartCoroutine(TickGameServer());
-        }
-
-        IEnumerator TickGameServer()
-        {
-            while (true)
-            {
-                if (_gameServerToListenConnection.Connected)
-                    SendStatus();
-                else if (!_gameServerToListenConnection.Connecting)
-                {
-                    Debug.Log("[List Server] GameServer connecting......");
-                    _gameServerToListenConnection.Connect(ListServerIp, GameServerToListenPort);
-                }
-                yield return new WaitForSeconds(1.0f);
-            }
-        }
-
-        void SendStatus()
-        {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
-
-            byte[] titleBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
-            writer.Write((ushort)titleBytes.Length);
-            writer.Write(titleBytes);
-            writer.Flush();
-
-            // list server only allows up to 128 bytes per message
-            if (writer.BaseStream.Position <= 128)
-            {
-//                Debug.Log("[List Server] GameServer sending status......");
-                _gameServerToListenConnection.Send(((MemoryStream)writer.BaseStream).ToArray());
-            }
-            else
-                Debug.LogError("[List Server] List Server will reject messages longer than 128 bytes. Please use a shorter title.");
+            return new ServerStatus(ip, gameName, players, capacity);
         }
 
         public void Stop()
         {
+            Debug.Log("[List Server] Stopping...");
             if (_clientToListenConnection.Connected)
                 _clientToListenConnection.Disconnect();
             if (_gameServerToListenConnection.Connected)
                 _gameServerToListenConnection.Disconnect();
             StopAllCoroutines();
+        }
+
+        void OnApplicationQuit()
+        {
+            Stop();
         }
 
     }
