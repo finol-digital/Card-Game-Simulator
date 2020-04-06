@@ -6,15 +6,16 @@ permalink: roadmap.html
 
 ## What's New
 - Tech: GitHub Actions CI
-- Added Share button to popups
+- Added internet-connectivity (requires forwarding ports 8887-8888 on your router if you want to host)
 
 ## Current Sprint
+- Restart game from within play mode
+- Deck & play space share prefence: ask, individual, share
+- Playmats
 - Fix: New Deck and Save Deck views
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
-- Playmats
-- Deck & play space share prefence: ask, individual, share
 - Re-record training video (show on webpage and play store)
 
 ## Sprint+1

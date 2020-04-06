@@ -82,14 +82,14 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'android playstore'
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'android playstore'
       - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'ios release'
-      - run: ./fastlane/sign-osx-build.sh
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'mac macupload'
+#      - run: ./fastlane/sign-osx-build.sh
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'mac macupload'
