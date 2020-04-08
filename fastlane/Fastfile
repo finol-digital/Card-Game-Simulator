@@ -13,10 +13,15 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-default_platform(:ios)
-
 keychain_name = "temporary_keychain"
 keychain_password = SecureRandom.base64
+
+platform :android do
+  desc "Upload a new Android version to the Google Play Store"
+  lane :playstore do
+    supply
+  end
+end
 
 platform :ios do
 
