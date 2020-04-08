@@ -36,19 +36,21 @@ echo "OSX certificate setup complete!"
 echo "Signing app..."
 sleep 10
 
-chmod -R a+xr "${BUILDS_PATH}/StandaloneOSX/StandaloneOSX.app"
+mv "${BUILDS_PATH}/StandaloneOSX/StandaloneOSX.app" "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app"
+
+chmod -R a+xr "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app"
 bundlepaths=$(echo $MAC_APP_BUNDLE_PATHS | tr ";" "\n")
 for bundlepath in $bundlepaths
 do
-    codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${BUILDS_PATH}/StandaloneOSX/StandaloneOSX.app/$bundlepath"
+    codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app/$bundlepath"
 done
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" --entitlements "Assets/Editor/${PROJECT_NAME}.entitlements" "${BUILDS_PATH}/StandaloneOSX/StandaloneOSX.app"
+codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" --entitlements "fastlane/${PROJECT_NAME}.entitlements" "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app"
 
 sleep 10
 echo "Packaging app..."
 sleep 10
 
-productbuild --component "${BUILDS_PATH}/StandaloneOSX/StandaloneOSX.app" /Applications --sign "3rd Party Mac Developer Installer: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${PROJECT_NAME}.pkg"
+productbuild --component "${BUILDS_PATH}/StandaloneOSX/${PROJECT_NAME}.app" /Applications --sign "3rd Party Mac Developer Installer: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${PROJECT_NAME}.pkg"
 STATUS_CODE=$?
 
 sleep 10
