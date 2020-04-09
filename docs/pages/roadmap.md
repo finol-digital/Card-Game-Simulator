@@ -9,6 +9,9 @@ permalink: roadmap.html
 - Added internet-connectivity (requires forwarding ports 8887-8888 on your router if you want to host)
 
 ## Current Sprint
+- Fix title screen and settings for non-mobile builds
+- Highlight current selected button in Main Menu
+- Navigate games from Cards Browser
 - Restart game from within play mode
 - Deck & play space share prefence: ask, individual, share
 - Playmats
@@ -46,10 +49,8 @@ permalink: roadmap.html
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Android Searchbar Widget
-- Highlight current selected button in Main Menu
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
-- Navigate games from Cards Browser
 
 ## Icebox
 - Tech: Replace SwipeManager
