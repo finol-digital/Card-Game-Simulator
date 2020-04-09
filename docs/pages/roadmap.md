@@ -46,7 +46,6 @@ permalink: roadmap.html
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Android Searchbar Widget
-- Animate "Tap Anywhere to Start" text
 - Highlight current selected button in Main Menu
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
@@ -60,7 +59,6 @@ permalink: roadmap.html
   - Large Image
 - Support default search filters
 - Support default sort
-- Enhance Main Menu Carousel
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
 - Support dual-faced cards (DFC)

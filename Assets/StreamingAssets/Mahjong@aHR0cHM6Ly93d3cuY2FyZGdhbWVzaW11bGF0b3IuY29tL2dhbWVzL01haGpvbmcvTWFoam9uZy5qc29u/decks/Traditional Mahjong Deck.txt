@@ -1,0 +1,43 @@
+### Mahjong Deck: Traditional Mahjong Deck
+4 1 Circle
+4 2 Circle
+4 3 Circle
+4 4 Circle
+4 5 Circle
+4 6 Circle
+4 7 Circle
+4 8 Circle
+4 9 Circle
+4 1 Bamboo
+4 2 Bamboo
+4 3 Bamboo
+4 4 Bamboo
+4 5 Bamboo
+4 6 Bamboo
+4 7 Bamboo
+4 8 Bamboo
+4 9 Bamboo
+4 1 Character
+4 2 Character
+4 3 Character
+4 4 Character
+4 5 Character
+4 6 Character
+4 7 Character
+4 8 Character
+4 9 Character
+4 East Wind
+4 South Wind
+4 West Wind
+4 North Wind
+4 Red Dragon
+4 Green Dragon
+4 White Dragon
+1 Plum
+1 Orchid
+1 Chrysanthemum
+1 Bamboo
+1 Spring
+1 Summer
+1 Autumn
+1 Winter
