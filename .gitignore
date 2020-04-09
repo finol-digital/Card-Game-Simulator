@@ -56,6 +56,7 @@ Assets/StreamingAssets/crashlytics-build.properties
 *.keystore*
 *.pfx*
 *.pem
+api-*.json
 
 # Fastlane
 fastlane/README.md
