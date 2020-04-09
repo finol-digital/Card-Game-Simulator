@@ -19,7 +19,7 @@ keychain_password = SecureRandom.base64
 platform :android do
   desc "Upload a new Android version to the Google Play Store"
   lane :playstore do
-    upload_to_play_store
+    upload_to_play_store(aab: "#{ENV['BUILDS_PATH']}/Android/Android.aab")
   end
 end
 
