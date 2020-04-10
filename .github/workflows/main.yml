@@ -89,10 +89,10 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-#      - run: echo "${{ secrets.GOOGLE_PLAY_KEY_FILE }}" > ${{ secrets.GOOGLE_PLAY_KEY_FILE_PATH }}
-#      - uses: maierj/fastlane-action@v1.4.0
-#        with:
-#          lane: 'android playstore'
+      - run: echo "${{ secrets.GOOGLE_PLAY_KEY_FILE }}" > ${{ secrets.GOOGLE_PLAY_KEY_FILE_PATH }}
+      - uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: 'android playstore'
       - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
       - uses: maierj/fastlane-action@v1.4.0
         with:
