@@ -1,0 +1,4 @@
+- Added internet-connectivity (requires forwarding ports 8887-8888 on your router if you want to host)
+- Navigate games in the Cards Browser by swiping left/right along the top banner of the screen
+- Able to reset the Play Mode play area by pressing back, then no, then yes
+- Deck SharePreference

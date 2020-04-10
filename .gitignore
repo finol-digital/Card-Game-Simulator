@@ -58,11 +58,5 @@ Assets/StreamingAssets/crashlytics-build.properties
 *.pem
 api-*.json
 
-# Fastlane
-fastlane/README.md
-fastlane/report.xml
-fastlane/metadata/
-fastlane/screenshots/
-
 # OS
 *.DS_Store

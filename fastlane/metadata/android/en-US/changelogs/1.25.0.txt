@@ -1,0 +1,2 @@
+- Tech: GitHub Actions CI
+- Added internet-connectivity (requires forwarding ports 8887-8888 on your router if you want to host)
