@@ -243,6 +243,11 @@ namespace CardGameDef
         public int DeckMaxCount { get; set; } = 75;
 
         [JsonProperty]
+        [Description("For networked games, CGS will use deckSharePreference to: ask players if they want to share the same deck, force all players to share the same deck, or force an individual deck for each player.")]
+        [DefaultValue("share")]
+        public SharePreference DeckSharePreference { get; set; } = SharePreference.Share;
+
+        [JsonProperty]
         [Description("CGS will go through each DeckUrl and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'")]
         public List<DeckUrl> DeckUrls { get; set; } = new List<DeckUrl>();
 

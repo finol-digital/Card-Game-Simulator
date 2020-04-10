@@ -7,10 +7,10 @@ permalink: roadmap.html
 ## What's New
 - Added internet-connectivity (requires forwarding ports 8887-8888 on your router if you want to host)
 - Navigate games in the Cards Browser by swiping left/right along the top banner of the screen
+- Able to reset the Play Mode play area by pressing back, then no, then yes
+- Deck SharePreference
 
 ## Current Sprint
-- Restart game from within play mode
-- Deck & play space share prefence: ask, individual, share
 - Playmats
 - Fix: New Deck and Save Deck views
 - Layout cards in the Deck Editor more dynamically
@@ -41,6 +41,8 @@ permalink: roadmap.html
     - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
   - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
   - Slider to control zoom
+  - Play Area SharePreference
+  - Points/Score Tracker
 
 ## Backlog
 - Tech: Branch on desktop

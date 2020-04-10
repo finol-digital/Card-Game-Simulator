@@ -13,9 +13,6 @@ namespace CGS.Play.Multiplayer
     [RequireComponent(typeof(CGSNetListServer))]
     public class CGSNetManager : NetworkManager
     {
-        public const string PlayerCountMessage = "Number of connected players: ";
-        public const string ConnectionIdMessage = "Connection Id: ";
-
         public static CGSNetManager Instance => (CGSNetManager)singleton;
         public CGSNetPlayer LocalPlayer { get; set; }
         public CGSNetData Data { get; set; }
@@ -36,7 +33,6 @@ namespace CGS.Play.Multiplayer
                 NetworkServer.Spawn(Data.gameObject);
             }
             Data.RegisterScore(conn.identity.gameObject, CardGameManager.Current.GameStartPointsCount);
-            playController.netText.text = PlayerCountMessage + NetworkServer.connections.Count.ToString();
             Debug.Log("CGSNetManager OnServerAddPlayer!");
         }
 
@@ -45,7 +41,6 @@ namespace CGS.Play.Multiplayer
             base.OnClientConnect(connection);
             Debug.Log("CGSNetManager OnClientConnect...");
             ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
-            playController.netText.text = ConnectionIdMessage + connection.connectionId;
             Debug.Log("CGSNetManager OnClientConnect!");
         }
 

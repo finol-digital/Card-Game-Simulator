@@ -214,6 +214,15 @@
       "format": "int32",
       "default": 75
     },
+    "deckSharePreference": {
+      "description": "For networked games, CGS will use deckSharePreference to: ask players if they want to share the same deck, force all players to share the same deck, or force an individual deck for each player.",
+      "default": "share",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/SharePreference"
+        }
+      ]
+    },
     "deckUrls": {
       "type": "array",
       "description": "CGS will go through each DeckUrl and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'",
@@ -434,6 +443,20 @@
         "hsd",
         "txt",
         "ydk"
+      ]
+    },
+    "SharePreference": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Ask",
+        "Share",
+        "Individual"
+      ],
+      "enum": [
+        "ask",
+        "share",
+        "individual"
       ]
     },
     "DeckUrl": {

@@ -106,7 +106,11 @@ namespace CGS.Play.Multiplayer
         {
             while (CardGameManager.Current.IsDownloading)
                 yield return null;
-            // TODO: CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+
+            if (CardGameManager.Current.DeckSharePreference == SharePreference.Ask)
+                CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+            else if (CardGameManager.Current.DeckSharePreference == SharePreference.Share)
+                RequestSharedDeck();
         }
 
         public void RequestSharedDeck()

@@ -22,6 +22,7 @@ namespace CGS.Play
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string DealHandPrompt = "Draw initial starting hand?";
+        public const string ResetPlayAreaPrompt = "Restart?";
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
         public GameObject cardViewerPrefab;
@@ -32,8 +33,6 @@ namespace CGS.Play
 
         public ZonesViewer zones;
         public RectTransform playAreaContent;
-        public Image currentBanner;
-        public Text netText;
 
         public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
         private LobbyMenu _lobby;
@@ -83,8 +82,9 @@ namespace CGS.Play
 
         public void ResetPlayArea()
         {
+            // TODO: CHECK IF THIS IS OK WITH NETWORKING
+            playAreaContent.DestroyAllChildren();
             playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
-            currentBanner.sprite = CardGameManager.Current.BannerImageSprite;
         }
 
         public void ViewRules()
@@ -258,7 +258,12 @@ namespace CGS.Play
 
         public void PromptBackToMainMenu()
         {
-            CardGameManager.Instance.Messenger.Prompt(MainMenuPrompt, BackToMainMenu);
+            CardGameManager.Instance.Messenger.Ask(MainMenuPrompt, PromptResetPlayArea, BackToMainMenu);
+        }
+
+        public void PromptResetPlayArea()
+        {
+            CardGameManager.Instance.Messenger.Prompt(ResetPlayAreaPrompt, ResetPlayArea);
         }
 
         public void BackToMainMenu()
