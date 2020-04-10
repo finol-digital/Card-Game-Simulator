@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -26,6 +27,7 @@ namespace CGS.Menu
         public Toggle screenLandscapeToggle;
         public Toggle controllerLockToLandscapeToggle;
         public Toggle hideReprintsToggle;
+        public List<Transform> orientationOptions;
 
         void Start()
         {
@@ -48,6 +50,10 @@ namespace CGS.Menu
             }
             controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
             hideReprintsToggle.isOn = HideReprints;
+#if !UNITY_ANDROID && !UNITY_IOS
+            foreach (var transform in orientationOptions)
+                transform.gameObject.SetActive(false);
+#endif
         }
 
         void Update()

@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +14,8 @@ namespace CGS.Cards
 {
     public class CardSelector : MonoBehaviour
     {
+        public const float GameSelectorHeight = 160;
+
         public SearchResults results;
         public ScrollRect scrollRect;
 
@@ -41,10 +45,20 @@ namespace CGS.Cards
                 }
                 else if (!CardViewer.Instance.Zoom)
                 {
-                    if (SwipeManager.IsSwipingRight())
-                        PageLeft();
-                    else if (SwipeManager.IsSwipingLeft())
-                        PageRight();
+                    if (Input.touches.All(touch => touch.position.y > Screen.height - GameSelectorHeight))
+                    {
+                        if (SwipeManager.IsSwipingRight())
+                            CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
+                        else if (SwipeManager.IsSwipingLeft())
+                            CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
+                    }
+                    else
+                    {
+                        if (SwipeManager.IsSwipingRight())
+                            PageLeft();
+                        else if (SwipeManager.IsSwipingLeft())
+                            PageRight();
+                    }
                 }
             }
 

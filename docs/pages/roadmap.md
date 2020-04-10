@@ -5,13 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Tech: GitHub Actions CI
 - Added internet-connectivity (requires forwarding ports 8887-8888 on your router if you want to host)
+- Navigate games in the Cards Browser by swiping left/right along the top banner of the screen
 
 ## Current Sprint
-- Fix title screen and settings for non-mobile builds
-- Highlight current selected button in Main Menu
-- Navigate games from Cards Browser
 - Restart game from within play mode
 - Deck & play space share prefence: ask, individual, share
 - Playmats

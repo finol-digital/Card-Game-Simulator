@@ -10,6 +10,7 @@ namespace CGS.Menu
 {
     public class TitleScreen : MonoBehaviour
     {
+        public const string TouchlessStartMessage = "Press Any Key";
         public const float MinWidth = 1080;
         public const int CenterTextFontSizePortrait = 30;
         public const int CenterTextFontSizeLandscape = 40;
@@ -82,7 +83,9 @@ namespace CGS.Menu
         void Start()
         {
             versionText.text = MainMenu.VersionMessage;
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if !UNITY_ANDROID && !UNITY_IOS
+            centerText.text = TouchlessStartMessage;
+#elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             Branch.initSession(CardGameManager.Instance.BranchCallbackWithParams);
 #endif
         }
