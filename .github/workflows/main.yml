@@ -89,7 +89,9 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-      - run: echo "${{ secrets.GOOGLE_PLAY_KEY_FILE }}" > ${{ secrets.GOOGLE_PLAY_KEY_FILE_PATH }}
+      - run: |
+          echo "${{ secrets.GOOGLE_PLAY_KEY_FILE }}" > ${{ secrets.GOOGLE_PLAY_KEY_FILE_PATH }}
+          echo "${{ github.event.release.body }}" > fastlane/metadata/android/en-US/changelogs/default.txt
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'android playstore'

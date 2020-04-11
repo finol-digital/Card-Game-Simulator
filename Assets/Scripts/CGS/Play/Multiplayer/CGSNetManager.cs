@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 
 using CardGameView;
@@ -22,11 +23,13 @@ namespace CGS.Play.Multiplayer
 
         public GameObject cardModelPrefab;
         public PlayMode playController;
+        public Text statusText;
 
         public override void OnServerAddPlayer(NetworkConnection conn)
         {
             base.OnServerAddPlayer(conn);
             Debug.Log("CGSNetManager OnServerAddPlayer...");
+            statusText.text = $"Player {NetworkServer.connections.Count} has joined!";
             if (Data == null)
             {
                 Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CGSNetData>();
@@ -40,6 +43,7 @@ namespace CGS.Play.Multiplayer
         {
             base.OnClientConnect(connection);
             Debug.Log("CGSNetManager OnClientConnect...");
+            statusText.text = "Connected!";
             ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard, UnSpawnCard);
             Debug.Log("CGSNetManager OnClientConnect!");
         }

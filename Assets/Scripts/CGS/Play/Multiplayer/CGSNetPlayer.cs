@@ -40,6 +40,7 @@ namespace CGS.Play.Multiplayer
 
         public void RequestCardGame()
         {
+            CGSNetManager.Instance.statusText.text = "Determining game id...";
             CmdSelectCardGame();
         }
 
@@ -53,8 +54,21 @@ namespace CGS.Play.Multiplayer
         [TargetRpc]
         public void TargetSelectCardGame(NetworkConnection target, string gameId)
         {
+            CGSNetManager.Instance.statusText.text = $"Game id is {gameId}! Loading game details...";
             CardGameManager.Instance.Select(gameId);
-            StartCoroutine(WaitToRequestDeck());
+            StartCoroutine(WaitToStartGame());
+        }
+
+        public IEnumerator WaitToStartGame()
+        {
+            while (CardGameManager.Current.IsDownloading)
+                yield return null;
+
+            CGSNetManager.Instance.statusText.text = $"Game loaded and ready!";
+            if (CardGameManager.Current.DeckSharePreference == SharePreference.Ask)
+                CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+            else if (CardGameManager.Current.DeckSharePreference == SharePreference.Share)
+                RequestSharedDeck();
         }
 
         public void RequestScoreUpdate(int points)
@@ -102,19 +116,9 @@ namespace CGS.Play.Multiplayer
             CGSNetManager.Instance.Data.RegisterDeck(gameObject, cardIds);
         }
 
-        public IEnumerator WaitToRequestDeck()
-        {
-            while (CardGameManager.Current.IsDownloading)
-                yield return null;
-
-            if (CardGameManager.Current.DeckSharePreference == SharePreference.Ask)
-                CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
-            else if (CardGameManager.Current.DeckSharePreference == SharePreference.Share)
-                RequestSharedDeck();
-        }
-
         public void RequestSharedDeck()
         {
+            CGSNetManager.Instance.statusText.text = "Getting deck from server...";
             CmdShareDeck();
         }
 
@@ -127,6 +131,7 @@ namespace CGS.Play.Multiplayer
         [TargetRpc]
         public void TargetShareDeck(NetworkConnection target, int deckIndex)
         {
+            CGSNetManager.Instance.statusText.text = "Got deck from server!";
             this.deckIndex = deckIndex;
             CGSNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
             // TODO: CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => { }, RequestSharedScore);
