@@ -65,7 +65,7 @@ MonoBehaviour:
   OnClientDisconnected:
     m_PersistentCalls:
       m_Calls: []
-  port: 7777
+  port: 8889
   NoDelay: 1
   serverMaxMessageSize: 16384
   clientMaxMessageSize: 16384
@@ -119,6 +119,7 @@ MonoBehaviour:
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   playController: {fileID: 0}
+  statusText: {fileID: 0}
 --- !u!114 &5823894451252158404
 MonoBehaviour:
   m_ObjectHideFlags: 0
