@@ -33,7 +33,9 @@ namespace CGS.Play.Multiplayer
             base.OnStartLocalPlayer();
             Debug.Log("CGSNetPlayer OnStartLocalPlayer...");
             CGSNetManager.Instance.LocalPlayer = this;
-            if (!isServer)
+            if (isServer)
+                CGSNetManager.Instance.playController.ShowDeckMenu();
+            else
                 RequestCardGame();
             Debug.Log("CGSNetPlayer OnStartLocalPlayer!");
         }
