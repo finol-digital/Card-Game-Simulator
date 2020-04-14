@@ -11,11 +11,11 @@ permalink: roadmap.html
 - Deck SharePreference
 
 ## Current Sprint
+- Fix: Text Mesh Pro missing characters
 - Playmats
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
-- Re-record training video (show on webpage and play store)
 - Play Mode Redesign
   - Allow any player to move cards in the play area, instead of just the player who put it there
   - Allow cards to snap to each other when moving them
@@ -38,6 +38,8 @@ permalink: roadmap.html
   - Slider to control zoom
   - Play Area SharePreference
   - Points/Score Tracker
+- Update all images/screenshots (on cgs website and all stores)
+- Re-record training video (show on cgs webpage, personal webpage, play store)
 
 ## Backlog
 - Tech: Branch on desktop
@@ -71,7 +73,6 @@ permalink: roadmap.html
 - Show hotkeys from within Play Mode
 - Synchronize points across teams in Play Mode
 - Share discard pile between all players who share a deck in Play Mode
-- Online vs local matchmaking (Split Play Game to Play Local and Play Online)
 - Allow automatic deletion of empty zones in Play Mode
 - Organize cards by category when saving a deck in the Deck Editor
 - Allow rotation to keep viewing the currently selected card
