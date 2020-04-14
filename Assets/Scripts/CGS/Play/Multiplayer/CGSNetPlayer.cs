@@ -18,15 +18,17 @@ namespace CGS.Play.Multiplayer
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
         public const string ShareScoreRequest = "Also share score?";
 
-        public int CurrentScore => CGSNetManager.Instance.Data.scores.Count > 0 ? CGSNetManager.Instance.Data.scores[scoreIndex].points : 0;
         public List<Card> CurrentDeck => CGSNetManager.Instance.Data.cardStacks.Count > 0 ?
             CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList() : new List<Card>();
         public string[] CurrentDeckCardIds => CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds;
 
-        [SyncVar(hook = "OnChangeScore")]
-        public int scoreIndex;
+        public int CurrentScore => CGSNetManager.Instance.Data.scores.Count > 0 ? CGSNetManager.Instance.Data.scores[scoreIndex].points : 0;
+
         [SyncVar(hook = "OnChangeDeck")]
         public int deckIndex;
+
+        [SyncVar(hook = "OnChangeScore")]
+        public int scoreIndex;
 
         public override void OnStartLocalPlayer()
         {
@@ -66,28 +68,21 @@ namespace CGS.Play.Multiplayer
             while (CardGameManager.Current.IsDownloading)
                 yield return null;
 
-            CGSNetManager.Instance.statusText.text = $"Game loaded and ready!";
-            if (CardGameManager.Current.DeckSharePreference == SharePreference.Ask)
-                CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
-            else if (CardGameManager.Current.DeckSharePreference == SharePreference.Share)
-                RequestSharedDeck();
-        }
+            CGSNetManager.Instance.statusText.text = "Game loaded and ready!";
 
-        public void RequestScoreUpdate(int points)
-        {
-            CmdUpdateScore(points);
-        }
-
-        [Command]
-        public void CmdUpdateScore(int points)
-        {
-            CGSNetManager.Instance.Data.ChangeScore(scoreIndex, points);
-        }
-
-        public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
-        {
-            // TODO: if (CGSNetManager.Instance.Data != null)
-            //    CGSNetManager.Instance.pointsDisplay?.UpdateText();
+            switch (CardGameManager.Current.DeckSharePreference)
+            {
+                case SharePreference.Share:
+                    RequestSharedDeck();
+                    break;
+                case SharePreference.Individual:
+                    CGSNetManager.Instance.playController.ShowDeckMenu();
+                    break;
+                case SharePreference.Ask:
+                default:
+                    CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+                    break;
+            }
         }
 
         public void RequestDeckUpdate(List<Card> deckCards)
@@ -137,6 +132,23 @@ namespace CGS.Play.Multiplayer
             this.deckIndex = deckIndex;
             CGSNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
             // TODO: CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => { }, RequestSharedScore);
+        }
+
+        public void RequestScoreUpdate(int points)
+        {
+            CmdUpdateScore(points);
+        }
+
+        [Command]
+        public void CmdUpdateScore(int points)
+        {
+            CGSNetManager.Instance.Data.ChangeScore(scoreIndex, points);
+        }
+
+        public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
+        {
+            // TODO: if (CGSNetManager.Instance.Data != null)
+            //    CGSNetManager.Instance.pointsDisplay?.UpdateText();
         }
 
         public void RequestSharedScore()

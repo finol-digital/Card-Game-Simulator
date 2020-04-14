@@ -4,7 +4,6 @@
 
 using System.Collections;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using UnityEngine;
@@ -50,11 +49,9 @@ namespace CGS.Play.Multiplayer
         {
             Stop();
             Debug.Log("[List Server] Starting game server...");
-//            InvokeRepeating(nameof(TickGameServer), 0, 1);
             StartCoroutine(TickGameServer());
         }
 
-//        void TickGameServer()
         IEnumerator TickGameServer()
         {
             while (true)
@@ -102,11 +99,9 @@ namespace CGS.Play.Multiplayer
         {
             Stop();
             Debug.Log("[List Server] Starting client...");
-//            InvokeRepeating(nameof(TickClient), 0, 1);
             StartCoroutine(TickClient());
         }
 
-//        void TickClient()
         IEnumerator TickClient()
         {
             while (true)

@@ -5,23 +5,18 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Added internet-connectivity (requires forwarding ports 8887-8888 on your router if you want to host)
+- Added internet-connectivity (requires forwarding port 8889 on your router if you want to host)
 - Navigate games in the Cards Browser by swiping left/right along the top banner of the screen
 - Able to reset the Play Mode play area by pressing back, then no, then yes
 - Deck SharePreference
 
 ## Current Sprint
 - Playmats
-- Fix: New Deck and Save Deck views
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
 - Re-record training video (show on webpage and play store)
-
-## Sprint+1
 - Play Mode Redesign
-  - Fix: Server freezes when sharing deck
-  - Fix: Card dissappears when connection to server is dropped
   - Allow any player to move cards in the play area, instead of just the player who put it there
   - Allow cards to snap to each other when moving them
   - Have view for only hand vs view for only field
