@@ -66,7 +66,7 @@ jobs:
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-      GOOGLE_PLAY_KEY_FILE_PATH: ${{ secrets.GOOGLE_PLAY_KEY_FILE_PATH }}
+      GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
       MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
       MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
       MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
@@ -75,6 +75,7 @@ jobs:
       MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
       MATCH_URL: ${{ secrets.MATCH_URL }}
       BUILDS_PATH: ${{ format('{0}/builds', github.workspace) }}
+      GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/api-6030118668073712072-347696-48aea697113d.json', github.workspace) }}
       ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
       IOS_APP_ID: com.finoldigital.CardGameSim
       MAC_APP_ID: com.finoldigital.CardGameSimulator
@@ -90,7 +91,7 @@ jobs:
           name: cgs-builds
           path: builds
       - run: |
-          echo "${{ secrets.GOOGLE_PLAY_KEY_FILE }}" > ${{ secrets.GOOGLE_PLAY_KEY_FILE_PATH }}
+          echo "${{ secrets.GOOGLE_PLAY_KEY_FILE }}" > ${{ format('{0}/api-6030118668073712072-347696-48aea697113d.json', github.workspace) }}
           echo "${{ github.event.release.body }}" > fastlane/metadata/android/en-US/changelogs/default.txt
       - uses: maierj/fastlane-action@v1.4.0
         with:
