@@ -10,6 +10,9 @@ Assets/AssetStoreTools*
 .vs/
 .vscode/
 
+# JetBrains Rider cache directory
+.idea/
+
 # Gradle cache directory
 .gradle/
 

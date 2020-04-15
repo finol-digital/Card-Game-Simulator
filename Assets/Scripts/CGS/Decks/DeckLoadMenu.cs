@@ -14,6 +14,7 @@ using TMPro;
 
 using CardGameDef;
 using CGS.Menu;
+using UnityExtensions.ScrollRects;
 
 namespace CGS.Decks
 {

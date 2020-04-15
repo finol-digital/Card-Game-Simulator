@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using Mirror;
 
 using CGS.Menu;
+using UnityExtensions.ScrollRects;
 
 namespace CGS.Play.Multiplayer
 {
