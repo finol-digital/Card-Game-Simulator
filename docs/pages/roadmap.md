@@ -11,7 +11,6 @@ permalink: roadmap.html
 - Deck SharePreference
 
 ## Current Sprint
-- Fix: Text Mesh Pro missing characters
 - Password-protected internet games
 - Playmats
 - Layout cards in the Deck Editor more dynamically
