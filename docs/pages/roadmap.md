@@ -11,7 +11,7 @@ permalink: roadmap.html
 - Deck SharePreference
 
 ## Current Sprint
-- Password-protected internet games
+- For internet games, add session name and password option
 - Playmats
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
