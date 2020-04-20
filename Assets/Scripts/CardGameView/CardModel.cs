@@ -32,8 +32,8 @@ namespace CardGameView
         public static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
         public static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
 
-        public bool IsOnline => CGSNetManager.Instance != null && CGSNetManager.Instance.isNetworkActive
-            && transform.parent == CGSNetManager.Instance.playController.playAreaContent;
+        public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
+            && transform.parent == CgsNetManager.Instance.playController.playAreaContent;
         public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
             (CurrentPointerEventData.button == PointerEventData.InputButton.Middle || CurrentPointerEventData.button == PointerEventData.InputButton.Right));
         public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
@@ -560,8 +560,8 @@ namespace CardGameView
 
         public void Discard()
         {
-            if (DropTarget == null && CGSNetManager.Instance != null)
-                CGSNetManager.Instance.playController.CatchDiscard(Value);
+            if (DropTarget == null && CgsNetManager.Instance != null)
+                CgsNetManager.Instance.playController.CatchDiscard(Value);
             Destroy(gameObject);
         }
 

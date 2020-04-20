@@ -140,7 +140,7 @@ namespace CGS.Play
             zones.scrollView.verticalScrollbar.value = 0;
 #if !UNITY_WEBGL
             if (!isShared)
-                CGSNetManager.Instance.LocalPlayer?.RequestNewDeck(deckCards);
+                CgsNetManager.Instance.LocalPlayer?.RequestNewDeck(deckCards);
 #endif
             zones.CurrentDeck.Sync(deckCards);
             StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
@@ -231,7 +231,7 @@ namespace CGS.Play
         public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
         {
             if (NetworkManager.singleton.isNetworkActive)
-                CGSNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
+                CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
             else
                 SetPlayActions(cardStack, cardModel);
         }
@@ -270,15 +270,15 @@ namespace CGS.Play
         {
             if (NetworkManager.singleton.isNetworkActive)
             {
-                CGSNetManager.Instance.Discovery.StopDiscovery();
-                CGSNetManager.Instance.ListServer.Stop();
+                CgsNetManager.Instance.Discovery.StopDiscovery();
+                CgsNetManager.Instance.ListServer.Stop();
                 if (NetworkServer.active)
                     NetworkManager.singleton.StopHost();
                 else if (NetworkClient.isConnected)
                     NetworkManager.singleton.StopClient();
             }
 
-            SceneManager.LoadScene(CGS.Menu.MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(Menu.MainMenu.MainMenuSceneIndex);
         }
     }
 }

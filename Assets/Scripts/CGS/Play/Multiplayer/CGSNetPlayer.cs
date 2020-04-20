@@ -7,58 +7,60 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Mirror;
-
 using CardGameDef;
 using CardGameView;
 
 namespace CGS.Play.Multiplayer
 {
-    public class CGSNetPlayer : NetworkBehaviour
+    public class CgsNetPlayer : NetworkBehaviour
     {
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
         public const string ShareScoreRequest = "Also share score?";
 
-        public List<Card> CurrentDeck => CGSNetManager.Instance.Data.cardStacks.Count > 0 ?
-            CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList() : new List<Card>();
-        public string[] CurrentDeckCardIds => CGSNetManager.Instance.Data.cardStacks[deckIndex].cardIds;
+        public List<Card> CurrentDeck => CgsNetManager.Instance.Data.cardStacks.Count > 0
+            ? CgsNetManager.Instance.Data.cardStacks[deckIndex].cardIds
+                .Select(cardId => CardGameManager.Current.Cards[cardId]).ToList()
+            : new List<Card>();
 
-        public int CurrentScore => CGSNetManager.Instance.Data.scores.Count > 0 ? CGSNetManager.Instance.Data.scores[scoreIndex].points : 0;
+        public string[] CurrentDeckCardIds => CgsNetManager.Instance.Data.cardStacks[deckIndex].cardIds;
 
-        [SyncVar(hook = "OnChangeDeck")]
-        public int deckIndex;
+        public int CurrentScore => CgsNetManager.Instance.Data.scores.Count > 0
+            ? CgsNetManager.Instance.Data.scores[scoreIndex].points
+            : 0;
 
-        [SyncVar(hook = "OnChangeScore")]
-        public int scoreIndex;
+        [SyncVar(hook = "OnChangeDeck")] public int deckIndex;
+
+        [SyncVar(hook = "OnChangeScore")] public int scoreIndex;
 
         public override void OnStartLocalPlayer()
         {
             base.OnStartLocalPlayer();
-            Debug.Log("CGSNetPlayer OnStartLocalPlayer...");
-            CGSNetManager.Instance.LocalPlayer = this;
+            Debug.Log("[CgsNet Player] Starting local player...");
+            CgsNetManager.Instance.LocalPlayer = this;
             if (isServer)
-                CGSNetManager.Instance.playController.ShowDeckMenu();
+                CgsNetManager.Instance.playController.ShowDeckMenu();
             else
                 RequestCardGame();
-            Debug.Log("CGSNetPlayer OnStartLocalPlayer!");
+            Debug.Log("[CgsNet Player] Started local player!");
         }
 
         public void RequestCardGame()
         {
-            CGSNetManager.Instance.statusText.text = "Determining game id...";
+            CgsNetManager.Instance.statusText.text = "Determining game id...";
             CmdSelectCardGame();
         }
 
         [Command]
         public void CmdSelectCardGame()
         {
-            CGSNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
+            CgsNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
             TargetSelectCardGame(connectionToClient, CardGameManager.Current.Id);
         }
 
         [TargetRpc]
         public void TargetSelectCardGame(NetworkConnection target, string gameId)
         {
-            CGSNetManager.Instance.statusText.text = $"Game id is {gameId}! Loading game details...";
+            CgsNetManager.Instance.statusText.text = $"Game id is {gameId}! Loading game details...";
             CardGameManager.Instance.Select(gameId);
             StartCoroutine(WaitToStartGame());
         }
@@ -68,7 +70,7 @@ namespace CGS.Play.Multiplayer
             while (CardGameManager.Current.IsDownloading)
                 yield return null;
 
-            CGSNetManager.Instance.statusText.text = "Game loaded and ready!";
+            CgsNetManager.Instance.statusText.text = "Game loaded and ready!";
 
             switch (CardGameManager.Current.DeckSharePreference)
             {
@@ -76,11 +78,12 @@ namespace CGS.Play.Multiplayer
                     RequestSharedDeck();
                     break;
                 case SharePreference.Individual:
-                    CGSNetManager.Instance.playController.ShowDeckMenu();
+                    CgsNetManager.Instance.playController.ShowDeckMenu();
                     break;
                 case SharePreference.Ask:
                 default:
-                    CardGameManager.Instance.Messenger.Ask(ShareDeckRequest, CGSNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+                    CardGameManager.Instance.Messenger.Ask(ShareDeckRequest,
+                        CgsNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
                     break;
             }
         }
@@ -93,13 +96,13 @@ namespace CGS.Play.Multiplayer
         [Command]
         public void CmdUpdateDeck(string[] cardIds)
         {
-            CGSNetManager.Instance.Data.ChangeDeck(deckIndex, cardIds);
+            CgsNetManager.Instance.Data.ChangeDeck(deckIndex, cardIds);
         }
 
         public void OnChangeDeck(int oldDeckIndex, int newDeckIndex)
         {
             if (this.deckIndex == newDeckIndex)
-                CGSNetManager.Instance.playController.zones.CurrentDeck.Sync(CurrentDeck);
+                CgsNetManager.Instance.playController.zones.CurrentDeck.Sync(CurrentDeck);
         }
 
         public void RequestNewDeck(List<Card> deckCards)
@@ -110,27 +113,27 @@ namespace CGS.Play.Multiplayer
         [Command]
         public void CmdRegisterDeck(string[] cardIds)
         {
-            CGSNetManager.Instance.Data.RegisterDeck(gameObject, cardIds);
+            CgsNetManager.Instance.Data.RegisterDeck(gameObject, cardIds);
         }
 
         public void RequestSharedDeck()
         {
-            CGSNetManager.Instance.statusText.text = "Getting deck from server...";
+            CgsNetManager.Instance.statusText.text = "Getting deck from server...";
             CmdShareDeck();
         }
 
         [Command]
         public void CmdShareDeck()
         {
-            TargetShareDeck(connectionToClient, CGSNetManager.Instance.LocalPlayer.deckIndex);
+            TargetShareDeck(connectionToClient, CgsNetManager.Instance.LocalPlayer.deckIndex);
         }
 
         [TargetRpc]
-        public void TargetShareDeck(NetworkConnection target, int deckIndex)
+        public void TargetShareDeck(NetworkConnection target, int sharedDeckIndex)
         {
-            CGSNetManager.Instance.statusText.text = "Got deck from server!";
-            this.deckIndex = deckIndex;
-            CGSNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
+            CgsNetManager.Instance.statusText.text = "Got deck from server!";
+            deckIndex = sharedDeckIndex;
+            CgsNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
             // TODO: CardGameManager.Instance.Messenger.Ask(ShareScoreRequest, () => { }, RequestSharedScore);
         }
 
@@ -142,7 +145,7 @@ namespace CGS.Play.Multiplayer
         [Command]
         public void CmdUpdateScore(int points)
         {
-            CGSNetManager.Instance.Data.ChangeScore(scoreIndex, points);
+            CgsNetManager.Instance.Data.ChangeScore(scoreIndex, points);
         }
 
         public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
@@ -164,9 +167,10 @@ namespace CGS.Play.Multiplayer
 
         public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
         {
-            cardModel.transform.SetParent(cardStack.transform);
-            cardModel.position = ((RectTransform)cardModel.transform).anchoredPosition;
-            cardModel.rotation = cardModel.transform.rotation;
+            var cardModelTransform = cardModel.transform;
+            cardModelTransform.SetParent(cardStack.transform);
+            cardModel.position = ((RectTransform) cardModelTransform).anchoredPosition;
+            cardModel.rotation = cardModelTransform.rotation;
             CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.IsFacedown);
             Destroy(cardModel.gameObject);
         }
@@ -174,8 +178,8 @@ namespace CGS.Play.Multiplayer
         [Command]
         public void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
-            PlayMode controller = CGSNetManager.Instance.playController;
-            GameObject newCard = Instantiate(CGSNetManager.Instance.cardModelPrefab, controller.playAreaContent);
+            PlayMode controller = CgsNetManager.Instance.playController;
+            GameObject newCard = Instantiate(CgsNetManager.Instance.cardModelPrefab, controller.playAreaContent);
             CardModel cardModel = newCard.GetComponent<CardModel>();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.position = position;
@@ -188,10 +192,11 @@ namespace CGS.Play.Multiplayer
 
         void Update()
         {
-            if (!isLocalPlayer || CGSNetManager.Instance.Data == null || CGSNetManager.Instance.Data.cardStacks == null || CGSNetManager.Instance.Data.cardStacks.Count < 1)
+            if (!isLocalPlayer || CgsNetManager.Instance.Data == null ||
+                CgsNetManager.Instance.Data.cardStacks == null || CgsNetManager.Instance.Data.cardStacks.Count < 1)
                 return;
 
-            IReadOnlyList<Card> localDeck = CGSNetManager.Instance.playController.zones.CurrentDeck?.Cards;
+            IReadOnlyList<Card> localDeck = CgsNetManager.Instance.playController.zones.CurrentDeck?.Cards;
             if (localDeck == null)
                 return;
 

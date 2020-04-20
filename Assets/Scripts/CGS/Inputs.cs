@@ -8,6 +8,8 @@ namespace CGS
 {
     public static class Inputs
     {
+        public const float Tolerance = 0.1f;
+
         public const KeyCode BluetoothReturn = (KeyCode)10;
         public const string Cancel = "Cancel";
         public const string Filter = "Filter";

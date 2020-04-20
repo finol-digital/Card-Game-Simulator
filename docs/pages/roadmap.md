@@ -5,23 +5,23 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Added internet-connectivity (requires forwarding port 8889 on your router if you want to host)
-- Navigate games in the Cards Browser by swiping left/right along the top banner of the screen
-- Able to reset the Play Mode play area by pressing back, then no, then yes
-- Deck SharePreference
-
-## Current Sprint
-- For internet games, add session name and password option
-- Playmats
+- Fix: Allow more than 2 players for internet-connected games (still requires forwarding port 8889 on your router if you want to host)
+- More dynamic restart (reset deck, and prompt redeal for each player)
+- For internet-connected games, add session name and password options
+- Deal/Draw Hand prompts for gameStartHandCount cards
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
+- Playmats
+
+## Current Sprint
 - Play Mode Redesign
-  - Allow any player to move cards in the play area, instead of just the player who put it there
   - Allow cards to snap to each other when moving them
+  - Allow any player to move cards in the play area, instead of just the player who put it there
   - Have view for only hand vs view for only field
   - Card Grouping
     - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
+      - Share discard pile between all players who share a deck in Play Mode
       - Card zones can define what actions are possible in that zone
   - Card Actions
     - Define
@@ -47,6 +47,8 @@ permalink: roadmap.html
 - Android Searchbar Widget
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
+- Support multiple card backs
+- Support more than 1 card face (DFC)
 
 ## Icebox
 - Tech: Replace SwipeManager
@@ -58,21 +60,17 @@ permalink: roadmap.html
 - Support default sort
 - Support https://github.com/ValveSoftware/ArtifactDeckCode
 - Support Deck Code from https://shadowverse-portal.com/
-- Support dual-faced cards (DFC)
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
 - Support custom card backgrounds (Hearthstone)
-- Support multiple card backs
-- Support more than 1 card face
 - Support grouping of dice
 - Support different colored dice
 - Automatically roll dice on phone shake
 - Synchronize dice across all connected players in Play Mode
 - Show hotkeys from within Play Mode
 - Synchronize points across teams in Play Mode
-- Share discard pile between all players who share a deck in Play Mode
 - Allow automatic deletion of empty zones in Play Mode
 - Organize cards by category when saving a deck in the Deck Editor
 - Allow rotation to keep viewing the currently selected card

@@ -19,23 +19,25 @@ namespace CGS.Play.Multiplayer
 
     public class DiscoveryResponse : MessageBase
     {
-        public long serverId;
+        public long ServerId;
         public IPEndPoint EndPoint { get; set; }
-        public Uri uri;
-        public string gameName;
-        public int players;
-        public int capacity;
+        public Uri Uri;
+        public string GameName;
+        public int Players;
+        public int Capacity;
 
         public override string ToString()
         {
-            return $"{gameName}\n{uri.AbsoluteUri} - {players}/{capacity}";
+            return $"{GameName}\n{Uri.AbsoluteUri} - {Players}/{Capacity}";
         }
     }
 
-    public class CGSNetDiscovery : NetworkDiscoveryBase<DiscoveryRequest, DiscoveryResponse>
+    public class CgsNetDiscovery : NetworkDiscoveryBase<DiscoveryRequest, DiscoveryResponse>
     {
         public long ServerId { get; private set; }
         public Transport transport;
+
+        // ReSharper disable once InconsistentNaming
         public OnServerDiscoveredDelegate OnServerFound;
 
         public override void Start()
@@ -46,19 +48,18 @@ namespace CGS.Play.Multiplayer
                 transport = Transport.activeTransport;
         }
 
-        //protected override void ProcessClientRequest(DiscoveryRequest request, IPEndPoint endpoint) { base.ProcessClientRequest(request, endpoint); }
         protected override DiscoveryResponse ProcessRequest(DiscoveryRequest request, IPEndPoint endpoint)
         {
             try
             {
                 return new DiscoveryResponse
                 {
-                    serverId = ServerId,
+                    ServerId = ServerId,
                     // the endpoint is populated by the client
-                    uri = transport.ServerUri(),
-                    gameName = CardGameManager.Current.Name,
-                    players = NetworkServer.connections.Count,
-                    capacity = NetworkManager.singleton.maxConnections
+                    Uri = transport.ServerUri(),
+                    GameName = CardGameManager.Current.Name,
+                    Players = NetworkServer.connections.Count,
+                    Capacity = NetworkManager.singleton.maxConnections
                 };
             }
             catch (NotImplementedException)
@@ -69,17 +70,17 @@ namespace CGS.Play.Multiplayer
         }
 
         protected override DiscoveryRequest GetRequest() => new DiscoveryRequest();
+
         protected override void ProcessResponse(DiscoveryResponse response, IPEndPoint endpoint)
         {
             response.EndPoint = endpoint;
-            UriBuilder realUri = new UriBuilder(response.uri)
+            UriBuilder realUri = new UriBuilder(response.Uri)
             {
                 Host = response.EndPoint.Address.ToString()
             };
-            response.uri = realUri.Uri;
+            response.Uri = realUri.Uri;
 
             OnServerFound(response);
         }
     }
-
 }

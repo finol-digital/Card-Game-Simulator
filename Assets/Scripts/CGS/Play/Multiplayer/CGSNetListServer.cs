@@ -15,35 +15,36 @@ namespace CGS.Play.Multiplayer
 
     public class ServerStatus
     {
-        public string ip;
-        public string gameName;
-        public ushort players;
-        public ushort capacity;
+        public readonly string Ip;
+        public readonly string GameName;
+        public readonly ushort Players;
+        public readonly ushort Capacity;
 
         public ServerStatus(string ip, string gameName, ushort players, ushort capacity)
         {
-            this.ip = ip;
-            this.gameName = gameName;
-            this.players = players;
-            this.capacity = capacity;
+            Ip = ip;
+            GameName = gameName;
+            Players = players;
+            Capacity = capacity;
         }
 
         public override string ToString()
         {
-            return $"{gameName}\n{ip} - {players}/{capacity}";
+            return $"{GameName}\n{Ip} - {Players}/{Capacity}";
         }
     }
 
-    public class CGSNetListServer : MonoBehaviour
+    public class CgsNetListServer : MonoBehaviour
     {
         public const string ListServerIp = "35.232.64.143";
         public const ushort GameServerToListenPort = 8887;
         public const ushort ClientToListenPort = 8888;
 
+        // ReSharper disable once InconsistentNaming
         public OnServerListedDelegate OnServerFound;
 
-        private Telepathy.Client _gameServerToListenConnection = new Telepathy.Client();
-        private Telepathy.Client _clientToListenConnection = new Telepathy.Client();
+        private readonly Telepathy.Client _gameServerToListenConnection = new Telepathy.Client();
+        private readonly Telepathy.Client _clientToListenConnection = new Telepathy.Client();
 
         public void StartGameServer()
         {
@@ -63,11 +64,15 @@ namespace CGS.Play.Multiplayer
                 }
                 else if (!_gameServerToListenConnection.Connecting)
                 {
-                    Debug.Log("[List Server] GameServer connecting...");
+                    Debug.Log("[CgsNet List Server] GameServer connecting...");
                     _gameServerToListenConnection.Connect(ListServerIp, GameServerToListenPort);
                 }
                 else
-                    Debug.LogError("[List Server] GameServer is ticking but not connecting.");
+                {
+                    Debug.LogError("[CgsNet List Server] GameServer is ticking but not connecting.");
+                    yield break;
+                }
+
                 yield return new WaitForSeconds(1.0f);
             }
         }
@@ -77,10 +82,10 @@ namespace CGS.Play.Multiplayer
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
 
             // create message
-            writer.Write((ushort)NetworkServer.connections.Count);
-            writer.Write((ushort)NetworkManager.singleton.maxConnections);
+            writer.Write((ushort) NetworkServer.connections.Count);
+            writer.Write((ushort) NetworkManager.singleton.maxConnections);
             byte[] gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
-            writer.Write((ushort)gameNameBytes.Length);
+            writer.Write((ushort) gameNameBytes.Length);
             writer.Write(gameNameBytes);
             writer.Flush();
 
@@ -88,17 +93,18 @@ namespace CGS.Play.Multiplayer
             if (writer.BaseStream.Position <= 128)
             {
 //                Debug.Log("[List Server] GameServer sending status......");
-                if(!_gameServerToListenConnection.Send(((MemoryStream)writer.BaseStream).ToArray()))
-                    Debug.LogError("[List Server] GameServer failed to send status!");
+                if (!_gameServerToListenConnection.Send(((MemoryStream) writer.BaseStream).ToArray()))
+                    Debug.LogError("[CgsNet List Server] GameServer failed to send status!");
             }
             else
-                Debug.LogError("[List Server] List Server will reject messages longer than 128 bytes. Game Name is too long.");
+                Debug.LogError(
+                    "[CgsNet List Server] List Server will reject messages longer than 128 bytes. Game Name is too long.");
         }
 
         public void StartClient()
         {
             Stop();
-            Debug.Log("[List Server] Starting client...");
+            Debug.Log("[CgsNet List Server] Starting client...");
             StartCoroutine(TickClient());
         }
 
@@ -113,22 +119,26 @@ namespace CGS.Play.Multiplayer
                     {
                         // connected?
                         if (message.eventType == Telepathy.EventType.Connected)
-                            Debug.Log("[List Server] Client connected!");
+                            Debug.Log("[CgsNet List Server] Client connected!");
                         // data message?
                         else if (message.eventType == Telepathy.EventType.Data)
                             OnServerFound(ParseMessage(message.data));
                         // disconnected?
                         else if (message.eventType == Telepathy.EventType.Disconnected)
-                            Debug.Log("[List Server] Client disconnected.");
+                            Debug.Log("[CgsNet List Server] Client disconnected.");
                     }
                 }
                 else if (!_clientToListenConnection.Connecting)
                 {
-                    Debug.Log("[List Server] Client connecting...");
+                    Debug.Log("[CgsNet List Server] Client connecting...");
                     _clientToListenConnection.Connect(ListServerIp, ClientToListenPort);
                 }
                 else
-                    Debug.LogError("[List Server] Client is ticking but not connecting.");
+                {
+                    Debug.LogError("[CgsNet List Server] Client is ticking but not connecting.");
+                    yield break;
+                }
+
                 yield return new WaitForSeconds(1.0f);
             }
         }
@@ -150,7 +160,7 @@ namespace CGS.Play.Multiplayer
 
         public void Stop()
         {
-            Debug.Log("[List Server] Stopping...");
+            Debug.Log("[CgsNet List Server] Stopping...");
             if (_clientToListenConnection.Connected)
                 _clientToListenConnection.Disconnect();
             if (_gameServerToListenConnection.Connected)
@@ -162,6 +172,5 @@ namespace CGS.Play.Multiplayer
         {
             Stop();
         }
-
     }
 }

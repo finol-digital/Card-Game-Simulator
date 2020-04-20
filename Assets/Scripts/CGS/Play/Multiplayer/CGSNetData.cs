@@ -41,7 +41,7 @@ namespace CGS.Play.Multiplayer
 
         void Start()
         {
-            CGSNetManager.Instance.Data = this;
+            CgsNetManager.Instance.Data = this;
         }
 
         public override void OnStartClient()
@@ -59,7 +59,7 @@ namespace CGS.Play.Multiplayer
             }
 
             cardStacks.Add(new NetCardStack(owner, cardIds));
-            owner.GetComponent<CGSNetPlayer>().deckIndex = cardStacks.Count - 1;
+            owner.GetComponent<CgsNetPlayer>().deckIndex = cardStacks.Count - 1;
         }
 
         public void ChangeDeck(int deckIndex, string[] cardIds)
@@ -79,7 +79,7 @@ namespace CGS.Play.Multiplayer
             if (op == SyncList<NetCardStack>.Operation.OP_ADD)
                 return;
 
-            CGSNetManager.Instance.LocalPlayer.OnChangeDeck(deckIndex, deckIndex);
+            CgsNetManager.Instance.LocalPlayer.OnChangeDeck(deckIndex, deckIndex);
         }
 
         public void RegisterScore(GameObject owner, int points)
@@ -91,7 +91,7 @@ namespace CGS.Play.Multiplayer
             }
 
             scores.Add(new NetScore(owner, points));
-            owner.GetComponent<CGSNetPlayer>().scoreIndex = scores.Count - 1;
+            owner.GetComponent<CgsNetPlayer>().scoreIndex = scores.Count - 1;
         }
 
         public void ChangeScore(int scoreIndex, int points)
@@ -111,7 +111,7 @@ namespace CGS.Play.Multiplayer
             if (op == SyncList<NetScore>.Operation.OP_ADD)
                 return;
 
-            CGSNetManager.Instance.LocalPlayer.OnChangeScore(scoreIndex, scoreIndex);
+            CgsNetManager.Instance.LocalPlayer.OnChangeScore(scoreIndex, scoreIndex);
         }
 
     }

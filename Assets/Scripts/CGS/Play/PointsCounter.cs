@@ -15,8 +15,8 @@ namespace CGS.Play
 
         protected int Count
         {
-            get { return CGSNetManager.Instance.LocalPlayer.CurrentScore; }
-            set { CGSNetManager.Instance.LocalPlayer.RequestScoreUpdate(value); }
+            get { return CgsNetManager.Instance.LocalPlayer.CurrentScore; }
+            set { CgsNetManager.Instance.LocalPlayer.RequestScoreUpdate(value); }
         }
 
         public void Decrement()
