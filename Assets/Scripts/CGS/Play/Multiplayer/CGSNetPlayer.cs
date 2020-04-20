@@ -101,7 +101,7 @@ namespace CGS.Play.Multiplayer
 
         public void OnChangeDeck(int oldDeckIndex, int newDeckIndex)
         {
-            if (this.deckIndex == newDeckIndex)
+            if (deckIndex == newDeckIndex)
                 CgsNetManager.Instance.playController.zones.CurrentDeck.Sync(CurrentDeck);
         }
 
@@ -196,7 +196,7 @@ namespace CGS.Play.Multiplayer
                 CgsNetManager.Instance.Data.cardStacks == null || CgsNetManager.Instance.Data.cardStacks.Count < 1)
                 return;
 
-            IReadOnlyList<Card> localDeck = CgsNetManager.Instance.playController.zones.CurrentDeck?.Cards;
+            var localDeck = CgsNetManager.Instance.playController.zones.CurrentDeck?.Cards;
             if (localDeck == null)
                 return;
 

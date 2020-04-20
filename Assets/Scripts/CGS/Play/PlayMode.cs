@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Mirror;
-
 using CardGameDef;
 using CardGameView;
 using CGS.Cards;
@@ -37,13 +36,20 @@ namespace CGS.Play
         public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
         private LobbyMenu _lobby;
 
-        public DeckLoadMenu DeckLoader => _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+        public DeckLoadMenu DeckLoader =>
+            _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+
         private DeckLoadMenu _deckLoader;
 
-        public DiceMenu DiceManager => _diceManager ?? (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
+        public DiceMenu DiceManager =>
+            _diceManager ?? (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
+
         private DiceMenu _diceManager;
 
-        public CardSearchMenu CardSearcher => _cardSearcher ?? (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
+        public CardSearchMenu CardSearcher => _cardSearcher ??
+                                              (_cardSearcher = Instantiate(searchMenuPrefab)
+                                                  .GetOrAddComponent<CardSearchMenu>());
+
         private CardSearchMenu _cardSearcher;
 
         void OnEnable()
@@ -67,7 +73,8 @@ namespace CGS.Play
 
         void Update()
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown || CardGameManager.Instance.ModalCanvas != null)
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
+                CardGameManager.Instance.ModalCanvas != null)
                 return;
 
             if (Input.GetButtonDown(Inputs.Load))
@@ -89,7 +96,8 @@ namespace CGS.Play
 
         public void ViewRules()
         {
-            if (CardGameManager.Current.RulesUrl != null && CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
+            if (CardGameManager.Current.RulesUrl != null &&
+                CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
                 Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
             else
                 CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
@@ -129,9 +137,9 @@ namespace CGS.Play
             LoadDeckCards(deckCards);
 
             foreach (Card card in deck.Cards)
-                foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards)
-                    if (card.Id.Equals(boardCard.Card))
-                        CreateGameBoards(boardCard.Boards);
+            foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards)
+                if (card.Id.Equals(boardCard.Card))
+                    CreateGameBoards(boardCard.Boards);
         }
 
         public void LoadDeckCards(List<Card> deckCards, bool isShared = false)
@@ -161,7 +169,7 @@ namespace CGS.Play
                 return;
 
             GameObject newBoard = new GameObject(board.Id, typeof(RectTransform));
-            RectTransform rt = (RectTransform)newBoard.transform;
+            RectTransform rt = (RectTransform) newBoard.transform;
             rt.SetParent(playAreaContent);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
@@ -170,7 +178,9 @@ namespace CGS.Play
 
             string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
                                    CardGameManager.Current.GameBoardFileType;
-            Sprite boardImageSprite = System.IO.File.Exists(boardFilepath) ? UnityExtensionMethods.CreateSprite(boardFilepath) : null;
+            Sprite boardImageSprite = System.IO.File.Exists(boardFilepath)
+                ? UnityExtensionMethods.CreateSprite(boardFilepath)
+                : null;
             if (boardImageSprite != null)
                 newBoard.AddComponent<Image>().sprite = boardImageSprite;
 
