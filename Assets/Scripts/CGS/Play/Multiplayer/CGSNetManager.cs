@@ -15,7 +15,7 @@ namespace CGS.Play.Multiplayer
     {
         public static CgsNetManager Instance => (CgsNetManager) singleton;
         public CgsNetPlayer LocalPlayer { get; set; }
-        public CGSNetData Data { get; set; }
+        public CgsNetData Data { get; set; }
 
         // ReSharper disable once InconsistentNaming
         public CgsNetDiscovery Discovery;
@@ -34,7 +34,7 @@ namespace CGS.Play.Multiplayer
             statusText.text = $"Player {NetworkServer.connections.Count} has joined!";
             if (Data == null)
             {
-                Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CGSNetData>();
+                Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CgsNetData>();
                 NetworkServer.Spawn(Data.gameObject);
             }
 

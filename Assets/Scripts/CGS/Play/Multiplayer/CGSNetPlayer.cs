@@ -18,14 +18,14 @@ namespace CGS.Play.Multiplayer
         public const string ShareScoreRequest = "Also share score?";
 
         public List<Card> CurrentDeck => CgsNetManager.Instance.Data.cardStacks.Count > 0
-            ? CgsNetManager.Instance.Data.cardStacks[deckIndex].cardIds
+            ? CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds
                 .Select(cardId => CardGameManager.Current.Cards[cardId]).ToList()
             : new List<Card>();
 
-        public string[] CurrentDeckCardIds => CgsNetManager.Instance.Data.cardStacks[deckIndex].cardIds;
+        public string[] CurrentDeckCardIds => CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds;
 
         public int CurrentScore => CgsNetManager.Instance.Data.scores.Count > 0
-            ? CgsNetManager.Instance.Data.scores[scoreIndex].points
+            ? CgsNetManager.Instance.Data.scores[scoreIndex].Points
             : 0;
 
         [SyncVar(hook = "OnChangeDeck")] public int deckIndex;

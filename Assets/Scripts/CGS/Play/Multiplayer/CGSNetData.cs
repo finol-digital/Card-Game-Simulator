@@ -7,29 +7,29 @@ using Mirror;
 
 namespace CGS.Play.Multiplayer
 {
-    public class CGSNetData : NetworkBehaviour
+    public class CgsNetData : NetworkBehaviour
     {
         public const string NetworkWarningMessage = "Warning: Invalid network action detected";
 
         public struct NetCardStack
         {
-            public GameObject owner;
-            public string[] cardIds;
+            public readonly GameObject Owner;
+            public readonly string[] CardIds;
             public NetCardStack(GameObject owner, string[] cardIds)
             {
-                this.owner = owner;
-                this.cardIds = cardIds;
+                Owner = owner;
+                CardIds = cardIds;
             }
         }
 
         public struct NetScore
         {
-            public GameObject owner;
-            public int points;
+            public readonly GameObject Owner;
+            public readonly int Points;
             public NetScore(GameObject owner, int points)
             {
-                this.owner = owner;
-                this.points = points;
+                Owner = owner;
+                Points = points;
             }
         }
 
@@ -70,7 +70,7 @@ namespace CGS.Play.Multiplayer
                 return;
             }
 
-            GameObject owner = cardStacks[deckIndex].owner;
+            GameObject owner = cardStacks[deckIndex].Owner;
             cardStacks[deckIndex] = new NetCardStack(owner, cardIds);
         }
 
@@ -102,7 +102,7 @@ namespace CGS.Play.Multiplayer
                 return;
             }
 
-            GameObject owner = scores[scoreIndex].owner;
+            GameObject owner = scores[scoreIndex].Owner;
             scores[scoreIndex] = new NetScore(owner, points);
         }
 
