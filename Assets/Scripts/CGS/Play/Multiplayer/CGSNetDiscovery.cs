@@ -34,11 +34,10 @@ namespace CGS.Play.Multiplayer
 
     public class CgsNetDiscovery : NetworkDiscoveryBase<DiscoveryRequest, DiscoveryResponse>
     {
+        public OnServerDiscoveredDelegate OnServerFound { get; set; }
+
         public long ServerId { get; private set; }
         public Transport transport;
-
-        // ReSharper disable once InconsistentNaming
-        public OnServerDiscoveredDelegate OnServerFound;
 
         public override void Start()
         {

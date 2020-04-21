@@ -14,18 +14,24 @@ namespace CGS.Play.Multiplayer
     public class CgsNetManager : NetworkManager
     {
         public static CgsNetManager Instance => (CgsNetManager) singleton;
+
         public CgsNetPlayer LocalPlayer { get; set; }
         public CgsNetData Data { get; set; }
 
-        // ReSharper disable once InconsistentNaming
-        public CgsNetDiscovery Discovery;
-
-        // ReSharper disable once InconsistentNaming
-        public CgsNetListServer ListServer;
+        public CgsNetDiscovery Discovery { get; private set; }
+        public CgsNetListServer ListServer { get; private set; }
 
         public GameObject cardModelPrefab;
         public PlayMode playController;
         public Text statusText;
+
+        public override void Start()
+        {
+            base.Start();
+            Discovery = GetComponent<CgsNetDiscovery>();
+            ListServer = GetComponent<CgsNetListServer>();
+            Debug.Log("[CgsNet Manager] Acquired Discovery and List Server.");
+        }
 
         public override void OnServerAddPlayer(NetworkConnection conn)
         {

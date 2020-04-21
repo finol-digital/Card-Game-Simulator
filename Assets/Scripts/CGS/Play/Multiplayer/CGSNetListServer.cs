@@ -40,8 +40,7 @@ namespace CGS.Play.Multiplayer
         public const ushort GameServerToListenPort = 8887;
         public const ushort ClientToListenPort = 8888;
 
-        // ReSharper disable once InconsistentNaming
-        public OnServerListedDelegate OnServerFound;
+        public OnServerListedDelegate OnServerFound { get; set; }
 
         private readonly Telepathy.Client _gameServerToListenConnection = new Telepathy.Client();
         private readonly Telepathy.Client _clientToListenConnection = new Telepathy.Client();
@@ -59,7 +58,7 @@ namespace CGS.Play.Multiplayer
             {
                 if (_gameServerToListenConnection.Connected)
                 {
-//                    Debug.Log("[List Server] GameServer connected...");
+//                    Debug.Log("[CgsNet List Server] GameServer connected and sending status...");
                     SendStatus();
                 }
                 else if (!_gameServerToListenConnection.Connecting)
@@ -77,14 +76,14 @@ namespace CGS.Play.Multiplayer
             }
         }
 
-        void SendStatus()
+        private void SendStatus()
         {
             BinaryWriter writer = new BinaryWriter(new MemoryStream());
 
             // create message
             writer.Write((ushort) NetworkServer.connections.Count);
             writer.Write((ushort) NetworkManager.singleton.maxConnections);
-            byte[] gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
+            var gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
             writer.Write((ushort) gameNameBytes.Length);
             writer.Write(gameNameBytes);
             writer.Flush();
@@ -92,7 +91,6 @@ namespace CGS.Play.Multiplayer
             // list server only allows up to 128 bytes per message
             if (writer.BaseStream.Position <= 128)
             {
-//                Debug.Log("[List Server] GameServer sending status......");
                 if (!_gameServerToListenConnection.Send(((MemoryStream) writer.BaseStream).ToArray()))
                     Debug.LogError("[CgsNet List Server] GameServer failed to send status!");
             }

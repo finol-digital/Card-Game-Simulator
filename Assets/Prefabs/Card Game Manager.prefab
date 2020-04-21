@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 114614180611090904}
   - component: {fileID: 114208327254760074}
   - component: {fileID: 114356562771634316}
-  - component: {fileID: 1851177271932900406}
   m_Layer: 0
   m_Name: Card Game Manager
   m_TagString: CardGameManager
@@ -46,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6920e0423b49035438e0f18dd7c0581c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  discovery: {fileID: 1851177271932900406}
 --- !u!114 &114208327254760074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,19 +72,3 @@ MonoBehaviour:
   minSwipeLength: 1
   triggerSwipeAtMinLength: 1
   useEightDirections: 0
---- !u!114 &1851177271932900406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565440365293990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e520ffee43e728a48b91256d2d702235, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  secretHandshake: 8881861175871791683
-  serverBroadcastListenPort: 47777
-  ActiveDiscoveryInterval: 3
-  lobby: {fileID: 0}
