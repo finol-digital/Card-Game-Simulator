@@ -30,8 +30,9 @@ namespace CGS.Play
         public GameObject diceMenuPrefab;
         public GameObject searchMenuPrefab;
 
-        public ZonesViewer zones;
         public RectTransform playAreaContent;
+        public ZonesViewer zones;
+        public PointsCounter scoreboard;
 
         public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
         private LobbyMenu _lobby;
@@ -63,7 +64,7 @@ namespace CGS.Play
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
             if (CardGameManager.Instance.IsSearchingForServer)
-                Lobby.Show(BackToMainMenu);
+                Lobby.Show();
             else
             {
                 ShowDeckMenu();
@@ -147,8 +148,8 @@ namespace CGS.Play
             zones.CreateDeck();
             zones.scrollView.verticalScrollbar.value = 0;
 #if !UNITY_WEBGL
-            if (!isShared)
-                CgsNetManager.Instance.LocalPlayer?.RequestNewDeck(deckCards);
+            if (!isShared && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
 #endif
             zones.CurrentDeck.Sync(deckCards);
             StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
@@ -224,7 +225,7 @@ namespace CGS.Play
             if (zones.CurrentDeck == null)
                 return cards;
 
-            for (int i = 0; i < cardCount && zones.CurrentDeck.Cards.Count > 0; i++)
+            for (var i = 0; i < cardCount && zones.CurrentDeck.Cards.Count > 0; i++)
                 cards.Add(zones.CurrentDeck.PopCard());
             return cards;
         }

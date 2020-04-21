@@ -4,7 +4,6 @@
 
 using System;
 using System.Net;
-using UnityEngine;
 using Mirror;
 using Mirror.Discovery;
 
@@ -36,36 +35,27 @@ namespace CGS.Play.Multiplayer
     {
         public OnServerDiscoveredDelegate OnServerFound { get; set; }
 
-        public long ServerId { get; private set; }
-        public Transport transport;
+        private long _serverId;
+        private Transport _transport;
 
         public override void Start()
         {
             base.Start();
-            ServerId = RandomLong();
-            if (transport == null)
-                transport = Transport.activeTransport;
+            _serverId = RandomLong();
+            _transport = GetComponent<Transport>() ?? Transport.activeTransport;
         }
 
         protected override DiscoveryResponse ProcessRequest(DiscoveryRequest request, IPEndPoint endpoint)
         {
-            try
+            return new DiscoveryResponse
             {
-                return new DiscoveryResponse
-                {
-                    ServerId = ServerId,
-                    // the endpoint is populated by the client
-                    Uri = transport.ServerUri(),
-                    GameName = CardGameManager.Current.Name,
-                    Players = NetworkServer.connections.Count,
-                    Capacity = NetworkManager.singleton.maxConnections
-                };
-            }
-            catch (NotImplementedException)
-            {
-                Debug.LogError($"Transport {transport} does not support network discovery");
-                throw;
-            }
+                ServerId = _serverId,
+                // the endpoint is populated by the client
+                Uri = _transport.ServerUri(),
+                GameName = CardGameManager.Current.Name,
+                Players = NetworkServer.connections.Count,
+                Capacity = NetworkManager.singleton.maxConnections
+            };
         }
 
         protected override DiscoveryRequest GetRequest() => new DiscoveryRequest();
@@ -73,7 +63,7 @@ namespace CGS.Play.Multiplayer
         protected override void ProcessResponse(DiscoveryResponse response, IPEndPoint endpoint)
         {
             response.EndPoint = endpoint;
-            UriBuilder realUri = new UriBuilder(response.Uri)
+            var realUri = new UriBuilder(response.Uri)
             {
                 Host = response.EndPoint.Address.ToString()
             };

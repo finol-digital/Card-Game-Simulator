@@ -4,7 +4,6 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-
 using CGS.Play.Multiplayer;
 
 namespace CGS.Play
@@ -13,25 +12,30 @@ namespace CGS.Play
     {
         public Text pointsText;
 
-        protected int Count
+        public int CurrentDisplayValue
         {
-            get { return CgsNetManager.Instance.LocalPlayer.CurrentScore; }
-            set { CgsNetManager.Instance.LocalPlayer.RequestScoreUpdate(value); }
+            get => _currentDisplayValue;
+            set
+            {
+                _currentDisplayValue = value;
+                pointsText.text = _currentDisplayValue.ToString();
+                if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive &&
+                    CgsNetManager.Instance.LocalPlayer != null &&
+                    CgsNetManager.Instance.LocalPlayer.CurrentScore != _currentDisplayValue)
+                    CgsNetManager.Instance.LocalPlayer.RequestScoreUpdate(_currentDisplayValue);
+            }
         }
+
+        private int _currentDisplayValue;
 
         public void Decrement()
         {
-            Count--;
+            CurrentDisplayValue--;
         }
 
         public void Increment()
         {
-            Count++;
-        }
-
-        public void UpdateText()
-        {
-            pointsText.text = Count.ToString();
+            CurrentDisplayValue++;
         }
     }
 }

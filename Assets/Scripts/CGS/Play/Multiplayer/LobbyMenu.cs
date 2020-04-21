@@ -6,12 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensions.ScrollRects;
 using Mirror;
 using CGS.Menu;
-using UnityExtensions.ScrollRects;
 
 namespace CGS.Play.Multiplayer
 {
@@ -22,11 +21,15 @@ namespace CGS.Play.Multiplayer
         public Toggle internetToggle;
         public Button joinButton;
 
-        public bool IsInternetConnectionSource { get; private set; }
+        public bool IsLanConnectionSource
+        {
+            get => !IsInternetConnectionSource;
+            set => IsInternetConnectionSource = !value;
+        }
+        public bool IsInternetConnectionSource { get; set; }
 
         public long? SelectedServerId { get; private set; }
         public IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
-
         private readonly Dictionary<long, DiscoveryResponse> _discoveredServers =
             new Dictionary<long, DiscoveryResponse>();
 
@@ -62,9 +65,9 @@ namespace CGS.Play.Multiplayer
             if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) &&
                 joinButton.interactable)
                 Join();
-            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
-                .Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
+            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Any(toggle =>
+                toggle.gameObject == EventSystem.current.currentSelectedGameObject))
+                Toggles.First(toggle => toggle.gameObject == EventSystem.current.currentSelectedGameObject).isOn = true;
             else if (Input.GetButtonDown(Inputs.New))
                 Host();
             else if ((Input.GetButtonDown(Inputs.PageVertical) ||
@@ -82,7 +85,7 @@ namespace CGS.Play.Multiplayer
             _wasPageHorizontal = Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance;
         }
 
-        public void Show(UnityAction cancelAction)
+        public void Show()
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
@@ -102,7 +105,7 @@ namespace CGS.Play.Multiplayer
             Redisplay();
         }
 
-        private void Redisplay()
+        public void Redisplay()
         {
             if (!IsInternetConnectionSource)
             {
@@ -118,23 +121,11 @@ namespace CGS.Play.Multiplayer
             }
         }
 
-        private void ToggleConnectionSource()
+        public void ToggleConnectionSource()
         {
             bool isInternetConnectionSource = !IsInternetConnectionSource;
             lanToggle.isOn = !isInternetConnectionSource;
             internetToggle.isOn = isInternetConnectionSource;
-        }
-
-        public void SetLanConnectionSource(bool isLanConnectionSource)
-        {
-            IsInternetConnectionSource = !isLanConnectionSource;
-            Redisplay();
-        }
-
-        public void SetInternetConnectionSource(bool isInternetConnectionSource)
-        {
-            IsInternetConnectionSource = isInternetConnectionSource;
-            Redisplay();
         }
 
         public void OnDiscoveredServer(DiscoveryResponse info)

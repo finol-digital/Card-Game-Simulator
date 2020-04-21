@@ -52,7 +52,7 @@ namespace CGS.Play.Multiplayer
             StartCoroutine(TickGameServer());
         }
 
-        IEnumerator TickGameServer()
+        private IEnumerator TickGameServer()
         {
             while (true)
             {
@@ -78,12 +78,12 @@ namespace CGS.Play.Multiplayer
 
         private void SendStatus()
         {
-            BinaryWriter writer = new BinaryWriter(new MemoryStream());
+            var writer = new BinaryWriter(new MemoryStream());
 
             // create message
             writer.Write((ushort) NetworkServer.connections.Count);
             writer.Write((ushort) NetworkManager.singleton.maxConnections);
-            var gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
+            byte[] gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
             writer.Write((ushort) gameNameBytes.Length);
             writer.Write(gameNameBytes);
             writer.Flush();
@@ -106,7 +106,7 @@ namespace CGS.Play.Multiplayer
             StartCoroutine(TickClient());
         }
 
-        IEnumerator TickClient()
+        private IEnumerator TickClient()
         {
             while (true)
             {
@@ -141,14 +141,14 @@ namespace CGS.Play.Multiplayer
             }
         }
 
-        ServerStatus ParseMessage(byte[] bytes)
+        private static ServerStatus ParseMessage(byte[] bytes)
         {
             // note: we don't use ReadString here because the list server
             //       doesn't know C#'s '7-bit-length + utf8' encoding for strings
-            BinaryReader reader = new BinaryReader(new MemoryStream(bytes, false), Encoding.UTF8);
+            var reader = new BinaryReader(new MemoryStream(bytes, false), Encoding.UTF8);
             byte ipBytesLength = reader.ReadByte();
             byte[] ipBytes = reader.ReadBytes(ipBytesLength);
-            string ip = new IPAddress(ipBytes).ToString();
+            var ip = new IPAddress(ipBytes).ToString();
             ushort players = reader.ReadUInt16();
             ushort capacity = reader.ReadUInt16();
             ushort gameNameLength = reader.ReadUInt16();
