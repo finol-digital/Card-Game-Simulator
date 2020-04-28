@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using CGS.Play.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
-using CGS.Play.Multiplayer;
 
 namespace CGS.Play
 {
@@ -14,28 +14,28 @@ namespace CGS.Play
 
         public int CurrentDisplayValue
         {
-            get => _currentDisplayValue;
-            set
-            {
-                _currentDisplayValue = value;
-                pointsText.text = _currentDisplayValue.ToString();
-                if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive &&
-                    CgsNetManager.Instance.LocalPlayer != null &&
-                    CgsNetManager.Instance.LocalPlayer.CurrentScore != _currentDisplayValue)
-                    CgsNetManager.Instance.LocalPlayer.RequestScoreUpdate(_currentDisplayValue);
-            }
+            get => int.Parse(pointsText.text);
+            set => pointsText.text = value.ToString();
         }
-
-        private int _currentDisplayValue;
 
         public void Decrement()
         {
             CurrentDisplayValue--;
+            UpdateNetScore();
         }
 
         public void Increment()
         {
             CurrentDisplayValue++;
+            UpdateNetScore();
+        }
+
+        private void UpdateNetScore()
+        {
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive &&
+                CgsNetManager.Instance.LocalPlayer != null &&
+                CgsNetManager.Instance.LocalPlayer.CurrentScore != CurrentDisplayValue)
+                CgsNetManager.Instance.LocalPlayer.RequestScoreUpdate(CurrentDisplayValue);
         }
     }
 }
