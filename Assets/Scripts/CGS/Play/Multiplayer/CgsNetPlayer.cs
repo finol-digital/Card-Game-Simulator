@@ -26,7 +26,8 @@ namespace CGS.Play.Multiplayer
 
         public string[] CurrentDeckCardIds => CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds;
 
-        public int CurrentScore => CgsNetManager.Instance.Data.scores.Count > 0
+        public int CurrentScore => CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.scores != null
+                                                                       && CgsNetManager.Instance.Data.scores.Count > 0
             ? CgsNetManager.Instance.Data.scores[scoreIndex].Points
             : 0;
 
