@@ -151,7 +151,8 @@ namespace CGS.Play.Multiplayer
 
         public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
         {
-            CgsNetManager.Instance.playController.scoreboard.CurrentDisplayValue = CurrentScore;
+            if (scoreIndex == newScoreIndex)
+                CgsNetManager.Instance.playController.scoreboard.CurrentDisplayValue = CurrentScore;
         }
 
         public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
