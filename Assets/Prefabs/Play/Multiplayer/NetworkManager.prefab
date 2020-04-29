@@ -65,7 +65,7 @@ MonoBehaviour:
   OnClientDisconnected:
     m_PersistentCalls:
       m_Calls: []
-  port: 8889
+  port: 7777
   NoDelay: 1
   serverMaxMessageSize: 16384
   clientMaxMessageSize: 16384
@@ -84,7 +84,6 @@ MonoBehaviour:
   secretHandshake: -6801914499066754151
   serverBroadcastListenPort: 47777
   ActiveDiscoveryInterval: 3
-  transport: {fileID: 7366114127203556204}
 --- !u!114 &5823894451252158404
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,7 +9,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
-
 using CardGameDef;
 using CGS.Menu;
 
@@ -39,10 +38,13 @@ namespace CGS.Decks
             if (!IsFocused || nameInputField.isFocused || !Input.anyKeyDown)
                 return;
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) &&
+                EventSystem.current.currentSelectedGameObject == null)
                 AttemptSaveAndHide();
-            else if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0
-                        || Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)
+            else if (Input.GetButtonDown(Inputs.FocusBack) || Math.Abs(Input.GetAxis(Inputs.FocusBack)) >
+                                                           Inputs.Tolerance
+                                                           || Input.GetButtonDown(Inputs.FocusNext) ||
+                                                           Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance)
                 nameInputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Load) && EventSystem.current.currentSelectedGameObject == null)
                 Share();
@@ -52,7 +54,8 @@ namespace CGS.Decks
                 Hide();
         }
 
-        public void Show(Deck deckToShow, OnNameChangeDelegate nameChangeCallback = null, OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
+        public void Show(Deck deckToShow, OnNameChangeDelegate nameChangeCallback = null,
+            OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
@@ -100,6 +103,7 @@ namespace CGS.Decks
                 Debug.LogError(DeckPrintErrorMessage + e.Message + e.StackTrace);
                 CardGameManager.Instance.Messenger.Show(DeckPrintErrorMessage + e.Message);
             }
+
             if (pdfUri == null || !pdfUri.IsAbsoluteUri)
             {
                 Debug.LogError(DeckPrintOpenErrorMessage);
@@ -110,6 +114,7 @@ namespace CGS.Decks
                 StartCoroutine(OpenPdf(pdfUri));
             }
         }
+
         private IEnumerator OpenPdf(Uri pdfUri)
         {
             yield return null;
@@ -130,7 +135,9 @@ namespace CGS.Decks
                 CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
             }
 #else
-            Application.OpenURL(pdfUri.AbsoluteUri);
+            CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
+            Application.OpenURL(pdfUri.AbsoluteUri); // This will likely fail, so its wrapped with the path as backup
+            CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
 #endif
         }
 
@@ -142,7 +149,8 @@ namespace CGS.Decks
 
         public void AttemptSaveAndHide()
         {
-            Deck filePathFinder = new Deck(CardGameManager.Current, nameInputField.text, CardGameManager.Current.DeckFileType);
+            Deck filePathFinder = new Deck(CardGameManager.Current, nameInputField.text,
+                CardGameManager.Current.DeckFileType);
             if (!DoesAutoOverwrite && File.Exists(filePathFinder.FilePath))
                 CardGameManager.Instance.Messenger.Prompt(OverWriteDeckPrompt, SaveToFile);
             else
@@ -169,6 +177,7 @@ namespace CGS.Decks
             {
                 Debug.LogError(DeckSaveErrorMessage + e.Message);
             }
+
             deckSaveCallback?.Invoke(deck);
         }
 

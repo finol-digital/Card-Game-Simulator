@@ -60,8 +60,8 @@ namespace CGS.Play.Multiplayer
 
         public GameObject SpawnCard(Vector3 position, System.Guid assetId)
         {
-            GameObject newCard = Instantiate(cardModelPrefab, playController.playAreaContent);
-            playController.SetPlayActions(playController.playAreaContent.GetComponent<CardStack>(),
+            GameObject newCard = Instantiate(cardModelPrefab, playController.playMatContent);
+            playController.SetPlayActions(playController.playMatContent.GetComponent<CardStack>(),
                 newCard.GetComponent<CardModel>());
             return newCard;
         }

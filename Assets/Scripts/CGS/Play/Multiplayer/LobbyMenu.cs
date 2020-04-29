@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using UnityExtensions.ScrollRects;
 using Mirror;
 using CGS.Menu;
+using JetBrains.Annotations;
 
 namespace CGS.Play.Multiplayer
 {
@@ -21,15 +22,18 @@ namespace CGS.Play.Multiplayer
         public Toggle internetToggle;
         public Button joinButton;
 
+        [UsedImplicitly]
         public bool IsLanConnectionSource
         {
             get => !IsInternetConnectionSource;
             set => IsInternetConnectionSource = !value;
         }
+
         public bool IsInternetConnectionSource { get; set; }
 
         public long? SelectedServerId { get; private set; }
         public IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
+
         private readonly Dictionary<long, DiscoveryResponse> _discoveredServers =
             new Dictionary<long, DiscoveryResponse>();
 
@@ -143,9 +147,8 @@ namespace CGS.Play.Multiplayer
         public void Host()
         {
             NetworkManager.singleton.StartHost();
-            if (!IsInternetConnectionSource)
-                CgsNetManager.Instance.Discovery.AdvertiseServer();
-            else
+            CgsNetManager.Instance.Discovery.AdvertiseServer();
+            if (IsInternetConnectionSource)
                 CgsNetManager.Instance.ListServer.StartGameServer();
             Hide();
         }

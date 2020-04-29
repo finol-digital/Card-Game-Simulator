@@ -5,13 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: Allow more than 2 players for internet-connected games (still requires forwarding port 8889 on your router if you want to host)
-- More dynamic restart (reset deck, and prompt redeal for each player)
+- Fix: Adding card to play area freezes server
+- Change port forwarding to port 7777
+- In game port forwarding notification
 - For internet-connected games, add session name and password options
+- More dynamic restart (reset deck, and prompt redeal for each player)
 - Deal/Draw Hand prompts for gameStartHandCount cards
-- Layout cards in the Deck Editor more dynamically
-  - Have stacks link to each other
-  - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
 - Playmats
 
 ## Current Sprint
@@ -45,6 +44,9 @@ permalink: roadmap.html
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Android Searchbar Widget
+- Layout cards in the Deck Editor more dynamically
+  - Have stacks link to each other
+  - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
 - Support multiple card backs

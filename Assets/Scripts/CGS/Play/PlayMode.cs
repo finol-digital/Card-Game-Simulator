@@ -3,16 +3,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Mirror;
+using System.IO;
 using CardGameDef;
 using CardGameView;
 using CGS.Cards;
 using CGS.Decks;
+using CGS.Menu;
 using CGS.Play.Multiplayer;
 using CGS.Play.Zones;
+using Mirror;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace CGS.Play
 {
@@ -30,7 +32,8 @@ namespace CGS.Play
         public GameObject diceMenuPrefab;
         public GameObject searchMenuPrefab;
 
-        public RectTransform playAreaContent;
+        public RectTransform playMatContent;
+        // TODO: public Image playMatImage;
         public ZonesViewer zones;
         public PointsCounter scoreboard;
 
@@ -62,7 +65,7 @@ namespace CGS.Play
         void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
-            playAreaContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
+            playMatContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
             if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show();
             else
@@ -91,8 +94,8 @@ namespace CGS.Play
         public void ResetPlayArea()
         {
             // TODO: CHECK IF THIS IS OK WITH NETWORKING
-            playAreaContent.DestroyAllChildren();
-            playAreaContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
+            playMatContent.DestroyAllChildren();
+            playMatContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
         }
 
         public void ViewRules()
@@ -111,7 +114,7 @@ namespace CGS.Play
 
         public void ShowDiceMenu()
         {
-            DiceManager.Show(playAreaContent);
+            DiceManager.Show(playMatContent);
         }
 
         public void ShowCardsMenu()
@@ -171,7 +174,7 @@ namespace CGS.Play
 
             GameObject newBoard = new GameObject(board.Id, typeof(RectTransform));
             RectTransform rt = (RectTransform) newBoard.transform;
-            rt.SetParent(playAreaContent);
+            rt.SetParent(playMatContent);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
             rt.offsetMin = board.OffsetMin * CardGameManager.PixelsPerInch;
@@ -179,7 +182,7 @@ namespace CGS.Play
 
             string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
                                    CardGameManager.Current.GameBoardFileType;
-            Sprite boardImageSprite = System.IO.File.Exists(boardFilepath)
+            Sprite boardImageSprite = File.Exists(boardFilepath)
                 ? UnityExtensionMethods.CreateSprite(boardFilepath)
                 : null;
             if (boardImageSprite != null)
@@ -289,7 +292,7 @@ namespace CGS.Play
                     NetworkManager.singleton.StopClient();
             }
 
-            SceneManager.LoadScene(Menu.MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }
     }
 }

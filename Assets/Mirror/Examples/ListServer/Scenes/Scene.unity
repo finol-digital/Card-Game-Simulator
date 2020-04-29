@@ -2456,8 +2456,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   runInBackground: 1
   startOnHeadless: 1
-  serverTickRate: 30
   showDebugMessages: 0
+  serverTickRate: 30
   offlineScene: 
   onlineScene: 
   transport: {fileID: 1282001521}
@@ -2485,25 +2485,7 @@ MonoBehaviour:
   OnClientConnected:
     m_PersistentCalls:
       m_Calls: []
-  OnClientDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientError:
-    m_PersistentCalls:
-      m_Calls: []
   OnClientDisconnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerConnected:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDataReceived:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerError:
-    m_PersistentCalls:
-      m_Calls: []
-  OnServerDisconnected:
     m_PersistentCalls:
       m_Calls: []
   port: 7777
@@ -2522,7 +2504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69f796b44735c414783d66f47b150c5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listServerIp: 35.243.149.104
+  listServerIp: 35.232.64.143
   gameServerToListenPort: 8887
   clientToListenPort: 8888
   gameServerTitle: Deathmatch

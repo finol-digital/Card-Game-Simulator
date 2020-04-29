@@ -33,7 +33,7 @@ namespace CardGameView
         public static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
 
         public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
-            && transform.parent == CgsNetManager.Instance.playController.playAreaContent;
+            && transform.parent == CgsNetManager.Instance.playController.playMatContent;
         public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
             (CurrentPointerEventData.button == PointerEventData.InputButton.Middle || CurrentPointerEventData.button == PointerEventData.InputButton.Right));
         public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
