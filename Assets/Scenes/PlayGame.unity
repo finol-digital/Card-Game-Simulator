@@ -1579,7 +1579,7 @@ MonoBehaviour:
     type: 3}
   searchMenuPrefab: {fileID: 1332435347197338, guid: 3193cd5bbf6276147a6652aff7dca225,
     type: 3}
-  playMat: {fileID: 217919977}
+  playMatContent: {fileID: 217919977}
   zones: {fileID: 1426326036}
   scoreboard: {fileID: 1720539154216192284}
 --- !u!1 &758454744

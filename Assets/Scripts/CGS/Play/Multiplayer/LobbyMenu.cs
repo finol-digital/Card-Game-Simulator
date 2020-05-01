@@ -8,10 +8,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityExtensions.ScrollRects;
 using Mirror;
 using CGS.Menu;
 using JetBrains.Annotations;
+using ScrollRects;
 
 namespace CGS.Play.Multiplayer
 {

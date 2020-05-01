@@ -49,7 +49,7 @@ jobs:
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
           buildsPath: builds
-          buildMethod: BuildCGS.BuildProject
+          buildMethod: CGS.Editor.BuildCgs.BuildProject
           customParameters: -androidAppBundle -keystorePass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }} -keyaliasPass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}
       - uses: actions/upload-artifact@v1
         with:

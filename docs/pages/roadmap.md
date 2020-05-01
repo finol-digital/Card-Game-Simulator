@@ -11,9 +11,11 @@ permalink: roadmap.html
 - For internet-connected games, add session name and password options
 - More dynamic restart (reset deck, and prompt redeal for each player)
 - Deal/Draw Hand prompts for gameStartHandCount cards
+- Scoreboard
 - Playmats
 
 ## Current Sprint
+- Highlight auto scroll area when auto scrolling
 - Play Mode Redesign
   - Allow cards to snap to each other when moving them
   - Allow any player to move cards in the play area, instead of just the player who put it there
@@ -37,16 +39,16 @@ permalink: roadmap.html
   - Slider to control zoom
   - Play Area SharePreference
   - Points/Score Tracker
-- Update all images/screenshots (on cgs website and all stores)
-- Re-record training video (show on cgs webpage, personal webpage, play store)
-
-## Backlog
-- Tech: Branch on desktop
-- Tech: Google Play Instant
-- Android Searchbar Widget
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
+
+## Backlog
+- Update all images/screenshots (on cgs website, ln, and all stores)
+- Re-record training video (show on cgs webpage, personal webpage, play store)
+- Tech: Branch on desktop
+- Tech: Google Play Instant
+- Android Searchbar Widget
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
 - Support multiple card backs

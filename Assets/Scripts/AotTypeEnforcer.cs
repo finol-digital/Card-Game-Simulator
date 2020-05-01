@@ -1,15 +1,22 @@
-﻿using Newtonsoft.Json.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using CardGameDef;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Utilities;
 using UnityEngine;
+
+// ReSharper disable UnusedVariable
 
 public class AotTypeEnforcer : MonoBehaviour
 {
     public void Awake()
     {
-        AotHelper.EnsureType<Newtonsoft.Json.Converters.StringEnumConverter>();
+        AotHelper.EnsureType<StringEnumConverter>();
         AotHelper.Ensure(() =>
         {
-            var cardGame = new CardGameDef.CardGame(null);
-            cardGame.AllCardsUrl = new System.Uri(UnityExtensionMethods.FilePrefix);
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            var cardGame = new CardGame(null);
+            cardGame.AllCardsUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.AllCardsUrlPageCount = 1;
             cardGame.AllCardsUrlPageCountDivisor = 1;
             cardGame.AllCardsUrlPageCountIdentifier = string.Empty;
@@ -18,15 +25,15 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.AllCardsUrlPostBodyContent = string.Empty;
             cardGame.AllCardsUrlWrapped = false;
             cardGame.AllCardsUrlZipped = false;
-            cardGame.AllSetsUrl = new System.Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.AllSetsUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.AllSetsUrlWrapped = false;
             cardGame.AllSetsUrlZipped = false;
             cardGame.AutoUpdate = 1;
-            cardGame.AutoUpdateUrl = new System.Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.AutoUpdateUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.BannerImageFileType = string.Empty;
-            cardGame.BannerImageUrl = new System.Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.BannerImageUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.CardBackImageFileType = string.Empty;
-            cardGame.CardBackImageUrl = new System.Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.CardBackImageUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.CardDataIdentifier = string.Empty;
             cardGame.CardIdIdentifier = string.Empty;
             cardGame.CardIdStop = string.Empty;
@@ -36,7 +43,7 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.CardNameIdentifier = string.Empty;
             cardGame.CardNameIsUnique = false;
             cardGame.CardPrimaryProperty = string.Empty;
-            cardGame.CardProperties = new System.Collections.Generic.List<CardGameDef.PropertyDef>();
+            cardGame.CardProperties = new List<PropertyDef>();
             cardGame.CardPropertyIdentifier = string.Empty;
             cardGame.CardSetIdentifier = string.Empty;
             cardGame.CardSetIsObject = false;
@@ -45,26 +52,29 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.CardSetsInListIsCsv = false;
             cardGame.CardSize = Vector2.one;
             cardGame.DeckFileAltId = string.Empty;
-            cardGame.DeckFileTxtId = CardGameDef.DeckFileTxtId.Id;
-            cardGame.DeckFileType = CardGameDef.DeckFileType.Dec;
+            cardGame.DeckFileTxtId = DeckFileTxtId.Id;
+            cardGame.DeckFileType = DeckFileType.Dec;
             cardGame.DeckMaxCount = 1;
-            cardGame.DeckUrls = new System.Collections.Generic.List<CardGameDef.DeckUrl>();
-            var deckUrl = new CardGameDef.DeckUrl(string.Empty, new System.Uri(UnityExtensionMethods.FilePrefix));
-            cardGame.Enums = new System.Collections.Generic.List<CardGameDef.EnumDef>();
-            var enumDef = new CardGameDef.EnumDef(string.Empty, new System.Collections.Generic.Dictionary<string, string>());
-            cardGame.Extras = new System.Collections.Generic.List<CardGameDef.ExtraDef>();
-            var extraDef = new CardGameDef.ExtraDef(string.Empty, string.Empty, string.Empty);
-            cardGame.GameBoardCards = new System.Collections.Generic.List<CardGameDef.GameBoardCard>();
-            var gameBoard = new CardGameDef.GameBoard(string.Empty, Vector2.zero, Vector2.zero);
-            var gameBoardCard = new CardGameDef.GameBoardCard(string.Empty, new System.Collections.Generic.List<CardGameDef.GameBoard>());
+            cardGame.DeckUrls = new List<DeckUrl>();
+            var deckUrl = new DeckUrl(string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
+            cardGame.Enums = new List<EnumDef>();
+            var enumDef = new EnumDef(string.Empty,
+                new Dictionary<string, string>());
+            cardGame.Extras = new List<ExtraDef>();
+            var extraDef = new ExtraDef(string.Empty, string.Empty, string.Empty);
+            cardGame.GameBoardCards = new List<GameBoardCard>();
+            var gameBoard = new GameBoard(string.Empty, Vector2.zero, Vector2.zero);
+            var gameBoardCard = new GameBoardCard(string.Empty,
+                new List<GameBoard>());
             cardGame.GameBoardFileType = string.Empty;
-            cardGame.GameBoardUrls = new System.Collections.Generic.List<CardGameDef.GameBoardUrl>();
-            var gameBoardUrl = new CardGameDef.GameBoardUrl(string.Empty, new System.Uri(UnityExtensionMethods.FilePrefix));
+            cardGame.GameBoardUrls = new List<GameBoardUrl>();
+            var gameBoardUrl =
+                new GameBoardUrl(string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
             cardGame.GameStartHandCount = 1;
             cardGame.GameStartPointsCount = 1;
             cardGame.Name = string.Empty;
             cardGame.PlayAreaSize = Vector2.one;
-            cardGame.RulesUrl = new System.Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.RulesUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.SetCardsIdentifier = string.Empty;
             cardGame.SetCodeDefault = string.Empty;
             cardGame.SetCodeIdentifier = string.Empty;

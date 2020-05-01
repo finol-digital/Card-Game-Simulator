@@ -394,25 +394,35 @@
     },
     "Vector2": {
       "type": "object",
+      "description": "Representation of 2D vectors and points.\n      ",
       "additionalProperties": false,
       "properties": {
         "x": {
           "type": "number",
+          "description": "X component of the vector.\n      ",
           "format": "double"
         },
         "y": {
           "type": "number",
+          "description": "Y component of the vector.\n      ",
           "format": "double"
         },
         "normalized": {
-          "$ref": "#/definitions/Vector2"
+          "description": "Returns this vector with a magnitude of 1 (Read Only).\n      ",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Vector2"
+            }
+          ]
         },
         "magnitude": {
           "type": "number",
+          "description": "Returns the length of this vector (Read Only).\n      ",
           "format": "double"
         },
         "sqrMagnitude": {
           "type": "number",
+          "description": "Returns the squared length of this vector (Read Only).\n      ",
           "format": "double"
         }
       }

@@ -1,30 +1,38 @@
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Core;
 using UnityEngine;
 using UnityEngine.Networking;
+using Object = UnityEngine.Object;
+using Random = System.Random;
 
 public static class ThreadSafeRandom
 {
-    [ThreadStatic] private static System.Random _local;
-    public static System.Random ThisThreadsRandom => _local ??
-        (_local = new System.Random(unchecked(Environment.TickCount * 31 + System.Threading.Thread.CurrentThread.ManagedThreadId)));
+    [ThreadStatic] private static Random _local;
+
+    public static Random ThisThreadsRandom => _local ??
+                                              (_local = new Random(
+                                                  unchecked(Environment.TickCount * 31 + Thread
+                                                      .CurrentThread.ManagedThreadId)));
 }
 
-static public class UnityExtensionMethods
+public static class UnityExtensionMethods
 {
+#if UNITY_ANDROID && !UNITY_EDITOR
     public const string AndroidStreamingAssetsDirectory = "assets/";
     public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
-    public const string FilePrefix = "file://";
     public const string DirectorySeparator = "/";
+#endif
+    public const string FilePrefix = "file://";
     public const string MetaExtension = ".meta";
     public const string ZipExtension = ".zip";
 
-    static public void Shuffle<T>(this IList<T> list)
+    public static void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
         while (n > 1)
@@ -37,7 +45,7 @@ static public class UnityExtensionMethods
         }
     }
 
-    static public T FindInParents<T>(this GameObject go) where T : Component
+    public static T FindInParents<T>(this GameObject go) where T : Component
     {
         T component = go.GetComponent<T>();
         if (component != null)
@@ -49,21 +57,22 @@ static public class UnityExtensionMethods
             component = transform.gameObject.GetComponent<T>();
             transform = transform.parent;
         }
+
         return component;
     }
 
-    static public T GetOrAddComponent<T>(this GameObject go) where T : Component
+    public static T GetOrAddComponent<T>(this GameObject go) where T : Component
     {
         return go.GetComponent<T>() ?? go.AddComponent<T>();
     }
 
-    static public void DestroyAllChildren(this Transform parent)
+    public static void DestroyAllChildren(this Transform parent)
     {
         for (int i = parent.transform.childCount - 1; i >= 0; i--)
         {
             Transform child = parent.GetChild(i);
             child.SetParent(null);
-            UnityEngine.Object.Destroy(child.gameObject);
+            Object.Destroy(child.gameObject);
         }
     }
 
@@ -76,12 +85,16 @@ static public class UnityExtensionMethods
 
     public static string GetSafeFilePath(string filePath)
     {
-        return !string.IsNullOrEmpty(filePath) ? string.Join("_", filePath.Split(Path.GetInvalidPathChars())) : string.Empty;
+        return !string.IsNullOrEmpty(filePath)
+            ? string.Join("_", filePath.Split(Path.GetInvalidPathChars()))
+            : string.Empty;
     }
 
     public static string GetSafeFileName(string fileName)
     {
-        return !string.IsNullOrEmpty(fileName) ? string.Join("_", fileName.Split(Path.GetInvalidFileNameChars())) : string.Empty;
+        return !string.IsNullOrEmpty(fileName)
+            ? string.Join("_", fileName.Split(Path.GetInvalidFileNameChars()))
+            : string.Empty;
     }
 
     public static void CopyDirectory(string sourceDir, string targetDir)
@@ -108,15 +121,18 @@ static public class UnityExtensionMethods
 #if ENABLE_WINMD_SUPPORT
         Windows.Storage.StorageFile sourceStorageFile = Crosstales.FB.FileBrowserWSAImpl.LastOpenFile;
         Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
-        var cacheStorageFile = await sourceStorageFile.CopyAsync(cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
+        var cacheStorageFile =
+ await sourceStorageFile.CopyAsync(cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
         string cacheFilePath = cacheStorageFile.Path;
 #else
-        string cacheFilePath = Path.Combine(Application.temporaryCachePath, fileName);
+        string cacheFilePath =
+            Path.Combine(Application.temporaryCachePath, fileName ?? throw new FileNotFoundException());
         File.Copy(sourceFilePath, cacheFilePath);
 #endif
         return cacheFilePath;
     }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
     public static void ExtractAndroidStreamingAssets(string targetPath)
     {
         if (!Directory.Exists(targetPath))
@@ -169,6 +185,7 @@ static public class UnityExtensionMethods
             }
         }
     }
+#endif
 
     public static void ExtractZip(string zipPath, string targetDir)
     {
@@ -178,7 +195,7 @@ static public class UnityExtensionMethods
         if (!Directory.Exists(targetDir))
             Directory.CreateDirectory(targetDir);
 
-        FastZip fastZip = new FastZip();
+        var fastZip = new FastZip();
         fastZip.ExtractZip(zipPath, targetDir, null);
     }
 
@@ -211,11 +228,12 @@ static public class UnityExtensionMethods
         UnityWebRequest www = (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST"));
         if (postJsonBody != null)
         {
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(postJsonBody);
-            www.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
-            www.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(postJsonBody);
+            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
         }
+
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
@@ -243,6 +261,7 @@ static public class UnityExtensionMethods
             result = coroutine.Current;
             yield return result;
         }
+
         output(result as T);
     }
 
@@ -261,7 +280,7 @@ static public class UnityExtensionMethods
         }
         else
         {
-            Texture2D texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
             yield return CreateSprite(texture);
         }
     }
@@ -278,7 +297,7 @@ static public class UnityExtensionMethods
         }
         else
         {
-            Texture2D texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
             yield return CreateSprite(texture);
         }
     }

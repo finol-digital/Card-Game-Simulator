@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UnityExtensions.ScrollRects
+namespace ScrollRects
 {
     public delegate void OnSelectDelegate<in T>(Toggle toggle, T selection);
 
@@ -16,17 +16,19 @@ namespace UnityExtensions.ScrollRects
 
         protected List<Toggle> Toggles { get; } = new List<Toggle>();
 
-        protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select, TKey current)
+        protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
+            TKey current)
         {
             Toggles.Clear();
             selectionContent.DestroyAllChildren();
-            selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
+            selectionContent.sizeDelta =
+                new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
 
             int currentSelectionIndex = -1;
             var i = 0;
-            foreach (var option in options)
+            foreach (KeyValuePair<TKey, TValue> option in options)
             {
-                Toggle toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
+                var toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
                 toggle.gameObject.SetActive(true);
                 toggle.transform.localScale = Vector3.one;
                 toggle.GetComponentInChildren<Text>().text = option.Value.ToString();
@@ -56,7 +58,8 @@ namespace UnityExtensions.ScrollRects
 
         protected void ScrollPage(float scrollDirection)
         {
-            scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDirection < 0 ? 0.1f : -0.1f));
+            scrollRect.verticalNormalizedPosition =
+                Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDirection < 0 ? 0.1f : -0.1f));
         }
 
         protected void SelectPrevious()
@@ -73,7 +76,7 @@ namespace UnityExtensions.ScrollRects
                 return;
             }
 
-            for (var i = Toggles.Count - 1; i >= 0; i--)
+            for (int i = Toggles.Count - 1; i >= 0; i--)
             {
                 if (!Toggles[i].isOn)
                     continue;
@@ -116,6 +119,5 @@ namespace UnityExtensions.ScrollRects
                 return;
             }
         }
-
     }
 }
