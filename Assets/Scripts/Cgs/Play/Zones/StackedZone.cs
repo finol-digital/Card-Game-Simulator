@@ -4,10 +4,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-
 using CardGameDef;
 using CardGameView;
+using UnityEngine;
 
 namespace Cgs.Play.Zones
 {
@@ -19,7 +18,10 @@ namespace Cgs.Play.Zones
         public override IReadOnlyList<Card> Cards => CardModels.Select(cardModel => cardModel.Value).ToList();
         protected List<CardModel> CardModels { get; } = new List<CardModel>();
 
-        protected CardStack ExtensionCardStack => _extensionCardStack ?? (_extensionCardStack = extensionContent.gameObject.GetOrAddComponent<CardStack>());
+        protected CardStack ExtensionCardStack => _extensionCardStack ??
+                                                  (_extensionCardStack = extensionContent.gameObject
+                                                      .GetOrAddComponent<CardStack>());
+
         private CardStack _extensionCardStack;
 
         protected CardStack ZoneCardStack => _zoneCardStack ?? (_zoneCardStack = GetComponent<CardStack>());
@@ -38,7 +40,9 @@ namespace Cgs.Play.Zones
 
         public override void AddCard(Card card)
         {
-            CardModel newCardModel = Instantiate(cardModelPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform).GetOrAddComponent<CardModel>();
+            CardModel newCardModel =
+                Instantiate(cardModelPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform)
+                    .GetOrAddComponent<CardModel>();
             newCardModel.Value = card;
             newCardModel.IsFacedown = !IsFaceup;
             OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, newCardModel);
@@ -59,8 +63,11 @@ namespace Cgs.Play.Zones
             if (cardStack == ExtensionCardStack)
             {
                 int transformIndex = cardModel.transform.GetSiblingIndex();
-                cardIndex = transformIndex >= 0 && transformIndex < CardModels.Count ? transformIndex : CardModels.Count;
+                cardIndex = transformIndex >= 0 && transformIndex < CardModels.Count
+                    ? transformIndex
+                    : CardModels.Count;
             }
+
             CardModels.Insert(cardIndex, cardModel);
             UpdateCountText();
         }
@@ -126,9 +133,10 @@ namespace Cgs.Play.Zones
                 cardModel.IsFacedown = !IsExtended && !IsFaceup;
                 if (IsExtended)
                     continue;
-                ((RectTransform)cardModel.transform).anchorMin = new Vector2(0.5f, 0.5f);
-                ((RectTransform)cardModel.transform).anchorMax = new Vector2(0.5f, 0.5f);
-                ((RectTransform)cardModel.transform).anchoredPosition = Vector2.zero;
+                var cardModelTransform = (RectTransform) cardModel.transform;
+                cardModelTransform.anchorMin = new Vector2(0.5f, 0.5f);
+                cardModelTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                cardModelTransform.anchoredPosition = Vector2.zero;
                 cardModel.transform.SetSiblingIndex(siblingIndex);
                 siblingIndex++;
             }

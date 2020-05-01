@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -32,6 +33,8 @@ namespace Cgs.Menu
         public Image previousCardImage;
         public Image nextCardImage;
         public List<GameObject> selectableButtons;
+
+        // ReSharper disable once NotAccessedField.Global
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
@@ -87,21 +90,24 @@ namespace Cgs.Menu
                     SelectNext();
             }
 
-            if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
+            if (Input.GetButtonDown(Inputs.PageVertical) ||
+                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
             {
                 if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
                     SelectNext();
                 else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
                     SelectPrevious();
             }
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0))
+            else if ((Input.GetButtonDown(Inputs.PageHorizontal) ||
+                      Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance))
             {
                 if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
                     SelectPrevious();
                 else if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
                     SelectNext();
             }
-            else if ((Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0) &&
+            else if ((Input.GetButtonDown(Inputs.Horizontal) ||
+                      Math.Abs(Input.GetAxis(Inputs.Horizontal)) > Inputs.Tolerance) &&
                      (EventSystem.current.currentSelectedGameObject == null
                       || EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
@@ -110,7 +116,8 @@ namespace Cgs.Menu
                 else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
                     SelectNext();
             }
-            else if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+            else if ((Input.GetButtonDown(Inputs.Vertical) ||
+                      Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
                      && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
@@ -183,10 +190,7 @@ namespace Cgs.Menu
 #if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < 0.1)
                 return;
-            if (gameManagement.activeSelf)
-                gameManagement.SetActive(false);
-            else
-                gameManagement.SetActive(true);
+            gameManagement.SetActive(!gameManagement.activeSelf);
 #endif
         }
 

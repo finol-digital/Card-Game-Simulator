@@ -5,18 +5,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CardGameDef;
+using CardGameView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-using CardGameDef;
-using CardGameView;
+// ReSharper disable MemberCanBeProtected.Global
 
 namespace Cgs.Play.Zones
 {
     public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
-        public virtual IReadOnlyList<Card> Cards => extensionContent.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Value).ToList();
+        public virtual IReadOnlyList<Card> Cards => extensionContent.GetComponentsInChildren<CardModel>()
+            .Select(cardModel => cardModel.Value).ToList();
 
         public GameObject cardModelPrefab;
         public List<CardDropArea> cardDropZones;
@@ -50,7 +52,7 @@ namespace Cgs.Play.Zones
 
         public virtual void AddCard(Card card)
         {
-            CardModel newCardModel = Instantiate(cardModelPrefab, extensionContent).GetOrAddComponent<CardModel>();
+            var newCardModel = Instantiate(cardModelPrefab, extensionContent).GetOrAddComponent<CardModel>();
             newCardModel.Value = card;
             OnAddCardModel(null, newCardModel);
         }
@@ -90,16 +92,16 @@ namespace Cgs.Play.Zones
 
         public IEnumerator DisplayShuffle()
         {
-            if (statusText != null)
-            {
-                if (shuffleButton != null)
-                    shuffleButton.SetActive(false);
-                statusText.gameObject.SetActive(true);
-                yield return new WaitForSeconds(1);
-                statusText.gameObject.SetActive(false);
-                if (shuffleButton != null)
-                    shuffleButton.SetActive(true);
-            }
+            if (statusText == null)
+                yield break;
+
+            if (shuffleButton != null)
+                shuffleButton.SetActive(false);
+            statusText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1);
+            statusText.gameObject.SetActive(false);
+            if (shuffleButton != null)
+                shuffleButton.SetActive(true);
         }
 
         public virtual void ToggleExtension()
@@ -112,12 +114,14 @@ namespace Cgs.Play.Zones
 
         public void ResizeExtension()
         {
-            RectTransform.Edge edge = RectTransform.Edge.Right;
-            float inset = ZonesViewer.Width - ZonesViewer.ScrollbarWidth;
-            float width = ((RectTransform)Viewer.transform).rect.width - ZonesViewer.Width + (Viewer.IsExtended ? 0 : inset);
+            const RectTransform.Edge edge = RectTransform.Edge.Right;
+            const float inset = ZonesViewer.Width - ZonesViewer.ScrollbarWidth;
+            float width = ((RectTransform) Viewer.transform).rect.width - ZonesViewer.Width +
+                          (Viewer.IsExtended ? 0 : inset);
             extension.SetInsetAndSizeFromParentEdge(edge, inset, width);
 
             extension.anchorMin = new Vector2(extension.anchorMin.x, 0);
+            // ReSharper disable once Unity.InefficientPropertyAccess
             extension.anchorMax = new Vector2(extension.anchorMin.x, 1);
             extension.offsetMin = new Vector2(extension.offsetMin.x, 0);
             extension.offsetMax = new Vector2(extension.offsetMax.x, 0);
@@ -128,7 +132,7 @@ namespace Cgs.Play.Zones
             countText.text = Cards.Count.ToString();
         }
 
-        public void Sync(List<Card> cards)
+        public void Sync(IEnumerable<Card> cards)
         {
             Clear();
             foreach (Card card in cards)
@@ -138,12 +142,13 @@ namespace Cgs.Play.Zones
         public IEnumerator WaitForLoad(UnityAction action)
         {
             IReadOnlyList<Card> deckCards = Cards;
-            bool loaded = false;
+            var loaded = false;
             while (!loaded)
             {
                 yield return null;
                 loaded = deckCards.Where(card => card.IsLoadingImage).ToList().Count == 0;
             }
+
             action();
         }
     }

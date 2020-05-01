@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 namespace Cgs.Menu
 {
     public delegate IEnumerator DownloadCoroutineDelegate(string url);
+
     public class DownloadMenu : Modal
     {
         public Text labelText;
@@ -22,17 +24,24 @@ namespace Cgs.Menu
             if (!IsFocused || urlInputField.isFocused)
                 return;
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) || Input.GetButtonDown(Inputs.New))
-                 && downloadButton.interactable)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) ||
+                 Input.GetButtonDown(Inputs.New))
+                && downloadButton.interactable)
                 StartDownload();
-            else if ((Input.GetButtonDown(Inputs.Sort) || Input.GetButtonDown(Inputs.Load)) && urlInputField.interactable)
+            else if ((Input.GetButtonDown(Inputs.Sort) || Input.GetButtonDown(Inputs.Load)) &&
+                     urlInputField.interactable)
                 Clear();
-            else if ((Input.GetButtonDown(Inputs.Filter) || Input.GetButtonDown(Inputs.Save)) && urlInputField.interactable)
+            else if ((Input.GetButtonDown(Inputs.Filter) || Input.GetButtonDown(Inputs.Save)) &&
+                     urlInputField.interactable)
                 Paste();
-            else if (((Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0)
-                || (Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0)) && urlInputField.interactable)
+            else if (((Input.GetButtonDown(Inputs.FocusBack) ||
+                       Math.Abs(Input.GetAxis(Inputs.FocusBack)) > Inputs.Tolerance)
+                      || (Input.GetButtonDown(Inputs.FocusNext) ||
+                          Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance)) &&
+                     urlInputField.interactable)
                 urlInputField.ActivateInputField();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) || Input.GetButtonDown(Inputs.Option))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) ||
+                     Input.GetButtonDown(Inputs.Option))
                 Hide();
         }
 
@@ -42,7 +51,7 @@ namespace Cgs.Menu
             transform.SetAsLastSibling();
 
             labelText.text = label;
-            (urlInputField.placeholder as Text).text = prompt;
+            ((Text) urlInputField.placeholder).text = prompt;
             DownloadCoroutine = downloadCoroutine;
         }
 
@@ -59,7 +68,7 @@ namespace Cgs.Menu
 
         public void CheckDownloadUrl(string url)
         {
-            downloadButton.interactable = System.Uri.IsWellFormedUriString(url.Trim(), System.UriKind.Absolute);
+            downloadButton.interactable = Uri.IsWellFormedUriString(url.Trim(), UriKind.Absolute);
         }
 
         public void StartDownload()
@@ -76,6 +85,7 @@ namespace Cgs.Menu
 
             yield return DownloadCoroutine(url);
 
+            // ReSharper disable once Unity.InefficientPropertyAccess
             urlInputField.interactable = true;
             Hide();
         }

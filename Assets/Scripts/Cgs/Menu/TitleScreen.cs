@@ -40,7 +40,7 @@ namespace Cgs.Menu
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
+            if (((RectTransform) transform).rect.width < MinWidth) // Portrait
             {
                 backgroundImage.sprite = backgroundSpritePortrait;
                 footerImage.preserveAspect = false;
@@ -68,17 +68,19 @@ namespace Cgs.Menu
                 footerImage.sprite = footerSpriteLandscape;
                 centerText.fontSize = CenterTextFontSizeLandscape;
                 companyText.fontSize = MetaTextFontSizeLandscape;
-                companyText.rectTransform.anchorMin = Vector2.right / 2;
-                companyText.rectTransform.anchorMax = Vector2.right / 2;
-                companyText.rectTransform.pivot = Vector2.right / 2;
-                companyText.rectTransform.offsetMin = CompanyTextLandscapePosition;
-                companyText.rectTransform.offsetMax = CompanyTextLandscapeDimensions;
+                RectTransform companyTransform = companyText.rectTransform;
+                companyTransform.anchorMin = Vector2.right / 2;
+                companyTransform.anchorMax = Vector2.right / 2;
+                companyTransform.pivot = Vector2.right / 2;
+                companyTransform.offsetMin = CompanyTextLandscapePosition;
+                companyTransform.offsetMax = CompanyTextLandscapeDimensions;
                 versionText.fontSize = MetaTextFontSizeLandscape;
-                versionText.rectTransform.anchorMin = Vector2.right / 2;
-                versionText.rectTransform.anchorMax = Vector2.right / 2;
-                versionText.rectTransform.pivot = Vector2.right / 2;
-                versionText.rectTransform.offsetMin = VersionTextLandscapeOffsetMin;
-                versionText.rectTransform.offsetMax = VersionTextLandscapeOffsetMax;
+                RectTransform versionTransform = versionText.rectTransform;
+                versionTransform.anchorMin = Vector2.right / 2;
+                versionTransform.anchorMax = Vector2.right / 2;
+                versionTransform.pivot = Vector2.right / 2;
+                versionTransform.offsetMin = VersionTextLandscapeOffsetMin;
+                versionTransform.offsetMax = VersionTextLandscapeOffsetMax;
             }
         }
 

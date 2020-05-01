@@ -4,7 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New
+## Current Sprint
 - Fix: Adding card to play area freezes server
 - Change port forwarding to port 7777
 - In game port forwarding notification
@@ -14,7 +14,7 @@ permalink: roadmap.html
 - Scoreboard
 - Playmats
 
-## Current Sprint
+## Next Sprint
 - Highlight auto scroll area when auto scrolling
 - Play Mode Redesign
   - Allow cards to snap to each other when moving them
