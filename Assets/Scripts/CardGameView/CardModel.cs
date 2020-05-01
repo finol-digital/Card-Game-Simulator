@@ -12,8 +12,8 @@ using UnityEngine.EventSystems;
 using Mirror;
 
 using CardGameDef;
-using CGS;
-using CGS.Play.Multiplayer;
+using Cgs;
+using Cgs.Play.Multiplayer;
 
 namespace CardGameView
 {

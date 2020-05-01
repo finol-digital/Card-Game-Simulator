@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 using CardGameDef;
-using CGS;
+using Cgs;
 
 namespace CardGameView
 {

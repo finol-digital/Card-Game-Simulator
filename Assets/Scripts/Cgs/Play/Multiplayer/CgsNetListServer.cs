@@ -1,0 +1,174 @@
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+using System.Collections;
+using System.IO;
+using System.Net;
+using System.Text;
+using UnityEngine;
+using Mirror;
+
+namespace Cgs.Play.Multiplayer
+{
+    public delegate void OnServerListedDelegate(ServerStatus response);
+
+    public class ServerStatus
+    {
+        public readonly string Ip;
+        public readonly string GameName;
+        public readonly ushort Players;
+        public readonly ushort Capacity;
+
+        public ServerStatus(string ip, string gameName, ushort players, ushort capacity)
+        {
+            Ip = ip;
+            GameName = gameName;
+            Players = players;
+            Capacity = capacity;
+        }
+
+        public override string ToString()
+        {
+            return $"{GameName}\n{Ip} - {Players}/{Capacity}";
+        }
+    }
+
+    public class CgsNetListServer : MonoBehaviour
+    {
+        public const string ListServerIp = "35.232.64.143";
+        public const ushort GameServerToListenPort = 8887;
+        public const ushort ClientToListenPort = 8888;
+
+        public OnServerListedDelegate OnServerFound { get; set; }
+
+        private readonly Telepathy.Client _gameServerToListenConnection = new Telepathy.Client();
+        private readonly Telepathy.Client _clientToListenConnection = new Telepathy.Client();
+
+        public void StartGameServer()
+        {
+            Stop();
+            Debug.Log("[List Server] Starting game server...");
+            StartCoroutine(TickGameServer());
+        }
+
+        private IEnumerator TickGameServer()
+        {
+            while (true)
+            {
+                if (_gameServerToListenConnection.Connected)
+                {
+//                    Debug.Log("[CgsNet List Server] GameServer connected and sending status...");
+                    SendStatus();
+                }
+                else if (!_gameServerToListenConnection.Connecting)
+                {
+                    Debug.Log("[CgsNet List Server] GameServer connecting...");
+                    _gameServerToListenConnection.Connect(ListServerIp, GameServerToListenPort);
+                }
+                else
+                {
+                    Debug.LogError("[CgsNet List Server] GameServer is ticking but not connecting.");
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(1.0f);
+            }
+        }
+
+        private void SendStatus()
+        {
+            var writer = new BinaryWriter(new MemoryStream());
+
+            // create message
+            writer.Write((ushort) NetworkServer.connections.Count);
+            writer.Write((ushort) NetworkManager.singleton.maxConnections);
+            byte[] gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
+            writer.Write((ushort) gameNameBytes.Length);
+            writer.Write(gameNameBytes);
+            writer.Flush();
+
+            // list server only allows up to 128 bytes per message
+            if (writer.BaseStream.Position <= 128)
+            {
+                if (!_gameServerToListenConnection.Send(((MemoryStream) writer.BaseStream).ToArray()))
+                    Debug.LogError("[CgsNet List Server] GameServer failed to send status!");
+            }
+            else
+                Debug.LogError(
+                    "[CgsNet List Server] List Server will reject messages longer than 128 bytes. Game Name is too long.");
+        }
+
+        public void StartClient()
+        {
+            Stop();
+            Debug.Log("[CgsNet List Server] Starting client...");
+            StartCoroutine(TickClient());
+        }
+
+        private IEnumerator TickClient()
+        {
+            while (true)
+            {
+                if (_clientToListenConnection.Connected)
+                {
+                    // receive latest game server info
+                    while (_clientToListenConnection.GetNextMessage(out Telepathy.Message message))
+                    {
+                        // connected?
+                        if (message.eventType == Telepathy.EventType.Connected)
+                            Debug.Log("[CgsNet List Server] Client connected!");
+                        // data message?
+                        else if (message.eventType == Telepathy.EventType.Data)
+                            OnServerFound(ParseMessage(message.data));
+                        // disconnected?
+                        else if (message.eventType == Telepathy.EventType.Disconnected)
+                            Debug.Log("[CgsNet List Server] Client disconnected.");
+                    }
+                }
+                else if (!_clientToListenConnection.Connecting)
+                {
+                    Debug.Log("[CgsNet List Server] Client connecting...");
+                    _clientToListenConnection.Connect(ListServerIp, ClientToListenPort);
+                }
+                else
+                {
+                    Debug.LogError("[CgsNet List Server] Client is ticking but not connecting.");
+                    yield break;
+                }
+
+                yield return new WaitForSeconds(1.0f);
+            }
+        }
+
+        private static ServerStatus ParseMessage(byte[] bytes)
+        {
+            // note: we don't use ReadString here because the list server
+            //       doesn't know C#'s '7-bit-length + utf8' encoding for strings
+            var reader = new BinaryReader(new MemoryStream(bytes, false), Encoding.UTF8);
+            byte ipBytesLength = reader.ReadByte();
+            byte[] ipBytes = reader.ReadBytes(ipBytesLength);
+            var ip = new IPAddress(ipBytes).ToString();
+            ushort players = reader.ReadUInt16();
+            ushort capacity = reader.ReadUInt16();
+            ushort gameNameLength = reader.ReadUInt16();
+            string gameName = Encoding.UTF8.GetString(reader.ReadBytes(gameNameLength));
+            return new ServerStatus(ip, gameName, players, capacity);
+        }
+
+        public void Stop()
+        {
+            Debug.Log("[CgsNet List Server] Stopping...");
+            if (_clientToListenConnection.Connected)
+                _clientToListenConnection.Disconnect();
+            if (_gameServerToListenConnection.Connected)
+                _gameServerToListenConnection.Disconnect();
+            StopAllCoroutines();
+        }
+
+        void OnApplicationQuit()
+        {
+            Stop();
+        }
+    }
+}
