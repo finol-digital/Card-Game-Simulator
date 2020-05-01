@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Cgs
 {
-    public enum ScreenOrientationPref : int
+    public enum ScreenOrientationPref
     {
-        OSControl,
+        OsControl,
         AutoRotate,
         Portrait,
         Landscape
@@ -21,19 +21,19 @@ namespace Cgs
 
         public static ScreenOrientationPref PreferredScreenOrientation
         {
-            get { return (ScreenOrientationPref)PlayerPrefs.GetInt(PlayerPrefScreenOrientation); }
+            get => (ScreenOrientationPref) PlayerPrefs.GetInt(PlayerPrefScreenOrientation);
             set
             {
                 if (value == PreferredScreenOrientation)
                     return;
-                PlayerPrefs.SetInt(PlayerPrefScreenOrientation, (int)value);
+                PlayerPrefs.SetInt(PlayerPrefScreenOrientation, (int) value);
                 ResetOrientation();
             }
         }
 
         public static bool DoesControllerLockToLandscape
         {
-            get { return PlayerPrefs.GetInt(PlayerPrefControllerLockToLandscape, 0) == 1; }
+            get => PlayerPrefs.GetInt(PlayerPrefControllerLockToLandscape, 0) == 1;
             set
             {
                 if (value == DoesControllerLockToLandscape)
@@ -43,25 +43,29 @@ namespace Cgs
             }
         }
 
-        public static bool DoesOSWantAutoRotation
+        public static bool DoesOsWantAutoRotation
         {
             get
             {
-                bool doesOSWantAutoRotation = true;
+                bool doesOsWantAutoRotation = true;
 #if UNITY_ANDROID && !UNITY_EDITOR
                 using (AndroidJavaClass actClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
                 {
                     AndroidJavaObject context = actClass.GetStatic<AndroidJavaObject>("currentActivity");
                     AndroidJavaClass systemGlobal = new AndroidJavaClass("android.provider.Settings$System");
-                    int rotationOn = systemGlobal.CallStatic<int>("getInt", context.Call<AndroidJavaObject>("getContentResolver"), "accelerometer_rotation");
-                    doesOSWantAutoRotation = rotationOn==1;
+                    int rotationOn =
+ systemGlobal.CallStatic<int>("getInt", context.Call<AndroidJavaObject>("getContentResolver"), "accelerometer_rotation");
+                    doesOsWantAutoRotation = rotationOn==1;
                 }
 #endif
-                return doesOSWantAutoRotation;
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                return doesOsWantAutoRotation;
             }
         }
 
-        public static bool IsControllerConnected => Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length > 0;
+        public static bool IsControllerConnected =>
+            Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length > 0;
+
         public static bool WasControllerConnected { get; private set; }
 
         public static void ResetOrientation()
@@ -77,10 +81,14 @@ namespace Cgs
             else
             {
                 bool autoRotationOn = PreferredScreenOrientation == ScreenOrientationPref.AutoRotate
-                    || (PreferredScreenOrientation == ScreenOrientationPref.OSControl && DoesOSWantAutoRotation);
-                Screen.autorotateToPortrait = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
-                Screen.autorotateToPortraitUpsideDown = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
-                Screen.autorotateToLandscapeLeft = autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
+                                      || (PreferredScreenOrientation == ScreenOrientationPref.OsControl &&
+                                          DoesOsWantAutoRotation);
+                Screen.autorotateToPortrait =
+                    autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
+                Screen.autorotateToPortraitUpsideDown =
+                    autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
+                Screen.autorotateToLandscapeLeft =
+                    autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
                 Screen.autorotateToLandscapeRight = autoRotationOn;
                 switch (PreferredScreenOrientation)
                 {
@@ -90,13 +98,12 @@ namespace Cgs
                     case ScreenOrientationPref.Portrait:
                         Screen.orientation = ScreenOrientation.Portrait;
                         break;
-                    case ScreenOrientationPref.OSControl:
+                    case ScreenOrientationPref.OsControl:
                     case ScreenOrientationPref.AutoRotate:
                     default:
                         Screen.orientation = ScreenOrientation.AutoRotation;
                         break;
                 }
-
             }
         }
 

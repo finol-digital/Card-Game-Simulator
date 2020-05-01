@@ -31,7 +31,7 @@ namespace Cgs.Menu
         {
             switch (ScreenOrientationManager.PreferredScreenOrientation)
             {
-                case ScreenOrientationPref.OSControl:
+                case ScreenOrientationPref.OsControl:
                     screenOsControlToggle.isOn = true;
                     break;
                 case ScreenOrientationPref.AutoRotate:
@@ -62,7 +62,7 @@ namespace Cgs.Menu
         public void SetScreenOsControl(bool isOn)
         {
             if (isOn)
-                ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.OSControl;
+                ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.OsControl;
         }
 
         public void SetScreenAutoRotate(bool isOn)

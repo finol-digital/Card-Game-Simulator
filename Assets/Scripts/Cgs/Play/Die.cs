@@ -4,14 +4,15 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using Mirror;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Cgs.Play
 {
-    public class Die : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler
+    public class Die : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
+        IBeginDragHandler, IDragHandler
     {
         public const float RollTime = 1.0f;
         public const float RollDelay = 0.05f;
@@ -26,7 +27,7 @@ namespace Cgs.Play
 
         public int Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 _value = value;
@@ -37,8 +38,8 @@ namespace Cgs.Play
                 valueText.text = _value.ToString();
             }
         }
-        [SyncVar]
-        private int _value;
+
+        [SyncVar] private int _value;
 
         void Start()
         {
@@ -53,7 +54,7 @@ namespace Cgs.Play
 
         public IEnumerator DoRoll()
         {
-            float elapsedTime = 0f;
+            var elapsedTime = 0f;
             while (elapsedTime < RollTime)
             {
                 Value = Random.Range(Min, Max);
@@ -83,7 +84,9 @@ namespace Cgs.Play
         }
 
         // Required for OnPointerUp to trigger
-        public void OnPointerDown(PointerEventData eventData) { }
+        public void OnPointerDown(PointerEventData eventData)
+        {
+        }
 
         public void OnPointerUp(PointerEventData eventData)
         {
@@ -104,7 +107,7 @@ namespace Cgs.Play
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            DragOffset = eventData.position - ((Vector2)transform.position);
+            DragOffset = eventData.position - ((Vector2) transform.position);
             transform.SetAsLastSibling();
             HideButtons();
         }

@@ -3,17 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Events;
-
 using CardGameDef;
 using Cgs.Menu;
-using Cgs.Play.Multiplayer;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace Cgs
 {
@@ -21,26 +19,39 @@ namespace Cgs
     {
         // Show all Debug.Log() to help with debugging?
         public const bool IsMessengerDebugLogVerbose = false;
-        public const string GameId = "GameId";
         public const string PlayerPrefDefaultGame = "DefaultGame";
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        public const string GameId = "GameId";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
+#endif
         public const string EmptyNameWarning = "Found game with missing name!";
         public const string DefaultNameWarning = "Found game with default name. Deleting it.";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!";
         public const string DownloadErrorMessage = "Error downloading game!: ";
         public const string LoadErrorMessage = "Error loading game!: ";
-        public const string LoadErrorPrompt = "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
+
+        public const string LoadErrorPrompt =
+            "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
+
         public const string CardsLoadedMessage = "{0} cards loaded!";
         public const string CardsLoadingMessage = "{0} cards loading...";
         public const string DeleteErrorMessage = "Error deleting game!: ";
         public const string DeleteWarningMessage = "Please download additional card games before deleting.";
-        public const string DeletePrompt = "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
+
+        public const string DeletePrompt =
+            "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
+
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public const string ShareTitle = "Card Game Simulator - {0}";
         public const string ShareDescription = "Play {0} on CGS!";
         public const string ShareBranchMessage = "Get CGS for {0}: {1}";
+#endif
         public const string ShareUrlMessage = "Copied the CGS AutoUpdate Url for {0}: {1}";
-        public const string ShareWarningMessage = "You must upload this card game to the web in order to share it. Please check the CGS website. ";
+
+        public const string ShareWarningMessage =
+            "You must upload this card game to the web in order to share it. Please check the CGS website. ";
+
         public const int CardsLoadingMessageThreshold = 60;
         public const int PixelsPerInch = 100;
 
@@ -55,44 +66,54 @@ namespace Cgs
                 return _instance;
             }
         }
+
         private static CardGameManager _instance;
 
         public static CardGame Current { get; private set; } = CardGame.Invalid;
-        public static bool IsQuitting { get; private set; } = false;
+        public static bool IsQuitting { get; private set; }
 
         public bool IsSearchingForServer { get; set; }
 
         public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
-        public SortedList<string, string> GamesListing => new SortedList<string, string>(AllCardGames.ToDictionary(game => game.Key, game => game.Value.Name));
+
         public CardGame Previous
         {
             get
             {
                 CardGame previous = AllCardGames.Values.LastOrDefault() ?? CardGame.Invalid;
-                SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
-                bool found = false;
-                while (!found && allCardGamesEnum.MoveNext())
+
+                using (SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator())
                 {
-                    if (allCardGamesEnum.Current.Value != Current)
-                        previous = allCardGamesEnum.Current.Value;
-                    else
-                        found = true;
+                    var found = false;
+                    while (!found && allCardGamesEnum.MoveNext())
+                    {
+                        if (allCardGamesEnum.Current.Value != Current)
+                            previous = allCardGamesEnum.Current.Value;
+                        else
+                            found = true;
+                    }
                 }
+
                 return previous;
             }
         }
+
         public CardGame Next
         {
             get
             {
                 CardGame next = AllCardGames.Values.FirstOrDefault() ?? CardGame.Invalid;
-                SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator();
-                bool found = false;
-                while (!found && allCardGamesEnum.MoveNext())
-                    if (allCardGamesEnum.Current.Value == Current)
-                        found = true;
-                if (allCardGamesEnum.MoveNext())
-                    next = allCardGamesEnum.Current.Value;
+
+                using (SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator())
+                {
+                    var found = false;
+                    while (!found && allCardGamesEnum.MoveNext())
+                        if (allCardGamesEnum.Current.Value == Current)
+                            found = true;
+                    if (allCardGamesEnum.MoveNext())
+                        next = allCardGamesEnum.Current.Value;
+                }
+
                 return next;
             }
         }
@@ -100,6 +121,7 @@ namespace Cgs
         public HashSet<UnityAction> OnSceneActions { get; } = new HashSet<UnityAction>();
 
         public HashSet<Canvas> CardCanvases { get; } = new HashSet<Canvas>();
+
         public Canvas CardCanvas
         {
             get
@@ -107,13 +129,15 @@ namespace Cgs
                 Canvas topCanvas = null;
                 CardCanvases.RemoveWhere((canvas) => canvas == null);
                 foreach (Canvas canvas in CardCanvases)
-                    if (canvas.gameObject.activeSelf && (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
+                    if (canvas.gameObject.activeSelf &&
+                        (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
                         topCanvas = canvas;
                 return topCanvas;
             }
         }
 
         public HashSet<Canvas> ModalCanvases { get; } = new HashSet<Canvas>();
+
         public Canvas ModalCanvas
         {
             get
@@ -121,7 +145,8 @@ namespace Cgs
                 Canvas topCanvas = null;
                 ModalCanvases.RemoveWhere((canvas) => canvas == null);
                 foreach (Canvas canvas in ModalCanvases)
-                    if (canvas.gameObject.activeSelf && (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
+                    if (canvas.gameObject.activeSelf &&
+                        (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
                         topCanvas = canvas;
                 return topCanvas;
             }
@@ -137,6 +162,7 @@ namespace Cgs
                 return _messenger;
             }
         }
+
         private Dialog _messenger;
 
         public ProgressBar Progress
@@ -149,6 +175,7 @@ namespace Cgs
                 return _spinner;
             }
         }
+
         private ProgressBar _spinner;
 
         void Awake()
@@ -158,6 +185,7 @@ namespace Cgs
                 Destroy(gameObject);
                 return;
             }
+
             _instance = this;
             CardGame.Invalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
@@ -181,7 +209,8 @@ namespace Cgs
 #elif UNITY_WEBGL
             if (!Directory.Exists(CardGame.GamesDirectoryPath))
                 Directory.CreateDirectory(CardGame.GamesDirectoryPath);
-            string standardPlayingCardsDirectory = CardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
+            string standardPlayingCardsDirectory =
+ CardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
             if (!Directory.Exists(standardPlayingCardsDirectory))
                 Directory.CreateDirectory(standardPlayingCardsDirectory);
             File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName, Tags.StandPlayingCardsJsonFileContent);
@@ -207,7 +236,8 @@ namespace Cgs
 
         private void LookupCardGames()
         {
-            if (!Directory.Exists(CardGame.GamesDirectoryPath) || Directory.GetDirectories(CardGame.GamesDirectoryPath).Length < 1)
+            if (!Directory.Exists(CardGame.GamesDirectoryPath) ||
+                Directory.GetDirectories(CardGame.GamesDirectoryPath).Length < 1)
                 CreateDefaultCardGames();
 
             foreach (string gameDirectory in Directory.GetDirectories(CardGame.GamesDirectoryPath))
@@ -219,12 +249,18 @@ namespace Cgs
                 else if (name.Equals(CardGame.DefaultName))
                 {
                     Debug.LogWarning(DefaultNameWarning);
-                    try { Directory.Delete(gameDirectory, true); }
-                    catch (Exception ex) { Debug.LogError(DeleteErrorMessage + ex.Message); }
+                    try
+                    {
+                        Directory.Delete(gameDirectory, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError(DeleteErrorMessage + ex.Message);
+                    }
                 }
                 else
                 {
-                    CardGame newCardGame = new CardGame(this, game.name, game.url);
+                    var newCardGame = new CardGame(this, game.name, game.url);
                     newCardGame.ReadProperties();
                     if (!string.IsNullOrEmpty(newCardGame.Error))
                         Debug.LogError(LoadErrorMessage + newCardGame.Error);
@@ -236,6 +272,7 @@ namespace Cgs
 
         void ShowLogToUser(string logString, string stackTrace, LogType type)
         {
+            // ReSharper disable once RedundantLogicalConditionalExpressionOperand
             if (IsMessengerDebugLogVerbose || !LogType.Log.Equals(type))
                 Messenger.Show(logString);
         }
@@ -250,6 +287,7 @@ namespace Cgs
             OnSceneActions.Clear();
         }
 
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public void BranchCallbackWithParams(Dictionary<string, object> parameters, string error)
         {
             if (!string.IsNullOrEmpty(error))
@@ -259,21 +297,26 @@ namespace Cgs
                 return;
             }
 
-            if (parameters.TryGetValue(GameId, out object gameId))
-            {
-                if (gameId is string)
-                    Select((string)gameId);
-                else
-                    Debug.LogWarning(BranchCallbackWarning);
-            }
+            if (!parameters.TryGetValue(GameId, out object gameId))
+                return;
+
+            if (gameId is string id)
+                Select(id);
+            else
+                Debug.LogWarning(BranchCallbackWarning);
         }
+
+#endif
 
         // Note: Does NOT Reset Game Scene
         public void ResetCurrentToDefault()
         {
-            string preferredGameId = PlayerPrefs.GetString(PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
-            Current = AllCardGames.TryGetValue(preferredGameId, out CardGame currentGame) && string.IsNullOrEmpty(currentGame.Error)
-                ? currentGame : (AllCardGames.FirstOrDefault().Value ?? CardGame.Invalid);
+            string preferredGameId =
+                PlayerPrefs.GetString(PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            Current = AllCardGames.TryGetValue(preferredGameId, out CardGame currentGame) &&
+                      string.IsNullOrEmpty(currentGame.Error)
+                ? currentGame
+                : (AllCardGames.FirstOrDefault().Value ?? CardGame.Invalid);
         }
 
         public IEnumerator GetCardGame(string gameUrl)
@@ -281,7 +324,7 @@ namespace Cgs
             // If user attempts to download a game they already have, we should just update that game
             CardGame existingGame = null;
             foreach (CardGame cardGame in AllCardGames.Values)
-                if (gameUrl.Equals(cardGame.AutoUpdateUrl))
+                if (cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl)))
                     existingGame = cardGame;
             if (existingGame != null)
             {
@@ -295,28 +338,35 @@ namespace Cgs
 
         public IEnumerator DownloadCardGame(string gameUrl)
         {
-            CardGame newGame = new CardGame(this, CardGame.DefaultName, gameUrl);
+            var cardGame = new CardGame(this, CardGame.DefaultName, gameUrl);
 
-            Progress.Show(newGame);
-            yield return newGame.Download();
+            Progress.Show(cardGame);
+            yield return cardGame.Download();
             Progress.Hide();
 
-            newGame.Load(UpdateCardGame, LoadCards);
+            cardGame.Load(UpdateCardGame, LoadCards);
 
-            if (!string.IsNullOrEmpty(newGame.Error))
+            if (!string.IsNullOrEmpty(cardGame.Error))
             {
                 Debug.LogError(DownloadErrorMessage + Current.Error);
                 Messenger.Show(DownloadErrorMessage + Current.Error);
-                if (Directory.Exists(newGame.GameDirectoryPath))
+
+                if (!Directory.Exists(cardGame.GameDirectoryPath))
+                    yield break;
+
+                try
                 {
-                    try { Directory.Delete(newGame.GameDirectoryPath, true); }
-                    catch (Exception ex) { Debug.LogError(DeleteErrorMessage + ex.Message); }
+                    Directory.Delete(cardGame.GameDirectoryPath, true);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError(DeleteErrorMessage + ex.Message);
                 }
             }
             else
             {
-                AllCardGames[newGame.Id] = newGame;
-                Select(newGame.Id);
+                AllCardGames[cardGame.Id] = cardGame;
+                Select(cardGame.Id);
             }
         }
 
@@ -347,10 +397,13 @@ namespace Cgs
             if (cardGame == null)
                 cardGame = Current;
 
-            for (int page = cardGame.AllCardsUrlPageCountStartIndex; page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount; page++)
+            for (int page = cardGame.AllCardsUrlPageCountStartIndex;
+                page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount;
+                page++)
             {
                 cardGame.LoadCards(page);
-                if (page == cardGame.AllCardsUrlPageCountStartIndex && cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
+                if (page == cardGame.AllCardsUrlPageCountStartIndex &&
+                    cardGame.AllCardsUrlPageCount > CardsLoadingMessageThreshold)
                     Messenger.Show(string.Format(CardsLoadingMessage, cardGame.Name));
                 yield return null;
             }
@@ -373,6 +426,7 @@ namespace Cgs
                 }
                 else
                     StartCoroutine(DownloadCardGame(gameUrl));
+
                 return;
             }
 
@@ -461,6 +515,7 @@ namespace Cgs
 #endif
         }
 
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public void ShareBranch()
         {
             BranchUniversalObject universalObject = new BranchUniversalObject();
@@ -470,9 +525,9 @@ namespace Cgs
             universalObject.contentDescription = string.Format(ShareDescription, Current.Name);
             universalObject.imageUrl = Current.BannerImageUrl?.OriginalString;
             universalObject.metadata.AddCustomMetadata(GameId, Current.Id);
-            BranchLinkProperties linkProperties = new BranchLinkProperties();
-            linkProperties.controlParams.Add(GameId, Current.Id);
-            Branch.getShortURL(universalObject, linkProperties, BranchCallbackWithUrl);
+            var branchLinkProperties = new BranchLinkProperties();
+            branchLinkProperties.controlParams.Add(GameId, Current.Id);
+            Branch.getShortURL(universalObject, branchLinkProperties, BranchCallbackWithUrl);
         }
 
         public void BranchCallbackWithUrl(string url, string error)
@@ -483,9 +538,10 @@ namespace Cgs
                 return;
             }
 
-            NativeShare nativeShare = new NativeShare();
+            var nativeShare = new NativeShare();
             nativeShare.SetText(string.Format(ShareBranchMessage, Current.Name, url)).Share();
         }
+#endif
 
         public void ShareUrl()
         {
