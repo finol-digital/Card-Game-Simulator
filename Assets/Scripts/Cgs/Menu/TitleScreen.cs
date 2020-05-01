@@ -47,17 +47,19 @@ namespace Cgs.Menu
                 footerImage.sprite = footerSpritePortrait;
                 centerText.fontSize = CenterTextFontSizePortrait;
                 companyText.fontSize = MetaTextFontSizePortrait;
-                companyText.rectTransform.anchorMin = Vector2.zero;
-                companyText.rectTransform.anchorMax = Vector2.zero;
-                companyText.rectTransform.pivot = Vector2.zero;
-                companyText.rectTransform.offsetMin = Vector2.zero;
-                companyText.rectTransform.offsetMax = CompanyTextPortraitDimensions;
+                RectTransform companyTransform = companyText.rectTransform;
+                companyTransform.anchorMin = Vector2.zero;
+                companyTransform.anchorMax = Vector2.zero;
+                companyTransform.pivot = Vector2.zero;
+                companyTransform.offsetMin = Vector2.zero;
+                companyTransform.offsetMax = CompanyTextPortraitDimensions;
                 versionText.fontSize = MetaTextFontSizePortrait;
-                versionText.rectTransform.anchorMin = Vector2.right;
-                versionText.rectTransform.anchorMax = Vector2.right;
-                versionText.rectTransform.pivot = Vector2.right;
-                versionText.rectTransform.offsetMin = VersionTextPortraitOffsetMin;
-                versionText.rectTransform.offsetMax = VersionTextPortraitOffsetMax;
+                RectTransform versionTransform = versionText.rectTransform;
+                versionTransform.anchorMin = Vector2.right;
+                versionTransform.anchorMax = Vector2.right;
+                versionTransform.pivot = Vector2.right;
+                versionTransform.offsetMin = VersionTextPortraitOffsetMin;
+                versionTransform.offsetMax = VersionTextPortraitOffsetMax;
             }
             else // Landscape
             {

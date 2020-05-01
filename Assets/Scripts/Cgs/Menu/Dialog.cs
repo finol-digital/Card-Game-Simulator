@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Cgs.Menu
 {
@@ -27,7 +27,7 @@ namespace Cgs.Menu
             {
                 return !string.IsNullOrEmpty(Text) && Text.Equals(other.Text);
             }
-        };
+        }
 
         protected Queue<Message> MessageQueue { get; } = new Queue<Message>();
         protected bool IsNewMessage { get; private set; }
@@ -68,7 +68,7 @@ namespace Cgs.Menu
 
         public void Ask(string text, UnityAction noAction, UnityAction yesAction)
         {
-            Message message = new Message() { Text = text, NoAction = noAction, YesAction = yesAction };
+            Message message = new Message() {Text = text, NoAction = noAction, YesAction = yesAction};
             if (gameObject.activeSelf)
             {
                 if (!MessageQueue.Contains(message))

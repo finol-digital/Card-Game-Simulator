@@ -3,10 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using CardGameDef;
 using UnityEngine;
 using UnityEngine.UI;
-
-using CardGameDef;
 
 namespace Cgs.Play.Zones
 {
@@ -17,39 +16,41 @@ namespace Cgs.Play.Zones
         public const float Height = 300f;
         public const float ScrollbarWidth = 80f;
 
-        public bool IsPortrait => ((RectTransform)transform).sizeDelta.y > ((RectTransform)transform).sizeDelta.x;
+        public bool IsPortrait => ((RectTransform) transform).sizeDelta.y > ((RectTransform) transform).sizeDelta.x;
 
         public bool IsExtended
         {
-            get
-            {
-                return ((RectTransform)scrollView.transform.parent).anchoredPosition.x < 1;
-            }
+            get => ((RectTransform) scrollView.transform.parent).anchoredPosition.x < 1;
             set
             {
-                RectTransform.Edge edge = RectTransform.Edge.Right;
-                float size = Width;
+                const RectTransform.Edge edge = RectTransform.Edge.Right;
+                const float size = Width;
                 float inset = value ? 0 : -(size - ScrollbarWidth);
-                ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, inset, size);
-                Results?.ResizeExtension();
-                Discard?.ResizeExtension();
+                ((RectTransform) scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, inset, size);
+                if (Results != null)
+                    Results.ResizeExtension();
+                if (Discard != null)
+                    Discard.ResizeExtension();
                 foreach (ExtensibleCardZone zone in ExtraZones)
                     zone.ResizeExtension();
-                CurrentDeck?.ResizeExtension();
-                Hand?.ResizeExtension();
+                if (CurrentDeck != null)
+                    CurrentDeck.ResizeExtension();
+                if (Hand != null)
+                    Hand.ResizeExtension();
                 ResetButtons();
             }
         }
 
         public bool IsVisible
         {
-            get { return scrollView.gameObject.activeSelf; }
+            get => scrollView.gameObject.activeSelf;
             set
             {
                 scrollView.gameObject.SetActive(value);
-                RectTransform.Edge edge = RectTransform.Edge.Top;
+                const RectTransform.Edge edge = RectTransform.Edge.Top;
                 float size = GetComponent<RectTransform>().rect.height;
-                ((RectTransform)scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, 0, scrollView.gameObject.activeSelf ? size : ScrollbarWidth);
+                ((RectTransform) scrollView.transform.parent).SetInsetAndSizeFromParentEdge(edge, 0,
+                    scrollView.gameObject.activeSelf ? size : ScrollbarWidth);
                 ResetButtons();
             }
         }
@@ -88,38 +89,43 @@ namespace Cgs.Play.Zones
         public void ResizeContent()
         {
             float height = Height;
-            int siblingIndex = 3;
+            var siblingIndex = 3;
             if (Results != null)
             {
-                height += ((RectTransform)Results.transform).rect.height;
+                height += ((RectTransform) Results.transform).rect.height;
                 Results.transform.SetSiblingIndex(siblingIndex);
                 siblingIndex++;
             }
+
             if (Discard != null)
             {
-                height += ((RectTransform)Discard.transform).rect.height;
+                height += ((RectTransform) Discard.transform).rect.height;
                 Discard.transform.SetSiblingIndex(siblingIndex);
                 siblingIndex++;
             }
+
             foreach (ExtensibleCardZone zone in ExtraZones)
             {
-                height += ((RectTransform)zone.transform).rect.height;
+                height += ((RectTransform) zone.transform).rect.height;
                 zone.transform.SetSiblingIndex(siblingIndex);
                 siblingIndex++;
             }
+
             if (CurrentDeck != null)
             {
-                height += ((RectTransform)CurrentDeck.transform).rect.height;
+                height += ((RectTransform) CurrentDeck.transform).rect.height;
                 CurrentDeck.transform.SetSiblingIndex(siblingIndex);
                 siblingIndex++;
             }
+
             if (Hand != null)
             {
-                height += ((RectTransform)Hand.transform).rect.height;
+                height += ((RectTransform) Hand.transform).rect.height;
                 Hand.transform.SetSiblingIndex(siblingIndex);
-                siblingIndex++;
             }
-            scrollView.content.sizeDelta = new Vector2(scrollView.content.sizeDelta.x, height);
+
+            RectTransform content = scrollView.content;
+            content.sizeDelta = new Vector2(content.sizeDelta.x, height);
         }
 
         public void CreateResults()
@@ -143,10 +149,11 @@ namespace Cgs.Play.Zones
             ResizeContent();
         }
 
-        public void CreateExtraZone(string name, List<Card> cards)
+        public void CreateExtraZone(string zoneName, List<Card> cards)
         {
-            ExtensibleCardZone extraZone = Instantiate(extraZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
-            extraZone.labelText.text = name;
+            ExtensibleCardZone extraZone =
+                Instantiate(extraZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
+            extraZone.labelText.text = zoneName;
             foreach (Card card in cards)
                 extraZone.AddCard(card);
             extraZone.Viewer = this;

@@ -3,10 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 namespace Cgs.Menu
 {
@@ -36,10 +37,14 @@ namespace Cgs.Menu
         public Text versionText;
 
         public DownloadMenu Downloader => _downloader ??
-                                              (_downloader = Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>());
+                                          (_downloader = Instantiate(downloadMenuPrefab)
+                                              .GetOrAddComponent<DownloadMenu>());
+
         private DownloadMenu _downloader;
+
         public CreateMenu Creator => _creator ??
-                                              (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<CreateMenu>());
+                                     (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<CreateMenu>());
+
         private CreateMenu _creator;
 
         private bool _wasLeft;
@@ -97,8 +102,8 @@ namespace Cgs.Menu
                     SelectNext();
             }
             else if ((Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0) &&
-                    (EventSystem.current.currentSelectedGameObject == null
-                    || EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
+                     (EventSystem.current.currentSelectedGameObject == null
+                      || EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
                 if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
                     SelectPrevious();
@@ -106,7 +111,7 @@ namespace Cgs.Menu
                     SelectNext();
             }
             else if ((Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
-                    && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
+                     && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
@@ -268,10 +273,9 @@ namespace Cgs.Menu
 
         public void Quit() =>
 #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
+            EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
-
     }
 }

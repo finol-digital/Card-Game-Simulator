@@ -9,10 +9,8 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Canvas))]
     public class Modal : MonoBehaviour
     {
-        public bool IsFocused
-        {
-            get { return CardGameManager.Instance.ModalCanvas?.gameObject == gameObject; }
-        }
+        public bool IsFocused => CardGameManager.Instance.ModalCanvas.gameObject != null &&
+                                 CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
 
         void Start()
         {
