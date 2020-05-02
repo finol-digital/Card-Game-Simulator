@@ -5,13 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using ICSharpCode.SharpZipLib.Zip;
 using UnityEngine;
 using UnityEngine.Networking;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 #if UNITY_ANDROID && !UNITY_EDITOR
 using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
 #endif
 
 public static class ThreadSafeRandom
@@ -188,6 +188,7 @@ public static class UnityExtensionMethods
             }
         }
     }
+#endif
 
     public static void ExtractZip(string zipPath, string targetDir)
     {
@@ -200,7 +201,6 @@ public static class UnityExtensionMethods
         var fastZip = new FastZip();
         fastZip.ExtractZip(zipPath, targetDir, null);
     }
-#endif
 
     public static void UnwrapFile(string filePath)
     {
