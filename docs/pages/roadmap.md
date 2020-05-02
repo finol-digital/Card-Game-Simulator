@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## Current Sprint
-- Fix: Adding card to play area freezes server
+- Fix: Network server freezes
 - Change port forwarding to port 7777
 - In game port forwarding notification
 - For internet-connected games, add session name and password options
