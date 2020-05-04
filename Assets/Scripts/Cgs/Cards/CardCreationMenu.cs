@@ -22,6 +22,9 @@ namespace Cgs.Cards
     {
         public const string DownloadCardImage = "Download Card Image";
         public const string DownloadCardImagePrompt = "Enter card image url...";
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+        public const string ImportImage = "Import Image";
+#endif
         public const string ImportImageWarningMessage = "No image file selected for import!";
         public const string ImageCreationFailedWarningMessage = "Failed to get the image! Unable to create the card.";
 

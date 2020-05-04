@@ -24,8 +24,9 @@ namespace Cgs.Menu
         public const string DownloadBannerImagePrompt = "Enter banner image url...";
         public const string DownloadCardBackImage = "Download Card Back Image";
         public const string DownloadCardBackImagePrompt = "Enter card back image url...";
-        // ReSharper disable once UnusedMember.Global
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public const string ImportImage = "Import Image";
+#endif
         public const string ImportImageWarningMessage = "No image file selected for import!";
         public const string CreateWarningMessage = "A game with that name already exists!";
         public const string CreationWarningMessage = "Failed to create the custom card game! ";
