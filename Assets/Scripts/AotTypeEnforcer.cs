@@ -15,7 +15,7 @@ public class AotTypeEnforcer : MonoBehaviour
         AotHelper.Ensure(() =>
         {
             // ReSharper disable once UseObjectOrCollectionInitializer
-            var cardGame = new CardGame(null);
+            var cardGame = new CardGame();
             cardGame.AllCardsUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.AllCardsUrlPageCount = 1;
             cardGame.AllCardsUrlPageCountDivisor = 1;
