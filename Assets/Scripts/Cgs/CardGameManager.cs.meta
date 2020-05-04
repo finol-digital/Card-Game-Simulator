@@ -1,13 +1,12 @@
 fileFormatVersion: 2
 guid: 6920e0423b49035438e0f18dd7c0581c
-timeCreated: 1507069898
-licenseType: Free
 MonoImporter:
+  externalObjects: {}
   serializedVersion: 2
   defaultReferences:
   - PopupPrefab: {fileID: 1841404771972492, guid: 159c1b942b201514d9d36c985ef3c58b,
-      type: 2}
-  executionOrder: -100
+      type: 3}
+  executionOrder: -50
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

@@ -5,19 +5,18 @@ permalink: roadmap.html
 # Roadmap
 
 ## Current Sprint
-mtg dec sideboard is extras
-ygo ydk side is also extra
-gamePlayDeckName (default="Deck")
-switch to default builder script and try out version code
-editor unit test to generate schema and confirm it matches docs/ folder
-runtime unit tests for StreamingAssets/ to match docs/ schema
 - Fix: Network server freezes
 - Change port forwarding to port 7777
 - In game port forwarding notification
 - For internet-connected games, add session name and password options
 - More dynamic restart (reset deck, and prompt redeal for each player)
 - Deal/Draw Hand prompts for gameStartHandCount cards
-- Scoreboard
+- dec sideboard is extras
+- ydk side is also extra
+- gamePlayDeckName (default="Deck")
+- switch to default builder script and try out version code
+- editor unit test to generate schema and confirm it matches docs/ folder
+- runtime unit tests for StreamingAssets/ to match docs/ schema
 - Playmats
 
 ## Next Sprint
@@ -79,12 +78,11 @@ runtime unit tests for StreamingAssets/ to match docs/ schema
 - Support different colored dice
 - Automatically roll dice on phone shake
 - Synchronize dice across all connected players in Play Mode
-- Show hotkeys from within Play Mode
 - Synchronize points across teams in Play Mode
 - Allow automatic deletion of empty zones in Play Mode
 - Organize cards by category when saving a deck in the Deck Editor
 - Allow rotation to keep viewing the currently selected card
-- Display keyboard shortcuts in-app
+- Display keyboard shortcuts/hotkeys in-app
 - Allow pre-fetching of card images
 - Set card image cache limit
 - Support different formats/game-types for custom card games

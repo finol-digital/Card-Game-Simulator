@@ -1,18 +1,17 @@
 fileFormatVersion: 2
 guid: b0811e85c2a95a448a549d2ed1176ac0
-timeCreated: 1510350099
-licenseType: Free
 MonoImporter:
+  externalObjects: {}
   serializedVersion: 2
   defaultReferences:
   - m_PlayerPrefab: {fileID: 1833244134286464, guid: 576a15ab1b0e4f34c8981877e9ab8029,
-      type: 2}
+      type: 3}
   - matchMaker: {instanceID: 0}
   - cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
-      type: 2}
+      type: 3}
   - playAreaContent: {instanceID: 0}
   - discovery: {instanceID: 0}
-  executionOrder: 0
+  executionOrder: -20
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
