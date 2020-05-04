@@ -5,12 +5,14 @@
 using System;
 using System.Collections;
 using System.IO;
+using CardGameDef;
+using CardGameDef.Unity;
+using Cgs.Menu;
+using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using TMPro;
-using CardGameDef;
-using Cgs.Menu;
 
 namespace Cgs.Decks
 {
@@ -28,7 +30,7 @@ namespace Cgs.Decks
         public InputField nameInputField;
         public TMP_Text textOutputArea;
 
-        public Deck CurrentDeck { get; private set; }
+        public UnityDeck CurrentDeck { get; private set; }
         public OnNameChangeDelegate NameChangeCallback { get; private set; }
         public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
         public bool DoesAutoOverwrite { get; private set; }
@@ -54,12 +56,12 @@ namespace Cgs.Decks
                 Hide();
         }
 
-        public void Show(Deck deckToShow, OnNameChangeDelegate nameChangeCallback = null,
+        public void Show(UnityDeck deckToShow, OnNameChangeDelegate nameChangeCallback = null,
             OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
-            CurrentDeck = deckToShow ?? new Deck(CardGameManager.Current);
+            CurrentDeck = deckToShow ?? new UnityDeck(CardGameManager.Current);
             NameChangeCallback = nameChangeCallback;
             DeckSaveCallback = deckSaveCallback;
             DoesAutoOverwrite = overwrite;
@@ -67,15 +69,17 @@ namespace Cgs.Decks
             textOutputArea.text = CurrentDeck.ToString();
         }
 
+        [UsedImplicitly]
         public void ChangeName(string newName)
         {
             if (NameChangeCallback != null)
                 newName = NameChangeCallback(newName);
             if (!string.IsNullOrEmpty(newName))
                 nameInputField.text = newName;
-            Deck newDeck = new Deck(CardGameManager.Current, newName, CardGameManager.Current.DeckFileType);
-            newDeck.Cards.AddRange(CurrentDeck.Cards);
-            textOutputArea.text = newDeck.ToString();
+            var deck = new UnityDeck(CardGameManager.Current, newName, CardGameManager.Current.DeckFileType);
+            foreach (Card card in deck.Cards)
+                deck.Add((UnityCard) card);
+            textOutputArea.text = deck.ToString();
         }
 
         public void Share()
@@ -92,7 +96,7 @@ namespace Cgs.Decks
         public void PrintPdf()
         {
             CurrentDeck.Name = nameInputField.text;
-            Deck deck = CurrentDeck;
+            UnityDeck deck = CurrentDeck;
             Uri pdfUri = null;
             try
             {
@@ -141,6 +145,7 @@ namespace Cgs.Decks
 #endif
         }
 
+        [UsedImplicitly]
         public void EnableSubmit()
         {
             if (!EventSystem.current.alreadySelecting)
@@ -149,7 +154,7 @@ namespace Cgs.Decks
 
         public void AttemptSaveAndHide()
         {
-            Deck filePathFinder = new Deck(CardGameManager.Current, nameInputField.text,
+            UnityDeck filePathFinder = new UnityDeck(CardGameManager.Current, nameInputField.text,
                 CardGameManager.Current.DeckFileType);
             if (!DoesAutoOverwrite && File.Exists(filePathFinder.FilePath))
                 CardGameManager.Instance.Messenger.Prompt(OverWriteDeckPrompt, SaveToFile);
@@ -165,7 +170,7 @@ namespace Cgs.Decks
             SaveToFile(CurrentDeck, DeckSaveCallback);
         }
 
-        public static void SaveToFile(Deck deck, OnDeckSavedDelegate deckSaveCallback = null)
+        public static void SaveToFile(UnityDeck deck, OnDeckSavedDelegate deckSaveCallback = null)
         {
             try
             {
@@ -181,6 +186,7 @@ namespace Cgs.Decks
             deckSaveCallback?.Invoke(deck);
         }
 
+        [UsedImplicitly]
         public void CancelAndHide()
         {
             NameChangeCallback?.Invoke(CurrentDeck.Name);

@@ -4,15 +4,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
+using CardGameDef.Decks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
-using Didstopia.PDFSharp.Pdf;
-using Didstopia.PDFSharp.Drawing;
 
 namespace CardGameDef
 {
@@ -21,221 +19,38 @@ namespace CardGameDef
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DeckFileType
     {
-        [EnumMember(Value = "dec")]
-        Dec,
-        [EnumMember(Value = "hsd")]
-        Hsd,
-        [EnumMember(Value = "txt")]
-        Txt,
-        [EnumMember(Value = "ydk")]
-        Ydk
+        [EnumMember(Value = "dec")] Dec,
+        [EnumMember(Value = "hsd")] Hsd,
+        [EnumMember(Value = "txt")] Txt,
+        [EnumMember(Value = "ydk")] Ydk
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DeckFileTxtId
     {
-        [EnumMember(Value = "id")]
-        Id,
-        [EnumMember(Value = "set")]
-        Set
+        [EnumMember(Value = "id")] Id,
+        [EnumMember(Value = "set")] Set
     }
 
     public class Deck : IEquatable<Deck>
     {
         public const string DefaultName = "Untitled";
-        public const float PrintPdfWidth = 8.5f;
-        public const float PrintPdfHeight = 11f;
-        public const float PrintPdfMargin = 0.5f;
-        public const int PrintPdfPixelsPerInch = 72;
-
-        public string FilePath => SourceGame.DecksFilePath + "/" + UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
-        public string PrintPdfDirectory => SourceGame.DecksFilePath + "/printpdf";
-        public string PrintPdfFilePath => PrintPdfDirectory + "/" + UnityExtensionMethods.GetSafeFileName(Name + ".pdf");
 
         public string Name { get; set; }
-        public DeckFileType FileType { get; private set; }
-        public List<Card> Cards { get; private set; }
 
-        protected CardGame SourceGame { get; private set; }
+        protected DeckFileType FileType { get; }
 
-        public Deck(CardGame sourceGame, string name = DefaultName, DeckFileType fileType = DeckFileType.Txt, List<Card> cards = null)
+        public virtual IReadOnlyCollection<Card> Cards { get; }
+
+        protected CardGame SourceGame { get; set; }
+
+        protected Deck(CardGame sourceGame, string name = DefaultName, DeckFileType fileType = DeckFileType.Txt,
+            IReadOnlyCollection<Card> cards = null)
         {
             SourceGame = sourceGame ?? CardGame.Invalid;
             Name = !string.IsNullOrEmpty(name) ? name.Clone() as string : DefaultName;
             FileType = fileType;
-            if (cards != null)
-                Cards = new List<Card>(cards);
-            else
-                Cards = new List<Card>();
-        }
-
-        public static Deck Parse(CardGame cardGame, string deckName, DeckFileType deckFileType, string deckText)
-        {
-            Deck newDeck = new Deck(cardGame, deckName, deckFileType);
-            if (string.IsNullOrEmpty(deckText))
-                return newDeck;
-
-            foreach (string line in deckText.Split('\n').Select(x => x.Trim()))
-            {
-                switch (deckFileType)
-                {
-                    case DeckFileType.Dec:
-                        newDeck.LoadDec(line);
-                        break;
-                    case DeckFileType.Hsd:
-                        newDeck.LoadHsd(line);
-                        break;
-                    case DeckFileType.Ydk:
-                        if (line.Equals("!side"))
-                            return newDeck;
-                        newDeck.LoadYdk(line);
-                        break;
-                    case DeckFileType.Txt:
-                    default:
-                        if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
-                            return newDeck;
-                        newDeck.LoadTxt(line);
-                        break;
-                }
-            }
-            return newDeck;
-        }
-
-        public void LoadDec(string line)
-        {
-            if (string.IsNullOrEmpty(line) || line.StartsWith("//") || line.StartsWith("SB:"))
-                return;
-
-            int cardCount = 1;
-            List<string> tokens = line.Split(' ').ToList();
-            if (tokens.Count > 0 && int.TryParse(tokens[0], out cardCount))
-                tokens.RemoveAt(0);
-            string cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
-            IEnumerable<Card> cards = SourceGame.FilterCards(new CardSearchFilters() { Name = cardName });
-            foreach (Card card in cards)
-            {
-                if (!string.Equals(card.Name, cardName, StringComparison.OrdinalIgnoreCase))
-                    continue;
-                for (int i = 0; i < cardCount; i++)
-                    Cards.Add(card);
-                break;
-            }
-        }
-
-        public void LoadHsd(string line)
-        {
-            if (string.IsNullOrEmpty(line))
-                return;
-            if (line.StartsWith("#"))
-            {
-                if (line.StartsWith("###"))
-                    Name = line.Substring(3).Trim();
-                return;
-            }
-
-            byte[] bytes = Convert.FromBase64String(line);
-            ulong offset = 3;
-            int length;
-
-            int numHeroes = (int)VarInt.Read(bytes, ref offset, out length);
-            for (int i = 0; i < numHeroes; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int)VarInt.Read(bytes, ref offset, out length), 1);
-
-            int numSingleCards = (int)VarInt.Read(bytes, ref offset, out length);
-            for (int i = 0; i < numSingleCards; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int)VarInt.Read(bytes, ref offset, out length), 1);
-
-            int numDoubleCards = (int)VarInt.Read(bytes, ref offset, out length);
-            for (int i = 0; i < numDoubleCards; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int)VarInt.Read(bytes, ref offset, out length), 2);
-
-            int numMultiCards = (int)VarInt.Read(bytes, ref offset, out length);
-            for (int i = 0; i < numMultiCards; i++)
-            {
-                int id = (int)VarInt.Read(bytes, ref offset, out length);
-                int count = (int)VarInt.Read(bytes, ref offset, out length);
-                AddCardsByPropertyInt(SourceGame.DeckFileAltId, id, count);
-            }
-
-            Sort();
-        }
-
-        public void AddCardsByPropertyInt(string propertyName, int propertyValue, int count)
-        {
-            Card card = SourceGame.Cards.Values.FirstOrDefault(currCard => currCard.GetPropertyValueInt(propertyName) == propertyValue);
-            for (int i = 0; card != null && i < count; i++)
-                Cards.Add(card);
-        }
-
-        public void AddCardsByPropertyString(string propertyName, string propertyValue, int count)
-        {
-            Card card = SourceGame.Cards.Values.FirstOrDefault(currCard => currCard.GetPropertyValueString(propertyName).Equals(propertyValue));
-            for (int i = 0; card != null && i < count; i++)
-                Cards.Add(card);
-        }
-
-        public void LoadYdk(string line)
-        {
-            if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
-                return;
-
-            AddCardsByPropertyString(SourceGame.DeckFileAltId, line, 1);
-        }
-
-        public void LoadTxt(string line)
-        {
-            if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.StartsWith("//") || line.Equals("Sideboard", StringComparison.OrdinalIgnoreCase) || line.Equals("Sideboard:"))
-                return;
-
-            int cardCount = 1;
-            string cardName = line;
-            string cardId = string.Empty;
-            string cardSet = string.Empty;
-            if (line.Contains(" "))
-            {
-                List<string> tokens = line.Split(' ').ToList();
-                if (tokens.Count > 0 && int.TryParse((tokens[0].StartsWith("x") || tokens[0].EndsWith("x")) ? tokens[0].Replace("x", "") : tokens[0], out cardCount))
-                    tokens.RemoveAt(0);
-
-                if (tokens.Count > 0 && tokens[0].StartsWith("[") && tokens[0].EndsWith("]"))
-                {
-                    cardId = tokens[0].Substring(1, tokens[0].Length - 2);
-                    tokens.RemoveAt(0);
-                }
-
-                if (tokens.Count > 0 && tokens[tokens.Count - 1].StartsWith("(") && tokens[tokens.Count - 1].EndsWith(")"))
-                {
-                    string inParens = tokens[tokens.Count - 1].Substring(1, tokens[tokens.Count - 1].Length - 2);
-                    if (SourceGame.Sets.ContainsKey(inParens))
-                    {
-                        cardSet = inParens;
-                        tokens.RemoveAt(tokens.Count - 1);
-                    }
-                }
-
-                cardName = tokens.Count > 0 ? string.Join(" ", tokens.ToArray()) : string.Empty;
-            }
-
-            IEnumerable<Card> cards = SourceGame.FilterCards(new CardSearchFilters() { Id = cardId, Name = cardName, SetCode = cardSet });
-            foreach (Card card in cards)
-            {
-                if (!card.Id.Equals(cardId) && (!string.Equals(card.Name.Trim(), cardName, StringComparison.OrdinalIgnoreCase) ||
-                                                (!string.IsNullOrEmpty(cardSet) && !cardSet.Equals(card.SetCode, StringComparison.OrdinalIgnoreCase))))
-                    continue;
-                for (int i = 0; i < cardCount; i++)
-                    Cards.Add(card);
-                break;
-            }
-        }
-
-        public void Shuffle()
-        {
-            Cards.Shuffle();
-        }
-
-        public void Sort()
-        {
-            Cards.Sort();
+            Cards = cards;
         }
 
         public Dictionary<Card, int> GetCardCounts()
@@ -243,11 +58,11 @@ namespace CardGameDef
             Dictionary<Card, int> cardCounts = new Dictionary<Card, int>();
             foreach (Card card in Cards)
             {
-                int currentCount = 0;
-                cardCounts.TryGetValue(card, out currentCount);
+                cardCounts.TryGetValue(card, out int currentCount);
                 currentCount++;
                 cardCounts[card] = currentCount;
             }
+
             return cardCounts;
         }
 
@@ -258,16 +73,20 @@ namespace CardGameDef
             {
                 foreach (ExtraDef extraDef in SourceGame.Extras)
                 {
-                    if (SourceGame.IsEnumProperty(extraDef.Property) ? !card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
-                                                                    : !card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value))
+                    if (SourceGame.IsEnumProperty(extraDef.Property)
+                        ? !card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
+                        : !card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value))
                         continue;
-                    string groupName = !string.IsNullOrEmpty(extraDef.Group) ? extraDef.Group : ExtraDef.DefaultExtraGroup;
+                    string groupName = !string.IsNullOrEmpty(extraDef.Group)
+                        ? extraDef.Group
+                        : ExtraDef.DefaultExtraGroup;
                     if (!extraGroups.ContainsKey(groupName))
                         extraGroups[groupName] = new List<Card>();
                     extraGroups[groupName].Add(card);
                     break;
                 }
             }
+
             return extraGroups;
         }
 
@@ -281,9 +100,10 @@ namespace CardGameDef
 
         public string ToDec()
         {
-            string text = string.Empty;
+            var text = string.Empty;
             Dictionary<Card, int> cardCounts = GetCardCounts();
-            return cardCounts.Keys.Aggregate(text, (current, card) => current + (cardCounts[card] + " " + card.Name + Environment.NewLine));
+            return cardCounts.Keys.Aggregate(text,
+                (current, card) => current + (cardCounts[card] + " " + card.Name + Environment.NewLine));
         }
 
         public string ToHsd()
@@ -296,7 +116,9 @@ namespace CardGameDef
             text += "#" + Environment.NewLine;
 
             Dictionary<Card, int> cardCounts = GetCardCounts();
-            text = cardCounts.Keys.Where(card => !extraCards.Contains(card)).Aggregate(text, (current, card) => current + ("# " + cardCounts[card] + "x (" + card.GetPropertyValueString("cost") + ") " + card.Name + Environment.NewLine));
+            text = cardCounts.Keys.Where(card => !extraCards.Contains(card)).Aggregate(text,
+                (current, card) => current + ("# " + cardCounts[card] + "x (" + card.GetPropertyValueString("cost") +
+                                              ") " + card.Name + Environment.NewLine));
             text += "#" + Environment.NewLine;
 
             text += SerializeHsd() + Environment.NewLine;
@@ -305,11 +127,11 @@ namespace CardGameDef
 
         public string SerializeHsd()
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var memoryStream = new MemoryStream())
             {
-                ms.WriteByte(0);
-                VarInt.Write(ms, 1);
-                VarInt.Write(ms, 1);
+                memoryStream.WriteByte(0);
+                VarInt.Write(memoryStream, 1);
+                VarInt.Write(memoryStream, 1);
 
                 Dictionary<Card, int> cardCounts = GetCardCounts();
                 List<Card> extraCards = GetExtraCards();
@@ -320,26 +142,26 @@ namespace CardGameDef
                 doubleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
                 nCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
 
-                VarInt.Write(ms, extraCards.Count);
+                VarInt.Write(memoryStream, extraCards.Count);
                 foreach (Card card in extraCards)
-                    VarInt.Write(ms, card.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    VarInt.Write(memoryStream, card.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
-                VarInt.Write(ms, singleCopy.Count);
+                VarInt.Write(memoryStream, singleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    VarInt.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
-                VarInt.Write(ms, doubleCopy.Count);
+                VarInt.Write(memoryStream, doubleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    VarInt.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
-                VarInt.Write(ms, nCopy.Count);
+                VarInt.Write(memoryStream, nCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in nCopy)
                 {
-                    VarInt.Write(ms, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
-                    VarInt.Write(ms, cardCount.Value);
+                    VarInt.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    VarInt.Write(memoryStream, cardCount.Value);
                 }
 
-                return Convert.ToBase64String(ms.ToArray());
+                return Convert.ToBase64String(memoryStream.ToArray());
             }
         }
 
@@ -351,9 +173,13 @@ namespace CardGameDef
             mainCards.RemoveAll(card => extraCards.Contains(card));
 
             text += "#main" + Environment.NewLine;
-            text = mainCards.Aggregate(text, (current, card) => current + (card.GetPropertyValueString(SourceGame.DeckFileAltId) + Environment.NewLine));
+            text = mainCards.Aggregate(text,
+                (current, card) =>
+                    current + (card.GetPropertyValueString(SourceGame.DeckFileAltId) + Environment.NewLine));
             text += "#extra" + Environment.NewLine;
-            text = extraCards.Aggregate(text, (current, card) => current + (card.GetPropertyValueString(SourceGame.DeckFileAltId) + Environment.NewLine));
+            text = extraCards.Aggregate(text,
+                (current, card) =>
+                    current + (card.GetPropertyValueString(SourceGame.DeckFileAltId) + Environment.NewLine));
 
             text += "!side" + Environment.NewLine;
             return text;
@@ -374,14 +200,17 @@ namespace CardGameDef
                     text.AppendFormat("[{0}]", cardCount.Key.Id);
                     text.Append(" ");
                 }
+
                 text.Append(cardCount.Key.Name);
                 if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Set)
                 {
                     text.Append(" ");
                     text.AppendFormat("({0})", cardCount.Key.SetCode);
                 }
+
                 text.AppendLine();
             }
+
             return text.ToString();
         }
 
@@ -404,6 +233,7 @@ namespace CardGameDef
                     text = ToTxt();
                     break;
             }
+
             return text;
         }
 
@@ -411,48 +241,5 @@ namespace CardGameDef
         {
             return other != null && ToString().Equals(other.ToString());
         }
-
-        // NOTE: CAN THROW EXCEPTION
-        public Uri PrintPdf()
-        {
-            if (!Directory.Exists(PrintPdfDirectory))
-                Directory.CreateDirectory(PrintPdfDirectory);
-
-            ImageSource.ImageSourceImpl = new ImageSharpImageSource();
-            PdfDocument document = new PdfDocument();
-            document.Info.Title = Name;
-
-            int cardsPerRow = (int)Math.Floor((PrintPdfWidth - PrintPdfMargin * 2) / SourceGame.CardSize.x);
-            int rowsPerPage = (int)Math.Floor((PrintPdfHeight - PrintPdfMargin * 2) / SourceGame.CardSize.y);
-            int cardsPerPage = cardsPerRow * rowsPerPage;
-            PdfPage page = null;
-            XGraphics gfx = null;
-            double px = PrintPdfMargin * PrintPdfPixelsPerInch, py = PrintPdfMargin * PrintPdfPixelsPerInch;
-            for (int cardNumber = 0; cardNumber < Cards.Count; cardNumber++)
-            {
-                if (page == null || cardNumber % cardsPerPage == 0)
-                {
-                    page = document.AddPage();
-                    page.Size = Didstopia.PDFSharp.PageSize.Letter;
-                    gfx = XGraphics.FromPdfPage(page);
-                    py = PrintPdfMargin * PrintPdfPixelsPerInch;
-                }
-                XImage image = XImage.FromFile(Cards[cardNumber].ImageFilePath);
-                gfx.DrawImage(image, px, py, SourceGame.CardSize.x * PrintPdfPixelsPerInch, SourceGame.CardSize.y * PrintPdfPixelsPerInch);
-                px += SourceGame.CardSize.x * PrintPdfPixelsPerInch;
-                if ((cardNumber + 1) % cardsPerRow == 0)
-                {
-                    px = PrintPdfMargin * PrintPdfPixelsPerInch;
-                    py += SourceGame.CardSize.y * PrintPdfPixelsPerInch;
-                }
-            }
-
-            document.Save(PrintPdfFilePath);
-            document.Close();
-            document.Dispose();
-
-            return new Uri(UnityExtensionMethods.FilePrefix + PrintPdfFilePath);
-        }
-
     }
 }

@@ -2,13 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
+using CardGameView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
-using CardGameView;
 
 namespace Cgs.Cards
 {
@@ -62,14 +61,15 @@ namespace Cgs.Cards
                 }
             }
 
-            if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+            if (Input.GetButtonDown(Inputs.Vertical) || Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
             {
                 if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
                     SelectDown();
                 else if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
                     SelectUp();
             }
-            else if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
+            else if (Input.GetButtonDown(Inputs.Horizontal) ||
+                     Math.Abs(Input.GetAxis(Inputs.Horizontal)) > Inputs.Tolerance)
             {
                 if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
                     SelectLeft();
@@ -77,7 +77,8 @@ namespace Cgs.Cards
                     SelectRight();
             }
 
-            if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
+            if (Input.GetButtonDown(Inputs.PageVertical) ||
+                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
             {
                 if (!CardViewer.Instance.IsVisible || CardViewer.Instance.Mode != CardViewerMode.Maximal)
                 {
@@ -87,7 +88,8 @@ namespace Cgs.Cards
                         PageUp();
                 }
             }
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0))
+            else if ((Input.GetButtonDown(Inputs.PageHorizontal) ||
+                      Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance))
             {
                 if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
                     PageLeft();
@@ -116,7 +118,7 @@ namespace Cgs.Cards
                 return;
             }
 
-            for (int i = 0; i < results.layoutArea.childCount; i++)
+            for (var i = 0; i < results.layoutArea.childCount; i++)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
@@ -126,13 +128,15 @@ namespace Cgs.Cards
                     results.IncrementPage();
                     i = 0;
                 }
+
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
             scrollRect.verticalNormalizedPosition = 0;
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -157,13 +161,15 @@ namespace Cgs.Cards
                     results.DecrementPage();
                     i = results.layoutArea.childCount - 1;
                 }
+
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
             scrollRect.verticalNormalizedPosition = 0;
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -188,13 +194,15 @@ namespace Cgs.Cards
                     results.DecrementPage();
                     i = results.layoutArea.childCount - 1;
                 }
+
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
             scrollRect.verticalNormalizedPosition = 0;
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -209,7 +217,7 @@ namespace Cgs.Cards
                 return;
             }
 
-            for (int i = 0; i < results.layoutArea.childCount; i++)
+            for (var i = 0; i < results.layoutArea.childCount; i++)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
@@ -219,13 +227,15 @@ namespace Cgs.Cards
                     results.IncrementPage();
                     i = 0;
                 }
+
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / (float)results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
             scrollRect.verticalNormalizedPosition = 0;
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 

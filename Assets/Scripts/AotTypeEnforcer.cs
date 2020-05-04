@@ -50,7 +50,7 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.CardSetNameIdentifier = string.Empty;
             cardGame.CardSetsInList = false;
             cardGame.CardSetsInListIsCsv = false;
-            cardGame.CardSize = Vector2.one;
+            cardGame.CardSize = new Float2(1, 1);
             cardGame.DeckFileAltId = string.Empty;
             cardGame.DeckFileTxtId = DeckFileTxtId.Id;
             cardGame.DeckFileType = DeckFileType.Dec;
@@ -63,7 +63,8 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.Extras = new List<ExtraDef>();
             var extraDef = new ExtraDef(string.Empty, string.Empty, string.Empty);
             cardGame.GameBoardCards = new List<GameBoardCard>();
-            var gameBoard = new GameBoard(string.Empty, Vector2.zero, Vector2.zero);
+            var float2 = new Float2(0f, 0f);
+            var gameBoard = new GameBoard(string.Empty, float2, float2);
             var gameBoardCard = new GameBoardCard(string.Empty,
                 new List<GameBoard>());
             cardGame.GameBoardFileType = string.Empty;
@@ -73,7 +74,7 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.GameStartHandCount = 1;
             cardGame.GameStartPointsCount = 1;
             cardGame.Name = string.Empty;
-            cardGame.PlayAreaSize = Vector2.one;
+            cardGame.PlayAreaSize = new Float2(1, 1);
             cardGame.RulesUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.SetCardsIdentifier = string.Empty;
             cardGame.SetCodeDefault = string.Empty;

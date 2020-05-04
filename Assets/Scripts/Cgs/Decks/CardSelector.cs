@@ -2,12 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
-
+using System.Linq;
 using CardGameView;
 using Cgs.Cards;
+using JetBrains.Annotations;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Cgs.Decks
 {
@@ -42,14 +44,15 @@ namespace Cgs.Decks
                     SelectResultsRight();
             }
 
-            if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+            if (Input.GetButtonDown(Inputs.Vertical) || Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
             {
                 if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
                     SelectResultsDown();
                 else if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
                     SelectResultsUp();
             }
-            else if (Input.GetButtonDown(Inputs.Horizontal) || Input.GetAxis(Inputs.Horizontal) != 0)
+            else if (Input.GetButtonDown(Inputs.Horizontal) ||
+                     Math.Abs(Input.GetAxis(Inputs.Horizontal)) > Inputs.Tolerance)
             {
                 if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
                     SelectResultsLeft();
@@ -57,14 +60,16 @@ namespace Cgs.Decks
                     SelectResultsRight();
             }
 
-            if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
+            if (Input.GetButtonDown(Inputs.PageVertical) ||
+                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
             {
                 if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
                     SelectEditorDown();
                 else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
                     SelectEditorUp();
             }
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) || Input.GetAxis(Inputs.PageHorizontal) != 0))
+            else if ((Input.GetButtonDown(Inputs.PageHorizontal) ||
+                      Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance))
             {
                 if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
                     SelectEditorLeft();
@@ -103,11 +108,13 @@ namespace Cgs.Decks
                     results.DecrementPage();
                     i = results.layoutArea.childCount - 1;
                 }
+
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -122,7 +129,7 @@ namespace Cgs.Decks
                 return;
             }
 
-            for (int i = 0; i < results.layoutArea.childCount; i++)
+            for (var i = 0; i < results.layoutArea.childCount; i++)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
@@ -132,11 +139,13 @@ namespace Cgs.Decks
                     results.IncrementPage();
                     i = 0;
                 }
+
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -162,7 +171,7 @@ namespace Cgs.Decks
                 return;
             }
 
-            for (int i = 0; i < editorCards.Count; i++)
+            for (var i = 0; i < editorCards.Count; i++)
             {
                 if (editorCards[i] != CardViewer.Instance.SelectedCardModel)
                     continue;
@@ -173,9 +182,10 @@ namespace Cgs.Decks
                 editor.FocusScrollRectOn(editorCards[i]);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
             editor.FocusScrollRectOn(editorCards[0]);
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -202,9 +212,10 @@ namespace Cgs.Decks
                 editor.FocusScrollRectOn(editorCards[i]);
                 return;
             }
+
             EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
             editor.FocusScrollRectOn(editorCards[editorCards.Count - 1]);
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -227,16 +238,16 @@ namespace Cgs.Decks
                     continue;
                 if (editorCards[i] == CardViewer.Instance.SelectedCardModel)
                     startParent = editorCards[i].transform.parent;
-                if (startParent != editorCards[i].transform.parent)
-                {
-                    EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
-                    editor.FocusScrollRectOn(editorCards[i]);
-                    return;
-                }
+                if (startParent == editorCards[i].transform.parent)
+                    continue;
+                EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
+                editor.FocusScrollRectOn(editorCards[i]);
+                return;
             }
+
             editor.scrollRect.horizontalNormalizedPosition = 1;
             EventSystem.current.SetSelectedGameObject(editorCards[editorCards.Count - 1].gameObject);
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
@@ -253,56 +264,59 @@ namespace Cgs.Decks
             }
 
             Transform startParent = null;
-            for (int i = 0; i < editorCards.Count; i++)
+            foreach (CardModel cardModel in editorCards.Where(t =>
+                startParent != null || t == CardViewer.Instance.SelectedCardModel))
             {
-                if (startParent == null && editorCards[i] != CardViewer.Instance.SelectedCardModel)
+                if (cardModel == CardViewer.Instance.SelectedCardModel)
+                    startParent = cardModel.transform.parent;
+                if (startParent == cardModel.transform.parent)
                     continue;
-                if (editorCards[i] == CardViewer.Instance.SelectedCardModel)
-                    startParent = editorCards[i].transform.parent;
-                if (startParent != editorCards[i].transform.parent)
-                {
-                    EventSystem.current.SetSelectedGameObject(editorCards[i].gameObject);
-                    editor.FocusScrollRectOn(editorCards[i]);
-                    return;
-                }
+                EventSystem.current.SetSelectedGameObject(cardModel.gameObject);
+                editor.FocusScrollRectOn(cardModel);
+                return;
             }
+
             editor.scrollRect.horizontalNormalizedPosition = 0;
             EventSystem.current.SetSelectedGameObject(editorCards[0].gameObject);
-            if (CardViewer.Instance?.SelectedCardModel != null)
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void DecrementPage()
         {
-            RectTransform rt = GetComponent<RectTransform>();
-            if (rt.rect.width > rt.rect.height) // Landscape
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform.rect.width > rectTransform.rect.height) // Landscape
                 SelectEditorLeft();
             else // Portrait
                 results.DecrementPage();
         }
 
+        [UsedImplicitly]
         public void IncrementPage()
         {
-            RectTransform rt = GetComponent<RectTransform>();
-            if (rt.rect.width > rt.rect.height) // Landscape
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform.rect.width > rectTransform.rect.height) // Landscape
                 SelectEditorRight();
             else // Portrait
                 results.IncrementPage();
         }
 
+        [UsedImplicitly]
         public void NavigateLeft()
         {
-            RectTransform rt = GetComponent<RectTransform>();
-            if (rt.rect.width < rt.rect.height) // Portrait
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform.rect.width < rectTransform.rect.height) // Portrait
                 SelectResultsLeft();
             else // Landscape
                 results.DecrementPage();
         }
 
+        [UsedImplicitly]
         public void NavigateRight()
         {
-            RectTransform rt = GetComponent<RectTransform>();
-            if (rt.rect.width < rt.rect.height) // Portrait
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform.rect.width < rectTransform.rect.height) // Portrait
                 SelectResultsRight();
             else // Landscape
                 results.IncrementPage();

@@ -2,13 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-
 using CardGameDef;
+using CardGameDef.Unity;
 using Cgs;
+using JetBrains.Annotations;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace CardGameView
 {
@@ -33,21 +35,24 @@ namespace CardGameView
                     return _instance;
 
                 GameObject cardViewer = GameObject.FindWithTag(Tags.CardViewer);
-                _instance = cardViewer?.GetOrAddComponent<CardViewer>();
+                if (cardViewer != null)
+                    _instance = cardViewer.GetOrAddComponent<CardViewer>();
                 return _instance;
             }
         }
+
         private static CardViewer _instance;
 
         public CardViewerMode Mode
         {
-            get { return _mode; }
+            get => _mode;
             set
             {
                 _mode = value;
                 Redisplay();
             }
         }
+
         private CardViewerMode _mode;
 
         public CanvasGroup minimal;
@@ -67,7 +72,7 @@ namespace CardGameView
         public Text propertyTextTemplate;
         public List<Dropdown> propertySelectors;
         public List<Text> propertyValueTexts;
-        public List<Text> propertyTexts { get; } = new List<Text>();
+        public List<Text> PropertyTexts { get; } = new List<Text>();
         public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
         public Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
 
@@ -75,10 +80,10 @@ namespace CardGameView
         {
             get
             {
-                int primaryPropertyIndex = 0;
-                for (int i = 0; i < PropertyOptions.Count; i++)
+                var primaryPropertyIndex = 0;
+                for (var i = 0; i < PropertyOptions.Count; i++)
                     if (DisplayNameLookup.TryGetValue(PropertyOptions[i].text, out string propertyName)
-                            && propertyName.Equals(CardGameManager.Current.CardPrimaryProperty))
+                        && propertyName.Equals(CardGameManager.Current.CardPrimaryProperty))
                         primaryPropertyIndex = i;
                 return primaryPropertyIndex;
             }
@@ -96,6 +101,7 @@ namespace CardGameView
                 return selectedName;
             }
         }
+
         public string SelectedPropertyDisplay
         {
             get
@@ -108,9 +114,10 @@ namespace CardGameView
                 return selectedDisplay;
             }
         }
+
         public int SelectedPropertyIndex
         {
-            get { return _selectedPropertyIndex; }
+            get => _selectedPropertyIndex;
             set
             {
                 _selectedPropertyIndex = value;
@@ -123,11 +130,12 @@ namespace CardGameView
                 ResetPropertyValueText();
             }
         }
+
         private int _selectedPropertyIndex;
 
         public CardModel SelectedCardModel
         {
-            get { return _selectedCardModel; }
+            get => _selectedCardModel;
             set
             {
                 if (_selectedCardModel != null)
@@ -140,28 +148,35 @@ namespace CardGameView
 
                 if (_selectedCardModel != null)
                 {
-                    Card selectedCard = _selectedCardModel.Value;
+                    UnityCard selectedCard = _selectedCardModel.Value;
                     ResetTexts();
                     selectedCard.RegisterDisplay(this);
                 }
                 else if (!EventSystem.current.alreadySelecting)
                     EventSystem.current.SetSelectedGameObject(null);
+
                 IsVisible = _selectedCardModel != null;
                 ZoomTime = 0;
             }
         }
+
         private CardModel _selectedCardModel;
 
         public bool Zoom
         {
-            get { return zoomPanel.gameObject.activeSelf; }
-            set { if (ZoomTime > 0.5f || value) zoomPanel.gameObject.SetActive(value); }
+            get => zoomPanel.gameObject.activeSelf;
+            set
+            {
+                if (ZoomTime > 0.5f || value)
+                    zoomPanel.gameObject.SetActive(value);
+            }
         }
+
         public float ZoomTime { get; private set; }
 
         public bool IsVisible
         {
-            get { return _isVisible; }
+            get => _isVisible;
             set
             {
                 _isVisible = value;
@@ -172,6 +187,7 @@ namespace CardGameView
                 Redisplay();
             }
         }
+
         private bool _isVisible;
         public bool WasVisible { get; private set; }
 
@@ -201,23 +217,26 @@ namespace CardGameView
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            if (Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0)
+            if (Input.GetButtonDown(Inputs.PageVertical) ||
+                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
             {
-                if (CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                if (Instance.Mode == CardViewerMode.Maximal)
                 {
                     if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
-                        maximalScrollRect.verticalNormalizedPosition = Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
+                        maximalScrollRect.verticalNormalizedPosition =
+                            Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
                     else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
-                        maximalScrollRect.verticalNormalizedPosition = Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
+                        maximalScrollRect.verticalNormalizedPosition =
+                            Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
                 }
             }
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)))
+            if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)
                     Mode = CardViewerMode.Expanded;
-                else if (SelectedCardModel.DoubleClickAction != null)
-                    SelectedCardModel.DoubleClickAction(SelectedCardModel);
+                else
+                    SelectedCardModel.DoubleClickAction?.Invoke(SelectedCardModel);
             }
             else if (Input.GetButtonDown(Inputs.Sort))
                 DecrementProperty();
@@ -244,8 +263,8 @@ namespace CardGameView
                 text.transform.parent.parent.gameObject.SetActive(!CardGameManager.Current.CardNameIsUnique);
 
             PropertyOptions.Clear();
-            PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
-            PropertyOptions.Add(new Dropdown.OptionData() { text = IdLabel });
+            PropertyOptions.Add(new Dropdown.OptionData() {text = SetLabel});
+            PropertyOptions.Add(new Dropdown.OptionData() {text = IdLabel});
             DisplayNameLookup.Clear();
             foreach (PropertyDef propertyDef in CardGameManager.Current.CardProperties)
                 AddProperty(propertyDef);
@@ -273,8 +292,9 @@ namespace CardGameView
             }
             else
             {
-                string displayName = !string.IsNullOrEmpty(propertyDef.Display) ? propertyDef.Display : propertyDef.Name;
-                PropertyOptions.Add(new Dropdown.OptionData() { text = displayName });
+                string displayName =
+                    !string.IsNullOrEmpty(propertyDef.Display) ? propertyDef.Display : propertyDef.Name;
+                PropertyOptions.Add(new Dropdown.OptionData() {text = displayName});
                 DisplayNameLookup[displayName] = parentPrefix + propertyDef.Name;
             }
         }
@@ -328,9 +348,10 @@ namespace CardGameView
             Zoom = true;
         }
 
+        [UsedImplicitly]
         public void SetMode(int mode)
         {
-            Mode = (CardViewerMode)mode;
+            Mode = (CardViewerMode) mode;
         }
 
         private void Redisplay()
@@ -354,20 +375,27 @@ namespace CardGameView
                 uniqueId.text = SelectedCardModel.Id;
             idText.text = IdLabel + Delimiter + SelectedCardModel.Id;
             setText.text = SetLabel + Delimiter
-                + (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out Set currentSet)
-                    ? currentSet.ToString() : SelectedCardModel.Value.SetCode);
-            foreach (Text propertyText in propertyTexts)
+                                    + (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode,
+                                        out Set currentSet)
+                                        ? currentSet.ToString()
+                                        : SelectedCardModel.Value.SetCode);
+            foreach (Text propertyText in PropertyTexts)
                 Destroy(propertyText.gameObject);
-            propertyTexts.Clear();
-            for (int i = 2; i < PropertyOptions.Count; i++)
+            PropertyTexts.Clear();
+            for (var i = 2; i < PropertyOptions.Count; i++)
             {
-                Text newPropertyText = Instantiate(propertyTextTemplate.gameObject, maximalScrollRect.content).GetComponent<Text>();
+                var newPropertyText = Instantiate(propertyTextTemplate.gameObject, maximalScrollRect.content)
+                    .GetComponent<Text>();
                 newPropertyText.gameObject.SetActive(true);
                 newPropertyText.text = PropertyOptions[i].text + Delimiter
-                    + (DisplayNameLookup.TryGetValue(PropertyOptions[i].text, out string propertyName)
-                        ? SelectedCardModel.Value.GetPropertyValueString(propertyName) : string.Empty);
-                propertyTexts.Add(newPropertyText);
+                                                               + (DisplayNameLookup.TryGetValue(PropertyOptions[i].text,
+                                                                   out string propertyName)
+                                                                   ? SelectedCardModel.Value.GetPropertyValueString(
+                                                                       propertyName)
+                                                                   : string.Empty);
+                PropertyTexts.Add(newPropertyText);
             }
+
             maximalScrollRect.verticalNormalizedPosition = 1;
             ResetPropertyValueText();
         }
@@ -381,7 +409,7 @@ namespace CardGameView
                 return;
             }
 
-            string newContentTextValue = string.Empty;
+            var newContentTextValue = string.Empty;
             if (SelectedPropertyIndex > 1)
                 newContentTextValue = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
             else if (SelectedPropertyIndex == 1)

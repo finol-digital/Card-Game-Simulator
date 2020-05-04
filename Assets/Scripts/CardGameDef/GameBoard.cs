@@ -16,14 +16,14 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description("Indicates the position (in inches) of the bottom-left corner")]
-        public UnityEngine.Vector2 OffsetMin { get; private set; }
+        public Float2 OffsetMin { get; private set; }
 
         [JsonProperty]
         [Description("Indicates the board's width and height in inches")]
-        public UnityEngine.Vector2 Size { get; private set; }
+        public Float2 Size { get; private set; }
 
         [JsonConstructor]
-        public GameBoard(string id, UnityEngine.Vector2 offsetMin, UnityEngine.Vector2 size)
+        public GameBoard(string id, Float2 offsetMin, Float2 size)
         {
             Id = id ?? string.Empty;
             OffsetMin = offsetMin;

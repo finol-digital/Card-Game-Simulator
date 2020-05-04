@@ -4,7 +4,9 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CardGameDef;
+using CardGameDef.Unity;
 using CardGameView;
 using Cgs.Cards;
 using Cgs.Decks;
@@ -15,6 +17,9 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+// ReSharper disable UnusedParameter.Global
+// ReSharper disable UnusedMember.Global
 
 namespace Cgs.Play
 {
@@ -33,6 +38,7 @@ namespace Cgs.Play
         public GameObject searchMenuPrefab;
 
         public RectTransform playMatContent;
+
         // TODO: public Image playMatImage;
         public ZonesViewer zones;
         public PointsCounter scoreboard;
@@ -95,7 +101,9 @@ namespace Cgs.Play
         {
             // TODO: CHECK IF THIS IS OK WITH NETWORKING
             playMatContent.DestroyAllChildren();
-            playMatContent.sizeDelta = CardGameManager.Current.PlayAreaSize * CardGameManager.PixelsPerInch;
+            var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
+                CardGameManager.Current.PlayAreaSize.Y);
+            playMatContent.sizeDelta = playAreaSize * CardGameManager.PixelsPerInch;
         }
 
         public void ViewRules()
@@ -122,7 +130,7 @@ namespace Cgs.Play
             CardSearcher.Show(DisplayResults);
         }
 
-        public void LoadDeck(Deck deck)
+        public void LoadDeck(UnityDeck deck)
         {
             if (deck == null)
                 return;
@@ -131,11 +139,11 @@ namespace Cgs.Play
             foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
                 zones.CreateExtraZone(cardGroup.Key, cardGroup.Value);
 
-            List<Card> deckCards = new List<Card>();
+            List<UnityCard> deckCards = new List<UnityCard>();
             List<Card> extraCards = deck.GetExtraCards();
             foreach (Card card in deck.Cards)
                 if (!extraCards.Contains(card))
-                    deckCards.Add(card);
+                    deckCards.Add((UnityCard) card);
             deckCards.Shuffle();
 
             LoadDeckCards(deckCards);
@@ -146,15 +154,16 @@ namespace Cgs.Play
                     CreateGameBoards(boardCard.Boards);
         }
 
-        public void LoadDeckCards(List<Card> deckCards, bool isShared = false)
+        public void LoadDeckCards(IEnumerable<Card> deckCards, bool isShared = false)
         {
             zones.CreateDeck();
             zones.scrollView.verticalScrollbar.value = 0;
+            IEnumerable<Card> enumerable = deckCards.ToList();
 #if !UNITY_WEBGL
             if (!isShared && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckCards);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(enumerable);
 #endif
-            zones.CurrentDeck.Sync(deckCards);
+            zones.CurrentDeck.Sync(enumerable);
             StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
         }
 
@@ -177,8 +186,9 @@ namespace Cgs.Play
             rt.SetParent(playMatContent);
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.zero;
-            rt.offsetMin = board.OffsetMin * CardGameManager.PixelsPerInch;
-            rt.offsetMax = board.Size * CardGameManager.PixelsPerInch + rt.offsetMin;
+            rt.offsetMin = new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch;
+            rt.offsetMax = new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch +
+                           rt.offsetMin;
 
             string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
                                    CardGameManager.Current.GameBoardFileType;
@@ -218,13 +228,13 @@ namespace Cgs.Play
 
         public void Burn(int cardCount)
         {
-            foreach (Card card in PopDeckCards(cardCount))
+            foreach (UnityCard card in PopDeckCards(cardCount))
                 CatchDiscard(card);
         }
 
-        public List<Card> PopDeckCards(int cardCount)
+        public IEnumerable<UnityCard> PopDeckCards(int cardCount)
         {
-            List<Card> cards = new List<Card>(cardCount);
+            List<UnityCard> cards = new List<UnityCard>(cardCount);
             if (zones.CurrentDeck == null)
                 return cards;
 
@@ -233,12 +243,12 @@ namespace Cgs.Play
             return cards;
         }
 
-        public void AddCardsToHand(List<Card> cards)
+        public void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
             if (zones.Hand == null)
                 zones.CreateHand();
 
-            foreach (Card card in cards)
+            foreach (UnityCard card in cards)
                 zones.Hand.AddCard(card);
         }
 
@@ -256,14 +266,14 @@ namespace Cgs.Play
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
-        public void CatchDiscard(Card card)
+        public void CatchDiscard(UnityCard card)
         {
             if (zones.Discard == null)
                 zones.CreateDiscard();
             zones.Discard.AddCard(card);
         }
 
-        public void DisplayResults(string filters, List<Card> cards)
+        public void DisplayResults(string filters, List<UnityCard> cards)
         {
             if (zones.Results == null)
                 zones.CreateResults();

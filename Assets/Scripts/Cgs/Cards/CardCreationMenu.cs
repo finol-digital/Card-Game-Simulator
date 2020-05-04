@@ -7,13 +7,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CardGameDef;
+using CardGameDef.Unity;
+using Cgs.Menu;
+using Crosstales.FB;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using Crosstales.FB;
-
-using CardGameDef;
-using Cgs.Menu;
 
 namespace Cgs.Cards
 {
@@ -21,7 +22,6 @@ namespace Cgs.Cards
     {
         public const string DownloadCardImage = "Download Card Image";
         public const string DownloadCardImagePrompt = "Enter card image url...";
-        public const string ImportImage = "Import Image";
         public const string ImportImageWarningMessage = "No image file selected for import!";
         public const string ImageCreationFailedWarningMessage = "Failed to get the image! Unable to create the card.";
 
@@ -30,12 +30,24 @@ namespace Cgs.Cards
         public Image cardImage;
         public Button createButton;
 
-        public string CardName { get; set; }
-        public Uri CardImageUri { get { return _cardImageUri; } private set { _cardImageUri = value; ValidateCreateButton(); } }
+        public string CardName { get; [UsedImplicitly] set; }
+
+        public Uri CardImageUri
+        {
+            get => _cardImageUri;
+            private set
+            {
+                _cardImageUri = value;
+                ValidateCreateButton();
+            }
+        }
+
         private Uri _cardImageUri;
 
         public DownloadMenu Downloader => _downloader ??
-                                              (_downloader = Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>());
+                                          (_downloader = Instantiate(downloadMenuPrefab)
+                                              .GetOrAddComponent<DownloadMenu>());
+
         private DownloadMenu _downloader;
 
         private UnityAction _onCreationCallback;
@@ -45,14 +57,16 @@ namespace Cgs.Cards
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) || Input.GetButtonDown(Inputs.New))
-                 && createButton.interactable)
+            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) ||
+                 Input.GetButtonDown(Inputs.New))
+                && createButton.interactable)
                 StartCreation();
             if (Input.GetButtonDown(Inputs.Load) && createButton.interactable)
                 DownloadCardImageFromWeb();
             if (Input.GetButtonDown(Inputs.Save) && createButton.interactable)
                 ImportCardImageFromFile();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) || Input.GetButtonDown(Inputs.Option))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) ||
+                     Input.GetButtonDown(Inputs.Option))
                 Hide();
         }
 
@@ -67,11 +81,13 @@ namespace Cgs.Cards
         {
             Downloader.Show(DownloadCardImage, DownloadCardImagePrompt, DownloadCardImageFromWeb);
         }
+
         public IEnumerator DownloadCardImageFromWeb(string url)
         {
             CardImageUri = new Uri(url);
             yield return UpdateCardImage();
         }
+
         public void ImportCardImageFromFile()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -100,11 +116,12 @@ namespace Cgs.Cards
 #endif
             StartCoroutine(UpdateCardImage());
         }
+
         private IEnumerator UpdateCardImage()
         {
             // NOTE: Memory Leak Potential
-            UnityEngine.Sprite newSprite = null;
-            yield return UnityExtensionMethods.RunOutputCoroutine<UnityEngine.Sprite>(
+            Sprite newSprite = null;
+            yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(
                 UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(CardImageUri?.AbsoluteUri)
                 , output => newSprite = output);
             if (newSprite != null)
@@ -115,7 +132,8 @@ namespace Cgs.Cards
 
         public void ValidateCreateButton()
         {
-            createButton.interactable = !string.IsNullOrEmpty(CardName) && CardImageUri != null && CardImageUri.IsAbsoluteUri;
+            createButton.interactable =
+                !string.IsNullOrEmpty(CardName) && CardImageUri != null && CardImageUri.IsAbsoluteUri;
         }
 
         public void StartCreation()
@@ -131,19 +149,18 @@ namespace Cgs.Cards
 
             createButton.interactable = false;
 
-            Card newCard = new Card(CardGameManager.Current, Guid.NewGuid().ToString().ToUpper(), CardName, Set.DefaultCode, null, false);
-            newCard.ImageWebUrl = CardImageUri.AbsoluteUri;
-            yield return UnityExtensionMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, newCard.ImageFilePath);
+            var card = new UnityCard(CardGameManager.Current, Guid.NewGuid().ToString().ToUpper(), CardName,
+                Set.DefaultCode, null, false) {ImageWebUrl = CardImageUri.AbsoluteUri};
+            yield return UnityExtensionMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);
 
-            if (!File.Exists(newCard.ImageFilePath))
+            if (!File.Exists(card.ImageFilePath))
             {
                 Debug.LogWarning(ImageCreationFailedWarningMessage);
                 yield break;
             }
 
-            CardGameManager.Current.Add(newCard);
-            if (_onCreationCallback != null)
-                _onCreationCallback();
+            CardGameManager.Current.Add(card);
+            _onCreationCallback?.Invoke();
 
             ValidateCreateButton();
             Hide();

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace CardGameDef
@@ -13,14 +12,14 @@ namespace CardGameDef
     {
         public const string Delimiter = " ";
         public const string KeywordFormat = Delimiter + "{0}{1}";
-        public const string Keyword_Id = "id:";
-        public const string Keyword_Set = "set:";
-        public const string Keyword_Is = "is:";
-        public const string Keyword_Not = "not:";
-        public const string Keyword_String = ":";
-        public const string Keyword_IntMin = ">=";
-        public const string Keyword_IntMax = "<=";
-        public const string Keyword_Enum = "=";
+        public const string KeywordId = "id:";
+        public const string KeywordSet = "set:";
+        public const string KeywordIs = "is:";
+        public const string KeywordNot = "not:";
+        public const string KeywordString = ":";
+        public const string KeywordIntMin = ">=";
+        public const string KeywordIntMax = "<=";
+        public const string KeywordEnum = "=";
         public const string Quote = "\"";
 
         public string Id { get; set; } = "";
@@ -65,43 +64,66 @@ namespace CardGameDef
             string unprocessedInput = input;
             while (unprocessedInput.Contains(Quote))
             {
-                int leftQuoteIndex = unprocessedInput.IndexOf(Quote); // Guaranteed to be found because we checked with Contains()
+                int leftQuoteIndex =
+                    unprocessedInput.IndexOf(Quote,
+                        StringComparison.Ordinal); // Guaranteed to be found because we checked with Contains()
                 // If the left quote is the last character, then we obviously won't find a right quote
                 int rightQuoteIndex = leftQuoteIndex == unprocessedInput.Length - Quote.Length
-                    ? -1 : unprocessedInput.IndexOf(Quote, leftQuoteIndex + Quote.Length);
+                    ? -1
+                    : unprocessedInput.IndexOf(Quote, leftQuoteIndex + Quote.Length, StringComparison.Ordinal);
                 string beforeQuote = unprocessedInput.Substring(0, leftQuoteIndex);
-                string quotation = string.Empty;
+                var quotation = string.Empty;
                 if (rightQuoteIndex != -1) // If there's no right quote, then we don't have a quotation
                 {
                     int startIndex = leftQuoteIndex + Quote.Length;
-                    quotation = unprocessedInput.Substring(startIndex, rightQuoteIndex - startIndex).Replace(Delimiter, Quote);
+                    quotation = unprocessedInput.Substring(startIndex, rightQuoteIndex - startIndex)
+                        .Replace(Delimiter, Quote);
                 }
+
                 processedInput.Append(beforeQuote + quotation);
-                if (rightQuoteIndex == -1) // If there's no quotation, we'll finish by taking everything after the 1 quote
-                    unprocessedInput = unprocessedInput.Substring(leftQuoteIndex + Quote.Length);
-                else // Otherwise, we'll keep checking the rest of the input for quotations
-                    unprocessedInput = unprocessedInput.Substring(rightQuoteIndex + Quote.Length);
+                // If there's no quotation, we'll finish by taking everything after the 1 quote
+                // Otherwise, we'll keep checking the rest of the input for quotations
+                unprocessedInput = rightQuoteIndex == -1
+                    ? unprocessedInput.Substring(leftQuoteIndex + Quote.Length)
+                    : unprocessedInput.Substring(rightQuoteIndex + Quote.Length);
             }
+
             processedInput.Append(unprocessedInput);
-            foreach (string word in processedInput.ToString().Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string word in processedInput.ToString()
+                .Split(new[] {Delimiter}, StringSplitOptions.RemoveEmptyEntries))
             {
                 string token = word.Replace(Quote, Delimiter); // Restore spaces that we temporarily replaced
-                if (token.StartsWith(Keyword_Id))
-                    Id = token.Substring(Keyword_Id.Length);
-                else if (token.StartsWith(Keyword_Set))
-                    SetCode = token.Substring(Keyword_Set.Length);
-                else if (token.StartsWith(Keyword_Is))
-                    BoolProperties.Add(token.Substring(Keyword_Is.Length), true);
-                else if (token.StartsWith(Keyword_Not))
-                    BoolProperties.Add(token.Substring(Keyword_Not.Length), false);
-                else if (token.Contains(Keyword_String))
-                    StringProperties.Add(token.Substring(0, token.IndexOf(Keyword_String)), token.Substring(token.IndexOf(Keyword_String) + Keyword_String.Length));
-                else if (token.Contains(Keyword_IntMin) && int.TryParse(token.Substring(token.IndexOf(Keyword_IntMin) + Keyword_IntMin.Length), out int minValue))
-                    IntMinProperties.Add(token.Substring(0, token.IndexOf(Keyword_IntMin)), minValue);
-                else if (token.Contains(Keyword_IntMax) && int.TryParse(token.Substring(token.IndexOf(Keyword_IntMax) + Keyword_IntMax.Length), out int maxValue))
-                    IntMaxProperties.Add(token.Substring(0, token.IndexOf(Keyword_IntMax)), maxValue);
-                else if (token.Contains(Keyword_Enum) && int.TryParse(token.Substring(token.IndexOf(Keyword_Enum) + Keyword_Enum.Length), out int enumValue))
-                    EnumProperties.Add(token.Substring(0, token.IndexOf(Keyword_Enum)), enumValue);
+                if (token.StartsWith(KeywordId))
+                    Id = token.Substring(KeywordId.Length);
+                else if (token.StartsWith(KeywordSet))
+                    SetCode = token.Substring(KeywordSet.Length);
+                else if (token.StartsWith(KeywordIs))
+                    BoolProperties.Add(token.Substring(KeywordIs.Length), true);
+                else if (token.StartsWith(KeywordNot))
+                    BoolProperties.Add(token.Substring(KeywordNot.Length), false);
+                else if (token.Contains(KeywordString))
+                    StringProperties.Add(token.Substring(0, token.IndexOf(KeywordString, StringComparison.Ordinal)),
+                        token.Substring(token.IndexOf(KeywordString, StringComparison.Ordinal) + KeywordString.Length));
+                else if (token.Contains(KeywordIntMin) &&
+                         int.TryParse(
+                             token.Substring(token.IndexOf(KeywordIntMin, StringComparison.Ordinal) +
+                                             KeywordIntMin.Length),
+                             out int minValue))
+                    IntMinProperties.Add(token.Substring(0, token.IndexOf(KeywordIntMin, StringComparison.Ordinal)),
+                        minValue);
+                else if (token.Contains(KeywordIntMax) &&
+                         int.TryParse(
+                             token.Substring(token.IndexOf(KeywordIntMax, StringComparison.Ordinal) +
+                                             KeywordIntMax.Length),
+                             out int maxValue))
+                    IntMaxProperties.Add(token.Substring(0, token.IndexOf(KeywordIntMax, StringComparison.Ordinal)),
+                        maxValue);
+                else if (token.Contains(KeywordEnum) &&
+                         int.TryParse(
+                             token.Substring(token.IndexOf(KeywordEnum, StringComparison.Ordinal) + KeywordEnum.Length),
+                             out int enumValue))
+                    EnumProperties.Add(token.Substring(0, token.IndexOf(KeywordEnum, StringComparison.Ordinal)),
+                        enumValue);
                 else
                     Name += (string.IsNullOrEmpty(Name) ? string.Empty : Delimiter) + token;
             }
@@ -109,31 +131,34 @@ namespace CardGameDef
 
         public override string ToString()
         {
-            StringBuilder filters = new StringBuilder(Name);
+            var filters = new StringBuilder(Name);
 
             if (!string.IsNullOrEmpty(Id))
             {
                 string filterValue = Id.Contains(Delimiter) ? Quote + Id + Quote : Id;
-                filters.AppendFormat(KeywordFormat, Keyword_Id, filterValue);
+                filters.AppendFormat(KeywordFormat, KeywordId, filterValue);
             }
+
             if (!string.IsNullOrEmpty(SetCode))
             {
                 string filterValue = SetCode.Contains(Delimiter) ? Quote + SetCode + Quote : SetCode;
-                filters.AppendFormat(KeywordFormat, Keyword_Set, filterValue);
+                filters.AppendFormat(KeywordFormat, KeywordSet, filterValue);
             }
-            foreach (var filter in StringProperties)
+
+            foreach (KeyValuePair<string, string> filter in StringProperties)
             {
                 string filterValue = filter.Value.Contains(Delimiter) ? Quote + filter.Value + Quote : filter.Value;
-                filters.AppendFormat(KeywordFormat, filter.Key + Keyword_String, filterValue);
+                filters.AppendFormat(KeywordFormat, filter.Key + KeywordString, filterValue);
             }
-            foreach (var filter in BoolProperties)
-                filters.AppendFormat(KeywordFormat, filter.Value ? Keyword_Is : Keyword_Not, filter.Key);
-            foreach (var filter in IntMinProperties)
-                filters.AppendFormat(KeywordFormat, filter.Key + Keyword_IntMin, filter.Value);
-            foreach (var filter in IntMaxProperties)
-                filters.AppendFormat(KeywordFormat, filter.Key + Keyword_IntMax, filter.Value);
-            foreach (var filter in EnumProperties)
-                filters.AppendFormat(KeywordFormat, filter.Key + Keyword_Enum, filter.Value);
+
+            foreach (KeyValuePair<string, bool> filter in BoolProperties)
+                filters.AppendFormat(KeywordFormat, filter.Value ? KeywordIs : KeywordNot, filter.Key);
+            foreach (KeyValuePair<string, int> filter in IntMinProperties)
+                filters.AppendFormat(KeywordFormat, filter.Key + KeywordIntMin, filter.Value);
+            foreach (KeyValuePair<string, int> filter in IntMaxProperties)
+                filters.AppendFormat(KeywordFormat, filter.Key + KeywordIntMax, filter.Value);
+            foreach (KeyValuePair<string, int> filter in EnumProperties)
+                filters.AppendFormat(KeywordFormat, filter.Key + KeywordEnum, filter.Value);
 
             return filters.ToString();
         }

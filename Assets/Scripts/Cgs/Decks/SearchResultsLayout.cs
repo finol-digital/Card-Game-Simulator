@@ -2,10 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using UnityEngine;
-
 using CardGameView;
 using Cgs.Cards;
+using UnityEngine;
 
 namespace Cgs.Decks
 {
@@ -22,7 +21,7 @@ namespace Cgs.Decks
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform)transform).rect.width < CardsExplorerLayout.MinWidth) // Portrait
+            if (((RectTransform) transform).rect.width < CardsExplorerLayout.MinWidth) // Portrait
             {
                 pageButtons.anchorMin = Vector2.right;
                 pageButtons.anchorMax = Vector2.right;
@@ -43,7 +42,5 @@ namespace Cgs.Decks
             if (CardViewer.Instance != null)
                 CardViewer.Instance.IsVisible = false;
         }
-
     }
 }
-

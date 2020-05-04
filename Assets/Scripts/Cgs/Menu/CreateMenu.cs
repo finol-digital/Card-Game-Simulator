@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CardGameDef;
+using CardGameDef.Unity;
 using Crosstales.FB;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -203,7 +204,7 @@ namespace Cgs.Menu
                 yield break;
             }
 
-            var newCardGame = new CardGame(CardGameManager.Instance, gameName)
+            var newCardGame = new UnityCardGame(CardGameManager.Instance, gameName)
             {
                 AutoUpdate = -1, BannerImageUrl = _game.BannerImageUrl, CardBackImageUrl = _game.CardBackImageUrl
             };

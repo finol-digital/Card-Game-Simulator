@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
+using CardGameDef.Unity;
 using CardGameView;
 using UnityEngine;
 
@@ -15,7 +15,7 @@ namespace Cgs.Play.Zones
     {
         public bool IsFaceup { get; set; }
 
-        public override IReadOnlyList<Card> Cards => CardModels.Select(cardModel => cardModel.Value).ToList();
+        public override IReadOnlyList<UnityCard> Cards => CardModels.Select(cardModel => cardModel.Value).ToList();
         protected List<CardModel> CardModels { get; } = new List<CardModel>();
 
         protected CardStack ExtensionCardStack => _extensionCardStack ??
@@ -38,14 +38,14 @@ namespace Cgs.Play.Zones
             ZoneCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
         }
 
-        public override void AddCard(Card card)
+        public override void AddCard(UnityCard card)
         {
-            CardModel newCardModel =
+            var cardModel =
                 Instantiate(cardModelPrefab, IsExtended ? ExtensionCardStack.transform : ZoneCardStack.transform)
                     .GetOrAddComponent<CardModel>();
-            newCardModel.Value = card;
-            newCardModel.IsFacedown = !IsFaceup;
-            OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, newCardModel);
+            cardModel.Value = card;
+            cardModel.IsFacedown = !IsFaceup;
+            OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, cardModel);
         }
 
         public override void OnAddCardModel(CardStack cardStack, CardModel cardModel)
@@ -86,13 +86,13 @@ namespace Cgs.Play.Zones
             UpdateCountText();
         }
 
-        public Card PopCard()
+        public UnityCard PopCard()
         {
             if (CardModels.Count < 1)
-                return Card.Blank;
+                return UnityCard.Blank;
 
             CardModel cardModel = CardModels[CardModels.Count - 1];
-            Card card = cardModel.Value;
+            UnityCard card = cardModel.Value;
             CardModels.Remove(cardModel);
             Destroy(cardModel.gameObject);
             UpdateCountText();

@@ -7,25 +7,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CardGameDef;
+using CardGameDef.Unity;
+using Cgs.Menu;
+using JetBrains.Annotations;
+using ScrollRects;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using TMPro;
-
-using CardGameDef;
-using Cgs.Menu;
-using ScrollRects;
 
 namespace Cgs.Decks
 {
-    public delegate void OnDeckLoadedDelegate(Deck loadedDeck);
+    public delegate void OnDeckLoadedDelegate(UnityDeck loadedDeck);
 
     [RequireComponent(typeof(Modal))]
     public class DeckLoadMenu : SelectionPanel
     {
-        public const string DecInstructions = "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+        public const string DecInstructions =
+            "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+
         public const string HsdInstructions = "#Paste the deck string/code here";
-        public const string TxtInstructions = "### Instructions\n#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+
+        public const string TxtInstructions =
+            "### Instructions\n#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
+
         public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
 
         public const string DeletePrompt = "Are you sure you would like to delete this deck?";
@@ -64,13 +70,18 @@ namespace Cgs.Decks
 
             if (newDeckPanel.gameObject.activeSelf)
             {
-                if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && EventSystem.current.currentSelectedGameObject == null)
+                if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) &&
+                    EventSystem.current.currentSelectedGameObject == null)
                     DoSaveDontOverwrite();
                 else if (Input.GetButtonDown(Inputs.New) && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.text = string.Empty;
-                else if ((Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0) && EventSystem.current.currentSelectedGameObject == null)
+                else if ((Input.GetButtonDown(Inputs.FocusBack) ||
+                          Math.Abs(Input.GetAxis(Inputs.FocusBack)) > Inputs.Tolerance) &&
+                         EventSystem.current.currentSelectedGameObject == null)
                     nameInputField.ActivateInputField();
-                else if ((Input.GetButtonDown(Inputs.FocusNext) || Input.GetAxis(Inputs.FocusNext) != 0) && EventSystem.current.currentSelectedGameObject == null)
+                else if ((Input.GetButtonDown(Inputs.FocusNext) ||
+                          Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance) &&
+                         EventSystem.current.currentSelectedGameObject == null)
                     textInputField.ActivateInputField();
                 else if (Input.GetButtonDown(Inputs.Save) && EventSystem.current.currentSelectedGameObject == null)
                     PasteClipboardIntoText();
@@ -81,7 +92,7 @@ namespace Cgs.Decks
             }
             else
             {
-                if (Input.GetButtonDown(Inputs.Vertical) || Input.GetAxis(Inputs.Vertical) != 0)
+                if (Input.GetButtonDown(Inputs.Vertical) || Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
                 {
                     if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
                         SelectPrevious();
@@ -89,9 +100,11 @@ namespace Cgs.Decks
                         SelectNext();
                 }
 
-                if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) && loadFromFileButton.interactable)
+                if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) &&
+                    loadFromFileButton.interactable)
                     LoadFromFileAndHide();
-                else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject).Contains(EventSystem.current.currentSelectedGameObject))
+                else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
+                    .Contains(EventSystem.current.currentSelectedGameObject))
                     EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
                 else if (Input.GetButtonDown(Inputs.Sort) && shareFileButton.interactable)
                     Share();
@@ -99,7 +112,9 @@ namespace Cgs.Decks
                     ShowNewDeckPanel();
                 else if (Input.GetButtonDown(Inputs.Option) && deleteFileButton.interactable)
                     PromptForDeleteFile();
-                else if ((Input.GetButtonDown(Inputs.PageVertical) || Input.GetAxis(Inputs.PageVertical) != 0) && !_wasPage)
+                else if ((Input.GetButtonDown(Inputs.PageVertical) ||
+                          Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance) &&
+                         !_wasPage)
                     ScrollPage(Input.GetAxis(Inputs.PageVertical));
                 else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
                     Hide();
@@ -107,10 +122,11 @@ namespace Cgs.Decks
 
             _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
             _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
-            _wasPage = Input.GetAxis(Inputs.PageVertical) != 0;
+            _wasPage = Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance;
         }
 
-        public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null, string originalText = null)
+        public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null,
+            string originalText = null)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
@@ -137,18 +153,21 @@ namespace Cgs.Decks
                     instructionsText.text = TxtInstructions;
                     break;
             }
+
             HideNewDeckPanel();
         }
 
         public void BuildDeckFileSelectionOptions()
         {
             DeckFiles.Clear();
-            string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath) ? Directory.GetFiles(CardGameManager.Current.DecksFilePath) : new string[0];
+            string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath)
+                ? Directory.GetFiles(CardGameManager.Current.DecksFilePath)
+                : new string[0];
             foreach (string file in files)
                 if (GetFileTypeFromPath(file) == CardGameManager.Current.DeckFileType)
-                    DeckFiles[file] = GetNameFromPath((file));
+                    DeckFiles[file] = GetNameFromPath(file);
 
-            Rebuild<string, string>(DeckFiles, SelectFile, SelectedFilePath);
+            Rebuild(DeckFiles, SelectFile, SelectedFilePath);
 
             shareFileButton.interactable = !string.IsNullOrEmpty(SelectedFilePath);
             deleteFileButton.interactable = !string.IsNullOrEmpty(SelectedFilePath);
@@ -186,15 +205,15 @@ namespace Cgs.Decks
 
         public DeckFileType GetFileTypeFromPath(string filePath)
         {
-            DeckFileType fileType = DeckFileType.Txt;
+            var deckFileType = DeckFileType.Txt;
             string extension = filePath.Substring(filePath.LastIndexOf('.') + 1);
             if (extension.ToLower().Equals(DeckFileType.Dec.ToString().ToLower()))
-                fileType = DeckFileType.Dec;
+                deckFileType = DeckFileType.Dec;
             else if (extension.ToLower().Equals(DeckFileType.Hsd.ToString().ToLower()))
-                fileType = DeckFileType.Hsd;
+                deckFileType = DeckFileType.Hsd;
             else if (extension.ToLower().Equals(DeckFileType.Ydk.ToString().ToLower()))
-                fileType = DeckFileType.Ydk;
-            return fileType;
+                deckFileType = DeckFileType.Ydk;
+            return deckFileType;
         }
 
         public void PromptForDeleteFile()
@@ -212,6 +231,7 @@ namespace Cgs.Decks
             {
                 Debug.LogError(DeckDeleteErrorMessage + e.Message);
             }
+
             SelectedFilePath = string.Empty;
             BuildDeckFileSelectionOptions();
         }
@@ -229,7 +249,7 @@ namespace Cgs.Decks
 
         public string GetDeckText()
         {
-            string deckText = string.Empty;
+            var deckText = string.Empty;
             try
             {
                 deckText = File.ReadAllText(SelectedFilePath);
@@ -238,12 +258,14 @@ namespace Cgs.Decks
             {
                 Debug.LogError(DeckLoadErrorMessage + e.Message);
             }
+
             return deckText;
         }
 
         public void LoadFromFileAndHide()
         {
-            Deck newDeck = Deck.Parse(CardGameManager.Current, DeckFiles[SelectedFilePath], CardGameManager.Current.DeckFileType, GetDeckText());
+            UnityDeck newDeck = UnityDeck.Parse(CardGameManager.Current, DeckFiles[SelectedFilePath],
+                CardGameManager.Current.DeckFileType, GetDeckText());
             LoadCallback?.Invoke(newDeck);
             Hide();
         }
@@ -253,6 +275,7 @@ namespace Cgs.Decks
             newDeckPanel.gameObject.SetActive(true);
         }
 
+        [UsedImplicitly]
         public void ValidateDeckName(string deckName)
         {
             nameInputField.text = UnityExtensionMethods.GetSafeFileName(deckName);
@@ -268,6 +291,7 @@ namespace Cgs.Decks
             textInputField.text = UniClipboard.GetText();
         }
 
+        [UsedImplicitly]
         public void EnableSubmit()
         {
             if (!EventSystem.current.alreadySelecting)
@@ -276,7 +300,8 @@ namespace Cgs.Decks
 
         public void DoSaveDontOverwrite()
         {
-            Deck filePathFinder = new Deck(CardGameManager.Current, nameInputField.text, CardGameManager.Current.DeckFileType);
+            UnityDeck filePathFinder = new UnityDeck(CardGameManager.Current, nameInputField.text,
+                CardGameManager.Current.DeckFileType);
             if (File.Exists(filePathFinder.FilePath))
                 CardGameManager.Instance.StartCoroutine(WaitToPromptOverwrite());
             else
@@ -291,7 +316,8 @@ namespace Cgs.Decks
 
         public void DoSave()
         {
-            Deck filePathFinder = new Deck(CardGameManager.Current, nameInputField.text, CardGameManager.Current.DeckFileType);
+            UnityDeck filePathFinder = new UnityDeck(CardGameManager.Current, nameInputField.text,
+                CardGameManager.Current.DeckFileType);
             try
             {
                 if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
@@ -302,6 +328,7 @@ namespace Cgs.Decks
             {
                 Debug.LogError(DeckSaveErrorMessage + e.Message);
             }
+
             BuildDeckFileSelectionOptions();
             HideNewDeckPanel();
         }

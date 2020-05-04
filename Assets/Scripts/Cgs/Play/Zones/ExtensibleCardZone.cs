@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef;
+using CardGameDef.Unity;
 using CardGameView;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,7 +18,7 @@ namespace Cgs.Play.Zones
 {
     public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
-        public virtual IReadOnlyList<Card> Cards => extensionContent.GetComponentsInChildren<CardModel>()
+        public virtual IReadOnlyList<UnityCard> Cards => extensionContent.GetComponentsInChildren<CardModel>()
             .Select(cardModel => cardModel.Value).ToList();
 
         public GameObject cardModelPrefab;
@@ -50,11 +51,11 @@ namespace Cgs.Play.Zones
             AddCard(cardModel.Value);
         }
 
-        public virtual void AddCard(Card card)
+        public virtual void AddCard(UnityCard card)
         {
-            var newCardModel = Instantiate(cardModelPrefab, extensionContent).GetOrAddComponent<CardModel>();
-            newCardModel.Value = card;
-            OnAddCardModel(null, newCardModel);
+            var cardModel = Instantiate(cardModelPrefab, extensionContent).GetOrAddComponent<CardModel>();
+            cardModel.Value = card;
+            OnAddCardModel(null, cardModel);
         }
 
         public virtual void OnAddCardModel(CardStack cardStack, CardModel cardModel)
@@ -84,7 +85,7 @@ namespace Cgs.Play.Zones
         public virtual void Shuffle()
         {
             StopAllCoroutines();
-            List<Card> cards = new List<Card>(Cards);
+            List<UnityCard> cards = new List<UnityCard>(Cards);
             cards.Shuffle();
             Sync(cards);
             StartCoroutine(DisplayShuffle());
@@ -136,12 +137,12 @@ namespace Cgs.Play.Zones
         {
             Clear();
             foreach (Card card in cards)
-                AddCard(card);
+                AddCard((UnityCard) card);
         }
 
         public IEnumerator WaitForLoad(UnityAction action)
         {
-            IReadOnlyList<Card> deckCards = Cards;
+            IReadOnlyList<UnityCard> deckCards = Cards;
             var loaded = false;
             while (!loaded)
             {

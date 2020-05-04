@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 namespace CardGameView
 {
     public delegate void CardAction(CardModel cardModel);
+
     public static class CardActions
     {
         public static void ResetRotation(CardModel cardModel)
@@ -19,6 +20,7 @@ namespace CardGameView
             if (cardModel.IsOnline)
                 cardModel.CmdUpdateRotation(cardModel.transform.rotation);
         }
+
         public static void Rotate90(CardModel cardModel)
         {
             if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
@@ -35,8 +37,7 @@ namespace CardGameView
                 return;
 
             bool isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
-            cardModel.transform.rotation = isVertical ?
-                Quaternion.AngleAxis(90, Vector3.back) : Quaternion.identity;
+            cardModel.transform.rotation = isVertical ? Quaternion.AngleAxis(90, Vector3.back) : Quaternion.identity;
             if (cardModel.IsOnline)
                 cardModel.CmdUpdateRotation(cardModel.transform.rotation);
         }

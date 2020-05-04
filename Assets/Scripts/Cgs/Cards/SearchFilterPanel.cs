@@ -5,8 +5,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using CardGameDef;
-
 namespace Cgs.Cards
 {
     public class SearchFilterPanel : MonoBehaviour

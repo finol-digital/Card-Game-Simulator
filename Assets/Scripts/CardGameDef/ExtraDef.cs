@@ -22,7 +22,8 @@ namespace CardGameDef
         public string Property { get; private set; }
 
         [JsonProperty]
-        [Description("If *Card:Properties[ExtraDef:Property]* equals *ExtraDef:Value*, then that card will be moved from the main deck to this extra deck")]
+        [Description(
+            "If *Card:Properties[ExtraDef:Property]* equals *ExtraDef:Value*, then that card will be moved from the main deck to this extra deck")]
         public string Value { get; private set; }
 
         [JsonConstructor]

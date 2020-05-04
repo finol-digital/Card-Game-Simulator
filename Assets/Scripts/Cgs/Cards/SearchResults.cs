@@ -3,11 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using CardGameDef.Unity;
+using CardGameView;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
-
-using CardGameDef;
-using CardGameView;
 
 namespace Cgs.Cards
 {
@@ -30,41 +30,51 @@ namespace Cgs.Cards
             {
                 float padding = 0;
                 float spacing = 0;
-                float cardWidth = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.x;
-                if (layoutGroup is HorizontalLayoutGroup)
-                    spacing = ((HorizontalLayoutGroup)layoutGroup).spacing;
-                else if (layoutGroup is GridLayoutGroup)
+                float cardWidth = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X;
+                if (layoutGroup is HorizontalLayoutGroup horizontalLayoutGroup)
+                    spacing = horizontalLayoutGroup.spacing;
+                else if (layoutGroup is GridLayoutGroup gridLayoutGroup)
                 {
-                    padding = ((GridLayoutGroup)layoutGroup).padding.left + ((GridLayoutGroup)layoutGroup).padding.right;
-                    spacing = ((GridLayoutGroup)layoutGroup).spacing.x;
-                    cardWidth = ((GridLayoutGroup)layoutGroup).cellSize.x;
+                    RectOffset gridPadding = gridLayoutGroup.padding;
+                    padding = gridPadding.left + gridPadding.right;
+                    spacing = gridLayoutGroup.spacing.x;
+                    cardWidth = gridLayoutGroup.cellSize.x;
                 }
+
                 return Mathf.FloorToInt((layoutArea.rect.width - padding + spacing) / (cardWidth + spacing));
             }
         }
+
         public int CardsPerPage
         {
             get
             {
-                int rowsPerPage = 1;
-                if (layoutGroup is GridLayoutGroup)
-                {
-                    GridLayoutGroup gridLayoutGroup = (GridLayoutGroup)layoutGroup;
-                    float padding = gridLayoutGroup.padding.top + gridLayoutGroup.padding.bottom;
-                    rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height - padding + gridLayoutGroup.spacing.y)
-                        / (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y));
-                }
+                var rowsPerPage = 1;
+                if (!(layoutGroup is GridLayoutGroup gridLayoutGroup))
+                    return CardsPerRow * rowsPerPage;
+
+                RectOffset gridPadding = gridLayoutGroup.padding;
+                float padding = gridPadding.top + gridPadding.bottom;
+                rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height - padding + gridLayoutGroup.spacing.y)
+                                               / (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y));
+
                 return CardsPerRow * rowsPerPage;
             }
         }
-        public int TotalPageCount => CardsPerPage == 0 ? 0 : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
+
+        public int TotalPageCount => CardsPerPage == 0
+            ? 0
+            : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
 
         public CardSearchMenu CardSearcher => _cardSearcher ??
-                                              (_cardSearcher = Instantiate(cardSearchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
+                                              (_cardSearcher = Instantiate(cardSearchMenuPrefab)
+                                                  .GetOrAddComponent<CardSearchMenu>());
+
         private CardSearchMenu _cardSearcher;
-        public List<Card> AllResults
+
+        public List<UnityCard> AllResults
         {
-            get { return _allResults ?? (_allResults = new List<Card>()); }
+            get => _allResults ?? (_allResults = new List<UnityCard>());
             set
             {
                 _allResults = value;
@@ -72,7 +82,8 @@ namespace Cgs.Cards
                 UpdateSearchResultsPanel();
             }
         }
-        private List<Card> _allResults;
+
+        private List<UnityCard> _allResults;
 
         public int CurrentPageIndex { get; set; }
 
@@ -92,16 +103,18 @@ namespace Cgs.Cards
 
         public void ResetPlaceholderText()
         {
-            if (inputField != null && inputField.placeholder is Text)
-                (inputField.placeholder as Text).text = InputPrompt;
+            if (inputField != null && inputField.placeholder is Text text)
+                text.text = InputPrompt;
         }
 
+        [UsedImplicitly]
         public string UpdateInputField(string input)
         {
             inputField.text = input;
             return inputField.text;
         }
 
+        [UsedImplicitly]
         public void SetInput(string input)
         {
             CardSearcher.SetFilters(input);
@@ -136,21 +149,23 @@ namespace Cgs.Cards
         {
             layoutArea.DestroyAllChildren();
 
-            for (int i = 0; i < CardsPerPage && CurrentPageIndex >= 0 && CurrentPageIndex * CardsPerPage + i < AllResults.Count; i++)
+            for (var i = 0;
+                i < CardsPerPage && CurrentPageIndex >= 0 && CurrentPageIndex * CardsPerPage + i < AllResults.Count;
+                i++)
             {
                 string cardId = AllResults[CurrentPageIndex * CardsPerPage + i].Id;
                 if (!CardGameManager.Current.Cards.ContainsKey(cardId))
                     continue;
-                Card cardToShow = CardGameManager.Current.Cards[cardId];
-                CardModel cardModelToShow = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
-                cardModelToShow.Value = cardToShow;
-                cardModelToShow.IsStatic = layoutGroup is GridLayoutGroup;
-                cardModelToShow.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
+                UnityCard cardToShow = CardGameManager.Current.Cards[cardId];
+                var cardModel = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
+                cardModel.Value = cardToShow;
+                cardModel.IsStatic = layoutGroup is GridLayoutGroup;
+                cardModel.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
                 if (HorizontalDoubleClickAction != null
-                        && ((RectTransform)transform).rect.width > ((RectTransform)transform).rect.height)
-                    cardModelToShow.DoubleClickAction = HorizontalDoubleClickAction;
+                    && ((RectTransform) transform).rect.width > ((RectTransform) transform).rect.height)
+                    cardModel.DoubleClickAction = HorizontalDoubleClickAction;
                 else
-                    cardModelToShow.DoubleClickAction = CardViewer.Instance.MaximizeOn;
+                    cardModel.DoubleClickAction = CardViewer.Instance.MaximizeOn;
             }
 
             countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);
@@ -164,7 +179,7 @@ namespace Cgs.Cards
             CardSearcher.Show(ShowResults);
         }
 
-        public void ShowResults(string filters, List<Card> results)
+        public void ShowResults(string filters, List<UnityCard> results)
         {
             inputField.text = filters;
             AllResults = results;

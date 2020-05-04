@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using CardGameDef;
+using CardGameDef.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +13,7 @@ namespace Cgs.Menu
         public Image progressBar;
         public Text progressText;
 
-        private CardGame _downloadStatus;
+        private UnityCardGame _downloadStatus;
 
         void Update()
         {
@@ -27,7 +27,7 @@ namespace Cgs.Menu
             progressText.text = _downloadStatus.DownloadStatus;
         }
 
-        public void Show(CardGame gameToDownload)
+        public void Show(UnityCardGame gameToDownload)
         {
             gameObject.SetActive(true);
             _downloadStatus = gameToDownload;

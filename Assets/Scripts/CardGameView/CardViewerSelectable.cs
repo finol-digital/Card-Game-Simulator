@@ -9,7 +9,7 @@ namespace CardGameView
 {
     public class CardViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
-        public bool ignoreDeselect = false;
+        public bool ignoreDeselect;
 
         public void OnPointerDown(PointerEventData eventData)
         {

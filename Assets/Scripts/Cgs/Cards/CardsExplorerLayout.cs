@@ -4,14 +4,12 @@
 
 using UnityEngine;
 
-using CardGameView;
-
 namespace Cgs.Cards
 {
     public class CardsExplorerLayout : MonoBehaviour
     {
         public const float MinWidth = 1200;
-        public const float CardsPortaitHeight = 5000;
+        public const float CardsPortraitHeight = 5000;
         public const float CardsLandscapeHeight = 2000;
 
         public RectTransform cardsViewContent;
@@ -21,16 +19,11 @@ namespace Cgs.Cards
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
-            {
-                cardsViewContent.sizeDelta = new Vector2(cardsViewContent.sizeDelta.x, CardsPortaitHeight);
-            }
-            else // Landscape
-            {
-                cardsViewContent.sizeDelta = new Vector2(cardsViewContent.sizeDelta.x, CardsLandscapeHeight);
-            }
+            Vector2 sizeDelta = cardsViewContent.sizeDelta;
+            sizeDelta = ((RectTransform) transform).rect.width < MinWidth
+                ? new Vector2(sizeDelta.x, CardsPortraitHeight)
+                : new Vector2(sizeDelta.x, CardsLandscapeHeight);
+            cardsViewContent.sizeDelta = sizeDelta;
         }
-
     }
 }
-

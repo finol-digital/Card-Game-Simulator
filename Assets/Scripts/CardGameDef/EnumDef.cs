@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using System.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using Newtonsoft.Json;
 
@@ -29,7 +29,9 @@ namespace CardGameDef
         public static bool TryParseInt(string number, out int intValue)
         {
             bool isHex = number.StartsWith(Hex);
-            return int.TryParse(isHex ? number.Substring(Hex.Length) : number, isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture, out intValue);
+            return int.TryParse(isHex ? number.Substring(Hex.Length) : number,
+                isHex ? NumberStyles.AllowHexSpecifier : NumberStyles.Integer, CultureInfo.InvariantCulture,
+                out intValue);
         }
 
         [JsonConstructor]
@@ -51,8 +53,7 @@ namespace CardGameDef
             if (string.IsNullOrEmpty(key) || Lookups.ContainsKey(key))
                 return 0;
 
-            int intValue;
-            if (!key.StartsWith(Hex) || !TryParseInt(key, out intValue))
+            if (!key.StartsWith(Hex) || !TryParseInt(key, out int intValue))
                 intValue = 1 << Lookups.Count;
 
             Lookups[key] = intValue;
@@ -61,16 +62,16 @@ namespace CardGameDef
 
         public string GetStringFromLookupFlags(int flags)
         {
-            string stringValue = string.Empty;
+            var stringValue = string.Empty;
             foreach (KeyValuePair<string, string> enumValue in Values)
             {
-                if (Lookups.TryGetValue(enumValue.Key, out int lookupValue) && ((lookupValue & flags) != 0))
-                {
-                    if (!string.IsNullOrEmpty(stringValue))
-                        stringValue += Delimiter;
-                    stringValue += enumValue.Value;
-                }
+                if (!Lookups.TryGetValue(enumValue.Key, out int lookupValue) || ((lookupValue & flags) == 0))
+                    continue;
+                if (!string.IsNullOrEmpty(stringValue))
+                    stringValue += Delimiter;
+                stringValue += enumValue.Value;
             }
+
             return stringValue;
         }
 
@@ -79,8 +80,8 @@ namespace CardGameDef
             if (string.IsNullOrEmpty(propertyValue))
                 return string.Empty;
 
-            string stringValue = string.Empty;
-            foreach (string splitValue in propertyValue.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries))
+            var stringValue = string.Empty;
+            foreach (string splitValue in propertyValue.Split(new[] {Delimiter}, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (!string.IsNullOrEmpty(stringValue))
                     stringValue += Delimiter;
@@ -89,6 +90,7 @@ namespace CardGameDef
                 else
                     stringValue += Values.TryGetValue(splitValue, out string mappedValue) ? mappedValue : splitValue;
             }
+
             return stringValue;
         }
 
@@ -97,12 +99,14 @@ namespace CardGameDef
             if (string.IsNullOrEmpty(propertyValue))
                 return 0;
 
-            int enumValue = 0;
-            foreach (string stringValue in propertyValue.Split(new[] { Delimiter }, StringSplitOptions.RemoveEmptyEntries))
+            var enumValue = 0;
+            foreach (string stringValue in propertyValue.Split(new[] {Delimiter}, StringSplitOptions.RemoveEmptyEntries)
+            )
             {
                 if (Lookups.TryGetValue(stringValue, out int intValue) || TryParseInt(stringValue, out intValue))
                     enumValue |= intValue;
             }
+
             return enumValue;
         }
     }

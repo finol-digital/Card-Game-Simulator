@@ -4,12 +4,13 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace CardGameView
 {
     public delegate void OnAddCardDelegate(CardStack cardStack, CardModel cardModel);
+
     public delegate void OnRemoveCardDelegate(CardStack cardStack, CardModel cardModel);
 
     public enum CardStackType
@@ -33,7 +34,8 @@ namespace CardGameView
         public void OnPointerEnter(PointerEventData eventData)
         {
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
-            if (cardModel != null && (type != CardStackType.Area || cardModel.transform.parent != transform) && !cardModel.IsStatic)
+            if (cardModel != null && (type != CardStackType.Area || cardModel.transform.parent != transform) &&
+                !cardModel.IsStatic)
                 cardModel.PlaceHolderCardStack = this;
         }
 
@@ -74,15 +76,18 @@ namespace CardGameView
                 case CardStackType.Vertical:
                 case CardStackType.Horizontal:
                     int newSiblingIndex = transform.childCount;
-                    for (int i = 0; i < transform.childCount; i++)
+                    for (var i = 0; i < transform.childCount; i++)
                     {
-                        if (type == CardStackType.Vertical ? targetPosition.y < transform.GetChild(i).position.y : targetPosition.x > transform.GetChild(i).position.x)
+                        if (type == CardStackType.Vertical
+                            ? targetPosition.y < transform.GetChild(i).position.y
+                            : targetPosition.x > transform.GetChild(i).position.x)
                             continue;
                         newSiblingIndex = i;
                         if (child.GetSiblingIndex() < newSiblingIndex)
                             newSiblingIndex--;
                         break;
                     }
+
                     child.SetSiblingIndex(newSiblingIndex);
                     break;
                 case CardStackType.Area:

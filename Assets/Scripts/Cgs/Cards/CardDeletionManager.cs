@@ -2,11 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using UnityEngine;
-using UnityEngine.UI;
-
 using CardGameDef;
 using CardGameView;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Cgs.Cards
 {
@@ -14,20 +13,26 @@ namespace Cgs.Cards
     {
         public SearchResults searchResults;
         private Button _deleteButton;
+
         void Start()
         {
             _deleteButton = gameObject.GetOrAddComponent<Button>();
         }
+
         void Update()
         {
-            _deleteButton.interactable = CardViewer.Instance?.SelectedCardModel != null;
-            if (Input.GetButtonDown(Inputs.Load) && CardGameManager.Instance.ModalCanvas == null && !searchResults.inputField.isFocused)
+            _deleteButton.interactable = CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null;
+            if (Input.GetButtonDown(Inputs.Load) && CardGameManager.Instance.ModalCanvas == null &&
+                !searchResults.inputField.isFocused)
                 Delete();
         }
 
         public void Delete()
         {
-            Card toDelete = CardViewer.Instance?.SelectedCardModel?.Value;
+            if (CardViewer.Instance == null || CardViewer.Instance.SelectedCardModel == null)
+                return;
+
+            Card toDelete = CardViewer.Instance.SelectedCardModel.Value;
             if (toDelete == null)
                 return;
 

@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using CardGameDef;
+using CardGameDef.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -149,13 +150,13 @@ namespace Cgs.Play.Zones
             ResizeContent();
         }
 
-        public void CreateExtraZone(string zoneName, List<Card> cards)
+        public void CreateExtraZone(string zoneName, IEnumerable<Card> cards)
         {
             ExtensibleCardZone extraZone =
                 Instantiate(extraZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
             extraZone.labelText.text = zoneName;
             foreach (Card card in cards)
-                extraZone.AddCard(card);
+                extraZone.AddCard((UnityCard) card);
             extraZone.Viewer = this;
             ExtraZones.Add(extraZone);
             ResizeContent();

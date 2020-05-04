@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CardGameDef;
+using CardGameDef.Unity;
 using Cgs.Menu;
 using UnityEngine;
 using UnityEngine.Events;
@@ -69,20 +70,22 @@ namespace Cgs
 
         private static CardGameManager _instance;
 
-        public static CardGame Current { get; private set; } = CardGame.Invalid;
+        public static UnityCardGame Current { get; private set; } = UnityCardGame.UnityInvalid;
         public static bool IsQuitting { get; private set; }
 
         public bool IsSearchingForServer { get; set; }
 
-        public SortedDictionary<string, CardGame> AllCardGames { get; } = new SortedDictionary<string, CardGame>();
+        public SortedDictionary<string, UnityCardGame> AllCardGames { get; } =
+            new SortedDictionary<string, UnityCardGame>();
 
-        public CardGame Previous
+        public UnityCardGame Previous
         {
             get
             {
-                CardGame previous = AllCardGames.Values.LastOrDefault() ?? CardGame.Invalid;
+                UnityCardGame previous = AllCardGames.Values.LastOrDefault() ?? UnityCardGame.UnityInvalid;
 
-                using (SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator())
+                using (SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
+                    AllCardGames.GetEnumerator())
                 {
                     var found = false;
                     while (!found && allCardGamesEnum.MoveNext())
@@ -98,13 +101,14 @@ namespace Cgs
             }
         }
 
-        public CardGame Next
+        public UnityCardGame Next
         {
             get
             {
-                CardGame next = AllCardGames.Values.FirstOrDefault() ?? CardGame.Invalid;
+                UnityCardGame next = AllCardGames.Values.FirstOrDefault() ?? UnityCardGame.UnityInvalid;
 
-                using (SortedDictionary<string, CardGame>.Enumerator allCardGamesEnum = AllCardGames.GetEnumerator())
+                using (SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
+                    AllCardGames.GetEnumerator())
                 {
                     var found = false;
                     while (!found && allCardGamesEnum.MoveNext())
@@ -187,10 +191,10 @@ namespace Cgs
             }
 
             _instance = this;
-            CardGame.Invalid.CoroutineRunner = this;
+            UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 
-            if (!Directory.Exists(CardGame.GamesDirectoryPath))
+            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 CreateDefaultCardGames();
             LookupCardGames();
 
@@ -205,44 +209,44 @@ namespace Cgs
         private void CreateDefaultCardGames()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            UnityExtensionMethods.ExtractAndroidStreamingAssets(CardGame.GamesDirectoryPath);
+            UnityExtensionMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
 #elif UNITY_WEBGL
-            if (!Directory.Exists(CardGame.GamesDirectoryPath))
-                Directory.CreateDirectory(CardGame.GamesDirectoryPath);
+            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
+                Directory.CreateDirectory(UnityCardGame.GamesDirectoryPath);
             string standardPlayingCardsDirectory =
- CardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
+ UnityCardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
             if (!Directory.Exists(standardPlayingCardsDirectory))
                 Directory.CreateDirectory(standardPlayingCardsDirectory);
             File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName, Tags.StandPlayingCardsJsonFileContent);
-            string dominoesDirectory = CardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
+            string dominoesDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
             if (!Directory.Exists(dominoesDirectory))
                 Directory.CreateDirectory(dominoesDirectory);
             File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
             StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
-            string mahjongDirectory = CardGame.GamesDirectoryPath + "/" + Tags.MahjongDirectoryName;
+            string mahjongDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.MahjongDirectoryName;
             if (!Directory.Exists(mahjongDirectory))
                 Directory.CreateDirectory(mahjongDirectory);
             File.WriteAllText(mahjongDirectory + "/" + Tags.MahjongJsonFileName, Tags.MahjongJsonFileContent);
             StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.MahjongCardBackUrl, mahjongDirectory + "/CardBack.png"));
-            string arcmageDirectory = CardGame.GamesDirectoryPath + "/" + Tags.ArcmageDirectoryName;
+            string arcmageDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.ArcmageDirectoryName;
             if (!Directory.Exists(arcmageDirectory))
                 Directory.CreateDirectory(arcmageDirectory);
             File.WriteAllText(arcmageDirectory + "/" + Tags.ArcmageJsonFileName, Tags.ArcmageJsonFileContent);
             StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.ArcmageCardBackUrl, arcmageDirectory + "/CardBack.png"));
 #else
-            UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, CardGame.GamesDirectoryPath);
+            UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
 
         private void LookupCardGames()
         {
-            if (!Directory.Exists(CardGame.GamesDirectoryPath) ||
-                Directory.GetDirectories(CardGame.GamesDirectoryPath).Length < 1)
+            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
+                Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
                 CreateDefaultCardGames();
 
-            foreach (string gameDirectory in Directory.GetDirectories(CardGame.GamesDirectoryPath))
+            foreach (string gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
-                string gameDirectoryName = gameDirectory.Substring(CardGame.GamesDirectoryPath.Length + 1);
+                string gameDirectoryName = gameDirectory.Substring(UnityCardGame.GamesDirectoryPath.Length + 1);
                 (string name, string url) game = CardGame.Decode(gameDirectoryName);
                 if (string.IsNullOrEmpty(name))
                     Debug.LogWarning(EmptyNameWarning);
@@ -260,7 +264,7 @@ namespace Cgs
                 }
                 else
                 {
-                    var newCardGame = new CardGame(this, game.name, game.url);
+                    var newCardGame = new UnityCardGame(this, game.name, game.url);
                     newCardGame.ReadProperties();
                     if (!string.IsNullOrEmpty(newCardGame.Error))
                         Debug.LogError(LoadErrorMessage + newCardGame.Error);
@@ -313,17 +317,17 @@ namespace Cgs
         {
             string preferredGameId =
                 PlayerPrefs.GetString(PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
-            Current = AllCardGames.TryGetValue(preferredGameId, out CardGame currentGame) &&
+            Current = AllCardGames.TryGetValue(preferredGameId, out UnityCardGame currentGame) &&
                       string.IsNullOrEmpty(currentGame.Error)
                 ? currentGame
-                : (AllCardGames.FirstOrDefault().Value ?? CardGame.Invalid);
+                : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
         }
 
         public IEnumerator GetCardGame(string gameUrl)
         {
             // If user attempts to download a game they already have, we should just update that game
-            CardGame existingGame = null;
-            foreach (CardGame cardGame in AllCardGames.Values)
+            UnityCardGame existingGame = null;
+            foreach (UnityCardGame cardGame in AllCardGames.Values)
                 if (cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl)))
                     existingGame = cardGame;
             if (existingGame != null)
@@ -338,7 +342,7 @@ namespace Cgs
 
         public IEnumerator DownloadCardGame(string gameUrl)
         {
-            var cardGame = new CardGame(this, CardGame.DefaultName, gameUrl);
+            var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
 
             Progress.Show(cardGame);
             yield return cardGame.Download();
@@ -370,7 +374,7 @@ namespace Cgs
             }
         }
 
-        public IEnumerator UpdateCardGame(CardGame cardGame)
+        public IEnumerator UpdateCardGame(UnityCardGame cardGame)
         {
             if (cardGame == null)
                 cardGame = Current;
@@ -392,7 +396,7 @@ namespace Cgs
                 ResetGameScene();
         }
 
-        public IEnumerator LoadCards(CardGame cardGame)
+        public IEnumerator LoadCards(UnityCardGame cardGame)
         {
             if (cardGame == null)
                 cardGame = Current;

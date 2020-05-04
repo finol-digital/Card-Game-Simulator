@@ -11,7 +11,7 @@ namespace CardGameDef
         public const string DefaultCode = "_CGSDEFAULT_";
         public const string DefaultName = "_CGSDEFAULT_";
 
-        public string Code { get; private set; }
+        public string Code { get; }
         public string Name { get; set; }
 
         public Set(string code, string name)

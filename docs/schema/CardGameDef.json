@@ -181,7 +181,7 @@
       "default": "(x: 2.5, y: 3.5)",
       "oneOf": [
         {
-          "$ref": "#/definitions/Vector2"
+          "$ref": "#/definitions/Float2"
         }
       ]
     },
@@ -277,7 +277,7 @@
       "default": "(x: 36, y: 24)",
       "oneOf": [
         {
-          "$ref": "#/definitions/Vector2"
+          "$ref": "#/definitions/Float2"
         }
       ]
     },
@@ -392,37 +392,16 @@
         "objectEnumList"
       ]
     },
-    "Vector2": {
+    "Float2": {
       "type": "object",
-      "description": "Representation of 2D vectors and points.\n      ",
       "additionalProperties": false,
       "properties": {
         "x": {
           "type": "number",
-          "description": "X component of the vector.\n      ",
           "format": "double"
         },
         "y": {
           "type": "number",
-          "description": "Y component of the vector.\n      ",
-          "format": "double"
-        },
-        "normalized": {
-          "description": "Returns this vector with a magnitude of 1 (Read Only).\n      ",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/Vector2"
-            }
-          ]
-        },
-        "magnitude": {
-          "type": "number",
-          "description": "Returns the length of this vector (Read Only).\n      ",
-          "format": "double"
-        },
-        "sqrMagnitude": {
-          "type": "number",
-          "description": "Returns the squared length of this vector (Read Only).\n      ",
           "format": "double"
         }
       }
@@ -548,7 +527,7 @@
           "description": "Indicates the position (in inches) of the bottom-left corner",
           "oneOf": [
             {
-              "$ref": "#/definitions/Vector2"
+              "$ref": "#/definitions/Float2"
             }
           ]
         },
@@ -556,7 +535,7 @@
           "description": "Indicates the board's width and height in inches",
           "oneOf": [
             {
-              "$ref": "#/definitions/Vector2"
+              "$ref": "#/definitions/Float2"
             }
           ]
         }

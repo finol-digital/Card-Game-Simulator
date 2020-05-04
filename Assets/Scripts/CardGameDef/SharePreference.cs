@@ -11,11 +11,8 @@ namespace CardGameDef
     [JsonConverter(typeof(StringEnumConverter))]
     public enum SharePreference
     {
-        [EnumMember(Value = "ask")]
-        Ask,
-        [EnumMember(Value = "share")]
-        Share,
-        [EnumMember(Value = "individual")]
-        Individual
+        [EnumMember(Value = "ask")] Ask,
+        [EnumMember(Value = "share")] Share,
+        [EnumMember(Value = "individual")] Individual
     }
 }

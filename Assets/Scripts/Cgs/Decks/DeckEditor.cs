@@ -2,8 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using CardGameDef;
+using CardGameDef.Unity;
 using CardGameView;
 using Cgs.Cards;
 using Cgs.Menu;
@@ -24,7 +27,7 @@ namespace Cgs.Decks
         public float PreHeight => cardModelPrefab.GetComponent<RectTransform>().rect.height;
 
         public int CardsPerStack =>
-            Mathf.FloorToInt((CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight) * 4);
+            Mathf.FloorToInt((CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / PreHeight) * 4);
 
         public int CardStackCount => Mathf.CeilToInt((float) CardGameManager.Current.DeckMaxCount / CardsPerStack);
         public List<CardStack> CardStacks => _cardStacks ?? (_cardStacks = new List<CardStack>());
@@ -38,7 +41,7 @@ namespace Cgs.Decks
                     _currentCardStackIndex = 0;
                 return _currentCardStackIndex;
             }
-            set { _currentCardStackIndex = value; }
+            set => _currentCardStackIndex = value;
         }
 
         private int _currentCardStackIndex;
@@ -59,21 +62,19 @@ namespace Cgs.Decks
             {
                 List<CardModel> cardModels = new List<CardModel>();
                 foreach (CardStack stack in CardStacks)
-                foreach (CardModel cardModel in stack.GetComponentsInChildren<CardModel>())
-                    cardModels.Add(cardModel);
+                    cardModels.AddRange(stack.GetComponentsInChildren<CardModel>());
                 return cardModels;
             }
         }
 
-        public Deck CurrentDeck
+        public UnityDeck CurrentDeck
         {
             get
             {
-                Deck deck = new Deck(CardGameManager.Current, SavedDeck?.Name ?? Deck.DefaultName,
+                var deck = new UnityDeck(CardGameManager.Current, SavedDeck?.Name ?? Deck.DefaultName,
                     CardGameManager.Current.DeckFileType);
-                foreach (CardStack stack in CardStacks)
-                foreach (CardModel card in stack.GetComponentsInChildren<CardModel>())
-                    deck.Cards.Add(card.Value);
+                foreach (CardModel card in CardStacks.SelectMany(stack => stack.GetComponentsInChildren<CardModel>()))
+                    deck.Add(card.Value);
                 return deck;
             }
         }
@@ -131,9 +132,10 @@ namespace Cgs.Decks
                 ShowDeckLoadMenu();
             else if (Input.GetButtonDown(Inputs.Save))
                 ShowDeckSaveMenu();
-            else if (Input.GetButtonDown(Inputs.FocusBack) || Input.GetAxis(Inputs.FocusBack) != 0
+            else if (Input.GetButtonDown(Inputs.FocusBack) || Math.Abs(Input.GetAxis(Inputs.FocusBack)) >
+                                                           Inputs.Tolerance
                                                            || Input.GetButtonDown(Inputs.FocusNext) ||
-                                                           Input.GetAxis(Inputs.FocusNext) != 0)
+                                                           Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance)
                 searchResults.inputField.ActivateInputField();
             else if (Input.GetButtonDown(Inputs.Filter))
                 searchResults.ShowSearchMenu();
@@ -146,18 +148,18 @@ namespace Cgs.Decks
             Clear();
             layoutContent.DestroyAllChildren();
             CardStacks.Clear();
-            for (int i = 0; i < CardStackCount; i++)
+            for (var i = 0; i < CardStackCount; i++)
             {
-                CardStack newCardStack = Instantiate(cardStackPrefab, layoutContent).GetOrAddComponent<CardStack>();
-                newCardStack.type = CardStackType.Vertical;
-                newCardStack.scrollRectContainer = scrollRect;
-                newCardStack.DoesImmediatelyRelease = true;
-                newCardStack.OnAddCardActions.Add(OnAddCardModel);
-                newCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
-                CardStacks.Add(newCardStack);
-                newCardStack.GetComponent<VerticalLayoutGroup>().spacing =
+                var cardStack = Instantiate(cardStackPrefab, layoutContent).GetOrAddComponent<CardStack>();
+                cardStack.type = CardStackType.Vertical;
+                cardStack.scrollRectContainer = scrollRect;
+                cardStack.DoesImmediatelyRelease = true;
+                cardStack.OnAddCardActions.Add(OnAddCardModel);
+                cardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
+                CardStacks.Add(cardStack);
+                cardStack.GetComponent<VerticalLayoutGroup>().spacing =
                     cardStackPrefab.GetComponent<VerticalLayoutGroup>().spacing
-                    * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.y / PreHeight);
+                    * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / PreHeight);
             }
 
             layoutContent.sizeDelta = new Vector2(
@@ -180,7 +182,7 @@ namespace Cgs.Decks
             AddCard(cardModel.Value);
         }
 
-        public void AddCard(Card card)
+        public void AddCard(UnityCard card)
         {
             if (card == null || CardStacks.Count < 1)
                 return;
@@ -251,13 +253,13 @@ namespace Cgs.Decks
 
         public void Sort()
         {
-            Deck sortedDeck = CurrentDeck;
+            UnityDeck sortedDeck = CurrentDeck;
             sortedDeck.Sort();
             foreach (CardStack stack in CardStacks)
                 stack.transform.DestroyAllChildren();
             CurrentCardStackIndex = 0;
             foreach (Card card in sortedDeck.Cards)
-                AddCard(card);
+                AddCard((UnityCard) card);
         }
 
         public void PromptForClear()
@@ -301,21 +303,21 @@ namespace Cgs.Decks
             DeckLoader.Show(LoadDeck, currentDeck.Name, currentDeck.Cards.Count > 0 ? currentDeck.ToString() : null);
         }
 
-        public void LoadDeck(Deck newDeck)
+        public void LoadDeck(UnityDeck deck)
         {
-            if (newDeck == null)
+            if (deck == null)
                 return;
 
             Clear();
-            foreach (Card card in newDeck.Cards)
-                AddCard(card);
-            SavedDeck = newDeck;
+            foreach (Card card in deck.Cards)
+                AddCard((UnityCard) card);
+            SavedDeck = deck;
             UpdateDeckStats();
         }
 
         public void ShowDeckSaveMenu()
         {
-            Deck deckToSave = CurrentDeck;
+            UnityDeck deckToSave = CurrentDeck;
             bool overwrite = SavedDeck != null && deckToSave.Name.Equals(SavedDeck.Name);
             DeckSaver.Show(deckToSave, UpdateDeckName, OnSaveDeck, overwrite);
         }

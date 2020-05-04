@@ -54,8 +54,8 @@ namespace Cgs.Cards
         public void ResetBannerCardsAndButtons()
         {
             bannerImage.sprite = CardGameManager.Current.BannerImageSprite;
-            ((GridLayoutGroup) searchResults.layoutGroup).cellSize =
-                CardGameManager.Current.CardSize * CardGameManager.PixelsPerInch;
+            var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
+            ((GridLayoutGroup) searchResults.layoutGroup).cellSize = cardSize * CardGameManager.PixelsPerInch;
             foreach (GameObject button in editButtons)
                 button.SetActive(!CardGameManager.Current.IsExternal);
         }

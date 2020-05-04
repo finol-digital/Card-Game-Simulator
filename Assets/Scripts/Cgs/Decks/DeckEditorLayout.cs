@@ -24,7 +24,7 @@ namespace Cgs.Decks
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
+            if (((RectTransform) transform).rect.width < MinWidth) // Portrait
             {
                 deckButtons.anchorMin = DeckButtonsPortraitAnchor;
                 deckButtons.anchorMax = DeckButtonsPortraitAnchor;

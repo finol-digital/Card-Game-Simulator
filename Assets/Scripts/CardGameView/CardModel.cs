@@ -5,15 +5,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using Mirror;
-
-using CardGameDef;
+using CardGameDef.Unity;
 using Cgs;
 using Cgs.Play.Multiplayer;
+using JetBrains.Annotations;
+using Mirror;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace CardGameView
 {
@@ -25,7 +25,8 @@ namespace CardGameView
     }
 
     [RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(Outline))]
-    public class CardModel : NetworkBehaviour, ICardDisplay, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class CardModel : NetworkBehaviour, ICardDisplay, IPointerDownHandler, IPointerUpHandler, ISelectHandler,
+        IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public const float ZoomHoldTime = 1.5f;
         public const float MovementSpeed = 600f;
@@ -33,9 +34,17 @@ namespace CardGameView
         public static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
 
         public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
-            && transform.parent == CgsNetManager.Instance.playController.playMatContent;
+                                                               && transform.parent == CgsNetManager.Instance
+                                                                   .playController.playMatContent;
+
         public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
-            (CurrentPointerEventData.button == PointerEventData.InputButton.Middle || CurrentPointerEventData.button == PointerEventData.InputButton.Right));
+                                                                                      (CurrentPointerEventData.button ==
+                                                                                       PointerEventData.InputButton
+                                                                                           .Middle ||
+                                                                                       CurrentPointerEventData.button ==
+                                                                                       PointerEventData.InputButton
+                                                                                           .Right));
+
         public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
         public bool IsStatic { get; set; }
@@ -53,21 +62,20 @@ namespace CardGameView
         public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
         protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
-        [SyncVar(hook = "OnChangePosition")]
-        public Vector2 position;
+        [SyncVar(hook = "OnChangePosition")] public Vector2 position;
 
-        [SyncVar(hook = "OnChangeRotation")]
-        public Quaternion rotation;
+        [SyncVar(hook = "OnChangeRotation")] public Quaternion rotation;
 
-        [SyncVar]
-        private string _id;
+        [SyncVar] private string _id;
         public string Id => _id;
-        public Card Value
+
+        public UnityCard Value
         {
             get
             {
-                if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out Card cardValue))
-                    return Card.Blank;
+                if (string.IsNullOrEmpty(_id) ||
+                    !CardGameManager.Current.Cards.TryGetValue(_id, out UnityCard cardValue))
+                    return UnityCard.Blank;
                 return cardValue;
             }
             set
@@ -75,15 +83,15 @@ namespace CardGameView
                 Value.UnregisterDisplay(this);
                 _id = value != null ? value.Id : string.Empty;
                 gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
-                value.RegisterDisplay(this);
+                value?.RegisterDisplay(this);
             }
         }
 
-        [SyncVar]
-        private bool _isFacedown;
+        [SyncVar] private bool _isFacedown;
+
         public bool IsFacedown
         {
-            get { return _isFacedown; }
+            get => _isFacedown;
             set
             {
                 if (value == _isFacedown)
@@ -101,7 +109,7 @@ namespace CardGameView
 
         public RectTransform PlaceHolder
         {
-            get { return _placeHolder; }
+            get => _placeHolder;
             private set
             {
                 if (_placeHolder != null)
@@ -117,11 +125,12 @@ namespace CardGameView
                     IsHighlighted = false;
             }
         }
+
         private RectTransform _placeHolder;
 
         public CardStack PlaceHolderCardStack
         {
-            get { return _placeHolderCardStack; }
+            get => _placeHolderCardStack;
             set
             {
                 _placeHolderCardStack = value;
@@ -131,20 +140,21 @@ namespace CardGameView
                     PlaceHolder = null;
                     return;
                 }
+
                 DropTarget = null;
 
                 GameObject placeholder = new GameObject(gameObject.name + "(PlaceHolder)", typeof(RectTransform));
-                PlaceHolder = (RectTransform)placeholder.transform;
+                PlaceHolder = (RectTransform) placeholder.transform;
                 PlaceHolder.SetParent(_placeHolderCardStack.transform);
-                PlaceHolder.sizeDelta = ((RectTransform)transform).sizeDelta;
+                PlaceHolder.sizeDelta = ((RectTransform) transform).sizeDelta;
                 PlaceHolder.anchoredPosition = Vector2.zero;
             }
         }
+
         private CardStack _placeHolderCardStack;
 
         public bool IsNameVisible
         {
-            get { return nameLabel.activeSelf; }
             set
             {
                 nameLabel.SetActive(value);
@@ -152,12 +162,12 @@ namespace CardGameView
                     nameText.text = Value.Name;
             }
         }
+
         public GameObject nameLabel;
         public Text nameText;
 
         public bool IsHighlighted
         {
-            get { return outline.effectColor == SelectedHighlightColor; }
             set
             {
                 if (value)
@@ -173,23 +183,28 @@ namespace CardGameView
                 }
             }
         }
+
+        // ReSharper disable once InconsistentNaming
         protected Outline outline => _outline ?? (_outline = GetComponent<Outline>());
         private Outline _outline;
 
+        // ReSharper disable once InconsistentNaming
         public Image image => _image ?? (_image = GetComponent<Image>());
         private Image _image;
 
+        // ReSharper disable once InconsistentNaming
         public CanvasGroup canvasGroup => _canvasGroup ?? (_canvasGroup = GetComponent<CanvasGroup>());
         private CanvasGroup _canvasGroup;
 
         void Start()
         {
-            ((RectTransform)transform).sizeDelta = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize;
+            var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
+            ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
 
             if (IsOnline)
             {
                 if (Vector2.zero != position)
-                    ((RectTransform)transform).anchoredPosition = position;
+                    ((RectTransform) transform).anchoredPosition = position;
                 if (Quaternion.identity != rotation)
                     transform.rotation = rotation;
             }
@@ -226,34 +241,42 @@ namespace CardGameView
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
-            if (HoldTime > ZoomHoldTime)
-            {
-                CurrentPointerEventData = null;
-                PointerPositions.Clear();
-                PointerDragOffsets.Clear();
-                CardViewer.Instance?.ZoomOn(this);
-            }
+
+            if (!(HoldTime > ZoomHoldTime))
+                return;
+
+            CurrentPointerEventData = null;
+            PointerPositions.Clear();
+            PointerDragOffsets.Clear();
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.ZoomOn(this);
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            DidSelectOnDown = eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right
-                && CardViewer.Instance.SelectedCardModel != this && CardViewer.Instance.WasVisible;
+            DidSelectOnDown =
+                eventData.button != PointerEventData.InputButton.Middle && eventData.button !=
+                                                                        PointerEventData.InputButton.Right
+                                                                        && CardViewer.Instance.SelectedCardModel !=
+                                                                        this && CardViewer.Instance.WasVisible;
             if (DidSelectOnDown && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
 
             CurrentPointerEventData = eventData;
 
             PointerPositions[eventData.pointerId] = eventData.position;
-            PointerDragOffsets[eventData.pointerId] = ((Vector2)transform.position) - eventData.position;
+            PointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId && !eventData.dragging
-                && eventData.button != PointerEventData.InputButton.Middle && eventData.button != PointerEventData.InputButton.Right)
+            if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId &&
+                !eventData.dragging
+                && eventData.button != PointerEventData.InputButton.Middle &&
+                eventData.button != PointerEventData.InputButton.Right)
             {
-                if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject && DoubleClickAction != null)
+                if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
+                    DoubleClickAction != null)
                     DoubleClickAction(this);
                 else if (PlaceHolder == null)
                 {
@@ -294,15 +317,17 @@ namespace CardGameView
             DidDrag = true;
             if (DoesCloneOnDrag)
             {
-                GameObject newGameObject = Instantiate(gameObject, transform.position, transform.rotation, gameObject.FindInParents<Canvas>().transform);
+                Transform transform1 = transform;
+                GameObject newGameObject = Instantiate(gameObject, transform1.position, transform1.rotation,
+                    gameObject.FindInParents<Canvas>().transform);
                 eventData.pointerPress = newGameObject;
                 eventData.pointerDrag = newGameObject;
-                CardModel cardModel = newGameObject.GetOrAddComponent<CardModel>();
+                var cardModel = newGameObject.GetOrAddComponent<CardModel>();
                 cardModel.canvasGroup.blocksRaycasts = false;
                 cardModel.IsHighlighted = false;
                 cardModel.Value = Value;
                 cardModel.DoesCloneOnDrag = false;
-                cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
+                cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
                 cardModel.OnBeginDrag(eventData);
                 return;
             }
@@ -345,7 +370,7 @@ namespace CardGameView
 
             Vector2 removedOffset = Vector2.zero;
             if (PointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
-                removedOffset = (Vector2)transform.position - eventData.position - pointerDragOffset;
+                removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
             foreach (int offsetKey in PointerDragOffsets.Keys.ToList())
@@ -363,9 +388,7 @@ namespace CardGameView
 
         public static CardModel GetPointerDrag(PointerEventData eventData)
         {
-            if (eventData.pointerDrag == null)
-                return null;
-            return eventData.pointerDrag.GetComponent<CardModel>();
+            return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardModel>();
         }
 
         public void UpdatePosition()
@@ -374,7 +397,8 @@ namespace CardGameView
             if (SecondaryDragAction != Rotate && IsProcessingSecondaryDragAction)
                 return;
 #else
-            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) || Input.GetMouseButtonUp(2))
+            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) ||
+                Input.GetMouseButtonUp(2))
                 return;
 #endif
             if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !hasAuthority))
@@ -387,14 +411,14 @@ namespace CardGameView
             else if (!IsStatic)
                 transform.position = targetPosition;
 
-            if (!IsStatic)
-            {
-                if (PlaceHolderCardStack != null)
-                    PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
+            if (IsStatic)
+                return;
 
-                if (IsOnline)
-                    CmdUpdatePosition(((RectTransform)transform).anchoredPosition);
-            }
+            if (PlaceHolderCardStack != null)
+                PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
+
+            if (IsOnline)
+                CmdUpdatePosition(((RectTransform) transform).anchoredPosition);
         }
 
         public void UpdateCardStackPosition(Vector2 targetPosition)
@@ -403,40 +427,42 @@ namespace CardGameView
             if (cardStack == null || (IsOnline && !hasAuthority))
                 return;
 
-            if (!cardStack.DoesImmediatelyRelease && (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal))
+            if (!cardStack.DoesImmediatelyRelease &&
+                (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal))
                 cardStack.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
             else if (!IsStatic)
                 cardStack.UpdateLayout(transform as RectTransform, targetPosition);
 
-            if (!IsStatic)
-            {
-                if (cardStack.type == CardStackType.Area)
-                    transform.SetAsLastSibling();
+            if (IsStatic)
+                return;
 
-                Vector3[] stackCorners = new Vector3[4];
-                ((RectTransform)cardStack.transform).GetWorldCorners(stackCorners);
-                bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
-                bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
-                if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
-                    || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
-                    || (cardStack.type == CardStackType.Vertical && isOutXBounds)
-                    || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
-                    || (cardStack.type == CardStackType.Area
-                        && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
-                    ParentToCanvas(targetPosition);
-            }
+            if (cardStack.type == CardStackType.Area)
+                transform.SetAsLastSibling();
+
+            Vector3[] stackCorners = new Vector3[4];
+            ((RectTransform) cardStack.transform).GetWorldCorners(stackCorners);
+            bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
+            bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
+            if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
+                || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
+                || (cardStack.type == CardStackType.Vertical && isOutXBounds)
+                || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
+                || (cardStack.type == CardStackType.Area
+                    && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
+                ParentToCanvas(targetPosition);
         }
 
         [Command]
-        void CmdUpdatePosition(Vector2 position)
+        void CmdUpdatePosition(Vector2 newPosition)
         {
-            this.position = position;
+            position = newPosition;
         }
 
+        [UsedImplicitly]
         public void OnChangePosition(Vector2 oldPosition, Vector2 newPosition)
         {
             if (!hasAuthority)
-                ((RectTransform)transform).anchoredPosition = newPosition;
+                ((RectTransform) transform).anchoredPosition = newPosition;
         }
 
         public void ParentToCanvas(Vector3 targetPosition)
@@ -451,11 +477,12 @@ namespace CardGameView
             if (prevParentStack != null)
                 prevParentStack.OnRemove(this);
             canvasGroup.blocksRaycasts = false;
-            ((RectTransform)transform).anchorMax = 0.5f * Vector2.one;
-            ((RectTransform)transform).anchorMin = 0.5f * Vector2.one;
-            ((RectTransform)transform).pivot = 0.5f * Vector2.one;
-            transform.position = targetPosition;
-            transform.localScale = Vector3.one;
+            var rectTransform = (RectTransform) transform;
+            rectTransform.anchorMax = 0.5f * Vector2.one;
+            rectTransform.anchorMin = 0.5f * Vector2.one;
+            rectTransform.pivot = 0.5f * Vector2.one;
+            rectTransform.position = targetPosition;
+            rectTransform.localScale = Vector3.one;
         }
 
         [Command]
@@ -489,9 +516,10 @@ namespace CardGameView
             }
 
             CardStack prevParentStack = ParentCardStack;
-            transform.SetParent(PlaceHolder.parent);
-            transform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
-            transform.localScale = Vector3.one;
+            Transform transform1 = transform;
+            transform1.SetParent(PlaceHolder.parent);
+            transform1.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
+            transform1.localScale = Vector3.one;
             if (prevParentStack != null)
                 prevParentStack.OnRemove(this);
             if (ParentCardStack != null)
@@ -522,11 +550,12 @@ namespace CardGameView
         }
 
         [Command]
-        public void CmdUpdateRotation(Quaternion rotation)
+        public void CmdUpdateRotation(Quaternion newRotation)
         {
-            this.rotation = rotation;
+            rotation = newRotation;
         }
 
+        [UsedImplicitly]
         public void OnChangeRotation(Quaternion oldRotation, Quaternion newRotation)
         {
             if (!hasAuthority)
