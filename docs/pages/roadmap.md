@@ -14,9 +14,9 @@ permalink: roadmap.html
 - dec sideboard is extras
 - ydk side is also extra
 - gamePlayDeckName (default="Deck")
-- switch to default builder script and try out version code
-- editor unit test to generate schema and confirm it matches docs/ folder
-- runtime unit tests for StreamingAssets/ to match docs/ schema
+- Switch to default builder script and try out version code
+- Editor unit test to generate schema and confirm it matches docs/ folder
+- Runtime unit tests for StreamingAssets/ to match docs/ schema
 - Playmats
 
 ## Next Sprint
