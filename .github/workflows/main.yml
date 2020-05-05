@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "${{ secrets.UNITY_ANDROID_KEYSTORE }}" > finoldigital.keystore.asc
           gpg -d --passphrase "${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}" --batch finoldigital.keystore.asc > finoldigital.keystore
-      - uses: webbertakken/unity-builder@v0.11
+      - uses: webbertakken/unity-builder@v0.14
         with:
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
