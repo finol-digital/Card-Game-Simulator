@@ -28,6 +28,9 @@ namespace Cgs.Editor
                 target = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]),
             };
 
+            // Support automatic versioning
+            PlayerSettings.bundleVersion = options["version"];
+
             // Support Android signing
             if (buildOptions.target == BuildTarget.Android)
             {

@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Object = UnityEngine.Object;
 using Random = System.Random;
+
 #if UNITY_ANDROID && !UNITY_EDITOR
 using ICSharpCode.SharpZipLib.Core;
 #endif
@@ -116,24 +117,25 @@ public static class UnityExtensionMethods
 
 #if ENABLE_WINMD_SUPPORT
     public static async System.Threading.Tasks.Task<string> CacheFileAsync(string sourceFilePath)
-#else
-    public static string CacheFile(string sourceFilePath)
-#endif
     {
         string fileName = Path.GetFileName(sourceFilePath);
-#if ENABLE_WINMD_SUPPORT
         Windows.Storage.StorageFile sourceStorageFile = Crosstales.FB.FileBrowserWSAImpl.LastOpenFile;
         Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
         var cacheStorageFile =
  await sourceStorageFile.CopyAsync(cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
         string cacheFilePath = cacheStorageFile.Path;
-#else
+        return cacheFilePath;
+    }
+#elif UNITY_STANDALONE
+    public static string CacheFile(string sourceFilePath)
+    {
+        string fileName = Path.GetFileName(sourceFilePath);
         string cacheFilePath =
             Path.Combine(Application.temporaryCachePath, fileName ?? throw new FileNotFoundException());
         File.Copy(sourceFilePath, cacheFilePath);
-#endif
         return cacheFilePath;
     }
+#endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR
     public static void ExtractAndroidStreamingAssets(string targetPath)
@@ -228,26 +230,29 @@ public static class UnityExtensionMethods
             yield break;
         }
 
-        UnityWebRequest www = (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST"));
-        if (postJsonBody != null)
+        using (UnityWebRequest www =
+            (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST")))
         {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(postJsonBody);
-            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            www.downloadHandler = new DownloadHandlerBuffer();
-            www.SetRequestHeader("Content-Type", "application/json");
+            if (postJsonBody != null)
+            {
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(postJsonBody);
+                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                www.downloadHandler = new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
+            }
+
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
+            {
+                Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error);
+                yield break;
+            }
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            File.WriteAllBytes(directory + "/" + fileName, www.downloadHandler.data);
         }
-
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
-        {
-            Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error);
-            yield break;
-        }
-
-        if (!Directory.Exists(directory))
-            Directory.CreateDirectory(directory);
-        File.WriteAllBytes(directory + "/" + fileName, www.downloadHandler.data);
     }
 
     public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
@@ -274,34 +279,38 @@ public static class UnityExtensionMethods
         if (!File.Exists(imageFilePath))
             yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
 
-        UnityWebRequest www = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath);
-        yield return www.SendWebRequest();
-        if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath))
         {
-            Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
-            yield return null;
-        }
-        else
-        {
-            Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
-            yield return CreateSprite(texture);
+            yield return www.SendWebRequest();
+            if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
+            {
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+                yield return null;
+            }
+            else
+            {
+                Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+                yield return CreateSprite(texture);
+            }
         }
     }
 
     // Note: Memory Leak Potential
     public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageUrl)
     {
-        UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl);
-        yield return www.SendWebRequest();
-        if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl))
         {
-            Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
-            yield return null;
-        }
-        else
-        {
-            Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
-            yield return CreateSprite(texture);
+            yield return www.SendWebRequest();
+            if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
+            {
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+                yield return null;
+            }
+            else
+            {
+                Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+                yield return CreateSprite(texture);
+            }
         }
     }
 

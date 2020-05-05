@@ -3,21 +3,29 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using Mirror;
+using System.Net.Sockets;
 using Cgs.Menu;
 using JetBrains.Annotations;
+using Mirror;
 using ScrollRects;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using NetworkManager = Mirror.NetworkManager;
+using NetworkServer = Mirror.NetworkServer;
 
 namespace Cgs.Play.Multiplayer
 {
     [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
+        public static string PortForwardingWarningMessage =>
+            $"Unable to verify internet connection. Other players may not be able to find this game session. You may need to forward port {((TelepathyTransport) Transport.activeTransport).port}. More info on port forwarding is available at: https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router/";
+
         public Toggle lanToggle;
         public Toggle internetToggle;
         public Button joinButton;
@@ -149,8 +157,51 @@ namespace Cgs.Play.Multiplayer
             NetworkManager.singleton.StartHost();
             CgsNetManager.Instance.Discovery.AdvertiseServer();
             if (IsInternetConnectionSource)
+            {
                 CgsNetManager.Instance.ListServer.StartGameServer();
+                CgsNetManager.Instance.StartCoroutine(CheckIsPortForwarded());
+            }
+
             Hide();
+        }
+
+        public static IEnumerator CheckIsPortForwarded()
+        {
+            string host;
+            using (UnityWebRequest www = UnityWebRequest.Get("https://api.ipify.org"))
+            {
+                yield return www.SendWebRequest();
+                if (www.isNetworkError)
+                {
+                    ShowPortForwardingWarningMessage();
+                    yield break;
+                }
+
+                host = www.downloadHandler.text;
+            }
+
+            try
+            {
+                using (var tcpClient = new TcpClient())
+                {
+                    IAsyncResult result = tcpClient.BeginConnect(host,
+                        ((TelepathyTransport) Transport.activeTransport).port, null, null);
+                    bool success = result.AsyncWaitHandle.WaitOne(100);
+                    tcpClient.EndConnect(result);
+                    if (!success)
+                        ShowPortForwardingWarningMessage();
+                }
+            }
+            catch
+            {
+                ShowPortForwardingWarningMessage();
+            }
+        }
+
+        public static void ShowPortForwardingWarningMessage()
+        {
+            Debug.LogWarning(PortForwardingWarningMessage);
+            CardGameManager.Instance.Messenger.Show(PortForwardingWarningMessage);
         }
 
         public void SelectServer(Toggle toggle, long serverId)
