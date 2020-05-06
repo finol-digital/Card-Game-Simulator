@@ -109,7 +109,7 @@ namespace Cgs.Play.Multiplayer
                 {
                     IAsyncResult result = tcpClient.BeginConnect(ip,
                         ((TelepathyTransport) Transport.activeTransport).port, null, null);
-                    bool success = result.AsyncWaitHandle.WaitOne(500);
+                    bool success = result.AsyncWaitHandle.WaitOne(100);
                     tcpClient.EndConnect(result);
                     if (!success)
                         ShowPortForwardingWarningMessage();
