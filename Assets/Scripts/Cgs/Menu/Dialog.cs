@@ -68,7 +68,7 @@ namespace Cgs.Menu
 
         public void Ask(string text, UnityAction noAction, UnityAction yesAction)
         {
-            Message message = new Message() {Text = text, NoAction = noAction, YesAction = yesAction};
+            var message = new Message() {Text = text, NoAction = noAction, YesAction = yesAction};
             if (gameObject.activeSelf)
             {
                 if (!MessageQueue.Contains(message))

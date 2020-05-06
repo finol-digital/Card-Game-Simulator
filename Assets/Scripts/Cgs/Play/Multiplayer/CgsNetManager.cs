@@ -2,10 +2,19 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using UnityEngine;
-using UnityEngine.UI;
-using Mirror;
+using System;
+using System.Collections;
+using System.Net.Sockets;
 using CardGameView;
+using Mirror;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using ClientScene = Mirror.ClientScene;
+using NetworkConnection = Mirror.NetworkConnection;
+using NetworkIdentity = Mirror.NetworkIdentity;
+using NetworkManager = Mirror.NetworkManager;
+using NetworkServer = Mirror.NetworkServer;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -13,6 +22,9 @@ namespace Cgs.Play.Multiplayer
     [RequireComponent(typeof(CgsNetListServer))]
     public class CgsNetManager : NetworkManager
     {
+        public static string PortForwardingWarningMessage =>
+            $"Unable to verify internet connection. Other players may not be able to find this game session. You may need to forward port {((TelepathyTransport) Transport.activeTransport).port}. More info on port forwarding is available at: https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router/";
+
         public static CgsNetManager Instance => (CgsNetManager) singleton;
 
         public CgsNetPlayer LocalPlayer { get; set; }
@@ -58,7 +70,7 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] Client connected!");
         }
 
-        public GameObject SpawnCard(Vector3 position, System.Guid assetId)
+        public GameObject SpawnCard(Vector3 position, Guid assetId)
         {
             GameObject newCard = Instantiate(cardModelPrefab, playController.playMatContent);
             playController.SetPlayActions(playController.playMatContent.GetComponent<CardStack>(),
@@ -69,6 +81,50 @@ namespace Cgs.Play.Multiplayer
         public void UnSpawnCard(GameObject spawned)
         {
             Destroy(spawned);
+        }
+
+        public void CheckForPortForwarding()
+        {
+            StartCoroutine(CheckIsPortForwarded());
+        }
+
+        private static IEnumerator CheckIsPortForwarded()
+        {
+            string ip;
+            using (UnityWebRequest www = UnityWebRequest.Get("https://api.ipify.org"))
+            {
+                yield return www.SendWebRequest();
+                if (www.isNetworkError)
+                {
+                    ShowPortForwardingWarningMessage();
+                    yield break;
+                }
+
+                ip = www.downloadHandler.text;
+            }
+
+            try
+            {
+                using (var tcpClient = new TcpClient())
+                {
+                    IAsyncResult result = tcpClient.BeginConnect(ip,
+                        ((TelepathyTransport) Transport.activeTransport).port, null, null);
+                    bool success = result.AsyncWaitHandle.WaitOne(100);
+                    tcpClient.EndConnect(result);
+                    if (!success)
+                        ShowPortForwardingWarningMessage();
+                }
+            }
+            catch
+            {
+                ShowPortForwardingWarningMessage();
+            }
+        }
+
+        private static void ShowPortForwardingWarningMessage()
+        {
+            Debug.LogWarning(PortForwardingWarningMessage);
+            CardGameManager.Instance.Messenger.Show(PortForwardingWarningMessage);
         }
     }
 }

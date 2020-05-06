@@ -277,7 +277,7 @@ namespace Cgs
         void ShowLogToUser(string logString, string stackTrace, LogType type)
         {
             // ReSharper disable once RedundantLogicalConditionalExpressionOperand
-            if (IsMessengerDebugLogVerbose || !LogType.Log.Equals(type))
+            if (this != null && Messenger != null && (IsMessengerDebugLogVerbose || !LogType.Log.Equals(type)))
                 Messenger.Show(logString);
         }
 
