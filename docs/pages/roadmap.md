@@ -8,18 +8,18 @@ permalink: roadmap.html
 - Change port forwarding to port 7777
 
 ## Current Sprint
-- Fix: Network server freezes
-- For internet-connected games, add session name and password options
-- More dynamic restart (reset deck, and prompt redeal for each player)
+- Fix freeze if card is already on table when player joins
 - Deal/Draw Hand prompts for gameStartHandCount cards
+- For internet-connected games, add session name and password options
+
+## Next Sprint
+- More dynamic restart (reset deck, and prompt redeal for each player)
 - dec sideboard is extras
 - ydk side is also extra
 - gamePlayDeckName (default="Deck")
 - Editor unit test to generate schema and confirm it matches docs/ folder
 - Runtime unit tests for StreamingAssets/ to match docs/ schema
 - Playmats
-
-## Next Sprint
 - Highlight auto scroll area when auto scrolling
 - Play Mode Redesign
   - Allow cards to snap to each other when moving them
