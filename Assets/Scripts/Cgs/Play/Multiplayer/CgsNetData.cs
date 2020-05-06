@@ -11,7 +11,7 @@ namespace Cgs.Play.Multiplayer
     {
         public const string NetworkWarningMessage = "Warning: Invalid network action detected";
 
-        public struct NetCardStack
+        public readonly struct NetCardStack
         {
             public readonly GameObject Owner;
             public readonly string[] CardIds;
@@ -22,7 +22,7 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        public struct NetScore
+        public readonly struct NetScore
         {
             public readonly GameObject Owner;
             public readonly int Points;

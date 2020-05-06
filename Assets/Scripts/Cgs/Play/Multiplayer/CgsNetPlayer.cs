@@ -8,7 +8,6 @@ using System.Linq;
 using UnityEngine;
 using Mirror;
 using CardGameDef;
-using CardGameDef.Unity;
 using CardGameView;
 
 // ReSharper disable UnusedParameter.Local
@@ -20,14 +19,14 @@ namespace Cgs.Play.Multiplayer
     {
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
 
-        public List<UnityCard> CurrentDeck =>
-            CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.scores != null
-                                                && CgsNetManager.Instance.Data.cardStacks.Count > 0
-                ? CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds
-                    .Select(cardId => CardGameManager.Current.Cards[cardId]).ToList()
-                : new List<UnityCard>();
+        public IEnumerable<Card> CurrentDeck =>
+            CurrentDeckCardIds.Select(cardId => CardGameManager.Current.Cards[cardId]);
 
-        public string[] CurrentDeckCardIds => CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds;
+        private string[] CurrentDeckCardIds =>
+            CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.scores != null
+                                                && CgsNetManager.Instance.Data.scores.Count > 0
+                ? CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds
+                : new string[] { };
 
         public int CurrentScore => CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.scores != null
                                                                        && CgsNetManager.Instance.Data.scores.Count > 0

@@ -4,17 +4,17 @@ permalink: roadmap.html
 
 # Roadmap
 
+## What's New
+- Change port forwarding to port 7777
+
 ## Current Sprint
 - Fix: Network server freezes
-- Change port forwarding to port 7777
-- In game port forwarding notification
 - For internet-connected games, add session name and password options
 - More dynamic restart (reset deck, and prompt redeal for each player)
 - Deal/Draw Hand prompts for gameStartHandCount cards
 - dec sideboard is extras
 - ydk side is also extra
 - gamePlayDeckName (default="Deck")
-- Switch to default builder script and try out version code
 - Editor unit test to generate schema and confirm it matches docs/ folder
 - Runtime unit tests for StreamingAssets/ to match docs/ schema
 - Playmats
