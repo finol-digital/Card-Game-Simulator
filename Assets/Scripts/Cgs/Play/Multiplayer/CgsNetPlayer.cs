@@ -5,10 +5,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using Mirror;
 using CardGameDef;
 using CardGameView;
+using Mirror;
+using UnityEngine;
 
 // ReSharper disable UnusedParameter.Local
 // ReSharper disable UnusedParameter.Global
@@ -172,13 +172,14 @@ namespace Cgs.Play.Multiplayer
         private void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
             PlayMode controller = CgsNetManager.Instance.playController;
-            GameObject newCard = Instantiate(CgsNetManager.Instance.cardModelPrefab, controller.playMatContent);
+            GameObject newCard = Instantiate(CgsNetManager.Instance.cardModelPrefab,
+                controller.playAreaCardStack.transform);
             var cardModel = newCard.GetComponent<CardModel>();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.position = position;
             cardModel.rotation = rotation;
             cardModel.IsFacedown = isFacedown;
-            controller.SetPlayActions(controller.playMatContent.GetComponent<CardStack>(), cardModel);
+            controller.SetPlayActions(controller.playAreaCardStack, cardModel);
             NetworkServer.Spawn(newCard, connectionToClient);
             cardModel.RpcHideHighlight();
         }

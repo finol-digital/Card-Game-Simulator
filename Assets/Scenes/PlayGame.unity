@@ -578,7 +578,7 @@ GameObject:
   - component: {fileID: 217919979}
   - component: {fileID: 217919978}
   m_Layer: 5
-  m_Name: PlayMat Content
+  m_Name: PlayMat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1579,7 +1579,7 @@ MonoBehaviour:
     type: 3}
   searchMenuPrefab: {fileID: 1332435347197338, guid: 3193cd5bbf6276147a6652aff7dca225,
     type: 3}
-  playMatContent: {fileID: 217919977}
+  playAreaCardStack: {fileID: 217919978}
   zones: {fileID: 1426326036}
   scoreboard: {fileID: 1720539154216192284}
 --- !u!1 &758454744
@@ -1921,7 +1921,7 @@ GameObject:
   - component: {fileID: 892208556}
   - component: {fileID: 892208555}
   m_Layer: 5
-  m_Name: PlayMat Viewport
+  m_Name: PlayArea Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2827,7 +2827,7 @@ GameObject:
   - component: {fileID: 1507733846}
   - component: {fileID: 1507733848}
   m_Layer: 5
-  m_Name: PlayMat
+  m_Name: PlayArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -332,6 +332,8 @@ MonoBehaviour:
   selectionTemplate: {fileID: 7581353184148898774}
   emptyText: {fileID: 6259256610052023587}
   scrollRect: {fileID: 114188681332653896}
+  hostAuthenticationPrefab: {fileID: 363928893714515857, guid: 3b785c064c09c6b4790eaab681955e1a,
+    type: 3}
   lanToggle: {fileID: 451786474446294447}
   internetToggle: {fileID: 5205196412134756233}
   joinButton: {fileID: 4893818211736348601}

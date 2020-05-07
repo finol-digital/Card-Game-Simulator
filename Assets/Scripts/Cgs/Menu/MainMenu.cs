@@ -122,7 +122,10 @@ namespace Cgs.Menu
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
-                EventSystem.current.currentSelectedGameObject?.GetComponent<Button>()?.onClick?.Invoke();
+            {
+                if (EventSystem.current.currentSelectedGameObject != null)
+                    EventSystem.current.currentSelectedGameObject.GetComponent<Button>()?.onClick?.Invoke();
+            }
             else if (Input.GetButtonDown(Inputs.Sort))
                 SelectPrevious();
             else if (Input.GetButtonDown(Inputs.Filter))

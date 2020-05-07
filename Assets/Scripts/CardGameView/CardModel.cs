@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Debug = System.Diagnostics.Debug;
 
 namespace CardGameView
 {
@@ -35,7 +36,7 @@ namespace CardGameView
 
         public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
                                                                && transform.parent == CgsNetManager.Instance
-                                                                   .playController.playMatContent;
+                                                                   .playController.playAreaCardStack.transform;
 
         public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
                                                                                       (CurrentPointerEventData.button ==
@@ -170,34 +171,31 @@ namespace CardGameView
         {
             set
             {
+                Debug.Assert(_outline != null, nameof(_outline) + " != null");
                 if (value)
                 {
-                    outline.effectColor = SelectedHighlightColor;
-                    outline.effectDistance = OutlineHighlightDistance;
+                    _outline.effectColor = SelectedHighlightColor;
+                    _outline.effectDistance = OutlineHighlightDistance;
                 }
                 else
                 {
                     bool isOthers = IsOnline && !hasAuthority;
-                    outline.effectColor = isOthers ? Color.yellow : Color.black;
-                    outline.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+                    _outline.effectColor = isOthers ? Color.yellow : Color.black;
+                    _outline.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                 }
             }
         }
 
-        // ReSharper disable once InconsistentNaming
-        protected Outline outline => _outline ?? (_outline = GetComponent<Outline>());
         private Outline _outline;
-
-        // ReSharper disable once InconsistentNaming
-        public Image image => _image ?? (_image = GetComponent<Image>());
         private Image _image;
-
-        // ReSharper disable once InconsistentNaming
-        public CanvasGroup canvasGroup => _canvasGroup ?? (_canvasGroup = GetComponent<CanvasGroup>());
         private CanvasGroup _canvasGroup;
 
         void Start()
         {
+            _outline = GetComponent<Outline>();
+            _image = GetComponent<Image>();
+            _canvasGroup = GetComponent<CanvasGroup>();
+
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
 
@@ -216,21 +214,21 @@ namespace CardGameView
 
         public void SetImageSprite(Sprite imageSprite)
         {
-            if (image == null || imageSprite == null)
+            if (_image == null || imageSprite == null)
             {
                 RemoveImageSprite();
                 return;
             }
 
-            image.sprite = imageSprite;
+            _image.sprite = imageSprite;
             IsNameVisible = false;
         }
 
         private void RemoveImageSprite()
         {
-            if (image == null)
+            if (_image == null)
                 return;
-            image.sprite = CardGameManager.Current.CardBackImageSprite;
+            _image.sprite = CardGameManager.Current.CardBackImageSprite;
             if (!IsFacedown)
                 IsNameVisible = true;
         }
@@ -323,7 +321,7 @@ namespace CardGameView
                 eventData.pointerPress = newGameObject;
                 eventData.pointerDrag = newGameObject;
                 var cardModel = newGameObject.GetOrAddComponent<CardModel>();
-                cardModel.canvasGroup.blocksRaycasts = false;
+                cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
                 cardModel.IsHighlighted = false;
                 cardModel.Value = Value;
                 cardModel.DoesCloneOnDrag = false;
@@ -476,7 +474,8 @@ namespace CardGameView
             transform.SetAsLastSibling();
             if (prevParentStack != null)
                 prevParentStack.OnRemove(this);
-            canvasGroup.blocksRaycasts = false;
+            if (_canvasGroup != null)
+                _canvasGroup.blocksRaycasts = false;
             var rectTransform = (RectTransform) transform;
             rectTransform.anchorMax = 0.5f * Vector2.one;
             rectTransform.anchorMin = 0.5f * Vector2.one;
@@ -525,7 +524,8 @@ namespace CardGameView
             if (ParentCardStack != null)
                 ParentCardStack.OnAdd(this);
             PlaceHolder = null;
-            canvasGroup.blocksRaycasts = true;
+            if (_canvasGroup != null)
+                _canvasGroup.blocksRaycasts = true;
         }
 
         public void UpdateParentCardStackScrollRect()
@@ -577,8 +577,9 @@ namespace CardGameView
 
         public void WarnHighlight()
         {
-            outline.effectColor = Color.red;
-            outline.effectDistance = OutlineHighlightDistance;
+            Debug.Assert(_outline != null, nameof(_outline) + " != null");
+            _outline.effectColor = Color.red;
+            _outline.effectDistance = OutlineHighlightDistance;
         }
 
         [ClientRpc]

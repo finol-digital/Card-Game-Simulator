@@ -18,6 +18,8 @@ namespace Cgs.Play.Multiplayer
     [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
+        public GameObject hostAuthenticationPrefab;
+
         public Toggle lanToggle;
         public Toggle internetToggle;
         public Button joinButton;
@@ -40,6 +42,12 @@ namespace Cgs.Play.Multiplayer
         public string SelectedServerIp { get; private set; }
         public IReadOnlyDictionary<string, ServerStatus> ListedServers => _listedServers;
         private readonly Dictionary<string, ServerStatus> _listedServers = new Dictionary<string, ServerStatus>();
+
+        public HostAuthentication Authenticator =>
+            _authenticator ??
+            (_authenticator = Instantiate(hostAuthenticationPrefab).GetComponent<HostAuthentication>());
+
+        private HostAuthentication _authenticator;
 
         private bool _wasDown;
         private bool _wasUp;
@@ -146,15 +154,28 @@ namespace Cgs.Play.Multiplayer
 
         public void Host()
         {
-            NetworkManager.singleton.StartHost();
-            CgsNetManager.Instance.Discovery.AdvertiseServer();
-            if (IsInternetConnectionSource)
-            {
-                CgsNetManager.Instance.ListServer.StartGameServer();
-                CgsNetManager.Instance.CheckForPortForwarding();
-            }
+            if (CardGameManager.Instance.IsSearchingForServer)
+                ShowHostAuthentication();
+            else
+                StartHost();
 
             Hide();
+        }
+
+        private void ShowHostAuthentication()
+        {
+            Authenticator.Show();
+        }
+
+        private void StartHost()
+        {
+            NetworkManager.singleton.StartHost();
+            CgsNetManager.Instance.Discovery.AdvertiseServer();
+            if (!IsInternetConnectionSource)
+                return;
+
+            CgsNetManager.Instance.ListServer.StartGameServer();
+            CgsNetManager.Instance.CheckForPortForwarding();
         }
 
         public void SelectServer(Toggle toggle, long serverId)

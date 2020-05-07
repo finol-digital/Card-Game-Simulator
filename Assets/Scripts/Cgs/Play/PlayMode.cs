@@ -37,9 +37,8 @@ namespace Cgs.Play
         public GameObject diceMenuPrefab;
         public GameObject searchMenuPrefab;
 
-        public RectTransform playMatContent;
-
         // TODO: public Image playMatImage;
+        public CardStack playAreaCardStack;
         public ZonesViewer zones;
         public PointsCounter scoreboard;
 
@@ -71,7 +70,7 @@ namespace Cgs.Play
         void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
-            playMatContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(AddCardToPlay);
+            playAreaCardStack.OnAddCardActions.Add(AddCardToPlay);
             if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show();
             else
@@ -97,13 +96,14 @@ namespace Cgs.Play
                 PromptBackToMainMenu();
         }
 
-        public void ResetPlayArea()
+        private void ResetPlayArea()
         {
             // TODO: CHECK IF THIS IS OK WITH NETWORKING
-            playMatContent.DestroyAllChildren();
+            var playAreaRectTransform = (RectTransform) playAreaCardStack.transform;
+            playAreaRectTransform.DestroyAllChildren();
             var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
                 CardGameManager.Current.PlayAreaSize.Y);
-            playMatContent.sizeDelta = playAreaSize * CardGameManager.PixelsPerInch;
+            playAreaRectTransform.sizeDelta = playAreaSize * CardGameManager.PixelsPerInch;
         }
 
         public void ViewRules()
@@ -122,7 +122,7 @@ namespace Cgs.Play
 
         public void ShowDiceMenu()
         {
-            DiceManager.Show(playMatContent);
+            DiceManager.Show(playAreaCardStack.transform as RectTransform);
         }
 
         public void ShowCardsMenu()
@@ -139,19 +139,16 @@ namespace Cgs.Play
             foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
                 zones.CreateExtraZone(cardGroup.Key, cardGroup.Value);
 
-            List<UnityCard> deckCards = new List<UnityCard>();
             List<Card> extraCards = deck.GetExtraCards();
-            foreach (Card card in deck.Cards)
-                if (!extraCards.Contains(card))
-                    deckCards.Add((UnityCard) card);
+            List<UnityCard> deckCards = deck.Cards.Where(card => !extraCards.Contains(card)).Cast<UnityCard>().ToList();
             deckCards.Shuffle();
 
             LoadDeckCards(deckCards);
 
             foreach (Card card in deck.Cards)
-            foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards)
-                if (card.Id.Equals(boardCard.Card))
-                    CreateGameBoards(boardCard.Boards);
+            foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards.Where(boardCard =>
+                card.Id.Equals(boardCard.Card)))
+                CreateGameBoards(boardCard.Boards);
         }
 
         public void LoadDeckCards(IEnumerable<Card> deckCards, bool isShared = false)
@@ -181,14 +178,16 @@ namespace Cgs.Play
             if (board == null)
                 return;
 
-            GameObject newBoard = new GameObject(board.Id, typeof(RectTransform));
-            RectTransform rt = (RectTransform) newBoard.transform;
-            rt.SetParent(playMatContent);
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.zero;
-            rt.offsetMin = new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch;
-            rt.offsetMax = new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch +
-                           rt.offsetMin;
+            var newBoard = new GameObject(board.Id, typeof(RectTransform));
+            var boardRectTransform = (RectTransform) newBoard.transform;
+            boardRectTransform.SetParent(playAreaCardStack.transform);
+            boardRectTransform.anchorMin = Vector2.zero;
+            boardRectTransform.anchorMax = Vector2.zero;
+            boardRectTransform.offsetMin =
+                new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch;
+            boardRectTransform.offsetMax =
+                new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch +
+                boardRectTransform.offsetMin;
 
             string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
                                    CardGameManager.Current.GameBoardFileType;
@@ -198,7 +197,7 @@ namespace Cgs.Play
             if (boardImageSprite != null)
                 newBoard.AddComponent<Image>().sprite = boardImageSprite;
 
-            rt.localScale = Vector3.one;
+            boardRectTransform.localScale = Vector3.one;
         }
 
         public void CreateHand()

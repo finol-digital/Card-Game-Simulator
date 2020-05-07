@@ -70,15 +70,15 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] Client connected!");
         }
 
-        public GameObject SpawnCard(Vector3 position, Guid assetId)
+        private GameObject SpawnCard(Vector3 position, Guid assetId)
         {
-            GameObject newCard = Instantiate(cardModelPrefab, playController.playMatContent);
-            playController.SetPlayActions(playController.playMatContent.GetComponent<CardStack>(),
+            GameObject newCard = Instantiate(cardModelPrefab, playController.playAreaCardStack.transform);
+            playController.SetPlayActions(playController.playAreaCardStack,
                 newCard.GetComponent<CardModel>());
             return newCard;
         }
 
-        public void UnSpawnCard(GameObject spawned)
+        private static void UnSpawnCard(GameObject spawned)
         {
             Destroy(spawned);
         }

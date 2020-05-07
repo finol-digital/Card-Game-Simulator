@@ -10,7 +10,7 @@ permalink: roadmap.html
 ## Current Sprint
 - Fix freeze if card is already on table when player joins
 - Deal/Draw Hand prompts for gameStartHandCount cards
-- For internet-connected games, add session name and password options
+- For internet-connected game sessions, add session name and password options
 
 ## Next Sprint
 - More dynamic restart (reset deck, and prompt redeal for each player)
