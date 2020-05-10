@@ -13,30 +13,30 @@ namespace Cgs.Menu
         public Image progressBar;
         public Text progressText;
 
-        private UnityCardGame _downloadStatus;
+        private UnityCardGame _game;
 
-        void Update()
+        private void Update()
         {
-            if (_downloadStatus == null)
+            if (_game == null)
             {
                 Debug.LogError("ProgressBar::MissingCardGame");
                 Hide();
             }
 
-            progressBar.fillAmount = _downloadStatus.DownloadProgress;
-            progressText.text = _downloadStatus.DownloadStatus;
+            progressBar.fillAmount = _game.DownloadProgress;
+            progressText.text = _game.DownloadStatus;
         }
 
         public void Show(UnityCardGame gameToDownload)
         {
-            gameObject.SetActive(true);
-            _downloadStatus = gameToDownload;
+            Show();
+            _game = gameToDownload;
         }
 
-        public void Hide()
+        public override void Hide()
         {
-            _downloadStatus = null;
-            gameObject.SetActive(false);
+            _game = null;
+            base.Hide();
         }
     }
 }

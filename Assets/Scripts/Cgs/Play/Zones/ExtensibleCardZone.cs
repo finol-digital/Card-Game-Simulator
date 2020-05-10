@@ -12,8 +12,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-// ReSharper disable MemberCanBeProtected.Global
-
 namespace Cgs.Play.Zones
 {
     public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
@@ -33,14 +31,14 @@ namespace Cgs.Play.Zones
         public ZonesViewer Viewer { get; set; }
         public bool IsExtended { get; private set; }
 
-        void Start()
+        private void Start()
         {
             foreach (CardDropArea dropZone in cardDropZones)
-                dropZone.dropHandler = this;
+                dropZone.DropHandler = this;
             OnStart();
         }
 
-        public virtual void OnStart()
+        protected virtual void OnStart()
         {
             extensionContent.gameObject.GetOrAddComponent<CardStack>().OnAddCardActions.Add(OnAddCardModel);
             extensionContent.gameObject.GetOrAddComponent<CardStack>().OnRemoveCardActions.Add(OnRemoveCardModel);
@@ -58,7 +56,7 @@ namespace Cgs.Play.Zones
             OnAddCardModel(null, cardModel);
         }
 
-        public virtual void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+        protected virtual void OnAddCardModel(CardStack cardStack, CardModel cardModel)
         {
             if (cardModel == null)
                 return;
@@ -71,27 +69,18 @@ namespace Cgs.Play.Zones
             UpdateCountText();
         }
 
-        public virtual void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
+        protected virtual void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
         {
             UpdateCountText();
         }
 
-        public virtual void Clear()
+        protected virtual void Clear()
         {
             extensionContent.DestroyAllChildren();
             UpdateCountText();
         }
 
-        public virtual void Shuffle()
-        {
-            StopAllCoroutines();
-            List<UnityCard> cards = new List<UnityCard>(Cards);
-            cards.Shuffle();
-            Sync(cards);
-            StartCoroutine(DisplayShuffle());
-        }
-
-        public IEnumerator DisplayShuffle()
+        protected IEnumerator DisplayShuffle()
         {
             if (statusText == null)
                 yield break;
@@ -128,7 +117,7 @@ namespace Cgs.Play.Zones
             extension.offsetMax = new Vector2(extension.offsetMax.x, 0);
         }
 
-        public void UpdateCountText()
+        protected void UpdateCountText()
         {
             countText.text = Cards.Count.ToString();
         }

@@ -9,7 +9,7 @@ namespace Cgs.Play.Multiplayer
 {
     public class CgsNetData : NetworkBehaviour
     {
-        public const string NetworkWarningMessage = "Warning: Invalid network action detected";
+        private const string NetworkWarningMessage = "Warning: Invalid network action detected";
 
         public readonly struct NetCardStack
         {
@@ -39,7 +39,7 @@ namespace Cgs.Play.Multiplayer
         public SyncListNetCardStack cardStacks = new SyncListNetCardStack();
         public SyncListNetScore scores = new SyncListNetScore();
 
-        void Start()
+        private void Start()
         {
             CgsNetManager.Instance.Data = this;
         }

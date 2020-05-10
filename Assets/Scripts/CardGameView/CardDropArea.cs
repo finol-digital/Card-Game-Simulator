@@ -14,8 +14,7 @@ namespace CardGameView
 
     public class CardDropArea : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
     {
-        // HACK: UNITY CAN'T PASS INTERFACES THROUGH UI, SO THIS NEEDS TO BE SET THROUGH CODE
-        public ICardDropHandler dropHandler;
+        public ICardDropHandler DropHandler { get; set; }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -35,7 +34,7 @@ namespace CardGameView
         {
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
-                dropHandler.OnDrop(cardModel);
+                DropHandler.OnDrop(cardModel);
         }
     }
 }

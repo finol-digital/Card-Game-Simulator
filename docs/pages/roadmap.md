@@ -6,11 +6,8 @@ permalink: roadmap.html
 
 ## What's New
 - Change port forwarding to port 7777
-
-## Current Sprint
-- Fix freeze if card is already on table when player joins
+- For networked game sessions, you can set session name and password options
 - Deal/Draw Hand prompts for gameStartHandCount cards
-- For internet-connected game sessions, add session name and password options
 
 ## Next Sprint
 - More dynamic restart (reset deck, and prompt redeal for each player)
@@ -77,7 +74,6 @@ permalink: roadmap.html
 - Support grouping of dice
 - Support different colored dice
 - Automatically roll dice on phone shake
-- Synchronize dice across all connected players in Play Mode
 - Synchronize points across teams in Play Mode
 - Allow automatic deletion of empty zones in Play Mode
 - Organize cards by category when saving a deck in the Deck Editor

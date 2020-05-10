@@ -11,19 +11,20 @@ namespace Cgs.Menu
     public class TitleScreen : MonoBehaviour
     {
         public const string TouchlessStartMessage = "Press Any Key";
-        public const float MinWidth = 1080;
-        public const int CenterTextFontSizePortrait = 30;
-        public const int CenterTextFontSizeLandscape = 40;
-        public const int MetaTextFontSizePortrait = 25;
-        public const int MetaTextFontSizeLandscape = 30;
 
-        public static readonly Vector2 CompanyTextPortraitDimensions = new Vector2(250, 75);
-        public static readonly Vector2 CompanyTextLandscapeDimensions = new Vector2(-400, 75);
-        public static readonly Vector2 CompanyTextLandscapePosition = new Vector2(-700, 0);
-        public static readonly Vector2 VersionTextPortraitOffsetMin = new Vector2(-250, 0);
-        public static readonly Vector2 VersionTextPortraitOffsetMax = new Vector2(0, 75);
-        public static readonly Vector2 VersionTextLandscapeOffsetMin = new Vector2(400, 0);
-        public static readonly Vector2 VersionTextLandscapeOffsetMax = new Vector2(700, 75);
+        private const float MinWidth = 1080;
+        private const int CenterTextFontSizePortrait = 30;
+        private const int CenterTextFontSizeLandscape = 40;
+        private const int MetaTextFontSizePortrait = 25;
+        private const int MetaTextFontSizeLandscape = 30;
+
+        private static readonly Vector2 CompanyTextPortraitDimensions = new Vector2(250, 75);
+        private static readonly Vector2 CompanyTextLandscapeDimensions = new Vector2(-400, 75);
+        private static readonly Vector2 CompanyTextLandscapePosition = new Vector2(-700, 0);
+        private static readonly Vector2 VersionTextPortraitOffsetMin = new Vector2(-250, 0);
+        private static readonly Vector2 VersionTextPortraitOffsetMax = new Vector2(0, 75);
+        private static readonly Vector2 VersionTextLandscapeOffsetMin = new Vector2(400, 0);
+        private static readonly Vector2 VersionTextLandscapeOffsetMax = new Vector2(700, 75);
 
         public Image backgroundImage;
         public Sprite backgroundSpritePortrait;
@@ -35,7 +36,7 @@ namespace Cgs.Menu
         public Text centerText;
         public Text versionText;
 
-        void OnRectTransformDimensionsChange()
+        private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
@@ -84,7 +85,7 @@ namespace Cgs.Menu
             }
         }
 
-        void Start()
+        private void Start()
         {
             versionText.text = MainMenu.VersionMessage;
 #if !UNITY_ANDROID && !UNITY_IOS
@@ -94,7 +95,7 @@ namespace Cgs.Menu
 #endif
         }
 
-        void Update()
+        private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;

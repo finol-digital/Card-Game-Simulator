@@ -51,7 +51,7 @@ public static class UnityExtensionMethods
 
     public static T FindInParents<T>(this GameObject go) where T : Component
     {
-        T component = go.GetComponent<T>();
+        var component = go.GetComponent<T>();
         if (component != null)
             return component;
 
@@ -323,9 +323,9 @@ public static class UnityExtensionMethods
             return null;
         }
 
-        Texture2D newTexture = new Texture2D(2, 2);
-        newTexture.LoadImage(File.ReadAllBytes(textureFilePath));
-        return CreateSprite(newTexture);
+        var texture2D = new Texture2D(2, 2);
+        texture2D.LoadImage(File.ReadAllBytes(textureFilePath));
+        return CreateSprite(texture2D);
     }
 
     // Note: Memory Leak Potential

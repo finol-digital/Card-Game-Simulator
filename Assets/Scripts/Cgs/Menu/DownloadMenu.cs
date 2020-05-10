@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,82 +18,71 @@ namespace Cgs.Menu
         public InputField urlInputField;
         public Button downloadButton;
 
-        public DownloadCoroutineDelegate DownloadCoroutine { get; private set; }
+        private DownloadCoroutineDelegate _downloadCoroutine;
 
-        void Update()
+        private void Update()
         {
             if (!IsFocused || urlInputField.isFocused)
                 return;
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) ||
-                 Input.GetButtonDown(Inputs.New))
-                && downloadButton.interactable)
+            if ((Inputs.IsSubmit || Input.GetButtonDown(Inputs.New)) && downloadButton.interactable)
                 StartDownload();
-            else if ((Input.GetButtonDown(Inputs.Sort) || Input.GetButtonDown(Inputs.Load)) &&
-                     urlInputField.interactable)
+            else if ((Inputs.IsSort || Inputs.IsLoad) && urlInputField.interactable)
                 Clear();
-            else if ((Input.GetButtonDown(Inputs.Filter) || Input.GetButtonDown(Inputs.Save)) &&
-                     urlInputField.interactable)
+            else if ((Inputs.IsFilter || Inputs.IsSave) && urlInputField.interactable)
                 Paste();
-            else if (((Input.GetButtonDown(Inputs.FocusBack) ||
-                       Math.Abs(Input.GetAxis(Inputs.FocusBack)) > Inputs.Tolerance)
-                      || (Input.GetButtonDown(Inputs.FocusNext) ||
-                          Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance)) &&
-                     urlInputField.interactable)
+            else if (Inputs.IsFocus && urlInputField.interactable)
                 urlInputField.ActivateInputField();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) ||
-                     Input.GetButtonDown(Inputs.Option))
+            else if (Inputs.IsCancel || Input.GetButtonDown(Inputs.Option))
                 Hide();
         }
 
         public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine)
         {
-            gameObject.SetActive(true);
-            transform.SetAsLastSibling();
+            Show();
 
             labelText.text = label;
             ((Text) urlInputField.placeholder).text = prompt;
-            DownloadCoroutine = downloadCoroutine;
+            _downloadCoroutine = downloadCoroutine;
         }
 
+        [UsedImplicitly]
         public void Clear()
         {
             urlInputField.text = string.Empty;
         }
 
+        [UsedImplicitly]
         public void Paste()
         {
             if (urlInputField.interactable)
                 urlInputField.text = UniClipboard.GetText();
         }
 
+        [UsedImplicitly]
         public void CheckDownloadUrl(string url)
         {
             downloadButton.interactable = Uri.IsWellFormedUriString(url.Trim(), UriKind.Absolute);
         }
 
+        [UsedImplicitly]
         public void StartDownload()
         {
             CardGameManager.Instance.StartCoroutine(Download());
         }
 
-        public IEnumerator Download()
+        private IEnumerator Download()
         {
             string url = urlInputField.text.Trim();
 
             urlInputField.text = string.Empty;
             urlInputField.interactable = false;
 
-            yield return DownloadCoroutine(url);
+            yield return _downloadCoroutine(url);
 
             // ReSharper disable once Unity.InefficientPropertyAccess
             urlInputField.interactable = true;
             Hide();
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
         }
     }
 }

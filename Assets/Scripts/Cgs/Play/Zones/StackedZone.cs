@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
 using CardGameView;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Cgs.Play.Zones
@@ -30,7 +31,7 @@ namespace Cgs.Play.Zones
         protected CardDropArea DropZone => _dropZone ?? (_dropZone = gameObject.GetOrAddComponent<CardDropArea>());
         private CardDropArea _dropZone;
 
-        public override void OnStart()
+        protected override void OnStart()
         {
             ExtensionCardStack.OnAddCardActions.Add(OnAddCardModel);
             ExtensionCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
@@ -48,7 +49,7 @@ namespace Cgs.Play.Zones
             OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, cardModel);
         }
 
-        public override void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+        protected override void OnAddCardModel(CardStack cardStack, CardModel cardModel)
         {
             if (cardStack == null || cardModel == null)
                 return;
@@ -72,13 +73,13 @@ namespace Cgs.Play.Zones
             UpdateCountText();
         }
 
-        public override void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
+        protected override void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
         {
             CardModels.Remove(cardModel);
             UpdateCountText();
         }
 
-        public override void Clear()
+        protected override void Clear()
         {
             foreach (CardModel cardModel in CardModels)
                 Destroy(cardModel.gameObject);
@@ -99,7 +100,7 @@ namespace Cgs.Play.Zones
             return card;
         }
 
-        public override void Shuffle()
+        public void Shuffle()
         {
             StopAllCoroutines();
             CardModels.Shuffle();
@@ -107,20 +108,22 @@ namespace Cgs.Play.Zones
             StartCoroutine(DisplayShuffle());
         }
 
+        [UsedImplicitly]
         public void ToggleExtension(CardModel cardModel)
         {
             ToggleExtension();
         }
 
+        [UsedImplicitly]
         public override void ToggleExtension()
         {
             base.ToggleExtension();
-            DropZone.dropHandler = IsExtended ? this : null;
+            DropZone.DropHandler = IsExtended ? this : null;
             ZoneCardStack.enabled = !IsExtended;
             Display();
         }
 
-        public void Display()
+        private void Display()
         {
             Transform parent = ZoneCardStack.transform;
             if (IsExtended)

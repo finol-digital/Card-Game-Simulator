@@ -123,35 +123,33 @@ namespace CardGameDef
             if (other == null)
                 return -1;
 
-            // TODO: FIXME: THIS IS NONDETERMINISTIC?
-            foreach (PropertyDefValuePair property in Properties.Values)
-            {
-                switch (property.Def.Type)
-                {
-                    case PropertyType.ObjectEnum:
-                    case PropertyType.ObjectEnumList:
-                    case PropertyType.StringEnum:
-                    case PropertyType.StringEnumList:
-                    case PropertyType.Boolean:
-                        bool thisBool = GetPropertyValueBool(property.Def.Name);
-                        bool otherBool = other.GetPropertyValueBool(property.Def.Name);
-                        return otherBool.CompareTo(thisBool);
-                    case PropertyType.Integer:
-                        int thisInt = GetPropertyValueInt(property.Def.Name);
-                        int otherInt = other.GetPropertyValueInt(property.Def.Name);
-                        return thisInt.CompareTo(otherInt);
-                    case PropertyType.Object:
-                    case PropertyType.ObjectList:
-                    case PropertyType.StringList:
-                    case PropertyType.EscapedString:
-                    case PropertyType.String:
-                    default:
-                        return string.Compare(property.Value, other.Properties[property.Def.Name].Value,
-                            StringComparison.Ordinal);
-                }
-            }
+            PropertyDefValuePair propertyToCompare = Properties.FirstOrDefault().Value;
+            if (propertyToCompare == null)
+                return 0;
 
-            return 0;
+            switch (propertyToCompare.Def.Type)
+            {
+                case PropertyType.ObjectEnum:
+                case PropertyType.ObjectEnumList:
+                case PropertyType.StringEnum:
+                case PropertyType.StringEnumList:
+                case PropertyType.Boolean:
+                    bool thisBool = GetPropertyValueBool(propertyToCompare.Def.Name);
+                    bool otherBool = other.GetPropertyValueBool(propertyToCompare.Def.Name);
+                    return otherBool.CompareTo(thisBool);
+                case PropertyType.Integer:
+                    int thisInt = GetPropertyValueInt(propertyToCompare.Def.Name);
+                    int otherInt = other.GetPropertyValueInt(propertyToCompare.Def.Name);
+                    return thisInt.CompareTo(otherInt);
+                case PropertyType.Object:
+                case PropertyType.ObjectList:
+                case PropertyType.StringList:
+                case PropertyType.EscapedString:
+                case PropertyType.String:
+                default:
+                    return string.Compare(propertyToCompare.Value, other.Properties[propertyToCompare.Def.Name].Value,
+                        StringComparison.Ordinal);
+            }
         }
 
         public bool Equals(Card other)

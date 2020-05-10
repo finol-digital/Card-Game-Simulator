@@ -16,8 +16,8 @@ namespace Cgs
 
     public class ScreenOrientationManager : MonoBehaviour
     {
-        public const string PlayerPrefScreenOrientation = "ScreenOrientation";
-        public const string PlayerPrefControllerLockToLandscape = "ControllerLockToLandscape";
+        private const string PlayerPrefScreenOrientation = "ScreenOrientation";
+        private const string PlayerPrefControllerLockToLandscape = "ControllerLockToLandscape";
 
         public static ScreenOrientationPref PreferredScreenOrientation
         {
@@ -43,11 +43,12 @@ namespace Cgs
             }
         }
 
-        public static bool DoesOsWantAutoRotation
+        private static bool DoesOsWantAutoRotation
         {
             get
             {
-                bool doesOsWantAutoRotation = true;
+                // ReSharper disable once ConvertToConstant.Local
+                var doesOsWantAutoRotation = true;
 #if UNITY_ANDROID && !UNITY_EDITOR
                 using (AndroidJavaClass actClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
                 {
@@ -63,12 +64,12 @@ namespace Cgs
             }
         }
 
-        public static bool IsControllerConnected =>
+        private static bool IsControllerConnected =>
             Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length > 0;
 
-        public static bool WasControllerConnected { get; private set; }
+        private static bool WasControllerConnected { get; set; }
 
-        public static void ResetOrientation()
+        private static void ResetOrientation()
         {
             if (DoesControllerLockToLandscape && IsControllerConnected)
             {
@@ -107,18 +108,18 @@ namespace Cgs
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             WasControllerConnected = IsControllerConnected;
         }
 
-        void OnApplicationFocus(bool haveFocus)
+        private void OnApplicationFocus(bool haveFocus)
         {
             if (haveFocus)
                 ResetOrientation();
         }
 
-        void Update()
+        private void Update()
         {
             if (DoesControllerLockToLandscape && (IsControllerConnected != WasControllerConnected))
                 ResetOrientation();

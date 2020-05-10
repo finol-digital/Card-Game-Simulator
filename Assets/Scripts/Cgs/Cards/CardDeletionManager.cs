@@ -4,6 +4,7 @@
 
 using CardGameDef;
 using CardGameView;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,12 +15,12 @@ namespace Cgs.Cards
         public SearchResults searchResults;
         private Button _deleteButton;
 
-        void Start()
+        private void Start()
         {
             _deleteButton = gameObject.GetOrAddComponent<Button>();
         }
 
-        void Update()
+        private void Update()
         {
             _deleteButton.interactable = CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null;
             if (Input.GetButtonDown(Inputs.Load) && CardGameManager.Instance.ModalCanvas == null &&
@@ -27,6 +28,7 @@ namespace Cgs.Cards
                 Delete();
         }
 
+        [UsedImplicitly]
         public void Delete()
         {
             if (CardViewer.Instance == null || CardViewer.Instance.SelectedCardModel == null)

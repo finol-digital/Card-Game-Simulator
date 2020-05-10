@@ -2,10 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Collections.Generic;
 using CardGameView;
 using Cgs.Menu;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -26,32 +26,30 @@ namespace Cgs.Cards
 
         private CardCreationMenu _cardCreator;
 
-        void OnEnable()
+        private void OnEnable()
         {
             Instantiate(cardViewerPrefab);
             CardViewer.Instance.Mode = CardViewerMode.Expanded;
             CardGameManager.Instance.OnSceneActions.Add(ResetBannerCardsAndButtons);
         }
 
-        void Update()
+        private void Update()
         {
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                 CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
-            if (Input.GetButtonDown(Inputs.FocusBack) || Math.Abs(Input.GetAxis(Inputs.FocusBack)) > Inputs.Tolerance
-                                                      || Input.GetButtonDown(Inputs.FocusNext) ||
-                                                      Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance)
+            if (Inputs.IsFocus)
                 searchResults.inputField.ActivateInputField();
-            else if (Input.GetButtonDown(Inputs.Filter))
+            else if (Inputs.IsFilter)
                 searchResults.ShowSearchMenu();
-            else if (Input.GetButtonDown(Inputs.New))
+            else if (Inputs.IsNew)
                 ShowCardCreationMenu();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
                 BackToMainMenu();
         }
 
-        public void ResetBannerCardsAndButtons()
+        private void ResetBannerCardsAndButtons()
         {
             bannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -60,11 +58,13 @@ namespace Cgs.Cards
                 button.SetActive(!CardGameManager.Current.IsExternal);
         }
 
+        [UsedImplicitly]
         public void ShowCardCreationMenu()
         {
             CardCreator.Show(searchResults.Search);
         }
 
+        [UsedImplicitly]
         public void BackToMainMenu()
         {
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

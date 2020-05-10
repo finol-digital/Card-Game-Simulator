@@ -376,7 +376,7 @@ namespace CardGameDef.Unity
             }
 
             Dictionary<string, PropertyDefValuePair> metaProperties = new Dictionary<string, PropertyDefValuePair>();
-            PropertyDef idDef = new PropertyDef(CardIdIdentifier, PropertyType.String);
+            var idDef = new PropertyDef(CardIdIdentifier, PropertyType.String);
             PopulateCardProperty(metaProperties, cardJToken, idDef, idDef.Name);
             string cardId;
             if (metaProperties.TryGetValue(CardIdIdentifier, out PropertyDefValuePair cardIdEntry))
@@ -397,7 +397,7 @@ namespace CardGameDef.Unity
                 return;
             }
 
-            PropertyDef nameDef = new PropertyDef(CardNameIdentifier, PropertyType.String);
+            var nameDef = new PropertyDef(CardNameIdentifier, PropertyType.String);
             PopulateCardProperty(metaProperties, cardJToken, nameDef, nameDef.Name);
             var cardName = string.Empty;
             if (metaProperties.TryGetValue(CardNameIdentifier, out PropertyDefValuePair cardNameEntry))
@@ -470,20 +470,23 @@ namespace CardGameDef.Unity
 
             try
             {
-                PropertyDefValuePair newProperty = new PropertyDefValuePair() {Def = property};
+                var newProperty = new PropertyDefValuePair() {Def = property};
                 string listValue;
+                JToken listTokens;
                 JObject jObject;
                 switch (property.Type)
                 {
                     case PropertyType.ObjectEnumList:
                         listValue = string.Empty;
-                        foreach (JToken jToken in cardJToken[property.Name])
-                        {
-                            if (!string.IsNullOrEmpty(listValue))
-                                listValue += EnumDef.Delimiter;
-                            jObject = jToken as JObject;
-                            listValue += jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty;
-                        }
+                        listTokens = cardJToken[property.Name];
+                        if (listTokens != null)
+                            foreach (JToken jToken in listTokens)
+                            {
+                                if (!string.IsNullOrEmpty(listValue))
+                                    listValue += EnumDef.Delimiter;
+                                jObject = jToken as JObject;
+                                listValue += jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty;
+                            }
 
                         newProperty.Value = listValue;
                         cardProperties[key] = newProperty;
@@ -496,11 +499,13 @@ namespace CardGameDef.Unity
                             Dictionary<string, PropertyDefValuePair> values =
                                 new Dictionary<string, PropertyDefValuePair>();
                             var i = 0;
-                            foreach (JToken jToken in cardJToken[property.Name])
-                            {
-                                PopulateCardProperty(values, jToken, childProperty, key + childProperty.Name + i);
-                                i++;
-                            }
+                            listTokens = cardJToken[property.Name];
+                            if (listTokens != null)
+                                foreach (JToken jToken in listTokens)
+                                {
+                                    PopulateCardProperty(values, jToken, childProperty, key + childProperty.Name + i);
+                                    i++;
+                                }
 
                             foreach (KeyValuePair<string, PropertyDefValuePair> entry in values)
                             {
@@ -532,12 +537,14 @@ namespace CardGameDef.Unity
                         listValue = string.Empty;
                         if (string.IsNullOrEmpty(property.Delimiter))
                         {
-                            foreach (JToken jToken in cardJToken[property.Name])
-                            {
-                                if (!string.IsNullOrEmpty(listValue))
-                                    listValue += EnumDef.Delimiter;
-                                listValue += jToken.Value<string>() ?? string.Empty;
-                            }
+                            listTokens = cardJToken[property.Name];
+                            if (listTokens != null)
+                                foreach (JToken jToken in listTokens)
+                                {
+                                    if (!string.IsNullOrEmpty(listValue))
+                                        listValue += EnumDef.Delimiter;
+                                    listValue += jToken.Value<string>() ?? string.Empty;
+                                }
                         }
                         else
                         {

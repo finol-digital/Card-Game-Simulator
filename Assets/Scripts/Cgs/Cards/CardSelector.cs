@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Linq;
 using CardGameView;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,21 +13,12 @@ namespace Cgs.Cards
 {
     public class CardSelector : MonoBehaviour
     {
-        public const float GameSelectorHeight = 160;
+        private const float GameSelectorHeight = 160;
 
         public SearchResults results;
         public ScrollRect scrollRect;
 
-        private bool _wasDown;
-        private bool _wasUp;
-        private bool _wasLeft;
-        private bool _wasRight;
-        private bool _wasPageDown;
-        private bool _wasPageUp;
-        private bool _wasPageLeft;
-        private bool _wasPageRight;
-
-        void Update()
+        private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
                 return;
@@ -61,52 +52,40 @@ namespace Cgs.Cards
                 }
             }
 
-            if (Input.GetButtonDown(Inputs.Vertical) || Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
+            if (Inputs.IsVertical)
             {
-                if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+                if (Inputs.IsDown && !Inputs.WasDown)
                     SelectDown();
-                else if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                else if (Inputs.IsUp && !Inputs.WasUp)
                     SelectUp();
             }
-            else if (Input.GetButtonDown(Inputs.Horizontal) ||
-                     Math.Abs(Input.GetAxis(Inputs.Horizontal)) > Inputs.Tolerance)
+            else if (Inputs.IsHorizontal)
             {
-                if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
+                if (Inputs.IsLeft && !Inputs.WasLeft)
                     SelectLeft();
-                else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
+                else if (Inputs.IsRight && !Inputs.WasRight)
                     SelectRight();
             }
 
-            if (Input.GetButtonDown(Inputs.PageVertical) ||
-                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
+            if (Inputs.IsPageVertical)
             {
-                if (!CardViewer.Instance.IsVisible || CardViewer.Instance.Mode != CardViewerMode.Maximal)
-                {
-                    if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
-                        PageDown();
-                    else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
-                        PageUp();
-                }
+                if (CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                    return;
+                if (Inputs.IsPageDown && !Inputs.WasPageDown)
+                    PageDown();
+                else if (Inputs.IsPageUp && !Inputs.WasPageUp)
+                    PageUp();
             }
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) ||
-                      Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance))
+            else if (Inputs.IsPageHorizontal)
             {
-                if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
+                if (Inputs.IsPageLeft && !Inputs.WasPageLeft)
                     PageLeft();
-                else if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
+                else if (Inputs.IsPageRight && !Inputs.WasPageRight)
                     PageRight();
             }
-
-            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
-            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
-            _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
-            _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
-            _wasPageDown = Input.GetAxis(Inputs.PageVertical) < 0;
-            _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
-            _wasPageLeft = Input.GetAxis(Inputs.PageHorizontal) < 0;
-            _wasPageRight = Input.GetAxis(Inputs.PageHorizontal) > 0;
         }
 
+        [UsedImplicitly]
         public void SelectDown()
         {
             if (EventSystem.current.alreadySelecting)
@@ -140,6 +119,7 @@ namespace Cgs.Cards
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectUp()
         {
             if (EventSystem.current.alreadySelecting)
@@ -173,6 +153,7 @@ namespace Cgs.Cards
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectLeft()
         {
             if (EventSystem.current.alreadySelecting)
@@ -206,6 +187,7 @@ namespace Cgs.Cards
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectRight()
         {
             if (EventSystem.current.alreadySelecting)
@@ -239,21 +221,25 @@ namespace Cgs.Cards
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void PageDown()
         {
             scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + 0.1f);
         }
 
+        [UsedImplicitly]
         public void PageUp()
         {
             scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition - 0.1f);
         }
 
+        [UsedImplicitly]
         public void PageLeft()
         {
             results.DecrementPage();
         }
 
+        [UsedImplicitly]
         public void PageRight()
         {
             results.IncrementPage();

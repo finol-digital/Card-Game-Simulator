@@ -8,18 +8,18 @@ namespace Cgs.Decks
 {
     public class DeckEditorLayout : MonoBehaviour
     {
-        public const float MinWidth = 1200;
+        private const float MinWidth = 1200;
 
-        public static readonly Vector2 DeckButtonsPortraitAnchor = new Vector2(0, 0.43f);
-        public static readonly Vector2 DeckButtonsLandscapePosition = new Vector2(-650, 0);
+        private static readonly Vector2 DeckButtonsPortraitAnchor = new Vector2(0, 0.43f);
+        private static readonly Vector2 DeckButtonsLandscapePosition = new Vector2(-650, 0);
 
-        public static readonly Vector2 SelectButtonsPortraitPosition = new Vector2(0, 10);
-        public static readonly Vector2 SelectButtonsLandscapePosition = new Vector2(-350, 10);
+        private static readonly Vector2 SelectButtonsPortraitPosition = new Vector2(0, 10);
+        private static readonly Vector2 SelectButtonsLandscapePosition = new Vector2(-350, 10);
 
         public RectTransform deckButtons;
         public RectTransform selectButtons;
 
-        void OnRectTransformDimensionsChange()
+        private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;

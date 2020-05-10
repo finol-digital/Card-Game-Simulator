@@ -30,50 +30,45 @@ namespace Cgs.Decks
         public InputField nameInputField;
         public TMP_Text textOutputArea;
 
-        public UnityDeck CurrentDeck { get; private set; }
-        public OnNameChangeDelegate NameChangeCallback { get; private set; }
-        public OnDeckSavedDelegate DeckSaveCallback { get; private set; }
-        public bool DoesAutoOverwrite { get; private set; }
+        private UnityDeck _currentDeck;
+        private OnNameChangeDelegate _nameChangeCallback;
+        private OnDeckSavedDelegate _deckSaveCallback;
+        private bool _doesAutoOverwrite;
 
-        void Update()
+        private void Update()
         {
             if (!IsFocused || nameInputField.isFocused || !Input.anyKeyDown)
                 return;
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) &&
-                EventSystem.current.currentSelectedGameObject == null)
+            if (Inputs.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
                 AttemptSaveAndHide();
-            else if (Input.GetButtonDown(Inputs.FocusBack) || Math.Abs(Input.GetAxis(Inputs.FocusBack)) >
-                                                           Inputs.Tolerance
-                                                           || Input.GetButtonDown(Inputs.FocusNext) ||
-                                                           Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance)
+            else if (Inputs.IsFocus)
                 nameInputField.ActivateInputField();
-            else if (Input.GetButtonDown(Inputs.Load) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Inputs.IsLoad && EventSystem.current.currentSelectedGameObject == null)
                 Share();
-            else if (Input.GetButtonDown(Inputs.Save) && EventSystem.current.currentSelectedGameObject == null)
+            else if (Inputs.IsSave && EventSystem.current.currentSelectedGameObject == null)
                 PrintPdf();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
                 Hide();
         }
 
         public void Show(UnityDeck deckToShow, OnNameChangeDelegate nameChangeCallback = null,
             OnDeckSavedDelegate deckSaveCallback = null, bool overwrite = false)
         {
-            gameObject.SetActive(true);
-            transform.SetAsLastSibling();
-            CurrentDeck = deckToShow ?? new UnityDeck(CardGameManager.Current);
-            NameChangeCallback = nameChangeCallback;
-            DeckSaveCallback = deckSaveCallback;
-            DoesAutoOverwrite = overwrite;
-            nameInputField.text = CurrentDeck.Name;
-            textOutputArea.text = CurrentDeck.ToString();
+            Show();
+            _currentDeck = deckToShow ?? new UnityDeck(CardGameManager.Current);
+            _nameChangeCallback = nameChangeCallback;
+            _deckSaveCallback = deckSaveCallback;
+            _doesAutoOverwrite = overwrite;
+            nameInputField.text = _currentDeck.Name;
+            textOutputArea.text = _currentDeck.ToString();
         }
 
         [UsedImplicitly]
         public void ChangeName(string newName)
         {
-            if (NameChangeCallback != null)
-                newName = NameChangeCallback(newName);
+            if (_nameChangeCallback != null)
+                newName = _nameChangeCallback(newName);
             if (!string.IsNullOrEmpty(newName))
                 nameInputField.text = newName;
             var deck = new UnityDeck(CardGameManager.Current, newName, CardGameManager.Current.DeckFileType);
@@ -82,6 +77,7 @@ namespace Cgs.Decks
             textOutputArea.text = deck.ToString();
         }
 
+        [UsedImplicitly]
         public void Share()
         {
             string shareText = textOutputArea.text;
@@ -93,10 +89,11 @@ namespace Cgs.Decks
 #endif
         }
 
+        [UsedImplicitly]
         public void PrintPdf()
         {
-            CurrentDeck.Name = nameInputField.text;
-            UnityDeck deck = CurrentDeck;
+            _currentDeck.Name = nameInputField.text;
+            UnityDeck deck = _currentDeck;
             Uri pdfUri = null;
             try
             {
@@ -119,7 +116,7 @@ namespace Cgs.Decks
             }
         }
 
-        private IEnumerator OpenPdf(Uri pdfUri)
+        private static IEnumerator OpenPdf(Uri pdfUri)
         {
             yield return null;
 #if ENABLE_WINMD_SUPPORT
@@ -152,11 +149,12 @@ namespace Cgs.Decks
                 EventSystem.current.SetSelectedGameObject(null);
         }
 
+        [UsedImplicitly]
         public void AttemptSaveAndHide()
         {
-            UnityDeck filePathFinder = new UnityDeck(CardGameManager.Current, nameInputField.text,
+            var filePathFinder = new UnityDeck(CardGameManager.Current, nameInputField.text,
                 CardGameManager.Current.DeckFileType);
-            if (!DoesAutoOverwrite && File.Exists(filePathFinder.FilePath))
+            if (!_doesAutoOverwrite && File.Exists(filePathFinder.FilePath))
                 CardGameManager.Instance.Messenger.Prompt(OverWriteDeckPrompt, SaveToFile);
             else
                 SaveToFile();
@@ -164,13 +162,14 @@ namespace Cgs.Decks
             Hide();
         }
 
+        [UsedImplicitly]
         public void SaveToFile()
         {
-            CurrentDeck.Name = nameInputField.text;
-            SaveToFile(CurrentDeck, DeckSaveCallback);
+            _currentDeck.Name = nameInputField.text;
+            SaveToFile(_currentDeck, _deckSaveCallback);
         }
 
-        public static void SaveToFile(UnityDeck deck, OnDeckSavedDelegate deckSaveCallback = null)
+        private static void SaveToFile(UnityDeck deck, OnDeckSavedDelegate deckSaveCallback = null)
         {
             try
             {
@@ -189,13 +188,8 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void CancelAndHide()
         {
-            NameChangeCallback?.Invoke(CurrentDeck.Name);
+            _nameChangeCallback?.Invoke(_currentDeck.Name);
             Hide();
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
         }
     }
 }

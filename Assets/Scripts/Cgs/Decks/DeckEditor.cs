@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef;
@@ -10,6 +9,7 @@ using CardGameDef.Unity;
 using CardGameView;
 using Cgs.Cards;
 using Cgs.Menu;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -104,42 +104,39 @@ namespace Cgs.Decks
         public Text countText;
         public SearchResults searchResults;
 
-        void OnEnable()
+        private void OnEnable()
         {
             Instantiate(cardViewerPrefab);
             searchResults.HorizontalDoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(ResetCardStacks);
         }
 
-        void Start()
+        private void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
-            dropZone.dropHandler = this;
+            dropZone.DropHandler = this;
             ShowDeckLoadMenu();
         }
 
-        void Update()
+        private void Update()
         {
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                 CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
-            if (Input.GetButtonDown(Inputs.Sort))
+            if (Inputs.IsSort)
                 Sort();
-            else if (Input.GetButtonDown(Inputs.New))
+            else if (Inputs.IsNew)
                 PromptForClear();
-            else if (Input.GetButtonDown(Inputs.Load))
+            else if (Inputs.IsLoad)
                 ShowDeckLoadMenu();
-            else if (Input.GetButtonDown(Inputs.Save))
+            else if (Inputs.IsSave)
                 ShowDeckSaveMenu();
-            else if (Input.GetButtonDown(Inputs.FocusBack) || Math.Abs(Input.GetAxis(Inputs.FocusBack)) >
-                                                           Inputs.Tolerance
-                                                           || Input.GetButtonDown(Inputs.FocusNext) ||
-                                                           Math.Abs(Input.GetAxis(Inputs.FocusNext)) > Inputs.Tolerance)
+            else if (Inputs.IsFocus)
                 searchResults.inputField.ActivateInputField();
-            else if (Input.GetButtonDown(Inputs.Filter))
+            else if (Inputs.IsFilter)
                 searchResults.ShowSearchMenu();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
                 CheckBackToMainMenu();
         }
 
@@ -172,7 +169,7 @@ namespace Cgs.Decks
             AddCardModel(cardModel);
         }
 
-        public void AddCardModel(CardModel cardModel)
+        private void AddCardModel(CardModel cardModel)
         {
             if (cardModel == null || CardStacks.Count < 1)
                 return;
@@ -182,7 +179,7 @@ namespace Cgs.Decks
             AddCard(cardModel.Value);
         }
 
-        public void AddCard(UnityCard card)
+        private void AddCard(UnityCard card)
         {
             if (card == null || CardStacks.Count < 1)
                 return;
@@ -208,7 +205,7 @@ namespace Cgs.Decks
             OnAddCardModel(CardStacks[CurrentCardStackIndex], newCardModel);
         }
 
-        public void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+        private void OnAddCardModel(CardStack cardStack, CardModel cardModel)
         {
             if (cardStack == null || cardModel == null)
                 return;
@@ -234,12 +231,12 @@ namespace Cgs.Decks
                     : 0f;
         }
 
-        public void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
+        private void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
         {
             UpdateDeckStats();
         }
 
-        public void DestroyCardModel(CardModel cardModel)
+        private void DestroyCardModel(CardModel cardModel)
         {
             if (cardModel == null)
                 return;
@@ -251,6 +248,7 @@ namespace Cgs.Decks
             UpdateDeckStats();
         }
 
+        [UsedImplicitly]
         public void Sort()
         {
             UnityDeck sortedDeck = CurrentDeck;
@@ -262,11 +260,13 @@ namespace Cgs.Decks
                 AddCard((UnityCard) card);
         }
 
+        [UsedImplicitly]
         public void PromptForClear()
         {
             CardGameManager.Instance.Messenger.Prompt(NewDeckPrompt, Clear);
         }
 
+        [UsedImplicitly]
         public void Clear()
         {
             foreach (CardStack stack in CardStacks)
@@ -279,6 +279,7 @@ namespace Cgs.Decks
             UpdateDeckStats();
         }
 
+        [UsedImplicitly]
         public string UpdateDeckName(string newName)
         {
             if (newName == null)
@@ -288,6 +289,7 @@ namespace Cgs.Decks
             return newName;
         }
 
+        [UsedImplicitly]
         public void UpdateDeckStats()
         {
             string deckName = Deck.DefaultName;
@@ -297,13 +299,14 @@ namespace Cgs.Decks
             countText.text = CurrentDeck.Cards.Count.ToString();
         }
 
+        [UsedImplicitly]
         public void ShowDeckLoadMenu()
         {
             Deck currentDeck = CurrentDeck;
             DeckLoader.Show(LoadDeck, currentDeck.Name, currentDeck.Cards.Count > 0 ? currentDeck.ToString() : null);
         }
 
-        public void LoadDeck(UnityDeck deck)
+        private void LoadDeck(UnityDeck deck)
         {
             if (deck == null)
                 return;
@@ -315,6 +318,7 @@ namespace Cgs.Decks
             UpdateDeckStats();
         }
 
+        [UsedImplicitly]
         public void ShowDeckSaveMenu()
         {
             UnityDeck deckToSave = CurrentDeck;
@@ -322,12 +326,13 @@ namespace Cgs.Decks
             DeckSaver.Show(deckToSave, UpdateDeckName, OnSaveDeck, overwrite);
         }
 
-        public void OnSaveDeck(Deck savedDeck)
+        private void OnSaveDeck(Deck savedDeck)
         {
             SavedDeck = savedDeck;
             UpdateDeckStats();
         }
 
+        [UsedImplicitly]
         public void CheckBackToMainMenu()
         {
             if (HasChanged)
@@ -339,6 +344,7 @@ namespace Cgs.Decks
             BackToMainMenu();
         }
 
+        [UsedImplicitly]
         public void BackToMainMenu()
         {
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

@@ -16,10 +16,10 @@ namespace CardGameDef.Unity
 {
     public class UnityDeck : Deck
     {
-        public const float PrintPdfWidth = 8.5f;
-        public const float PrintPdfHeight = 11f;
-        public const float PrintPdfMargin = 0.5f;
-        public const int PrintPdfPixelsPerInch = 72;
+        private const float PrintPdfWidth = 8.5f;
+        private const float PrintPdfHeight = 11f;
+        private const float PrintPdfMargin = 0.5f;
+        private const int PrintPdfPixelsPerInch = 72;
 
         public string FilePath => ((UnityCardGame) SourceGame).DecksFilePath + "/" +
                                   UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
@@ -73,7 +73,7 @@ namespace CardGameDef.Unity
             return deck;
         }
 
-        public void LoadDec(string line)
+        private void LoadDec(string line)
         {
             if (string.IsNullOrEmpty(line) || line.StartsWith("//") || line.StartsWith("SB:"))
                 return;
@@ -95,7 +95,7 @@ namespace CardGameDef.Unity
             }
         }
 
-        public void LoadHsd(string line)
+        private void LoadHsd(string line)
         {
             if (string.IsNullOrEmpty(line))
                 return;
@@ -148,7 +148,7 @@ namespace CardGameDef.Unity
                 _cards.Add(card);
         }
 
-        public void LoadYdk(string line)
+        private void LoadYdk(string line)
         {
             if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.Equals("!side"))
                 return;
@@ -156,7 +156,7 @@ namespace CardGameDef.Unity
             AddCardsByPropertyString(SourceGame.DeckFileAltId, line, 1);
         }
 
-        public void LoadTxt(string line)
+        private void LoadTxt(string line)
         {
             if (string.IsNullOrEmpty(line) || line.StartsWith("#") || line.StartsWith("//") ||
                 line.Equals("Sideboard", StringComparison.OrdinalIgnoreCase) || line.Equals("Sideboard:"))

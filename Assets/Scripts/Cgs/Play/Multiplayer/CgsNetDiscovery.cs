@@ -52,7 +52,7 @@ namespace Cgs.Play.Multiplayer
                 ServerId = _serverId,
                 // the endpoint is populated by the client
                 Uri = _transport.ServerUri(),
-                GameName = CardGameManager.Current.Name,
+                GameName = CgsNetManager.Instance.GameName,
                 Players = NetworkServer.connections.Count,
                 Capacity = NetworkManager.singleton.maxConnections
             };

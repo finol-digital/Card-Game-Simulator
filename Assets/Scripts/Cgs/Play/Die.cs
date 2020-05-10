@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,8 +15,8 @@ namespace Cgs.Play
     public class Die : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
         IBeginDragHandler, IDragHandler
     {
-        public const float RollTime = 1.0f;
-        public const float RollDelay = 0.05f;
+        private const float RollTime = 1.0f;
+        private const float RollDelay = 0.05f;
 
         public Text valueText;
         public List<CanvasGroup> buttons;
@@ -23,69 +24,35 @@ namespace Cgs.Play
         public int Min { get; set; }
         public int Max { get; set; }
 
-        public Vector2 DragOffset { get; private set; }
-
         public int Value
         {
             get => _value;
             set
             {
-                _value = value;
-                if (_value > Max)
-                    _value = Min;
-                if (_value < Min)
-                    _value = Max;
-                valueText.text = _value.ToString();
+                int oldValue = _value;
+                int newValue = value;
+                if (newValue > Max)
+                    newValue = Min;
+                if (newValue < Min)
+                    newValue = Max;
+                _value = newValue;
+                OnChangeValue(oldValue, newValue);
             }
         }
 
-        [SyncVar] private int _value;
+        [SyncVar(hook = "OnChangeValue")] private int _value;
 
-        void Start()
+        private Vector2 _dragOffset;
+
+        private void Start()
         {
             Roll();
             HideButtons();
         }
 
-        public void Roll()
-        {
-            StartCoroutine(DoRoll());
-        }
-
-        public IEnumerator DoRoll()
-        {
-            var elapsedTime = 0f;
-            while (elapsedTime < RollTime)
-            {
-                Value = Random.Range(Min, Max);
-                yield return new WaitForSeconds(RollDelay);
-                elapsedTime += RollDelay;
-            }
-        }
-
-        public void ShowButtons()
-        {
-            foreach (CanvasGroup button in buttons)
-            {
-                button.alpha = 1;
-                button.interactable = true;
-                button.blocksRaycasts = true;
-            }
-        }
-
-        public void HideButtons()
-        {
-            foreach (CanvasGroup button in buttons)
-            {
-                button.alpha = 0;
-                button.interactable = false;
-                button.blocksRaycasts = false;
-            }
-        }
-
-        // Required for OnPointerUp to trigger
         public void OnPointerDown(PointerEventData eventData)
         {
+            // OnPointerDown is required for OnPointerUp to trigger
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -107,24 +74,69 @@ namespace Cgs.Play
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            DragOffset = eventData.position - ((Vector2) transform.position);
+            _dragOffset = eventData.position - ((Vector2) transform.position);
             transform.SetAsLastSibling();
             HideButtons();
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            transform.position = eventData.position - DragOffset;
+            transform.position = eventData.position - _dragOffset;
         }
 
+        [UsedImplicitly]
+        public void OnChangeValue(int oldValue, int newValue)
+        {
+            valueText.text = _value.ToString();
+        }
+
+        [UsedImplicitly]
         public void Decrement()
         {
             Value--;
         }
 
+        [UsedImplicitly]
         public void Increment()
         {
             Value++;
+        }
+
+        [UsedImplicitly]
+        public void Roll()
+        {
+            StartCoroutine(DoRoll());
+        }
+
+        private IEnumerator DoRoll()
+        {
+            var elapsedTime = 0f;
+            while (elapsedTime < RollTime)
+            {
+                Value = Random.Range(Min, Max);
+                yield return new WaitForSeconds(RollDelay);
+                elapsedTime += RollDelay;
+            }
+        }
+
+        private void ShowButtons()
+        {
+            foreach (CanvasGroup button in buttons)
+            {
+                button.alpha = 1;
+                button.interactable = true;
+                button.blocksRaycasts = true;
+            }
+        }
+
+        private void HideButtons()
+        {
+            foreach (CanvasGroup button in buttons)
+            {
+                button.alpha = 0;
+                button.interactable = false;
+                button.blocksRaycasts = false;
+            }
         }
     }
 }

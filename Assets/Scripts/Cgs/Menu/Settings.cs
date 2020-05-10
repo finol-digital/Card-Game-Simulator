@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,12 +12,12 @@ namespace Cgs.Menu
 {
     public class Settings : MonoBehaviour
     {
-        public const string PlayerPrefHideReprints = "HideReprints";
+        private const string PlayerPrefHideReprints = "HideReprints";
 
         public static bool HideReprints
         {
             get => PlayerPrefs.GetInt(PlayerPrefHideReprints, 1) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefHideReprints, value ? 1 : 0);
+            [UsedImplicitly] set => PlayerPrefs.SetInt(PlayerPrefHideReprints, value ? 1 : 0);
         }
 
         public Toggle screenOsControlToggle;
@@ -27,7 +28,7 @@ namespace Cgs.Menu
         public Toggle hideReprintsToggle;
         public List<Transform> orientationOptions;
 
-        void Start()
+        private void Start()
         {
             switch (ScreenOrientationManager.PreferredScreenOrientation)
             {
@@ -43,6 +44,9 @@ namespace Cgs.Menu
                 case ScreenOrientationPref.Landscape:
                     screenLandscapeToggle.isOn = true;
                     break;
+                default:
+                    Debug.LogError("Invalid value for ScreenOrientationManager.PreferredScreenOrientation!");
+                    break;
             }
 
             controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
@@ -53,46 +57,53 @@ namespace Cgs.Menu
 #endif
         }
 
-        void Update()
+        private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            if (Inputs.IsCancel)
                 BackToMainMenu();
         }
 
+        [UsedImplicitly]
         public void SetScreenOsControl(bool isOn)
         {
             if (isOn)
                 ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.OsControl;
         }
 
+        [UsedImplicitly]
         public void SetScreenAutoRotate(bool isOn)
         {
             if (isOn)
                 ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.AutoRotate;
         }
 
+        [UsedImplicitly]
         public void SetScreenPortrait(bool isOn)
         {
             if (isOn)
                 ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.Portrait;
         }
 
+        [UsedImplicitly]
         public void SetScreenLandscape(bool isOn)
         {
             if (isOn)
                 ScreenOrientationManager.PreferredScreenOrientation = ScreenOrientationPref.Landscape;
         }
 
+        [UsedImplicitly]
         public void SetControllerLockToLandscape(bool controllerLockToLandscape)
         {
             ScreenOrientationManager.DoesControllerLockToLandscape = controllerLockToLandscape;
         }
 
+        [UsedImplicitly]
         public void SetHideReprints(bool hideReprints)
         {
             HideReprints = hideReprints;
         }
 
+        [UsedImplicitly]
         public void BackToMainMenu()
         {
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

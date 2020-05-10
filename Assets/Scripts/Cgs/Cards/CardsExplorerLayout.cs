@@ -8,13 +8,13 @@ namespace Cgs.Cards
 {
     public class CardsExplorerLayout : MonoBehaviour
     {
-        public const float MinWidth = 1200;
-        public const float CardsPortraitHeight = 5000;
-        public const float CardsLandscapeHeight = 2000;
+        private const float MinWidth = 1200f;
+        private const float CardsPortraitHeight = 5000f;
+        private const float CardsLandscapeHeight = 2000f;
 
         public RectTransform cardsViewContent;
 
-        void OnRectTransformDimensionsChange()
+        private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;

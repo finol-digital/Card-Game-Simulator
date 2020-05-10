@@ -72,13 +72,13 @@ namespace Cgs.Play.Zones
         public StackedZone CurrentDeck { get; private set; }
         public ExtensibleCardZone Hand { get; private set; }
 
-        void Start()
+        private void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             CreateDiscard();
         }
 
-        void OnRectTransformDimensionsChange()
+        private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
@@ -87,7 +87,7 @@ namespace Cgs.Play.Zones
             ResizeContent();
         }
 
-        public void ResizeContent()
+        private void ResizeContent()
         {
             float height = Height;
             var siblingIndex = 3;
@@ -152,8 +152,7 @@ namespace Cgs.Play.Zones
 
         public void CreateExtraZone(string zoneName, IEnumerable<Card> cards)
         {
-            ExtensibleCardZone extraZone =
-                Instantiate(extraZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
+            var extraZone = Instantiate(extraZonePrefab, scrollView.content).GetComponent<ExtensibleCardZone>();
             extraZone.labelText.text = zoneName;
             foreach (Card card in cards)
                 extraZone.AddCard((UnityCard) card);
@@ -184,7 +183,7 @@ namespace Cgs.Play.Zones
             IsExtended = !IsPortrait;
         }
 
-        public void ResetButtons()
+        private void ResetButtons()
         {
             extendButton.SetActive(!IsExtended);
             showButton.SetActive(IsExtended && !IsVisible);

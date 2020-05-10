@@ -44,48 +44,42 @@ namespace Cgs.Menu
 
         private DownloadMenu _downloader;
 
-        public string GameName { get; [UsedImplicitly] set; }
+        [UsedImplicitly] public string GameName { get; set; }
+
         private readonly CardGame _game = new CardGame(null);
 
-        void Update()
+        private void Update()
         {
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) ||
-                 Input.GetButtonDown(Inputs.New))
-                && createButton.interactable)
+            if ((Inputs.IsSubmit || Inputs.IsNew) && createButton.interactable)
                 StartCreation();
-            if (Input.GetButtonDown(Inputs.Sort) && createButton.interactable)
+            if (Inputs.IsSort)
                 DownloadBannerImageFromWeb();
-            if (Input.GetButtonDown(Inputs.Filter) && createButton.interactable)
+            if (Inputs.IsFilter)
                 ImportBannerImageFromFile();
-            if (Input.GetButtonDown(Inputs.Load) && createButton.interactable)
+            if (Inputs.IsLoad)
                 DownloadCardBackImageFromWeb();
-            if (Input.GetButtonDown(Inputs.Save) && createButton.interactable)
+            if (Inputs.IsSave)
                 ImportCardBackImageFromFile();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) ||
-                     Input.GetButtonDown(Inputs.Option))
+            else if (Inputs.IsCancel || Inputs.IsOption)
                 Hide();
         }
 
-        public void Show()
-        {
-            gameObject.SetActive(true);
-            transform.SetAsLastSibling();
-        }
-
+        [UsedImplicitly]
         public void DownloadBannerImageFromWeb()
         {
             Downloader.Show(DownloadBannerImage, DownloadBannerImagePrompt, DownloadBannerImageFromWeb);
         }
 
-        public IEnumerator DownloadBannerImageFromWeb(string url)
+        private IEnumerator DownloadBannerImageFromWeb(string url)
         {
             _game.BannerImageUrl = new Uri(url);
             yield return UpdateBannerImage();
         }
 
+        [UsedImplicitly]
         public void ImportBannerImageFromFile()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -95,9 +89,9 @@ namespace Cgs.Menu
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
-        public async void ImportBannerImageFromFile(string uri)
+        private async void ImportBannerImageFromFile(string uri)
 #else
-        public void ImportBannerImageFromFile(string uri)
+        private void ImportBannerImageFromFile(string uri)
 #endif
         {
             if (string.IsNullOrEmpty(uri))
@@ -128,17 +122,19 @@ namespace Cgs.Menu
                 Debug.LogWarning(ImportImageWarningMessage);
         }
 
+        [UsedImplicitly]
         public void DownloadCardBackImageFromWeb()
         {
             Downloader.Show(DownloadCardBackImage, DownloadCardBackImagePrompt, DownloadCardBackImageFromWeb);
         }
 
-        public IEnumerator DownloadCardBackImageFromWeb(string url)
+        private IEnumerator DownloadCardBackImageFromWeb(string url)
         {
             _game.CardBackImageUrl = new Uri(url);
             yield return UpdateCardBackImage();
         }
 
+        [UsedImplicitly]
         public void ImportCardBackImageFromFile()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -148,9 +144,9 @@ namespace Cgs.Menu
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
-        public async void ImportCardBackImageFromFile(string uri)
+        private async void ImportCardBackImageFromFile(string uri)
 #else
-        public void ImportCardBackImageFromFile(string uri)
+        private void ImportCardBackImageFromFile(string uri)
 #endif
         {
             if (string.IsNullOrEmpty(uri))
@@ -181,17 +177,19 @@ namespace Cgs.Menu
                 Debug.LogWarning(ImportImageWarningMessage);
         }
 
+        [UsedImplicitly]
         public void ValidateCreateButton()
         {
             createButton.interactable = !string.IsNullOrEmpty(GameName);
         }
 
+        [UsedImplicitly]
         public void StartCreation()
         {
             StartCoroutine(CreateGame());
         }
 
-        public IEnumerator CreateGame()
+        private IEnumerator CreateGame()
         {
             ValidateCreateButton();
             if (!createButton.interactable)
@@ -241,11 +239,6 @@ namespace Cgs.Menu
                 CardGameManager.Instance.Select(newCardGame.Id);
                 Hide();
             }
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
         }
     }
 }

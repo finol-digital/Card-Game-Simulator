@@ -169,7 +169,7 @@ namespace Cgs
 
         private Dialog _messenger;
 
-        public ProgressBar Progress
+        private ProgressBar Progress
         {
             get
             {
@@ -182,7 +182,7 @@ namespace Cgs
 
         private ProgressBar _spinner;
 
-        void Awake()
+        private void Awake()
         {
             if (_instance != null && _instance != this)
             {
@@ -274,19 +274,19 @@ namespace Cgs
             }
         }
 
-        void ShowLogToUser(string logString, string stackTrace, LogType type)
+        private void ShowLogToUser(string logString, string stackTrace, LogType type)
         {
             // ReSharper disable once RedundantLogicalConditionalExpressionOperand
             if (this != null && Messenger != null && (IsMessengerDebugLogVerbose || !LogType.Log.Equals(type)))
                 Messenger.Show(logString);
         }
 
-        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             ResetGameScene();
         }
 
-        void OnSceneUnloaded(Scene scene)
+        private void OnSceneUnloaded(Scene scene)
         {
             OnSceneActions.Clear();
         }
@@ -313,7 +313,7 @@ namespace Cgs
 #endif
 
         // Note: Does NOT Reset Game Scene
-        public void ResetCurrentToDefault()
+        private void ResetCurrentToDefault()
         {
             string preferredGameId =
                 PlayerPrefs.GetString(PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
@@ -340,7 +340,7 @@ namespace Cgs
                 yield return DownloadCardGame(gameUrl);
         }
 
-        public IEnumerator DownloadCardGame(string gameUrl)
+        private IEnumerator DownloadCardGame(string gameUrl)
         {
             var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
 
@@ -396,7 +396,7 @@ namespace Cgs
                 ResetGameScene();
         }
 
-        public IEnumerator LoadCards(UnityCardGame cardGame)
+        private IEnumerator LoadCards(UnityCardGame cardGame)
         {
             if (cardGame == null)
                 cardGame = Current;
@@ -438,7 +438,7 @@ namespace Cgs
             ResetGameScene();
         }
 
-        public void ResetGameScene()
+        private void ResetGameScene()
         {
             if (!Current.HasLoaded)
             {
@@ -468,7 +468,7 @@ namespace Cgs
                 action();
         }
 
-        public void IgnoreCurrentErroredGame()
+        private void IgnoreCurrentErroredGame()
         {
             Current.ClearError();
             ResetCurrentToDefault();
@@ -483,7 +483,7 @@ namespace Cgs
                 Messenger.Show(DeleteWarningMessage);
         }
 
-        public void Delete()
+        private void Delete()
         {
             if (AllCardGames.Count < 1)
             {
@@ -520,7 +520,7 @@ namespace Cgs
         }
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        public void ShareBranch()
+        private void ShareBranch()
         {
             BranchUniversalObject universalObject = new BranchUniversalObject();
             universalObject.contentIndexMode = 1;
@@ -534,7 +534,7 @@ namespace Cgs
             Branch.getShortURL(universalObject, branchLinkProperties, BranchCallbackWithUrl);
         }
 
-        public void BranchCallbackWithUrl(string url, string error)
+        private void BranchCallbackWithUrl(string url, string error)
         {
             if (error != null)
             {
@@ -547,18 +547,34 @@ namespace Cgs
         }
 #endif
 
-        public void ShareUrl()
+        private void ShareUrl()
         {
             UniClipboard.SetText(Current.AutoUpdateUrl?.OriginalString ?? string.Empty);
             Messenger.Show(string.Format(ShareUrlMessage, Current.Name, Current.AutoUpdateUrl));
         }
 
-        void OnDisable()
+        private void LateUpdate()
+        {
+            Inputs.WasFocusBack = Inputs.IsFocusBack;
+            Inputs.WasFocusNext = Inputs.IsFocusNext;
+            Inputs.WasDown = Inputs.IsDown;
+            Inputs.WasUp = Inputs.IsUp;
+            Inputs.WasLeft = Inputs.IsLeft;
+            Inputs.WasRight = Inputs.IsRight;
+            Inputs.WasPageVertical = Inputs.IsPageVertical;
+            Inputs.WasPageDown = Inputs.IsPageDown;
+            Inputs.WasPageUp = Inputs.IsPageUp;
+            Inputs.WasPageHorizontal = Inputs.IsPageHorizontal;
+            Inputs.WasPageLeft = Inputs.IsPageLeft;
+            Inputs.WasPageRight = Inputs.IsPageRight;
+        }
+
+        private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             IsQuitting = true;
         }

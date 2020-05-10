@@ -49,14 +49,13 @@ namespace Cgs.Cards
         {
             get
             {
-                var rowsPerPage = 1;
                 if (!(layoutGroup is GridLayoutGroup gridLayoutGroup))
-                    return CardsPerRow * rowsPerPage;
+                    return CardsPerRow;
 
                 RectOffset gridPadding = gridLayoutGroup.padding;
                 float padding = gridPadding.top + gridPadding.bottom;
-                rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height - padding + gridLayoutGroup.spacing.y)
-                                               / (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y));
+                int rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height - padding + gridLayoutGroup.spacing.y)
+                                                   / (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y));
 
                 return CardsPerRow * rowsPerPage;
             }
@@ -89,19 +88,19 @@ namespace Cgs.Cards
 
         public CardAction HorizontalDoubleClickAction { get; set; }
 
-        void OnEnable()
+        private void OnEnable()
         {
             CardSearcher.SearchCallback = ShowResults;
             CardGameManager.Instance.OnSceneActions.Add(CardSearcher.ClearSearch);
             CardGameManager.Instance.OnSceneActions.Add(ResetPlaceholderText);
         }
 
-        void Start()
+        private void Start()
         {
             UpdateSearchResultsPanel();
         }
 
-        public void ResetPlaceholderText()
+        private void ResetPlaceholderText()
         {
             if (inputField != null && inputField.placeholder is Text text)
                 text.text = InputPrompt;
@@ -120,11 +119,13 @@ namespace Cgs.Cards
             CardSearcher.SetFilters(input);
         }
 
+        [UsedImplicitly]
         public void Search()
         {
             CardSearcher.Search();
         }
 
+        [UsedImplicitly]
         public void DecrementPage()
         {
             if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
@@ -135,6 +136,7 @@ namespace Cgs.Cards
             UpdateSearchResultsPanel();
         }
 
+        [UsedImplicitly]
         public void IncrementPage()
         {
             if (!CardViewer.Instance.zoomPanel.gameObject.activeSelf)
@@ -145,6 +147,7 @@ namespace Cgs.Cards
             UpdateSearchResultsPanel();
         }
 
+        // Public to allow the layout classes to refresh on layout change
         public void UpdateSearchResultsPanel()
         {
             layoutArea.DestroyAllChildren();
@@ -168,18 +171,19 @@ namespace Cgs.Cards
                     cardModel.DoubleClickAction = CardViewer.Instance.MaximizeOn;
             }
 
-            countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);
+            countText.text = CurrentPageIndex + 1 + CountSeparator + TotalPageCount + 1;
 
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1;
         }
 
+        [UsedImplicitly]
         public void ShowSearchMenu()
         {
             CardSearcher.Show(ShowResults);
         }
 
-        public void ShowResults(string filters, List<UnityCard> results)
+        private void ShowResults(string filters, List<UnityCard> results)
         {
             inputField.text = filters;
             AllResults = results;

@@ -29,22 +29,22 @@ namespace CardGameView
     public class CardModel : NetworkBehaviour, ICardDisplay, IPointerDownHandler, IPointerUpHandler, ISelectHandler,
         IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        public const float ZoomHoldTime = 1.5f;
-        public const float MovementSpeed = 600f;
-        public static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
-        public static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
+        private const float ZoomHoldTime = 1.5f;
+        private const float MovementSpeed = 600f;
+        private static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
+        private static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
 
         public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
                                                                && transform.parent == CgsNetManager.Instance
                                                                    .playController.playAreaCardStack.transform;
 
-        public bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
-                                                                                      (CurrentPointerEventData.button ==
-                                                                                       PointerEventData.InputButton
-                                                                                           .Middle ||
-                                                                                       CurrentPointerEventData.button ==
-                                                                                       PointerEventData.InputButton
-                                                                                           .Right));
+        private bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
+                                                                                       (CurrentPointerEventData.button ==
+                                                                                        PointerEventData.InputButton
+                                                                                            .Middle ||
+                                                                                        CurrentPointerEventData.button ==
+                                                                                        PointerEventData.InputButton
+                                                                                            .Right));
 
         public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
@@ -61,13 +61,14 @@ namespace CardGameView
         public DragPhase CurrentDragPhase { get; private set; }
 
         public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
-        protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
+        private Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
         [SyncVar(hook = "OnChangePosition")] public Vector2 position;
 
         [SyncVar(hook = "OnChangeRotation")] public Quaternion rotation;
 
         [SyncVar] private string _id;
+        // ReSharper disable once ConvertToAutoPropertyWithPrivateSetter
         public string Id => _id;
 
         public UnityCard Value
@@ -144,7 +145,7 @@ namespace CardGameView
 
                 DropTarget = null;
 
-                GameObject placeholder = new GameObject(gameObject.name + "(PlaceHolder)", typeof(RectTransform));
+                var placeholder = new GameObject(gameObject.name + "(PlaceHolder)", typeof(RectTransform));
                 PlaceHolder = (RectTransform) placeholder.transform;
                 PlaceHolder.SetParent(_placeHolderCardStack.transform);
                 PlaceHolder.sizeDelta = ((RectTransform) transform).sizeDelta;
@@ -154,7 +155,7 @@ namespace CardGameView
 
         private CardStack _placeHolderCardStack;
 
-        public bool IsNameVisible
+        private bool IsNameVisible
         {
             set
             {
@@ -190,7 +191,7 @@ namespace CardGameView
         private Image _image;
         private CanvasGroup _canvasGroup;
 
-        void Start()
+        private void Start()
         {
             _outline = GetComponent<Outline>();
             _image = GetComponent<Image>();
@@ -233,7 +234,7 @@ namespace CardGameView
                 IsNameVisible = true;
         }
 
-        void Update()
+        private void Update()
         {
             if (PointerPositions.Count > 0 && !DidDrag)
                 HoldTime += Time.deltaTime;
@@ -389,7 +390,7 @@ namespace CardGameView
             return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardModel>();
         }
 
-        public void UpdatePosition()
+        private void UpdatePosition()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             if (SecondaryDragAction != Rotate && IsProcessingSecondaryDragAction)
@@ -403,7 +404,7 @@ namespace CardGameView
                 return;
 
             Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
-            targetPosition = targetPosition + UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
+            targetPosition += UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
             if (ParentCardStack != null)
                 UpdateCardStackPosition(targetPosition);
             else if (!IsStatic)
@@ -419,7 +420,7 @@ namespace CardGameView
                 CmdUpdatePosition(((RectTransform) transform).anchoredPosition);
         }
 
-        public void UpdateCardStackPosition(Vector2 targetPosition)
+        private void UpdateCardStackPosition(Vector2 targetPosition)
         {
             CardStack cardStack = ParentCardStack;
             if (cardStack == null || (IsOnline && !hasAuthority))
@@ -451,7 +452,7 @@ namespace CardGameView
         }
 
         [Command]
-        void CmdUpdatePosition(Vector2 newPosition)
+        private void CmdUpdatePosition(Vector2 newPosition)
         {
             position = newPosition;
         }
@@ -463,7 +464,7 @@ namespace CardGameView
                 ((RectTransform) transform).anchoredPosition = newPosition;
         }
 
-        public void ParentToCanvas(Vector3 targetPosition)
+        private void ParentToCanvas(Vector3 targetPosition)
         {
             if (IsOnline && hasAuthority)
                 CmdUnspawnCard();
@@ -485,13 +486,13 @@ namespace CardGameView
         }
 
         [Command]
-        void CmdUnspawnCard()
+        private void CmdUnspawnCard()
         {
             RpcUnspawnCard();
         }
 
         [ClientRpc]
-        public void RpcUnspawnCard()
+        private void RpcUnspawnCard()
         {
             if (!isServer && !hasAuthority)
                 Discard();
@@ -499,7 +500,7 @@ namespace CardGameView
                 NetworkServer.UnSpawn(gameObject);
         }
 
-        public IEnumerator MoveToPlaceHolder()
+        private IEnumerator MoveToPlaceHolder()
         {
             while (PlaceHolder != null && Vector3.Distance(transform.position, PlaceHolder.position) > 1)
             {
@@ -563,21 +564,22 @@ namespace CardGameView
         }
 
         [Command]
-        void CmdUpdateIsFacedown(bool isFacedown)
+        private void CmdUpdateIsFacedown(bool isFacedown)
         {
             RpcUpdateIsFacedown(isFacedown);
         }
 
         [ClientRpc]
-        void RpcUpdateIsFacedown(bool isFacedown)
+        private void RpcUpdateIsFacedown(bool isFacedown)
         {
             if (!hasAuthority)
                 IsFacedown = isFacedown;
         }
 
-        public void WarnHighlight()
+        private void WarnHighlight()
         {
-            Debug.Assert(_outline != null, nameof(_outline) + " != null");
+            if (_outline == null)
+                return;
             _outline.effectColor = Color.red;
             _outline.effectDistance = OutlineHighlightDistance;
         }
@@ -588,14 +590,14 @@ namespace CardGameView
             IsHighlighted = false;
         }
 
-        public void Discard()
+        private void Discard()
         {
             if (DropTarget == null && CgsNetManager.Instance != null)
                 CgsNetManager.Instance.playController.CatchDiscard(Value);
             Destroy(gameObject);
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             if (CardGameManager.IsQuitting)
                 return;

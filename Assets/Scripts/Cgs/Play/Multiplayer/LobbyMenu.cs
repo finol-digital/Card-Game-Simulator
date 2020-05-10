@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.Menu;
@@ -31,70 +30,57 @@ namespace Cgs.Play.Multiplayer
             set => IsInternetConnectionSource = !value;
         }
 
-        public bool IsInternetConnectionSource { get; set; }
+        [UsedImplicitly] public bool IsInternetConnectionSource { get; set; }
 
-        public long? SelectedServerId { get; private set; }
-        public IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
+        private IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
 
         private readonly Dictionary<long, DiscoveryResponse> _discoveredServers =
             new Dictionary<long, DiscoveryResponse>();
 
-        public string SelectedServerIp { get; private set; }
-        public IReadOnlyDictionary<string, ServerStatus> ListedServers => _listedServers;
-        private readonly Dictionary<string, ServerStatus> _listedServers = new Dictionary<string, ServerStatus>();
+        private long? _selectedServerId;
 
-        public HostAuthentication Authenticator =>
-            _authenticator ??
-            (_authenticator = Instantiate(hostAuthenticationPrefab).GetComponent<HostAuthentication>());
+        private IReadOnlyDictionary<string, ServerStatus> ListedServers => _listedServers;
+        private readonly Dictionary<string, ServerStatus> _listedServers = new Dictionary<string, ServerStatus>();
+        private string _selectedServerIp;
+
+        private HostAuthentication Authenticator =>
+            _authenticator
+                ? _authenticator
+                : (_authenticator = Instantiate(hostAuthenticationPrefab).GetComponent<HostAuthentication>());
 
         private HostAuthentication _authenticator;
 
-        private bool _wasDown;
-        private bool _wasUp;
-        private bool _wasPageVertical;
-        private bool _wasPageHorizontal;
+        private Modal Menu =>
+            _menu ? _menu : (_menu = gameObject.GetOrAddComponent<Modal>());
 
-        private Modal _modal;
+        private Modal _menu;
 
-        void Start()
+        private void Update()
         {
-            _modal = GetComponent<Modal>();
-        }
-
-        void Update()
-        {
-            if (!_modal.IsFocused)
+            if (!Menu.IsFocused)
                 return;
 
-            if (Input.GetButtonDown(Inputs.Vertical) || Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
+            if (Inputs.IsVertical)
             {
-                if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                if (Inputs.IsUp && !Inputs.WasUp)
                     SelectPrevious();
-                else if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+                else if (Inputs.IsDown && !Inputs.WasDown)
                     SelectNext();
             }
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit)) &&
-                joinButton.interactable)
+            if (Inputs.IsSubmit && joinButton.interactable)
                 Join();
-            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Any(toggle =>
-                toggle.gameObject == EventSystem.current.currentSelectedGameObject))
-                Toggles.First(toggle => toggle.gameObject == EventSystem.current.currentSelectedGameObject).isOn = true;
-            else if (Input.GetButtonDown(Inputs.New))
+            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
+                .Contains(EventSystem.current.currentSelectedGameObject))
+                EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
+            else if (Inputs.IsNew)
                 Host();
-            else if ((Input.GetButtonDown(Inputs.PageVertical) ||
-                      Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance) && !_wasPageVertical)
+            else if (Inputs.IsPageVertical && !Inputs.IsPageVertical)
                 ScrollPage(Input.GetAxis(Inputs.PageVertical));
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) ||
-                      Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance) && !_wasPageHorizontal)
+            else if (Inputs.IsPageHorizontal && !Inputs.WasPageHorizontal)
                 ToggleConnectionSource();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
                 Hide();
-
-            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
-            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
-            _wasPageVertical = Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance;
-            _wasPageHorizontal = Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance;
         }
 
         public void Show()
@@ -103,10 +89,10 @@ namespace Cgs.Play.Multiplayer
             transform.SetAsLastSibling();
 
             _discoveredServers.Clear();
-            SelectedServerId = null;
+            _selectedServerId = null;
 
             _listedServers.Clear();
-            SelectedServerIp = null;
+            _selectedServerIp = null;
 
             CgsNetManager.Instance.Discovery.OnServerFound = OnDiscoveredServer;
             CgsNetManager.Instance.Discovery.StartDiscovery();
@@ -117,54 +103,50 @@ namespace Cgs.Play.Multiplayer
             Redisplay();
         }
 
-        public void Redisplay()
+        private void Redisplay()
         {
             if (!IsInternetConnectionSource)
             {
-                if (SelectedServerId == null || !_discoveredServers.ContainsKey(SelectedServerId.GetValueOrDefault()))
+                if (_selectedServerId == null || !_discoveredServers.ContainsKey(_selectedServerId.GetValueOrDefault()))
                     joinButton.interactable = false;
-                Rebuild(_discoveredServers, SelectServer, SelectedServerId.GetValueOrDefault());
+                Rebuild(_discoveredServers, SelectServer, _selectedServerId.GetValueOrDefault());
             }
             else
             {
-                if (SelectedServerIp == null || !_listedServers.ContainsKey(SelectedServerIp))
+                if (_selectedServerIp == null || !_listedServers.ContainsKey(_selectedServerIp))
                     joinButton.interactable = false;
-                Rebuild(_listedServers, SelectServer, SelectedServerIp);
+                Rebuild(_listedServers, SelectServer, _selectedServerIp);
             }
         }
 
-        public void ToggleConnectionSource()
+        private void ToggleConnectionSource()
         {
             bool isInternetConnectionSource = !IsInternetConnectionSource;
             lanToggle.isOn = !isInternetConnectionSource;
             internetToggle.isOn = isInternetConnectionSource;
         }
 
-        public void OnDiscoveredServer(DiscoveryResponse info)
+        private void OnDiscoveredServer(DiscoveryResponse info)
         {
             _discoveredServers[info.ServerId] = info;
             Redisplay();
         }
 
-        public void OnListServer(ServerStatus info)
+        private void OnListServer(ServerStatus info)
         {
             _listedServers[info.Ip] = info;
             Redisplay();
         }
 
+        [UsedImplicitly]
         public void Host()
         {
             if (CardGameManager.Instance.IsSearchingForServer)
-                ShowHostAuthentication();
+                Authenticator.Show(StartHost);
             else
                 StartHost();
 
             Hide();
-        }
-
-        private void ShowHostAuthentication()
-        {
-            Authenticator.Show();
         }
 
         private void StartHost()
@@ -178,34 +160,37 @@ namespace Cgs.Play.Multiplayer
             CgsNetManager.Instance.CheckForPortForwarding();
         }
 
+        [UsedImplicitly]
         public void SelectServer(Toggle toggle, long serverId)
         {
             if (toggle.isOn)
             {
-                SelectedServerId = serverId;
+                _selectedServerId = serverId;
                 joinButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && serverId == SelectedServerId)
+            else if (!toggle.group.AnyTogglesOn() && serverId == _selectedServerId)
                 Join();
         }
 
+        [UsedImplicitly]
         public void SelectServer(Toggle toggle, string serverIp)
         {
             if (toggle.isOn)
             {
-                SelectedServerIp = serverIp;
+                _selectedServerIp = serverIp;
                 joinButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && serverIp.Equals(SelectedServerIp))
+            else if (!toggle.group.AnyTogglesOn() && serverIp.Equals(_selectedServerIp))
                 Join();
         }
 
+        [UsedImplicitly]
         public void Join()
         {
             if (!IsInternetConnectionSource)
             {
-                if (SelectedServerId == null
-                    || !DiscoveredServers.TryGetValue(SelectedServerId.GetValueOrDefault(),
+                if (_selectedServerId == null
+                    || !DiscoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
                         out DiscoveryResponse serverResponse)
                     || serverResponse.Uri == null)
                 {
@@ -217,8 +202,8 @@ namespace Cgs.Play.Multiplayer
             }
             else
             {
-                if (SelectedServerIp == null
-                    || !ListedServers.TryGetValue(SelectedServerIp, out ServerStatus serverResponse)
+                if (_selectedServerIp == null
+                    || !ListedServers.TryGetValue(_selectedServerIp, out ServerStatus serverResponse)
                     || string.IsNullOrEmpty(serverResponse.Ip))
                 {
                     Debug.LogError("Warning: Attempted to join a game without having selected a valid server!");
@@ -234,6 +219,7 @@ namespace Cgs.Play.Multiplayer
             Hide();
         }
 
+        [UsedImplicitly]
         public void Hide()
         {
             if (!NetworkServer.active)
@@ -242,7 +228,7 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.ListServer.Stop();
             }
 
-            gameObject.SetActive(false);
+            Menu.Hide();
         }
     }
 }

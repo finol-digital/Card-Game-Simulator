@@ -6,8 +6,10 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using System.Text;
-using UnityEngine;
 using Mirror;
+using Telepathy;
+using UnityEngine;
+using EventType = Telepathy.EventType;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -36,14 +38,14 @@ namespace Cgs.Play.Multiplayer
 
     public class CgsNetListServer : MonoBehaviour
     {
-        public const string ListServerIp = "35.232.64.143";
-        public const ushort GameServerToListenPort = 8887;
-        public const ushort ClientToListenPort = 8888;
+        private const string ListServerIp = "35.232.64.143";
+        private const ushort GameServerToListenPort = 8887;
+        private const ushort ClientToListenPort = 8888;
 
         public OnServerListedDelegate OnServerFound { get; set; }
 
-        private readonly Telepathy.Client _gameServerToListenConnection = new Telepathy.Client();
-        private readonly Telepathy.Client _clientToListenConnection = new Telepathy.Client();
+        private readonly Client _gameServerToListenConnection = new Client();
+        private readonly Client _clientToListenConnection = new Client();
 
         public void StartGameServer()
         {
@@ -83,7 +85,7 @@ namespace Cgs.Play.Multiplayer
             // create message
             writer.Write((ushort) NetworkServer.connections.Count);
             writer.Write((ushort) NetworkManager.singleton.maxConnections);
-            byte[] gameNameBytes = Encoding.UTF8.GetBytes(CardGameManager.Current.Name);
+            byte[] gameNameBytes = Encoding.UTF8.GetBytes(CgsNetManager.Instance.GameName);
             writer.Write((ushort) gameNameBytes.Length);
             writer.Write(gameNameBytes);
             writer.Flush();
@@ -113,16 +115,16 @@ namespace Cgs.Play.Multiplayer
                 if (_clientToListenConnection.Connected)
                 {
                     // receive latest game server info
-                    while (_clientToListenConnection.GetNextMessage(out Telepathy.Message message))
+                    while (_clientToListenConnection.GetNextMessage(out Message message))
                     {
                         // connected?
-                        if (message.eventType == Telepathy.EventType.Connected)
+                        if (message.eventType == EventType.Connected)
                             Debug.Log("[CgsNet List Server] Client connected!");
                         // data message?
-                        else if (message.eventType == Telepathy.EventType.Data)
+                        else if (message.eventType == EventType.Data)
                             OnServerFound(ParseMessage(message.data));
                         // disconnected?
-                        else if (message.eventType == Telepathy.EventType.Disconnected)
+                        else if (message.eventType == EventType.Disconnected)
                             Debug.Log("[CgsNet List Server] Client disconnected.");
                     }
                 }
@@ -166,7 +168,7 @@ namespace Cgs.Play.Multiplayer
             StopAllCoroutines();
         }
 
-        void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             Stop();
         }

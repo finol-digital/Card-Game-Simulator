@@ -33,12 +33,12 @@ namespace Cgs.Cards
         public Image cardImage;
         public Button createButton;
 
-        public string CardName { get; [UsedImplicitly] set; }
+        [UsedImplicitly] public string CardName { get; set; }
 
-        public Uri CardImageUri
+        private Uri CardImageUri
         {
             get => _cardImageUri;
-            private set
+            set
             {
                 _cardImageUri = value;
                 ValidateCreateButton();
@@ -47,50 +47,49 @@ namespace Cgs.Cards
 
         private Uri _cardImageUri;
 
-        public DownloadMenu Downloader => _downloader ??
-                                          (_downloader = Instantiate(downloadMenuPrefab)
-                                              .GetOrAddComponent<DownloadMenu>());
+        private DownloadMenu Downloader => _downloader
+            ? _downloader
+            : (_downloader = Instantiate(downloadMenuPrefab)
+                .GetOrAddComponent<DownloadMenu>());
 
         private DownloadMenu _downloader;
 
         private UnityAction _onCreationCallback;
 
-        void Update()
+        private void Update()
         {
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            if ((Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit) ||
-                 Input.GetButtonDown(Inputs.New))
-                && createButton.interactable)
+            if ((Inputs.IsSubmit || Input.GetButtonDown(Inputs.New)) && createButton.interactable)
                 StartCreation();
-            if (Input.GetButtonDown(Inputs.Load) && createButton.interactable)
+            if (Inputs.IsLoad && createButton.interactable)
                 DownloadCardImageFromWeb();
-            if (Input.GetButtonDown(Inputs.Save) && createButton.interactable)
+            if (Inputs.IsSave && createButton.interactable)
                 ImportCardImageFromFile();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel) ||
-                     Input.GetButtonDown(Inputs.Option))
+            else if (Inputs.IsCancel || Inputs.IsOption)
                 Hide();
         }
 
         public void Show(UnityAction onCreationCallback)
         {
-            gameObject.SetActive(true);
-            transform.SetAsLastSibling();
+            Show();
             _onCreationCallback = onCreationCallback;
         }
 
+        [UsedImplicitly]
         public void DownloadCardImageFromWeb()
         {
             Downloader.Show(DownloadCardImage, DownloadCardImagePrompt, DownloadCardImageFromWeb);
         }
 
-        public IEnumerator DownloadCardImageFromWeb(string url)
+        private IEnumerator DownloadCardImageFromWeb(string url)
         {
             CardImageUri = new Uri(url);
             yield return UpdateCardImage();
         }
 
+        [UsedImplicitly]
         public void ImportCardImageFromFile()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -99,10 +98,11 @@ namespace Cgs.Cards
             ImportCardImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
+
 #if ENABLE_WINMD_SUPPORT
-        public async void ImportCardImageFromFile(string uri)
+        private async void ImportCardImageFromFile(string uri)
 #else
-        public void ImportCardImageFromFile(string uri)
+        private void ImportCardImageFromFile(string uri)
 #endif
         {
             if (string.IsNullOrEmpty(uri))
@@ -133,18 +133,19 @@ namespace Cgs.Cards
                 Debug.LogWarning(ImageCreationFailedWarningMessage);
         }
 
-        public void ValidateCreateButton()
+        private void ValidateCreateButton()
         {
             createButton.interactable =
                 !string.IsNullOrEmpty(CardName) && CardImageUri != null && CardImageUri.IsAbsoluteUri;
         }
 
+        [UsedImplicitly]
         public void StartCreation()
         {
             StartCoroutine(CreateCard());
         }
 
-        public IEnumerator CreateCard()
+        private IEnumerator CreateCard()
         {
             ValidateCreateButton();
             if (!createButton.interactable)
@@ -167,11 +168,6 @@ namespace Cgs.Cards
 
             ValidateCreateButton();
             Hide();
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
         }
     }
 }

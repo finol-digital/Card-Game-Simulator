@@ -5,9 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace CardGameDef
 {
+    [PublicAPI]
     public class CardSearchFilters
     {
         public const string Delimiter = " ";
@@ -60,7 +62,7 @@ namespace CardGameDef
             // If some search criteria has a space in it, then that criteria should be enclosed in quotes
             // Using this assumption, we find all quoted areas and replace the space(s) temporarily so that we treat it as 1 word
             // This may not be the best solution (definitely not the cleanest), but it should get the job done
-            StringBuilder processedInput = new StringBuilder();
+            var processedInput = new StringBuilder();
             string unprocessedInput = input;
             while (unprocessedInput.Contains(Quote))
             {

@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Collections.Generic;
 using CardGameDef;
 using CardGameDef.Unity;
@@ -23,9 +22,9 @@ namespace CardGameView
 
     public class CardViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
-        public const string SetLabel = "Set";
-        public const string IdLabel = "Id";
-        public const string Delimiter = ": ";
+        private const string SetLabel = "Set";
+        private const string IdLabel = "Id";
+        private const string Delimiter = ": ";
 
         public static CardViewer Instance
         {
@@ -72,11 +71,12 @@ namespace CardGameView
         public Text propertyTextTemplate;
         public List<Dropdown> propertySelectors;
         public List<Text> propertyValueTexts;
+
         public List<Text> PropertyTexts { get; } = new List<Text>();
         public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
         public Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
 
-        public int PrimaryPropertyIndex
+        private int PrimaryPropertyIndex
         {
             get
             {
@@ -89,7 +89,7 @@ namespace CardGameView
             }
         }
 
-        public string SelectedPropertyName
+        private string SelectedPropertyName
         {
             get
             {
@@ -102,7 +102,7 @@ namespace CardGameView
             }
         }
 
-        public string SelectedPropertyDisplay
+        private string SelectedPropertyDisplay
         {
             get
             {
@@ -115,7 +115,7 @@ namespace CardGameView
             }
         }
 
-        public int SelectedPropertyIndex
+        private int SelectedPropertyIndex
         {
             get => _selectedPropertyIndex;
             set
@@ -191,20 +191,17 @@ namespace CardGameView
         private bool _isVisible;
         public bool WasVisible { get; private set; }
 
-        private bool _wasPageDown;
-        private bool _wasPageUp;
-
-        void OnEnable()
+        private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
         }
 
-        void Start()
+        private void Start()
         {
             ResetInfo();
         }
 
-        void Update()
+        private void Update()
         {
             if (Zoom)
                 ZoomTime += Time.deltaTime;
@@ -217,45 +214,41 @@ namespace CardGameView
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            if (Input.GetButtonDown(Inputs.PageVertical) ||
-                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
+            if (Inputs.IsPageVertical)
             {
                 if (Instance.Mode == CardViewerMode.Maximal)
                 {
-                    if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
+                    if (Inputs.IsPageDown && !Inputs.WasPageDown)
                         maximalScrollRect.verticalNormalizedPosition =
                             Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
-                    else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
+                    else if (Inputs.IsPageUp && !Inputs.WasPageDown)
                         maximalScrollRect.verticalNormalizedPosition =
                             Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
                 }
             }
 
-            if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
+            if (Inputs.IsSubmit)
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)
                     Mode = CardViewerMode.Expanded;
                 else
                     SelectedCardModel.DoubleClickAction?.Invoke(SelectedCardModel);
             }
-            else if (Input.GetButtonDown(Inputs.Sort))
+            else if (Inputs.IsSort)
                 DecrementProperty();
-            else if (Input.GetButtonDown(Inputs.Filter))
+            else if (Inputs.IsFilter)
                 IncrementProperty();
-            else if (Input.GetButtonDown(Inputs.Option))
+            else if (Inputs.IsOption)
                 Zoom = !Zoom;
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)
                     Mode = CardViewerMode.Expanded;
                 SelectedCardModel = null;
             }
-
-            _wasPageDown = Input.GetAxis(Inputs.PageVertical) < 0;
-            _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
         }
 
-        public void ResetInfo()
+        private void ResetInfo()
         {
             foreach (AspectRatioFitter cardAspectRatioFitter in cardAspectRatioFitters)
                 cardAspectRatioFitter.aspectRatio = CardGameManager.Current.CardAspectRatio;
@@ -277,7 +270,7 @@ namespace CardGameView
             }
         }
 
-        public void AddProperty(PropertyDef propertyDef, string parentPrefix = "")
+        private void AddProperty(PropertyDef propertyDef, string parentPrefix = "")
         {
             if (propertyDef == null || parentPrefix == null)
             {
@@ -299,11 +292,13 @@ namespace CardGameView
             }
         }
 
+        [UsedImplicitly]
         public void DecrementProperty()
         {
             SelectedPropertyIndex--;
         }
 
+        [UsedImplicitly]
         public void IncrementProperty()
         {
             SelectedPropertyIndex++;

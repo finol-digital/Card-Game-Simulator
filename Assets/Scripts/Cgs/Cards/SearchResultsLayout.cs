@@ -11,12 +11,11 @@ namespace Cgs.Cards
     {
         public SearchResults searchResults;
 
-        void OnRectTransformDimensionsChange()
+        private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
 
-            // TODO: CORRECTLY RE-MAP TO CURRENT PAGE
             searchResults.CurrentPageIndex = 0;
             searchResults.UpdateSearchResultsPanel();
             if (CardViewer.Instance != null)

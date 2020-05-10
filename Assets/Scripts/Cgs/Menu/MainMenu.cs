@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,10 +21,12 @@ namespace Cgs.Menu
         public static string VersionMessage => $"VERSION {Application.version}";
 
         public const int MainMenuSceneIndex = 1;
-        public const int PlayModeSceneIndex = 2;
-        public const int DeckEditorSceneIndex = 3;
-        public const int CardsExplorerSceneIndex = 4;
-        public const int SettingsSceneIndex = 5;
+        private const int PlayModeSceneIndex = 2;
+        private const int DeckEditorSceneIndex = 3;
+        private const int CardsExplorerSceneIndex = 4;
+        private const int SettingsSceneIndex = 5;
+
+        private const float StartBufferTime = 0.1f;
 
         public GameObject downloadMenuPrefab;
         public GameObject createMenuPrefab;
@@ -39,32 +42,24 @@ namespace Cgs.Menu
         public GameObject quitButton;
         public Text versionText;
 
-        public DownloadMenu Downloader => _downloader ??
-                                          (_downloader = Instantiate(downloadMenuPrefab)
-                                              .GetOrAddComponent<DownloadMenu>());
+        private DownloadMenu Downloader => _downloader
+            ? _downloader
+            : (_downloader = Instantiate(downloadMenuPrefab)
+                .GetOrAddComponent<DownloadMenu>());
 
         private DownloadMenu _downloader;
 
-        public CreateMenu Creator => _creator ??
-                                     (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<CreateMenu>());
+        private CreateMenu Creator =>
+            _creator ? _creator : (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<CreateMenu>());
 
         private CreateMenu _creator;
 
-        private bool _wasLeft;
-        private bool _wasRight;
-        private bool _wasPageDown;
-        private bool _wasPageUp;
-        private bool _wasPageLeft;
-        private bool _wasPageRight;
-        private bool _wasFocusBack;
-        private bool _wasFocusNext;
-
-        void OnEnable()
+        private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
         }
 
-        void Start()
+        private void Start()
         {
 #if UNITY_WEBGL
             joinButton.interactable = false;
@@ -77,7 +72,7 @@ namespace Cgs.Menu
             versionText.text = VersionMessage;
         }
 
-        void Update()
+        private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
@@ -93,32 +88,28 @@ namespace Cgs.Menu
             if (Input.GetButtonDown(Inputs.PageVertical) ||
                 Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
             {
-                if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
+                if (Inputs.IsPageDown && !Inputs.WasPageDown)
                     SelectNext();
-                else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
+                else if (Inputs.IsPageUp && !Inputs.WasPageUp)
                     SelectPrevious();
             }
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) ||
-                      Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance))
+            else if (Inputs.IsPageHorizontal)
             {
-                if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
+                if (Inputs.IsPageLeft && !Inputs.WasPageLeft)
                     SelectPrevious();
-                else if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
+                else if (Inputs.IsPageRight && !Inputs.WasPageRight)
                     SelectNext();
             }
-            else if ((Input.GetButtonDown(Inputs.Horizontal) ||
-                      Math.Abs(Input.GetAxis(Inputs.Horizontal)) > Inputs.Tolerance) &&
-                     (EventSystem.current.currentSelectedGameObject == null
-                      || EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
+            else if (Inputs.IsHorizontal && (EventSystem.current.currentSelectedGameObject == null ||
+                                             EventSystem.current.currentSelectedGameObject ==
+                                             selectableButtons[0].gameObject))
             {
-                if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
+                if (Inputs.IsLeft && !Inputs.WasLeft)
                     SelectPrevious();
-                else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
+                else if (Inputs.IsRight && !Inputs.WasRight)
                     SelectNext();
             }
-            else if ((Input.GetButtonDown(Inputs.Vertical) ||
-                      Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
-                     && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
+            else if (Inputs.IsVertical && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
             if (Input.GetKeyDown(Inputs.BluetoothReturn))
@@ -126,61 +117,52 @@ namespace Cgs.Menu
                 if (EventSystem.current.currentSelectedGameObject != null)
                     EventSystem.current.currentSelectedGameObject.GetComponent<Button>()?.onClick?.Invoke();
             }
-            else if (Input.GetButtonDown(Inputs.Sort))
+            else if (Inputs.IsSort)
                 SelectPrevious();
-            else if (Input.GetButtonDown(Inputs.Filter))
+            else if (Inputs.IsFilter)
                 SelectNext();
-            else if (Input.GetButtonDown(Inputs.New))
+            else if (Inputs.IsNew)
             {
                 if (gameManagement.activeSelf)
                     Create();
                 else
                     StartGame();
             }
-            else if (Input.GetButtonDown(Inputs.Load))
+            else if (Inputs.IsLoad)
             {
                 if (gameManagement.activeSelf)
                     Download();
                 else
                     JoinGame();
             }
-            else if (Input.GetButtonDown(Inputs.Save))
+            else if (Inputs.IsSave)
             {
                 if (gameManagement.activeSelf)
                     Share();
                 else
                     EditDeck();
             }
-            else if (Input.GetButtonDown(Inputs.Option))
+            else if (Inputs.IsOption)
             {
                 if (gameManagement.activeSelf)
                     Delete();
                 else
                     ExploreCards();
             }
-            else if (Input.GetButtonDown(Inputs.FocusBack) || (Input.GetAxis(Inputs.FocusBack) > 0 && !_wasFocusBack))
+            else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 ToggleGameManagement();
-            else if (Input.GetButtonDown(Inputs.FocusNext) || (Input.GetAxis(Inputs.FocusNext) > 0 && !_wasFocusNext))
+            else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
                 ShowSettings();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
             {
                 if (EventSystem.current.currentSelectedGameObject == null)
                     Quit();
                 else if (!EventSystem.current.alreadySelecting)
                     EventSystem.current.SetSelectedGameObject(null);
             }
-
-            _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
-            _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
-            _wasPageDown = Input.GetAxis(Inputs.PageVertical) < 0;
-            _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
-            _wasPageLeft = Input.GetAxis(Inputs.PageHorizontal) < 0;
-            _wasPageRight = Input.GetAxis(Inputs.PageHorizontal) > 0;
-            _wasFocusBack = Input.GetAxis(Inputs.FocusBack) > 0;
-            _wasFocusNext = Input.GetAxis(Inputs.FocusNext) > 0;
         }
 
-        public void ResetGameSelectionCarousel()
+        private void ResetGameSelectionCarousel()
         {
             currentCardImage.sprite = CardGameManager.Current.CardBackImageSprite;
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
@@ -188,96 +170,109 @@ namespace Cgs.Menu
             nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
         }
 
+        [UsedImplicitly]
         public void ToggleGameManagement()
         {
 #if !UNITY_WEBGL
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             gameManagement.SetActive(!gameManagement.activeSelf);
 #endif
         }
 
+        [UsedImplicitly]
         public void SelectPrevious()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             gameManagement.SetActive(false);
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
         }
 
+        [UsedImplicitly]
         public void SelectNext()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             gameManagement.SetActive(false);
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
         }
 
+        [UsedImplicitly]
         public void Download()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame);
         }
 
+        [UsedImplicitly]
         public void Create()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             Creator.Show();
         }
 
+        [UsedImplicitly]
         public void Delete()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.PromptDelete();
         }
 
+        [UsedImplicitly]
         public void Share()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.Share();
         }
 
+        [UsedImplicitly]
         public void StartGame()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.IsSearchingForServer = false;
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 
+        [UsedImplicitly]
         public void JoinGame()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.IsSearchingForServer = true;
             SceneManager.LoadScene(PlayModeSceneIndex);
         }
 
+        [UsedImplicitly]
         public void EditDeck()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             SceneManager.LoadScene(DeckEditorSceneIndex);
         }
 
+        [UsedImplicitly]
         public void ExploreCards()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             SceneManager.LoadScene(CardsExplorerSceneIndex);
         }
 
+        [UsedImplicitly]
         public void ShowSettings()
         {
-            if (Time.timeSinceLevelLoad < 0.1)
+            if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             SceneManager.LoadScene(SettingsSceneIndex);
         }
 
+        [UsedImplicitly]
         public void Quit() =>
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;

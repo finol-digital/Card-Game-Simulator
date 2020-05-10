@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using CardGameView;
@@ -18,16 +17,7 @@ namespace Cgs.Decks
         public DeckEditor editor;
         public SearchResults results;
 
-        private bool _wasDown;
-        private bool _wasUp;
-        private bool _wasLeft;
-        private bool _wasRight;
-        private bool _wasPageDown;
-        private bool _wasPageUp;
-        private bool _wasPageLeft;
-        private bool _wasPageRight;
-
-        void Update()
+        private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused)
                 return;
@@ -44,49 +34,38 @@ namespace Cgs.Decks
                     SelectResultsRight();
             }
 
-            if (Input.GetButtonDown(Inputs.Vertical) || Math.Abs(Input.GetAxis(Inputs.Vertical)) > Inputs.Tolerance)
+            if (Inputs.IsVertical)
             {
-                if (Input.GetAxis(Inputs.Vertical) < 0 && !_wasDown)
+                if (Inputs.IsDown && !Inputs.WasDown)
                     SelectResultsDown();
-                else if (Input.GetAxis(Inputs.Vertical) > 0 && !_wasUp)
+                else if (Inputs.IsUp && !Inputs.WasUp)
                     SelectResultsUp();
             }
-            else if (Input.GetButtonDown(Inputs.Horizontal) ||
-                     Math.Abs(Input.GetAxis(Inputs.Horizontal)) > Inputs.Tolerance)
+            else if (Inputs.IsHorizontal)
             {
-                if (Input.GetAxis(Inputs.Horizontal) < 0 && !_wasLeft)
+                if (Inputs.IsLeft && !Inputs.WasLeft)
                     SelectResultsLeft();
-                else if (Input.GetAxis(Inputs.Horizontal) > 0 && !_wasRight)
+                else if (Inputs.IsRight && !Inputs.WasRight)
                     SelectResultsRight();
             }
 
-            if (Input.GetButtonDown(Inputs.PageVertical) ||
-                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
+            if (Inputs.IsPageVertical)
             {
-                if (Input.GetAxis(Inputs.PageVertical) < 0 && !_wasPageDown)
+                if (Inputs.IsPageDown && !Inputs.WasPageDown)
                     SelectEditorDown();
-                else if (Input.GetAxis(Inputs.PageVertical) > 0 && !_wasPageUp)
+                else if (Inputs.IsPageUp && !Inputs.WasPageUp)
                     SelectEditorUp();
             }
-            else if ((Input.GetButtonDown(Inputs.PageHorizontal) ||
-                      Math.Abs(Input.GetAxis(Inputs.PageHorizontal)) > Inputs.Tolerance))
+            else if (Inputs.IsPageHorizontal)
             {
-                if (Input.GetAxis(Inputs.PageHorizontal) < 0 && !_wasPageLeft)
+                if (Inputs.IsPageLeft && !Inputs.WasPageLeft)
                     SelectEditorLeft();
-                else if (Input.GetAxis(Inputs.PageHorizontal) > 0 && !_wasPageRight)
+                else if (Inputs.IsPageRight && !Inputs.WasPageRight)
                     SelectEditorRight();
             }
-
-            _wasDown = Input.GetAxis(Inputs.Vertical) < 0;
-            _wasUp = Input.GetAxis(Inputs.Vertical) > 0;
-            _wasLeft = Input.GetAxis(Inputs.Horizontal) < 0;
-            _wasRight = Input.GetAxis(Inputs.Horizontal) > 0;
-            _wasPageDown = Input.GetAxis(Inputs.PageVertical) < 0;
-            _wasPageUp = Input.GetAxis(Inputs.PageVertical) > 0;
-            _wasPageLeft = Input.GetAxis(Inputs.PageHorizontal) < 0;
-            _wasPageRight = Input.GetAxis(Inputs.PageHorizontal) > 0;
         }
 
+        [UsedImplicitly]
         public void SelectResultsLeft()
         {
             if (EventSystem.current.alreadySelecting)
@@ -118,6 +97,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectResultsRight()
         {
             if (EventSystem.current.alreadySelecting)
@@ -149,16 +129,19 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectResultsDown()
         {
             results.IncrementPage();
         }
 
+        [UsedImplicitly]
         public void SelectResultsUp()
         {
             results.DecrementPage();
         }
 
+        [UsedImplicitly]
         public void SelectEditorDown()
         {
             if (EventSystem.current.alreadySelecting)
@@ -189,6 +172,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectEditorUp()
         {
             if (EventSystem.current.alreadySelecting)
@@ -219,6 +203,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectEditorLeft()
         {
             if (EventSystem.current.alreadySelecting)
@@ -251,6 +236,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
+        [UsedImplicitly]
         public void SelectEditorRight()
         {
             if (EventSystem.current.alreadySelecting)

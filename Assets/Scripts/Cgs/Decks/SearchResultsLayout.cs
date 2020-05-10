@@ -10,18 +10,20 @@ namespace Cgs.Decks
 {
     public class SearchResultsLayout : MonoBehaviour
     {
-        public static readonly Vector2 PageButtonsPortraitPosition = new Vector2(0, 447.5f);
-        public static readonly Vector2 PageButtonsLandscapePosition = new Vector2(1050, 375);
+        private const float MinWidth = 1200;
+
+        private static readonly Vector2 PageButtonsPortraitPosition = new Vector2(0, 447.5f);
+        private static readonly Vector2 PageButtonsLandscapePosition = new Vector2(1050, 375);
 
         public RectTransform pageButtons;
         public SearchResults searchResults;
 
-        void OnRectTransformDimensionsChange()
+        private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform) transform).rect.width < CardsExplorerLayout.MinWidth) // Portrait
+            if (((RectTransform) transform).rect.width < MinWidth) // Portrait
             {
                 pageButtons.anchorMin = Vector2.right;
                 pageButtons.anchorMax = Vector2.right;
@@ -36,7 +38,6 @@ namespace Cgs.Decks
                 pageButtons.anchoredPosition = PageButtonsLandscapePosition;
             }
 
-            // TODO: CORRECTLY RE-MAP TO CURRENT PAGE
             searchResults.CurrentPageIndex = 0;
             searchResults.UpdateSearchResultsPanel();
             if (CardViewer.Instance != null)

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -30,14 +31,15 @@ namespace Cgs.Menu
         }
 
         protected Queue<Message> MessageQueue { get; } = new Queue<Message>();
-        protected bool IsNewMessage { get; private set; }
+
+        private bool _isNewMessage;
 
         // Popup needs to update last to consume the input over what it covers
-        void LateUpdate()
+        private void LateUpdate()
         {
-            if (IsNewMessage)
+            if (_isNewMessage)
             {
-                IsNewMessage = false;
+                _isNewMessage = false;
                 return;
             }
 
@@ -98,9 +100,10 @@ namespace Cgs.Menu
                 noButton.onClick.AddListener(message.NoAction);
             noButton.onClick.AddListener(Close);
 
-            IsNewMessage = true;
+            _isNewMessage = true;
         }
 
+        [UsedImplicitly]
         public void Share()
         {
             string shareText = messageText.text;
@@ -111,6 +114,7 @@ namespace Cgs.Menu
 #endif
         }
 
+        [UsedImplicitly]
         public void Close()
         {
             if (!EventSystem.current.alreadySelecting && EventSystem.current.currentSelectedGameObject == gameObject)

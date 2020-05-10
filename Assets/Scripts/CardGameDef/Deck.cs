@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using CardGameDef.Decks;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -32,6 +33,7 @@ namespace CardGameDef
         [EnumMember(Value = "set")] Set
     }
 
+    [PublicAPI]
     public class Deck : IEquatable<Deck>
     {
         public const string DefaultName = "Untitled";
@@ -187,7 +189,7 @@ namespace CardGameDef
 
         public string ToTxt()
         {
-            StringBuilder text = new StringBuilder();
+            var text = new StringBuilder();
             text.AppendFormat("### {0} Deck: {1} {2}", SourceGame.Name, Name, Environment.NewLine);
             Dictionary<Card, int> cardCounts = GetCardCounts();
             foreach (KeyValuePair<Card, int> cardCount in cardCounts)

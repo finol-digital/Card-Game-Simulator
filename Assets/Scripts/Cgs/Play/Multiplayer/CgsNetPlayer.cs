@@ -184,7 +184,7 @@ namespace Cgs.Play.Multiplayer
             cardModel.RpcHideHighlight();
         }
 
-        void Update()
+        private void Update()
         {
             if (!isLocalPlayer || CgsNetManager.Instance.Data == null ||
                 CgsNetManager.Instance.Data.cardStacks == null || CgsNetManager.Instance.Data.cardStacks.Count < 1 ||
