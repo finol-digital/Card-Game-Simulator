@@ -52,6 +52,7 @@ jobs:
           buildMethod: Cgs.Editor.BuildCgs.BuildProject
           customParameters: -androidAppBundle -keystorePass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }} -keyaliasPass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}
       - uses: actions/upload-artifact@v1
+        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-builds
           path: builds
