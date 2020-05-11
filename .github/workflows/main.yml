@@ -1,7 +1,7 @@
 name: Build and Release CGS
 on:
+  push: { branches: [develop, master] }
   pull_request: { branches: [master] }
-  push: { branches: [master] }
   release: { types: [published] }
 env:
     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
