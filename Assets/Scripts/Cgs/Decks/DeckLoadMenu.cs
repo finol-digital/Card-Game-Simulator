@@ -103,7 +103,7 @@ namespace Cgs.Decks
                 else if (Inputs.IsOption && deleteFileButton.interactable)
                     PromptForDeleteFile();
                 else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
-                    ScrollPage(Input.GetAxis(Inputs.PageVertical));
+                    ScrollPage(Inputs.IsPageDown);
                 else if (Inputs.IsCancel)
                     Hide();
             }

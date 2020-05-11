@@ -76,7 +76,7 @@ namespace Cgs.Play.Multiplayer
             else if (Inputs.IsNew)
                 Host();
             else if (Inputs.IsPageVertical && !Inputs.IsPageVertical)
-                ScrollPage(Input.GetAxis(Inputs.PageVertical));
+                ScrollPage(Inputs.IsPageDown);
             else if (Inputs.IsPageHorizontal && !Inputs.WasPageHorizontal)
                 ToggleConnectionSource();
             else if (Inputs.IsCancel)

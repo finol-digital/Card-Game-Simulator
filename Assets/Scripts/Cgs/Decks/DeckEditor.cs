@@ -344,8 +344,7 @@ namespace Cgs.Decks
             BackToMainMenu();
         }
 
-        [UsedImplicitly]
-        public void BackToMainMenu()
+        private static void BackToMainMenu()
         {
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }

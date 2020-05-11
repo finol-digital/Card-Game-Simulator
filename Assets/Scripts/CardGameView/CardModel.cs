@@ -14,7 +14,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Debug = System.Diagnostics.Debug;
 
 namespace CardGameView
 {
@@ -38,13 +37,14 @@ namespace CardGameView
                                                                && transform.parent == CgsNetManager.Instance
                                                                    .playController.playAreaCardStack.transform;
 
-        private bool IsProcessingSecondaryDragAction => PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
-                                                                                       (CurrentPointerEventData.button ==
-                                                                                        PointerEventData.InputButton
-                                                                                            .Middle ||
-                                                                                        CurrentPointerEventData.button ==
-                                                                                        PointerEventData.InputButton
-                                                                                            .Right));
+        private bool IsProcessingSecondaryDragAction =>
+            PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
+                                           (CurrentPointerEventData.button ==
+                                            PointerEventData.InputButton
+                                                .Middle ||
+                                            CurrentPointerEventData.button ==
+                                            PointerEventData.InputButton
+                                                .Right));
 
         public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
 
@@ -68,6 +68,7 @@ namespace CardGameView
         [SyncVar(hook = "OnChangeRotation")] public Quaternion rotation;
 
         [SyncVar] private string _id;
+
         // ReSharper disable once ConvertToAutoPropertyWithPrivateSetter
         public string Id => _id;
 
@@ -172,31 +173,31 @@ namespace CardGameView
         {
             set
             {
-                Debug.Assert(_outline != null, nameof(_outline) + " != null");
                 if (value)
                 {
-                    _outline.effectColor = SelectedHighlightColor;
-                    _outline.effectDistance = OutlineHighlightDistance;
+                    Highlight.effectColor = SelectedHighlightColor;
+                    Highlight.effectDistance = OutlineHighlightDistance;
                 }
                 else
                 {
                     bool isOthers = IsOnline && !hasAuthority;
-                    _outline.effectColor = isOthers ? Color.yellow : Color.black;
-                    _outline.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+                    Highlight.effectColor = isOthers ? Color.yellow : Color.black;
+                    Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                 }
             }
         }
 
-        private Outline _outline;
-        private Image _image;
-        private CanvasGroup _canvasGroup;
+        private Outline Highlight => _highlight ? _highlight : (_highlight = GetComponent<Outline>());
+        private Outline _highlight;
+
+        private Image View => _view ? _view : (_view = GetComponent<Image>());
+        private Image _view;
+
+        private CanvasGroup Visibility => _visibility ? _visibility : (_visibility = GetComponent<CanvasGroup>());
+        private CanvasGroup _visibility;
 
         private void Start()
         {
-            _outline = GetComponent<Outline>();
-            _image = GetComponent<Image>();
-            _canvasGroup = GetComponent<CanvasGroup>();
-
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
 
@@ -215,21 +216,19 @@ namespace CardGameView
 
         public void SetImageSprite(Sprite imageSprite)
         {
-            if (_image == null || imageSprite == null)
+            if (imageSprite == null)
             {
                 RemoveImageSprite();
                 return;
             }
 
-            _image.sprite = imageSprite;
+            View.sprite = imageSprite;
             IsNameVisible = false;
         }
 
         private void RemoveImageSprite()
         {
-            if (_image == null)
-                return;
-            _image.sprite = CardGameManager.Current.CardBackImageSprite;
+            View.sprite = CardGameManager.Current.CardBackImageSprite;
             if (!IsFacedown)
                 IsNameVisible = true;
         }
@@ -475,8 +474,7 @@ namespace CardGameView
             transform.SetAsLastSibling();
             if (prevParentStack != null)
                 prevParentStack.OnRemove(this);
-            if (_canvasGroup != null)
-                _canvasGroup.blocksRaycasts = false;
+            Visibility.blocksRaycasts = false;
             var rectTransform = (RectTransform) transform;
             rectTransform.anchorMax = 0.5f * Vector2.one;
             rectTransform.anchorMin = 0.5f * Vector2.one;
@@ -525,8 +523,7 @@ namespace CardGameView
             if (ParentCardStack != null)
                 ParentCardStack.OnAdd(this);
             PlaceHolder = null;
-            if (_canvasGroup != null)
-                _canvasGroup.blocksRaycasts = true;
+            Visibility.blocksRaycasts = true;
         }
 
         public void UpdateParentCardStackScrollRect()
@@ -578,10 +575,8 @@ namespace CardGameView
 
         private void WarnHighlight()
         {
-            if (_outline == null)
-                return;
-            _outline.effectColor = Color.red;
-            _outline.effectDistance = OutlineHighlightDistance;
+            Highlight.effectColor = Color.red;
+            Highlight.effectDistance = OutlineHighlightDistance;
         }
 
         [ClientRpc]

@@ -13,13 +13,11 @@ using Cgs.Decks;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using Cgs.Play.Zones;
+using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
-// ReSharper disable UnusedParameter.Global
-// ReSharper disable UnusedMember.Global
 
 namespace Cgs.Play
 {
@@ -36,38 +34,48 @@ namespace Cgs.Play
         public GameObject deckLoadMenuPrefab;
         public GameObject diceMenuPrefab;
         public GameObject searchMenuPrefab;
+        public GameObject handDealerPrefab;
 
-        // TODO: public Image playMatImage;
         public CardStack playAreaCardStack;
         public ZonesViewer zones;
         public PointsCounter scoreboard;
 
-        public LobbyMenu Lobby => _lobby ?? (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
+        private LobbyMenu Lobby =>
+            _lobby ? _lobby : (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
+
         private LobbyMenu _lobby;
 
-        public DeckLoadMenu DeckLoader =>
-            _deckLoader ?? (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+        private DeckLoadMenu DeckLoader => _deckLoader
+            ? _deckLoader
+            : (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
 
         private DeckLoadMenu _deckLoader;
 
-        public DiceMenu DiceManager =>
-            _diceManager ?? (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
+        private DiceMenu DiceManager => _diceManager
+            ? _diceManager
+            : (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
 
         private DiceMenu _diceManager;
 
-        public CardSearchMenu CardSearcher => _cardSearcher ??
-                                              (_cardSearcher = Instantiate(searchMenuPrefab)
-                                                  .GetOrAddComponent<CardSearchMenu>());
+        private CardSearchMenu CardSearcher => _cardSearcher
+            ? _cardSearcher
+            : (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
 
         private CardSearchMenu _cardSearcher;
 
-        void OnEnable()
+        private HandDealer Dealer => _dealer
+            ? _dealer
+            : (_dealer = Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>());
+
+        private HandDealer _dealer;
+
+        private void OnEnable()
         {
             Instantiate(cardViewerPrefab);
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
 
-        void Start()
+        private void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             playAreaCardStack.OnAddCardActions.Add(AddCardToPlay);
@@ -80,25 +88,24 @@ namespace Cgs.Play
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
                 CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (Input.GetButtonDown(Inputs.Load))
+            if (Inputs.IsLoad)
                 ShowDeckMenu();
-            else if (Input.GetButtonDown(Inputs.Save))
+            else if (Inputs.IsSave)
                 ShowDiceMenu();
-            else if (Input.GetButtonDown(Inputs.Filter))
+            else if (Inputs.IsFilter)
                 ShowCardsMenu();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
                 PromptBackToMainMenu();
         }
 
         private void ResetPlayArea()
         {
-            // TODO: CHECK IF THIS IS OK WITH NETWORKING
             var playAreaRectTransform = (RectTransform) playAreaCardStack.transform;
             playAreaRectTransform.DestroyAllChildren();
             var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
@@ -106,6 +113,7 @@ namespace Cgs.Play
             playAreaRectTransform.sizeDelta = playAreaSize * CardGameManager.PixelsPerInch;
         }
 
+        [UsedImplicitly]
         public void ViewRules()
         {
             if (CardGameManager.Current.RulesUrl != null &&
@@ -115,22 +123,25 @@ namespace Cgs.Play
                 CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
         }
 
+        [UsedImplicitly]
         public void ShowDeckMenu()
         {
             DeckLoader.Show(LoadDeck);
         }
 
+        [UsedImplicitly]
         public void ShowDiceMenu()
         {
             DiceManager.Show(playAreaCardStack.transform as RectTransform);
         }
 
+        [UsedImplicitly]
         public void ShowCardsMenu()
         {
             CardSearcher.Show(DisplayResults);
         }
 
-        public void LoadDeck(UnityDeck deck)
+        private void LoadDeck(UnityDeck deck)
         {
             if (deck == null)
                 return;
@@ -164,7 +175,7 @@ namespace Cgs.Play
             StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
         }
 
-        public void CreateGameBoards(List<GameBoard> boards)
+        private void CreateGameBoards(IReadOnlyCollection<GameBoard> boards)
         {
             if (boards == null || boards.Count < 1)
                 return;
@@ -173,7 +184,7 @@ namespace Cgs.Play
                 CreateBoard(board);
         }
 
-        public void CreateBoard(GameBoard board)
+        private void CreateBoard(GameBoard board)
         {
             if (board == null)
                 return;
@@ -200,16 +211,16 @@ namespace Cgs.Play
             boardRectTransform.localScale = Vector3.one;
         }
 
-        public void CreateHand()
+        private void CreateHand()
         {
             if (zones.Hand == null)
                 zones.CreateHand();
 
             if (CardGameManager.Current.GameStartHandCount > 0)
-                CardGameManager.Instance.Messenger.Ask(DealHandPrompt, () => { }, DealStartingHand);
+                Dealer.Show(DealStartingHand);
         }
 
-        public void DealStartingHand()
+        private void DealStartingHand()
         {
             if (zones.Hand == null)
                 return;
@@ -217,21 +228,15 @@ namespace Cgs.Play
             if (!zones.Hand.IsExtended)
                 zones.Hand.ToggleExtension();
 
-            Deal(CardGameManager.Current.GameStartHandCount);
+            Deal(Dealer.Count);
         }
 
-        public void Deal(int cardCount)
+        private void Deal(int cardCount)
         {
             AddCardsToHand(PopDeckCards(cardCount));
         }
 
-        public void Burn(int cardCount)
-        {
-            foreach (UnityCard card in PopDeckCards(cardCount))
-                CatchDiscard(card);
-        }
-
-        public IEnumerable<UnityCard> PopDeckCards(int cardCount)
+        private IEnumerable<UnityCard> PopDeckCards(int cardCount)
         {
             List<UnityCard> cards = new List<UnityCard>(cardCount);
             if (zones.CurrentDeck == null)
@@ -242,7 +247,7 @@ namespace Cgs.Play
             return cards;
         }
 
-        public void AddCardsToHand(IEnumerable<UnityCard> cards)
+        private void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
             if (zones.Hand == null)
                 zones.CreateHand();
@@ -251,15 +256,15 @@ namespace Cgs.Play
                 zones.Hand.AddCard(card);
         }
 
-        public void AddCardToPlay(CardStack cardStack, CardModel cardModel)
+        private static void AddCardToPlay(CardStack cardStack, CardModel cardModel)
         {
             if (NetworkManager.singleton.isNetworkActive)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
             else
-                SetPlayActions(cardStack, cardModel);
+                SetPlayActions(cardModel);
         }
 
-        public void SetPlayActions(CardStack cardStack, CardModel cardModel)
+        public static void SetPlayActions(CardModel cardModel)
         {
             cardModel.DoubleClickAction = CardActions.Rotate90;
             cardModel.SecondaryDragAction = cardModel.Rotate;
@@ -272,24 +277,25 @@ namespace Cgs.Play
             zones.Discard.AddCard(card);
         }
 
-        public void DisplayResults(string filters, List<UnityCard> cards)
+        private void DisplayResults(string filters, List<UnityCard> cards)
         {
             if (zones.Results == null)
                 zones.CreateResults();
             zones.Results.Sync(cards);
         }
 
+        [UsedImplicitly]
         public void PromptBackToMainMenu()
         {
             CardGameManager.Instance.Messenger.Ask(MainMenuPrompt, PromptResetPlayArea, BackToMainMenu);
         }
 
-        public void PromptResetPlayArea()
+        private void PromptResetPlayArea()
         {
             CardGameManager.Instance.Messenger.Prompt(ResetPlayAreaPrompt, ResetPlayArea);
         }
 
-        public void BackToMainMenu()
+        private static void BackToMainMenu()
         {
             if (NetworkManager.singleton.isNetworkActive)
             {

@@ -84,7 +84,7 @@ namespace Cgs.Cards
 
         private void Scroll()
         {
-            scrollbar.value = Mathf.Clamp01(scrollbar.value + (Input.GetAxis(Inputs.PageVertical) < 0 ? 0.1f : -0.1f));
+            scrollbar.value = Mathf.Clamp01(scrollbar.value + (Inputs.IsPageDown ? 0.1f : -0.1f));
         }
 
         public void Show(OnSearchDelegate searchCallback)
@@ -387,7 +387,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SetBoolPropertyFilter(string propertyName, bool filterValue, bool isOn)
         {
-            if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
+            if (Inputs.IsSubmit)
                 return;
 
             if (isOn)
@@ -399,7 +399,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SetEnumPropertyFilter(string propertyName, int filterValue, bool isOn)
         {
-            if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
+            if (Inputs.IsSubmit)
                 return;
 
             bool isStored = _filters.EnumProperties.ContainsKey(propertyName);

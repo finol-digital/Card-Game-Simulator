@@ -61,7 +61,7 @@ namespace Cgs.Cards
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            if ((Inputs.IsSubmit || Input.GetButtonDown(Inputs.New)) && createButton.interactable)
+            if ((Inputs.IsSubmit || Inputs.IsNew) && createButton.interactable)
                 StartCreation();
             if (Inputs.IsLoad && createButton.interactable)
                 DownloadCardImageFromWeb();

@@ -56,10 +56,10 @@ namespace ScrollRects
                 scrollRect.verticalNormalizedPosition = 1f - (currentSelectionIndex / (options.Count - 1f));
         }
 
-        protected void ScrollPage(float scrollDirection)
+        protected void ScrollPage(bool scrollDown)
         {
             scrollRect.verticalNormalizedPosition =
-                Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDirection < 0 ? 0.1f : -0.1f));
+                Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDown ? -0.1f : 0.1f));
         }
 
         protected void SelectPrevious()

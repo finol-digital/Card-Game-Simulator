@@ -19,12 +19,12 @@ namespace Cgs.Play.Multiplayer
     {
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
 
-        public IEnumerable<Card> CurrentDeck =>
+        private IEnumerable<Card> CurrentDeck =>
             CurrentDeckCardIds.Select(cardId => CardGameManager.Current.Cards[cardId]);
 
         private string[] CurrentDeckCardIds =>
-            CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.scores != null
-                                                && CgsNetManager.Instance.Data.scores.Count > 0
+            CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.cardStacks != null
+                                                && CgsNetManager.Instance.Data.cardStacks.Count > 0
                 ? CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds
                 : new string[] { };
 
@@ -33,6 +33,7 @@ namespace Cgs.Play.Multiplayer
             ? CgsNetManager.Instance.Data.scores[scoreIndex].Points
             : 0;
 
+        public bool IsDeckShared { get; private set; }
         [SyncVar(hook = "OnChangeDeck")] public int deckIndex;
 
         [SyncVar(hook = "OnChangeScore")] public int scoreIndex;
@@ -120,6 +121,7 @@ namespace Cgs.Play.Multiplayer
         private void TargetShareDeck(NetworkConnection target, int sharedDeckIndex)
         {
             CgsNetManager.Instance.statusText.text = "Got deck from server!";
+            IsDeckShared = true;
             deckIndex = sharedDeckIndex;
             CgsNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
         }
@@ -179,7 +181,7 @@ namespace Cgs.Play.Multiplayer
             cardModel.position = position;
             cardModel.rotation = rotation;
             cardModel.IsFacedown = isFacedown;
-            controller.SetPlayActions(controller.playAreaCardStack, cardModel);
+            PlayMode.SetPlayActions(cardModel);
             NetworkServer.Spawn(newCard, connectionToClient);
             cardModel.RpcHideHighlight();
         }

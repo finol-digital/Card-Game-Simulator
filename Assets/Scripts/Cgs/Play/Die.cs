@@ -24,7 +24,7 @@ namespace Cgs.Play
         public int Min { get; set; }
         public int Max { get; set; }
 
-        public int Value
+        private int Value
         {
             get => _value;
             set

@@ -9,22 +9,22 @@ namespace Cgs
 {
     public static class Inputs
     {
-        public const float Tolerance = 0.1f;
         public const KeyCode BluetoothReturn = (KeyCode) 10;
-        public const string Cancel = "Cancel";
-        public const string Filter = "Filter";
-        public const string FocusBack = "FocusBack";
-        public const string FocusNext = "FocusNext";
-        public const string Horizontal = "Horizontal";
-        public const string Load = "Load";
-        public const string New = "New";
-        public const string Option = "Option";
-        public const string PageHorizontal = "PageHorizontal";
-        public const string PageVertical = "PageVertical";
-        public const string Save = "Save";
-        public const string Sort = "Sort";
-        public const string Submit = "Submit";
-        public const string Vertical = "Vertical";
+        private const float Tolerance = 0.1f;
+        private const string Cancel = "Cancel";
+        private const string Filter = "Filter";
+        private const string FocusBack = "FocusBack";
+        private const string FocusNext = "FocusNext";
+        private const string Horizontal = "Horizontal";
+        private const string Load = "Load";
+        private const string New = "New";
+        private const string Option = "Option";
+        private const string PageHorizontal = "PageHorizontal";
+        private const string PageVertical = "PageVertical";
+        private const string Save = "Save";
+        private const string Sort = "Sort";
+        private const string Submit = "Submit";
+        private const string Vertical = "Vertical";
 
         public static bool IsCancel => Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Cancel);
 
@@ -72,6 +72,7 @@ namespace Cgs
         public static bool IsDown => Input.GetAxis(Vertical) < 0;
         public static bool IsUp => Input.GetAxis(Vertical) < 0;
 
+
         // WasDirection set in CardGameManager.LateUpdate()
         public static bool WasFocusBack { get; set; }
         public static bool WasFocusNext { get; set; }
@@ -85,6 +86,7 @@ namespace Cgs
         public static bool WasPageHorizontal { get; set; }
         public static bool WasPageLeft { get; set; }
         public static bool WasPageRight { get; set; }
+
 
         public static char FilterFocusInput(char charToValidate)
         {

@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -85,8 +84,7 @@ namespace Cgs.Menu
                     SelectNext();
             }
 
-            if (Input.GetButtonDown(Inputs.PageVertical) ||
-                Math.Abs(Input.GetAxis(Inputs.PageVertical)) > Inputs.Tolerance)
+            if (Inputs.IsPageVertical)
             {
                 if (Inputs.IsPageDown && !Inputs.WasPageDown)
                     SelectNext();

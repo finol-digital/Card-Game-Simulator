@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -43,18 +42,18 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (Input.GetKeyDown(Inputs.BluetoothReturn) || Input.GetButtonDown(Inputs.Submit))
+            if (Inputs.IsSubmit)
             {
                 if (yesButton.gameObject.activeInHierarchy)
                     yesButton.onClick?.Invoke();
                 else
                     Close();
             }
-            else if (Input.GetButtonDown(Inputs.Option) && noButton.gameObject.activeInHierarchy)
+            else if (Inputs.IsOption && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
-            else if (Input.GetButtonDown(Inputs.Save))
+            else if (Inputs.IsSave)
                 Share();
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Inputs.Cancel))
+            else if (Inputs.IsCancel)
                 Close();
         }
 

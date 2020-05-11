@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -25,7 +24,7 @@ namespace Cgs.Menu
             if (!IsFocused || urlInputField.isFocused)
                 return;
 
-            if ((Inputs.IsSubmit || Input.GetButtonDown(Inputs.New)) && downloadButton.interactable)
+            if ((Inputs.IsSubmit || Inputs.IsNew) && downloadButton.interactable)
                 StartDownload();
             else if ((Inputs.IsSort || Inputs.IsLoad) && urlInputField.interactable)
                 Clear();
@@ -33,7 +32,7 @@ namespace Cgs.Menu
                 Paste();
             else if (Inputs.IsFocus && urlInputField.interactable)
                 urlInputField.ActivateInputField();
-            else if (Inputs.IsCancel || Input.GetButtonDown(Inputs.Option))
+            else if (Inputs.IsCancel || Inputs.IsOption)
                 Hide();
         }
 

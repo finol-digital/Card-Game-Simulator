@@ -20,9 +20,9 @@ namespace Cgs.Cards
         public List<GameObject> editButtons;
         public SearchResults searchResults;
 
-        public CardCreationMenu CardCreator => _cardCreator ??
-                                               (_cardCreator = Instantiate(cardCreationMenuPrefab)
-                                                   .GetOrAddComponent<CardCreationMenu>());
+        private CardCreationMenu CardCreator => _cardCreator
+            ? _cardCreator
+            : (_cardCreator = Instantiate(cardCreationMenuPrefab).GetOrAddComponent<CardCreationMenu>());
 
         private CardCreationMenu _cardCreator;
 
