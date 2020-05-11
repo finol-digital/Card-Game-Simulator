@@ -5,20 +5,22 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Change port forwarding to port 7777
+- Play online by forwarding port 7777
 - For networked game sessions, you can set session name and password options
 - Deal/Draw Hand prompts for gameStartHandCount cards
 
 ## Current Sprint
-- More dynamic restart (reset deck, and prompt redeal for each player)
-- dec sideboard is extras
-- ydk side is also extra
-- gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
+- Test then release: freeze if card in before player join
 - Editor unit test to generate schema and confirm it matches docs/ folder
-- Runtime unit tests for StreamingAssets/ to match docs/ schema
+- Runtime unit tests for StreamingAssets/ to validate against docs/ schema
 - Playmats
+- Layout cards in the Deck Editor more dynamically
+  - Have stacks link to each other
+  - Have # of stacks be based off the number of the unique cards (remove deckMaxCount)
 - Highlight auto scroll area when auto scrolling
 - Play Mode Redesign
+  - More dynamic restart (check ResetPlayArea, reset deck, and prompt redeal for each player)
+  - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
   - Allow cards to snap to each other when moving them
   - Allow any player to move cards in the play area, instead of just the player who put it there
   - Have view for only hand vs view for only field
@@ -40,9 +42,8 @@ permalink: roadmap.html
   - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
   - Slider to control zoom
   - Play Area SharePreference
-- Layout cards in the Deck Editor more dynamically
-  - Have stacks link to each other
-  - Have # of stacks be based off the number of the unique cards (remove deckMaxCount?)
+- dec sideboard is extras
+- ydk side is also extra
 
 ## Backlog
 - Update all images/screenshots (on cgs website, ln, and all stores)
