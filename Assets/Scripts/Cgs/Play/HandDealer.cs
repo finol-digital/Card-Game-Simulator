@@ -18,13 +18,21 @@ namespace Cgs.Play
             get
             {
                 string result;
-                CgsNetPlayer localPlayer = CgsNetManager.Instance.LocalPlayer;
-                if (!CgsNetManager.Instance.isNetworkActive || localPlayer == null)
-                    result = CardGameManager.Current.DeckSharePreference != SharePreference.Individual
-                        ? "Deal"
-                        : "Draw";
-                else
-                    result = localPlayer.IsDeckShared ? "Deal" : "Draw";
+                switch (CardGameManager.Current.DeckSharePreference)
+                {
+                    case SharePreference.Ask:
+                        CgsNetPlayer localPlayer = CgsNetManager.Instance.LocalPlayer;
+                        result = localPlayer != null && localPlayer.IsDeckShared ? "Deal" : "Draw";
+                        break;
+                    case SharePreference.Share:
+                        result = "Deal";
+                        break;
+                    case SharePreference.Individual:
+                    default:
+                        result = "Draw";
+                        break;
+                }
+
                 return result;
             }
         }
@@ -100,7 +108,7 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void Confirm()
         {
-            _callback();
+            _callback?.Invoke();
             Hide();
         }
     }
