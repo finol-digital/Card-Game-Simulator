@@ -74,6 +74,7 @@ namespace Cgs.Play.Multiplayer
             cardStacks[deckIndex] = new NetCardStack(owner, cardIds);
         }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void OnDeckChanged(SyncListNetCardStack.Operation op, int deckIndex, NetCardStack oldDeck, NetCardStack newDeck)
         {
             if (op == SyncList<NetCardStack>.Operation.OP_ADD)
@@ -106,6 +107,7 @@ namespace Cgs.Play.Multiplayer
             scores[scoreIndex] = new NetScore(owner, points);
         }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void OnScoreChanged(SyncListNetScore.Operation op, int scoreIndex, NetScore oldScore, NetScore newScore)
         {
             if (op == SyncList<NetScore>.Operation.OP_ADD)

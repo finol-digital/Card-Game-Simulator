@@ -26,10 +26,11 @@ namespace Cgs.Menu
                 EventSystem.current.currentSelectedGameObject != null
                     ? EventSystem.current.currentSelectedGameObject.GetComponent<InputField>()
                     : null;
-            set
+            private set
             {
-                if (!EventSystem.current.alreadySelecting)
-                    EventSystem.current.SetSelectedGameObject(value.gameObject);
+                if (EventSystem.current.alreadySelecting)
+                    return;
+                EventSystem.current.SetSelectedGameObject(value == null ? null : value.gameObject);
             }
         }
 
@@ -38,12 +39,11 @@ namespace Cgs.Menu
             get => EventSystem.current.currentSelectedGameObject != null
                 ? EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>()
                 : null;
-            set
+            private set
             {
-                if (value == null)
+                if (EventSystem.current.alreadySelecting)
                     return;
-                if (!EventSystem.current.alreadySelecting)
-                    EventSystem.current.SetSelectedGameObject(value.gameObject);
+                EventSystem.current.SetSelectedGameObject(value == null ? null : value.gameObject);
             }
         }
 

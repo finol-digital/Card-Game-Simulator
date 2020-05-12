@@ -18,6 +18,8 @@ namespace Cgs.Play.Multiplayer
     public class ServerStatus
     {
         public readonly string Ip;
+
+// ReSharper disable MemberCanBePrivate.Global
         public readonly string GameName;
         public readonly ushort Players;
         public readonly ushort Capacity;

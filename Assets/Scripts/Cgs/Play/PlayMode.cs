@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -42,8 +41,6 @@ namespace Cgs.Play
         public CardStack playAreaCardStack;
         public ZonesViewer zones;
         public PointsCounter scoreboard;
-
-        public Guid DieAssetId => diePrefab.GetComponent<NetworkIdentity>().assetId;
 
         private LobbyMenu Lobby =>
             _lobby ? _lobby : (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
@@ -114,7 +111,6 @@ namespace Cgs.Play
         private void ResetPlayArea()
         {
             var playAreaRectTransform = (RectTransform) playAreaCardStack.transform;
-            playAreaRectTransform.DestroyAllChildren();
             var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
                 CardGameManager.Current.PlayAreaSize.Y);
             playAreaRectTransform.sizeDelta = playAreaSize * CardGameManager.PixelsPerInch;
@@ -277,43 +273,6 @@ namespace Cgs.Play
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
-        public GameObject SpawnCard(Vector3 position, Guid assetId)
-        {
-            GameObject newCard = Instantiate(cardModelPrefab, playAreaCardStack.transform);
-            SetPlayActions(newCard.GetComponent<CardModel>());
-            return newCard;
-        }
-
-        public static void UnSpawnCard(GameObject spawned)
-        {
-            Debug.LogError("Unspawning card");
-            Destroy(spawned);
-        }
-
-        public Die CreateDie(int min, int max)
-        {
-            Transform target = playAreaCardStack.transform;
-            var die = Instantiate(diePrefab, target.parent).GetOrAddComponent<Die>();
-            die.transform.SetParent(target);
-            die.Min = min;
-            die.Max = max;
-            return die;
-        }
-
-        public GameObject SpawnDie(Vector3 position, Guid assetId)
-        {
-            Transform target = playAreaCardStack.transform;
-            var die = Instantiate(diePrefab, target.parent).GetOrAddComponent<Die>();
-            die.transform.SetParent(target);
-            return die.gameObject;
-        }
-
-        public static void UnSpawnDie(GameObject spawned)
-        {
-            Debug.LogError("Unspawning die");
-            Destroy(spawned);
-        }
-
         public void CatchDiscard(UnityCard card)
         {
             if (zones.Discard == null)
@@ -326,6 +285,16 @@ namespace Cgs.Play
             if (zones.Results == null)
                 zones.CreateResults();
             zones.Results.Sync(cards);
+        }
+
+        public Die CreateDie(int min, int max)
+        {
+            Transform target = playAreaCardStack.transform;
+            var die = Instantiate(diePrefab, target.parent).GetOrAddComponent<Die>();
+            die.transform.SetParent(target);
+            die.Min = min;
+            die.Max = max;
+            return die;
         }
 
         [UsedImplicitly]

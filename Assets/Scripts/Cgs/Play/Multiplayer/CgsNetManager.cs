@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Net.Sockets;
+using CardGameView;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -37,15 +38,19 @@ namespace Cgs.Play.Multiplayer
         public PlayMode playController;
         public Text statusText;
 
+        private Guid _cardAssetId;
+        private Guid _dieAssetId;
+
         public override void Start()
         {
             base.Start();
 
-            Guid cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(cardAssetId, playController.SpawnCard, PlayMode.UnSpawnCard);
+            _cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
+            ClientScene.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawnCard);
             Debug.Log("[CgsNet Manager] Registered card spawn handler.");
 
-            ClientScene.RegisterSpawnHandler(playController.DieAssetId, playController.SpawnDie, PlayMode.UnSpawnDie);
+            _dieAssetId = playController.diePrefab.GetComponent<NetworkIdentity>().assetId;
+            ClientScene.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawnDie);
             Debug.Log("[CgsNet Manager] Registered die spawn handler.");
 
             Discovery = GetComponent<CgsNetDiscovery>();
@@ -74,6 +79,36 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] Client connecting...");
             statusText.text = "Connected!";
             Debug.Log("[CgsNet Manager] Client connected!");
+        }
+
+        private GameObject SpawnCard(Vector3 position, Guid assetId)
+        {
+            Debug.Log("[CgsNet Manager] SpawnCard");
+            GameObject newCard =
+                Instantiate(playController.cardModelPrefab, playController.playAreaCardStack.transform);
+            PlayMode.SetPlayActions(newCard.GetComponent<CardModel>());
+            return newCard;
+        }
+
+        private static void UnSpawnCard(GameObject spawned)
+        {
+            Debug.Log("[CgsNet Manager] UnSpawnCard");
+            Destroy(spawned);
+        }
+
+        private GameObject SpawnDie(Vector3 position, Guid assetId)
+        {
+            Debug.Log("[CgsNet Manager] SpawnDie");
+            Transform target = playController.playAreaCardStack.transform;
+            var die = Instantiate(playController.diePrefab, target.parent).GetOrAddComponent<Die>();
+            die.transform.SetParent(target);
+            return die.gameObject;
+        }
+
+        private static void UnSpawnDie(GameObject spawned)
+        {
+            Debug.Log("[CgsNet Manager] UnSpawnDie");
+            Destroy(spawned);
         }
 
         public void CheckForPortForwarding()

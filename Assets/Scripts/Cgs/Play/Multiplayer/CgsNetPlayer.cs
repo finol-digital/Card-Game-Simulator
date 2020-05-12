@@ -10,9 +10,6 @@ using CardGameView;
 using Mirror;
 using UnityEngine;
 
-// ReSharper disable UnusedParameter.Local
-// ReSharper disable UnusedParameter.Global
-
 namespace Cgs.Play.Multiplayer
 {
     public class CgsNetPlayer : NetworkBehaviour
@@ -64,6 +61,7 @@ namespace Cgs.Play.Multiplayer
         }
 
         [TargetRpc]
+        // ReSharper disable once UnusedParameter.Local
         private void TargetSelectCardGame(NetworkConnection target, string gameId)
         {
             CgsNetManager.Instance.statusText.text = $"Game id is {gameId}! Loading game details...";
@@ -118,6 +116,7 @@ namespace Cgs.Play.Multiplayer
         }
 
         [TargetRpc]
+        // ReSharper disable once UnusedParameter.Local
         private void TargetShareDeck(NetworkConnection target, int sharedDeckIndex)
         {
             CgsNetManager.Instance.statusText.text = "Got deck from server!";
@@ -137,6 +136,7 @@ namespace Cgs.Play.Multiplayer
             CgsNetManager.Instance.Data.ChangeDeck(deckIndex, cardIds);
         }
 
+        // ReSharper disable once UnusedParameter.Global
         public void OnChangeDeck(int oldDeckIndex, int newDeckIndex)
         {
             if (deckIndex == newDeckIndex)
@@ -154,6 +154,7 @@ namespace Cgs.Play.Multiplayer
             CgsNetManager.Instance.Data.ChangeScore(scoreIndex, points);
         }
 
+        // ReSharper disable once UnusedParameter.Global
         public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
         {
             if (scoreIndex == newScoreIndex)
