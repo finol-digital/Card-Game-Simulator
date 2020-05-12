@@ -22,6 +22,7 @@ namespace Cgs.Play.Multiplayer
         public Toggle lanToggle;
         public Toggle internetToggle;
         public Button joinButton;
+        public InputField passwordInputField;
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -57,7 +58,7 @@ namespace Cgs.Play.Multiplayer
 
         private void Update()
         {
-            if (!Menu.IsFocused)
+            if (!Menu.IsFocused || passwordInputField.isFocused)
                 return;
 
             if (Inputs.IsVertical)
@@ -75,6 +76,8 @@ namespace Cgs.Play.Multiplayer
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Inputs.IsNew)
                 Host();
+            else if (Inputs.IsFocus)
+                passwordInputField.ActivateInputField();
             else if (Inputs.IsPageVertical && !Inputs.IsPageVertical)
                 ScrollPage(Inputs.IsPageDown);
             else if (Inputs.IsPageHorizontal && !Inputs.WasPageHorizontal)

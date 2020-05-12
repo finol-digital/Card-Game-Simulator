@@ -195,7 +195,7 @@ namespace Cgs.Play.Multiplayer
         private void CmdCreateDie(int min, int max)
         {
             Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
-            NetworkServer.Spawn(die.gameObject, CgsNetManager.Instance.playController.DieAssetId);
+            NetworkServer.Spawn(die.gameObject, connectionToClient);
         }
 
         private void Update()

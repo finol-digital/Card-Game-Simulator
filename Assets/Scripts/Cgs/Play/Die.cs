@@ -72,6 +72,8 @@ namespace Cgs.Play
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            if (!hasAuthority)
+                return;
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
             ShowButtons();
@@ -79,6 +81,8 @@ namespace Cgs.Play
 
         public void OnSelect(BaseEventData eventData)
         {
+            if (!hasAuthority)
+                return;
             ShowButtons();
         }
 
@@ -89,6 +93,8 @@ namespace Cgs.Play
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (!hasAuthority)
+                return;
             _dragOffset = eventData.position - ((Vector2) transform.position);
             transform.SetAsLastSibling();
             HideButtons();
@@ -96,6 +102,8 @@ namespace Cgs.Play
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (!hasAuthority)
+                return;
             var rectTransform = (RectTransform) transform;
             rectTransform.position = eventData.position - _dragOffset;
             position = rectTransform.anchoredPosition;
