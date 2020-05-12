@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.Net.Sockets;
-using CardGameView;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -41,6 +40,14 @@ namespace Cgs.Play.Multiplayer
         public override void Start()
         {
             base.Start();
+
+            Guid cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
+            ClientScene.RegisterSpawnHandler(cardAssetId, playController.SpawnCard, PlayMode.UnSpawnCard);
+            Debug.Log("[CgsNet Manager] Registered card spawn handler.");
+
+            ClientScene.RegisterSpawnHandler(playController.DieAssetId, playController.SpawnDie, PlayMode.UnSpawnDie);
+            Debug.Log("[CgsNet Manager] Registered die spawn handler.");
+
             Discovery = GetComponent<CgsNetDiscovery>();
             ListServer = GetComponent<CgsNetListServer>();
             Debug.Log("[CgsNet Manager] Acquired Discovery and List Server.");

@@ -12,12 +12,13 @@ using UnityEngine.UI;
 
 namespace Cgs.Play
 {
+    public delegate Die CreateDieDelegate(int min, int max);
+
     public class DiceMenu : Modal
     {
         private const int DefaultMin = 1;
         private const int DefaultMax = 6;
 
-        public GameObject diePrefab;
         public Text minText;
         public Text maxText;
 
@@ -31,7 +32,7 @@ namespace Cgs.Play
             }
         }
 
-        private int _min;
+        private int _min = DefaultMin;
 
         private int Max
         {
@@ -43,19 +44,9 @@ namespace Cgs.Play
             }
         }
 
-        private int _max;
+        private int _max = DefaultMax;
 
-        private RectTransform _target;
-
-        protected override void Start()
-        {
-            base.Start();
-            Min = DefaultMin;
-            Max = DefaultMax;
-
-            ClientScene.RegisterSpawnHandler(diePrefab.GetComponent<NetworkIdentity>().assetId, SpawnDie,
-                UnSpawnDie);
-        }
+        private CreateDieDelegate _createDieCallback;
 
         private void Update()
         {
@@ -83,10 +74,10 @@ namespace Cgs.Play
                 Hide();
         }
 
-        public void Show(RectTransform playArea)
+        public void Show(CreateDieDelegate createDieCallback)
         {
             Show();
-            _target = playArea;
+            _createDieCallback = createDieCallback;
         }
 
         [UsedImplicitly]
@@ -116,31 +107,12 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void CreateAndHide()
         {
-            Die die = CreateDie();
-            die.Min = Min;
-            die.Max = Max;
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.MoveDieToServer(die);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDie(Min, Max);
+            else
+                _createDieCallback?.Invoke(Min, Max);
+
             Hide();
-        }
-
-        private Die CreateDie()
-        {
-            Transform parent = _target != null ? _target.parent : null;
-            var die = Instantiate(diePrefab, parent).GetOrAddComponent<Die>();
-            die.transform.SetParent(_target);
-            return die;
-        }
-
-        private GameObject SpawnDie(Vector3 position, Guid assetId)
-        {
-            Die die = CreateDie();
-            return die.gameObject;
-        }
-
-        private static void UnSpawnDie(GameObject spawned)
-        {
-            Destroy(spawned);
         }
     }
 }

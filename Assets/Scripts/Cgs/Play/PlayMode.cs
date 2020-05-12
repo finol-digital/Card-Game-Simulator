@@ -29,7 +29,6 @@ namespace Cgs.Play
         public const string ResetPlayAreaPrompt = "Restart?";
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
-        public GameObject cardModelPrefab;
         public GameObject cardViewerPrefab;
         public GameObject lobbyMenuPrefab;
         public GameObject deckLoadMenuPrefab;
@@ -37,9 +36,14 @@ namespace Cgs.Play
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
 
+        public GameObject cardModelPrefab;
+        public GameObject diePrefab;
+
         public CardStack playAreaCardStack;
         public ZonesViewer zones;
         public PointsCounter scoreboard;
+
+        public Guid DieAssetId => diePrefab.GetComponent<NetworkIdentity>().assetId;
 
         private LobbyMenu Lobby =>
             _lobby ? _lobby : (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
@@ -52,7 +56,7 @@ namespace Cgs.Play
 
         private DeckLoadMenu _deckLoader;
 
-        public DiceMenu DiceManager => _diceManager
+        private DiceMenu DiceManager => _diceManager
             ? _diceManager
             : (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
 
@@ -79,9 +83,6 @@ namespace Cgs.Play
         private void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
-
-            ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard,
-                UnSpawnCard);
 
             playAreaCardStack.OnAddCardActions.Add(AddCardToPlay);
 
@@ -138,7 +139,7 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ShowDiceMenu()
         {
-            DiceManager.Show(playAreaCardStack.transform as RectTransform);
+            DiceManager.Show(CreateDie);
         }
 
         [UsedImplicitly]
@@ -276,14 +277,37 @@ namespace Cgs.Play
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
-        private GameObject SpawnCard(Vector3 position, Guid assetId)
+        public GameObject SpawnCard(Vector3 position, Guid assetId)
         {
             GameObject newCard = Instantiate(cardModelPrefab, playAreaCardStack.transform);
             SetPlayActions(newCard.GetComponent<CardModel>());
             return newCard;
         }
 
-        private static void UnSpawnCard(GameObject spawned)
+        public static void UnSpawnCard(GameObject spawned)
+        {
+            Destroy(spawned);
+        }
+
+        public Die CreateDie(int min, int max)
+        {
+            Transform target = playAreaCardStack.transform;
+            var die = Instantiate(diePrefab, target.parent).GetOrAddComponent<Die>();
+            die.transform.SetParent(target);
+            die.Min = min;
+            die.Max = max;
+            return die;
+        }
+
+        public GameObject SpawnDie(Vector3 position, Guid assetId)
+        {
+            Transform target = playAreaCardStack.transform;
+            var die = Instantiate(diePrefab, target.parent).GetOrAddComponent<Die>();
+            die.transform.SetParent(target);
+            return die.gameObject;
+        }
+
+        public static void UnSpawnDie(GameObject spawned)
         {
             Destroy(spawned);
         }

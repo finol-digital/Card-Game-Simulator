@@ -185,24 +185,17 @@ namespace Cgs.Play.Multiplayer
             cardModel.RpcHideHighlight();
         }
 
-        public void MoveDieToServer(Die die)
+        public void RequestNewDie(int min, int max)
         {
-            die.position = ((RectTransform) die.transform).anchoredPosition;
-            CmdSpawnDie(die.Min, die.Max, die.Value, die.position);
-            Destroy(die.gameObject);
+            CmdCreateDie(min, max);
         }
 
         [Command]
-        private void CmdSpawnDie(int min, int max, int value, Vector2 position)
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CmdCreateDie(int min, int max)
         {
-            PlayMode controller = CgsNetManager.Instance.playController;
-            Transform parent = CgsNetManager.Instance.playController.playAreaCardStack.transform;
-            var die = Instantiate(controller.DiceManager.diePrefab, parent).GetOrAddComponent<Die>();
-            die.Min = min;
-            die.Max = max;
-            die.Value = value;
-            die.position = position;
-            NetworkServer.Spawn(die.gameObject, connectionToClient);
+            Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
+            NetworkServer.Spawn(die.gameObject, CgsNetManager.Instance.playController.DieAssetId);
         }
 
         private void Update()

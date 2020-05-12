@@ -25,7 +25,7 @@ namespace Cgs.Play
 
         [field: SyncVar] public int Max { get; set; }
 
-        public int Value
+        private int Value
         {
             get => _value;
             set
