@@ -30,14 +30,15 @@ namespace Cgs.Play
             get => _value;
             set
             {
-                int oldValue = _value;
                 int newValue = value;
                 if (newValue > Max)
                     newValue = Min;
                 if (newValue < Min)
                     newValue = Max;
                 _value = newValue;
-                OnChangeValue(oldValue, newValue);
+                valueText.text = _value.ToString();
+                if (hasAuthority)
+                    CmdUpdateValue(_value);
             }
         }
 
@@ -104,15 +105,34 @@ namespace Cgs.Play
         {
             if (!hasAuthority)
                 return;
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = ((RectTransform) transform);
             rectTransform.position = eventData.position - _dragOffset;
-            position = rectTransform.anchoredPosition;
+            CmdUpdatePosition(rectTransform.anchoredPosition);
+        }
+
+        [Command]
+        private void CmdUpdatePosition(Vector2 newPosition)
+        {
+            position = newPosition;
         }
 
         [UsedImplicitly]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
             ((RectTransform) transform).anchoredPosition = newValue;
+        }
+
+        [Command]
+        private void CmdUpdateValue(int value)
+        {
+            RpcUpdateValue(value);
+        }
+
+        [ClientRpc]
+        private void RpcUpdateValue(int value)
+        {
+            if (!hasAuthority)
+                Value = value;
         }
 
         [UsedImplicitly]

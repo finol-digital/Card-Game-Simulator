@@ -88,6 +88,7 @@ namespace Cgs.Play
             else
             {
                 ShowDeckMenu();
+                CgsNetManager.Instance.GameName = CardGameManager.Current.Name;
                 Lobby.Host();
             }
         }
