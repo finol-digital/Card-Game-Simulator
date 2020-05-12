@@ -54,7 +54,7 @@ namespace Cgs
 
         public static bool IsPageVertical => Math.Abs(Input.GetAxis(PageVertical)) > Tolerance;
         public static bool IsPageDown => Input.GetAxis(PageVertical) < 0;
-        public static bool IsPageUp => Input.GetAxis(PageVertical) < 0;
+        public static bool IsPageUp => Input.GetAxis(PageVertical) > 0;
 
         public static bool IsPageHorizontal => Math.Abs(Input.GetAxis(PageHorizontal)) > Tolerance;
         public static bool IsPageLeft => Input.GetAxis(PageHorizontal) < 0;
@@ -70,7 +70,7 @@ namespace Cgs
                                          Math.Abs(Input.GetAxis(Vertical)) > Tolerance;
 
         public static bool IsDown => Input.GetAxis(Vertical) < 0;
-        public static bool IsUp => Input.GetAxis(Vertical) < 0;
+        public static bool IsUp => Input.GetAxis(Vertical) > 0;
 
 
         // WasDirection set in CardGameManager.LateUpdate()
