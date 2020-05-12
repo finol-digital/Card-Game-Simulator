@@ -286,6 +286,7 @@ namespace Cgs.Play
 
         public static void UnSpawnCard(GameObject spawned)
         {
+            Debug.LogError("Unspawning card");
             Destroy(spawned);
         }
 
@@ -309,6 +310,7 @@ namespace Cgs.Play
 
         public static void UnSpawnDie(GameObject spawned)
         {
+            Debug.LogError("Unspawning die");
             Destroy(spawned);
         }
 
