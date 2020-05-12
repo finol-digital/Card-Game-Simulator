@@ -4,6 +4,7 @@
 
 using System;
 using Cgs.Menu;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -118,8 +119,8 @@ namespace Cgs.Play
             Die die = CreateDie();
             die.Min = Min;
             die.Max = Max;
-            if (NetworkManager.singleton.isNetworkActive)
-                NetworkServer.Spawn(die.gameObject);
+            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.MoveDieToServer(die);
             Hide();
         }
 

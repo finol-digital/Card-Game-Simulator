@@ -25,7 +25,7 @@ namespace Cgs.Play
 
         [field: SyncVar] public int Max { get; set; }
 
-        private int Value
+        public int Value
         {
             get => _value;
             set
@@ -96,7 +96,9 @@ namespace Cgs.Play
 
         public void OnDrag(PointerEventData eventData)
         {
-            transform.position = eventData.position - _dragOffset;
+            var rectTransform = (RectTransform) transform;
+            rectTransform.position = eventData.position - _dragOffset;
+            position = rectTransform.anchoredPosition;
         }
 
         [UsedImplicitly]

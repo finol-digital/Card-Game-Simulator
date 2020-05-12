@@ -52,7 +52,7 @@ namespace Cgs.Play
 
         private DeckLoadMenu _deckLoader;
 
-        private DiceMenu DiceManager => _diceManager
+        public DiceMenu DiceManager => _diceManager
             ? _diceManager
             : (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
 

@@ -185,6 +185,26 @@ namespace Cgs.Play.Multiplayer
             cardModel.RpcHideHighlight();
         }
 
+        public void MoveDieToServer(Die die)
+        {
+            die.position = ((RectTransform) die.transform).anchoredPosition;
+            CmdSpawnDie(die.Min, die.Max, die.Value, die.position);
+            Destroy(die.gameObject);
+        }
+
+        [Command]
+        private void CmdSpawnDie(int min, int max, int value, Vector2 position)
+        {
+            PlayMode controller = CgsNetManager.Instance.playController;
+            Transform parent = CgsNetManager.Instance.playController.playAreaCardStack.transform;
+            var die = Instantiate(controller.DiceManager.diePrefab, parent).GetOrAddComponent<Die>();
+            die.Min = min;
+            die.Max = max;
+            die.Value = value;
+            die.position = position;
+            NetworkServer.Spawn(die.gameObject, connectionToClient);
+        }
+
         private void Update()
         {
             if (!isLocalPlayer || CgsNetManager.Instance.Data == null ||
