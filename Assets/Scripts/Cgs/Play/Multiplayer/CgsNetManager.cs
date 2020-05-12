@@ -41,13 +41,6 @@ namespace Cgs.Play.Multiplayer
         {
             base.Start();
 
-            Guid cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(cardAssetId, playController.SpawnCard, PlayMode.UnSpawnCard);
-            Debug.Log("[CgsNet Manager] Registered card spawn handler.");
-
-            ClientScene.RegisterSpawnHandler(playController.DieAssetId, playController.SpawnDie, PlayMode.UnSpawnDie);
-            Debug.Log("[CgsNet Manager] Registered die spawn handler.");
-
             Discovery = GetComponent<CgsNetDiscovery>();
             ListServer = GetComponent<CgsNetListServer>();
             Debug.Log("[CgsNet Manager] Acquired Discovery and List Server.");
@@ -73,6 +66,14 @@ namespace Cgs.Play.Multiplayer
             base.OnClientConnect(connection);
             Debug.Log("[CgsNet Manager] Client connecting...");
             statusText.text = "Connected!";
+
+            Guid cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
+            ClientScene.RegisterSpawnHandler(cardAssetId, playController.SpawnCard, PlayMode.UnSpawnCard);
+            Debug.Log("[CgsNet Manager] Registered card spawn handler.");
+
+            ClientScene.RegisterSpawnHandler(playController.DieAssetId, playController.SpawnDie, PlayMode.UnSpawnDie);
+            Debug.Log("[CgsNet Manager] Registered die spawn handler.");
+
             Debug.Log("[CgsNet Manager] Client connected!");
         }
 
