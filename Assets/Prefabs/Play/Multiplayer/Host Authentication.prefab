@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameNameInputField: {fileID: 3696912373412140666}
+  passwordInputField: {fileID: 3696912371552517072}
 --- !u!1001 &8170131685449448182
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -313,6 +314,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4698c1a75d36a640afc1bea8b676ff4, type: 3}
+--- !u!114 &3696912371552517072 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+    type: 3}
+  m_PrefabInstance: {fileID: 8170131685522871701}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 575553740, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8170131685649409774
 PrefabInstance:
   m_ObjectHideFlags: 0

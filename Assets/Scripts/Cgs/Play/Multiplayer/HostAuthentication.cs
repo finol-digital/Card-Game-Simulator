@@ -13,6 +13,7 @@ namespace Cgs.Play.Multiplayer
     public class HostAuthentication : Modal
     {
         public InputField gameNameInputField;
+        public InputField passwordInputField;
 
         private UnityAction _callback;
 

@@ -185,6 +185,13 @@ namespace Cgs.Play.Multiplayer
         }
 
         [UsedImplicitly]
+        public void SetPassword(string password)
+        {
+            Authenticator.passwordInputField.text = password;
+            Authenticator.SetPassword(password);
+        }
+
+        [UsedImplicitly]
         public void Join()
         {
             if (!IsInternetConnectionSource)
