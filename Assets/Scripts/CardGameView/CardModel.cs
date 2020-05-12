@@ -54,37 +54,37 @@ namespace CardGameView
         public UnityAction SecondaryDragAction { get; set; }
         public CardDropArea DropTarget { get; set; }
 
-        public float HoldTime { get; private set; }
-        public bool DidSelectOnDown { get; private set; }
-        public bool DidDrag { get; private set; }
         public PointerEventData CurrentPointerEventData { get; private set; }
-        public DragPhase CurrentDragPhase { get; private set; }
 
         public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
         private Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
-        [SyncVar(hook = "OnChangePosition")] public Vector2 position;
+        private float _holdTime;
+        private bool _didSelectOnDown;
+        private bool _didDrag;
+        private DragPhase _currentDragPhase;
 
-        [SyncVar(hook = "OnChangeRotation")] public Quaternion rotation;
+        [SyncVar(hook = nameof(OnChangePosition))]
+        public Vector2 position;
 
-        [SyncVar] private string _id;
+        [SyncVar(hook = nameof(OnChangeRotation))]
+        public Quaternion rotation;
 
-        // ReSharper disable once ConvertToAutoPropertyWithPrivateSetter
-        public string Id => _id;
+        [field: SyncVar] public string Id { get; private set; }
 
         public UnityCard Value
         {
             get
             {
-                if (string.IsNullOrEmpty(_id) ||
-                    !CardGameManager.Current.Cards.TryGetValue(_id, out UnityCard cardValue))
+                if (string.IsNullOrEmpty(Id) ||
+                    !CardGameManager.Current.Cards.TryGetValue(Id, out UnityCard cardValue))
                     return UnityCard.Blank;
                 return cardValue;
             }
             set
             {
                 Value.UnregisterDisplay(this);
-                _id = value != null ? value.Id : string.Empty;
+                Id = value != null ? value.Id : string.Empty;
                 gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
                 value?.RegisterDisplay(this);
             }
@@ -235,12 +235,12 @@ namespace CardGameView
 
         private void Update()
         {
-            if (PointerPositions.Count > 0 && !DidDrag)
-                HoldTime += Time.deltaTime;
+            if (PointerPositions.Count > 0 && !_didDrag)
+                _holdTime += Time.deltaTime;
             else
-                HoldTime = 0;
+                _holdTime = 0;
 
-            if (!(HoldTime > ZoomHoldTime))
+            if (!(_holdTime > ZoomHoldTime))
                 return;
 
             CurrentPointerEventData = null;
@@ -252,12 +252,12 @@ namespace CardGameView
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            DidSelectOnDown =
+            _didSelectOnDown =
                 eventData.button != PointerEventData.InputButton.Middle && eventData.button !=
                                                                         PointerEventData.InputButton.Right
                                                                         && CardViewer.Instance.SelectedCardModel !=
                                                                         this && CardViewer.Instance.WasVisible;
-            if (DidSelectOnDown && !EventSystem.current.alreadySelecting)
+            if (_didSelectOnDown && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
 
             CurrentPointerEventData = eventData;
@@ -273,7 +273,7 @@ namespace CardGameView
                 && eventData.button != PointerEventData.InputButton.Middle &&
                 eventData.button != PointerEventData.InputButton.Right)
             {
-                if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
+                if (!_didSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
                     DoubleClickAction != null)
                     DoubleClickAction(this);
                 else if (PlaceHolder == null)
@@ -286,13 +286,13 @@ namespace CardGameView
             }
 
             CurrentPointerEventData = eventData;
-            if (CurrentDragPhase == DragPhase.Drag)
+            if (_currentDragPhase == DragPhase.Drag)
                 return;
 
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
-            if (DidDrag && PointerDragOffsets.Count == 0)
-                DidDrag = false;
+            if (_didDrag && PointerDragOffsets.Count == 0)
+                _didDrag = false;
         }
 
         public void OnSelect(BaseEventData eventData)
@@ -312,7 +312,7 @@ namespace CardGameView
             if (IsOnline && !hasAuthority)
                 return;
 
-            DidDrag = true;
+            _didDrag = true;
             if (DoesCloneOnDrag)
             {
                 Transform transform1 = transform;
@@ -332,7 +332,7 @@ namespace CardGameView
 
             EventSystem.current.SetSelectedGameObject(null, eventData);
             CurrentPointerEventData = eventData;
-            CurrentDragPhase = DragPhase.Begin;
+            _currentDragPhase = DragPhase.Begin;
             PointerPositions[eventData.pointerId] = eventData.position;
 
             UpdatePosition();
@@ -346,7 +346,7 @@ namespace CardGameView
                 return;
 
             CurrentPointerEventData = eventData;
-            CurrentDragPhase = DragPhase.Drag;
+            _currentDragPhase = DragPhase.Drag;
             PointerPositions[eventData.pointerId] = eventData.position;
 
             UpdatePosition();
@@ -360,7 +360,7 @@ namespace CardGameView
                 return;
 
             CurrentPointerEventData = eventData;
-            CurrentDragPhase = DragPhase.End;
+            _currentDragPhase = DragPhase.End;
 
             UpdatePosition();
             if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
@@ -427,7 +427,7 @@ namespace CardGameView
 
             if (!cardStack.DoesImmediatelyRelease &&
                 (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal))
-                cardStack.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
+                cardStack.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
             else if (!IsStatic)
                 cardStack.UpdateLayout(transform as RectTransform, targetPosition);
 
@@ -442,7 +442,7 @@ namespace CardGameView
             bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
             bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
             if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
-                || (cardStack.type == CardStackType.Full && CurrentDragPhase == DragPhase.Begin)
+                || (cardStack.type == CardStackType.Full && _currentDragPhase == DragPhase.Begin)
                 || (cardStack.type == CardStackType.Vertical && isOutXBounds)
                 || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
                 || (cardStack.type == CardStackType.Area
@@ -468,7 +468,7 @@ namespace CardGameView
             if (IsOnline && hasAuthority)
                 CmdUnspawnCard();
             CardStack prevParentStack = ParentCardStack;
-            if (CurrentDragPhase == DragPhase.Drag)
+            if (_currentDragPhase == DragPhase.Drag)
                 prevParentStack.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
             transform.SetParent(CardGameManager.Instance.CardCanvas.transform);
             transform.SetAsLastSibling();
@@ -530,7 +530,7 @@ namespace CardGameView
         {
             CardStack cardStack = ParentCardStack;
             if (cardStack != null)
-                cardStack.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
+                cardStack.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
         }
 
         public void Rotate()

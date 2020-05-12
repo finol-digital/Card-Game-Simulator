@@ -126,9 +126,6 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 1073801045010386, guid: 58d2c1bbaeb829d42a84b6ce2a2d0897, type: 3}
-  - {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e, type: 3}
-  cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
-    type: 3}
   playController: {fileID: 0}
   statusText: {fileID: 0}
 --- !u!114 &2535259625562847021

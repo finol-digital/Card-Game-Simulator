@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using Mirror;
@@ -19,7 +20,7 @@ namespace Cgs.Play
         public Text minText;
         public Text maxText;
 
-        public int Min
+        private int Min
         {
             get => _min;
             set
@@ -31,7 +32,7 @@ namespace Cgs.Play
 
         private int _min;
 
-        public int Max
+        private int Max
         {
             get => _max;
             set
@@ -50,6 +51,9 @@ namespace Cgs.Play
             base.Start();
             Min = DefaultMin;
             Max = DefaultMax;
+
+            ClientScene.RegisterSpawnHandler(diePrefab.GetComponent<NetworkIdentity>().assetId, SpawnDie,
+                UnSpawnDie);
         }
 
         private void Update()
@@ -111,14 +115,31 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void CreateAndHide()
         {
-            Transform parent = _target != null ? _target.parent : null;
-            var die = Instantiate(diePrefab, parent).GetOrAddComponent<Die>();
-            die.transform.SetParent(_target);
+            Die die = CreateDie();
             die.Min = Min;
             die.Max = Max;
             if (NetworkManager.singleton.isNetworkActive)
                 NetworkServer.Spawn(die.gameObject);
             Hide();
+        }
+
+        private Die CreateDie()
+        {
+            Transform parent = _target != null ? _target.parent : null;
+            var die = Instantiate(diePrefab, parent).GetOrAddComponent<Die>();
+            die.transform.SetParent(_target);
+            return die;
+        }
+
+        private GameObject SpawnDie(Vector3 position, Guid assetId)
+        {
+            Die die = CreateDie();
+            return die.gameObject;
+        }
+
+        private static void UnSpawnDie(GameObject spawned)
+        {
+            Destroy(spawned);
         }
     }
 }

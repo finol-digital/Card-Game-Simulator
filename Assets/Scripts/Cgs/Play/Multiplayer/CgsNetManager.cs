@@ -35,7 +35,6 @@ namespace Cgs.Play.Multiplayer
         public CgsNetDiscovery Discovery { get; private set; }
         public CgsNetListServer ListServer { get; private set; }
 
-        public GameObject cardModelPrefab;
         public PlayMode playController;
         public Text statusText;
 
@@ -67,21 +66,7 @@ namespace Cgs.Play.Multiplayer
             base.OnClientConnect(connection);
             Debug.Log("[CgsNet Manager] Client connecting...");
             statusText.text = "Connected!";
-            ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard,
-                UnSpawnCard);
             Debug.Log("[CgsNet Manager] Client connected!");
-        }
-
-        private GameObject SpawnCard(Vector3 position, Guid assetId)
-        {
-            GameObject newCard = Instantiate(cardModelPrefab, playController.playAreaCardStack.transform);
-            PlayMode.SetPlayActions(newCard.GetComponent<CardModel>());
-            return newCard;
-        }
-
-        private static void UnSpawnCard(GameObject spawned)
-        {
-            Destroy(spawned);
         }
 
         public void CheckForPortForwarding()

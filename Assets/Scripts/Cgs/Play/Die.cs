@@ -21,8 +21,9 @@ namespace Cgs.Play
         public Text valueText;
         public List<CanvasGroup> buttons;
 
-        public int Min { get; set; }
-        public int Max { get; set; }
+        [field: SyncVar] public int Min { get; set; }
+
+        [field: SyncVar] public int Max { get; set; }
 
         private int Value
         {
@@ -40,13 +41,27 @@ namespace Cgs.Play
             }
         }
 
-        [SyncVar(hook = "OnChangeValue")] private int _value;
+        [SyncVar(hook = nameof(OnChangeValue))]
+        private int _value;
+
+        [SyncVar(hook = nameof(OnChangePosition))]
+        public Vector2 position;
 
         private Vector2 _dragOffset;
 
         private void Start()
         {
-            Roll();
+            if (!hasAuthority)
+            {
+                valueText.text = _value.ToString();
+                if (Vector2.zero != position)
+                    ((RectTransform) transform).anchoredPosition = position;
+            }
+            else
+            {
+                Roll();
+            }
+
             HideButtons();
         }
 
@@ -82,6 +97,12 @@ namespace Cgs.Play
         public void OnDrag(PointerEventData eventData)
         {
             transform.position = eventData.position - _dragOffset;
+        }
+
+        [UsedImplicitly]
+        public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
+        {
+            ((RectTransform) transform).anchoredPosition = newValue;
         }
 
         [UsedImplicitly]

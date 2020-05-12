@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,10 +26,10 @@ namespace Cgs.Play
     public class PlayMode : MonoBehaviour
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
-        public const string DealHandPrompt = "Draw initial starting hand?";
         public const string ResetPlayAreaPrompt = "Restart?";
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
+        public GameObject cardModelPrefab;
         public GameObject cardViewerPrefab;
         public GameObject lobbyMenuPrefab;
         public GameObject deckLoadMenuPrefab;
@@ -78,7 +79,12 @@ namespace Cgs.Play
         private void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
+
+            ClientScene.RegisterSpawnHandler(cardModelPrefab.GetComponent<NetworkIdentity>().assetId, SpawnCard,
+                UnSpawnCard);
+
             playAreaCardStack.OnAddCardActions.Add(AddCardToPlay);
+
             if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show();
             else
@@ -268,6 +274,18 @@ namespace Cgs.Play
         {
             cardModel.DoubleClickAction = CardActions.Rotate90;
             cardModel.SecondaryDragAction = cardModel.Rotate;
+        }
+
+        private GameObject SpawnCard(Vector3 position, Guid assetId)
+        {
+            GameObject newCard = Instantiate(cardModelPrefab, playAreaCardStack.transform);
+            SetPlayActions(newCard.GetComponent<CardModel>());
+            return newCard;
+        }
+
+        private static void UnSpawnCard(GameObject spawned)
+        {
+            Destroy(spawned);
         }
 
         public void CatchDiscard(UnityCard card)

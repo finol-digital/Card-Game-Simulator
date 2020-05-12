@@ -174,8 +174,7 @@ namespace Cgs.Play.Multiplayer
         private void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
             PlayMode controller = CgsNetManager.Instance.playController;
-            GameObject newCard = Instantiate(CgsNetManager.Instance.cardModelPrefab,
-                controller.playAreaCardStack.transform);
+            GameObject newCard = Instantiate(controller.cardModelPrefab, controller.playAreaCardStack.transform);
             var cardModel = newCard.GetComponent<CardModel>();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.position = position;
