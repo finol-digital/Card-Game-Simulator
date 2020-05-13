@@ -10,10 +10,13 @@ permalink: roadmap.html
 - Deal/Draw Hand prompts for gameStartHandCount cards
 
 ## Current Sprint
-- Tech: Editor unit test to generate schema and confirm it matches docs/ folder
-- Tech: unit test to compare docs/games json files to StreamingAssets/
-- Tech: Runtime unit tests for StreamingAssets/  and to validate against docs/ schema
-- Tech: Runtime unit tests to succesfully load StreamingAssets/ without error
+- Release for WebGL
+- Fix: Version generation on publish release tag
+- Tech: Android Build Parameters
+- Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
+- Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
+- Tech: Runtime unit test to succesfully load StreamingAssets/ without error
+- Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
 - Playmats
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
