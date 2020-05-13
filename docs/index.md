@@ -33,7 +33,7 @@ You can also create your own custom game(s) by following the [Custom Games Docum
 
 {% include youtubePlayer.html id=page.cgsYoutubeId %}
 
-When you play a game in CGS, CGS hosts game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game.
+When you play a game in CGS, CGS defaults to hosting game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game. If you want to play over the internet, you need to forward port 7777.
 
 When joining a friend's game session, CGS will be set to use the same card game that the host has selected. If you do not already have that card game, CGS will automatically download it.
 
