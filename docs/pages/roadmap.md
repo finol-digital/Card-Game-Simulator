@@ -11,7 +11,8 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Tech: Editor unit test to generate schema and confirm it matches docs/ folder
-- Tech: Runtime unit tests for StreamingAssets/ to validate against docs/ schema
+- Tech: unit test to compare docs/games json files to StreamingAssets/
+- Tech: Runtime unit tests for StreamingAssets/  and to validate against docs/ schema
 - Tech: Runtime unit tests to succesfully load StreamingAssets/ without error
 - Playmats
 - Layout cards in the Deck Editor more dynamically

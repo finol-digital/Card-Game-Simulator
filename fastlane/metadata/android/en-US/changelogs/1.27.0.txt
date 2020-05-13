@@ -1,0 +1,3 @@
+- Play online by forwarding port 7777
+- For networked game sessions, you can set session name and password options
+- Deal/Draw Hand prompts for gameStartHandCount cards
