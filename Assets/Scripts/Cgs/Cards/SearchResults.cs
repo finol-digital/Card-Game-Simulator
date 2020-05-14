@@ -45,7 +45,7 @@ namespace Cgs.Cards
             }
         }
 
-        public int CardsPerPage
+        private int CardsPerPage
         {
             get
             {
@@ -61,17 +61,17 @@ namespace Cgs.Cards
             }
         }
 
-        public int TotalPageCount => CardsPerPage == 0
+        private int TotalPageCount => CardsPerPage == 0
             ? 0
             : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
 
-        public CardSearchMenu CardSearcher => _cardSearcher ??
-                                              (_cardSearcher = Instantiate(cardSearchMenuPrefab)
-                                                  .GetOrAddComponent<CardSearchMenu>());
+        private CardSearchMenu CardSearcher => _cardSearcher ??
+                                               (_cardSearcher = Instantiate(cardSearchMenuPrefab)
+                                                   .GetOrAddComponent<CardSearchMenu>());
 
         private CardSearchMenu _cardSearcher;
 
-        public List<UnityCard> AllResults
+        private List<UnityCard> AllResults
         {
             get => _allResults ?? (_allResults = new List<UnityCard>());
             set
@@ -171,7 +171,7 @@ namespace Cgs.Cards
                     cardModel.DoubleClickAction = CardViewer.Instance.MaximizeOn;
             }
 
-            countText.text = CurrentPageIndex + 1 + CountSeparator + TotalPageCount + 1;
+            countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);
 
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 1;

@@ -169,14 +169,14 @@ namespace Cgs.Decks
                 return;
             }
 
-            if (toggle.isOn)
+            if (toggle != null && toggle.isOn)
             {
                 _selectedFilePath = deckFilePath;
                 shareFileButton.interactable = true;
                 deleteFileButton.interactable = true;
                 loadFromFileButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && _selectedFilePath.Equals(deckFilePath))
+            else if (toggle != null && !toggle.group.AnyTogglesOn() && _selectedFilePath.Equals(deckFilePath))
                 LoadFromFileAndHide();
         }
 
@@ -225,43 +225,58 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void Share()
         {
-            string shareText = GetDeckText();
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            (new NativeShare()).SetText(shareText).Share();
-#else
-            UniClipboard.SetText(shareText);
-            CardGameManager.Instance.Messenger.Show(DeckSaveMenu.DeckCopiedMessage);
-#endif
-        }
-
-        private string GetDeckText()
-        {
-            var deckText = string.Empty;
             try
             {
-                deckText = File.ReadAllText(_selectedFilePath);
+                string shareText = File.ReadAllText(_selectedFilePath);
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+                (new NativeShare()).SetText(shareText).Share();
+#else
+                UniClipboard.SetText(shareText);
+                CardGameManager.Instance.Messenger.Show(DeckSaveMenu.DeckCopiedMessage);
+#endif
             }
             catch (Exception e)
             {
                 Debug.LogError(DeckLoadErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
             }
-
-            return deckText;
         }
 
         [UsedImplicitly]
         public void LoadFromFileAndHide()
         {
-            UnityDeck newDeck = UnityDeck.Parse(CardGameManager.Current, _deckFiles[_selectedFilePath],
-                CardGameManager.Current.DeckFileType, GetDeckText());
-            _loadCallback?.Invoke(newDeck);
-            Hide();
+            try
+            {
+                string deckText = File.ReadAllText(_selectedFilePath);
+                UnityDeck newDeck = UnityDeck.Parse(CardGameManager.Current, _deckFiles[_selectedFilePath],
+                    CardGameManager.Current.DeckFileType, deckText);
+                _loadCallback?.Invoke(newDeck);
+                Hide();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(DeckLoadErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
+            }
         }
 
         [UsedImplicitly]
         public void ShowNewDeckPanel()
         {
             newDeckPanel.gameObject.SetActive(true);
+
+            if (string.IsNullOrEmpty(_selectedFilePath) || !File.Exists(_selectedFilePath))
+                return;
+
+            try
+            {
+                nameInputField.text = GetNameFromPath(_selectedFilePath);
+                textInputField.text = File.ReadAllText(_selectedFilePath);
+            }
+            catch
+            {
+                Debug.LogWarning("ShowNewDeckPanel had _selectedFilePath but failed to load it");
+            }
         }
 
         [UsedImplicitly]
@@ -315,14 +330,21 @@ namespace Cgs.Decks
                 if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
                     Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
                 File.WriteAllText(filePathFinder.FilePath, textInputField.text);
+                _selectedFilePath = filePathFinder.FilePath;
+
+                HideNewDeckPanel();
+                BuildDeckFileSelectionOptions();
+                foreach (string path in _deckFiles.Keys)
+                {
+                    Debug.Log(path);
+                }
+                Debug.Log(_selectedFilePath);
+                LoadFromFileAndHide();
             }
             catch (Exception e)
             {
                 Debug.LogError(DeckSaveErrorMessage + e.Message);
             }
-
-            BuildDeckFileSelectionOptions();
-            HideNewDeckPanel();
         }
 
         [UsedImplicitly]

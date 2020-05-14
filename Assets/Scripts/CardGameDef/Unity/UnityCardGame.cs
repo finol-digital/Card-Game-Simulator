@@ -185,7 +185,7 @@ namespace CardGameDef.Unity
             foreach (DeckUrl deckUrl in DeckUrls)
                 if (!string.IsNullOrEmpty(deckUrl.Name) && deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
                     yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri,
-                        DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType);
+                        DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType.ToString().ToLower());
 
             DownloadProgress = 5f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: AllSets.json";
