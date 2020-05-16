@@ -455,7 +455,7 @@ namespace Cgs
             }
 
 #if UNITY_WEBGL
-            foreach(CardGame game in AllCardGames.Values)
+            foreach(UnityCardGame game in AllCardGames.Values)
                 game.ReadProperties();
 #endif
 

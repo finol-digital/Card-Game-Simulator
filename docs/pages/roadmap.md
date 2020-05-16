@@ -10,7 +10,7 @@ permalink: roadmap.html
 - Deal/Draw Hand prompts for gameStartHandCount cards
 
 ## Current Sprint
-- Release for WebGL
+- Fix: Performance issue when drawing card
 - Fix: Version generation on publish release tag
 - Tech: Android Build Parameters
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
