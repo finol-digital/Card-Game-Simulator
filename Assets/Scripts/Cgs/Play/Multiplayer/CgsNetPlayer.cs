@@ -198,7 +198,7 @@ namespace Cgs.Play.Multiplayer
             Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
             NetworkServer.Spawn(die.gameObject, connectionToClient);
         }
-
+/*
         private void Update()
         {
             if (!isLocalPlayer || CgsNetManager.Instance.Data == null ||
@@ -218,5 +218,6 @@ namespace Cgs.Play.Multiplayer
             if (!deckMatches)
                 RequestDeckUpdate(localDeck);
         }
+        */
     }
 }
