@@ -302,8 +302,8 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description("playAreaSize indicates the width and height in inches of the play area in Play Mode.")]
-        [DefaultValue("(x: 36, y: 24)")]
-        public Float2 PlayAreaSize { get; set; } = new Float2(36f, 24f);
+        [DefaultValue("(x: 36, y: 36)")]
+        public Float2 PlayAreaSize { get; set; } = new Float2(36f, 36f);
 
         [JsonProperty]
         [Description("rulesUrl should link to this game's online rulebook.")]
