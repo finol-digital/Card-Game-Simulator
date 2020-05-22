@@ -309,7 +309,6 @@ namespace Cgs
             else
                 Debug.LogWarning(BranchCallbackWarning);
         }
-
 #endif
 
         // Note: Does NOT Reset Game Scene

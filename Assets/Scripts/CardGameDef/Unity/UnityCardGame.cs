@@ -61,7 +61,9 @@ namespace CardGameDef.Unity
 
         public Sprite BannerImageSprite
         {
-            get => _bannerImageSprite ?? (_bannerImageSprite = Resources.Load<Sprite>(BannerImageFileName));
+            get => _bannerImageSprite
+                ? _bannerImageSprite
+                : (_bannerImageSprite = Resources.Load<Sprite>(BannerImageFileName));
             private set
             {
                 if (_bannerImageSprite != null)
@@ -78,7 +80,9 @@ namespace CardGameDef.Unity
 
         public Sprite CardBackImageSprite
         {
-            get => _cardBackImageSprite ?? (_cardBackImageSprite = Resources.Load<Sprite>(CardBackImageFileName));
+            get => _cardBackImageSprite
+                ? _cardBackImageSprite
+                : (_cardBackImageSprite = Resources.Load<Sprite>(CardBackImageFileName));
             private set
             {
                 if (_cardBackImageSprite != null)
