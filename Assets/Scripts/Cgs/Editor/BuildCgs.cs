@@ -29,7 +29,7 @@ namespace Cgs.Editor
             };
 
             // Support automatic versioning
-            PlayerSettings.bundleVersion = options["version"];
+            //PlayerSettings.bundleVersion = options["version"];
 
             // Support Android signing
             if (buildOptions.target == BuildTarget.Android)
