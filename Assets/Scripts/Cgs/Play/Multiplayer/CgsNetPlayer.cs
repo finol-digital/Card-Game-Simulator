@@ -19,7 +19,7 @@ namespace Cgs.Play.Multiplayer
         private IEnumerable<Card> CurrentDeck =>
             CurrentDeckCardIds.Select(cardId => CardGameManager.Current.Cards[cardId]);
 
-        private string[] CurrentDeckCardIds =>
+        public string[] CurrentDeckCardIds =>
             CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.cardStacks != null
                                                 && CgsNetManager.Instance.Data.cardStacks.Count > 0
                 ? CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds
@@ -125,7 +125,7 @@ namespace Cgs.Play.Multiplayer
             CgsNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
         }
 
-        private void RequestDeckUpdate(IEnumerable<Card> deckCards)
+        public void RequestDeckUpdate(IEnumerable<Card> deckCards)
         {
             CmdUpdateDeck(deckCards.Select(card => card.Id).ToArray());
         }
@@ -198,26 +198,5 @@ namespace Cgs.Play.Multiplayer
             Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
             NetworkServer.Spawn(die.gameObject, connectionToClient);
         }
-/*
-        private void Update()
-        {
-            if (!isLocalPlayer || CgsNetManager.Instance.Data == null ||
-                CgsNetManager.Instance.Data.cardStacks == null || CgsNetManager.Instance.Data.cardStacks.Count < 1 ||
-                CgsNetManager.Instance.playController.zones.CurrentDeck == null)
-                return;
-
-            IReadOnlyList<Card> localDeck = CgsNetManager.Instance.playController.zones.CurrentDeck.Cards;
-            if (localDeck == null)
-                return;
-
-            bool deckMatches = localDeck.Count == CurrentDeckCardIds.Length;
-            for (var i = 0; deckMatches && i < localDeck.Count; i++)
-                if (!localDeck[i].Id.Equals(CurrentDeckCardIds[i]))
-                    deckMatches = false;
-
-            if (!deckMatches)
-                RequestDeckUpdate(localDeck);
-        }
-        */
     }
 }

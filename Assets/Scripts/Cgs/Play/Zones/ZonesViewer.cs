@@ -68,7 +68,7 @@ namespace Cgs.Play.Zones
 
         public ExtensibleCardZone Results { get; private set; }
         public StackedZone Discard { get; private set; }
-        protected List<ExtensibleCardZone> ExtraZones { get; } = new List<ExtensibleCardZone>();
+        private List<ExtensibleCardZone> ExtraZones { get; } = new List<ExtensibleCardZone>();
         public StackedZone CurrentDeck { get; private set; }
         public ExtensibleCardZone Hand { get; private set; }
 

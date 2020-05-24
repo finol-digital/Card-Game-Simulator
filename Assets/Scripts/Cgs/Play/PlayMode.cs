@@ -248,6 +248,10 @@ namespace Cgs.Play
 
             for (var i = 0; i < cardCount && zones.CurrentDeck.Cards.Count > 0; i++)
                 cards.Add(zones.CurrentDeck.PopCard());
+#if !UNITY_WEBGL
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestDeckUpdate(zones.CurrentDeck.Cards);
+#endif
             return cards;
         }
 

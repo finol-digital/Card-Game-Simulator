@@ -4,8 +4,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using CardGameDef;
 using CardGameDef.Unity;
 using CardGameView;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -46,10 +48,10 @@ namespace Cgs.Play.Zones
                     .GetOrAddComponent<CardModel>();
             cardModel.Value = card;
             cardModel.IsFacedown = !IsFaceup;
-            OnAddCardModel(IsExtended ? ExtensionCardStack : ZoneCardStack, cardModel);
+            OnAddCardModelLocal(IsExtended ? ExtensionCardStack : ZoneCardStack, cardModel);
         }
 
-        protected override void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+        private void OnAddCardModelLocal(Object cardStack, CardModel cardModel)
         {
             if (cardStack == null || cardModel == null)
                 return;
@@ -73,18 +75,40 @@ namespace Cgs.Play.Zones
             UpdateCountText();
         }
 
+        protected override void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+        {
+            OnAddCardModelLocal(cardStack, cardModel);
+            UpdateNetwork();
+        }
+
         protected override void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
         {
             CardModels.Remove(cardModel);
             UpdateCountText();
+            UpdateNetwork();
         }
 
-        protected override void Clear()
+        private void UpdateNetwork()
         {
-            foreach (CardModel cardModel in CardModels)
-                Destroy(cardModel.gameObject);
-            CardModels.Clear();
-            UpdateCountText();
+            if (Viewer == null || Viewer.CurrentDeck != this ||
+                CgsNetManager.Instance == null || !CgsNetManager.Instance.isNetworkActive ||
+                CgsNetManager.Instance.LocalPlayer == null)
+                return;
+
+            string[] currentDeckCardIds = CgsNetManager.Instance.LocalPlayer.CurrentDeckCardIds;
+            if (currentDeckCardIds == null)
+                return;
+
+#if !UNITY_WEBGL
+            IReadOnlyList<Card> localDeck = Cards;
+            bool deckMatches = localDeck.Count == currentDeckCardIds.Length;
+            for (var i = 0; deckMatches && i < localDeck.Count; i++)
+                if (!localDeck[i].Id.Equals(currentDeckCardIds[i]))
+                    deckMatches = false;
+
+            if (!deckMatches)
+                CgsNetManager.Instance.LocalPlayer.RequestDeckUpdate(localDeck);
+#endif
         }
 
         public UnityCard PopCard()
@@ -97,7 +121,16 @@ namespace Cgs.Play.Zones
             CardModels.Remove(cardModel);
             Destroy(cardModel.gameObject);
             UpdateCountText();
+            // Calling method should update network
             return card;
+        }
+
+        protected override void Clear()
+        {
+            foreach (CardModel cardModel in CardModels)
+                Destroy(cardModel.gameObject);
+            CardModels.Clear();
+            UpdateCountText();
         }
 
         public void Shuffle()

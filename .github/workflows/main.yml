@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "${{ secrets.UNITY_ANDROID_KEYSTORE }}" > finoldigital.keystore.asc
           gpg -d --passphrase "${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}" --batch finoldigital.keystore.asc > finoldigital.keystore
-      - uses: webbertakken/unity-builder@6c2a39f
+      - uses: webbertakken/unity-builder@v1.0
         with:
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
@@ -60,8 +60,7 @@ jobs:
     name: Release to Google Play and the App Store
     runs-on: macOS-latest
     needs: buildForAllPlatforms
-    if: false
-#    if: github.event.action == 'published'
+    if: github.event.action == 'published'
     env:
       APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
       APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}

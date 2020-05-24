@@ -10,8 +10,6 @@ permalink: roadmap.html
 - Deal/Draw Hand prompts for gameStartHandCount cards
 
 ## Current Sprint
-- Fix: Performance issue when drawing card
-- Fix: Version generation on publish release tag
 - Tech: Android Build Parameters
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
