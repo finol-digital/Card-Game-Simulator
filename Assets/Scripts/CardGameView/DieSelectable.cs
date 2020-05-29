@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Cgs.Play
+namespace CardGameView
 {
     public class DieSelectable : MonoBehaviour, IPointerDownHandler
     {

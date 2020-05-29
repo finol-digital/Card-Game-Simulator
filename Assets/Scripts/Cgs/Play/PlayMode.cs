@@ -8,11 +8,11 @@ using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
 using CardGameView;
+using CardGameView.Zones;
 using Cgs.Cards;
 using Cgs.Decks;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
-using Cgs.Play.Zones;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -25,7 +25,7 @@ namespace Cgs.Play
     public class PlayMode : MonoBehaviour
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
-        public const string ResetPlayAreaPrompt = "Restart?";
+        public const string RestartPrompt = "Restart?";
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
         public GameObject cardViewerPrefab;
@@ -109,8 +109,17 @@ namespace Cgs.Play
                 PromptBackToMainMenu();
         }
 
+        private void Restart()
+        {
+            zones.Clear();
+            ResetPlayArea();
+            ShowDeckMenu();
+        }
+
         private void ResetPlayArea()
         {
+            // TODO: delete all children through network
+
             var playAreaRectTransform = (RectTransform) playAreaCardStack.transform;
             var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
                 CardGameManager.Current.PlayAreaSize.Y);
@@ -305,12 +314,12 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void PromptBackToMainMenu()
         {
-            CardGameManager.Instance.Messenger.Ask(MainMenuPrompt, PromptResetPlayArea, BackToMainMenu);
+            CardGameManager.Instance.Messenger.Ask(MainMenuPrompt, PromptRestart, BackToMainMenu);
         }
 
-        private void PromptResetPlayArea()
+        private void PromptRestart()
         {
-            CardGameManager.Instance.Messenger.Prompt(ResetPlayAreaPrompt, ResetPlayArea);
+            CardGameManager.Instance.Messenger.Prompt(RestartPrompt, Restart);
         }
 
         private static void BackToMainMenu()

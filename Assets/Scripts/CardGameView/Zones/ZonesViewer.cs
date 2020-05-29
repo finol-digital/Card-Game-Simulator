@@ -5,10 +5,11 @@
 using System.Collections.Generic;
 using CardGameDef;
 using CardGameDef.Unity;
+using Cgs;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Cgs.Play.Zones
+namespace CardGameView.Zones
 {
     [RequireComponent(typeof(Canvas))]
     public class ZonesViewer : MonoBehaviour
@@ -188,6 +189,11 @@ namespace Cgs.Play.Zones
             extendButton.SetActive(!IsExtended);
             showButton.SetActive(IsExtended && !IsVisible);
             hideButton.SetActive(IsExtended && IsVisible);
+        }
+
+        public void Clear()
+        {
+            // TODO:
         }
     }
 }

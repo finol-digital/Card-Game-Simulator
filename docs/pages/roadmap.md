@@ -10,20 +10,10 @@ permalink: roadmap.html
 - Deal/Draw Hand prompts for gameStartHandCount cards
 
 ## Current Sprint
-- Tech: Android Build Parameters
-- Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
-- Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
-- Tech: Runtime unit test to succesfully load StreamingAssets/ without error
-- Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
-- Playmats
-- Layout cards in the Deck Editor more dynamically
-  - Have stacks link to each other
-  - Have # of stacks be based off the number of unique cards (remove deckMaxCount)
-- Highlight auto scroll area when auto scrolling
+- Fix: Card moved to server, but is still in hand
 - Play Mode Redesign
   - More dynamic restart (check ResetPlayArea, take cards from all zones, reset deck, and prompt redeal for each player)
   - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
-  - Allow cards to snap to each other when moving them
   - Allow any player to move cards in the play area, instead of just the player who put it there
   - Have view for only hand vs view for only field
   - Card Grouping
@@ -44,12 +34,23 @@ permalink: roadmap.html
   - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
   - Slider to control zoom
   - Play Area SharePreference
+  - Rotate play area
+- Playmats
+- Layout cards in the Deck Editor more dynamically
+  - Have stacks link to each other
+  - Have # of stacks be based off the number of unique cards (remove deckMaxCount)
+- Highlight auto scroll area when auto scrolling
 - dec sideboard is extras
 - ydk side is also extra
 
 ## Backlog
 - Update all images/screenshots (on cgs website, ln, and all stores)
 - Re-record training video (show on cgs webpage, personal webpage, play store)
+- Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
+- Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
+- Tech: Runtime unit test to succesfully load StreamingAssets/ without error
+- Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
+- Tech: Android Build Parameters
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Android Searchbar Widget
@@ -57,6 +58,7 @@ permalink: roadmap.html
 - Edit Deck List in the Deck Save Menu
 - Support multiple card backs
 - Support more than 1 card face (DFC)
+- Allow cards to snap to each other when moving them
 
 ## Icebox
 - Tech: Replace SwipeManager

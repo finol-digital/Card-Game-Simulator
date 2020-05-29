@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using CardGameView;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;

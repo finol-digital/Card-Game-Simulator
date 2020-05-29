@@ -6,12 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
-using CardGameView;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Cgs.Play.Zones
+namespace CardGameView.Zones
 {
     [RequireComponent(typeof(CardStack))]
     public class StackedZone : ExtensibleCardZone

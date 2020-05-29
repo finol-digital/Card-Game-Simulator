@@ -7,12 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
-using CardGameView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Cgs.Play.Zones
+namespace CardGameView.Zones
 {
     public class ExtensibleCardZone : MonoBehaviour, ICardDropHandler
     {
