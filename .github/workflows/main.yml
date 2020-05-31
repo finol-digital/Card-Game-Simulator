@@ -91,12 +91,12 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-      - run: |
-          echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'android playstore'
+#      - run: |
+#          echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
+#          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'android playstore'
       - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
       - uses: maierj/fastlane-action@v1.4.0
         with:
