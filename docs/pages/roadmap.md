@@ -5,14 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Play online by forwarding port 7777
-- For networked game sessions, you can set session name and password options
-- Deal/Draw Hand prompts for gameStartHandCount cards
+- More dynamic restart
 
 ## Current Sprint
 - Fix: Card moved to server, but is still in hand
 - Play Mode Redesign
-  - More dynamic restart (check ResetPlayArea, take cards from all zones, reset deck, and prompt redeal for each player)
   - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
   - Allow any player to move cards in the play area, instead of just the player who put it there
   - Have view for only hand vs view for only field

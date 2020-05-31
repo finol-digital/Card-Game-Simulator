@@ -225,6 +225,7 @@ namespace Cgs.Play.Multiplayer
             if (isServer || CardGameManager.Current.DeckSharePreference == SharePreference.Individual)
             {
                 CgsNetManager.Instance.playController.ShowDeckMenu();
+                CgsNetManager.Instance.statusText.text = "Game restarted!";
                 yield break;
             }
 
