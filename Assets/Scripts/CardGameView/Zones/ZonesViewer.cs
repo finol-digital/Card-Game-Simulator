@@ -193,7 +193,47 @@ namespace CardGameView.Zones
 
         public void Clear()
         {
-            // TODO:
+            if (Results != null)
+            {
+                Results.transform.DestroyAllChildren();
+                Destroy(Results.gameObject);
+            }
+
+            Results = null;
+
+            if (Discard != null)
+            {
+                Discard.transform.DestroyAllChildren();
+                Destroy(Discard.gameObject);
+            }
+
+            Discard = null;
+
+            foreach (ExtensibleCardZone zone in ExtraZones)
+            {
+                zone.transform.DestroyAllChildren();
+                Destroy(zone.gameObject);
+            }
+
+            ExtraZones.Clear();
+
+            if (CurrentDeck != null)
+            {
+                CurrentDeck.transform.DestroyAllChildren();
+                Destroy(CurrentDeck.gameObject);
+            }
+
+            CurrentDeck = null;
+
+            if (Hand != null)
+            {
+                Hand.transform.DestroyAllChildren();
+                Destroy(Hand.gameObject);
+            }
+
+            Hand = null;
+
+            ResizeContent();
         }
     }
 }

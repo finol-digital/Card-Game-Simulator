@@ -154,5 +154,17 @@ namespace Cgs.Play.Multiplayer
             Debug.LogWarning(PortForwardingWarningMessage);
             CardGameManager.Instance.Messenger.Show(PortForwardingWarningMessage);
         }
+
+        public void Restart()
+        {
+            // Clear all decks when restarting
+            for (var i = 0; i < Data.cardStacks.Count; i++)
+                Data.ChangeDeck(i, new string[] { });
+
+            foreach (CardModel cardModel in playController.playAreaCardStack.GetComponentsInChildren<CardModel>())
+                NetworkServer.UnSpawn(cardModel.gameObject);
+            foreach (CgsNetPlayer player in FindObjectsOfType<CgsNetPlayer>())
+                player.TargetRestart(player.connectionToClient);
+        }
     }
 }

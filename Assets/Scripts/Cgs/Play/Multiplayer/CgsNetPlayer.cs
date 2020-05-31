@@ -198,5 +198,55 @@ namespace Cgs.Play.Multiplayer
             Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
             NetworkServer.Spawn(die.gameObject, connectionToClient);
         }
+
+        public void RequestRestart()
+        {
+            CmdRestart();
+        }
+
+        [Command]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CmdRestart()
+        {
+            CgsNetManager.Instance.Restart();
+        }
+
+        [TargetRpc]
+        // ReSharper disable once UnusedParameter.Global
+        public void TargetRestart(NetworkConnection target)
+        {
+            CgsNetManager.Instance.statusText.text = "Game is restarting!...";
+            CgsNetManager.Instance.playController.ResetPlayArea();
+            StartCoroutine(WaitToRestartGame());
+        }
+
+        private IEnumerator WaitToRestartGame()
+        {
+            if (isServer || CardGameManager.Current.DeckSharePreference == SharePreference.Individual)
+            {
+                CgsNetManager.Instance.playController.ShowDeckMenu();
+                yield break;
+            }
+
+            while (!CurrentDeck.Any())
+                yield return null;
+
+            CgsNetManager.Instance.statusText.text = "Game restarted!";
+
+            switch (CardGameManager.Current.DeckSharePreference)
+            {
+                case SharePreference.Individual:
+                    CgsNetManager.Instance.playController.ShowDeckMenu();
+                    break;
+                case SharePreference.Share:
+                    RequestSharedDeck();
+                    break;
+                case SharePreference.Ask:
+                default:
+                    CardGameManager.Instance.Messenger.Ask(ShareDeckRequest,
+                        CgsNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+                    break;
+            }
+        }
     }
 }

@@ -111,16 +111,26 @@ namespace Cgs.Play
 
         private void Restart()
         {
-            zones.Clear();
+#if !UNITY_WEBGL
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive &&
+                CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestRestart();
+            else
+            {
+                ResetPlayArea();
+                ShowDeckMenu();
+            }
+#else
             ResetPlayArea();
             ShowDeckMenu();
+#endif
         }
 
-        private void ResetPlayArea()
+        public void ResetPlayArea()
         {
-            // TODO: delete all children through network
-
+            zones.Clear();
             var playAreaRectTransform = (RectTransform) playAreaCardStack.transform;
+            playAreaRectTransform.DestroyAllChildren();
             var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
                 CardGameManager.Current.PlayAreaSize.Y);
             playAreaRectTransform.sizeDelta = playAreaSize * CardGameManager.PixelsPerInch;
