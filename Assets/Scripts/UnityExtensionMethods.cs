@@ -214,7 +214,8 @@ public static class UnityExtensionMethods
         File.WriteAllText(filePath, unwrappedContent);
     }
 
-    public static IEnumerator SaveUrlToFile(string url, string filePath, string postJsonBody = null)
+    public static IEnumerator SaveUrlToFile(string url, string filePath, string postJsonBody = null,
+        Dictionary<string, string> responseHeaders = null)
     {
         if (string.IsNullOrEmpty(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
         {
@@ -248,6 +249,10 @@ public static class UnityExtensionMethods
                 Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error);
                 yield break;
             }
+
+            if (responseHeaders != null)
+                foreach (KeyValuePair<string, string> responseHeader in www.GetResponseHeaders())
+                    responseHeaders.Add(responseHeader.Key, responseHeader.Value);
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);

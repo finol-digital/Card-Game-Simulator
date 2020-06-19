@@ -228,15 +228,24 @@ namespace CardGameDef.Unity
                         jsonBody += "}";
                     }
 
-                    yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody);
+                    Dictionary<string, string> responseHeaders = new Dictionary<string, string>();
+                    yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody, responseHeaders);
                     if (AllCardsUrlZipped)
                         UnityExtensionMethods.ExtractZip(cardsFile, GameDirectoryPath);
                     if (AllCardsUrlWrapped)
                         UnityExtensionMethods.UnwrapFile(cardsFile.EndsWith(UnityExtensionMethods.ZipExtension)
                             ? cardsFile.Remove(cardsFile.Length - UnityExtensionMethods.ZipExtension.Length)
                             : cardsFile);
+
                     // Sometimes, we need to get the AllCardsUrlPageCount from the first page of AllCardsUrl
-                    if (page == AllCardsUrlPageCountStartIndex && !string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
+                    if (page != AllCardsUrlPageCountStartIndex ||
+                        string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier)) continue;
+
+                    // Get it from the response header if we can
+                    if (responseHeaders.TryGetValue(AllCardsUrlPageCountIdentifier, out string pageCount) &&
+                        int.TryParse(pageCount, out int pageCountInt))
+                        AllCardsUrlPageCount = Mathf.CeilToInt(pageCountInt / (float) AllCardsUrlPageCountDivisor);
+                    else // Or load it from the json if we have to
                         LoadCards(page);
                 }
             }

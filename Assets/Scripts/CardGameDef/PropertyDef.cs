@@ -81,7 +81,7 @@ namespace CardGameDef
                 if (type == PropertyType.Object || type == PropertyType.ObjectEnum ||
                     type == PropertyType.ObjectEnumList || type == PropertyType.ObjectList)
                     Properties.Clear();
-                Properties.Add(new PropertyDef(Name.Substring(objectDelimiterIdx + 1), type, display, displayEmpty,
+                Properties.Add(new PropertyDef(name?.Substring(objectDelimiterIdx + 1), type, display, displayEmpty,
                     displayEmptyFirst, properties));
             }
 

@@ -351,8 +351,8 @@ namespace Cgs
 
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
-                Debug.LogError(DownloadErrorMessage + Current.Error);
-                Messenger.Show(DownloadErrorMessage + Current.Error);
+                Debug.LogError(DownloadErrorMessage + cardGame.Error);
+                Messenger.Show(DownloadErrorMessage + cardGame.Error);
 
                 if (!Directory.Exists(cardGame.GameDirectoryPath))
                     yield break;

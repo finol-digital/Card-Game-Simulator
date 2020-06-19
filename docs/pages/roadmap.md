@@ -55,7 +55,7 @@ permalink: roadmap.html
 - Edit Deck List in the Deck Save Menu
 - Support multiple card backs
 - Support more than 1 card face (DFC)
-- Allow cards to snap to each other when moving them
+- Overlap: snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
 
 ## Icebox
 - Tech: Replace SwipeManager
@@ -65,8 +65,6 @@ permalink: roadmap.html
   - Large Image
 - Support default search filters
 - Support default sort
-- Support https://github.com/ValveSoftware/ArtifactDeckCode
-- Support Deck Code from https://shadowverse-portal.com/
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
