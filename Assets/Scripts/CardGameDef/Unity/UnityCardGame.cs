@@ -704,8 +704,9 @@ namespace CardGameDef.Unity
             }
 
             string setName = setJToken.Value<string>(SetNameIdentifier) ?? setCode;
+            string setCardsUrl = setJToken.Value<string>(SetCardsUrlIdentifier) ?? string.Empty;
 
-            LoadedSets[setCode] = new Set(setCode, setName);
+            LoadedSets[setCode] = new Set(setCode, setName, setCardsUrl);
 
             var cards = setJToken.Value<JArray>(SetCardsIdentifier);
             if (cards == null)
