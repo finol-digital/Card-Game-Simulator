@@ -17,6 +17,11 @@
       },
       "@CardGameDef.json#/properties/setCardsIdentifier": {
         "$ref": "AllCards.json"
+      },
+      "@CardGameDef.json#/properties/setCardsUrlIdentifier": {
+        "type": "string",
+        "description": "From this url, CGS downloads the json that contains the Card data for the Set. If CGS is able to successfully download this file, it will save it to sets/<setCodeIdentifier>.json.",
+        "format": "uri"
       }
     },
     "required": [

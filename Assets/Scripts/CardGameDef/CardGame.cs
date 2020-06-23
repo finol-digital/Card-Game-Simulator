@@ -317,6 +317,12 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
+            "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with SetCardsUrlIdentifier. Most custom games will likely want to keep the default SetCardsUrlIdentifier.")]
+        [DefaultValue("cardsUrl")]
+        public string SetCardsUrlIdentifier { get; set; } = "cardsUrl";
+
+        [JsonProperty]
+        [Description(
             "If a Card does not specify its Set, it will be included in the Set with *Set:Code* specified by setCodeDefault. This Set's name is specified by setNameDefault.")]
         [DefaultValue("_CGSDEFAULT_")]
         public string SetCodeDefault { get; set; } = Set.DefaultCode;

@@ -61,6 +61,9 @@ namespace CardGameDef.Unity
                             return deck;
                         deck.LoadYdk(line);
                         break;
+                    case DeckFileType.Lor:
+                        deck.LoadLor(line);
+                        break;
                     case DeckFileType.Txt:
                     default:
                         if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
@@ -109,23 +112,23 @@ namespace CardGameDef.Unity
             byte[] bytes = Convert.FromBase64String(line);
             ulong offset = 3;
 
-            var heroesCount = (int) VarInt.Read(bytes, ref offset, out int _);
+            var heroesCount = (int) Varint.Read(bytes, ref offset, out int _);
             for (var i = 0; i < heroesCount; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int) VarInt.Read(bytes, ref offset, out int _), 1);
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int) Varint.Read(bytes, ref offset, out int _), 1);
 
-            var singleCardsCount = (int) VarInt.Read(bytes, ref offset, out int _);
+            var singleCardsCount = (int) Varint.Read(bytes, ref offset, out int _);
             for (var i = 0; i < singleCardsCount; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int) VarInt.Read(bytes, ref offset, out int _), 1);
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int) Varint.Read(bytes, ref offset, out int _), 1);
 
-            var doubleCardsCount = (int) VarInt.Read(bytes, ref offset, out int _);
+            var doubleCardsCount = (int) Varint.Read(bytes, ref offset, out int _);
             for (var i = 0; i < doubleCardsCount; i++)
-                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int) VarInt.Read(bytes, ref offset, out int _), 2);
+                AddCardsByPropertyInt(SourceGame.DeckFileAltId, (int) Varint.Read(bytes, ref offset, out int _), 2);
 
-            var multiCardsCount = (int) VarInt.Read(bytes, ref offset, out int _);
+            var multiCardsCount = (int) Varint.Read(bytes, ref offset, out int _);
             for (var i = 0; i < multiCardsCount; i++)
             {
-                var id = (int) VarInt.Read(bytes, ref offset, out int _);
-                var count = (int) VarInt.Read(bytes, ref offset, out int _);
+                var id = (int) Varint.Read(bytes, ref offset, out int _);
+                var count = (int) Varint.Read(bytes, ref offset, out int _);
                 AddCardsByPropertyInt(SourceGame.DeckFileAltId, id, count);
             }
 
@@ -146,6 +149,27 @@ namespace CardGameDef.Unity
                 currCard.GetPropertyValueString(propertyName).Equals(propertyValue));
             for (var i = 0; card != null && i < count; i++)
                 _cards.Add(card);
+        }
+
+        private void LoadLor(string line)
+        {
+            if (string.IsNullOrEmpty(line))
+                return;
+            if (line.StartsWith("#"))
+            {
+                if (line.StartsWith("###"))
+                    Name = line.Substring(3).Trim();
+                return;
+            }
+
+            List<CardCodeAndCount> cardCodeAndCounts = LoRDeckEncoder.GetDeckFromCode(line);
+            foreach (CardCodeAndCount cardCount in cardCodeAndCounts)
+            {
+                if (!((UnityCardGame) SourceGame).Cards.TryGetValue(cardCount.CardCode, out UnityCard card))
+                    continue;
+                for (var i = 0; i < cardCount.Count; i++)
+                    _cards.Add(card);
+            }
         }
 
         private void LoadYdk(string line)

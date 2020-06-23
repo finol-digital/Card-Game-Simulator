@@ -22,6 +22,7 @@ namespace CardGameDef
     {
         [EnumMember(Value = "dec")] Dec,
         [EnumMember(Value = "hsd")] Hsd,
+        [EnumMember(Value = "lor")] Lor,
         [EnumMember(Value = "txt")] Txt,
         [EnumMember(Value = "ydk")] Ydk
     }
@@ -132,8 +133,8 @@ namespace CardGameDef
             using (var memoryStream = new MemoryStream())
             {
                 memoryStream.WriteByte(0);
-                VarInt.Write(memoryStream, 1);
-                VarInt.Write(memoryStream, 1);
+                Varint.Write(memoryStream, 1);
+                Varint.Write(memoryStream, 1);
 
                 Dictionary<Card, int> cardCounts = GetCardCounts();
                 List<Card> extraCards = GetExtraCards();
@@ -144,27 +145,38 @@ namespace CardGameDef
                 doubleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
                 nCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
 
-                VarInt.Write(memoryStream, extraCards.Count);
+                Varint.Write(memoryStream, extraCards.Count);
                 foreach (Card card in extraCards)
-                    VarInt.Write(memoryStream, card.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    Varint.Write(memoryStream, card.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
-                VarInt.Write(memoryStream, singleCopy.Count);
+                Varint.Write(memoryStream, singleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                    VarInt.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
-                VarInt.Write(memoryStream, doubleCopy.Count);
+                Varint.Write(memoryStream, doubleCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                    VarInt.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
 
-                VarInt.Write(memoryStream, nCopy.Count);
+                Varint.Write(memoryStream, nCopy.Count);
                 foreach (KeyValuePair<Card, int> cardCount in nCopy)
                 {
-                    VarInt.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
-                    VarInt.Write(memoryStream, cardCount.Value);
+                    Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                    Varint.Write(memoryStream, cardCount.Value);
                 }
 
                 return Convert.ToBase64String(memoryStream.ToArray());
             }
+        }
+
+        public string ToLor()
+        {
+            Dictionary<Card, int> cardCounts = GetCardCounts();
+            List<CardCodeAndCount> cardCodeAndCounts = cardCounts.Select(
+                cardCount => new CardCodeAndCount()
+                {
+                    CardCode = cardCount.Key.Id, Count = cardCount.Value
+                }).ToList();
+            return LoRDeckEncoder.GetCodeFromDeck(cardCodeAndCounts) + Environment.NewLine;
         }
 
         public string ToYdk()
@@ -226,6 +238,9 @@ namespace CardGameDef
                     break;
                 case DeckFileType.Hsd:
                     text = ToHsd();
+                    break;
+                case DeckFileType.Lor:
+                    text = ToLor();
                     break;
                 case DeckFileType.Ydk:
                     text = ToYdk();

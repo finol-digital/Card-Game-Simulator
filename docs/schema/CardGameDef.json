@@ -274,7 +274,7 @@
     },
     "playAreaSize": {
       "description": "playAreaSize indicates the width and height in inches of the play area in Play Mode.",
-      "default": "(x: 36, y: 24)",
+      "default": "(x: 36, y: 36)",
       "oneOf": [
         {
           "$ref": "#/definitions/Float2"
@@ -290,6 +290,11 @@
       "type": "string",
       "description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
       "default": "cards"
+    },
+    "setCardsUrlIdentifier": {
+      "type": "string",
+      "description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with SetCardsUrlIdentifier. Most custom games will likely want to keep the default SetCardsUrlIdentifier.",
+      "default": "cardsUrl"
     },
     "setCodeDefault": {
       "type": "string",
@@ -424,12 +429,14 @@
       "x-enumNames": [
         "Dec",
         "Hsd",
+        "Lor",
         "Txt",
         "Ydk"
       ],
       "enum": [
         "dec",
         "hsd",
+        "lor",
         "txt",
         "ydk"
       ]
