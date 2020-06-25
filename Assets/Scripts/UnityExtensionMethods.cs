@@ -35,6 +35,7 @@ public static class UnityExtensionMethods
     public const string FilePrefix = "file://";
     public const string MetaExtension = ".meta";
     public const string ZipExtension = ".zip";
+    public const string JsonExtension = ".json";
 
     public static void Shuffle<T>(this IList<T> list)
     {

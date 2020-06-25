@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -15,8 +14,6 @@ namespace CardGameDef
     [JsonObject(MemberSerialization.OptIn)]
     public class CardGame
     {
-        public const string BannerImageFileName = "Banner";
-        public const string CardBackImageFileName = "CardBack";
         public const string DefaultName = "_INVALID_";
 
         public static CardGame Invalid => new CardGame();
@@ -28,17 +25,19 @@ namespace CardGameDef
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
-        // *Game:Id* = *Game:Name*@<base64(*Game:AutoUpdateUrl*)>
-        // Since urls must be unique, this id will also be unique and human-recognizable
-        public string Id => Name + EncodedUrl;
+        // *Game:Id* = *Game:Name*@*Game:AutoUpdateUrl:Host*
+        // This only works for a single instance of a game per host
+        public string Id => _id ?? (_id = Name + Host);
+        private string _id;
 
-        public string EncodedUrl => (AutoUpdateUrl != null && AutoUpdateUrl.IsWellFormedOriginalString())
-            ? "@" + Convert.ToBase64String(Encoding.UTF8.GetBytes(AutoUpdateUrl.OriginalString))
+        public string Host => (AutoUpdateUrl != null && AutoUpdateUrl.IsWellFormedOriginalString())
+            ? "@" + AutoUpdateUrl.Host
             : "";
 
         public bool IsExternal => (AutoUpdateUrl != null && AutoUpdateUrl.IsWellFormedOriginalString())
                                   || (AllCardsUrl != null && AllCardsUrl.IsWellFormedOriginalString())
                                   || (AllSetsUrl != null && AllSetsUrl.IsWellFormedOriginalString());
+
 
         [JsonProperty]
         [JsonRequired]
@@ -350,25 +349,33 @@ namespace CardGameDef
         [DefaultValue("name")]
         public string SetNameIdentifier { get; set; } = "name";
 
-        public static (string name, string url) Decode(string gameId)
+        public static (string name, string host) GetNameAndHost(string id)
         {
-            string name = gameId;
-            var url = string.Empty;
-            int delimiterIdx = gameId.LastIndexOf('@');
-            if (delimiterIdx == -1)
-                return (name, url);
+            string name = string.IsNullOrEmpty(id) ? DefaultName : id;
+            int hostIndex = name.LastIndexOf('@');
+            if (hostIndex <= 0)
+                return (name, null);
 
-            name = gameId.Substring(0, delimiterIdx);
-            url = Encoding.UTF8.GetString(
-                Convert.FromBase64String(gameId.Substring(delimiterIdx + 1).Replace('_', '/')));
-
-            return (name, url);
+            string host = name.Substring(hostIndex + 1);
+            name = name.Substring(0, hostIndex);
+            return (name, host);
         }
 
-        public CardGame(string name = DefaultName, string url = "")
+        public CardGame(string id = DefaultName, string autoUpdateUrl = "")
         {
-            Name = name ?? DefaultName;
-            AutoUpdateUrl = Uri.IsWellFormedUriString(url, UriKind.Absolute) ? new Uri(url) : null;
+            (string name, string host) = GetNameAndHost(id);
+            Name = name;
+            if (Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.Absolute))
+                AutoUpdateUrl = new Uri(autoUpdateUrl);
+            else if (Uri.CheckHostName(host) != UriHostNameType.Unknown)
+                AutoUpdateUrl = new Uri("https://" + host);
+            else
+                _id = id;
+        }
+
+        protected void RefreshId()
+        {
+            _id = Name + Host;
         }
 
         public bool IsEnumProperty(string propertyName)

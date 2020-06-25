@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace Cgs.Play.Multiplayer
 {
     public class CgsNetPlayer : NetworkBehaviour
     {
+        public const string GameSelectionErrorMessage = "The host has selected a game that is not available!";
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
 
         private IEnumerable<Card> CurrentDeck =>
@@ -57,16 +59,37 @@ namespace Cgs.Play.Multiplayer
         private void CmdSelectCardGame()
         {
             CgsNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
-            TargetSelectCardGame(connectionToClient, CardGameManager.Current.Id);
+            TargetSelectCardGame(connectionToClient, CardGameManager.Current.Id,
+                CardGameManager.Current.AutoUpdateUrl?.OriginalString);
         }
 
         [TargetRpc]
         // ReSharper disable once UnusedParameter.Local
-        private void TargetSelectCardGame(NetworkConnection target, string gameId)
+        private void TargetSelectCardGame(NetworkConnection target, string gameId, string autoUpdateUrl)
         {
             CgsNetManager.Instance.statusText.text = $"Game id is {gameId}! Loading game details...";
-            CardGameManager.Instance.Select(gameId);
-            StartCoroutine(WaitToStartGame());
+            if (!CardGameManager.Instance.AllCardGames.ContainsKey(gameId))
+            {
+                if (!Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.Absolute))
+                {
+                    Debug.LogError(GameSelectionErrorMessage);
+                    CardGameManager.Instance.Messenger.Show();
+                    return;
+                }
+
+                StartCoroutine(DownloadGame(autoUpdateUrl));
+            }
+            else
+            {
+                CardGameManager.Instance.Select(gameId);
+                StartCoroutine(WaitToStartGame());
+            }
+        }
+
+        private IEnumerator DownloadGame(string url)
+        {
+            yield return CardGameManager.Instance.GetCardGame(url);
+            yield return WaitToStartGame();
         }
 
         private IEnumerator WaitToStartGame()

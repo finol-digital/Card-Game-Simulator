@@ -29,6 +29,8 @@ namespace Cgs.Decks
 
         public const string HsdInstructions = "#Paste the deck string/code here";
 
+        public const string LorInstructions = "#Paste the deck string/code here";
+
         public const string TxtInstructions =
             "### Instructions\n#On each line, enter:\n#<Quantity> <Card Name>\n#For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
 
@@ -128,6 +130,9 @@ namespace Cgs.Decks
                 case DeckFileType.Hsd:
                     instructionsText.text = HsdInstructions;
                     break;
+                case DeckFileType.Lor:
+                    instructionsText.text = LorInstructions;
+                    break;
                 case DeckFileType.Ydk:
                     instructionsText.text = YdkInstructions;
                     break;
@@ -195,6 +200,8 @@ namespace Cgs.Decks
                 deckFileType = DeckFileType.Dec;
             else if (extension.ToLower().Equals(DeckFileType.Hsd.ToString().ToLower()))
                 deckFileType = DeckFileType.Hsd;
+            else if (extension.ToLower().Equals(DeckFileType.Lor.ToString().ToLower()))
+                deckFileType = DeckFileType.Lor;
             else if (extension.ToLower().Equals(DeckFileType.Ydk.ToString().ToLower()))
                 deckFileType = DeckFileType.Ydk;
             return deckFileType;
@@ -335,10 +342,8 @@ namespace Cgs.Decks
                 HideNewDeckPanel();
                 BuildDeckFileSelectionOptions();
                 foreach (string path in _deckFiles.Keys)
-                {
                     Debug.Log(path);
-                }
-                Debug.Log(_selectedFilePath);
+
                 LoadFromFileAndHide();
             }
             catch (Exception e)

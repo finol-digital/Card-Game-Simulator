@@ -8,29 +8,35 @@ namespace Cgs
     {
         public const string CardGameManager = "CardGameManager";
         public const string CardViewer = "CardViewer";
-        public const string StandardPlayingCardsDirectoryName =
-            "Standard Playing Cards@aHR0cHM6Ly93d3cuY2FyZGdhbWVzaW11bGF0b3IuY29tL2dhbWVzL1N0YW5kYXJkL1N0YW5kYXJkLmpzb24=";
+
+        public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@www.cardgamesimulator.com";
+
 #if UNITY_WEBGL
         public const string StandardPlayingCardsJsonFileName = "Standard Playing Cards.json";
+
         public const string StandPlayingCardsJsonFileContent =
- "{\"name\":\"Standard Playing Cards\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Standard/Standard.json\"}";
-        public const string DominoesDirectoryName =
- "Dominoes@aHR0cHM6Ly93d3cuY2FyZGdhbWVzaW11bGF0b3IuY29tL2dhbWVzL0RvbWlub2VzL0RvbWlub2VzLmpzb24=";
+            "{\"name\":\"Standard Playing Cards\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Standard/Standard.json\"}";
+
+        public const string DominoesDirectoryName = "Dominoes@www.cardgamesimulator.com";
         public const string DominoesJsonFileName = "Dominoes.json";
+
         public const string DominoesJsonFileContent =
- "{\"name\":\"Dominoes\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Dominoes/Dominoes.json\"}";
+            "{\"name\":\"Dominoes\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Dominoes/Dominoes.json\"}";
+
         public const string DominoesCardBackUrl = "https://www.cardgamesimulator.com/games/Dominoes/CardBack.png";
-        public const string MahjongDirectoryName =
- "Mahjong@aHR0cHM6Ly93d3cuY2FyZGdhbWVzaW11bGF0b3IuY29tL2dhbWVzL01haGpvbmcvTWFoam9uZy5qc29u";
+        public const string MahjongDirectoryName = "Mahjong@www.cardgamesimulator.com";
         public const string MahjongJsonFileName = "Mahjong.json";
+
         public const string MahjongJsonFileContent =
- "{\"name\":\"Mahjong\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Mahjong/Mahjong.json\"}";
+            "{\"name\":\"Mahjong\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Mahjong/Mahjong.json\"}";
+
         public const string MahjongCardBackUrl = "https://www.cardgamesimulator.com/games/Mahjong/CardBack.png";
-        public const string ArcmageDirectoryName =
- "Arcmage@aHR0cHM6Ly93d3cuY2FyZGdhbWVzaW11bGF0b3IuY29tL2dhbWVzL0FyY21hZ2UvQXJjbWFnZS5qc29u";
+        public const string ArcmageDirectoryName = "Arcmage@www.cardgamesimulator.com";
         public const string ArcmageJsonFileName = "Arcmage.json";
+
         public const string ArcmageJsonFileContent =
- "{\"name\":\"Arcmage\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json\"}";
+            "{\"name\":\"Arcmage\",\"autoUpdateUrl\":\"https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json\"}";
+
         public const string ArcmageCardBackUrl = "https://www.cardgamesimulator.com/games/Arcmage/CardBack.png";
 #endif
     }

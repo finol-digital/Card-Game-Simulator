@@ -16,7 +16,7 @@ namespace CardGameDef.Unity
         public string ImageFileName => UnityExtensionMethods.GetSafeFileName(Id + "." + SourceGame.CardImageFileType);
 
         public string ImageFilePath =>
-            UnityExtensionMethods.GetSafeFilePath(((UnityCardGame) SourceGame).GameDirectoryPath + "/sets/" + SetCode +
+            UnityExtensionMethods.GetSafeFilePath(((UnityCardGame) SourceGame).SetsDirectoryPath + "/" + SetCode +
                                                   "/") + ImageFileName;
 
         public Sprite ImageSprite

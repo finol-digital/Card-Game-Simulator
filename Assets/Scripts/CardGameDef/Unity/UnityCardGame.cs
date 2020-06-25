@@ -24,19 +24,23 @@ namespace CardGameDef.Unity
 
         public static string GamesDirectoryPath => Application.persistentDataPath + "/games";
 
-        public string GameDirectoryPath => GamesDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Id);
-        public string GameFilePath => GameDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name) + ".json";
+        public string GameDirectoryPath => Path.Combine(GamesDirectoryPath, UnityExtensionMethods.GetSafeFileName(Id));
+
+        public string GameFilePath => Path.Combine(GameDirectoryPath,
+            UnityExtensionMethods.GetSafeFileName(Name) + UnityExtensionMethods.JsonExtension);
+
         public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
         public string SetsFilePath => GameDirectoryPath + "/AllSets.json";
 
-        public string BannerImageFilePath => GameDirectoryPath + "/" + BannerImageFileName + "." +
+        public string BannerImageFilePath => GameDirectoryPath + "/Banner." +
                                              UnityExtensionMethods.GetSafeFileName(BannerImageFileType);
 
-        public string CardBackImageFilePath => GameDirectoryPath + "/" + CardBackImageFileName + "." +
+        public string CardBackImageFilePath => GameDirectoryPath + "/CardBack." +
                                                UnityExtensionMethods.GetSafeFileName(CardBackImageFileType);
 
         public string DecksFilePath => GameDirectoryPath + "/decks";
         public string GameBoardsFilePath => GameDirectoryPath + "/boards";
+        public string SetsDirectoryPath => GameDirectoryPath + "/sets";
 
         public float CardAspectRatio => CardSize.Y > 0 ? Mathf.Abs(CardSize.X / CardSize.Y) : 0.715f;
         public IReadOnlyDictionary<string, UnityCard> Cards => LoadedCards;
@@ -63,7 +67,7 @@ namespace CardGameDef.Unity
         {
             get => _bannerImageSprite
                 ? _bannerImageSprite
-                : (_bannerImageSprite = Resources.Load<Sprite>(BannerImageFileName));
+                : (_bannerImageSprite = Resources.Load<Sprite>("Banner"));
             private set
             {
                 if (_bannerImageSprite != null)
@@ -82,7 +86,7 @@ namespace CardGameDef.Unity
         {
             get => _cardBackImageSprite
                 ? _cardBackImageSprite
-                : (_cardBackImageSprite = Resources.Load<Sprite>(CardBackImageFileName));
+                : (_cardBackImageSprite = Resources.Load<Sprite>("CardBack"));
             private set
             {
                 if (_cardBackImageSprite != null)
@@ -97,8 +101,8 @@ namespace CardGameDef.Unity
 
         private Sprite _cardBackImageSprite;
 
-        public UnityCardGame(MonoBehaviour coroutineRunner, string name = DefaultName, string url = "") : base(
-            name, url)
+        public UnityCardGame(MonoBehaviour coroutineRunner, string id = DefaultName, string autoUpdateUrl = "")
+            : base(id, autoUpdateUrl)
         {
             CoroutineRunner = coroutineRunner;
         }
@@ -117,15 +121,17 @@ namespace CardGameDef.Unity
         {
             try
             {
-                // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name* to change, so account for that
+                // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name/Id* to change, so account for that
                 string gameFilePath = GameFilePath;
                 string gameDirectoryPath = GameDirectoryPath;
                 ClearDefinitionLists();
                 JsonConvert.PopulateObject(File.ReadAllText(GameFilePath), this);
+                RefreshId();
                 if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath))
                 {
                     string tempGameFilePath =
-                        gameDirectoryPath + "/" + UnityExtensionMethods.GetSafeFileName(Name) + ".json";
+                        Path.Combine(gameDirectoryPath,
+                            UnityExtensionMethods.GetSafeFileName(Name) + UnityExtensionMethods.JsonExtension);
                     File.Move(gameFilePath, tempGameFilePath);
                 }
 
@@ -256,7 +262,8 @@ namespace CardGameDef.Unity
             HasLoaded = false;
         }
 
-        public void Load(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine)
+        public void Load(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
+            CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
             // We should have already read the *Game:Name*.json, but we need to be sure
             if (!HasReadProperties)
@@ -301,6 +308,8 @@ namespace CardGameDef.Unity
             if (CoroutineRunner != null)
                 CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
             LoadSets();
+            if (CoroutineRunner != null && LoadedSets.Values.Any(set => !string.IsNullOrEmpty(set.CardsUrl)))
+                CoroutineRunner.StartCoroutine(loadSetCardsCoroutine(this));
 
             // We also re-load the banner and cardBack images now in case they've changed since we ReadProperties
             if (File.Exists(BannerImageFilePath))
@@ -319,15 +328,20 @@ namespace CardGameDef.Unity
                 CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
 
             if (File.Exists(cardsFilePath))
-                LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier);
+                LoadCards(cardsFilePath, SetCodeDefault);
             else
                 Debug.Log("LoadCards::NOAllCards.json");
+        }
+
+        public void LoadCards(string cardsFilePath, string defaultSetCode)
+        {
+            LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier, defaultSetCode);
         }
 
         public void LoadSets()
         {
             if (File.Exists(SetsFilePath))
-                LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier);
+                LoadJsonFromFile(SetsFilePath, LoadSetFromJToken, SetDataIdentifier, null);
             else
                 Debug.Log("LoadSets::NOAllSets.json");
 
@@ -335,7 +349,7 @@ namespace CardGameDef.Unity
                 defaultSet.Name = SetNameDefault;
         }
 
-        public void LoadJsonFromFile(string file, LoadJTokenDelegate load, string dataId)
+        private void LoadJsonFromFile(string file, LoadJTokenDelegate load, string dataId, string defaultSetCode)
         {
             if (!File.Exists(file))
             {
@@ -360,7 +374,7 @@ namespace CardGameDef.Unity
 
                 if (dataContainer != null)
                     foreach (JToken jToken in dataContainer)
-                        load(jToken, SetCodeDefault);
+                        load(jToken, defaultSetCode ?? SetCodeDefault);
                 else
                     Debug.LogWarning("LoadJsonFromFile::EmptyFile");
 
@@ -380,7 +394,7 @@ namespace CardGameDef.Unity
             }
         }
 
-        public void LoadCardFromJToken(JToken cardJToken, string defaultSetCode)
+        private void LoadCardFromJToken(JToken cardJToken, string defaultSetCode)
         {
             if (cardJToken == null)
             {
@@ -459,7 +473,7 @@ namespace CardGameDef.Unity
                 Debug.Log("LoadCardFromJToken::MissingCardImage");
         }
 
-        public void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,
+        private void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,
             List<PropertyDef> propertyDefs, string keyPrefix = "")
         {
             if (cardProperties == null || cardJToken == null || propertyDefs == null)
@@ -472,7 +486,7 @@ namespace CardGameDef.Unity
                 PopulateCardProperty(cardProperties, cardJToken, property, keyPrefix + property.Name);
         }
 
-        public void PopulateCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,
+        private void PopulateCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,
             PropertyDef property, string key)
         {
             if (cardProperties == null || cardJToken == null || property == null)
@@ -603,7 +617,7 @@ namespace CardGameDef.Unity
                     key + PropertyDef.ObjectDelimiter + childProperty.Name);
         }
 
-        public void PopulateCardSets(Dictionary<string, string> cardSets, JToken cardJToken, string defaultSetCode)
+        private void PopulateCardSets(Dictionary<string, string> cardSets, JToken cardJToken, string defaultSetCode)
         {
             if (cardSets == null || cardJToken == null || string.IsNullOrEmpty(defaultSetCode))
             {
@@ -688,7 +702,7 @@ namespace CardGameDef.Unity
             }
         }
 
-        public void LoadSetFromJToken(JToken setJToken, string defaultSetCode)
+        private void LoadSetFromJToken(JToken setJToken, string defaultSetCode)
         {
             if (setJToken == null)
             {

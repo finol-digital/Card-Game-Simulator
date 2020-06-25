@@ -30,10 +30,12 @@ namespace Cgs.Editor
 
             // Support automatic versioning
             PlayerSettings.bundleVersion = options["version"];
+            PlayerSettings.macOS.buildNumber = options["version"];
 
             // Support Android signing
             if (buildOptions.target == BuildTarget.Android)
             {
+                PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
                 PlayerSettings.Android.keystorePass = options["keystorePass"];
                 PlayerSettings.Android.keyaliasPass = options["keyaliasPass"];
                 if (options.ContainsKey("androidAppBundle"))

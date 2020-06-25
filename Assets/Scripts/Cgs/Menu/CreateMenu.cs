@@ -195,7 +195,7 @@ namespace Cgs.Menu
             if (!createButton.interactable)
                 yield break;
 
-            string gameName = GameName.Trim();
+            string gameName = GameName.Trim().Replace("@", "");
             if (CardGameManager.Instance.AllCardGames.ContainsKey(gameName))
             {
                 CardGameManager.Instance.Messenger.Show(CreateWarningMessage);

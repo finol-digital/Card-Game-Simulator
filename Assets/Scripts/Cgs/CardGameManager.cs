@@ -26,7 +26,6 @@ namespace Cgs
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
 #endif
-        public const string EmptyNameWarning = "Found game with missing name!";
         public const string DefaultNameWarning = "Found game with default name. Deleting it.";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!";
         public const string DownloadErrorMessage = "Error downloading game!: ";
@@ -37,6 +36,8 @@ namespace Cgs
 
         public const string CardsLoadedMessage = "{0} cards loaded!";
         public const string CardsLoadingMessage = "{0} cards loading...";
+        public const string SetCardsLoadedMessage = "{0} set cards loaded!";
+        public const string SetCardsLoadingMessage = "{0} set cards loading...";
         public const string DeleteErrorMessage = "Error deleting game!: ";
         public const string DeleteWarningMessage = "Please download additional card games before deleting.";
 
@@ -247,10 +248,8 @@ namespace Cgs
             foreach (string gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
                 string gameDirectoryName = gameDirectory.Substring(UnityCardGame.GamesDirectoryPath.Length + 1);
-                (string name, string url) game = CardGame.Decode(gameDirectoryName);
-                if (string.IsNullOrEmpty(name))
-                    Debug.LogWarning(EmptyNameWarning);
-                else if (name.Equals(CardGame.DefaultName))
+                (string gameName, _) = CardGame.GetNameAndHost(gameDirectoryName);
+                if (gameName.Equals(CardGame.DefaultName))
                 {
                     Debug.LogWarning(DefaultNameWarning);
                     try
@@ -264,7 +263,7 @@ namespace Cgs
                 }
                 else
                 {
-                    var newCardGame = new UnityCardGame(this, game.name, game.url);
+                    var newCardGame = new UnityCardGame(this, gameDirectoryName);
                     newCardGame.ReadProperties();
                     if (!string.IsNullOrEmpty(newCardGame.Error))
                         Debug.LogError(LoadErrorMessage + newCardGame.Error);
@@ -347,7 +346,7 @@ namespace Cgs
             yield return cardGame.Download();
             Progress.Hide();
 
-            cardGame.Load(UpdateCardGame, LoadCards);
+            cardGame.Load(UpdateCardGame, LoadCards, LoadSetCards);
 
             if (!string.IsNullOrEmpty(cardGame.Error))
             {
@@ -390,7 +389,7 @@ namespace Cgs
                 cardGame.ClearError();
             }
 
-            cardGame.Load(UpdateCardGame, LoadCards);
+            cardGame.Load(UpdateCardGame, LoadCards, LoadSetCards);
             if (cardGame == Current)
                 ResetGameScene();
         }
@@ -417,19 +416,44 @@ namespace Cgs
                 Messenger.Show(string.Format(CardsLoadedMessage, cardGame.Name));
         }
 
+        private IEnumerator LoadSetCards(UnityCardGame cardGame)
+        {
+            if (cardGame == null)
+                cardGame = Current;
+
+            var setCardsLoaded = false;
+            foreach (Set set in cardGame.Sets.Values)
+            {
+                if (string.IsNullOrEmpty(set.CardsUrl))
+                    continue;
+                if (!setCardsLoaded)
+                    Messenger.Show(string.Format(SetCardsLoadingMessage, cardGame.Name));
+                setCardsLoaded = true;
+                string setCardsFilePath = Path.Combine(cardGame.SetsDirectoryPath,
+                    UnityExtensionMethods.GetSafeFileName(set.Code + UnityExtensionMethods.JsonExtension));
+                if (!File.Exists(setCardsFilePath))
+                    yield return UnityExtensionMethods.SaveUrlToFile(set.CardsUrl, setCardsFilePath);
+                if (File.Exists(setCardsFilePath))
+                    cardGame.LoadCards(setCardsFilePath, set.Code);
+                else
+                {
+                    Debug.LogError(LoadErrorMessage + set.CardsUrl);
+                    yield break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(cardGame.Error))
+                Debug.LogError(LoadErrorMessage + cardGame.Error);
+            else if (setCardsLoaded)
+                Messenger.Show(string.Format(SetCardsLoadedMessage, cardGame.Name));
+        }
+
         public void Select(string gameId)
         {
             if (string.IsNullOrEmpty(gameId) || !AllCardGames.ContainsKey(gameId))
             {
-                (_, string gameUrl) = CardGame.Decode(gameId);
-                if (!Uri.IsWellFormedUriString(gameUrl, UriKind.Absolute))
-                {
-                    Debug.LogError(SelectionErrorMessage);
-                    Messenger.Show(SelectionErrorMessage);
-                }
-                else
-                    StartCoroutine(DownloadCardGame(gameUrl));
-
+                Debug.LogError(SelectionErrorMessage);
+                Messenger.Show(SelectionErrorMessage);
                 return;
             }
 
@@ -441,7 +465,7 @@ namespace Cgs
         {
             if (!Current.HasLoaded)
             {
-                Current.Load(UpdateCardGame, LoadCards);
+                Current.Load(UpdateCardGame, LoadCards, LoadSetCards);
                 if (Current.IsDownloading)
                     return;
             }
