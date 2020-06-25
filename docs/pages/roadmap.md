@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- More dynamic restart
+- Enhance backend
 
 ## Current Sprint
 - Fix: Card moved to server, but is still in hand
