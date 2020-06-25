@@ -354,12 +354,8 @@ namespace Crosstales.Common.EditorUtil
             try
             {
                if (type.FullName != null && type.FullName.Equals(className))
-               {
                   if (type.IsClass)
-                  {
                      type.GetMethod(methodName, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).Invoke(null, parameters);
-                  }
-               }
             }
             catch (System.Exception ex)
             {
@@ -412,95 +408,59 @@ namespace Crosstales.Common.EditorUtil
       public static BuildTarget getBuildTargetForBuildName(string build)
       {
          if ("win32".CTEquals(build) || "win".CTEquals(build))
-         {
             return BuildTarget.StandaloneWindows;
-         }
 
          if ("win64".CTEquals(build))
-         {
             return BuildTarget.StandaloneWindows64;
-         }
 
          if (!string.IsNullOrEmpty(build) && build.CTContains("osx"))
-         {
             return BuildTarget.StandaloneOSX;
-         }
 #if UNITY_2019_2_OR_NEWER
-            if (!string.IsNullOrEmpty(build) && build.CTContains("linux"))
-            {
-                return BuildTarget.StandaloneLinux64;
-            }
+         if (!string.IsNullOrEmpty(build) && build.CTContains("linux"))
+             return BuildTarget.StandaloneLinux64;
 #else
          if ("linux".CTEquals(build))
-         {
             return BuildTarget.StandaloneLinux;
-         }
 
          if ("linux64".CTEquals(build))
-         {
             return BuildTarget.StandaloneLinux64;
-         }
 
          if ("linuxuniversal".CTEquals(build))
-         {
             return BuildTarget.StandaloneLinuxUniversal;
-         }
 #endif
          if ("android".CTEquals(build))
-         {
             return BuildTarget.Android;
-         }
 
          if ("ios".CTEquals(build))
-         {
             return BuildTarget.iOS;
-         }
 
          if ("wsaplayer".CTEquals(build) || "WindowsStoreApps".CTEquals(build))
-         {
             return BuildTarget.WSAPlayer;
-         }
 
          if ("webgl".CTEquals(build))
-         {
             return BuildTarget.WebGL;
-         }
 
          if ("tvOS".CTEquals(build))
-         {
             return BuildTarget.tvOS;
-         }
 
          if ("ps4".CTEquals(build))
-         {
             return BuildTarget.PS4;
-         }
 #if !UNITY_2018_2_OR_NEWER
          if ("psp2".CTEquals(build))
-         {
             return BuildTarget.PSP2;
-         }
 #endif
          if ("xboxone".CTEquals(build))
-         {
             return BuildTarget.XboxOne;
-         }
 #if !UNITY_2018_1_OR_NEWER
          if ("wiiu".CTEquals(build))
-         {
             return BuildTarget.WiiU;
-         }
 #endif
 #if !UNITY_2018_2_OR_NEWER
          if ("N3DS".CTEquals(build))
-         {
             return BuildTarget.N3DS;
-         }
 #endif
          if ("switch".CTEquals(build))
-         {
             return BuildTarget.Switch;
-         }
 
          Debug.LogWarning("Build target '" + build + "' not found! Returning 'StandaloneWindows64'.");
          return BuildTarget.StandaloneWindows64;
@@ -520,8 +480,8 @@ namespace Crosstales.Common.EditorUtil
             case BuildTarget.StandaloneOSX:
                return "OSXUniversal";
 #if UNITY_2019_2_OR_NEWER
-                case BuildTarget.StandaloneLinux64:
-                    return "Linux64";
+            case BuildTarget.StandaloneLinux64:
+              return "Linux64";
 #else
             case BuildTarget.StandaloneLinux:
                return "Linux";
@@ -593,7 +553,7 @@ namespace Crosstales.Common.EditorUtil
          // header
          sb.AppendLine("echo ##############################################################################");
          sb.AppendLine("echo #                                                                            #");
-         sb.AppendLine("echo #  Common 2020.1.0 - Windows                                                 #");
+         sb.AppendLine("echo #  Common 2020.2.0 - Windows                                                 #");
          sb.AppendLine("echo #  Copyright 2018-2020 by www.crosstales.com                                 #");
          sb.AppendLine("echo #                                                                            #");
          sb.AppendLine("echo #  This script restarts Unity.                                               #");
@@ -616,10 +576,10 @@ namespace Crosstales.Common.EditorUtil
          sb.AppendLine("timeout /t 3");
          /*
 #if UNITY_2018_2_OR_NEWER
-                     sb.Append("del \"");
-                     sb.Append(Constants.PATH);
-                     sb.Append("Temp\\UnityLockfile\" /q");
-                     sb.AppendLine();
+         sb.Append("del \"");
+         sb.Append(Constants.PATH);
+         sb.Append("Temp\\UnityLockfile\" /q");
+         sb.AppendLine();
 #endif
          */
          sb.AppendLine("goto waitloop");
@@ -681,7 +641,7 @@ namespace Crosstales.Common.EditorUtil
          // header
          sb.AppendLine("echo \"+----------------------------------------------------------------------------+\"");
          sb.AppendLine("echo \"¦                                                                            ¦\"");
-         sb.AppendLine("echo \"¦  Common 2020.1.0 - macOS                                                   ¦\"");
+         sb.AppendLine("echo \"¦  Common 2020.2.0 - macOS                                                   ¦\"");
          sb.AppendLine("echo \"¦  Copyright 2018-2020 by www.crosstales.com                                 ¦\"");
          sb.AppendLine("echo \"¦                                                                            ¦\"");
          sb.AppendLine("echo \"¦  This script restarts Unity.                                               ¦\"");
@@ -703,10 +663,10 @@ namespace Crosstales.Common.EditorUtil
          sb.AppendLine("  sleep 3");
          /*
 #if UNITY_2018_2_OR_NEWER
-                     sb.Append("  rm \"");
-                     sb.Append(Constants.PATH);
-                     sb.Append("Temp/UnityLockfile\"");
-                     sb.AppendLine();
+         sb.Append("  rm \"");
+         sb.Append(Constants.PATH);
+         sb.Append("Temp/UnityLockfile\"");
+         sb.AppendLine();
 #endif
          */
          sb.AppendLine("done");
@@ -766,7 +726,7 @@ namespace Crosstales.Common.EditorUtil
          // header
          sb.AppendLine("echo \"+----------------------------------------------------------------------------+\"");
          sb.AppendLine("echo \"¦                                                                            ¦\"");
-         sb.AppendLine("echo \"¦  Common 2020.1.0 - Linux                                                   ¦\"");
+         sb.AppendLine("echo \"¦  Common 2020.2.0 - Linux                                                   ¦\"");
          sb.AppendLine("echo \"¦  Copyright 2018-2020 by www.crosstales.com                                 ¦\"");
          sb.AppendLine("echo \"¦                                                                            ¦\"");
          sb.AppendLine("echo \"¦  This script restarts Unity.                                               ¦\"");
@@ -788,10 +748,10 @@ namespace Crosstales.Common.EditorUtil
          sb.AppendLine("  sleep 3");
          /*
 #if UNITY_2018_2_OR_NEWER
-                     sb.Append("  rm \"");
-                     sb.Append(Constants.PATH);
-                     sb.Append("Temp/UnityLockfile\"");
-                     sb.AppendLine();
+         sb.Append("  rm \"");
+         sb.Append(Constants.PATH);
+         sb.Append("Temp/UnityLockfile\"");
+         sb.AppendLine();
 #endif
          */
          sb.AppendLine("done");
@@ -841,13 +801,10 @@ namespace Crosstales.Common.EditorUtil
 #if CT_DEVELOP
             logo = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Plugins/crosstales/Common/Icons/" + fileName, typeof(Texture2D));
 #else
-                logo = (Texture2D)EditorGUIUtility.Load("crosstales/Common/" + fileName);
+            logo = (Texture2D)EditorGUIUtility.Load("crosstales/Common/" + fileName);
 #endif
-
             if (logo == null)
-            {
                Debug.LogWarning("Image not found: " + fileName);
-            }
          }
 
          return logo;

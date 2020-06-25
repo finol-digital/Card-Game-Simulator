@@ -40,9 +40,7 @@ namespace Crosstales.Common.Util
          elapsedTime = changeTime = Random.Range(ChangeInterval.x, ChangeInterval.y);
 
          if (RandomRotationAtStart)
-         {
             tf.localRotation = Random.rotation;
-         }
       }
 
       public void Update()

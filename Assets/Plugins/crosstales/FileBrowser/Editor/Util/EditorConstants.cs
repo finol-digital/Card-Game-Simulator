@@ -7,6 +7,7 @@ namespace Crosstales.FB.EditorUtil
       #region Constant variables
 
       public const string KEY_UPDATE_CHECK = Util.Constants.KEY_PREFIX + "UPDATE_CHECK";
+      public const string KEY_COMPILE_DEFINES = Util.Constants.KEY_PREFIX + "COMPILE_DEFINES";
 
       // Keys for the configuration of the asset
       public const string KEY_UPDATE_DATE = Util.Constants.KEY_PREFIX + "UPDATE_DATE";
@@ -16,6 +17,7 @@ namespace Crosstales.FB.EditorUtil
       // Default values
       public const string DEFAULT_ASSET_PATH = "/Plugins/crosstales/FileBrowser/";
       public const bool DEFAULT_UPDATE_CHECK = false;
+      public const bool DEFAULT_COMPILE_DEFINES = true;
 
       #endregion
 

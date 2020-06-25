@@ -28,7 +28,7 @@ namespace Crosstales.Common.Util
       public static bool HasKey(string key)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            return PlayerPrefs.HasKey(key);
+         return PlayerPrefs.HasKey(key);
 #else
          return content.ContainsKey(key);
 #endif
@@ -38,7 +38,7 @@ namespace Crosstales.Common.Util
       public static void DeleteAll()
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            PlayerPrefs.DeleteAll();
+         PlayerPrefs.DeleteAll();
 #else
          content.Clear();
 #endif
@@ -49,7 +49,7 @@ namespace Crosstales.Common.Util
       public static void DeleteKey(string key)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            PlayerPrefs.DeleteKey(key);
+         PlayerPrefs.DeleteKey(key);
 #else
          content.Remove(key);
 #endif
@@ -59,7 +59,7 @@ namespace Crosstales.Common.Util
       public static void Save()
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            PlayerPrefs.Save();
+         PlayerPrefs.Save();
 #else
          //Debug.Log(fileName);
 
@@ -79,7 +79,7 @@ namespace Crosstales.Common.Util
       public static string GetString(string key)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            return PlayerPrefs.GetString(key);
+         return PlayerPrefs.GetString(key);
 #else
          return content[key];
 #endif
@@ -91,7 +91,7 @@ namespace Crosstales.Common.Util
       public static float GetFloat(string key)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            return PlayerPrefs.GetFloat(key);
+         return PlayerPrefs.GetFloat(key);
 #else
          float result;
          float.TryParse(GetString(key), out result);
@@ -106,7 +106,7 @@ namespace Crosstales.Common.Util
       public static int GetInt(string key)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            return PlayerPrefs.GetInt(key);
+         return PlayerPrefs.GetInt(key);
 #else
          int result;
          int.TryParse(GetString(key), out result);
@@ -151,7 +151,7 @@ namespace Crosstales.Common.Util
       public static void SetString(string key, string value)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            PlayerPrefs.SetString(key, value);
+         PlayerPrefs.SetString(key, value);
 #else
          if (content.ContainsKey(key))
          {
@@ -170,7 +170,7 @@ namespace Crosstales.Common.Util
       public static void SetFloat(string key, float value)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            PlayerPrefs.SetFloat(key, value);
+         PlayerPrefs.SetFloat(key, value);
 #else
          SetString(key, value.ToString());
 #endif
@@ -182,7 +182,7 @@ namespace Crosstales.Common.Util
       public static void SetInt(string key, int value)
       {
 #if (UNITY_WSA || UNITY_WEBGL) && !UNITY_EDITOR
-            PlayerPrefs.SetInt(key, value);
+         PlayerPrefs.SetInt(key, value);
 #else
          SetString(key, value.ToString());
 #endif

@@ -14,6 +14,7 @@ namespace Crosstales.Common.Util
       {
          if (obj == null)
             throw new System.ArgumentNullException("obj");
+
          if (filename == null)
             throw new System.ArgumentNullException("filename");
 
@@ -39,9 +40,7 @@ namespace Crosstales.Common.Util
          try
          {
             if (System.IO.File.Exists(filename))
-            {
                return DeserializeFromString<T>(System.IO.File.ReadAllText(filename), skipBOM);
-            }
 
             Debug.LogError("File doesn't exist: " + filename);
          }
@@ -98,9 +97,7 @@ namespace Crosstales.Common.Util
             using (System.IO.StringReader sr = new System.IO.StringReader(xmlAsString))
             {
                if (skipBOM)
-               {
                   sr.Read(); //skip BOM
-               }
 
                return (T)xs.Deserialize(sr);
             }

@@ -55,74 +55,67 @@ namespace Crosstales.FB.Wrapper
 
       public override string[] OpenFiles(string title, string directory, ExtensionFilter[] extensions, bool multiselect)
       {
-         if (IntPtr.Size == 8)
+         NativeMethods.OpenFileName ofn = new NativeMethods.OpenFileName();
+         string dir = Util.Helper.ValidatePath(directory);
+
+         try
          {
-            NativeMethods.OpenFileName ofn = new NativeMethods.OpenFileName();
-            string dir = Util.Helper.ValidatePath(directory);
+            ofn.dlgOwner = currentWindow;
+            ofn.filter = getFilterFromFileExtensionList(extensions);
+            ofn.filterIndex = 1;
 
-            try
+            if (!string.IsNullOrEmpty(dir))
+               ofn.initialDir = dir;
+
+#if ENABLE_IL2CPP
+            //ofn.file = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUni(Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH));
+            ofn.file = System.Runtime.InteropServices.Marshal.StringToBSTR(Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH));
+#else
+            ofn.file = Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH);
+#endif
+            ofn.maxFile = MAX_OPEN_FILE_LENGTH;
+
+            ofn.title = title;
+            ofn.flags = OFN_NOCHANGEDIR | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST |
+                        (multiselect ? OFN_ALLOWMULTISELECT | OFN_EXPLORER : 0x00000000);
+
+            ofn.structSize = System.Runtime.InteropServices.Marshal.SizeOf(ofn);
+
+            if (NativeMethods.GetOpenFileName(ref ofn))
             {
-               ofn.dlgOwner = currentWindow;
-               ofn.filter = getFilterFromFileExtensionList(extensions);
-               ofn.filterIndex = 1;
-
-               if (!string.IsNullOrEmpty(dir))
-               {
-                  ofn.initialDir = dir;
-               }
-
 #if ENABLE_IL2CPP
-                //ofn.file = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUni(Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH));
-                ofn.file = System.Runtime.InteropServices.Marshal.StringToBSTR(Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH));
+               //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(ofn.file);
+               string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ofn.file);
 #else
-               ofn.file = Util.Helper.CreateString(" ", MAX_OPEN_FILE_LENGTH);
+               string file = ofn.file;
 #endif
-               ofn.maxFile = MAX_OPEN_FILE_LENGTH;
-
-               ofn.title = title;
-               ofn.flags = OFN_NOCHANGEDIR | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST |
-                           (multiselect ? OFN_ALLOWMULTISELECT | OFN_EXPLORER : 0x00000000);
-
-               ofn.structSize = System.Runtime.InteropServices.Marshal.SizeOf(ofn);
-
-               if (NativeMethods.GetOpenFileName(ofn))
+               if (multiselect)
                {
-#if ENABLE_IL2CPP
-                  //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(ofn.file);
-                  string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ofn.file);
-#else
-                  string file = ofn.file;
-#endif
-                  if (multiselect)
+                  //Debug.Log("FILE: " + file);
+
+                  string[] files = file.Split(nullChar, StringSplitOptions.RemoveEmptyEntries);
+
+                  if (files.Length > 2)
                   {
-                     string[] files = file.Split(nullChar, StringSplitOptions.RemoveEmptyEntries);
+                     System.Collections.Generic.List<string> selectedFilesList =
+                        new System.Collections.Generic.List<string>();
 
-                     if (files.Length > 2)
+                     for (int ii = 1; ii < files.Length - 1; ii++)
                      {
-                        System.Collections.Generic.List<string> selectedFilesList =
-                           new System.Collections.Generic.List<string>();
-
-                        for (int ii = 1; ii < files.Length - 1; ii++)
-                        {
-                           var resultFile = Util.Helper.ValidateFile(files[0] + '\\' + files[ii]);
-                           selectedFilesList.Add(resultFile);
-                        }
-
-                        return selectedFilesList.ToArray();
+                        var resultFile = Util.Helper.ValidateFile(files[0] + '\\' + files[ii]);
+                        selectedFilesList.Add(resultFile);
                      }
-                  }
 
-                  return new[] {Util.Helper.ValidateFile(file)};
+                     return selectedFilesList.ToArray();
+                  }
                }
-            }
-            catch (Exception ex)
-            {
-               Debug.LogError(ex);
+
+               return new[] {Util.Helper.ValidateFile(file)};
             }
          }
-         else
+         catch (Exception ex)
          {
-            Debug.LogError("'OpenFiles' only works with 64bit Windows builds!");
+            Debug.LogError(ex);
          }
 
          return new string[0];
@@ -135,61 +128,54 @@ namespace Crosstales.FB.Wrapper
 
       public override string SaveFile(string title, string directory, string defaultName, ExtensionFilter[] extensions)
       {
-         if (IntPtr.Size == 8)
+         NativeMethods.OpenFileName sfn = new NativeMethods.OpenFileName();
+
+         string dir = Util.Helper.ValidatePath(directory);
+         string defaultExtension = getDefaultExtension(extensions);
+
+         try
          {
-            NativeMethods.OpenFileName sfn = new NativeMethods.OpenFileName();
+            sfn.dlgOwner = currentWindow;
+            sfn.filter = getFilterFromFileExtensionList(extensions);
+            sfn.filterIndex = 1;
 
-            string dir = Util.Helper.ValidatePath(directory);
-            string defaultExtension = getDefaultExtension(extensions);
+            var fileNames = defaultExtension.Equals("*") ? defaultExtension : defaultName + "." + defaultExtension;
 
-            try
-            {
-               sfn.dlgOwner = currentWindow;
-               sfn.filter = getFilterFromFileExtensionList(extensions);
-               sfn.filterIndex = 1;
-
-               var fileNames = defaultExtension.Equals("*") ? defaultExtension : defaultName + "." + defaultExtension;
-
-               if (!string.IsNullOrEmpty(dir))
-                  sfn.initialDir = dir;
+            if (!string.IsNullOrEmpty(dir))
+               sfn.initialDir = dir;
 
 #if ENABLE_IL2CPP
-               //sfn.file = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUni(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
-               sfn.file = System.Runtime.InteropServices.Marshal.StringToBSTR(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
+            //sfn.file = System.Runtime.InteropServices.Marshal.StringToCoTaskMemUni(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
+            sfn.file = System.Runtime.InteropServices.Marshal.StringToBSTR(fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length));
 #else
-               sfn.file = fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length);
+            sfn.file = fileNames + Util.Helper.CreateString(" ", MAX_SAVE_FILE_LENGTH - fileNames.Length);
 #endif
-               sfn.maxFile = MAX_SAVE_FILE_LENGTH;
+            sfn.maxFile = MAX_SAVE_FILE_LENGTH;
 
-               sfn.title = title;
-               sfn.defExt = defaultExtension;
-               sfn.flags = OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
+            sfn.title = title;
+            sfn.defExt = defaultExtension;
+            sfn.flags = OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
 
-               sfn.structSize = System.Runtime.InteropServices.Marshal.SizeOf(sfn);
+            sfn.structSize = System.Runtime.InteropServices.Marshal.SizeOf(sfn);
 
-               if (NativeMethods.GetSaveFileName(sfn))
-               {
-#if ENABLE_IL2CPP
-                  //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(sfn.file);
-                  string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(sfn.file);
-                  string newFile = Util.Helper.ValidateFile(file);
-                  //return newFile.Substring(0, newFile.Length - 1);
-                  return newFile.Substring(0, newFile.Length);
-#else
-                  string file = sfn.file;
-                  string newFile = Util.Helper.ValidateFile(file);
-                  return newFile;
-#endif
-               }
-            }
-            catch (Exception ex)
+            if (NativeMethods.GetSaveFileName(ref sfn))
             {
-               Debug.LogError(ex);
+#if ENABLE_IL2CPP
+               //string file = System.Runtime.InteropServices.Marshal.PtrToStringUni(sfn.file);
+               string file = System.Runtime.InteropServices.Marshal.PtrToStringBSTR(sfn.file);
+               string newFile = Util.Helper.ValidateFile(file);
+               //return newFile.Substring(0, newFile.Length - 1);
+               return newFile.Substring(0, newFile.Length);
+#else
+               string file = sfn.file;
+               string newFile = Util.Helper.ValidateFile(file);
+               return newFile;
+#endif
             }
          }
-         else
+         catch (Exception ex)
          {
-            Debug.LogError("'SaveFile' only works with 64bit Windows builds!");
+            Debug.LogError(ex);
          }
 
          return string.Empty;
@@ -374,10 +360,10 @@ namespace Crosstales.FB.Wrapper
       public delegate int BrowseCallbackProc(IntPtr hwnd, int uMsg, IntPtr lParam, IntPtr lpData);
 
       [System.Runtime.InteropServices.DllImport("Comdlg32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
-      public static extern bool GetOpenFileName([System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out] OpenFileName ofn);
+      public static extern bool GetOpenFileName(ref OpenFileName ofn);
 
       [System.Runtime.InteropServices.DllImport("Comdlg32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
-      public static extern bool GetSaveFileName([System.Runtime.InteropServices.In, System.Runtime.InteropServices.Out] OpenFileName sfn);
+      public static extern bool GetSaveFileName(ref OpenFileName sfn);
 
       [System.Runtime.InteropServices.DllImport("shell32.dll")]
       internal static extern IntPtr SHBrowseForFolder(ref BROWSEINFO lpbi);

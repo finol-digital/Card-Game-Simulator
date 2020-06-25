@@ -126,7 +126,7 @@ namespace Crosstales.FB.EditorTask
                switch (option)
                {
                   case 0:
-                     Application.OpenURL(EditorConstants.ASSET_URL);
+                     Util.Helper.OpenURL(EditorConstants.ASSET_URL);
                      break;
                   case 1:
                      // do nothing!
@@ -151,7 +151,7 @@ namespace Crosstales.FB.EditorTask
                switch (option)
                {
                   case 0:
-                     Application.OpenURL(Util.Constants.ASSET_PRO_URL);
+                     Util.Helper.OpenURL(Util.Constants.ASSET_PRO_URL);
                      break;
                   case 1:
                      // do nothing!
@@ -176,7 +176,7 @@ namespace Crosstales.FB.EditorTask
                switch (option)
                {
                   case 0:
-                     Application.OpenURL(EditorConstants.ASSET_URL);
+                     Util.Helper.OpenURL(EditorConstants.ASSET_URL);
                      break;
                   case 1:
                      // do nothing!
@@ -201,7 +201,7 @@ namespace Crosstales.FB.EditorTask
                switch (option)
                {
                   case 0:
-                     Application.OpenURL(Common.Util.BaseConstants.ASSET_AUTHOR_URL);
+                     Util.Helper.OpenURL(Common.Util.BaseConstants.ASSET_AUTHOR_URL);
                      break;
                   case 1:
                      // do nothing!

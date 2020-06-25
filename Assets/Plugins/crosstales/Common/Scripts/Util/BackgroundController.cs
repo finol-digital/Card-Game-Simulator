@@ -19,29 +19,29 @@ namespace Crosstales.Common.Util
       #region MonoBehaviour methods
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR //|| CT_DEVELOP
-        public void Start()
-        {
+      public void Start()
+      {
+         isFocused = Application.isFocused;
+      }
+
+      public void FixedUpdate()
+      {
+         if (Application.isFocused != isFocused)
+         {
             isFocused = Application.isFocused;
-        }
 
-        public void FixedUpdate()
-        {
-            if (Application.isFocused != isFocused)
+            if ((BaseHelper.isAndroidPlatform || BaseHelper.isIOSPlatform) && !TouchScreenKeyboard.visible)
             {
-                isFocused = Application.isFocused;
+               foreach (var go in Objects.Where(go => go != null))
+               {
+                  go.SetActive(isFocused);
+               }
 
-                if ((BaseHelper.isAndroidPlatform || BaseHelper.isIOSPlatform) && !TouchScreenKeyboard.visible)
-                {
-                    foreach (var go in Objects.Where(go => go != null))
-                    {
-                        go.SetActive(isFocused);
-                    }
-
-                    if (BaseConstants.DEV_DEBUG)
-                        Debug.Log("Application.isFocused: " + isFocused);
-                }
+               if (BaseConstants.DEV_DEBUG)
+                  Debug.Log("Application.isFocused: " + isFocused, this);
             }
-        }
+         }
+      }
 #endif
 
       #endregion

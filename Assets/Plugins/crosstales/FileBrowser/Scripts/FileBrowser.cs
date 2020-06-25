@@ -17,10 +17,11 @@ namespace Crosstales.FB
 
       static FileBrowser()
       {
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+//#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+#if UNITY_EDITOR_WIN
          if (Util.Helper.isEditor && !Util.Config.NATIVE_WINDOWS)
 #else
-            if (Util.Helper.isEditor)
+         if (Util.Helper.isEditor)
 #endif
          {
 #if UNITY_EDITOR
@@ -30,7 +31,7 @@ namespace Crosstales.FB
          else if (Util.Helper.isMacOSPlatform)
          {
 #if UNITY_STANDALONE_OSX
-                platformWrapper = new Wrapper.FileBrowserMac();
+            platformWrapper = new Wrapper.FileBrowserMac();
 #endif
          }
          else if (Util.Helper.isWindowsPlatform || Util.Helper.isWindowsEditor)
@@ -42,13 +43,13 @@ namespace Crosstales.FB
          else if (Util.Helper.isLinuxPlatform)
          {
 #if UNITY_STANDALONE_LINUX
-                platformWrapper = new Wrapper.FileBrowserLinux();
+            platformWrapper = new Wrapper.FileBrowserLinux();
 #endif
          }
          else if (Util.Helper.isWSAPlatform)
          {
 #if UNITY_WSA && !UNITY_EDITOR
-                platformWrapper = new Wrapper.FileBrowserWSA();
+            platformWrapper = new Wrapper.FileBrowserWSA();
 #endif
          }
          else

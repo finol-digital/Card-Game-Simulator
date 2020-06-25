@@ -19,35 +19,35 @@ namespace Crosstales
          if (str == null)
             throw new System.ArgumentNullException("str");
 #if UNITY_WSA
-            return toTitleCase(str);
+         return toTitleCase(str);
 #else
          return System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.ToLower());
 #endif
       }
 
 #if UNITY_WSA
-        /// <summary>
-        /// Converts to title case: each word starts with an upper case.
-        /// </summary>
-        private static string toTitleCase(string str)
-        {
-            if (str.Length == 0)
-                return str;
+     /// <summary>
+     /// Converts to title case: each word starts with an upper case.
+     /// </summary>
+     private static string toTitleCase(string str)
+     {
+         if (str.Length == 0)
+             return str;
 
-            System.Text.StringBuilder result = new System.Text.StringBuilder(str);
+         System.Text.StringBuilder result = new System.Text.StringBuilder(str);
 
-            result[0] = char.ToUpper(result[0]);
+         result[0] = char.ToUpper(result[0]);
 
-            for (int ii = 1; ii < result.Length; ii++)
-            {
-                if (char.IsWhiteSpace(result[ii - 1]))
-                    result[ii] = char.ToUpper(result[ii]);
-                else
-                    result[ii] = char.ToLower(result[ii]);
-            }
+         for (int ii = 1; ii < result.Length; ii++)
+         {
+             if (char.IsWhiteSpace(result[ii - 1]))
+                 result[ii] = char.ToUpper(result[ii]);
+             else
+                 result[ii] = char.ToLower(result[ii]);
+         }
 
-            return result.ToString();
-        }
+         return result.ToString();
+     }
 #endif
 
       /// <summary>
@@ -193,8 +193,26 @@ namespace Crosstales
       /// <returns>True if the string is numeric.</returns>
       public static bool CTisNumeric(this string str)
       {
+         if (str == null)
+            throw new System.ArgumentNullException("str");
+
          float output;
          return float.TryParse(str, out output);
+      }
+
+      /// <summary>
+      /// Extension method for strings.
+      /// Checks if the string is integer.
+      /// </summary>
+      /// <param name="str">String-instance.</param>
+      /// <returns>True if the string is integer.</returns>
+      public static bool CTisInteger(this string str)
+      {
+         if (str == null)
+            throw new System.ArgumentNullException("str");
+
+         int output;
+         return !str.Contains(".") && int.TryParse(str, out output);
       }
 
       #endregion
@@ -636,21 +654,21 @@ namespace Crosstales
       /// Extension method for IDictionary.
       /// Adds a dictionary to an existing one.
       /// </summary>
-      /// <param name="source">IDictionary-instance.</param>
+      /// <param name="dict">IDictionary-instance.</param>
       /// <param name="collection">Dictionary to add.</param>
-      public static void CTAddRange<K, V>(this System.Collections.Generic.IDictionary<K, V> source, System.Collections.Generic.IDictionary<K, V> collection)
+      public static void CTAddRange<K, V>(this System.Collections.Generic.IDictionary<K, V> dict, System.Collections.Generic.IDictionary<K, V> collection)
       {
-         if (source == null)
-            throw new System.ArgumentNullException("source");
+         if (dict == null)
+            throw new System.ArgumentNullException("dict");
 
          if (collection == null)
             throw new System.ArgumentNullException("collection");
 
          foreach (System.Collections.Generic.KeyValuePair<K, V> item in collection)
          {
-            if (!source.ContainsKey(item.Key))
+            if (!dict.ContainsKey(item.Key))
             {
-               source.Add(item.Key, item.Value);
+               dict.Add(item.Key, item.Value);
             }
             else
             {
@@ -714,6 +732,36 @@ namespace Crosstales
          }
 
          return null;
+      }
+
+      #endregion
+
+
+      #region Streams
+
+      /// <summary>
+      /// Extension method for Stream.
+      /// Reads the full content of a Stream.
+      /// </summary>
+      /// <param name="input">Stream-instance to read.</param>
+      /// <param name="bufferSize">Buffer size in bytes (default: 16384, optional).</param>
+      /// <returns>Byte-array of the Stream content.</returns>
+      public static byte[] CTReadFully(this System.IO.Stream input, int bufferSize = 16384)
+      {
+         if (input == null)
+            throw new System.ArgumentNullException("input");
+
+         byte[] buffer = new byte[bufferSize];
+         using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+         {
+            int read;
+            while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+               ms.Write(buffer, 0, read);
+            }
+
+            return ms.ToArray();
+         }
       }
 
       #endregion

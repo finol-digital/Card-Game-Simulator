@@ -5,9 +5,30 @@ using UnityEngine;
 
 namespace Crosstales.Common.EditorTask
 {
-   /// <summary>Base for adding and removing the given define symbols to PlayerSettings define symbols.</summary>
+   /// <summary>Base for adding and removing the given symbols to PlayerSettings compiler define symbols.</summary>
    public abstract class BaseCompileDefines
    {
+      #region Public methods
+
+      /// <summary>Adds the given symbols to the compiler defines.</summary>
+      /// <param name="symbols">Symbols to add to the compiler defines</param>
+      public static void AddSymbolsToAllTargets(params string[] symbols)
+      {
+         addSymbolsToAllTargets(symbols);
+      }
+
+      /// <summary>Removes the given symbols from the compiler defines.</summary>
+      /// <param name="symbols">Symbols to remove from the compiler defines</param>
+      public static void RemoveSymbolsFromAllTargets(params string[] symbols)
+      {
+         removeSymbolsFromAllTargets(symbols);
+      }
+
+      #endregion
+
+
+      #region Protected methods
+
       protected static void addSymbolsToAllTargets(params string[] symbols)
       {
          foreach (BuildTargetGroup group in System.Enum.GetValues(typeof(BuildTargetGroup)))
@@ -68,16 +89,15 @@ namespace Crosstales.Common.EditorTask
          }
       }
 
+      #endregion
+
+
+      #region Private methods
+
       private static bool isValidBuildTargetGroup(BuildTargetGroup group)
       {
          if (group == BuildTargetGroup.Unknown || isObsolete(group))
             return false;
-
-         /*
-         #if UNITY_5_6 // Unity 5.6 bug
-                     if ((int)(object)group == 27) return false;
-         #endif
-         */
 
          if (Application.unityVersion.StartsWith("5.6"))
          {
@@ -97,14 +117,11 @@ namespace Crosstales.Common.EditorTask
 
          System.Reflection.FieldInfo field = value.GetType().GetField(value.ToString());
          System.ObsoleteAttribute[] attributes = (System.ObsoleteAttribute[])field.GetCustomAttributes(typeof(System.ObsoleteAttribute), false);
+
          return attributes.Length > 0;
       }
 
-      //TODO remove in a later version
-      protected static void setCompileDefines(string[] symbols)
-      {
-         addSymbolsToAllTargets(symbols);
-      }
+      #endregion
    }
 }
 #endif

@@ -36,7 +36,7 @@ namespace Crosstales.FB.Wrapper
 
          path = extensions == null ? EditorUtility.OpenFilePanel(title, directory, string.Empty) : EditorUtility.OpenFilePanelWithFilters(title, directory, getFilterFromFileExtensionList(extensions));
 
-         return string.IsNullOrEmpty(path) ? new string[0] : new[] {path};
+         return string.IsNullOrEmpty(path) ? new string[0] : new[] {Util.Helper.ValidateFile(path)};
       }
 
       public override string[] OpenFolders(string title, string directory, bool multiselect)
@@ -46,7 +46,7 @@ namespace Crosstales.FB.Wrapper
 
          string path = EditorUtility.OpenFolderPanel(title, directory, string.Empty);
 
-         return string.IsNullOrEmpty(path) ? new string[0] : new[] {path};
+         return string.IsNullOrEmpty(path) ? new string[0] : new[] {Util.Helper.ValidatePath(path)};
       }
 
       public override string SaveFile(string title, string directory, string defaultName, ExtensionFilter[] extensions)
@@ -57,7 +57,7 @@ namespace Crosstales.FB.Wrapper
          string ext = extensions != null && extensions.Length > 0 ? extensions[0].Extensions[0].Equals("*") ? string.Empty : extensions[0].Extensions[0] : string.Empty;
          string name = string.IsNullOrEmpty(ext) ? defaultName : defaultName + "." + ext;
 
-         return EditorUtility.SaveFilePanel(title, directory, name, ext);
+         return Util.Helper.ValidateFile(EditorUtility.SaveFilePanel(title, directory, name, ext));
       }
 
       public override void OpenFilesAsync(string title, string directory, ExtensionFilter[] extensions, bool multiselect, Action<string[]> cb)

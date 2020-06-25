@@ -99,14 +99,10 @@ namespace Crosstales.Common.Util
       void System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader reader)
       {
          if (reader.IsEmptyElement)
-         {
             return;
-         }
 
          if (!reader.Read())
-         {
             throw new System.Xml.XmlException("Error in Deserialization of Dictionary");
-         }
 
          while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
          {

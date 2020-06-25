@@ -1,6 +1,13 @@
 {
   "scopedRegistries": [
     {
+      "name": "Google",
+      "url": "https://unityregistry-pa.googleapis.com",
+      "scopes": [
+        "com.google"
+      ]
+    },
+    {
       "name": "Packages from jillejr",
       "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity/",
       "scopes": [
@@ -9,15 +16,21 @@
     }
   ],
   "dependencies": {
-    "com.unity.package-manager-ui": "2.0.8",
-    "com.unity.textmeshpro": "1.4.1",
+    "com.google.play.instant": "1.1.1",
+    "com.unity.2d.sprite": "1.0.0",
+    "com.unity.ide.rider": "1.1.4",
+    "com.unity.ide.vscode": "1.2.1",
+    "com.unity.test-framework": "1.1.14",
+    "com.unity.textmeshpro": "2.0.1",
+    "com.unity.ugui": "1.0.0",
     "jillejr.newtonsoft.json-for-unity": "12.0.301",
-    "com.unity.modules.ai": "1.0.0",
+    "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
     "com.unity.modules.imageconversion": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",
+    "com.unity.modules.jsonserialize": "1.0.0",
     "com.unity.modules.physics": "1.0.0",
     "com.unity.modules.physics2d": "1.0.0",
     "com.unity.modules.screencapture": "1.0.0",

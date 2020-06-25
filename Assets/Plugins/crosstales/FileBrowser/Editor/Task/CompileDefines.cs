@@ -11,7 +11,8 @@ namespace Crosstales.FB.EditorTask
 
       static CompileDefines()
       {
-         addSymbolsToAllTargets(symbols);
+         if (EditorUtil.EditorConfig.COMPILE_DEFINES)
+            addSymbolsToAllTargets(symbols);
       }
    }
 }

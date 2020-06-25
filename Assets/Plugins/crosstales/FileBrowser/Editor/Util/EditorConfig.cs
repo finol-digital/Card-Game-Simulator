@@ -13,6 +13,9 @@ namespace Crosstales.FB.EditorUtil
       /// <summary>Enable or disable update-checks for the asset.</summary>
       public static bool UPDATE_CHECK = EditorConstants.DEFAULT_UPDATE_CHECK;
 
+      /// <summary>Enable or disable adding compile defines "CT_FB" and "CT_FB_PRO" for the asset.</summary>
+      public static bool COMPILE_DEFINES = EditorConstants.DEFAULT_COMPILE_DEFINES;
+
       /// <summary>Is the configuration loaded?</summary>
       public static bool isLoaded = false;
 
@@ -90,6 +93,7 @@ namespace Crosstales.FB.EditorUtil
       public static void Reset()
       {
          UPDATE_CHECK = EditorConstants.DEFAULT_UPDATE_CHECK;
+         COMPILE_DEFINES = EditorConstants.DEFAULT_COMPILE_DEFINES;
       }
 
       /// <summary>Loads the all changeable variables.</summary>
@@ -100,6 +104,11 @@ namespace Crosstales.FB.EditorUtil
             UPDATE_CHECK = Common.Util.CTPlayerPrefs.GetBool(EditorConstants.KEY_UPDATE_CHECK);
          }
 
+         if (Common.Util.CTPlayerPrefs.HasKey(EditorConstants.KEY_COMPILE_DEFINES))
+         {
+            COMPILE_DEFINES = Common.Util.CTPlayerPrefs.GetBool(EditorConstants.KEY_COMPILE_DEFINES);
+         }
+
          isLoaded = true;
       }
 
@@ -107,6 +116,7 @@ namespace Crosstales.FB.EditorUtil
       public static void Save()
       {
          Common.Util.CTPlayerPrefs.SetBool(EditorConstants.KEY_UPDATE_CHECK, UPDATE_CHECK);
+         Common.Util.CTPlayerPrefs.SetBool(EditorConstants.KEY_COMPILE_DEFINES, COMPILE_DEFINES);
 
          Common.Util.CTPlayerPrefs.Save();
       }

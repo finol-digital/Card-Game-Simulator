@@ -66,10 +66,10 @@ namespace Crosstales.Common.Util
       #endregion
 
 #else
-        public void Start()
-        {
-            Debug.LogWarning("'TakeScreenshot' doesn't work with the current platform!");
-        }
+      public void Start()
+      {
+         Debug.LogWarning("'TakeScreenshot' doesn't work with the current platform!");
+      }
 #endif
    }
 }

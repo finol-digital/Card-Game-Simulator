@@ -12,7 +12,6 @@ namespace Crosstales.Common.Util
       #region Variables
 
       private uint exitCode = 123456;
-      private IntPtr threadHandle = IntPtr.Zero;
       private CTProcessStartInfo startInfo = new CTProcessStartInfo();
 
       #endregion
@@ -109,9 +108,12 @@ namespace Crosstales.Common.Util
 
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
 //#if false
+
       #region Windows
 
       #region Variables
+
+      private IntPtr threadHandle = IntPtr.Zero;
 
       private static readonly System.Reflection.FieldInfo[] eventFields =
          typeof(System.Diagnostics.DataReceivedEventArgs).GetFields(
@@ -412,7 +414,6 @@ namespace Crosstales.Common.Util
       #endregion
 
 #else
-
       #region Unix
 
       #region Variables

@@ -1,5 +1,40 @@
 ﻿# FileBrowser PRO - Release notes
 
+## 2020.2.8 - 17.06.2020
+* Demo scenes are now in "Demos.unitypackage" (please install "Assets/Plugins/crosstales/Common/UI.unitypackage" first)
+* Demos improved
+* Updated to Common 2020.2.1
+  
+## 2020.2.7 - 10.06.2020
+* Windows: 
+  * Path fixed for Editor version
+  * Open file fixed for Windows 32bit
+
+## 2020.2.6 - 02.06.2020
+* Windows: fix for multiple file selection
+* Demos improved
+* Code improved
+
+## 2020.2.5 - 24.05.2020
+* Updated to Common 2020.2.0
+
+## 2020.2.4 - 19.05.2020
+* macOS: bundle id no longer interferes with the app store
+* Small fixes
+
+## 2020.2.3 - 13.05.2020
+* Compile defines can now be disabled
+* Editor integration improved
+* PlayMaker actions improved
+
+## 2020.2.2 - 15.04.2020
+* Windows: support for 32bit builds 
+* Updated to Common 2020.1.3
+
+## 2020.2.1 - 26.03.2020
+* Improvements for macOS and Linux editors
+* Editor improved
+
 ## 2020.2.0 - 05.03.2020
 * WSA - new properties and variables added (access them with in code with "ENABLE_WINMD_SUPPORT"):
   * CurrentLocation: path location for the file browser (default: PickerLocationId.ComputerFolder)
