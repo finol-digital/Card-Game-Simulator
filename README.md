@@ -10,6 +10,8 @@ For additional resources, see: https://drive.google.com/open?id=1kVms-_CXRw1e4Ob
 
 ## Building and Running
 
+Built with [Unity 2019.4 LTS](https://unity.com/releases/2019-lts).
+
 To build and run the project, you just need to clone the repo and run it in Unity 2018.4, available from https://unity3d.com/get-unity/download/archive
 
 ## Contributing
