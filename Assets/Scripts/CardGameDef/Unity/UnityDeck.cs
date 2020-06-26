@@ -6,11 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CardGameDef.Decks;/*
-using Didstopia.PDFSharp;
-using Didstopia.PDFSharp.Drawing;
-using Didstopia.PDFSharp.Pdf;
-using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;*/
+using CardGameDef.Decks;
+using PdfSharp;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 
 namespace CardGameDef.Unity
 {
@@ -249,8 +248,7 @@ namespace CardGameDef.Unity
         {
             if (!Directory.Exists(PrintPdfDirectory))
                 Directory.CreateDirectory(PrintPdfDirectory);
-/*
-            ImageSource.ImageSourceImpl = new ImageSharpImageSource();
+
             var pdfDocument = new PdfDocument();
             pdfDocument.Info.Title = Name;
 
@@ -285,7 +283,7 @@ namespace CardGameDef.Unity
             pdfDocument.Save(PrintPdfFilePath);
             pdfDocument.Close();
             pdfDocument.Dispose();
-*/
+
             return new Uri(UnityExtensionMethods.FilePrefix + PrintPdfFilePath);
         }
     }
