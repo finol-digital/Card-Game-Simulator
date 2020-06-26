@@ -11,9 +11,6 @@ namespace Crosstales.FB.EditorIntegration
    {
       #region Variables
 
-      private static string updateText = UpdateCheck.TEXT_NOT_CHECKED;
-      private static UpdateStatus updateStatus = UpdateStatus.NOT_CHECKED;
-
       private System.Threading.Thread worker;
 
       private Vector2 scrollPosConfig;
@@ -24,8 +21,6 @@ namespace Crosstales.FB.EditorIntegration
 
       private static string readme;
       private static string versions;
-
-      private int aboutTab = 0;
 
       #endregion
 

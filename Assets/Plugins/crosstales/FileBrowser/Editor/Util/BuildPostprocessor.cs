@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR && UNITY_STANDALONE_OSX //|| CT_DEVELOP
+using Crosstales.Common.Util;
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.Callbacks;
@@ -14,7 +15,7 @@ namespace Crosstales.FB.EditorUtil
       [PostProcessBuildAttribute(1)]
       public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
       {
-         if (EditorHelper.isMacOSPlatform)
+         if (BaseHelper.isMacOSPlatform)
          {
             //remove all meta-files
             string[] files = Helper.GetFiles(pathToBuiltProject, true, "meta");
