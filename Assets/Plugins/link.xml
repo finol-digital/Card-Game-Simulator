@@ -1,9 +1,5 @@
 <linker>
-  <assembly fullname="Didstopia.PDFSharp" preserve="all"/>
-  <assembly fullname="SixLabors.Core" preserve="all"/>
-  <assembly fullname="SixLabors.ImageSharp" preserve="all"/>
-  <assembly fullname="SixLabors.ImageSharp.Drawing" preserve="all"/>
-  <assembly fullname="System.Core">
-    <type fullname="System.Linq.Expressions.Interpreter.LightLambda" preserve="all"/>
+  <assembly fullname="Newtonsoft.Json">
+    <type fullname="System.Runtime.CompilerServices.NullableAttribute" preserve="all"/>
   </assembly>
 </linker>
