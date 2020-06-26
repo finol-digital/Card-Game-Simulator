@@ -108,10 +108,14 @@ namespace Cgs.Editor
                 EditorApplication.Exit(121);
             }
 
-            if (!validatedOptions.TryGetValue("customBuildPath", out string _))
+            if (!validatedOptions.TryGetValue("customBuildPath", out string customBuildPath))
             {
                 Console.WriteLine("Missing argument -customBuildPath");
                 EditorApplication.Exit(130);
+            }
+            else if (validatedOptions.ContainsKey("androidAppBundle") && customBuildPath.Contains("apk"))
+            {
+                validatedOptions["customBuildPath"] = customBuildPath.Replace("apk", "aab");
             }
 
             const string defaultCustomBuildName = "TestBuild";

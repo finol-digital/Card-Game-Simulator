@@ -175,7 +175,7 @@ PlayerSettings:
     Standalone: 38
     iPhone: 0
   AndroidBundleVersionCode: 89
-  AndroidMinSdkVersion: 19
+  AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0
   aotOptions: 
@@ -818,7 +818,7 @@ PlayerSettings:
     Android: 1
     Standalone: 1
   managedStrippingLevel:
-    Android: 2
+    Android: 3
     Standalone: 2
     Windows Store Apps: 1
   incrementalIl2cppBuild: {}
