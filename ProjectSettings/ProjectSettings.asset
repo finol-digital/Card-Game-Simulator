@@ -809,7 +809,8 @@ PlayerSettings:
     27: CT_FB;CT_FB_PRO
     28: CT_FB;CT_FB_PRO
     29: CT_FB;CT_FB_PRO
-  platformArchitecture: {}
+  platformArchitecture:
+    iPhone: 1
   scriptingBackend:
     Android: 1
     Standalone: 0
