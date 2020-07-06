@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Enhance backend
 
 ## Current Sprint
+- Filter '@' when creating game in-app
 - Fix: Card moved to server, but is still in hand
 - Play Mode Redesign
   - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)

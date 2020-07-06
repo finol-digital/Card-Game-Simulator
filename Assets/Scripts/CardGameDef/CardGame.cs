@@ -181,7 +181,7 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
-            "If cardNameIsUnique is true, different Cards are not allowed to have the same *Card:Name*. Cards with the same name will be treated as reprints, with the option to hide reprints available. If cardNameIsUnique false, DeckFileType.Txt will require <deckFileTxtId> for every Card.")]
+            "If cardNameIsUnique is true, different Cards are not allowed to have the same *Card:Name*. Cards with the same name will be treated as reprints, with the option to hide reprints available. If cardNameIsUnique is false, DeckFileType.Txt will require <deckFileTxtId> for every Card.")]
         [DefaultValue(true)]
         public bool CardNameIsUnique { get; set; } = true;
 

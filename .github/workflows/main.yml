@@ -3,14 +3,14 @@ on:
   push: { branches: [develop, master] }
   pull_request: { branches: [master] }
   release: { types: [published] }
-env:
-    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-    UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
 jobs:
   buildForAllPlatforms:
     name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
     runs-on: ubuntu-latest
+    env:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
     strategy:
       fail-fast: false
       matrix:
@@ -33,24 +33,17 @@ jobs:
         with:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
-      - name: free disk space
-        run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
-      - name: create android keystore
-        run: |
-          echo "${{ secrets.UNITY_ANDROID_KEYSTORE }}" > finoldigital.keystore.asc
-          gpg -d --passphrase "${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}" --batch finoldigital.keystore.asc > finoldigital.keystore
-      - uses: webbertakken/unity-builder@bf702784d2650ed3933a93d0592b1927acc057a7
+      - uses: davidmfinol/unity-builder@4bbcbe6395a50f6afe3576a4371126cd998055c5
         with:
           unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
           buildsPath: builds
-          buildMethod: Cgs.Editor.BuildCgs.BuildProject
-          customParameters: -androidAppBundle -keystorePass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }} -keyaliasPass ${{ secrets.UNITY_ANDROID_KEYSTORE_PASS }}
+          androidAppBundle: true
+          androidKeystoreName: finoldigital.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
       - uses: actions/upload-artifact@v1
         if: github.event.ref != 'refs/heads/develop'
         with:
@@ -91,19 +84,19 @@ jobs:
         with:
           name: cgs-builds
           path: builds
-      - run: |
+      - name: Prepare for upload
+        run: |
           echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
           echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+          find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
+          chmod +x fastlane/sign-osx-build.sh
+          ./fastlane/sign-osx-build.sh
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'android playstore'
-      - run: find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'ios release'
-      - run: |
-          chmod +x fastlane/sign-osx-build.sh
-          ./fastlane/sign-osx-build.sh
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'mac macupload'
