@@ -75,7 +75,7 @@ jobs:
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       MAC_APP_BUNDLE_PATHS: Contents/Plugins/libProcessStart.bundle;Contents/Plugins/FileBrowser.bundle
       PROJECT_NAME: Card Game Simulator
-      RELEASE_NOTES: - Enhance backend
+      RELEASE_NOTES: Enhance backend
 #      RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - uses: actions/checkout@v2
