@@ -108,11 +108,11 @@ public class BranchEditor : Editor {
 		}
 
 		StreamReader sr = new StreamReader(iosWrapperPath, Encoding.Default);
-        
-		#if UNITY_EDITOR_OSX
+
+		#if UNITY_EDITOR_WIN
+        string[] lines = sr.ReadToEnd().Split(new string[] { "\r\n", "\n", "\r" }, System.StringSplitOptions.None).ToArray();
+		#else
 		string[] lines = sr.ReadToEnd().Split(new string[] { System.Environment.NewLine }, System.StringSplitOptions.None).ToArray();
-		#elif UNITY_EDITOR_WIN
-		string[] lines = sr.ReadToEnd().Split(new string[] { "\r\n", "\n", "\r" }, System.StringSplitOptions.None).ToArray();
 		#endif
 
 		sr.Close();
@@ -143,20 +143,20 @@ public class BranchEditor : Editor {
 	#region Manifest update
 
 	public static void UpdateManifest() {
-		
+
 		string manifestFolder = Path.Combine(Application.dataPath, "Plugins/Android");
 		string defaultManifestPath = Path.Combine(Application.dataPath, "Plugins/Branch/Android/AndroidManifest.xml");
 		string manifestPath = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
-		
+
 		if (!File.Exists(manifestPath)) {
-			
+
 			if (!Directory.Exists(manifestFolder)) {
 				Directory.CreateDirectory(manifestFolder);
 			}
-			
+
 			File.Copy(defaultManifestPath, manifestPath);
 		}
-		
+
 		// Opening android manifest
 		XmlDocument xmlDoc = new XmlDocument();
 		xmlDoc.Load(manifestPath);
@@ -218,7 +218,7 @@ public class BranchEditor : Editor {
 
 //		// Adding debug mode meta and branch key
 		UpdateDebugModeMeta(xmlDoc, appNode);
-		
+
 		// Saving android manifest
 		xmlDoc.Save(manifestPath);
 
@@ -234,7 +234,7 @@ public class BranchEditor : Editor {
 		manifestWriter.Write(content);
 		manifestWriter.Close();
 	}
-	
+
 	public static void UpdateURIFilter(XmlDocument doc, XmlNode unityActivityNode) {
 		XmlNode intentFilterNode = null;
 
@@ -443,7 +443,7 @@ public class BranchEditor : Editor {
 
 
 	public static void UpdateDebugModeMeta(XmlDocument doc, XmlNode appNode) {
-//		<meta-data android:name="io.branch.sdk.TestMode" android:value="true" /> 
+//		<meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
 //		<meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_.." />
 //		<meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_.." />
 
