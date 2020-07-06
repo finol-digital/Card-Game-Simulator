@@ -169,9 +169,15 @@ public class BranchPostProcessBuild {
 		PBXProject proj = new PBXProject();
 		proj.ReadFromString(File.ReadAllText(pathToProject));
 
-		string target = proj.TargetGuidByName("Unity-iPhone");
+		string target = "";
+#if UNITY_2019_3_OR_NEWER
+		target = proj.GetUnityFrameworkTargetGuid();
+#else
+		target = proj.TargetGuidByName("Unity-iPhone");
+#endif
 
-		#if UNITY_2017_1_OR_NEWER
+
+#if UNITY_2017_1_OR_NEWER
 
 		if (!proj.ContainsFramework(target, "AdSupport.framework")) {
 			proj.AddFrameworkToProject(target, "AdSupport.framework", false);

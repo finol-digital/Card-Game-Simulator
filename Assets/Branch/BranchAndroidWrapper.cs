@@ -6,17 +6,11 @@ using System;
 public class BranchAndroidWrapper {
 #if UNITY_ANDROID
     
-    public static void setBranchKey(String branchKey) {
+    public static void setBranchKey(String branchKey, String sdkVersion) {
 		_runBlockOnThread(() => {
-        	_getBranchClass().CallStatic("setBranchKey", branchKey);
+        	_getBranchClass().CallStatic("setBranchKey", branchKey, sdkVersion);
 		});
     }
-    
-	public static void getAutoInstance() {
-		_runBlockOnThread(() => {
-			_getBranchClass().CallStatic("getAutoInstance");
-		});
-	}
 
 	#region InitSession methods
     

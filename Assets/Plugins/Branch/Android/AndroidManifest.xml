@@ -27,13 +27,6 @@
       <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true" />
     </activity>
 
-    <!-- Add this for Branch for install referrer tracking-->
-    <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-      <intent-filter>
-        <action android:name="com.android.vending.INSTALL_REFERRER" />
-      </intent-filter>
-    </receiver>
-
     <!-- Optional. Set to true to disable auto deep link feature-->
     <meta-data android:name="io.branch.sdk.auto_link_disable" android:value="false"/>
 

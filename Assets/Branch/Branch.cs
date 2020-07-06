@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 public class Branch : MonoBehaviour {
 
-	public static string sdkVersion = "0.5.15";
+	public static string sdkVersion = "0.6.5";
 
     public delegate void BranchCallbackWithParams(Dictionary<string, object> parameters, string error);
     public delegate void BranchCallbackWithUrl(string url, string error);
@@ -19,12 +19,6 @@ public class Branch : MonoBehaviour {
 
     #region InitSession methods
 
-	/**
-	 * 
-	 */
-	public static void getAutoInstance() {
-		_getAutoInstance();
-	}
 
 	/**
 	 * Initialize session and receive information about how it opened.
@@ -397,10 +391,10 @@ public class Branch : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
 		if (BranchData.Instance.testMode) {
-        	_setBranchKey(BranchData.Instance.testBranchKey);
+        	_setBranchKey(BranchData.Instance.testBranchKey, sdkVersion);
 		}
 		else {
-			_setBranchKey(BranchData.Instance.liveBranchKey);
+			_setBranchKey(BranchData.Instance.liveBranchKey, sdkVersion);
 		}
     }
 
@@ -430,9 +424,7 @@ public class Branch : MonoBehaviour {
 #if (UNITY_IOS || UNITY_IPHONE) && !UNITY_EDITOR
     
     [DllImport ("__Internal")]
-    private static extern void _setBranchKey(string branchKey);
-    
-	private static void _getAutoInstance() {}
+    private static extern void _setBranchKey(string branchKey, string sdkVersion);
 
     [DllImport ("__Internal")]
     private static extern void _initSession();
@@ -547,13 +539,9 @@ public class Branch : MonoBehaviour {
 	    
 #elif UNITY_ANDROID && !UNITY_EDITOR
 
-    private static void _setBranchKey(string branchKey) {
-        BranchAndroidWrapper.setBranchKey(branchKey);
+    private static void _setBranchKey(string branchKey, string sdkVersion) {
+        BranchAndroidWrapper.setBranchKey(branchKey, sdkVersion);
     }
-
-	private static void _getAutoInstance() {
-		BranchAndroidWrapper.getAutoInstance();
-	}
 
     private static void _initSession() {
         BranchAndroidWrapper.initSession();
@@ -703,9 +691,7 @@ public class Branch : MonoBehaviour {
 
 #else
 
-    private static void _setBranchKey(string branchKey) { }
-    
-	private static void _getAutoInstance() { }
+    private static void _setBranchKey(string branchKey, string sdkVersion) { }
 
     private static void _initSession() {
         Debug.Log("Branch is not implemented on this platform");

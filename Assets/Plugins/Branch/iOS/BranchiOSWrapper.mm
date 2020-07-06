@@ -5,7 +5,7 @@
 #import "UnityAppController.h"
 
 
-static NSString *_branchKey = @"key_live_mnzYrzoSgtqi3gAyzkVzqppkxFnNY1jn";
+static NSString *_branchKey = @"";
 static BranchUnityWrapper *_wrapper = [BranchUnityWrapper sharedInstance];
 
 
@@ -340,9 +340,9 @@ static callbackWithShareCompletion callbackWithShareCompletionForCallbackId(char
 
 #pragma mark - Key methods
 
-void _setBranchKey(char *branchKey) {
+void _setBranchKey(char *branchKey, char* branchSDKVersion) {
     _branchKey = CreateNSString(branchKey);
-    [[Branch getInstance:_branchKey] registerPluginName:@"unity.ios" version:@"0.5.15"];
+    [[Branch getInstance:_branchKey] registerPluginName:@"Unity" version:CreateNSString(branchSDKVersion)];
 }
 
 #pragma mark - InitSession methods
@@ -485,6 +485,9 @@ void _sendEvent(char *eventJson) {
     
     if (eventDict[@"transaction_id"]) {
         event.transactionID = eventDict[@"transaction_id"];
+    }
+    if (eventDict[@"customer_event_alias"]) {
+        event.alias = eventDict[@"customer_event_alias"];
     }
     if (eventDict[@"affiliation"]) {
         event.affiliation = eventDict[@"affiliation"];

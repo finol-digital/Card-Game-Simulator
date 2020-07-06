@@ -17,7 +17,7 @@ typedef void (^callbackWithShareCompletion) (NSString *activityType, BOOL comple
 extern "C" {
     #pragma mark - Key methods
 
-    void _setBranchKey(char *branchKey);
+    void _setBranchKey(char *branchKey, char* branchSDKVersion);
 
     #pragma mark - InitSession methods
 

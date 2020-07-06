@@ -109,7 +109,7 @@ public class BranchEditor : Editor {
 
 		StreamReader sr = new StreamReader(iosWrapperPath, Encoding.Default);
         
-		#if UNITY_EDITOR_OSX || UNITY_EDITOR_LINUX
+		#if UNITY_EDITOR_OSX
 		string[] lines = sr.ReadToEnd().Split(new string[] { System.Environment.NewLine }, System.StringSplitOptions.None).ToArray();
 		#elif UNITY_EDITOR_WIN
 		string[] lines = sr.ReadToEnd().Split(new string[] { "\r\n", "\n", "\r" }, System.StringSplitOptions.None).ToArray();
@@ -364,7 +364,7 @@ public class BranchEditor : Editor {
 						ifData.SetAttribute("android____scheme", "https");
 					}
 					else {
-						ifData.SetAttribute("android____scheme", "http");
+						ifData.SetAttribute("android____scheme", "https");
 					}
 
 					ifData.SetAttribute("android____host", link);
@@ -391,7 +391,7 @@ public class BranchEditor : Editor {
 						ifData.SetAttribute("android____scheme", "https");
 					}
 					else {
-						ifData.SetAttribute("android____scheme", "http");
+						ifData.SetAttribute("android____scheme", "https");
 					}
 
 					ifData.SetAttribute("android____host", link);
@@ -479,17 +479,12 @@ public class BranchEditor : Editor {
 
 		XmlElement keyMetaData = doc.CreateElement("meta-data");
 
-		if (BranchData.Instance.simulateFreshInstalls) {
-			keyMetaData.SetAttribute("android____name", "io.branch.sdk.BranchKey.test");
-		}
-		else {
-			keyMetaData.SetAttribute("android____name", "io.branch.sdk.BranchKey");
-		}
-
 		if (BranchData.Instance.testMode) {
+			keyMetaData.SetAttribute("android____name", "io.branch.sdk.BranchKey.test");
 			keyMetaData.SetAttribute("android____value", BranchData.Instance.testBranchKey);
 		}
 		else {
+			keyMetaData.SetAttribute("android____name", "io.branch.sdk.BranchKey");
 			keyMetaData.SetAttribute("android____value", BranchData.Instance.liveBranchKey);
 		}
 
