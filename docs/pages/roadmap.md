@@ -43,14 +43,13 @@ permalink: roadmap.html
 
 ## Backlog
 - Update all images/screenshots (on cgs website, ln, and all stores)
-- Re-record training video (show on cgs webpage, personal webpage, play store)
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to succesfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
-- Tech: Android Build Parameters
 - Tech: Branch on desktop
 - Tech: Google Play Instant
+- Re-record training video (show on cgs webpage, personal webpage, play store)
 - Android Searchbar Widget
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu

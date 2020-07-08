@@ -316,6 +316,7 @@ namespace Cgs.Decks
                 AddCard((UnityCard) card);
             SavedDeck = deck;
             UpdateDeckStats();
+            scrollRect.horizontalNormalizedPosition = 0;
         }
 
         [UsedImplicitly]
