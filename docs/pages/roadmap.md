@@ -42,7 +42,6 @@ permalink: roadmap.html
 - ydk side is also extra
 
 ## Backlog
-- Update all images/screenshots (on cgs website, ln, and all stores)
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to succesfully load StreamingAssets/ without error
@@ -59,6 +58,7 @@ permalink: roadmap.html
 
 ## Icebox
 - Tech: Replace SwipeManager
+- Automate store images through fastlane
 - Card Search Results View Options
   - Text-only
   - Small Image
