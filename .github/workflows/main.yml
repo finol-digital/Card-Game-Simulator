@@ -100,6 +100,6 @@ jobs:
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'ios release'
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'mac macupload'
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'mac macupload'
