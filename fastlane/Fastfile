@@ -10,17 +10,16 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 keychain_name = "temporary_keychain"
 keychain_password = SecureRandom.base64
 
 platform :android do
+
   desc "Upload a new Android version to the Google Play Store"
   lane :playstore do
     upload_to_play_store(aab: "#{ENV['BUILDS_PATH']}/Android/Android.aab")
   end
+
 end
 
 platform :ios do
@@ -97,8 +96,20 @@ platform :ios do
 end
 
 platform :mac do
+
+  desc "Hack to prefix 9 to version, so that Apple doesn't reject it" 
+  lane :fixversion do
+    update_info_plist(
+      plist_path: "#{ENV['BUILDS_PATH']}/StandaloneOSX/StandaloneOSX.app/Contents/Info.plist",
+      block: proc do |plist|
+        plist["CFBundleVersion"] = "9" + plist["CFBundleVersion"]
+      end
+    )
+  end
+
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do
     deliver
   end
+
 end
