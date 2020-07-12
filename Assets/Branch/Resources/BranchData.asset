@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: BranchData
   m_EditorClassIdentifier: 
   liveBranchKey: key_live_mnzYrzoSgtqi3gAyzkVzqppkxFnNY1jn
-  liveBranchUri: secret_live_YPoyJFL8pVLAIcBZyyRjnvW0kj169iuA
-  liveAndroidPathPrefix: cardgamesim://
+  liveBranchUri: cardgamesim
+  liveAndroidPathPrefix: 
   liveAppLinks:
   - cgs.link
   - cardgamesim-alternate.app.link
