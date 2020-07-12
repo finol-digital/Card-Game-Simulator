@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac695c03334d64ebd95c3ab403d74540, type: 3}
   m_Name: BranchData
   m_EditorClassIdentifier: 
-  liveBranchKey: 
-  liveBranchUri: 
-  liveAndroidPathPrefix: 
-  liveAppLinks: []
+  liveBranchKey: key_live_mnzYrzoSgtqi3gAyzkVzqppkxFnNY1jn
+  liveBranchUri: secret_live_YPoyJFL8pVLAIcBZyyRjnvW0kj169iuA
+  liveAndroidPathPrefix: cardgamesim://
+  liveAppLinks:
+  - cgs.link
+  - cardgamesim-alternate.app.link
   testBranchKey: 
   testBranchUri: 
   testAndroidPathPrefix: 
