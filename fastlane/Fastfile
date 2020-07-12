@@ -13,6 +13,17 @@
 keychain_name = "temporary_keychain"
 keychain_password = SecureRandom.base64
 
+
+desc "Hack so that Apple doesn't reject the build due to incorrect versioning" 
+lane :fixversion do
+  update_plist(
+    plist_path: "#{ENV['BUILDS_PATH']}/StandaloneOSX/StandaloneOSX.app/Contents/Info.plist",
+    block: proc do |plist|
+      plist[:CFBundleVersion] = "9" + plist["CFBundleVersion"]
+    end
+  )
+end
+
 platform :android do
 
   desc "Upload a new Android version to the Google Play Store"
@@ -96,16 +107,6 @@ platform :ios do
 end
 
 platform :mac do
-
-  desc "Hack to prefix 9 to version, so that Apple doesn't reject it" 
-  lane :fixversion do
-    update_info_plist(
-      plist_path: "#{ENV['BUILDS_PATH']}/StandaloneOSX/StandaloneOSX.app/Contents/Info.plist",
-      block: proc do |plist|
-        plist["CFBundleVersion"] = "9" + plist["CFBundleVersion"]
-      end
-    )
-  end
 
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do

@@ -86,7 +86,7 @@ jobs:
           path: builds
       - uses: maierj/fastlane-action@v1.4.0
         with:
-          lane: 'mac fixversion'
+          lane: 'fixversion'
       - name: Prepare for upload
         run: |
           echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
