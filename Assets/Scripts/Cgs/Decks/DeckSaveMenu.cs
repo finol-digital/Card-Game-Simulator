@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using System.Collections;
 using System.IO;
 using CardGameDef;
 using CardGameDef.Unity;
@@ -109,35 +108,38 @@ namespace Cgs.Decks
             {
                 Debug.LogError(DeckPrintOpenErrorMessage);
                 CardGameManager.Instance.Messenger.Show(DeckPrintOpenErrorMessage);
+                return;
             }
-            else
-            {
-                StartCoroutine(OpenPdf(pdfUri));
-            }
-        }
 
-        private static IEnumerator OpenPdf(Uri pdfUri)
-        {
-            yield return null;
 #if ENABLE_WINMD_SUPPORT
-            bool success = false;
-            try
-            {
-                success = Windows.System.Launcher.LaunchUriAsync(pdfUri).GetAwaiter().GetResult();
-                if (!success)
+            UnityEngine.WSA.Application.InvokeOnUIThread(async () => {
+                try
                 {
-                    Debug.LogError(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
-                    CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
+                    var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(pdfUri.LocalPath);
+                    if (file != null)
+                    {
+                        // Launch the retrieved file
+                        bool success = await Windows.System.Launcher.LaunchFileAsync(file);
+                        if (!success)
+                        {
+                            Debug.LogError(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                            CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                        CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                    }
                 }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e.Message + e.StackTrace);
-                CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
-            }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.Message + e.StackTrace);
+                    CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
+                }
+            }, false);
 #else
-            CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
-            Application.OpenURL(pdfUri.AbsoluteUri); // This will likely fail, so its wrapped with the path as backup
+            Application.OpenURL(pdfUri.AbsoluteUri); // This likely fails, so show the file location
             CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
 #endif
         }

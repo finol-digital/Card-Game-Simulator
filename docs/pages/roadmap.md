@@ -8,8 +8,13 @@ permalink: roadmap.html
 - Enhance backend
 
 ## Current Sprint
+- Fix: Drag card result in deck editor
 - Filter '@' when creating game in-app
-- Fix: Card moved to server, but is still in hand
+- Layout cards in the Deck Editor more dynamically
+  - Have stacks link to each other
+  - Have # of stacks be based off the number of unique cards (remove deckMaxCount)
+  - Press sort and direction to move card
+- Highlight auto scroll area when auto scrolling
 - Play Mode Redesign
   - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
   - Allow any player to move cards in the play area, instead of just the player who put it there
@@ -34,10 +39,6 @@ permalink: roadmap.html
   - Play Area SharePreference
   - Rotate play area
 - Playmats
-- Layout cards in the Deck Editor more dynamically
-  - Have stacks link to each other
-  - Have # of stacks be based off the number of unique cards (remove deckMaxCount)
-- Highlight auto scroll area when auto scrolling
 - dec sideboard is extras
 - ydk side is also extra
 
@@ -46,9 +47,7 @@ permalink: roadmap.html
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to succesfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
-- Tech: Branch on desktop
-- Tech: Google Play Instant
-- Re-record training video (show on cgs webpage, personal webpage, play store)
+- Re-record training video (show on app first launch, cgs webpage, personal webpage, play store, and maybe other store)
 - Android Searchbar Widget
 - Add sorting in the Deck Editor and Cards Explorer
 - Edit Deck List in the Deck Save Menu
@@ -58,6 +57,8 @@ permalink: roadmap.html
 
 ## Icebox
 - Tech: Replace SwipeManager
+- Tech: Branch on desktop
+- Tech: Google Play Instant
 - Automate store images through fastlane
 - Card Search Results View Options
   - Text-only

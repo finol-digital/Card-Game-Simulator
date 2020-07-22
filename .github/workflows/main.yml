@@ -23,7 +23,6 @@ jobs:
           - StandaloneWindows # Build a Windows standalone.
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
           - StandaloneLinux64 # Build a Linux 64-bit standalone.
-#          - WSAPlayer # Build a Universal Windows Platform (UWP) app.
 #          - WebGL # WebGL.
     steps:
       - uses: actions/checkout@v2
