@@ -38,13 +38,25 @@ namespace Cgs.Menu
         public Image cardBackImage;
         public Button createButton;
 
-        public DownloadMenu Downloader => _downloader ??
-                                          (_downloader = Instantiate(downloadMenuPrefab)
-                                              .GetOrAddComponent<DownloadMenu>());
+        private DownloadMenu Downloader => _downloader
+            ? _downloader
+            : _downloader = Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
 
         private DownloadMenu _downloader;
 
-        [UsedImplicitly] public string GameName { get; set; }
+        [UsedImplicitly]
+        public string GameName
+        {
+            get => _gameName;
+            set
+            {
+                _gameName = value != null ? value.Replace("@", "") : string.Empty;
+                if (!_gameName.Equals(inputFields[0].text))
+                    inputFields[0].text = _gameName;
+            }
+        }
+
+        private string _gameName = string.Empty;
 
         private readonly CardGame _game = new CardGame(null);
 
