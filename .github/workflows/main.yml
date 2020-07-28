@@ -4,6 +4,26 @@ on:
   pull_request: { branches: [master] }
   release: { types: [published] }
 jobs:
+  buildUwp:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Install Unity
+        uses: crazy-max/ghaction-chocolatey@v1.2.2
+        with:
+          args: install --yes unity --version=2019.4.1
+      - name: Build Uwp
+        env:
+          UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Print Logs
+        run: cat build.stdout.txt
+        shell: pwsh
   buildForAllPlatforms:
     name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
     runs-on: ubuntu-latest
