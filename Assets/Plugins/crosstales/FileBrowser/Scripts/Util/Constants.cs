@@ -1,4 +1,4 @@
-﻿namespace Crosstales.FB.Util
+namespace Crosstales.FB.Util
 {
    /// <summary>Collected constants of very general utility for the asset.</summary>
    public abstract class Constants : Common.Util.BaseConstants

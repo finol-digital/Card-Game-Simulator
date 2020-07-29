@@ -1,4 +1,4 @@
-﻿namespace Crosstales.FB.Wrapper
+namespace Crosstales.FB.Wrapper
 {
    /// <summary>Interface for all file browsers.</summary>
    public interface IFileBrowser

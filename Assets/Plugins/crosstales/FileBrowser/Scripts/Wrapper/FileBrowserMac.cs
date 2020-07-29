@@ -1,4 +1,4 @@
-﻿#if UNITY_STANDALONE_OSX || CT_DEVELOP
+#if UNITY_STANDALONE_OSX || CT_DEVELOP
 using System;
 using UnityEngine;
 

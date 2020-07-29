@@ -1,4 +1,4 @@
-﻿namespace Crosstales.Common.Model.Enum
+namespace Crosstales.Common.Model.Enum
 {
    /// <summary>Typical audio sample rates.</summary>
    public enum SampleRate

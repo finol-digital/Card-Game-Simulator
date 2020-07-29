@@ -1,4 +1,4 @@
-﻿// vis2k:
+// vis2k:
 // base class for NetworkTransform and NetworkTransformChild.
 // New method is simple and stupid. No more 1500 lines of code.
 //

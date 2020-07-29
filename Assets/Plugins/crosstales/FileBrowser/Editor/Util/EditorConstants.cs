@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+#if UNITY_EDITOR
 namespace Crosstales.FB.EditorUtil
 {
    /// <summary>Collected editor constants of very general utility for the asset.</summary>
