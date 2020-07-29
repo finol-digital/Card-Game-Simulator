@@ -20,10 +20,16 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
           args: install --yes unity --version=2019.4.1 unity-il2cpp --version=2019.4.1
-      - name: Build Uwp
+      - name: Activate License
         run: |
           Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Build Uwp
+        run: |
           Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit",-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Return License
+        run: |
           Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-returnlicense" -NoNewWindow -Wait
         shell: pwsh
       - name: Print Logs
