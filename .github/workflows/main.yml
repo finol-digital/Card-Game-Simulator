@@ -4,28 +4,40 @@ on:
   pull_request: { branches: [master] }
   release: { types: [published] }
 jobs:
-  buildUwp:
+  buildForUwp:
+    name: Build for UWP
     runs-on: windows-latest
+    env:
+      UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          lfs: true
       - name: Install Unity
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
           args: install --yes unity --version=2019.4.1
       - name: Build Uwp
-        env:
-          UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         run: |
           Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
         shell: pwsh
       - name: Print Logs
         run: cat build.stdout.txt
         shell: pwsh
+      - name: Return License
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-returnlicense" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Upload build
+        uses: actions/upload-artifact@v1
+        with:
+          name: cgs-uwp
+          path: build
   buildForAllPlatforms:
-    name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
+    name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     env:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -34,8 +46,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        unityVersion:
-          - 2019.4.1f1
         targetPlatform:
           - Android # Build an Android .apk standalone app.
           - iOS # Build an iOS player.
@@ -54,7 +64,7 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
       - uses: webbertakken/unity-builder@6ece6447b229baedca54df3aae22fc3d097bc4f3
         with:
-          unityVersion: ${{ matrix.unityVersion }}
+          unityVersion: 2019.4.1f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildsPath: builds
           androidAppBundle: true
