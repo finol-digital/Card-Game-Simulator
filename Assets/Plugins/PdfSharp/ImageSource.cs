@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 using SixLabors.ImageSharp;

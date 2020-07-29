@@ -1,4 +1,4 @@
-﻿//THIS CODE ADAPTED FROM
+//THIS CODE ADAPTED FROM
 /*
 VarintBitConverter: https://github.com/topas/VarintBitConverter
 Copyright (c) 2011 Tomas Pastorek, Ixone.cz. All rights reserved.

@@ -1,4 +1,4 @@
-﻿namespace Crosstales.FB.Util
+namespace Crosstales.FB.Util
 {
    /// <summary>Various helper functions.</summary>
    public abstract class Helper : Common.Util.BaseHelper

@@ -1,4 +1,4 @@
-﻿namespace Crosstales.Common.Model.Enum
+namespace Crosstales.Common.Model.Enum
 {
    /// <summary>All available platforms.</summary>
    public enum Platform

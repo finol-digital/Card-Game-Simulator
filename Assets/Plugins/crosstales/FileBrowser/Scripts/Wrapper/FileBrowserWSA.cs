@@ -1,4 +1,4 @@
-﻿#if (UNITY_WSA && !UNITY_EDITOR) //|| CT_DEVELOP
+#if (UNITY_WSA && !UNITY_EDITOR) //|| CT_DEVELOP
 using UnityEngine;
 using System;
 

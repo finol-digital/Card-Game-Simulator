@@ -1,4 +1,4 @@
-﻿#if UNITY_STANDALONE || UNITY_EDITOR
+#if UNITY_STANDALONE || UNITY_EDITOR
 using System;
 using UnityEngine;
 

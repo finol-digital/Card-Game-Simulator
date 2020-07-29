@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR && UNITY_STANDALONE_OSX //|| CT_DEVELOP
+#if UNITY_EDITOR && UNITY_STANDALONE_OSX //|| CT_DEVELOP
 using Crosstales.Common.Util;
 using UnityEditor;
 using UnityEngine;

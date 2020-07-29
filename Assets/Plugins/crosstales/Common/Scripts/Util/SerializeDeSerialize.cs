@@ -1,4 +1,4 @@
-﻿#if !UNITY_WSA || UNITY_EDITOR
+#if !UNITY_WSA || UNITY_EDITOR
 using UnityEngine;
 
 namespace Crosstales.Common.Util

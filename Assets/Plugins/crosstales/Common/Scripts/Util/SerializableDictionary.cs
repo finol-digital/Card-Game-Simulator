@@ -1,4 +1,4 @@
-﻿#if !UNITY_WSA || UNITY_EDITOR
+#if !UNITY_WSA || UNITY_EDITOR
 namespace Crosstales.Common.Util
 {
    /// <summary>Serializable Dictionary-class for XML.</summary>

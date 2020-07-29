@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR && !UNITY_2019_1_OR_NEWER
+#if UNITY_EDITOR && !UNITY_2019_1_OR_NEWER
 using UnityEditor;
 using UnityEngine;
 using Crosstales.FB.EditorUtil;

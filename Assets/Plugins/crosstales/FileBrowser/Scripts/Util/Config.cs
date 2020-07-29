@@ -1,4 +1,4 @@
-﻿namespace Crosstales.FB.Util
+namespace Crosstales.FB.Util
 {
    /// <summary>Configuration for the asset.</summary>
    public static class Config
