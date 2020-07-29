@@ -19,17 +19,15 @@ jobs:
       - name: Install Unity
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
-          args: install --yes unity --version=2019.4.1
+          args: install --yes unity --version=2019.4.1 unity-il2cpp --version=2019.4.1
       - name: Build Uwp
         run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit",-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-returnlicense" -NoNewWindow -Wait
         shell: pwsh
       - name: Print Logs
         run: cat build.stdout.txt
-        shell: pwsh
-      - name: Return License
-        run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-returnlicense" -NoNewWindow -Wait
         shell: pwsh
       - name: Upload build
         uses: actions/upload-artifact@v1
