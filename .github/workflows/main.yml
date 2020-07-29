@@ -22,7 +22,7 @@ jobs:
           args: install --yes unity --version=2019.4.1 unity-il2cpp --version=2019.4.1
       - name: Activate License
         run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","-logfile activate.stdout.txt","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL","–quit" -NoNewWindow -Wait
         shell: pwsh
       - name: Build Uwp
         run: |
@@ -30,10 +30,13 @@ jobs:
         shell: pwsh
       - name: Return License
         run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-returnlicense" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile return.stdout.txt","-returnlicense" -NoNewWindow -Wait
         shell: pwsh
       - name: Print Logs
-        run: cat build.stdout.txt
+        run: |
+          cat activate.stdout.txt
+          cat build.stdout.txt
+          cat return.stdout.txt
         shell: pwsh
       - name: Upload build
         uses: actions/upload-artifact@v1
