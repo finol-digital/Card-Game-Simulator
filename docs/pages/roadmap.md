@@ -9,7 +9,6 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Fix: Drag card result in deck editor
-- badge for develop
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of unique cards (remove deckMaxCount)

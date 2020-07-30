@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-#          - Android
+          - Android
           - iOS
 #          - StandaloneOSX
 #          - StandaloneLinux64
@@ -42,13 +42,12 @@ jobs:
       - uses: actions/upload-artifact@v1
         if: github.event.ref != 'refs/heads/develop'
         with:
-          name: cgs-builds
+          name: cgs-nonwindows-builds
           path: builds
-  buildForWindows:
-    name: Build for Windows
+  buildAndReleaseWindows:
+    name: Build and Release to the Microsoft Store
     runs-on: windows-latest
     needs: buildForAllPlatforms
-#    if: github.event.ref != 'refs/heads/develop'
     env:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -68,15 +67,15 @@ jobs:
         shell: pwsh
       - name: Build StandaloneWindows
         run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-windows.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows" -NoNewWindow -Wait
         shell: pwsh
       - name: Build StandaloneWindows64
         run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows64" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-windows64.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows64" -NoNewWindow -Wait
         shell: pwsh
       - name: Build Uwp
         run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-uwp.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
         shell: pwsh
       - name: Return License
         run: |
@@ -84,12 +83,17 @@ jobs:
         shell: pwsh
       - name: Print Logs
         run: |
-          cat build.stdout.txt
+          cat activate.stdout.txt
+          cat build-windows.stdout.txt
+          cat build-windows64.stdout.txt
+          cat build-uwp.stdout.txt
+          cat return.stdout.txt
         shell: pwsh
       - name: Upload build
         uses: actions/upload-artifact@v1
+        if: github.event.ref != 'refs/heads/develop'
         with:
-          name: cgs-windows
+          name: cgs-windows-builds
           path: builds
   releaseToStore:
     name: Release to Google Play and the App Store
