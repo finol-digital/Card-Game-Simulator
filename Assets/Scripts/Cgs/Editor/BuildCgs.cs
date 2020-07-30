@@ -18,22 +18,22 @@ namespace Cgs.Editor
         [UsedImplicitly]
         public static void BuildWindows()
         {
-            Build(BuildTarget.StandaloneWindows);
+            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("builds", "windows"), "cgs.exe"));
         }
 
         [UsedImplicitly]
         public static void BuildWindows64()
         {
-            Build(BuildTarget.StandaloneWindows64);
+            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("builds", "windows64"), "cgs.exe"));
         }
 
         [UsedImplicitly]
         public static void BuildUwp()
         {
-            Build(BuildTarget.WSAPlayer);
+            Build(BuildTarget.WSAPlayer, Path.Combine("builds", "uwp"));
         }
 
-        private static void Build(BuildTarget buildTarget)
+        private static void Build(BuildTarget buildTarget, string filePath)
         {
             string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(s => s.path).ToArray();
 
@@ -41,7 +41,7 @@ namespace Cgs.Editor
             var buildOptions = new BuildPlayerOptions
             {
                 scenes = scenes,
-                locationPathName = Path.Combine("builds", buildTarget.ToString()),
+                locationPathName = filePath,
                 target = buildTarget,
             };
 
