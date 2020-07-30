@@ -4,56 +4,9 @@ on:
   pull_request: { branches: [master] }
   release: { types: [published] }
 jobs:
-  buildForWindows:
-    name: Build for Windows
-    runs-on: windows-latest
-    env:
-      UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
-      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          lfs: true
-      - name: Install Unity
-        uses: crazy-max/ghaction-chocolatey@v1.2.2
-        with:
-          args: install --yes unity --version=2019.4.1 unity-il2cpp --version=2019.4.1 unity-win-il2cpp --version=2019.4.1
-      - name: Activate License
-        run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile activate.stdout.txt","-nographics","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
-        shell: pwsh
-      - name: Build StandaloneWindows
-        run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows" -NoNewWindow -Wait
-        shell: pwsh
-      - name: Build StandaloneWindows64
-        run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows64" -NoNewWindow -Wait
-        shell: pwsh
-      - name: Build Uwp
-        run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
-        shell: pwsh
-      - name: Return License
-        run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile return.stdout.txt","-returnlicense" -NoNewWindow -Wait
-        shell: pwsh
-      - name: Print Logs
-        run: |
-          cat build.stdout.txt
-        shell: pwsh
-      - name: Upload build
-        uses: actions/upload-artifact@v1
-        if: github.event.ref != 'refs/heads/develop'
-        with:
-          name: cgs-windows
-          path: builds
   buildForAllPlatforms:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
-    needs: buildForWindows
     env:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -90,6 +43,53 @@ jobs:
         if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-builds
+          path: builds
+  buildForWindows:
+    name: Build for Windows
+    runs-on: windows-latest
+    needs: buildForAllPlatforms
+#    if: github.event.ref != 'refs/heads/develop'
+    env:
+      UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      - name: Install Unity
+        uses: crazy-max/ghaction-chocolatey@v1.2.2
+        with:
+          args: install --yes unity --version=2019.4.1 unity-il2cpp --version=2019.4.1 unity-win-il2cpp --version=2019.4.1 unity-metro --version=2019.4.1
+      - name: Activate License
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile activate.stdout.txt","-nographics","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Build StandaloneWindows
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Build StandaloneWindows64
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows64" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Build Uwp
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Return License
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile return.stdout.txt","-returnlicense" -NoNewWindow -Wait
+        shell: pwsh
+      - name: Print Logs
+        run: |
+          cat build.stdout.txt
+        shell: pwsh
+      - name: Upload build
+        uses: actions/upload-artifact@v1
+        with:
+          name: cgs-windows
           path: builds
   releaseToStore:
     name: Release to Google Play and the App Store
