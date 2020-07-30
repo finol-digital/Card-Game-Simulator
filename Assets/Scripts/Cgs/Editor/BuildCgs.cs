@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -15,7 +16,24 @@ namespace Cgs.Editor
         private static readonly string Eol = Environment.NewLine;
 
         [UsedImplicitly]
+        public static void BuildWindows()
+        {
+            Build(BuildTarget.StandaloneWindows);
+        }
+
+        [UsedImplicitly]
+        public static void BuildWindows64()
+        {
+            Build(BuildTarget.StandaloneWindows64);
+        }
+
+        [UsedImplicitly]
         public static void BuildUwp()
+        {
+            Build(BuildTarget.WSAPlayer);
+        }
+
+        private static void Build(BuildTarget buildTarget)
         {
             string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(s => s.path).ToArray();
 
@@ -23,8 +41,8 @@ namespace Cgs.Editor
             var buildOptions = new BuildPlayerOptions
             {
                 scenes = scenes,
-                locationPathName = "build",
-                target = BuildTarget.WSAPlayer,
+                locationPathName = Path.Combine("builds", buildTarget.ToString()),
+                target = buildTarget,
             };
 
             // Perform build
@@ -57,28 +75,25 @@ namespace Cgs.Editor
 
         private static void ExitWithResult(BuildResult result)
         {
-            if (result == BuildResult.Succeeded)
+            switch (result)
             {
-                Console.WriteLine("Build succeeded!");
-                EditorApplication.Exit(0);
-            }
-
-            if (result == BuildResult.Failed)
-            {
-                Console.WriteLine("Build failed!");
-                EditorApplication.Exit(101);
-            }
-
-            if (result == BuildResult.Cancelled)
-            {
-                Console.WriteLine("Build cancelled!");
-                EditorApplication.Exit(102);
-            }
-
-            if (result == BuildResult.Unknown)
-            {
-                Console.WriteLine("Build result is unknown!");
-                EditorApplication.Exit(103);
+                case BuildResult.Succeeded:
+                    Console.WriteLine("Build succeeded!");
+                    EditorApplication.Exit(0);
+                    break;
+                case BuildResult.Failed:
+                    Console.WriteLine("Build failed!");
+                    EditorApplication.Exit(101);
+                    break;
+                case BuildResult.Cancelled:
+                    Console.WriteLine("Build cancelled!");
+                    EditorApplication.Exit(102);
+                    break;
+                case BuildResult.Unknown:
+                default:
+                    Console.WriteLine("Build result is unknown!");
+                    EditorApplication.Exit(103);
+                    break;
             }
         }
     }
