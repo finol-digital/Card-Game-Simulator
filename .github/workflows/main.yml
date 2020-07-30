@@ -32,6 +32,10 @@ jobs:
         run: |
           Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows64" -NoNewWindow -Wait
         shell: pwsh
+#      - name: Build Uwp
+#        run: |
+#          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+#        shell: pwsh
       - name: Return License
         run: |
           Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile return.stdout.txt","-returnlicense" -NoNewWindow -Wait
@@ -57,7 +61,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - Android
+#          - Android
           - iOS
 #          - StandaloneOSX
 #          - StandaloneLinux64
