@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - Android
+#          - Android
           - iOS
 #          - StandaloneOSX
 #          - StandaloneLinux64
@@ -88,6 +88,12 @@ jobs:
           cat build-windows64.stdout.txt
           cat build-uwp.stdout.txt
           cat return.stdout.txt
+        shell: pwsh
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.1
+      - name: MSBuild
+        run: |
+          MSBuild "Card Game Simulator.sln" /p:Configuration=Master;UapAppxPackageBuildMode=StoreUpload
         shell: pwsh
       - name: Upload build
         uses: actions/upload-artifact@v1
