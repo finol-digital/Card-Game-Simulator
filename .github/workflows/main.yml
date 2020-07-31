@@ -93,7 +93,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.0.1
       - name: Create .appxupload
         run: |
-          cd builds/uwp
+          cd .\builds\uwp
           MSBuild "Card Game Simulator.sln" /p:Configuration=Master;UapAppxPackageBuildMode=StoreUpload
         shell: pwsh
       - name: Upload build
