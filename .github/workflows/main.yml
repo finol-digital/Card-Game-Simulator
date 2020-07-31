@@ -98,7 +98,7 @@ jobs:
         shell: pwsh
       - name: Upload build
         uses: actions/upload-artifact@v1
-        if: github.event.ref != 'refs/heads/develop'
+#        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows-builds
           path: builds
