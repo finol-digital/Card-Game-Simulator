@@ -30,6 +30,7 @@ namespace Cgs.Editor
         [UsedImplicitly]
         public static void BuildUwp()
         {
+            EditorUserBuildSettings.wsaUWPBuildType = WSAUWPBuildType.XAML;
             Build(BuildTarget.WSAPlayer, Path.Combine("builds", "uwp"));
         }
 
