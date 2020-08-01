@@ -52,6 +52,7 @@ jobs:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+      Solution_Path: builds\uwp\Card Game Simulator.sln
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -92,9 +93,7 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.1
       - name: Create .appxupload
-        run: |
-          cd .\builds\uwp
-          MSBuild "Card Game Simulator.sln" /p:Configuration=Master;UapAppxPackageBuildMode=StoreUpload
+        run: msbuild $env:Solution_Path /p:Configuration=Master /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Always
         shell: pwsh
       - name: Upload build
         uses: actions/upload-artifact@v1
