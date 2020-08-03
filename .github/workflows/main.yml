@@ -13,6 +13,7 @@ jobs:
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
       Solution_Path: builds\uwp\Card Game Simulator.sln
+      Configuration: Master
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -52,12 +53,15 @@ jobs:
         shell: pwsh
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.1
+      - name:  Restore the Wpf application to populate the obj folder
+        run: msbuild $env:Solution_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+        env:
+          RuntimeIdentifier: win-x64
       - name: Create .appxupload
         run: msbuild $env:Solution_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
           AppxBundle: Always
           BuildMode: StoreUpload
-          Configuration: Master
           TargetPlatform: x64
       - name: Upload build
         uses: actions/upload-artifact@v1
