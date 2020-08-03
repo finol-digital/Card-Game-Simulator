@@ -7,7 +7,7 @@ jobs:
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
     runs-on: windows-latest
-    needs: buildForAllPlatforms
+#    needs: buildForAllPlatforms
     env:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
