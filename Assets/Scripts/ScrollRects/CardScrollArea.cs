@@ -23,19 +23,31 @@ namespace ScrollRects
         public float scrollAmount = 0.01f;
         public float holdFrequency = 0.01f;
 
-        void Update()
-        {
-            var blocksRayCast = true;
-            if (scrollDirection == CardScrollDirection.Left && scrollRect.horizontalNormalizedPosition <= 0)
-                blocksRayCast = false;
-            else if (scrollDirection == CardScrollDirection.Down && scrollRect.verticalNormalizedPosition <= 0)
-                blocksRayCast = false;
-            else if (scrollDirection == CardScrollDirection.Right && scrollRect.horizontalNormalizedPosition >= 1)
-                blocksRayCast = false;
-            else if (scrollDirection == CardScrollDirection.Up && scrollRect.verticalNormalizedPosition >= 1)
-                blocksRayCast = false;
+        private CanvasGroup _canvasGroup;
 
-            GetComponent<CanvasGroup>().blocksRaycasts = blocksRayCast;
+        private void Start()
+        {
+            _canvasGroup = GetComponent<CanvasGroup>();
+        }
+
+        private void Update()
+        {
+            bool blocksRayCast;
+            switch (scrollDirection)
+            {
+                case CardScrollDirection.Left when scrollRect.horizontalNormalizedPosition <= 0:
+                case CardScrollDirection.Down when scrollRect.verticalNormalizedPosition <= 0:
+                case CardScrollDirection.Right when scrollRect.horizontalNormalizedPosition >= 1:
+                case CardScrollDirection.Up when scrollRect.verticalNormalizedPosition >= 1:
+                    blocksRayCast = false;
+                    _canvasGroup.alpha = 0;
+                    break;
+                default:
+                    blocksRayCast = true;
+                    break;
+            }
+
+            _canvasGroup.blocksRaycasts = blocksRayCast;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -51,16 +63,19 @@ namespace ScrollRects
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            _canvasGroup.alpha = 0;
             StopAllCoroutines();
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
+            _canvasGroup.alpha = 0;
             StopAllCoroutines();
         }
 
         private IEnumerator MoveScrollbar()
         {
+            _canvasGroup.alpha = 1;
             switch (scrollDirection)
             {
                 case CardScrollDirection.Left:

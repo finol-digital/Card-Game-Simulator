@@ -8,12 +8,10 @@ permalink: roadmap.html
 - Enhance backend
 
 ## Current Sprint
-- Fix: Drag card result in deck editor
 - Layout cards in the Deck Editor more dynamically
   - Have stacks link to each other
   - Have # of stacks be based off the number of unique cards (remove deckMaxCount)
   - Press sort and direction to move card
-- Highlight auto scroll area when auto scrolling
 - Play Mode Redesign
   - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
   - Allow any player to move cards in the play area, instead of just the player who put it there

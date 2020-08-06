@@ -316,6 +316,8 @@ namespace CardGameView
             if (DoesCloneOnDrag)
             {
                 Transform transform1 = transform;
+                if (!IsOnline)
+                    NetworkServer.UnSpawn(gameObject); // Avoid Mirror error
                 GameObject newGameObject = Instantiate(gameObject, transform1.position, transform1.rotation,
                     gameObject.FindInParents<Canvas>().transform);
                 eventData.pointerPress = newGameObject;
