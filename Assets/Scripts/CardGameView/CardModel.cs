@@ -116,7 +116,10 @@ namespace CardGameView
             private set
             {
                 if (_placeHolder != null)
+                {
+                    _placeHolder.SetParent(null);
                     Destroy(_placeHolder.gameObject);
+                }
                 _placeHolder = value;
                 if (_placeHolder == null)
                 {

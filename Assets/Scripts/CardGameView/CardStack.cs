@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -28,6 +29,8 @@ namespace CardGameView
 
         public bool DoesImmediatelyRelease { get; set; }
 
+        public UnityAction OnLayout { get; set; }
+
         public List<OnAddCardDelegate> OnAddCardActions { get; } = new List<OnAddCardDelegate>();
         public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new List<OnRemoveCardDelegate>();
 
@@ -44,6 +47,7 @@ namespace CardGameView
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && cardModel.PlaceHolderCardStack == this)
                 cardModel.PlaceHolderCardStack = null;
+            OnLayout?.Invoke();
         }
 
         public void OnAdd(CardModel cardModel)
@@ -95,6 +99,8 @@ namespace CardGameView
                     child.position = targetPosition;
                     break;
             }
+
+            OnLayout?.Invoke();
         }
 
         public void UpdateScrollRect(DragPhase dragPhase, PointerEventData eventData)

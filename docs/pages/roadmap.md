@@ -5,16 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Enhance backend
+- Revamp deck editor
 
 ## Current Sprint
-- Layout cards in the Deck Editor more dynamically
-  - Have stacks link to each other
-  - Have # of stacks be based off the number of unique cards (remove deckMaxCount)
-  - Press sort and direction to move card
 - Play Mode Redesign
-  - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
   - Allow any player to move cards in the play area, instead of just the player who put it there
+  - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
   - Have view for only hand vs view for only field
   - Card Grouping
     - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
@@ -63,6 +59,7 @@ permalink: roadmap.html
   - Large Image
 - Support default search filters
 - Support default sort
+- Press sort and direction to move card in deck editor
 - Highlight card that is currently being dragged
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images

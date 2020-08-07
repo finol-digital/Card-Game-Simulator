@@ -251,11 +251,6 @@ namespace CardGameDef
         public DeckFileType DeckFileType { get; set; } = DeckFileType.Txt;
 
         [JsonProperty]
-        [Description("deckMaxCount is used to decide how many card slots should appear in the deck editor.")]
-        [DefaultValue(75)]
-        public int DeckMaxCount { get; set; } = 75;
-
-        [JsonProperty]
         [Description(
             "For networked games, CGS will use deckSharePreference to: ask players if they want to share the same deck, force all players to share the same deck, or force an individual deck for each player.")]
         [DefaultValue("share")]

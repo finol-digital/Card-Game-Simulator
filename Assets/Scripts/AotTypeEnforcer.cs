@@ -54,7 +54,6 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.DeckFileAltId = string.Empty;
             cardGame.DeckFileTxtId = DeckFileTxtId.Id;
             cardGame.DeckFileType = DeckFileType.Dec;
-            cardGame.DeckMaxCount = 1;
             cardGame.DeckUrls = new List<DeckUrl>();
             var deckUrl = new DeckUrl(string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
             cardGame.Enums = new List<EnumDef>();

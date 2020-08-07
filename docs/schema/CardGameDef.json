@@ -208,12 +208,6 @@
         }
       ]
     },
-    "deckMaxCount": {
-      "type": "integer",
-      "description": "deckMaxCount is used to decide how many card slots should appear in the deck editor.",
-      "format": "int32",
-      "default": 75
-    },
     "deckSharePreference": {
       "description": "For networked games, CGS will use deckSharePreference to: ask players if they want to share the same deck, force all players to share the same deck, or force an individual deck for each player.",
       "default": "share",
