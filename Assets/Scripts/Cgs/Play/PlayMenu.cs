@@ -12,7 +12,7 @@ namespace Cgs.Play
     {
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
-        public PlayMode controller;
+        public PlayController controller;
         public GameObject hand;
 
         private void Update()

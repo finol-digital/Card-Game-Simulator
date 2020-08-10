@@ -21,7 +21,7 @@ using UnityEngine.UI;
 namespace Cgs.Play
 {
     [RequireComponent(typeof(Canvas))]
-    public class PlayMode : MonoBehaviour
+    public class PlayController : MonoBehaviour
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string RestartPrompt = "Restart?";
@@ -122,7 +122,6 @@ namespace Cgs.Play
 
         public void ResetPlayArea()
         {
-            // TODO: zones.Clear();
             var playAreaRectTransform = (RectTransform) playAreaCardStack.transform;
             playAreaRectTransform.DestroyAllChildren();
             var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,

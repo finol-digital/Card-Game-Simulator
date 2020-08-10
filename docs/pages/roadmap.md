@@ -9,29 +9,28 @@ permalink: roadmap.html
 - Play Mode: Re-organized buttons and card stacks
 
 ## Current Sprint
-- Play Mode Redesign
-  - Card Grouping
-    - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
-    - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
-      - Resize hand and zones based off card game settings
-      - Share discard pile between all players who share a deck in Play Mode
-      - Card zones can define what actions are possible in that zone
-      - .dec sideboard & .ydk side are extras
-  - Allow any player to move cards in the play area, instead of just the player who put it there
-  - Play Area SharePreference
-  - Card Actions
-    - Define
-      - Toggle rotation between 0 and 90/180/270
-      - Rotate 90/180/270
-      - Toggle facedown
-      - Move to hand
-      - Move to top/bottom of deck
-      - Move to discard/delete
-    - Double-clicking takes a default action, based on the zone the card is in
-    - Single-click show menu with all possible actions at the bottom
-  - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
-  - Rotate play area (2 finger or right-click)
-  - Play area zoom and rotation sliders in bottom corners (hidden by hand)
+- Card Grouping
+  - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
+  - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
+    - Resize hand and zones based off card game settings
+    - Share discard pile between all players who share a deck in Play Mode
+    - Card zones can define what actions are possible in that zone
+    - .dec sideboard & .ydk side are extras
+- Allow any player to move cards in the play area, instead of just the player who put it there
+- Play Area SharePreference
+- Card Actions
+  - Define
+    - Toggle rotation between 0 and 90/180/270
+    - Rotate 90/180/270
+    - Toggle facedown
+    - Move to hand
+    - Move to top/bottom of deck
+    - Move to discard/delete
+  - Double-clicking takes a default action, based on the zone the card is in
+  - Single-click show menu with all possible actions at the bottom
+- Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
+- Rotate play area (2 finger or right-click)
+- Play area zoom and rotation sliders in bottom corners (hidden by hand)
 - Playmats
 
 ## Backlog
@@ -39,28 +38,27 @@ permalink: roadmap.html
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to succesfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
-- Re-record training video (show on app first launch, cgs webpage, personal webpage, play store, and maybe other store)
-- Android Searchbar Widget
-- Add sorting in the Deck Editor and Cards Explorer
-- Edit Deck List in the Deck Save Menu
-- Support multiple card backs
-- Support more than 1 card face (DFC)
-- Overlap: snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
+- Integration: Re-record training video (show on app first launch, cgs webpage, personal webpage, play store, and maybe other store)
+- Deck Editor & Cards Explorer: Add sorting + Sort Menu
+- Deck Editor: Edit Deck List in the Deck Save Menu
+- Cards: Support multiple card backs
+- Cards: Support more than 1 card face (DFC)
+- Play Mode: Overlap snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
 
 ## Icebox
 - Tech: Replace SwipeManager
 - Tech: Branch on desktop
 - Tech: Google Play Instant
+- Tech: Automate store images through fastlane
+- Integration: Android Searchbar Widget
 - Play Mode: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Automate store images through fastlane
 - Card Search Results View Options
   - Text-only
   - Small Image
   - Large Image
 - Support default search filters
 - Support default sort
-- Press sort and direction to move card in deck editor
-- Highlight card that is currently being dragged
+- Deck Editor: Focus buttons move cards
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
@@ -84,6 +82,6 @@ permalink: roadmap.html
 - Support encryption of game information
 - Partner with other companies to provide licensed games
 - Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG
-- Magic Set Editor + Cockatrice integration
-- Support game-specific rules enforcement
+- Integration: Magic Set Editor + Cockatrice integration
+- Super Stretch Goal: Support game-specific rules enforcement
 

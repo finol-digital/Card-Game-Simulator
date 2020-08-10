@@ -29,7 +29,7 @@ namespace Cgs.Play.Multiplayer
         public CgsNetDiscovery Discovery { get; private set; }
         public CgsNetListServer ListServer { get; private set; }
 
-        public PlayMode playController;
+        public PlayController playController;
 
         private Guid _cardAssetId;
         private Guid _dieAssetId;
@@ -76,7 +76,7 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] SpawnCard");
             GameObject newCard =
                 Instantiate(playController.cardModelPrefab, playController.playAreaCardStack.transform);
-            PlayMode.SetPlayActions(newCard.GetComponent<CardModel>());
+            PlayController.SetPlayActions(newCard.GetComponent<CardModel>());
             return newCard;
         }
 

@@ -197,14 +197,14 @@ namespace Cgs.Play.Multiplayer
         [Command]
         private void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
-            PlayMode controller = CgsNetManager.Instance.playController;
+            PlayController controller = CgsNetManager.Instance.playController;
             GameObject newCard = Instantiate(controller.cardModelPrefab, controller.playAreaCardStack.transform);
             var cardModel = newCard.GetComponent<CardModel>();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.position = position;
             cardModel.rotation = rotation;
             cardModel.IsFacedown = isFacedown;
-            PlayMode.SetPlayActions(cardModel);
+            PlayController.SetPlayActions(cardModel);
             NetworkServer.Spawn(newCard, connectionToClient);
             cardModel.RpcHideHighlight();
         }
