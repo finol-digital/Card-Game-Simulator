@@ -224,8 +224,6 @@ namespace Cgs.Play.Multiplayer
                 NetworkManager.singleton.StartClient();
             }
 
-            CgsNetManager.Instance.statusText.text = "Connecting...";
-
             Hide();
         }
 

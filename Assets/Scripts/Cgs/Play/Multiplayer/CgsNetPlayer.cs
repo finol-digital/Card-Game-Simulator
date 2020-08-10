@@ -51,7 +51,7 @@ namespace Cgs.Play.Multiplayer
 
         private void RequestCardGameSelection()
         {
-            CgsNetManager.Instance.statusText.text = "Determining game id...";
+            Debug.Log("[CgsNet Player] Determining game id...");
             CmdSelectCardGame();
         }
 
@@ -67,7 +67,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once UnusedParameter.Local
         private void TargetSelectCardGame(NetworkConnection target, string gameId, string autoUpdateUrl)
         {
-            CgsNetManager.Instance.statusText.text = $"Game id is {gameId}! Loading game details...";
+            Debug.Log($"[CgsNet Player] Game id is {gameId}! Loading game details...");
             if (!CardGameManager.Instance.AllCardGames.ContainsKey(gameId))
             {
                 if (!Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.Absolute))
@@ -97,7 +97,7 @@ namespace Cgs.Play.Multiplayer
             while (CardGameManager.Current.IsDownloading)
                 yield return null;
 
-            CgsNetManager.Instance.statusText.text = "Game loaded and ready!";
+            Debug.Log("[CgsNet Player] Game loaded and ready!");
 
             switch (CardGameManager.Current.DeckSharePreference)
             {
@@ -128,7 +128,7 @@ namespace Cgs.Play.Multiplayer
 
         private void RequestSharedDeck()
         {
-            CgsNetManager.Instance.statusText.text = "Getting deck from server...";
+            Debug.Log("[CgsNet Player] Getting deck from server...");
             CmdShareDeck();
         }
 
@@ -142,7 +142,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once UnusedParameter.Local
         private void TargetShareDeck(NetworkConnection target, int sharedDeckIndex)
         {
-            CgsNetManager.Instance.statusText.text = "Got deck from server!";
+            Debug.Log("[CgsNet Player] Got deck from server!");
             IsDeckShared = true;
             deckIndex = sharedDeckIndex;
             CgsNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
@@ -162,8 +162,8 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once UnusedParameter.Global
         public void OnChangeDeck(int oldDeckIndex, int newDeckIndex)
         {
-            if (deckIndex == newDeckIndex)
-                CgsNetManager.Instance.playController.zones.CurrentDeck.Sync(CurrentDeck);
+            // TODO: if (deckIndex == newDeckIndex)
+            // TODO:    CgsNetManager.Instance.playController.zones.CurrentDeck.Sync(CurrentDeck);
         }
 
         public void RequestScoreUpdate(int points)
@@ -238,7 +238,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once UnusedParameter.Global
         public void TargetRestart(NetworkConnection target)
         {
-            CgsNetManager.Instance.statusText.text = "Game is restarting!...";
+            Debug.Log("[CgsNet Player] Game is restarting!...");
             CgsNetManager.Instance.playController.ResetPlayArea();
             StartCoroutine(WaitToRestartGame());
         }
@@ -248,14 +248,14 @@ namespace Cgs.Play.Multiplayer
             if (isServer || CardGameManager.Current.DeckSharePreference == SharePreference.Individual)
             {
                 CgsNetManager.Instance.playController.ShowDeckMenu();
-                CgsNetManager.Instance.statusText.text = "Game restarted!";
+                Debug.Log("[CgsNet Player] Game restarted!");
                 yield break;
             }
 
             while (!CurrentDeck.Any())
                 yield return null;
 
-            CgsNetManager.Instance.statusText.text = "Game restarted!";
+            Debug.Log("[CgsNet Player] Game restarted!");
 
             switch (CardGameManager.Current.DeckSharePreference)
             {

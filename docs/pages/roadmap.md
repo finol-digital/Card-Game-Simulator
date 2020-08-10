@@ -5,17 +5,19 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Revamp deck editor
+- Deck Editor: Cards move in their stacks to better make use of visible space
+- Play Mode: Re-organized buttons and card stacks
 
 ## Current Sprint
 - Play Mode Redesign
-  - Allow any player to move cards in the play area, instead of just the player who put it there
   - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
-  - Have view for only hand vs view for only field
   - Card Grouping
     - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
       - Share discard pile between all players who share a deck in Play Mode
       - Card zones can define what actions are possible in that zone
+      - .dec sideboard & .ydk side are extras
+  - Allow any player to move cards in the play area, instead of just the player who put it there
+  - Play Area SharePreference
   - Card Actions
     - Define
       - Toggle rotation between 0 and 90/180/270
@@ -26,14 +28,11 @@ permalink: roadmap.html
       - Move to discard/delete
     - Double-clicking takes a default action, based on the zone the card is in
     - Single-click show menu with all possible actions at the bottom
-    - Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
   - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
   - Slider to control zoom
-  - Play Area SharePreference
   - Rotate play area
+  - Play area zoom and orientation sliders (hidden by hand)
 - Playmats
-- dec sideboard is extras
-- ydk side is also extra
 
 ## Backlog
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
@@ -52,6 +51,7 @@ permalink: roadmap.html
 - Tech: Replace SwipeManager
 - Tech: Branch on desktop
 - Tech: Google Play Instant
+- Play Mode: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Automate store images through fastlane
 - Card Search Results View Options
   - Text-only

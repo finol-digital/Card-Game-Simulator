@@ -21,9 +21,12 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Play Mode
 - **Cancel**: *Esc* - Back to Main Menu.
+- **Option**: *Delete* - Toggle the Play Mode Menu.
+- **New**: *e* - View rules for current game online.
 - **Load**: *r* - Brings up the Deck Load Menu.
-- **Save**: *t* - Brings up the Dice Menu.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
+- **Sort**: *q* - Brings up the Dice Menu.
+- **Save**: *t* - Show/Hide hand.
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.

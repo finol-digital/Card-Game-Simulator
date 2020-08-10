@@ -9,12 +9,6 @@ using CardGameView;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
-using ClientScene = Mirror.ClientScene;
-using NetworkConnection = Mirror.NetworkConnection;
-using NetworkIdentity = Mirror.NetworkIdentity;
-using NetworkManager = Mirror.NetworkManager;
-using NetworkServer = Mirror.NetworkServer;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -36,7 +30,6 @@ namespace Cgs.Play.Multiplayer
         public CgsNetListServer ListServer { get; private set; }
 
         public PlayMode playController;
-        public Text statusText;
 
         private Guid _cardAssetId;
         private Guid _dieAssetId;
@@ -62,7 +55,6 @@ namespace Cgs.Play.Multiplayer
         {
             base.OnServerAddPlayer(conn);
             Debug.Log("[CgsNet Manager] Server adding player...");
-            statusText.text = $"Player {NetworkServer.connections.Count} has joined!";
             if (Data == null)
             {
                 Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CgsNetData>();
@@ -76,8 +68,6 @@ namespace Cgs.Play.Multiplayer
         public override void OnClientConnect(NetworkConnection connection)
         {
             base.OnClientConnect(connection);
-            Debug.Log("[CgsNet Manager] Client connecting...");
-            statusText.text = "Connected!";
             Debug.Log("[CgsNet Manager] Client connected!");
         }
 
