@@ -13,6 +13,7 @@ permalink: roadmap.html
   - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
   - Card Grouping
     - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
+      - Resize hand and zones based off card game settings
       - Share discard pile between all players who share a deck in Play Mode
       - Card zones can define what actions are possible in that zone
       - .dec sideboard & .ydk side are extras
@@ -30,8 +31,8 @@ permalink: roadmap.html
     - Single-click show menu with all possible actions at the bottom
   - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
   - Slider to control zoom
-  - Rotate play area
-  - Play area zoom and orientation sliders (hidden by hand)
+  - Rotate play area (2 finger or right-click)
+  - Play area zoom and rotation sliders in bottom corners (hidden by hand)
 - Playmats
 
 ## Backlog
