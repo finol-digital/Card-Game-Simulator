@@ -52,13 +52,13 @@ permalink: roadmap.html
 - Tech: Automate store images through fastlane
 - Integration: Android Searchbar Widget
 - Play Mode: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Deck Editor: Focus buttons move cards
 - Card Search Results View Options
   - Text-only
   - Small Image
   - Large Image
 - Support default search filters
 - Support default sort
-- Deck Editor: Focus buttons move cards
 - Keep current page when Deck Editor Layout changes
 - Apply autoUpdate to cached card images
 - Support Android TV and tvOS
@@ -74,14 +74,11 @@ permalink: roadmap.html
 - Allow pre-fetching of card images
 - Set card image cache limit
 - Support different formats/game-types for custom card games
-- Support sideboards
-- Track personal collection of cards and show which cards you're missing for certain decks
 - Support svg images
 - Support multiple languages (Spanish,Chinese)
 - Support different resolutions and languages for card images
-- Support encryption of game information
-- Partner with other companies to provide licensed games
-- Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG
+- Integration: Partner with other companies to provide licensed games
+- Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG
 - Integration: Magic Set Editor + Cockatrice integration
 - Super Stretch Goal: Support game-specific rules enforcement
 
