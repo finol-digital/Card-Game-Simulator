@@ -19,7 +19,7 @@ jobs:
           - iOS
 #          - StandaloneOSX
 #          - StandaloneLinux64
-          - WebGL
+#          - WebGL
     steps:
       - uses: actions/checkout@v2
         with:
