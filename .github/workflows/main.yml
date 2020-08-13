@@ -4,6 +4,47 @@ on:
   pull_request: { branches: [master] }
   release: { types: [published] }
 jobs:
+  buildForAllPlatforms:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    env:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+#          - Android
+          - iOS
+#          - StandaloneOSX
+#          - StandaloneLinux64
+          - WebGL
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+      - uses: actions/cache@v1.1.0
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+      - uses: webbertakken/unity-builder@6ece6447b229baedca54df3aae22fc3d097bc4f3
+        with:
+          unityVersion: 2019.4.1f1
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildsPath: builds
+          androidAppBundle: true
+          androidKeystoreName: finoldigital.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+      - uses: actions/upload-artifact@v1
+        if: github.event.ref != 'refs/heads/develop'
+        with:
+          name: cgs-mac-linux
+          path: builds
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
     runs-on: windows-latest
@@ -58,18 +99,18 @@ jobs:
         run: msbuild $env:Solution_Path /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
           RuntimeIdentifier: win-x64
-      - name: Create .appxupload
-        run: msbuild $env:Solution_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
-        env:
-          AppxBundle: Always
-          BuildMode: StoreUpload
-          TargetPlatform: x64
+#      - name: Create .appxupload
+#        run: msbuild $env:Solution_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
+#        env:
+#          AppxBundle: Always
+#          BuildMode: StoreUpload
+#          TargetPlatform: x64
       - name: Upload build
         uses: actions/upload-artifact@v1
         with:
-          name: cgs-windows-builds
+          name: cgs-windows
           path: builds
-  releaseToStore:
+  releaseToAppStore:
     name: Release to Google Play and the App Store
     runs-on: macos-latest
     needs: buildForAllPlatforms

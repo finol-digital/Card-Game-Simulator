@@ -36,9 +36,9 @@ permalink: roadmap.html
 ## Backlog
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
-- Tech: Runtime unit test to succesfully load StreamingAssets/ without error
+- Tech: Runtime unit test to successfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
-- Integration: Re-record training video (show on app first launch, cgs webpage, personal webpage, play store, and maybe other store)
+- Integration: Re-record training video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 - Deck Editor & Cards Explorer: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
@@ -49,8 +49,8 @@ permalink: roadmap.html
 - Tech: Replace SwipeManager
 - Tech: Branch on desktop
 - Tech: Google Play Instant
-- Tech: Automate store images through fastlane
-- Integration: Android Searchbar Widget
+- Tech: Automate store images through Fastlane
+- Integration: Android Search Bar Widget
 - Play Mode: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Deck Editor: Focus buttons move cards
 - Card Search Results View Options
@@ -74,7 +74,7 @@ permalink: roadmap.html
 - Allow pre-fetching of card images
 - Set card image cache limit
 - Support different formats/game-types for custom card games
-- Support svg images
+- Support .svg images
 - Support multiple languages (Spanish,Chinese)
 - Support different resolutions and languages for card images
 - Integration: Partner with other companies to provide licensed games
