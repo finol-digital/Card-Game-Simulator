@@ -48,7 +48,7 @@ jobs:
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
     runs-on: windows-latest
-    needs: buildForAllPlatforms
+    needs: buildForSomePlatforms
     if: github.event.ref != 'refs/heads/develop'
     env:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
@@ -113,7 +113,7 @@ jobs:
   releaseToAppStore:
     name: Release to Google Play and the App Store
     runs-on: macos-latest
-    needs: buildForAllPlatforms
+    needs: buildForSomePlatforms
     if: github.event.action == 'published'
     env:
       APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
