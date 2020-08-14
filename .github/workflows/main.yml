@@ -4,7 +4,7 @@ on:
   pull_request: { branches: [master] }
   release: { types: [published] }
 jobs:
-  buildForAllPlatforms:
+  buildForSomePlatforms:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     env:
@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-#          - Android
+          - Android
           - iOS
 #          - StandaloneOSX
 #          - StandaloneLinux64
