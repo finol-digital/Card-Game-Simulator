@@ -19,7 +19,6 @@ permalink: roadmap.html
   - Define
     - Toggle rotation between 0 and 90/180/270
     - Rotate 90/180/270
-    - Toggle facedown
     - Move to hand
     - Move to top/bottom of deck
     - Move to discard/delete
@@ -28,7 +27,7 @@ permalink: roadmap.html
 - Play Area SharePreference
 - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
 - Rotate play area (2 finger or right-click)
-- Play area zoom and rotation sliders in bottom corners (hidden by hand)
+- Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset button)
 - Playmats
 
 ## Backlog
@@ -48,6 +47,7 @@ permalink: roadmap.html
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
+- Platforms: Full support for web through WebGL
 - Integration: Android Search Bar Widget
 - Play Mode: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Deck Editor: Focus buttons move cards

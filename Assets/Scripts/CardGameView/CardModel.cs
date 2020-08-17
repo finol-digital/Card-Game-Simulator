@@ -120,6 +120,7 @@ namespace CardGameView
                     _placeHolder.SetParent(null);
                     Destroy(_placeHolder.gameObject);
                 }
+
                 _placeHolder = value;
                 if (_placeHolder == null)
                 {
@@ -146,8 +147,6 @@ namespace CardGameView
                     PlaceHolder = null;
                     return;
                 }
-
-                DropTarget = null;
 
                 var placeholder = new GameObject(gameObject.name + "(PlaceHolder)", typeof(RectTransform));
                 PlaceHolder = (RectTransform) placeholder.transform;
@@ -416,6 +415,9 @@ namespace CardGameView
 
             if (IsStatic)
                 return;
+
+            if (DropTarget != null && DropTarget.isBlocker && ParentCardStack != null)
+                ParentToCanvas(targetPosition);
 
             if (PlaceHolderCardStack != null)
                 PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);

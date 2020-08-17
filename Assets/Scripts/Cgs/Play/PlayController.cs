@@ -38,7 +38,7 @@ namespace Cgs.Play
         public GameObject diePrefab;
 
         public CardStack playAreaCardStack;
-        public ZoneViewer hand;
+        public Hand hand;
         public PlayMenu menu;
         public PointsCounter scoreboard;
 
@@ -226,6 +226,7 @@ namespace Cgs.Play
             rectTransform.SetParent(target);
             if (!Vector2.zero.Equals(position))
                 rectTransform.anchoredPosition = position;
+            cardZone.position = rectTransform.anchoredPosition;
             return cardZone;
         }
 

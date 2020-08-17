@@ -2,37 +2,56 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections.Generic;
 using CardGameDef.Unity;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CardGameView
 {
-    public class ZoneViewer : MonoBehaviour
+    public class ZoneViewer : MonoBehaviour, ICardDropHandler
     {
+        public GameObject cardModelPrefab;
 
-        public void Show()
+        public List<CardDropArea> drops;
+        public CardStack contentCardStack;
+        public Text countLabel;
+
+        private void Start()
         {
-            gameObject.SetActive(true);
+            foreach (CardDropArea drop in drops)
+                drop.DropHandler = this;
+            contentCardStack.OnAddCardActions.Add(OnAddCardModel);
+            contentCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
         }
 
-        public void Toggle()
+        public void OnDrop(CardModel cardModel)
         {
-            gameObject.SetActive(!gameObject.activeSelf);
-        }
-
-        public void Hide()
-        {
-            gameObject.SetActive(false);
+            AddCard(cardModel.Value);
         }
 
         public void AddCard(UnityCard card)
         {
-            // TODO:
+            var cardModel = Instantiate(cardModelPrefab, contentCardStack.transform).GetOrAddComponent<CardModel>();
+            cardModel.Value = card;
+
+            OnAddCardModel(contentCardStack, cardModel);
+        }
+
+        private void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+        {
+            cardModel.DoubleClickAction = CardActions.FlipFace;
+            countLabel.text = contentCardStack.GetComponentsInChildren<CardModel>().Length.ToString();
+        }
+
+        private void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
+        {
+            countLabel.text = contentCardStack.GetComponentsInChildren<CardModel>().Length.ToString();
         }
 
         public void Clear()
         {
-            // TODO:
+            contentCardStack.transform.DestroyAllChildren();
         }
     }
 }

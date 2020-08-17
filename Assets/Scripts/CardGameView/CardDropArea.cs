@@ -16,11 +16,16 @@ namespace CardGameView
     {
         public ICardDropHandler DropHandler { get; set; }
 
+        public bool isBlocker;
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
-            if (cardModel != null)
-                cardModel.DropTarget = this;
+            if (cardModel == null)
+                return;
+
+            cardModel.DropTarget = this;
+            cardModel.IsHighlighted = false;
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -33,8 +38,12 @@ namespace CardGameView
         public void OnDrop(PointerEventData eventData)
         {
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
-            if (cardModel != null && cardModel.PlaceHolder == null && cardModel.ParentCardStack == null)
-                DropHandler.OnDrop(cardModel);
+            if (cardModel == null || cardModel.PlaceHolder != null || cardModel.ParentCardStack != null)
+                return;
+
+            DropHandler.OnDrop(cardModel);
+            if (cardModel.DropTarget == this)
+                cardModel.DropTarget = null;
         }
     }
 }

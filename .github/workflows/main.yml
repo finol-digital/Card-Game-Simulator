@@ -19,7 +19,6 @@ jobs:
           - iOS
 #          - StandaloneOSX
 #          - StandaloneLinux64
-#          - WebGL
     steps:
       - uses: actions/checkout@v2
         with:
@@ -43,7 +42,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         if: github.event.ref != 'refs/heads/develop'
         with:
-          name: cgs-mac-linux
+          name: cgs-android-ios-mac-linux
           path: builds
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
@@ -142,7 +141,7 @@ jobs:
           lfs: true
       - uses: actions/download-artifact@v1
         with:
-          name: cgs-builds
+          name: cgs-android-ios-mac-linux
           path: builds
       - uses: maierj/fastlane-action@v1.4.0
         with:

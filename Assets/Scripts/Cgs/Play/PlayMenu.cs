@@ -28,8 +28,6 @@ namespace Cgs.Play
                 ShowCardsMenu();
             else if (Inputs.IsSort)
                 ShowDiceMenu();
-            else if (Inputs.IsSave)
-                ToggleHand();
         }
 
         public void Show()
@@ -63,12 +61,6 @@ namespace Cgs.Play
         public void ShowDiceMenu()
         {
             controller.ShowDiceMenu();
-        }
-
-        [UsedImplicitly]
-        public void ToggleHand()
-        {
-            controller.hand.Toggle();
         }
 
         public void Hide()
