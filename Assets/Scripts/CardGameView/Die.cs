@@ -116,7 +116,7 @@ namespace CardGameView
             position = newPosition;
         }
 
-        [UsedImplicitly]
+        [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
             ((RectTransform) transform).anchoredPosition = newValue;
@@ -135,7 +135,7 @@ namespace CardGameView
                 Value = value;
         }
 
-        [UsedImplicitly]
+        [PublicAPI]
         public void OnChangeValue(int oldValue, int newValue)
         {
             valueText.text = _value.ToString();

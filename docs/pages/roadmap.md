@@ -7,17 +7,14 @@ permalink: roadmap.html
 ## What's New
 - Deck Editor: Cards move in their stacks to better make use of visible space
 - Play Mode: Re-organized buttons and card stacks
+- CardGameDef: gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
 
 ## Current Sprint
-- Card Grouping
-  - gamePlayDeckName (default="Stock", "Square Wall" for Mahjong)
-  - Define card zones in play area (replace gameHasDiscard/gameCatchesDiscard)
-    - Resize hand and zones based off card game settings
-    - Share discard pile between all players who share a deck in Play Mode
-    - Card zones can define what actions are possible in that zone
-    - .dec sideboard & .ydk side are extras
 - Allow any player to move cards in the play area, instead of just the player who put it there
-- Play Area SharePreference
+- Card Zones
+  - Resize zone viewer based off card game settings
+  - .dec sideboard & .ydk side are extras
+  - Card zones can define what actions are possible in that zone
 - Card Actions
   - Define
     - Toggle rotation between 0 and 90/180/270
@@ -28,6 +25,7 @@ permalink: roadmap.html
     - Move to discard/delete
   - Double-clicking takes a default action, based on the zone the card is in
   - Single-click show menu with all possible actions at the bottom
+- Play Area SharePreference
 - Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
 - Rotate play area (2 finger or right-click)
 - Play area zoom and rotation sliders in bottom corners (hidden by hand)

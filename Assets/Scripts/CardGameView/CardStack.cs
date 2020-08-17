@@ -16,7 +16,6 @@ namespace CardGameView
 
     public enum CardStackType
     {
-        Full,
         Vertical,
         Horizontal,
         Area
@@ -75,8 +74,6 @@ namespace CardGameView
 
             switch (type)
             {
-                case CardStackType.Full:
-                    break;
                 case CardStackType.Vertical:
                 case CardStackType.Horizontal:
                     int newSiblingIndex = transform.childCount;

@@ -447,7 +447,6 @@ namespace CardGameView
             bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
             bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
             if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
-                || (cardStack.type == CardStackType.Full && _currentDragPhase == DragPhase.Begin)
                 || (cardStack.type == CardStackType.Vertical && isOutXBounds)
                 || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
                 || (cardStack.type == CardStackType.Area
@@ -592,8 +591,6 @@ namespace CardGameView
 
         private void Discard()
         {
-            if (DropTarget == null && CgsNetManager.Instance != null)
-                CgsNetManager.Instance.playController.CatchDiscard(Value);
             Destroy(gameObject);
         }
 

@@ -7,7 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef;
+using CardGameDef.Unity;
 using CardGameView;
+using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 
@@ -18,24 +20,15 @@ namespace Cgs.Play.Multiplayer
         public const string GameSelectionErrorMessage = "The host has selected a game that is not available!";
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
 
-        private IEnumerable<Card> CurrentDeck =>
-            CurrentDeckCardIds.Select(cardId => CardGameManager.Current.Cards[cardId]);
-
-        public string[] CurrentDeckCardIds =>
-            CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.cardStacks != null
-                                                && CgsNetManager.Instance.Data.cardStacks.Count > 0
-                ? CgsNetManager.Instance.Data.cardStacks[deckIndex].CardIds
-                : new string[] { };
-
-        public int CurrentScore => CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.scores != null
-                                                                       && CgsNetManager.Instance.Data.scores.Count > 0
-            ? CgsNetManager.Instance.Data.scores[scoreIndex].Points
+        public int CurrentScore => CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.Scores != null
+                                                                       && CgsNetManager.Instance.Data.Scores.Count > 0
+            ? CgsNetManager.Instance.Data.Scores[scoreIndex].Points
             : 0;
 
-        public bool IsDeckShared { get; private set; }
-        [SyncVar(hook = "OnChangeDeck")] public int deckIndex;
-
         [SyncVar(hook = "OnChangeScore")] public int scoreIndex;
+
+        [field: SyncVar] public GameObject DeckZone { get; set; }
+        [field: SyncVar] public bool IsDeckShared { get; private set; }
 
         public override void OnStartLocalPlayer()
         {
@@ -51,21 +44,20 @@ namespace Cgs.Play.Multiplayer
 
         private void RequestCardGameSelection()
         {
-            Debug.Log("[CgsNet Player] Determining game id...");
+            Debug.Log("[CgsNet Player] Requesting game id...");
             CmdSelectCardGame();
         }
 
         [Command]
         private void CmdSelectCardGame()
         {
+            Debug.Log("[CgsNet Player] Sending game id...");
             CgsNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
-            TargetSelectCardGame(connectionToClient, CardGameManager.Current.Id,
-                CardGameManager.Current.AutoUpdateUrl?.OriginalString);
+            TargetSelectCardGame(CardGameManager.Current.Id, CardGameManager.Current.AutoUpdateUrl?.OriginalString);
         }
 
         [TargetRpc]
-        // ReSharper disable once UnusedParameter.Local
-        private void TargetSelectCardGame(NetworkConnection target, string gameId, string autoUpdateUrl)
+        private void TargetSelectCardGame(string gameId, string autoUpdateUrl)
         {
             Debug.Log($"[CgsNet Player] Game id is {gameId}! Loading game details...");
             if (!CardGameManager.Instance.AllCardGames.ContainsKey(gameId))
@@ -115,15 +107,27 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        public void RequestNewDeck(IEnumerable<Card> deckCards)
+        public void RequestNewDeck(string zoneName, IEnumerable<UnityCard> cards)
         {
-            CmdRegisterDeck(deckCards.Select(card => card.Id).ToArray());
+            CmdCreateZone(zoneName, cards.Select(card => card.Id).ToArray(), true);
+        }
+
+        public void RequestNewZone(string zoneName, IEnumerable<UnityCard> cards)
+        {
+            CmdCreateZone(zoneName, cards.Select(card => card.Id).ToArray(), false);
         }
 
         [Command]
-        private void CmdRegisterDeck(string[] cardIds)
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
+        private void CmdCreateZone(string zoneName, string[] cardIds, bool isDeck)
         {
-            CgsNetManager.Instance.Data.RegisterDeck(gameObject, cardIds);
+            CardZone zone = CgsNetManager.Instance.playController.CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
+            zone.Name = zoneName;
+            zone.Cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
+            GameObject zoneGameObject = zone.gameObject;
+            NetworkServer.Spawn(zoneGameObject);
+            if (isDeck)
+                DeckZone = zoneGameObject;
         }
 
         private void RequestSharedDeck()
@@ -135,35 +139,16 @@ namespace Cgs.Play.Multiplayer
         [Command]
         private void CmdShareDeck()
         {
-            TargetShareDeck(connectionToClient, CgsNetManager.Instance.LocalPlayer.deckIndex);
+            Debug.Log("[CgsNet Player] Sending deck from server to client...");
+            TargetShareDeck(CgsNetManager.Instance.LocalPlayer.DeckZone);
         }
 
         [TargetRpc]
-        // ReSharper disable once UnusedParameter.Local
-        private void TargetShareDeck(NetworkConnection target, int sharedDeckIndex)
+        private void TargetShareDeck(GameObject deckZone)
         {
             Debug.Log("[CgsNet Player] Got deck from server!");
+            DeckZone = deckZone;
             IsDeckShared = true;
-            deckIndex = sharedDeckIndex;
-            CgsNetManager.Instance.playController.LoadDeckCards(CurrentDeck, true);
-        }
-
-        public void RequestDeckUpdate(IEnumerable<Card> deckCards)
-        {
-            CmdUpdateDeck(deckCards.Select(card => card.Id).ToArray());
-        }
-
-        [Command]
-        private void CmdUpdateDeck(string[] cardIds)
-        {
-            CgsNetManager.Instance.Data.ChangeDeck(deckIndex, cardIds);
-        }
-
-        // ReSharper disable once UnusedParameter.Global
-        public void OnChangeDeck(int oldDeckIndex, int newDeckIndex)
-        {
-            // TODO: if (deckIndex == newDeckIndex)
-            // TODO:    CgsNetManager.Instance.playController.zones.CurrentDeck.Sync(CurrentDeck);
         }
 
         public void RequestScoreUpdate(int points)
@@ -177,7 +162,7 @@ namespace Cgs.Play.Multiplayer
             CgsNetManager.Instance.Data.ChangeScore(scoreIndex, points);
         }
 
-        // ReSharper disable once UnusedParameter.Global
+        [PublicAPI]
         public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
         {
             if (scoreIndex == newScoreIndex)
@@ -235,11 +220,12 @@ namespace Cgs.Play.Multiplayer
         }
 
         [TargetRpc]
-        // ReSharper disable once UnusedParameter.Global
-        public void TargetRestart(NetworkConnection target)
+        public void TargetRestart()
         {
             Debug.Log("[CgsNet Player] Game is restarting!...");
             CgsNetManager.Instance.playController.ResetPlayArea();
+            CgsNetManager.Instance.playController.hand.Clear();
+            DeckZone = null;
             StartCoroutine(WaitToRestartGame());
         }
 
@@ -252,8 +238,7 @@ namespace Cgs.Play.Multiplayer
                 yield break;
             }
 
-            while (!CurrentDeck.Any())
-                yield return null;
+            yield return null;
 
             Debug.Log("[CgsNet Player] Game restarted!");
 

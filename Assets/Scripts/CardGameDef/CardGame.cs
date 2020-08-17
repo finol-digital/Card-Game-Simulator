@@ -286,6 +286,12 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
+            "gamePlayDeckName is the name of the card stack shown when a player loads a deck.")]
+        [DefaultValue("Stock")]
+        public string GamePlayDeckName { get; set; } = "Stock";
+
+        [JsonProperty]
+        [Description(
             "gameStartHandCount indicates how many cards are automatically dealt from the deck to the hand, when a user loads a deck in Play Mode.")]
         public int GameStartHandCount { get; set; }
 

@@ -2,13 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using CardGameView;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
-using Mirror;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Cgs.Play

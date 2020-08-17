@@ -13,7 +13,6 @@ namespace Cgs.Play
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
         public PlayController controller;
-        public GameObject hand;
 
         private void Update()
         {
@@ -69,7 +68,7 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ToggleHand()
         {
-            hand.SetActive(!hand.activeSelf);
+            controller.hand.Toggle();
         }
 
         public void Hide()

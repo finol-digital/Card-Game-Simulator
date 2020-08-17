@@ -33,41 +33,45 @@ namespace Cgs.Play
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
 
+        public GameObject cardZonePrefab;
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
 
         public CardStack playAreaCardStack;
+        public ZoneViewer hand;
         public PlayMenu menu;
         public PointsCounter scoreboard;
 
         private LobbyMenu Lobby =>
-            _lobby ? _lobby : (_lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>());
+            _lobby ? _lobby : _lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
 
-        public DeckLoadMenu DeckLoader => _deckLoader
+        private DeckLoadMenu DeckLoader => _deckLoader
             ? _deckLoader
-            : (_deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>());
+            : _deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
 
         private DeckLoadMenu _deckLoader;
 
-        public DiceMenu DiceManager => _diceManager
+        private DiceMenu DiceManager => _diceManager
             ? _diceManager
-            : (_diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>());
+            : _diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>();
 
         private DiceMenu _diceManager;
 
-        public CardSearchMenu CardSearcher => _cardSearcher
+        private CardSearchMenu CardSearcher => _cardSearcher
             ? _cardSearcher
-            : (_cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>());
+            : _cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
 
         private CardSearchMenu _cardSearcher;
 
         private HandDealer Dealer => _dealer
             ? _dealer
-            : (_dealer = Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>());
+            : _dealer = Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
+
+        private CardZone _soloDeckZone;
 
         private void OnEnable()
         {
@@ -105,19 +109,15 @@ namespace Cgs.Play
 
         private void Restart()
         {
-#if !UNITY_WEBGL
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive &&
-                CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestRestart();
             else
             {
                 ResetPlayArea();
+                hand.Clear();
+                _soloDeckZone = null;
                 DeckLoader.Show(LoadDeck);
             }
-#else
-            ResetPlayArea();
-            ShowDeckMenu();
-#endif
         }
 
         public void ResetPlayArea()
@@ -153,56 +153,49 @@ namespace Cgs.Play
             DiceManager.Show(CreateDie);
         }
 
-        public void LoadDeck(UnityDeck deck)
+        private void LoadDeck(UnityDeck deck)
         {
-            if (deck == null)
-                return;
-
-            // TODO:
-            /*
-            Dictionary<string, List<Card>> extraGroups = deck.GetExtraGroups();
-            foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
-                zones.CreateExtraZone(cardGroup.Key, cardGroup.Value);*/
-
-            List<Card> extraCards = deck.GetExtraCards();
-            List<UnityCard> deckCards = deck.Cards.Where(card => !extraCards.Contains(card)).Cast<UnityCard>().ToList();
-            deckCards.Shuffle();
-
-            LoadDeckCards(deckCards);
-
             foreach (Card card in deck.Cards)
             foreach (GameBoardCard boardCard in CardGameManager.Current.GameBoardCards.Where(boardCard =>
                 card.Id.Equals(boardCard.Card)))
                 CreateGameBoards(boardCard.Boards);
-        }
 
-        public void LoadDeckCards(IEnumerable<Card> deckCards, bool isShared = false)
-        {
-            // TODO:zones.CreateDeck();
-            // TODO:zones.scrollView.verticalScrollbar.value = 0;
-            IEnumerable<Card> enumerable = deckCards.ToList();
-#if !UNITY_WEBGL
-            if (!isShared && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(enumerable);
-#endif
-            // TODO:zones.CurrentDeck.Sync(enumerable);
-            // TODO:StartCoroutine(zones.CurrentDeck.WaitForLoad(CreateHand));
+            Dictionary<string, List<Card>> extraGroups = deck.GetExtraGroups();
+            List<Card> extraCards = deck.GetExtraCards();
+            List<UnityCard> deckCards = deck.Cards.Where(card => !extraCards.Contains(card)).Cast<UnityCard>().ToList();
+            deckCards.Shuffle();
+
+            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+            {
+                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(CardGameManager.Current.GamePlayDeckName, deckCards);
+                foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
+                    CgsNetManager.Instance.LocalPlayer.RequestNewZone(cardGroup.Key, cardGroup.Value.Cast<UnityCard>());
+            }
+            else
+            {
+                _soloDeckZone = CreateZone(Vector2.zero);
+                _soloDeckZone.Name = CardGameManager.Current.GamePlayDeckName;
+                _soloDeckZone.Cards = deckCards;
+
+                foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
+                {
+                    CardZone zone = CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
+                    zone.Name = cardGroup.Key;
+                    zone.Cards = (List<UnityCard>) cardGroup.Value.Cast<UnityCard>();
+                }
+            }
+
+            PromptForHand();
         }
 
         private void CreateGameBoards(IReadOnlyCollection<GameBoard> boards)
         {
-            if (boards == null || boards.Count < 1)
-                return;
-
             foreach (GameBoard board in boards)
                 CreateBoard(board);
         }
 
         private void CreateBoard(GameBoard board)
         {
-            if (board == null)
-                return;
-
             var newBoard = new GameObject(board.Id, typeof(RectTransform));
             var boardRectTransform = (RectTransform) newBoard.transform;
             boardRectTransform.SetParent(playAreaCardStack.transform);
@@ -225,23 +218,26 @@ namespace Cgs.Play
             boardRectTransform.localScale = Vector3.one;
         }
 
-        public void CreateHand()
+        public CardZone CreateZone(Vector2 position)
         {
-            // TODO: if (zones.Hand == null)
-            // TODO:     zones.CreateHand();
+            Transform target = playAreaCardStack.transform;
+            var cardZone = Instantiate(cardZonePrefab, target.parent).GetComponent<CardZone>();
+            var rectTransform = (RectTransform) cardZone.transform;
+            rectTransform.SetParent(target);
+            if (!Vector2.zero.Equals(position))
+                rectTransform.anchoredPosition = position;
+            return cardZone;
+        }
 
+        private void PromptForHand()
+        {
             if (CardGameManager.Current.GameStartHandCount > 0)
                 Dealer.Show(DealStartingHand);
         }
 
         private void DealStartingHand()
         {
-            // TODO: if (zones.Hand == null)
-            // TODO:    return;
-
-            // TODO: if (!zones.Hand.IsExtended)
-            // TODO:     zones.Hand.ToggleExtension();
-
+            hand.Show();
             Deal(Dealer.Count);
         }
 
@@ -253,25 +249,22 @@ namespace Cgs.Play
         private IEnumerable<UnityCard> PopDeckCards(int cardCount)
         {
             List<UnityCard> cards = new List<UnityCard>(cardCount);
-            // TODO: if (zones.CurrentDeck == null)
-            // TODO:    return cards;
+            CardZone deckZone = _soloDeckZone;
+            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null &&
+                CgsNetManager.Instance.LocalPlayer.DeckZone != null)
+                deckZone = CgsNetManager.Instance.LocalPlayer.DeckZone.GetComponent<CardZone>();
+            if (deckZone == null)
+                return cards;
 
-            // TODO: for (var i = 0; i < cardCount && zones.CurrentDeck.Cards.Count > 0; i++)
-            // TODO:    cards.Add(zones.CurrentDeck.PopCard());
-#if !UNITY_WEBGL
-            // TODO: if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
-            // TODO:    CgsNetManager.Instance.LocalPlayer.RequestDeckUpdate(zones.CurrentDeck.Cards);
-#endif
+            for (var i = 0; i < cardCount && deckZone.Cards.Count > 0; i++)
+                cards.Add(deckZone.PopCard());
             return cards;
         }
 
-        public void AddCardsToHand(IEnumerable<UnityCard> cards)
+        private void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
-            // TODO: if (zones.Hand == null)
-            // TODO:    zones.CreateHand();
-
-            // TODO: foreach (UnityCard card in cards)
-            // TODO:    zones.Hand.AddCard(card);
+            foreach (UnityCard card in cards)
+                hand.AddCard(card);
         }
 
         private static void AddCardToPlay(CardStack cardStack, CardModel cardModel)
@@ -288,18 +281,9 @@ namespace Cgs.Play
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
-        public void CatchDiscard(UnityCard card)
+        private void DisplayResults(string filters, List<UnityCard> cards)
         {
-            // TODO: if (zones.Discard == null)
-            // TODO:     zones.CreateDiscard();
-            // TODO: zones.Discard.AddCard(card);
-        }
-
-        public void DisplayResults(string filters, List<UnityCard> cards)
-        {
-            // TODO: if (zones.Results == null)
-            // TODO:    zones.CreateResults();
-            // TODO: zones.Results.Sync(cards);
+            // TODO: CreateZone(CardGameManager.Current.Name, cards);
         }
 
         public Die CreateDie(int min, int max)

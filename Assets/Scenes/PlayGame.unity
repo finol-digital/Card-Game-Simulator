@@ -1165,12 +1165,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 412199087}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &462126528 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8084244048543937869, guid: db824bcf7bf139d4484ca9b35f47b8c9,
-    type: 3}
-  m_PrefabInstance: {fileID: 8084244048905078925}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &462126529 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8084244048543937868, guid: db824bcf7bf139d4484ca9b35f47b8c9,
@@ -1461,10 +1455,13 @@ MonoBehaviour:
     type: 3}
   handDealerPrefab: {fileID: 7945912001630269733, guid: 743c496c97559c94c87f8e6ae3360c32,
     type: 3}
+  cardZonePrefab: {fileID: 4087591186767669376, guid: 5fdc698f4f037cc44921305d641fd80b,
+    type: 3}
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e, type: 3}
   playAreaCardStack: {fileID: 217919978}
+  hand: {fileID: 8084244048905078926}
   menu: {fileID: 1904102581}
   scoreboard: {fileID: 1720539154216192284}
 --- !u!1 &806328559
@@ -2386,7 +2383,7 @@ GameObject:
   - component: {fileID: 1303562788}
   - component: {fileID: 1303562787}
   m_Layer: 5
-  m_Name: Stack Viewers
+  m_Name: Zone Viewers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3282,7 +3279,7 @@ RectTransform:
   m_Children:
   - {fileID: 609703444}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3302,7 +3299,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 709840748}
-  hand: {fileID: 462126528}
 --- !u!114 &1904102582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4048,7 +4044,7 @@ RectTransform:
   - {fileID: 1720539154766825657}
   - {fileID: 1720539154275417877}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4553,12 +4549,12 @@ PrefabInstance:
     - target: {fileID: 2016992045204714089, guid: db824bcf7bf139d4484ca9b35f47b8c9,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2016992045204714089, guid: db824bcf7bf139d4484ca9b35f47b8c9,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -340
       objectReference: {fileID: 0}
     - target: {fileID: 8084244048543937868, guid: db824bcf7bf139d4484ca9b35f47b8c9,
         type: 3}
@@ -4673,7 +4669,19 @@ PrefabInstance:
     - target: {fileID: 8084244048543937869, guid: db824bcf7bf139d4484ca9b35f47b8c9,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db824bcf7bf139d4484ca9b35f47b8c9, type: 3}
+--- !u!114 &8084244048905078926 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5706626876545127617, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+    type: 3}
+  m_PrefabInstance: {fileID: 8084244048905078925}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da0cc102d19b7684f84e390aa28941a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

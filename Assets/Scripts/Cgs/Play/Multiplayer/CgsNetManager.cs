@@ -31,6 +31,7 @@ namespace Cgs.Play.Multiplayer
 
         public PlayController playController;
 
+        private Guid _zoneAssetId;
         private Guid _cardAssetId;
         private Guid _dieAssetId;
 
@@ -38,12 +39,16 @@ namespace Cgs.Play.Multiplayer
         {
             base.Start();
 
+            _zoneAssetId = playController.cardZonePrefab.GetComponent<NetworkIdentity>().assetId;
+            ClientScene.RegisterSpawnHandler(_zoneAssetId, SpawnZone, UnSpawn);
+            Debug.Log("[CgsNet Manager] Registered zone spawn handler.");
+
             _cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawnCard);
+            ClientScene.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawn);
             Debug.Log("[CgsNet Manager] Registered card spawn handler.");
 
             _dieAssetId = playController.diePrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawnDie);
+            ClientScene.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawn);
             Debug.Log("[CgsNet Manager] Registered die spawn handler.");
 
             Discovery = GetComponent<CgsNetDiscovery>();
@@ -71,6 +76,15 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] Client connected!");
         }
 
+        private GameObject SpawnZone(Vector3 position, Guid assetId)
+        {
+            Debug.Log("[CgsNet Manager] SpawnZone");
+            Transform target = playController.playAreaCardStack.transform;
+            var cardZone = Instantiate(playController.cardZonePrefab, target.parent).GetComponent<CardZone>();
+            cardZone.transform.SetParent(target);
+            return cardZone.gameObject;
+        }
+
         private GameObject SpawnCard(Vector3 position, Guid assetId)
         {
             Debug.Log("[CgsNet Manager] SpawnCard");
@@ -78,12 +92,6 @@ namespace Cgs.Play.Multiplayer
                 Instantiate(playController.cardModelPrefab, playController.playAreaCardStack.transform);
             PlayController.SetPlayActions(newCard.GetComponent<CardModel>());
             return newCard;
-        }
-
-        private static void UnSpawnCard(GameObject spawned)
-        {
-            Debug.Log("[CgsNet Manager] UnSpawnCard");
-            Destroy(spawned);
         }
 
         private GameObject SpawnDie(Vector3 position, Guid assetId)
@@ -95,9 +103,9 @@ namespace Cgs.Play.Multiplayer
             return die.gameObject;
         }
 
-        private static void UnSpawnDie(GameObject spawned)
+        private static void UnSpawn(GameObject spawned)
         {
-            Debug.Log("[CgsNet Manager] UnSpawnDie");
+            Debug.Log("[CgsNet Manager] UnSpawn");
             Destroy(spawned);
         }
 
@@ -147,14 +155,14 @@ namespace Cgs.Play.Multiplayer
 
         public void Restart()
         {
-            // Clear all decks when restarting
-            for (var i = 0; i < Data.cardStacks.Count; i++)
-                Data.ChangeDeck(i, new string[] { });
-
+            foreach (CardZone cardZone in playController.playAreaCardStack.GetComponentsInChildren<CardZone>())
+                NetworkServer.UnSpawn(cardZone.gameObject);
             foreach (CardModel cardModel in playController.playAreaCardStack.GetComponentsInChildren<CardModel>())
                 NetworkServer.UnSpawn(cardModel.gameObject);
+            foreach (Die die in playController.playAreaCardStack.GetComponentsInChildren<Die>())
+                NetworkServer.UnSpawn(die.gameObject);
             foreach (CgsNetPlayer player in FindObjectsOfType<CgsNetPlayer>())
-                player.TargetRestart(player.connectionToClient);
+                player.TargetRestart();
         }
     }
 }
