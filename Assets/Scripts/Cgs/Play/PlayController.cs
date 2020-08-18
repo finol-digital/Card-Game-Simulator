@@ -188,7 +188,7 @@ namespace Cgs.Play
             PromptForHand();
         }
 
-        private void CreateGameBoards(IReadOnlyCollection<GameBoard> boards)
+        private void CreateGameBoards(IEnumerable<GameBoard> boards)
         {
             foreach (GameBoard board in boards)
                 CreateBoard(board);

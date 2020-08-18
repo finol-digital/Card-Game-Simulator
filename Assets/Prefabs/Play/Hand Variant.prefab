@@ -19,6 +19,7 @@ MonoBehaviour:
   - {fileID: 1580848122011576364}
   contentCardStack: {fileID: 1584776059262385294}
   countLabel: {fileID: 2030967688879958789}
+  toggle: {fileID: 1247117517210743210}
 --- !u!1001 &902623568232620183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -86,6 +87,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 48
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146076944898601840, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146076944898601843, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146076944898601843, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146076944898601843, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146076944898601843, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5939000394208968370}
+    - target: {fileID: 2146076944898601843, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Toggle
+      objectReference: {fileID: 0}
+    - target: {fileID: 2146076944898601843, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8084244048543937868, guid: db824bcf7bf139d4484ca9b35f47b8c9,
         type: 3}
@@ -223,6 +259,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1247117517210743210 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2146076944757018941, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+    type: 3}
+  m_PrefabInstance: {fileID: 902623568232620183}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2030967688879958789 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1200685390900153234, guid: db824bcf7bf139d4484ca9b35f47b8c9,

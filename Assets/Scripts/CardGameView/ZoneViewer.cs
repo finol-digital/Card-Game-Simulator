@@ -40,6 +40,8 @@ namespace CardGameView
 
         private void OnAddCardModel(CardStack cardStack, CardModel cardModel)
         {
+            cardModel.transform.rotation = Quaternion.identity;
+            cardModel.IsFacedown = false;
             cardModel.DoubleClickAction = CardActions.FlipFace;
             countLabel.text = contentCardStack.GetComponentsInChildren<CardModel>().Length.ToString();
         }

@@ -13,6 +13,8 @@ permalink: roadmap.html
 - Allow any player to move cards in the play area, instead of just the player who put it there
 - Card Zones
   - Resize zone viewer based off card game settings
+  - right to left in zone viewer
+  - load multiple decks
   - .dec sideboard & .ydk side are extras
   - Card zones can define what actions are possible in that zone
 - Card Actions
