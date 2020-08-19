@@ -23,7 +23,7 @@ namespace CardGameView
         public Text deckLabel;
         public Text countLabel;
         public Image topCard;
-        public Button shuffleButton;
+        public GameObject buttons;
 
         [field: SyncVar(hook = nameof(OnChangeName))]
         public string Name { get; set; }
@@ -77,23 +77,19 @@ namespace CardGameView
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (!hasAuthority)
-                return;
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-            shuffleButton.gameObject.SetActive(true);
+            ShowButtons();
         }
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (!hasAuthority)
-                return;
-            shuffleButton.gameObject.SetActive(true);
+            ShowButtons();
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-            shuffleButton.gameObject.SetActive(false);
+            HideButtons();
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -102,7 +98,7 @@ namespace CardGameView
                 return;
             _dragOffset = eventData.position - (Vector2) transform.position;
             transform.SetAsLastSibling();
-            shuffleButton.gameObject.SetActive(false);
+            HideButtons();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -162,6 +158,45 @@ namespace CardGameView
             UnityCard card = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
             _cardIds.RemoveAt(_cardIds.Count - 1);
             return card;
+        }
+
+        private void ShowButtons()
+        {
+            buttons.SetActive(true);
+        }
+
+        private void HideButtons()
+        {
+            buttons.SetActive(false);
+        }
+
+        [UsedImplicitly]
+        public void View()
+        {
+            // TODO: ZONE VIEWER
+        }
+
+        [UsedImplicitly]
+        public void PromptShuffle()
+        {
+            CardGameManager.Instance.Messenger.Ask($"Shuffle {deckLabel.text}?", null, Shuffle);
+        }
+
+        private void Shuffle()
+        {
+            Cards.Shuffle();
+            // TODO: SHOW SHUFFLE LABEL
+        }
+
+        [UsedImplicitly]
+        public void PromptDelete()
+        {
+            CardGameManager.Instance.Messenger.Ask($"Delete {deckLabel.text}?", null, Delete);
+        }
+
+        private void Delete()
+        {
+            Destroy(gameObject);
         }
     }
 }

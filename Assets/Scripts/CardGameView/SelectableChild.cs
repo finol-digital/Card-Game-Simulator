@@ -4,16 +4,17 @@
 
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace CardGameView
 {
-    public class DieSelectable : MonoBehaviour, IPointerDownHandler
+    public class SelectableChild : MonoBehaviour, IPointerDownHandler
     {
-        public GameObject dieObject;
+        [FormerlySerializedAs("dieObject")] public GameObject parentObject;
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            EventSystem.current.SetSelectedGameObject(dieObject, eventData);
+            EventSystem.current.SetSelectedGameObject(parentObject, eventData);
         }
     }
 }
