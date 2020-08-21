@@ -20,10 +20,13 @@ namespace CardGameView
     public class CardZone : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
         IBeginDragHandler, IDragHandler, ICardDropHandler
     {
+        public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
+        public string DeletePrompt => $"Delete {deckLabel.text}?";
+
         public Text deckLabel;
         public Text countLabel;
         public Image topCard;
-        public GameObject buttons;
+        public CanvasGroup buttons;
 
         [field: SyncVar(hook = nameof(OnChangeName))]
         public string Name { get; set; }
@@ -162,12 +165,16 @@ namespace CardGameView
 
         private void ShowButtons()
         {
-            buttons.SetActive(true);
+            buttons.alpha = 1;
+            buttons.interactable = true;
+            buttons.blocksRaycasts = true;
         }
 
         private void HideButtons()
         {
-            buttons.SetActive(false);
+            buttons.alpha = 0;
+            buttons.interactable = false;
+            buttons.blocksRaycasts = false;
         }
 
         [UsedImplicitly]
@@ -179,7 +186,7 @@ namespace CardGameView
         [UsedImplicitly]
         public void PromptShuffle()
         {
-            CardGameManager.Instance.Messenger.Ask($"Shuffle {deckLabel.text}?", null, Shuffle);
+            CardGameManager.Instance.Messenger.Prompt(ShufflePrompt, Shuffle);
         }
 
         private void Shuffle()
@@ -191,12 +198,15 @@ namespace CardGameView
         [UsedImplicitly]
         public void PromptDelete()
         {
-            CardGameManager.Instance.Messenger.Ask($"Delete {deckLabel.text}?", null, Delete);
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, Delete);
         }
 
         private void Delete()
         {
-            Destroy(gameObject);
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive)
+                CgsNetManager.Instance.LocalPlayer.RequestDelete(gameObject);
+            else
+                Destroy(gameObject);
         }
     }
 }

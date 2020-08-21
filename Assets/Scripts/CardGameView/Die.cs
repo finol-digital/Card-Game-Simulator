@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Cgs;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace CardGameView
     public class Die : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
         IBeginDragHandler, IDragHandler
     {
+        public const string DeletePrompt = "Delete die?";
+
         private const float RollTime = 1.0f;
         private const float RollDelay = 0.05f;
 
@@ -188,6 +191,27 @@ namespace CardGameView
                 button.interactable = false;
                 button.blocksRaycasts = false;
             }
+        }
+
+        [UsedImplicitly]
+        public void PromptDelete()
+        {
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, Delete);
+        }
+
+        private void Delete()
+        {
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdDelete();
+            else
+                Destroy(gameObject);
+        }
+
+        [Command]
+        private void CmdDelete()
+        {
+            NetworkServer.UnSpawn(gameObject);
+            Destroy(gameObject);
         }
     }
 }

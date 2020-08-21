@@ -27,8 +27,10 @@ namespace Cgs.Play.Multiplayer
 
         [SyncVar(hook = "OnChangeScore")] public int scoreIndex;
 
-        [field: SyncVar] public GameObject DeckZone { get; set; }
+        [field: SyncVar] public GameObject DeckZone { get; private set; }
         [field: SyncVar] public bool IsDeckShared { get; private set; }
+
+        #region StartGame
 
         public override void OnStartLocalPlayer()
         {
@@ -107,6 +109,32 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
+        #endregion
+
+        #region Scores
+
+        public void RequestScoreUpdate(int points)
+        {
+            CmdUpdateScore(points);
+        }
+
+        [Command]
+        private void CmdUpdateScore(int points)
+        {
+            CgsNetManager.Instance.Data.ChangeScore(scoreIndex, points);
+        }
+
+        [PublicAPI]
+        public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
+        {
+            if (scoreIndex == newScoreIndex)
+                CgsNetManager.Instance.playController.scoreboard.CurrentDisplayValue = CurrentScore;
+        }
+
+        #endregion
+
+        #region Zones
+
         public void RequestNewDeck(string zoneName, IEnumerable<UnityCard> cards)
         {
             CmdCreateZone(zoneName, cards.Select(card => card.Id).ToArray(), true);
@@ -151,23 +179,9 @@ namespace Cgs.Play.Multiplayer
             IsDeckShared = true;
         }
 
-        public void RequestScoreUpdate(int points)
-        {
-            CmdUpdateScore(points);
-        }
+        #endregion
 
-        [Command]
-        private void CmdUpdateScore(int points)
-        {
-            CgsNetManager.Instance.Data.ChangeScore(scoreIndex, points);
-        }
-
-        [PublicAPI]
-        public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
-        {
-            if (scoreIndex == newScoreIndex)
-                CgsNetManager.Instance.playController.scoreboard.CurrentDisplayValue = CurrentScore;
-        }
+        #region Cards
 
         public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
         {
@@ -194,6 +208,10 @@ namespace Cgs.Play.Multiplayer
             cardModel.RpcHideHighlight();
         }
 
+        #endregion
+
+        #region Dice
+
         public void RequestNewDie(int min, int max)
         {
             CmdCreateDie(min, max);
@@ -206,6 +224,10 @@ namespace Cgs.Play.Multiplayer
             Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
             NetworkServer.Spawn(die.gameObject, connectionToClient);
         }
+
+        #endregion
+
+        #region RestartGame
 
         public void RequestRestart()
         {
@@ -256,6 +278,21 @@ namespace Cgs.Play.Multiplayer
                         CgsNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
                     break;
             }
+        }
+
+        #endregion
+
+        public void RequestDelete(GameObject toDelete)
+        {
+            CmdDelete(toDelete);
+        }
+
+        [Command]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CmdDelete(GameObject toDelete)
+        {
+            NetworkServer.UnSpawn(toDelete);
+            Destroy(toDelete);
         }
     }
 }

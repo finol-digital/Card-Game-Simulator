@@ -47,7 +47,7 @@ namespace ScrollRects
                     break;
             }
 
-            _canvasGroup.blocksRaycasts = blocksRayCast;
+            _canvasGroup.blocksRaycasts = blocksRayCast && EventSystem.current.currentSelectedGameObject == null;
         }
 
         public void OnPointerEnter(PointerEventData eventData)

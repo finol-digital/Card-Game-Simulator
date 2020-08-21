@@ -77,8 +77,6 @@ permalink: roadmap.html
 - Support .svg images
 - Support multiple languages (Spanish,Chinese)
 - Support different resolutions and languages for card images
-- Integration: Partner with other companies to provide licensed games
-- Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG
-- Integration: Magic Set Editor + Cockatrice integration
-- Super Stretch Goal: Support game-specific rules enforcement
-
+- Integration: NanDeck + Squib + Magic Set Editor
+- Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice
+- Stretch Goal: Support game-specific rules enforcement
