@@ -18,6 +18,16 @@ namespace CardGameView
 
         public bool isBlocker;
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            var cardModel = other.GetComponent<CardModel>();
+            if (cardModel == null || cardModel.ParentCardZone == null ||
+                cardModel.ParentCardZone.type != CardZoneType.Area)
+                return;
+
+            cardModel.DropTarget = this;
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
@@ -37,17 +47,13 @@ namespace CardGameView
 
         public void OnDrop(PointerEventData eventData)
         {
-            Debug.Log("should drop");
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel == null
                 || cardModel.ParentCardZone != null && cardModel.ParentCardZone.type != CardZoneType.Area
                 || cardModel.PlaceHolderCardZone != null && cardModel.PlaceHolderCardZone.type != CardZoneType.Area)
                 return;
 
-            Debug.Log("do drop");
             DropHandler.OnDrop(cardModel);
-            if (cardModel.DropTarget == this)
-                cardModel.DropTarget = null;
         }
     }
 }

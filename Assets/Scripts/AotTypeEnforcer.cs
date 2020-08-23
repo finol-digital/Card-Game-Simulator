@@ -70,6 +70,7 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.GameBoardUrls = new List<GameBoardUrl>();
             var gameBoardUrl =
                 new GameBoardUrl(string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
+            cardGame.GamePlayDeckName = string.Empty;
             cardGame.GameStartHandCount = 1;
             cardGame.GameStartPointsCount = 1;
             cardGame.Name = string.Empty;

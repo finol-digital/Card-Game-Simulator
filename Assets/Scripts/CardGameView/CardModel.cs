@@ -38,13 +38,10 @@ namespace CardGameView
                                                                    .playController.playArea.transform;
 
         private bool IsProcessingSecondaryDragAction =>
-            PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
-                                           (CurrentPointerEventData.button ==
-                                            PointerEventData.InputButton
-                                                .Middle ||
-                                            CurrentPointerEventData.button ==
-                                            PointerEventData.InputButton
-                                                .Right));
+            PointerPositions.Count > 1
+            || CurrentPointerEventData != null &&
+            (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
+             CurrentPointerEventData.button == PointerEventData.InputButton.Right);
 
         public CardZone ParentCardZone => transform.parent.GetComponent<CardZone>();
 
@@ -189,13 +186,13 @@ namespace CardGameView
             }
         }
 
-        private Outline Highlight => _highlight ? _highlight : (_highlight = GetComponent<Outline>());
+        private Outline Highlight => _highlight ? _highlight : _highlight = GetComponent<Outline>();
         private Outline _highlight;
 
-        private Image View => _view ? _view : (_view = GetComponent<Image>());
+        private Image View => _view ? _view : _view = GetComponent<Image>();
         private Image _view;
 
-        private CanvasGroup Visibility => _visibility ? _visibility : (_visibility = GetComponent<CanvasGroup>());
+        private CanvasGroup Visibility => _visibility ? _visibility : _visibility = GetComponent<CanvasGroup>();
         private CanvasGroup _visibility;
 
         private void Start()
@@ -325,7 +322,7 @@ namespace CardGameView
                 eventData.pointerPress = newGameObject;
                 eventData.pointerDrag = newGameObject;
                 var cardModel = newGameObject.GetOrAddComponent<CardModel>();
-                cardModel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+                cardModel.Visibility.blocksRaycasts = false;
                 cardModel.IsHighlighted = false;
                 cardModel.Value = Value;
                 cardModel.DoesCloneOnDrag = false;
@@ -381,6 +378,33 @@ namespace CardGameView
 
             if (IsProcessingSecondaryDragAction)
                 return;
+
+            if (DropTarget != null &&
+                (ParentCardZone != null && ParentCardZone.type == CardZoneType.Area
+                 || PlaceHolderCardZone != null && PlaceHolderCardZone.type == CardZoneType.Area))
+            {
+                var shouldDiscard = true;
+                if (Visibility.blocksRaycasts)
+                {
+                    List<RaycastResult> hits = new List<RaycastResult>();
+                    EventSystem.current.RaycastAll(eventData, hits);
+                    bool pointerOverDropTarget = hits.Any(hit => hit.gameObject == DropTarget.gameObject);
+                    if (pointerOverDropTarget)
+                        DropTarget.OnDrop(eventData);
+                    else
+                        shouldDiscard = false;
+                }
+
+                if (!shouldDiscard)
+                    return;
+
+                if (IsOnline)
+                    CmdUnspawnCard();
+                Discard();
+                return;
+            }
+
+            DropTarget = null;
 
             if (PlaceHolder != null)
                 StartCoroutine(MoveToPlaceHolder());
