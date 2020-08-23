@@ -61,6 +61,7 @@
       }
     }
   ],
+  "gamePlayDeckName": "Stock",
   "gameStartHandCount": 7,
   "name": "Dominoes",
   "rulesUrl": "http://www.dominorules.com/introduction"

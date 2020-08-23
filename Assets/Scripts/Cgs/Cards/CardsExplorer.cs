@@ -22,7 +22,7 @@ namespace Cgs.Cards
 
         private CardCreationMenu CardCreator => _cardCreator
             ? _cardCreator
-            : (_cardCreator = Instantiate(cardCreationMenuPrefab).GetOrAddComponent<CardCreationMenu>());
+            : _cardCreator = Instantiate(cardCreationMenuPrefab).GetOrAddComponent<CardCreationMenu>();
 
         private CardCreationMenu _cardCreator;
 

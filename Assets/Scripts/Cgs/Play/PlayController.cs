@@ -16,6 +16,7 @@ using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Cgs.Play
@@ -33,12 +34,12 @@ namespace Cgs.Play
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
 
-        public GameObject cardZonePrefab;
+        public GameObject cardStackPrefab;
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
 
-        public CardStack playAreaCardStack;
-        public Hand hand;
+        public CardZone playArea;
+        public HandController hand;
         public PlayMenu menu;
         public PointsCounter scoreboard;
 
@@ -71,7 +72,7 @@ namespace Cgs.Play
 
         private HandDealer _dealer;
 
-        private CardZone _soloDeckZone;
+        private CardStack _soloDeckStack;
 
         private void OnEnable()
         {
@@ -83,7 +84,7 @@ namespace Cgs.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
-            playAreaCardStack.OnAddCardActions.Add(AddCardToPlay);
+            playArea.OnAddCardActions.Add(AddCardToPlay);
 
             if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show();
@@ -115,14 +116,14 @@ namespace Cgs.Play
             {
                 ResetPlayArea();
                 hand.Clear();
-                _soloDeckZone = null;
+                _soloDeckStack = null;
                 DeckLoader.Show(LoadDeck);
             }
         }
 
         public void ResetPlayArea()
         {
-            var playAreaRectTransform = (RectTransform) playAreaCardStack.transform;
+            var playAreaRectTransform = (RectTransform) playArea.transform;
             playAreaRectTransform.DestroyAllChildren();
             var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
                 CardGameManager.Current.PlayAreaSize.Y);
@@ -165,23 +166,26 @@ namespace Cgs.Play
             List<UnityCard> deckCards = deck.Cards.Where(card => !extraCards.Contains(card)).Cast<UnityCard>().ToList();
             deckCards.Shuffle();
 
+            string deckName = !string.IsNullOrEmpty(CardGameManager.Current.GamePlayDeckName)
+                ? CardGameManager.Current.GamePlayDeckName
+                : deck.Name;
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
             {
-                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(CardGameManager.Current.GamePlayDeckName, deckCards);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
                     CgsNetManager.Instance.LocalPlayer.RequestNewZone(cardGroup.Key, cardGroup.Value.Cast<UnityCard>());
             }
             else
             {
-                _soloDeckZone = CreateZone(Vector2.zero);
-                _soloDeckZone.Name = CardGameManager.Current.GamePlayDeckName;
-                _soloDeckZone.Cards = deckCards;
+                _soloDeckStack = CreateZone(Vector2.zero);
+                _soloDeckStack.Name = deckName;
+                _soloDeckStack.Cards = deckCards;
 
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
                 {
-                    CardZone zone = CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
-                    zone.Name = cardGroup.Key;
-                    zone.Cards = (List<UnityCard>) cardGroup.Value.Cast<UnityCard>();
+                    CardStack stack = CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
+                    stack.Name = cardGroup.Key;
+                    stack.Cards = (List<UnityCard>) cardGroup.Value.Cast<UnityCard>();
                 }
             }
 
@@ -198,7 +202,7 @@ namespace Cgs.Play
         {
             var newBoard = new GameObject(board.Id, typeof(RectTransform));
             var boardRectTransform = (RectTransform) newBoard.transform;
-            boardRectTransform.SetParent(playAreaCardStack.transform);
+            boardRectTransform.SetParent(playArea.transform);
             boardRectTransform.anchorMin = Vector2.zero;
             boardRectTransform.anchorMax = Vector2.zero;
             boardRectTransform.offsetMin =
@@ -218,10 +222,10 @@ namespace Cgs.Play
             boardRectTransform.localScale = Vector3.one;
         }
 
-        public CardZone CreateZone(Vector2 position)
+        public CardStack CreateZone(Vector2 position)
         {
-            Transform target = playAreaCardStack.transform;
-            var cardZone = Instantiate(cardZonePrefab, target.parent).GetComponent<CardZone>();
+            Transform target = playArea.transform;
+            var cardZone = Instantiate(cardStackPrefab, target.parent).GetComponent<CardStack>();
             var rectTransform = (RectTransform) cardZone.transform;
             rectTransform.SetParent(target);
             if (!Vector2.zero.Equals(position))
@@ -250,15 +254,15 @@ namespace Cgs.Play
         private IEnumerable<UnityCard> PopDeckCards(int cardCount)
         {
             List<UnityCard> cards = new List<UnityCard>(cardCount);
-            CardZone deckZone = _soloDeckZone;
+            CardStack deckStack = _soloDeckStack;
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.DeckZone != null)
-                deckZone = CgsNetManager.Instance.LocalPlayer.DeckZone.GetComponent<CardZone>();
-            if (deckZone == null)
+                deckStack = CgsNetManager.Instance.LocalPlayer.DeckZone.GetComponent<CardStack>();
+            if (deckStack == null)
                 return cards;
 
-            for (var i = 0; i < cardCount && deckZone.Cards.Count > 0; i++)
-                cards.Add(deckZone.PopCard());
+            for (var i = 0; i < cardCount && deckStack.Cards.Count > 0; i++)
+                cards.Add(deckStack.PopCard());
             return cards;
         }
 
@@ -268,10 +272,10 @@ namespace Cgs.Play
                 hand.AddCard(card);
         }
 
-        private static void AddCardToPlay(CardStack cardStack, CardModel cardModel)
+        private static void AddCardToPlay(CardZone cardZone, CardModel cardModel)
         {
             if (NetworkManager.singleton.isNetworkActive)
-                CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardStack, cardModel);
+                CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
                 SetPlayActions(cardModel);
         }
@@ -289,7 +293,7 @@ namespace Cgs.Play
 
         public Die CreateDie(int min, int max)
         {
-            Transform target = playAreaCardStack.transform;
+            Transform target = playArea.transform;
             var die = Instantiate(diePrefab, target.parent).GetOrAddComponent<Die>();
             die.transform.SetParent(target);
             die.Min = min;

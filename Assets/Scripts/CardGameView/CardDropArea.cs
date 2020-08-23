@@ -37,10 +37,14 @@ namespace CardGameView
 
         public void OnDrop(PointerEventData eventData)
         {
+            Debug.Log("should drop");
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
-            if (cardModel == null || cardModel.PlaceHolder != null || cardModel.ParentCardStack != null)
+            if (cardModel == null
+                || cardModel.ParentCardZone != null && cardModel.ParentCardZone.type != CardZoneType.Area
+                || cardModel.PlaceHolderCardZone != null && cardModel.PlaceHolderCardZone.type != CardZoneType.Area)
                 return;
 
+            Debug.Log("do drop");
             DropHandler.OnDrop(cardModel);
             if (cardModel.DropTarget == this)
                 cardModel.DropTarget = null;

@@ -286,9 +286,8 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
-            "gamePlayDeckName is the name of the card stack shown when a player loads a deck.")]
-        [DefaultValue("Stock")]
-        public string GamePlayDeckName { get; set; } = "Stock";
+            "gamePlayDeckName is the name of the card stack shown when a player loads a deck. If <gamePlayDeckName> is empty, the *Deck:Name* is used.")]
+        public string GamePlayDeckName { get; set; }
 
         [JsonProperty]
         [Description(

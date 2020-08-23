@@ -3,210 +3,121 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using System.Linq;
-using CardGameDef;
-using CardGameDef.Unity;
-using Cgs;
-using Cgs.Play.Multiplayer;
-using JetBrains.Annotations;
-using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace CardGameView
 {
-    [RequireComponent(typeof(CardDropArea))]
-    public class CardZone : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
-        IBeginDragHandler, IDragHandler, ICardDropHandler
+    public delegate void OnAddCardDelegate(CardZone cardZone, CardModel cardModel);
+
+    public delegate void OnRemoveCardDelegate(CardZone cardZone, CardModel cardModel);
+
+    public enum CardZoneType
     {
-        public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
-        public string DeletePrompt => $"Delete {deckLabel.text}?";
+        Vertical,
+        Horizontal,
+        Area
+    }
 
-        public Text deckLabel;
-        public Text countLabel;
-        public Image topCard;
-        public CanvasGroup buttons;
+    public class CardZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    {
+        public CardZoneType type;
+        public ScrollRect scrollRectContainer;
 
-        [field: SyncVar(hook = nameof(OnChangeName))]
-        public string Name { get; set; }
+        public bool DoesImmediatelyRelease { get; set; }
 
-        public List<UnityCard> Cards
+        public UnityAction OnLayout { get; set; }
+
+        public List<OnAddCardDelegate> OnAddCardActions { get; } = new List<OnAddCardDelegate>();
+        public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new List<OnRemoveCardDelegate>();
+
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            get => _cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
-            set
-            {
-                if (!CgsNetManager.Instance.isNetworkActive || !hasAuthority)
-                {
-                    _cardIds.Clear();
-                    _cardIds.AddRange(value?.Select(card => card.Id).ToArray());
-                }
-                else
-                    CmdUpdateCards(value?.Select(card => card.Id).ToArray());
-            }
+            CardModel cardModel = CardModel.GetPointerDrag(eventData);
+            if (cardModel != null && (type != CardZoneType.Area || cardModel.transform.parent != transform) &&
+                !cardModel.IsStatic)
+                cardModel.PlaceHolderCardZone = this;
         }
 
-        private readonly SyncListString _cardIds = new SyncListString();
-
-        [SyncVar(hook = nameof(OnChangePosition))]
-        public Vector2 position;
-
-        private Vector2 _dragOffset;
-
-        private void Start()
+        public void OnPointerExit(PointerEventData eventData)
         {
-            GetComponent<CardDropArea>().DropHandler = this;
-
-            var rectTransform = (RectTransform) transform;
-            var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
-            rectTransform.sizeDelta = CardGameManager.PixelsPerInch * cardSize;
-
-            if (!hasAuthority)
-            {
-                deckLabel.text = Name;
-                countLabel.text = _cardIds.Count.ToString();
-                rectTransform.anchoredPosition = position;
-            }
-
-            _cardIds.Callback += OnCardsUpdated;
-
-            topCard.sprite = CardGameManager.Current.CardBackImageSprite;
+            CardModel cardModel = CardModel.GetPointerDrag(eventData);
+            if (cardModel != null && cardModel.PlaceHolderCardZone == this)
+                cardModel.PlaceHolderCardZone = null;
+            OnLayout?.Invoke();
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        public void OnAdd(CardModel cardModel)
         {
-            // OnPointerDown is required for OnPointerUp to trigger
-        }
-
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            if (!EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-            ShowButtons();
-        }
-
-        public void OnSelect(BaseEventData eventData)
-        {
-            ShowButtons();
-        }
-
-        public void OnDeselect(BaseEventData eventData)
-        {
-            HideButtons();
-        }
-
-        public void OnBeginDrag(PointerEventData eventData)
-        {
-            if (!hasAuthority)
+            if (cardModel == null)
                 return;
-            _dragOffset = eventData.position - (Vector2) transform.position;
-            transform.SetAsLastSibling();
-            HideButtons();
+
+            foreach (OnAddCardDelegate cardAddAction in OnAddCardActions)
+                cardAddAction(this, cardModel);
         }
 
-        public void OnDrag(PointerEventData eventData)
+        public void OnRemove(CardModel cardModel)
         {
-            if (!hasAuthority)
+            if (cardModel == null)
                 return;
-            var rectTransform = (RectTransform) transform;
-            rectTransform.position = eventData.position - _dragOffset;
-            CmdUpdatePosition(rectTransform.anchoredPosition);
+
+            foreach (OnRemoveCardDelegate cardRemoveAction in OnRemoveCardActions)
+                cardRemoveAction(this, cardModel);
         }
 
-        [Command]
-        private void CmdUpdatePosition(Vector2 newPosition)
+        public void UpdateLayout(RectTransform child, Vector2 targetPosition)
         {
-            position = newPosition;
+            if (child == null)
+                return;
+
+            switch (type)
+            {
+                case CardZoneType.Vertical:
+                case CardZoneType.Horizontal:
+                    int newSiblingIndex = transform.childCount;
+                    for (var i = 0; i < transform.childCount; i++)
+                    {
+                        if (type == CardZoneType.Vertical
+                            ? targetPosition.y < transform.GetChild(i).position.y
+                            : targetPosition.x > transform.GetChild(i).position.x)
+                            continue;
+                        newSiblingIndex = i;
+                        if (child.GetSiblingIndex() < newSiblingIndex)
+                            newSiblingIndex--;
+                        break;
+                    }
+
+                    child.SetSiblingIndex(newSiblingIndex);
+                    break;
+                case CardZoneType.Area:
+                default:
+                    child.position = targetPosition;
+                    break;
+            }
+
+            OnLayout?.Invoke();
         }
 
-        [PublicAPI]
-        public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
+        public void UpdateScrollRect(DragPhase dragPhase, PointerEventData eventData)
         {
-            ((RectTransform) transform).anchoredPosition = newValue;
-        }
+            if (scrollRectContainer == null)
+                return;
 
-        [PublicAPI]
-        public void OnChangeName(string oldName, string newName)
-        {
-            deckLabel.text = newName;
-        }
-
-        [Command]
-        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void CmdUpdateCards(string[] cardIds)
-        {
-            _cardIds.Clear();
-            _cardIds.AddRange(cardIds);
-        }
-
-        private void OnCardsUpdated(SyncList<string>.Operation op, int index, string oldId, string newId)
-        {
-            countLabel.text = _cardIds.Count.ToString();
-        }
-
-        public void OnDrop(CardModel cardModel)
-        {
-            AddCard(cardModel.Value);
-        }
-
-        private void AddCard(Card card)
-        {
-            _cardIds.Add(card.Id);
-        }
-
-        public UnityCard PopCard()
-        {
-            if (_cardIds.Count < 1)
-                return UnityCard.Blank;
-            UnityCard card = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
-            _cardIds.RemoveAt(_cardIds.Count - 1);
-            return card;
-        }
-
-        private void ShowButtons()
-        {
-            buttons.alpha = 1;
-            buttons.interactable = true;
-            buttons.blocksRaycasts = true;
-        }
-
-        private void HideButtons()
-        {
-            buttons.alpha = 0;
-            buttons.interactable = false;
-            buttons.blocksRaycasts = false;
-        }
-
-        [UsedImplicitly]
-        public void View()
-        {
-            // TODO: ZONE VIEWER
-        }
-
-        [UsedImplicitly]
-        public void PromptShuffle()
-        {
-            CardGameManager.Instance.Messenger.Prompt(ShufflePrompt, Shuffle);
-        }
-
-        private void Shuffle()
-        {
-            Cards.Shuffle();
-            // TODO: SHOW SHUFFLE LABEL
-        }
-
-        [UsedImplicitly]
-        public void PromptDelete()
-        {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, Delete);
-        }
-
-        private void Delete()
-        {
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive)
-                CgsNetManager.Instance.LocalPlayer.RequestDelete(gameObject);
-            else
-                Destroy(gameObject);
+            switch (dragPhase)
+            {
+                case DragPhase.Begin:
+                    scrollRectContainer.OnBeginDrag(eventData);
+                    break;
+                case DragPhase.Drag:
+                    scrollRectContainer.OnDrag(eventData);
+                    break;
+                case DragPhase.End:
+                default:
+                    scrollRectContainer.OnEndDrag(eventData);
+                    break;
+            }
         }
     }
 }

@@ -57,7 +57,7 @@ namespace ScrollRects
 
             var cardModel = eventData.pointerDrag.GetComponent<CardModel>();
             if (cardModel != null &&
-                (cardModel.ParentCardStack == null || cardModel.ParentCardStack.type == CardStackType.Area))
+                (cardModel.ParentCardZone == null || cardModel.ParentCardZone.type == CardZoneType.Area))
                 StartCoroutine(MoveScrollbar());
         }
 

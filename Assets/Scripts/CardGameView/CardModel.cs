@@ -35,7 +35,7 @@ namespace CardGameView
 
         public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
                                                                && transform.parent == CgsNetManager.Instance
-                                                                   .playController.playAreaCardStack.transform;
+                                                                   .playController.playArea.transform;
 
         private bool IsProcessingSecondaryDragAction =>
             PointerPositions.Count > 1 || (CurrentPointerEventData != null &&
@@ -46,7 +46,7 @@ namespace CardGameView
                                             PointerEventData.InputButton
                                                 .Right));
 
-        public CardStack ParentCardStack => transform.parent.GetComponent<CardStack>();
+        public CardZone ParentCardZone => transform.parent.GetComponent<CardZone>();
 
         public bool IsStatic { get; set; }
         public bool DoesCloneOnDrag { get; set; }
@@ -124,9 +124,9 @@ namespace CardGameView
                 _placeHolder = value;
                 if (_placeHolder == null)
                 {
-                    if (ParentCardStack == null && DropTarget == null)
+                    if (ParentCardZone == null && DropTarget == null)
                         WarnHighlight();
-                    _placeHolderCardStack = null;
+                    _placeHolderCardZone = null;
                 }
                 else
                     IsHighlighted = false;
@@ -135,14 +135,14 @@ namespace CardGameView
 
         private RectTransform _placeHolder;
 
-        public CardStack PlaceHolderCardStack
+        public CardZone PlaceHolderCardZone
         {
-            get => _placeHolderCardStack;
+            get => _placeHolderCardZone;
             set
             {
-                _placeHolderCardStack = value;
+                _placeHolderCardZone = value;
 
-                if (_placeHolderCardStack == null)
+                if (_placeHolderCardZone == null)
                 {
                     PlaceHolder = null;
                     return;
@@ -150,13 +150,13 @@ namespace CardGameView
 
                 var placeholder = new GameObject(gameObject.name + "(PlaceHolder)", typeof(RectTransform));
                 PlaceHolder = (RectTransform) placeholder.transform;
-                PlaceHolder.SetParent(_placeHolderCardStack.transform);
+                PlaceHolder.SetParent(_placeHolderCardZone.transform);
                 PlaceHolder.sizeDelta = ((RectTransform) transform).sizeDelta;
                 PlaceHolder.anchoredPosition = Vector2.zero;
             }
         }
 
-        private CardStack _placeHolderCardStack;
+        private CardZone _placeHolderCardZone;
 
         private bool IsNameVisible
         {
@@ -384,7 +384,7 @@ namespace CardGameView
 
             if (PlaceHolder != null)
                 StartCoroutine(MoveToPlaceHolder());
-            else if (ParentCardStack == null)
+            else if (ParentCardZone == null)
                 Discard();
         }
 
@@ -408,50 +408,50 @@ namespace CardGameView
 
             Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
             targetPosition += UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
-            if (ParentCardStack != null)
-                UpdateCardStackPosition(targetPosition);
+            if (ParentCardZone != null)
+                UpdateCardZonePosition(targetPosition);
             else if (!IsStatic)
                 transform.position = targetPosition;
 
             if (IsStatic)
                 return;
 
-            if (DropTarget != null && DropTarget.isBlocker && ParentCardStack != null)
+            if (DropTarget != null && DropTarget.isBlocker && ParentCardZone != null)
                 ParentToCanvas(targetPosition);
 
-            if (PlaceHolderCardStack != null)
-                PlaceHolderCardStack.UpdateLayout(PlaceHolder, targetPosition);
+            if (PlaceHolderCardZone != null)
+                PlaceHolderCardZone.UpdateLayout(PlaceHolder, targetPosition);
 
             if (IsOnline)
                 CmdUpdatePosition(((RectTransform) transform).anchoredPosition);
         }
 
-        private void UpdateCardStackPosition(Vector2 targetPosition)
+        private void UpdateCardZonePosition(Vector2 targetPosition)
         {
-            CardStack cardStack = ParentCardStack;
-            if (cardStack == null || (IsOnline && !hasAuthority))
+            CardZone cardZone = ParentCardZone;
+            if (cardZone == null || (IsOnline && !hasAuthority))
                 return;
 
-            if (!cardStack.DoesImmediatelyRelease &&
-                (cardStack.type == CardStackType.Vertical || cardStack.type == CardStackType.Horizontal))
-                cardStack.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
+            if (!cardZone.DoesImmediatelyRelease &&
+                (cardZone.type == CardZoneType.Vertical || cardZone.type == CardZoneType.Horizontal))
+                cardZone.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
             else if (!IsStatic)
-                cardStack.UpdateLayout(transform as RectTransform, targetPosition);
+                cardZone.UpdateLayout(transform as RectTransform, targetPosition);
 
             if (IsStatic)
                 return;
 
-            if (cardStack.type == CardStackType.Area)
+            if (cardZone.type == CardZoneType.Area)
                 transform.SetAsLastSibling();
 
-            Vector3[] stackCorners = new Vector3[4];
-            ((RectTransform) cardStack.transform).GetWorldCorners(stackCorners);
-            bool isOutYBounds = targetPosition.y < stackCorners[0].y || targetPosition.y > stackCorners[1].y;
-            bool isOutXBounds = targetPosition.x < stackCorners[0].x || targetPosition.y > stackCorners[2].x;
-            if ((cardStack.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
-                || (cardStack.type == CardStackType.Vertical && isOutXBounds)
-                || (cardStack.type == CardStackType.Horizontal && isOutYBounds)
-                || (cardStack.type == CardStackType.Area
+            Vector3[] zoneCorners = new Vector3[4];
+            ((RectTransform) cardZone.transform).GetWorldCorners(zoneCorners);
+            bool isOutYBounds = targetPosition.y < zoneCorners[0].y || targetPosition.y > zoneCorners[1].y;
+            bool isOutXBounds = targetPosition.x < zoneCorners[0].x || targetPosition.y > zoneCorners[2].x;
+            if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
+                || (cardZone.type == CardZoneType.Vertical && isOutXBounds)
+                || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
+                || (cardZone.type == CardZoneType.Area
                     && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
                 ParentToCanvas(targetPosition);
         }
@@ -473,13 +473,13 @@ namespace CardGameView
         {
             if (IsOnline && hasAuthority)
                 CmdUnspawnCard();
-            CardStack prevParentStack = ParentCardStack;
+            CardZone prevParentZone = ParentCardZone;
             if (_currentDragPhase == DragPhase.Drag)
-                prevParentStack.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
+                prevParentZone.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
             transform.SetParent(CardGameManager.Instance.CardCanvas.transform);
             transform.SetAsLastSibling();
-            if (prevParentStack != null)
-                prevParentStack.OnRemove(this);
+            if (prevParentZone != null)
+                prevParentZone.OnRemove(this);
             Visibility.blocksRaycasts = false;
             var rectTransform = (RectTransform) transform;
             rectTransform.anchorMax = 0.5f * Vector2.one;
@@ -519,24 +519,24 @@ namespace CardGameView
                 yield break;
             }
 
-            CardStack prevParentStack = ParentCardStack;
+            CardZone prevParentZone = ParentCardZone;
             Transform transform1 = transform;
             transform1.SetParent(PlaceHolder.parent);
             transform1.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
             transform1.localScale = Vector3.one;
-            if (prevParentStack != null)
-                prevParentStack.OnRemove(this);
-            if (ParentCardStack != null)
-                ParentCardStack.OnAdd(this);
+            if (prevParentZone != null)
+                prevParentZone.OnRemove(this);
+            if (ParentCardZone != null)
+                ParentCardZone.OnAdd(this);
             PlaceHolder = null;
             Visibility.blocksRaycasts = true;
         }
 
-        public void UpdateParentCardStackScrollRect()
+        public void UpdateParentCardZoneScrollRect()
         {
-            CardStack cardStack = ParentCardStack;
-            if (cardStack != null)
-                cardStack.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
+            CardZone cardZone = ParentCardZone;
+            if (cardZone != null)
+                cardZone.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
         }
 
         public void Rotate()

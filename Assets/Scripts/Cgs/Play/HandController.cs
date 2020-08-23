@@ -2,23 +2,42 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using CardGameDef.Unity;
 using CardGameView;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Cgs.Play
 {
-    public class Hand : ZoneViewer
+    [RequireComponent(typeof(StackViewer))]
+    public class HandController : MonoBehaviour
     {
         private static readonly Vector2 ShownPosition = new Vector2(0, 0);
         private static readonly Vector2 HiddenPosition = new Vector2(0, -360);
 
         public Transform toggle;
 
+        private StackViewer _handViewer;
+
+        private void Start()
+        {
+            _handViewer = GetComponent<StackViewer>();
+        }
+
         public void Show()
         {
             ((RectTransform) transform).anchoredPosition = ShownPosition;
             toggle.rotation = Quaternion.identity;
+        }
+
+        public void AddCard(UnityCard card)
+        {
+            _handViewer.AddCard(card);
+        }
+
+        public void Clear()
+        {
+            _handViewer.Clear();
         }
 
         [UsedImplicitly]

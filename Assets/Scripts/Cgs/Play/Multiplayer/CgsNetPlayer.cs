@@ -149,10 +149,10 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void CmdCreateZone(string zoneName, string[] cardIds, bool isDeck)
         {
-            CardZone zone = CgsNetManager.Instance.playController.CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
-            zone.Name = zoneName;
-            zone.Cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
-            GameObject zoneGameObject = zone.gameObject;
+            CardStack stack = CgsNetManager.Instance.playController.CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
+            stack.Name = zoneName;
+            stack.Cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
+            GameObject zoneGameObject = stack.gameObject;
             NetworkServer.Spawn(zoneGameObject);
             if (isDeck)
                 DeckZone = zoneGameObject;
@@ -160,33 +160,43 @@ namespace Cgs.Play.Multiplayer
 
         private void RequestSharedDeck()
         {
-            Debug.Log("[CgsNet Player] Getting deck from server...");
             CmdShareDeck();
         }
 
         [Command]
         private void CmdShareDeck()
         {
-            Debug.Log("[CgsNet Player] Sending deck from server to client...");
             TargetShareDeck(CgsNetManager.Instance.LocalPlayer.DeckZone);
         }
 
         [TargetRpc]
         private void TargetShareDeck(GameObject deckZone)
         {
-            Debug.Log("[CgsNet Player] Got deck from server!");
             DeckZone = deckZone;
             IsDeckShared = true;
+        }
+
+        public void RequestShuffle(GameObject toShuffle)
+        {
+            CmdShuffle(toShuffle);
+        }
+
+        [Command]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CmdShuffle(GameObject toShuffle)
+        {
+            var cardZone = toShuffle.GetComponent<CardStack>();
+            cardZone.DoShuffle();
         }
 
         #endregion
 
         #region Cards
 
-        public void MoveCardToServer(CardStack cardStack, CardModel cardModel)
+        public void MoveCardToServer(CardZone cardZone, CardModel cardModel)
         {
             Transform cardModelTransform = cardModel.transform;
-            cardModelTransform.SetParent(cardStack.transform);
+            cardModelTransform.SetParent(cardZone.transform);
             cardModel.position = ((RectTransform) cardModelTransform).anchoredPosition;
             cardModel.rotation = cardModelTransform.rotation;
             CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.IsFacedown);
@@ -197,7 +207,7 @@ namespace Cgs.Play.Multiplayer
         private void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
             PlayController controller = CgsNetManager.Instance.playController;
-            GameObject newCard = Instantiate(controller.cardModelPrefab, controller.playAreaCardStack.transform);
+            GameObject newCard = Instantiate(controller.cardModelPrefab, controller.playArea.transform);
             var cardModel = newCard.GetComponent<CardModel>();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.position = position;

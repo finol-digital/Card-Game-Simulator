@@ -51,6 +51,7 @@
       }
     }
   ],
+  "gamePlayDeckName": "Square Wall",
   "gameStartHandCount": 13,
   "name": "Mahjong",
   "rulesUrl": "http://mahjong.wikidot.com/basic-rules"

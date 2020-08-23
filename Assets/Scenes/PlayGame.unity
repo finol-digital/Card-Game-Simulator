@@ -1615,12 +1615,12 @@ MonoBehaviour:
     type: 3}
   handDealerPrefab: {fileID: 7945912001630269733, guid: 743c496c97559c94c87f8e6ae3360c32,
     type: 3}
-  cardZonePrefab: {fileID: 4087591186767669376, guid: 5fdc698f4f037cc44921305d641fd80b,
+  cardStackPrefab: {fileID: 4087591186767669376, guid: 5fdc698f4f037cc44921305d641fd80b,
     type: 3}
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e, type: 3}
-  playAreaCardStack: {fileID: 217919978}
+  playArea: {fileID: 217919978}
   hand: {fileID: 695024013}
   menu: {fileID: 1904102581}
   scoreboard: {fileID: 1720539154216192284}
@@ -3303,7 +3303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1930199089}
   m_Layer: 5
-  m_Name: Zone Viewers
+  m_Name: Stack Viewers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

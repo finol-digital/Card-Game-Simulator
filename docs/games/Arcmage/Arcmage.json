@@ -91,6 +91,7 @@
     "y": 3.622
   },
   "deckMaxCount": 45,
+  "deckSharePreference": "individual",
   "deckUrls": [
     {
       "name": "Gaian Love for Life",
@@ -157,6 +158,7 @@
       "value": "City"
     }
   ],
+  "gamePlayDeckName": "Deck",
   "gameStartHandCount": 7,
   "name": "Arcmage",
   "rulesUrl": "https://arcmage.org/rules/",

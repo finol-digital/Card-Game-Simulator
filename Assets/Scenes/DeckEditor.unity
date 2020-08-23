@@ -491,7 +491,7 @@ MonoBehaviour:
     type: 3}
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
-  cardStackPrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
+  cardZonePrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
     type: 3}
   deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
     type: 3}
@@ -1704,7 +1704,7 @@ PrefabInstance:
     - target: {fileID: 3237348215989687739, guid: 1200650e6b8967b43ac73718e6e1fa87,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3237348215989687739, guid: 1200650e6b8967b43ac73718e6e1fa87,
         type: 3}
@@ -3594,6 +3594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBlocker: 0
 --- !u!1 &2061901251
 GameObject:
   m_ObjectHideFlags: 0

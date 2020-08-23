@@ -9,20 +9,20 @@ using UnityEngine.UI;
 
 namespace CardGameView
 {
-    public class ZoneViewer : MonoBehaviour, ICardDropHandler
+    public class StackViewer : MonoBehaviour, ICardDropHandler
     {
         public GameObject cardModelPrefab;
 
         public List<CardDropArea> drops;
-        public CardStack contentCardStack;
+        public CardZone contentCardZone;
         public Text countLabel;
 
         private void Start()
         {
             foreach (CardDropArea drop in drops)
                 drop.DropHandler = this;
-            contentCardStack.OnAddCardActions.Add(OnAddCardModel);
-            contentCardStack.OnRemoveCardActions.Add(OnRemoveCardModel);
+            contentCardZone.OnAddCardActions.Add(OnAddCardModel);
+            contentCardZone.OnRemoveCardActions.Add(OnRemoveCardModel);
         }
 
         public void OnDrop(CardModel cardModel)
@@ -32,28 +32,29 @@ namespace CardGameView
 
         public void AddCard(UnityCard card)
         {
-            var cardModel = Instantiate(cardModelPrefab, contentCardStack.transform).GetOrAddComponent<CardModel>();
+            var cardModel = Instantiate(cardModelPrefab, contentCardZone.transform).GetOrAddComponent<CardModel>();
             cardModel.Value = card;
+            cardModel.transform.SetAsFirstSibling();
 
-            OnAddCardModel(contentCardStack, cardModel);
+            OnAddCardModel(contentCardZone, cardModel);
         }
 
-        private void OnAddCardModel(CardStack cardStack, CardModel cardModel)
+        private void OnAddCardModel(CardZone cardZone, CardModel cardModel)
         {
             cardModel.transform.rotation = Quaternion.identity;
             cardModel.IsFacedown = false;
             cardModel.DoubleClickAction = CardActions.FlipFace;
-            countLabel.text = contentCardStack.GetComponentsInChildren<CardModel>().Length.ToString();
+            countLabel.text = contentCardZone.GetComponentsInChildren<CardModel>().Length.ToString();
         }
 
-        private void OnRemoveCardModel(CardStack cardStack, CardModel cardModel)
+        private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
         {
-            countLabel.text = contentCardStack.GetComponentsInChildren<CardModel>().Length.ToString();
+            countLabel.text = contentCardZone.GetComponentsInChildren<CardModel>().Length.ToString();
         }
 
         public void Clear()
         {
-            contentCardStack.transform.DestroyAllChildren();
+            contentCardZone.transform.DestroyAllChildren();
         }
     }
 }

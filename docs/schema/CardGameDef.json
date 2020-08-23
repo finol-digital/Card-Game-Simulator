@@ -256,6 +256,10 @@
         "$ref": "#/definitions/GameBoardUrl"
       }
     },
+    "gamePlayDeckName": {
+      "type": "string",
+      "description": "gamePlayDeckName is the name of the card stack shown when a player loads a deck. If <gamePlayDeckName> is empty, the *Deck:Name* is used."
+    },
     "gameStartHandCount": {
       "type": "integer",
       "description": "gameStartHandCount indicates how many cards are automatically dealt from the deck to the hand, when a user loads a deck in Play Mode.",

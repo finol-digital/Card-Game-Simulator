@@ -31,7 +31,7 @@ namespace Cgs.Play.Multiplayer
 
         public PlayController playController;
 
-        private Guid _zoneAssetId;
+        private Guid _cardStackAssetId;
         private Guid _cardAssetId;
         private Guid _dieAssetId;
 
@@ -39,17 +39,14 @@ namespace Cgs.Play.Multiplayer
         {
             base.Start();
 
-            _zoneAssetId = playController.cardZonePrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(_zoneAssetId, SpawnZone, UnSpawn);
-            Debug.Log("[CgsNet Manager] Registered zone spawn handler.");
+            _cardStackAssetId = playController.cardStackPrefab.GetComponent<NetworkIdentity>().assetId;
+            ClientScene.RegisterSpawnHandler(_cardStackAssetId, SpawnStack, UnSpawn);
 
             _cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
             ClientScene.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawn);
-            Debug.Log("[CgsNet Manager] Registered card spawn handler.");
 
             _dieAssetId = playController.diePrefab.GetComponent<NetworkIdentity>().assetId;
             ClientScene.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawn);
-            Debug.Log("[CgsNet Manager] Registered die spawn handler.");
 
             Discovery = GetComponent<CgsNetDiscovery>();
             ListServer = GetComponent<CgsNetListServer>();
@@ -76,20 +73,20 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] Client connected!");
         }
 
-        private GameObject SpawnZone(Vector3 position, Guid assetId)
+        private GameObject SpawnStack(Vector3 position, Guid assetId)
         {
-            Debug.Log("[CgsNet Manager] SpawnZone");
-            Transform target = playController.playAreaCardStack.transform;
-            var cardZone = Instantiate(playController.cardZonePrefab, target.parent).GetComponent<CardZone>();
-            cardZone.transform.SetParent(target);
-            return cardZone.gameObject;
+            Debug.Log("[CgsNet Manager] SpawnStack");
+            Transform target = playController.playArea.transform;
+            var cardStack = Instantiate(playController.cardStackPrefab, target.parent).GetComponent<CardStack>();
+            cardStack.transform.SetParent(target);
+            return cardStack.gameObject;
         }
 
         private GameObject SpawnCard(Vector3 position, Guid assetId)
         {
             Debug.Log("[CgsNet Manager] SpawnCard");
             GameObject newCard =
-                Instantiate(playController.cardModelPrefab, playController.playAreaCardStack.transform);
+                Instantiate(playController.cardModelPrefab, playController.playArea.transform);
             PlayController.SetPlayActions(newCard.GetComponent<CardModel>());
             return newCard;
         }
@@ -97,7 +94,7 @@ namespace Cgs.Play.Multiplayer
         private GameObject SpawnDie(Vector3 position, Guid assetId)
         {
             Debug.Log("[CgsNet Manager] SpawnDie");
-            Transform target = playController.playAreaCardStack.transform;
+            Transform target = playController.playArea.transform;
             var die = Instantiate(playController.diePrefab, target.parent).GetOrAddComponent<Die>();
             die.transform.SetParent(target);
             return die.gameObject;
@@ -155,11 +152,11 @@ namespace Cgs.Play.Multiplayer
 
         public void Restart()
         {
-            foreach (CardZone cardZone in playController.playAreaCardStack.GetComponentsInChildren<CardZone>())
-                NetworkServer.UnSpawn(cardZone.gameObject);
-            foreach (CardModel cardModel in playController.playAreaCardStack.GetComponentsInChildren<CardModel>())
+            foreach (CardStack cardStack in playController.playArea.GetComponentsInChildren<CardStack>())
+                NetworkServer.UnSpawn(cardStack.gameObject);
+            foreach (CardModel cardModel in playController.playArea.GetComponentsInChildren<CardModel>())
                 NetworkServer.UnSpawn(cardModel.gameObject);
-            foreach (Die die in playController.playAreaCardStack.GetComponentsInChildren<Die>())
+            foreach (Die die in playController.playArea.GetComponentsInChildren<Die>())
                 NetworkServer.UnSpawn(die.gameObject);
             foreach (CgsNetPlayer player in FindObjectsOfType<CgsNetPlayer>())
                 player.TargetRestart();

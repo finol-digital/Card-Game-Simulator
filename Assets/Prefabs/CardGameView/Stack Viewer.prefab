@@ -353,7 +353,7 @@ GameObject:
   - component: {fileID: 1351510956653137345}
   - component: {fileID: 5706626876545127617}
   m_Layer: 5
-  m_Name: Zone Viewer
+  m_Name: Stack Viewer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
