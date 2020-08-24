@@ -24,6 +24,15 @@ namespace Cgs.Play
             _handViewer = GetComponent<StackViewer>();
         }
 
+        private void Update()
+        {
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
+
+            if (Inputs.IsSave)
+                Toggle();
+        }
+
         public void Show()
         {
             ((RectTransform) transform).anchoredPosition = ShownPosition;

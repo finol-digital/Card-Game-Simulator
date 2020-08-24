@@ -63,6 +63,7 @@ namespace CardGameView
             var rectTransform = (RectTransform) transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             rectTransform.sizeDelta = CardGameManager.PixelsPerInch * cardSize;
+            gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
             if (!hasAuthority)
             {

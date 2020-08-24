@@ -450,7 +450,7 @@ MonoBehaviour:
   drops:
   - {fileID: 1351510956653137345}
   - {fileID: 1834811848209287355}
-  contentCardStack: {fileID: 1835360023883422745}
+  contentCardZone: {fileID: 1835360023883422745}
   countLabel: {fileID: 1200685390900153234}
 --- !u!1 &8084244049043195940
 GameObject:
@@ -959,7 +959,7 @@ PrefabInstance:
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
