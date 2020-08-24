@@ -16,7 +16,6 @@ using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Cgs.Play
@@ -173,17 +172,17 @@ namespace Cgs.Play
             {
                 CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
-                    CgsNetManager.Instance.LocalPlayer.RequestNewZone(cardGroup.Key, cardGroup.Value.Cast<UnityCard>());
+                    CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(cardGroup.Key, cardGroup.Value.Cast<UnityCard>());
             }
             else
             {
-                _soloDeckStack = CreateZone(Vector2.zero);
+                _soloDeckStack = CreateCardStack(Vector2.zero);
                 _soloDeckStack.Name = deckName;
                 _soloDeckStack.Cards = deckCards;
 
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
                 {
-                    CardStack stack = CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
+                    CardStack stack = CreateCardStack(Vector2.zero); // TODO: DYNAMIC LOCATION
                     stack.Name = cardGroup.Key;
                     stack.Cards = (List<UnityCard>) cardGroup.Value.Cast<UnityCard>();
                 }
@@ -222,16 +221,16 @@ namespace Cgs.Play
             boardRectTransform.localScale = Vector3.one;
         }
 
-        public CardStack CreateZone(Vector2 position)
+        public CardStack CreateCardStack(Vector2 position)
         {
             Transform target = playArea.transform;
-            var cardZone = Instantiate(cardStackPrefab, target.parent).GetComponent<CardStack>();
-            var rectTransform = (RectTransform) cardZone.transform;
+            var cardStack = Instantiate(cardStackPrefab, target.parent).GetComponent<CardStack>();
+            var rectTransform = (RectTransform) cardStack.transform;
             rectTransform.SetParent(target);
             if (!Vector2.zero.Equals(position))
                 rectTransform.anchoredPosition = position;
-            cardZone.position = rectTransform.anchoredPosition;
-            return cardZone;
+            cardStack.position = rectTransform.anchoredPosition;
+            return cardStack;
         }
 
         private void PromptForHand()
@@ -288,7 +287,7 @@ namespace Cgs.Play
 
         private void DisplayResults(string filters, List<UnityCard> cards)
         {
-            // TODO: CreateZone(CardGameManager.Current.Name, cards);
+            // TODO: CreateCardStack(CardGameManager.Current.Name, cards);
         }
 
         public Die CreateDie(int min, int max)

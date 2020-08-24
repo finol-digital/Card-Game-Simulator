@@ -133,29 +133,29 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
-        #region Zones
+        #region CardStacks
 
         public void RequestNewDeck(string zoneName, IEnumerable<UnityCard> cards)
         {
-            CmdCreateZone(zoneName, cards.Select(card => card.Id).ToArray(), true);
+            CmdCreateCardStack(zoneName, cards.Select(card => card.Id).ToArray(), true);
         }
 
-        public void RequestNewZone(string zoneName, IEnumerable<UnityCard> cards)
+        public void RequestNewCardStack(string zoneName, IEnumerable<UnityCard> cards)
         {
-            CmdCreateZone(zoneName, cards.Select(card => card.Id).ToArray(), false);
+            CmdCreateCardStack(zoneName, cards.Select(card => card.Id).ToArray(), false);
         }
 
         [Command]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void CmdCreateZone(string zoneName, string[] cardIds, bool isDeck)
+        private void CmdCreateCardStack(string stackName, string[] cardIds, bool isDeck)
         {
-            CardStack stack = CgsNetManager.Instance.playController.CreateZone(Vector2.zero); // TODO: DYNAMIC LOCATION
-            stack.Name = zoneName;
+            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(Vector2.zero); // TODO: DYNAMIC LOCATION
+            stack.Name = stackName;
             stack.Cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
-            GameObject zoneGameObject = stack.gameObject;
-            NetworkServer.Spawn(zoneGameObject);
+            GameObject stackGameObject = stack.gameObject;
+            NetworkServer.Spawn(stackGameObject);
             if (isDeck)
-                DeckZone = zoneGameObject;
+                DeckZone = stackGameObject;
         }
 
         private void RequestSharedDeck()
@@ -185,8 +185,8 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CmdShuffle(GameObject toShuffle)
         {
-            var cardZone = toShuffle.GetComponent<CardStack>();
-            cardZone.DoShuffle();
+            var cardStack = toShuffle.GetComponent<CardStack>();
+            cardStack.DoShuffle();
         }
 
         #endregion
