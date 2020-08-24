@@ -5,32 +5,26 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Deck Editor: Cards move in their stacks to better make use of visible space
-- Play Mode: Re-organized buttons and card stacks
+- Deck Editor: Cards move in their zones to better make use of visible space
+- Play Mode: Re-organized buttons and card layouts
+- Play Mode: Card stacks in play area
+- Play Mode: Allow any player to move cards and dice in the play area, instead of just the player who put it there
 - CardGameDef: gamePlayDeckName ("Stock" for Standard and Dominoes, "Square Wall" for Mahjong)
 - Website: Added external links
 
 ## Current Sprint
-- Allow any player to move cards in the play area, instead of just the player who put it there
-- Card Zones
-  - Resize zone viewer based off card game settings
-  - right to left in zone viewer
-  - load multiple decks
-  - .dec sideboard & .ydk side are extras
-  - Card zones can define what actions are possible in that zone
-- Card Actions
-  - Define
-    - Toggle rotation between 0 and 90/180/270
-    - Rotate 90/180/270
-    - Move to hand
-    - Move to top/bottom of deck
-    - Move to discard/delete
-  - Double-clicking takes a default action, based on the zone the card is in
-  - Single-click show menu with all possible actions at the bottom
-- Place card in deck in a certain spot (x from top, x from bottom) with toggle for facedown or faceup
-- Rotate play area (2 finger or right-click)
-- Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset button)
-- Playmats
+- Play Mode: Resize stack viewer based off card game settings
+- Play Mode: .dec sideboard & .ydk side are extra stacks
+- Play Mode: Pre-defined stack locations
+- Play Mode: Rotate stacks with 2 finger or right-click
+- Play Mode: Single-clicking card shows the Actions Bar
+  - Flip Face (in hand and play area)
+  - Rotate 90/180/270 (only in play area)
+  - Snap rotation to 0/90/180/270 (only in play area)
+  - Move to hand/other card stack(s) in a certain spot (x from top, x from bottom)
+- Play Mode: Rotate play area (2 finger or right-click)
+- Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
+- Play Mode: Playmats
 
 ## Backlog
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
@@ -38,12 +32,13 @@ permalink: roadmap.html
 - Tech: Runtime unit test to successfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
 - Tech: GitHub for Unity
-- Integration: Re-record training video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
+- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (DFC)
-- Play Mode: Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
+- Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
+- Play Mode: Face-up cards in cards stacks
 
 ## Icebox
 - Tech: Replace SwipeManager
