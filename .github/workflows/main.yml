@@ -48,7 +48,7 @@ jobs:
     name: Build and Release to the Microsoft Store
     runs-on: windows-latest
     needs: buildForSomePlatforms
-#    if: github.event.ref != 'refs/heads/develop'
+    if: github.event.ref != 'refs/heads/develop'
     env:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -65,15 +65,20 @@ jobs:
         with:
           args: install --yes unity --version=2019.4.1 unity-il2cpp --version=2019.4.1 unity-win-il2cpp --version=2019.4.1 unity-metro --version=2019.4.1
       - name: Activate License
-        run: Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile activate.stdout.txt","-nographics","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile activate.stdout.txt","-nographics","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
       - name: Build StandaloneWindows
-        run: Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-windows.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows" -NoNewWindow -Wait
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-windows.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows" -NoNewWindow -Wait
       - name: Build StandaloneWindows64
-        run: Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-windows64.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows64" -NoNewWindow -Wait
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-windows64.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows64" -NoNewWindow -Wait
       - name: Build Uwp
-        run: Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-uwp.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-uwp.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildUwp" -NoNewWindow -Wait
       - name: Return License
-        run: Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile return.stdout.txt","-returnlicense" -NoNewWindow -Wait
+        run: |
+          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile return.stdout.txt","-returnlicense" -NoNewWindow -Wait
       - name: Print Logs
         run: |
           cat activate.stdout.txt

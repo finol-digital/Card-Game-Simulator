@@ -32,6 +32,7 @@ permalink: roadmap.html
 - Tech: Runtime unit test to successfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
 - Tech: GitHub for Unity
+- Tech: Scale size of UI based off either physical size or resolution of display
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu

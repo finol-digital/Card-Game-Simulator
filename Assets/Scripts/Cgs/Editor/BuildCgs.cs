@@ -37,25 +37,17 @@ namespace Cgs.Editor
         private static void Build(BuildTarget buildTarget, string filePath)
         {
             string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(s => s.path).ToArray();
-
-            // Define BuildPlayer Options
-            var buildOptions = new BuildPlayerOptions
+            var buildPlayerOptions = new BuildPlayerOptions
             {
                 scenes = scenes,
                 locationPathName = filePath,
                 target = buildTarget,
             };
 
-            // Perform build
-            BuildReport buildReport = BuildPipeline.BuildPlayer(buildOptions);
-
-            // Summary
+            BuildReport buildReport = BuildPipeline.BuildPlayer(buildPlayerOptions);
             BuildSummary summary = buildReport.summary;
-            ReportSummary(summary);
-
-            // Result
-            BuildResult result = summary.result;
-            ExitWithResult(result);
+            ReportSummary(buildReport.summary);
+            ExitWithResult(summary.result);
         }
 
         private static void ReportSummary(BuildSummary summary)
