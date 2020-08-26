@@ -40,6 +40,6 @@ When joining a friend's game session, CGS will be set to use the same card game 
 When navigating through CGS, you may find it useful to use [keyboard shortcuts](keyboard.html).
 
 ## Feedback
-See the [current roadmap](roadmap.html). Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or [contact us on facebook](https://www.facebook.com/cardgamesimulator/). We're also on [Twitter](https://twitter.com/cardgamesim) and [Reddit](https://www.reddit.com/r/CardGameSimulator/), and we encourage you to check out [these other projects](external.html)
+See the [current roadmap](roadmap.html). Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or [contact us on facebook](https://www.facebook.com/cardgamesimulator/). We're also on [Twitter](https://twitter.com/cardgamesim) and [Reddit](https://www.reddit.com/r/CardGameSimulator/), and we encourage you to check out [these other projects](external.html).
 
 *You may also be interested in our [Privacy Policy](PRIVACY.html).*

@@ -8,23 +8,23 @@ permalink: roadmap.html
 - Deck Editor: Cards move in their zones to better make use of visible space
 - Play Mode: Re-organized buttons and card layouts
 - Play Mode: Card stacks in play area
+- Play Mode: Pre-defined stack locations
 - Play Mode: Allow any player to move cards and dice in the play area, instead of just the player who put it there
-- CardGameDef: gamePlayDeckName ("Stock" for Standard and Dominoes, "Square Wall" for Mahjong)
+- Play Mode: Playmats
+- CardGameDef: gamePlayDeckName ("Stock" for Standard and Dominoes, "Square Wall" for Mahjong), playMatSize, playMatImageFileType, playMatImageUrl
 - Website: Added external links
 
 ## Current Sprint
 - Play Mode: Resize stack viewer based off card game settings
 - Play Mode: .dec sideboard & .ydk side are extra stacks
-- Play Mode: Pre-defined stack locations
 - Play Mode: Rotate stacks with 2 finger or right-click
 - Play Mode: Single-clicking card shows the Actions Bar
   - Flip Face (in hand and play area)
   - Rotate 90/180/270 (only in play area)
   - Snap rotation to 0/90/180/270 (only in play area)
-  - Move to hand/other card stack(s) in a certain spot (x from top, x from bottom)
+  - Move to hand/other card stack(s) in a certain spot (x from top or bottom)
 - Play Mode: Rotate play area (2 finger or right-click)
 - Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
-- Play Mode: Playmats
 
 ## Backlog
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
@@ -37,6 +37,7 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (DFC)
+- Play Mode: Support multiple playmats
 - Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
 - Play Mode: Face-up cards in cards stacks
 
