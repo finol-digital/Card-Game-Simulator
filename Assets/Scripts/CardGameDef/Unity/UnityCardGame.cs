@@ -38,6 +38,9 @@ namespace CardGameDef.Unity
         public string CardBackImageFilePath => GameDirectoryPath + "/CardBack." +
                                                UnityExtensionMethods.GetSafeFileName(CardBackImageFileType);
 
+        public string PlayMatImageFilePath => GameDirectoryPath + "/PlayMat." +
+                                              UnityExtensionMethods.GetSafeFileName(PlayMatImageFileType);
+
         public string DecksFilePath => GameDirectoryPath + "/decks";
         public string GameBoardsFilePath => GameDirectoryPath + "/boards";
         public string SetsDirectoryPath => GameDirectoryPath + "/sets";
@@ -67,7 +70,7 @@ namespace CardGameDef.Unity
         {
             get => _bannerImageSprite
                 ? _bannerImageSprite
-                : (_bannerImageSprite = Resources.Load<Sprite>("Banner"));
+                : _bannerImageSprite = Resources.Load<Sprite>("Banner");
             private set
             {
                 if (_bannerImageSprite != null)
@@ -86,7 +89,7 @@ namespace CardGameDef.Unity
         {
             get => _cardBackImageSprite
                 ? _cardBackImageSprite
-                : (_cardBackImageSprite = Resources.Load<Sprite>("CardBack"));
+                : _cardBackImageSprite = Resources.Load<Sprite>("CardBack");
             private set
             {
                 if (_cardBackImageSprite != null)
@@ -100,6 +103,25 @@ namespace CardGameDef.Unity
         }
 
         private Sprite _cardBackImageSprite;
+
+        public Sprite PlayMatImageSprite
+        {
+            get => _playMatImageSprite
+                ? _playMatImageSprite
+                : _playMatImageSprite = Resources.Load<Sprite>("Table");
+            private set
+            {
+                if (_playMatImageSprite != null)
+                {
+                    Object.Destroy(_playMatImageSprite.texture);
+                    Object.Destroy(_playMatImageSprite);
+                }
+
+                _playMatImageSprite = value;
+            }
+        }
+
+        private Sprite _playMatImageSprite;
 
         public UnityCardGame(MonoBehaviour coroutineRunner, string id = DefaultName, string autoUpdateUrl = "")
             : base(id, autoUpdateUrl)
@@ -173,31 +195,36 @@ namespace CardGameDef.Unity
                 yield break;
             }
 
-            DownloadProgress = 1f / (7f + AllCardsUrlPageCount);
+            DownloadProgress = 1f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Banner";
             if (BannerImageUrl != null && BannerImageUrl.IsAbsoluteUri)
                 yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl.AbsoluteUri, BannerImageFilePath);
 
-            DownloadProgress = 2f / (7f + AllCardsUrlPageCount);
+            DownloadProgress = 2f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: CardBack";
             if (CardBackImageUrl != null && CardBackImageUrl.IsAbsoluteUri)
                 yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl.AbsoluteUri, CardBackImageFilePath);
 
-            DownloadProgress = 3f / (7f + AllCardsUrlPageCount);
+            DownloadProgress = 3f / (8f + AllCardsUrlPageCount);
+            DownloadStatus = "Downloading: PlayMat";
+            if (PlayMatImageUrl != null && PlayMatImageUrl.IsAbsoluteUri)
+                yield return UnityExtensionMethods.SaveUrlToFile(PlayMatImageUrl.AbsoluteUri, PlayMatImageFilePath);
+
+            DownloadProgress = 4f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Boards";
             foreach (GameBoardUrl boardUrl in GameBoardUrls)
                 if (!string.IsNullOrEmpty(boardUrl.Id) && boardUrl.Url != null && boardUrl.Url.IsAbsoluteUri)
                     yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url.AbsoluteUri,
                         GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
 
-            DownloadProgress = 4f / (7f + AllCardsUrlPageCount);
+            DownloadProgress = 5f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Decks";
             foreach (DeckUrl deckUrl in DeckUrls)
                 if (!string.IsNullOrEmpty(deckUrl.Name) && deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
                     yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri,
                         DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType.ToString().ToLower());
 
-            DownloadProgress = 5f / (7f + AllCardsUrlPageCount);
+            DownloadProgress = 6f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: AllSets.json";
             string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
             if (AllSetsUrl != null && AllSetsUrl.IsAbsoluteUri)
@@ -213,8 +240,8 @@ namespace CardGameDef.Unity
                     page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount;
                     page++)
                 {
-                    DownloadProgress = (6f + page - AllCardsUrlPageCountStartIndex) /
-                                       (7f + AllCardsUrlPageCount - AllCardsUrlPageCountStartIndex);
+                    DownloadProgress = (7f + page - AllCardsUrlPageCountStartIndex) /
+                                       (8f + AllCardsUrlPageCount - AllCardsUrlPageCountStartIndex);
                     DownloadStatus =
                         $"Downloading: Cards: {page,5} / {AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount}";
                     string cardsUrl = AllCardsUrl.OriginalString;
@@ -316,6 +343,10 @@ namespace CardGameDef.Unity
                 BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
             if (File.Exists(CardBackImageFilePath))
                 CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
+
+            // The play mat can be loaded last
+            if (File.Exists(PlayMatImageFilePath))
+                PlayMatImageSprite = UnityExtensionMethods.CreateSprite(PlayMatImageFilePath);
 
             // Only considered as loaded if none of the steps failed
             if (string.IsNullOrEmpty(Error))

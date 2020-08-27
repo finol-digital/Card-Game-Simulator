@@ -22,6 +22,7 @@ The structure of this custom game folder is:
   - AllSets.json
   - Banner.\<bannerImageFileType\>
   - CardBack.\<cardBackImageFileType\>
+  - PlayMat.\<playMatImageFileType\>
   - boards/
     * *GameBoard:Id*.\<gameBoardFileType\>
     * ...

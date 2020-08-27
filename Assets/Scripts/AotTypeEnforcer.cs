@@ -74,7 +74,9 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.GameStartHandCount = 1;
             cardGame.GameStartPointsCount = 1;
             cardGame.Name = string.Empty;
-            cardGame.PlayAreaSize = new Float2(1, 1);
+            cardGame.PlayMatImageFileType = string.Empty;
+            cardGame.PlayMatImageUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.PlayMatSize = new Float2(1, 1);
             cardGame.RulesUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.SetCardsIdentifier = string.Empty;
             cardGame.SetCardsUrlIdentifier = string.Empty;

@@ -300,9 +300,20 @@ namespace CardGameDef
         public int GameStartPointsCount { get; set; }
 
         [JsonProperty]
-        [Description("playAreaSize indicates the width and height in inches of the play area in Play Mode.")]
+        [Description(
+            "playMatImageFileType is the file type extension for the image file that CGS downloads from playMatImageUrl.")]
+        [DefaultValue("png")]
+        public string PlayMatImageFileType { get; set; } = "png";
+
+        [JsonProperty]
+        [Description(
+            "If playMatImageUrl is a valid url, CGS will download the image at that url and save it as PlayMat.<playMatImageFileType>. CGS will use the PlayMat.<playMatImageFileType> as the background image while in Play Mode. If CGS is unable to get this image, CGS will use the default table image.")]
+        public Uri PlayMatImageUrl { get; set; }
+
+        [JsonProperty]
+        [Description("playMatSize indicates the width and height in inches of the play area in Play Mode.")]
         [DefaultValue("(x: 36, y: 36)")]
-        public Float2 PlayAreaSize { get; set; } = new Float2(36f, 36f);
+        public Float2 PlayMatSize { get; set; } = new Float2(36f, 36f);
 
         [JsonProperty]
         [Description("rulesUrl should link to this game's online rulebook.")]

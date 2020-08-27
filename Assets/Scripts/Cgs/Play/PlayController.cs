@@ -122,11 +122,12 @@ namespace Cgs.Play
 
         public void ResetPlayArea()
         {
-            var playAreaRectTransform = (RectTransform) playArea.transform;
-            playAreaRectTransform.DestroyAllChildren();
-            var playAreaSize = new Vector2(CardGameManager.Current.PlayAreaSize.X,
-                CardGameManager.Current.PlayAreaSize.Y);
-            playAreaRectTransform.sizeDelta = playAreaSize * CardGameManager.PixelsPerInch;
+            var rectTransform = (RectTransform) playArea.transform;
+            rectTransform.DestroyAllChildren();
+            var size = new Vector2(CardGameManager.Current.PlayMatSize.X,
+                CardGameManager.Current.PlayMatSize.Y);
+            rectTransform.sizeDelta = size * CardGameManager.PixelsPerInch;
+            playArea.GetComponent<Image>().sprite = CardGameManager.Current.PlayMatImageSprite;
         }
 
         [UsedImplicitly]
@@ -172,7 +173,8 @@ namespace Cgs.Play
             {
                 CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
-                    CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(cardGroup.Key, cardGroup.Value.Cast<UnityCard>());
+                    CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(cardGroup.Key,
+                        cardGroup.Value.Cast<UnityCard>());
             }
             else
             {

@@ -270,8 +270,18 @@
       "description": "gameStartPointsCount indicates how many points are assigned to each player, when that player loads a deck in Play Mode.",
       "format": "int32"
     },
-    "playAreaSize": {
-      "description": "playAreaSize indicates the width and height in inches of the play area in Play Mode.",
+    "playMatImageFileType": {
+      "type": "string",
+      "description": "playMatImageFileType is the file type extension for the image file that CGS downloads from playMatImageUrl.",
+      "default": "png"
+    },
+    "playMatImageUrl": {
+      "type": "string",
+      "description": "If playMatImageUrl is a valid url, CGS will download the image at that url and save it as PlayMat.<playMatImageFileType>. CGS will use the PlayMat.<playMatImageFileType> as the background image while in Play Mode. If CGS is unable to get this image, CGS will use the default table image.",
+      "format": "uri"
+    },
+    "playMatSize": {
+      "description": "playMatSize indicates the width and height in inches of the play area in Play Mode.",
       "default": "(x: 36, y: 36)",
       "oneOf": [
         {
