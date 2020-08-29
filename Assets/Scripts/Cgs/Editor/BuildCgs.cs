@@ -44,10 +44,9 @@ namespace Cgs.Editor
                 target = buildTarget,
             };
 
-            BuildReport buildReport = BuildPipeline.BuildPlayer(buildPlayerOptions);
-            BuildSummary summary = buildReport.summary;
-            ReportSummary(buildReport.summary);
-            ExitWithResult(summary.result);
+            BuildSummary buildSummary = BuildPipeline.BuildPlayer(buildPlayerOptions).summary;
+            ReportSummary(buildSummary);
+            ExitWithResult(buildSummary.result);
         }
 
         private static void ReportSummary(BuildSummary summary)

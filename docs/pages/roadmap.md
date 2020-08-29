@@ -8,13 +8,13 @@ permalink: roadmap.html
 - Deck Editor: Cards move in their zones to better make use of visible space
 - Play Mode: Re-organized buttons and card layouts
 - Play Mode: Card stacks in play area
-- Play Mode: Pre-defined stack locations
 - Play Mode: Allow any player to move cards and dice in the play area, instead of just the player who put it there
 - Play Mode: Playmats
 - CardGameDef: gamePlayDeckName ("Stock" for Standard and Dominoes, "Square Wall" for Mahjong), playMatSize, playMatImageFileType, playMatImageUrl
 - Website: Added external links
 
 ## Current Sprint
+- Play Mode: Pre-defined stack locations
 - Play Mode: Resize stack viewer based off card game settings
 - Play Mode: .dec sideboard & .ydk side are extra stacks
 - Play Mode: Rotate stacks with 2 finger or right-click
