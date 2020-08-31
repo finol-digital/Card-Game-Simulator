@@ -37,6 +37,8 @@ namespace Cgs.Play
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
 
+        public Transform stackViewers;
+
         public CardZone playArea;
         public HandController hand;
         public PlayMenu menu;

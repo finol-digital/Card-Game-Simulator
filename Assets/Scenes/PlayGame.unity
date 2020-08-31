@@ -1620,6 +1620,7 @@ MonoBehaviour:
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e, type: 3}
+  stackViewers: {fileID: 1930199089}
   playArea: {fileID: 217919978}
   hand: {fileID: 695024013}
   menu: {fileID: 1904102581}

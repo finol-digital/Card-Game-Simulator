@@ -23,6 +23,8 @@ namespace CardGameView
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
 
+        public GameObject stackViewerPrefab;
+
         public Text deckLabel;
         public Text countLabel;
         public GameObject shuffleLabel;
@@ -55,6 +57,8 @@ namespace CardGameView
         private Vector2 _dragOffset;
 
         [SyncVar] private float _shuffleTime;
+
+        private StackViewer _viewer;
 
         private void Start()
         {
@@ -193,7 +197,10 @@ namespace CardGameView
         [UsedImplicitly]
         public void View()
         {
-            // TODO: Stack VIEWER
+            if (_viewer == null)
+                _viewer = Instantiate(stackViewerPrefab, CgsNetManager.Instance.playController.stackViewers)
+                    .GetComponent<StackViewer>();
+            _viewer.Show(this);
         }
 
         [UsedImplicitly]
