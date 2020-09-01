@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Fix: Error when getting initial games for new users
 - Deck Editor: Cards move in their zones to better make use of visible space
 - Play Mode: Re-organized buttons and card layouts
 - Play Mode: Card stacks in play area
