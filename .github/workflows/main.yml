@@ -17,8 +17,8 @@ jobs:
         targetPlatform:
 #          - Android
           - iOS
-#          - StandaloneOSX
-#          - StandaloneLinux64
+          - StandaloneOSX
+          - StandaloneLinux64
     steps:
       - uses: actions/checkout@v2
         with:
@@ -33,6 +33,7 @@ jobs:
           unityVersion: 2019.4.1f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildsPath: builds
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
           androidAppBundle: true
           androidKeystoreName: finoldigital.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}

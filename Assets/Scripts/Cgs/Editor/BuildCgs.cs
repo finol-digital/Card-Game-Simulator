@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
@@ -14,6 +15,122 @@ namespace Cgs.Editor
     internal static class BuildCgs
     {
         private static readonly string Eol = Environment.NewLine;
+
+        private static readonly string[] Secrets =
+            {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
+
+        [UsedImplicitly]
+        public static void BuildOptions()
+        {
+            // Gather values from args
+            Dictionary<string, string> options = GetValidatedOptions();
+
+            // Set version for this build
+            PlayerSettings.bundleVersion = options["buildVersion"];
+            PlayerSettings.macOS.buildNumber = options["buildVersion"];
+            PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
+
+            // Apply build target
+            var buildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]);
+            if (buildTarget == BuildTarget.Android)
+            {
+                EditorUserBuildSettings.buildAppBundle = options["customBuildPath"].EndsWith(".aab");
+                if (options.TryGetValue("androidKeystoreName", out string keystoreName) &&
+                    !string.IsNullOrEmpty(keystoreName))
+                    PlayerSettings.Android.keystoreName = keystoreName;
+                if (options.TryGetValue("androidKeystorePass", out string keystorePass) &&
+                    !string.IsNullOrEmpty(keystorePass))
+                    PlayerSettings.Android.keystorePass = keystorePass;
+                if (options.TryGetValue("androidKeyaliasName", out string keyaliasName) &&
+                    !string.IsNullOrEmpty(keyaliasName))
+                    PlayerSettings.Android.keyaliasName = keyaliasName;
+                if (options.TryGetValue("androidKeyaliasPass", out string keyaliasPass) &&
+                    !string.IsNullOrEmpty(keyaliasPass))
+                    PlayerSettings.Android.keyaliasPass = keyaliasPass;
+            }
+            else
+            {
+                PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+            }
+
+
+            Build(buildTarget, options["customBuildPath"]);
+        }
+
+        private static Dictionary<string, string> GetValidatedOptions()
+        {
+            ParseCommandLineArguments(out Dictionary<string, string> validatedOptions);
+
+            if (!validatedOptions.TryGetValue("projectPath", out string _))
+            {
+                Console.WriteLine("Missing argument -projectPath");
+                EditorApplication.Exit(110);
+            }
+
+            if (!validatedOptions.TryGetValue("buildTarget", out string buildTarget))
+            {
+                Console.WriteLine("Missing argument -buildTarget");
+                EditorApplication.Exit(120);
+            }
+
+            if (!Enum.IsDefined(typeof(BuildTarget), buildTarget ?? string.Empty))
+            {
+                EditorApplication.Exit(121);
+            }
+
+            if (!validatedOptions.TryGetValue("customBuildPath", out string _))
+            {
+                Console.WriteLine("Missing argument -customBuildPath");
+                EditorApplication.Exit(130);
+            }
+
+            const string defaultCustomBuildName = "TestBuild";
+            if (!validatedOptions.TryGetValue("customBuildName", out string customBuildName))
+            {
+                Console.WriteLine($"Missing argument -customBuildName, defaulting to {defaultCustomBuildName}.");
+                validatedOptions.Add("customBuildName", defaultCustomBuildName);
+            }
+            else if (customBuildName == "")
+            {
+                Console.WriteLine($"Invalid argument -customBuildName, defaulting to {defaultCustomBuildName}.");
+                validatedOptions.Add("customBuildName", defaultCustomBuildName);
+            }
+
+            return validatedOptions;
+        }
+
+        private static void ParseCommandLineArguments(out Dictionary<string, string> providedArguments)
+        {
+            providedArguments = new Dictionary<string, string>();
+            string[] args = Environment.GetCommandLineArgs();
+
+            Console.WriteLine(
+                $"{Eol}" +
+                $"###########################{Eol}" +
+                $"#    Parsing settings     #{Eol}" +
+                $"###########################{Eol}" +
+                $"{Eol}"
+            );
+
+            // Extract flags with optional values
+            for (int current = 0, next = 1; current < args.Length; current++, next++)
+            {
+                // Parse flag
+                bool isFlag = args[current].StartsWith("-");
+                if (!isFlag) continue;
+                string flag = args[current].TrimStart('-');
+
+                // Parse optional value
+                bool flagHasValue = next < args.Length && !args[next].StartsWith("-");
+                string value = flagHasValue ? args[next].TrimStart('-') : "";
+                bool secret = Secrets.Contains(flag);
+                string displayValue = secret ? "*HIDDEN*" : "\"" + value + "\"";
+
+                // Assign
+                Console.WriteLine($"Found flag \"{flag}\" with value {displayValue}.");
+                providedArguments.Add(flag, value);
+            }
+        }
 
         [UsedImplicitly]
         public static void BuildWindows()
