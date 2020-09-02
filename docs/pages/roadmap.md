@@ -35,6 +35,7 @@ permalink: roadmap.html
 - Tech: GitHub for Unity
 - Tech: Scale size of UI based off either physical size or resolution of display
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
+- Cards: Support mix of different card sizes in the same game
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs

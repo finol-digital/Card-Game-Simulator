@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-#          - Android
+          - Android
           - iOS
           - StandaloneOSX
           - StandaloneLinux64
