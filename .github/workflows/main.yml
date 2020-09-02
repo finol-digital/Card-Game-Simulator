@@ -28,7 +28,7 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
-      - uses: webbertakken/unity-builder@6ece6447b229baedca54df3aae22fc3d097bc4f3
+      - uses: webbertakken/unity-builder@v1.2
         with:
           unityVersion: 2019.4.1f1
           targetPlatform: ${{ matrix.targetPlatform }}

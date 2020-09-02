@@ -48,12 +48,12 @@ namespace Cgs.Editor
                     !string.IsNullOrEmpty(keyaliasPass))
                     PlayerSettings.Android.keyaliasPass = keyaliasPass;
             }
-            else
+            else if (buildTarget != BuildTarget.iOS)
             {
                 PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
             }
 
-
+            // Custom build
             Build(buildTarget, options["customBuildPath"]);
         }
 
