@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
 using CardGameDef.Unity;
 using Cgs;
 using Cgs.Play.Multiplayer;
@@ -119,6 +118,7 @@ namespace CardGameView
             _dragOffset = eventData.position - (Vector2) transform.position;
             transform.SetAsLastSibling();
             HideButtons();
+            // TODO: MOVEMENT
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -128,6 +128,7 @@ namespace CardGameView
             var rectTransform = (RectTransform) transform;
             rectTransform.position = eventData.position - _dragOffset;
             CmdUpdatePosition(rectTransform.anchoredPosition);
+            // TODO: MOVEMENT
         }
 
         [Command]
@@ -159,25 +160,35 @@ namespace CardGameView
         private void OnCardsUpdated(SyncList<string>.Operation op, int index, string oldId, string newId)
         {
             countLabel.text = _cardIds.Count.ToString();
+            if (_viewer != null)
+                _viewer.Sync(this);
         }
 
         public void OnDrop(CardModel cardModel)
         {
-            AddCard(cardModel.Value);
+            if (CgsNetManager.Instance.isNetworkActive)
+                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
+            else
+                Insert(Cards.Count, cardModel.Id);
         }
 
-        private void AddCard(Card card)
+        public void Insert(int index, string cardId)
         {
-            _cardIds.Add(card.Id);
+            _cardIds.Insert(index, cardId);
         }
 
-        public UnityCard PopCard()
+        public string RemoveAt(int index)
         {
-            if (_cardIds.Count < 1)
-                return UnityCard.Blank;
-            UnityCard card = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
-            _cardIds.RemoveAt(_cardIds.Count - 1);
-            return card;
+            if (index < 0 || index >= _cardIds.Count)
+                return UnityCard.Blank.Id;
+            string cardId = _cardIds[index];
+            _cardIds.RemoveAt(index);
+            return cardId;
+        }
+
+        public string PopCard()
+        {
+            return RemoveAt(_cardIds.Count - 1);
         }
 
         private void ShowButtons()

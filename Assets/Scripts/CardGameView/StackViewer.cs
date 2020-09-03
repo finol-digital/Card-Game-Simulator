@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,7 +22,7 @@ namespace CardGameView
         public Text nameLabel;
         public Text countLabel;
 
-        private CardStack _stack;
+        private CardStack _cardStack;
 
         private void Start()
         {
@@ -31,35 +32,35 @@ namespace CardGameView
             contentCardZone.OnRemoveCardActions.Add(OnRemoveCardModel);
         }
 
-        private void Update()
-        {
-            // TODO: SYNC WITH STACK throw new NotImplementedException();
-        }
-
         public void Show(CardStack stack)
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
-            _stack = stack;
 
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            Sync();
+            Sync(stack);
             contentCardZone.scrollRectContainer.horizontalNormalizedPosition = 0;
         }
 
-        private void Sync()
+        public void Sync(CardStack stack)
         {
-            nameLabel.text = _stack.Name;
+            _cardStack = stack;
+            nameLabel.text = _cardStack.Name;
 
-            foreach (UnityCard card in _stack.Cards.Reverse())
+            contentCardZone.transform.DestroyAllChildren();
+            List<UnityCard> cards = _cardStack.Cards.Reverse().ToList();
+            int index = cards.Count - 1;
+            foreach (UnityCard card in cards)
             {
                 var cardModel = Instantiate(cardModelPrefab, contentCardZone.transform).GetOrAddComponent<CardModel>();
                 cardModel.Value = card;
+                cardModel.Index = index;
+                index--;
             }
 
-            countLabel.text = _stack.Cards.Count.ToString();
+            countLabel.text = _cardStack.Cards.Count.ToString();
         }
 
         public void OnDrop(CardModel cardModel)
@@ -82,11 +83,28 @@ namespace CardGameView
             cardModel.IsFacedown = false;
             cardModel.DoubleClickAction = CardActions.FlipFace;
             countLabel.text = contentCardZone.GetComponentsInChildren<CardModel>().Length.ToString();
+
+            if (_cardStack == null)
+                return;
+
+            int index =  cardZone.transform.childCount - cardModel.transform.GetSiblingIndex(); // TODO: FIX INDEX OUT OF BOUNDS
+            if (CgsNetManager.Instance.isNetworkActive)
+                CgsNetManager.Instance.LocalPlayer.RequestInsert(_cardStack.gameObject, index, cardModel.Id);
+            else
+                _cardStack.Insert(index, cardModel.Id);
         }
 
         private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
         {
             countLabel.text = contentCardZone.GetComponentsInChildren<CardModel>().Length.ToString();
+
+            if (_cardStack == null)
+                return;
+
+            if (CgsNetManager.Instance.isNetworkActive)
+                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(_cardStack.gameObject, cardModel.Index);
+            else
+                _cardStack.RemoveAt(cardModel.Index);
         }
 
         public void Clear()

@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - Android
+#          - Android
           - iOS
           - StandaloneOSX
           - StandaloneLinux64
@@ -148,9 +148,9 @@ jobs:
           find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
           chmod +x fastlane/sign-osx-build.sh
           ./fastlane/sign-osx-build.sh
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'android playstore'
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'android playstore'
       - uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'ios release'

@@ -149,7 +149,8 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void CmdCreateCardStack(string stackName, string[] cardIds, bool isDeck)
         {
-            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(Vector2.zero); // TODO: DYNAMIC LOCATION
+            // TODO: DYNAMIC LOCATION
+            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(Vector2.zero);
             stack.Name = stackName;
             stack.Cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
             GameObject stackGameObject = stack.gameObject;
@@ -187,6 +188,58 @@ namespace Cgs.Play.Multiplayer
         {
             var cardStack = toShuffle.GetComponent<CardStack>();
             cardStack.DoShuffle();
+        }
+
+        public void RequestInsert(GameObject stack, int index, string cardId)
+        {
+            CmdInsert(stack, index, cardId);
+        }
+
+        [Command]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CmdInsert(GameObject stack, int index, string cardId)
+        {
+            var cardStack = stack.GetComponent<CardStack>();
+            cardStack.Insert(index, cardId);
+        }
+
+        public void RequestRemoveAt(GameObject stack, int index)
+        {
+            CmdRemoveAt(stack, index);
+        }
+
+        [Command]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CmdRemoveAt(GameObject stack, int index)
+        {
+            var cardStack = stack.GetComponent<CardStack>();
+            cardStack.RemoveAt(index);
+        }
+
+        public void RequestDeal(GameObject stack, int count)
+        {
+            CmdDeal(stack, count);
+        }
+
+        [Command]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CmdDeal(GameObject stack, int count)
+        {
+            var cardStack = stack.GetComponent<CardStack>();
+            string[] cardIds = new string[count];
+            for (var i = 0; i < count && cardStack.Cards.Count > 0; i++)
+                cardIds[i] = cardStack.PopCard();
+            TargetDeal(cardIds);
+        }
+
+        [TargetRpc]
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void TargetDeal(string[] cardIds)
+        {
+            CgsNetManager.Instance.playController.AddCardsToHand(
+                cardIds.Where(cardId => !string.IsNullOrEmpty(cardId) && !UnityCard.Blank.Id.Equals(cardId))
+                    .Select(cardId => CardGameManager.Current.Cards[cardId]));
         }
 
         #endregion

@@ -15,6 +15,7 @@ permalink: roadmap.html
 - Website: Added external links
 
 ## Current Sprint
+- Play Mode: Modulate speed of card scroll areas
 - Play Mode: Pre-defined stack locations
 - Play Mode: Resize stack viewer based off card game settings
 - Play Mode: .dec sideboard & .ydk side are extra stacks

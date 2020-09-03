@@ -251,28 +251,28 @@ namespace Cgs.Play
 
         private void Deal(int cardCount)
         {
-            AddCardsToHand(PopDeckCards(cardCount));
-        }
-
-        private IEnumerable<UnityCard> PopDeckCards(int cardCount)
-        {
-            List<UnityCard> cards = new List<UnityCard>(cardCount);
-            CardStack deckStack = _soloDeckStack;
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.DeckZone != null)
-                deckStack = CgsNetManager.Instance.LocalPlayer.DeckZone.GetComponent<CardStack>();
-            if (deckStack == null)
-                return cards;
-
-            for (var i = 0; i < cardCount && deckStack.Cards.Count > 0; i++)
-                cards.Add(deckStack.PopCard());
-            return cards;
+                CgsNetManager.Instance.LocalPlayer.RequestDeal(CgsNetManager.Instance.LocalPlayer.DeckZone, cardCount);
+            else
+                AddCardsToHand(PopSoloDeckCards(cardCount));
         }
 
-        private void AddCardsToHand(IEnumerable<UnityCard> cards)
+        public void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
             foreach (UnityCard card in cards)
                 hand.AddCard(card);
+        }
+
+        private IEnumerable<UnityCard> PopSoloDeckCards(int count)
+        {
+            List<UnityCard> cards = new List<UnityCard>(count);
+            if (_soloDeckStack == null)
+                return cards;
+
+            for (var i = 0; i < count && _soloDeckStack.Cards.Count > 0; i++)
+                cards.Add(CardGameManager.Current.Cards[_soloDeckStack.PopCard()]);
+            return cards;
         }
 
         private static void AddCardToPlay(CardZone cardZone, CardModel cardModel)

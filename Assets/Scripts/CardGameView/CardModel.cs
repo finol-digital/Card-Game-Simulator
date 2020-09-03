@@ -45,6 +45,8 @@ namespace CardGameView
 
         public CardZone ParentCardZone => transform.parent.GetComponent<CardZone>();
 
+        public int Index { get; set; }
+
         public bool IsStatic { get; set; }
         public bool DoesCloneOnDrag { get; set; }
         public CardAction DoubleClickAction { get; set; }
