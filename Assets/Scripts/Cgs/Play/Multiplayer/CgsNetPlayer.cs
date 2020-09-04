@@ -137,20 +137,20 @@ namespace Cgs.Play.Multiplayer
 
         public void RequestNewDeck(string zoneName, IEnumerable<UnityCard> cards)
         {
-            CmdCreateCardStack(zoneName, cards.Select(card => card.Id).ToArray(), true);
+            CmdCreateCardStack(zoneName, cards.Select(card => card.Id).ToArray(), true,
+                CgsNetManager.Instance.playController.NextDeckPosition);
         }
 
-        public void RequestNewCardStack(string zoneName, IEnumerable<UnityCard> cards)
+        public void RequestNewCardStack(string zoneName, IEnumerable<UnityCard> cards, Vector2 position)
         {
-            CmdCreateCardStack(zoneName, cards.Select(card => card.Id).ToArray(), false);
+            CmdCreateCardStack(zoneName, cards.Select(card => card.Id).ToArray(), false, position);
         }
 
         [Command]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void CmdCreateCardStack(string stackName, string[] cardIds, bool isDeck)
+        private void CmdCreateCardStack(string stackName, string[] cardIds, bool isDeck, Vector2 position)
         {
-            // TODO: DYNAMIC LOCATION
-            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(Vector2.zero);
+            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(position);
             stack.Name = stackName;
             stack.Cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
             GameObject stackGameObject = stack.gameObject;

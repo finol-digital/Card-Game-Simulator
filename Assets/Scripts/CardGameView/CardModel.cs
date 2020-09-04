@@ -43,7 +43,7 @@ namespace CardGameView
             (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
              CurrentPointerEventData.button == PointerEventData.InputButton.Right);
 
-        public CardZone ParentCardZone => transform.parent.GetComponent<CardZone>();
+        public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         public int Index { get; set; }
 
@@ -271,8 +271,7 @@ namespace CardGameView
         public void OnPointerUp(PointerEventData eventData)
         {
             if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId &&
-                !eventData.dragging
-                && eventData.button != PointerEventData.InputButton.Middle &&
+                !eventData.dragging && eventData.button != PointerEventData.InputButton.Middle &&
                 eventData.button != PointerEventData.InputButton.Right)
             {
                 if (!_didSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&

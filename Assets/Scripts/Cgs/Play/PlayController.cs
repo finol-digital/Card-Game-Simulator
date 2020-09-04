@@ -44,6 +44,8 @@ namespace Cgs.Play
         public PlayMenu menu;
         public PointsCounter scoreboard;
 
+        public Vector2 NextDeckPosition { get; private set; } = Vector2.zero;
+
         private LobbyMenu Lobby =>
             _lobby ? _lobby : _lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
@@ -174,23 +176,35 @@ namespace Cgs.Play
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
             {
                 CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
+                var i = 1;
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
+                {
+                    Vector2 position = NextDeckPosition + Vector2.right * CardGameManager.PixelsPerInch * i *
+                        CardGameManager.Current.CardSize.X;
                     CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(cardGroup.Key,
-                        cardGroup.Value.Cast<UnityCard>());
+                        cardGroup.Value.Cast<UnityCard>(), position);
+                    i++;
+                }
             }
             else
             {
-                _soloDeckStack = CreateCardStack(Vector2.zero);
+                _soloDeckStack = CreateCardStack(NextDeckPosition);
                 _soloDeckStack.Name = deckName;
                 _soloDeckStack.Cards = deckCards;
 
+                var i = 1;
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
                 {
-                    CardStack stack = CreateCardStack(Vector2.zero); // TODO: DYNAMIC LOCATION
+                    CardStack stack = CreateCardStack(NextDeckPosition + Vector2.right * CardGameManager.PixelsPerInch *
+                        i *
+                        CardGameManager.Current.CardSize.X);
                     stack.Name = cardGroup.Key;
                     stack.Cards = (List<UnityCard>) cardGroup.Value.Cast<UnityCard>();
+                    i++;
                 }
             }
+
+            NextDeckPosition += Vector2.down * CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y;
 
             PromptForHand();
         }
@@ -285,13 +299,16 @@ namespace Cgs.Play
 
         public static void SetPlayActions(CardModel cardModel)
         {
-            cardModel.DoubleClickAction = CardActions.Rotate90;
+            cardModel.DoubleClickAction = CardActions.FlipFace;
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
         private void DisplayResults(string filters, List<UnityCard> cards)
         {
-            // TODO: CreateCardStack(CardGameManager.Current.Name, cards);
+            CardStack stack =
+                CreateCardStack(Vector2.left * CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X);
+            stack.Name = filters;
+            stack.Cards = cards;
         }
 
         public Die CreateDie(int min, int max)

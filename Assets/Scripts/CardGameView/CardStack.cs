@@ -17,7 +17,7 @@ namespace CardGameView
 {
     [RequireComponent(typeof(CardDropArea))]
     public class CardStack : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
-        IBeginDragHandler, IDragHandler, ICardDropHandler
+        IBeginDragHandler, ICardDropHandler
     {
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
@@ -53,11 +53,11 @@ namespace CardGameView
         [SyncVar(hook = nameof(OnChangePosition))]
         public Vector2 position;
 
-        private Vector2 _dragOffset;
-
         [SyncVar] private float _shuffleTime;
 
         private StackViewer _viewer;
+
+        private PointerEventData _currentPointerEventData;
 
         private void Start()
         {
@@ -91,14 +91,22 @@ namespace CardGameView
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            // OnPointerDown is required for OnPointerUp to trigger
+            _currentPointerEventData = eventData;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (!EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-            ShowButtons();
+            if (_currentPointerEventData != null && _currentPointerEventData.pointerId == eventData.pointerId &&
+                !eventData.dragging && eventData.button != PointerEventData.InputButton.Middle &&
+                eventData.button != PointerEventData.InputButton.Right)
+            {
+                if (EventSystem.current.currentSelectedGameObject == gameObject)
+                    View();
+                else if (!EventSystem.current.alreadySelecting)
+                    EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+            }
+
+            _currentPointerEventData = eventData;
         }
 
         public void OnSelect(BaseEventData eventData)
@@ -113,28 +121,7 @@ namespace CardGameView
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (!hasAuthority)
-                return;
-            _dragOffset = eventData.position - (Vector2) transform.position;
-            transform.SetAsLastSibling();
-            HideButtons();
-            // TODO: MOVEMENT
-        }
-
-        public void OnDrag(PointerEventData eventData)
-        {
-            if (!hasAuthority)
-                return;
-            var rectTransform = (RectTransform) transform;
-            rectTransform.position = eventData.position - _dragOffset;
-            CmdUpdatePosition(rectTransform.anchoredPosition);
-            // TODO: MOVEMENT
-        }
-
-        [Command]
-        private void CmdUpdatePosition(Vector2 newPosition)
-        {
-            position = newPosition;
+            // TODO:
         }
 
         [PublicAPI]

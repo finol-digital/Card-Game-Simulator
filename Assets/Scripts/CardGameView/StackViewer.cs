@@ -87,7 +87,8 @@ namespace CardGameView
             if (_cardStack == null)
                 return;
 
-            int index =  cardZone.transform.childCount - 1 - cardModel.transform.GetSiblingIndex(); // TODO: FIX INDEX OUT OF BOUNDS
+            int cardCount = cardZone.GetComponentsInChildren<CardModel>().Length;
+            int index = cardCount - 1 - cardModel.transform.GetSiblingIndex();
             if (CgsNetManager.Instance.isNetworkActive)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(_cardStack.gameObject, index, cardModel.Id);
             else
