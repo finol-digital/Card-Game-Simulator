@@ -14,10 +14,12 @@ permalink: roadmap.html
 - Website: Added external links
 
 ## Current Sprint
-- Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
+- Fix: Let cards stay in their location when dropped on card scroll areas in Play Mode
 - Play Mode: Modulate speed of card scroll areas
-- Play Mode: Pre-defined stack locations
+- Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 - Play Mode: Resize stack viewer based off card game settings
+- Play Mode: Pre-defined stack locations
+- Play Mode: Pre-defines zones in Play Area
 - Play Mode: .dec sideboard & .ydk side are extra stacks
 - Play Mode: Rotate stacks with 2 finger or right-click
 - Play Mode: Single-clicking card shows the Actions Bar
