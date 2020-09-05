@@ -127,7 +127,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 0
-  bundleVersion: 1.30.0
+  bundleVersion: 1.31.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -177,7 +177,7 @@ PlayerSettings:
   buildNumber:
     Standalone: 91
     iPhone: 0
-  AndroidBundleVersionCode: 89
+  AndroidBundleVersionCode: 1031000
   AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 0
@@ -847,12 +847,12 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 1.30.0.0
+  metroPackageVersion: 1.31.0.0
   metroCertificatePath: WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 00ccf5ff6086d701
+  metroCertificateNotAfter: 00a0ade555a2d701
   metroApplicationDescription: Create, Share, and Play
   wsaImages:
     131172: Assets/Sprites and Textures/UWP/SplashScreen.scale-100.png
