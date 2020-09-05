@@ -17,12 +17,13 @@ namespace CardGameView
 {
     [RequireComponent(typeof(CardDropArea))]
     public class CardStack : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
-        IBeginDragHandler, ICardDropHandler
+        IBeginDragHandler, IDragHandler, ICardDropHandler
     {
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
 
         public GameObject stackViewerPrefab;
+        public GameObject cardModelPrefab;
 
         public Text deckLabel;
         public Text countLabel;
@@ -121,7 +122,23 @@ namespace CardGameView
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            // TODO:
+            if (_cardIds.Count < 1)
+                return;
+
+            UnityCard card = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
+
+            if (CgsNetManager.Instance.isNetworkActive)
+                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, _cardIds.Count - 1);
+            else
+                PopCard();
+
+            CardModel.CreateDrag(eventData, cardModelPrefab, transform, card, true,
+                CgsNetManager.Instance.playController.playArea);
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            // Required for OnBeginDrag to trigger
         }
 
         [PublicAPI]

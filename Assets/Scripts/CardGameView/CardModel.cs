@@ -308,6 +308,25 @@ namespace CardGameView
                 CardViewer.Instance.IsVisible = false;
         }
 
+        public static void CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
+            UnityCard value, bool isFacedown, CardZone placeHolderCardZone = null)
+        {
+            Vector3 position = transform.position;
+            GameObject newGameObject = Instantiate(gameObject, position, transform.rotation,
+                transform.gameObject.FindInParents<Canvas>().transform);
+            eventData.pointerPress = newGameObject;
+            eventData.pointerDrag = newGameObject;
+            var cardModel = newGameObject.GetOrAddComponent<CardModel>();
+            cardModel.Visibility.blocksRaycasts = false;
+            cardModel.IsHighlighted = false;
+            cardModel.Value = value;
+            cardModel.IsFacedown = isFacedown;
+            cardModel.PlaceHolderCardZone = placeHolderCardZone;
+            cardModel.DoesCloneOnDrag = false;
+            cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2) position - eventData.position;
+            cardModel.OnBeginDrag(eventData);
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (IsOnline && !hasAuthority)
@@ -316,20 +335,9 @@ namespace CardGameView
             _didDrag = true;
             if (DoesCloneOnDrag)
             {
-                Transform transform1 = transform;
                 if (!IsOnline)
                     NetworkServer.UnSpawn(gameObject); // Avoid Mirror error
-                GameObject newGameObject = Instantiate(gameObject, transform1.position, transform1.rotation,
-                    gameObject.FindInParents<Canvas>().transform);
-                eventData.pointerPress = newGameObject;
-                eventData.pointerDrag = newGameObject;
-                var cardModel = newGameObject.GetOrAddComponent<CardModel>();
-                cardModel.Visibility.blocksRaycasts = false;
-                cardModel.IsHighlighted = false;
-                cardModel.Value = Value;
-                cardModel.DoesCloneOnDrag = false;
-                cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
-                cardModel.OnBeginDrag(eventData);
+                CreateDrag(eventData, gameObject, transform, Value, IsFacedown);
                 return;
             }
 

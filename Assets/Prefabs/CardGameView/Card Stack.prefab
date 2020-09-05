@@ -154,6 +154,8 @@ MonoBehaviour:
   syncInterval: 0.1
   stackViewerPrefab: {fileID: 8084244048543937869, guid: db824bcf7bf139d4484ca9b35f47b8c9,
     type: 3}
+  cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
+    type: 3}
   deckLabel: {fileID: 6350843647229516575}
   countLabel: {fileID: 6350843648775402011}
   shuffleLabel: {fileID: 5991317807577796637}
