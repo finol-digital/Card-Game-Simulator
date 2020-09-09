@@ -18,6 +18,8 @@ permalink: roadmap.html
 - Play Mode: Modulate speed of card scroll areas
 - Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 - Play Mode: Resize stack viewer based off card game settings
+ - Pooling to improve performance of opening stack viewer
+- Play Mode: Move stack viewers, and allow multiple viewers per stack
 - Play Mode: Pre-defined stack locations
 - Play Mode: Pre-defines zones in Play Area
 - Play Mode: .dec sideboard & .ydk side are extra stacks
