@@ -15,6 +15,7 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Fix: Let cards stay in their location when dropped on card scroll areas in Play Mode
+- Card Games: Change Play Mode Mat in-app
 - Play Mode: Modulate speed of card scroll areas
 - Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 - Play Mode: Resize stack viewer based off card game settings
@@ -29,10 +30,9 @@ permalink: roadmap.html
   - Rotate 90/180/270 (only in play area)
   - Snap rotation to 0/90/180/270 (only in play area)
   - Move to hand/other card stack(s) in a certain spot (x from top or bottom)
-- Play Mode: Rotate play area (2 finger or right-click)
-- Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
 
 ## Backlog
+- Tech: Improve performance/battery-usage
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to successfully load StreamingAssets/ without error
@@ -48,6 +48,8 @@ permalink: roadmap.html
 - Play Mode: Support multiple playmats
 - Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
 - Play Mode: Face-up cards in cards stacks
+- Play Mode: Rotate play area (2 finger or right-click)
+- Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
 
 ## Icebox
 - Tech: Replace SwipeManager
