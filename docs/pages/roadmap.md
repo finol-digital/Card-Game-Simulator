@@ -14,17 +14,15 @@ permalink: roadmap.html
 - Website: Added external links
 
 ## Current Sprint
+- Fix: Card Stack sizes
+- Fix: Card Search in Play Mode
 - Fix: Let cards stay in their location when dropped on card scroll areas in Play Mode
 - Card Games: Change Play Mode Mat in-app
 - Play Mode: Modulate speed of card scroll areas
 - Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 - Play Mode: Resize stack viewer based off card game settings
- - Pooling to improve performance of opening stack viewer
+  - Pooling to improve performance of opening stack viewer
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
-- Play Mode: Pre-defined stack locations
-- Play Mode: Pre-defines zones in Play Area
-- Play Mode: .dec sideboard & .ydk side are extra stacks
-- Play Mode: Rotate stacks with 2 finger or right-click
 - Play Mode: Single-clicking card shows the Actions Bar
   - Flip Face (in hand and play area)
   - Rotate 90/180/270 (only in play area)
@@ -50,6 +48,10 @@ permalink: roadmap.html
 - Play Mode: Face-up cards in cards stacks
 - Play Mode: Rotate play area (2 finger or right-click)
 - Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
+- Play Mode: Pre-defined stack locations
+- Play Mode: Pre-defined zones in Play Area
+- Play Mode: .dec sideboard & .ydk side are extra stacks
+- Play Mode: Rotate stacks with 2 finger or right-click
 
 ## Icebox
 - Tech: Replace SwipeManager
