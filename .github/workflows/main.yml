@@ -5,7 +5,7 @@ on:
   release: { types: [published] }
 jobs:
   buildForSomePlatforms:
-    name: Build for ${{ matrix.targetPlatform }}
+#    name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     env:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
