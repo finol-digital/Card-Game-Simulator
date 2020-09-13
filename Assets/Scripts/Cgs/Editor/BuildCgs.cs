@@ -26,9 +26,9 @@ namespace Cgs.Editor
             Dictionary<string, string> options = GetValidatedOptions();
 
             // Set version for this build
-            PlayerSettings.bundleVersion = options["buildVersion"];
-            PlayerSettings.macOS.buildNumber = options["buildVersion"];
-            PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
+            //PlayerSettings.bundleVersion = options["buildVersion"];
+            //PlayerSettings.macOS.buildNumber = options["buildVersion"];
+            //PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
 
             // Apply build target
             var buildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]);

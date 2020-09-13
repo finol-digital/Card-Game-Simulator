@@ -13,33 +13,43 @@ jobs:
       UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
     strategy:
       fail-fast: false
-      matrix:
-        targetPlatform:
-          - Android
-          - iOS
-          - StandaloneOSX
-          - StandaloneLinux64
+#      matrix:
+#        targetPlatform:
+#          - Android
+#          - iOS
+#          - StandaloneOSX
+#          - StandaloneLinux64
     steps:
       - uses: actions/checkout@v2
         with:
           lfs: true
-      - uses: actions/cache@v1.1.0
-        with:
-          path: Library
-          key: Library-${{ matrix.targetPlatform }}
-          restore-keys: Library-
+#      - uses: actions/cache@v1.1.0
+#        with:
+#          path: Library
+#          key: Library-${{ matrix.targetPlatform }}
+#          restore-keys: Library-
       - uses: webbertakken/unity-builder@v1.2
         with:
-          unityVersion: 2019.4.9f1
-          targetPlatform: ${{ matrix.targetPlatform }}
-          buildsPath: builds
-          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
-          androidAppBundle: true
+          versioning: None
+          unityVersion: 2019.4.8f1
+          targetPlatform: Android
           androidKeystoreName: finoldigital.keystore
-          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          customParameters: -outputFilePath build/Android/cgs.apk -keystoreName finoldigital.keystore
+#          unityVersion: 2019.4.9f1
+#          targetPlatform: ${{ matrix.targetPlatform }}
+#          buildsPath: builds         
+#          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+#          androidAppBundle: true
+#          androidKeystoreName: finoldigital.keystore
+#          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+#          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+#          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+#          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
       - uses: actions/upload-artifact@v1
         if: github.event.ref != 'refs/heads/develop'
         with:
