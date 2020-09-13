@@ -150,9 +150,8 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void CmdCreateCardStack(string stackName, string[] cardIds, bool isDeck, Vector2 position)
         {
-            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(position);
-            stack.Name = stackName;
-            stack.Cards = cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
+            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(stackName,
+                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position);
             GameObject stackGameObject = stack.gameObject;
             NetworkServer.Spawn(stackGameObject);
             if (isDeck)

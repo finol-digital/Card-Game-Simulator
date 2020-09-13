@@ -188,18 +188,13 @@ namespace Cgs.Play
             }
             else
             {
-                _soloDeckStack = CreateCardStack(NextDeckPosition);
-                _soloDeckStack.Name = deckName;
-                _soloDeckStack.Cards = deckCards;
-
+                _soloDeckStack = CreateCardStack(deckName, deckCards, NextDeckPosition);
                 var i = 1;
                 foreach (KeyValuePair<string, List<Card>> cardGroup in extraGroups)
                 {
-                    CardStack stack = CreateCardStack(NextDeckPosition + Vector2.right * CardGameManager.PixelsPerInch *
-                        i *
-                        CardGameManager.Current.CardSize.X);
-                    stack.Name = cardGroup.Key;
-                    stack.Cards = (List<UnityCard>) cardGroup.Value.Cast<UnityCard>();
+                    Vector2 position = NextDeckPosition + Vector2.right * CardGameManager.PixelsPerInch * i *
+                        CardGameManager.Current.CardSize.X;
+                    CreateCardStack(cardGroup.Key, (List<UnityCard>) cardGroup.Value.Cast<UnityCard>(), position);
                     i++;
                 }
             }
@@ -239,10 +234,14 @@ namespace Cgs.Play
             boardRectTransform.localScale = Vector3.one;
         }
 
-        public CardStack CreateCardStack(Vector2 position)
+        public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position)
         {
             Transform target = playArea.transform;
             var cardStack = Instantiate(cardStackPrefab, target.parent).GetComponent<CardStack>();
+            if (!string.IsNullOrEmpty(stackName))
+                cardStack.Name = stackName;
+            if (cards != null)
+                cardStack.Cards = cards;
             var rectTransform = (RectTransform) cardStack.transform;
             rectTransform.SetParent(target);
             if (!Vector2.zero.Equals(position))
@@ -305,10 +304,11 @@ namespace Cgs.Play
 
         private void DisplayResults(string filters, List<UnityCard> cards)
         {
-            CardStack stack =
-                CreateCardStack(Vector2.left * CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X);
-            stack.Name = filters;
-            stack.Cards = cards;
+            Vector2 position = Vector2.left * CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X;
+            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(filters, cards, position);
+            else
+                CreateCardStack(filters, cards, position);
         }
 
         public Die CreateDie(int min, int max)

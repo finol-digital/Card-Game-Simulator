@@ -6,9 +6,9 @@ permalink: roadmap.html
 
 ## What's New
 - Fix: Card Stack sizes
+- Fix: Card Search in Play Mode
 
 ## Current Sprint
-- Fix: Card Search in Play Mode
 - Fix: Let cards stay in their location when dropped on card scroll areas in Play Mode
 - Card Games: Change Play Mode Mat in-app
 - Play Mode: Modulate speed of card scroll areas
