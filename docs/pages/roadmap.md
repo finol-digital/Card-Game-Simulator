@@ -5,16 +5,9 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: Error when getting initial games for new users
-- Deck Editor: Cards move in their zones to better make use of visible space
-- Play Mode: Re-organized buttons and card layouts
-- Play Mode: Card stacks in play area
-- Play Mode: Playmats
-- CardGameDef: gamePlayDeckName ("Stock" for Standard and Dominoes, "Square Wall" for Mahjong), playMatSize, playMatImageFileType, playMatImageUrl
-- Website: Added external links
+- Fix: Card Stack sizes
 
 ## Current Sprint
-- Fix: Card Stack sizes
 - Fix: Card Search in Play Mode
 - Fix: Let cards stay in their location when dropped on card scroll areas in Play Mode
 - Card Games: Change Play Mode Mat in-app
@@ -28,6 +21,7 @@ permalink: roadmap.html
   - Rotate 90/180/270 (only in play area)
   - Snap rotation to 0/90/180/270 (only in play area)
   - Move to hand/other card stack(s) in a certain spot (x from top or bottom)
+- Default double-click action
 
 ## Backlog
 - Tech: Improve performance/battery-usage
