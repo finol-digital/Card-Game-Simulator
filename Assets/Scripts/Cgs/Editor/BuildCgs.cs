@@ -157,8 +157,10 @@ namespace Cgs.Editor
             var buildPlayerOptions = new BuildPlayerOptions
             {
                 scenes = scenes,
+                target = BuildTarget.Android,
+                targetGroup = BuildTargetGroup.Android,
                 locationPathName = filePath,
-                target = buildTarget,
+                options = UnityEditor.BuildOptions.Development
             };
 
             BuildSummary buildSummary = BuildPipeline.BuildPlayer(buildPlayerOptions).summary;
