@@ -6,6 +6,7 @@ jobs:
   buildForSomePlatforms:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
+    if: github.event.ref != 'refs/heads/develop'
     env:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -47,7 +48,7 @@ jobs:
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
     runs-on: self-hosted
-    needs: buildForSomePlatforms
+#   needs: buildForSomePlatforms
 #    if: github.event.ref != 'refs/heads/develop'
     env:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
