@@ -49,7 +49,6 @@ jobs:
     name: Build and Release to the Microsoft Store
     runs-on: [windows, self-hosted]
 #   needs: buildForSomePlatforms
-#    if: github.event.ref != 'refs/heads/develop'
     env:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
