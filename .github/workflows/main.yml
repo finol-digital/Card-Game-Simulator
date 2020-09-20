@@ -103,56 +103,56 @@ jobs:
         with:
           name: cgs-windows
           path: builds
-  releaseToAppStore:
-    name: Release to Google Play and the App Store
-    runs-on: macos-latest
-    needs: buildForSomePlatforms
-    if: github.event.action == 'published'
-    env:
-      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
-      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-      GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
-      MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
-      MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
-      MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
-      MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
-      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
-      MATCH_URL: ${{ secrets.MATCH_URL }}
-      BUILDS_PATH: ${{ format('{0}/builds', github.workspace) }}
-      GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
-      ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-      IOS_APP_ID: com.finoldigital.CardGameSim
-      MAC_APP_ID: com.finoldigital.CardGameSimulator
-      PROJECT_NAME: Card Game Simulator
-      RELEASE_NOTES: ${{ github.event.release.body }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          lfs: true
-      - uses: actions/download-artifact@v1
-        with:
-          name: cgs-android-ios-mac-linux
-          path: builds
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'fixversion'
-      - name: Prepare for upload
-        run: |
-          echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-          find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
-          chmod +x fastlane/sign-osx-build.sh
-          ./fastlane/sign-osx-build.sh
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'android playstore'
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'ios release'
-      - uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'mac macupload'
+#  releaseToAppStore:
+#    name: Release to Google Play and the App Store
+#    runs-on: macos-latest
+#    needs: buildForSomePlatforms
+#    if: github.event.action == 'published'
+#    env:
+#      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
+#      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+#      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+#      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+#      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+#      GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
+#      MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
+#      MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
+#      MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
+#      MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
+#      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+#      MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
+#      MATCH_URL: ${{ secrets.MATCH_URL }}
+#      BUILDS_PATH: ${{ format('{0}/builds', github.workspace) }}
+#      GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
+#      ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
+#      IOS_APP_ID: com.finoldigital.CardGameSim
+#      MAC_APP_ID: com.finoldigital.CardGameSimulator
+#      PROJECT_NAME: Card Game Simulator
+#      RELEASE_NOTES: ${{ github.event.release.body }}
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          lfs: true
+#      - uses: actions/download-artifact@v1
+#        with:
+#          name: cgs-android-ios-mac-linux
+#          path: builds
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'fixversion'
+#      - name: Prepare for upload
+#        run: |
+#          echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
+#          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+#          find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
+#          chmod +x fastlane/sign-osx-build.sh
+#          ./fastlane/sign-osx-build.sh
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'android playstore'
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'ios release'
+#      - uses: maierj/fastlane-action@v1.4.0
+#        with:
+#          lane: 'mac macupload'
