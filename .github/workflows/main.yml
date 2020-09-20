@@ -66,7 +66,7 @@ jobs:
 #          args: install --yes unity --version=2019.4.9 unity-il2cpp --version=2019.4.9 unity-win-il2cpp --version=2019.4.9 unity-metro --version=2019.4.9
       - name: Activate License
         run: |
-          Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile activate.stdout.txt","-nographics","-username $env:UNITY_USERNAME","-password $env:UNITY_PASSWORD","-serial $env:UNITY_SERIAL" -NoNewWindow -Wait
+          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList '-batchmode','–quit','-logfile activate.stdout.txt','-nographics','-username $env:UNITY_USERNAME','-password $env:UNITY_PASSWORD','-serial $env:UNITY_SERIAL' -NoNewWindow -Wait
       - name: Build StandaloneWindows
         run: |
           Start-Process -FilePath "C:\Program Files\Unity\Editor\Unity.exe" -ArgumentList "-batchmode","–quit","-logfile build-windows.stdout.txt","-executeMethod Cgs.Editor.BuildCgs.BuildWindows" -NoNewWindow -Wait
