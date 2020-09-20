@@ -3,52 +3,51 @@ on:
   push: { branches: [develop, master] }
   release: { types: [published] }
 jobs:
-  buildForSomePlatforms:
-    name: Build for ${{ matrix.targetPlatform }}
-    runs-on: ubuntu-latest
-    if: github.event.ref != 'refs/heads/develop'
-    env:
-      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-    strategy:
-      fail-fast: false
-      matrix:
-        targetPlatform:
-#          - Android
-          - iOS
-          - StandaloneOSX
-          - StandaloneLinux64
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          lfs: true
-      - uses: actions/cache@v1.1.0
-        with:
-          path: Library
-          key: Library-${{ matrix.targetPlatform }}
-          restore-keys: Library-
-      - uses: webbertakken/unity-builder@v1.2
-        with:
-          unityVersion: 2019.4.9f1
-          targetPlatform: ${{ matrix.targetPlatform }}
-          buildsPath: builds         
-          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
-          androidAppBundle: true
-          androidKeystoreName: finoldigital.keystore
-          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
-          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
-          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
-      - uses: actions/upload-artifact@v1
-        if: github.event.ref != 'refs/heads/develop'
-        with:
-          name: cgs-android-ios-mac-linux
-          path: builds
+#  buildForSomePlatforms:
+#    name: Build for ${{ matrix.targetPlatform }}
+#    runs-on: ubuntu-latest
+#    env:
+#      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+#      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+#      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        targetPlatform:
+##          - Android
+#          - iOS
+#          - StandaloneOSX
+#          - StandaloneLinux64
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          lfs: true
+#      - uses: actions/cache@v1.1.0
+#        with:
+#          path: Library
+#          key: Library-${{ matrix.targetPlatform }}
+#          restore-keys: Library-
+#      - uses: webbertakken/unity-builder@v1.2
+#        with:
+#          unityVersion: 2019.4.9f1
+#          targetPlatform: ${{ matrix.targetPlatform }}
+#          buildsPath: builds         
+#          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+#          androidAppBundle: true
+#          androidKeystoreName: finoldigital.keystore
+#          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+#          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+#          androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
+#          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+#      - uses: actions/upload-artifact@v1
+#        if: github.event.ref != 'refs/heads/develop'
+#        with:
+#          name: cgs-android-ios-mac-linux
+#          path: builds
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
     runs-on: [windows, self-hosted]
-#   needs: buildForSomePlatforms
+#    needs: buildForSomePlatforms
     env:
       UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -64,9 +63,9 @@ jobs:
 #        uses: crazy-max/ghaction-chocolatey@v1.3.0
 #        with:
 #          args: install --yes unity --version=2019.4.9 unity-il2cpp --version=2019.4.9 unity-win-il2cpp --version=2019.4.9 unity-metro --version=2019.4.9
-#      - name: Activate License
-#        run: |
-#          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList '-batchmode','–quit','-logfile activate.stdout.txt','-nographics','-username $env:UNITY_USERNAME','-password $env:UNITY_PASSWORD','-serial $env:UNITY_SERIAL' -NoNewWindow -Wait
+      - name: Activate License
+        run: |
+          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList '-batchmode','–quit','-logfile activate.stdout.txt','-nographics','-username $env:UNITY_USERNAME','-password $env:UNITY_PASSWORD','-serial $env:UNITY_SERIAL' -NoNewWindow -Wait
       - name: Build StandaloneWindows
         run: |
           Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList '-batchmode','–quit','-logfile build-windows.stdout.txt','-executeMethod Cgs.Editor.BuildCgs.BuildWindows' -NoNewWindow -Wait
