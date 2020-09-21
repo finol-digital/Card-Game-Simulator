@@ -48,19 +48,15 @@ jobs:
     name: Build and Release to the Microsoft Store
     runs-on: [windows, self-hosted]
 #    needs: buildForSomePlatforms
-    env:
-      UNITY_USERNAME: ${{ secrets.UNITY_EMAIL }}
-      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-      Configuration: Master
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2.3.2
         with:
           lfs: true
       - name: Activate License
-        run: |
-          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList `"-batchmode –quit -logfile activate.stdout.txt -nographics -username $env:UNITY_USERNAME -password $env:UNITY_PASSWORD -serial $env:UNITY_SERIAL`" -NoNewWindow -Wait
+        run: Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList $env:Args -NoNewWindow -Wait
+        env:
+          Args: -batchmode –quit -logfile activate.stdout.txt -nographics -username ${{ secrets.UNITY_EMAIL }} -password ${{ secrets.UNITY_PASSWORD }} -serial ${{ secrets.UNITY_SERIAL }}
       - name: Build StandaloneWindows
         run: |
           Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList ""-batchmode –quit -logfile build-windows.stdout.txt -executeMethod Cgs.Editor.BuildCgs.BuildWindows"" -NoNewWindow -Wait
@@ -85,12 +81,14 @@ jobs:
       - name:  Restore the Wpf application to populate the obj folder
         run: msbuild 'builds\uwp\Card Game Simulator.sln' /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
+          Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
         run: msbuild 'builds\uwp\Card Game Simulator.sln' /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
           AppxBundle: Always
           BuildMode: StoreUpload
+          Configuration: Master
           TargetPlatform: x64
       - name: Upload build
         uses: actions/upload-artifact@v1
