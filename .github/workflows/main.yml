@@ -53,32 +53,17 @@ jobs:
         uses: actions/checkout@v2.3.2
         with:
           lfs: true
-      - name: Activate License
-        run: Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList $env:Args -NoNewWindow -Wait
+      - name: Build Cgs for Windows
+        if: github.event.ref != 'refs/heads/develop'
+        run: .\build-windows.ps1
+        shell: powershell
         env:
-          Args: -batchmode –quit -logfile activate.stdout.txt -nographics -username ${{ secrets.UNITY_EMAIL }} -password ${{ secrets.UNITY_PASSWORD }} -serial ${{ secrets.UNITY_SERIAL }}
-      - name: Build StandaloneWindows
-        run: |
-          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList ""-batchmode –quit -logfile build-windows.stdout.txt -executeMethod Cgs.Editor.BuildCgs.BuildWindows"" -NoNewWindow -Wait
-      - name: Build StandaloneWindows64
-        run: |
-          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList ""-batchmode –quit -logfile build-windows64.stdout.txt -executeMethod Cgs.Editor.BuildCgs.BuildWindows64"" -NoNewWindow -Wait
-      - name: Build Uwp
-        run: |
-          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList ""-batchmode –quit -logfile build-uwp.stdout.txt -executeMethod Cgs.Editor.BuildCgs.BuildUwp"" -NoNewWindow -Wait
-      - name: Return License
-        run: |
-          Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList ""-batchmode –quit -logfile return.stdout.txt -returnlicense"" -NoNewWindow -Wait
-      - name: Print Logs
-        run: |
-          cat activate.stdout.txt
-          cat build-windows.stdout.txt
-          cat build-windows64.stdout.txt
-          cat build-uwp.stdout.txt
-          cat return.stdout.txt
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.1
-      - name:  Restore the Wpf application to populate the obj folder
+      - name: Restore the Wpf application to populate the obj folder
         run: msbuild 'builds\uwp\Card Game Simulator.sln' /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
           Configuration: Master
@@ -92,7 +77,7 @@ jobs:
           TargetPlatform: x64
       - name: Upload build
         uses: actions/upload-artifact@v1
-#        if: github.event.ref != 'refs/heads/develop'
+        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows
           path: builds
