@@ -54,7 +54,7 @@ jobs:
         with:
           lfs: true
       - name: Build Cgs for Windows
-        run: .\build-windows.ps1
+        run: .\build_windows.ps1
         shell: powershell
         env:
           UnityPath: C:\Program Files\Unity\Editor\Unity.exe
