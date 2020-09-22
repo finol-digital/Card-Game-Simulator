@@ -64,17 +64,19 @@ jobs:
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.1
       - name: Restore the Wpf application to populate the obj folder
-        run: msbuild 'build\uwp\Card Game Simulator.sln' /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+        run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
+          SolutionPath: build\uwp\Card Game Simulator.sln
           Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
-        run: msbuild 'build\uwp\Card Game Simulator.sln' /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
+        run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
-          AppxBundle: Always
-          BuildMode: StoreUpload
+          SolutionPath: build\uwp\Card Game Simulator.sln
           Configuration: Master
           TargetPlatform: x64
+          BuildMode: StoreUpload
+          AppxBundle: Always
       - name: Upload builds
         uses: actions/upload-artifact@v1
 #        if: github.event.ref != 'refs/heads/develop'
