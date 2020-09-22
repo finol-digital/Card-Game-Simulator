@@ -1,27 +1,19 @@
-#      - name: Activate License
-#        env:
-#          Args: -batchmode –quit -logfile activate.stdout.txt -nographics -username ${{ secrets.UNITY_EMAIL }} -password ${{ secrets.UNITY_PASSWORD }} -serial ${{ secrets.UNITY_SERIAL }}
-#Get-Content activate.stdout.txt
+# Activate License
+Start-Process -FilePath $env:UnityPath -ArgumentList '-batchmode','–quit','-logfile','activatelicense.log','-nographics','-username',$env:UnityUser,'-password',$env:UnityPassword,'-serial',$env:UnitySerial -NoNewWindow -Wait
+Get-Content activatelicense.log
 
-        run: Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList $env:Args -NoNewWindow -Wait
-        env:
-          Args: -batchmode –quit -logfile build-windows.stdout.txt -executeMethod Cgs.Editor.BuildCgs.BuildWindows
-        run: Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList $env:Args -NoNewWindow -Wait
-Get-Content build-windows.stdout.txt
-      - name: Build StandaloneWindows64
-        env:
-          Args: -batchmode –quit -logfile build-windows64.stdout.txt -executeMethod Cgs.Editor.BuildCgs.BuildWindows64
-        run: Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList $env:Args -NoNewWindow -Wait
-Get-Content build-windows64.stdout.txt
-      - name: Build Uwp
-        env:
-          Args: -batchmode –quit -logfile build-uwp.stdout.txt -executeMethod Cgs.Editor.BuildCgs.BuildUwp
-        run: Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList $env:Args -NoNewWindow -Wait
-Get-Content build-uwp.stdout.txt
+# Build Standalone
+Start-Process -FilePath $env:UnityPath -ArgumentList '-batchmode','–quit','-logfile','build-windows.log','-executeMethod','Cgs.Editor.BuildCgs.BuildWindows' -NoNewWindow -Wait
+Get-Content build-windows.log
 
-      - name: Return License
-        env:
-          Args: -batchmode –quit -logfile returnlicense.stdout.txt -returnlicense
-        run: Start-Process -FilePath 'C:\Program Files\Unity\Editor\Unity.exe' -ArgumentList $env:Args -NoNewWindow -Wait
+# Build Standalone64
+Start-Process -FilePath $env:UnityPath -ArgumentList '-batchmode','–quit','-logfile','build-windows64.log','-executeMethod','Cgs.Editor.BuildCgs.BuildWindows64' -NoNewWindow -Wait
+Get-Content build-windows64.log
 
-Get-Content returnlicense.stdout.txt
+# Build Uwp
+Start-Process -FilePath $env:UnityPath -ArgumentList '-batchmode','–quit','-logfile','build-uwp.log','-executeMethod','Cgs.Editor.BuildCgs.BuildUwp' -NoNewWindow -Wait
+Get-Content build-uwp.log
+
+# Return License
+Start-Process -FilePath $env:UnityPath -ArgumentList '-batchmode','–quit','-logfile','returnlicense.log','-returnlicense' -NoNewWindow -Wait
+Get-Content returnlicense.log

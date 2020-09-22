@@ -54,30 +54,30 @@ jobs:
         with:
           lfs: true
       - name: Build Cgs for Windows
-        if: github.event.ref != 'refs/heads/develop'
         run: .\build-windows.ps1
         shell: powershell
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UnityPath: C:\Program Files\Unity\Editor\Unity.exe
+          UnityUsername: ${{ secrets.UNITY_EMAIL }}
+          UnityPassword: ${{ secrets.UNITY_PASSWORD }}
+          UnitySerial: ${{ secrets.UNITY_SERIAL }}
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.1
       - name: Restore the Wpf application to populate the obj folder
-        run: msbuild 'builds\uwp\Card Game Simulator.sln' /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+        run: msbuild 'build\uwp\Card Game Simulator.sln' /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
           Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
-        run: msbuild 'builds\uwp\Card Game Simulator.sln' /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
+        run: msbuild 'build\uwp\Card Game Simulator.sln' /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
           AppxBundle: Always
           BuildMode: StoreUpload
           Configuration: Master
           TargetPlatform: x64
-      - name: Upload build
+      - name: Upload builds
         uses: actions/upload-artifact@v1
-        if: github.event.ref != 'refs/heads/develop'
+#        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows
           path: builds
