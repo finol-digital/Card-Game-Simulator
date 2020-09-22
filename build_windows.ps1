@@ -1,5 +1,5 @@
 # Activate License
-Start-Process -FilePath $env:UnityPath -ArgumentList '-batchmode','-quit','-logfile','activatelicense.log','-nographics','-username',$env:UnityUser,'-password',$env:UnityPassword,'-serial',$env:UnitySerial -NoNewWindow -Wait
+Start-Process -FilePath $env:UnityPath -ArgumentList '-batchmode','-quit','-logfile','activatelicense.log','-nographics','-username',$env:UnityUsername,'-password',$env:UnityPassword,'-serial',$env:UnitySerial -NoNewWindow -Wait
 Get-Content activatelicense.log
 
 # Build Standalone
