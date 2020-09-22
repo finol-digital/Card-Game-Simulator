@@ -26,9 +26,9 @@ namespace Cgs.Editor
             Dictionary<string, string> options = GetValidatedOptions();
 
             // Set version for this build
-            //PlayerSettings.bundleVersion = options["buildVersion"];
-            //PlayerSettings.macOS.buildNumber = options["buildVersion"];
-            //PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
+            PlayerSettings.bundleVersion = options["buildVersion"];
+            PlayerSettings.macOS.buildNumber = options["buildVersion"];
+            PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
 
             // Apply build target
             var buildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]);
@@ -135,13 +135,13 @@ namespace Cgs.Editor
         [UsedImplicitly]
         public static void BuildWindows()
         {
-            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("builds", "windows"), "cgs.exe"));
+            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("builds", "cgs-windows32"), "cgs.exe"));
         }
 
         [UsedImplicitly]
         public static void BuildWindows64()
         {
-            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("builds", "windows64"), "cgs.exe"));
+            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("builds", "cgs-windows64"), "cgs.exe"));
         }
 
         [UsedImplicitly]
@@ -158,8 +158,9 @@ namespace Cgs.Editor
             {
                 scenes = scenes,
                 target = buildTarget,
+//                targetGroup = BuildPipeline.GetBuildTargetGroup(buildTarget),
                 locationPathName = filePath,
-                options = UnityEditor.BuildOptions.Development
+//                options = UnityEditor.BuildOptions.Development
             };
 
             BuildSummary buildSummary = BuildPipeline.BuildPlayer(buildPlayerOptions).summary;
