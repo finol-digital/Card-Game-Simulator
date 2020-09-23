@@ -7,11 +7,12 @@ permalink: roadmap.html
 ## What's New
 - Fix: Card Stack sizes
 - Fix: Card Search in Play Mode
+- Cards: Highlight dragged card
 
 ## Current Sprint
 - Fix: Let cards stay in their location when dropped on card scroll areas in Play Mode
-- Card Games: Change Play Mode Mat in-app
 - Play Mode: Modulate speed of card scroll areas
+- Play Mode: Add submenu to control position, rotation, and zoom of playmat
 - Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 - Play Mode: Resize stack viewer based off card game settings
   - Pooling to improve performance of opening stack viewer
@@ -21,7 +22,8 @@ permalink: roadmap.html
   - Rotate 90/180/270 (only in play area)
   - Snap rotation to 0/90/180/270 (only in play area)
   - Move to hand/other card stack(s) in a certain spot (x from top or bottom)
-- Default double-click action
+- Card Games: Default double-click action in Play Mode
+- Card Games: Change Play Mode Mat in-app
 
 ## Backlog
 - Tech: Improve performance/battery-usage
@@ -63,7 +65,7 @@ permalink: roadmap.html
 - Cards: Support default search filters
 - Cards: Support default sort
 - Deck Editor: Keep current page when orientation changes
-- Cards: Keep viewing the currently selected card when orientation changes
+- Card Search Results: Keep viewing the currently selected card when orientation changes
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit
 - Cards: Allow pre-fetching of card images

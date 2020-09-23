@@ -440,6 +440,11 @@ namespace CardGameView
             if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !hasAuthority))
                 return;
 
+            IsHighlighted = _currentDragPhase != DragPhase.End;
+            Highlight.effectColor = DropTarget != null || PlaceHolder != null || ParentCardZone != null
+                ? Color.green
+                : Color.red;
+
             Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
             targetPosition += UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
             if (ParentCardZone != null)
