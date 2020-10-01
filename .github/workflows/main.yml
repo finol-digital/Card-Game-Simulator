@@ -18,6 +18,7 @@ jobs:
           - iOS
           - StandaloneOSX
           - StandaloneLinux64
+          - WebGL
     steps:
       - uses: actions/checkout@v2
         with:
@@ -27,7 +28,7 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
-      - uses: webbertakken/unity-builder@v1.2
+      - uses: webbertakken/unity-builder@v1.3
         with:
           unityVersion: 2019.4.9f1
           targetPlatform: ${{ matrix.targetPlatform }}
