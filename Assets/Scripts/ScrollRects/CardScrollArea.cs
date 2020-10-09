@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using CardGameView;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,12 +17,13 @@ namespace ScrollRects
     [RequireComponent(typeof(CanvasGroup))]
     public class CardScrollArea : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler
     {
+        private const float ScrollSpeed = 1500;
+
         public ScrollRect scrollRect;
         public CardScrollDirection scrollDirection = CardScrollDirection.Left;
-        public float scrollAmount = 0.01f;
-        public float holdFrequency = 0.01f;
 
         private CanvasGroup _canvasGroup;
+        private bool _isScrolling;
 
         private void Start()
         {
@@ -48,6 +48,44 @@ namespace ScrollRects
             }
 
             _canvasGroup.blocksRaycasts = blocksRayCast && EventSystem.current.currentSelectedGameObject == null;
+
+            if (!_isScrolling)
+                return;
+
+            _canvasGroup.alpha = 1;
+            switch (scrollDirection)
+            {
+                case CardScrollDirection.Left:
+                    float delta = ScrollSpeed / scrollRect.content.rect.width * Time.deltaTime;
+                    scrollRect.horizontalNormalizedPosition =
+                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition - delta);
+                    if (scrollRect.horizontalNormalizedPosition <= 0)
+                        _isScrolling = false;
+                    break;
+                case CardScrollDirection.Down:
+                    float delta2 = ScrollSpeed / scrollRect.content.rect.height * Time.deltaTime;
+                    scrollRect.verticalNormalizedPosition =
+                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition - delta2);
+                    if (scrollRect.verticalNormalizedPosition <= 0)
+                        _isScrolling = false;
+                    break;
+                case CardScrollDirection.Right:
+                    float delta3 = ScrollSpeed / scrollRect.content.rect.width * Time.deltaTime;
+                    scrollRect.horizontalNormalizedPosition =
+                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition + delta3);
+                    if (scrollRect.horizontalNormalizedPosition >= 1)
+                        _isScrolling = false;
+                    break;
+                case CardScrollDirection.Up:
+                    float delta4 = ScrollSpeed / scrollRect.content.rect.height * Time.deltaTime;
+                    scrollRect.verticalNormalizedPosition =
+                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta4);
+                    if (scrollRect.verticalNormalizedPosition >= 1)
+                        _isScrolling = false;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -58,56 +96,19 @@ namespace ScrollRects
             var cardModel = eventData.pointerDrag.GetComponent<CardModel>();
             if (cardModel != null &&
                 (cardModel.ParentCardZone == null || cardModel.ParentCardZone.type == CardZoneType.Area))
-                StartCoroutine(MoveScrollbar());
+                _isScrolling = true;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             _canvasGroup.alpha = 0;
-            StopAllCoroutines();
+            _isScrolling = false;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             _canvasGroup.alpha = 0;
-            StopAllCoroutines();
-        }
-
-        private IEnumerator MoveScrollbar()
-        {
-            _canvasGroup.alpha = 1;
-            switch (scrollDirection)
-            {
-                case CardScrollDirection.Left:
-                    scrollRect.horizontalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition - scrollAmount);
-                    if (scrollRect.horizontalNormalizedPosition <= 0)
-                        yield break;
-                    break;
-                case CardScrollDirection.Down:
-                    scrollRect.verticalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition - scrollAmount);
-                    if (scrollRect.verticalNormalizedPosition <= 0)
-                        yield break;
-                    break;
-                case CardScrollDirection.Right:
-                    scrollRect.horizontalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition + scrollAmount);
-                    if (scrollRect.horizontalNormalizedPosition >= 1)
-                        yield break;
-                    break;
-                case CardScrollDirection.Up:
-                    scrollRect.verticalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition + scrollAmount);
-                    if (scrollRect.verticalNormalizedPosition >= 1)
-                        yield break;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            yield return new WaitForSeconds(holdFrequency);
-            StartCoroutine(MoveScrollbar());
+            _isScrolling = false;
         }
     }
 }

@@ -8,9 +8,9 @@ permalink: roadmap.html
 - Fix: Card Stack sizes
 - Fix: Card Search in Play Mode
 - Cards: Highlight dragged card
+- Play Mode: Modulate speed of card scroll areas
 
 ## Current Sprint
-- Play Mode: Modulate speed of card scroll areas
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat
 - Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 - Play Mode: Resize stack viewer based off card game settings
