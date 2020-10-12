@@ -9,6 +9,7 @@ permalink: roadmap.html
 - Fix: Card Search in Play Mode
 - Cards: Highlight dragged card
 - Play Mode: Modulate speed of card scroll areas
+- Card Games: Change Play Mode Mat in-app
 
 ## Current Sprint
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat
@@ -22,7 +23,6 @@ permalink: roadmap.html
   - Snap rotation to 0/90/180/270 (only in play area)
   - Move to hand/other card stack(s) in a certain spot (x from top or bottom)
 - Card Games: Default double-click action in Play Mode
-- Card Games: Change Play Mode Mat in-app
 
 ## Backlog
 - Tech: Improve performance/battery-usage

@@ -24,6 +24,8 @@ namespace Cgs.Menu
         public const string DownloadBannerImagePrompt = "Enter banner image url...";
         public const string DownloadCardBackImage = "Download Card Back Image";
         public const string DownloadCardBackImagePrompt = "Enter card back image url...";
+        public const string DownloadPlayMatImage = "Download PlayMat Image";
+        public const string DownloadPlayMatImagePrompt = "Enter playmat image url...";
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public const string ImportImage = "Import Image";
 #endif
@@ -36,6 +38,7 @@ namespace Cgs.Menu
         public List<InputField> inputFields;
         public Image bannerImage;
         public Image cardBackImage;
+        public Image playMatImage;
         public Button createButton;
 
         private DownloadMenu Downloader => _downloader
@@ -67,17 +70,23 @@ namespace Cgs.Menu
 
             if ((Inputs.IsSubmit || Inputs.IsNew) && createButton.interactable)
                 StartCreation();
-            if (Inputs.IsSort)
+            else if (Inputs.IsSort)
                 DownloadBannerImageFromWeb();
-            if (Inputs.IsFilter)
+            else if (Inputs.IsFilter)
                 ImportBannerImageFromFile();
-            if (Inputs.IsLoad)
+            else if (Inputs.IsLoad)
                 DownloadCardBackImageFromWeb();
-            if (Inputs.IsSave)
+            else if (Inputs.IsSave)
                 ImportCardBackImageFromFile();
+            else if (Inputs.IsFocusNext)
+                DownloadPlayMatImageFromWeb();
+            else if (Inputs.IsFocusBack)
+                ImportPlayMatImageFromFile();
             else if (Inputs.IsCancel || Inputs.IsOption)
                 Hide();
         }
+
+        #region Banner
 
         [UsedImplicitly]
         public void DownloadBannerImageFromWeb()
@@ -134,6 +143,10 @@ namespace Cgs.Menu
                 Debug.LogWarning(ImportImageWarningMessage);
         }
 
+        #endregion
+
+        #region CardBack
+
         [UsedImplicitly]
         public void DownloadCardBackImageFromWeb()
         {
@@ -189,6 +202,67 @@ namespace Cgs.Menu
                 Debug.LogWarning(ImportImageWarningMessage);
         }
 
+        #endregion
+
+        #region PlayMat
+
+        [UsedImplicitly]
+        public void DownloadPlayMatImageFromWeb()
+        {
+            Downloader.Show(DownloadPlayMatImage, DownloadPlayMatImagePrompt, DownloadPlayMatImageFromWeb);
+        }
+
+        private IEnumerator DownloadPlayMatImageFromWeb(string url)
+        {
+            _game.PlayMatImageUrl = new Uri(url);
+            yield return UpdatePlayMatImage();
+        }
+
+        [UsedImplicitly]
+        public void ImportPlayMatImageFromFile()
+        {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, ImportImage);
+#else
+            ImportPlayMatImageFromFile(FileBrowser.OpenSingleFile());
+#endif
+        }
+#if ENABLE_WINMD_SUPPORT
+        private async void ImportPlayMatImageFromFile(string uri)
+#else
+        private void ImportPlayMatImageFromFile(string uri)
+#endif
+        {
+            if (string.IsNullOrEmpty(uri))
+            {
+                Debug.LogWarning(ImportImageWarningMessage);
+                return;
+            }
+#if ENABLE_WINMD_SUPPORT
+            _game.PlayMatImageUrl = new Uri(await UnityExtensionMethods.CacheFileAsync(uri));
+#elif UNITY_STANDALONE
+            _game.PlayMatImageUrl = new Uri(UnityExtensionMethods.CacheFile(uri));
+#else
+            _game.PlayMatImageUrl = new Uri(uri);
+#endif
+            StartCoroutine(UpdatePlayMatImage());
+        }
+
+        private IEnumerator UpdatePlayMatImage()
+        {
+            // NOTE: Memory Leak Potential
+            Sprite newSprite = null;
+            yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(
+                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(_game.PlayMatImageUrl?.AbsoluteUri)
+                , output => newSprite = output);
+            if (newSprite != null)
+                playMatImage.sprite = newSprite;
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
+        }
+
+        #endregion
+
         [UsedImplicitly]
         public void ValidateCreateButton()
         {
@@ -216,7 +290,8 @@ namespace Cgs.Menu
 
             var newCardGame = new UnityCardGame(CardGameManager.Instance, gameName)
             {
-                AutoUpdate = -1, BannerImageUrl = _game.BannerImageUrl, CardBackImageUrl = _game.CardBackImageUrl
+                AutoUpdate = -1, BannerImageUrl = _game.BannerImageUrl, CardBackImageUrl = _game.CardBackImageUrl,
+                PlayMatImageUrl = _game.PlayMatImageUrl
             };
 
             if (!Directory.Exists(newCardGame.GameDirectoryPath))
