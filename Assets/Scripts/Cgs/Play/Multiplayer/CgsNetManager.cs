@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Net.Sockets;
 using CardGameView;
+using CardGameView.Multiplayer;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Networking;

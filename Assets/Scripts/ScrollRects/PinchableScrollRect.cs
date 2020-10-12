@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardGameView;
+using CardGameView.Multiplayer;
 using UnityEngine;
 
 namespace ScrollRects

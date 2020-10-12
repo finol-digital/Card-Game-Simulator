@@ -9,6 +9,7 @@ using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
 using CardGameView;
+using CardGameView.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;

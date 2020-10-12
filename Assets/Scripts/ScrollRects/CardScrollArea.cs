@@ -1,5 +1,6 @@
 using System;
 using CardGameView;
+using CardGameView.Multiplayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

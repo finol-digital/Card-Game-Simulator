@@ -4,6 +4,7 @@
 
 using System.Linq;
 using CardGameView;
+using CardGameView.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
