@@ -54,6 +54,7 @@ permalink: roadmap.html
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
+- Usability: Alt-text with button name appears when hovering mouse over a button
 - Platforms: Full support for web through WebGL
 - Integration: Android Search Bar Widget
 - Play Mode: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)

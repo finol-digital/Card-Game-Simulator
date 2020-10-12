@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
-using CardGameView.Multiplayer;
 using Cgs;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
@@ -14,7 +13,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace CardGameView
+namespace CardGameView.Multiplayer
 {
     [RequireComponent(typeof(CardDropArea))]
     public class CardStack : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,

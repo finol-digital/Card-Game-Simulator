@@ -15,7 +15,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace CardGameView
+namespace CardGameView.Multiplayer
 {
     public enum DragPhase
     {
