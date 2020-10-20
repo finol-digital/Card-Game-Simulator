@@ -12,11 +12,10 @@ permalink: roadmap.html
 - Card Games: Change Play Mode Mat in-app
 
 ## Current Sprint
-- Play Mode: Add submenu to control position, rotation, and zoom of playmat
 - Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
-- Play Mode: Resize stack viewer based off card game settings
-  - Pooling to improve performance of opening stack viewer
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
+  - Pooling to improve performance of opening stack viewer
+- Play Mode: Resize stack viewer based off card game settings
 - Play Mode: Single-clicking card shows the Actions Bar
   - Flip Face (in hand and play area)
   - Rotate 90/180/270 (only in play area)
@@ -38,6 +37,7 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (DFC)
+- Play Mode: Add submenu to control position, rotation, and zoom of playmat
 - Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Support multiple playmats
 - Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
