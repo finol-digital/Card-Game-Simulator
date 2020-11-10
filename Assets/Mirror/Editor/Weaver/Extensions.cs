@@ -1,49 +1,43 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Mono.CecilX;
 
 namespace Mirror.Weaver
 {
     public static class Extensions
     {
-        public static bool IsDerivedFrom(this TypeDefinition td, TypeReference baseClass)
+        public static bool Is(this TypeReference td, Type t)
         {
-            return IsDerivedFrom(td, baseClass.FullName);
+            if (t.IsGenericType)
+            {
+                return td.GetElementType().FullName == t.FullName;
+            }
+            return td.FullName == t.FullName;
         }
 
-        public static bool IsDerivedFrom(this TypeDefinition td, string baseClassFullName)
+        public static bool Is<T>(this TypeReference td) => Is(td, typeof(T));
+
+        public static bool IsDerivedFrom<T>(this TypeDefinition td) => IsDerivedFrom(td, typeof(T));
+
+        public static bool IsDerivedFrom(this TypeDefinition td, Type baseClass)
         {
+
             if (!td.IsClass)
                 return false;
 
             // are ANY parent classes of baseClass?
             TypeReference parent = td.BaseType;
-            while (parent != null)
-            {
-                string parentName = parent.FullName;
 
-                // strip generic parameters
-                int index = parentName.IndexOf('<');
-                if (index != -1)
-                {
-                    parentName = parentName.Substring(0, index);
-                }
+            if (parent == null)
+                return false;
 
-                if (parentName == baseClassFullName)
-                {
-                    return true;
-                }
-                try
-                {
-                    parent = parent.Resolve().BaseType;
-                }
-                catch (AssemblyResolutionException)
-                {
-                    // this can happen for plugins.
-                    //Console.WriteLine("AssemblyResolutionException: "+ ex.ToString());
-                    break;
-                }
-            }
+            if (parent.Is(baseClass))
+                return true;
+
+            if (parent.CanBeResolved())
+                return IsDerivedFrom(parent.Resolve(), baseClass);
+
             return false;
         }
 
@@ -57,14 +51,15 @@ namespace Mirror.Weaver
             throw new ArgumentException($"Invalid enum {td.FullName}");
         }
 
-        public static bool ImplementsInterface(this TypeDefinition td, TypeReference baseInterface)
+        public static bool ImplementsInterface<TInterface>(this TypeDefinition td)
         {
             TypeDefinition typedef = td;
+
             while (typedef != null)
             {
                 foreach (InterfaceImplementation iface in typedef.Interfaces)
                 {
-                    if (iface.InterfaceType.FullName == baseInterface.FullName)
+                    if (iface.InterfaceType.Is<TInterface>())
                         return true;
                 }
 
@@ -84,14 +79,9 @@ namespace Mirror.Weaver
             return false;
         }
 
-        public static bool IsArrayType(this TypeReference tr)
+        public static bool IsMultidimensionalArray(this TypeReference tr)
         {
-            // jagged array
-            if ((tr.IsArray && ((ArrayType)tr).ElementType.IsArray) ||
-                // multidimensional array
-                (tr.IsArray && ((ArrayType)tr).Rank > 1))
-                return false;
-            return true;
+            return tr is ArrayType arrayType && arrayType.Rank > 1;
         }
 
         public static bool CanBeResolved(this TypeReference parent)
@@ -122,10 +112,15 @@ namespace Mirror.Weaver
         }
 
 
-        // Given a method of a generic class such as ArraySegment<T>.get_Count,
-        // and a generic instance such as ArraySegment<int>
-        // Creates a reference to the specialized method  ArraySegment<int>.get_Count
-        // Note that calling ArraySegment<T>.get_Count directly gives an invalid IL error
+        /// <summary>
+        /// Given a method of a generic class such as ArraySegment`T.get_Count,
+        /// and a generic instance such as ArraySegment`int
+        /// Creates a reference to the specialized method  ArraySegment`int`.get_Count
+        /// <para> Note that calling ArraySegment`T.get_Count directly gives an invalid IL error </para>
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="instanceType"></param>
+        /// <returns></returns>
         public static MethodReference MakeHostInstanceGeneric(this MethodReference self, GenericInstanceType instanceType)
         {
             MethodReference reference = new MethodReference(self.Name, self.ReturnType, instanceType)
@@ -144,44 +139,36 @@ namespace Mirror.Weaver
             return Weaver.CurrentAssembly.MainModule.ImportReference(reference);
         }
 
-        public static CustomAttribute GetCustomAttribute(this ICustomAttributeProvider method, string attributeName)
+        /// <summary>
+        /// Given a field of a generic class such as Writer<T>.write,
+        /// and a generic instance such as ArraySegment`int
+        /// Creates a reference to the specialized method  ArraySegment`int`.get_Count
+        /// <para> Note that calling ArraySegment`T.get_Count directly gives an invalid IL error </para>
+        /// </summary>
+        /// <param name="self"></param>
+        /// <param name="instanceType">Generic Instance eg Writer<int></param>
+        /// <returns></returns>
+        public static FieldReference SpecializeField(this FieldReference self, GenericInstanceType instanceType)
+        {
+            FieldReference reference = new FieldReference(self.Name, self.FieldType, instanceType);
+
+            return Weaver.CurrentAssembly.MainModule.ImportReference(reference);
+        }
+
+        public static CustomAttribute GetCustomAttribute<TAttribute>(this ICustomAttributeProvider method)
         {
             foreach (CustomAttribute ca in method.CustomAttributes)
             {
-                if (ca.AttributeType.FullName == attributeName)
+                if (ca.AttributeType.Is<TAttribute>())
                     return ca;
             }
             return null;
         }
 
-        public static CustomAttribute GetCustomAttribute(this ICustomAttributeProvider method, TypeReference attribute)
+        public static bool HasCustomAttribute<TAttribute>(this ICustomAttributeProvider attributeProvider)
         {
-            foreach (CustomAttribute ca in method.CustomAttributes)
-            {
-                if (ca.AttributeType.FullName == attribute.FullName)
-                    return ca;
-            }
-            return null;
-        }
-
-        public static bool HasCustomAttribute(this ICustomAttributeProvider attributeProvider, string attributeName)
-        {
-            foreach (CustomAttribute ca in attributeProvider.CustomAttributes)
-            {
-                if (ca.AttributeType.FullName == attributeName)
-                    return true;
-            }
-            return false;
-        }
-
-        public static bool HasCustomAttribute(this ICustomAttributeProvider attributeProvider, TypeReference attribute)
-        {
-            foreach (CustomAttribute ca in attributeProvider.CustomAttributes)
-            {
-                if (ca.AttributeType.FullName == attribute.FullName)
-                    return true;
-            }
-            return false;
+            // Linq allocations don't matter in weaver
+            return attributeProvider.CustomAttributes.Any(attr => attr.AttributeType.Is<TAttribute>());
         }
 
         public static T GetField<T>(this CustomAttribute ca, string field, T defaultValue)
@@ -199,44 +186,25 @@ namespace Mirror.Weaver
 
         public static MethodDefinition GetMethod(this TypeDefinition td, string methodName)
         {
-            foreach (MethodDefinition md in td.Methods)
-            {
-                if (md.Name == methodName)
-                    return md;
-            }
-            return null;
+            // Linq allocations don't matter in weaver
+            return td.Methods.FirstOrDefault(method => method.Name == methodName);
         }
 
         public static List<MethodDefinition> GetMethods(this TypeDefinition td, string methodName)
         {
-            List<MethodDefinition> methods = new List<MethodDefinition>();
-            foreach (MethodDefinition md in td.Methods)
-            {
-                if (md.Name == methodName)
-                    methods.Add(md);
-            }
-            return methods;
+            // Linq allocations don't matter in weaver
+            return td.Methods.Where(method => method.Name == methodName).ToList();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="td"></param>
-        /// <param name="methodName"></param>
-        /// <param name="stopAt"></param>
-        /// <returns></returns>
-        public static bool HasMethodInBaseType(this TypeDefinition td, string methodName, TypeReference stopAt)
+        public static MethodDefinition GetMethodInBaseType(this TypeDefinition td, string methodName)
         {
             TypeDefinition typedef = td;
             while (typedef != null)
             {
-                if (typedef.FullName == stopAt.FullName)
-                    break;
-
                 foreach (MethodDefinition md in typedef.Methods)
                 {
                     if (md.Name == methodName)
-                        return true;
+                        return md;
                 }
 
                 try
@@ -246,12 +214,12 @@ namespace Mirror.Weaver
                 }
                 catch (AssemblyResolutionException)
                 {
-                    // this can happen for pluins.
+                    // this can happen for plugins.
                     break;
                 }
             }
 
-            return false;
+            return null;
         }
 
         /// <summary>
@@ -286,9 +254,9 @@ namespace Mirror.Weaver
 
                 try
                 {
-                    typeDefinition = typeDefinition.BaseType.Resolve();
+                    typeDefinition = typeDefinition.BaseType?.Resolve();
                 }
-                catch
+                catch (AssemblyResolutionException)
                 {
                     break;
                 }

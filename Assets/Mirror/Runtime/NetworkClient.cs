@@ -63,6 +63,7 @@ namespace Mirror
         public static void Connect(string address)
         {
             if (logger.LogEnabled()) logger.Log("Client Connect: " + address);
+            logger.Assert(Transport.activeTransport != null, "There was no active transport when calling NetworkClient.Connect, If you are calling Connect manually then make sure to set 'Transport.activeTransport' first");
 
             RegisterSystemHandlers(false);
             Transport.activeTransport.enabled = true;
@@ -83,6 +84,7 @@ namespace Mirror
         public static void Connect(Uri uri)
         {
             if (logger.LogEnabled()) logger.Log("Client Connect: " + uri);
+            logger.Assert(Transport.activeTransport != null, "There was no active transport when calling NetworkClient.Connect, If you are calling Connect manually then make sure to set 'Transport.activeTransport' first");
 
             RegisterSystemHandlers(false);
             Transport.activeTransport.enabled = true;
@@ -96,7 +98,7 @@ namespace Mirror
             connection.SetHandlers(handlers);
         }
 
-        internal static void ConnectHost()
+        public static void ConnectHost()
         {
             logger.Log("Client Connect Host to Server");
 
@@ -120,7 +122,7 @@ namespace Mirror
         /// <summary>
         /// connect host mode
         /// </summary>
-        internal static void ConnectLocalServer()
+        public static void ConnectLocalServer()
         {
             NetworkServer.OnConnected(NetworkServer.localConnection);
             NetworkServer.localConnection.Send(new ConnectMessage());
@@ -130,7 +132,7 @@ namespace Mirror
         /// disconnect host mode. this is needed to call DisconnectMessage for
         /// the host client too.
         /// </summary>
-        internal static void DisconnectLocalServer()
+        public static void DisconnectLocalServer()
         {
             // only if host connection is running
             if (NetworkServer.localConnection != null)
@@ -213,7 +215,6 @@ namespace Mirror
                 if (connection != null)
                 {
                     connection.Disconnect();
-                    connection.Dispose();
                     connection = null;
                     RemoveTransportHandlers();
                 }
@@ -237,23 +238,20 @@ namespace Mirror
         /// <typeparam name="T">The message type to unregister.</typeparam>
         /// <param name="message"></param>
         /// <param name="channelId"></param>
-        /// <returns>True if message was sent.</returns>
-        public static bool Send<T>(T message, int channelId = Channels.DefaultReliable) where T : IMessageBase
+        public static void Send<T>(T message, int channelId = Channels.DefaultReliable) where T : NetworkMessage
         {
             if (connection != null)
             {
-                if (connectState != ConnectState.Connected)
+                if (connectState == ConnectState.Connected)
                 {
-                    logger.LogError("NetworkClient Send when not connected to a server");
-                    return false;
+                    connection.Send(message, channelId);
                 }
-                return connection.Send(message, channelId);
+                else logger.LogError("NetworkClient Send when not connected to a server");
             }
-            logger.LogError("NetworkClient Send with no connection");
-            return false;
+            else logger.LogError("NetworkClient Send with no connection");
         }
 
-        internal static void Update()
+        public static void Update()
         {
             // local connection?
             if (connection is ULocalConnectionToServer localConnection)
@@ -299,7 +297,6 @@ namespace Mirror
                 RegisterHandler<UpdateVarsMessage>(ClientScene.OnUpdateVarsMessage);
             }
             RegisterHandler<RpcMessage>(ClientScene.OnRPCMessage);
-            RegisterHandler<SyncEventMessage>(ClientScene.OnSyncEventMessage);
         }
 
         /// <summary>
@@ -309,7 +306,7 @@ namespace Mirror
         /// <typeparam name="T">Message type</typeparam>
         /// <param name="handler">Function handler which will be invoked when this message type is received.</param>
         /// <param name="requireAuthentication">True if the message requires an authenticated connection</param>
-        public static void RegisterHandler<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true) where T : IMessageBase, new()
+        public static void RegisterHandler<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true) where T : NetworkMessage
         {
             int msgType = MessagePacker.GetId<T>();
             if (handlers.ContainsKey(msgType))
@@ -326,7 +323,7 @@ namespace Mirror
         /// <typeparam name="T">Message type</typeparam>
         /// <param name="handler">Function handler which will be invoked when this message type is received.</param>
         /// <param name="requireAuthentication">True if the message requires an authenticated connection</param>
-        public static void RegisterHandler<T>(Action<T> handler, bool requireAuthentication = true) where T : IMessageBase, new()
+        public static void RegisterHandler<T>(Action<T> handler, bool requireAuthentication = true) where T : NetworkMessage
         {
             RegisterHandler((NetworkConnection _, T value) => { handler(value); }, requireAuthentication);
         }
@@ -338,7 +335,7 @@ namespace Mirror
         /// <typeparam name="T">Message type</typeparam>
         /// <param name="handler">Function handler which will be invoked when this message type is received.</param>
         /// <param name="requireAuthentication">True if the message requires an authenticated connection</param>
-        public static void ReplaceHandler<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true) where T : IMessageBase, new()
+        public static void ReplaceHandler<T>(Action<NetworkConnection, T> handler, bool requireAuthentication = true) where T : NetworkMessage
         {
             int msgType = MessagePacker.GetId<T>();
             handlers[msgType] = MessagePacker.MessageHandler(handler, requireAuthentication);
@@ -351,7 +348,7 @@ namespace Mirror
         /// <typeparam name="T">Message type</typeparam>
         /// <param name="handler">Function handler which will be invoked when this message type is received.</param>
         /// <param name="requireAuthentication">True if the message requires an authenticated connection</param>
-        public static void ReplaceHandler<T>(Action<T> handler, bool requireAuthentication = true) where T : IMessageBase, new()
+        public static void ReplaceHandler<T>(Action<T> handler, bool requireAuthentication = true) where T : NetworkMessage
         {
             ReplaceHandler((NetworkConnection _, T value) => { handler(value); }, requireAuthentication);
         }
@@ -360,7 +357,7 @@ namespace Mirror
         /// Unregisters a network message handler.
         /// </summary>
         /// <typeparam name="T">The message type to unregister.</typeparam>
-        public static bool UnregisterHandler<T>() where T : IMessageBase
+        public static bool UnregisterHandler<T>() where T : NetworkMessage
         {
             // use int to minimize collisions
             int msgType = MessagePacker.GetId<T>();

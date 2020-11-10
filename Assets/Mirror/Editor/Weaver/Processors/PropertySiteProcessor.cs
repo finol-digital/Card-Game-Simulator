@@ -6,7 +6,7 @@ namespace Mirror.Weaver
 {
     public static class PropertySiteProcessor
     {
-        public static void ProcessSitesModule(ModuleDefinition moduleDef)
+        public static void Process(ModuleDefinition moduleDef)
         {
             DateTime startTime = DateTime.Now;
 
@@ -18,21 +18,7 @@ namespace Mirror.Weaver
                     ProcessSiteClass(td);
                 }
             }
-            if (Weaver.WeaveLists.generateContainerClass != null)
-            {
-                moduleDef.Types.Add(Weaver.WeaveLists.generateContainerClass);
-                Weaver.CurrentAssembly.MainModule.ImportReference(Weaver.WeaveLists.generateContainerClass);
 
-                foreach (MethodDefinition f in Weaver.WeaveLists.generatedReadFunctions)
-                {
-                    Weaver.CurrentAssembly.MainModule.ImportReference(f);
-                }
-
-                foreach (MethodDefinition f in Weaver.WeaveLists.generatedWriteFunctions)
-                {
-                    Weaver.CurrentAssembly.MainModule.ImportReference(f);
-                }
-            }
             Console.WriteLine("  ProcessSitesModule " + moduleDef.Name + " elapsed time:" + (DateTime.Now - startTime));
         }
 
@@ -41,7 +27,7 @@ namespace Mirror.Weaver
             //Console.WriteLine("    ProcessSiteClass " + td);
             foreach (MethodDefinition md in td.Methods)
             {
-                ProcessSiteMethod(td, md);
+                ProcessSiteMethod(md);
             }
 
             foreach (TypeDefinition nested in td.NestedTypes)
@@ -50,21 +36,23 @@ namespace Mirror.Weaver
             }
         }
 
-        static void ProcessSiteMethod(TypeDefinition td, MethodDefinition md)
+        static void ProcessSiteMethod(MethodDefinition md)
         {
             // process all references to replaced members with properties
             //Weaver.DLog(td, "      ProcessSiteMethod " + md);
 
             if (md.Name == ".cctor" ||
                 md.Name == NetworkBehaviourProcessor.ProcessedFunctionName ||
-                md.Name.StartsWith("InvokeSyn"))
+                md.Name.StartsWith(Weaver.InvokeRpcPrefix))
                 return;
+
+            if (md.IsAbstract)
+            {
+                return;
+            }
 
             if (md.Body != null && md.Body.Instructions != null)
             {
-                // TODO move this to NetworkBehaviourProcessor
-                ServerClientAttributeProcessor.ProcessMethodAttributes(td, md);
-
                 for (int iCount = 0; iCount < md.Body.Instructions.Count;)
                 {
                     Instruction instr = md.Body.Instructions[iCount];
@@ -111,12 +99,6 @@ namespace Mirror.Weaver
 
         static int ProcessInstruction(MethodDefinition md, Instruction instr, int iCount)
         {
-            if ((instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt)
-                && instr.Operand is MethodReference opMethod)
-            {
-                ProcessInstructionMethod(md, instr, opMethod, iCount);
-            }
-
             if (instr.OpCode == OpCodes.Stfld && instr.Operand is FieldDefinition opFieldst)
             {
                 // this instruction sets the value of a field. cache the field reference.
@@ -169,45 +151,10 @@ namespace Mirror.Weaver
                     worker.Remove(instr);
                     worker.Remove(nextInstr);
                     return 4;
-
                 }
-
             }
 
             return 1;
-        }
-
-        static void ProcessInstructionMethod(MethodDefinition md, Instruction instr, MethodReference opMethodRef, int iCount)
-        {
-            if (opMethodRef.Name != "Invoke")
-                return;
-
-            // Events use an "Invoke" method to call the delegate.
-            // this code replaces the "Invoke" instruction with the generated "Call***" instruction which send the event to the server.
-            // but the "Invoke" instruction is called on the event field - where the "call" instruction is not.
-            // so the earlier instruction that loads the event field is replaced with a Noop.
-
-            // go backwards until find a ldfld instruction that matches ANY event
-            bool found = false;
-            while (iCount > 0 && !found)
-            {
-                iCount -= 1;
-                Instruction inst = md.Body.Instructions[iCount];
-                if (inst.OpCode == OpCodes.Ldfld)
-                {
-                    FieldReference opField = inst.Operand as FieldReference;
-
-                    // find replaceEvent with matching name
-                    // NOTE: original weaver compared .Name, not just the MethodDefinition,
-                    //       that's why we use dict<string,method>.
-                    if (Weaver.WeaveLists.replaceEvents.TryGetValue(opField.Name, out MethodDefinition replacement))
-                    {
-                        instr.Operand = replacement;
-                        inst.OpCode = OpCodes.Nop;
-                        found = true;
-                    }
-                }
-            }
         }
     }
 }

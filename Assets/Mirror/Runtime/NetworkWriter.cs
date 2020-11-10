@@ -1,10 +1,23 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using UnityEngine;
 
 namespace Mirror
 {
+    /// <summary>
+    /// a class that holds writers for the different types
+    /// Note that c# creates a different static variable for each
+    /// type
+    /// This will be populated by the weaver
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public static class Writer<T>
+    {
+        public static Action<NetworkWriter, T> write;
+    }
+
     /// <summary>
     /// Binary stream Writer. Supports simple types, buffers, arrays, structs, and nested types
     /// <para>Use <see cref="NetworkWriterPool.GetWriter">NetworkWriter.GetWriter</see> to reduce memory allocation</para>
@@ -154,6 +167,16 @@ namespace Mirror
         }
 
         public void WriteInt64(long value) => WriteUInt64((ulong)value);
+
+        /// <summary>
+        /// Writes any type that mirror supports
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        public void Write<T>(T value)
+        {
+            Writer<T>.write(this, value);
+        }
     }
 
 
@@ -536,9 +559,38 @@ namespace Mirror
             writer.WriteString(uri.ToString());
         }
 
-        public static void WriteMessage<T>(this NetworkWriter writer, T msg) where T : IMessageBase
+        public static void WriteList<T>(this NetworkWriter writer, List<T> list)
         {
-            msg.Serialize(writer);
+            if (list is null)
+            {
+                writer.WritePackedInt32(-1);
+                return;
+            }
+            writer.WritePackedInt32(list.Count);
+            for (int i = 0; i < list.Count; i++)
+                writer.Write(list[i]);
+        }
+
+        public static void WriteArray<T>(this NetworkWriter writer, T[] array)
+        {
+            if (array is null)
+            {
+                writer.WritePackedInt32(-1);
+                return;
+            }
+            writer.WritePackedInt32(array.Length);
+            for (int i = 0; i < array.Length; i++)
+                writer.Write(array[i]);
+        }
+
+        public static void WriteArraySegment<T>(this NetworkWriter writer, ArraySegment<T> segment)
+        {
+            int length = segment.Count;
+            writer.WritePackedInt32(length);
+            for (int i = 0; i < length; i++)
+            {
+                writer.Write(segment.Array[segment.Offset + i]);
+            }
         }
     }
 }

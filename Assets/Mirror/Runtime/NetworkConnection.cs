@@ -14,7 +14,7 @@ namespace Mirror
     /// <para>NetworkConnection objects also act as observers for networked objects. When a connection is an observer of a networked object with a NetworkIdentity, then the object will be visible to corresponding client for the connection, and incremental state changes will be sent to the client.</para>
     /// <para>There are many virtual functions on NetworkConnection that allow its behaviour to be customized. NetworkClient and NetworkServer can both be made to instantiate custom classes derived from NetworkConnection by setting their networkConnectionClass member variable.</para>
     /// </remarks>
-    public abstract class NetworkConnection : IDisposable
+    public abstract class NetworkConnection
     {
         public const int LocalConnectionId = 0;
         static readonly ILogger logger = LogFactory.GetLogger<NetworkConnection>();
@@ -79,22 +79,11 @@ namespace Mirror
         public readonly HashSet<NetworkIdentity> clientOwnedObjects = new HashSet<NetworkIdentity>();
 
         /// <summary>
-        /// Setting this to true will log the contents of network message to the console.
-        /// </summary>
-        /// <remarks>
-        /// <para>Warning: this can be a lot of data and can be very slow. Both incoming and outgoing messages are logged. The format of the logs is:</para>
-        /// <para>ConnectionSend con:1 bytes:11 msgId:5 FB59D743FD120000000000 ConnectionRecv con:1 bytes:27 msgId:8 14F21000000000016800AC3FE090C240437846403CDDC0BD3B0000</para>
-        /// <para>Note that these are application-level network messages, not protocol-level packets. There will typically be multiple network messages combined in a single protocol packet.</para>
-        /// </remarks>
-        [Obsolete("Set logger to Log level instead")]
-        public bool logNetworkMessages;
-
-        /// <summary>
         /// Creates a new NetworkConnection
         /// </summary>
         internal NetworkConnection()
         {
-            // set lastTime to current time when creating connection to make sure it isn't instantly kicked for inactivity 
+            // set lastTime to current time when creating connection to make sure it isn't instantly kicked for inactivity
             lastMessageTime = Time.time;
         }
 
@@ -105,28 +94,6 @@ namespace Mirror
         internal NetworkConnection(int networkConnectionId) : this()
         {
             connectionId = networkConnectionId;
-        }
-
-        ~NetworkConnection()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Disposes of this connection, releasing channel buffers that it holds.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            // Take yourself off the Finalization queue
-            // to prevent finalization code for this object
-            // from executing a second time.
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            clientOwnedObjects.Clear();
         }
 
         /// <summary>
@@ -145,15 +112,14 @@ namespace Mirror
         /// <typeparam name="T">The message type to unregister.</typeparam>
         /// <param name="msg">The message to send.</param>
         /// <param name="channelId">The transport layer channel to send on.</param>
-        /// <returns></returns>
-        public bool Send<T>(T msg, int channelId = Channels.DefaultReliable) where T : IMessageBase
+        public void Send<T>(T msg, int channelId = Channels.DefaultReliable) where T : NetworkMessage
         {
             using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
             {
                 // pack message and send allocation free
                 MessagePacker.Pack(msg, writer);
                 NetworkDiagnostics.OnSend(msg, channelId, writer.Position, 1);
-                return Send(writer.ToArraySegment(), channelId);
+                Send(writer.ToArraySegment(), channelId);
             }
         }
 
@@ -183,7 +149,7 @@ namespace Mirror
 
         // internal because no one except Mirror should send bytes directly to
         // the client. they would be detected as a message. send messages instead.
-        internal abstract bool Send(ArraySegment<byte> segment, int channelId = Channels.DefaultReliable);
+        internal abstract void Send(ArraySegment<byte> segment, int channelId = Channels.DefaultReliable);
 
         public override string ToString()
         {
@@ -236,14 +202,13 @@ namespace Mirror
         /// <typeparam name="T">The message type to unregister.</typeparam>
         /// <param name="msg">The message object to process.</param>
         /// <returns>Returns true if the handler was successfully invoked</returns>
-        public bool InvokeHandler<T>(T msg, int channelId) where T : IMessageBase
+        public bool InvokeHandler<T>(T msg, int channelId) where T : NetworkMessage
         {
-            // get writer from pool
             using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
             {
                 // if it is a value type,  just use typeof(T) to avoid boxing
                 // this works because value types cannot be derived
-                // if it is a reference type (for example IMessageBase),
+                // if it is a reference type (for example NetworkMessage),
                 // ask the message for the real type
                 int msgType = MessagePacker.GetId(default(T) != null ? typeof(T) : msg.GetType());
 
@@ -266,6 +231,12 @@ namespace Mirror
         /// <param name="buffer">The data received.</param>
         internal void TransportReceive(ArraySegment<byte> buffer, int channelId)
         {
+            if (buffer.Count == 0)
+            {
+                logger.LogError($"ConnectionRecv {this} Message was empty");
+                return;
+            }
+
             // unpack message
             using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(buffer))
             {
@@ -288,16 +259,18 @@ namespace Mirror
             }
         }
 
-        // Failsafe to kick clients that have stopped sending anything to the server.
-        // Clients Ping the server every 2 seconds but transports are unreliable
-        // when it comes to properly generating Disconnect messages to the server.
-        // This cannot be abstract because then NetworkConnectionToServer
-        // would require and override that would never be called
-        // This is overriden in NetworkConnectionToClient.
-        internal virtual bool IsClientAlive()
-        {
-            return true;
-        }
+        /// <summary>
+        /// Checks if cliet has sent a message within timeout
+        /// <para>
+        /// Some transports are unreliable at sending disconnect message to the server
+        /// so this acts as a failsafe to make sure clients are kicked
+        /// </para>
+        /// <para>
+        /// Client should send ping message to server every 2 seconds to keep this alive
+        /// </para>
+        /// </summary>
+        /// <returns>True if server has recently recieved a message</returns>
+        internal virtual bool IsAlive(float timeout) => Time.time - lastMessageTime < timeout;
 
         internal void AddOwnedObject(NetworkIdentity obj)
         {

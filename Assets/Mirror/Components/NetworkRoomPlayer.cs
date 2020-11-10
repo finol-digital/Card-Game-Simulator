@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel;
 using UnityEngine;
 
 namespace Mirror
@@ -56,13 +54,26 @@ namespace Mirror
                     DontDestroyOnLoad(gameObject);
 
                 room.roomSlots.Add(this);
-                room.RecalculateRoomPlayerIndices();
+
+                if (NetworkServer.active)
+                    room.RecalculateRoomPlayerIndices();
 
                 if (NetworkClient.active)
-                    OnClientEnterRoom();
+                    room.CallOnClientEnterRoom();
             }
             else
                 logger.LogError("RoomPlayer could not find a NetworkRoomManager. The RoomPlayer requires a NetworkRoomManager object to function. Make sure that there is one in the scene.");
+        }
+
+        public virtual void OnDisable()
+        {
+            if (NetworkClient.active && NetworkManager.singleton is NetworkRoomManager room)
+            {
+                // only need to call this on client as server removes it before object is destroyed
+                room.roomSlots.Remove(this);
+
+                room.CallOnClientExitRoom();
+            }
         }
 
         #endregion
@@ -96,12 +107,7 @@ namespace Mirror
         /// <para>This function is called when the a client player calls CmdChangeReadyState.</para>
         /// </summary>
         /// <param name="newReadyState">New Ready State</param>
-        public virtual void ReadyStateChanged(bool _, bool newReadyState)
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            OnClientReady(newReadyState);
-#pragma warning restore CS0618 // Type or member is obsolete
-        }
+        public virtual void ReadyStateChanged(bool oldReadyState, bool newReadyState) { }
 
         #endregion
 
@@ -117,13 +123,6 @@ namespace Mirror
         /// This is a hook that is invoked on clients for all room player objects when exiting the room.
         /// </summary>
         public virtual void OnClientExitRoom() { }
-
-        // Deprecated 05/18/2020
-        /// <summary>
-        /// Obsolete: Override <see cref="ReadyStateChanged(bool, bool)">ReadyStateChanged(bool, bool)</see> instead.
-        /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Override ReadyStateChanged(bool, bool) instead")]
-        public virtual void OnClientReady(bool readyState) { }
 
         #endregion
 

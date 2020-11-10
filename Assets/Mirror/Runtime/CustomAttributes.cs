@@ -47,16 +47,6 @@ namespace Mirror
     }
 
     /// <summary>
-    /// SyncEvents are networked events like ClientRpc's, but instead of calling a function on the game object, they trigger Events instead.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Event)]
-    public class SyncEventAttribute : Attribute
-    {
-        // this is zero
-        public int channel = Channels.DefaultReliable;
-    }
-
-    /// <summary>
     /// Prevents clients from running this method.
     /// <para>Prints a warning if a client tries to execute this method.</para>
     /// </summary>

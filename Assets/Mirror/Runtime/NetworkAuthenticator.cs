@@ -37,17 +37,21 @@ namespace Mirror
         /// </summary>
         public virtual void OnStartServer() { }
 
-        // This will get more code in the near future
-        internal void OnServerAuthenticateInternal(NetworkConnection conn)
-        {
-            OnServerAuthenticate(conn);
-        }
-
         /// <summary>
         /// Called on server from OnServerAuthenticateInternal when a client needs to authenticate
         /// </summary>
         /// <param name="conn">Connection to client.</param>
         public abstract void OnServerAuthenticate(NetworkConnection conn);
+
+        protected void ServerAccept(NetworkConnection conn)
+        {
+            OnServerAuthenticated.Invoke(conn);
+        }
+
+        protected void ServerReject(NetworkConnection conn)
+        {
+            conn.Disconnect();
+        }
 
         #endregion
 
@@ -59,17 +63,25 @@ namespace Mirror
         /// </summary>
         public virtual void OnStartClient() { }
 
-        // This will get more code in the near future
-        internal void OnClientAuthenticateInternal(NetworkConnection conn)
-        {
-            OnClientAuthenticate(conn);
-        }
-
         /// <summary>
         /// Called on client from OnClientAuthenticateInternal when a client needs to authenticate
         /// </summary>
         /// <param name="conn">Connection of the client.</param>
         public abstract void OnClientAuthenticate(NetworkConnection conn);
+
+        protected void ClientAccept(NetworkConnection conn)
+        {
+            OnClientAuthenticated.Invoke(conn);
+        }
+
+        protected void ClientReject(NetworkConnection conn)
+        {
+            // Set this on the client for local reference
+            conn.isAuthenticated = false;
+
+            // disconnect the client
+            conn.Disconnect();
+        }
 
         #endregion
 

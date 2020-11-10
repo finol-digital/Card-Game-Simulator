@@ -13,15 +13,14 @@ namespace Mirror
 
         public override string address => "localhost";
 
-        internal override bool Send(ArraySegment<byte> segment, int channelId = Channels.DefaultReliable)
+        internal override void Send(ArraySegment<byte> segment, int channelId = Channels.DefaultReliable)
         {
             connectionToServer.buffer.Write(segment);
-
-            return true;
         }
 
-        // override for host client: always return true.
-        internal override bool IsClientAlive() => true;
+        // true because local connections never timeout
+        /// <inheritdoc/>
+        internal override bool IsAlive(float timeout) => true;
 
         internal void DisconnectInternal()
         {
@@ -88,17 +87,16 @@ namespace Mirror
 
         public override string address => "localhost";
 
-        internal override bool Send(ArraySegment<byte> segment, int channelId = Channels.DefaultReliable)
+        internal override void Send(ArraySegment<byte> segment, int channelId = Channels.DefaultReliable)
         {
             if (segment.Count == 0)
             {
                 logger.LogError("LocalConnection.SendBytes cannot send zero bytes");
-                return false;
+                return;
             }
 
             // handle the server's message directly
             connectionToClient.TransportReceive(segment, channelId);
-            return true;
         }
 
         internal void Update()
@@ -135,5 +133,9 @@ namespace Mirror
             connectionToClient.DisconnectInternal();
             DisconnectInternal();
         }
+
+        // true because local connections never timeout
+        /// <inheritdoc/>
+        internal override bool IsAlive(float timeout) => true;
     }
 }

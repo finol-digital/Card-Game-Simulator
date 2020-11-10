@@ -2,7 +2,6 @@
 // example: to use Apathy if on Windows/Mac/Linux and fall back to Telepathy
 //          otherwise.
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mirror
@@ -25,6 +24,16 @@ namespace Mirror
             InitServer();
             available = GetAvailableTransport();
             Debug.Log("FallbackTransport available: " + available.GetType());
+        }
+
+        void OnEnable()
+        {
+            available.enabled = true;
+        }
+
+        void OnDisable()
+        {
+            available.enabled = false;
         }
 
         // The client just uses the first transport available
@@ -93,9 +102,9 @@ namespace Mirror
             available.ClientDisconnect();
         }
 
-        public override bool ClientSend(int channelId, ArraySegment<byte> segment)
+        public override void ClientSend(int channelId, ArraySegment<byte> segment)
         {
-            return available.ClientSend(channelId, segment);
+            available.ClientSend(channelId, segment);
         }
 
         void InitServer()
@@ -129,9 +138,9 @@ namespace Mirror
             return available.ServerDisconnect(connectionId);
         }
 
-        public override bool ServerSend(List<int> connectionIds, int channelId, ArraySegment<byte> segment)
+        public override void ServerSend(int connectionId, int channelId, ArraySegment<byte> segment)
         {
-            return available.ServerSend(connectionIds, channelId, segment);
+            available.ServerSend(connectionId, channelId, segment);
         }
 
         public override void ServerStart()

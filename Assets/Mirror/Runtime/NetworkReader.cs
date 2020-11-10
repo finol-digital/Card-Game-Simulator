@@ -7,12 +7,25 @@
 //   now:
 //     0.0% CPU time,  32KB memory, 0.02ms
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
 
 namespace Mirror
 {
+    /// <summary>
+    /// a class that holds readers for the different types
+    /// Note that c# creates a different static variable for each
+    /// type
+    /// This will be populated by the weaver
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public static class Reader<T>
+    {
+        public static Func<NetworkReader, T> read;
+    }
+
     // Note: This class is intended to be extremely pedantic, and
     // throw exceptions whenever stuff is going slightly wrong.
     // The exceptions will be handled in NetworkServer/NetworkClient.
@@ -107,6 +120,16 @@ namespace Mirror
         public override string ToString()
         {
             return "NetworkReader pos=" + Position + " len=" + Length + " buffer=" + BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count);
+        }
+
+        /// <summary>
+        /// Reads any data type that mirror supports
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T Read<T>()
+        {
+            return Reader<T>.read(this);
         }
     }
 
@@ -340,8 +363,19 @@ namespace Mirror
         }
 
         public static Guid ReadGuid(this NetworkReader reader) => new Guid(reader.ReadBytes(16));
-        public static Transform ReadTransform(this NetworkReader reader) => reader.ReadNetworkIdentity()?.transform;
-        public static GameObject ReadGameObject(this NetworkReader reader) => reader.ReadNetworkIdentity()?.gameObject;
+        public static Transform ReadTransform(this NetworkReader reader)
+        {
+            // Dont use null propagation here as it could lead to MissingReferenceException
+            NetworkIdentity networkIdentity = reader.ReadNetworkIdentity();
+            return networkIdentity != null ? networkIdentity.transform : null;
+        }
+
+        public static GameObject ReadGameObject(this NetworkReader reader)
+        {
+            // Dont use null propagation here as it could lead to MissingReferenceException
+            NetworkIdentity networkIdentity = reader.ReadNetworkIdentity();
+            return networkIdentity != null ? networkIdentity.gameObject : null;
+        }
 
         public static NetworkIdentity ReadNetworkIdentity(this NetworkReader reader)
         {
@@ -358,14 +392,35 @@ namespace Mirror
             return null;
         }
 
+        public static List<T> ReadList<T>(this NetworkReader reader)
+        {
+            int length = reader.ReadPackedInt32();
+            if (length < 0)
+                return null;
+            List<T> result = new List<T>(length);
+            for (int i = 0; i < length; i++)
+            {
+                result.Add(reader.Read<T>());
+            }
+            return result;
+        }
+
+        public static T[] ReadArray<T>(this NetworkReader reader)
+        {
+            int length = reader.ReadPackedInt32();
+            if (length < 0)
+                return null;
+            T[] result = new T[length];
+            for (int i = 0; i < length; i++)
+            {
+                result[i] = reader.Read<T>();
+            }
+            return result;
+        }
+
         public static Uri ReadUri(this NetworkReader reader)
         {
             return new Uri(reader.ReadString());
-        }
-
-        public static void ReadMessage<T>(this NetworkReader reader, T msg) where T : IMessageBase
-        {
-            msg.Deserialize(reader);
         }
     }
 }

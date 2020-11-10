@@ -5,6 +5,7 @@ namespace Mirror.Weaver
 {
     public static class MethodProcessor
     {
+        private const string RpcPrefix = "UserCode_";
 
         // creates a method substitute
         // For example, if we have this:
@@ -29,8 +30,9 @@ namespace Mirror.Weaver
         //
         //  the original method definition loses all code
         //  this returns the newly created method with all the user provided code
-        public static MethodDefinition SubstituteMethod(TypeDefinition td, MethodDefinition md, string newName)
+        public static MethodDefinition SubstituteMethod(TypeDefinition td, MethodDefinition md)
         {
+            string newName = RpcPrefix + md.Name;
             MethodDefinition cmd = new MethodDefinition(newName, md.Attributes, md.ReturnType);
 
             // add parameters
@@ -69,13 +71,13 @@ namespace Mirror.Weaver
         {
             string callName = method.Name;
 
-            // all Commands/Rpc start with "Call"
+            // Cmd/rpc start with Weaver.RpcPrefix
             // eg CallCmdDoSomething
-            if (!callName.StartsWith("Call"))
+            if (!callName.StartsWith(RpcPrefix))
                 return;
 
             // eg CmdDoSomething
-            string baseRemoteCallName = method.Name.Substring(4);
+            string baseRemoteCallName = method.Name.Substring(RpcPrefix.Length);
 
             foreach (Instruction instruction in method.Body.Instructions)
             {
@@ -84,7 +86,19 @@ namespace Mirror.Weaver
                     calledMethod.Name == baseRemoteCallName)
                 {
                     TypeDefinition baseType = type.BaseType.Resolve();
-                    MethodDefinition baseMethod = baseType.GetMethod(callName);
+                    MethodDefinition baseMethod = baseType.GetMethodInBaseType(callName);
+
+                    if (baseMethod == null)
+                    {
+                        Weaver.Error($"Could not find base method for {callName}", method);
+                        return;
+                    }
+
+                    if (!baseMethod.IsVirtual)
+                    {
+                        Weaver.Error($"Could not find base method that was virutal {callName}", method);
+                        return;
+                    }
 
                     instruction.Operand = baseMethod;
 
