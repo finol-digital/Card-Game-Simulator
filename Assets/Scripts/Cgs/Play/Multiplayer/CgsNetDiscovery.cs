@@ -11,12 +11,12 @@ namespace Cgs.Play.Multiplayer
 {
     public delegate void OnServerDiscoveredDelegate(DiscoveryResponse response);
 
-    public class DiscoveryRequest : MessageBase
+    public class DiscoveryRequest : NetworkMessage
     {
         // Can be used to add filters, client info, etc...
     }
 
-    public class DiscoveryResponse : MessageBase
+    public class DiscoveryResponse : NetworkMessage
     {
         public long ServerId;
         public IPEndPoint EndPoint { get; set; }

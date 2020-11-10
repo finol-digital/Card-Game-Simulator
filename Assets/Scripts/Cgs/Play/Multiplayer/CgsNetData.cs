@@ -23,11 +23,7 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        public class SyncListNetScore : SyncList<NetScore>
-        {
-        }
-
-        public readonly SyncListNetScore Scores = new SyncListNetScore();
+        public readonly SyncList<NetScore> Scores = new SyncList<NetScore>();
 
         private void Start()
         {

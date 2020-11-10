@@ -10,9 +10,9 @@ permalink: roadmap.html
 - Cards: Highlight dragged card
 - Play Mode: Modulate speed of card scroll areas
 - Card Games: Change Play Mode Mat in-app
+- Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 
 ## Current Sprint
-- Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
 - Play Mode: Resize stack viewer based off card game settings
@@ -29,8 +29,7 @@ permalink: roadmap.html
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to successfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
-- Tech: GitHub for Unity
-- Tech: Scale size of UI based off either physical size or resolution of display
+- Settings: Scale size of UI based off either physical size or resolution of display
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 - Cards: Support mix of different card sizes in the same game
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu

@@ -5,8 +5,8 @@
 using System;
 using System.Collections;
 using System.Net.Sockets;
-using CardGameView;
 using CardGameView.Multiplayer;
+using kcp2k;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -18,7 +18,7 @@ namespace Cgs.Play.Multiplayer
     public class CgsNetManager : NetworkManager
     {
         public static string PortForwardingWarningMessage =>
-            $"Unable to verify internet connection. Other players may not be able to find this game session. You may need to forward port {((TelepathyTransport) Transport.activeTransport).port}. More info on port forwarding is available at: https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router/";
+            $"Unable to verify internet connection. Other players may not be able to find this game session. You may need to forward port {((KcpTransport) Transport.activeTransport).Port}. More info on port forwarding is available at: https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router/";
 
         public static CgsNetManager Instance => (CgsNetManager) singleton;
 
@@ -132,7 +132,7 @@ namespace Cgs.Play.Multiplayer
                 using (var tcpClient = new TcpClient())
                 {
                     IAsyncResult result = tcpClient.BeginConnect(ip,
-                        ((TelepathyTransport) Transport.activeTransport).port, null, null);
+                        ((KcpTransport) Transport.activeTransport).Port, null, null);
                     bool success = result.AsyncWaitHandle.WaitOne(100);
                     tcpClient.EndConnect(result);
                     if (!success)

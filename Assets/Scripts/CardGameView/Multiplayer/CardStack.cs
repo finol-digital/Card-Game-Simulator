@@ -17,10 +17,14 @@ namespace CardGameView.Multiplayer
 {
     [RequireComponent(typeof(CardDropArea))]
     public class CardStack : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
-        IBeginDragHandler, IDragHandler, ICardDropHandler
+        IBeginDragHandler, IDragHandler, IEndDragHandler, ICardDropHandler
     {
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
+
+        public bool IsDraggingCard => _pointerPositions.Count == 1 && _currentPointerEventData != null &&
+                                      _currentPointerEventData.button != PointerEventData.InputButton.Middle &&
+                                      _currentPointerEventData.button != PointerEventData.InputButton.Right;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -49,7 +53,7 @@ namespace CardGameView.Multiplayer
             }
         }
 
-        private readonly SyncListString _cardIds = new SyncListString();
+        private readonly SyncList<string> _cardIds = new SyncList<string>();
 
         [SyncVar(hook = nameof(OnChangePosition))]
         public Vector2 position;
@@ -59,6 +63,10 @@ namespace CardGameView.Multiplayer
         private StackViewer _viewer;
 
         private PointerEventData _currentPointerEventData;
+        private DragPhase _currentDragPhase;
+
+        private readonly Dictionary<int, Vector2> _pointerPositions = new Dictionary<int, Vector2>();
+        private readonly Dictionary<int, Vector2> _pointerDragOffsets = new Dictionary<int, Vector2>();
 
         private void Start()
         {
@@ -94,6 +102,8 @@ namespace CardGameView.Multiplayer
         public void OnPointerDown(PointerEventData eventData)
         {
             _currentPointerEventData = eventData;
+            _pointerPositions[eventData.pointerId] = eventData.position;
+            _pointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -109,6 +119,11 @@ namespace CardGameView.Multiplayer
             }
 
             _currentPointerEventData = eventData;
+
+            if (_currentDragPhase == DragPhase.Drag)
+                return;
+            _pointerPositions.Remove(eventData.pointerId);
+            _pointerDragOffsets.Remove(eventData.pointerId);
         }
 
         public void OnSelect(BaseEventData eventData)
@@ -123,8 +138,64 @@ namespace CardGameView.Multiplayer
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (_cardIds.Count < 1)
+            _currentPointerEventData = eventData;
+            _currentDragPhase = DragPhase.Begin;
+            _pointerPositions[eventData.pointerId] = eventData.position;
+            _pointerDragOffsets[eventData.pointerId] = eventData.position - ((Vector2) transform.position);
+
+            HideButtons();
+
+            if (IsDraggingCard)
+                DragCard(eventData);
+            else if (hasAuthority)
+                ProcessTransform();
+            else
+                CmdAssignAuthority();
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            _currentPointerEventData = eventData;
+            _currentDragPhase = DragPhase.Drag;
+            _pointerPositions[eventData.pointerId] = eventData.position;
+            if (IsDraggingCard)
                 return;
+
+            Debug.Log("dragging 1");
+            if (hasAuthority)
+                ProcessTransform();
+            else
+                CmdAssignAuthority();
+            Debug.Log("dragging 2");
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            _currentPointerEventData = eventData;
+            _currentDragPhase = DragPhase.End;
+
+            if (!IsDraggingCard && hasAuthority)
+                ProcessTransform();
+            if (hasAuthority)
+                CmdRelease();
+
+            Vector2 removedOffset = Vector2.zero;
+            if (_pointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
+                removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
+            _pointerPositions.Remove(eventData.pointerId);
+            _pointerDragOffsets.Remove(eventData.pointerId);
+            foreach (int offsetKey in _pointerDragOffsets.Keys.ToList())
+                if (_pointerDragOffsets.TryGetValue(offsetKey, out Vector2 otherOffset))
+                    _pointerDragOffsets[offsetKey] = otherOffset - removedOffset;
+        }
+
+        private void DragCard(PointerEventData eventData)
+        {
+            if (_cardIds.Count < 1)
+            {
+                Debug.LogWarning("Attempted to remove from an empty card stack");
+                return;
+            }
 
             UnityCard card = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
 
@@ -137,9 +208,42 @@ namespace CardGameView.Multiplayer
                 CgsNetManager.Instance.playController.playArea);
         }
 
-        public void OnDrag(PointerEventData eventData)
+        private void ProcessTransform()
         {
-            // Required for OnBeginDrag to trigger
+            if (_pointerPositions.Count < 1 || _pointerDragOffsets.Count < 1 || !hasAuthority)
+            {
+                Debug.LogError("Attempted to process translation and authority without pointers or authority!");
+                return;
+            }
+
+            Debug.Log("moving");
+
+            Vector2 targetPosition = UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
+            targetPosition += UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
+
+            var rectTransform = (RectTransform) transform;
+            rectTransform.position = targetPosition;
+            rectTransform.SetAsLastSibling();
+
+            CmdUpdatePosition(rectTransform.anchoredPosition);
+
+            // TODO: ROTATION
+        }
+
+        [Command(ignoreAuthority = true)]
+        private void CmdAssignAuthority(NetworkConnectionToClient sender = null)
+        {
+            if (sender != null && netIdentity.connectionToClient == null)
+            {
+                bool assigned = sender.identity.AssignClientAuthority(sender);
+                Debug.Log("Assigning " + assigned);
+            }
+        }
+
+        [Command]
+        private void CmdUpdatePosition(Vector2 newPosition)
+        {
+            position = newPosition;
         }
 
         [PublicAPI]
@@ -160,6 +264,12 @@ namespace CardGameView.Multiplayer
         {
             _cardIds.Clear();
             _cardIds.AddRange(cardIds);
+        }
+
+        [Command]
+        private void CmdRelease()
+        {
+            connectionToClient.identity.RemoveClientAuthority();
         }
 
         private void OnCardsUpdated(SyncList<string>.Operation op, int index, string oldId, string newId)

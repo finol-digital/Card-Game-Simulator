@@ -1,15 +1,15 @@
 // wraps Telepathy for use as HLAPI TransportLayer
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+// Replaced by Kcp November 2020
 namespace Mirror
 {
     [HelpURL("https://github.com/vis2k/Telepathy/blob/master/README.md")]
+    [Obsolete("This transport has been replaced by the Kcp Transport and will be removed in a future release.")]
     public class TelepathyTransport : Transport
     {
         // scheme used by this transport
@@ -20,14 +20,6 @@ namespace Mirror
 
         [Tooltip("Nagle Algorithm can be disabled by enabling NoDelay")]
         public bool NoDelay = true;
-
-        // Deprecated 04/08/2019
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use MaxMessageSizeFromClient or MaxMessageSizeFromServer instead.")]
-        public int MaxMessageSize
-        {
-            get => serverMaxMessageSize;
-            set => serverMaxMessageSize = clientMaxMessageSize = value;
-        }
 
         [Header("Server")]
         [Tooltip("Protect against allocation attacks by keeping the max message size small. Otherwise an attacker might send multiple fake packets with 2GB headers, causing the server to run out of memory after allocating multiple large packets.")]
@@ -80,13 +72,13 @@ namespace Mirror
             int serverPort = uri.IsDefaultPort ? port : uri.Port;
             client.Connect(uri.Host, serverPort);
         }
-        public override bool ClientSend(int channelId, ArraySegment<byte> segment)
+        public override void ClientSend(int channelId, ArraySegment<byte> segment)
         {
             // telepathy doesn't support allocation-free sends yet.
             // previously we allocated in Mirror. now we do it here.
             byte[] data = new byte[segment.Count];
             Array.Copy(segment.Array, segment.Offset, data, 0, segment.Count);
-            return client.Send(data);
+            client.Send(data);
         }
 
         bool ProcessClientMessage()
@@ -176,18 +168,15 @@ namespace Mirror
         // server
         public override bool ServerActive() => server.Active;
         public override void ServerStart() => server.Start(port);
-        public override bool ServerSend(List<int> connectionIds, int channelId, ArraySegment<byte> segment)
+        public override void ServerSend(int connectionId, int channelId, ArraySegment<byte> segment)
         {
             // telepathy doesn't support allocation-free sends yet.
             // previously we allocated in Mirror. now we do it here.
             byte[] data = new byte[segment.Count];
             Array.Copy(segment.Array, segment.Offset, data, 0, segment.Count);
 
-            // send to all
-            bool result = true;
-            foreach (int connectionId in connectionIds)
-                result &= server.Send(connectionId, data);
-            return result;
+            // send
+            server.Send(connectionId, data);
         }
         public bool ProcessServerMessage()
         {
