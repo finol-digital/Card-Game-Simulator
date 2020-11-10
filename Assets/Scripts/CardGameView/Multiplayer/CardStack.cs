@@ -176,8 +176,8 @@ namespace CardGameView.Multiplayer
 
             if (!IsDraggingCard && hasAuthority)
                 ProcessTransform();
-            if (hasAuthority)
-                CmdRelease();
+            //if (hasAuthority)
+            //    CmdRelease();
 
             Vector2 removedOffset = Vector2.zero;
             if (_pointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
