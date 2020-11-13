@@ -23,8 +23,9 @@ namespace CardGameView.Multiplayer
         public string DeletePrompt => $"Delete {deckLabel.text}?";
 
         public bool IsDraggingCard => _pointerPositions.Count == 1 && _currentPointerEventData != null &&
-                                      _currentPointerEventData.button != PointerEventData.InputButton.Middle &&
-                                      _currentPointerEventData.button != PointerEventData.InputButton.Right;
+                                       _currentPointerEventData.button != PointerEventData.InputButton.Middle &&
+                                       _currentPointerEventData.button != PointerEventData.InputButton.Right
+                                      || _pointerPositions.Count > 1;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -141,16 +142,15 @@ namespace CardGameView.Multiplayer
             _currentPointerEventData = eventData;
             _currentDragPhase = DragPhase.Begin;
             _pointerPositions[eventData.pointerId] = eventData.position;
-            _pointerDragOffsets[eventData.pointerId] = eventData.position - ((Vector2) transform.position);
 
             HideButtons();
 
             if (IsDraggingCard)
                 DragCard(eventData);
             else if (hasAuthority)
-                ProcessTransform();
+                UpdatePosition();
             else
-                CmdAssignAuthority();
+                CmdTransferAuthority();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -161,12 +161,10 @@ namespace CardGameView.Multiplayer
             if (IsDraggingCard)
                 return;
 
-            Debug.Log("dragging 1");
             if (hasAuthority)
-                ProcessTransform();
+                UpdatePosition();
             else
-                CmdAssignAuthority();
-            Debug.Log("dragging 2");
+                CmdTransferAuthority();
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -175,10 +173,15 @@ namespace CardGameView.Multiplayer
             _currentDragPhase = DragPhase.End;
 
             if (!IsDraggingCard && hasAuthority)
-                ProcessTransform();
-            //if (hasAuthority)
-            //    CmdRelease();
+                UpdatePosition();
+            if (hasAuthority)
+                CmdReleaseAuthority();
 
+            RemovePointer(eventData);
+        }
+
+        private void RemovePointer(PointerEventData eventData)
+        {
             Vector2 removedOffset = Vector2.zero;
             if (_pointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
                 removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
@@ -206,17 +209,17 @@ namespace CardGameView.Multiplayer
 
             CardModel.CreateDrag(eventData, cardModelPrefab, transform, card, true,
                 CgsNetManager.Instance.playController.playArea);
+
+            RemovePointer(eventData);
         }
 
-        private void ProcessTransform()
+        private void UpdatePosition()
         {
             if (_pointerPositions.Count < 1 || _pointerDragOffsets.Count < 1 || !hasAuthority)
             {
                 Debug.LogError("Attempted to process translation and authority without pointers or authority!");
                 return;
             }
-
-            Debug.Log("moving");
 
             Vector2 targetPosition = UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
             targetPosition += UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
@@ -226,18 +229,13 @@ namespace CardGameView.Multiplayer
             rectTransform.SetAsLastSibling();
 
             CmdUpdatePosition(rectTransform.anchoredPosition);
-
-            // TODO: ROTATION
         }
 
         [Command(ignoreAuthority = true)]
-        private void CmdAssignAuthority(NetworkConnectionToClient sender = null)
+        private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
         {
             if (sender != null && netIdentity.connectionToClient == null)
-            {
-                bool assigned = sender.identity.AssignClientAuthority(sender);
-                Debug.Log("Assigning " + assigned);
-            }
+                netIdentity.AssignClientAuthority(sender);
         }
 
         [Command]
@@ -267,9 +265,9 @@ namespace CardGameView.Multiplayer
         }
 
         [Command]
-        private void CmdRelease()
+        private void CmdReleaseAuthority()
         {
-            connectionToClient.identity.RemoveClientAuthority();
+            netIdentity.RemoveClientAuthority();
         }
 
         private void OnCardsUpdated(SyncList<string>.Operation op, int index, string oldId, string newId)

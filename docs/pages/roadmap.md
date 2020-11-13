@@ -9,10 +9,11 @@ permalink: roadmap.html
 - Fix: Card Search in Play Mode
 - Cards: Highlight dragged card
 - Play Mode: Modulate speed of card scroll areas
+- Play Mode: Move card stacks around
 - Card Games: Change Play Mode Mat in-app
-- Play Mode: Allow any player to move cards, stacks, and dice in the play area, instead of just the player who put it there
 
 ## Current Sprint
+- Play Mode: Allow any player to move cards and dice in the play area, instead of just the player who put it there
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
 - Play Mode: Resize stack viewer based off card game settings
