@@ -30,6 +30,7 @@ namespace CardGameDef.Unity
             UnityExtensionMethods.GetSafeFileName(Name) + UnityExtensionMethods.JsonExtension);
 
         public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
+        public string DecksFilePath => GameDirectoryPath + "/AllDecks.json";
         public string SetsFilePath => GameDirectoryPath + "/AllSets.json";
 
         public string BannerImageFilePath => GameDirectoryPath + "/Banner." +
@@ -41,8 +42,8 @@ namespace CardGameDef.Unity
         public string PlayMatImageFilePath => GameDirectoryPath + "/PlayMat." +
                                               UnityExtensionMethods.GetSafeFileName(PlayMatImageFileType);
 
-        public string DecksFilePath => GameDirectoryPath + "/decks";
-        public string GameBoardsFilePath => GameDirectoryPath + "/boards";
+        public string DecksDirectoryPath => GameDirectoryPath + "/decks";
+        public string GameBoardsDirectoryPath => GameDirectoryPath + "/boards";
         public string SetsDirectoryPath => GameDirectoryPath + "/sets";
 
         public float CardAspectRatio => CardSize.Y > 0 ? Mathf.Abs(CardSize.X / CardSize.Y) : 0.715f;
@@ -215,14 +216,52 @@ namespace CardGameDef.Unity
             foreach (GameBoardUrl boardUrl in GameBoardUrls)
                 if (!string.IsNullOrEmpty(boardUrl.Id) && boardUrl.Url != null && boardUrl.Url.IsAbsoluteUri)
                     yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url.AbsoluteUri,
-                        GameBoardsFilePath + "/" + boardUrl.Id + "." + GameBoardFileType);
+                        GameBoardsDirectoryPath + "/" + boardUrl.Id + "." + GameBoardImageFileType);
 
             DownloadProgress = 5f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Decks";
+            string deckRequestBody = null;
+            if (!string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
+                deckRequestBody = "{" + AllCardsUrlPostBodyContent + "}";
+            if (AllDecksUrl != null && AllDecksUrl.IsAbsoluteUri)
+                yield return UnityExtensionMethods.SaveUrlToFile(AllDecksUrl.AbsoluteUri, DecksFilePath,
+                    deckRequestBody);
+            if (File.Exists(DecksFilePath))
+            {
+                try
+                {
+                    JToken root = JToken.Parse(File.ReadAllText(DecksFilePath));
+                    IJEnumerable<JToken> dataContainer;
+                    if (!string.IsNullOrEmpty(AllDecksUrlDataIdentifier))
+                    {
+                        JToken childProcessor = root;
+                        foreach (string childName in AllDecksUrlDataIdentifier.Split(new[] {'.'},
+                            StringSplitOptions.RemoveEmptyEntries))
+                            (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
+                        dataContainer = childProcessor;
+                    }
+                    else
+                        dataContainer = root as JArray ?? (IJEnumerable<JToken>) ((JObject) root).PropertyValues();
+
+                    if (dataContainer != null)
+                        DeckUrls.AddRange(dataContainer.Value<List<DeckUrl>>());
+                    else
+                        Debug.Log("Empty AllDecks.json");
+                }
+                catch
+                {
+                    Debug.LogWarning("Unable to read AllDecks.json!");
+                }
+            }
+
             foreach (DeckUrl deckUrl in DeckUrls)
-                if (!string.IsNullOrEmpty(deckUrl.Name) && deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
-                    yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri,
-                        DecksFilePath + "/" + deckUrl.Name + "." + DeckFileType.ToString().ToLower());
+            {
+                string deckFilePath = DecksDirectoryPath + "/" + deckUrl.Name + "." + DeckFileType.ToString().ToLower();
+                if (!string.IsNullOrEmpty(AllDecksUrlTxtRoot) && !string.IsNullOrEmpty(deckUrl.Txt))
+                    yield return UnityExtensionMethods.SaveUrlToFile(AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
+                else if (!string.IsNullOrEmpty(deckUrl.Name) && deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
+                    yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, deckFilePath);
+            }
 
             DownloadProgress = 6f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: AllSets.json";

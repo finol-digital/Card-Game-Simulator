@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cardgamesim.finoldigital.com/schema/AllDecks.json",
+  "title": "CGS Custom Game - Decks",
+  "description": "Lists out Deck information. Alternatively, list out all the decks directly in CardGameDef.json with deckUrls. If both AllDecks.json and @CardGameDef.json#/properties/deckUrls have data, both will be used.",
+  "items": {
+    "title": "Deck",
+    "type": "object",
+    "$ref": "@CardGameDef.json#/definitions/DeckUrl"
+  },
+  "type": "array",
+  "uniqueItems": true
+}

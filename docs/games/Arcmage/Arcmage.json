@@ -4,6 +4,10 @@
   "allCardsUrlPageCountDivisor": 50,
   "allCardsUrlPageIdentifier": ",\"pageNumber\":",
   "allCardsUrlPostBodyContent": "\"ruleSet\":{\"guid\":\"208cbc77-4110-51b7-9afd-1c0c4e96f4ad\"},\"pageSize\":50",
+  "allDecksUrl": "https://aminduna.arcmage.org/api/DeckSearch",
+  "allDecksUrlDataIdentifier": "items",
+  "allDecksUrlPostBodyContent": "\"ruleSet\":{\"guid\":\"208cbc77-4110-51b7-9afd-1c0c4e96f4ad\"},\"pageSize\":50,\"pageNumber\":1",
+  "allDecksUrlTxtRoot": "https://aminduna.arcmage.org",
   "allSetsUrl": "https://aminduna.arcmage.org/api/CardOptions",
   "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json",
   "bannerImageUrl": "https://www.cardgamesimulator.com/games/Arcmage/Banner.png",
@@ -92,32 +96,6 @@
   },
   "deckMaxCount": 45,
   "deckSharePreference": "individual",
-  "deckUrls": [
-    {
-      "name": "Gaian Love for Life",
-      "url": "https://aminduna.arcmage.org/WTactics/Decks/b9c3f75d-8aaa-437a-b0dd-3d973edb3083/deck.txt"
-    },
-    {
-      "name": "Brothers in Arms",
-      "url": "https://aminduna.arcmage.org/WTactics/Decks/6776ddb8-3ce0-470b-8d2c-afb26bd29359/deck.txt"
-    },
-    {
-      "name": "Shadow League",
-      "url": "https://aminduna.arcmage.org/WTactics/Decks/25268444-33ad-42f8-8452-2089659bc91d/deck.txt"
-    },
-    {
-      "name": "The Uprising",
-      "url": "https://aminduna.arcmage.org/WTactics/Decks/ade9be8e-a414-4da9-a97a-e843a40aa2af/deck.txt"
-    },
-    {
-      "name": "Toll of Time",
-      "url": "https://aminduna.arcmage.org/WTactics/Decks/0aa069a0-5e59-40dc-a443-692a89e151a0/deck.txt"
-    },
-    {
-      "name": "Uneasy Alliance",
-      "url": "https://aminduna.arcmage.org/WTactics/Decks/ed84714a-0570-4384-a303-f2ded1400bdd/deck.txt"
-    }
-  ],
   "enums": [
     {
       "property": "faction",

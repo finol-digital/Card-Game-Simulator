@@ -57,6 +57,23 @@
       "type": "boolean",
       "description": "If allCardsUrl points to zipped file(s), set allCardsUrlZipped to true, and CGS will unzip the file(s)."
     },
+    "allDecksUrl": {
+      "type": "string",
+      "description": "From allDecksUrl, CGS downloads the json that contains the Deck data for the game. If CGS is able to successfully download this file, it will save it as AllDecks.json.",
+      "format": "uri"
+    },
+    "allDecksUrlDataIdentifier": {
+      "type": "string",
+      "description": "If allDecksUrlDataIdentifier is set to a non-empty string, AllDecks.json will be parsed as a JSON object: {\"@allDecksUrlDataIdentifier\":{\"$ref\":\"AllDecks.json\"}}"
+    },
+    "allDecksUrlPostBodyContent": {
+      "type": "string",
+      "description": "If allDecksUrlPostBodyContent is set, CGS will make a POST to <allDecksUrl> with a JSON body that contains <allDecksUrlPostBodyContent>. If not set, CGS will just GET from <allDecksUrl>."
+    },
+    "allDecksUrlTxtRoot": {
+      "type": "string",
+      "description": "If allDecksUrlTxtRoot is set, will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*"
+    },
     "allSetsUrl": {
       "type": "string",
       "description": "From allSetsUrl, CGS downloads the json that contains the Set data for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
@@ -238,9 +255,9 @@
         "$ref": "#/definitions/ExtraDef"
       }
     },
-    "gameBoardFileType": {
+    "gameBoardImageFileType": {
       "type": "string",
-      "description": "gameBoardFileType is the file type extension for the image files that CGS downloads for each game board.",
+      "description": "gameBoardImageFileType is the file type extension for the image files that CGS downloads for each game board.",
       "default": "png"
     },
     "gameBoardCards": {
@@ -251,7 +268,7 @@
     },
     "gameBoardUrls": {
       "type": "array",
-      "description": "CGS will go through each GameBoardUrl and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardFileType>'",
+      "description": "CGS will go through each GameBoardUrl and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardImageFileType>'",
       "items": {
         "$ref": "#/definitions/GameBoardUrl"
       }
@@ -470,6 +487,10 @@
         "name": {
           "type": "string",
           "description": "The name of the deck"
+        },
+        "txt": {
+          "type": "string",
+          "description": "An optional path that can be used to override the url. See @CardGameDef.json#/properties/allDecksUrlTxtRoot"
         },
         "url": {
           "type": "string",

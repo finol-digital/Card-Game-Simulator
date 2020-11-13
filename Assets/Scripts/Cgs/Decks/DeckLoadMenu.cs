@@ -148,8 +148,8 @@ namespace Cgs.Decks
         private void BuildDeckFileSelectionOptions()
         {
             _deckFiles.Clear();
-            string[] files = Directory.Exists(CardGameManager.Current.DecksFilePath)
-                ? Directory.GetFiles(CardGameManager.Current.DecksFilePath)
+            string[] files = Directory.Exists(CardGameManager.Current.DecksDirectoryPath)
+                ? Directory.GetFiles(CardGameManager.Current.DecksDirectoryPath)
                 : new string[0];
             foreach (string file in files)
                 if (GetFileTypeFromPath(file) == CardGameManager.Current.DeckFileType)
@@ -334,8 +334,8 @@ namespace Cgs.Decks
                 CardGameManager.Current.DeckFileType);
             try
             {
-                if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
-                    Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
+                if (!Directory.Exists(CardGameManager.Current.DecksDirectoryPath))
+                    Directory.CreateDirectory(CardGameManager.Current.DecksDirectoryPath);
                 File.WriteAllText(filePathFinder.FilePath, textInputField.text);
                 _selectedFilePath = filePathFinder.FilePath;
 

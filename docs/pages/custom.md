@@ -19,6 +19,7 @@ The structure of this custom game folder is:
 - *Game:Id*/
   - *Game:Name*.json
   - AllCards.json
+  - AllDecks.json
   - AllSets.json
   - Banner.\<bannerImageFileType\>
   - CardBack.\<cardBackImageFileType\>
@@ -41,6 +42,7 @@ The GGS AutoUpdate Url that is used to download a card game is actually a pointe
 You can create your own json and [validate](https://www.jsonschemavalidator.net/) against these schema:
 - [CardGameDef](schema/CardGameDef.json)
 - [AllCards](schema/AllCards.json)
+- [AllDecks](schema/AllDecks.json)
 - [AllSets](schema/AllSets.json)
 
 ## Examples

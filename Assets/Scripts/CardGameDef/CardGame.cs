@@ -95,6 +95,25 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
+            "From allDecksUrl, CGS downloads the json that contains the Deck data for the game. If CGS is able to successfully download this file, it will save it as AllDecks.json.")]
+        public Uri AllDecksUrl { get; set; }
+
+        [JsonProperty]
+        [Description(
+            "If allDecksUrlDataIdentifier is set to a non-empty string, AllDecks.json will be parsed as a JSON object: {\"@allDecksUrlDataIdentifier\":{\"$ref\":\"AllDecks.json\"}}")]
+        public string AllDecksUrlDataIdentifier { get; set; } = "";
+
+        [JsonProperty]
+        [Description(
+            "If allDecksUrlPostBodyContent is set, CGS will make a POST to <allDecksUrl> with a JSON body that contains <allDecksUrlPostBodyContent>. If not set, CGS will just GET from <allDecksUrl>.")]
+        public string AllDecksUrlPostBodyContent { get; set; } = "";
+
+        [JsonProperty]
+        [Description("If allDecksUrlTxtRoot is set, will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*")]
+        public string AllDecksUrlTxtRoot { get; set; } = "";
+
+        [JsonProperty]
+        [Description(
             "From allSetsUrl, CGS downloads the json that contains the Set data for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.")]
         public Uri AllSetsUrl { get; set; }
 
@@ -273,15 +292,15 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
-            "gameBoardFileType is the file type extension for the image files that CGS downloads for each game board.")]
+            "gameBoardImageFileType is the file type extension for the image files that CGS downloads for each game board.")]
         [DefaultValue("png")]
-        public string GameBoardFileType { get; set; } = "png";
+        public string GameBoardImageFileType { get; set; } = "png";
 
         [JsonProperty] public List<GameBoardCard> GameBoardCards { get; set; } = new List<GameBoardCard>();
 
         [JsonProperty]
         [Description(
-            "CGS will go through each GameBoardUrl and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardFileType>'")]
+            "CGS will go through each GameBoardUrl and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardImageFileType>'")]
         public List<GameBoardUrl> GameBoardUrls { get; set; } = new List<GameBoardUrl>();
 
         [JsonProperty]

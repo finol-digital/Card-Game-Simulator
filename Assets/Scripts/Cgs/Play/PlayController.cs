@@ -224,8 +224,8 @@ namespace Cgs.Play
                 new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch +
                 boardRectTransform.offsetMin;
 
-            string boardFilepath = CardGameManager.Current.GameBoardsFilePath + "/" + board.Id + "." +
-                                   CardGameManager.Current.GameBoardFileType;
+            string boardFilepath = CardGameManager.Current.GameBoardsDirectoryPath + "/" + board.Id + "." +
+                                   CardGameManager.Current.GameBoardImageFileType;
             Sprite boardImageSprite = File.Exists(boardFilepath)
                 ? UnityExtensionMethods.CreateSprite(boardFilepath)
                 : null;

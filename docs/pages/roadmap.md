@@ -11,6 +11,7 @@ permalink: roadmap.html
 - Play Mode: Modulate speed of card scroll areas
 - Play Mode: Move card stacks around
 - Card Games: Change Play Mode Mat in-app
+- CardGameDef: AllDecksUrl, AllDecksUrlDataIdentifier, AllDecksUrlPostBodyContent 
 
 ## Current Sprint
 - Play Mode: Allow any player to move cards and dice in the play area, instead of just the player who put it there

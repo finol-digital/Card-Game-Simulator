@@ -175,8 +175,8 @@ namespace Cgs.Decks
         {
             try
             {
-                if (!Directory.Exists(CardGameManager.Current.DecksFilePath))
-                    Directory.CreateDirectory(CardGameManager.Current.DecksFilePath);
+                if (!Directory.Exists(CardGameManager.Current.DecksDirectoryPath))
+                    Directory.CreateDirectory(CardGameManager.Current.DecksDirectoryPath);
                 File.WriteAllText(deck.FilePath, deck.ToString());
             }
             catch (Exception e)

@@ -55,7 +55,7 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.DeckFileTxtId = DeckFileTxtId.Id;
             cardGame.DeckFileType = DeckFileType.Dec;
             cardGame.DeckUrls = new List<DeckUrl>();
-            var deckUrl = new DeckUrl(string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
+            var deckUrl = new DeckUrl(string.Empty, string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
             cardGame.Enums = new List<EnumDef>();
             var enumDef = new EnumDef(string.Empty,
                 new Dictionary<string, string>());
@@ -66,7 +66,7 @@ public class AotTypeEnforcer : MonoBehaviour
             var gameBoard = new GameBoard(string.Empty, float2, float2);
             var gameBoardCard = new GameBoardCard(string.Empty,
                 new List<GameBoard>());
-            cardGame.GameBoardFileType = string.Empty;
+            cardGame.GameBoardImageFileType = string.Empty;
             cardGame.GameBoardUrls = new List<GameBoardUrl>();
             var gameBoardUrl =
                 new GameBoardUrl(string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
