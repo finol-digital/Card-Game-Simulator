@@ -109,7 +109,7 @@ namespace CardGameDef
         public string AllDecksUrlPostBodyContent { get; set; } = "";
 
         [JsonProperty]
-        [Description("If allDecksUrlTxtRoot is set, will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*")]
+        [Description("If allDecksUrlTxtRoot is set, CGS will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*")]
         public string AllDecksUrlTxtRoot { get; set; } = "";
 
         [JsonProperty]

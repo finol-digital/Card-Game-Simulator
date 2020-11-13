@@ -72,7 +72,7 @@
     },
     "allDecksUrlTxtRoot": {
       "type": "string",
-      "description": "If allDecksUrlTxtRoot is set, will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*"
+      "description": "If allDecksUrlTxtRoot is set, CGS will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*"
     },
     "allSetsUrl": {
       "type": "string",
