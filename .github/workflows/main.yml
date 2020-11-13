@@ -28,6 +28,10 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
+      - name: Install Unity
+        uses: crazy-max/ghaction-chocolatey@v1.2.2
+        with:
+          args: install --yes unity --version=2019.4.9 unity-il2cpp --version=2019.4.9 unity-win-il2cpp --version=2019.4.9 unity-metro --version=2019.4.9
       - uses: webbertakken/unity-builder@v2.0-alpha-2
         with:
           unityVersion: 2019.4.9f1
@@ -47,7 +51,7 @@ jobs:
           path: builds
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
-    runs-on: windows
+    runs-on: windows-latest
     needs: buildForSomePlatforms
     if: github.event.ref != 'refs/heads/develop'
     steps:
