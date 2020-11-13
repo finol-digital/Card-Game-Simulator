@@ -28,6 +28,13 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
+      - name: free disk space
+        run: |
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo apt clean
+          docker rmi $(docker image ls -aq)
+          df -h
       - uses: webbertakken/unity-builder@v2.0-alpha-2
         with:
           unityVersion: 2019.4.9f1
