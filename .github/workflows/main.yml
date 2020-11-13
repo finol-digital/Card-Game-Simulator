@@ -1,6 +1,6 @@
 name: Build and Release CGS
 on:
-  push: { branches: [develop, master] }
+  push: { branches: [develop, main] }
   release: { types: [published] }
 jobs:
   buildForSomePlatforms:
