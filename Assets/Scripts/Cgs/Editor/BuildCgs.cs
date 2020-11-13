@@ -32,25 +32,28 @@ namespace Cgs.Editor
 
             // Apply build target
             var buildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]);
-            if (buildTarget == BuildTarget.Android)
+            switch (buildTarget)
             {
-                EditorUserBuildSettings.buildAppBundle = options["customBuildPath"].EndsWith(".aab");
-                if (options.TryGetValue("androidKeystoreName", out string keystoreName) &&
-                    !string.IsNullOrEmpty(keystoreName))
-                    PlayerSettings.Android.keystoreName = keystoreName;
-                if (options.TryGetValue("androidKeystorePass", out string keystorePass) &&
-                    !string.IsNullOrEmpty(keystorePass))
-                    PlayerSettings.Android.keystorePass = keystorePass;
-                if (options.TryGetValue("androidKeyaliasName", out string keyaliasName) &&
-                    !string.IsNullOrEmpty(keyaliasName))
-                    PlayerSettings.Android.keyaliasName = keyaliasName;
-                if (options.TryGetValue("androidKeyaliasPass", out string keyaliasPass) &&
-                    !string.IsNullOrEmpty(keyaliasPass))
-                    PlayerSettings.Android.keyaliasPass = keyaliasPass;
-            }
-            else if (buildTarget != BuildTarget.iOS)
-            {
-                PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+                case BuildTarget.Android:
+                {
+                    EditorUserBuildSettings.buildAppBundle = options["customBuildPath"].EndsWith(".aab");
+                    if (options.TryGetValue("androidKeystoreName", out string keystoreName) &&
+                        !string.IsNullOrEmpty(keystoreName))
+                        PlayerSettings.Android.keystoreName = keystoreName;
+                    if (options.TryGetValue("androidKeystorePass", out string keystorePass) &&
+                        !string.IsNullOrEmpty(keystorePass))
+                        PlayerSettings.Android.keystorePass = keystorePass;
+                    if (options.TryGetValue("androidKeyaliasName", out string keyaliasName) &&
+                        !string.IsNullOrEmpty(keyaliasName))
+                        PlayerSettings.Android.keyaliasName = keyaliasName;
+                    if (options.TryGetValue("androidKeyaliasPass", out string keyaliasPass) &&
+                        !string.IsNullOrEmpty(keyaliasPass))
+                        PlayerSettings.Android.keyaliasPass = keyaliasPass;
+                    break;
+                }
+                case BuildTarget.StandaloneOSX:
+                    PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+                    break;
             }
 
             // Custom build
