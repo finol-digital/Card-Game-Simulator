@@ -47,7 +47,7 @@ jobs:
           path: builds
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
-    runs-on: [windows, self-hosted]
+    runs-on: windows
     needs: buildForSomePlatforms
     if: github.event.ref != 'refs/heads/develop'
     steps:
