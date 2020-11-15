@@ -267,7 +267,7 @@ namespace Cgs.Play.Multiplayer
             cardModel.rotation = rotation;
             cardModel.IsFacedown = isFacedown;
             PlayController.SetPlayActions(cardModel);
-            NetworkServer.Spawn(newCard, connectionToClient);
+            NetworkServer.Spawn(newCard);
             cardModel.RpcHideHighlight();
         }
 
@@ -285,7 +285,7 @@ namespace Cgs.Play.Multiplayer
         private void CmdCreateDie(int min, int max)
         {
             Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
-            NetworkServer.Spawn(die.gameObject, connectionToClient);
+            NetworkServer.Spawn(die.gameObject);
         }
 
         #endregion
@@ -345,17 +345,5 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
-        public void RequestDelete(GameObject toDelete)
-        {
-            CmdDelete(toDelete);
-        }
-
-        [Command]
-        // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdDelete(GameObject toDelete)
-        {
-            NetworkServer.UnSpawn(toDelete);
-            Destroy(toDelete);
-        }
     }
 }

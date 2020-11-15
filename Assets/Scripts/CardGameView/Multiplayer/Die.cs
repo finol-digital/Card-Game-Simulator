@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.Collections;
 using System.Collections.Generic;
 using Cgs;
 using JetBrains.Annotations;
@@ -14,7 +13,7 @@ using UnityEngine.UI;
 namespace CardGameView.Multiplayer
 {
     public class Die : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
-        IBeginDragHandler, IDragHandler
+        IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public const string DeletePrompt = "Delete die?";
 
@@ -38,10 +37,7 @@ namespace CardGameView.Multiplayer
                     newValue = Min;
                 if (newValue < Min)
                     newValue = Max;
-                _value = newValue;
-                valueText.text = _value.ToString();
-                if (hasAuthority)
-                    CmdUpdateValue(_value);
+                CmdUpdateValue(newValue);
             }
         }
 
@@ -53,20 +49,32 @@ namespace CardGameView.Multiplayer
 
         private Vector2 _dragOffset;
 
+        private float _rollTime;
+        private float _rollDelay;
+
         private void Start()
         {
-            if (!hasAuthority)
-            {
-                valueText.text = _value.ToString();
-                if (Vector2.zero != position)
-                    ((RectTransform) transform).anchoredPosition = position;
-            }
-            else
-            {
-                Roll();
-            }
+            valueText.text = _value.ToString();
+            if (Vector2.zero != position)
+                ((RectTransform) transform).anchoredPosition = position;
+            if (isServer)
+                _rollTime = RollTime;
 
             HideButtons();
+        }
+
+        private void Update()
+        {
+            if (!isServer || _rollTime <= 0)
+                return;
+
+            _rollTime -= Time.deltaTime;
+            _rollDelay += Time.deltaTime;
+            if (_rollDelay < RollDelay)
+                return;
+
+            Value = Random.Range(Min, Max);
+            _rollDelay = 0;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -76,8 +84,6 @@ namespace CardGameView.Multiplayer
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (!hasAuthority)
-                return;
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
             ShowButtons();
@@ -85,8 +91,6 @@ namespace CardGameView.Multiplayer
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (!hasAuthority)
-                return;
             ShowButtons();
         }
 
@@ -97,11 +101,12 @@ namespace CardGameView.Multiplayer
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (!hasAuthority)
-                return;
             _dragOffset = eventData.position - ((Vector2) transform.position);
             transform.SetAsLastSibling();
+
             HideButtons();
+
+            CmdTransferAuthority();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -111,6 +116,20 @@ namespace CardGameView.Multiplayer
             var rectTransform = ((RectTransform) transform);
             rectTransform.position = eventData.position - _dragOffset;
             CmdUpdatePosition(rectTransform.anchoredPosition);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (!hasAuthority)
+                return;
+            CmdReleaseAuthority();
+        }
+
+        [Command(ignoreAuthority = true)]
+        private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
+        {
+            if (sender != null && netIdentity.connectionToClient == null)
+                netIdentity.AssignClientAuthority(sender);
         }
 
         [Command]
@@ -125,23 +144,16 @@ namespace CardGameView.Multiplayer
             ((RectTransform) transform).anchoredPosition = newValue;
         }
 
-        [Command]
+        [Command(ignoreAuthority = true)]
         private void CmdUpdateValue(int value)
         {
-            RpcUpdateValue(value);
-        }
-
-        [ClientRpc]
-        private void RpcUpdateValue(int value)
-        {
-            if (!hasAuthority)
-                Value = value;
+            _value = value;
         }
 
         [PublicAPI]
         public void OnChangeValue(int oldValue, int newValue)
         {
-            valueText.text = _value.ToString();
+            valueText.text = newValue.ToString();
         }
 
         [UsedImplicitly]
@@ -159,18 +171,13 @@ namespace CardGameView.Multiplayer
         [UsedImplicitly]
         public void Roll()
         {
-            StartCoroutine(DoRoll());
+            CmdRoll();
         }
 
-        private IEnumerator DoRoll()
+        [Command(ignoreAuthority = true)]
+        private void CmdRoll()
         {
-            var elapsedTime = 0f;
-            while (elapsedTime < RollTime)
-            {
-                Value = Random.Range(Min, Max);
-                yield return new WaitForSeconds(RollDelay);
-                elapsedTime += RollDelay;
-            }
+            _rollTime = RollTime;
         }
 
         private void ShowButtons()
@@ -193,6 +200,12 @@ namespace CardGameView.Multiplayer
             }
         }
 
+        [Command]
+        private void CmdReleaseAuthority()
+        {
+            netIdentity.RemoveClientAuthority();
+        }
+
         [UsedImplicitly]
         public void PromptDelete()
         {
@@ -207,9 +220,15 @@ namespace CardGameView.Multiplayer
                 Destroy(gameObject);
         }
 
-        [Command]
+        [Command(ignoreAuthority = true)]
         private void CmdDelete()
         {
+            if (netIdentity.connectionToClient != null)
+            {
+                Debug.LogWarning("Ignoring request to delete, since it is currently owned by a client!");
+                return;
+            }
+
             NetworkServer.UnSpawn(gameObject);
             Destroy(gameObject);
         }

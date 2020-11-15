@@ -364,10 +364,23 @@ namespace CardGameView.Multiplayer
 
         private void Delete()
         {
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive)
-                CgsNetManager.Instance.LocalPlayer.RequestDelete(gameObject);
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdDelete();
             else
                 Destroy(gameObject);
+        }
+
+        [Command(ignoreAuthority = true)]
+        private void CmdDelete()
+        {
+            if (netIdentity.connectionToClient != null)
+            {
+                Debug.LogWarning("Ignoring request to delete, since it is currently owned by a client!");
+                return;
+            }
+
+            NetworkServer.UnSpawn(gameObject);
+            Destroy(gameObject);
         }
     }
 }
