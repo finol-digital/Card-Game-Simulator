@@ -252,7 +252,7 @@ namespace Cgs.Play.Multiplayer
             cardModelTransform.SetParent(cardZone.transform);
             cardModel.position = ((RectTransform) cardModelTransform).anchoredPosition;
             cardModel.rotation = cardModelTransform.rotation;
-            CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.IsFacedown);
+            CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.isFacedown);
             Destroy(cardModel.gameObject);
         }
 
@@ -265,7 +265,7 @@ namespace Cgs.Play.Multiplayer
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.position = position;
             cardModel.rotation = rotation;
-            cardModel.IsFacedown = isFacedown;
+            cardModel.isFacedown = isFacedown;
             PlayController.SetPlayActions(cardModel);
             NetworkServer.Spawn(newCard);
             cardModel.RpcHideHighlight();

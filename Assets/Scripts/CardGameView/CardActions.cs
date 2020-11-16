@@ -48,7 +48,7 @@ namespace CardGameView
             if (cardModel == null || (cardModel.IsOnline && !cardModel.hasAuthority))
                 return;
 
-            cardModel.IsFacedown = !cardModel.IsFacedown;
+            cardModel.IsFacedown = !cardModel.isFacedown;
             EventSystem.current.SetSelectedGameObject(null, cardModel.CurrentPointerEventData);
         }
 

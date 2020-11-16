@@ -89,23 +89,20 @@ namespace CardGameView.Multiplayer
             }
         }
 
-        [SyncVar] private bool _isFacedown;
+        [SyncVar(hook = nameof(OnChangeFacedown))]
+        public bool isFacedown;
 
         public bool IsFacedown
         {
-            get => _isFacedown;
             set
             {
-                if (value == _isFacedown)
+                if (value == isFacedown)
                     return;
-                _isFacedown = value;
-                if (!_isFacedown)
-                    Value.RegisterDisplay(this);
-                else
-                    Value.UnregisterDisplay(this);
 
-                if (IsOnline && hasAuthority)
-                    CmdUpdateIsFacedown(_isFacedown);
+                bool oldValue = isFacedown;
+                isFacedown = value;
+                if (!IsOnline)
+                    OnChangeFacedown(oldValue, isFacedown);
             }
         }
 
@@ -181,7 +178,7 @@ namespace CardGameView.Multiplayer
                 }
                 else
                 {
-                    bool isOthers = IsOnline && !hasAuthority;
+                    bool isOthers = IsOnline && _isClientAuthorized && !hasAuthority;
                     Highlight.effectColor = isOthers ? Color.yellow : Color.black;
                     Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                 }
@@ -197,6 +194,8 @@ namespace CardGameView.Multiplayer
         private CanvasGroup Visibility => _visibility ? _visibility : _visibility = GetComponent<CanvasGroup>();
         private CanvasGroup _visibility;
 
+        [SyncVar] private bool _isClientAuthorized;
+
         private void Start()
         {
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -211,8 +210,8 @@ namespace CardGameView.Multiplayer
                     transform.rotation = rotation;
             }
 
-            IsNameVisible = !IsFacedown;
-            if (!IsFacedown)
+            IsNameVisible = !isFacedown;
+            if (!isFacedown)
                 Value.RegisterDisplay(this);
         }
 
@@ -231,7 +230,7 @@ namespace CardGameView.Multiplayer
         private void RemoveImageSprite()
         {
             View.sprite = CardGameManager.Current.CardBackImageSprite;
-            if (!IsFacedown)
+            if (!isFacedown)
                 IsNameVisible = true;
         }
 
@@ -242,9 +241,12 @@ namespace CardGameView.Multiplayer
             else
                 _holdTime = 0;
 
-            if (!(_holdTime > ZoomHoldTime))
-                return;
+            if (_holdTime > ZoomHoldTime)
+                RequestZoomOnThis();
+        }
 
+        private void RequestZoomOnThis()
+        {
             CurrentPointerEventData = null;
             PointerPositions.Clear();
             PointerDragOffsets.Clear();
@@ -298,7 +300,7 @@ namespace CardGameView.Multiplayer
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (CardViewer.Instance != null && !IsFacedown)
+            if (CardViewer.Instance != null && !isFacedown)
                 CardViewer.Instance.SelectedCardModel = this;
         }
 
@@ -329,15 +331,12 @@ namespace CardGameView.Multiplayer
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (IsOnline && !hasAuthority)
-                return;
-
             _didDrag = true;
             if (DoesCloneOnDrag)
             {
                 if (!IsOnline)
                     NetworkServer.UnSpawn(gameObject); // Avoid Mirror error
-                CreateDrag(eventData, gameObject, transform, Value, IsFacedown);
+                CreateDrag(eventData, gameObject, transform, Value, isFacedown);
                 return;
             }
 
@@ -346,36 +345,31 @@ namespace CardGameView.Multiplayer
             _currentDragPhase = DragPhase.Begin;
             PointerPositions[eventData.pointerId] = eventData.position;
 
-            UpdatePosition();
-            if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
-                SecondaryDragAction();
+            if (!IsOnline)
+                ActOnDrag();
+            else
+                CmdTransferAuthority();
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (IsOnline && !hasAuthority)
-                return;
-
             CurrentPointerEventData = eventData;
             _currentDragPhase = DragPhase.Drag;
             PointerPositions[eventData.pointerId] = eventData.position;
 
-            UpdatePosition();
-            if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
-                SecondaryDragAction();
+            if (!IsOnline || hasAuthority)
+                ActOnDrag();
+            else
+                CmdTransferAuthority();
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (IsOnline && !hasAuthority)
-                return;
-
             CurrentPointerEventData = eventData;
             _currentDragPhase = DragPhase.End;
 
-            UpdatePosition();
-            if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
-                SecondaryDragAction();
+            if (!IsOnline || hasAuthority)
+                ActOnDrag();
 
             Vector2 removedOffset = Vector2.zero;
             if (PointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
@@ -414,6 +408,9 @@ namespace CardGameView.Multiplayer
                 return;
             }
 
+            if (IsOnline)
+                CmdReleaseAuthority();
+
             DropTarget = null;
 
             if (PlaceHolder != null)
@@ -425,6 +422,26 @@ namespace CardGameView.Multiplayer
         public static CardModel GetPointerDrag(PointerEventData eventData)
         {
             return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardModel>();
+        }
+
+        [Command(ignoreAuthority = true)]
+        private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
+        {
+            if (sender == null || netIdentity.connectionToClient != null)
+            {
+                Debug.Log("Ignoring request to transfer authority, as it is already transferred");
+                return;
+            }
+
+            _isClientAuthorized = true;
+            netIdentity.AssignClientAuthority(sender);
+        }
+
+        private void ActOnDrag()
+        {
+            UpdatePosition();
+            if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
+                SecondaryDragAction();
         }
 
         private void UpdatePosition()
@@ -529,6 +546,13 @@ namespace CardGameView.Multiplayer
         }
 
         [Command]
+        private void CmdReleaseAuthority()
+        {
+            netIdentity.RemoveClientAuthority();
+            _isClientAuthorized = false;
+        }
+
+        [Command]
         private void CmdUnspawnCard()
         {
             RpcUnspawnCard();
@@ -605,17 +629,13 @@ namespace CardGameView.Multiplayer
                 transform.rotation = newRotation;
         }
 
-        [Command]
-        private void CmdUpdateIsFacedown(bool isFacedown)
+        [PublicAPI]
+        public void OnChangeFacedown(bool oldValue, bool newValue)
         {
-            RpcUpdateIsFacedown(isFacedown);
-        }
-
-        [ClientRpc]
-        private void RpcUpdateIsFacedown(bool isFacedown)
-        {
-            if (!hasAuthority)
-                IsFacedown = isFacedown;
+            if (!isFacedown)
+                Value.RegisterDisplay(this);
+            else
+                Value.UnregisterDisplay(this);
         }
 
         private void WarnHighlight()

@@ -25,6 +25,10 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.AllCardsUrlPostBodyContent = string.Empty;
             cardGame.AllCardsUrlWrapped = false;
             cardGame.AllCardsUrlZipped = false;
+            cardGame.AllDecksUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.AllDecksUrlDataIdentifier = string.Empty;
+            cardGame.AllDecksUrlPostBodyContent = string.Empty;
+            cardGame.AllDecksUrlTxtRoot = string.Empty;
             cardGame.AllSetsUrl = new Uri(UnityExtensionMethods.FilePrefix);
             cardGame.AllSetsUrlWrapped = false;
             cardGame.AllSetsUrlZipped = false;
