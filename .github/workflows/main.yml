@@ -15,8 +15,8 @@ jobs:
       matrix:
         targetPlatform:
           - Android
-          - iOS
-          - StandaloneOSX
+#          - iOS
+#          - StandaloneOSX
 #          - StandaloneLinux64
 #          - WebGL
     steps:
@@ -37,6 +37,7 @@ jobs:
           df -h
       - uses: webbertakken/unity-builder@v2.0-alpha-3
         with:
+          customImage: unityci/editor:ubuntu-2018.4.9f1-android-0.5
           unityVersion: 2019.4.9f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildsPath: builds         
