@@ -21,9 +21,9 @@ permalink: roadmap.html
   - Snap rotation to 0/90/180/270 (only in play area)
   - Move to hand/other card stack(s) in a certain spot (x from top or bottom)
 - Card Games: Default double-click action in Play Mode
+- Play Mode: Resize stack viewer based off card game settings
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
-- Play Mode: Resize stack viewer based off card game settings
 
 ## Backlog
 - Tech: Improve performance/battery-usage
