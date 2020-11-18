@@ -17,7 +17,7 @@ jobs:
           - Android
           - iOS
           - StandaloneOSX
-#          - StandaloneLinux64
+          - StandaloneLinux64
 #          - WebGL
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +35,7 @@ jobs:
           sudo apt clean
           docker rmi $(docker image ls -aq)
           df -h
-      - uses: webbertakken/unity-builder@v2.0-alpha-3
+      - uses: webbertakken/unity-builder@v2.0-alpha-4
         with:
           unityVersion: 2019.4.9f1
           targetPlatform: ${{ matrix.targetPlatform }}
