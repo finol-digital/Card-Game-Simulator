@@ -35,7 +35,7 @@ jobs:
           sudo apt clean
           docker rmi $(docker image ls -aq)
           df -h
-      - uses: webbertakken/unity-builder@v2.0-alpha-4
+      - uses: webbertakken/unity-builder@v2.0-aplha-5
         with:
           unityVersion: 2019.4.9f1
           targetPlatform: ${{ matrix.targetPlatform }}
