@@ -49,7 +49,7 @@ namespace CardGameView.Multiplayer
 
         public bool IsStatic { get; set; }
         public bool DoesCloneOnDrag { get; set; }
-        public CardAction DoubleClickAction { get; set; }
+        public CardAction DefaultAction { get; set; }
         public UnityAction SecondaryDragAction { get; set; }
         public CardDropArea DropTarget { get; set; }
 
@@ -277,8 +277,8 @@ namespace CardGameView.Multiplayer
                 eventData.button != PointerEventData.InputButton.Right)
             {
                 if (!_didSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
-                    DoubleClickAction != null)
-                    DoubleClickAction(this);
+                    DefaultAction != null)
+                    DefaultAction(this);
                 else if (PlaceHolder == null)
                 {
                     if (CardViewer.Instance != null && CardViewer.Instance.Mode == CardViewerMode.Maximal)

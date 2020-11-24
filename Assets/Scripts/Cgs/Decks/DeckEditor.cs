@@ -254,7 +254,7 @@ namespace Cgs.Decks
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DoubleClickAction = DestroyCardModel;
+            cardModel.DefaultAction = DestroyCardModel;
 
             Consolidate();
             UpdateDeckStats();

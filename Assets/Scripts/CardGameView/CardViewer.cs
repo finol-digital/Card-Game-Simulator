@@ -233,7 +233,7 @@ namespace CardGameView
                 if (!Zoom && Mode == CardViewerMode.Maximal)
                     Mode = CardViewerMode.Expanded;
                 else
-                    SelectedCardModel.DoubleClickAction?.Invoke(SelectedCardModel);
+                    SelectedCardModel.DefaultAction?.Invoke(SelectedCardModel);
             }
             else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 DecrementProperty();

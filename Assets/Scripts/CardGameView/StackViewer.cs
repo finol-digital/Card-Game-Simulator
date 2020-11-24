@@ -82,7 +82,7 @@ namespace CardGameView
         {
             cardModel.transform.rotation = Quaternion.identity;
             cardModel.IsFacedown = false;
-            cardModel.DoubleClickAction = CardActions.Flip;
+            cardModel.DefaultAction = CardActions.Flip;
             countLabel.text = contentCardZone.GetComponentsInChildren<CardModel>().Length.ToString();
 
             if (_cardStack == null)

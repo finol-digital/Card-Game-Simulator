@@ -167,9 +167,9 @@ namespace Cgs.Cards
                 cardModel.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
                 if (HorizontalDoubleClickAction != null
                     && ((RectTransform) transform).rect.width > ((RectTransform) transform).rect.height)
-                    cardModel.DoubleClickAction = HorizontalDoubleClickAction;
+                    cardModel.DefaultAction = HorizontalDoubleClickAction;
                 else
-                    cardModel.DoubleClickAction = CardViewer.Instance.MaximizeOn;
+                    cardModel.DefaultAction = CardViewer.Instance.MaximizeOn;
             }
 
             countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);

@@ -299,7 +299,7 @@ namespace Cgs.Play
 
         public static void SetPlayActions(CardModel cardModel)
         {
-            cardModel.DoubleClickAction = CardActions.Flip;
+            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
