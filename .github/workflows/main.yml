@@ -47,7 +47,7 @@ jobs:
           androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
           androidKeyaliasName: ${{ secrets.ANDROID_KEYALIAS_NAME }}
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v2
         if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-android-ios-mac-linux
@@ -56,8 +56,7 @@ jobs:
     name: Build and Release to the Microsoft Store
     runs-on: windows-latest
     needs: buildForSomePlatforms
-#    if: github.event.ref != 'refs/heads/develop'
-    if: false
+    if: github.event.ref != 'refs/heads/develop'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -92,7 +91,7 @@ jobs:
           BuildMode: StoreUpload
           AppxBundle: Always
       - name: Upload builds
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows
