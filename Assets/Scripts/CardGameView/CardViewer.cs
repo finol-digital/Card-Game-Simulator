@@ -235,9 +235,9 @@ namespace CardGameView
                 else
                     SelectedCardModel.DoubleClickAction?.Invoke(SelectedCardModel);
             }
-            else if (Inputs.IsSort)
+            else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 DecrementProperty();
-            else if (Inputs.IsFilter)
+            else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
                 IncrementProperty();
             else if (Inputs.IsOption)
                 Zoom = !Zoom;

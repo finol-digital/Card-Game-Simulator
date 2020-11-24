@@ -37,7 +37,7 @@ jobs:
           df -h
       - uses: webbertakken/unity-builder@v2.0-aplha-5
         with:
-          unityVersion: 2019.4.9f1
+          unityVersion: 2019.4.15f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildsPath: builds         
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
@@ -65,7 +65,7 @@ jobs:
       - name: Install Unity
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
-          args: install --yes unity --version=2019.4.9 unity-il2cpp --version=2019.4.9 unity-win-il2cpp --version=2019.4.9 unity-metro --version=2019.4.9
+          args: install --yes unity --version=2019.4.15 unity-il2cpp --version=2019.4.15 unity-win-il2cpp --version=2019.4.15 unity-metro --version=2019.4.15
       - name: Build Cgs for Windows
         run: .\build_windows.ps1
         shell: powershell

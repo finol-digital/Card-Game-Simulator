@@ -5,25 +5,16 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Fix: Card Stack sizes
-- Fix: Card Search in Play Mode
-- Cards: Highlight dragged card
-- Play Mode: Modulate speed of card scroll areas
-- Play Mode: Move card stacks around
-- Play Mode: Allow any player to move cards and dice in the play area, instead of just the player who put it there
-- Card Games: Change Play Mode Mat in-app
-- CardGameDef: AllDecksUrl, AllDecksUrlDataIdentifier, AllDecksUrlPostBodyContent 
+- Play Mode: Card Actions
+  - Q: Move to zone or stack
+  - F: Flip Face
+  - E: gameDefaultAction
+  - R: Rotate gameRotationDegrees
+  - T: Toggle rotation between 0 and gameRotationDegrees
+- CardGameDef: gameDefaultAction, gameRotationDegrees
 
 ## Current Sprint
-- Play Mode: Single-clicking card shows the Actions Bar
-  - Flip Face (in hand and play area)
-  - Rotate 90/180/270 (only in play area)
-  - Snap rotation to 0/90/180/270 (only in play area)
-  - Move to hand/other card stack(s) in a certain spot (x from top or bottom)
-- Card Games: Default double-click action in Play Mode
-- Play Mode: Move stack viewers, and allow multiple viewers per stack
-  - Pooling to improve performance of opening stack viewer
-- Play Mode: Resize stack viewer based off card game settings
+- Integration: Automate game upload
 
 ## Backlog
 - Tech: Improve performance/battery-usage
@@ -34,6 +25,7 @@ permalink: roadmap.html
 - Settings: Scale size of UI based off either physical size or resolution of display
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 - Cards: Support mix of different card sizes in the same game
+- Cards: Configurable highlight color
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
@@ -49,6 +41,9 @@ permalink: roadmap.html
 - Play Mode: Pre-defined zones in Play Area
 - Play Mode: .dec sideboard & .ydk side are extra stacks
 - Play Mode: Rotate stacks with 2 finger or right-click
+- Play Mode: Move stack viewers, and allow multiple viewers per stack
+  - Pooling to improve performance of opening stack viewer
+- Play Mode: Resize stack viewer based off card game settings
 
 ## Icebox
 - Tech: Replace SwipeManager

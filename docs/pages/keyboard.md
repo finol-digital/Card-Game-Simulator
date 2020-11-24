@@ -30,9 +30,13 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.
-- **Sort**: *q* - Previous property.
-- **Filter**: *f* - Next property.
+- **Focus**: *\`* or *Tab* - Cycle previous/next properties in Card Viewer.
 - **Option**: *Delete* - Zoom on selected card.
+- **Sort**: *q* - Move card.
+- **Filter**: *f* - Flip card face.
+- **New**: *e* - Default card action.
+- **Load**: *r* - Rotate card.
+- **Save**: *t* - Toggle card rotation.
 - **Submit**: *Enter* - Double-click on selected card.
 
 ## Deck Editor
