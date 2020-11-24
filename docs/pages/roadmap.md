@@ -8,10 +8,10 @@ permalink: roadmap.html
 - Play Mode: Card Actions
   - Q: Move to zone or stack
   - F: Flip Face
-  - E: gameDefaultAction
-  - R: Rotate gameRotationDegrees
-  - T: Toggle rotation between 0 and gameRotationDegrees
-- CardGameDef: gameDefaultAction, gameRotationDegrees
+  - E: gameDefaultCardAction
+  - R: Rotate gameCardRotationDegrees
+  - T: Toggle rotation between 0 and gameCardRotationDegrees (Tap)
+- CardGameDef: gameDefaultCardAction, gameCardRotationDegrees
 
 ## Current Sprint
 - Integration: Automate game upload

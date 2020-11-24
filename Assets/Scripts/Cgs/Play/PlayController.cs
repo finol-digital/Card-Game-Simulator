@@ -299,7 +299,7 @@ namespace Cgs.Play
 
         public static void SetPlayActions(CardModel cardModel)
         {
-            cardModel.DoubleClickAction = CardActions.FlipFace;
+            cardModel.DoubleClickAction = CardActions.Flip;
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 

@@ -304,6 +304,16 @@ namespace CardGameDef
         public List<GameBoardUrl> GameBoardUrls { get; set; } = new List<GameBoardUrl>();
 
         [JsonProperty]
+        [Description("gameCardRotationDegrees indicates how many degrees to rotate Cards in Play Mode.")]
+        [DefaultValue(90)]
+        public int GameCardRotationDegrees { get; set; } = 90;
+
+        [JsonProperty]
+        [Description("If possible, CGS will take the gameDefaultCardAction when a Card is double-clicked in Play Mode.")]
+        [DefaultValue("flip")]
+        public CardAction GameDefaultCardAction { get; set; } = CardAction.Flip;
+
+        [JsonProperty]
         [Description(
             "gamePlayDeckName is the name of the card stack shown when a player loads a deck. If <gamePlayDeckName> is empty, the *Deck:Name* is used.")]
         public string GamePlayDeckName { get; set; }
