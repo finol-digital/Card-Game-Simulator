@@ -6,9 +6,7 @@ permalink: roadmap.html
 
 ## What's New
 - Play Mode: Card Actions
-  - Q: Move to zone or stack
   - F: Flip Face
-  - E: gameDefaultCardAction
   - R: Rotate gameCardRotationDegrees
   - T: Toggle rotation between 0 and gameCardRotationDegrees (Tap)
 - CardGameDef: gameDefaultCardAction, gameCardRotationDegrees
@@ -30,6 +28,7 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (DFC)
+- Play Mode: E: Move card to zone or stack
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat
 - Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Support multiple playmats
