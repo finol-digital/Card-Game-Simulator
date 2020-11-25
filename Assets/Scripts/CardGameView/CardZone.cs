@@ -25,6 +25,8 @@ namespace CardGameView
     public class CardZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public CardZoneType type;
+        public bool allowsFlip;
+        public bool allowsRotation;
         public ScrollRect scrollRectContainer;
 
         public bool DoesImmediatelyRelease { get; set; }

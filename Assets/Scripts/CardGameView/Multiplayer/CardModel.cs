@@ -96,13 +96,14 @@ namespace CardGameView.Multiplayer
         {
             set
             {
-                if (value == isFacedown)
-                    return;
-
-                bool oldValue = isFacedown;
-                isFacedown = value;
-                if (!IsOnline)
+                if (IsOnline)
+                    CmdUpdateFacedown(value);
+                else
+                {
+                    bool oldValue = isFacedown;
+                    isFacedown = value;
                     OnChangeFacedown(oldValue, isFacedown);
+                }
             }
         }
 
@@ -243,6 +244,20 @@ namespace CardGameView.Multiplayer
 
             if (_holdTime > ZoomHoldTime)
                 RequestZoomOnThis();
+
+            if (CardViewer.Instance == null || CardViewer.Instance.SelectedCardModel != this || !CardViewer.Instance.IsVisible)
+                return;
+
+            if (Inputs.IsSort)
+                CardActions.Move(this);
+            else if (Inputs.IsFilter)
+                CardActions.Flip(this);
+            else if (Inputs.IsNew)
+                CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction](this);
+            else if (Inputs.IsLoad)
+                CardActions.Rotate(this);
+            else if (Inputs.IsSave)
+                CardActions.Tap(this);
         }
 
         private void RequestZoomOnThis()
@@ -616,7 +631,7 @@ namespace CardGameView.Multiplayer
                 CmdUpdateRotation(transform.rotation);
         }
 
-        [Command]
+        [Command(ignoreAuthority = true)]
         public void CmdUpdateRotation(Quaternion newRotation)
         {
             rotation = newRotation;
@@ -627,6 +642,12 @@ namespace CardGameView.Multiplayer
         {
             if (!hasAuthority)
                 transform.rotation = newRotation;
+        }
+
+        [Command(ignoreAuthority = true)]
+        private void CmdUpdateFacedown(bool facedown)
+        {
+            isFacedown = facedown;
         }
 
         [PublicAPI]

@@ -30,6 +30,11 @@ PrefabInstance:
       propertyPath: m_Text
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1835360023883422745, guid: db824bcf7bf139d4484ca9b35f47b8c9,
+        type: 3}
+      propertyPath: allowsFlip
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2016992045204714089, guid: db824bcf7bf139d4484ca9b35f47b8c9,
         type: 3}
       propertyPath: m_SizeDelta.x

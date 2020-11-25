@@ -19,6 +19,7 @@ namespace CardGameView
         public static IReadOnlyDictionary<CardGameDef.CardAction, CardAction> ActionsDictionary =>
             _actionsDictionary ?? (_actionsDictionary = new Dictionary<CardGameDef.CardAction, CardAction>
             {
+                [CardGameDef.CardAction.Move] = Move,
                 [CardGameDef.CardAction.Flip] = Flip,
                 [CardGameDef.CardAction.Rotate] = Rotate,
                 [CardGameDef.CardAction.Tap] = Tap
@@ -26,17 +27,28 @@ namespace CardGameView
 
         private static Dictionary<CardGameDef.CardAction, CardAction> _actionsDictionary;
 
+        public static void Move(CardModel cardModel)
+        {
+            // TODO
+        }
+
         public static void Flip(CardModel cardModel)
         {
+            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsFlip)
+            {
+                Debug.Log("Ignoring flip request since the parent card zone does not support it.");
+                return;
+            }
+
             cardModel.IsFacedown = !cardModel.isFacedown;
             EventSystem.current.SetSelectedGameObject(null, cardModel.CurrentPointerEventData);
         }
 
         public static void Rotate(CardModel cardModel)
         {
-            if (cardModel.IsOnline && !cardModel.hasAuthority)
+            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsRotation)
             {
-                Debug.LogWarning("Attempted to rotate card without authority!");
+                Debug.Log("Ignoring rotation request since the parent card zone does not support it.");
                 return;
             }
 
@@ -47,9 +59,9 @@ namespace CardGameView
 
         public static void Tap(CardModel cardModel)
         {
-            if (cardModel.IsOnline && !cardModel.hasAuthority)
+            if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsRotation)
             {
-                Debug.LogWarning("Attempted to rotate card without authority!");
+                Debug.Log("Ignoring rotation request since the parent card zone does not support it.");
                 return;
             }
 

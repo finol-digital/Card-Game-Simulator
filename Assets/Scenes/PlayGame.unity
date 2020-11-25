@@ -468,6 +468,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
+  allowsFlip: 1
+  allowsRotation: 1
   scrollRectContainer: {fileID: 0}
 --- !u!114 &217919979
 MonoBehaviour:

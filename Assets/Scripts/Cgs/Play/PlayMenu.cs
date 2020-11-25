@@ -26,7 +26,7 @@ namespace Cgs.Play
                 ShowDeckMenu();
             else if (Inputs.IsFilter)
                 ShowCardsMenu();
-            else if (Inputs.IsSort)
+            else if (Inputs.IsSave)
                 ShowDiceMenu();
         }
 

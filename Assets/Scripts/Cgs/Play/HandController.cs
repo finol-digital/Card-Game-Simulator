@@ -29,7 +29,7 @@ namespace Cgs.Play
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (Inputs.IsSave)
+            if (Inputs.IsSort)
                 Toggle();
         }
 
