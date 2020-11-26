@@ -5,16 +5,15 @@
 using System.Collections.Generic;
 using CardGameView.Multiplayer;
 using Cgs;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace CardGameView
 {
     public delegate void CardAction(CardModel cardModel);
 
-    [PublicAPI]
-    public static class CardActions
+    public class CardActions : MonoBehaviour
     {
         public static IReadOnlyDictionary<CardGameDef.CardAction, CardAction> ActionsDictionary =>
             _actionsDictionary ?? (_actionsDictionary = new Dictionary<CardGameDef.CardAction, CardAction>
@@ -71,6 +70,52 @@ namespace CardGameView
                 : Quaternion.identity;
             if (cardModel.IsOnline)
                 cardModel.CmdUpdateRotation(cardModel.transform.rotation);
+        }
+
+        public Button flipButton;
+        public Button rotateButton;
+        public Button tapButton;
+
+        public void Update()
+        {
+            bool isCardSelected = CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
+                                  CardViewer.Instance.SelectedCardModel != null;
+
+            flipButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                                      CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
+            rotateButton.interactable =
+                isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+            tapButton.interactable =
+                isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+
+            if (Inputs.IsFilter && flipButton.interactable)
+                Flip(CardViewer.Instance.SelectedCardModel);
+            else if (Inputs.IsNew) // TODO
+                Move(CardViewer.Instance.SelectedCardModel);
+            else if (Inputs.IsLoad && rotateButton.interactable)
+                Rotate(CardViewer.Instance.SelectedCardModel);
+            else if (Inputs.IsSave && tapButton.interactable)
+                Tap(CardViewer.Instance.SelectedCardModel);
+        }
+
+        public void Flip()
+        {
+            Debug.Log("Flip");
+            Flip(CardViewer.Instance.SelectedCardModel);
+        }
+
+        public void Rotate()
+        {
+            Debug.Log("Rotate");
+            Rotate(CardViewer.Instance.SelectedCardModel);
+        }
+
+        public void Tap()
+        {
+            Debug.Log("Tap");
+            Tap(CardViewer.Instance.SelectedCardModel);
         }
     }
 }

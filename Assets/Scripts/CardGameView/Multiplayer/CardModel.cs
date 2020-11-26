@@ -244,20 +244,6 @@ namespace CardGameView.Multiplayer
 
             if (_holdTime > ZoomHoldTime)
                 RequestZoomOnThis();
-
-            if (CardViewer.Instance == null || CardViewer.Instance.SelectedCardModel != this || !CardViewer.Instance.IsVisible)
-                return;
-
-            if (Inputs.IsSort)
-                CardActions.Move(this);
-            else if (Inputs.IsFilter)
-                CardActions.Flip(this);
-            else if (Inputs.IsNew)
-                CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction](this);
-            else if (Inputs.IsLoad)
-                CardActions.Rotate(this);
-            else if (Inputs.IsSave)
-                CardActions.Tap(this);
         }
 
         private void RequestZoomOnThis()
