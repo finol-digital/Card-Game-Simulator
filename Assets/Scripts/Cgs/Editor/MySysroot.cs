@@ -20,8 +20,7 @@ namespace UnityEditor.LinuxStandalone
         public override IEnumerable<string> GetIl2CppArguments()
         {
             yield return "--sysroot-path=/";
-            yield return
-                "--tool-chain-path=/opt/unity/Editor/Data/PlaybackEngines/LinuxStandaloneSupport/BuildTools/Emscripten_FastComp_Linux/clang";
+            yield return "--tool-chain-path=/usr/lib/llvm-6.0";
         }
     }
 }
