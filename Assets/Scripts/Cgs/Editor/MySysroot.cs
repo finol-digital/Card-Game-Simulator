@@ -21,7 +21,7 @@ namespace UnityEditor.LinuxStandalone
         {
             yield return "--sysroot-path=/";
             yield return
-                "--tool-chain-path=/opt/unity/Editor/Data/PlaybackEngines/WebGLSupport/BuildTools/Emscripten_FastComp_Linux/clang";
+                "--tool-chain-path=/opt/unity/Editor/Data/PlaybackEngines/LinuxStandaloneSupport/BuildTools/Emscripten_FastComp_Linux/clang";
         }
     }
 }
