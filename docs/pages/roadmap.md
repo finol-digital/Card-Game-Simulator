@@ -20,6 +20,7 @@ permalink: roadmap.html
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to successfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
+- Networking: Add ability to enter direct IP for a networked game
 - Settings: Scale size of UI based off either physical size or resolution of display
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 - Cards: Support mix of different card sizes in the same game
