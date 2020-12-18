@@ -5,42 +5,40 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Play Mode: Card Actions
-  - F: Flip Face
-  - R: Rotate gameCardRotationDegrees
-  - T: Toggle rotation between 0 and gameCardRotationDegrees (Tap)
-- CardGameDef: gameDefaultCardAction, gameCardRotationDegrees
+
 
 ## Current Sprint
-- Integration: Automate game upload
-
-## Backlog
-- Tech: Improve performance/battery-usage
+- Fix: Dice on WebGL
+- Fix: Move decks on Web
+- Fix: Bugs on GitHub Issues
+- Cards: Peek at facedown
 - Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to successfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
 - Networking: Add ability to enter direct IP for a networked game
-- Settings: Scale size of UI based off either physical size or resolution of display
+- Play Mode: Let cards stay in their location when dropped on card scroll areas
+- Play Mode: Pre-defined stack locations
+- Play Mode: Pre-defined zones in Play Area
+- Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
+- Play Mode: .dec sideboard & .ydk side are extra stacks
+- Play Mode: E: Move card to zone or stack
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
+
+## Backlog
+- Settings: Scale size of UI based off either physical size or resolution of display
+- Integration: Automate game upload
 - Cards: Support mix of different card sizes in the same game
 - Cards: Configurable highlight color
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (DFC)
-- Play Mode: E: Move card to zone or stack
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat
-- Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Support multiple playmats
-- Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal, stack-diagonal
 - Play Mode: Face-up cards in cards stacks
 - Play Mode: Rotate play area (2 finger or right-click)
 - Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
-- Play Mode: Pre-defined stack locations
-- Play Mode: Pre-defined zones in Play Area
-- Play Mode: .dec sideboard & .ydk side are extra stacks
-- Play Mode: Rotate stacks with 2 finger or right-click
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
 - Play Mode: Resize stack viewer based off card game settings
