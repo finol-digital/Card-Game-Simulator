@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CardGameDef;
+using CardGameDef.Unity;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Utilities;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class AotTypeEnforcer : MonoBehaviour
         {
             // ReSharper disable once UseObjectOrCollectionInitializer
             var cardGame = new CardGame();
-            cardGame.AllCardsUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.AllCardsUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.AllCardsUrlPageCount = 1;
             cardGame.AllCardsUrlPageCountDivisor = 1;
             cardGame.AllCardsUrlPageCountIdentifier = string.Empty;
@@ -25,19 +26,19 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.AllCardsUrlPostBodyContent = string.Empty;
             cardGame.AllCardsUrlWrapped = false;
             cardGame.AllCardsUrlZipped = false;
-            cardGame.AllDecksUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.AllDecksUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.AllDecksUrlDataIdentifier = string.Empty;
             cardGame.AllDecksUrlPostBodyContent = string.Empty;
             cardGame.AllDecksUrlTxtRoot = string.Empty;
-            cardGame.AllSetsUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.AllSetsUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.AllSetsUrlWrapped = false;
             cardGame.AllSetsUrlZipped = false;
             cardGame.AutoUpdate = 1;
-            cardGame.AutoUpdateUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.AutoUpdateUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.BannerImageFileType = string.Empty;
-            cardGame.BannerImageUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.BannerImageUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.CardBackImageFileType = string.Empty;
-            cardGame.CardBackImageUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.CardBackImageUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.CardDataIdentifier = string.Empty;
             cardGame.CardIdIdentifier = string.Empty;
             cardGame.CardIdStop = string.Empty;
@@ -59,7 +60,7 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.DeckFileTxtId = DeckFileTxtId.Id;
             cardGame.DeckFileType = DeckFileType.Dec;
             cardGame.DeckUrls = new List<DeckUrl>();
-            var deckUrl = new DeckUrl(string.Empty, string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
+            var deckUrl = new DeckUrl(string.Empty, string.Empty, new Uri(UnityFileMethods.FilePrefix));
             cardGame.Enums = new List<EnumDef>();
             var enumDef = new EnumDef(string.Empty,
                 new Dictionary<string, string>());
@@ -73,15 +74,15 @@ public class AotTypeEnforcer : MonoBehaviour
             cardGame.GameBoardImageFileType = string.Empty;
             cardGame.GameBoardUrls = new List<GameBoardUrl>();
             var gameBoardUrl =
-                new GameBoardUrl(string.Empty, new Uri(UnityExtensionMethods.FilePrefix));
+                new GameBoardUrl(string.Empty, new Uri(UnityFileMethods.FilePrefix));
             cardGame.GamePlayDeckName = string.Empty;
             cardGame.GameStartHandCount = 1;
             cardGame.GameStartPointsCount = 1;
             cardGame.Name = string.Empty;
             cardGame.PlayMatImageFileType = string.Empty;
-            cardGame.PlayMatImageUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.PlayMatImageUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.PlayMatSize = new Float2(1, 1);
-            cardGame.RulesUrl = new Uri(UnityExtensionMethods.FilePrefix);
+            cardGame.RulesUrl = new Uri(UnityFileMethods.FilePrefix);
             cardGame.SetCardsIdentifier = string.Empty;
             cardGame.SetCardsUrlIdentifier = string.Empty;
             cardGame.SetCodeDefault = string.Empty;

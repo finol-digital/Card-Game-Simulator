@@ -7,14 +7,15 @@ using System.IO;
 using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
-using CardGameView;
-using CardGameView.Multiplayer;
+using Cgs.CardGameView;
+using Cgs.CardGameView.Multiplayer;
 using Cgs.Cards;
 using Cgs.Decks;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
+using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -227,7 +228,7 @@ namespace Cgs.Play
             string boardFilepath = CardGameManager.Current.GameBoardsDirectoryPath + "/" + board.Id + "." +
                                    CardGameManager.Current.GameBoardImageFileType;
             Sprite boardImageSprite = File.Exists(boardFilepath)
-                ? UnityExtensionMethods.CreateSprite(boardFilepath)
+                ? UnityFileMethods.CreateSprite(boardFilepath)
                 : null;
             if (boardImageSprite != null)
                 newBoard.AddComponent<Image>().sprite = boardImageSprite;

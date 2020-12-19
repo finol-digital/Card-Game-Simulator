@@ -13,10 +13,10 @@ namespace CardGameDef.Unity
         public static readonly UnityCard Blank = new UnityCard(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
-        public string ImageFileName => UnityExtensionMethods.GetSafeFileName(Id + "." + SourceGame.CardImageFileType);
+        public string ImageFileName => UnityFileMethods.GetSafeFileName(Id + "." + SourceGame.CardImageFileType);
 
         public string ImageFilePath =>
-            UnityExtensionMethods.GetSafeFilePath(((UnityCardGame) SourceGame).SetsDirectoryPath + "/" + SetCode +
+            UnityFileMethods.GetSafeFilePath(((UnityCardGame) SourceGame).SetsDirectoryPath + "/" + SetCode +
                                                   "/") + ImageFileName;
 
         public Sprite ImageSprite
@@ -72,12 +72,12 @@ namespace CardGameDef.Unity
             IsLoadingImage = true;
             Sprite newSprite = null;
 #if UNITY_WEBGL
-            yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(
-                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(ImageWebUrl)
+            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
+                UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageWebUrl)
                 , output => newSprite = output);
 #else
-            yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(
-                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl)
+            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
+                UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl)
                 , output => newSprite = output);
 #endif
             if (newSprite != null)

@@ -1,0 +1,21 @@
+{
+    "name": "Cgs",
+    "references": [
+        "GUID:de5fde282a2c8e0489b04b065584c338",
+        "GUID:ab425aab4b86fce43a60190dfdddb1ad",
+        "GUID:9cf21dd966e73d646841605de002131b",
+        "GUID:30817c1a0e6d646d99c048fc403f5979",
+        "GUID:72872094b21c16e48b631b2224833d49",
+        "GUID:e720aa64e3f58fb4880566a322584340",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

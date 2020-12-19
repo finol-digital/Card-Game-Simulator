@@ -4,9 +4,10 @@
 
 using System.Collections.Generic;
 using CardGameDef.Unity;
-using CardGameView;
-using CardGameView.Multiplayer;
+using Cgs.CardGameView;
+using Cgs.CardGameView.Multiplayer;
 using JetBrains.Annotations;
+using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.UI;
 

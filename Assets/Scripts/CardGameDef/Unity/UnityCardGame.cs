@@ -24,23 +24,23 @@ namespace CardGameDef.Unity
 
         public static string GamesDirectoryPath => Application.persistentDataPath + "/games";
 
-        public string GameDirectoryPath => Path.Combine(GamesDirectoryPath, UnityExtensionMethods.GetSafeFileName(Id));
+        public string GameDirectoryPath => Path.Combine(GamesDirectoryPath, UnityFileMethods.GetSafeFileName(Id));
 
         public string GameFilePath => Path.Combine(GameDirectoryPath,
-            UnityExtensionMethods.GetSafeFileName(Name) + UnityExtensionMethods.JsonExtension);
+            UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
 
         public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
         public string DecksFilePath => GameDirectoryPath + "/AllDecks.json";
         public string SetsFilePath => GameDirectoryPath + "/AllSets.json";
 
         public string BannerImageFilePath => GameDirectoryPath + "/Banner." +
-                                             UnityExtensionMethods.GetSafeFileName(BannerImageFileType);
+                                             UnityFileMethods.GetSafeFileName(BannerImageFileType);
 
         public string CardBackImageFilePath => GameDirectoryPath + "/CardBack." +
-                                               UnityExtensionMethods.GetSafeFileName(CardBackImageFileType);
+                                               UnityFileMethods.GetSafeFileName(CardBackImageFileType);
 
         public string PlayMatImageFilePath => GameDirectoryPath + "/PlayMat." +
-                                              UnityExtensionMethods.GetSafeFileName(PlayMatImageFileType);
+                                              UnityFileMethods.GetSafeFileName(PlayMatImageFileType);
 
         public string DecksDirectoryPath => GameDirectoryPath + "/decks";
         public string GameBoardsDirectoryPath => GameDirectoryPath + "/boards";
@@ -154,7 +154,7 @@ namespace CardGameDef.Unity
                 {
                     string tempGameFilePath =
                         Path.Combine(gameDirectoryPath,
-                            UnityExtensionMethods.GetSafeFileName(Name) + UnityExtensionMethods.JsonExtension);
+                            UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
                     File.Move(gameFilePath, tempGameFilePath);
                 }
 
@@ -163,9 +163,9 @@ namespace CardGameDef.Unity
 
                 // We're being greedy about loading these now, since these could be shown before the game is selected
                 if (File.Exists(BannerImageFilePath))
-                    BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
+                    BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
                 if (File.Exists(CardBackImageFilePath))
-                    CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
+                    CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
 
                 HasReadProperties = true;
             }
@@ -186,7 +186,7 @@ namespace CardGameDef.Unity
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: CardGameDef...";
             if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
-                yield return UnityExtensionMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, GameFilePath);
+                yield return UnityFileMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, GameFilePath);
             ReadProperties();
             if (!HasReadProperties)
             {
@@ -199,23 +199,23 @@ namespace CardGameDef.Unity
             DownloadProgress = 1f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Banner";
             if (BannerImageUrl != null && BannerImageUrl.IsAbsoluteUri)
-                yield return UnityExtensionMethods.SaveUrlToFile(BannerImageUrl.AbsoluteUri, BannerImageFilePath);
+                yield return UnityFileMethods.SaveUrlToFile(BannerImageUrl.AbsoluteUri, BannerImageFilePath);
 
             DownloadProgress = 2f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: CardBack";
             if (CardBackImageUrl != null && CardBackImageUrl.IsAbsoluteUri)
-                yield return UnityExtensionMethods.SaveUrlToFile(CardBackImageUrl.AbsoluteUri, CardBackImageFilePath);
+                yield return UnityFileMethods.SaveUrlToFile(CardBackImageUrl.AbsoluteUri, CardBackImageFilePath);
 
             DownloadProgress = 3f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: PlayMat";
             if (PlayMatImageUrl != null && PlayMatImageUrl.IsAbsoluteUri)
-                yield return UnityExtensionMethods.SaveUrlToFile(PlayMatImageUrl.AbsoluteUri, PlayMatImageFilePath);
+                yield return UnityFileMethods.SaveUrlToFile(PlayMatImageUrl.AbsoluteUri, PlayMatImageFilePath);
 
             DownloadProgress = 4f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Boards";
             foreach (GameBoardUrl boardUrl in GameBoardUrls)
                 if (!string.IsNullOrEmpty(boardUrl.Id) && boardUrl.Url != null && boardUrl.Url.IsAbsoluteUri)
-                    yield return UnityExtensionMethods.SaveUrlToFile(boardUrl.Url.AbsoluteUri,
+                    yield return UnityFileMethods.SaveUrlToFile(boardUrl.Url.AbsoluteUri,
                         GameBoardsDirectoryPath + "/" + boardUrl.Id + "." + GameBoardImageFileType);
 
             DownloadProgress = 5f / (8f + AllCardsUrlPageCount);
@@ -224,7 +224,7 @@ namespace CardGameDef.Unity
             if (!string.IsNullOrEmpty(AllDecksUrlPostBodyContent))
                 deckRequestBody = "{" + AllDecksUrlPostBodyContent + "}";
             if (AllDecksUrl != null && AllDecksUrl.IsAbsoluteUri)
-                yield return UnityExtensionMethods.SaveUrlToFile(AllDecksUrl.AbsoluteUri, DecksFilePath,
+                yield return UnityFileMethods.SaveUrlToFile(AllDecksUrl.AbsoluteUri, DecksFilePath,
                     deckRequestBody);
             if (File.Exists(DecksFilePath))
             {
@@ -264,22 +264,22 @@ namespace CardGameDef.Unity
 
                 string deckFilePath = DecksDirectoryPath + "/" + deckUrl.Name + "." + DeckFileType.ToString().ToLower();
                 if (!string.IsNullOrEmpty(AllDecksUrlTxtRoot) && !string.IsNullOrEmpty(deckUrl.Txt))
-                    yield return UnityExtensionMethods.SaveUrlToFile(AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
+                    yield return UnityFileMethods.SaveUrlToFile(AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
                 else if (deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
-                    yield return UnityExtensionMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, deckFilePath);
+                    yield return UnityFileMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, deckFilePath);
                 else
                     Debug.Log($"Empty url for deckUrl {deckUrl}");
             }
 
             DownloadProgress = 6f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: AllSets.json";
-            string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityExtensionMethods.ZipExtension : string.Empty);
+            string setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityFileMethods.ZipExtension : string.Empty);
             if (AllSetsUrl != null && AllSetsUrl.IsAbsoluteUri)
-                yield return UnityExtensionMethods.SaveUrlToFile(AllSetsUrl.AbsoluteUri, setsFilePath);
+                yield return UnityFileMethods.SaveUrlToFile(AllSetsUrl.AbsoluteUri, setsFilePath);
             if (AllSetsUrlZipped)
-                UnityExtensionMethods.ExtractZip(setsFilePath, GameDirectoryPath);
+                UnityFileMethods.ExtractZip(setsFilePath, GameDirectoryPath);
             if (AllSetsUrlWrapped)
-                UnityExtensionMethods.UnwrapFile(SetsFilePath);
+                UnityFileMethods.UnwrapFile(SetsFilePath);
 
             if (AllCardsUrl != null && AllCardsUrl.IsWellFormedOriginalString())
             {
@@ -298,7 +298,7 @@ namespace CardGameDef.Unity
                     if (page != AllCardsUrlPageCountStartIndex)
                         cardsFile += page.ToString();
                     if (AllCardsUrlZipped)
-                        cardsFile += UnityExtensionMethods.ZipExtension;
+                        cardsFile += UnityFileMethods.ZipExtension;
                     string jsonBody = null;
                     if (!string.IsNullOrEmpty(AllCardsUrlPostBodyContent))
                     {
@@ -309,12 +309,12 @@ namespace CardGameDef.Unity
                     }
 
                     Dictionary<string, string> responseHeaders = new Dictionary<string, string>();
-                    yield return UnityExtensionMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody, responseHeaders);
+                    yield return UnityFileMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody, responseHeaders);
                     if (AllCardsUrlZipped)
-                        UnityExtensionMethods.ExtractZip(cardsFile, GameDirectoryPath);
+                        UnityFileMethods.ExtractZip(cardsFile, GameDirectoryPath);
                     if (AllCardsUrlWrapped)
-                        UnityExtensionMethods.UnwrapFile(cardsFile.EndsWith(UnityExtensionMethods.ZipExtension)
-                            ? cardsFile.Remove(cardsFile.Length - UnityExtensionMethods.ZipExtension.Length)
+                        UnityFileMethods.UnwrapFile(cardsFile.EndsWith(UnityFileMethods.ZipExtension)
+                            ? cardsFile.Remove(cardsFile.Length - UnityFileMethods.ZipExtension.Length)
                             : cardsFile);
 
                     // Sometimes, we need to get the AllCardsUrlPageCount from the first page of AllCardsUrl
@@ -387,13 +387,13 @@ namespace CardGameDef.Unity
 
             // We also re-load the banner and cardBack images now in case they've changed since we ReadProperties
             if (File.Exists(BannerImageFilePath))
-                BannerImageSprite = UnityExtensionMethods.CreateSprite(BannerImageFilePath);
+                BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
             if (File.Exists(CardBackImageFilePath))
-                CardBackImageSprite = UnityExtensionMethods.CreateSprite(CardBackImageFilePath);
+                CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
 
             // The play mat can be loaded last
             if (File.Exists(PlayMatImageFilePath))
-                PlayMatImageSprite = UnityExtensionMethods.CreateSprite(PlayMatImageFilePath);
+                PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
 
             // Only considered as loaded if none of the steps failed
             if (string.IsNullOrEmpty(Error))

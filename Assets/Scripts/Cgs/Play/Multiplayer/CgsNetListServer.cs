@@ -7,9 +7,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Mirror;
-using Telepathy;
 using UnityEngine;
-using EventType = Telepathy.EventType;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -46,8 +44,8 @@ namespace Cgs.Play.Multiplayer
 
         public OnServerListedDelegate OnServerFound { get; set; }
 
-        private readonly Client _gameServerToListenConnection = new Client();
-        private readonly Client _clientToListenConnection = new Client();
+        // TODO: private readonly Client _gameServerToListenConnection = new Client();
+        // TODO: private readonly Client _clientToListenConnection = new Client();
 
         public void StartGameServer()
         {
@@ -60,6 +58,7 @@ namespace Cgs.Play.Multiplayer
         {
             while (true)
             {
+                /* // TODO:
                 if (_gameServerToListenConnection.Connected)
                 {
 //                    Debug.Log("[CgsNet List Server] GameServer connected and sending status...");
@@ -75,7 +74,7 @@ namespace Cgs.Play.Multiplayer
                     Debug.LogError("[CgsNet List Server] GameServer is ticking but not connecting.");
                     yield break;
                 }
-
+*/
                 yield return new WaitForSeconds(1.0f);
             }
         }
@@ -95,8 +94,8 @@ namespace Cgs.Play.Multiplayer
             // list server only allows up to 128 bytes per message
             if (writer.BaseStream.Position <= 128)
             {
-                if (!_gameServerToListenConnection.Send(((MemoryStream) writer.BaseStream).ToArray()))
-                    Debug.LogError("[CgsNet List Server] GameServer failed to send status!");
+                // TODO: if (!_gameServerToListenConnection.Send(((MemoryStream) writer.BaseStream).ToArray()))
+                // TODO:     Debug.LogError("[CgsNet List Server] GameServer failed to send status!");
             }
             else
                 Debug.LogError(
@@ -114,6 +113,7 @@ namespace Cgs.Play.Multiplayer
         {
             while (true)
             {
+                /*// TODO:
                 if (_clientToListenConnection.Connected)
                 {
                     // receive latest game server info
@@ -140,7 +140,7 @@ namespace Cgs.Play.Multiplayer
                     Debug.LogError("[CgsNet List Server] Client is ticking but not connecting.");
                     yield break;
                 }
-
+*/
                 yield return new WaitForSeconds(1.0f);
             }
         }
@@ -163,10 +163,10 @@ namespace Cgs.Play.Multiplayer
         public void Stop()
         {
             Debug.Log("[CgsNet List Server] Stopping...");
-            if (_clientToListenConnection.Connected)
-                _clientToListenConnection.Disconnect();
-            if (_gameServerToListenConnection.Connected)
-                _gameServerToListenConnection.Disconnect();
+            // TODO: if (_clientToListenConnection.Connected)
+            // TODO:     _clientToListenConnection.Disconnect();
+            // TODO: if (_gameServerToListenConnection.Connected)
+            // TODO:     _gameServerToListenConnection.Disconnect();
             StopAllCoroutines();
         }
 

@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Linq;
-using CardGameView;
-using CardGameView.Multiplayer;
+using Cgs.CardGameView;
+using Cgs.CardGameView.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;

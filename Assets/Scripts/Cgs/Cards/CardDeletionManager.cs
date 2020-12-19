@@ -3,8 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using CardGameDef;
-using CardGameView;
+using Cgs.CardGameView;
 using JetBrains.Annotations;
+using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.UI;
 

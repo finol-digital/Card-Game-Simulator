@@ -15,7 +15,7 @@ namespace Mirror
     /// <para>The OnRoom*() functions have empty implementations on the NetworkRoomManager base class, so the base class functions do not have to be called.</para>
     /// </remarks>
     [AddComponentMenu("Network/NetworkRoomManager")]
-    [HelpURL("https://mirror-networking.com/docs/Components/NetworkRoomManager.html")]
+    [HelpURL("https://mirror-networking.com/docs/Articles/Components/NetworkRoomManager.html")]
     public class NetworkRoomManager : NetworkManager
     {
         static readonly ILogger logger = LogFactory.GetLogger(typeof(NetworkRoomManager));
@@ -31,17 +31,17 @@ namespace Mirror
         [FormerlySerializedAs("m_ShowRoomGUI")]
         [SerializeField]
         [Tooltip("This flag controls whether the default UI is shown for the room")]
-        internal bool showRoomGUI = true;
+        public bool showRoomGUI = true;
 
         [FormerlySerializedAs("m_MinPlayers")]
         [SerializeField]
         [Tooltip("Minimum number of players to auto-start the game")]
-        protected int minPlayers = 1;
+        public int minPlayers = 1;
 
         [FormerlySerializedAs("m_RoomPlayerPrefab")]
         [SerializeField]
         [Tooltip("Prefab to use for the Room Player")]
-        protected NetworkRoomPlayer roomPlayerPrefab;
+        public NetworkRoomPlayer roomPlayerPrefab;
 
         /// <summary>
         /// The scene to use for the room. This is similar to the offlineScene of the NetworkManager.
@@ -125,7 +125,7 @@ namespace Mirror
             base.OnValidate();
         }
 
-        internal void ReadyStatusChanged()
+        public void ReadyStatusChanged()
         {
             int CurrentPlayers = 0;
             int ReadyPlayers = 0;
@@ -403,13 +403,13 @@ namespace Mirror
         {
             if (string.IsNullOrEmpty(RoomScene))
             {
-                logger.LogError("NetworkRoomManager RoomScene is empty. Set the RoomScene in the inspector for the NetworkRoomMangaer");
+                logger.LogError("NetworkRoomManager RoomScene is empty. Set the RoomScene in the inspector for the NetworkRoomManager");
                 return;
             }
 
             if (string.IsNullOrEmpty(GameplayScene))
             {
-                logger.LogError("NetworkRoomManager PlayScene is empty. Set the PlayScene in the inspector for the NetworkRoomMangaer");
+                logger.LogError("NetworkRoomManager PlayScene is empty. Set the PlayScene in the inspector for the NetworkRoomManager");
                 return;
             }
 

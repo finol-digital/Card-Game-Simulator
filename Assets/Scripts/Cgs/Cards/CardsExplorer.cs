@@ -3,9 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameView;
+using Cgs.CardGameView;
 using Cgs.Menu;
 using JetBrains.Annotations;
+using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;

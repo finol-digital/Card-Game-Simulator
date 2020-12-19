@@ -22,12 +22,12 @@ namespace CardGameDef.Unity
         private const int PrintPdfPixelsPerInch = 72;
 
         public string FilePath => ((UnityCardGame) SourceGame).DecksDirectoryPath + Path.DirectorySeparatorChar +
-                                  UnityExtensionMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
+                                  UnityFileMethods.GetSafeFileName(Name + "." + FileType.ToString().ToLower());
 
         private string PrintPdfDirectory => ((UnityCardGame) SourceGame).DecksDirectoryPath + "/printpdf";
 
         private string PrintPdfFilePath =>
-            PrintPdfDirectory + "/" + UnityExtensionMethods.GetSafeFileName(Name + ".pdf");
+            PrintPdfDirectory + "/" + UnityFileMethods.GetSafeFileName(Name + ".pdf");
 
         public override IReadOnlyCollection<Card> Cards => new List<Card>(_cards);
         private readonly List<UnityCard> _cards;
@@ -286,7 +286,7 @@ namespace CardGameDef.Unity
             pdfDocument.Close();
             pdfDocument.Dispose();
 
-            return new Uri(UnityExtensionMethods.FilePrefix + PrintPdfFilePath);
+            return new Uri(UnityFileMethods.FilePrefix + PrintPdfFilePath);
         }
     }
 }

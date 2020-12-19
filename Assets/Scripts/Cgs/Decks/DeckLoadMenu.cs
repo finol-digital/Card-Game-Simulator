@@ -11,6 +11,7 @@ using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
 using JetBrains.Annotations;
+using Plugins.UnityExtensionMethods;
 using ScrollRects;
 using TMPro;
 using UnityEngine;
@@ -289,7 +290,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void ValidateDeckName(string deckName)
         {
-            nameInputField.text = UnityExtensionMethods.GetSafeFileName(deckName);
+            nameInputField.text = UnityFileMethods.GetSafeFileName(deckName);
         }
 
         [UsedImplicitly]

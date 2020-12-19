@@ -4,16 +4,19 @@ namespace Mirror.Examples.RigidbodyPhysics
 {
     public class AddForce : NetworkBehaviour
     {
-        [SerializeField] float force = 500f;
+        public Rigidbody rigidbody3d;
+        public float force = 500f;
+
+        private void Start()
+        {
+            rigidbody3d.isKinematic = !isServer;
+        }
 
         void Update()
         {
-            if (isServer)
+            if (isServer && Input.GetKeyDown(KeyCode.Space))
             {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    GetComponent<Rigidbody>().AddForce(Vector3.up * force);
-                }
+                rigidbody3d.AddForce(Vector3.up * force);
             }
         }
     }
