@@ -18,11 +18,11 @@ namespace Mirror.Weaver
 
         public static bool Is<T>(this TypeReference td) => Is(td, typeof(T));
 
-        public static bool IsDerivedFrom<T>(this TypeDefinition td) => IsDerivedFrom(td, typeof(T));
+        public static bool IsDerivedFrom<T>(this TypeReference tr) => IsDerivedFrom(tr, typeof(T));
 
-        public static bool IsDerivedFrom(this TypeDefinition td, Type baseClass)
+        public static bool IsDerivedFrom(this TypeReference tr, Type baseClass)
         {
-
+            TypeDefinition td = tr.Resolve();
             if (!td.IsClass)
                 return false;
 
@@ -84,6 +84,16 @@ namespace Mirror.Weaver
             return tr is ArrayType arrayType && arrayType.Rank > 1;
         }
 
+        /// <summary>
+        /// Does type use netId as backing field
+        /// </summary>
+        public static bool IsNetworkIdentityField(this TypeReference tr)
+        {
+            return tr.Is<UnityEngine.GameObject>()
+                || tr.Is<NetworkIdentity>()
+                || tr.IsDerivedFrom<NetworkBehaviour>();
+        }
+
         public static bool CanBeResolved(this TypeReference parent)
         {
             while (parent != null)
@@ -111,6 +121,20 @@ namespace Mirror.Weaver
             return true;
         }
 
+        /// <summary>
+        /// Makes T => Variable and imports function
+        /// </summary>
+        /// <param name="generic"></param>
+        /// <param name="variableReference"></param>
+        /// <returns></returns>
+        public static MethodReference MakeGeneric(this MethodReference generic, TypeReference variableReference)
+        {
+            GenericInstanceMethod instance = new GenericInstanceMethod(generic);
+            instance.GenericArguments.Add(variableReference);
+
+            MethodReference readFunc = Weaver.CurrentAssembly.MainModule.ImportReference(instance);
+            return readFunc;
+        }
 
         /// <summary>
         /// Given a method of a generic class such as ArraySegment`T.get_Count,
