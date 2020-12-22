@@ -7,10 +7,10 @@ using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.CardGameView.Multiplayer;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.CardGameView
 {

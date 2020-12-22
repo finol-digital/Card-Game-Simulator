@@ -7,9 +7,9 @@ using CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {

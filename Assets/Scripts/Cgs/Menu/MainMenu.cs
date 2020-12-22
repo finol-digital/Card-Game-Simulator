@@ -5,12 +5,12 @@
 using System.Collections.Generic;
 using CardGameDef.Unity;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {

@@ -10,10 +10,10 @@ using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityExtensionMethods;
 
 namespace Cgs
 {

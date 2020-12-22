@@ -9,11 +9,11 @@ using CardGameDef.Unity;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
@@ -463,8 +463,8 @@ namespace Cgs.CardGameView.Multiplayer
                 ? Color.green
                 : Color.red;
 
-            Vector2 targetPosition = UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
-            targetPosition += UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
+            Vector2 targetPosition = UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
+            targetPosition += UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
             if (ParentCardZone != null)
                 UpdateCardZonePosition(targetPosition);
             else if (!IsStatic)

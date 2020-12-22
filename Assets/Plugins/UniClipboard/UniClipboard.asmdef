@@ -1,16 +1,11 @@
 {
-    "name": "CardGameDef",
-    "references": [
-        "GUID:d7528a878641bff40a1fd2651047d55f"
-    ],
+    "name": "UniClipboard",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
-    "precompiledReferences": [
-        "Newtonsoft.Json.dll",
-        "SharpZipLib.dll"
-    ],
+    "precompiledReferences": [],
     "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],

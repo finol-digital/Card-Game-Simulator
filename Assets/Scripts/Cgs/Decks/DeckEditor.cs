@@ -12,11 +12,11 @@ using Cgs.CardGameView.Multiplayer;
 using Cgs.Cards;
 using Cgs.Menu;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Decks
 {

@@ -15,10 +15,10 @@ using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Play
 {

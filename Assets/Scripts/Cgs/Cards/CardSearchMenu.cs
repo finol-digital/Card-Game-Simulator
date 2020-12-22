@@ -8,9 +8,9 @@ using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {

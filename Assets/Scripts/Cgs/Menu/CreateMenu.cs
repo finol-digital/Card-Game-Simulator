@@ -13,9 +13,9 @@ using Crosstales.FB;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {

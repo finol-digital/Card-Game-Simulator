@@ -5,9 +5,9 @@
 using CardGameDef;
 using Cgs.CardGameView;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {

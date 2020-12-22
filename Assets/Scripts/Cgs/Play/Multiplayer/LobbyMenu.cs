@@ -8,11 +8,11 @@ using CardGameDef.Unity;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using Mirror;
-using Plugins.UnityExtensionMethods;
 using ScrollRects;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {

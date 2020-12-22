@@ -1,0 +1,21 @@
+{
+    "name": "Cgs.Editor",
+    "references": [
+        "GUID:de5fde282a2c8e0489b04b065584c338"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "NJsonSchema.dll",
+        "Namotion.Reflection.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using CardGameDef.Unity;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace ScrollRects
 {

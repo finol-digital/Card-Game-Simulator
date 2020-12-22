@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using Cgs.CardGameView;
 using Cgs.Menu;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {

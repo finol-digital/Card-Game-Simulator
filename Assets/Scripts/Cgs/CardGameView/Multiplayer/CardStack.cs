@@ -10,10 +10,10 @@ using CardGameDef.Unity;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 using Random = System.Random;
 
 namespace Cgs.CardGameView.Multiplayer
@@ -247,8 +247,8 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            Vector2 targetPosition = UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
-            targetPosition += UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
+            Vector2 targetPosition = UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
+            targetPosition += UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
 
             var rectTransform = (RectTransform) transform;
             rectTransform.position = targetPosition;

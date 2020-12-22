@@ -12,10 +12,10 @@ using CardGameDef.Unity;
 using Cgs.Menu;
 using Crosstales.FB;
 using JetBrains.Annotations;
-using Plugins.UnityExtensionMethods;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {
