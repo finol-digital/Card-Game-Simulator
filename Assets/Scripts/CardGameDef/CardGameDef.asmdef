@@ -9,7 +9,7 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "Newtonsoft.Json.dll",
-        "SharpZipLib.dll"
+        "ICSharpCode.SharpZipLib.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

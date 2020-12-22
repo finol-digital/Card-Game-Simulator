@@ -273,6 +273,21 @@
         "$ref": "#/definitions/GameBoardUrl"
       }
     },
+    "gameCardRotationDegrees": {
+      "type": "integer",
+      "description": "gameCardRotationDegrees indicates how many degrees to rotate Cards in Play Mode.",
+      "format": "int32",
+      "default": 90
+    },
+    "gameDefaultCardAction": {
+      "description": "If possible, CGS will take the gameDefaultCardAction when a Card is double-clicked in Play Mode.",
+      "default": "flip",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/CardAction"
+        }
+      ]
+    },
     "gamePlayDeckName": {
       "type": "string",
       "description": "gamePlayDeckName is the name of the card stack shown when a player loads a deck. If <gamePlayDeckName> is empty, the *Deck:Name* is used."
@@ -591,6 +606,22 @@
           "format": "uri"
         }
       }
+    },
+    "CardAction": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Move",
+        "Flip",
+        "Rotate",
+        "Tap"
+      ],
+      "enum": [
+        "move",
+        "flip",
+        "rotate",
+        "tap"
+      ]
     }
   }
 }
