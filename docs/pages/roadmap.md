@@ -34,10 +34,10 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (DFC)
-- Play Mode: Add submenu to control position, rotation, and zoom of playmat
+- Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Play Mode: Support multiple playmats
 - Play Mode: Face-up cards in cards stacks
-- Play Mode: Rotate play area (2 finger or right-click)
+- Play Mode: Rotate play area (2 finger or right-click) (see Tabletopia)
 - Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
