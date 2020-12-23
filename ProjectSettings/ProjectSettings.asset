@@ -853,7 +853,7 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 0030f94d08ded701
+  metroCertificateNotAfter: 8029e46576f8d701
   metroApplicationDescription: Create, Share, and Play
   wsaImages:
     131172: Assets/Sprites and Textures/UWP/SplashScreen.scale-100.png
