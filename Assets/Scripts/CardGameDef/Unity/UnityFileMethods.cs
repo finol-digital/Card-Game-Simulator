@@ -17,9 +17,9 @@ namespace CardGameDef.Unity
     public static class UnityFileMethods
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-    public const string AndroidStreamingAssetsDirectory = "assets/";
-    public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
-    public const string DirectorySeparator = "/";
+        public const string AndroidStreamingAssetsDirectory = "assets/";
+        public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
+        public const string DirectorySeparator = "/";
 #endif
         public const string FilePrefix = "file://";
         public const string MetaExtension = ".meta";
@@ -55,16 +55,16 @@ namespace CardGameDef.Unity
         }
 
 #if ENABLE_WINMD_SUPPORT
-    public static async System.Threading.Tasks.Task<string> CacheFileAsync(string sourceFilePath)
-    {
-        string fileName = Path.GetFileName(sourceFilePath);
-        Windows.Storage.StorageFile sourceStorageFile = Crosstales.FB.FileBrowserWSAImpl.LastOpenFile;
-        Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
-        var cacheStorageFile =
- await sourceStorageFile.CopyAsync(cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
-        string cacheFilePath = cacheStorageFile.Path;
-        return cacheFilePath;
-    }
+        public static async System.Threading.Tasks.Task<string> CacheFileAsync(string sourceFilePath)
+        {
+            string fileName = Path.GetFileName(sourceFilePath);
+            Windows.Storage.StorageFile sourceStorageFile = Crosstales.FB.FileBrowserWSAImpl.LastOpenFile;
+            Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
+            var cacheStorageFile = await sourceStorageFile.CopyAsync(
+                cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
+            string cacheFilePath = cacheStorageFile.Path;
+            return cacheFilePath;
+        }
 #elif UNITY_STANDALONE
         public static string CacheFile(string sourceFilePath)
         {
@@ -77,58 +77,58 @@ namespace CardGameDef.Unity
 #endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-    public static void ExtractAndroidStreamingAssets(string targetPath)
-    {
-        if (!Directory.Exists(targetPath))
-            Directory.CreateDirectory(targetPath);
-
-        if (targetPath[targetPath.Length - 1] != '/' || targetPath[targetPath.Length - 1] != '\\')
-            targetPath += '/';
-
-        HashSet<string> createdDirectories = new HashSet<string>();
-
-        ZipFile zf = null;
-        try
+        public static void ExtractAndroidStreamingAssets(string targetPath)
         {
-            zf = new ZipFile(File.OpenRead(Application.dataPath));
-            foreach (ZipEntry zipEntry in zf)
+            if (!Directory.Exists(targetPath))
+                Directory.CreateDirectory(targetPath);
+
+            if (targetPath[targetPath.Length - 1] != '/' || targetPath[targetPath.Length - 1] != '\\')
+                targetPath += '/';
+
+            HashSet<string> createdDirectories = new HashSet<string>();
+
+            ZipFile zf = null;
+            try
             {
-                if (!zipEntry.IsFile)
-                    continue;
-
-                string name = zipEntry.Name;
-                if (!name.StartsWith(AndroidStreamingAssetsDirectory) || name.EndsWith(MetaExtension) ||
-                    name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) continue;
-
-                name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
-                string relativeDir = Path.GetDirectoryName(name);
-                if (!createdDirectories.Contains(relativeDir))
+                zf = new ZipFile(File.OpenRead(Application.dataPath));
+                foreach (ZipEntry zipEntry in zf)
                 {
-                    Directory.CreateDirectory(targetPath + relativeDir);
-                    createdDirectories.Add(relativeDir);
+                    if (!zipEntry.IsFile)
+                        continue;
+
+                    string name = zipEntry.Name;
+                    if (!name.StartsWith(AndroidStreamingAssetsDirectory) || name.EndsWith(MetaExtension) ||
+                        name.StartsWith(AndroidStreamingAssetsInternalDataDirectory)) continue;
+
+                    name = name.Replace(AndroidStreamingAssetsDirectory, string.Empty);
+                    string relativeDir = Path.GetDirectoryName(name);
+                    if (!createdDirectories.Contains(relativeDir))
+                    {
+                        Directory.CreateDirectory(targetPath + relativeDir);
+                        createdDirectories.Add(relativeDir);
+                    }
+
+                    byte[] buffer = new byte[4096];
+                    using (Stream zipStream = zf.GetInputStream(zipEntry))
+                    {
+                        using (FileStream streamWriter = File.Create(targetPath + name))
+                            StreamUtils.Copy(zipStream, streamWriter, buffer);
+                    }
                 }
-
-                byte[] buffer = new byte[4096];
-                using (Stream zipStream = zf.GetInputStream(zipEntry))
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+            finally
+            {
+                if (zf != null)
                 {
-                    using (FileStream streamWriter = File.Create(targetPath + name))
-                        StreamUtils.Copy(zipStream, streamWriter, buffer);
+                    zf.IsStreamOwner = true;
+                    zf.Close();
                 }
             }
         }
-        catch (Exception e)
-        {
-            Debug.LogError(e.Message);
-        }
-        finally
-        {
-            if (zf != null)
-            {
-                zf.IsStreamOwner = true;
-                zf.Close();
-            }
-        }
-    }
 #endif
 
         public static void ExtractZip(string zipPath, string targetDir)

@@ -5,14 +5,13 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-
+- Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 
 ## Current Sprint
 - Fix: Dice on WebGL
 - Fix: Move decks on Web
 - Fix: Bugs on GitHub Issues
 - Cards: Peek at facedown
-- Tech: Editor unit test to generate schema and confirm it matches docs/schema folder
 - Tech: Runtime unit test to validate StreamingAssets/ against docs/schema
 - Tech: Runtime unit test to successfully load StreamingAssets/ without error
 - Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
@@ -38,7 +37,7 @@ permalink: roadmap.html
 - Play Mode: Support multiple playmats
 - Play Mode: Face-up cards in cards stacks
 - Play Mode: Rotate play area (2 finger or right-click) (see Tabletopia)
-- Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons)
+- Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
 - Play Mode: Resize stack viewer based off card game settings
