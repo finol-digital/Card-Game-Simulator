@@ -3,6 +3,7 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
+        "CardGameDef.Unity",
         "Cgs.Editor"
     ],
     "includePlatforms": [

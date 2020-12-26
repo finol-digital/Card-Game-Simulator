@@ -8,11 +8,10 @@ permalink: roadmap.html
 - Tech: Add unit tests
 
 ## Current Sprint
-- Tech: Runtime unit test to successfully load StreamingAssets/ without error
-- Tech: Runtime unit test to compare docs/games contents to StreamingAssets/
+- Tech: PlayMode unit test to successfully load StreamingAssets/ without error
+- Fix: Bugs on GitHub Issues
 - Fix: Dice on WebGL
 - Fix: Move decks on Web
-- Fix: Bugs on GitHub Issues
 - Cards: Peek at facedown
 - Networking: Add ability to enter direct IP for a networked game
 - Play Mode: Let cards stay in their location when dropped on card scroll areas
