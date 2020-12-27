@@ -50,8 +50,8 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: github.event.ref != 'refs/heads/develop'
         with:
-          name: cgs-android-ios-mac-linux
-          path: builds
+          name: cgs-${{ matrix.targetPlatform }}
+          path: builds/${{ matrix.targetPlatform }}
   buildAndReleaseWindows:
     name: Build and Release to the Microsoft Store
     runs-on: windows-latest
@@ -95,8 +95,14 @@ jobs:
         uses: actions/upload-artifact@v2
         if: github.event.ref != 'refs/heads/develop'
         with:
-          name: cgs-windows
-          path: builds
+          name: cgs-windows32
+          path: builds/cgs-windows32
+      - name: Upload builds
+        uses: actions/upload-artifact@v2
+        if: github.event.ref != 'refs/heads/develop'
+        with:
+          name: cgs-windows64
+          path: builds/cgs-windows64
   releaseToAppStore:
     name: Release to Google Play and the App Store
     runs-on: macos-latest
