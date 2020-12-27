@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Tests.EditMode
 {
-    public class WriteCgsSchemaTests
+    public class SchemaTests
     {
         [Test]
         public void UpdatedSchema()

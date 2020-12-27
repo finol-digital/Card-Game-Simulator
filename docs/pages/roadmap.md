@@ -8,7 +8,6 @@ permalink: roadmap.html
 - Tech: Add unit tests
 
 ## Current Sprint
-- Tech: PlayMode unit test to successfully load StreamingAssets/ without error
 - Fix: Bugs on GitHub Issues
 - Fix: Dice on WebGL
 - Fix: Move decks on Web
