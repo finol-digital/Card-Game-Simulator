@@ -13,6 +13,7 @@ using Cgs.Menu;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityExtensionMethods;
 
 namespace Cgs
 {
@@ -210,7 +211,7 @@ namespace Cgs
         private void CreateDefaultCardGames()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            UnityExtensionMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
+            UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
 #elif UNITY_WEBGL
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 Directory.CreateDirectory(UnityCardGame.GamesDirectoryPath);
@@ -223,19 +224,19 @@ namespace Cgs
             if (!Directory.Exists(dominoesDirectory))
                 Directory.CreateDirectory(dominoesDirectory);
             File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
-            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
+            StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
             string mahjongDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.MahjongDirectoryName;
             if (!Directory.Exists(mahjongDirectory))
                 Directory.CreateDirectory(mahjongDirectory);
             File.WriteAllText(mahjongDirectory + "/" + Tags.MahjongJsonFileName, Tags.MahjongJsonFileContent);
-            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.MahjongCardBackUrl, mahjongDirectory + "/CardBack.png"));
+            StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.MahjongCardBackUrl, mahjongDirectory + "/CardBack.png"));
             string arcmageDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.ArcmageDirectoryName;
             if (!Directory.Exists(arcmageDirectory))
                 Directory.CreateDirectory(arcmageDirectory);
             File.WriteAllText(arcmageDirectory + "/" + Tags.ArcmageJsonFileName, Tags.ArcmageJsonFileContent);
-            StartCoroutine(UnityExtensionMethods.SaveUrlToFile(Tags.ArcmageCardBackUrl, arcmageDirectory + "/CardBack.png"));
+            StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.ArcmageCardBackUrl, arcmageDirectory + "/CardBack.png"));
 #else
-            UnityExtensionMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
+            UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
 
@@ -430,9 +431,9 @@ namespace Cgs
                     Messenger.Show(string.Format(SetCardsLoadingMessage, cardGame.Name));
                 setCardsLoaded = true;
                 string setCardsFilePath = Path.Combine(cardGame.SetsDirectoryPath,
-                    UnityExtensionMethods.GetSafeFileName(set.Code + UnityExtensionMethods.JsonExtension));
+                    UnityFileMethods.GetSafeFileName(set.Code + UnityFileMethods.JsonExtension));
                 if (!File.Exists(setCardsFilePath))
-                    yield return UnityExtensionMethods.SaveUrlToFile(set.CardsUrl, setCardsFilePath);
+                    yield return UnityFileMethods.SaveUrlToFile(set.CardsUrl, setCardsFilePath);
                 if (File.Exists(setCardsFilePath))
                     cardGame.LoadCards(setCardsFilePath, set.Code);
                 else

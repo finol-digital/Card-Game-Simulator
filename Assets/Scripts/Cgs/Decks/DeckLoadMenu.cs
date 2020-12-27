@@ -16,6 +16,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Decks
 {
@@ -289,7 +290,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void ValidateDeckName(string deckName)
         {
-            nameInputField.text = UnityExtensionMethods.GetSafeFileName(deckName);
+            nameInputField.text = UnityFileMethods.GetSafeFileName(deckName);
         }
 
         [UsedImplicitly]

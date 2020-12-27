@@ -5,11 +5,13 @@
 using System;
 using System.Collections;
 using System.Net.Sockets;
-using CardGameView.Multiplayer;
+using CardGameDef.Unity;
+using Cgs.CardGameView.Multiplayer;
 using kcp2k;
 using Mirror;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {

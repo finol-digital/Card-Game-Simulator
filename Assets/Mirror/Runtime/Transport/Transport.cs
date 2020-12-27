@@ -1,21 +1,41 @@
 using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Mirror
 {
-    // UnityEvent definitions
-    [Serializable] public class ClientDataReceivedEvent : UnityEvent<ArraySegment<byte>, int> { }
-    [Serializable] public class UnityEventException : UnityEvent<Exception> { }
-    [Serializable] public class UnityEventInt : UnityEvent<int> { }
-    [Serializable] public class ServerDataReceivedEvent : UnityEvent<int, ArraySegment<byte>, int> { }
-    [Serializable] public class UnityEventIntException : UnityEvent<int, Exception> { }
-
     /// <summary>
     /// Abstract transport layer component
     /// </summary>
     /// <remarks>
-    /// note: Not all transports need a port, so add it to yours if needed.
+    /// <h2>
+    ///   Transport Rules 
+    /// </h2>
+    /// <list type="bullet">
+    ///   <listheader><description>
+    ///     All transports should follow these rules so that they work correctly with mirror
+    ///   </description></listheader>
+    ///   <item><description>
+    ///     When Monobehaviour is disabled the Transport should not invoke callbacks
+    ///   </description></item>
+    ///   <item><description>
+    ///     Callbacks should be invoked on main thread. It is best to do this from LateUpdate
+    ///   </description></item>
+    ///   <item><description>
+    ///     Callbacks can be invoked after <see cref="ServerStop"/> or <see cref="ClientDisconnect"/> as been called
+    ///   </description></item>
+    ///   <item><description>
+    ///     <see cref="ServerStop"/> or <see cref="ClientDisconnect"/> can be called by mirror multiple times
+    ///   </description></item>
+    ///   <item><description>
+    ///     <see cref="Available"/> should check the platform and 32 vs 64 bit if the transport only works on some of them
+    ///   </description></item>
+    ///   <item><description>
+    ///     <see cref="GetMaxPacketSize"/> should return size even if transport is not running
+    ///   </description></item>
+    ///   <item><description>
+    ///     Default channel should be reliable <see cref="Channels.DefaultReliable"/>
+    ///   </description></item>
+    /// </list>
     /// </remarks>
     public abstract class Transport : MonoBehaviour
     {
@@ -36,24 +56,27 @@ namespace Mirror
         #region Client
         /// <summary>
         /// Notify subscribers when when this client establish a successful connection to the server
+        /// <para>callback()</para>
         /// </summary>
-        [HideInInspector] public UnityEvent OnClientConnected = new UnityEvent();
+        public Action OnClientConnected = () => Debug.LogWarning("OnClientConnected called with no handler");
 
         /// <summary>
         /// Notify subscribers when this client receive data from the server
+        /// <para>callback(ArraySegment&lt;byte&gt; data, int channel)</para>
         /// </summary>
-        // Note: we provide channelId for NetworkDiagnostics.
-        [HideInInspector] public ClientDataReceivedEvent OnClientDataReceived = new ClientDataReceivedEvent();
+        public Action<ArraySegment<byte>, int> OnClientDataReceived = (data, channel) => Debug.LogWarning("OnClientDataReceived called with no handler");
 
         /// <summary>
         /// Notify subscribers when this client encounters an error communicating with the server
+        /// <para>callback(Exception e)</para>
         /// </summary>
-        [HideInInspector] public UnityEventException OnClientError = new UnityEventException();
+        public Action<Exception> OnClientError = (error) => Debug.LogWarning("OnClientError called with no handler");
 
         /// <summary>
         /// Notify subscribers when this client disconnects from the server
+        /// <para>callback()</para>
         /// </summary>
-        [HideInInspector] public UnityEvent OnClientDisconnected = new UnityEvent();
+        public Action OnClientDisconnected = () => Debug.LogWarning("OnClientDisconnected called with no handler");
 
         /// <summary>
         /// Determines if we are currently connected to the server
@@ -106,24 +129,27 @@ namespace Mirror
 
         /// <summary>
         /// Notify subscribers when a client connects to this server
+        /// <para>callback(int connId)</para>
         /// </summary>
-        [HideInInspector] public UnityEventInt OnServerConnected = new UnityEventInt();
+        public Action<int> OnServerConnected = (connId) => Debug.LogWarning("OnServerConnected called with no handler");
 
         /// <summary>
         /// Notify subscribers when this server receives data from the client
+        /// <para>callback(int connId, ArraySegment&lt;byte&gt; data, int channel)</para>
         /// </summary>
-        // Note: we provide channelId for NetworkDiagnostics.
-        [HideInInspector] public ServerDataReceivedEvent OnServerDataReceived = new ServerDataReceivedEvent();
+        public Action<int, ArraySegment<byte>, int> OnServerDataReceived = (connId, data, channel) => Debug.LogWarning("OnServerDataReceived called with no handler");
 
         /// <summary>
         /// Notify subscribers when this server has some problem communicating with the client
+        /// <para>callback(int connId, Exception e)</para>
         /// </summary>
-        [HideInInspector] public UnityEventIntException OnServerError = new UnityEventIntException();
+        public Action<int, Exception> OnServerError = (connId, error) => Debug.LogWarning("OnServerError called with no handler");
 
         /// <summary>
         /// Notify subscribers when a client disconnects from this server
+        /// <para>callback(int connId)</para>
         /// </summary>
-        [HideInInspector] public UnityEventInt OnServerDisconnected = new UnityEventInt();
+        public Action<int> OnServerDisconnected = (connId) => Debug.LogWarning("OnServerDisconnected called with no handler");
 
         /// <summary>
         /// Determines if the server is up and running

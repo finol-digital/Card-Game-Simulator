@@ -10,6 +10,7 @@ using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {

@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
-using CardGameView;
-using CardGameView.Multiplayer;
+using Cgs.CardGameView;
+using Cgs.CardGameView.Multiplayer;
 using Cgs.Cards;
 using Cgs.Menu;
 using JetBrains.Annotations;
@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Decks
 {
@@ -319,7 +320,7 @@ namespace Cgs.Decks
         {
             if (newName == null)
                 newName = string.Empty;
-            newName = UnityExtensionMethods.GetSafeFileName(newName);
+            newName = UnityFileMethods.GetSafeFileName(newName);
             nameText.text = newName + (HasChanged ? ChangeIndicator : string.Empty);
             return newName;
         }

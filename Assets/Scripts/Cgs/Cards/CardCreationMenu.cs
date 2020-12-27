@@ -15,6 +15,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {
@@ -111,9 +112,9 @@ namespace Cgs.Cards
                 return;
             }
 #if ENABLE_WINMD_SUPPORT
-            CardImageUri = new Uri(await UnityExtensionMethods.CacheFileAsync(uri));
+            CardImageUri = new Uri(await UnityFileMethods.CacheFileAsync(uri));
 #elif UNITY_STANDALONE
-            CardImageUri = new Uri(UnityExtensionMethods.CacheFile(uri));
+            CardImageUri = new Uri(UnityFileMethods.CacheFile(uri));
 #else
             CardImageUri = new Uri(uri);
 #endif
@@ -124,8 +125,8 @@ namespace Cgs.Cards
         {
             // NOTE: Memory Leak Potential
             Sprite newSprite = null;
-            yield return UnityExtensionMethods.RunOutputCoroutine<Sprite>(
-                UnityExtensionMethods.CreateAndOutputSpriteFromImageFile(CardImageUri?.AbsoluteUri)
+            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
+                UnityFileMethods.CreateAndOutputSpriteFromImageFile(CardImageUri?.AbsoluteUri)
                 , output => newSprite = output);
             if (newSprite != null)
                 cardImage.sprite = newSprite;
@@ -155,7 +156,7 @@ namespace Cgs.Cards
 
             var card = new UnityCard(CardGameManager.Current, Guid.NewGuid().ToString().ToUpper(), CardName,
                 Set.DefaultCode, null, false) {ImageWebUrl = CardImageUri.AbsoluteUri};
-            yield return UnityExtensionMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);
+            yield return UnityFileMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);
 
             if (!File.Exists(card.ImageFilePath))
             {

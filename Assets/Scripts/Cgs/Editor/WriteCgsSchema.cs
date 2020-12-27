@@ -11,17 +11,17 @@ using UnityEngine;
 
 namespace Cgs.Editor
 {
-    internal static class WriteCgsSchema
+    public static class WriteCgsSchema
     {
-        public const string SchemaId = "https://cardgamesim.finoldigital.com/schema/CardGameDef.json";
-        public const string SchemaTitle = "CGS Custom Game";
-        public const string SchemaDescription = "A custom card game definition to be used within Card Game Simulator";
-
         public static string SchemaFilePath => Application.dataPath.Remove(Application.dataPath.Length - 6, 6)
                                                + "docs/schema/CardGameDef.json";
 
+        private const string SchemaId = "https://cardgamesim.finoldigital.com/schema/CardGameDef.json";
+        private const string SchemaTitle = "CGS Custom Game";
+        private const string SchemaDescription = "A custom card game definition to be used within Card Game Simulator";
+
         [MenuItem("CGS/Write CardGameDef.json")]
-        private static void WriteCardGameDef()
+        public static void WriteCardGameDef()
         {
             Debug.Log("Writing CardGameDef.json...");
             var settings = new JsonSchemaGeneratorSettings

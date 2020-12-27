@@ -1,0 +1,17 @@
+{
+    "name": "Branch.Editor",
+    "references": [
+        "GUID:bf5c66b763c13af418c2c04eed41331f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
