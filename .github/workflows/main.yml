@@ -17,6 +17,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
+          key: Library
       - uses: webbertakken/unity-test-runner@v2.0-alpha-1
         with:
           unityVersion: 2019.4.15f1
