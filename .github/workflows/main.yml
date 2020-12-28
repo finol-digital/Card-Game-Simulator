@@ -19,8 +19,6 @@ jobs:
           path: Library
           key: Library
       - uses: davidmfinol/unity-test-runner@main
-        with:
-          unityVersion: 2019.4.15f1
       - uses: actions/upload-artifact@v2
         with:
           name: test-results
