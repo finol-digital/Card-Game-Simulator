@@ -18,7 +18,7 @@ jobs:
         with:
           path: Library
           key: Library
-      - uses: webbertakken/unity-test-runner@v2.0-alpha-1
+      - uses: davidmfinol/unity-test-runner@main
         with:
           unityVersion: 2019.4.15f1
       - uses: actions/upload-artifact@v2
