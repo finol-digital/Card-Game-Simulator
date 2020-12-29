@@ -23,7 +23,7 @@ jobs:
         with:
           name: test-results
           path: artifacts
-  buildForSomePlatforms:
+  buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     needs: tests
@@ -35,8 +35,8 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-#          - Android
-#          - iOS
+          - Android
+          - iOS
           - StandaloneOSX
 #          - StandaloneLinux64
     steps:
@@ -71,11 +71,10 @@ jobs:
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: builds/${{ matrix.targetPlatform }}
-  buildWindows:
-    name: Build Windows
+  buildWithWindows:
+    name: Build for Windows
     runs-on: windows-latest
-    needs: buildForSomePlatforms
-    if: github.event.ref != 'refs/heads/develop'
+    needs: tests
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -85,6 +84,10 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
           args: install --yes unity --version=2019.4.5 unity-win-il2cpp --version=2019.4.5 unity-metro --version=2019.4.5
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library
       - name: Build Cgs for Windows
         run: .\build_windows.ps1
         shell: powershell
@@ -112,20 +115,22 @@ jobs:
           TargetPlatform: x64
           BuildMode: StoreUpload
           AppxBundle: Always
-      - name: Upload builds
+      - name: Upload cgs-windows32
         uses: actions/upload-artifact@v2
+        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows32
           path: builds/cgs-windows32
-      - name: Upload builds
+      - name: Upload cgs-windows64
         uses: actions/upload-artifact@v2
+        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows64
           path: builds/cgs-windows64
   releaseToAppStore:
     name: Release to Google Play and the App Store
     runs-on: macos-latest
-    needs: buildForSomePlatforms
+    needs: buildWithLinux
     if: github.event.action == 'published'
     env:
       APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
