@@ -35,8 +35,8 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - Android
-          - iOS
+#          - Android
+#          - iOS
           - StandaloneOSX
 #          - StandaloneLinux64
     steps:
@@ -71,8 +71,8 @@ jobs:
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: builds/${{ matrix.targetPlatform }}
-  buildAndReleaseWindows:
-    name: Build and Release to the Microsoft Store
+  buildWindows:
+    name: Build Windows
     runs-on: windows-latest
     needs: buildForSomePlatforms
     if: github.event.ref != 'refs/heads/develop'
@@ -84,7 +84,7 @@ jobs:
       - name: Install Unity
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
-          args: install --yes unity --version=2019.4.6 unity-il2cpp --version=2019.4.6 unity-win-il2cpp --version=2019.4.6 unity-metro --version=2019.4.6
+          args: install --yes unity --version=2019.4.5 unity-win-il2cpp --version=2019.4.5 unity-metro --version=2019.4.5
       - name: Build Cgs for Windows
         run: .\build_windows.ps1
         shell: powershell
