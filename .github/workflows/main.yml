@@ -39,7 +39,6 @@ jobs:
           - iOS
           - StandaloneOSX
 #          - StandaloneLinux64
-#          - WebGL
     steps:
       - uses: actions/checkout@v2
         with:
@@ -56,7 +55,7 @@ jobs:
           sudo apt clean
           docker rmi $(docker image ls -aq)
           df -h
-      - uses: davidmfinol/unity-builder@main
+      - uses: game-ci/unity-builder@main
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildsPath: builds         
@@ -76,8 +75,7 @@ jobs:
     name: Build and Release to the Microsoft Store
     runs-on: windows-latest
     needs: buildForSomePlatforms
-#    if: github.event.ref != 'refs/heads/develop'
-    if: false
+    if: github.event.ref != 'refs/heads/develop'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -86,7 +84,7 @@ jobs:
       - name: Install Unity
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
-          args: install --yes unity --version=2019.4.15 unity-il2cpp --version=2019.4.15 unity-win-il2cpp --version=2019.4.15 unity-metro --version=2019.4.15
+          args: install --yes unity --version=2019.4.6 unity-il2cpp --version=2019.4.6 unity-win-il2cpp --version=2019.4.6 unity-metro --version=2019.4.6
       - name: Build Cgs for Windows
         run: .\build_windows.ps1
         shell: powershell
@@ -97,14 +95,17 @@ jobs:
           UnitySerial: ${{ secrets.UNITY_SERIAL }}
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.1
+        if: false
       - name: Restore the Wpf application to populate the obj folder
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+        if: false
         env:
           SolutionPath: build\uwp\Card Game Simulator.sln
           Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
         run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
+        if: false
         env:
           SolutionPath: build\uwp\Card Game Simulator.sln
           Configuration: Master
@@ -113,13 +114,11 @@ jobs:
           AppxBundle: Always
       - name: Upload builds
         uses: actions/upload-artifact@v2
-        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows32
           path: builds/cgs-windows32
       - name: Upload builds
         uses: actions/upload-artifact@v2
-        if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows64
           path: builds/cgs-windows64
