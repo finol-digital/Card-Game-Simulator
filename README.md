@@ -2,7 +2,7 @@
 
 ![Card Game Simulator](https://www.cardgamesimulator.com/assets/img/CGSLogo.png)
 
-![Build and Release CGS](https://github.com/finol-digital/Card-Game-Simulator/workflows/Build%20and%20Release%20CGS/badge.svg?branch=develop)
+![Test, Build, and Release CGS](https://github.com/finol-digital/Card-Game-Simulator/workflows/Test%2C%20Build%2C%20and%20Release%20CGS/badge.svg)
 
 Public documentation for CGS is provided through Github Pages in the docs/ folder. 
 

@@ -28,7 +28,7 @@ platform :android do
 
   desc "Upload a new Android version to the Google Play Store"
   lane :playstore do
-    upload_to_play_store(aab: "#{ENV['BUILDS_PATH']}/Android/Android.aab")
+    upload_to_play_store(aab: "#{ENV['ANDROID_BUILD_FILE_PATH']}")
   end
 
 end
