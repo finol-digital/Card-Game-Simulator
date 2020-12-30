@@ -33,7 +33,7 @@ permalink: roadmap.html
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Play Mode: Support multiple playmats
 - Play Mode: Face-up cards in cards stacks
-- Play Mode: Rotate play area (2 finger or right-click) (see Tabletopia)
+- Play Mode: Control play area with 2 finger or right-click (see Tabletopia)
 - Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
