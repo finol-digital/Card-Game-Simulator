@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
-          lfs: true
+          fetch-depth: 0
       - name: Cache Library
         uses: actions/cache@v2
         with:
@@ -164,8 +164,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          lfs: true
       - name: Download Android Artifact
         uses: actions/download-artifact@v2
         with:
@@ -206,8 +204,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          lfs: true
       - name: Download iOS Artifact
         uses: actions/download-artifact@v2
         with:
