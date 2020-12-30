@@ -22,6 +22,7 @@ permalink: roadmap.html
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 
 ## Backlog
+- Tech: SonarQube Scans
 - Settings: Scale size of UI based off either physical size or resolution of display
 - Integration: Automate game upload
 - Cards: Support mix of different card sizes in the same game

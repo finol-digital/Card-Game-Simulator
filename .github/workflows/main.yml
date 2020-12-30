@@ -31,11 +31,6 @@ jobs:
         with:
           name: test-results
           path: artifacts
-      - name: Analyze with SonarQube
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
