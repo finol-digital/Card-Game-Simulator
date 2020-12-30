@@ -4,7 +4,7 @@ on:
   release: { types: [published] }
 jobs:
   tests:
-    name: Unit Tests
+    name: Tests
     runs-on: ubuntu-latest
     env:
       UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -23,6 +23,10 @@ jobs:
         with:
           name: test-results
           path: artifacts
+      - uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
@@ -85,7 +89,8 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v1.2.2
         with:
           args: install --yes unity --version=2019.4.5 unity-win-il2cpp --version=2019.4.5 unity-metro --version=2019.4.5
-      - uses: actions/cache@v2
+      - name: Cache Library
+        uses: actions/cache@v2
         with:
           path: Library
           key: Library
