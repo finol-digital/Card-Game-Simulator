@@ -138,9 +138,11 @@ namespace Cgs.Decks
                     CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
                 }
             }, false);
+#elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            var nativeShare = new NativeShare();
+            nativeShare.AddFile(pdfUri.AbsoluteUri, "application/pdf").Share();
 #else
-            Application.OpenURL(pdfUri.AbsoluteUri); // This likely fails, so show the file location
-            CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.AbsoluteUri);
+            Application.OpenURL(pdfUri.AbsoluteUri);
 #endif
         }
 
