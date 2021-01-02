@@ -20,12 +20,12 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public static class ThreadSafeRandom
     {
-        [ThreadStatic] private static Random _local;
+        [ThreadStatic] private static Random local;
 
-        public static Random ThisThreadsRandom => _local ??
-                                                  (_local = new Random(
-                                                      unchecked(Environment.TickCount * 31 + Thread
-                                                          .CurrentThread.ManagedThreadId)));
+        private static Random ThisThreadsRandom => local ??
+                                                   (local = new Random(
+                                                       unchecked(Environment.TickCount * 31 + Thread
+                                                           .CurrentThread.ManagedThreadId)));
 
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -52,6 +52,8 @@ namespace Cgs.CardGameView.Multiplayer
                                       _currentPointerEventData.button != PointerEventData.InputButton.Middle &&
                                       _currentPointerEventData.button != PointerEventData.InputButton.Right
                                       || _pointerPositions.Count > 1;
+
+        public bool LacksAuthority => CgsNetManager.Instance.isNetworkActive && !hasAuthority;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -122,7 +124,7 @@ namespace Cgs.CardGameView.Multiplayer
             bool shuffled = _shuffleTime > 0;
             if (shuffleLabel.activeSelf != shuffled)
                 shuffleLabel.SetActive(shuffled);
-            if (shuffled && (!NetworkManager.singleton.isNetworkActive || isServer))
+            if (shuffled && (!CgsNetManager.Instance.isNetworkActive || isServer))
                 _shuffleTime -= Time.deltaTime;
         }
 
@@ -173,10 +175,10 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (IsDraggingCard)
                 DragCard(eventData);
-            else if (hasAuthority)
-                UpdatePosition();
-            else
+            else if (LacksAuthority)
                 CmdTransferAuthority();
+            else
+                UpdatePosition();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -187,10 +189,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsDraggingCard)
                 return;
 
-            if (hasAuthority)
-                UpdatePosition();
-            else
+            if (LacksAuthority)
                 CmdTransferAuthority();
+            else
+                UpdatePosition();
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -198,7 +200,7 @@ namespace Cgs.CardGameView.Multiplayer
             _currentPointerEventData = eventData;
             _currentDragPhase = DragPhase.End;
 
-            if (!IsDraggingCard && hasAuthority)
+            if (!IsDraggingCard && !LacksAuthority)
                 UpdatePosition();
             if (hasAuthority)
                 CmdReleaseAuthority();
@@ -247,14 +249,17 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            Vector2 targetPosition = UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
-            targetPosition += UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
+            Vector2 targetPosition =
+                UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
+            targetPosition +=
+                UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
 
             var rectTransform = (RectTransform) transform;
             rectTransform.position = targetPosition;
             rectTransform.SetAsLastSibling();
 
-            CmdUpdatePosition(rectTransform.anchoredPosition);
+            if (hasAuthority)
+                CmdUpdatePosition(rectTransform.anchoredPosition);
         }
 
         [Command(ignoreAuthority = true)]

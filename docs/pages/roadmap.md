@@ -5,12 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
+- Fix: Game freezes
+- Fix: Movement on web
 - Tech: Add unit tests
 
 ## Current Sprint
-- Fix: Bugs on GitHub Issues
-- Fix: Dice on WebGL
-- Fix: Move decks on Web
 - Cards: Peek at facedown
 - Networking: Add ability to enter direct IP for a networked game
 - Play Mode: Let cards stay in their location when dropped on card scroll areas

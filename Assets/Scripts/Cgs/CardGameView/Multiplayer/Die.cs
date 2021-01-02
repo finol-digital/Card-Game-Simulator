@@ -36,7 +36,15 @@ namespace Cgs.CardGameView.Multiplayer
                     newValue = Min;
                 if (newValue < Min)
                     newValue = Max;
-                CmdUpdateValue(newValue);
+
+                if (NetworkManager.singleton.isNetworkActive)
+                    CmdUpdateValue(newValue);
+                else
+                {
+                    int oldValue = value;
+                    _value = newValue;
+                    OnChangeValue(oldValue, newValue);
+                }
             }
         }
 
@@ -56,7 +64,7 @@ namespace Cgs.CardGameView.Multiplayer
             valueText.text = _value.ToString();
             if (Vector2.zero != position)
                 ((RectTransform) transform).anchoredPosition = position;
-            if (isServer)
+            if (!NetworkManager.singleton.isNetworkActive || isServer)
                 _rollTime = RollTime;
 
             HideButtons();
@@ -64,7 +72,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
-            if (!isServer || _rollTime <= 0)
+            if (_rollTime <= 0 || (NetworkManager.singleton.isNetworkActive && !isServer))
                 return;
 
             _rollTime -= Time.deltaTime;
@@ -105,16 +113,18 @@ namespace Cgs.CardGameView.Multiplayer
 
             HideButtons();
 
-            CmdTransferAuthority();
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdTransferAuthority();
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (!hasAuthority)
+            if (NetworkManager.singleton.isNetworkActive && !hasAuthority)
                 return;
             var rectTransform = ((RectTransform) transform);
             rectTransform.position = eventData.position - _dragOffset;
-            CmdUpdatePosition(rectTransform.anchoredPosition);
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdUpdatePosition(rectTransform.anchoredPosition);
         }
 
         public void OnEndDrag(PointerEventData eventData)
