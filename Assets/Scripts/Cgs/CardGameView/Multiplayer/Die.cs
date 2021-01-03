@@ -180,7 +180,10 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void Roll()
         {
-            CmdRoll();
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdRoll();
+            else
+                _rollTime = RollTime;
         }
 
         [Command(ignoreAuthority = true)]
