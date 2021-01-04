@@ -114,18 +114,15 @@ jobs:
           UnityPassword: ${{ secrets.UNITY_PASSWORD }}
           UnitySerial: ${{ secrets.UNITY_SERIAL }}
       - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v1.0.1
-        if: false
+        uses: microsoft/setup-msbuild@v1.0.2
       - name: Restore the Wpf application to populate the obj folder
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
-        if: false
         env:
           SolutionPath: build\uwp\Card Game Simulator.sln
           Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
         run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
-        if: false
         env:
           SolutionPath: build\uwp\Card Game Simulator.sln
           Configuration: Master
