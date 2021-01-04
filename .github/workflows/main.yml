@@ -61,7 +61,7 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
       - name: Free Disk Space for Android
-        if: ${{ matrix.targetPlatform }} == 'Android'
+        if: matrix.targetPlatform == 'Android'
         run: |
           sudo swapoff -a
           sudo rm -f /swapfile
@@ -122,6 +122,7 @@ jobs:
           Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
+        if: false
         run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
           SolutionPath: build\uwp\Card Game Simulator.sln
@@ -141,6 +142,12 @@ jobs:
         with:
           name: cgs-windows64
           path: builds/cgs-windows64
+      - name: Upload .appxupload
+        uses: actions/upload-artifact@v2
+        if: false
+        with:
+          name: cgs.appxupload
+          path: build/uwp/AppPackages/Card Game Simulator/Card Game Simulator_1.35.0.0_Master_Test/Card Game Simulator_1.35.0.0_x86_x64_arm_Master.appxupload
 
   releaseToGooglePlay:
     name: Release to the Google Play Store
