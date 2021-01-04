@@ -91,6 +91,7 @@ jobs:
     name: Build for Windows
     runs-on: windows-latest
     needs: test
+    if: false
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
