@@ -53,7 +53,7 @@ namespace Cgs.CardGameView.Multiplayer
                                       _currentPointerEventData.button != PointerEventData.InputButton.Right
                                       || _pointerPositions.Count > 1;
 
-        public bool LacksAuthority => CgsNetManager.Instance.isNetworkActive && !hasAuthority;
+        public bool LacksAuthority => NetworkManager.singleton.isNetworkActive && !hasAuthority;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -243,12 +243,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void UpdatePosition()
         {
-            if (_pointerPositions.Count < 1 || _pointerDragOffsets.Count < 1 || !hasAuthority)
-            {
-                Debug.LogError("Attempted to process translation and authority without pointers or authority!");
-                return;
-            }
-
             Vector2 targetPosition =
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
             targetPosition +=
