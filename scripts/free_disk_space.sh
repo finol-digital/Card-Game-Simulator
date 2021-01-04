@@ -1,3 +1,5 @@
+#! /bin/sh
+
 sudo swapoff -a
 sudo rm -f /swapfile
 sudo apt clean

@@ -62,7 +62,9 @@ jobs:
           restore-keys: Library-
       - name: Free Disk Space for Android
         if: matrix.targetPlatform == 'Android'
-        run: ./scripts/free_disk_space.sh
+        run: |
+          chmod +x scripts/free_disk_space.sh
+          ./scripts/free_disk_space.sh
       - name: Build Unity Project
         uses: game-ci/unity-builder@main
         with:
@@ -215,8 +217,8 @@ jobs:
       - name: Prepare for Upload
         run: |
           find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
-          chmod +x fastlane/sign-osx-build.sh
-          ./fastlane/sign-osx-build.sh
+          chmod +x scripts/sign-osx-build.sh
+          ./scripts/sign-osx-build.sh
       - name: Upload to the App Store
         uses: maierj/fastlane-action@v1.4.0
         with:
