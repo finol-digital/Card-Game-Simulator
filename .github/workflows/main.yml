@@ -195,7 +195,7 @@ jobs:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
       MATCH_URL: ${{ secrets.MATCH_URL }}
-      BUILDS_PATH: ${{ format('{0}/builds', github.workspace) }}
+      BUILD_PATH: ${{ format('{0}/build', github.workspace) }}
       IOS_APP_ID: com.finoldigital.CardGameSim
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       PROJECT_NAME: Card Game Simulator
@@ -207,19 +207,19 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cgs-iOS
-          path: builds/iOS
+          path: build/iOS
       - name: Download StandaloneOSX Artifact
         uses: actions/download-artifact@v2
         with:
           name: cgs-StandaloneOSX
-          path: builds/StandaloneOSX
+          path: build/StandaloneOSX
       - name: Fix version for StandaloneOSX
         uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'fixversion'
       - name: Prepare for Upload
         run: |
-          find $BUILDS_PATH -type f -iname "*.sh" -exec chmod +x {} \;
+          find $BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
           chmod +x scripts/sign-osx-build.sh
           ./scripts/sign-osx-build.sh
       - name: Upload to the App Store
