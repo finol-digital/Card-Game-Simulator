@@ -157,7 +157,7 @@ jobs:
     env:
       GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
       GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
-      ANDROID_BUILD_FILE_PATH: ${{ format('{0}/builds/Android/Android.aab', github.workspace) }}
+      ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
       ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
       RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
@@ -167,7 +167,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cgs-android
-          path: builds/Android
+          path: build/Android
       - name: Prepare for Upload
         run: |
           echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
@@ -195,9 +195,10 @@ jobs:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
       MATCH_URL: ${{ secrets.MATCH_URL }}
-      BUILD_PATH: ${{ format('{0}/build', github.workspace) }}
       IOS_APP_ID: com.finoldigital.CardGameSim
+      IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       MAC_APP_ID: com.finoldigital.CardGameSimulator
+      MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
       RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
@@ -219,7 +220,8 @@ jobs:
           lane: 'fixversion'
       - name: Prepare for Upload
         run: |
-          find $BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
+          find $IOS_BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
+          find $MAC_BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
           chmod +x scripts/sign-osx-build.sh
           ./scripts/sign-osx-build.sh
       - name: Upload to the App Store

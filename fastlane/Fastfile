@@ -17,7 +17,7 @@ keychain_password = SecureRandom.base64
 desc "Hack so that Apple doesn't reject the build due to incorrect versioning" 
 lane :fixversion do
   update_plist(
-    plist_path: "#{ENV['BUILDS_PATH']}/StandaloneOSX/StandaloneOSX.app/Contents/Info.plist",
+    plist_path: "#{ENV['MAC_BUILD_PATH']}/StandaloneOSX.app/Contents/Info.plist",
     block: proc do |plist|
       plist[:CFBundleVersion] = "9" + plist["CFBundleVersion"]
     end
@@ -49,16 +49,16 @@ platform :ios do
 
   desc "Create .ipa"
   lane :build do
-    disable_automatic_code_signing(path: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj")
+    disable_automatic_code_signing(path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj")
     certificates
     update_project_provisioning(
-      xcodeproj: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
+      xcodeproj: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
       target_filter: "Unity-iPhone",
       profile: ENV["sigh_com.finoldigital.CardGameSim_appstore_profile-path"],
       code_signing_identity: "Apple Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})"
     )
     gym(
-      project: "#{ENV['BUILDS_PATH']}/iOS/iOS/Unity-iPhone.xcodeproj",
+      project: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
       scheme: "Unity-iPhone",
       clean: true,
       skip_profile_detection: true,
