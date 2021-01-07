@@ -135,13 +135,13 @@ jobs:
         if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows32
-          path: builds/cgs-windows32
+          path: build/cgs-windows32
       - name: Upload cgs-windows64
         uses: actions/upload-artifact@v2
         if: github.event.ref != 'refs/heads/develop'
         with:
           name: cgs-windows64
-          path: builds/cgs-windows64
+          path: build/cgs-windows64
       - name: Upload .appxupload
         uses: actions/upload-artifact@v2
         if: false

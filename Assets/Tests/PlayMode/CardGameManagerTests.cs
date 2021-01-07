@@ -19,9 +19,6 @@ namespace Tests.PlayMode
             var manager = new GameObject();
             manager.AddComponent<EventSystem>();
             _manager = manager.AddComponent<CardGameManager>();
-
-            if (Directory.Exists(UnityCardGame.GamesDirectoryPath))
-                Directory.Delete(UnityCardGame.GamesDirectoryPath, true);
         }
 
         [TearDown]
@@ -31,18 +28,26 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator CanLoadGames()
+        public IEnumerator CanLoadDefaultGames()
         {
+            if (Directory.Exists(UnityCardGame.GamesDirectoryPath))
+                Directory.Delete(UnityCardGame.GamesDirectoryPath, true);
+            PlayerPrefs.SetString(CardGameManager.PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+
             _manager.LookupCardGames();
             _manager.ResetCurrentToDefault();
             _manager.ResetGameScene();
             yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
+
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
+            Assert.AreEqual("Standard Playing Cards", CardGameManager.Current.Name);
+
+            // TODO: DOMINOES AND MAHJONG
         }
 
         [UnityTest]
-        public IEnumerator CanGetGames()
+        public IEnumerator CanGetArcmage()
         {
             // Download
             yield return _manager.GetCardGame("https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json");
