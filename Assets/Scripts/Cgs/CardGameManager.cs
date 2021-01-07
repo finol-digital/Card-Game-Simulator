@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
@@ -15,6 +16,7 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
 
+[assembly: InternalsVisibleTo("PlayMode")]
 namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
@@ -64,13 +66,13 @@ namespace Cgs
             {
                 if (IsQuitting)
                     return null;
-                if (_instance == null)
-                    _instance = GameObject.FindGameObjectWithTag(Tags.CardGameManager).GetComponent<CardGameManager>();
-                return _instance;
+                if (instance == null)
+                    instance = GameObject.FindGameObjectWithTag(Tags.CardGameManager).GetComponent<CardGameManager>();
+                return instance;
             }
         }
 
-        private static CardGameManager _instance;
+        private static CardGameManager instance;
 
         public static UnityCardGame Current { get; private set; } = UnityCardGame.UnityInvalid;
         public static bool IsQuitting { get; private set; }
@@ -175,24 +177,24 @@ namespace Cgs
         {
             get
             {
-                if (_spinner != null) return _spinner;
-                _spinner = Instantiate(Resources.Load<GameObject>("ProgressBar")).GetOrAddComponent<ProgressBar>();
-                _spinner.transform.SetParent(transform);
-                return _spinner;
+                if (_progress != null) return _progress;
+                _progress = Instantiate(Resources.Load<GameObject>("ProgressBar")).GetOrAddComponent<ProgressBar>();
+                _progress.transform.SetParent(transform);
+                return _progress;
             }
         }
 
-        private ProgressBar _spinner;
+        private ProgressBar _progress;
 
         private void Awake()
         {
-            if (_instance != null && _instance != this)
+            if (instance != null && instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            _instance = this;
+            instance = this;
             UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 
@@ -216,15 +218,17 @@ namespace Cgs
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 Directory.CreateDirectory(UnityCardGame.GamesDirectoryPath);
             string standardPlayingCardsDirectory =
- UnityCardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
+                UnityCardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
             if (!Directory.Exists(standardPlayingCardsDirectory))
                 Directory.CreateDirectory(standardPlayingCardsDirectory);
-            File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName, Tags.StandPlayingCardsJsonFileContent);
+            File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName,
+                Tags.StandPlayingCardsJsonFileContent);
             string dominoesDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
             if (!Directory.Exists(dominoesDirectory))
                 Directory.CreateDirectory(dominoesDirectory);
             File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
-            StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
+            StartCoroutine(
+                UnityFileMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
             string mahjongDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.MahjongDirectoryName;
             if (!Directory.Exists(mahjongDirectory))
                 Directory.CreateDirectory(mahjongDirectory);
@@ -240,7 +244,7 @@ namespace Cgs
 #endif
         }
 
-        private void LookupCardGames()
+        internal void LookupCardGames()
         {
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
                 Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
@@ -312,7 +316,7 @@ namespace Cgs
 #endif
 
         // Note: Does NOT Reset Game Scene
-        private void ResetCurrentToDefault()
+        internal void ResetCurrentToDefault()
         {
             string preferredGameId =
                 PlayerPrefs.GetString(PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
@@ -462,7 +466,7 @@ namespace Cgs
             ResetGameScene();
         }
 
-        private void ResetGameScene()
+        internal void ResetGameScene()
         {
             if (!Current.HasLoaded)
             {
@@ -479,7 +483,7 @@ namespace Cgs
             }
 
 #if UNITY_WEBGL
-            foreach(UnityCardGame game in AllCardGames.Values)
+            foreach (UnityCardGame game in AllCardGames.Values)
                 game.ReadProperties();
 #endif
 

@@ -511,6 +511,11 @@
           "type": "string",
           "description": "The url from which to download the deck",
           "format": "uri"
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "description": "Optionally set to false to ignore this deck url",
+          "default": "true"
         }
       }
     },

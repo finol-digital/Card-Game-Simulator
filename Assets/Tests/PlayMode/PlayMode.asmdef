@@ -4,7 +4,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Cgs",
-        "CardGameDef.Unity"
+        "CardGameDef.Unity",
+        "CardGameDef"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -256,9 +256,9 @@ namespace CardGameDef.Unity
 
             foreach (DeckUrl deckUrl in DeckUrls)
             {
-                if (string.IsNullOrEmpty(deckUrl.Name))
+                if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
                 {
-                    Debug.LogWarning($"Ignoring deckUrl with empty name {deckUrl}!");
+                    Debug.Log($"Ignoring deckUrl {deckUrl}");
                     continue;
                 }
 
@@ -352,9 +352,8 @@ namespace CardGameDef.Unity
             }
 
             // Don't waste time loading if we need to update first
-            bool shouldUpdate;
 #if UNITY_WEBGL
-            shouldUpdate = !HasDownloaded;
+            bool shouldUpdate = !HasDownloaded;
 #else
             var daysSinceUpdate = 0;
             try
@@ -366,11 +365,14 @@ namespace CardGameDef.Unity
                 Debug.Log($"Unable to determine last update date for {Name}. Assuming today.");
             }
 
-            shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && CoroutineRunner != null;
+            bool shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && CoroutineRunner != null;
 #endif
             if (shouldUpdate)
             {
-                CoroutineRunner.StartCoroutine(updateCoroutine(this));
+                if (CoroutineRunner != null)
+                    CoroutineRunner.StartCoroutine(updateCoroutine(this));
+                else
+                    Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
                 return;
             }
 
@@ -381,6 +383,8 @@ namespace CardGameDef.Unity
             // The main load action is to load cards and sets
             if (CoroutineRunner != null)
                 CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
+            else
+                Debug.LogWarning($"Should load cards for {Name}, but CoroutineRunner is null!");
             LoadSets();
             if (CoroutineRunner != null && LoadedSets.Values.Any(set => !string.IsNullOrEmpty(set.CardsUrl)))
                 CoroutineRunner.StartCoroutine(loadSetCardsCoroutine(this));

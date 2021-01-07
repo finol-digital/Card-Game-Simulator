@@ -185,7 +185,7 @@ namespace CardGameDef.Unity
 
                 if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
                 {
-                    Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error);
+                    Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error + " " + www.url);
                     yield break;
                 }
 

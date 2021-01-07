@@ -24,12 +24,23 @@ namespace CardGameDef
         [Description("The url from which to download the deck")]
         public Uri Url { get; private set; }
 
+        [JsonProperty]
+        [Description("Optionally set to false to ignore this deck url")]
+        [DefaultValue("true")]
+        public bool IsAvailable { get; private set; }
+
         [JsonConstructor]
-        public DeckUrl(string name, string txt, Uri url)
+        public DeckUrl(string name, string txt, Uri url, bool isAvailable = true)
         {
             Name = name ?? string.Empty;
             Txt = txt ?? string.Empty;
             Url = url;
+            IsAvailable = isAvailable;
+        }
+
+        public override string ToString()
+        {
+            return $"{Name} at {Url}/{Txt} is {IsAvailable}";
         }
     }
 }
