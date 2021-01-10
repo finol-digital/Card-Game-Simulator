@@ -34,6 +34,7 @@ namespace Tests.PlayMode
                 Directory.Delete(UnityCardGame.GamesDirectoryPath, true);
             PlayerPrefs.SetString(CardGameManager.PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
 
+            // Default is Standard Playing Cards
             _manager.LookupCardGames();
             _manager.ResetCurrentToDefault();
             _manager.ResetGameScene();
@@ -43,7 +44,21 @@ namespace Tests.PlayMode
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
             Assert.AreEqual("Standard Playing Cards", CardGameManager.Current.Name);
 
-            // TODO: DOMINOES AND MAHJONG
+            // Mahjong
+            CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
+            yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
+
+            Assert.IsTrue(CardGameManager.Current.HasLoaded);
+            Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
+            Assert.AreEqual("Mahjong", CardGameManager.Current.Name);
+
+            // Dominoes
+            CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
+            yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
+
+            Assert.IsTrue(CardGameManager.Current.HasLoaded);
+            Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
+            Assert.AreEqual("Dominoes", CardGameManager.Current.Name);
         }
 
         [UnityTest]
@@ -56,7 +71,10 @@ namespace Tests.PlayMode
             Assert.AreEqual("Arcmage", CardGameManager.Current.Name);
 
             // Update
-            // TODO
+            yield return _manager.GetCardGame("https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json");
+            Assert.IsTrue(CardGameManager.Current.HasLoaded);
+            Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
+            Assert.AreEqual("Arcmage", CardGameManager.Current.Name);
         }
     }
 }

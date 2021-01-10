@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameDef.Unity;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
