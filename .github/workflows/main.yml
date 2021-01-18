@@ -31,8 +31,6 @@ jobs:
         uses: davidmfinol/unity-test-publisher@main
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          editModeReport: artifacts/editmode-results.xml
-          playModeReport: artifacts/playmode-results.xml
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
