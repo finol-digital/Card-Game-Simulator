@@ -76,5 +76,11 @@ namespace Tests.PlayMode
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
             Assert.AreEqual("Arcmage", CardGameManager.Current.Name);
         }
+
+        [Test]
+        public void CanRecoverFromFailure()
+        {
+            Assert.IsTrue(false);
+        }
     }
 }
