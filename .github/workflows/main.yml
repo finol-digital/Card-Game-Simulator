@@ -34,6 +34,7 @@ jobs:
           workdirPrefix: '/github/workspace/'
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           report: ${{ steps.tests.outputs.artifactsPath }}/editmode-results.xml
+          checkName: EditMode Test Results
       - name: 'Publish PlayMode Test Results'
         if: ${{ always() }} # Avoid skipping on failed tests
         uses: rainbow-duck-games/unity-test-publisher@main
@@ -41,6 +42,7 @@ jobs:
           workdirPrefix: '/github/workspace/'
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           report: ${{ steps.tests.outputs.artifactsPath }}/playmode-results.xml
+          checkName: PlayMode Test Results
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
