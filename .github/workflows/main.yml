@@ -25,15 +25,14 @@ jobs:
           path: Library
           key: Library
       - name: Run EditMode and PlayMode Tests
-        id: tests
         uses: game-ci/unity-test-runner@main
       - name: Publish Test Results
         if: ${{ always() }} # Avoid skipping on failed tests
         uses: davidmfinol/unity-test-publisher@main
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          editModeReport: ${{ steps.tests.outputs.artifactsPath }}/editmode-results.xml
-          playModeReport: ${{ steps.tests.outputs.artifactsPath }}/playmode-results.xml
+          editModeReport: artifacts/editmode-results.xml
+          playModeReport: artifacts/playmode-results.xml
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
