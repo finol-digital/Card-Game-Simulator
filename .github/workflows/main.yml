@@ -27,22 +27,13 @@ jobs:
       - name: Run EditMode and PlayMode Tests
         id: tests
         uses: game-ci/unity-test-runner@main
-      - name: 'Publish EditMode Test Results'
+      - name: Publish Test Results
         if: ${{ always() }} # Avoid skipping on failed tests
-        uses: rainbow-duck-games/unity-test-publisher@main
+        uses: davidmfinol/unity-test-publisher@main
         with:
-          workdirPrefix: '/github/workspace/'
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          report: ${{ steps.tests.outputs.artifactsPath }}/editmode-results.xml
-          checkName: EditMode Test Results
-      - name: 'Publish PlayMode Test Results'
-        if: ${{ always() }} # Avoid skipping on failed tests
-        uses: rainbow-duck-games/unity-test-publisher@main
-        with:
-          workdirPrefix: '/github/workspace/'
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          report: ${{ steps.tests.outputs.artifactsPath }}/playmode-results.xml
-          checkName: PlayMode Test Results
+          editModeReport: ${{ steps.tests.outputs.artifactsPath }}/editmode-results.xml
+          playModeReport: ${{ steps.tests.outputs.artifactsPath }}/playmode-results.xml
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
