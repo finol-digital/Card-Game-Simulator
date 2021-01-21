@@ -30,7 +30,7 @@ jobs:
         uses: game-ci/unity-test-runner@main
       - name: Publish Test Results
         if: ${{ always() }} # Avoid skipping on failed tests
-        uses: rainbow-duck-games/unity-test-publisher@v0.1.3
+        uses: davidmfinol/unity-test-publisher@main
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
