@@ -308,8 +308,9 @@ namespace Cgs
             if (!parameters.TryGetValue(GameId, out object gameId))
                 return;
 
-            if (gameId is string id)
-                Select(id);
+            string gameUrl = gameId as string;
+            if (!string.IsNullOrEmpty(gameUrl))
+                StartCoroutine(GetCardGame(gameUrl));
             else
                 Debug.LogWarning(BranchCallbackWarning);
         }

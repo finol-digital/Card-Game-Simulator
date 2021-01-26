@@ -5,10 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Cards: Peek at facedown
-- Networking: Add ability to enter direct IP for a networked game
+- Fix: CGS Deep Links
+- Fix: Card Action Buttons
 
 ## Current Sprint
+- Cards: Peek at facedown
+- Networking: Add ability to enter direct IP for a networked game
 - Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Pre-defined stack locations
 - Play Mode: Pre-defined zones in Play Area

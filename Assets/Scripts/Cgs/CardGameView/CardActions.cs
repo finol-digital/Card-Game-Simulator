@@ -71,31 +71,34 @@ namespace Cgs.CardGameView
                 cardModel.CmdUpdateRotation(cardModel.transform.rotation);
         }
 
-        public Button flipButton;
-        public Button rotateButton;
-        public Button tapButton;
+        public List<Button> flipButtons;
+        public List<Button> rotateButtons;
+        public List<Button> tapButtons;
 
         public void Update()
         {
             bool isCardSelected = CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
                                   CardViewer.Instance.SelectedCardModel != null;
 
-            flipButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
-                                      CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
-            rotateButton.interactable =
-                isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
-                CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
-            tapButton.interactable =
-                isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
-                CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+            foreach (Button flipButton in flipButtons)
+                flipButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                    CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
 
-            if (Inputs.IsFilter && flipButton.interactable)
+            foreach (Button rotateButton in rotateButtons)
+                rotateButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                    CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+                
+            foreach (Button tapButton in tapButtons)
+                tapButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                    CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+
+            if (Inputs.IsFilter && flipButtons[0].interactable)
                 Flip(CardViewer.Instance.SelectedCardModel);
             else if (Inputs.IsNew) // TODO
                 Move(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsLoad && rotateButton.interactable)
+            else if (Inputs.IsLoad && rotateButtons[0].interactable)
                 Rotate(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsSave && tapButton.interactable)
+            else if (Inputs.IsSave && tapButtons[0].interactable)
                 Tap(CardViewer.Instance.SelectedCardModel);
         }
 
