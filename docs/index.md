@@ -19,7 +19,7 @@ You can mange your card games by tapping the center card game in the Main Menu:
 ![Game Selection Menu Image](assets/img/selectionmenu.webp)
 
 You can then tap on the "Share" button to create a CGS Deep Link that you can send to other people, so that they can click on it and get access to that card game.
-For example, the CGS Deep Link for [Arcmage](https://arcmage.org/) is: https://cgs.link/arcmage
+For example, the CGS Deep Link for [Arcmage](https://arcmage.org/) is: [https://cgs.link/arcmage](https://cgs.link/arcmage)
 
 You can also tap the "Download" button to manually enter the CGS AutoUpdate URL for the game you would like to download.
 For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json
