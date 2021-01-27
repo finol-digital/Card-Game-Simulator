@@ -51,7 +51,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 100
+          fetch-depth: 1000
           lfs: true
       - name: Cache Library
         uses: actions/cache@v2
