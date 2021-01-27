@@ -25,12 +25,12 @@ namespace Cgs
         public const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefDefaultGame = "DefaultGame";
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        public const string GameId = "GameId";
+        public const string GameUrl = "GameUrl";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
-        public const string BranchCallbackWarning = "Branch Callback has GameId, but it is not a string?";
+        public const string BranchCallbackWarning = "Branch Callback has GameUrl, but it is not a string?";
 #endif
         public const string DefaultNameWarning = "Found game with default name. Deleting it.";
-        public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!";
+        public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
         public const string DownloadErrorMessage = "Error downloading game!: ";
         public const string LoadErrorMessage = "Error loading game!: ";
 
@@ -305,10 +305,10 @@ namespace Cgs
                 return;
             }
 
-            if (!parameters.TryGetValue(GameId, out object gameId))
+            if (!parameters.TryGetValue(GameUrl, out object gameUrlObj))
                 return;
 
-            string gameUrl = gameId as string;
+            string gameUrl = gameUrlObj as string;
             if (!string.IsNullOrEmpty(gameUrl))
                 StartCoroutine(GetCardGame(gameUrl));
             else
@@ -458,8 +458,8 @@ namespace Cgs
         {
             if (string.IsNullOrEmpty(gameId) || !AllCardGames.ContainsKey(gameId))
             {
-                Debug.LogError(SelectionErrorMessage);
-                Messenger.Show(SelectionErrorMessage);
+                Debug.LogError(SelectionErrorMessage + gameId);
+                Messenger.Show(SelectionErrorMessage + gameId);
                 return;
             }
 
