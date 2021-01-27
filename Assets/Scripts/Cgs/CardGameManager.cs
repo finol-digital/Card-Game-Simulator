@@ -557,9 +557,9 @@ namespace Cgs
             universalObject.title = string.Format(ShareTitle, Current.Name);
             universalObject.contentDescription = string.Format(ShareDescription, Current.Name);
             universalObject.imageUrl = Current.BannerImageUrl?.OriginalString;
-            universalObject.metadata.AddCustomMetadata(GameId, Current.Id);
+            universalObject.metadata.AddCustomMetadata(GameUrl, Current.Id);
             var branchLinkProperties = new BranchLinkProperties();
-            branchLinkProperties.controlParams.Add(GameId, Current.Id);
+            branchLinkProperties.controlParams.Add(GameUrl, Current.Id);
             Branch.getShortURL(universalObject, branchLinkProperties, BranchCallbackWithUrl);
         }
 
