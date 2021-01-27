@@ -51,6 +51,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           lfs: true
       - name: Cache Library
         uses: actions/cache@v2
@@ -88,6 +89,7 @@ jobs:
     name: Build for Windows
     runs-on: windows-latest
     needs: tests
+    if: false
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
