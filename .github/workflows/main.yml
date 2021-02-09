@@ -45,8 +45,8 @@ jobs:
           - Android
           - iOS
           - StandaloneOSX
-#          - StandaloneLinux64
-#          - WebGL
+          - StandaloneLinux64
+          - WebGL
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
