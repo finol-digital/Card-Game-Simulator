@@ -28,6 +28,8 @@ jobs:
           key: Library
       - name: Run EditMode and PlayMode Tests
         uses: game-ci/unity-test-runner@main
+        with:
+          unityVersion: 2019.4.19f1
       - name: Publish Test Results
         if: always() # Avoid skipping on failed tests
         uses: davidmfinol/unity-test-publisher@main
@@ -70,6 +72,7 @@ jobs:
       - name: Build Unity Project
         uses: game-ci/unity-builder@shallow
         with:
+          unityVersion: 2019.4.19f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
           androidAppBundle: true
