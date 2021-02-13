@@ -68,7 +68,7 @@ jobs:
           docker rmi $(docker image ls -aq)
           df -h
       - name: Build Unity Project
-        uses: game-ci/unity-builder@shallow
+        uses: game-ci/unity-builder@main
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
