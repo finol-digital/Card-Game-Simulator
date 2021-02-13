@@ -28,8 +28,6 @@ jobs:
           key: Library
       - name: Run EditMode and PlayMode Tests
         uses: game-ci/unity-test-runner@main
-        with:
-          unityVersion: 2019.4.19f1
       - name: Publish Test Results
         if: always() # Avoid skipping on failed tests
         uses: davidmfinol/unity-test-publisher@main
@@ -48,11 +46,12 @@ jobs:
           - iOS
           - StandaloneOSX
           - StandaloneLinux64
-#          - WebGL
+          - WebGL
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           lfs: true
       - name: Cache Library
         uses: actions/cache@v2
@@ -71,7 +70,6 @@ jobs:
       - name: Build Unity Project
         uses: game-ci/unity-builder@shallow
         with:
-          unityVersion: 2019.4.19f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
           androidAppBundle: true
