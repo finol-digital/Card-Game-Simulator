@@ -29,7 +29,7 @@ jobs:
       - name: Run EditMode and PlayMode Tests
         uses: game-ci/unity-test-runner@main
       - name: Publish Test Results
-        if: ${{ always() }} # Avoid skipping on failed tests
+        if: always() # Avoid skipping on failed tests
         uses: davidmfinol/unity-test-publisher@main
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
           - iOS
           - StandaloneOSX
           - StandaloneLinux64
-          - WebGL
+#          - WebGL
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
