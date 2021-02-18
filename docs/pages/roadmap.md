@@ -20,14 +20,6 @@ permalink: roadmap.html
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 
 ## Backlog
-- Tech: SonarQube Scans
-- Settings: Scale size of UI based off either physical size or resolution of display
-- Integration: Automate game upload
-- Cards: Support mix of different card sizes in the same game
-- Cards: Configurable highlight color
-- Cards Explorer & Deck Editor: Add sorting + Sort Menu
-- Deck Editor: Edit Deck List in the Deck Save Menu
-- Cards: Support multiple card backs
 - Cards: Support more than 1 card face (DFC)
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Play Mode: Support multiple playmats
@@ -37,12 +29,22 @@ permalink: roadmap.html
 - Play Mode: Move stack viewers, and allow multiple viewers per stack
   - Pooling to improve performance of opening stack viewer
 - Play Mode: Resize stack viewer based off card game settings
+- Settings: Scale size of UI based off either physical size or resolution of display
+- Cards: Support mix of different card sizes in the same game
+- Cards: Configurable highlight color
+- Cards Explorer & Deck Editor: Add sorting + Sort Menu
+- Deck Editor: Edit Deck List in the Deck Save Menu
+- Cards: Support multiple card backs
 
 ## Icebox
 - Tech: Replace SwipeManager
 - Tech: Branch on desktop
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
+- Tech: Upgrade json schema version from v4 to v7
+- Tech: Use AllDecks.json for default games
+- Tech: SonarQube Scans
+- Integration: Automate game upload
 - Usability: Alt-text with button name appears when hovering mouse over a button
 - Platforms: Full support for web through WebGL
 - Integration: Android Search Bar Widget
