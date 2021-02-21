@@ -26,18 +26,17 @@ jobs:
         with:
           path: Library
           key: Library
-      - name: Run EditMode and PlayMode Tests
-        uses: game-ci/unity-test-runner@main
-      - name: Publish Test Results
-        if: always() # Avoid skipping on failed tests
-        uses: davidmfinol/unity-test-publisher@main
-        with:
+      - name: Run Unit Tests
+        uses: game-ci/unity-test-runner@feature/createCheck
+          unityVersion: 2019.4.19f1
+          createCheck: true
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     needs: tests
+    if: false
     strategy:
       fail-fast: false
       matrix:
