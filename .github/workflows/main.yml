@@ -171,7 +171,7 @@ jobs:
       - name: Upload to Google Play
         uses: maierj/fastlane-action@v1.4.0
         with:
-          lane: 'android playstore'
+          lane: 'android playprod'
 
   releaseToAppStore:
     name: Release to the App Store
@@ -210,10 +210,6 @@ jobs:
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
-      - name: Fix version for StandaloneOSX
-        uses: maierj/fastlane-action@v1.4.0
-        with:
-          lane: 'fixversion'
       - name: Prepare for Upload
         run: |
           find $IOS_BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
@@ -224,6 +220,10 @@ jobs:
         uses: maierj/fastlane-action@v1.4.0
         with:
           lane: 'ios release'
+      - name: Fix version for StandaloneOSX
+        uses: maierj/fastlane-action@v1.4.0
+        with:
+          lane: 'mac fixversion'
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v1.4.0
         with:

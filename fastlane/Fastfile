@@ -10,28 +10,18 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
-keychain_name = "temporary_keychain"
-keychain_password = SecureRandom.base64
-
-
-desc "Hack so that Apple doesn't reject the build due to incorrect versioning" 
-lane :fixversion do
-  update_plist(
-    plist_path: "#{ENV['MAC_BUILD_PATH']}/StandaloneOSX.app/Contents/Info.plist",
-    block: proc do |plist|
-      plist[:CFBundleVersion] = "9" + plist["CFBundleVersion"]
-    end
-  )
-end
-
 platform :android do
 
   desc "Upload a new Android version to the Google Play Store"
-  lane :playstore do
+  lane :playprod do
     upload_to_play_store(aab: "#{ENV['ANDROID_BUILD_FILE_PATH']}")
   end
 
 end
+
+
+keychain_name = "temporary_keychain"
+keychain_password = SecureRandom.base64
 
 platform :ios do
 
@@ -106,7 +96,18 @@ platform :ios do
 
 end
 
+
 platform :mac do
+
+  desc "Hack so that Apple doesn't reject the build due to incorrect versioning" 
+  lane :fixversion do
+    update_plist(
+      plist_path: "#{ENV['MAC_BUILD_PATH']}/StandaloneOSX.app/Contents/Info.plist",
+      block: proc do |plist|
+        plist[:CFBundleVersion] = "9" + plist["CFBundleVersion"]
+      end
+    )
+  end
 
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do
