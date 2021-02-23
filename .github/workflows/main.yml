@@ -37,7 +37,6 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     needs: tests
-    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -46,7 +45,7 @@ jobs:
           - iOS
           - StandaloneOSX
           - StandaloneLinux64
-          - WebGL
+#          - WebGL
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -70,6 +69,7 @@ jobs:
       - name: Build Unity Project
         uses: game-ci/unity-builder@main
         with:
+          unityVersion: 2019.4.19f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
           androidAppBundle: true
