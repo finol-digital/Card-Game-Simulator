@@ -78,8 +78,10 @@ namespace Tests.PlayMode
         }
 
         [Test]
+        [Ignore("TODO")]
         public void CanRecoverFromFailure()
         {
+            // TODO:
             Assert.IsTrue(false);
         }
     }
