@@ -80,7 +80,7 @@ namespace Tests.PlayMode
         [Test]
         public void CanRecoverFromFailure()
         {
-            // TODO:
+            Assert.IsTrue(false);
         }
     }
 }
