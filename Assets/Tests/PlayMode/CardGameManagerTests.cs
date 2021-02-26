@@ -78,7 +78,7 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        [Ignore("TODO")]
+        //[Ignore("TODO")]
         public void CanRecoverFromFailure()
         {
             // TODO:
