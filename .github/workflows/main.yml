@@ -37,6 +37,7 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     needs: tests
+    if: false
     strategy:
       fail-fast: false
       matrix:
