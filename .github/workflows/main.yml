@@ -27,10 +27,9 @@ jobs:
           path: Library
           key: Library
       - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@check-github-token
+        uses: game-ci/unity-test-runner@main
         with:
           unityVersion: 2019.4.19f1
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
