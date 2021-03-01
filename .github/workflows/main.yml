@@ -58,7 +58,9 @@ jobs:
           restore-keys: Library-
       - name: Free Disk Space for Android
         if: matrix.targetPlatform == 'Android'
-        run: chmod +X scripts/free-disk-space.sh; ./scripts/free-disk-space.sh
+        run: |
+          chmod +x scripts/free-disk-space.sh
+          ./scripts/free-disk-space.sh
       - name: Build Unity Project
         uses: game-ci/unity-builder@v2
         with:
