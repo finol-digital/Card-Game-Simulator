@@ -58,12 +58,7 @@ jobs:
           restore-keys: Library-
       - name: Free Disk Space for Android
         if: matrix.targetPlatform == 'Android'
-        run: |
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
+        run: chmod +X scripts/free-disk-space.sh; ./scripts/free-disk-space.sh
       - name: Build Unity Project
         uses: game-ci/unity-builder@v2
         with:
