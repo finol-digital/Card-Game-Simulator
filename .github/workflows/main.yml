@@ -59,8 +59,10 @@ jobs:
       - name: Free Disk Space for Android
         if: matrix.targetPlatform == 'Android'
         run: |
-          chmod +x scripts/free-disk-space.sh
-          ./scripts/free-disk-space.sh
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo apt clean
+          docker rmi $(docker images -q)
       - name: Build Unity Project
         uses: game-ci/unity-builder@v2
         with:
