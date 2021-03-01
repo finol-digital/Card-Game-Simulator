@@ -29,7 +29,6 @@ jobs:
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@v2
         with:
-          unityVersion: 2019.4.19f1
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
   buildWithLinux:
@@ -68,7 +67,6 @@ jobs:
       - name: Build Unity Project
         uses: game-ci/unity-builder@v2
         with:
-          unityVersion: 2019.4.19f1
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
           androidAppBundle: true
