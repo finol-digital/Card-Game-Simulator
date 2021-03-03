@@ -59,10 +59,12 @@ jobs:
       - name: Free Disk Space for Android
         if: matrix.targetPlatform == 'Android'
         run: |
+          df -h
           sudo swapoff -a
           sudo rm -f /swapfile
           sudo apt clean
-          docker rmi $(docker images -q)
+          docker rmi $(docker image ls -aq)
+          df -h
       - name: Build Unity Project
         uses: game-ci/unity-builder@v2
         with:
@@ -261,7 +263,7 @@ jobs:
         run: |
           git config --local user.name "$(git log --format='%an' HEAD^!)"
           git config --local user.email "$(git log --format='%ae' HEAD^!)"
-          cp $WEBGL_BUILD_PATH/Build/WebGL.* $WEBGL_PAGES_PATH
+          cp $WEBGL_BUILD_PATH/Build/WebGL.** $WEBGL_PAGES_PATH
           git add $WEBGL_PAGES_PATH
           git commit -m "Release to GitHub Pages"
           git push
