@@ -244,6 +244,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action == 'published'
+    env:
+      WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL', github.workspace) }}
+      WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -256,7 +259,7 @@ jobs:
         run: |
           git config --local user.name "$(git log --format='%an' HEAD^!)"
           git config --local user.email "$(git log --format='%ae' HEAD^!)"
-          cp build/WebGL/Build/* docs/WebGL
-          git add docs/WebGL
+          cp $WEBGL_BUILD_PATH/Build/* $WEBGL_PAGES_PATH
+          git add $WEBGL_PAGES_PATH
           git commit -m "Release to GitHub Pages"
           git push

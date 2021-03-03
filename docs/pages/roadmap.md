@@ -15,12 +15,13 @@ permalink: roadmap.html
 - Play Mode: Pre-defined stack locations
 - Play Mode: Pre-defined zones in Play Area
 - Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
-- Play Mode: .dec sideboard & .ydk side are extra stacks
 - Play Mode: E: Move card to zone or stack
+- Play Mode: .dec sideboard & .ydk side are extra stacks
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
 
 ## Backlog
 - Cards: Support more than 1 card face (DFC)
+- Cards: Support multiple card backs
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Play Mode: Support multiple playmats
 - Play Mode: Face-up cards in cards stacks
@@ -32,9 +33,9 @@ permalink: roadmap.html
 - Settings: Scale size of UI based off either physical size or resolution of display
 - Cards: Support mix of different card sizes in the same game
 - Cards: Configurable highlight color
+- Cards Explorer: Add card properties in UI
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
-- Cards: Support multiple card backs
 
 ## Icebox
 - Tech: Replace SwipeManager
