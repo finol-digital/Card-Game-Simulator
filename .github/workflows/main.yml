@@ -160,12 +160,19 @@ jobs:
         with:
           name: cgs-Android
           path: build/Android
-      - name: Prepare for Upload
+      - name: Add Authentication and Release Notes
         run: |
           echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
           echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+      - name: Cache Fastlane Dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install Fastlane
+        run: bundle install
       - name: Upload to Google Play
-        uses: maierj/fastlane-action@v1.4.0
+        uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'android playprod'
 
@@ -206,22 +213,29 @@ jobs:
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
-      - name: Prepare for Upload
+      - name: Fix File Permissions
         run: |
           find $IOS_BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
           find $MAC_BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
           chmod +x scripts/sign-osx-build.sh
           ./scripts/sign-osx-build.sh
+      - name: Cache Fastlane Dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ hashFiles('**/Gemfile.lock') }}
+      - name: Install Fastlane
+        run: bundle install
       - name: Upload to the App Store
-        uses: maierj/fastlane-action@v1.4.0
+        uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'ios release'
       - name: Fix version for StandaloneOSX
-        uses: maierj/fastlane-action@v1.4.0
+        uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'mac fixversion'
       - name: Upload to the Mac App Store
-        uses: maierj/fastlane-action@v1.4.0
+        uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'mac macupload'
 
