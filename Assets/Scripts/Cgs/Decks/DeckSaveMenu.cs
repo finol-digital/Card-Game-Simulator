@@ -28,6 +28,7 @@ namespace Cgs.Decks
 
         public InputField nameInputField;
         public TMP_Text textOutputArea;
+        public Button printPdfButton;
 
         private UnityDeck _currentDeck;
         private OnNameChangeDelegate _nameChangeCallback;
@@ -61,6 +62,9 @@ namespace Cgs.Decks
             _doesAutoOverwrite = overwrite;
             nameInputField.text = _currentDeck.Name;
             textOutputArea.text = _currentDeck.ToString();
+#if UNITY_WEBGL
+            printPdfButton.interactable = false;
+#endif
         }
 
         [UsedImplicitly]

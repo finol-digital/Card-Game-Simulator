@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CardGameDef.Decks;
+#if !UNITY_WEBGL
 using Didstopia.PDFSharp;
 using Didstopia.PDFSharp.Drawing;
 using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
+#endif
 
 namespace CardGameDef.Unity
 {
@@ -247,6 +249,7 @@ namespace CardGameDef.Unity
         // NOTE: CAN THROW EXCEPTION
         public Uri PrintPdf()
         {
+#if !UNITY_WEBGL
             if (!Directory.Exists(PrintPdfDirectory))
                 Directory.CreateDirectory(PrintPdfDirectory);
 
@@ -287,6 +290,9 @@ namespace CardGameDef.Unity
             pdfDocument.Dispose();
 
             return new Uri(UnityFileMethods.FilePrefix + PrintPdfFilePath);
+#else
+            throw new System.NotImplementedException();
+#endif
         }
     }
 }
