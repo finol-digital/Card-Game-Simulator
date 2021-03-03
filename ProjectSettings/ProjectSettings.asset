@@ -857,21 +857,46 @@ PlayerSettings:
   metroCertificateNotAfter: 005a300b8812d801
   metroApplicationDescription: Create, Share, and Play
   wsaImages:
+    65636: Assets/Sprites and Textures/UWP/StoreLogo.scale-100.png
+    65661: Assets/Sprites and Textures/UWP/StoreLogo.scale-125.png
+    65686: Assets/Sprites and Textures/UWP/StoreLogo.scale-150.png
+    65736: Assets/Sprites and Textures/UWP/StoreLogo.scale-200.png
+    65936: Assets/Sprites and Textures/UWP/StoreLogo.scale-400.png
     131172: Assets/Sprites and Textures/UWP/SplashScreen.scale-100.png
     131197: Assets/Sprites and Textures/UWP/SplashScreen.scale-125.png
     131222: Assets/Sprites and Textures/UWP/SplashScreen.scale-150.png
     131272: Assets/Sprites and Textures/UWP/SplashScreen.scale-200.png
     131472: Assets/Sprites and Textures/UWP/SplashScreen.scale-400.png
+    2031632: Assets/Sprites and Textures/UWP/Square44x44Logo.targetsize-16.png
+    2031640: Assets/Sprites and Textures/UWP/Square44x44Logo.targetsize-24.png
+    2031648: Assets/Sprites and Textures/UWP/Square44x44Logo.targetsize-32.png
+    2031664: Assets/Sprites and Textures/UWP/Square44x44Logo.targetsize-48.png
+    2031716: Assets/Sprites and Textures/UWP/Square44x44Logo.scale-100.png
+    2031741: Assets/Sprites and Textures/UWP/Square44x44Logo.scale-125.png
+    2031766: Assets/Sprites and Textures/UWP/Square44x44Logo.scale-150.png
+    2031816: Assets/Sprites and Textures/UWP/Square44x44Logo.scale-200.png
+    2031872: Assets/Sprites and Textures/UWP/Square44x44Logo.targetsize-256.png
+    2032016: Assets/Sprites and Textures/UWP/Square44x44Logo.scale-400.png
+    2162788: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-100.png
+    2162813: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-125.png
+    2162838: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-150.png
+    2162888: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-200.png
+    2163088: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-400.png
+    2293860: Assets/Sprites and Textures/UWP/Wide310x150Logo.scale-100.png
+    2293885: Assets/Sprites and Textures/UWP/Wide310x150Logo.scale-125.png
+    2293910: Assets/Sprites and Textures/UWP/Wide310x150Logo.scale-150.png
+    2293960: Assets/Sprites and Textures/UWP/Wide310x150Logo.scale-200.png
+    2294160: Assets/Sprites and Textures/UWP/Wide310x150Logo.scale-400.png
   metroTileShortName: CGS
   metroTileShowName: 0
-  metroMediumTileShowName: 0
-  metroLargeTileShowName: 0
-  metroWideTileShowName: 0
+  metroMediumTileShowName: 1
+  metroLargeTileShowName: 1
+  metroWideTileShowName: 1
   metroSupportStreamingInstall: 0
   metroLastRequiredScene: 0
   metroDefaultTileSize: 1
-  metroTileForegroundText: 2
-  metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
+  metroTileForegroundText: 1
+  metroTileBackgroundColor: {r: 0.2627451, g: 0.18039216, b: 0.08627451, a: 1}
   metroSplashScreenBackgroundColor: {r: 0.2627451, g: 0.18039216, b: 0.08627451, a: 1}
   metroSplashScreenUseBackgroundColor: 1
   platformCapabilities:

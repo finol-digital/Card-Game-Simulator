@@ -145,7 +145,8 @@ jobs:
     name: Release to the Google Play Store
     runs-on: ubuntu-latest
     needs: buildWithLinux
-    if: github.event.action == 'published'
+    if: false
+#    if: github.event.action == 'published'
     env:
       GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
       GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
@@ -194,6 +195,7 @@ jobs:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
       MATCH_URL: ${{ secrets.MATCH_URL }}
+      SPACESHIP_SKIP_2FA_UPGRADE: 1
       IOS_APP_ID: com.finoldigital.CardGameSim
       IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       MAC_APP_ID: com.finoldigital.CardGameSimulator
@@ -259,7 +261,7 @@ jobs:
         run: |
           git config --local user.name "$(git log --format='%an' HEAD^!)"
           git config --local user.email "$(git log --format='%ae' HEAD^!)"
-          cp $WEBGL_BUILD_PATH/Build/* $WEBGL_PAGES_PATH
+          cp $WEBGL_BUILD_PATH/Build/WebGL.* $WEBGL_PAGES_PATH
           git add $WEBGL_PAGES_PATH
           git commit -m "Release to GitHub Pages"
           git push
