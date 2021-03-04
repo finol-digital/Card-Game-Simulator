@@ -22,6 +22,7 @@ permalink: roadmap.html
 ## Backlog
 - Cards: Support more than 1 card face (DFC)
 - Cards: Support multiple card backs
+- Play Mode: Move card stacks with 2 fingers
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Play Mode: Support multiple playmats
 - Play Mode: Face-up cards in cards stacks
