@@ -1,7 +1,7 @@
 {
 "companyName": "Finol Digital LLC",
 "productName": "Card Game Simulator",
-"productVersion": "1.36.0",
+"productVersion": "1.43.0",
 "dataUrl": "WebGL.data.unityweb",
 "wasmCodeUrl": "WebGL.wasm.code.unityweb",
 "wasmFrameworkUrl": "WebGL.wasm.framework.unityweb",
@@ -12,5 +12,5 @@
 "backgroundColor": "#FFFFFF",
 "developmentBuild": false,
 "multithreading": false,
-"unityVersion": "2019.4.18f1"
+"unityVersion": "2019.4.20f1"
 }
