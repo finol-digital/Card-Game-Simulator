@@ -22,4 +22,4 @@ If you'd like to help out with the project, please contact <david@finoldigital.c
 
 ## License
 
-Code released under the [Mozilla Public License 2.0](LICENSE)
+Code released under the [Mozilla Public License 2.0](LICENSE.md)
