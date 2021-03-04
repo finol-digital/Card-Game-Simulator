@@ -11,9 +11,9 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Whether to build or release'     
+        description: 'check OR release (platform)'     
         required: true
-        default: 'build'
+        default: 'check'
 
 jobs:
 
