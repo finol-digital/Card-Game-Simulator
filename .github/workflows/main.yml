@@ -189,7 +189,6 @@ jobs:
       APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
       MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
       MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
@@ -197,7 +196,10 @@ jobs:
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
       MATCH_URL: ${{ secrets.MATCH_URL }}
-      SPACESHIP_SKIP_2FA_UPGRADE: 1
+      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
+      APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
       IOS_APP_ID: com.finoldigital.CardGameSim
       IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       MAC_APP_ID: com.finoldigital.CardGameSimulator
@@ -217,8 +219,9 @@ jobs:
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
-      - name: Fix File Permissions
+      - name: Make App Store p8 and Fix File Permissions
         run: |
+          echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           find $IOS_BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
           find $MAC_BUILD_PATH -type f -iname "*.sh" -exec chmod +x {} \;
           chmod +x scripts/sign-osx-build.sh
@@ -249,7 +252,7 @@ jobs:
     needs: buildWithLinux
     if: github.event.action == 'published'
     env:
-      WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL', github.workspace) }}
+      WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL/Build', github.workspace) }}
       WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
     steps:
       - name: Checkout Repository
@@ -263,7 +266,7 @@ jobs:
         run: |
           git config --local user.name "$(git log --format='%an' HEAD^!)"
           git config --local user.email "$(git log --format='%ae' HEAD^!)"
-          cp $WEBGL_BUILD_PATH/Build/WebGL.** $WEBGL_PAGES_PATH
+          find $WEBGL_BUILD_PATH -type f -name 'WebGL.*' -exec cp '{}' $WEBGL_PAGES_PATH ';'
           git add $WEBGL_PAGES_PATH
           git commit -m "Release to GitHub Pages"
           git push
