@@ -17,7 +17,8 @@ permalink: roadmap.html
 - Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Play Mode: E: Move card to zone or stack
 - Play Mode: .dec sideboard & .ydk side are extra stacks
-- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and maybe other stores)
+- Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
+- Integration: Update Store descriptions (remove "When joining a friend’s game session...") and Store images
 
 ## Backlog
 - Cards: Support more than 1 card face (DFC)

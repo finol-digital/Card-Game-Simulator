@@ -241,9 +241,9 @@ jobs:
           path: build/WebGL
       - name: Copy the WebGL build artifacts to the GitHub Pages directory
         run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
-      - name: Deploy GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: main
-          file_pattern: docs/*
-          commit_message: Deploy GitHub Pages
+          file_pattern: docs/WebGL/*
+          commit_message: Deploy to GitHub Pages

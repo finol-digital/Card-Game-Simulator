@@ -28,17 +28,17 @@ For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: http
 
 You can also create your own custom game(s) by following the [Custom Games Documentation](custom.html).
 
-## Use CGS
+## Guide
 
 {% include youtubePlayer.html id=page.cgsYoutubeId %}
 
-When you play a game in CGS, CGS defaults to hosting game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game. If you want to play over the internet, you need to forward port 7777.
-
-When joining a friend's game session, CGS will be set to use the same card game that the host has selected. If you do not already have that card game, CGS will automatically download it.
+When you play a game in CGS, CGS defaults to hosting game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game. 
+If you want to play over the internet, you need to [forward port](https://portforward.com/router.htm) 7777.
 
 When navigating through CGS, you may find it useful to use [keyboard shortcuts](keyboard.html).
 
 ## Feedback
-See the [current roadmap](roadmap.html). Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or [contact us on facebook](https://www.facebook.com/cardgamesimulator/). We're also on [Twitter](https://twitter.com/cardgamesim) and [Reddit](https://www.reddit.com/r/CardGameSimulator/), and we encourage you to check out [these other projects](external.html).
+See the [current roadmap](roadmap.html). Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or [contact us on Facebook](https://www.facebook.com/cardgamesimulator/). 
+We're also on [Twitter](https://twitter.com/cardgamesim) and [Reddit](https://www.reddit.com/r/CardGameSimulator/), and we encourage you to check out [these other projects](external.html).
 
 *You may also be interested in our [Privacy Policy](PRIVACY.html).*
