@@ -41,7 +41,7 @@ permalink: roadmap.html
 
 ## Icebox
 - Tech: Replace SwipeManager
-- Tech: Branch on desktop
+- Tech: Branch on Windows (https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
 - Tech: Upgrade json schema version from v4 to v7

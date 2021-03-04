@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'check OR release (platform)'     
+        description: 'check OR release (platform)'
         required: true
         default: 'check'
 
