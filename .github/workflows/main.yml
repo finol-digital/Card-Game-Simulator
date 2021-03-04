@@ -1,21 +1,17 @@
 name: Test, Build, and Release CGS
-
-
 on:
   push: { branches: [develop, main] }
   release: { types: [published] }
-
-
-env:
-  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-  UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
 
 
 jobs:
   tests:
     name: Test Code Quality
     runs-on: ubuntu-latest
+    env:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -44,6 +40,10 @@ jobs:
           - StandaloneOSX
           - StandaloneLinux64
           - WebGL
+    env:
+      UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -89,19 +89,6 @@ jobs:
     needs: tests
     if: false
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          lfs: true
-      - name: Install Unity
-        uses: crazy-max/ghaction-chocolatey@v1.2.2
-        with:
-          args: install --yes unity --version=2019.4.5 unity-win-il2cpp --version=2019.4.5 unity-metro --version=2019.4.5
-      - name: Cache Library
-        uses: actions/cache@v2
-        with:
-          path: Library
-          key: Library
       - name: Build Cgs for Windows
         run: .\scripts\build_windows.ps1
         shell: powershell
@@ -116,7 +103,6 @@ jobs:
           Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
-        if: false
         run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
           SolutionPath: build\uwp\Card Game Simulator.sln
@@ -124,24 +110,6 @@ jobs:
           TargetPlatform: x64
           BuildMode: StoreUpload
           AppxBundle: Always
-      - name: Upload cgs-windows32
-        uses: actions/upload-artifact@v2
-        if: github.event.ref != 'refs/heads/develop'
-        with:
-          name: cgs-windows32
-          path: build/cgs-windows32
-      - name: Upload cgs-windows64
-        uses: actions/upload-artifact@v2
-        if: github.event.ref != 'refs/heads/develop'
-        with:
-          name: cgs-windows64
-          path: build/cgs-windows64
-      - name: Upload .appxupload
-        uses: actions/upload-artifact@v2
-        if: false
-        with:
-          name: cgs.appxupload
-          path: build/uwp/AppPackages/Card Game Simulator/Card Game Simulator_1.35.0.0_Master_Test/Card Game Simulator_1.35.0.0_x86_x64_arm_Master.appxupload
 
   releaseToGooglePlay:
     name: Release to the Google Play Store
@@ -167,11 +135,6 @@ jobs:
         run: |
           echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
           echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-      - name: Cache Fastlane Dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-${{ hashFiles('**/Gemfile.lock') }}
       - name: Install Fastlane
         run: bundle install
       - name: Upload to Google Play
@@ -181,6 +144,47 @@ jobs:
 
   releaseToAppStore:
     name: Release to the App Store
+    runs-on: macos-latest
+    needs: buildWithLinux
+    if: false
+#    if: github.event.action == 'published'
+    env:
+      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
+      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
+      MATCH_URL: ${{ secrets.MATCH_URL }}
+      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
+      APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
+      IOS_APP_ID: com.finoldigital.CardGameSim
+      IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
+      PROJECT_NAME: Card Game Simulator
+      RELEASE_NOTES: ${{ github.event.release.body }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Download iOS Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-iOS
+          path: build/iOS
+      - name: Make App Store p8 and Fix File Permissions
+        run: |
+          echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
+          find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
+      - name: Install Fastlane
+        run: bundle install
+      - name: Upload to the App Store
+        uses: maierj/fastlane-action@v2.0.0
+        with:
+          lane: 'ios release'
+
+  releaseToMacAppStore:
+    name: Release to the Mac App Store
     runs-on: macos-latest
     needs: buildWithLinux
     if: github.event.action == 'published'
@@ -193,15 +197,6 @@ jobs:
       MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
       MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
       MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
-      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.MATCH_PERSONAL_ACCESS_TOKEN }}
-      MATCH_URL: ${{ secrets.MATCH_URL }}
-      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
-      APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
-      IOS_APP_ID: com.finoldigital.CardGameSim
-      IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
@@ -209,42 +204,27 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Download iOS Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: cgs-iOS
-          path: build/iOS
       - name: Download StandaloneOSX Artifact
         uses: actions/download-artifact@v2
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
-      - name: Make App Store p8 and Fix File Permissions
+      - name: Fix File Permissions and Sign OSX Build
         run: |
-          echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
-          find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           chmod +x scripts/sign-osx-build.sh
           ./scripts/sign-osx-build.sh
-      - name: Cache Fastlane Dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-${{ hashFiles('**/Gemfile.lock') }}
       - name: Install Fastlane
         run: bundle install
-      - name: Upload to the App Store
-        uses: maierj/fastlane-action@v2.0.0
-        with:
-          lane: 'ios release'
       - name: Fix version for StandaloneOSX
         uses: maierj/fastlane-action@v2.0.0
         with:
-          lane: 'mac fixversion'
+          lane: 'fixversion'
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'mac macupload'
+
 
   releaseToGitHubPages:
     name: Release to GitHub Pages
@@ -262,11 +242,11 @@ jobs:
         with:
           name: cgs-WebGL
           path: build/WebGL
-      - name: Commit and Push to GitHub Pages
-        run: |
-          git config --local user.name "$(git log --format='%an' HEAD^!)"
-          git config --local user.email "$(git log --format='%ae' HEAD^!)"
-          find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
-          git add $WEBGL_PAGES_PATH
-          git commit -m "Release to GitHub Pages"
-          git push
+      - name: Copy the WebGL build artifacts to the GitHub Pages directory
+        run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
+      - name: Deploy GitHub Pages
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
+          file_pattern: docs/*
+          commit_message: Deploy GitHub Pages
