@@ -35,7 +35,7 @@ jobs:
           path: Library
           key: Library
       - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@results-check
+        uses: game-ci/unity-test-runner@v2
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
 
