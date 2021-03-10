@@ -134,7 +134,7 @@ jobs:
         uses: kuler90/build-unity@v1
         with:
           build-target: ${{ matrix.targetPlatform }}
-          build-method: Build${{ matrix.targetPlatform }}
+          build-method: Cgs.Editor.BuildCgs.Build${{ matrix.targetPlatform }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
         if: contains(github.ref, 'main') || startsWith(github.ref, 'refs/tags/v')
