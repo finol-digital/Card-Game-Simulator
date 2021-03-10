@@ -117,6 +117,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
           lfs: true
       - name: Setup Unity
         id: setup-unity
