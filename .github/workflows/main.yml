@@ -127,7 +127,7 @@ jobs:
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
-          unity-username: ${{ secrets.UNITY_USERNAME }}
+          unity-username: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
       - name: Build Unity
@@ -290,7 +290,7 @@ jobs:
   releaseToMicrosoftStore:
     name: Release to the Microsoft Store
     runs-on: windows-latest
-    needs: buildWithLinux
+    needs: buildWithWindows
     if: startsWith(github.ref, 'refs/tags/v') || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'uwp'))
     steps:
       - name: Setup MSBuild.exe
