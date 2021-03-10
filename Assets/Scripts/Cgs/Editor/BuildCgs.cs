@@ -137,22 +137,22 @@ namespace Cgs.Editor
         }
 
         [UsedImplicitly]
-        public static void BuildWindows()
+        public static void BuildWindows32()
         {
-            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("build", "cgs-windows32"), "cgs.exe"));
+            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("build", "BuildWindows32"), "cgs.exe"));
         }
 
         [UsedImplicitly]
         public static void BuildWindows64()
         {
-            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("build", "cgs-windows64"), "cgs.exe"));
+            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("build", "BuildWindows64"), "cgs.exe"));
         }
 
         [UsedImplicitly]
         public static void BuildUwp()
         {
             EditorUserBuildSettings.wsaUWPBuildType = WSAUWPBuildType.XAML;
-            Build(BuildTarget.WSAPlayer, Path.Combine("build", "uwp"));
+            Build(BuildTarget.WSAPlayer, Path.Combine("build", "BuildUwp"));
         }
 
         private static void Build(BuildTarget buildTarget, string filePath)
