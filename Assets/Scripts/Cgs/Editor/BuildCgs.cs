@@ -137,15 +137,15 @@ namespace Cgs.Editor
         }
 
         [UsedImplicitly]
-        public static void BuildWindows32()
+        public static void BuildStandaloneWindows()
         {
-            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("build", "BuildWindows32"), "cgs.exe"));
+            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("build", "StandaloneWindows"), "cgs.exe"));
         }
 
         [UsedImplicitly]
-        public static void BuildWindows64()
+        public static void BuildStandaloneWindows64()
         {
-            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("build", "BuildWindows64"), "cgs.exe"));
+            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("build", "StandaloneWindows64"), "cgs.exe"));
         }
 
         [UsedImplicitly]

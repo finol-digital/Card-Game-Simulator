@@ -104,15 +104,15 @@ jobs:
           tag: ${{ github.ref }}
 
   buildWithWindows:
-    name: Build for Windows
+    name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-latest
     needs: tests
     strategy:
       fail-fast: false
       matrix:
         targetPlatform:
-          - BuildWindows32
-          - BuildWindows64
+          - StandaloneWindows
+          - StandaloneWindows64
 #          - BuildUwp
     steps:
       - name: Checkout Repository
@@ -124,10 +124,17 @@ jobs:
         uses: kuler90/setup-unity@v1
         with:
           unity-modules: windows-il2cpp
+      - name: Activate Unity
+        uses: kuler90/activate-unity@v1
+        with:
+          unity-username: ${{ secrets.UNITY_USERNAME }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          unity-serial: ${{ secrets.UNITY_SERIAL }}
       - name: Build Unity
         uses: kuler90/build-unity@v1
         with:
-          build-method: ${{ matrix.targetPlatform }}
+          build-target: ${{ matrix.targetPlatform }}
+          build-method: Build${{ matrix.targetPlatform }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
         if: contains(github.ref, 'main') || startsWith(github.ref, 'refs/tags/v')
@@ -279,3 +286,27 @@ jobs:
           branch: main
           file_pattern: docs/WebGL/*
           commit_message: Deploy to GitHub Pages
+
+  releaseToMicrosoftStore:
+    name: Release to the Microsoft Store
+    runs-on: windows-latest
+    needs: buildWithLinux
+    if: startsWith(github.ref, 'refs/tags/v') || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'uwp'))
+    steps:
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v1.0.2
+      - name: Restore the Wpf application to populate the obj folder
+        run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+        env:
+          SolutionPath: build\uwp\Card Game Simulator.sln
+          Configuration: Master
+          RuntimeIdentifier: win-x64
+      - name: Create .appxupload
+        run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
+        env:
+          SolutionPath: build\uwp\Card Game Simulator.sln
+          Configuration: Master
+          TargetPlatform: x64
+          BuildMode: StoreUpload
+          AppxBundle: Always
+    
