@@ -123,8 +123,6 @@ jobs:
       - name: Setup Unity
         id: setup-unity
         uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: [windows-il2cpp, universal-windows-platform]
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
