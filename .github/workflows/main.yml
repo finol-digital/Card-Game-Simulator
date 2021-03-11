@@ -107,13 +107,14 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-latest
     needs: tests
+    if: false
     strategy:
       fail-fast: false
       matrix:
         targetPlatform:
           - StandaloneWindows
           - StandaloneWindows64
-#          - BuildUwp
+          - BuildUwp
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -123,7 +124,9 @@ jobs:
         id: setup-unity
         uses: kuler90/setup-unity@v1
         with:
-          unity-modules: windows-il2cpp
+          unity-modules:
+            - windows-il2cpp
+            - universal-windows-platform
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
