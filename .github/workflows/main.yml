@@ -57,6 +57,13 @@ jobs:
       UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
     steps:
+      - name: Free Disk Space for Android
+        if: matrix.targetPlatform == 'Android'
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -68,15 +75,6 @@ jobs:
           path: Library
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
-      - name: Free Disk Space for Android
-        if: matrix.targetPlatform == 'Android'
-        run: |
-          df -h
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
       - name: Build Unity Project
         uses: game-ci/unity-builder@v2
         with:
