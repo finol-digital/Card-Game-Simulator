@@ -245,17 +245,17 @@ jobs:
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
-      - name: Fix File Permissions and Sign OSX Build
-        run: |
-          find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
-          chmod +x scripts/sign-osx-build.sh
-          ./scripts/sign-osx-build.sh
       - name: Install Fastlane
         run: bundle install
       - name: Fix version for StandaloneOSX
         uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'fixversion'
+      - name: Fix File Permissions and Sign OSX Build
+        run: |
+          find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
+          chmod +x scripts/sign-osx-build.sh
+          ./scripts/sign-osx-build.sh
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v2.0.0
         with:
