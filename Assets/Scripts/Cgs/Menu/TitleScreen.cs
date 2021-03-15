@@ -91,6 +91,7 @@ namespace Cgs.Menu
 #if !UNITY_ANDROID && !UNITY_IOS
             centerText.text = TouchlessStartMessage;
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            Branch.setTrackingDisabled(true);
             Branch.initSession(CardGameManager.Instance.BranchCallbackWithParams);
 #endif
         }
