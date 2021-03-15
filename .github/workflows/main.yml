@@ -39,6 +39,17 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Write to Changelog
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "${{ github.event.release.body }}" > fastlane/metadata/android/en-US/changelogs/default.txt
+# TODO: echo "${{ github.event.release.body }}" > fastlane/metadata/android/en-US/changelogs/${{ correct version number based off github.ref? }}.txt
+      - name: Auto-Commit Changelog
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
+          file_pattern: fastlane/metadata/android/en-US/changelogs/*
+          commit_message: Update Changelog
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
@@ -106,7 +117,7 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-latest
     needs: tests
-# TODO: Use self-hosted runner so that we have access to more memory
+# TODO: Use self-hosted runner with access to enough memory so that builds won't fail
     if: false
     strategy:
       fail-fast: false
@@ -114,7 +125,7 @@ jobs:
         targetPlatform:
           - StandaloneWindows
           - StandaloneWindows64
-          - BuildUwp
+          - WSAPlayer
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -143,7 +154,7 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
       - name: Upload to Release
         uses: svenstaro/upload-release-action@v2
-        if: startsWith(github.ref, 'refs/tags/v') && matrix.targetPlatform != 'BuildUwp'
+        if: startsWith(github.ref, 'refs/tags/v') && matrix.targetPlatform != 'WSAPlayer'
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           asset_name: cgs-${{ matrix.targetPlatform }}
@@ -160,8 +171,6 @@ jobs:
       GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
       ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
       ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-# TODO: Get release notes from docs/CHANGELOG.md
-      RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -170,10 +179,8 @@ jobs:
         with:
           name: cgs-Android
           path: build/Android
-      - name: Add Authentication and Release Notes
-        run: |
-          echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+      - name: Add Authentication
+        run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Install Fastlane
         run: bundle install
       - name: Upload to Google Play
@@ -201,8 +208,6 @@ jobs:
       IOS_APP_ID: com.finoldigital.CardGameSim
       IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
-# TODO: Get release notes from docs/CHANGELOG.md
-      RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -211,10 +216,11 @@ jobs:
         with:
           name: cgs-iOS
           path: build/iOS
-      - name: Make App Store p8 and Fix File Permissions
+      - name: Fix File Permissions, Sign Code, and Get Release Notes
         run: |
-          echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
+          echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
+          export RELEASE_NOTES=$(< fastlane/metadata/android/en-US/changelogs/default.txt)
       - name: Install Fastlane
         run: bundle install
       - name: Upload to the App Store
@@ -239,8 +245,6 @@ jobs:
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
-# TODO: Get release notes from docs/CHANGELOG.md
-      RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -255,12 +259,12 @@ jobs:
         uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'fixversion'
-# TODO: Replace this step with a fastlane lane
-      - name: Fix File Permissions and Sign OSX Build
+      - name: Fix File Permissions, Sign Code, and Get Release Notes
         run: |
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
-          chmod +x scripts/sign-osx-build.sh
-          ./scripts/sign-osx-build.sh
+          chmod +x fastlane/sign-osx-build.sh
+          ./fastlane/sign-osx-build.sh
+          export RELEASE_NOTES=$(< fastlane/metadata/android/en-US/changelogs/default.txt)
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v2.0.0
         with:
@@ -297,18 +301,25 @@ jobs:
     needs: buildWithWindows
     if: startsWith(github.ref, 'refs/tags/v') || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'uwp'))
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Download WSAPlayer Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-WSAPlayer
+          path: build/WSAPlayer
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1.0.2
       - name: Restore the Wpf application to populate the obj folder
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
-          SolutionPath: build\uwp\Card Game Simulator.sln
+          SolutionPath: build\WSAPlayer\Card Game Simulator.sln
           Configuration: Master
           RuntimeIdentifier: win-x64
       - name: Create .appxupload
         run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
-          SolutionPath: build\uwp\Card Game Simulator.sln
+          SolutionPath: build\WSAPlayer\Card Game Simulator.sln
           Configuration: Master
           TargetPlatform: x64
           BuildMode: StoreUpload

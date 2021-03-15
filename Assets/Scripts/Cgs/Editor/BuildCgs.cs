@@ -149,10 +149,10 @@ namespace Cgs.Editor
         }
 
         [UsedImplicitly]
-        public static void BuildUwp()
+        public static void BuildWSAPlayer()
         {
             EditorUserBuildSettings.wsaUWPBuildType = WSAUWPBuildType.XAML;
-            Build(BuildTarget.WSAPlayer, Path.Combine("build", "BuildUwp"));
+            Build(BuildTarget.WSAPlayer, Path.Combine("build", "WSAPlayer"));
         }
 
         private static void Build(BuildTarget buildTarget, string filePath)
