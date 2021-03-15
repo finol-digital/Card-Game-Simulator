@@ -106,6 +106,7 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-latest
     needs: tests
+# TODO: Use self-hosted runner so that we have access to more memory
     if: false
     strategy:
       fail-fast: false
@@ -159,6 +160,7 @@ jobs:
       GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
       ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
       ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
+# TODO: Get release notes from docs/CHANGELOG.md
       RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - name: Checkout Repository
@@ -199,6 +201,7 @@ jobs:
       IOS_APP_ID: com.finoldigital.CardGameSim
       IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
+# TODO: Get release notes from docs/CHANGELOG.md
       RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - name: Checkout Repository
@@ -236,6 +239,7 @@ jobs:
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
+# TODO: Get release notes from docs/CHANGELOG.md
       RELEASE_NOTES: ${{ github.event.release.body }}
     steps:
       - name: Checkout Repository
@@ -251,6 +255,7 @@ jobs:
         uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'fixversion'
+# TODO: Replace this step with a fastlane lane
       - name: Fix File Permissions and Sign OSX Build
         run: |
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
