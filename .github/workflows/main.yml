@@ -42,7 +42,6 @@ jobs:
       - name: Write to Changelog
         if: startsWith(github.ref, 'refs/tags/v')
         run: echo "${{ github.event.release.body }}" > fastlane/metadata/android/en-US/changelogs/default.txt
-# TODO: echo "${{ github.event.release.body }}" > fastlane/metadata/android/en-US/changelogs/${{ correct version number based off github.ref? }}.txt
       - name: Auto-Commit Changelog
         if: startsWith(github.ref, 'refs/tags/v')
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -216,7 +215,7 @@ jobs:
         with:
           name: cgs-iOS
           path: build/iOS
-      - name: Fix File Permissions, Sign Code, and Get Release Notes
+      - name: Fix File Permissions, Code-Sign, and Get Release Notes
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
@@ -238,11 +237,14 @@ jobs:
       APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
       MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
       MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
       MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
+      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
+      APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
       MAC_APP_ID: com.finoldigital.CardGameSimulator
       MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
@@ -260,11 +262,12 @@ jobs:
         uses: maierj/fastlane-action@v2.0.0
         with:
           lane: 'fixversion'
-      - name: Fix File Permissions, Sign Code, and Get Release Notes
+      - name: Fix File Permissions, Code-Sign, and Get Release Notes
         run: |
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           chmod +x fastlane/sign-osx-build.sh
           ./fastlane/sign-osx-build.sh
+          echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           export RELEASE_NOTES=$(< fastlane/metadata/android/en-US/changelogs/default.txt)
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v2.0.0
@@ -300,7 +303,7 @@ jobs:
     name: Release to the Microsoft Store
     runs-on: windows-latest
     needs: buildWithWindows
-    if: startsWith(github.ref, 'refs/tags/v') || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'uwp'))
+    if: startsWith(github.ref, 'refs/tags/v') || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'windows'))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -326,4 +329,5 @@ jobs:
           BuildMode: StoreUpload
           AppxBundle: Always
 # TODO: https://docs.microsoft.com/en-us/windows/uwp/monetize/create-and-manage-submissions-using-windows-store-services#prerequisites
+# TODO: https://github.com/microsoft/StoreBroker/blob/master/Documentation/SETUP.md
     
