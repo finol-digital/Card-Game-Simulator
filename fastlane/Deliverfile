@@ -24,13 +24,6 @@ submission_information({
   export_compliance_available_on_french_store: false
 })
 
-app_store_connect_api_key(
-  key_id: "#{ENV['APPSTORE_KEY_ID']}",
-  issuer_id: "#{ENV['APPSTORE_ISSUER_ID']}",
-  key_filepath: "#{ENV['APPSTORE_P8_PATH']}",
-  duration: 1200, # optional
-  in_house: false, # true for enterprise and false for individual accounts
-)
 
 for_platform :mac do
   platform "osx"
