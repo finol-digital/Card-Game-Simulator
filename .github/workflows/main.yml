@@ -26,6 +26,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
+      - name: Cache Library
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@v2
         env:
@@ -71,6 +76,12 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+      - name: Cache Library
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
       - name: Build Unity Project
         uses: game-ci/unity-builder@v2
         env:
