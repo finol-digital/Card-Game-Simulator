@@ -28,6 +28,13 @@ platform :ios do
   desc "Push a new release build to the App Store"
   lane :release do
     build
+    app_store_connect_api_key(
+      key_id: "#{ENV['APPSTORE_KEY_ID']}",
+      issuer_id: "#{ENV['APPSTORE_ISSUER_ID']}",
+      key_filepath: "#{ENV['APPSTORE_P8_PATH']}",
+      duration: 1200, # optional
+      in_house: false, # true for enterprise and false for individual accounts
+    )
     deliver
   end
 
@@ -121,6 +128,13 @@ platform :mac do
 
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do
+    app_store_connect_api_key(
+      key_id: "#{ENV['APPSTORE_KEY_ID']}",
+      issuer_id: "#{ENV['APPSTORE_ISSUER_ID']}",
+      key_filepath: "#{ENV['APPSTORE_P8_PATH']}",
+      duration: 1200, # optional
+      in_house: false, # true for enterprise and false for individual accounts
+    )
     deliver
   end
 
