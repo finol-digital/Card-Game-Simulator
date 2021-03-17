@@ -219,7 +219,8 @@ jobs:
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
-          export RELEASE_NOTES=$(< fastlane/metadata/android/en-US/changelogs/default.txt)
+          export RELEASE_NOTES=$(cat fastlane/metadata/android/en-US/changelogs/default.txt)
+          echo "$RELEASE_NOTES"
       - name: Install Fastlane
         run: bundle install
       - name: Upload to the App Store
