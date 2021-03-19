@@ -25,7 +25,6 @@
     "com.unity.test-framework": "1.1.22",
     "com.unity.textmeshpro": "2.1.3",
     "com.unity.toolchain.linux-x86_64": "0.1.18-preview",
-    "com.unity.toolchain.win-x86_64-linux-x86_64": "0.1.19-preview",
     "com.unity.ugui": "1.0.0",
     "jillejr.newtonsoft.json-for-unity": "12.0.301",
     "com.unity.modules.ai": "1.0.0",
