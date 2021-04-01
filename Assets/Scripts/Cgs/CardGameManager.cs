@@ -66,13 +66,13 @@ namespace Cgs
             {
                 if (IsQuitting)
                     return null;
-                if (instance == null)
-                    instance = GameObject.FindGameObjectWithTag(Tags.CardGameManager).GetComponent<CardGameManager>();
-                return instance;
+                if (_instance == null)
+                    _instance = GameObject.FindGameObjectWithTag(Tags.CardGameManager).GetComponent<CardGameManager>();
+                return _instance;
             }
         }
 
-        private static CardGameManager instance;
+        private static CardGameManager _instance;
 
         public static UnityCardGame Current { get; private set; } = UnityCardGame.UnityInvalid;
         public static bool IsQuitting { get; private set; }
@@ -188,13 +188,13 @@ namespace Cgs
 
         private void Awake()
         {
-            if (instance != null && instance != this)
+            if (_instance != null && _instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            instance = this;
+            _instance = this;
             UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 

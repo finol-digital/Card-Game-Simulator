@@ -20,10 +20,10 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public static class ThreadSafeRandom
     {
-        [ThreadStatic] private static Random local;
+        [ThreadStatic] private static Random _local;
 
-        private static Random ThisThreadsRandom => local ??
-                                                   (local = new Random(
+        private static Random ThisThreadsRandom => _local ??
+                                                   (_local = new Random(
                                                        unchecked(Environment.TickCount * 31 + Thread
                                                            .CurrentThread.ManagedThreadId)));
 
