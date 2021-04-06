@@ -32,7 +32,7 @@ namespace Tests.PlayMode
         {
             if (Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 Directory.Delete(UnityCardGame.GamesDirectoryPath, true);
-            PlayerPrefs.SetString(CardGameManager.PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            PlayerPrefs.SetString(CardGameManager.PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
 
             // Default is Standard Playing Cards
             _manager.LookupCardGames();

@@ -23,7 +23,7 @@ namespace Cgs
     {
         // Show all Debug.Log() to help with debugging?
         public const bool IsMessengerDebugLogVerbose = false;
-        public const string PlayerPrefDefaultGame = "DefaultGame";
+        public const string PlayerPrefsDefaultGame = "DefaultGame";
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public const string GameUrl = "GameUrl";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
@@ -320,7 +320,7 @@ namespace Cgs
         internal void ResetCurrentToDefault()
         {
             string preferredGameId =
-                PlayerPrefs.GetString(PlayerPrefDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+                PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
             Current = AllCardGames.TryGetValue(preferredGameId, out UnityCardGame currentGame) &&
                       string.IsNullOrEmpty(currentGame.Error)
                 ? currentGame
@@ -489,7 +489,7 @@ namespace Cgs
 #endif
 
             // Now is the safest time to set this game as the preferred default game for the player
-            PlayerPrefs.SetString(PlayerPrefDefaultGame, Current.Id);
+            PlayerPrefs.SetString(PlayerPrefsDefaultGame, Current.Id);
 
             // Each scene is responsible for adding to OnSceneActions, but they may not remove
             OnSceneActions.RemoveWhere((action) => action == null);

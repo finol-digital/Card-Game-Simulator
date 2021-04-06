@@ -23,6 +23,8 @@ namespace Cgs.CardGameView
 
     public class CardViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
+        private const string PlayerPrefsIsNameVisible = "IsNameVisible";
+
         private const string SetLabel = "Set";
         private const string IdLabel = "Id";
         private const string Delimiter = ": ";
@@ -67,6 +69,8 @@ namespace Cgs.CardGameView
         public List<Image> cardImages;
         public List<Text> nameTexts;
         public List<Text> uniqueIdTexts;
+        public Image nameVisibleButtonImage;
+        public Image nameInvisibleButtonImage;
         public Text idText;
         public Text setText;
         public Text propertyTextTemplate;
@@ -192,6 +196,12 @@ namespace Cgs.CardGameView
         private bool _isVisible;
         public bool WasVisible { get; private set; }
 
+        private static bool IsNameVisible
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsIsNameVisible, 0) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsIsNameVisible, value ? 1 : 0);
+        }
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
@@ -211,6 +221,13 @@ namespace Cgs.CardGameView
             WasVisible = IsVisible;
             if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
+
+            bool isNameVisible = IsNameVisible;
+            if (nameVisibleButtonImage.gameObject.activeSelf != isNameVisible)
+                nameVisibleButtonImage.gameObject.SetActive(isNameVisible);
+            if (nameInvisibleButtonImage.gameObject.activeSelf == isNameVisible)
+                nameInvisibleButtonImage.gameObject.SetActive(!isNameVisible);
+            nameTexts[0].color = isNameVisible || !SelectedCardModel.isFacedown ? Color.white : Color.clear;
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
@@ -348,6 +365,12 @@ namespace Cgs.CardGameView
         public void SetMode(int mode)
         {
             Mode = (CardViewerMode) mode;
+        }
+
+        [UsedImplicitly]
+        public void ToggleIsNameVisible()
+        {
+            IsNameVisible = !IsNameVisible;
         }
 
         private void Redisplay()

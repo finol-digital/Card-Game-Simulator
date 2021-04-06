@@ -301,7 +301,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (CardViewer.Instance != null && !isFacedown)
+            if (CardViewer.Instance != null)
                 CardViewer.Instance.SelectedCardModel = this;
         }
 

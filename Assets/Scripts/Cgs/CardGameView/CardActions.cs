@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Cgs.CardGameView
@@ -34,19 +33,18 @@ namespace Cgs.CardGameView
         {
             if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsFlip)
             {
-                Debug.Log("Ignoring flip request since the parent card zone does not support it.");
+                Debug.LogWarning("Ignoring flip request since the parent card zone does not support it.");
                 return;
             }
 
             cardModel.IsFacedown = !cardModel.isFacedown;
-            EventSystem.current.SetSelectedGameObject(null, cardModel.CurrentPointerEventData);
         }
 
         public static void Rotate(CardModel cardModel)
         {
             if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsRotation)
             {
-                Debug.Log("Ignoring rotation request since the parent card zone does not support it.");
+                Debug.LogWarning("Ignoring rotation request since the parent card zone does not support it.");
                 return;
             }
 
@@ -59,7 +57,7 @@ namespace Cgs.CardGameView
         {
             if (cardModel.ParentCardZone == null || !cardModel.ParentCardZone.allowsRotation)
             {
-                Debug.Log("Ignoring rotation request since the parent card zone does not support it.");
+                Debug.LogWarning("Ignoring rotation request since the parent card zone does not support it.");
                 return;
             }
 
@@ -81,15 +79,18 @@ namespace Cgs.CardGameView
                                   CardViewer.Instance.SelectedCardModel != null;
 
             foreach (Button flipButton in flipButtons)
-                flipButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                flipButton.interactable =
+                    isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
 
             foreach (Button rotateButton in rotateButtons)
-                rotateButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                rotateButton.interactable =
+                    isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
-                
+
             foreach (Button tapButton in tapButtons)
-                tapButton.interactable = isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
+                tapButton.interactable =
+                    isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
 
             if (Inputs.IsFilter && flipButtons[0].interactable)

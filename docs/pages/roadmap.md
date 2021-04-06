@@ -8,6 +8,9 @@ permalink: roadmap.html
 - Cards: Peek at facedown
 
 ## Current Sprint
+- Deck Editor: cards didn't load when typed into save in load menu
+- Deck Editor: contents cleared when writing name in save menu
+- Play Mode: don't zoom on play area while menu is up
 - Networking: Add ability to enter direct IP for a networked game
 - Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Pre-defined stack locations
