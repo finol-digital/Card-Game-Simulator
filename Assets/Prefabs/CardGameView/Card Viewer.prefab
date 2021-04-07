@@ -214,6 +214,7 @@ MonoBehaviour:
   uniqueIdTexts:
   - {fileID: 4421569744400736546}
   - {fileID: 8891999154179803766}
+  nameVisibleButton: {fileID: 1022402755753600354}
   nameVisibleButtonImage: {fileID: 1022402755913910062}
   nameInvisibleButtonImage: {fileID: 6483681905477399728}
   idText: {fileID: 729178739697746545}
@@ -5712,7 +5713,7 @@ PrefabInstance:
     - target: {fileID: 7317508625903915486, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_Name
-      value: Visibility Button
+      value: Name Visible Button
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}

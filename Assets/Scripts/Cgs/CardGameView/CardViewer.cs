@@ -69,6 +69,7 @@ namespace Cgs.CardGameView
         public List<Image> cardImages;
         public List<Text> nameTexts;
         public List<Text> uniqueIdTexts;
+        public Transform nameVisibleButton;
         public Image nameVisibleButtonImage;
         public Image nameInvisibleButtonImage;
         public Text idText;
@@ -222,6 +223,8 @@ namespace Cgs.CardGameView
             if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
+            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.isFacedown)
+                nameVisibleButton.gameObject.SetActive(SelectedCardModel.isFacedown);
             bool isNameVisible = IsNameVisible;
             if (nameVisibleButtonImage.gameObject.activeSelf != isNameVisible)
                 nameVisibleButtonImage.gameObject.SetActive(isNameVisible);

@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ScrollRects
 {
-    public class PinchableScrollRect : SecondaryScrollView
+    public class PinchableScrollRect : SecondaryScrollView, IPointerEnterHandler, IPointerExitHandler
     {
         public const float MinZoom = 0.66f;
         public const float MaxZoom = 1.5f;
@@ -21,6 +22,7 @@ namespace ScrollRects
         private Vector2 _startPinchCenterPosition;
         private Vector2 _startPinchScreenPosition;
         private bool _blockPan;
+        private bool _isOver;
 
         protected override void Awake()
         {
@@ -63,7 +65,8 @@ namespace ScrollRects
 
             // Mouse input
             float scrollWheelInput = Input.GetAxis("Mouse ScrollWheel");
-            if (Mathf.Abs(scrollWheelInput) > float.Epsilon)
+            if (Mathf.Abs(scrollWheelInput) > float.Epsilon
+                && EventSystem.current.IsPointerOverGameObject() && _isOver)
             {
                 RectTransform content1 = content;
                 Rect rect = content1.rect;
@@ -138,6 +141,16 @@ namespace ScrollRects
                 new Vector3(deltaPivot.x * size.x, deltaPivot.y * size.y) * rectTransform.localScale.x;
             rectTransform.pivot = pivot;
             rectTransform.localPosition -= deltaPosition;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            _isOver = true;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            _isOver = false;
         }
     }
 }
