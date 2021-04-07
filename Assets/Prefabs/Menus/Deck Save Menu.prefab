@@ -616,6 +616,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c35fca13280ec4344b2150cb17e647ca, type: 3}
+--- !u!224 &4020040601630793949 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 576404893160410038, guid: c35fca13280ec4344b2150cb17e647ca,
+    type: 3}
+  m_PrefabInstance: {fileID: 3473894423254166379}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4020040601630793936 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 576404893160410043, guid: c35fca13280ec4344b2150cb17e647ca,
@@ -628,12 +634,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &4020040601630793949 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 576404893160410038, guid: c35fca13280ec4344b2150cb17e647ca,
-    type: 3}
-  m_PrefabInstance: {fileID: 3473894423254166379}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3717392209938599851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1014,7 +1014,7 @@ PrefabInstance:
     - target: {fileID: 2135092052294433002, guid: a24def208a6cce74eb7f7d07e399041b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Hide
+      value: CancelAndHide
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a24def208a6cce74eb7f7d07e399041b, type: 3}
@@ -1507,12 +1507,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4698c1a75d36a640afc1bea8b676ff4, type: 3}
---- !u!224 &2695075363246723385 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4658356562677211595, guid: f4698c1a75d36a640afc1bea8b676ff4,
-    type: 3}
-  m_PrefabInstance: {fileID: 7332733615195189490}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2877566048820076215 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
@@ -1525,3 +1519,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &2695075363246723385 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4658356562677211595, guid: f4698c1a75d36a640afc1bea8b676ff4,
+    type: 3}
+  m_PrefabInstance: {fileID: 7332733615195189490}
+  m_PrefabAsset: {fileID: 0}

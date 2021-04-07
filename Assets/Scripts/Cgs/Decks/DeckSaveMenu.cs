@@ -49,7 +49,7 @@ namespace Cgs.Decks
             else if (Inputs.IsSave && EventSystem.current.currentSelectedGameObject == null)
                 PrintPdf();
             else if (Inputs.IsCancel)
-                Hide();
+                CancelAndHide();
         }
 
         public void Show(UnityDeck deckToShow, OnNameChangeDelegate nameChangeCallback = null,
@@ -75,7 +75,7 @@ namespace Cgs.Decks
             if (!string.IsNullOrEmpty(newName))
                 nameInputField.text = newName;
             var deck = new UnityDeck(CardGameManager.Current, newName, CardGameManager.Current.DeckFileType);
-            foreach (Card card in deck.Cards)
+            foreach (Card card in _currentDeck.Cards)
                 deck.Add((UnityCard) card);
             textOutputArea.text = deck.ToString();
         }

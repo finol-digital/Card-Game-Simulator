@@ -9,8 +9,6 @@ permalink: roadmap.html
 - Play Mode: Fix scrolling in Play Area
 
 ## Current Sprint
-- Deck Editor: cards didn't load when typed into save in load menu
-- Deck Editor: contents cleared when writing name in save menu
 - Networking: Add ability to enter direct IP for a networked game
 - Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Pre-defined stack locations
