@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef.Unity;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using Mirror;
@@ -21,9 +21,11 @@ namespace Cgs.Play.Multiplayer
     {
         public GameObject hostAuthenticationPrefab;
 
+        public ToggleGroup lanToggleGroup;
         public Toggle lanToggle;
         public Toggle internetToggle;
         public Button joinButton;
+        public InputField ipInputField;
         public InputField passwordInputField;
 
         [UsedImplicitly]
@@ -46,6 +48,12 @@ namespace Cgs.Play.Multiplayer
         private readonly Dictionary<string, ServerStatus> _listedServers = new Dictionary<string, ServerStatus>();
         private string _selectedServerIp;
 
+        private string TargetIpAddress =>
+            IsInternetConnectionSource
+            && _discoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(), out DiscoveryResponse r)
+                ? r.Uri.ToString()
+                : _selectedServerIp;
+
         private HostAuthentication Authenticator =>
             _authenticator
                 ? _authenticator
@@ -60,8 +68,22 @@ namespace Cgs.Play.Multiplayer
 
         private void Update()
         {
-            if (!Menu.IsFocused || passwordInputField.isFocused)
+            if (!Menu.IsFocused)
                 return;
+
+            if (ipInputField.isFocused)
+            {
+                if (Inputs.IsFocusNext)
+                    passwordInputField.ActivateInputField();
+                return;
+            }
+
+            if (passwordInputField.isFocused)
+            {
+                if (Inputs.IsFocusBack)
+                    ipInputField.ActivateInputField();
+                return;
+            }
 
             if (Inputs.IsVertical)
             {
@@ -78,7 +100,9 @@ namespace Cgs.Play.Multiplayer
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Inputs.IsNew)
                 Host();
-            else if (Inputs.IsFocus)
+            else if (Inputs.IsFocusBack)
+                ipInputField.ActivateInputField();
+            else if (Inputs.IsFocusNext)
                 passwordInputField.ActivateInputField();
             else if (Inputs.IsPageVertical && !Inputs.IsPageVertical)
                 ScrollPage(Inputs.IsPageDown);
@@ -122,6 +146,9 @@ namespace Cgs.Play.Multiplayer
                     joinButton.interactable = false;
                 Rebuild(_listedServers, SelectServer, _selectedServerIp);
             }
+
+            if (!ipInputField.text.Equals(TargetIpAddress))
+                ipInputField.text = TargetIpAddress;
         }
 
         private void ToggleConnectionSource()
@@ -190,6 +217,16 @@ namespace Cgs.Play.Multiplayer
         }
 
         [UsedImplicitly]
+        public void SetTargetIpAddress(string targetIpAddress)
+        {
+            _selectedServerIp = targetIpAddress;
+            lanToggle.isOn = true;
+            lanToggleGroup.SetAllTogglesOff();
+            joinButton.interactable = !string.IsNullOrWhiteSpace(_selectedServerIp)
+                                      && Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute);
+        }
+
+        [UsedImplicitly]
         public void SetPassword(string password)
         {
             Authenticator.passwordInputField.text = password;
@@ -206,7 +243,7 @@ namespace Cgs.Play.Multiplayer
                         out DiscoveryResponse serverResponse)
                     || serverResponse.Uri == null)
                 {
-                    Debug.LogError("Warning: Attempted to join a game without having selected a valid server!");
+                    Debug.LogError("Error: Attempted to join a game without having selected a valid server!");
                     return;
                 }
 
@@ -218,7 +255,14 @@ namespace Cgs.Play.Multiplayer
                     || !ListedServers.TryGetValue(_selectedServerIp, out ServerStatus serverResponse)
                     || string.IsNullOrEmpty(serverResponse.Ip))
                 {
-                    Debug.LogError("Warning: Attempted to join a game without having selected a valid server!");
+                    if (!Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute))
+                    {
+                        Debug.LogError("Error: Attempted to join a game without having selected a valid server!");
+                        return;
+                    }
+
+                    NetworkManager.singleton.networkAddress = _selectedServerIp;
+                    NetworkManager.singleton.StartClient();
                     return;
                 }
 

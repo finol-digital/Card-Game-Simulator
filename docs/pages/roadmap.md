@@ -5,11 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New
-- Cards: Peek at facedown
+- Networking: Add ability to enter direct IP for a networked game
+- Play Mode: Peek at facedown cards
 - Play Mode: Fix scrolling in Play Area
 
 ## Current Sprint
-- Networking: Add ability to enter direct IP for a networked game
 - Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Pre-defined stack locations
 - Play Mode: Pre-defined zones in Play Area
@@ -22,6 +22,7 @@ permalink: roadmap.html
 ## Backlog
 - Cards: Support more than 1 card face (DFC)
 - Cards: Support multiple card backs
+- Play Mode: Ability to slide hand up and down
 - Play Mode: Move card stacks with 2 fingers
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Play Mode: Support multiple playmats

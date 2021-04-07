@@ -72,6 +72,8 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Vertical**: *down*, *up* - Scroll through sessions.
 - **PageHorizontal**: *Home*, *End* - Toggle between LAN and Internet.
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
+- **FocusBack**: *\`* - Focuses keyboard to the IP text input field.
+- **FocusNext**: *Tab* - Focuses keyboard to the password input field.
 - **New**: *e* - Host new session.
 - **Submit**: *Enter* - Join selected session.
 
