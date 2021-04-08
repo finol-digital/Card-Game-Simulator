@@ -4,8 +4,8 @@
 
 using CardGameDef.Unity;
 using Cgs.CardGameView;
-using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Cgs.Play
 {
@@ -15,7 +15,8 @@ namespace Cgs.Play
         private static readonly Vector2 ShownPosition = new Vector2(0, 0);
         private static readonly Vector2 HiddenPosition = new Vector2(0, -360);
 
-        public Transform toggle;
+        public Button downButton;
+        public Button upButton;
 
         private StackViewer _handViewer;
 
@@ -29,14 +30,20 @@ namespace Cgs.Play
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (Inputs.IsSort)
-                Toggle();
+            if (!Inputs.IsSort)
+                return;
+
+            if (upButton.interactable)
+                Show();
+            else
+                Hide();
         }
 
         public void Show()
         {
             ((RectTransform) transform).anchoredPosition = ShownPosition;
-            toggle.rotation = Quaternion.identity;
+            downButton.interactable = true;
+            upButton.interactable = false;
         }
 
         public void AddCard(UnityCard card)
@@ -49,19 +56,11 @@ namespace Cgs.Play
             _handViewer.Clear();
         }
 
-        [UsedImplicitly]
-        public void Toggle()
-        {
-            var rectTransform = (RectTransform) transform;
-            bool wasShown = ShownPosition.Equals(rectTransform.anchoredPosition);
-            rectTransform.anchoredPosition = wasShown ? HiddenPosition : ShownPosition;
-            toggle.rotation = wasShown ? Quaternion.Euler(0, 0, 180) : Quaternion.identity;
-        }
-
         public void Hide()
         {
             ((RectTransform) transform).anchoredPosition = HiddenPosition;
-            toggle.rotation = Quaternion.Euler(0, 0, 180);
+            downButton.interactable = false;
+            upButton.interactable = true;
         }
     }
 }
