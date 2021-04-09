@@ -23,7 +23,7 @@ using UnityExtensionMethods;
 namespace Cgs.Play
 {
     [RequireComponent(typeof(Canvas))]
-    public class PlayController : MonoBehaviour
+    public class PlayController : MonoBehaviour, ICardDropHandler
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string RestartPrompt = "Restart?";
@@ -42,6 +42,7 @@ namespace Cgs.Play
         public Transform stackViewers;
 
         public CardZone playArea;
+        public List<CardDropArea> playDropZones;
         public HandController hand;
         public PlayMenu menu;
         public PointsCounter scoreboard;
@@ -90,6 +91,7 @@ namespace Cgs.Play
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
             playArea.OnAddCardActions.Add(AddCardToPlay);
+            playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show();
@@ -321,6 +323,11 @@ namespace Cgs.Play
             die.Min = min;
             die.Max = max;
             return die;
+        }
+
+        public void OnDrop(CardModel cardModel)
+        {
+            AddCardToPlay(playArea, cardModel);
         }
 
         [UsedImplicitly]

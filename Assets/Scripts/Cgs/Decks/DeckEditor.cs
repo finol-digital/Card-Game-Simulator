@@ -36,7 +36,7 @@ namespace Cgs.Decks
         public GameObject deckLoadMenuPrefab;
         public GameObject deckSaveMenuPrefab;
         public RectTransform layoutContent;
-        public CardDropArea dropZone;
+        public List<CardDropArea> dropZones;
         public ScrollRect scrollRect;
         public Text nameText;
         public Text countText;
@@ -109,7 +109,7 @@ namespace Cgs.Decks
         private void Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
-            dropZone.DropHandler = this;
+            dropZones.ForEach(dropZone => dropZone.DropHandler = this);
             ShowDeckLoadMenu();
         }
 

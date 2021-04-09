@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3237348215989687621}
   - component: {fileID: 3237348215989687623}
   - component: {fileID: 3237348215989687738}
+  - component: {fileID: 7455844818097188402}
   m_Layer: 5
   m_Name: Scroll Area
   m_TagString: Untagged
@@ -106,5 +107,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollRect: {fileID: 0}
   scrollDirection: 0
-  scrollAmount: 0.01
-  holdFrequency: 0.01
+--- !u!114 &7455844818097188402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3237348215989687736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBlocker: 0

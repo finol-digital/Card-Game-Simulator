@@ -10,7 +10,6 @@ permalink: roadmap.html
 - Play Mode: Fix scrolling in Play Area
 
 ## Current Sprint
-- Play Mode: Let cards stay in their location when dropped on card scroll areas
 - Play Mode: Pre-defined stack locations
 - Play Mode: Pre-defined zones in Play Area
 - Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
