@@ -4,32 +4,33 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New
+## What's New - v1.44
+- Integration: Disable tracking from the Branch SDK
 - Networking: Add ability to enter direct IP for a networked game
-- Play Mode: Peek at facedown cards
-- Play Mode: Fix scrolling in Play Area
+- Game-Play: Peek at facedown cards
+- Game-Play: Fix scrolling in Play Area
 
 ## Current Sprint
-- Play Mode: Pre-defined stack locations
-- Play Mode: Pre-defined zones in Play Area
-- Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
-- Play Mode: E: Move card to zone or stack
-- Play Mode: .dec sideboard & .ydk side are extra stacks
-- Play Mode: Ability to slide stack viewers up and down
-- Play Mode: Resize stack viewer height based off card height
+- Game-Play: Ability to slide stack viewers up and down
+- Game-Play: Resize stack viewer height based off card height
+- Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
+- Game-Play: Pre-defined stack locations
+- Game-Play: Pre-defined zones in Play Area
+- Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
+- Game-Play: E: Move card to zone or stack
 - Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Integration: Update Store descriptions (remove "When joining a friend’s game session...") and Store images
 
 ## Backlog
 - Cards: Support more than 1 card face (DFC)
 - Cards: Support multiple card backs
-- Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
-- Play Mode: Control play area with 2 finger or right-click (see Tabletopia)
-- Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
-- Play Mode: Support multiple playmats
-- Play Mode: Face-up cards in cards stacks
-- Play Mode: Pooling to improve performance of opening stack viewer
-- Settings: Scale size of UI based off either physical size or resolution of display
+- Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
+- Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
+- Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
+- Game-Play: Support multiple playmats
+- Game-Play: Face-up cards in cards stacks
+- Game-Play: Pooling to improve performance of opening stack viewer
+- Usability: Scale size of UI based off either physical size or resolution of display
 - Cards: Support mix of different card sizes in the same game
 - Cards: Configurable highlight color
 - Cards Explorer: Add card properties in UI
@@ -46,9 +47,9 @@ permalink: roadmap.html
 - Tech: SonarQube Scans
 - Integration: Automate game upload
 - Usability: Alt-text with button name appears when hovering mouse over a button
-- Platforms: Full support for web through WebGL
+- Platforms: Networking on WebGL
 - Integration: Android Search Bar Widget
-- Play Mode: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Deck Editor: Focus buttons move cards
 - Cards Explorer: Search Results View Options
   - Text-only
@@ -61,11 +62,11 @@ permalink: roadmap.html
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit
 - Cards: Allow pre-fetching of card images
-- Play Mode: Support grouping of dice
-- Play Mode: Support different colored dice
-- Play Mode: Automatically roll dice on phone shake
-- Play Mode: Synchronize points across teams
-- Play Mode: Allow automatic deletion of empty zones
+- Game-Play: Support grouping of dice
+- Game-Play: Support different colored dice
+- Game-Play: Automatically roll dice on phone shake
+- Game-Play: Synchronize points across teams
+- Game-Play: Allow automatic deletion of empty zones
 - Deck Editor: Organize cards by category when saving
 - Platforms: Display keyboard shortcuts/hotkeys in-app
 - Cards: Support .svg images
@@ -73,6 +74,7 @@ permalink: roadmap.html
 - Integration: Support different resolutions and languages for card images
 - Integration: NanDeck + Squib + Magic Set Editor
 - Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice
+- Platforms: Support Tilt Five
 - Platforms: Support Android TV and tvOS
 - Platforms: Support VR + AR
 - Stretch Goal: Support game-specific rules enforcement
