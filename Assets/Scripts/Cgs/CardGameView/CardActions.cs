@@ -69,9 +69,16 @@ namespace Cgs.CardGameView
                 cardModel.CmdUpdateRotation(cardModel.transform.rotation);
         }
 
+        public List<Transform> buttonPanels;
         public List<Button> flipButtons;
         public List<Button> rotateButtons;
         public List<Button> tapButtons;
+
+        public void Show()
+        {
+            foreach (Transform panel in buttonPanels)
+                panel.gameObject.SetActive(true);
+        }
 
         public void Update()
         {

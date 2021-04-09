@@ -83,6 +83,7 @@ namespace Cgs.Play
         private void OnEnable()
         {
             Instantiate(cardViewerPrefab);
+            CardViewer.Instance.GetComponent<CardActions>().Show();
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
 

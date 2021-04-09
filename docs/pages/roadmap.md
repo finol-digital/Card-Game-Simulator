@@ -4,11 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.44
-- Integration: Disable tracking from the Branch SDK
-- Networking: Add ability to enter direct IP for a networked game
-- Game-Play: Peek at facedown cards
-- Game-Play: Fix scrolling in Play Area
+## What's New - v1.45
+- Card Viewer: Hide card action buttons in the Cards Browser & Deck Editor
 
 ## Current Sprint
 - Game-Play: Ability to slide stack viewers up and down
