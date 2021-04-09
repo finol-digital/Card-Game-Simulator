@@ -15,22 +15,20 @@ permalink: roadmap.html
 - Play Mode: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Play Mode: E: Move card to zone or stack
 - Play Mode: .dec sideboard & .ydk side are extra stacks
+- Play Mode: Ability to slide stack viewers up and down
+- Play Mode: Resize stack viewer height based off card height
 - Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Integration: Update Store descriptions (remove "When joining a friend’s game session...") and Store images
 
 ## Backlog
 - Cards: Support more than 1 card face (DFC)
 - Cards: Support multiple card backs
-- Play Mode: Ability to slide hand up and down
-- Play Mode: Move card stacks with 2 fingers
 - Play Mode: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
-- Play Mode: Support multiple playmats
-- Play Mode: Face-up cards in cards stacks
 - Play Mode: Control play area with 2 finger or right-click (see Tabletopia)
 - Play Mode: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
-- Play Mode: Move stack viewers, and allow multiple viewers per stack
-  - Pooling to improve performance of opening stack viewer
-- Play Mode: Resize stack viewer based off card game settings
+- Play Mode: Support multiple playmats
+- Play Mode: Face-up cards in cards stacks
+- Play Mode: Pooling to improve performance of opening stack viewer
 - Settings: Scale size of UI based off either physical size or resolution of display
 - Cards: Support mix of different card sizes in the same game
 - Cards: Configurable highlight color
