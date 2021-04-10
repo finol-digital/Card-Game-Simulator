@@ -162,7 +162,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.CGS_PAT }}
           asset_name: cgs-${{ matrix.targetPlatform }}
           file: build/${{ matrix.targetPlatform }}
           tag: ${{ github.ref }}
