@@ -5,7 +5,6 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.45
-- Card Viewer: Hide card action buttons in the Cards Browser & Deck Editor
 
 ## Current Sprint
 - Game-Play: Ability to slide stack viewers up and down
