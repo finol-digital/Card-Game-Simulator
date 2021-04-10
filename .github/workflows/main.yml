@@ -106,7 +106,7 @@ jobs:
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published'
+        if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release')
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
@@ -154,7 +154,7 @@ jobs:
           build-method: Cgs.Editor.BuildCgs.Build${{ matrix.targetPlatform }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published'
+        if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release')
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
