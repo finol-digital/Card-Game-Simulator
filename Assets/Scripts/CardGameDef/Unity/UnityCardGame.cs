@@ -52,10 +52,35 @@ namespace CardGameDef.Unity
 
 
         public MonoBehaviour CoroutineRunner { get; set; }
+
         public bool HasReadProperties { get; private set; }
-        public bool IsDownloading { get; private set; }
+
+        public bool IsDownloading
+        {
+            get => _isDownloading;
+            private set
+            {
+                _isDownloading = value;
+                Debug.Log("Download " + (_isDownloading ? "Start" : "End"));
+            }
+        }
+
+        private bool _isDownloading;
+
         public float DownloadProgress { get; private set; }
-        public string DownloadStatus { get; private set; } = "N / A";
+
+        public string DownloadStatus
+        {
+            get => _downloadStatus;
+            private set
+            {
+                _downloadStatus = value;
+                Debug.Log(_downloadStatus);
+            }
+        }
+
+        private string _downloadStatus = "N / A";
+
         public bool HasDownloaded { get; private set; }
         public bool HasLoaded { get; private set; }
         public string Error { get; private set; }
@@ -179,7 +204,11 @@ namespace CardGameDef.Unity
         public IEnumerator Download()
         {
             if (IsDownloading)
+            {
+                Debug.LogWarning("Duplicate Download Request Ignored");
                 yield break;
+            }
+
             IsDownloading = true;
 
             // We should always first get the *Game:Name*.json file and read it before doing anything else

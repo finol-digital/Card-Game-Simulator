@@ -338,9 +338,13 @@ namespace Cgs
                     existingGame = cardGame;
             if (existingGame != null)
             {
+                Debug.Log("GetCardGame: Existing game found; updating...");
                 yield return UpdateCardGame(existingGame);
+                Debug.Log("GetCardGame: Existing game found; updated!");
                 if (string.IsNullOrEmpty(existingGame.Error))
                     Select(existingGame.Id);
+                else
+                    Debug.LogError("GetCardGame: Not selecting card game because of error after update");
             }
             else
                 yield return DownloadCardGame(gameUrl);
@@ -348,6 +352,7 @@ namespace Cgs
 
         private IEnumerator DownloadCardGame(string gameUrl)
         {
+            Debug.Log("DownloadCardGame: start");
             var cardGame = new UnityCardGame(this, CardGame.DefaultName, gameUrl);
 
             Progress.Show(cardGame);
@@ -378,6 +383,7 @@ namespace Cgs
                 AllCardGames[cardGame.Id] = cardGame;
                 Select(cardGame.Id);
             }
+            Debug.Log("DownloadCardGame: end");
         }
 
         public IEnumerator UpdateCardGame(UnityCardGame cardGame)

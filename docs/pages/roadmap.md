@@ -5,10 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.45
-- Fix: Branch error on startup
+- Fix: Branch error
+- Tech: Add logging
 
 ## Current Sprint
-- Tech: Add logging to download process
 - Game-Play: Ability to slide stack viewers up and down
 - Game-Play: Resize stack viewer height based off card height
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
