@@ -300,13 +300,15 @@ namespace Cgs
         {
             if (!string.IsNullOrEmpty(error))
             {
-                Debug.LogError(BranchCallbackErrorMessage + error);
-                Messenger.Show(BranchCallbackErrorMessage + error);
+                Debug.LogWarning(BranchCallbackErrorMessage + error);
                 return;
             }
 
             if (!parameters.TryGetValue(GameUrl, out object gameUrlObj))
+            {
+                Debug.LogWarning(BranchCallbackWarning);
                 return;
+            }
 
             string gameUrl = gameUrlObj as string;
             if (!string.IsNullOrEmpty(gameUrl))

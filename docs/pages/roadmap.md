@@ -5,8 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.45
+- Fix: Branch error on startup
 
 ## Current Sprint
+- Tech: Add logging to download process
 - Game-Play: Ability to slide stack viewers up and down
 - Game-Play: Resize stack viewer height based off card height
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
@@ -14,8 +16,9 @@ permalink: roadmap.html
 - Game-Play: Pre-defined zones in Play Area
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Game-Play: E: Move card to zone or stack
+- Game-Play: Multiple hands
 - Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
-- Integration: Update Store descriptions (remove "When joining a friend’s game session...") and Store images
+- Integration: Update Store images
 
 ## Backlog
 - Cards: Support more than 1 card face (DFC)
@@ -34,6 +37,7 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 
 ## Icebox
+- Networking: Vertical layout for Lobby
 - Tech: Replace SwipeManager
 - Tech: Branch on Windows (https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 - Tech: Google Play Instant
