@@ -1,4 +1,2 @@
-- Integration: Disable tracking from the Branch SDK
-- Networking: Add ability to enter direct IP for a networked game
-- Game-Play: Peek at facedown cards
-- Game-Play: Fix scrolling in Play Area
+- Fix: Branch error
+- Tech: Add logging
