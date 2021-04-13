@@ -4,9 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.45
-- Fix: Branch error
-- Tech: Add logging
+## What's New - v1.46
 
 ## Current Sprint
 - Game-Play: Ability to slide stack viewers up and down
