@@ -132,7 +132,18 @@ namespace Cgs.Play
         public void ResetPlayArea()
         {
             var rectTransform = (RectTransform) playArea.transform;
-            rectTransform.DestroyAllChildren();
+            if (!NetworkManager.singleton.isNetworkActive)
+                rectTransform.DestroyAllChildren();
+            else if (CgsNetManager.Instance.LocalPlayer != null && CgsNetManager.Instance.LocalPlayer.isServer)
+            {
+                foreach (CardStack cardStack in playArea.GetComponentsInChildren<CardStack>())
+                    NetworkServer.UnSpawn(cardStack.gameObject);
+                foreach (CardModel cardModel in playArea.GetComponentsInChildren<CardModel>())
+                    NetworkServer.UnSpawn(cardModel.gameObject);
+                foreach (Die die in playArea.GetComponentsInChildren<Die>())
+                    NetworkServer.UnSpawn(die.gameObject);
+                rectTransform.DestroyAllChildren();
+            }
             var size = new Vector2(CardGameManager.Current.PlayMatSize.X,
                 CardGameManager.Current.PlayMatSize.Y);
             rectTransform.sizeDelta = size * CardGameManager.PixelsPerInch;
@@ -270,8 +281,8 @@ namespace Cgs.Play
         private void Deal(int cardCount)
         {
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null &&
-                CgsNetManager.Instance.LocalPlayer.DeckZone != null)
-                CgsNetManager.Instance.LocalPlayer.RequestDeal(CgsNetManager.Instance.LocalPlayer.DeckZone, cardCount);
+                CgsNetManager.Instance.LocalPlayer.CurrentDeck != null)
+                CgsNetManager.Instance.LocalPlayer.RequestDeal(CgsNetManager.Instance.LocalPlayer.CurrentDeck, cardCount);
             else
                 AddCardsToHand(PopSoloDeckCards(cardCount));
         }

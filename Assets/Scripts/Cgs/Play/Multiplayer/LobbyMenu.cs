@@ -4,13 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using Mirror;
 using ScrollRects;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -49,10 +47,13 @@ namespace Cgs.Play.Multiplayer
         private string _selectedServerIp;
 
         private string TargetIpAddress =>
-            IsInternetConnectionSource
-            && _discoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(), out DiscoveryResponse r)
-                ? r.Uri.ToString()
-                : _selectedServerIp;
+            IsInternetConnectionSource && _selectedServerIp != null &&
+            _listedServers.TryGetValue(_selectedServerIp, out ServerStatus internetServer)
+                ? internetServer.Ip
+                : IsLanConnectionSource && _discoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
+                    out DiscoveryResponse lanServer)
+                    ? lanServer.Uri.ToString()
+                    : _selectedServerIp;
 
         private HostAuthentication Authenticator =>
             _authenticator
@@ -65,6 +66,12 @@ namespace Cgs.Play.Multiplayer
             _menu ? _menu : (_menu = gameObject.GetOrAddComponent<Modal>());
 
         private Modal _menu;
+
+        private void Start()
+        {
+            ipInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            passwordInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+        }
 
         private void Update()
         {
@@ -95,9 +102,6 @@ namespace Cgs.Play.Multiplayer
 
             if (Inputs.IsSubmit && joinButton.interactable)
                 Join();
-            else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
-                .Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Inputs.IsNew)
                 Host();
             else if (Inputs.IsFocusBack)
@@ -134,21 +138,14 @@ namespace Cgs.Play.Multiplayer
 
         private void Redisplay()
         {
-            if (!IsInternetConnectionSource)
-            {
-                if (_selectedServerId == null || !_discoveredServers.ContainsKey(_selectedServerId.GetValueOrDefault()))
-                    joinButton.interactable = false;
+            if (IsLanConnectionSource)
                 Rebuild(_discoveredServers, SelectServer, _selectedServerId.GetValueOrDefault());
-            }
             else
-            {
-                if (_selectedServerIp == null || !_listedServers.ContainsKey(_selectedServerIp))
-                    joinButton.interactable = false;
                 Rebuild(_listedServers, SelectServer, _selectedServerIp);
-            }
 
-            if (!ipInputField.text.Equals(TargetIpAddress))
-                ipInputField.text = TargetIpAddress;
+            string ip = TargetIpAddress;
+            joinButton.interactable =
+                !string.IsNullOrEmpty(ip) && Uri.IsWellFormedUriString(ip, UriKind.RelativeOrAbsolute);
         }
 
         private void ToggleConnectionSource()
@@ -195,32 +192,41 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void SelectServer(Toggle toggle, long serverId)
         {
+            _selectedServerIp = null;
             if (toggle.isOn)
             {
                 _selectedServerId = serverId;
+                if (!string.IsNullOrEmpty(ipInputField.text))
+                    ipInputField.text = string.Empty;
                 joinButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && serverId == _selectedServerId)
+            else if (!ipInputField.isFocused && !toggle.group.AnyTogglesOn() && serverId == _selectedServerId)
                 Join();
         }
 
         [UsedImplicitly]
         public void SelectServer(Toggle toggle, string serverIp)
         {
+            _selectedServerId = null;
             if (toggle.isOn)
             {
                 _selectedServerIp = serverIp;
+                if (!string.IsNullOrEmpty(ipInputField.text))
+                    ipInputField.text = string.Empty;
                 joinButton.interactable = true;
             }
-            else if (!toggle.group.AnyTogglesOn() && serverIp.Equals(_selectedServerIp))
+            else if (!ipInputField.isFocused && !toggle.group.AnyTogglesOn() && serverIp.Equals(_selectedServerIp))
                 Join();
         }
 
         [UsedImplicitly]
         public void SetTargetIpAddress(string targetIpAddress)
         {
+            if (string.IsNullOrEmpty(targetIpAddress))
+                return;
+
+            _selectedServerId = null;
             _selectedServerIp = targetIpAddress;
-            lanToggle.isOn = true;
             lanToggleGroup.SetAllTogglesOff();
             joinButton.interactable = !string.IsNullOrWhiteSpace(_selectedServerIp)
                                       && Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute);

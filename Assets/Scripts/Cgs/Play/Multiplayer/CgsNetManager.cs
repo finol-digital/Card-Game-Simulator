@@ -4,8 +4,8 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 using System.Net.Sockets;
-using CardGameDef.Unity;
 using Cgs.CardGameView.Multiplayer;
 using kcp2k;
 using Mirror;
@@ -46,7 +46,7 @@ namespace Cgs.Play.Multiplayer
             ClientScene.RegisterSpawnHandler(_cardStackAssetId, SpawnStack, UnSpawn);
 
             _cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawn);
+            ClientScene.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawnCard);
 
             _dieAssetId = playController.diePrefab.GetComponent<NetworkIdentity>().assetId;
             ClientScene.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawn);
@@ -109,6 +109,16 @@ namespace Cgs.Play.Multiplayer
             Destroy(spawned);
         }
 
+        private static void UnSpawnCard(GameObject spawnedCard)
+        {
+            Debug.Log("[CgsNet Manager] UnSpawnCard");
+            var cardModel = spawnedCard.GetComponent<CardModel>();
+            if (!cardModel.PointerDragOffsets.Any())
+                Destroy(spawnedCard);
+            else
+                Debug.Log("[CgsNet Manager] Ignore UnSpawn - Active Card");
+        }
+
         public void CheckForPortForwarding()
         {
             StartCoroutine(CheckIsPortForwarded());
@@ -163,6 +173,11 @@ namespace Cgs.Play.Multiplayer
                 NetworkServer.UnSpawn(die.gameObject);
             foreach (CgsNetPlayer player in FindObjectsOfType<CgsNetPlayer>())
                 player.TargetRestart();
+        }
+
+        private void OnDisable()
+        {
+            ClientScene.ClearSpawners();
         }
     }
 }

@@ -5,8 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.46
+- Networking: Fix cards disappearing on client start
+- Networking: Fix card transfer between users
 
 ## Current Sprint
+- Game-Play & Networking: Fix card duplication when dropped in scroll area
+- Game-Play & Networking: Prompt to Deal on Client Start
 - Game-Play: Ability to slide stack viewers up and down
 - Game-Play: Resize stack viewer height based off card height
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra

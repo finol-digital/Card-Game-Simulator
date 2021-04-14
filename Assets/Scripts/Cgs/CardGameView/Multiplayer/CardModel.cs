@@ -38,7 +38,7 @@ namespace Cgs.CardGameView.Multiplayer
                                                                    .playController.playArea.transform;
 
         private bool IsProcessingSecondaryDragAction =>
-            PointerPositions.Count > 1
+            PointerDragOffsets.Count > 1
             || CurrentPointerEventData != null &&
             (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
              CurrentPointerEventData.button == PointerEventData.InputButton.Right);
@@ -56,7 +56,7 @@ namespace Cgs.CardGameView.Multiplayer
         public PointerEventData CurrentPointerEventData { get; private set; }
 
         public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
-        private Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
+        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
 
         private float _holdTime;
         private bool _didSelectOnDown;
@@ -381,6 +381,9 @@ namespace Cgs.CardGameView.Multiplayer
                 if (PointerDragOffsets.TryGetValue(offsetKey, out Vector2 otherOffset))
                     PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
 
+            if (IsOnline && hasAuthority)
+                CmdReleaseAuthority();
+
             if (IsProcessingSecondaryDragAction)
                 return;
 
@@ -409,9 +412,6 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            if (IsOnline)
-                CmdReleaseAuthority();
-
             DropTarget = null;
 
             if (PlaceHolder != null)
@@ -430,7 +430,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (sender == null || netIdentity.connectionToClient != null)
             {
-                Debug.Log("Ignoring request to transfer authority, as it is already transferred");
+                Debug.Log("CardModel: Ignoring request to transfer authority, as it is already transferred");
                 return;
             }
 
@@ -463,8 +463,10 @@ namespace Cgs.CardGameView.Multiplayer
                 ? Color.green
                 : Color.red;
 
-            Vector2 targetPosition = UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
-            targetPosition += UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
+            Vector2 targetPosition =
+                UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
+            targetPosition +=
+                UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
             if (ParentCardZone != null)
                 UpdateCardZonePosition(targetPosition);
             else if (!IsStatic)
@@ -562,7 +564,7 @@ namespace Cgs.CardGameView.Multiplayer
         [ClientRpc]
         private void RpcUnspawnCard()
         {
-            if (!isServer && !hasAuthority)
+            if (!hasAuthority)
                 Discard();
             else if (isServer)
                 NetworkServer.UnSpawn(gameObject);
