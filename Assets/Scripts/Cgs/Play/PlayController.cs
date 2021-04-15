@@ -266,7 +266,7 @@ namespace Cgs.Play
             return cardStack;
         }
 
-        private void PromptForHand()
+        public void PromptForHand()
         {
             if (CardGameManager.Current.GameStartHandCount > 0)
                 Dealer.Show(DealStartingHand);

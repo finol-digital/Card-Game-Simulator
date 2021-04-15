@@ -183,6 +183,7 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Player] Received shared deck!");
             CurrentDeck = deckStack;
             IsDeckShared = true;
+            CgsNetManager.Instance.playController.PromptForHand();
         }
 
         public void RequestShuffle(GameObject toShuffle)
@@ -270,6 +271,8 @@ namespace Cgs.Play.Multiplayer
             cardModel.position = ((RectTransform) cardModelTransform).anchoredPosition;
             cardModel.rotation = cardModelTransform.rotation;
             CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.isFacedown);
+            if (cardModel.IsOnline && cardModel.hasAuthority)
+                CmdUnSpawnCard(cardModel.gameObject);
             Destroy(cardModel.gameObject);
         }
 
@@ -286,6 +289,13 @@ namespace Cgs.Play.Multiplayer
             PlayController.SetPlayActions(cardModel);
             NetworkServer.Spawn(newCard);
             cardModel.RpcHideHighlight();
+        }
+
+        [Command]
+        private void CmdUnSpawnCard(GameObject toUnSpawn)
+        {
+            NetworkServer.UnSpawn(toUnSpawn);
+            Destroy(toUnSpawn);
         }
 
         #endregion
