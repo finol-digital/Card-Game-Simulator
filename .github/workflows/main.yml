@@ -185,6 +185,11 @@ jobs:
         with:
           name: cgs-Android
           path: build/Android
+      - name: Write to Changelog
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Add Authentication
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Install Fastlane
@@ -222,12 +227,18 @@ jobs:
         with:
           name: cgs-iOS
           path: build/iOS
+      - name: Write to Changelog
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Fix File Permissions, Code-Sign, and Get Release Notes
         id: bash
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
-          export RELEASE_NOTES=$(cat fastlane/metadata/android/en-US/changelogs/default.txt)
+          export RELEASE_NOTES="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          echo "$RELEASE_NOTES"
           echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
       - name: Install Fastlane
         run: bundle install
@@ -267,6 +278,11 @@ jobs:
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
+      - name: Write to Changelog
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Install Fastlane
         run: bundle install
       - name: Fix version for StandaloneOSX
@@ -280,7 +296,8 @@ jobs:
           chmod +x fastlane/sign-osx-build.sh
           ./fastlane/sign-osx-build.sh
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
-          export RELEASE_NOTES=$(cat fastlane/metadata/android/en-US/changelogs/default.txt)
+          export RELEASE_NOTES="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          echo "$RELEASE_NOTES"
           echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v2.0.0
