@@ -1,2 +1,4 @@
-- Fix: Branch error
-- Tech: Add logging
+- Networking: Fix cards disappearing on client start
+- Networking: Fix card transfer between users
+- Game-Play & Networking: Fix card duplication when dropped in scroll area
+- Game-Play & Networking: Prompt to Deal on Client Start
