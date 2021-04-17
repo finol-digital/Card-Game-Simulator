@@ -12,8 +12,10 @@ namespace Cgs.Play
     [RequireComponent(typeof(StackViewer))]
     public class HandController : MonoBehaviour
     {
-        private static readonly Vector2 ShownPosition = new Vector2(0, 0);
-        private static readonly Vector2 HiddenPosition = new Vector2(0, -360);
+        private static readonly Vector2 ShownPosition = Vector2.zero;
+
+        private static Vector2 HiddenPosition =>
+            new Vector2(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) - 10);
 
         public Button downButton;
         public Button upButton;
@@ -23,6 +25,7 @@ namespace Cgs.Play
         private void Start()
         {
             _handViewer = GetComponent<StackViewer>();
+            _handViewer.Resize();
         }
 
         private void Update()

@@ -17,7 +17,11 @@ namespace Cgs.CardGameView
 {
     public class StackViewer : MonoBehaviour, ICardDropHandler
     {
+        private const float HandleHeight = 100.0f;
+
         public GameObject cardModelPrefab;
+
+        public RectTransform cardZoneTransform;
 
         public List<CardDropArea> drops;
         public CardZone contentCardZone;
@@ -39,11 +43,21 @@ namespace Cgs.CardGameView
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
 
+            Resize();
+
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
             Sync(stack);
             contentCardZone.scrollRectContainer.horizontalNormalizedPosition = 0;
+        }
+
+        public void Resize()
+        {
+            var rectTransform = (RectTransform) transform;
+            float cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
+            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, HandleHeight + cardHeight);
+            cardZoneTransform.sizeDelta = new Vector2(cardZoneTransform.sizeDelta.x, cardHeight);
         }
 
         public void Sync(CardStack stack)

@@ -406,8 +406,6 @@ namespace Cgs.CardGameView.Multiplayer
                 if (!shouldDiscard)
                     return;
 
-                if (IsOnline)
-                    CmdUnspawnCard();
                 Discard();
                 return;
             }
@@ -555,7 +553,7 @@ namespace Cgs.CardGameView.Multiplayer
             _isClientAuthorized = false;
         }
 
-        [Command]
+        [Command(ignoreAuthority = true)]
         private void CmdUnspawnCard()
         {
             RpcUnspawnCard();
@@ -564,10 +562,9 @@ namespace Cgs.CardGameView.Multiplayer
         [ClientRpc]
         private void RpcUnspawnCard()
         {
-            if (!hasAuthority)
-                Discard();
-            else if (isServer)
+            if (isServer)
                 NetworkServer.UnSpawn(gameObject);
+            Destroy(gameObject);
         }
 
         private IEnumerator MoveToPlaceHolder()
@@ -661,6 +658,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Discard()
         {
+            if (IsOnline)
+                CmdUnspawnCard();
             Destroy(gameObject);
         }
 

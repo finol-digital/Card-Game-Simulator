@@ -4,23 +4,19 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.46
-- Networking: Fix cards disappearing on client start
-- Networking: Fix card transfer between users
-- Game-Play & Networking: Fix card duplication when dropped in scroll area
-- Game-Play & Networking: Prompt to Deal on Client Start
+## What's New - v1.47
+- Game-Play: Resize stack viewer height based off card height
+- Game-Play: Ability to slide stack viewers up and down
+- Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
+- Integration: Update Store images
 
 ## Current Sprint
-- Game-Play: Ability to slide stack viewers up and down
-- Game-Play: Resize stack viewer height based off card height
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
 - Game-Play: Pre-defined stack locations
 - Game-Play: Pre-defined zones in Play Area
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Game-Play: E: Move card to zone or stack
 - Game-Play: Multiple hands
-- Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
-- Integration: Update Store images
 
 ## Backlog
 - Cards: Support more than 1 card face (DFC)
