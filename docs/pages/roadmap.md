@@ -28,6 +28,7 @@ permalink: roadmap.html
 - Game-Play: Face-up cards in cards stacks
 - Game-Play: Pooling to improve performance of opening stack viewer
 - Usability: Scale size of UI based off either physical size or resolution of display
+- Game-Play: Custom colors for Dice
 - Cards: Support mix of different card sizes in the same game
 - Cards: Configurable highlight color
 - Cards Explorer: Add card properties in UI
@@ -61,7 +62,6 @@ permalink: roadmap.html
 - Cards: Set card image cache limit
 - Cards: Allow pre-fetching of card images
 - Game-Play: Support grouping of dice
-- Game-Play: Support different colored dice
 - Game-Play: Automatically roll dice on phone shake
 - Game-Play: Synchronize points across teams
 - Game-Play: Allow automatic deletion of empty zones
@@ -71,7 +71,7 @@ permalink: roadmap.html
 - Integration: Support multiple languages (Spanish,Chinese)
 - Integration: Support different resolutions and languages for card images
 - Integration: NanDeck + Squib + Magic Set Editor
-- Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice
+- Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice/CardWarden
 - Platforms: Support Tilt Five
 - Platforms: Support Android TV and tvOS
 - Platforms: Support VR + AR
