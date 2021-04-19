@@ -4,13 +4,14 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.46
-- Networking: Fix cards disappearing on client start
-- Networking: Fix card transfer between users
-- Game-Play & Networking: Fix card duplication when dropped in scroll area
-- Game-Play & Networking: Prompt to Deal on Client Start
+## What's New - v1.47
+- Game-Play: Resize stack viewer height based off card height
+- Game-Play: Ability to slide stack viewers up and down
+- Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
+- Integration: Update Store images
 
 ## Current Sprint
+- Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
 - Game-Play: Resize stack viewer height based off card height
 - Game-Play: Ability to slide stack viewers up and down
 - Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
@@ -27,11 +28,13 @@ permalink: roadmap.html
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 - Game-Play: Support multiple playmats
-- Game-Play: Face-up cards in cards stacks
-- Game-Play: Pooling to improve performance of opening stack viewer
-- Usability: Scale size of UI based off either physical size or resolution of display
-- Game-Play: Custom colors for Dice
 - Game-Play: Support multiple card selection
+- Game-Play: Remappable controls/input
+- Game-Play: Face-up cards in cards stacks
+- Game-Play: Custom colors for Dice
+- Tech: Pooling to improve performance of opening stack viewer
+- Tech: Add code coverage
+- Usability: Scale size of UI based off either physical screen size or resolution of display
 - Cards: Support mix of different card sizes in the same game
 - Cards: Configurable highlight color
 - Cards Explorer: Add card properties in UI
