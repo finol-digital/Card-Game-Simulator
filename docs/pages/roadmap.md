@@ -28,7 +28,7 @@ permalink: roadmap.html
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 - Game-Play: Support multiple playmats
 - Game-Play: Support multiple card selection
-- Game-Play: Remappable controls/input
+- Game-Play: Customize controls/input
 - Game-Play: Face-up cards in cards stacks
 - Game-Play: Custom colors for Dice
 - Tech: Pooling to improve performance of opening stack viewer
@@ -39,11 +39,13 @@ permalink: roadmap.html
 - Cards Explorer: Add card properties in UI
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
+- Networking: Vertical layout for Lobby
+- Tech: Branch on Windows (https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 
 ## Icebox
-- Networking: Vertical layout for Lobby
+- Networking: Dedicated online servers for multiplayer play over the internet
+- Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Replace SwipeManager
-- Tech: Branch on Windows (https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
 - Tech: Upgrade json schema version from v4 to v7
@@ -78,6 +80,6 @@ permalink: roadmap.html
 - Integration: NanDeck + Squib + Magic Set Editor
 - Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice/CardWarden
 - Platforms: Support Tilt Five
-- Platforms: Support Android TV and tvOS
 - Platforms: Support VR + AR
-- Stretch Goal: Support game-specific rules enforcement
+- Platforms: Support Android TV and tvOS
+- Only to be pursued if all other goals have been completed: Support game-specific rules enforcement
