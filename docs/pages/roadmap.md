@@ -40,8 +40,8 @@ permalink: roadmap.html
 - Tech: Branch on Windows (https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 
 ## Icebox
-- Networking: Dedicated online servers for 
-- Integration: Database for 
+- Networking: Dedicated online servers for multiplayer play over the internet
+- Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Replace SwipeManager
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
@@ -77,6 +77,6 @@ permalink: roadmap.html
 - Integration: NanDeck + Squib + Magic Set Editor
 - Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice/CardWarden
 - Platforms: Support Tilt Five
-- Platforms: Support Android TV and tvOS
 - Platforms: Support VR + AR
+- Platforms: Support Android TV and tvOS
 - Only to be pursued if all other goals have been completed: Support game-specific rules enforcement
