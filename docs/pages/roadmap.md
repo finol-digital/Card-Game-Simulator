@@ -12,16 +12,12 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
-- Game-Play: Resize stack viewer height based off card height
-- Game-Play: Ability to slide stack viewers up and down
-- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
-- Integration: Update Store images
-
-## Backlog
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Game-Play: Pre-defined zones and card stacks in Play Area
 - Game-Play: E: Move card to zone or stack
 - Game-Play: Multiple hands with drawers
+
+## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
