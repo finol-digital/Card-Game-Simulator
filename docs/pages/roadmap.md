@@ -27,21 +27,21 @@ permalink: roadmap.html
 - Game-Play: Support multiple card selection
 - Game-Play: Customize controls/input
 - Game-Play: Face-up cards in cards stacks
-- Game-Play: Custom colors for Dice
-- Tech: Pooling to improve performance of opening stack viewer
 - Tech: Add code coverage
 - Usability: Scale size of UI based off either physical screen size or resolution of display
-- Cards: Support mix of different card sizes in the same game
+- Game-Play: Custom colors for Dice
 - Cards: Configurable highlight color
+- Cards: Support mix of different card sizes in the same game
 - Cards Explorer: Add card properties in UI
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Networking: Vertical layout for Lobby
-- Tech: Branch on Windows (https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
+- Integration: [Branch on Windows](https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 
 ## Icebox
 - Networking: Dedicated online servers for multiplayer play over the internet
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
+- Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
