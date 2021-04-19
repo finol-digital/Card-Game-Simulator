@@ -30,6 +30,7 @@ permalink: roadmap.html
 - Game-Play: Support multiple card selection
 - Game-Play: Customize controls/input
 - Game-Play: Face-up cards in cards stacks
+- Game-Play: Convert card to stack
 - Tech: Add code coverage
 - Usability: Scale size of UI based off either physical screen size or resolution of display
 - Game-Play: Custom colors for Dice
