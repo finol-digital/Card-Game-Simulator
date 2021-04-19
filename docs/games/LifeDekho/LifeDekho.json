@@ -1,0 +1,97 @@
+{
+	"allCardsUrl": "https://www.cardgamesimulator.com/games/LifeDekho/AllCards.json",
+	"allSetsUrl": "https://www.cardgamesimulator.com/games/LifeDekho/AllSets.json",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/LifeDekho/LifeDekho.json",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/LifeDekho/Banner.png",
+	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/LifeDekho/CardBack.jpg",
+	"cardBackImageFileType": "jpg",
+	"cardImageFileType": "jpg",
+	"cardImageUrl": "https://www.cardgamesimulator.com/games/LifeDekho/sets/{cardSet}/{cardId}.{cardImageFileType}",
+	"cardPrimaryProperty": "category",
+	"cardProperties": [{
+			"name": "rank",
+			"display": "Rank",
+			"type": "stringEnum"
+		},
+		{
+			"name": "suit",
+			"display": "Suit",
+			"type": "stringEnum"
+		},
+		{
+			"name": "category",
+			"display": "Category",
+			"type": "stringEnum"
+		},
+		{
+			"name": "title",
+			"display": "Title",
+			"type": "string"
+		},
+		{
+			"name": "subtitle",
+			"display": "Subtitle",
+			"type": "string"
+		},
+		{
+			"name": "hand",
+			"display": "Hand",
+			"type": "integer"
+		},
+		{
+			"name": "deal",
+			"display": "Deal",
+			"type": "integer"
+		}
+	],
+	"deckUrls": [{
+			"name": "LifeDekho",
+			"url": "https://www.cardgamesimulator.com/games/LifeDekho/decks/LifeDekho.txt"
+		}
+	],
+	"enums": [{
+			"property": "rank",
+			"values": {
+				"1": "Ace",
+				"2": "2",
+				"3": "3",
+				"4": "4",
+				"5": "5",
+				"6": "6",
+				"7": "7",
+				"8": "8",
+				"9": "9",
+				"10": "10",
+				"11": "Jack",
+				"12": "Queen",
+				"13": "King",
+				"0": "Joker"
+			}
+		},
+		{
+			"property": "suit",
+			"values": {
+				"clubs": "Clubs",
+				"diamonds": "Diamonds",
+				"hearts": "Hearts",
+				"spades": "Spades"
+			}
+		},
+		{
+			"property": "category",
+			"values": {
+				"idea": "IDEA",
+				"c1": "C1",
+				"c2": "C2",
+				"c3": "C3",
+				"c4": "C4",
+				"c4": "C5",
+				"c6": "C6",
+				"wild": "WILD CARD"
+			}
+		}
+	],
+	"gameStartHandCount": 7,
+	"name": "LifeDekho",
+	"rulesUrl": "https://www.cardgamesimulator.com/games/LifeDekho/rules.txt"
+}
