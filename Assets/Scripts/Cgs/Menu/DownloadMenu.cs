@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -77,7 +78,9 @@ namespace Cgs.Menu
             urlInputField.text = string.Empty;
             urlInputField.interactable = false;
 
+            Debug.Log("DownloadMenu: Download start");
             yield return _downloadCoroutine(url);
+            Debug.Log("DownloadMenu: Download end");
 
             // ReSharper disable once Unity.InefficientPropertyAccess
             urlInputField.interactable = true;

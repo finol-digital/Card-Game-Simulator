@@ -331,11 +331,13 @@ namespace Cgs
 
         public IEnumerator GetCardGame(string gameUrl)
         {
+            Debug.Log("GetCardGame: Starting...");
             // If user attempts to download a game they already have, we should just update that game
             UnityCardGame existingGame = null;
             foreach (UnityCardGame cardGame in AllCardGames.Values)
                 if (cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl)))
                     existingGame = cardGame;
+            Debug.Log("GetCardGame: Existing game search complete...");
             if (existingGame != null)
             {
                 Debug.Log("GetCardGame: Existing game found; updating...");
@@ -348,6 +350,7 @@ namespace Cgs
             }
             else
                 yield return DownloadCardGame(gameUrl);
+            Debug.Log("GetCardGame: Done!");
         }
 
         private IEnumerator DownloadCardGame(string gameUrl)
