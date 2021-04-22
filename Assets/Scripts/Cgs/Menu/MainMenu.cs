@@ -38,6 +38,7 @@ namespace Cgs.Menu
         public List<GameObject> selectableButtons;
 
         // ReSharper disable once NotAccessedField.Global
+        public GameObject createButton;
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
@@ -61,6 +62,7 @@ namespace Cgs.Menu
 
         private void Start()
         {
+            createButton.SetActive(Settings.DeveloperMode);
 #if UNITY_WEBGL
             joinButton.interactable = false;
 #endif
@@ -122,7 +124,7 @@ namespace Cgs.Menu
                 SelectNext();
             else if (Inputs.IsNew)
             {
-                if (gameManagement.activeSelf)
+                if (gameManagement.activeSelf && createButton.activeSelf)
                     Create();
                 else
                     StartGame();
