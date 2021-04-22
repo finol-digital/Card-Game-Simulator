@@ -18,13 +18,13 @@ namespace Cgs.Menu
         public static bool HideReprints
         {
             get => PlayerPrefs.GetInt(PlayerPrefsHideReprints, 1) == 1;
-            [UsedImplicitly] set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
+            private set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
         }
 
         public static bool DeveloperMode
         {
             get => PlayerPrefs.GetInt(PlayerPrefsDeveloperMode, 1) == 1;
-            [UsedImplicitly] set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
+            private set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 
         public Toggle screenOsControlToggle;
@@ -59,6 +59,7 @@ namespace Cgs.Menu
 
             controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
             hideReprintsToggle.isOn = HideReprints;
+            developerModeToggle.isOn = DeveloperMode;
 #if !UNITY_ANDROID && !UNITY_IOS
             foreach (Transform option in orientationOptions)
                 option.gameObject.SetActive(false);
@@ -109,6 +110,12 @@ namespace Cgs.Menu
         public void SetHideReprints(bool hideReprints)
         {
             HideReprints = hideReprints;
+        }
+
+        [UsedImplicitly]
+        public void SetDeveloperMode(bool developerMode)
+        {
+            DeveloperMode = developerMode;
         }
 
         [UsedImplicitly]

@@ -56,7 +56,7 @@ namespace Cgs.Cards
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             ((GridLayoutGroup) searchResults.layoutGroup).cellSize = cardSize * CardGameManager.PixelsPerInch;
             foreach (GameObject button in editButtons)
-                button.SetActive(!CardGameManager.Current.IsExternal);
+                button.SetActive(!CardGameManager.Current.IsExternal || Settings.DeveloperMode);
         }
 
         [UsedImplicitly]
