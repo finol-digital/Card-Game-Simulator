@@ -12,12 +12,19 @@ namespace Cgs.Menu
 {
     public class Settings : MonoBehaviour
     {
-        private const string PlayerPrefHideReprints = "HideReprints";
+        private const string PlayerPrefsHideReprints = "HideReprints";
+        private const string PlayerPrefsDeveloperMode = "DeveloperMode";
 
         public static bool HideReprints
         {
-            get => PlayerPrefs.GetInt(PlayerPrefHideReprints, 1) == 1;
-            [UsedImplicitly] set => PlayerPrefs.SetInt(PlayerPrefHideReprints, value ? 1 : 0);
+            get => PlayerPrefs.GetInt(PlayerPrefsHideReprints, 1) == 1;
+            [UsedImplicitly] set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
+        }
+
+        public static bool DeveloperMode
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsDeveloperMode, 1) == 1;
+            [UsedImplicitly] set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 
         public Toggle screenOsControlToggle;
@@ -26,6 +33,7 @@ namespace Cgs.Menu
         public Toggle screenLandscapeToggle;
         public Toggle controllerLockToLandscapeToggle;
         public Toggle hideReprintsToggle;
+        public Toggle developerModeToggle;
         public List<Transform> orientationOptions;
 
         private void Start()

@@ -7,6 +7,7 @@ permalink: roadmap.html
 ## What's New - v1.47
 - Game-Play: Resize stack viewer height based off card height
 - Game-Play: Ability to slide stack viewers up and down
+- Settings: Developer Mode enables in-app card creation
 - Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Integration: Update Store images
 
@@ -38,6 +39,7 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Networking: Vertical layout for Lobby
 - Integration: [Branch on Windows](https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
+- Tech: Automatically send logs or use Firebase Crashlytics
 
 ## Icebox
 - Networking: Dedicated online servers for multiplayer play over the internet
