@@ -23,7 +23,7 @@ namespace Cgs.Menu
 
         public static bool DeveloperMode
         {
-            get => PlayerPrefs.GetInt(PlayerPrefsDeveloperMode, 1) == 1;
+            get => PlayerPrefs.GetInt(PlayerPrefsDeveloperMode, 0) == 1;
             private set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3944917758904020235}
   - component: {fileID: 1447856751178697143}
   - component: {fileID: 294695810116288315}
-  - component: {fileID: 5716396202611838269}
+  - component: {fileID: 2243302619181885816}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -75,7 +75,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5716396202611838269
+--- !u!114 &2243302619181885816
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,10 +84,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5230209123545403863}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdd2a9f41c9ff734ea7dc87eeeb976fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 50c9c9f34b55a954fbc3d7ba8c4eb28b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackViewer: {fileID: 4878737269219783766}
+  handViewer: {fileID: 4878737269219783766}
+  downButton: {fileID: 6156959940758829862}
+  upButton: {fileID: 273754333061090286}
 --- !u!1 &8986865415403623898
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,7 +103,6 @@ GameObject:
   - component: {fileID: 8986865415403623896}
   - component: {fileID: 2181795384458571094}
   - component: {fileID: 4878737269219783766}
-  - component: {fileID: 5939000394208968370}
   m_Layer: 5
   m_Name: Hand
   m_TagString: Untagged
@@ -205,20 +206,6 @@ MonoBehaviour:
   contentCardZone: {fileID: 8019199269330723383}
   nameLabel: {fileID: 2030967689021997969}
   countLabel: {fileID: 2030967688879958789}
---- !u!114 &5939000394208968370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8986865415403623898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50c9c9f34b55a954fbc3d7ba8c4eb28b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  downButton: {fileID: 6156959940758829862}
-  upButton: {fileID: 273754333061090286}
 --- !u!1 &8986865415962470579
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,7 +453,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 5939000394208968370}
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -658,7 +645,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 5939000394208968370}
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState

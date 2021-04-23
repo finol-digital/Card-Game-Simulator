@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.47
+- Fix: Game crash on start
 - Game-Play: Resize stack viewer height based off card height
 - Game-Play: Ability to slide stack viewers up and down
 - Settings: Developer Mode enables in-app card creation
