@@ -43,13 +43,13 @@ namespace Cgs.Play.Multiplayer
             base.Start();
 
             _cardStackAssetId = playController.cardStackPrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(_cardStackAssetId, SpawnStack, UnSpawn);
+            NetworkClient.RegisterSpawnHandler(_cardStackAssetId, SpawnStack, UnSpawn);
 
             _cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawnCard);
+            NetworkClient.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawnCard);
 
             _dieAssetId = playController.diePrefab.GetComponent<NetworkIdentity>().assetId;
-            ClientScene.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawn);
+            NetworkClient.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawn);
 
             Discovery = GetComponent<CgsNetDiscovery>();
             ListServer = GetComponent<CgsNetListServer>();
@@ -177,7 +177,7 @@ namespace Cgs.Play.Multiplayer
 
         private void OnDisable()
         {
-            ClientScene.ClearSpawners();
+            NetworkClient.ClearSpawners();
         }
     }
 }

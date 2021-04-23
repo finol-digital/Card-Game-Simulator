@@ -423,7 +423,7 @@ namespace Cgs.CardGameView.Multiplayer
             return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardModel>();
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
         {
             if (sender == null || netIdentity.connectionToClient != null)
@@ -553,7 +553,7 @@ namespace Cgs.CardGameView.Multiplayer
             _isClientAuthorized = false;
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdUnspawnCard()
         {
             RpcUnspawnCard();
@@ -616,7 +616,7 @@ namespace Cgs.CardGameView.Multiplayer
                 CmdUpdateRotation(transform.rotation);
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         public void CmdUpdateRotation(Quaternion newRotation)
         {
             rotation = newRotation;
@@ -629,7 +629,7 @@ namespace Cgs.CardGameView.Multiplayer
                 transform.rotation = newRotation;
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdUpdateFacedown(bool facedown)
         {
             isFacedown = facedown;

@@ -50,7 +50,7 @@ namespace Mirror
         public bool IsDirty => changes.Count > 0;
 
         // throw away all the changes
-        // this should be called after a successfull sync
+        // this should be called after a successful sync
         public void Flush() => changes.Clear();
 
         void AddOperation(Operation op, T item)
@@ -288,6 +288,7 @@ namespace Mirror
 
         public bool SetEquals(IEnumerable<T> other) => objects.SetEquals(other);
 
+        // custom implementation so we can do our own Clear/Add/Remove for delta
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
             if (other == this)
@@ -306,6 +307,7 @@ namespace Mirror
             }
         }
 
+        // custom implementation so we can do our own Clear/Add/Remove for delta
         public void UnionWith(IEnumerable<T> other)
         {
             if (other != this)
@@ -320,9 +322,8 @@ namespace Mirror
 
     public class SyncHashSet<T> : SyncSet<T>
     {
-        public SyncHashSet() : this(EqualityComparer<T>.Default) { }
-
-        public SyncHashSet(IEqualityComparer<T> comparer) : base(new HashSet<T>(comparer ?? EqualityComparer<T>.Default)) { }
+        public SyncHashSet() : this(EqualityComparer<T>.Default) {}
+        public SyncHashSet(IEqualityComparer<T> comparer) : base(new HashSet<T>(comparer ?? EqualityComparer<T>.Default)) {}
 
         // allocation free enumerator
         public new HashSet<T>.Enumerator GetEnumerator() => ((HashSet<T>)objects).GetEnumerator();
@@ -330,9 +331,8 @@ namespace Mirror
 
     public class SyncSortedSet<T> : SyncSet<T>
     {
-        public SyncSortedSet() : this(Comparer<T>.Default) { }
-
-        public SyncSortedSet(IComparer<T> comparer) : base(new SortedSet<T>(comparer ?? Comparer<T>.Default)) { }
+        public SyncSortedSet() : this(Comparer<T>.Default) {}
+        public SyncSortedSet(IComparer<T> comparer) : base(new SortedSet<T>(comparer ?? Comparer<T>.Default)) {}
 
         // allocation free enumerator
         public new SortedSet<T>.Enumerator GetEnumerator() => ((SortedSet<T>)objects).GetEnumerator();

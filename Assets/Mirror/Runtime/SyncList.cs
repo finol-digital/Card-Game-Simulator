@@ -6,33 +6,23 @@ namespace Mirror
 {
     // Deprecated 10/02/2020
     [Obsolete("Use SyncList<string> instead")]
-    public class SyncListString : SyncList<string>
-    {
-    }
+    public class SyncListString : SyncList<string> {}
 
     // Deprecated 10/02/2020
     [Obsolete("Use SyncList<float> instead")]
-    public class SyncListFloat : SyncList<float>
-    {
-    }
+    public class SyncListFloat : SyncList<float> {}
 
     // Deprecated 10/02/2020
     [Obsolete("Use SyncList<int> instead")]
-    public class SyncListInt : SyncList<int>
-    {
-    }
+    public class SyncListInt : SyncList<int> {}
 
     // Deprecated 10/02/2020
     [Obsolete("Use SyncList<uint> instead")]
-    public class SyncListUInt : SyncList<uint>
-    {
-    }
+    public class SyncListUInt : SyncList<uint> {}
 
     // Deprecated 10/02/2020
     [Obsolete("Use SyncList<bool> instead")]
-    public class SyncListBool : SyncList<bool>
-    {
-    }
+    public class SyncListBool : SyncList<bool> {}
 
     public class SyncList<T> : IList<T>, IReadOnlyList<T>, SyncObject
     {
@@ -68,9 +58,7 @@ namespace Mirror
         // so we need to skip them
         int changesAhead;
 
-        public SyncList() : this(EqualityComparer<T>.Default)
-        {
-        }
+        public SyncList() : this(EqualityComparer<T>.Default) {}
 
         public SyncList(IEqualityComparer<T> comparer)
         {
@@ -87,7 +75,7 @@ namespace Mirror
         public bool IsDirty => changes.Count > 0;
 
         // throw away all the changes
-        // this should be called after a successfull sync
+        // this should be called after a successful sync
         public void Flush() => changes.Clear();
 
         public void Reset()
@@ -425,7 +413,7 @@ namespace Mirror
 
             public void Reset() => index = -1;
             object IEnumerator.Current => Current;
-            public void Dispose() { }
+            public void Dispose() {}
         }
     }
 }

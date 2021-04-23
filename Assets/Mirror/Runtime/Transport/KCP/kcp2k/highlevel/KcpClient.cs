@@ -11,12 +11,6 @@ namespace kcp2k
         public Action<ArraySegment<byte>> OnData;
         public Action OnDisconnected;
 
-        // Mirror needs a way to stop kcp message processing while loop
-        // immediately after a scene change message. Mirror can't process any
-        // other messages during a scene change.
-        // (could be useful for others too)
-        public Func<bool> OnCheckEnabled = () => true;
-
         // state
         public KcpClientConnection connection;
         public bool connected;
@@ -58,19 +52,15 @@ namespace kcp2k
                 OnDisconnected.Invoke();
             };
 
-            // setup OnCheckEnabled to safely support Mirror
-            // scene changes (see comments in Awake() above)
-            connection.OnCheckEnabled = OnCheckEnabled;
-
             // connect
             connection.Connect(address, port, noDelay, interval, fastResend, congestionWindow, sendWindowSize, receiveWindowSize);
         }
 
-        public void Send(ArraySegment<byte> segment)
+        public void Send(ArraySegment<byte> segment, KcpChannel channel)
         {
             if (connected)
             {
-                connection.Send(segment);
+                connection.SendData(segment, channel);
             }
             else Log.Warning("KCP: can't send because client not connected!");
         }
@@ -89,16 +79,36 @@ namespace kcp2k
             }
         }
 
+        // process incoming messages. should be called before updating the world.
+        public void TickIncoming()
+        {
+            // recv on socket first, then process incoming
+            // (even if we didn't receive anything. need to tick ping etc.)
+            // (connection is null if not active)
+            connection?.RawReceive();
+            connection?.TickIncoming();
+        }
+
+        // process outgoing messages. should be called after updating the world.
+        public void TickOutgoing()
+        {
+            // process outgoing
+            // (connection is null if not active)
+            connection?.TickOutgoing();
+        }
+
+        // process incoming and outgoing for convenience
+        // => ideally call ProcessIncoming() before updating the world and
+        //    ProcessOutgoing() after updating the world for minimum latency
         public void Tick()
         {
-            // tick client connection
-            if (connection != null)
-            {
-                // recv on socket first
-                connection.RawReceive();
-                // then update
-                connection.Tick();
-            }
+            TickIncoming();
+            TickOutgoing();
         }
+
+        // pause/unpause to safely support mirror scene handling and to
+        // immediately pause the receive while loop if needed.
+        public void Pause() => connection?.Pause();
+        public void Unpause() => connection?.Unpause();
     }
 }

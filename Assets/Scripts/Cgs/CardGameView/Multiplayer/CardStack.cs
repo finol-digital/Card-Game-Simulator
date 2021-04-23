@@ -256,7 +256,7 @@ namespace Cgs.CardGameView.Multiplayer
                 CmdUpdatePosition(rectTransform.anchoredPosition);
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
         {
             if (sender != null && netIdentity.connectionToClient == null)
@@ -395,7 +395,7 @@ namespace Cgs.CardGameView.Multiplayer
                 Destroy(gameObject);
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdDelete()
         {
             if (netIdentity.connectionToClient != null)

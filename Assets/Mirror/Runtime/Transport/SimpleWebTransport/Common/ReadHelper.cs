@@ -28,7 +28,7 @@ namespace Mirror.SimpleWeb
             }
             catch (AggregateException ae)
             {
-                // if interupt is called we dont care about Exceptions
+                // if interrupt is called we don't care about Exceptions
                 Utils.CheckForInterupt();
 
                 // rethrow
@@ -123,7 +123,7 @@ namespace Mirror.SimpleWeb
     [Serializable]
     public class ReadHelperException : Exception
     {
-        public ReadHelperException(string message) : base(message) { }
+        public ReadHelperException(string message) : base(message) {}
 
         protected ReadHelperException(SerializationInfo info, StreamingContext context) : base(info, context)
         {

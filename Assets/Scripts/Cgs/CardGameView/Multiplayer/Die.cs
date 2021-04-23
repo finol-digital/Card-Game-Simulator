@@ -134,7 +134,7 @@ namespace Cgs.CardGameView.Multiplayer
             CmdReleaseAuthority();
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
         {
             if (sender != null && netIdentity.connectionToClient == null)
@@ -153,7 +153,7 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).anchoredPosition = newValue;
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdUpdateValue(int value)
         {
             _value = value;
@@ -186,7 +186,7 @@ namespace Cgs.CardGameView.Multiplayer
                 _rollTime = RollTime;
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdRoll()
         {
             _rollTime = RollTime;
@@ -232,7 +232,7 @@ namespace Cgs.CardGameView.Multiplayer
                 Destroy(gameObject);
         }
 
-        [Command(ignoreAuthority = true)]
+        [Command(requiresAuthority = false)]
         private void CmdDelete()
         {
             if (netIdentity.connectionToClient != null)

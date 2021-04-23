@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Mirror
 {
     // a transport that can listen to multiple underlying transport at the same time
+    [DisallowMultipleComponent]
     public class MultiplexTransport : Transport
     {
         public Transport[] transports;
@@ -16,6 +17,38 @@ namespace Mirror
             if (transports == null || transports.Length == 0)
             {
                 Debug.LogError("Multiplex transport requires at least 1 underlying transport");
+            }
+        }
+
+        public override void ClientEarlyUpdate()
+        {
+            foreach (Transport transport in transports)
+            {
+                transport.ClientEarlyUpdate();
+            }
+        }
+
+        public override void ServerEarlyUpdate()
+        {
+            foreach (Transport transport in transports)
+            {
+                transport.ServerEarlyUpdate();
+            }
+        }
+
+        public override void ClientLateUpdate()
+        {
+            foreach (Transport transport in transports)
+            {
+                transport.ClientLateUpdate();
+            }
+        }
+
+        public override void ServerLateUpdate()
+        {
+            foreach (Transport transport in transports)
+            {
+                transport.ServerLateUpdate();
             }
         }
 

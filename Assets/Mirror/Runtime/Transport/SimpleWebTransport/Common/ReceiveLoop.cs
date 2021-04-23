@@ -59,7 +59,7 @@ namespace Mirror.SimpleWeb
                 }
                 catch (Exception)
                 {
-                    // if interupted we dont care about other execptions
+                    // if interrupted we don't care about other exceptions
                     Utils.CheckForInterupt();
                     throw;
                 }
@@ -69,9 +69,8 @@ namespace Mirror.SimpleWeb
             catch (ObjectDisposedException e) { Log.InfoException(e); }
             catch (ReadHelperException e)
             {
-                // this could happen if client sends bad message
+                // log as info only
                 Log.InfoException(e);
-                queue.Enqueue(new Message(conn.connId, e));
             }
             catch (SocketException e)
             {

@@ -57,11 +57,8 @@ namespace Mirror.Weaver
 
             while (typedef != null)
             {
-                foreach (InterfaceImplementation iface in typedef.Interfaces)
-                {
-                    if (iface.InterfaceType.Is<TInterface>())
-                        return true;
-                }
+                if (typedef.Interfaces.Any(iface => iface.InterfaceType.Is<TInterface>()))
+                    return true;
 
                 try
                 {
@@ -70,7 +67,7 @@ namespace Mirror.Weaver
                 }
                 catch (AssemblyResolutionException)
                 {
-                    // this can happen for pluins.
+                    // this can happen for plugins.
                     //Console.WriteLine("AssemblyResolutionException: "+ ex.ToString());
                     break;
                 }
@@ -170,53 +167,39 @@ namespace Mirror.Weaver
         /// <para> Note that calling ArraySegment`T.get_Count directly gives an invalid IL error </para>
         /// </summary>
         /// <param name="self"></param>
-        /// <param name="instanceType">Generic Instance eg Writer<int></param>
+        /// <param name="instanceType">Generic Instance e.g. Writer<int></param>
         /// <returns></returns>
         public static FieldReference SpecializeField(this FieldReference self, GenericInstanceType instanceType)
         {
             FieldReference reference = new FieldReference(self.Name, self.FieldType, instanceType);
-
             return Weaver.CurrentAssembly.MainModule.ImportReference(reference);
         }
 
         public static CustomAttribute GetCustomAttribute<TAttribute>(this ICustomAttributeProvider method)
         {
-            foreach (CustomAttribute ca in method.CustomAttributes)
-            {
-                if (ca.AttributeType.Is<TAttribute>())
-                    return ca;
-            }
-            return null;
+            return method.CustomAttributes.FirstOrDefault(ca => ca.AttributeType.Is<TAttribute>());
         }
 
         public static bool HasCustomAttribute<TAttribute>(this ICustomAttributeProvider attributeProvider)
         {
-            // Linq allocations don't matter in weaver
             return attributeProvider.CustomAttributes.Any(attr => attr.AttributeType.Is<TAttribute>());
         }
 
         public static T GetField<T>(this CustomAttribute ca, string field, T defaultValue)
         {
             foreach (CustomAttributeNamedArgument customField in ca.Fields)
-            {
                 if (customField.Name == field)
-                {
                     return (T)customField.Argument.Value;
-                }
-            }
-
             return defaultValue;
         }
 
         public static MethodDefinition GetMethod(this TypeDefinition td, string methodName)
         {
-            // Linq allocations don't matter in weaver
             return td.Methods.FirstOrDefault(method => method.Name == methodName);
         }
 
         public static List<MethodDefinition> GetMethods(this TypeDefinition td, string methodName)
         {
-            // Linq allocations don't matter in weaver
             return td.Methods.Where(method => method.Name == methodName).ToList();
         }
 
