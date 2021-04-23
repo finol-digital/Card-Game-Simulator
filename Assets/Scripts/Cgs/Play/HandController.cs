@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace Cgs.Play
         public Button upButton;
 
         private RectTransform _rectTransform;
-        private Vector2 _dragOffset;
+        private float _dragOffsetHeight;
 
         private void Start()
         {
@@ -46,19 +47,24 @@ namespace Cgs.Play
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            _dragOffset = eventData.position - ((Vector2) transform.position);
+            var rectTransform = (RectTransform) transform;
+            _dragOffsetHeight = eventData.position.y - rectTransform.position.y + _rectTransform.rect.height *
+                CardGameManager.Instance.CardCanvas.transform.localScale.y;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            Vector2 targetPosition = eventData.position - _dragOffset;
-            float y = Mathf.Clamp(targetPosition.y, HiddenPosition.y, ShownPosition.y);
+            float targetY = eventData.position.y - _dragOffsetHeight;
+            float minY = HiddenPosition.y * CardGameManager.Instance.CardCanvas.transform.localScale.y;
+            float y = Mathf.Clamp(targetY, minY, ShownPosition.y);
             _rectTransform.position = new Vector3(_rectTransform.position.x, y);
+            downButton.interactable = Math.Abs(y - minY) > 0.1f;
+            upButton.interactable = Math.Abs(y - ShownPosition.y) > 0.1f;
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            _dragOffset = Vector2.zero;
+            _dragOffsetHeight = 0;
         }
 
         public void Show()
