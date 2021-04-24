@@ -20,6 +20,19 @@ namespace Cgs.Menu
 
         public static string VersionMessage => $"VERSION {Application.version}";
 
+        public const string TutorialPrompt =
+            "If you are new to Card Game Simulator (CGS), you may want to watch the CGS tutorial video.\nGo to the YouTube video?";
+
+        private const string TutorialUrl = "https://youtu.be/9J01FMgO7Pc";
+
+        private const string PlayerPrefsHasSeenTutorial = "HasSeenTutorial";
+
+        private static bool HasSeenTutorial
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsHasSeenTutorial, 0) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsHasSeenTutorial, value ? 1 : 0);
+        }
+
         public const int MainMenuSceneIndex = 1;
         private const int PlayModeSceneIndex = 2;
         private const int DeckEditorSceneIndex = 3;
@@ -72,6 +85,20 @@ namespace Cgs.Menu
             quitButton.SetActive(false);
 #endif
             versionText.text = VersionMessage;
+
+            if (!HasSeenTutorial)
+                CardGameManager.Instance.Messenger.Ask(TutorialPrompt, ConfirmHasSeenTutorial, GoToTutorial);
+        }
+
+        private static void ConfirmHasSeenTutorial()
+        {
+            HasSeenTutorial = true;
+        }
+
+        private static void GoToTutorial()
+        {
+            ConfirmHasSeenTutorial();
+            Application.OpenURL(TutorialUrl);
         }
 
         private void Update()
