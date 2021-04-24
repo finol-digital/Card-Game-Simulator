@@ -32,7 +32,7 @@ jobs:
           path: Library
           key: Library
       - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@v2
+        uses: game-ci/unity-test-runner@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -90,7 +90,7 @@ jobs:
           key: Library-${{ matrix.targetPlatform }}
           restore-keys: Library-
       - name: Build Unity Project
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
