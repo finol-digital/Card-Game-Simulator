@@ -127,9 +127,9 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - StandaloneWindows
+#          - StandaloneWindows # Fails due to out of memory on x32 tool-chain
           - StandaloneWindows64
-#          - WSAPlayer
+          - WSAPlayer
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -142,9 +142,9 @@ jobs:
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-serial: ${{ secrets.UNITY_SERIAL }}
+          unity-username: ${{ secrets.UNITY_EMAIL_2 }}
+          unity-password: ${{ secrets.UNITY_PASSWORD_2 }}
+          unity-serial: ${{ secrets.UNITY_SERIAL_2 }}
 # TODO: Get tag and pass it as the version to be applied
       - name: Build Unity
         uses: kuler90/build-unity@v1
