@@ -22,6 +22,7 @@ permalink: roadmap.html
 ## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
+- Game-Play: Synchronize points across teams and display all points
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
@@ -43,7 +44,10 @@ permalink: roadmap.html
 - Tech: Automatically send logs or use Firebase Crashlytics
 
 ## Icebox
-- Networking: Dedicated online servers for multiplayer play over the internet
+- Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
+- Fix: Open PDF fails outside of the Unity Editor
+- Tech: Update to Unity 2020.3
+- Networking: Dedicated online servers for multiplayer play over the internet (with [Mirage](https://github.com/MirageNet/Mirage))
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
@@ -71,7 +75,6 @@ permalink: roadmap.html
 - Cards: Allow pre-fetching of card images
 - Game-Play: Support grouping of dice
 - Game-Play: Automatically roll dice on phone shake
-- Game-Play: Synchronize points across teams
 - Game-Play: Allow automatic deletion of empty zones
 - Deck Editor: Organize cards by category when saving
 - Platforms: Display keyboard shortcuts/hotkeys in-app
