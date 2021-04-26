@@ -123,6 +123,7 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-latest
     needs: tests
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -138,7 +139,7 @@ jobs:
       - name: Setup Unity
         uses: kuler90/setup-unity@v1
         with:
-          unity-modules: windows windows-il2cpp windows-metro
+          unity-modules: windows-il2cpp windows-metro
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
