@@ -11,6 +11,7 @@ permalink: roadmap.html
 - Settings: Developer Mode enables in-app card creation
 - Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Integration: Update Store images
+- Tech: Enable cloud diagnostics
 
 ## Current Sprint
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
@@ -41,7 +42,6 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Networking: Vertical layout for Lobby
 - Integration: [Branch on Windows](https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
-- Tech: Automatically send logs or use Firebase Crashlytics
 
 ## Icebox
 - Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)

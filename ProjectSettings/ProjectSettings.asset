@@ -1011,7 +1011,9 @@ PlayerSettings:
     daydream:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    UNet: 1
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -1024,10 +1026,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 3
-  cloudProjectId: 
+  cloudProjectId: 34c381fc-425a-4e1d-9bee-3a2099636519
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: Card Game Simulator
+  organizationId: finoldigital
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
