@@ -130,7 +130,7 @@ namespace Cgs.Play.Multiplayer
             using (UnityWebRequest www = UnityWebRequest.Get("https://api.ipify.org"))
             {
                 yield return www.SendWebRequest();
-                if (www.isNetworkError)
+                if (www.result != UnityWebRequest.Result.Success)
                 {
                     ShowPortForwardingWarningMessage();
                     yield break;
@@ -141,15 +141,13 @@ namespace Cgs.Play.Multiplayer
 
             try
             {
-                using (var tcpClient = new TcpClient())
-                {
-                    IAsyncResult result = tcpClient.BeginConnect(ip,
-                        ((KcpTransport) Transport.activeTransport).Port, null, null);
-                    bool success = result.AsyncWaitHandle.WaitOne(100);
-                    tcpClient.EndConnect(result);
-                    if (!success)
-                        ShowPortForwardingWarningMessage();
-                }
+                using var tcpClient = new TcpClient();
+                IAsyncResult result = tcpClient.BeginConnect(ip,
+                    ((KcpTransport) Transport.activeTransport).Port, null, null);
+                bool success = result.AsyncWaitHandle.WaitOne(100);
+                tcpClient.EndConnect(result);
+                if (!success)
+                    ShowPortForwardingWarningMessage();
             }
             catch
             {
