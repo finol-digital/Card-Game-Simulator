@@ -37,6 +37,7 @@ permalink: roadmap.html
 - Game-Play: Custom colors for Dice
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
+- Cards: Popup card text on mouse hover over
 - Cards Explorer: Add card properties in UI
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
