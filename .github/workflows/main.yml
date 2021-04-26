@@ -128,8 +128,8 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows
-          - StandaloneWindows64
-#          - WSAPlayer
+#          - StandaloneWindows64
+          - WSAPlayer
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
