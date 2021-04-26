@@ -135,12 +135,15 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
-      - name: Setup Unity
+      - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
-          unity-modules: |
-            windows-il2cpp
-            universal-windows-platform
+          unity-modules: windows-il2cpp
+      - name: Setup Unity UWP
+        uses: kuler90/setup-unity@v1
+        if: matrix.targetPlatform == 'WSAPlayer'
+        with:
+          unity-modules: universal-windows-platform
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
