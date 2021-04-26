@@ -56,6 +56,7 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     needs: tests
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -123,14 +124,13 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-latest
     needs: tests
-    if: false
     strategy:
       fail-fast: false
       matrix:
         targetPlatform:
 #          - StandaloneWindows # Fails due to out of memory on x32 tool-chain
           - StandaloneWindows64
-          - WSAPlayer
+#          - WSAPlayer
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -139,7 +139,8 @@ jobs:
       - name: Setup Unity
         uses: kuler90/setup-unity@v1
         with:
-          unity-modules: windows-il2cpp windows-metro
+          unity-modules: 
+            - windows-il2cpp
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
