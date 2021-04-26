@@ -170,33 +170,31 @@ namespace CardGameDef.Unity
                 yield break;
             }
 
-            using (UnityWebRequest www =
-                (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST")))
+            using UnityWebRequest www =
+                (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST"));
+            if (postJsonBody != null)
             {
-                if (postJsonBody != null)
-                {
-                    byte[] bodyRaw = Encoding.UTF8.GetBytes(postJsonBody);
-                    www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                    www.downloadHandler = new DownloadHandlerBuffer();
-                    www.SetRequestHeader("Content-Type", "application/json");
-                }
-
-                yield return www.SendWebRequest();
-
-                if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
-                {
-                    Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error + " " + www.url);
-                    yield break;
-                }
-
-                if (responseHeaders != null)
-                    foreach (KeyValuePair<string, string> responseHeader in www.GetResponseHeaders())
-                        responseHeaders.Add(responseHeader.Key, responseHeader.Value);
-
-                if (!Directory.Exists(directory))
-                    Directory.CreateDirectory(directory);
-                File.WriteAllBytes(directory + "/" + fileName, www.downloadHandler.data);
+                byte[] bodyRaw = Encoding.UTF8.GetBytes(postJsonBody);
+                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                www.downloadHandler = new DownloadHandlerBuffer();
+                www.SetRequestHeader("Content-Type", "application/json");
             }
+
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
+            {
+                Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error + " " + www.url);
+                yield break;
+            }
+
+            if (responseHeaders != null)
+                foreach (KeyValuePair<string, string> responseHeader in www.GetResponseHeaders())
+                    responseHeaders.Add(responseHeader.Key, responseHeader.Value);
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            File.WriteAllBytes(directory + "/" + fileName, www.downloadHandler.data);
         }
 
         public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
@@ -223,38 +221,34 @@ namespace CardGameDef.Unity
             if (!File.Exists(imageFilePath))
                 yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
 
-            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath))
+            using UnityWebRequest www = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath);
+            yield return www.SendWebRequest();
+            if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
             {
-                yield return www.SendWebRequest();
-                if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
-                {
-                    Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
-                    yield return null;
-                }
-                else
-                {
-                    Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
-                    yield return CreateSprite(texture);
-                }
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+                yield return null;
+            }
+            else
+            {
+                Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+                yield return CreateSprite(texture);
             }
         }
 
         // Note: Memory Leak Potential
         public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageUrl)
         {
-            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl))
+            using UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl);
+            yield return www.SendWebRequest();
+            if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
             {
-                yield return www.SendWebRequest();
-                if (www.isNetworkError || www.isHttpError || !string.IsNullOrEmpty(www.error))
-                {
-                    Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
-                    yield return null;
-                }
-                else
-                {
-                    Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
-                    yield return CreateSprite(texture);
-                }
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+                yield return null;
+            }
+            else
+            {
+                Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+                yield return CreateSprite(texture);
             }
         }
 

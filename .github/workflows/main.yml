@@ -128,9 +128,9 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-#          - StandaloneWindows # Fails due to out of memory on x32 tool-chain
+          - StandaloneWindows
           - StandaloneWindows64
-#          - WSAPlayer
+          - WSAPlayer
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

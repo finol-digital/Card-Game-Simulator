@@ -46,7 +46,6 @@ permalink: roadmap.html
 ## Icebox
 - Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Fix: Open PDF fails outside of the Unity Editor
-- Tech: Update to Unity 2020.3
 - Networking: Dedicated online servers for multiplayer play over the internet (with [Mirage](https://github.com/MirageNet/Mirage))
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
