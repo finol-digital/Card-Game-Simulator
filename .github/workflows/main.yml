@@ -128,8 +128,8 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-#          - StandaloneWindows
-          - StandaloneWindows64
+          - StandaloneWindows
+#          - StandaloneWindows64
           - WSAPlayer
     steps:
       - name: Checkout Repository
@@ -139,7 +139,7 @@ jobs:
       - name: Setup Unity
         uses: kuler90/setup-unity@v1
         with:
-          unity-modules: windows-il2cpp --module metro
+          unity-modules: windows-il2cpp --module universal-windows-platform
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
