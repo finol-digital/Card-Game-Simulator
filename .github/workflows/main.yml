@@ -56,7 +56,6 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     needs: tests
-    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -129,8 +128,8 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows
-#          - StandaloneWindows64
-          - WSAPlayer
+          - StandaloneWindows64
+#          - WSAPlayer
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -139,7 +138,7 @@ jobs:
       - name: Setup Unity
         uses: kuler90/setup-unity@v1
         with:
-          unity-modules: windows-il2cpp --module universal-windows-platform
+          unity-modules: windows-il2cpp universal-windows-platform
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
