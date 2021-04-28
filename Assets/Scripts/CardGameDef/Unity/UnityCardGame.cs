@@ -503,7 +503,6 @@ namespace CardGameDef.Unity
                         allCardsUrlPageCountIdentifier.IndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal))
                 {
                     string currentObject = allCardsUrlPageCountIdentifier.Substring(0, delimiterIndex);
-                    Debug.Log(currentObject);
                     currentJToken = currentJToken[currentObject];
                     if (currentJToken == null)
                     {
@@ -514,8 +513,11 @@ namespace CardGameDef.Unity
                     allCardsUrlPageCountIdentifier = allCardsUrlPageCountIdentifier.Substring(delimiterIndex + 1);
                 }
 
-                Debug.Log(currentJToken.Value<int>(allCardsUrlPageCountIdentifier));
-                AllCardsUrlPageCount = currentJToken.Value<int>(allCardsUrlPageCountIdentifier);
+                var allCardsUrlPageCount = currentJToken.Value<int>(allCardsUrlPageCountIdentifier);
+                if (allCardsUrlPageCount < 1)
+                    return;
+
+                AllCardsUrlPageCount = allCardsUrlPageCount;
                 if (AllCardsUrlPageCountDivisor > 0)
                     AllCardsUrlPageCount =
                         Mathf.CeilToInt(((float) AllCardsUrlPageCount) / AllCardsUrlPageCountDivisor);
