@@ -225,7 +225,7 @@ namespace CardGameDef.Unity
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
             {
-                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error + " " + www.url);
                 yield return null;
             }
             else
@@ -242,7 +242,7 @@ namespace CardGameDef.Unity
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
             {
-                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error);
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error + " " + www.url);
                 yield return null;
             }
             else

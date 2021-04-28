@@ -769,20 +769,7 @@ namespace CardGameDef.Unity
                 dataIdentifier = parentNames[parentNames.Length - 1];
             }
 
-            if (CardSetsInListIsCsv)
-            {
-                string codesCsv = cardJToken?.Value<string>(dataIdentifier) ?? defaultSetCode;
-                string namesCsv = cardJToken?.Value<string>(CardSetNameIdentifier) ?? codesCsv;
-                string[] codes = codesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                string[] names = namesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                for (var i = 0; i < codes.Length; i++)
-                {
-                    string code = codes[i];
-                    string name = i < names.Length ? names[i] : code;
-                    cardSets[code] = name;
-                }
-            }
-            else if (CardSetsInList)
+            if (CardSetsInList)
             {
                 List<JToken> setJTokens = new List<JToken>();
                 try
@@ -803,12 +790,30 @@ namespace CardGameDef.Unity
                         string setName = setJObject?.Value<string>(SetNameIdentifier) ?? setCode;
                         cardSets[setCode] = setName;
                     }
+                    else if (CardSetsInListIsCsv)
+                    {
+                        string code = setJToken.Value<string>() ?? defaultSetCode;
+                        cardSets[code] = code;
+                    }
                     else
                     {
                         string code = setJToken.Value<string>(dataIdentifier) ?? defaultSetCode;
                         string name = setJToken.Value<string>(CardSetNameIdentifier) ?? code;
                         cardSets[code] = name;
                     }
+                }
+            }
+            else if (CardSetsInListIsCsv)
+            {
+                string codesCsv = cardJToken?.Value<string>(dataIdentifier) ?? defaultSetCode;
+                string namesCsv = cardJToken?.Value<string>(CardSetNameIdentifier) ?? codesCsv;
+                string[] codes = codesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                string[] names = namesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                for (var i = 0; i < codes.Length; i++)
+                {
+                    string code = codes[i];
+                    string name = i < names.Length ? names[i] : code;
+                    cardSets[code] = name;
                 }
             }
             else if (CardSetIsObject)
