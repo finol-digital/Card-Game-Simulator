@@ -489,11 +489,33 @@ namespace CardGameDef.Unity
                 else
                     Debug.LogWarning("LoadJsonFromFile::EmptyFile");
 
-                if (string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier) ||
-                    root.Value<int>(AllCardsUrlPageCountIdentifier) <= 0)
+                if (string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier))
                     return;
 
-                AllCardsUrlPageCount = root.Value<int>(AllCardsUrlPageCountIdentifier);
+                // Determine AllCardsUrlPageCount
+                string allCardsUrlPageCountIdentifier = AllCardsUrlPageCountIdentifier;
+                JToken currentJToken = root;
+
+                for (int delimiterIndex =
+                        allCardsUrlPageCountIdentifier.IndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal);
+                    delimiterIndex != -1;
+                    delimiterIndex =
+                        allCardsUrlPageCountIdentifier.IndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal))
+                {
+                    string currentObject = allCardsUrlPageCountIdentifier.Substring(0, delimiterIndex);
+                    Debug.Log(currentObject);
+                    currentJToken = currentJToken[currentObject];
+                    if (currentJToken == null)
+                    {
+                        Debug.LogWarning("LoadJsonFromFile::allCardsUrlPageCountIdentifier:EmptyObject");
+                        return;
+                    }
+
+                    allCardsUrlPageCountIdentifier = allCardsUrlPageCountIdentifier.Substring(delimiterIndex + 1);
+                }
+
+                Debug.Log(currentJToken.Value<int>(allCardsUrlPageCountIdentifier));
+                AllCardsUrlPageCount = currentJToken.Value<int>(allCardsUrlPageCountIdentifier);
                 if (AllCardsUrlPageCountDivisor > 0)
                     AllCardsUrlPageCount =
                         Mathf.CeilToInt(((float) AllCardsUrlPageCount) / AllCardsUrlPageCountDivisor);
@@ -664,7 +686,7 @@ namespace CardGameDef.Unity
                         break;
                     case PropertyType.Object:
                         jObject = cardJToken[property.Name] as JObject;
-                        if (jObject != null && jObject.HasValues)
+                        if (jObject is {HasValues: true})
                             PopulateCardProperties(cardProperties, cardJToken[property.Name], property.Properties,
                                 key + PropertyDef.ObjectDelimiter);
                         else
