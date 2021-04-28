@@ -9,11 +9,11 @@ permalink: roadmap.html
 - Game-Play: Resize stack viewer height based off card height
 - Game-Play: Ability to slide stack viewers up and down
 - Settings: Developer Mode enables in-app card creation
-- Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Integration: Update Store images
 - Tech: Enable cloud diagnostics
 
 ## Current Sprint
+- Integration: Re-record guide video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Game-Play: Pre-defined zones and card stacks in Play Area
