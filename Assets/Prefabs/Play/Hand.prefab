@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1447856751178697143}
   - component: {fileID: 294695810116288315}
   - component: {fileID: 2243302619181885816}
+  - component: {fileID: 2425695716470002056}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -61,6 +62,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -90,6 +92,19 @@ MonoBehaviour:
   handViewer: {fileID: 4878737269219783766}
   downButton: {fileID: 6156959940758829862}
   upButton: {fileID: 273754333061090286}
+--- !u!114 &2425695716470002056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5230209123545403863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBlocker: 1
 --- !u!1 &8986865415403623898
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,6 +174,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -203,6 +219,8 @@ MonoBehaviour:
   cardZoneTransform: {fileID: 7911854454100539227}
   drops:
   - {fileID: 2181795384458571094}
+  - {fileID: 2425695716470002056}
+  - {fileID: 8018631302447167125}
   contentCardZone: {fileID: 8019199269330723383}
   nameLabel: {fileID: 2030967689021997969}
   countLabel: {fileID: 2030967688879958789}
@@ -266,6 +284,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -291,6 +310,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Card Zone - Horizontal
+      objectReference: {fileID: 0}
+    - target: {fileID: 7303463712823025219, guid: 86a2b588a71aa914e9e8545728c3160c,
+        type: 3}
+      propertyPath: isBlocker
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7480577656120140945, guid: 86a2b588a71aa914e9e8545728c3160c,
         type: 3}
@@ -415,6 +439,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 728733365187209430}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8018631302447167125 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7303463712823025219, guid: 86a2b588a71aa914e9e8545728c3160c,
+    type: 3}
+  m_PrefabInstance: {fileID: 728733365187209430}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8019199269330723383 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7301760087598746337, guid: 86a2b588a71aa914e9e8545728c3160c,

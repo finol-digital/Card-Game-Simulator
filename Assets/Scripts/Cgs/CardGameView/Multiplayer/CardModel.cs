@@ -529,7 +529,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void ParentToCanvas(Vector3 targetPosition)
         {
             if (IsOnline && hasAuthority)
-                CmdUnspawnCard();
+                CmdUnspawnCard(true);
             CardZone prevParentZone = ParentCardZone;
             if (_currentDragPhase == DragPhase.Drag)
                 prevParentZone.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
@@ -554,17 +554,19 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Command(requiresAuthority = false)]
-        private void CmdUnspawnCard()
+        private void CmdUnspawnCard(bool shouldClientKeep)
         {
-            RpcUnspawnCard();
+            RpcUnspawnCard(shouldClientKeep);
         }
 
         [ClientRpc]
-        private void RpcUnspawnCard()
+        private void RpcUnspawnCard(bool shouldClientKeep)
         {
+            bool shouldKeep = shouldClientKeep && hasAuthority;
             if (isServer)
                 NetworkServer.UnSpawn(gameObject);
-            Destroy(gameObject);
+            if (!shouldKeep)
+                Destroy(gameObject);
         }
 
         private IEnumerator MoveToPlaceHolder()
@@ -659,7 +661,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void Discard()
         {
             if (IsOnline)
-                CmdUnspawnCard();
+                CmdUnspawnCard(false);
             Destroy(gameObject);
         }
 
