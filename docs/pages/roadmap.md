@@ -47,7 +47,7 @@ permalink: roadmap.html
 ## Icebox
 - Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Fix: Open PDF fails outside of the Unity Editor
-- Networking: Dedicated online servers for multiplayer play over the internet (with [Mirage](https://github.com/MirageNet/Mirage))
+- Networking: Dedicated online servers for multiplayer play over the internet (with [Mirage](https://github.com/MirageNet/Mirage) and [GameLift](https://forum.unity.com/threads/gamelift-with-unity.857341/))
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager

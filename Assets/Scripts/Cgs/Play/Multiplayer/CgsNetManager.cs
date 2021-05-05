@@ -137,6 +137,7 @@ namespace Cgs.Play.Multiplayer
                 }
 
                 ip = www.downloadHandler.text;
+                Debug.Log($"CheckIsPortForwarded::ip:${ip}");
             }
 
             try
