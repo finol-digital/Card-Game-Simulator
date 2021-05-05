@@ -4,17 +4,12 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.47
-- Fix: Game crash on start
-- Game-Play: Resize stack viewer height based off card height
-- Game-Play: Ability to slide stack viewers up and down
-- Settings: Developer Mode enables in-app card creation
-- Integration: Update Store images
-- Tech: Enable cloud diagnostics
-
-## Current Sprint
+## What's New - v1.48
+- Networking: Remove port forwarding requirement
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
+
+## Current Sprint
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Game-Play: Pre-defined zones and card stacks in Play Area
 - Game-Play: E: Move card to zone or stack
@@ -47,7 +42,6 @@ permalink: roadmap.html
 ## Icebox
 - Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Fix: Open PDF fails outside of the Unity Editor
-- Networking: Dedicated online servers for multiplayer play over the internet (with [Mirage](https://github.com/MirageNet/Mirage) and [GameLift](https://forum.unity.com/threads/gamelift-with-unity.857341/))
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
