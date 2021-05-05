@@ -251,6 +251,7 @@ jobs:
         uses: maierj/fastlane-action@v2.0.0
         env:
           RELEASE_NOTES: ${{ steps.bash.outputs.RELEASE_NOTES }}
+          USYM_UPLOAD_AUTH_TOKEN: ${{ secrets. USYM_UPLOAD_AUTH_TOKEN }}
         with:
           lane: 'ios release'
 
