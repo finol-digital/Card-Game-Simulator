@@ -128,7 +128,7 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows
-#          - StandaloneWindows64
+# Only 2 concurrent builds possible with this setup: - StandaloneWindows64
           - WSAPlayer
     steps:
       - name: Checkout Repository
@@ -240,6 +240,7 @@ jobs:
         id: bash
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
+          find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           export RELEASE_NOTES="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
           echo "$RELEASE_NOTES"
@@ -339,7 +340,8 @@ jobs:
     name: Release to the Microsoft Store
     runs-on: windows-latest
     needs: buildWithWindows
-    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'windows'))
+    if: false
+# TODO:    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'windows'))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -349,7 +351,9 @@ jobs:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
       - name: Setup MSBuild.exe
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1
+      - name: Setup c++
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Restore the Wpf application to populate the obj folder
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
