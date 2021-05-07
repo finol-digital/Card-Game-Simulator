@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using CardGameDef.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

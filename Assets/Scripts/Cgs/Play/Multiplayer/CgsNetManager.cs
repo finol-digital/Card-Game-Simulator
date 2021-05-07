@@ -3,25 +3,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using System.Collections;
 using System.Linq;
-using System.Net.Sockets;
 using Cgs.CardGameView.Multiplayer;
-using kcp2k;
 using Mirror;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {
     [RequireComponent(typeof(CgsNetDiscovery))]
-    [RequireComponent(typeof(CgsNetListServer))]
     public class CgsNetManager : NetworkManager
     {
-        public static string PortForwardingWarningMessage =>
-            $"Unable to verify internet connection. Other players may not be able to find this game session. You may need to forward port {((KcpTransport) Transport.activeTransport).Port}. More info on port forwarding is available at: https://www.howtogeek.com/66214/how-to-forward-ports-on-your-router/";
-
         public static CgsNetManager Instance => (CgsNetManager) singleton;
 
         public string GameName { get; set; } = "";
@@ -30,7 +22,8 @@ namespace Cgs.Play.Multiplayer
         public CgsNetData Data { get; set; }
 
         public CgsNetDiscovery Discovery { get; private set; }
-        public CgsNetListServer ListServer { get; private set; }
+
+        public LRMDirectConnectModule lanConnector;
 
         public PlayController playController;
 
@@ -52,8 +45,7 @@ namespace Cgs.Play.Multiplayer
             NetworkClient.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawn);
 
             Discovery = GetComponent<CgsNetDiscovery>();
-            ListServer = GetComponent<CgsNetListServer>();
-            Debug.Log("[CgsNet Manager] Acquired Discovery and List Server.");
+            Debug.Log("[CgsNet Manager] Acquired NetworkDiscovery.");
         }
 
         public override void OnServerAddPlayer(NetworkConnection conn)
@@ -117,49 +109,6 @@ namespace Cgs.Play.Multiplayer
                 Destroy(spawnedCard);
             else
                 Debug.Log("[CgsNet Manager] Ignore UnSpawn - Active Card");
-        }
-
-        public void CheckForPortForwarding()
-        {
-            StartCoroutine(CheckIsPortForwarded());
-        }
-
-        private static IEnumerator CheckIsPortForwarded()
-        {
-            string ip;
-            using (UnityWebRequest www = UnityWebRequest.Get("https://api.ipify.org"))
-            {
-                yield return www.SendWebRequest();
-                if (www.result != UnityWebRequest.Result.Success)
-                {
-                    ShowPortForwardingWarningMessage();
-                    yield break;
-                }
-
-                ip = www.downloadHandler.text;
-                Debug.Log($"CheckIsPortForwarded::ip:${ip}");
-            }
-
-            try
-            {
-                using var tcpClient = new TcpClient();
-                IAsyncResult result = tcpClient.BeginConnect(ip,
-                    ((KcpTransport) Transport.activeTransport).Port, null, null);
-                bool success = result.AsyncWaitHandle.WaitOne(100);
-                tcpClient.EndConnect(result);
-                if (!success)
-                    ShowPortForwardingWarningMessage();
-            }
-            catch
-            {
-                ShowPortForwardingWarningMessage();
-            }
-        }
-
-        private static void ShowPortForwardingWarningMessage()
-        {
-            Debug.LogWarning(PortForwardingWarningMessage);
-            CardGameManager.Instance.Messenger.Show(PortForwardingWarningMessage);
         }
 
         public void Restart()

@@ -358,7 +358,6 @@ namespace Cgs.Play
             if (NetworkManager.singleton.isNetworkActive)
             {
                 CgsNetManager.Instance.Discovery.StopDiscovery();
-                CgsNetManager.Instance.ListServer.Stop();
                 if (NetworkServer.active)
                     NetworkManager.singleton.StopHost();
                 else if (NetworkClient.isConnected)

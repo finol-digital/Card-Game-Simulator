@@ -4,8 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cgs.Menu;
 using JetBrains.Annotations;
+using LightReflectiveMirror;
 using Mirror;
 using ScrollRects;
 using UnityEngine;
@@ -17,6 +19,8 @@ namespace Cgs.Play.Multiplayer
     [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
+        private const float ServerListUpdateTime = 5;
+
         public GameObject hostAuthenticationPrefab;
 
         public ToggleGroup lanToggleGroup;
@@ -41,19 +45,13 @@ namespace Cgs.Play.Multiplayer
             new Dictionary<long, DiscoveryResponse>();
 
         private long? _selectedServerId;
-
-        private IReadOnlyDictionary<string, ServerStatus> ListedServers => _listedServers;
-        private readonly Dictionary<string, ServerStatus> _listedServers = new Dictionary<string, ServerStatus>();
         private string _selectedServerIp;
 
         private string TargetIpAddress =>
-            IsInternetConnectionSource && _selectedServerIp != null &&
-            _listedServers.TryGetValue(_selectedServerIp, out ServerStatus internetServer)
-                ? internetServer.Ip
-                : IsLanConnectionSource && _discoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
-                    out DiscoveryResponse lanServer)
-                    ? lanServer.Uri.ToString()
-                    : _selectedServerIp;
+            IsLanConnectionSource && _discoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
+                out DiscoveryResponse lanServer)
+                ? lanServer.Uri.ToString()
+                : _selectedServerIp;
 
         private HostAuthentication Authenticator =>
             _authenticator
@@ -67,16 +65,43 @@ namespace Cgs.Play.Multiplayer
 
         private Modal _menu;
 
+        private LightReflectiveMirrorTransport _lrm;
+        private float _lrmUpdateSecond = ServerListUpdateTime;
+
+        private void OnEnable()
+        {
+            EnableLrm();
+        }
+
+        private void EnableLrm()
+        {
+            if (_lrm == null)
+                _lrm = Transport.activeTransport as LightReflectiveMirrorTransport;
+            if (_lrm == null)
+                return;
+
+            _lrm.serverListUpdated.RemoveAllListeners();
+            _lrm.serverListUpdated.AddListener(Redisplay);
+        }
+
         private void Start()
         {
             ipInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
             passwordInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            EnableLrm();
         }
 
         private void Update()
         {
             if (!Menu.IsFocused)
                 return;
+
+            _lrmUpdateSecond += Time.deltaTime;
+            if (IsInternetConnectionSource && _lrm != null && _lrmUpdateSecond > ServerListUpdateTime)
+            {
+                _lrm.RequestServerList();
+                _lrmUpdateSecond = 0;
+            }
 
             if (ipInputField.isFocused)
             {
@@ -123,15 +148,10 @@ namespace Cgs.Play.Multiplayer
 
             _discoveredServers.Clear();
             _selectedServerId = null;
-
-            _listedServers.Clear();
             _selectedServerIp = null;
 
             CgsNetManager.Instance.Discovery.OnServerFound = OnDiscoveredServer;
             CgsNetManager.Instance.Discovery.StartDiscovery();
-
-            CgsNetManager.Instance.ListServer.OnServerFound = OnListServer;
-            CgsNetManager.Instance.ListServer.StartClient();
 
             Redisplay();
         }
@@ -141,7 +161,8 @@ namespace Cgs.Play.Multiplayer
             if (IsLanConnectionSource)
                 Rebuild(_discoveredServers, SelectServer, _selectedServerId.GetValueOrDefault());
             else
-                Rebuild(_listedServers, SelectServer, _selectedServerIp);
+                Rebuild(_lrm.relayServerList.ToDictionary(server => server.serverId, server => server), SelectServer,
+                    Convert.ToInt32(_selectedServerIp));
 
             string ip = TargetIpAddress;
             joinButton.interactable =
@@ -161,12 +182,6 @@ namespace Cgs.Play.Multiplayer
             Redisplay();
         }
 
-        private void OnListServer(ServerStatus info)
-        {
-            _listedServers[info.Ip] = info;
-            Redisplay();
-        }
-
         [UsedImplicitly]
         public void Host()
         {
@@ -180,13 +195,16 @@ namespace Cgs.Play.Multiplayer
 
         private void StartHost()
         {
+            if (IsInternetConnectionSource)
+            {
+                _lrm.serverName = CgsNetManager.Instance.GameName;
+                _lrm.isPublicServer = true;
+            }
+            else
+                Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
+
             NetworkManager.singleton.StartHost();
             CgsNetManager.Instance.Discovery.AdvertiseServer();
-            if (!IsInternetConnectionSource)
-                return;
-
-            CgsNetManager.Instance.ListServer.StartGameServer();
-            CgsNetManager.Instance.CheckForPortForwarding();
         }
 
         [UsedImplicitly]
@@ -205,17 +223,18 @@ namespace Cgs.Play.Multiplayer
         }
 
         [UsedImplicitly]
-        public void SelectServer(Toggle toggle, string serverIp)
+        public void SelectServer(Toggle toggle, int serverId)
         {
             _selectedServerId = null;
             if (toggle.isOn)
             {
-                _selectedServerIp = serverIp;
+                _selectedServerIp = serverId.ToString();
                 if (!string.IsNullOrEmpty(ipInputField.text))
                     ipInputField.text = string.Empty;
                 joinButton.interactable = true;
             }
-            else if (!ipInputField.isFocused && !toggle.group.AnyTogglesOn() && serverIp.Equals(_selectedServerIp))
+            else if (!ipInputField.isFocused && !toggle.group.AnyTogglesOn() &&
+                     serverId.ToString().Equals(_selectedServerIp))
                 Join();
         }
 
@@ -242,7 +261,7 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Join()
         {
-            if (!IsInternetConnectionSource)
+            if (IsLanConnectionSource)
             {
                 if (_selectedServerId == null
                     || !DiscoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
@@ -250,29 +269,16 @@ namespace Cgs.Play.Multiplayer
                     || serverResponse.Uri == null)
                 {
                     Debug.LogError("Error: Attempted to join a game without having selected a valid server!");
+                    CardGameManager.Instance.Messenger.Show("Error: Attempted to join a game without having selected a valid server!");
                     return;
                 }
 
+                Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
                 NetworkManager.singleton.StartClient(serverResponse.Uri);
             }
             else
             {
-                if (_selectedServerIp == null
-                    || !ListedServers.TryGetValue(_selectedServerIp, out ServerStatus serverResponse)
-                    || string.IsNullOrEmpty(serverResponse.Ip))
-                {
-                    if (!Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute))
-                    {
-                        Debug.LogError("Error: Attempted to join a game without having selected a valid server!");
-                        return;
-                    }
-
-                    NetworkManager.singleton.networkAddress = _selectedServerIp;
-                    NetworkManager.singleton.StartClient();
-                    return;
-                }
-
-                NetworkManager.singleton.networkAddress = serverResponse.Ip;
+                NetworkManager.singleton.networkAddress = _selectedServerIp;
                 NetworkManager.singleton.StartClient();
             }
 
@@ -283,12 +289,15 @@ namespace Cgs.Play.Multiplayer
         public void Hide()
         {
             if (!NetworkServer.active)
-            {
                 CgsNetManager.Instance.Discovery.StopDiscovery();
-                CgsNetManager.Instance.ListServer.Stop();
-            }
 
             Menu.Hide();
+        }
+
+        private void OnDisable()
+        {
+            if (_lrm != null)
+                _lrm.serverListUpdated.RemoveListener(Redisplay);
         }
     }
 }

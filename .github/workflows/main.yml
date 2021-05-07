@@ -118,6 +118,8 @@ jobs:
           asset_name: cgs-${{ matrix.targetPlatform }}
           file: build/${{ matrix.targetPlatform }}
           tag: ${{ github.ref }}
+          overwrite: true
+          body:  ${{ github.event.release.body }}
 
   buildWithWindows:
     name: Build for ${{ matrix.targetPlatform }}
@@ -170,6 +172,8 @@ jobs:
           asset_name: cgs-${{ matrix.targetPlatform }}
           file: build/${{ matrix.targetPlatform }}
           tag: ${{ github.ref }}
+          overwrite: true
+          body:  ${{ github.event.release.body }}
 
   releaseToGooglePlay:
     name: Release to the Google Play Store
