@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Networking: Remove port forwarding requirement
 
 ## Current Sprint
+- Fix: Dropping card from deck back on deck causes it to be duplicated
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal

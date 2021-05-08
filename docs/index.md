@@ -28,12 +28,9 @@ For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: http
 
 You can also create your own custom game(s) by following the [Custom Games Documentation](custom.html).
 
-## Guide
+## How to Play
 
 {% include youtubePlayer.html id=page.cgsYoutubeId %}
-
-When you play a game in CGS, CGS defaults to hosting game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game. 
-If you want to play over the internet, you need to [forward port](https://portforward.com/router.htm) 7777.
 
 When navigating through CGS, you may find it useful to use [keyboard shortcuts](keyboard.html).
 
