@@ -4,6 +4,4 @@ You can download additional games by selecting the center card game in the Main 
 
 You can also define your own custom game(s) by following the Custom Games Documentation on the CGS website!
 
-When you play a game in CGS, CGS defaults to hosting game sessions in your Local Area Network (LAN), meaning that anyone on the same wifi as you should be able to join your game. If you want to play over the internet, you need to forward port 7777.
-
-When you enter a game, you will be prompted to load a deck. Some card games will come with pre-built decks, but you can always create new decks by writing in card names or with the visual Deck Editor.
+When you start playing a game, you will be prompted to load a deck. Some card games will come with pre-built decks, but you can always create new decks by writing in card names or with the visual Deck Editor.

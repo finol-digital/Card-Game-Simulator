@@ -241,7 +241,7 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Fix File Permissions, Code-Sign, and Get Release Notes
-        id: bash
+        id: terminal
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
@@ -257,7 +257,7 @@ jobs:
       - name: Upload to the App Store
         uses: maierj/fastlane-action@v2.0.0
         env:
-          RELEASE_NOTES: ${{ steps.bash.outputs.RELEASE_NOTES }}
+          RELEASE_NOTES: ${{ steps.terminal.outputs.RELEASE_NOTES }}
           USYM_UPLOAD_AUTH_TOKEN: ${{ secrets. USYM_UPLOAD_AUTH_TOKEN }}
         with:
           lane: 'ios release'
@@ -303,7 +303,7 @@ jobs:
         with:
           lane: 'fixversion'
       - name: Fix File Permissions, Code-Sign, and Get Release Notes
-        id: bash
+        id: terminal
         run: |
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           chmod +x fastlane/sign-osx-build.sh
@@ -318,7 +318,7 @@ jobs:
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v2.0.0
         env:
-          RELEASE_NOTES: ${{ steps.bash.outputs.RELEASE_NOTES }}
+          RELEASE_NOTES: ${{ steps.terminal.outputs.RELEASE_NOTES }}
         with:
           lane: 'mac macupload'
 
