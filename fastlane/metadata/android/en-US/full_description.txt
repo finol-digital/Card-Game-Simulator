@@ -1,7 +1,0 @@
-With CGS, users can create and share their own custom card games!
-
-You can download additional games by selecting the center card game in the Main Menu. Press the download button that appears and enter the CGS AutoUpdate URL for the game you would like to download.
-
-You can also define your own custom game(s) by following the Custom Games Documentation on the CGS website!
-
-When you start playing a game, you will be prompted to load a deck. Some card games will come with pre-built decks, but you can always create new decks by writing in card names or with the visual Deck Editor.

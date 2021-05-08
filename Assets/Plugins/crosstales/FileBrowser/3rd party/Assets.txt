@@ -1,3 +1,0 @@
-#PlayMaker
-Version: 1.9.0.p10
-https://assetstore.unity.com/packages/slug/368?aid=1011lNGT
