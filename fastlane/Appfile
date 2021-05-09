@@ -1,0 +1,27 @@
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
+
+for_platform :android do
+  package_name(ENV["ANDROID_PACKAGE_NAME"])
+  json_key_file(ENV["GOOGLE_PLAY_KEY_FILE_PATH"])
+end
+
+for_platform :ios do
+  app_identifier(ENV["IOS_APP_ID"])
+
+  apple_dev_portal_id(ENV["APPLE_DEVELOPER_EMAIL"])  # Apple Developer Account
+  itunes_connect_id(ENV["APPLE_CONNECT_EMAIL"])     # App Store Connect Account
+
+  team_id(ENV["APPLE_TEAM_ID"]) # Developer Portal Team ID
+  itc_team_id(ENV["APPLE_TEAM_ID"]) # App Store Connect Team ID
+end
+
+for_platform :mac do
+  app_identifier ENV["MAC_APP_ID"]
+
+  apple_dev_portal_id(ENV["APPLE_DEVELOPER_EMAIL"])  # Apple Developer Account
+  itunes_connect_id(ENV["APPLE_CONNECT_EMAIL"])     # App Store Connect Account
+
+  team_id(ENV["APPLE_TEAM_ID"]) # Developer Portal Team ID
+  itc_team_id(ENV["APPLE_TEAM_ID"]) # App Store Connect Team ID
+end

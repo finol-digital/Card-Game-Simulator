@@ -1,0 +1,174 @@
+﻿# FileBrowser PRO - Release notes
+
+## 2020.2.8 - 17.06.2020
+* Demo scenes are now in "Demos.unitypackage" (please install "Assets/Plugins/crosstales/Common/UI.unitypackage" first)
+* Demos improved
+* Updated to Common 2020.2.1
+  
+## 2020.2.7 - 10.06.2020
+* Windows: 
+  * Path fixed for Editor version
+  * Open file fixed for Windows 32bit
+
+## 2020.2.6 - 02.06.2020
+* Windows: fix for multiple file selection
+* Demos improved
+* Code improved
+
+## 2020.2.5 - 24.05.2020
+* Updated to Common 2020.2.0
+
+## 2020.2.4 - 19.05.2020
+* macOS: bundle id no longer interferes with the app store
+* Small fixes
+
+## 2020.2.3 - 13.05.2020
+* Compile defines can now be disabled
+* Editor integration improved
+* PlayMaker actions improved
+
+## 2020.2.2 - 15.04.2020
+* Windows: support for 32bit builds 
+* Updated to Common 2020.1.3
+
+## 2020.2.1 - 26.03.2020
+* Improvements for macOS and Linux editors
+* Editor improved
+
+## 2020.2.0 - 05.03.2020
+* WSA - new properties and variables added (access them with in code with "ENABLE_WINMD_SUPPORT"):
+  * CurrentLocation: path location for the file browser (default: PickerLocationId.ComputerFolder)
+  * CurrentViewMode: style of the file browser (default: PickerViewMode.List)
+  * LastOpenFile: Last file from the "OpenFiles"-dialog (StorageFile)
+  * LastOpenFiles: Last files from the "OpenFiles"-dialog (List<StorageFile>)
+  * LastOpenFolder: Last folder from the "OpenSingleFolder"-dialog (StorageFolder)
+  * LastSaveFile: Last file from the "SaveFile"-dialog (StorageFile)
+  * LastGetFiles: Last files from the "GetFiles"-method (List<StorageFile>)
+  * LastGetDirectories: Last files from the "GetDirectories"-method (List<StorageFolder>)
+* macOS: fix for wildcard selection
+* ReminderCheck removed
+* Updated to Common 2020.1.2
+
+## 2020.1.1 - 29.01.2020
+* Linux integration improved
+* Support for Unity 2020
+* Updated to Common 2020.1.1
+
+## 2020.1.0 - 10.01.2020
+* asmdef added
+* Editor integration improved
+* Updated to Common 2020.1.0
+
+## 2019.5.6 - 17.12.2019
+* Windows: OpenFiles and SaveFile no longer crashes on 32bit builds
+* Small code improvements
+
+## 2019.5.5 - 06.12.2019
+* Windows implementation improved
+* Editor integration improved
+* Updated to Common 2019.5.4
+
+## 2019.5.4 - 20.11.2019
+* Async under Windows improved
+* Updated to Common 2019.5.3
+
+## 2019.5.3 - 12.11.2019
+* Small code changes
+* Updated to Common 2019.5.2
+
+## 2019.5.2 - 20.10.2019
+* Fix for 'OpenFoldersAsync' in the Windows Editor
+
+## 2019.5.1 - 17.10.2019
+* Async works now under Windows!
+
+## 2019.5.0 - 14.10.2019
+* Biggest code overhaul since the release 
+* Updated to Common 2019.5.1
+
+## 2019.4.4 - 25.09.2019
+* macOS: build for Apple store further improved
+* ReminderCheck changed
+* UpdateCheck is now set to "false" per default (enable it in the configuration)
+
+## 2019.4.3 - 24.09.2019
+* Windows: save file improved
+* macOS: build for Apple store improved
+* Code cleanup
+
+## 2019.4.2 - 17.09.2019
+* Windows: open folder and save file improved
+* Code improvements
+
+## 2019.4.1 - 04.09.2019
+* Linux-version improved (thanks to Yinon Oshrat!)
+* macOS-version improved (code cleaned up)
+* Windows-version improved (more files selectable)
+* Fixed wrong modifications of the path under Windows if build target was not Windows-based
+* "FileBrowser" is no longer a MonoBehaviour
+* Updated to Common 2019.4.1
+
+## 2019.4.0 - 26.07.2019
+* Updated for Unity 2017.4 and higher
+* Added compatibility with assembly definitions
+* Unity Editor (macOS): all files ("*") is now working correctly
+* Demos: fully qualified access to classes
+* Updated to Common 2019.4.0
+
+## 2019.3.5 - 23.05.2019
+* Windows: native integration for Unity 2019+ improved
+* Linux: GTK2+ version added (see "GTK2.zip")
+* Updated to Common 2019.3.2
+
+## 2019.3.4 - 09.05.2019
+* Windows: native integration added
+* "GetFiles" and "GetDirectories" improved and support for UWP added
+* UWP bug resolved
+* Updated to Common 2019.3.1
+
+## 2019.3.3 - 18.04.2019
+* Windows: OpenFile and SaveFile are now working correctly with paths
+* Updated to Common 2019.3.0
+
+## 2019.3.2 - 11.04.2019
+* Fix: Build platforms other than Windows failed in 2019.3.1
+* Updated to Common 2019.2.6
+
+## 2019.3.1 - 10.04.2019
+* Windows-builds improved
+
+## 2019.3.0 - 05.04.2019
+* Windows:
+  * support for IL2CPP!
+  * automatically add the extension for save files
+* Updated to Common 2019.2.5
+
+## 2019.2.2 - 26.03.2019
+* Windows: "System.Windows.Forms.dll" removed
+* WSA: logging improved
+* Updated to Common 2019.2.4
+
+## 2019.2.1 - 12.03.2019
+* Windows: option added to access the native file browser instead of the Unity Editor component
+* PlayMaker actions added
+* Code cleanup
+* Updated to Common 2019.2.3
+
+## 2019.2.0 - 06.02.2019
+* FileBrowser:
+  * "canOpenMultipleFiles" added
+  * "canOpenMultipleFolders" added
+  * simplified open and save methods added
+  * open and save file are now working with multiple extensions
+* WSA wrapper improved
+* Demo scene improved
+* Updated to Common 2019.2.0
+
+## 2019.1.2 - 28.01.2019
+* Editor integration added
+* Set API level for Unity 2018+ fixed
+* Minor code improvements
+* Documentation improved
+
+## 2019.1.1 - 23.01.2019
+* Production release 
