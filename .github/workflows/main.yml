@@ -340,13 +340,13 @@ jobs:
       - name: Copy the WebGL build artifacts to the GitHub Pages directory
         env:
           WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL', github.workspace) }}
-          WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
-        run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
+          WEBGL_PAGES_PATH: ${{ format('{0}/docs/Build', github.workspace) }}
+        run: find $WEBGL_BUILD_PATH -type f -name "Build/*" -exec cp {} $WEBGL_PAGES_PATH \;
       - name: Deploy to GitHub Pages
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: main
-          file_pattern: docs/WebGL/*
+          file_pattern: docs/**
           commit_message: Deploy to GitHub Pages
 
   releaseToMicrosoftStore:
