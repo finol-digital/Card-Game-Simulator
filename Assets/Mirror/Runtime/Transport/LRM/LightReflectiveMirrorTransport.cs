@@ -761,7 +761,7 @@ namespace LightReflectiveMirror
 
         public override string ToString()
         {
-            return $"{serverName}\n{serverId} - {currentPlayers}/{maxPlayers}";
+            return $"{serverName}\n{serverData} - {currentPlayers}/{maxPlayers}";
         }
     }
 }

@@ -198,6 +198,7 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource)
             {
                 _lrm.serverName = CgsNetManager.Instance.GameName;
+                _lrm.extraServerData = CardGameManager.Current.Name;
                 _lrm.isPublicServer = true;
             }
             else
