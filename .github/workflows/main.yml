@@ -2,12 +2,14 @@ name: Test, Build, and Release CGS
 on:
   push:
     paths:
-    - 'Assets/**'
-    - 'Packages/**'
-    - 'ProjectSettings/**'
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+    tags-ignore:
+      - v1.*
   release:
     types:
-    - published
+      - published
   workflow_dispatch:
     inputs:
       mode:
@@ -341,11 +343,11 @@ jobs:
           WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
         run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: main
-          folder: docs
-          token: ${{ secrets.CGS_PAT }}
+          file_pattern: docs/WebGL/*
+          commit_message: Deploy to GitHub Pages
 
   releaseToMicrosoftStore:
     name: Release to the Microsoft Store
