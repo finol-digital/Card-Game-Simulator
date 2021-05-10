@@ -112,13 +112,19 @@ jobs:
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-      - name: Upload ${{ matrix.targetPlatform }} to GitHub Release
+      - name: Zip build/${{ matrix.targetPlatform }}
+        uses: papeloto/action-zip@v1
+        if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
+        with:
+          files: build/${{ matrix.targetPlatform }}/
+          dest: build/cgs-${{ matrix.targetPlatform }}.zip
+      - name: Upload cgs-${{ matrix.targetPlatform }}.zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
-          asset_name: cgs-${{ matrix.targetPlatform }}
-          file: build/${{ matrix.targetPlatform }}
+          asset_name: cgs-${{ matrix.targetPlatform }}.zip
+          file: build/cgs-${{ matrix.targetPlatform }}.zip
           tag: ${{ github.ref }}
           overwrite: true
           body:  ${{ github.event.release.body }}
@@ -166,13 +172,19 @@ jobs:
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-      - name: Upload ${{ matrix.targetPlatform }} to GitHub Release
+      - name: Zip build/${{ matrix.targetPlatform }}
+        uses: papeloto/action-zip@v1
+        if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
+        with:
+          files: build/${{ matrix.targetPlatform }}/
+          dest: build/cgs-${{ matrix.targetPlatform }}.zip
+      - name: Upload cgs-${{ matrix.targetPlatform }}.zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
-          asset_name: cgs-${{ matrix.targetPlatform }}
-          file: build/${{ matrix.targetPlatform }}
+          asset_name: cgs-${{ matrix.targetPlatform }}.zip
+          file: build/cgs-${{ matrix.targetPlatform }}.zip
           tag: ${{ github.ref }}
           overwrite: true
           body:  ${{ github.event.release.body }}
