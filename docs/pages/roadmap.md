@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.49
 - Fix: Dropping card from deck back on deck causes it to be duplicated
-- Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
 - Integration: [Branch on Windows](https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 
@@ -38,6 +37,7 @@ permalink: roadmap.html
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Networking: Vertical layout for Lobby
+- Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 
 ## Icebox
 - Fix: Open PDF fails outside of the Unity Editor
