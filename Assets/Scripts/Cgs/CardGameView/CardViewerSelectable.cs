@@ -18,7 +18,7 @@ namespace Cgs.CardGameView
 
         public void OnSelect(BaseEventData eventData)
         {
-            if (CardViewer.Instance.WasVisible)
+            if (CardViewer.Instance != null && CardViewer.Instance.WasVisible)
                 CardViewer.Instance.IsVisible = true;
         }
 
