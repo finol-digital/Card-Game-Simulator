@@ -40,6 +40,7 @@ permalink: roadmap.html
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 
 ## Icebox
+- Fix: Share link
 - Fix: Open PDF fails outside of the Unity Editor
 - Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database

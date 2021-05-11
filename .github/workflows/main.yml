@@ -1,12 +1,14 @@
 name: Test, Build, and Release CGS
 on:
   push:
+    branches:
+      - '**'
     paths:
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
     tags-ignore:
-      - v1.*
+      - 'v1.*'
   release:
     types:
       - published

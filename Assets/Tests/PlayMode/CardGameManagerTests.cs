@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using CardGameDef.Unity;
 using Cgs;
@@ -62,19 +63,19 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator CanGetArcmage()
+        public IEnumerator CanGetGames()
         {
-            // Download
-            yield return _manager.GetCardGame("https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json");
-            Assert.IsTrue(CardGameManager.Current.HasLoaded);
-            Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
-            Assert.AreEqual("Arcmage", CardGameManager.Current.Name);
+            List<string> urls = new List<string> {"https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json"};
 
-            // Update
-            yield return _manager.GetCardGame("https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json");
-            Assert.IsTrue(CardGameManager.Current.HasLoaded);
-            Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
-            Assert.AreEqual("Arcmage", CardGameManager.Current.Name);
+            foreach (string url in urls)
+            {
+                yield return _manager.GetCardGame(url);
+                Assert.IsTrue(CardGameManager.Current.HasLoaded);
+                Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
+                Assert.IsTrue(CardGameManager.Current.AllCardsUrlPageCount > 0);
+                Assert.IsTrue(CardGameManager.Current.Cards.Count >= CardGameManager.Current.AllCardsUrlPageCount);
+                //Assert.AreEqual("Arcmage", CardGameManager.Current.Name);
+            }
         }
 
         [Test]
