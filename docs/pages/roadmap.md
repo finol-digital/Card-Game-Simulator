@@ -4,13 +4,13 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.48
-- Networking: Remove port forwarding requirement
+## What's New - v1.49
+- Fix: Dropping card from deck back on deck causes it to be duplicated
+- Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
+- Integration: [Branch on Windows](https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
+- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 
 ## Current Sprint
-- Fix: Dropping card from deck back on deck causes it to be duplicated
-- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
-- Decks: .dec sideboard & .ydk side are extra; empty line followed by second line label: is .txt extra
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Game-Play: Pre-defined zones and card stacks in Play Area
 - Game-Play: E: Move card to zone or stack
@@ -38,11 +38,10 @@ permalink: roadmap.html
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Networking: Vertical layout for Lobby
-- Integration: [Branch on Windows](https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
 
 ## Icebox
-- Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Fix: Open PDF fails outside of the Unity Editor
+- Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
