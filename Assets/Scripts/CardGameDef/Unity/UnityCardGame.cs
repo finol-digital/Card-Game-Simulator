@@ -576,10 +576,42 @@ namespace CardGameDef.Unity
             var cardImageWebUrl = string.Empty;
             if (!string.IsNullOrEmpty(CardImageProperty))
             {
-                PropertyDef imageDef = new PropertyDef(CardImageProperty, PropertyType.String);
-                PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDef.Name);
-                if (metaProperties.TryGetValue(CardImageProperty, out PropertyDefValuePair cardImageEntry))
+                // CardImageProperty should resolve to a string, but it may be an object and/or a list
+                var isImagePropertyObject = false;
+                var childName = string.Empty;
+                List<PropertyDef> childProperties = new List<PropertyDef>();
+                string imageDefName = CardImageProperty;
+                if (imageDefName.Contains(PropertyDef.ObjectDelimiter))
+                {
+                    isImagePropertyObject = true;
+                    int delimiterIndex =
+                        imageDefName.LastIndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal);
+                    childName = imageDefName.Substring(delimiterIndex + 1);
+                    childProperties.Add(new PropertyDef(childName, PropertyType.String));
+                    imageDefName = imageDefName.Substring(0, delimiterIndex);
+                }
+
+                bool isImagePropertyList = imageDefName.Contains('[');
+                if (isImagePropertyList)
+                    imageDefName = imageDefName.Substring(0, imageDefName.IndexOf('['));
+
+                PropertyType imagePropertyType = isImagePropertyObject switch
+                {
+                    true when isImagePropertyList => PropertyType.ObjectList,
+                    true => PropertyType.Object,
+                    _ => isImagePropertyList ? PropertyType.StringList : PropertyType.String
+                };
+
+                var imageDef = new PropertyDef(imageDefName, imagePropertyType) {Properties = childProperties};
+                PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDefName);
+                if (isImagePropertyObject && metaProperties.TryGetValue(
+                    imageDefName + PropertyDef.ObjectDelimiter + childName,
+                    out PropertyDefValuePair cardObjectImageEntry))
+                    cardImageWebUrl = cardObjectImageEntry.Value ?? string.Empty;
+                else if (metaProperties.TryGetValue(CardImageProperty, out PropertyDefValuePair cardImageEntry))
                     cardImageWebUrl = cardImageEntry.Value ?? string.Empty;
+                else
+                    Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
             }
 
             string cardImageUrl = CardImageUrl;
