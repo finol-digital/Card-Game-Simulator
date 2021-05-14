@@ -1,5 +1,4 @@
 #if UNITY_IOS
-
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -14,7 +13,7 @@ public class BranchPostProcessBuild {
 
 	[PostProcessBuild(900)]
 	public static void ChangeBranchBuiltProject(BuildTarget buildTarget, string pathToBuiltProject) {
-		
+
 		if ( buildTarget == BuildTarget.iOS ) {
 			ChangeXcodePlist(pathToBuiltProject);
 			ChangeXcodeProject(pathToBuiltProject);
@@ -27,7 +26,7 @@ public class BranchPostProcessBuild {
 		string plistPath = pathToBuiltProject + "/Info.plist";
 		PlistDocument plist = new PlistDocument();
 		plist.ReadFromString(File.ReadAllText(plistPath));
-		
+
 		// Get root
 		PlistElementDict rootDict = plist.root;
 		PlistElementArray urlTypesArray = null;
@@ -128,7 +127,7 @@ public class BranchPostProcessBuild {
         }
 
         return domains;
-       
+
     }
 
     public static void ChangeXcodeProject(string pathToBuiltProject) {
@@ -147,7 +146,7 @@ public class BranchPostProcessBuild {
 
 		// Write all lines to new file and enable objective C exceptions
 		foreach (string line in lines) {
-			
+
 			if (line.Contains("GCC_ENABLE_OBJC_EXCEPTIONS")) {
                 fCurrentXcodeProjFile.Write("\t\t\t\tGCC_ENABLE_OBJC_EXCEPTIONS = YES;\n");
             }
@@ -157,7 +156,7 @@ public class BranchPostProcessBuild {
             else if (line.Contains("CLANG_ENABLE_MODULES")) {
 				fCurrentXcodeProjFile.Write("\t\t\t\tCLANG_ENABLE_MODULES = YES;\n");
 			}
-			else {                          
+			else {
 				fCurrentXcodeProjFile.WriteLine(line);
 			}
 		}
@@ -221,5 +220,49 @@ public class BranchPostProcessBuild {
 
         File.WriteAllText(pathToProject, proj.WriteToString());
 	}
+}
+#endif
+
+#if UNITY_WSA
+using System.IO;
+using UnityEditor;
+using UnityEditor.Callbacks;
+
+// ReSharper disable once CheckNamespace
+public static class BranchPostProcessBuild
+{
+    [PostProcessBuild(900)]
+    public static void ChangeBranchBuiltProject(BuildTarget buildTarget, string pathToBuiltProject)
+    {
+        if (buildTarget != BuildTarget.WSAPlayer)
+            return;
+
+        ChangeVisualStudioManifest(pathToBuiltProject);
+    }
+
+    private static void ChangeVisualStudioManifest(string pathToBuiltProject)
+    {
+        string pathToManifest = pathToBuiltProject + "/Card Game Simulator/Package.appxmanifest";
+        string[] lines = File.ReadAllLines(pathToManifest);
+
+        // Clear the manifest
+        var fileStream = new FileStream(pathToManifest, FileMode.Create);
+        fileStream.Close();
+
+        // Write it
+        var streamWriter = new StreamWriter(pathToManifest);
+        foreach (string line in lines)
+        {
+            if (line.Contains(@"</Extensions>"))
+            {
+                streamWriter.Write(
+                    "         <uap3:Extension Category=\"windows.appUriHandler\">\n          <uap3:AppUriHandler>\n            <uap3:Host Name=\"cgs.link\" />\n          </uap3:AppUriHandler>\n        </uap3:Extension>\n");
+            }
+
+            streamWriter.WriteLine(line);
+        }
+
+        streamWriter.Close();
+    }
 }
 #endif

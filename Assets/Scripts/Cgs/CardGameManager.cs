@@ -324,7 +324,7 @@ namespace Cgs
 
             if (link?.ControlParams == null || !link.ControlParams.TryGetValue(GameUrl, out string gameUrl))
             {
-                Debug.LogWarning(BranchCallbackWarning);
+                Debug.LogWarning(BranchCallbackErrorMessage);
                 return;
             }
 
