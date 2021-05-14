@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using BranchSdk;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
@@ -315,7 +314,7 @@ namespace Cgs
 
 #if (UNITY_STANDALONE_WIN || UNITY_WSA)
         public void WindowsBranchCallback(BranchSdk.BranchUniversalObject buo, BranchSdk.BranchLinkProperties link,
-            BranchError error)
+            BranchSdk.BranchError error)
         {
             if (error != null && !string.IsNullOrEmpty(error.GetMessage()))
             {
