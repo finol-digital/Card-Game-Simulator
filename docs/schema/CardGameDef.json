@@ -202,6 +202,11 @@
         }
       ]
     },
+    "cgsDeepLink": {
+      "type": "string",
+      "description": "cgsDeepLink is a clickable url that will take the user directly to this game in CGS, which can be shared between users. This functionality must be configured through Branch.io.",
+      "format": "uri"
+    },
     "deckFileAltId": {
       "type": "string",
       "description": "When saving or loading a deck with <deckFileType> NOT txt, deckFileAltId refers to the *Card:Property* used to uniquely identify each Card. For hsd, this is stored as a varint within the deck string.",
@@ -328,7 +333,7 @@
     },
     "setCardsIdentifier": {
       "type": "string",
-      "description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
+      "description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIdentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
       "default": "cards"
     },
     "setCardsUrlIdentifier": {

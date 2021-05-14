@@ -23,6 +23,7 @@
       "type": "string"
     }
   ],
+  "cgsDeepLink": "https://cgs.link/mahjong",
   "deckUrls": [
     {
       "name": "Traditional Mahjong Deck",

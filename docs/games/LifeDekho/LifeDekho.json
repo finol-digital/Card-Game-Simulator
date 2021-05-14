@@ -44,6 +44,7 @@
 			"type": "integer"
 		}
 	],
+  "cgsDeepLink": "https://cgs.link/lifedekho",
 	"deckUrls": [{
 			"name": "LifeDekho",
 			"url": "https://www.cardgamesimulator.com/games/LifeDekho/decks/LifeDekho.txt"

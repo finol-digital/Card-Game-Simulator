@@ -27,16 +27,12 @@ namespace CardGameDef
 
         // *Game:Id* = *Game:Name*@*Game:AutoUpdateUrl:Host*
         // This only works for a single instance of a game per host
-        public string Id => _id ?? (_id = Name + Host);
+        public string Id => _id ??= Name + Host;
         private string _id;
 
         public string Host => (AutoUpdateUrl != null && AutoUpdateUrl.IsWellFormedOriginalString())
             ? "@" + AutoUpdateUrl.Host
             : "";
-
-        public bool IsExternal => (AutoUpdateUrl != null && AutoUpdateUrl.IsWellFormedOriginalString())
-                                  || (AllCardsUrl != null && AllCardsUrl.IsWellFormedOriginalString())
-                                  || (AllSetsUrl != null && AllSetsUrl.IsWellFormedOriginalString());
 
 
         [JsonProperty]
@@ -253,6 +249,11 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
+            "cgsDeepLink is a clickable url that will take the user directly to this game in CGS, which can be shared between users. This functionality must be configured through Branch.io.")]
+        public Uri CgsDeepLink { get; set; }
+
+        [JsonProperty]
+        [Description(
             "When saving or loading a deck with <deckFileType> NOT txt, deckFileAltId refers to the *Card:Property* used to uniquely identify each Card. For hsd, this is stored as a varint within the deck string.")]
         [DefaultValue("dbfId")]
         public string DeckFileAltId { get; set; } = "dbfId";
@@ -309,7 +310,8 @@ namespace CardGameDef
         public int GameCardRotationDegrees { get; set; } = 90;
 
         [JsonProperty]
-        [Description("If possible, CGS will take the gameDefaultCardAction when a Card is double-clicked in Play Mode.")]
+        [Description(
+            "If possible, CGS will take the gameDefaultCardAction when a Card is double-clicked in Play Mode.")]
         [DefaultValue("flip")]
         public CardAction GameDefaultCardAction { get; set; } = CardAction.Flip;
 
@@ -350,7 +352,7 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
-            "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIndentifier. Most custom games will likely want to keep the default setCardsIdentifier.")]
+            "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIdentifier. Most custom games will likely want to keep the default setCardsIdentifier.")]
         [DefaultValue("cards")]
         public string SetCardsIdentifier { get; set; } = "cards";
 

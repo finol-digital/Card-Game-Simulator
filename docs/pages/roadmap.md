@@ -6,7 +6,8 @@ permalink: roadmap.html
 
 ## What's New - v1.49
 - Fix: Dropping card from deck back on deck causes it to be duplicated
-- Integration: [Branch on Windows](https://help.branch.io/developers-hub/docs/windows-chsarp-basic-integration)
+- Fix: Share Deep Links
+- Integration: Deep Links on Windows
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 
 ## Current Sprint
@@ -40,7 +41,6 @@ permalink: roadmap.html
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 
 ## Icebox
-- Fix: Share link
 - Fix: Open PDF fails outside of the Unity Editor
 - Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database

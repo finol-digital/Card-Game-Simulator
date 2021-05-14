@@ -21,6 +21,7 @@
 			"type": "stringEnum"
 		}
 	],
+  "cgsDeepLink": "https://cgs.link/standard",
 	"deckUrls": [{
 			"name": "Standard 52-card Deck",
 			"url": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%2052-card%20Deck.txt"

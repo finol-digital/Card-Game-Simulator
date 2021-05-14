@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using BranchSdk;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
@@ -17,6 +18,7 @@ using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
 
 [assembly: InternalsVisibleTo("PlayMode")]
+
 namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
@@ -24,11 +26,9 @@ namespace Cgs
         // Show all Debug.Log() to help with debugging?
         public const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public const string GameUrl = "GameUrl";
         public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
         public const string BranchCallbackWarning = "Branch Callback has GameUrl, but it is not a string?";
-#endif
         public const string DefaultNameWarning = "Found game with default name. Deleting it.";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
         public const string DownloadErrorMessage = "Error downloading game!: ";
@@ -47,15 +47,13 @@ namespace Cgs
         public const string DeletePrompt =
             "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
 
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        public const string ShareTitle = "Card Game Simulator - {0}";
-        public const string ShareDescription = "Play {0} on CGS!";
         public const string ShareBranchMessage = "Get CGS for {0}: {1}";
-#endif
-        public const string ShareUrlMessage = "Copied the CGS AutoUpdate Url for {0}: {1}";
+
+        public const string ShareUrlMessage =
+            "CGS Deep Link Not Found!\nThe AutoUpdate Url for {0} has been copied to your clipboard:\n{1}";
 
         public const string ShareWarningMessage =
-            "You must upload this card game to the web in order to share it. Please check the CGS website. ";
+            "Sharing {0} on CGS requires that it be uploaded to the web.\nIf you would like help with this upload, please contact david@finoldigital.com";
 
         public const int CardsLoadingMessageThreshold = 60;
         public const int PixelsPerInch = 100;
@@ -88,17 +86,15 @@ namespace Cgs
             {
                 UnityCardGame previous = AllCardGames.Values.LastOrDefault() ?? UnityCardGame.UnityInvalid;
 
-                using (SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
-                    AllCardGames.GetEnumerator())
+                using SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
+                    AllCardGames.GetEnumerator();
+                var found = false;
+                while (!found && allCardGamesEnum.MoveNext())
                 {
-                    var found = false;
-                    while (!found && allCardGamesEnum.MoveNext())
-                    {
-                        if (allCardGamesEnum.Current.Value != Current)
-                            previous = allCardGamesEnum.Current.Value;
-                        else
-                            found = true;
-                    }
+                    if (allCardGamesEnum.Current.Value != Current)
+                        previous = allCardGamesEnum.Current.Value;
+                    else
+                        found = true;
                 }
 
                 return previous;
@@ -111,16 +107,14 @@ namespace Cgs
             {
                 UnityCardGame next = AllCardGames.Values.FirstOrDefault() ?? UnityCardGame.UnityInvalid;
 
-                using (SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
-                    AllCardGames.GetEnumerator())
-                {
-                    var found = false;
-                    while (!found && allCardGamesEnum.MoveNext())
-                        if (allCardGamesEnum.Current.Value == Current)
-                            found = true;
-                    if (allCardGamesEnum.MoveNext())
-                        next = allCardGamesEnum.Current.Value;
-                }
+                using SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
+                    AllCardGames.GetEnumerator();
+                var found = false;
+                while (!found && allCardGamesEnum.MoveNext())
+                    if (allCardGamesEnum.Current.Value == Current)
+                        found = true;
+                if (allCardGamesEnum.MoveNext())
+                    next = allCardGamesEnum.Current.Value;
 
                 return next;
             }
@@ -281,6 +275,7 @@ namespace Cgs
         private void ShowLogToUser(string logString, string stackTrace, LogType type)
         {
             // ReSharper disable once RedundantLogicalConditionalExpressionOperand
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (this != null && Messenger != null && (IsMessengerDebugLogVerbose || !LogType.Log.Equals(type)))
                 Messenger.Show(logString);
         }
@@ -296,7 +291,7 @@ namespace Cgs
         }
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        public void BranchCallbackWithParams(Dictionary<string, object> parameters, string error)
+        public void MobileBranchCallback(Dictionary<string, object> parameters, string error)
         {
             if (!string.IsNullOrEmpty(error))
             {
@@ -311,6 +306,29 @@ namespace Cgs
             }
 
             string gameUrl = gameUrlObj as string;
+            if (!string.IsNullOrEmpty(gameUrl))
+                StartCoroutine(GetCardGame(gameUrl));
+            else
+                Debug.LogWarning(BranchCallbackWarning);
+        }
+#endif
+
+#if (UNITY_STANDALONE_WIN || UNITY_WSA)
+        public void WindowsBranchCallback(BranchSdk.BranchUniversalObject buo, BranchSdk.BranchLinkProperties link,
+            BranchError error)
+        {
+            if (error != null && !string.IsNullOrEmpty(error.GetMessage()))
+            {
+                Debug.LogWarning(BranchCallbackErrorMessage + error);
+                return;
+            }
+
+            if (link?.ControlParams == null || !link.ControlParams.TryGetValue(GameUrl, out string gameUrl))
+            {
+                Debug.LogWarning(BranchCallbackWarning);
+                return;
+            }
+
             if (!string.IsNullOrEmpty(gameUrl))
                 StartCoroutine(GetCardGame(gameUrl));
             else
@@ -350,6 +368,7 @@ namespace Cgs
             }
             else
                 yield return DownloadCardGame(gameUrl);
+
             Debug.Log("GetCardGame: Done!");
         }
 
@@ -386,13 +405,13 @@ namespace Cgs
                 AllCardGames[cardGame.Id] = cardGame;
                 Select(cardGame.Id);
             }
+
             Debug.Log("DownloadCardGame: end");
         }
 
         public IEnumerator UpdateCardGame(UnityCardGame cardGame)
         {
-            if (cardGame == null)
-                cardGame = Current;
+            cardGame ??= Current;
 
             Progress.Show(cardGame);
             yield return cardGame.Download();
@@ -413,8 +432,7 @@ namespace Cgs
 
         private IEnumerator LoadCards(UnityCardGame cardGame)
         {
-            if (cardGame == null)
-                cardGame = Current;
+            cardGame ??= Current;
 
             for (int page = cardGame.AllCardsUrlPageCountStartIndex;
                 page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount;
@@ -435,8 +453,7 @@ namespace Cgs
 
         private IEnumerator LoadSetCards(UnityCardGame cardGame)
         {
-            if (cardGame == null)
-                cardGame = Current;
+            cardGame ??= Current;
 
             var setCardsLoaded = false;
             foreach (Set set in cardGame.Sets.Values)
@@ -546,51 +563,27 @@ namespace Cgs
 
         public void Share()
         {
-            if (!Current.IsExternal)
+            if (Current.CgsDeepLink != null && Current.CgsDeepLink.IsWellFormedOriginalString())
             {
-                Messenger.Show(ShareWarningMessage);
-                return;
-            }
-
+                string shareMessage = string.Format(ShareBranchMessage, Current.Name, Current.CgsDeepLink);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            ShareBranch();
+                var nativeShare = new NativeShare();
+                nativeShare.SetText(shareMessage).Share();
 #else
-            ShareUrl();
+                Messenger.Show(shareMessage);
+                UniClipboard.SetText(shareMessage);
 #endif
-        }
-
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        private void ShareBranch()
-        {
-            BranchUniversalObject universalObject = new BranchUniversalObject();
-            universalObject.contentIndexMode = 1;
-            universalObject.canonicalIdentifier = Current.Id;
-            universalObject.title = string.Format(ShareTitle, Current.Name);
-            universalObject.contentDescription = string.Format(ShareDescription, Current.Name);
-            universalObject.imageUrl = Current.BannerImageUrl?.OriginalString;
-            universalObject.metadata.AddCustomMetadata(GameUrl, Current.Id);
-            var branchLinkProperties = new BranchLinkProperties();
-            branchLinkProperties.controlParams.Add(GameUrl, Current.Id);
-            Branch.getShortURL(universalObject, branchLinkProperties, BranchCallbackWithUrl);
-        }
-
-        private void BranchCallbackWithUrl(string url, string error)
-        {
-            if (error != null)
-            {
-                Debug.LogError(error);
-                return;
             }
-
-            var nativeShare = new NativeShare();
-            nativeShare.SetText(string.Format(ShareBranchMessage, Current.Name, url)).Share();
-        }
-#endif
-
-        private void ShareUrl()
-        {
-            UniClipboard.SetText(Current.AutoUpdateUrl?.OriginalString ?? string.Empty);
-            Messenger.Show(string.Format(ShareUrlMessage, Current.Name, Current.AutoUpdateUrl));
+            else if (Current.AutoUpdateUrl != null && Current.AutoUpdateUrl.IsWellFormedOriginalString())
+            {
+                UniClipboard.SetText(Current.AutoUpdateUrl.ToString());
+                Messenger.Show(string.Format(ShareUrlMessage, Current.Name, Current.AutoUpdateUrl));
+            }
+            else
+            {
+                Debug.LogWarningFormat(ShareWarningMessage, Current.Name);
+                Messenger.Show(string.Format(ShareWarningMessage, Current.Name));
+            }
         }
 
         private void LateUpdate()

@@ -66,6 +66,7 @@ namespace Tests.PlayMode
         public IEnumerator CanGetGames()
         {
             List<string> urls = new List<string> {"https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json"};
+            // TODO: GET FROM LIST: GAIA, SAGA, LIFEDEKHO
 
             foreach (string url in urls)
             {

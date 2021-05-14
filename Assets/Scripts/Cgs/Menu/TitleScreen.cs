@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using BranchSdk;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -92,7 +93,12 @@ namespace Cgs.Menu
             centerText.text = TouchlessStartMessage;
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             Branch.setTrackingDisabled(true);
-            Branch.initSession(CardGameManager.Instance.BranchCallbackWithParams);
+            Branch.initSession(CardGameManager.Instance.MobileBranchCallback);
+#endif
+#if (UNITY_STANDALONE_WIN || UNITY_WSA)
+            BranchSdk.Branch.I.DisableTracking(true);
+            BranchSdk.Branch.I.InitSession(
+                new BranchInitCallbackWrapper(CardGameManager.Instance.WindowsBranchCallback));
 #endif
         }
 

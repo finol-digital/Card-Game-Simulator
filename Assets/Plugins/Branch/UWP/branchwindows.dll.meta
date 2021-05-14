@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: da38dbd8473a640feb5641b740cbbe7c
+guid: 5d6c59789991c394eba08c319c4c4ba3
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -18,19 +18,12 @@ PluginImporter:
       settings:
         Exclude Android: 1
         Exclude Editor: 1
-        Exclude Linux: 1
         Exclude Linux64: 1
-        Exclude LinuxUniversal: 1
-        Exclude OSXIntel: 1
-        Exclude OSXIntel64: 1
         Exclude OSXUniversal: 1
-        Exclude SamsungTV: 1
-        Exclude Tizen: 1
         Exclude WebGL: 1
         Exclude Win: 1
         Exclude Win64: 1
-        Exclude iOS: 0
-        Exclude tvOS: 1
+        Exclude WindowsStoreApps: 0
   - first:
       Android: Android
     second:
@@ -51,73 +44,39 @@ PluginImporter:
         DefaultValueInitialized: true
         OS: AnyOS
   - first:
-      Facebook: Win
-    second:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
-  - first:
-      Facebook: Win64
-    second:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
-  - first:
-      Samsung TV: SamsungTV
-    second:
-      enabled: 0
-      settings:
-        STV_MODEL: STANDARD_15
-  - first:
-      Standalone: Linux
-    second:
-      enabled: 0
-      settings:
-        CPU: x86
-  - first:
       Standalone: Linux64
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
-      Standalone: OSXIntel
+      Standalone: OSXUniversal
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
-  - first:
-      Standalone: OSXIntel64
-    second:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Standalone: Win
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Standalone: Win64
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
-      iPhone: iOS
+      Windows Store Apps: WindowsStoreApps
     second:
       enabled: 1
       settings:
-        CompileFlags: -fobjc-arc
-        FrameworkDependencies: 
-  - first:
-      tvOS: tvOS
-    second:
-      enabled: 0
-      settings:
-        CompileFlags: 
-        FrameworkDependencies: 
+        CPU: AnyCPU
+        DontProcess: false
+        PlaceholderPath: 
+        SDK: AnySDK
+        ScriptingBackend: AnyScriptingBackend
   userData: 
   assetBundleName: 
   assetBundleVariant: 
