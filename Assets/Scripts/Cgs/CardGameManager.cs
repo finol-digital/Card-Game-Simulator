@@ -569,8 +569,8 @@ namespace Cgs
                 var nativeShare = new NativeShare();
                 nativeShare.SetText(shareMessage).Share();
 #else
-                Messenger.Show(shareMessage);
                 UniClipboard.SetText(shareMessage);
+                Messenger.Show(shareMessage);
 #endif
             }
             else if (Current.AutoUpdateUrl != null && Current.AutoUpdateUrl.IsWellFormedOriginalString())

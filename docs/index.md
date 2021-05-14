@@ -22,7 +22,7 @@ You can then tap on the "Share" button to create a CGS Deep Link that you can se
 For example, the CGS Deep Link for [Arcmage](https://arcmage.org/) is: [https://cgs.link/arcmage](https://cgs.link/arcmage)
 
 You can also tap the "Download" button to manually enter the CGS AutoUpdate URL for the game you would like to download.
-For example, the CGS AutoUpdate URL for [Arcmage](https://arcmage.org/) is: https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json
+For example, the CGS AutoUpdate URL for Arcmage is: https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json
 
 ![Game Download Menu Image](assets/img/downloadmenu.webp)
 

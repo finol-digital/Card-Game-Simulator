@@ -250,13 +250,16 @@ public static class BranchPostProcessBuild
         fileStream.Close();
 
         // Write it
+        var hasAppUriHandler = false;
         var streamWriter = new StreamWriter(pathToManifest);
         foreach (string line in lines)
         {
-            if (line.Contains(@"</Extensions>"))
+            hasAppUriHandler = hasAppUriHandler || line.Contains(@"appUriHandler");
+            if (!hasAppUriHandler && line.Contains(@"</Extensions>"))
             {
                 streamWriter.Write(
                     "         <uap3:Extension Category=\"windows.appUriHandler\">\n          <uap3:AppUriHandler>\n            <uap3:Host Name=\"cgs.link\" />\n          </uap3:AppUriHandler>\n        </uap3:Extension>\n");
+                hasAppUriHandler = true;
             }
 
             streamWriter.WriteLine(line);

@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using System.IO;
 using CardGameDef.Unity;
 using Cgs;
@@ -7,9 +7,23 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
+using Object = UnityEngine.Object;
 
 namespace Tests.PlayMode
 {
+    [Serializable]
+    public class CardGameRef
+    {
+        public string name;
+        public string url;
+    }
+
+    [Serializable]
+    public class CardGameRefList
+    {
+        public CardGameRef[] games;
+    }
+
     public class CardGameManagerTests
     {
         private CardGameManager _manager;
@@ -36,6 +50,7 @@ namespace Tests.PlayMode
             PlayerPrefs.SetString(CardGameManager.PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
 
             // Default is Standard Playing Cards
+            _manager.AllCardGames.Clear();
             _manager.LookupCardGames();
             _manager.ResetCurrentToDefault();
             _manager.ResetGameScene();
@@ -65,17 +80,18 @@ namespace Tests.PlayMode
         [UnityTest]
         public IEnumerator CanGetGames()
         {
-            List<string> urls = new List<string> {"https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json"};
-            // TODO: GET FROM LIST: GAIA, SAGA, LIFEDEKHO
+            var jsonFile = Resources.Load("games") as TextAsset;
+            Assert.NotNull(jsonFile);
+            var cardGameRefList = JsonUtility.FromJson<CardGameRefList>(jsonFile.text);
 
-            foreach (string url in urls)
+            foreach (CardGameRef game in cardGameRefList.games)
             {
-                yield return _manager.GetCardGame(url);
+                yield return _manager.GetCardGame(game.url);
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
                 Assert.IsTrue(CardGameManager.Current.AllCardsUrlPageCount > 0);
                 Assert.IsTrue(CardGameManager.Current.Cards.Count >= CardGameManager.Current.AllCardsUrlPageCount);
-                //Assert.AreEqual("Arcmage", CardGameManager.Current.Name);
+                Assert.AreEqual(game.name, CardGameManager.Current.Name);
             }
         }
 
