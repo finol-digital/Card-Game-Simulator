@@ -28,10 +28,7 @@ namespace Tests.PlayMode
         [SetUp]
         public void Setup()
         {
-            if (CardGameManager.Instance != null)
-                return;
-
-            var manager = new GameObject();
+            var manager = new GameObject {tag = Tags.CardGameManager};
             manager.AddComponent<EventSystem>();
             manager.AddComponent<CardGameManager>();
         }
