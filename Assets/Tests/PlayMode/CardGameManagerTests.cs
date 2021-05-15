@@ -89,6 +89,7 @@ namespace Tests.PlayMode
             {
                 Debug.Log("Testing download for: " + game.name);
                 yield return _manager.GetCardGame(game.url);
+                yield return new WaitForSeconds(1); // Wait to load set cards
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
                 Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
