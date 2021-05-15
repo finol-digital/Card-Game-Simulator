@@ -154,7 +154,7 @@ namespace CardGameDef.Unity
         }
 
         public static IEnumerator SaveUrlToFile(string url, string filePath, string postJsonBody = null,
-            Dictionary<string, string> responseHeaders = null)
+            Dictionary<string, string> headers = null)
         {
             if (string.IsNullOrEmpty(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
@@ -180,6 +180,10 @@ namespace CardGameDef.Unity
                 www.SetRequestHeader("Content-Type", "application/json");
             }
 
+            if (headers != null)
+                foreach (KeyValuePair<string, string> header in headers)
+                    www.SetRequestHeader(header.Key, header.Value);
+
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
@@ -188,9 +192,9 @@ namespace CardGameDef.Unity
                 yield break;
             }
 
-            if (responseHeaders != null)
+            if (headers != null)
                 foreach (KeyValuePair<string, string> responseHeader in www.GetResponseHeaders())
-                    responseHeaders.Add(responseHeader.Key, responseHeader.Value);
+                    headers.Add(responseHeader.Key, responseHeader.Value);
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);

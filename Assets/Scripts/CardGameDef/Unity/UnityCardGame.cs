@@ -337,8 +337,11 @@ namespace CardGameDef.Unity
                         jsonBody += "}";
                     }
 
-                    Dictionary<string, string> responseHeaders = new Dictionary<string, string>();
-                    yield return UnityFileMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody, responseHeaders);
+                    Dictionary<string, string> headers = new Dictionary<string, string>();
+                    if (!string.IsNullOrEmpty(AllCardsUrlRequestHeader) &&
+                        !string.IsNullOrEmpty(AllCardsUrlRequestHeaderValue))
+                        headers.Add(AllCardsUrlRequestHeader, AllCardsUrlRequestHeaderValue);
+                    yield return UnityFileMethods.SaveUrlToFile(cardsUrl, cardsFile, jsonBody, headers);
                     if (AllCardsUrlZipped)
                         UnityFileMethods.ExtractZip(cardsFile, GameDirectoryPath);
                     if (AllCardsUrlWrapped)
@@ -351,7 +354,7 @@ namespace CardGameDef.Unity
                         string.IsNullOrEmpty(AllCardsUrlPageCountIdentifier)) continue;
 
                     // Get it from the response header if we can
-                    if (responseHeaders.TryGetValue(AllCardsUrlPageCountIdentifier, out string pageCount) &&
+                    if (headers.TryGetValue(AllCardsUrlPageCountIdentifier, out string pageCount) &&
                         int.TryParse(pageCount, out int pageCountInt))
                         AllCardsUrlPageCount = Mathf.CeilToInt(pageCountInt / (float) AllCardsUrlPageCountDivisor);
                     else // Or load it from the json if we have to

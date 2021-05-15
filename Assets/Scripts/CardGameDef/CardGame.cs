@@ -80,6 +80,15 @@ namespace CardGameDef
         public string AllCardsUrlPostBodyContent { get; set; } = "";
 
         [JsonProperty]
+        [Description("allCardsUrlRequestHeader and allCardsUrlRequestHeader can be used together for secured APIs.")]
+        [DefaultValue("X-Api-Key")]
+        public string AllCardsUrlRequestHeader { get; set; } = "X-Api-Key";
+
+        [JsonProperty]
+        [Description("allCardsUrlRequestHeader and allCardsUrlRequestHeader can be used together for secured APIs.")]
+        public string AllCardsUrlRequestHeaderValue { get; set; } = "";
+
+        [JsonProperty]
         [Description(
             "If allCardsUrl points to file(s) enclosed by extra characters, set allCardsUrlWrapped to true, and CGS will trim the first and last characters.")]
         public bool AllCardsUrlWrapped { get; set; }
