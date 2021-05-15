@@ -43,6 +43,28 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator CanGetGames()
+        {
+            var jsonFile = Resources.Load("games") as TextAsset;
+            Assert.NotNull(jsonFile);
+            var cardGameRefList = JsonUtility.FromJson<CardGameRefList>(jsonFile.text);
+            Assert.IsTrue(cardGameRefList.games.Length > 0);
+
+            foreach (CardGameRef game in cardGameRefList.games)
+            {
+                Debug.Log("Testing download for: " + game.name);
+                yield return _manager.GetCardGame(game.url);
+                yield return new WaitForSeconds(1); // Wait to load set cards
+                Assert.IsTrue(CardGameManager.Current.HasLoaded);
+                Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
+                Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
+                Assert.AreEqual(game.name, CardGameManager.Current.Name);
+            }
+
+            _manager.StopAllCoroutines(); // No need to wait for slow card lods
+        }
+
+        [UnityTest]
         public IEnumerator CanLoadDefaultGames()
         {
             if (Directory.Exists(UnityCardGame.GamesDirectoryPath))
@@ -75,26 +97,6 @@ namespace Tests.PlayMode
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
             Assert.AreEqual("Dominoes", CardGameManager.Current.Name);
-        }
-
-        [UnityTest]
-        public IEnumerator CanGetGames()
-        {
-            var jsonFile = Resources.Load("games") as TextAsset;
-            Assert.NotNull(jsonFile);
-            var cardGameRefList = JsonUtility.FromJson<CardGameRefList>(jsonFile.text);
-            Assert.IsTrue(cardGameRefList.games.Length > 0);
-
-            foreach (CardGameRef game in cardGameRefList.games)
-            {
-                Debug.Log("Testing download for: " + game.name);
-                yield return _manager.GetCardGame(game.url);
-                yield return new WaitForSeconds(1); // Wait to load set cards
-                Assert.IsTrue(CardGameManager.Current.HasLoaded);
-                Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
-                Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
-                Assert.AreEqual(game.name, CardGameManager.Current.Name);
-            }
         }
 
         [Test]
