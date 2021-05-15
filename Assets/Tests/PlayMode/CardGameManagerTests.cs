@@ -7,7 +7,6 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
-using Object = UnityEngine.Object;
 
 namespace Tests.PlayMode
 {
@@ -26,20 +25,15 @@ namespace Tests.PlayMode
 
     public class CardGameManagerTests
     {
-        private CardGameManager _manager;
-
         [SetUp]
         public void Setup()
         {
+            if (CardGameManager.Instance != null)
+                return;
+
             var manager = new GameObject();
             manager.AddComponent<EventSystem>();
-            _manager = manager.AddComponent<CardGameManager>();
-        }
-
-        [TearDown]
-        public void Teardown()
-        {
-            Object.Destroy(_manager.gameObject);
+            manager.AddComponent<CardGameManager>();
         }
 
         [UnityTest]
@@ -53,7 +47,7 @@ namespace Tests.PlayMode
             foreach (CardGameRef game in cardGameRefList.games)
             {
                 Debug.Log("Testing download for: " + game.name);
-                yield return _manager.GetCardGame(game.url);
+                yield return CardGameManager.Instance.GetCardGame(game.url);
                 yield return new WaitForSeconds(1); // Wait to load set cards
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
@@ -62,8 +56,6 @@ namespace Tests.PlayMode
             }
 
             // No need to wait for slow card loads
-            _manager.StopAllCoroutines();
-            yield return new WaitForSeconds(1);
             CardGameManager.Instance.StopAllCoroutines();
             yield return new WaitForSeconds(1);
         }
@@ -76,10 +68,10 @@ namespace Tests.PlayMode
             PlayerPrefs.SetString(CardGameManager.PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
 
             // Default is Standard Playing Cards
-            _manager.AllCardGames.Clear();
-            _manager.LookupCardGames();
-            _manager.ResetCurrentToDefault();
-            _manager.ResetGameScene();
+            CardGameManager.Instance.AllCardGames.Clear();
+            CardGameManager.Instance.LookupCardGames();
+            CardGameManager.Instance.ResetCurrentToDefault();
+            CardGameManager.Instance.ResetGameScene();
             yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
 
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
