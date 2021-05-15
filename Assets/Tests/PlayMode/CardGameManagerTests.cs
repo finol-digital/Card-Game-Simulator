@@ -83,9 +83,11 @@ namespace Tests.PlayMode
             var jsonFile = Resources.Load("games") as TextAsset;
             Assert.NotNull(jsonFile);
             var cardGameRefList = JsonUtility.FromJson<CardGameRefList>(jsonFile.text);
+            Assert.IsTrue(cardGameRefList.games.Count > 0);
 
             foreach (CardGameRef game in cardGameRefList.games)
             {
+                Debug.Log("Testing download for: " + game.name);
                 yield return _manager.GetCardGame(game.url);
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
