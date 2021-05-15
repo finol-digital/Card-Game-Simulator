@@ -83,7 +83,7 @@ namespace Tests.PlayMode
             var jsonFile = Resources.Load("games") as TextAsset;
             Assert.NotNull(jsonFile);
             var cardGameRefList = JsonUtility.FromJson<CardGameRefList>(jsonFile.text);
-            Assert.IsTrue(cardGameRefList.games.Count > 0);
+            Assert.IsTrue(cardGameRefList.games.Length > 0);
 
             foreach (CardGameRef game in cardGameRefList.games)
             {
