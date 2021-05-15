@@ -61,7 +61,11 @@ namespace Tests.PlayMode
                 Assert.AreEqual(game.name, CardGameManager.Current.Name);
             }
 
-            _manager.StopAllCoroutines(); // No need to wait for slow card lods
+            // No need to wait for slow card loads
+            _manager.StopAllCoroutines();
+            yield return new WaitForSeconds(1);
+            CardGameManager.Instance.StopAllCoroutines();
+            yield return new WaitForSeconds(1);
         }
 
         [UnityTest]
