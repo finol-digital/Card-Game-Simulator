@@ -367,8 +367,7 @@ jobs:
     name: Release to the Microsoft Store
     runs-on: windows-latest
     needs: buildWithWindows
-    if: false
-# TODO:    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'windows'))
+    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'windows'))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -379,7 +378,6 @@ jobs:
           path: build/WSAPlayer
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1
-# TODO: confirm this setup c++ step resolves the build error
       - name: Setup C++
         uses: ilammy/msvc-dev-cmd@v1
       - name: Restore the Wpf application to populate the obj folder
@@ -396,6 +394,11 @@ jobs:
           TargetPlatform: x64
           BuildMode: StoreUpload
           AppxBundle: Always
+      - name: Upload Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: cgs-${{ matrix.targetPlatform }}
+          path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
 # TODO: https://docs.microsoft.com/en-us/windows/uwp/monetize/create-and-manage-submissions-using-windows-store-services#prerequisites
 # TODO: https://github.com/microsoft/StoreBroker/blob/master/Documentation/SETUP.md
     
