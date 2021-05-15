@@ -34,6 +34,7 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        [Timeout(3600000)]
         public IEnumerator CanGetGames()
         {
             var jsonFile = Resources.Load("games") as TextAsset;
