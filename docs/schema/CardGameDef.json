@@ -49,6 +49,15 @@
       "type": "string",
       "description": "If allCardsUrlPostBodyContent is set, CGS will make a POST to <allCardsUrl> with a JSON body that contains <allCardsUrlPostBodyContent>. If not set, CGS will just GET from <allCardsUrl>."
     },
+    "allCardsUrlRequestHeader": {
+      "type": "string",
+      "description": "allCardsUrlRequestHeader and allCardsUrlRequestHeader can be used together for secured APIs.",
+      "default": "X-Api-Key"
+    },
+    "allCardsUrlRequestHeaderValue": {
+      "type": "string",
+      "description": "allCardsUrlRequestHeader and allCardsUrlRequestHeader can be used together for secured APIs."
+    },
     "allCardsUrlWrapped": {
       "type": "boolean",
       "description": "If allCardsUrl points to file(s) enclosed by extra characters, set allCardsUrlWrapped to true, and CGS will trim the first and last characters."
