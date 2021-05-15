@@ -89,8 +89,7 @@ namespace Tests.PlayMode
                 yield return _manager.GetCardGame(game.url);
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
-                Assert.IsTrue(CardGameManager.Current.AllCardsUrlPageCount > 0);
-                Assert.IsTrue(CardGameManager.Current.Cards.Count >= CardGameManager.Current.AllCardsUrlPageCount);
+                Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
                 Assert.AreEqual(game.name, CardGameManager.Current.Name);
             }
         }
