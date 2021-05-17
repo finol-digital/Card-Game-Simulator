@@ -150,6 +150,8 @@ jobs:
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
+        with:
+          format: "${major}.${minor}.${patch}"
       - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
@@ -389,7 +391,7 @@ jobs:
         with:
           unity-modules: universal-windows-platform
       - uses: ilammy/msvc-dev-cmd@v1
-      - name: Setup MSBuild.exe
+      - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Restore the Wpf application to populate the obj folder
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
@@ -405,12 +407,11 @@ jobs:
           TargetPlatform: x64
           BuildMode: StoreUpload
           AppxBundle: Always
-      - name: Upload Build
+      - name: Upload .appxupload
         uses: actions/upload-artifact@v2
         with:
           name: cgs.appxupload
           path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
-# TODO: Ensure the visual asssets are generated correctly
 # TODO: https://docs.microsoft.com/en-us/windows/uwp/monetize/create-and-manage-submissions-using-windows-store-services#prerequisites
 # TODO: https://github.com/microsoft/StoreBroker/blob/master/Documentation/SETUP.md
     

@@ -25,9 +25,12 @@ namespace Cgs.Editor
             Dictionary<string, string> options = GetValidatedOptions();
 
             // Set version for this build
-            PlayerSettings.bundleVersion = options["buildVersion"];
-            PlayerSettings.macOS.buildNumber = options["buildVersion"];
-            PlayerSettings.WSA.packageVersion = new Version(options["buildVersion"]);
+            string version = options["buildVersion"];
+            PlayerSettings.bundleVersion = version;
+            PlayerSettings.macOS.buildNumber = version;
+            while (version.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Length < 4)
+                version += ".0";
+            PlayerSettings.WSA.packageVersion = new Version(version);
 
             // Apply build target
             var buildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]);
