@@ -405,8 +405,9 @@ jobs:
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: cgs-${{ matrix.targetPlatform }}
+          name: cgs.appxupload
           path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
+# TODO: ENSURE WE HAVE THE CORRECT IMAGES
 # TODO: https://docs.microsoft.com/en-us/windows/uwp/monetize/create-and-manage-submissions-using-windows-store-services#prerequisites
 # TODO: https://github.com/microsoft/StoreBroker/blob/master/Documentation/SETUP.md
     
