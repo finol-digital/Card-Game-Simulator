@@ -886,6 +886,11 @@ PlayerSettings:
     2031816: Assets/Sprites and Textures/UWP/Square44x44Logo.scale-200.png
     2031872: Assets/Sprites and Textures/UWP/Square44x44Logo.targetsize-256.png
     2032016: Assets/Sprites and Textures/UWP/Square44x44Logo.scale-400.png
+    2097252: Assets/Sprites and Textures/UWP/Square71x71Logo.scale-100.png
+    2097277: Assets/Sprites and Textures/UWP/Square71x71Logo.scale-125.png
+    2097302: Assets/Sprites and Textures/UWP/Square71x71Logo.scale-150.png
+    2097352: Assets/Sprites and Textures/UWP/Square71x71Logo.scale-200.png
+    2097552: Assets/Sprites and Textures/UWP/Square71x71Logo.scale-400.png
     2162788: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-100.png
     2162813: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-125.png
     2162838: Assets/Sprites and Textures/UWP/Square150x150Logo.scale-150.png
@@ -921,8 +926,8 @@ PlayerSettings:
       PrivateNetworkClientServer: False
       InternetClientServer: True
       VideosLibrary: False
+      BackgroundMediaPlayback: False
       Objects3D: False
-      InternetClient: True
       RemoteSystem: False
       BlockedChatMessages: False
       PhoneCall: False
@@ -944,9 +949,9 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
+      InternetClient: True
       Proximity: False
       CodeGeneration: False
-      BackgroundMediaPlayback: False
       EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False

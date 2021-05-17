@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -55,6 +54,14 @@ namespace Cgs.Editor
                 case BuildTarget.StandaloneOSX:
                     PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
                     break;
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                    if (!options["customBuildPath"].EndsWith(".exe"))
+                        options["customBuildPath"] = options["customBuildPath"] + "/cgs.exe";
+                    break;
+                case BuildTarget.WSAPlayer:
+                    EditorUserBuildSettings.wsaUWPBuildType = WSAUWPBuildType.XAML;
+                    break;
             }
 
             // Custom build
@@ -80,6 +87,11 @@ namespace Cgs.Editor
             if (!Enum.IsDefined(typeof(BuildTarget), buildTarget ?? string.Empty))
             {
                 EditorApplication.Exit(121);
+            }
+
+            if (validatedOptions.TryGetValue("buildPath", out string buildPath))
+            {
+                validatedOptions["customBuildPath"] = buildPath;
             }
 
             if (!validatedOptions.TryGetValue("customBuildPath", out string _))
@@ -134,25 +146,6 @@ namespace Cgs.Editor
                 Console.WriteLine($"Found flag \"{flag}\" with value {displayValue}.");
                 providedArguments.Add(flag, value);
             }
-        }
-
-        [UsedImplicitly]
-        public static void BuildStandaloneWindows()
-        {
-            Build(BuildTarget.StandaloneWindows, Path.Combine(Path.Combine("build", "StandaloneWindows"), "cgs.exe"));
-        }
-
-        [UsedImplicitly]
-        public static void BuildStandaloneWindows64()
-        {
-            Build(BuildTarget.StandaloneWindows64, Path.Combine(Path.Combine("build", "StandaloneWindows64"), "cgs.exe"));
-        }
-
-        [UsedImplicitly]
-        public static void BuildWSAPlayer()
-        {
-            EditorUserBuildSettings.wsaUWPBuildType = WSAUWPBuildType.XAML;
-            Build(BuildTarget.WSAPlayer, Path.Combine("build", "WSAPlayer"));
         }
 
         private static void Build(BuildTarget buildTarget, string filePath)

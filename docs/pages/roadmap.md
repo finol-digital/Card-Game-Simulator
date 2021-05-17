@@ -8,18 +8,18 @@ permalink: roadmap.html
 - Fix: Dropping card from deck back on deck causes it to be duplicated
 - Fix: Share Deep Links
 - Integration: Deep Links on Windows
-- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 
 ## Current Sprint
+- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
 - Game-Play: Pre-defined zones and card stacks in Play Area
 - Game-Play: E: Move card to zone or stack
 - Game-Play: Multiple hands with drawers
+- Game-Play: Synchronize points across teams and display all points
 
 ## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
-- Game-Play: Synchronize points across teams and display all points
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)

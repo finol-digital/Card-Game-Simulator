@@ -148,6 +148,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
       - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
@@ -163,12 +166,13 @@ jobs:
           unity-username: ${{ secrets.UNITY_EMAIL_2 }}
           unity-password: ${{ secrets.UNITY_PASSWORD_2 }}
           unity-serial: ${{ secrets.UNITY_SERIAL_2 }}
-# TODO: Get tag and pass it as the version to be applied
       - name: Build Unity
         uses: kuler90/build-unity@v1
         with:
+          build-path: build/${{ matrix.targetPlatform }}
           build-target: ${{ matrix.targetPlatform }}
-          build-method: Cgs.Editor.BuildCgs.Build${{ matrix.targetPlatform }}
+          build-method: Cgs.Editor.BuildCgs.BuildOptions
+          build-version: ${{ steps.versioning.outputs.version }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
         if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release')
