@@ -27,7 +27,6 @@ namespace Cgs.Editor
             // Set version for this build
             PlayerSettings.bundleVersion = options["buildVersion"];
             PlayerSettings.macOS.buildNumber = options["buildVersion"];
-            PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
             PlayerSettings.WSA.packageVersion = new Version(options["buildVersion"]);
 
             // Apply build target
@@ -36,6 +35,7 @@ namespace Cgs.Editor
             {
                 case BuildTarget.Android:
                 {
+                    PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
                     EditorUserBuildSettings.buildAppBundle = options["customBuildPath"].EndsWith(".aab");
                     if (options.TryGetValue("androidKeystoreName", out string keystoreName) &&
                         !string.IsNullOrEmpty(keystoreName))
@@ -98,18 +98,6 @@ namespace Cgs.Editor
             {
                 Console.WriteLine("Missing argument -customBuildPath");
                 EditorApplication.Exit(130);
-            }
-
-            const string defaultCustomBuildName = "TestBuild";
-            if (!validatedOptions.TryGetValue("customBuildName", out string customBuildName))
-            {
-                Console.WriteLine($"Missing argument -customBuildName, defaulting to {defaultCustomBuildName}.");
-                validatedOptions.Add("customBuildName", defaultCustomBuildName);
-            }
-            else if (customBuildName == "")
-            {
-                Console.WriteLine($"Invalid argument -customBuildName, defaulting to {defaultCustomBuildName}.");
-                validatedOptions.Add("customBuildName", defaultCustomBuildName);
             }
 
             return validatedOptions;
