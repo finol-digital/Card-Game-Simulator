@@ -145,6 +145,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           lfs: true
       - name: Get Version
         id: versioning
