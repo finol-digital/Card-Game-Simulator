@@ -59,6 +59,7 @@ jobs:
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
+    if: false
     needs: tests
     strategy:
       fail-fast: false
@@ -376,10 +377,17 @@ jobs:
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
+      - name: Setup Unity IL2CPP
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: windows-il2cpp
+      - name: Setup Unity UWP
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: universal-windows-platform
+      - uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild.exe
         uses: microsoft/setup-msbuild@v1
-      - name: Setup C++
-        uses: ilammy/msvc-dev-cmd@v1
       - name: Restore the Wpf application to populate the obj folder
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
         env:
