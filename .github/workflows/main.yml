@@ -220,11 +220,12 @@ jobs:
       - name: Add Authentication
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Install Fastlane
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7.2'
+          ruby-version: 2.7.2
+          bundler-cache: true
       - name: Upload to Google Play
-        uses: maierj/fastlane-action@v2.0.0
+        uses: maierj/fastlane-action@v2.0.1
         with:
           lane: 'android playprod'
 
@@ -276,10 +277,10 @@ jobs:
       - name: Install Fastlane
         run: bundle install
       - name: Upload to the App Store
-        uses: maierj/fastlane-action@v2.0.0
+        uses: maierj/fastlane-action@v2.0.1
         env:
           RELEASE_NOTES: ${{ steps.terminal.outputs.RELEASE_NOTES }}
-          USYM_UPLOAD_AUTH_TOKEN: ${{ secrets. USYM_UPLOAD_AUTH_TOKEN }}
+          USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
         with:
           lane: 'ios release'
 
