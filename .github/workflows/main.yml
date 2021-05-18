@@ -80,8 +80,6 @@ jobs:
           sudo rm -rf /opt/ghc
           sudo rm -rf "/usr/local/share/boost"
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
           df -h
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -413,5 +411,8 @@ jobs:
         with:
           name: cgs.appxupload
           path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
+# TODO: Invalid package identity name: CardGameSimulator (expected: FinolDigitalLLC.CardGameSimulator)
+# TODO: Invalid package family name: CardGameSimulator_nvq7k659m756y (expected: FinolDigitalLLC.CardGameSimulator_499qk536pdy94)
+# TODO: Invalid package publisher name: CN=Finol Digital LLC (expected: CN=BBF9912B-079E-4CCE-A441-0D6EA6798115)
 # TODO: https://github.com/microsoft/StoreBroker#readme
     
