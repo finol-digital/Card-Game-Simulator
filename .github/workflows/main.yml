@@ -222,7 +222,9 @@ jobs:
       - name: Add Authentication
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Install Fastlane
-        run: bundle install
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7.2'
       - name: Upload to Google Play
         uses: maierj/fastlane-action@v2.0.0
         with:
