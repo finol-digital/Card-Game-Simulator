@@ -1,1 +1,3 @@
-- Networking: Remove port forwarding requirement
+- Fix: Dropping card from deck back on deck causes it to be duplicated
+- Fix: Share Deep Links
+- Integration: Deep Links on Windows
