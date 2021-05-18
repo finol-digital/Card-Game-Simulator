@@ -4,7 +4,7 @@
 
 [![Test, Build, and Release CGS](https://github.com/finol-digital/Card-Game-Simulator/actions/workflows/main.yml/badge.svg)](https://github.com/finol-digital/Card-Game-Simulator/actions/workflows/main.yml)
 
-Public documentation for CGS is provided through Github Pages in the docs/ folder. 
+Public documentation for CGS is provided through GitHub Pages in the docs/ folder. 
 
 See: https://www.cardgamesimulator.com
 
