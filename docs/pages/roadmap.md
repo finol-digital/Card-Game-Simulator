@@ -11,15 +11,16 @@ permalink: roadmap.html
 
 ## Current Sprint
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
-- Game-Play: Card Zones: Overlap snap, stack-full, stack-vertical, stack-horizontal
-- Game-Play: Pre-defined zones and card stacks in Play Area
-- Game-Play: E: Move card to zone or stack
-- Game-Play: Multiple hands with drawers
 - Game-Play: Synchronize points across teams and display all points
+- Game-Play: Support multiple hands in hand drawer
+- Game-Play: Pre-defined card zones/stacks
+- Game-Play: E: Move card to zone or stack
 
 ## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
+- Game-Play: Allow cards to snap to each other
+- Game-Play: Convert card to stack
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
@@ -27,7 +28,6 @@ permalink: roadmap.html
 - Game-Play: Support multiple card selection
 - Game-Play: Customize controls/input
 - Game-Play: Face-up cards in cards stacks
-- Game-Play: Convert card to stack
 - Tech: Add code coverage
 - Usability: Scale size of UI based off either physical screen size or resolution of display
 - Game-Play: Custom colors for Dice
