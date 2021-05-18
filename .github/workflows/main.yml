@@ -321,7 +321,7 @@ jobs:
       - name: Install Fastlane
         run: bundle install
       - name: Fix version for StandaloneOSX
-        uses: maierj/fastlane-action@v2.0.0
+        uses: maierj/fastlane-action@v2.0.1
         with:
           lane: 'fixversion'
       - name: Fix File Permissions, Code-Sign, and Get Release Notes
@@ -338,7 +338,7 @@ jobs:
           echo "$notes"
           echo "::set-output name=RELEASE_NOTES::$notes"
       - name: Upload to the Mac App Store
-        uses: maierj/fastlane-action@v2.0.0
+        uses: maierj/fastlane-action@v2.0.1
         env:
           RELEASE_NOTES: ${{ steps.terminal.outputs.RELEASE_NOTES }}
         with:
@@ -361,7 +361,7 @@ jobs:
         env:
           WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL', github.workspace) }}
           WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
-        run: find $WEBGL_BUILD_PATH -type f -name "Build/*" -exec cp {} $WEBGL_PAGES_PATH \;
+        run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
       - name: Deploy to GitHub Pages
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
