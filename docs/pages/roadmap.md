@@ -4,7 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.49
+## What's New - v1.50
 - Fix: Share on Android
 - Fix: Deep link on Windows
 
