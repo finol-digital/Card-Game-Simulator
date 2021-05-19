@@ -412,11 +412,11 @@ jobs:
         with:
           name: cgs.appxupload
           path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
-# ERR: Invalid package identity name: CardGameSimulator (expected: FinolDigitalLLC.CardGameSimulator)
+# ERROR: Invalid package identity name: CardGameSimulator (expected: FinolDigitalLLC.CardGameSimulator)
 # TODO: Post-process: Replace Identity Name="CardGameSimulator" with Identity Name="FinolDigitalLLC.CardGameSimulator"
-# ERR: Invalid package publisher name: CN=Finol Digital LLC (expected: CN=BBF9912B-079E-4CCE-A441-0D6EA6798115)
+# ERROR: Invalid package publisher name: CN=Finol Digital LLC (expected: CN=BBF9912B-079E-4CCE-A441-0D6EA6798115)
 # TODO: Post-process: Replace Publisher="CN=Finol Digital LLC" with Publisher="CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
-# ERR: Invalid package family name: CardGameSimulator_nvq7k659m756y (expected: FinolDigitalLLC.CardGameSimulator_499qk536pdy94)
+# ERROR: Invalid package family name: CardGameSimulator_nvq7k659m756y (expected: FinolDigitalLLC.CardGameSimulator_499qk536pdy94)
 # TODO: Post-process: Replace PhoneProductId="bb2f725b-48e6-4195-b736-9d41a07223e5" with PhoneProductId="702dc786-0001-4195-8614-ec1d596d8ffa"
 # TODO: Download Card Game Simulator_StoreKey.pfx as secret, and reference it in Card Game Simulator.vcxproj instead of WSATestCertificate.pfx
 # TODO: Download Package.StoreAssociation.xml

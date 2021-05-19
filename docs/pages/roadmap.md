@@ -7,6 +7,7 @@ permalink: roadmap.html
 ## What's New - v1.50
 - Fix: Share on Android
 - Fix: Deep link on Windows
+- Tech: UWP deployment
 
 ## Current Sprint
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
