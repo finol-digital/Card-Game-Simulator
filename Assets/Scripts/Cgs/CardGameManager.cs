@@ -564,6 +564,7 @@ namespace Cgs
 
         public void Share()
         {
+            Debug.Log("CGS Share:: Deep:" + Current.CgsDeepLink + " Auto:" + Current.AutoUpdateUrl);
             if (Current.CgsDeepLink != null && Current.CgsDeepLink.IsWellFormedOriginalString())
             {
                 string shareMessage = string.Format(ShareBranchMessage, Current.Name, Current.CgsDeepLink);

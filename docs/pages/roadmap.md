@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.50
 - Fix: Share on Android
-- Fix: Deep link on Windows
 - Tech: UWP deployment
 
 ## Current Sprint
