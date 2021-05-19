@@ -262,7 +262,13 @@ public static class BranchPostProcessBuild
                 hasAppUriHandler = true;
             }
 
-            streamWriter.WriteLine(line);
+            string fixedLine = line.Replace("Identity Name=\"CardGameSimulator\"",
+                "Identity Name=\"FinolDigitalLLC.CardGameSimulator\"");
+            fixedLine = fixedLine.Replace("Publisher=\"CN=Finol Digital LLC\"",
+                "Publisher=\"CN=BBF9912B-079E-4CCE-A441-0D6EA6798115\"");
+            fixedLine = fixedLine.Replace("PhoneProductId=\"bb2f725b-48e6-4195-b736-9d41a07223e5\"",
+                "PhoneProductId=\"702dc786-0001-4195-8614-ec1d596d8ffa\"");
+            streamWriter.WriteLine(fixedLine);
         }
 
         streamWriter.Close();

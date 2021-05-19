@@ -374,6 +374,9 @@ jobs:
     runs-on: windows-latest
     needs: buildWithWindows
     if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'windows'))
+    env:
+      Wap_Project_Directory: build\WSAPlayer\Card Game Simulator
+      SigningCertificate: Card Game Simulator_StoreKey.pfx
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -399,7 +402,13 @@ jobs:
           SolutionPath: build\WSAPlayer\Card Game Simulator.sln
           Configuration: Master
           RuntimeIdentifier: win-x64
-      - name: Create .appxupload
+      - name: Decode the Pfx
+        run: |
+          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.MICROSOFT_STORE_PFX_FILE }}")
+          $currentDirectory = Get-Location
+          $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
+          [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+      - name: Build the .appxupload
         run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
         env:
           SolutionPath: build\WSAPlayer\Card Game Simulator.sln
@@ -407,18 +416,12 @@ jobs:
           TargetPlatform: x64
           BuildMode: StoreUpload
           AppxBundle: Always
+      - name: Remove the .pfx
+        run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
       - name: Upload .appxupload
         uses: actions/upload-artifact@v2
         with:
           name: cgs.appxupload
           path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
-# ERROR: Invalid package identity name: CardGameSimulator (expected: FinolDigitalLLC.CardGameSimulator)
-# TODO: Post-process: Replace Identity Name="CardGameSimulator" with Identity Name="FinolDigitalLLC.CardGameSimulator"
-# ERROR: Invalid package publisher name: CN=Finol Digital LLC (expected: CN=BBF9912B-079E-4CCE-A441-0D6EA6798115)
-# TODO: Post-process: Replace Publisher="CN=Finol Digital LLC" with Publisher="CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
-# ERROR: Invalid package family name: CardGameSimulator_nvq7k659m756y (expected: FinolDigitalLLC.CardGameSimulator_499qk536pdy94)
-# TODO: Post-process: Replace PhoneProductId="bb2f725b-48e6-4195-b736-9d41a07223e5" with PhoneProductId="702dc786-0001-4195-8614-ec1d596d8ffa"
-# TODO: Download Card Game Simulator_StoreKey.pfx as secret, and reference it in Card Game Simulator.vcxproj instead of WSATestCertificate.pfx
-# TODO: Download Package.StoreAssociation.xml
 # TODO: https://github.com/microsoft/StoreBroker#readme
     
