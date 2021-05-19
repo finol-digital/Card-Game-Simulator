@@ -423,6 +423,6 @@ jobs:
         with:
           name: cgs.appxupload
           path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
-# TODO: Confirm if StoreManifest.xml needs to be updated?
+# TODO: Confirm if Package.StoreAssociation.xml needs to be used?
 # TODO: https://github.com/microsoft/StoreBroker#readme
     
