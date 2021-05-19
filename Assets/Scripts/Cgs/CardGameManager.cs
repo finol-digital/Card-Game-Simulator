@@ -292,6 +292,7 @@ namespace Cgs
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public void MobileBranchCallback(Dictionary<string, object> parameters, string error)
         {
+            Debug.Log("Branch.Callback");
             if (!string.IsNullOrEmpty(error))
             {
                 Debug.LogWarning(BranchCallbackErrorMessage + error);
@@ -312,10 +313,11 @@ namespace Cgs
         }
 #endif
 
-#if (UNITY_STANDALONE_WIN || UNITY_WSA)
+#if (UNITY_STANDALONE_WIN || UNITY_WSA || ENABLE_WINMD_SUPPORT)
         public void WindowsBranchCallback(BranchSdk.BranchUniversalObject buo, BranchSdk.BranchLinkProperties link,
             BranchSdk.BranchError error)
         {
+            Debug.Log("Branch.Callback");
             if (error != null && !string.IsNullOrEmpty(error.GetMessage()))
             {
                 Debug.LogWarning(BranchCallbackErrorMessage + error);

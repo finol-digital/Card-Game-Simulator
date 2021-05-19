@@ -91,10 +91,12 @@ namespace Cgs.Menu
 #if !UNITY_ANDROID && !UNITY_IOS
             centerText.text = TouchlessStartMessage;
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            Debug.Log("Branch.Init");
             Branch.setTrackingDisabled(true);
             Branch.initSession(CardGameManager.Instance.MobileBranchCallback);
 #endif
-#if (UNITY_STANDALONE_WIN || UNITY_WSA)
+#if (UNITY_STANDALONE_WIN || UNITY_WSA || ENABLE_WINMD_SUPPORT)
+            Debug.Log("Branch.Init");
             BranchSdk.Branch.I.DisableTracking(true);
             BranchSdk.Branch.I.InitSession(
                 new BranchSdk.BranchInitCallbackWrapper(CardGameManager.Instance.WindowsBranchCallback));
