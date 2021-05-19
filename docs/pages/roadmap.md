@@ -5,9 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.49
-- Fix: Dropping card from deck back on deck causes it to be duplicated
-- Fix: Share Deep Links
-- Integration: Deep Links on Windows
+- Fix: Share on Android
+- Fix: Deep link on Windows
 
 ## Current Sprint
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
