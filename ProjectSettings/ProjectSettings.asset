@@ -861,9 +861,9 @@ PlayerSettings:
   metroPackageVersion: 0.0.0.0
   metroCertificatePath: Card Game Simulator_StoreKey.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: BBF9912B-079E-4CCE-A441-0D6EA6798115
-  metroCertificateIssuer: BBF9912B-079E-4CCE-A441-0D6EA6798115
-  metroCertificateNotAfter: 00641e44ef6ad801
+  metroCertificateSubject: Finol Digital LLC
+  metroCertificateIssuer: Finol Digital LLC
+  metroCertificateNotAfter: 00db86bef86bd801
   metroApplicationDescription: Create, Share, and Play
   wsaImages:
     65636: Assets/Sprites and Textures/UWP/StoreLogo.scale-100.png
@@ -915,7 +915,6 @@ PlayerSettings:
   metroSplashScreenUseBackgroundColor: 1
   platformCapabilities:
     WindowsStoreApps:
-      CodeGeneration: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -927,6 +926,7 @@ PlayerSettings:
       PrivateNetworkClientServer: False
       InternetClientServer: True
       VideosLibrary: False
+      BackgroundMediaPlayback: False
       Objects3D: False
       RemoteSystem: False
       BlockedChatMessages: False
@@ -949,9 +949,9 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
-      Proximity: False
       InternetClient: True
-      BackgroundMediaPlayback: False
+      Proximity: False
+      CodeGeneration: False
       EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False

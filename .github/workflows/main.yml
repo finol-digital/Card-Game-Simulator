@@ -418,10 +418,11 @@ jobs:
           AppxBundle: Always
       - name: Remove the .pfx
         run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
-      - name: Upload .appxupload
+      - name: Upload the .appxupload
         uses: actions/upload-artifact@v2
         with:
           name: cgs.appxupload
           path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
+# TODO: Confirm if StoreManifest.xml needs to be updated?
 # TODO: https://github.com/microsoft/StoreBroker#readme
     

@@ -258,7 +258,7 @@ public static class BranchPostProcessBuild
             if (!hasAppUriHandler && line.Contains(@"</Extensions>"))
             {
                 streamWriter.Write(
-                    "         <uap3:Extension Category=\"windows.appUriHandler\">\n          <uap3:AppUriHandler>\n            <uap3:Host Name=\"cgs.link\" />\n          </uap3:AppUriHandler>\n        </uap3:Extension>\n");
+                    "        <uap3:Extension Category=\"windows.appUriHandler\">\n          <uap3:AppUriHandler>\n            <uap3:Host Name=\"cgs.link\" />\n          </uap3:AppUriHandler>\n        </uap3:Extension>\n");
                 hasAppUriHandler = true;
             }
 
