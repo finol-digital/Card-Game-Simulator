@@ -7,8 +7,6 @@ on:
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
-    tags-ignore:
-      - 'v1.*'
   release:
     types:
       - published
