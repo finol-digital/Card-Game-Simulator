@@ -2,7 +2,7 @@ name: Test, Build, and Release CGS
 on:
   push:
     branches:
-      - '**'
+      - develop
     paths:
       - 'Assets/**'
       - 'Packages/**'
