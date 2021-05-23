@@ -10,7 +10,6 @@ using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
-using Crosstales.FB;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
@@ -96,7 +95,7 @@ namespace Cgs.Cards
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardImageFromFile, ImportImage);
 #else
-            ImportCardImageFromFile(FileBrowser.OpenSingleFile());
+// TODO:            ImportCardImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
 

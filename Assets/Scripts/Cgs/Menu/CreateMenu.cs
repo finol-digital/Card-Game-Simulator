@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
-using Crosstales.FB;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -107,7 +106,7 @@ namespace Cgs.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
 #else
-            ImportBannerImageFromFile(FileBrowser.OpenSingleFile());
+// TODO:            ImportBannerImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
@@ -166,7 +165,7 @@ namespace Cgs.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
 #else
-            ImportCardBackImageFromFile(FileBrowser.OpenSingleFile());
+// TODO:            ImportCardBackImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
@@ -225,7 +224,7 @@ namespace Cgs.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, ImportImage);
 #else
-            ImportPlayMatImageFromFile(FileBrowser.OpenSingleFile());
+// TODO:            ImportPlayMatImageFromFile(FileBrowser.OpenSingleFile());
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
