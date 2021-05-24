@@ -40,6 +40,53 @@ namespace UnityExtensionMethods
                 : string.Empty;
         }
 
+        private static string ValidatePath(string path, bool addEndDelimiter = true)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            string pathTemp = path.Trim();
+
+            // ReSharper disable once JoinDeclarationAndInitializer
+            string result;
+#if UNITY_STANDALONE_WIN
+            result = pathTemp.Replace('/', '\\');
+            if (addEndDelimiter && !result.EndsWith("\\"))
+                result += "\\";
+#else
+            result = pathTemp.Replace('\\', '/');
+            if (addEndDelimiter && !result.EndsWith("/"))
+                result += "/";
+#endif
+
+            return string.Join(string.Empty, result.Split(Path.GetInvalidPathChars()));
+        }
+
+        public static string ValidateFile(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            string result = ValidatePath(path);
+
+            if (result.EndsWith("\\") || result.EndsWith("/"))
+                result = result.Substring(0, result.Length - 1);
+
+            // ReSharper disable once JoinDeclarationAndInitializer
+            string fileName;
+#if UNITY_STANDALONE_WIN
+            fileName = result.Substring(result.LastIndexOf('\\') + 1);
+#else
+            fileName = result.Substring(result.LastIndexOf('/') + 1);
+#endif
+
+            string newName =
+                string.Join(string.Empty,
+                    fileName.Split(Path
+                        .GetInvalidFileNameChars()));
+            return result.Substring(0, result.Length - fileName.Length) + newName;
+        }
+
         public static void CopyDirectory(string sourceDir, string targetDir)
         {
             if (!Directory.Exists(targetDir))

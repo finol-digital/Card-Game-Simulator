@@ -106,6 +106,8 @@ namespace Cgs.Menu
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
+#elif ENABLE_WINMD_SUPPORT
+// TODO:            ImportBannerImageFromFile
 #else
             StandaloneFileBrowser.OpenFilePanelAsync("Select Banner Image File", string.Empty, string.Empty, false,
                 paths => { ImportBannerImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
@@ -166,6 +168,8 @@ namespace Cgs.Menu
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
+#elif ENABLE_WINMD_SUPPORT
+// TODO:            ImportCardBackImageFromFile
 #else
             StandaloneFileBrowser.OpenFilePanelAsync("Select Card Back Image File", string.Empty, string.Empty, false,
                 paths => { ImportCardBackImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
@@ -226,6 +230,8 @@ namespace Cgs.Menu
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, ImportImage);
+#elif ENABLE_WINMD_SUPPORT
+// TODO:            ImportPlayMatImageFromFile
 #else
             StandaloneFileBrowser.OpenFilePanelAsync("Select PlayMat Image File", string.Empty, string.Empty, false,
                 paths => { ImportPlayMatImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
