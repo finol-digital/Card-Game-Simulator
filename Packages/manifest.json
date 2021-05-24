@@ -1,13 +1,6 @@
 {
   "scopedRegistries": [
     {
-      "name": "Google",
-      "url": "https://unityregistry-pa.googleapis.com",
-      "scopes": [
-        "com.google"
-      ]
-    },
-    {
       "name": "Packages from jillejr",
       "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity/",
       "scopes": [
@@ -16,9 +9,6 @@
     }
   ],
   "dependencies": {
-    "com.google.android.appbundle": "1.3.0",
-    "com.google.play.common": "1.3.0",
-    "com.google.play.instant": "1.3.0",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.cloud.userreporting": "0.2.4-preview",
     "com.unity.ide.rider": "2.0.7",

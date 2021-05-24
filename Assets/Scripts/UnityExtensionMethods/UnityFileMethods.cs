@@ -12,7 +12,7 @@ using UnityEngine.Networking;
 using ICSharpCode.SharpZipLib.Core;
 #endif
 
-namespace CardGameDef.Unity
+namespace UnityExtensionMethods
 {
     public static class UnityFileMethods
     {

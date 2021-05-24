@@ -11,6 +11,7 @@ using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
 using JetBrains.Annotations;
+using SFB;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -95,7 +96,8 @@ namespace Cgs.Cards
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardImageFromFile, ImportImage);
 #else
-// TODO:            ImportCardImageFromFile(FileBrowser.OpenSingleFile());
+            StandaloneFileBrowser.OpenFilePanelAsync("Select Card Image File", string.Empty, string.Empty, false,
+                paths => { ImportCardImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
 

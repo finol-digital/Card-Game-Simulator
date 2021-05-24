@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CardGameDef.Decks;
+using UnityExtensionMethods;
 #if !UNITY_WEBGL
 using Didstopia.PDFSharp;
 using Didstopia.PDFSharp.Drawing;
 using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
+
 #endif
 
 namespace CardGameDef.Unity

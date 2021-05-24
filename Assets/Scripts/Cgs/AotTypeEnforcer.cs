@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using CardGameDef;
-using CardGameDef.Unity;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Utilities;
 using UnityEngine;
-
-// ReSharper disable UnusedVariable
+using UnityExtensionMethods;
 
 namespace Cgs
 {
+    // ReSharper disable UnusedVariable
     public class AotTypeEnforcer : MonoBehaviour
     {
         public void Awake()

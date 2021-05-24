@@ -12,6 +12,7 @@ using CardGameDef.Unity;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SFB;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -106,7 +107,8 @@ namespace Cgs.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
 #else
-// TODO:            ImportBannerImageFromFile(FileBrowser.OpenSingleFile());
+            StandaloneFileBrowser.OpenFilePanelAsync("Select Banner Image File", string.Empty, string.Empty, false,
+                paths => { ImportBannerImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
@@ -165,7 +167,8 @@ namespace Cgs.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
 #else
-// TODO:            ImportCardBackImageFromFile(FileBrowser.OpenSingleFile());
+            StandaloneFileBrowser.OpenFilePanelAsync("Select Card Back Image File", string.Empty, string.Empty, false,
+                paths => { ImportCardBackImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
@@ -224,7 +227,8 @@ namespace Cgs.Menu
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, ImportImage);
 #else
-// TODO:            ImportPlayMatImageFromFile(FileBrowser.OpenSingleFile());
+            StandaloneFileBrowser.OpenFilePanelAsync("Select PlayMat Image File", string.Empty, string.Empty, false,
+                paths => { ImportPlayMatImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
 #if ENABLE_WINMD_SUPPORT
