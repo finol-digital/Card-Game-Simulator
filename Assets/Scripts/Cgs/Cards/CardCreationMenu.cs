@@ -96,7 +96,7 @@ namespace Cgs.Cards
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
-// TODO:            ImportCardImageFromFile
+            ImportCardImageFromFile(UwpFileBrowser.OpenFilePanel());
 #else
             StandaloneFileBrowser.OpenFilePanelAsync("Select Card Image File", string.Empty, string.Empty, false,
                 paths => { ImportCardImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });

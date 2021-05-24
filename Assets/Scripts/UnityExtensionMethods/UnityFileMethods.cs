@@ -105,7 +105,7 @@ namespace UnityExtensionMethods
         public static async System.Threading.Tasks.Task<string> CacheFileAsync(string sourceFilePath)
         {
             string fileName = Path.GetFileName(sourceFilePath);
-            Windows.Storage.StorageFile sourceStorageFile = Crosstales.FB.FileBrowserWSAImpl.LastOpenFile;
+            Windows.Storage.StorageFile sourceStorageFile = UwpFileBrowser.LastOpenFile;
             Windows.Storage.StorageFolder cacheStorageFolder = Windows.Storage.ApplicationData.Current.LocalCacheFolder;
             var cacheStorageFile = await sourceStorageFile.CopyAsync(
                 cacheStorageFolder, fileName,  Windows.Storage.NameCollisionOption.ReplaceExisting);
