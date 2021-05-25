@@ -4,14 +4,12 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.50
-- Fix: Share on Android
-- Tech: UWP deployment
-
-## Current Sprint
+## What's New - v1.51
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Game-Play: Synchronize points across teams and display all points
 - Game-Play: Support multiple hands in hand drawer
+
+## Current Sprint
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: E: Move card to zone or stack
 
