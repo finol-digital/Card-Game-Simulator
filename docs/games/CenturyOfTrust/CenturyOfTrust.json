@@ -1,0 +1,86 @@
+{
+	"allCardsUrl": "https://www.cardgamesimulator.com/games/CenturyOfTrust/AllCards.json",
+	"allSetsUrl": "https://www.cardgamesimulator.com/games/CenturyOfTrust/AllSets.json",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/CenturyOfTrust/CenturyOfTrust.json",
+	"bannerImageFileType": "jpg",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/CenturyOfTrust/Banner.jpg",
+	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/CenturyOfTrust/CardBack.png",
+	"cardImageUrl": "https://www.cardgamesimulator.com/games/CenturyOfTrust/sets/{cardSet}/{cardId}.{cardImageFileType}",
+	"cardPrimaryProperty": "title",
+	"cardProperties": [{
+			"name": "rank",
+			"display": "Rank",
+			"type": "stringEnum"
+		},
+		{
+			"name": "suit",
+			"display": "Suit",
+			"type": "stringEnum"
+		},
+		{
+			"name": "category",
+			"display": "Category",
+			"type": "stringEnum"
+		},
+		{
+			"name": "title",
+			"display": "Title",
+			"type": "string"
+		},
+		{
+			"name": "value",
+			"display": "Value",
+			"type": "integer"
+		},
+	],
+  "cgsDeepLink": "https://cgs.link/CenturyOfTrust",
+	"deckUrls": [{
+			"name": "CenturyOfTrust",
+			"url": "https://www.cardgamesimulator.com/games/CenturyOfTrust/decks/CenturyOfTrust.txt"
+		}
+	],
+	"enums": [{
+			"property": "rank",
+			"values": {
+				"1": "Ace",
+				"2": "2",
+				"3": "3",
+				"4": "4",
+				"5": "5",
+				"6": "6",
+				"7": "7",
+				"8": "8",
+				"9": "9",
+				"10": "10",
+				"11": "Jack",
+				"12": "Queen",
+				"13": "King"
+			}
+		},
+		{
+			"property": "suit",
+			"values": {
+				"clubs": "Clubs",
+				"diamonds": "Diamonds",
+				"hearts": "Hearts",
+				"spades": "Spades"
+			}
+		},
+		{
+			"property": "category",
+			"values": {
+				"idea": "IDEA",
+				"c1": "C1",
+				"c2": "C2",
+				"c3": "C3",
+				"c4": "C4",
+				"c5": "C5",
+				"c6": "C6",
+				"wild": "Wild Card"
+			}
+		}
+	],
+	"gameStartHandCount": 7,
+	"name": "Century Of Trust",
+	"rulesUrl": "https://www.cardgamesimulator.com/games/CenturyOfTrust/rules.txt"
+}
