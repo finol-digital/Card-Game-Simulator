@@ -33,7 +33,7 @@
 			"type": "integer"
 		},
 	],
-  "cgsDeepLink": "https://cgs.link/CenturyOfTrust",
+  "cgsDeepLink": "https://cgs.link/cot",
 	"deckUrls": [{
 			"name": "CenturyOfTrust",
 			"url": "https://www.cardgamesimulator.com/games/CenturyOfTrust/decks/CenturyOfTrust.txt"
