@@ -34,7 +34,7 @@ jobs:
           path: Library
           key: Library
       - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@main
+        uses: game-ci/unity-test-runner@fix-workflow-error
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
