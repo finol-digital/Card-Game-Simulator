@@ -280,7 +280,7 @@ jobs:
           RELEASE_NOTES: ${{ steps.terminal.outputs.RELEASE_NOTES }}
           USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
         with:
-          lane: 'ios release'
+          lane: 'ios beta'
 
   releaseToMacAppStore:
     name: Release to the Mac App Store
