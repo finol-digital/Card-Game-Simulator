@@ -10,6 +10,8 @@ namespace Cgs.Play
 {
     public class PointsCounter : MonoBehaviour
     {
+        public Transform scorePanel;
+
         public Text pointsText;
 
         public int CurrentDisplayValue
@@ -36,6 +38,11 @@ namespace Cgs.Play
                 CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.CurrentScore != CurrentDisplayValue)
                 CgsNetManager.Instance.LocalPlayer.RequestScoreUpdate(CurrentDisplayValue);
+        }
+
+        public void ToggleScorePanel()
+        {
+            scorePanel.gameObject.SetActive(!scorePanel.gameObject.activeSelf);
         }
     }
 }
