@@ -10,7 +10,6 @@ using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
-using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 
@@ -21,12 +20,8 @@ namespace Cgs.Play.Multiplayer
         public const string GameSelectionErrorMessage = "The host has selected a game that is not available!";
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
 
-        public int CurrentScore => CgsNetManager.Instance.Data != null && CgsNetManager.Instance.Data.Scores != null
-                                                                       && CgsNetManager.Instance.Data.Scores.Count > 0
-            ? CgsNetManager.Instance.Data.Scores[scoreIndex].Points
-            : 0;
-
-        [SyncVar(hook = "OnChangeScore")] public int scoreIndex;
+        [field: SyncVar] public string Name { get; private set; }
+        [field: SyncVar] public int Points { get; private set; }
 
         [field: SyncVar] public GameObject CurrentDeck { get; private set; }
         [field: SyncVar] public bool IsDeckShared { get; private set; }
@@ -38,6 +33,7 @@ namespace Cgs.Play.Multiplayer
             base.OnStartLocalPlayer();
             Debug.Log("[CgsNet Player] Starting local player...");
             CgsNetManager.Instance.LocalPlayer = this;
+            RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
             if (isServer)
                 CgsNetManager.Instance.playController.ShowDeckMenu();
             else
@@ -55,7 +51,7 @@ namespace Cgs.Play.Multiplayer
         private void CmdSelectCardGame()
         {
             Debug.Log("[CgsNet Player] Sending game id...");
-            CgsNetManager.Instance.Data.RegisterScore(gameObject, CardGameManager.Current.GameStartPointsCount);
+            Points = CardGameManager.Current.GameStartPointsCount;
             TargetSelectCardGame(CardGameManager.Current.Id, CardGameManager.Current.AutoUpdateUrl?.OriginalString);
         }
 
@@ -113,24 +109,28 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
-        #region Scores
+        #region Score
 
-        public void RequestScoreUpdate(int points)
+        public void RequestNameUpdate(string playerName)
         {
-            CmdUpdateScore(points);
+            CmdUpdateName(playerName);
         }
 
         [Command]
-        private void CmdUpdateScore(int points)
+        private void CmdUpdateName(string playerName)
         {
-            CgsNetManager.Instance.Data.ChangeScore(scoreIndex, points);
+            Name = playerName;
         }
 
-        [PublicAPI]
-        public void OnChangeScore(int oldScoreIndex, int newScoreIndex)
+        public void RequestPointsUpdate(int points)
         {
-            if (scoreIndex == newScoreIndex)
-                CgsNetManager.Instance.playController.scoreboard.CurrentDisplayValue = CurrentScore;
+            CmdUpdatePoints(points);
+        }
+
+        [Command]
+        private void CmdUpdatePoints(int points)
+        {
+            Points = points;
         }
 
         #endregion

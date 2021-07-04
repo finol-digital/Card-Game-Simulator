@@ -45,7 +45,7 @@ namespace Cgs.Play
         public List<CardDropArea> playDropZones;
         public HandController hand;
         public PlayMenu menu;
-        public PointsCounter scoreboard;
+        public Scoreboard scoreboard;
 
         public Vector2 NextDeckPosition { get; private set; } = Vector2.zero;
 
@@ -107,7 +107,7 @@ namespace Cgs.Play
         private void Update()
         {
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
-                CardGameManager.Instance.ModalCanvas != null)
+                CardGameManager.Instance.ModalCanvas != null || scoreboard.scorePanel.gameObject.activeSelf)
                 return;
 
             if (Inputs.IsOption)
