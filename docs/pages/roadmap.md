@@ -5,12 +5,13 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.51
-- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Game-Play: Synchronize points across teams and display all points
-- Fix: Online cards only show on host
 
 ## Current Sprint
+- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Game-Play: Support multiple hands in hand drawer
+
+## Next Sprint
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: E: Move card to zone or stack
 
