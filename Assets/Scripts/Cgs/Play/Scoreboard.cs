@@ -2,10 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Play
 {
@@ -20,19 +24,29 @@ namespace Cgs.Play
 
         public Text pointsText;
 
-        private bool IsPointsOutOfSync => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive &&
-                                          CgsNetManager.Instance.LocalPlayer != null &&
+        public RectTransform scoreContent;
+
+        public ScoreTemplate scoreTemplate;
+
+        private static bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive;
+
+        private bool IsPointsOutOfSync => IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                                           CgsNetManager.Instance.LocalPlayer.Points != Points;
+
+        private int Points
+        {
+            get => int.Parse(pointsText.text);
+            set => pointsText.text = value.ToString();
+        }
 
         private void Start()
         {
             nameInputField.text = PlayerPrefs.GetString(PlayerNamePlayerPrefs, DefaultPlayerName);
         }
 
-        private int Points
+        private void Update()
         {
-            get => int.Parse(pointsText.text);
-            set => pointsText.text = value.ToString();
+            Refresh();
         }
 
         public void Decrement()
@@ -63,10 +77,27 @@ namespace Cgs.Play
         public void ChangeName(string newName)
         {
             PlayerPrefs.SetString(PlayerNamePlayerPrefs, newName);
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive &&
-                CgsNetManager.Instance.LocalPlayer != null &&
+            if (IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.Name != newName)
                 CgsNetManager.Instance.LocalPlayer.RequestNameUpdate(newName);
+        }
+
+        private void Refresh()
+        {
+            // TODO: Improve this very slow process
+            List<Tuple<string, int>> scores = GameObject.FindGameObjectsWithTag("Player")
+                .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>
+                    new Tuple<string, int>(cgsNetPlayer.Name, cgsNetPlayer.Points)).ToList();
+            scoreContent.DestroyAllChildren();
+            scoreContent.sizeDelta = new Vector2(scoreContent.sizeDelta.x,
+                ((RectTransform) scoreTemplate.transform).rect.height * scores.Count);
+            foreach ((string playerName, int points) in scores)
+            {
+                var entry = Instantiate(scoreTemplate.gameObject, scoreContent).GetComponent<ScoreTemplate>();
+                entry.gameObject.SetActive(true);
+                entry.nameText.text = playerName;
+                entry.pointsText.text = points.ToString();
+            }
         }
     }
 }

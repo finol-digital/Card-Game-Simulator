@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 114416027808059046}
   - component: {fileID: 5854764439663770387}
   m_Layer: 0
-  m_Name: CGSNetPlayer
-  m_TagString: Untagged
+  m_Name: CgsNet Player
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,9 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a88bd459dba0be449622f9c07ed8e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
   syncInterval: 0.1
-  scoreIndex: 0
-  deckIndex: 0
 --- !u!114 &5854764439663770387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +58,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
-  m_AssetId: 576a15ab1b0e4f34c8981877e9ab8029
-  m_SceneId: 0
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
