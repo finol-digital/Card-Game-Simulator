@@ -1,0 +1,16 @@
+{
+    "name": "StandaloneFileBrowser",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ab425aab4b86fce43a60190dfdddb1ad"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

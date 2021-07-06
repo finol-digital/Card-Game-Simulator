@@ -10,6 +10,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using UnityExtensionMethods;
 using Object = UnityEngine.Object;
 
 namespace CardGameDef.Unity

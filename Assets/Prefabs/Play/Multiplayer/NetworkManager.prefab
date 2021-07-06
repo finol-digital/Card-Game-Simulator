@@ -97,8 +97,7 @@ MonoBehaviour:
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs:
-  - {fileID: 1073801045010386, guid: 58d2c1bbaeb829d42a84b6ce2a2d0897, type: 3}
+  spawnPrefabs: []
   lanConnector: {fileID: 210888049823459984}
   playController: {fileID: 0}
 --- !u!114 &6175044177485294063

@@ -19,7 +19,6 @@ namespace Cgs.Play.Multiplayer
         public string GameName { get; set; } = "";
 
         public CgsNetPlayer LocalPlayer { get; set; }
-        public CgsNetData Data { get; set; }
 
         public CgsNetDiscovery Discovery { get; private set; }
 
@@ -52,14 +51,6 @@ namespace Cgs.Play.Multiplayer
         {
             base.OnServerAddPlayer(conn);
             Debug.Log("[CgsNet Manager] Server adding player...");
-            if (Data == null)
-            {
-                Data = Instantiate(spawnPrefabs[0]).GetOrAddComponent<CgsNetData>();
-                NetworkServer.Spawn(Data.gameObject);
-            }
-
-            Data.RegisterScore(conn.identity.gameObject, CardGameManager.Current.GameStartPointsCount);
-            Debug.Log("[CgsNet Manager] Server added player!");
         }
 
         public override void OnClientConnect(NetworkConnection connection)

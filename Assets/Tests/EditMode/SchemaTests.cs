@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CardGameDef.Unity;
 using Cgs.Editor;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using NUnit.Framework;
 using UnityEngine;
+using UnityExtensionMethods;
 
 namespace Tests.EditMode
 {
