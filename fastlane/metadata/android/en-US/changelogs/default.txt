@@ -1,2 +1,1 @@
-- Fix: Share on Android
-- Tech: UWP deployment
+- Game-Play: Synchronize points across teams and display all points
