@@ -4,14 +4,11 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.51
-- Game-Play: Synchronize points across teams and display all points
-
-## Current Sprint
+## What's New - v1.52
 - Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
 - Game-Play: Support multiple hands in hand drawer
 
-## Next Sprint
+## Active Sprint
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: E: Move card to zone or stack
 
