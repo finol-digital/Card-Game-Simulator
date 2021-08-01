@@ -1,1 +1,1 @@
-- Game-Play: Synchronize points across teams and display all points
+- New tutorial video and updated documentation
