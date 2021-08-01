@@ -23,7 +23,7 @@ namespace Cgs.Menu
         public const string TutorialPrompt =
             "If you are new to Card Game Simulator (CGS), you may want to watch the CGS tutorial video.\nGo to the YouTube video?";
 
-        private const string TutorialUrl = "https://youtu.be/9J01FMgO7Pc";
+        private const string TutorialUrl = "https://youtu.be/PriDuaM6MEk";
 
         private const string PlayerPrefsHasSeenTutorial = "HasSeenTutorial";
 
