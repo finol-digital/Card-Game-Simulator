@@ -32,7 +32,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: Library
-          key: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@main
         env:
@@ -87,8 +88,10 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ matrix.targetPlatform }}
-          restore-keys: Library-
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-
+            Library-
       - name: Build Unity Project
         uses: game-ci/unity-builder@main
         env:

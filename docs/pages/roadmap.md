@@ -4,21 +4,18 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.51
-- Game-Play: Synchronize points across teams and display all points
+## What's New - v1.52
+- New tutorial video and updated documentation
 
-## Current Sprint
-- Integration: Re-record tutorial video (show on app first launch, cgs website, personal website, play store, and app stores)
-- Game-Play: Support multiple hands in hand drawer
-
-## Next Sprint
+## Active Sprint
 - Game-Play: Pre-defined card zones/stacks
-- Game-Play: E: Move card to zone or stack
+- Game-Play: Multiple hands in hand container
+- Cards: Move card to zone, stack, or container (E)
 
 ## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
-- Game-Play: Allow cards to snap to each other
+- Game-Play: Allow cards to snap to each other/align on grid
 - Game-Play: Convert card to stack
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
