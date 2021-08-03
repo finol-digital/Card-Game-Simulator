@@ -8,11 +8,14 @@ permalink: roadmap.html
 - New tutorial video and updated documentation
 
 ## Active Sprint
+- Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
+- Game-Play: Show how many cards each player has in the scoreboard
+- Game-Play: Support multiple card selection
+
+## Backlog
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Multiple hands in hand container
 - Cards: Move card to zone, stack, or container (E)
-
-## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Game-Play: Allow cards to snap to each other/align on grid
@@ -21,7 +24,6 @@ permalink: roadmap.html
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 - Game-Play: Support multiple playmats
-- Game-Play: Support multiple card selection
 - Game-Play: Customize controls/input
 - Game-Play: Face-up cards in cards stacks
 - Tech: Add code coverage
@@ -37,8 +39,8 @@ permalink: roadmap.html
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 
 ## Icebox
+- Game-Play: Log all Player actions
 - Fix: Open PDF fails outside of the Unity Editor
-- Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
