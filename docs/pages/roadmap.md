@@ -10,9 +10,9 @@ permalink: roadmap.html
 ## Active Sprint
 - Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Game-Play: Show how many cards each player has in the scoreboard
-- Game-Play: Support multiple card selection
 
 ## Backlog
+- Game-Play: Support multiple card selection
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Multiple hands in hand container
 - Cards: Move card to zone, stack, or container (E)
