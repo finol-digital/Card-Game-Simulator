@@ -1,0 +1,15 @@
+Set-StoreBrokerAuthentication -TenantId 1bab0886-bf2b-4c4f-acd5-ae83300ebef1
+
+check on windows 104 and:
+        LogoColor.png
+        LogoColor_big.png
+        
+Specify at runtime:
+ PDPRootPath - storebroker
+ ImagesRootPath - docs\assets\img
+ AppxPath 
+ OutPath 
+ OutName 
+
+Update 
+  <ReleaseNotes _locID="App_ReleaseNotes">
