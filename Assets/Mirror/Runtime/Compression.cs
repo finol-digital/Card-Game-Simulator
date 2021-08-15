@@ -1,5 +1,5 @@
 // Quaternion compression from DOTSNET
-
+using System;
 using UnityEngine;
 
 namespace Mirror
@@ -13,40 +13,40 @@ namespace Mirror
 
         // helper function to find largest absolute element
         // returns the index of the largest one
-        public static int LargestAbsoluteComponentIndex(Vector4 value, out float largest, out Vector3 withoutLargest)
+        public static int LargestAbsoluteComponentIndex(Vector4 value, out float largestAbs, out Vector3 withoutLargest)
         {
             // convert to abs
             Vector4 abs = new Vector4(Mathf.Abs(value.x), Mathf.Abs(value.y), Mathf.Abs(value.z), Mathf.Abs(value.w));
 
-            // set largest to first value (x)
-            largest = value.x;
+            // set largest to first abs (x)
+            largestAbs = abs.x;
             withoutLargest = new Vector3(value.y, value.z, value.w);
-            int index = 0;
+            int largestIndex = 0;
 
             // compare to the others, starting at second value
             // performance for 100k calls
             //   for-loop:       25ms
             //   manual checks:  22ms
-            if (abs.y > largest)
+            if (abs.y > largestAbs)
             {
-                index = 1;
-                largest = abs.y;
+                largestIndex = 1;
+                largestAbs = abs.y;
                 withoutLargest = new Vector3(value.x, value.z, value.w);
             }
-            if (abs.z > largest)
+            if (abs.z > largestAbs)
             {
-                index = 2;
-                largest = abs.z;
+                largestIndex = 2;
+                largestAbs = abs.z;
                 withoutLargest = new Vector3(value.x, value.y, value.w);
             }
-            if (abs.w > largest)
+            if (abs.w > largestAbs)
             {
-                index = 3;
-                largest = abs.w;
+                largestIndex = 3;
+                largestAbs = abs.w;
                 withoutLargest = new Vector3(value.x, value.y, value.z);
             }
 
-            return index;
+            return largestIndex;
         }
 
         // scale a float within min/max range to an ushort between min/max range
@@ -188,6 +188,170 @@ namespace Mirror
             // => NormalizeSafe returns a normalized quaternion even if we pass
             //    in NaN from deserializing invalid values!
             return QuaternionNormalizeSafe(new Quaternion(value.x, value.y, value.z, value.w));
+        }
+
+        // varint compression //////////////////////////////////////////////////
+        // compress ulong varint.
+        // same result for int, short and byte. only need one function.
+        // NOT an extension. otherwise weaver might accidentally use it.
+        public static void CompressVarUInt(NetworkWriter writer, ulong value)
+        {
+            if (value <= 240)
+            {
+                writer.Write((byte)value);
+                return;
+            }
+            if (value <= 2287)
+            {
+                writer.Write((byte)(((value - 240) >> 8) + 241));
+                writer.Write((byte)((value - 240) & 0xFF));
+                return;
+            }
+            if (value <= 67823)
+            {
+                writer.Write((byte)249);
+                writer.Write((byte)((value - 2288) >> 8));
+                writer.Write((byte)((value - 2288) & 0xFF));
+                return;
+            }
+            if (value <= 16777215)
+            {
+                writer.Write((byte)250);
+                writer.Write((byte)(value & 0xFF));
+                writer.Write((byte)((value >> 8) & 0xFF));
+                writer.Write((byte)((value >> 16) & 0xFF));
+                return;
+            }
+            if (value <= 4294967295)
+            {
+                writer.Write((byte)251);
+                writer.Write((byte)(value & 0xFF));
+                writer.Write((byte)((value >> 8) & 0xFF));
+                writer.Write((byte)((value >> 16) & 0xFF));
+                writer.Write((byte)((value >> 24) & 0xFF));
+                return;
+            }
+            if (value <= 1099511627775)
+            {
+                writer.Write((byte)252);
+                writer.Write((byte)(value & 0xFF));
+                writer.Write((byte)((value >> 8) & 0xFF));
+                writer.Write((byte)((value >> 16) & 0xFF));
+                writer.Write((byte)((value >> 24) & 0xFF));
+                writer.Write((byte)((value >> 32) & 0xFF));
+                return;
+            }
+            if (value <= 281474976710655)
+            {
+                writer.Write((byte)253);
+                writer.Write((byte)(value & 0xFF));
+                writer.Write((byte)((value >> 8) & 0xFF));
+                writer.Write((byte)((value >> 16) & 0xFF));
+                writer.Write((byte)((value >> 24) & 0xFF));
+                writer.Write((byte)((value >> 32) & 0xFF));
+                writer.Write((byte)((value >> 40) & 0xFF));
+                return;
+            }
+            if (value <= 72057594037927935)
+            {
+                writer.Write((byte)254);
+                writer.Write((byte)(value & 0xFF));
+                writer.Write((byte)((value >> 8) & 0xFF));
+                writer.Write((byte)((value >> 16) & 0xFF));
+                writer.Write((byte)((value >> 24) & 0xFF));
+                writer.Write((byte)((value >> 32) & 0xFF));
+                writer.Write((byte)((value >> 40) & 0xFF));
+                writer.Write((byte)((value >> 48) & 0xFF));
+                return;
+            }
+
+            // all others
+            {
+                writer.Write((byte)255);
+                writer.Write((byte)(value & 0xFF));
+                writer.Write((byte)((value >> 8) & 0xFF));
+                writer.Write((byte)((value >> 16) & 0xFF));
+                writer.Write((byte)((value >> 24) & 0xFF));
+                writer.Write((byte)((value >> 32) & 0xFF));
+                writer.Write((byte)((value >> 40) & 0xFF));
+                writer.Write((byte)((value >> 48) & 0xFF));
+                writer.Write((byte)((value >> 56) & 0xFF));
+            }
+        }
+
+
+        // zigzag encoding https://gist.github.com/mfuerstenau/ba870a29e16536fdbaba
+        public static void CompressVarInt(NetworkWriter writer, long i)
+        {
+            ulong zigzagged = (ulong)((i >> 63) ^ (i << 1));
+            CompressVarUInt(writer, zigzagged);
+        }
+
+        // NOT an extension. otherwise weaver might accidentally use it.
+        public static ulong DecompressVarUInt(NetworkReader reader)
+        {
+            byte a0 = reader.ReadByte();
+            if (a0 < 241)
+            {
+                return a0;
+            }
+
+            byte a1 = reader.ReadByte();
+            if (a0 >= 241 && a0 <= 248)
+            {
+                return 240 + ((a0 - (ulong)241) << 8) + a1;
+            }
+
+            byte a2 = reader.ReadByte();
+            if (a0 == 249)
+            {
+                return 2288 + ((ulong)a1 << 8) + a2;
+            }
+
+            byte a3 = reader.ReadByte();
+            if (a0 == 250)
+            {
+                return a1 + (((ulong)a2) << 8) + (((ulong)a3) << 16);
+            }
+
+            byte a4 = reader.ReadByte();
+            if (a0 == 251)
+            {
+                return a1 + (((ulong)a2) << 8) + (((ulong)a3) << 16) + (((ulong)a4) << 24);
+            }
+
+            byte a5 = reader.ReadByte();
+            if (a0 == 252)
+            {
+                return a1 + (((ulong)a2) << 8) + (((ulong)a3) << 16) + (((ulong)a4) << 24) + (((ulong)a5) << 32);
+            }
+
+            byte a6 = reader.ReadByte();
+            if (a0 == 253)
+            {
+                return a1 + (((ulong)a2) << 8) + (((ulong)a3) << 16) + (((ulong)a4) << 24) + (((ulong)a5) << 32) + (((ulong)a6) << 40);
+            }
+
+            byte a7 = reader.ReadByte();
+            if (a0 == 254)
+            {
+                return a1 + (((ulong)a2) << 8) + (((ulong)a3) << 16) + (((ulong)a4) << 24) + (((ulong)a5) << 32) + (((ulong)a6) << 40) + (((ulong)a7) << 48);
+            }
+
+            byte a8 = reader.ReadByte();
+            if (a0 == 255)
+            {
+                return a1 + (((ulong)a2) << 8) + (((ulong)a3) << 16) + (((ulong)a4) << 24) + (((ulong)a5) << 32) + (((ulong)a6) << 40) + (((ulong)a7) << 48)  + (((ulong)a8) << 56);
+            }
+
+            throw new IndexOutOfRangeException("DecompressVarInt failure: " + a0);
+        }
+
+        // zigzag decoding https://gist.github.com/mfuerstenau/ba870a29e16536fdbaba
+        public static long DecompressVarInt(NetworkReader reader)
+        {
+            ulong data = DecompressVarUInt(reader);
+            return ((long)(data >> 1)) ^ -((long)data & 1);
         }
     }
 }

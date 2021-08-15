@@ -1,0 +1,9 @@
+{
+    "name": "com.derek-r-s.lrm",
+    "version": "0.10.120",
+    "displayName": "Light-Reflective-Mirror",
+    "description": "Light Reflective Mirror is a transport for Mirror Networking which relays network traffic through your own servers.",
+    "unity": "2019.4",
+    "dependencies": {},
+    "keywords": []
+}
