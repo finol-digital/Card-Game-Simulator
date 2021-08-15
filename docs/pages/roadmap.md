@@ -7,6 +7,7 @@ permalink: roadmap.html
 ## What's New - v1.53
 - Fix: Flip card in hand
 - Fix: Move card from hand to stock
+- Fix: LAN Discovery
 - Game-Play: Show how many cards each player has in the scoreboard
 
 ## Active Sprint
