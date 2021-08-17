@@ -8,9 +8,9 @@ permalink: roadmap.html
 - Fix: Flip card in hand
 - Fix: Move card from hand to stock
 - Fix: LAN Discovery
-- Game-Play: Show how many cards each player has in the scoreboard
 
 ## Active Sprint
+- Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Support multiple card selection
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Multiple hands in hand container
