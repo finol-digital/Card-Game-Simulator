@@ -161,7 +161,8 @@ namespace Cgs.Play.Multiplayer
             if (IsLanConnectionSource)
                 Rebuild(_discoveredServers, SelectServer, _selectedServerId.GetValueOrDefault());
             else
-                Rebuild(_lrm.relayServerList.ToDictionary(server => server.serverId, server => server), SelectServer,
+                Rebuild(_lrm.relayServerList.ToDictionary(server => Convert.ToInt32(server.serverId), server => server),
+                    SelectServer,
                     Convert.ToInt32(_selectedServerIp));
 
             string ip = TargetIpAddress;
@@ -270,7 +271,8 @@ namespace Cgs.Play.Multiplayer
                     || serverResponse.Uri == null)
                 {
                     Debug.LogError("Error: Attempted to join a game without having selected a valid server!");
-                    CardGameManager.Instance.Messenger.Show("Error: Attempted to join a game without having selected a valid server!");
+                    CardGameManager.Instance.Messenger.Show(
+                        "Error: Attempted to join a game without having selected a valid server!");
                     return;
                 }
 

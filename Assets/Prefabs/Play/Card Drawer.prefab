@@ -771,6 +771,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card Zone - Horizontal
       objectReference: {fileID: 0}
+    - target: {fileID: 7301760087598746337, guid: 86a2b588a71aa914e9e8545728c3160c,
+        type: 3}
+      propertyPath: allowsFlip
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7303463712823025219, guid: 86a2b588a71aa914e9e8545728c3160c,
         type: 3}
       propertyPath: isBlocker

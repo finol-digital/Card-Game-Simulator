@@ -51,7 +51,7 @@ namespace Cgs.CardGameView
             CardModel cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel == null
                 || cardModel.ParentCardZone != null && cardModel.ParentCardZone.type != CardZoneType.Area
-                || cardModel.PlaceHolderCardZone != null)
+                || cardModel.PlaceHolderCardZone != null && cardModel.PlaceHolderCardZone.type != CardZoneType.Area)
                 return;
 
             DropHandler.OnDrop(cardModel);

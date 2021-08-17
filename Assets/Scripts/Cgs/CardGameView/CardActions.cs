@@ -14,13 +14,13 @@ namespace Cgs.CardGameView
     public class CardActions : MonoBehaviour
     {
         public static IReadOnlyDictionary<CardGameDef.CardAction, CardAction> ActionsDictionary =>
-            _actionsDictionary ?? (_actionsDictionary = new Dictionary<CardGameDef.CardAction, CardAction>
+            _actionsDictionary ??= new Dictionary<CardGameDef.CardAction, CardAction>
             {
                 [CardGameDef.CardAction.Move] = Move,
                 [CardGameDef.CardAction.Flip] = Flip,
                 [CardGameDef.CardAction.Rotate] = Rotate,
                 [CardGameDef.CardAction.Tap] = Tap
-            });
+            };
 
         private static Dictionary<CardGameDef.CardAction, CardAction> _actionsDictionary;
 

@@ -4,17 +4,18 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.52
-- New tutorial video and updated documentation
+## What's New - v1.53
+- Fix: Flip card in hand
+- Fix: Move card from hand to stock
+- Fix: LAN Discovery
 
 ## Active Sprint
-- Fix: [GitHub Issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Support multiple card selection
-
-## Backlog
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Multiple hands in hand container
+
+## Backlog
 - Cards: Move card to zone, stack, or container (E)
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs

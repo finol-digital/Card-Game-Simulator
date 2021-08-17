@@ -57,11 +57,12 @@ namespace LightReflectiveMirror
 
         void RecvData(IAsyncResult result)
         {
-            _clientInitialRecv = true;
             byte[] data = _udpClient.EndReceive(result, ref _recvEndpoint);
+            _udpClient.BeginReceive(new AsyncCallback(RecvData), _udpClient);
+            _clientInitialRecv = true;
             lastInteractionTime = DateTime.Now;
             dataReceived?.Invoke(_remoteEndpoint, data);
-            _udpClient.BeginReceive(new AsyncCallback(RecvData), _udpClient);
+            
         }
     }
 }

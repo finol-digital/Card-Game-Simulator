@@ -9,13 +9,14 @@ using LightReflectiveMirror;
 [RequireComponent(typeof(LightReflectiveMirrorTransport))]
 public class LRMDirectConnectModule : MonoBehaviour
 {
+    [HideInInspector]
     public Transport directConnectTransport;
     public bool showDebugLogs;
-    private LightReflectiveMirrorTransport _lightMirrorTransport;
+    private LightReflectiveMirrorTransport lightMirrorTransport;
 
     void Awake()
     {
-        _lightMirrorTransport = GetComponent<LightReflectiveMirrorTransport>();
+        lightMirrorTransport = GetComponent<LightReflectiveMirrorTransport>();
 
         if (directConnectTransport == null)
         {
@@ -26,13 +27,6 @@ public class LRMDirectConnectModule : MonoBehaviour
         if (directConnectTransport is LightReflectiveMirrorTransport)
         {
             Debug.Log("Direct Connect Transport Cannot be the relay, silly. :P");
-            return;
-        }
-
-        if(directConnectTransport == _lightMirrorTransport.clientToServerTransport)
-        {
-            Debug.LogError("LRM | Direct connect transport cannot be the same transport used to communicate with LRM servers!");
-            _lightMirrorTransport.useNATPunch = false;
             return;
         }
 
@@ -63,8 +57,9 @@ public class LRMDirectConnectModule : MonoBehaviour
 
     public void JoinServer(string ip, int port)
     {
-        if(SupportsNATPunch())
+        if (SupportsNATPunch())
             SetTransportPort(port);
+
         directConnectTransport.ClientConnect(ip);
     }
 
@@ -93,11 +88,16 @@ public class LRMDirectConnectModule : MonoBehaviour
         return directConnectTransport is kcp2k.KcpTransport;
     }
 
-    public bool KickClient(int clientID)
+    public void KickClient(int clientID)
     {
         if (showDebugLogs)
             Debug.Log("Kicked direct connect client.");
-        return directConnectTransport.ServerDisconnect(clientID);
+#if MIRROR_37_0_OR_NEWER
+        directConnectTransport.ServerDisconnect(clientID);
+        //return true;
+#else
+        directConnectTransport.ServerDisconnect(clientID);
+#endif
     }
 
     public void ClientDisconnect()
@@ -107,30 +107,38 @@ public class LRMDirectConnectModule : MonoBehaviour
 
     public void ServerSend(int clientID, ArraySegment<byte> data, int channel)
     {
+#if MIRROR_40_0_OR_NEWER
+        directConnectTransport.ServerSend(clientID, data, channel);
+#else
         directConnectTransport.ServerSend(clientID, channel, data);
+#endif
     }
 
     public void ClientSend(ArraySegment<byte> data, int channel)
     {
+#if MIRROR_40_0_OR_NEWER
+        directConnectTransport.ClientSend(data, channel);
+#else
         directConnectTransport.ClientSend(channel, data);
+#endif
     }
 
-    #region Transport Callbacks
+#region Transport Callbacks
     void OnServerConnected(int clientID)
     {
         if (showDebugLogs)
             Debug.Log("Direct Connect Client Connected");
-        _lightMirrorTransport.DirectAddClient(clientID);
+        lightMirrorTransport.DirectAddClient(clientID);
     }
 
     void OnServerDataReceived(int clientID, ArraySegment<byte> data, int channel)
     {
-        _lightMirrorTransport.DirectReceiveData(data, channel, clientID);
+        lightMirrorTransport.DirectReceiveData(data, channel, clientID);
     }
 
     void OnServerDisconnected(int clientID)
     {
-        _lightMirrorTransport.DirectRemoveClient(clientID);
+        lightMirrorTransport.DirectRemoveClient(clientID);
     }
 
     void OnServerError(int client, Exception error)
@@ -144,17 +152,17 @@ public class LRMDirectConnectModule : MonoBehaviour
         if (showDebugLogs)
             Debug.Log("Direct Connect Client Joined");
 
-        _lightMirrorTransport.DirectClientConnected();
+        lightMirrorTransport.DirectClientConnected();
     }
 
     void OnClientDisconnected()
     {
-        _lightMirrorTransport.DirectDisconnected();
+        lightMirrorTransport.DirectDisconnected();
     }
 
     void OnClientDataReceived(ArraySegment<byte> data, int channel)
     {
-        _lightMirrorTransport.DirectReceiveData(data, channel);
+        lightMirrorTransport.DirectReceiveData(data, channel);
     }
 
     void OnClientError(Exception error)
@@ -162,5 +170,5 @@ public class LRMDirectConnectModule : MonoBehaviour
         if (showDebugLogs)
             Debug.Log("Direct Client Error: " + error);
     }
-    #endregion
+#endregion
 }
