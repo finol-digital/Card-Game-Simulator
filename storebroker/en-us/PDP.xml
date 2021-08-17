@@ -59,8 +59,8 @@ When you enter a game, you will be prompted to load a deck. Some card games will
     <!-- PromotionalArt16x9, PromotionalArtwork2400X1200, XboxBrandedKeyArt, XboxTitledHeroArt, XboxFeaturedPromotionalArt, -->
     <!-- SquareIcon358X358, BackgroundImage1000X800, PromotionalArtwork414X180 -->
     <!-- There is no content for any of these elements, just a single attribute called FileName. -->
-    <Icon FileName="LogoColor.png" />
-    <StoreLogoSquare FileName="LogoColor_big.png" />
+    <Icon FileName="LogoColor300.png" />
+    <StoreLogoSquare FileName="LogoColor1080.png" />
   </AdditionalAssets>
   <Trailers>
     <!-- Maximum number of trailers permitted: 15 -->
