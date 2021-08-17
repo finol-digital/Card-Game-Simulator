@@ -1,1 +1,3 @@
-- New tutorial video and updated documentation
+- Fix: Flip card in hand
+- Fix: Move card from hand to stock
+- Fix: LAN Discovery
