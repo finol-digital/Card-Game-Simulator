@@ -4,19 +4,16 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.53
-- Fix: Flip card in hand
-- Fix: Move card from hand to stock
-- Fix: LAN Discovery
-
-## Active Sprint
+## What's New - v1.54
 - Game-Play: Show how many cards each player has in the scoreboard
-- Game-Play: Support multiple card selection
-- Game-Play: Pre-defined card zones/stacks
 - Game-Play: Multiple hands in hand container
 
-## Backlog
+## Active Sprint
+- Game-Play: Support multiple card selection
+- Game-Play: Pre-defined card zones/stacks
 - Cards: Move card to zone, stack, or container (E)
+
+## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Game-Play: Allow cards to snap to each other/align on grid
