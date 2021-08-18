@@ -270,9 +270,9 @@ jobs:
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           export notes="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
-          notes="${notes//'%'/'%25'}"
-          notes="${notes//$'\n'/'%0A'}"
-          notes="${notes//$'\r'/'%0D'}"
+          notes="${notes//'%'/%25}"
+          notes="${notes//$'\n'/%0A}"
+          notes="${notes//$'\r'/%0D}"
           echo "$notes"
           echo "::set-output name=RELEASE_NOTES::$notes"
       - name: Install Fastlane
@@ -333,9 +333,9 @@ jobs:
           ./fastlane/sign-osx-build.sh
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           export notes="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
-          notes="${notes//'%'/'%25'}"
-          notes="${notes//$'\n'/'%0A'}"
-          notes="${notes//$'\r'/'%0D'}"
+          notes="${notes//'%'/%25}"
+          notes="${notes//$'\n'/%0A}"
+          notes="${notes//$'\r'/%0D}"
           echo "$notes"
           echo "::set-output name=RELEASE_NOTES::$notes"
       - name: Upload to the Mac App Store
@@ -386,6 +386,12 @@ jobs:
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
+      - name: Write to Changelog
+        if: github.event.action == 'published'
+        shell: bash
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
@@ -398,31 +404,76 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Restore the Wpf application to populate the obj folder
-        run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+        shell: pwsh
         env:
           SolutionPath: build\WSAPlayer\Card Game Simulator.sln
           Configuration: Master
           RuntimeIdentifier: win-x64
+        run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
+      - name: Remove spaces from project name
+        uses: microsoft/variable-substitution@v1 
+        env:
+          ProjectName: CardGameSimulator
+        with:
+          files: 'build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj'
       - name: Decode the Pfx
+        shell: pwsh
         run: |
           $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.MICROSOFT_STORE_PFX_FILE }}")
           $currentDirectory = Get-Location
           $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
       - name: Build the .appxupload
-        run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
+        shell: pwsh
         env:
           SolutionPath: build\WSAPlayer\Card Game Simulator.sln
           Configuration: Master
           TargetPlatform: x64
           BuildMode: StoreUpload
           AppxBundle: Always
+        run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
       - name: Remove the .pfx
+        shell: pwsh
         run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
-      - name: Upload the .appxupload
-        uses: actions/upload-artifact@v2
+      - name: Get release notes
+        id: changelog
+        shell: bash
+        run: |
+          export notes="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          notes="${notes//'%'/%25}"
+          notes="${notes//$'\n'/%0A}"
+          notes="${notes//$'\r'/%0D}"
+          echo "$notes"
+          echo "::set-output name=RELEASE_NOTES::$notes"
+      - name: Apply release notes
+        uses: microsoft/variable-substitution@v1 
+        env:
+          ReleaseNotes: ${{ steps.changelog.outputs.RELEASE_NOTES }} 
         with:
-          name: cgs.appxupload
-          path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
-### Stretch Goal: https://github.com/microsoft/StoreBroker
-    
+          files: 'storebroker\en-us\PDP.xml'
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          format: "${major}.${minor}.${patch}"
+      - name: Upload to the Microsoft Store
+        shell: pwsh
+        env:
+          MICROSOFT_TENANT_ID: ${{ secrets.MICROSOFT_TENANT_ID }}
+          MICROSOFT_CLIENT_ID: ${{ secrets.MICROSOFT_CLIENT_ID }}
+          MICROSOFT_KEY: ${{ secrets.MICROSOFT_KEY }}
+          MICROSOFT_APP_ID: 9N96N5S4W3J0
+          STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', github.workspace) }}
+          PDP_ROOT_PATH: ${{ format('{0}\storebroker\', github.workspace) }}
+          IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', github.workspace) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
+          OUT_PATH: ${{ format('{0}\build\WSAPlayer\', github.workspace) }}
+          SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.json', github.workspace) }}
+          PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.zip', github.workspace) }}
+        run: |
+          Install-Module -Name StoreBroker
+          $cred = New-Object System.Management.Automation.PSCredential "$MICROSOFT_CLIENT_ID", $MICROSOFT_KEY
+          Set-StoreBrokerAuthentication -TenantId $MICROSOFT_TENANT_ID -Credential $cred
+          New-SubmissionPackage -ConfigPath "$STOREBROKER_CONFIG_PATH" -PDPRootPath "$PDP_ROOT_PATH" -ImagesRootPath "$IMAGES_ROOT_PATH" -AppxPath "$APPX_PATH" -OutPath "$OUT_PATH" -OutName 'cgs-upload' -Verbose
+          Update-ApplicationSubmission -AppId $MICROSOFT_APP_ID -SubmissionDataPath "$SUBMISSION_DATA_PATH" -PackagePath "$PACKAGE_PATH" -ReplacePackages -UpdateListings -AutoCommit -Force
+
