@@ -4,10 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.53
-- Fix: Flip card in hand
-- Fix: Move card from hand to stock
-- Fix: LAN Discovery
+## What's New - v1.54
+- Fix: Online lobby
 
 ## Active Sprint
 - Fix: Duplicate card when tapping on deck
