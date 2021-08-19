@@ -6,10 +6,10 @@ permalink: roadmap.html
 
 ## What's New - v1.54
 - Fix: Online lobby
-
-## Active Sprint
 - Fix: Duplicate card when tapping on deck
 - Integration: CGS Discord Server
+
+## Active Sprint
 - Game-Play: Rotate card stacks & create additional deck(s) further above
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand container

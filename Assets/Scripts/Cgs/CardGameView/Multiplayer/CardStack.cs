@@ -22,10 +22,9 @@ namespace Cgs.CardGameView.Multiplayer
     {
         [ThreadStatic] private static Random _local;
 
-        private static Random ThisThreadsRandom => _local ??
-                                                   (_local = new Random(
-                                                       unchecked(Environment.TickCount * 31 + Thread
-                                                           .CurrentThread.ManagedThreadId)));
+        private static Random ThisThreadsRandom => _local ??= new Random(
+            unchecked(Environment.TickCount * 31 + Thread
+                .CurrentThread.ManagedThreadId));
 
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -34,9 +33,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 n--;
                 int k = ThisThreadsRandom.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
+                (list[k], list[n]) = (list[n], list[k]);
             }
         }
     }
@@ -101,7 +98,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             GetComponent<CardDropArea>().DropHandler = this;
 
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             rectTransform.sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             rectTransform.localScale = Vector3.one;
@@ -132,7 +129,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _currentPointerEventData = eventData;
             _pointerPositions[eventData.pointerId] = eventData.position;
-            _pointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
+            _pointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -212,7 +209,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Vector2 removedOffset = Vector2.zero;
             if (_pointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
-                removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
+                removedOffset = (Vector2)transform.position - eventData.position - pointerDragOffset;
             _pointerPositions.Remove(eventData.pointerId);
             _pointerDragOffsets.Remove(eventData.pointerId);
             foreach (int offsetKey in _pointerDragOffsets.Keys.ToList())
@@ -248,7 +245,7 @@ namespace Cgs.CardGameView.Multiplayer
             targetPosition +=
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
 
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             rectTransform.position = targetPosition;
             rectTransform.SetAsLastSibling();
 
@@ -272,7 +269,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
-            ((RectTransform) transform).anchoredPosition = newValue;
+            ((RectTransform)transform).anchoredPosition = newValue;
         }
 
         [PublicAPI]
@@ -304,6 +301,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardModel cardModel)
         {
+            cardModel.PlaceHolderCardZone = null;
             if (CgsNetManager.Instance.isNetworkActive)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
             else
