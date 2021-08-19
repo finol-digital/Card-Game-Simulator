@@ -48,6 +48,7 @@ permalink: roadmap.html
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
+- Tech: Amazon App Store
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
 - Tech: Upgrade json schema version from v4 to v7
