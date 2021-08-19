@@ -161,9 +161,9 @@ namespace Cgs.Play.Multiplayer
             if (IsLanConnectionSource)
                 Rebuild(_discoveredServers, SelectServer, _selectedServerId.GetValueOrDefault());
             else
-                Rebuild(_lrm.relayServerList.ToDictionary(server => Convert.ToInt32(server.serverId), server => server),
+                Rebuild(_lrm.relayServerList.ToDictionary(server => server.serverId, server => server),
                     SelectServer,
-                    Convert.ToInt32(_selectedServerIp));
+                    _selectedServerIp);
 
             string ip = TargetIpAddress;
             joinButton.interactable =
@@ -225,18 +225,18 @@ namespace Cgs.Play.Multiplayer
         }
 
         [UsedImplicitly]
-        public void SelectServer(Toggle toggle, int serverId)
+        public void SelectServer(Toggle toggle, String serverId)
         {
             _selectedServerId = null;
             if (toggle.isOn)
             {
-                _selectedServerIp = serverId.ToString();
+                _selectedServerIp = serverId;
                 if (!string.IsNullOrEmpty(ipInputField.text))
                     ipInputField.text = string.Empty;
                 joinButton.interactable = true;
             }
             else if (!ipInputField.isFocused && !toggle.group.AnyTogglesOn() &&
-                     serverId.ToString().Equals(_selectedServerIp))
+                     serverId.Equals(_selectedServerIp))
                 Join();
         }
 

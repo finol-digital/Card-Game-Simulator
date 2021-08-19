@@ -4,14 +4,12 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.53
-- Fix: Flip card in hand
-- Fix: Move card from hand to stock
-- Fix: LAN Discovery
-
-## Active Sprint
+## What's New - v1.54
+- Fix: Online lobby
 - Fix: Duplicate card when tapping on deck
 - Integration: CGS Discord Server
+
+## Active Sprint
 - Game-Play: Rotate card stacks & create additional deck(s) further above
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand container

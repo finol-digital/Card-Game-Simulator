@@ -36,6 +36,7 @@ When navigating through CGS, you may find it useful to use [keyboard shortcuts](
 
 ## Feedback
 See the [current roadmap](roadmap.html). Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or [contact us on Facebook](https://www.facebook.com/cardgamesimulator/). 
-We're also on [Twitter](https://twitter.com/cardgamesim) and [Reddit](https://www.reddit.com/r/CardGameSimulator/), and we encourage you to check out [these other projects](external.html).
+We're also on [Discord](https://discord.gg/MdUHEUJCU4), [Twitter](https://twitter.com/cardgamesim), and [Reddit](https://www.reddit.com/r/CardGameSimulator/).
+We encourage you to check out [these other projects](external.html).
 
 *You may also be interested in our [Privacy Policy](PRIVACY.html).*
