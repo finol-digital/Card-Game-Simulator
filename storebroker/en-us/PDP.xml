@@ -36,8 +36,7 @@ When you enter a game, you will be prompted to load a deck. Some card games will
     <!-- Specify this value if you want to include a "Developed by" field in the listing. (The "Published by" field will list the publisher display name associated with your account, whether or not you provide a devStudio value.) -->
     <!-- _locComment_text="{MaxLength=255} App DevStudio" -->
   </DevStudio>
-  <ReleaseNotes _locID="App_ReleaseNotes">
-    <!-- _locComment_text="{MaxLength=1500} App Release Note" -->- New tutorial video and updated documentation</ReleaseNotes>
+  <ReleaseNotes _locID="App_ReleaseNotes"></ReleaseNotes>
   <ScreenshotCaptions>
     <!-- Valid length: 200 character limit, up to 9 elements per platform -->
     <!-- Valid attributes: any of DesktopImage, MobileImage, XboxImage, SurfaceHubImage, and HoloLensImage -->
