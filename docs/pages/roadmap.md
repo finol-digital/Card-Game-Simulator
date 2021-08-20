@@ -4,10 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.54
-- Fix: Online lobby
-- Fix: Duplicate card when tapping on deck
-- Integration: CGS Discord Server
+## What's New - v1.55
 
 ## Active Sprint
 - Game-Play: Rotate card stacks & create additional deck(s) further above
