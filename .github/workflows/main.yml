@@ -452,7 +452,7 @@ jobs:
         env:
           ReleaseNotes: ${{ steps.changelog.outputs.RELEASE_NOTES }} 
           PdpFilePath: storebroker\en-us\PDP.xml
-        run: xml ed -L -u "//ReleaseNotes" -v "$ReleaseNotes" $PdpFilePath
+        run: xml ed -L -u "//ReleaseNotes" -v $env:ReleaseNotes $env:PdpFilePath
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
