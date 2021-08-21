@@ -416,8 +416,8 @@ jobs:
       - name: Remove spaces from project name
         shell: pwsh
         env:
-          ProjectFilePath: ${{ format('{0}\build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj', github.workspace) }}
-        run: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator "$ProjectFilePath"
+          ProjectFilePath: build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj
+        run: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator $env:ProjectFilePath
       - name: Decode the Pfx
         shell: pwsh
         run: |
@@ -451,8 +451,8 @@ jobs:
         shell: pwsh
         env:
           ReleaseNotes: ${{ steps.changelog.outputs.RELEASE_NOTES }} 
-          PdpFilePath: ${{ format('{0}\storebroker\en-us\PDP.xml', github.workspace) }}
-        run: xml ed -L -u "//ReleaseNotes" -v "$ReleaseNotes" "$PdpFilePath"
+          PdpFilePath: storebroker\en-us\PDP.xml
+        run: xml ed -L -u "//ReleaseNotes" -v "$ReleaseNotes" $env:PdpFilePath
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
