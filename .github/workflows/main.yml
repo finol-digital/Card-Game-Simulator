@@ -392,6 +392,9 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+      - name: Setup xmlstarlet
+        shell: pwsh
+        run: choco install xmlstarlet
       - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
@@ -414,8 +417,7 @@ jobs:
         uses: Mudlet/xmlstarlet-action@master
         env:
           ProjectFilePath: ${{ format('{0}\build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj', github.workspace) }}
-        with:
-          args: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator "$ProjectFilePath"
+        run: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator "$ProjectFilePath"
       - name: Decode the Pfx
         shell: pwsh
         run: |
@@ -446,12 +448,11 @@ jobs:
           echo "$notes"
           echo "::set-output name=RELEASE_NOTES::$notes"
       - name: Apply release notes
-        uses: Mudlet/xmlstarlet-action@master
+        shell: pwsh
         env:
           ReleaseNotes: ${{ steps.changelog.outputs.RELEASE_NOTES }} 
           PdpFilePath: ${{ format('{0}\storebroker\en-us\PDP.xml', github.workspace) }}
-        with:
-          args: xml ed -L -u "//ReleaseNotes" -v "$ReleaseNotes" "$PdpFilePath"
+        run: xml ed -L -u "//ReleaseNotes" -v "$ReleaseNotes" "$PdpFilePath"
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
