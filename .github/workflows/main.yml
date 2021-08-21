@@ -414,7 +414,7 @@ jobs:
           RuntimeIdentifier: win-x64
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
       - name: Remove spaces from project name
-        uses: Mudlet/xmlstarlet-action@master
+        shell: pwsh
         env:
           ProjectFilePath: ${{ format('{0}\build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj', github.workspace) }}
         run: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator "$ProjectFilePath"
