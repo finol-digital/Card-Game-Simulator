@@ -473,9 +473,9 @@ jobs:
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.json', github.workspace) }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.zip', github.workspace) }}
         run: |
-          Install-Module -Name StoreBroker
-          $cred = New-Object System.Management.Automation.PSCredential "$MICROSOFT_CLIENT_ID", $MICROSOFT_KEY
+          Install-Module -Name StoreBroker -AcceptLicense
+          $cred = New-Object System.Management.Automation.PSCredential ($env:MICROSOFT_CLIENT_ID, $env:MICROSOFT_KEY)
           Set-StoreBrokerAuthentication -TenantId $MICROSOFT_TENANT_ID -Credential $cred
-          New-SubmissionPackage -ConfigPath "$STOREBROKER_CONFIG_PATH" -PDPRootPath "$PDP_ROOT_PATH" -ImagesRootPath "$IMAGES_ROOT_PATH" -AppxPath "$APPX_PATH" -OutPath "$OUT_PATH" -OutName 'cgs-upload' -Verbose
-          Update-ApplicationSubmission -AppId $MICROSOFT_APP_ID -SubmissionDataPath "$SUBMISSION_DATA_PATH" -PackagePath "$PACKAGE_PATH" -ReplacePackages -UpdateListings -AutoCommit -Force
+          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'cgs-upload' -Verbose
+          Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
