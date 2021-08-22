@@ -470,7 +470,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', github.workspace) }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', github.workspace) }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', github.workspace) }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\', github.workspace) }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.json', github.workspace) }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.zip', github.workspace) }}
