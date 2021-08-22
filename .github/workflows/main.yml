@@ -473,7 +473,7 @@ jobs:
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.json', github.workspace) }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.zip', github.workspace) }}
         run: |
-          Install-Module -Name StoreBroker -AcceptLicense
+          Install-Module -Name StoreBroker -AcceptLicense -Force
           $pass = ConvertTo-SecureString $env:MICROSOFT_KEY -AsPlainText -Force
           $cred = New-Object System.Management.Automation.PSCredential ($env:MICROSOFT_CLIENT_ID, $pass)
           Set-StoreBrokerAuthentication -TenantId $MICROSOFT_TENANT_ID -Credential $cred
