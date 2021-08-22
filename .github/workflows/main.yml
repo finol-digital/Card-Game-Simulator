@@ -381,6 +381,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+          fetch-depth: 0
       - name: Download WSAPlayer Artifact
         uses: actions/download-artifact@v2
         with:
