@@ -408,6 +408,11 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
+      - name: Remove spaces from project name
+        shell: pwsh
+        env:
+          ProjectFilePath: build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj
+        run: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator $env:ProjectFilePath
       - name: Restore the Wpf application to populate the obj folder
         shell: pwsh
         env:
@@ -470,7 +475,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', github.workspace) }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', github.workspace) }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', github.workspace) }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\', github.workspace) }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.json', github.workspace) }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.zip', github.workspace) }}
