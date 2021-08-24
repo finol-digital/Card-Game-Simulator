@@ -411,6 +411,7 @@ jobs:
           files: "build/WSAPlayer/Card Game Simulator.sln"
           replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
       - name: Remove spaces from project name 2
+        uses: davidmfinol/replace-action@master
         with:
           files: "build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj"
           replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
@@ -451,6 +452,7 @@ jobs:
           echo "$notes"
           echo "::set-output name=RELEASE_NOTES::$notes"
       - name: Apply release notes
+        uses: davidmfinol/replace-action@master
         with:
           files: "storebroker\en-us\PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
