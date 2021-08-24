@@ -409,6 +409,11 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Remove spaces from project name
+        uses: datamonsters/replace-action@v2
+        with:
+          files: "build/WSAPlayer/Card Game Simulator.sln"
+          replace: "\"Card Game Simulator\"=\"CardGameSimulator\""
+      - name: Remove spaces from project name 2
         shell: pwsh
         env:
           ProjectFilePath: build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj
@@ -420,11 +425,6 @@ jobs:
           Configuration: Master
           RuntimeIdentifier: win-x64
         run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
-      - name: Remove spaces from project name
-        shell: pwsh
-        env:
-          ProjectFilePath: build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj
-        run: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator $env:ProjectFilePath
       - name: Decode the Pfx
         shell: pwsh
         run: |
