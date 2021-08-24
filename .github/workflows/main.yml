@@ -413,7 +413,7 @@ jobs:
       - name: Remove spaces from project name 2
         uses: davidmfinol/replace-action@master
         with:
-          files: "build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj"
+          files: "build/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
           replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
       - name: Restore the Wpf application to populate the obj folder
         shell: pwsh
@@ -454,7 +454,7 @@ jobs:
       - name: Apply release notes
         uses: davidmfinol/replace-action@master
         with:
-          files: "storebroker\en-us\PDP.xml"
+          files: "storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
       - name: Get Version
         id: versioning
