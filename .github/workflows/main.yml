@@ -409,7 +409,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       - name: Remove spaces from project name
-        uses: datamonsters/replace-action@v2
+        uses: davidmfinol/replace-action@master
         with:
           files: "build/WSAPlayer/Card Game Simulator.sln"
           replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
