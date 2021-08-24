@@ -473,13 +473,13 @@ jobs:
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', github.workspace) }}
           APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\', github.workspace) }}
-          SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.json', github.workspace) }}
-          PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\cgs-upload.zip', github.workspace) }}
+          SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\upload.json', github.workspace) }}
+          PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\upload.zip', github.workspace) }}
         run: |
           Install-Module -Name StoreBroker -AcceptLicense -Force
           $pass = ConvertTo-SecureString $env:MICROSOFT_KEY -AsPlainText -Force
           $cred = New-Object System.Management.Automation.PSCredential ($env:MICROSOFT_CLIENT_ID, $pass)
           Set-StoreBrokerAuthentication -TenantId $env:MICROSOFT_TENANT_ID -Credential $cred
-          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'cgs-upload' -Verbose
+          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
