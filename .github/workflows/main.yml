@@ -412,7 +412,7 @@ jobs:
         uses: datamonsters/replace-action@v2
         with:
           files: "build/WSAPlayer/Card Game Simulator.sln"
-          replace: "\"Card Game Simulator\"=\"CardGameSimulator\""
+          replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
       - name: Remove spaces from project name 2
         shell: pwsh
         env:
