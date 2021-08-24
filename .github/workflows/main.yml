@@ -394,9 +394,6 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-      - name: Setup xmlstarlet
-        shell: pwsh
-        run: choco install xmlstarlet
       - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
@@ -414,10 +411,9 @@ jobs:
           files: "build/WSAPlayer/Card Game Simulator.sln"
           replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
       - name: Remove spaces from project name 2
-        shell: pwsh
-        env:
-          ProjectFilePath: build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj
-        run: xml ed -L -u "//*[local-name()='ProjectName']" -v CardGameSimulator $env:ProjectFilePath
+        with:
+          files: "build\WSAPlayer\Card Game Simulator\Card Game Simulator.vcxproj"
+          replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
       - name: Restore the Wpf application to populate the obj folder
         shell: pwsh
         env:
@@ -455,11 +451,9 @@ jobs:
           echo "$notes"
           echo "::set-output name=RELEASE_NOTES::$notes"
       - name: Apply release notes
-        shell: pwsh
-        env:
-          ReleaseNotes: ${{ steps.changelog.outputs.RELEASE_NOTES }} 
-          PdpFilePath: storebroker\en-us\PDP.xml
-        run: xml ed -L -u "//ReleaseNotes" -v $env:ReleaseNotes $env:PdpFilePath
+        with:
+          files: "storebroker\en-us\PDP.xml"
+          replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
