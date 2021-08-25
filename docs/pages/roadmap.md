@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.55
+- Cards: Creation allows for jpg and text-only
 
 ## Active Sprint
 - Game-Play: Rotate card stacks & create additional deck(s) further above
