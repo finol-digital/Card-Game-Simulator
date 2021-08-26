@@ -8,7 +8,7 @@ permalink: roadmap.html
 - Cards: Creation allows for jpg and text-only
 
 ## Active Sprint
-- Game-Play: Rotate card stacks & create additional deck(s) further above
+- Game-Play: Create additional deck(s) further above
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand container
 
@@ -22,6 +22,7 @@ permalink: roadmap.html
 - Cards: Support multiple card backs
 - Game-Play: Allow cards to snap to each other/align on grid
 - Game-Play: Convert card to stack
+- Game-Play: Rotate card stacks
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
