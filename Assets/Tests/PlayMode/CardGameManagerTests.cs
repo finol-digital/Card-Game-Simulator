@@ -94,9 +94,10 @@ namespace Tests.PlayMode
         }
 
         [Test]
-        [Ignore("TODO")]
+        //[Ignore("TODO")]
         public void CanRecoverFromFailure()
         {
+        add compiler error!
             // TODO:
             Assert.Fail();
         }
