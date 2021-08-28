@@ -35,6 +35,7 @@ namespace Tests.PlayMode
 
         [UnityTest]
         [Timeout(3600000)]
+        [Ignore("TODO")]
         public IEnumerator CanGetGames()
         {
             var jsonFile = Resources.Load("games") as TextAsset;
@@ -59,6 +60,7 @@ namespace Tests.PlayMode
         }
 
         [UnityTest]
+        [Ignore("TODO")]
         public IEnumerator CanLoadDefaultGames()
         {
             if (Directory.Exists(UnityCardGame.GamesDirectoryPath))

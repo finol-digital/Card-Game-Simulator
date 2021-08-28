@@ -36,6 +36,10 @@ jobs:
           restore-keys: Library-
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@fix/exit-code
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Write to Changelog
