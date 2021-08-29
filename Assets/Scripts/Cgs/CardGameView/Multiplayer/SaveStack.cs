@@ -3,20 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using CardGameDef.Unity;
 using Cgs.Decks;
-using Cgs.Play.Multiplayer;
-using JetBrains.Annotations;
-using Mirror;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityExtensionMethods;
-using Random = System.Random;
 
 namespace Cgs.CardGameView.Multiplayer
 {
@@ -33,7 +23,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void SaveToFile()
         {
             _currentDeck = new UnityDeck(CardGameManager.Current, _stack.Name + " " + DateTime.Now,
-                CardGameManager.Current.DeckFileType,_stack.Cards);
+                CardGameManager.Current.DeckFileType, _stack.Cards);
             SaveToFile(_currentDeck);
         }
 
@@ -47,7 +37,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
             catch (Exception e)
             {
-                //Debug.LogError(DeckSaveErrorMessage + e.Message);
+                Debug.LogError(DeckLoadMenu.DeckSaveErrorMessage + e.Message);
             }
 
             deckSaveCallback?.Invoke(deck);

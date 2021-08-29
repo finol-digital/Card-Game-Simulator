@@ -5,14 +5,15 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.55
-- Cards: Creation allows for jpg and text-only
+- Game-Play: Added save to card stacks
 
 ## Active Sprint
-- Game-Play: Create additional deck(s) further above
+- Cards: Creation allows for jpg and text-only
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand container
 
 ## Next Sprint
+- Game-Play: Card Stack Manager
 - Game-Play: Support multiple card selection
 - Game-Play: Pre-defined card zones/stacks
 - Cards: Move card to zone, stack, or container (E)
