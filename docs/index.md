@@ -4,12 +4,12 @@ cgsYoutubeId: PriDuaM6MEk
 ---
 
 # Play Anywhere
+- PC via Steam *(Coming Soon!)*
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
 - iOS via the [App Store](https://itunes.apple.com/us/app/card-game-simulator/id1392877362?ls=1&mt=8)
 - OSX via the [Mac App Store](https://itunes.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
 - Windows via the [Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
 - Web via [Unity WebGL](cgs-webgl.html) *(experimental)*
-- Others via [GitHub Releases](https://github.com/finol-digital/Card-Game-Simulator/releases)
 
 ## Create & Share Custom Games
 With CGS, users can create and share their own custom card games!
