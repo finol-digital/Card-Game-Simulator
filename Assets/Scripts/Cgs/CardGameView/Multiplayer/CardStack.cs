@@ -43,6 +43,7 @@ namespace Cgs.CardGameView.Multiplayer
         IBeginDragHandler, IDragHandler, IEndDragHandler, ICardDropHandler
     {
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
+        public string SavePrompt => $"Save {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
 
         public bool IsDraggingCard => _pointerPositions.Count == 1 && _currentPointerEventData != null &&
@@ -377,6 +378,17 @@ namespace Cgs.CardGameView.Multiplayer
             _cardIds.Clear();
             _cardIds.AddRange(cards);
             _shuffleTime = 1;
+        }
+
+        [UsedImplicitly]
+        public void PromptSave()
+        {
+            CardGameManager.Instance.Messenger.Prompt(SavePrompt, Save);
+        }
+
+        private void Save()
+        {
+// TODO
         }
 
         [UsedImplicitly]
