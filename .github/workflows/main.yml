@@ -32,7 +32,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-2-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@main
