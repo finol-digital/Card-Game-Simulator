@@ -4,9 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using CardGameDef.Unity;
+using Cgs.Decks;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
@@ -42,6 +44,10 @@ namespace Cgs.CardGameView.Multiplayer
     public class CardStack : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
         IBeginDragHandler, IDragHandler, IEndDragHandler, ICardDropHandler
     {
+        private const string ShuffleText = "Shuffled!";
+        private const string SaveText = "Saved";
+        private const string SaveDelimiter = "_";
+
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
@@ -58,7 +64,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Text deckLabel;
         public Text countLabel;
-        public GameObject shuffleLabel;
+        public Text actionLabel;
         public Image topCard;
         public CanvasGroup buttons;
 
@@ -85,7 +91,8 @@ namespace Cgs.CardGameView.Multiplayer
         [SyncVar(hook = nameof(OnChangePosition))]
         public Vector2 position;
 
-        [SyncVar] private float _shuffleTime;
+        [SyncVar] private string _actionText = "";
+        [SyncVar] private float _actionTime;
 
         private StackViewer _viewer;
 
@@ -119,11 +126,14 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
-            bool shuffled = _shuffleTime > 0;
-            if (shuffleLabel.activeSelf != shuffled)
-                shuffleLabel.SetActive(shuffled);
-            if (shuffled && (!CgsNetManager.Instance.isNetworkActive || isServer))
-                _shuffleTime -= Time.deltaTime;
+            bool isAction = _actionTime > 0;
+            if (actionLabel.gameObject.activeSelf != isAction)
+            {
+                actionLabel.gameObject.SetActive(isAction);
+                actionLabel.text = _actionText;
+            }
+            if (isAction && (!CgsNetManager.Instance.isNetworkActive || isServer))
+                _actionTime -= Time.deltaTime;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -377,7 +387,9 @@ namespace Cgs.CardGameView.Multiplayer
             cards.Shuffle();
             _cardIds.Clear();
             _cardIds.AddRange(cards);
-            _shuffleTime = 1;
+
+            _actionText = ShuffleText;
+            _actionTime = 1;
         }
 
         [UsedImplicitly]
@@ -388,7 +400,21 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Save()
         {
-// TODO
+            var unityDeck = new UnityDeck(CardGameManager.Current, Name + SaveDelimiter + DateTime.Now,
+                CardGameManager.Current.DeckFileType, Cards);
+            try
+            {
+                if (!Directory.Exists(CardGameManager.Current.DecksDirectoryPath))
+                    Directory.CreateDirectory(CardGameManager.Current.DecksDirectoryPath);
+                File.WriteAllText(unityDeck.FilePath, unityDeck.ToString());
+
+                _actionText = SaveText;
+                _actionTime = 1;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(DeckLoadMenu.DeckSaveErrorMessage + e.Message);
+            }
         }
 
         [UsedImplicitly]
