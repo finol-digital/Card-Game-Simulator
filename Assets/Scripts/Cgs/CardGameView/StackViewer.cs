@@ -18,6 +18,7 @@ namespace Cgs.CardGameView
     public class StackViewer : MonoBehaviour, ICardDropHandler
     {
         private const float HandleHeight = 100.0f;
+        private const float ScrollbarHeight = 50.0f;
 
         public GameObject cardModelPrefab;
 
@@ -54,9 +55,10 @@ namespace Cgs.CardGameView
 
         public void Resize()
         {
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             float cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, HandleHeight + cardHeight);
+            rectTransform.sizeDelta =
+                new Vector2(rectTransform.sizeDelta.x, HandleHeight + cardHeight + ScrollbarHeight);
             cardZoneTransform.sizeDelta = new Vector2(cardZoneTransform.sizeDelta.x, cardHeight);
         }
 
