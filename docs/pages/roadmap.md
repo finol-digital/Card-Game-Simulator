@@ -8,11 +8,13 @@ permalink: roadmap.html
 - Game-Play: Added save to card stacks
 
 ## Active Sprint
+- Fix: Account for card size differences
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand container
 
 ## Next Sprint
+- Fix: Cards duplicated when drawn by multiple players
 - Game-Play: Card Stack Manager
 - Game-Play: Support multiple card selection
 - Game-Play: Pre-defined card zones/stacks
