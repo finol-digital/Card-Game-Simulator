@@ -517,6 +517,9 @@ MonoBehaviour:
   downButton: {fileID: 1871971257440497774}
   upButton: {fileID: 5712793710300922022}
   panelRectTransform: {fileID: 3475859695529778835}
+  cardZonesRectTransform: {fileID: 3004100670776422371}
+  cardZoneRectTransforms:
+  - {fileID: 2398153831763885075}
 --- !u!114 &1098799366171000606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1276,7 +1279,7 @@ PrefabInstance:
     - target: {fileID: 7262617277326294647, guid: 86a2b588a71aa914e9e8545728c3160c,
         type: 3}
       propertyPath: m_Name
-      value: Card Zone - Horizontal
+      value: Hand Zone
       objectReference: {fileID: 0}
     - target: {fileID: 7301760087598746337, guid: 86a2b588a71aa914e9e8545728c3160c,
         type: 3}

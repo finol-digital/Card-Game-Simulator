@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections.Generic;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace Cgs.Play.Drawer
 {
     public class CardDrawer : MonoBehaviour
     {
+        private const float HandleHeight = 100.0f;
+
         public static readonly Vector2 ShownPosition = Vector2.zero;
 
         public static Vector2 HiddenPosition =>
@@ -20,6 +23,8 @@ namespace Cgs.Play.Drawer
         public Button downButton;
         public Button upButton;
         public RectTransform panelRectTransform;
+        public RectTransform cardZonesRectTransform;
+        public List<RectTransform> cardZoneRectTransforms;
 
         private void OnEnable()
         {
@@ -42,7 +47,11 @@ namespace Cgs.Play.Drawer
 
         private void Resize()
         {
-            viewer.Resize();
+            float cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
+            panelRectTransform.sizeDelta = new Vector2(panelRectTransform.sizeDelta.x, HandleHeight + cardHeight);
+            cardZonesRectTransform.sizeDelta = new Vector2(cardZonesRectTransform.sizeDelta.x, cardHeight);
+            foreach (RectTransform cardZoneRectTransform in cardZoneRectTransforms)
+                cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
         }
 
         public void Show()
@@ -68,6 +77,5 @@ namespace Cgs.Play.Drawer
             downButton.interactable = false;
             upButton.interactable = true;
         }
-
     }
 }
