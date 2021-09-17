@@ -12,6 +12,7 @@ using Cgs.CardGameView.Multiplayer;
 using Cgs.Cards;
 using Cgs.Decks;
 using Cgs.Menu;
+using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
@@ -43,7 +44,7 @@ namespace Cgs.Play
 
         public CardZone playArea;
         public List<CardDropArea> playDropZones;
-        public HandController hand;
+        public CardDrawer drawer;
         public PlayMenu menu;
         public Scoreboard scoreboard;
 
@@ -123,7 +124,7 @@ namespace Cgs.Play
             else
             {
                 ResetPlayArea();
-                hand.Clear();
+                drawer.Clear();
                 _soloDeckStack = null;
                 DeckLoader.Show(LoadDeck);
             }
@@ -278,7 +279,7 @@ namespace Cgs.Play
 
         private void DealStartingHand()
         {
-            hand.Show();
+            drawer.Show();
             Deal(Dealer.Count);
         }
 
@@ -295,7 +296,7 @@ namespace Cgs.Play
         public void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
             foreach (UnityCard card in cards)
-                hand.AddCard(card);
+                drawer.AddCard(card);
         }
 
         private IEnumerable<UnityCard> PopSoloDeckCards(int count)

@@ -338,7 +338,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log("[CgsNet Player] Game is restarting!...");
             CgsNetManager.Instance.playController.ResetPlayArea();
-            CgsNetManager.Instance.playController.hand.Clear();
+            CgsNetManager.Instance.playController.drawer.Clear();
             CurrentDeck = null;
             StartCoroutine(WaitToRestartGame());
         }

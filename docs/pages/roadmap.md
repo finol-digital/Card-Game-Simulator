@@ -9,9 +9,9 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Fix: Account for card size differences
-- Cards: Creation allows for jpg and text-only
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand container
+- Cards: Creation allows for jpg and text-only
 
 ## Next Sprint
 - Fix: Cards duplicated when drawn by multiple players
