@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -85,18 +86,23 @@ namespace Cgs.Play
         private void Refresh()
         {
             // TODO: Improve this very slow process
-            List<Tuple<string, int>> scores = GameObject.FindGameObjectsWithTag("Player")
+            List<Tuple<string, int, string>> scores = GameObject.FindGameObjectsWithTag("Player")
                 .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>
-                    new Tuple<string, int>(cgsNetPlayer.Name, cgsNetPlayer.Points)).ToList();
+                    new Tuple<string, int, string>(cgsNetPlayer.Name, cgsNetPlayer.Points, cgsNetPlayer.HandCount))
+                .ToList();
             scoreContent.DestroyAllChildren();
             scoreContent.sizeDelta = new Vector2(scoreContent.sizeDelta.x,
-                ((RectTransform) scoreTemplate.transform).rect.height * scores.Count);
-            foreach ((string playerName, int points) in scores)
+                ((RectTransform)scoreTemplate.transform).rect.height * scores.Count);
+            foreach ((string playerName, int points, string handCount) in scores)
             {
                 var entry = Instantiate(scoreTemplate.gameObject, scoreContent).GetComponent<ScoreTemplate>();
                 entry.gameObject.SetActive(true);
                 entry.nameText.text = playerName;
                 entry.pointsText.text = points.ToString();
+                entry.handCountText.text = string.IsNullOrEmpty(handCount)
+                    ? CgsNetManager.Instance.playController.drawer.cardZonesRectTransform
+                        .GetComponentsInChildren<CardModel>().Length.ToString()
+                    : handCount;
             }
         }
     }

@@ -8,9 +8,9 @@ permalink: roadmap.html
 - Fix: Account for card size differences
 - Game-Play: Added save to card stacks
 - Game-Play: Show how many cards each player has in the scoreboard
+- Game-Play: Multiple hands in hand container
 
 ## Active Sprint
-- Game-Play: Multiple hands in hand container
 - Cards: Creation allows for jpg and text-only
 
 ## Next Sprint

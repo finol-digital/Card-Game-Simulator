@@ -29,6 +29,10 @@ namespace Cgs.Play.Multiplayer
 
         [field: SyncVar] public int CurrentHand { get; private set; }
 
+        public string HandCount => HandCards.Count > 0 && CurrentHand >= 0 && CurrentHand < HandCards.Count
+            ? HandCards[CurrentHand].Count.ToString()
+            : string.Empty;
+
         public IReadOnlyList<IReadOnlyList<UnityCard>> HandCards => _handCards.Select(hand =>
                 hand.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList())
             .Cast<IReadOnlyList<UnityCard>>().ToList();
