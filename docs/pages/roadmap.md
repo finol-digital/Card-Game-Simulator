@@ -5,11 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.55
+- Fix: Account for card size differences
 - Game-Play: Added save to card stacks
+- Game-Play: Show how many cards each player has in the scoreboard
 
 ## Active Sprint
-- Fix: Account for card size differences
-- Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand container
 - Cards: Creation allows for jpg and text-only
 

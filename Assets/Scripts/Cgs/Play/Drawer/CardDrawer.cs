@@ -12,6 +12,8 @@ namespace Cgs.Play.Drawer
 {
     public class CardDrawer : MonoBehaviour
     {
+        public const string DefaultHandName = "Hand";
+
         private const float HandleHeight = 100.0f;
 
         public static readonly Vector2 ShownPosition = Vector2.zero;
