@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,14 @@ namespace Cgs.Play.Drawer
         public RectTransform panelRectTransform;
         public RectTransform cardZonesRectTransform;
         public List<RectTransform> cardZoneRectTransforms;
+
+        public List<CardZone> cardZones;
+
+        [UsedImplicitly]
+        public void CreateTab()
+        {
+            CardGameManager.Instance.Messenger.Show("The Multiple Hands feature is coming soon!");
+        }
 
         private void OnEnable()
         {

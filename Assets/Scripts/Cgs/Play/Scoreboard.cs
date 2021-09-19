@@ -100,7 +100,7 @@ namespace Cgs.Play
                 entry.nameText.text = playerName;
                 entry.pointsText.text = points.ToString();
                 entry.handCountText.text = string.IsNullOrEmpty(handCount)
-                    ? CgsNetManager.Instance.playController.drawer.cardZonesRectTransform
+                    ? CgsNetManager.Instance.playController.drawer.cardZoneRectTransforms[CgsNetManager.Instance.LocalPlayer.CurrentHand]
                         .GetComponentsInChildren<CardModel>().Length.ToString()
                     : handCount;
             }

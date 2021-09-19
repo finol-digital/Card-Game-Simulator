@@ -8,17 +8,16 @@ permalink: roadmap.html
 - Fix: Account for card size differences
 - Game-Play: Added save to card stacks
 - Game-Play: Show how many cards each player has in the scoreboard
-- Game-Play: Multiple hands in hand container
-
-## Active Sprint
+- Game-Play: Multiple hands in hand drawer
 - Cards: Creation allows for jpg and text-only
 
-## Next Sprint
+## Active Sprint
 - Fix: Cards duplicated when drawn by multiple players
+- Tech: Clear CgsNetPlayer on restart
 - Game-Play: Card Stack Manager
 - Game-Play: Support multiple card selection
 - Game-Play: Pre-defined card zones/stacks
-- Cards: Move card to zone, stack, or container (E)
+- Cards: Move card to zone, stack, or drawer (E)
 
 ## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
