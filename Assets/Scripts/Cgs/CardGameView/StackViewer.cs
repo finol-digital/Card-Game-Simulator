@@ -82,9 +82,12 @@ namespace Cgs.CardGameView
             countLabel.text = _cardStack.Cards.Count.ToString();
         }
 
-        public void Sync(int handIndex)
+        public void Sync(int handIndex, CardZone cardZone, Text nameText, Text countText)
         {
             _handIndex = handIndex;
+            contentCardZone = cardZone;
+            nameLabel = nameText;
+            countLabel = countText;
         }
 
         public void OnDrop(CardModel cardModel)
@@ -101,7 +104,7 @@ namespace Cgs.CardGameView
             OnAddCardModel(contentCardZone, cardModel);
         }
 
-        private void OnAddCardModel(CardZone cardZone, CardModel cardModel)
+        public void OnAddCardModel(CardZone cardZone, CardModel cardModel)
         {
             cardModel.transform.rotation = Quaternion.identity;
             cardModel.IsFacedown = false;
@@ -125,7 +128,7 @@ namespace Cgs.CardGameView
                 _cardStack.Insert(index, cardModel.Id);
         }
 
-        private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
+        public void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
         {
             CardModel[] cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
             countLabel.text = cardModels.Length.ToString();
@@ -141,11 +144,6 @@ namespace Cgs.CardGameView
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(_cardStack.gameObject, cardModel.Index);
             else
                 _cardStack.RemoveAt(cardModel.Index);
-        }
-
-        public void Clear()
-        {
-            contentCardZone.transform.DestroyAllChildren();
         }
 
         [UsedImplicitly]

@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
-using JetBrains.Annotations;
+using Cgs.Play.Multiplayer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,16 +29,23 @@ namespace Cgs.Play.Drawer
         public RectTransform cardZonesRectTransform;
         public List<RectTransform> cardZoneRectTransforms;
 
-        public List<CardZone> cardZones;
-
-        [UsedImplicitly]
-        public void CreateTab()
-        {
-            CardGameManager.Instance.Messenger.Show("The Multiple Hands feature is coming soon!");
-        }
+        public Toggle firstToggle;
+        public Toggle secondToggle;
+        public List<Text> nameTexts;
+        public List<Text> countTexts;
 
         private void OnEnable()
         {
+            firstToggle.onValueChanged.AddListener(isOn =>
+            {
+                if (isOn)
+                    SelectTab(0);
+            });
+            secondToggle.onValueChanged.AddListener(isOn =>
+            {
+                if (isOn)
+                    SelectTab(1);
+            });
             CardGameManager.Instance.OnSceneActions.Add(Resize);
         }
 
@@ -67,6 +74,13 @@ namespace Cgs.Play.Drawer
 
         public void Show()
         {
+            if (CgsNetManager.Instance.LocalPlayer.HandNames.Count < 2)
+            {
+                CgsNetManager.Instance.LocalPlayer.RequestNewHand("Drawer");
+                CardZone cardZone = cardZoneRectTransforms[1].GetComponentInChildren<CardZone>();
+                cardZone.OnAddCardActions.Add(viewer.OnAddCardModel);
+                cardZone.OnRemoveCardActions.Add(viewer.OnRemoveCardModel);
+            }
             panelRectTransform.anchoredPosition = ShownPosition;
             downButton.interactable = true;
             upButton.interactable = false;
@@ -77,9 +91,19 @@ namespace Cgs.Play.Drawer
             viewer.AddCard(card);
         }
 
+        public void SelectTab(int tabIndex)
+        {
+            for (var i = 0; i < cardZoneRectTransforms.Count; i++)
+                cardZoneRectTransforms[i].gameObject.SetActive(i == tabIndex);
+            CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
+            viewer.Sync(tabIndex, cardZoneRectTransforms[tabIndex].GetComponentInChildren<CardZone>(),
+                nameTexts[tabIndex], countTexts[tabIndex]);
+        }
+
         public void Clear()
         {
-            viewer.Clear();
+            foreach (CardZone cardZone in cardZonesRectTransform.GetComponentsInChildren<CardZone>())
+                cardZone.Clear();
         }
 
         public void Hide()

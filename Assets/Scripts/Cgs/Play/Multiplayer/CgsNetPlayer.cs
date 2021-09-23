@@ -51,6 +51,7 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Player] Starting local player...");
             CgsNetManager.Instance.LocalPlayer = this;
             RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
+            RequestNewHand(CardDrawer.DefaultHandName);
             if (isServer)
                 CgsNetManager.Instance.playController.ShowDeckMenu();
             else
@@ -296,6 +297,19 @@ namespace Cgs.Play.Multiplayer
             _handCards.Add(Array.Empty<string>());
             _handNames.Add(handName);
             CurrentHand = _handNames.Count - 1;
+        }
+
+        public void RequestUseHand(int handIndex)
+        {
+            Debug.Log($"[CgsNet Player] Requesting use hand {handIndex}...");
+            CmdUseHand(handIndex);
+        }
+
+        [Command]
+        private void CmdUseHand(int handIndex)
+        {
+            Debug.Log($"[CgsNet Player] Use hand {handIndex}!");
+            CurrentHand = handIndex;
         }
 
         public void RequestSyncHand(int handIndex, string[] cardIds)
