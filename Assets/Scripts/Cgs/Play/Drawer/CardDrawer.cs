@@ -3,9 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using System.Linq;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
+using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Multiplayer;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +17,7 @@ namespace Cgs.Play.Drawer
     public class CardDrawer : MonoBehaviour
     {
         public const string DefaultHandName = "Hand";
+        public const string DefaultDrawerName = "Drawer";
 
         private const float HandleHeight = 100.0f;
 
@@ -47,6 +51,8 @@ namespace Cgs.Play.Drawer
                     SelectTab(1);
             });
             CardGameManager.Instance.OnSceneActions.Add(Resize);
+            viewer.Sync(0, cardZoneRectTransforms[0].GetComponentInChildren<CardZone>(),
+                nameTexts[0], countTexts[0]);
         }
 
         private void Update()
@@ -75,12 +81,7 @@ namespace Cgs.Play.Drawer
         public void Show()
         {
             if (CgsNetManager.Instance.LocalPlayer.HandNames.Count < 2)
-            {
                 CgsNetManager.Instance.LocalPlayer.RequestNewHand("Drawer");
-                CardZone cardZone = cardZoneRectTransforms[1].GetComponentInChildren<CardZone>();
-                cardZone.OnAddCardActions.Add(viewer.OnAddCardModel);
-                cardZone.OnRemoveCardActions.Add(viewer.OnRemoveCardModel);
-            }
             panelRectTransform.anchoredPosition = ShownPosition;
             downButton.interactable = true;
             upButton.interactable = false;
@@ -91,13 +92,25 @@ namespace Cgs.Play.Drawer
             viewer.AddCard(card);
         }
 
+        [UsedImplicitly]
         public void SelectTab(int tabIndex)
         {
             for (var i = 0; i < cardZoneRectTransforms.Count; i++)
                 cardZoneRectTransforms[i].gameObject.SetActive(i == tabIndex);
             CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
-            viewer.Sync(tabIndex, cardZoneRectTransforms[tabIndex].GetComponentInChildren<CardZone>(),
+            var cardZone = cardZoneRectTransforms[tabIndex].GetComponentInChildren<CardZone>();
+            viewer.Sync(tabIndex, cardZone,
                 nameTexts[tabIndex], countTexts[tabIndex]);
+            SyncNetwork(cardZone.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Id).ToArray());
+        }
+
+        public void SyncNetwork(string[] cardIds)
+        {
+            if (!CgsNetManager.Instance.isNetworkActive || CgsNetManager.Instance.LocalPlayer == null)
+                return;
+
+            int index = CgsNetManager.Instance.LocalPlayer.CurrentHand;
+            CgsNetManager.Instance.LocalPlayer.RequestSyncHand(index, cardIds);
         }
 
         public void Clear()

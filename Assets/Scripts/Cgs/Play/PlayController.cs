@@ -295,8 +295,13 @@ namespace Cgs.Play
 
         public void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
+            List<string> cardIds = new List<string>();
             foreach (UnityCard card in cards)
+            {
+                cardIds.Add(card.Id);
                 drawer.AddCard(card);
+            }
+            drawer.SyncNetwork(cardIds.ToArray());
         }
 
         private IEnumerable<UnityCard> PopSoloDeckCards(int count)

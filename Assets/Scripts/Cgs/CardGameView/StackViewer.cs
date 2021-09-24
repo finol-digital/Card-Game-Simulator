@@ -88,6 +88,11 @@ namespace Cgs.CardGameView
             contentCardZone = cardZone;
             nameLabel = nameText;
             countLabel = countText;
+
+            if (!cardZone.OnAddCardActions.Contains(OnAddCardModel))
+                cardZone.OnAddCardActions.Add(OnAddCardModel);
+            if (!cardZone.OnRemoveCardActions.Contains(OnRemoveCardModel))
+                cardZone.OnRemoveCardActions.Add(OnRemoveCardModel);
         }
 
         public void OnDrop(CardModel cardModel)
@@ -104,7 +109,7 @@ namespace Cgs.CardGameView
             OnAddCardModel(contentCardZone, cardModel);
         }
 
-        public void OnAddCardModel(CardZone cardZone, CardModel cardModel)
+        private void OnAddCardModel(CardZone cardZone, CardModel cardModel)
         {
             cardModel.transform.rotation = Quaternion.identity;
             cardModel.IsFacedown = false;
@@ -128,7 +133,7 @@ namespace Cgs.CardGameView
                 _cardStack.Insert(index, cardModel.Id);
         }
 
-        public void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
+        private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
         {
             CardModel[] cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
             countLabel.text = cardModels.Length.ToString();
