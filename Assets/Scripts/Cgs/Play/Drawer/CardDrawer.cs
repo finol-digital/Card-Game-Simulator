@@ -33,24 +33,35 @@ namespace Cgs.Play.Drawer
         public RectTransform cardZonesRectTransform;
         public List<RectTransform> cardZoneRectTransforms;
 
-        public Toggle firstToggle;
-        public Toggle secondToggle;
-        public List<Text> nameTexts;
-        public List<Text> countTexts;
+        public Toggle handToggle;
+        public Text handNameText;
+        public Text handCountText;
+
+        public Transform variableTabsTransform;
+
+        public GameObject tabPrefab;
+        public GameObject cardZonePrefab;
+
+        private readonly List<Toggle> _toggles = new List<Toggle>();
+        private readonly List<Text> _nameTexts = new List<Text>();
+        private readonly List<Text> _countTexts = new List<Text>();
 
         private void OnEnable()
         {
-            firstToggle.onValueChanged.AddListener(isOn =>
+            CardGameManager.Instance.OnSceneActions.Add(Resize);
+        }
+
+        private void Start()
+        {
+            _toggles.Add(handToggle);
+            _nameTexts.Add(handNameText);
+            _countTexts.Add(handCountText);
+
+            _toggles[0].onValueChanged.AddListener(isOn =>
             {
                 if (isOn)
                     SelectTab(0);
             });
-            secondToggle.onValueChanged.AddListener(isOn =>
-            {
-                if (isOn)
-                    SelectTab(1);
-            });
-            CardGameManager.Instance.OnSceneActions.Add(Resize);
         }
 
         private void Update()
@@ -78,8 +89,6 @@ namespace Cgs.Play.Drawer
 
         public void Show()
         {
-            if (CgsNetManager.Instance.LocalPlayer.HandNames.Count < 2)
-                CgsNetManager.Instance.LocalPlayer.RequestNewHand("Drawer");
             panelRectTransform.anchoredPosition = ShownPosition;
             downButton.interactable = true;
             upButton.interactable = false;
@@ -91,6 +100,37 @@ namespace Cgs.Play.Drawer
         }
 
         [UsedImplicitly]
+        public void AddTab()
+        {
+            var tabTemplate = Instantiate(tabPrefab, variableTabsTransform).GetComponent<TabTemplate>();
+            int tabIndex = variableTabsTransform.childCount;
+
+            _toggles.Add(tabTemplate.toggle);
+            _toggles[tabIndex].group = _toggles[0].group;
+            _toggles[tabIndex].onValueChanged.AddListener(isOn =>
+            {
+                if (isOn)
+                    SelectTab(tabIndex);
+            });
+
+            _nameTexts.Add(tabTemplate.nameText);
+            _countTexts.Add(tabTemplate.countText);
+
+            tabTemplate.drawerHandle.cardDrawer = this;
+
+            var cardZoneRectTransform = (RectTransform) Instantiate(cardZonePrefab, cardZonesRectTransform).transform;
+            float cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
+            cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
+            cardZoneRectTransforms.Add(cardZoneRectTransform);
+
+            var cardDropArea = cardZoneRectTransform.GetComponent<CardDropArea>();
+            cardDropArea.DropHandler = viewer;
+            viewer.drops.Add(cardDropArea);
+
+            CgsNetManager.Instance.LocalPlayer.RequestNewHand(DefaultDrawerName);
+        }
+
+        [UsedImplicitly]
         public void SelectTab(int tabIndex)
         {
             for (var i = 0; i < cardZoneRectTransforms.Count; i++)
@@ -98,7 +138,7 @@ namespace Cgs.Play.Drawer
             CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
             var cardZone = cardZoneRectTransforms[tabIndex].GetComponentInChildren<CardZone>();
             viewer.Sync(tabIndex, cardZone,
-                nameTexts[tabIndex], countTexts[tabIndex]);
+                _nameTexts[tabIndex], _countTexts[tabIndex]);
             SyncNetwork(cardZone.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Id).ToArray());
         }
 
