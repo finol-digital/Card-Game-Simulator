@@ -51,8 +51,6 @@ namespace Cgs.Play.Drawer
                     SelectTab(1);
             });
             CardGameManager.Instance.OnSceneActions.Add(Resize);
-            viewer.Sync(0, cardZoneRectTransforms[0].GetComponentInChildren<CardZone>(),
-                nameTexts[0], countTexts[0]);
         }
 
         private void Update()
@@ -104,7 +102,7 @@ namespace Cgs.Play.Drawer
             SyncNetwork(cardZone.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Id).ToArray());
         }
 
-        public void SyncNetwork(string[] cardIds)
+        private static void SyncNetwork(string[] cardIds)
         {
             if (!CgsNetManager.Instance.isNetworkActive || CgsNetManager.Instance.LocalPlayer == null)
                 return;

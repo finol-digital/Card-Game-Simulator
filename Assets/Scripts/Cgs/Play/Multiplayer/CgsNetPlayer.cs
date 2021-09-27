@@ -314,14 +314,14 @@ namespace Cgs.Play.Multiplayer
 
         public void RequestSyncHand(int handIndex, string[] cardIds)
         {
-            Debug.Log($"[CgsNet Player] Requesting sync hand {handIndex} to {cardIds}...");
+            Debug.Log($"[CgsNet Player] Requesting sync hand {handIndex} to {cardIds.Length}...");
             CmdSyncHand(handIndex, cardIds);
         }
 
         [Command]
         private void CmdSyncHand(int handIndex, string[] cardIds)
         {
-            Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds}!");
+            Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds.Length}!");
             if (handIndex < 0 || handIndex >= _handCards.Count)
             {
                 Debug.LogError($"[CgsNet Player] {handIndex} is out of bounds of {_handCards.Count}");

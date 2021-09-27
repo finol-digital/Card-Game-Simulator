@@ -85,14 +85,13 @@ namespace Cgs.CardGameView
         public void Sync(int handIndex, CardZone cardZone, Text nameText, Text countText)
         {
             _handIndex = handIndex;
-            contentCardZone = cardZone;
-            nameLabel = nameText;
-            countLabel = countText;
-
             if (!cardZone.OnAddCardActions.Contains(OnAddCardModel))
                 cardZone.OnAddCardActions.Add(OnAddCardModel);
             if (!cardZone.OnRemoveCardActions.Contains(OnRemoveCardModel))
                 cardZone.OnRemoveCardActions.Add(OnRemoveCardModel);
+            contentCardZone = cardZone;
+            nameLabel = nameText;
+            countLabel = countText;
         }
 
         public void OnDrop(CardModel cardModel)
