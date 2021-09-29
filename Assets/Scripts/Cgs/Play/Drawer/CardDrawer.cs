@@ -37,7 +37,7 @@ namespace Cgs.Play.Drawer
         public Text handNameText;
         public Text handCountText;
 
-        public Transform variableTabsTransform;
+        public RectTransform tabsRectTransform;
 
         public GameObject tabPrefab;
         public GameObject cardZonePrefab;
@@ -102,8 +102,13 @@ namespace Cgs.Play.Drawer
         [UsedImplicitly]
         public void AddTab()
         {
-            var tabTemplate = Instantiate(tabPrefab, variableTabsTransform).GetComponent<TabTemplate>();
-            int tabIndex = variableTabsTransform.childCount;
+            Vector2 sizeDelta = tabsRectTransform.sizeDelta;
+            sizeDelta = new Vector2(sizeDelta.x + ((RectTransform)tabPrefab.transform).sizeDelta.x, sizeDelta.y);
+            tabsRectTransform.sizeDelta = sizeDelta;
+
+            var tabTemplate = Instantiate(tabPrefab, tabsRectTransform).GetComponent<TabTemplate>();
+            int tabIndex = tabsRectTransform.childCount - 2;
+            tabTemplate.transform.SetSiblingIndex(tabIndex);
 
             _toggles.Add(tabTemplate.toggle);
             _toggles[tabIndex].group = _toggles[0].group;
