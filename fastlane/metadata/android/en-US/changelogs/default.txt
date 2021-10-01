@@ -1,3 +1,4 @@
-- Fix: Online lobby
-- Fix: Duplicate card when tapping on deck
-- Integration: CGS Discord Server
+- Fix: Account for card size differences
+- Game-Play: Added save to card stacks
+- Game-Play: Show how many cards each player has in the scoreboard
+- Game-Play: Multiple hands in hand drawer
