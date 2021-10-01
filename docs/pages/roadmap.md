@@ -9,13 +9,15 @@ permalink: roadmap.html
 - Game-Play: Added save to card stacks
 - Game-Play: Show how many cards each player has in the scoreboard
 - Game-Play: Multiple hands in hand drawer
-- Cards: Creation allows for jpg and text-only
 
 ## Active Sprint
 - Fix: Cards duplicated when drawn by multiple players
+- Cards: Creation allows for jpg and text-only
 - Tech: Clear CgsNetPlayer on restart
-- Game-Play: Card Stack Manager
+
+## Next Sprint
 - Game-Play: Support multiple card selection
+- Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks
 - Cards: Move card to zone, stack, or drawer (E)
 
