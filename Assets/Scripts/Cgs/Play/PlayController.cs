@@ -12,6 +12,7 @@ using Cgs.CardGameView.Multiplayer;
 using Cgs.Cards;
 using Cgs.Decks;
 using Cgs.Menu;
+using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
@@ -43,7 +44,7 @@ namespace Cgs.Play
 
         public CardZone playArea;
         public List<CardDropArea> playDropZones;
-        public HandController hand;
+        public CardDrawer drawer;
         public PlayMenu menu;
         public Scoreboard scoreboard;
 
@@ -123,7 +124,7 @@ namespace Cgs.Play
             else
             {
                 ResetPlayArea();
-                hand.Clear();
+                drawer.Clear();
                 _soloDeckStack = null;
                 DeckLoader.Show(LoadDeck);
             }
@@ -131,7 +132,7 @@ namespace Cgs.Play
 
         public void ResetPlayArea()
         {
-            var rectTransform = (RectTransform) playArea.transform;
+            var rectTransform = (RectTransform)playArea.transform;
             if (!NetworkManager.singleton.isNetworkActive)
                 rectTransform.DestroyAllChildren();
             else if (CgsNetManager.Instance.LocalPlayer != null && CgsNetManager.Instance.LocalPlayer.isServer)
@@ -144,6 +145,7 @@ namespace Cgs.Play
                     NetworkServer.UnSpawn(die.gameObject);
                 rectTransform.DestroyAllChildren();
             }
+
             var size = new Vector2(CardGameManager.Current.PlayMatSize.X,
                 CardGameManager.Current.PlayMatSize.Y);
             rectTransform.sizeDelta = size * CardGameManager.PixelsPerInch;
@@ -210,12 +212,15 @@ namespace Cgs.Play
                 {
                     Vector2 position = NextDeckPosition + Vector2.right * CardGameManager.PixelsPerInch * i *
                         CardGameManager.Current.CardSize.X;
-                    CreateCardStack(cardGroup.Key, (List<UnityCard>) cardGroup.Value.Cast<UnityCard>(), position);
+                    CreateCardStack(cardGroup.Key, (List<UnityCard>)cardGroup.Value.Cast<UnityCard>(), position);
                     i++;
                 }
             }
 
-            NextDeckPosition += Vector2.down * CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y;
+            var cardStack = cardStackPrefab.GetComponent<CardStack>();
+            NextDeckPosition += Vector2.up * CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y +
+                                Vector2.up * (((RectTransform)cardStack.buttons.transform).rect.height +
+                                              ((RectTransform)cardStack.deckLabel.transform).rect.height);
 
             PromptForHand();
         }
@@ -229,7 +234,7 @@ namespace Cgs.Play
         private void CreateBoard(GameBoard board)
         {
             var newBoard = new GameObject(board.Id, typeof(RectTransform));
-            var boardRectTransform = (RectTransform) newBoard.transform;
+            var boardRectTransform = (RectTransform)newBoard.transform;
             boardRectTransform.SetParent(playArea.transform);
             boardRectTransform.anchorMin = Vector2.zero;
             boardRectTransform.anchorMax = Vector2.zero;
@@ -258,7 +263,7 @@ namespace Cgs.Play
                 cardStack.Name = stackName;
             if (cards != null)
                 cardStack.Cards = cards;
-            var rectTransform = (RectTransform) cardStack.transform;
+            var rectTransform = (RectTransform)cardStack.transform;
             rectTransform.SetParent(target);
             if (!Vector2.zero.Equals(position))
                 rectTransform.anchoredPosition = position;
@@ -274,7 +279,7 @@ namespace Cgs.Play
 
         private void DealStartingHand()
         {
-            hand.Show();
+            drawer.Show();
             Deal(Dealer.Count);
         }
 
@@ -282,15 +287,17 @@ namespace Cgs.Play
         {
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.CurrentDeck != null)
-                CgsNetManager.Instance.LocalPlayer.RequestDeal(CgsNetManager.Instance.LocalPlayer.CurrentDeck, cardCount);
+                CgsNetManager.Instance.LocalPlayer.RequestDeal(CgsNetManager.Instance.LocalPlayer.CurrentDeck,
+                    cardCount);
             else
                 AddCardsToHand(PopSoloDeckCards(cardCount));
         }
 
         public void AddCardsToHand(IEnumerable<UnityCard> cards)
         {
+            drawer.SelectTab(0);
             foreach (UnityCard card in cards)
-                hand.AddCard(card);
+                drawer.AddCard(card);
         }
 
         private IEnumerable<UnityCard> PopSoloDeckCards(int count)

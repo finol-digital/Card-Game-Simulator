@@ -18,6 +18,7 @@ namespace Cgs.CardGameView
     public class StackViewer : MonoBehaviour, ICardDropHandler
     {
         private const float HandleHeight = 100.0f;
+        private const float ScrollbarHeight = 50.0f;
 
         public GameObject cardModelPrefab;
 
@@ -29,6 +30,7 @@ namespace Cgs.CardGameView
         public Text countLabel;
 
         private CardStack _cardStack;
+        private int? _handIndex;
 
         private void Start()
         {
@@ -52,11 +54,12 @@ namespace Cgs.CardGameView
             contentCardZone.scrollRectContainer.horizontalNormalizedPosition = 0;
         }
 
-        public void Resize()
+        private void Resize()
         {
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             float cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, HandleHeight + cardHeight);
+            rectTransform.sizeDelta =
+                new Vector2(rectTransform.sizeDelta.x, HandleHeight + cardHeight + ScrollbarHeight);
             cardZoneTransform.sizeDelta = new Vector2(cardZoneTransform.sizeDelta.x, cardHeight);
         }
 
@@ -79,6 +82,18 @@ namespace Cgs.CardGameView
             countLabel.text = _cardStack.Cards.Count.ToString();
         }
 
+        public void Sync(int handIndex, CardZone cardZone, Text nameText, Text countText)
+        {
+            _handIndex = handIndex;
+            if (!cardZone.OnAddCardActions.Contains(OnAddCardModel))
+                cardZone.OnAddCardActions.Add(OnAddCardModel);
+            if (!cardZone.OnRemoveCardActions.Contains(OnRemoveCardModel))
+                cardZone.OnRemoveCardActions.Add(OnRemoveCardModel);
+            contentCardZone = cardZone;
+            nameLabel = nameText;
+            countLabel = countText;
+        }
+
         public void OnDrop(CardModel cardModel)
         {
             AddCard(cardModel.Value);
@@ -98,7 +113,13 @@ namespace Cgs.CardGameView
             cardModel.transform.rotation = Quaternion.identity;
             cardModel.IsFacedown = false;
             cardModel.DefaultAction = CardActions.Flip;
-            countLabel.text = contentCardZone.GetComponentsInChildren<CardModel>().Length.ToString();
+
+            CardModel[] cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
+            countLabel.text = cardModels.Length.ToString();
+
+            if (_handIndex != null)
+                CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int)_handIndex,
+                    cardModels.Select(card => card.Id).ToArray());
 
             if (_cardStack == null)
                 return;
@@ -113,7 +134,12 @@ namespace Cgs.CardGameView
 
         private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
         {
-            countLabel.text = contentCardZone.GetComponentsInChildren<CardModel>().Length.ToString();
+            CardModel[] cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
+            countLabel.text = cardModels.Length.ToString();
+
+            if (_handIndex != null)
+                CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int)_handIndex,
+                    cardModels.Select(card => card.Id).ToArray());
 
             if (_cardStack == null)
                 return;
@@ -122,11 +148,6 @@ namespace Cgs.CardGameView
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(_cardStack.gameObject, cardModel.Index);
             else
                 _cardStack.RemoveAt(cardModel.Index);
-        }
-
-        public void Clear()
-        {
-            contentCardZone.transform.DestroyAllChildren();
         }
 
         [UsedImplicitly]

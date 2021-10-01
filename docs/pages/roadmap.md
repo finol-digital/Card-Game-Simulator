@@ -4,26 +4,29 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.54
-- Fix: Online lobby
-- Fix: Duplicate card when tapping on deck
-- Integration: CGS Discord Server
+## What's New - v1.55
+- Fix: Account for card size differences
+- Game-Play: Added save to card stacks
+- Game-Play: Show how many cards each player has in the scoreboard
+- Game-Play: Multiple hands in hand drawer
 
 ## Active Sprint
-- Game-Play: Rotate card stacks & create additional deck(s) further above
-- Game-Play: Show how many cards each player has in the scoreboard
-- Game-Play: Multiple hands in hand container
+- Fix: Cards duplicated when drawn by multiple players
+- Cards: Creation allows for jpg and text-only
+- Tech: Clear CgsNetPlayer on restart
 
 ## Next Sprint
 - Game-Play: Support multiple card selection
+- Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks
-- Cards: Move card to zone, stack, or container (E)
+- Cards: Move card to zone, stack, or drawer (E)
 
 ## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Game-Play: Allow cards to snap to each other/align on grid
 - Game-Play: Convert card to stack
+- Game-Play: Rotate card stacks
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
@@ -48,6 +51,7 @@ permalink: roadmap.html
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
+- Tech: Amazon App Store
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
 - Tech: Upgrade json schema version from v4 to v7

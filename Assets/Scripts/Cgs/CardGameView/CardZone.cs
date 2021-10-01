@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.CardGameView
 {
@@ -122,5 +123,11 @@ namespace Cgs.CardGameView
                     break;
             }
         }
+
+        public void Clear()
+        {
+            transform.DestroyAllChildren();
+        }
+
     }
 }

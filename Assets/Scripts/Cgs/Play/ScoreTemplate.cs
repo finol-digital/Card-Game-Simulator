@@ -11,5 +11,6 @@ namespace Cgs.Play
     {
         public Text nameText;
         public Text pointsText;
+        public Text handCountText;
     }
 }

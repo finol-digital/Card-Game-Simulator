@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Cgs.Play
+namespace Cgs.Play.Drawer
 {
     public class HandDealer : Modal
     {
