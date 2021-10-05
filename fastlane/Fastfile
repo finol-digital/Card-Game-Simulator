@@ -1,14 +1,5 @@
 # This file contains the fastlane.tools configuration
 # You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
 
 platform :android do
 
@@ -20,95 +11,74 @@ platform :android do
 end
 
 
-keychain_name = "temporary_keychain"
-keychain_password = SecureRandom.base64
-
 platform :ios do
+
+  org, repo = ENV["GITHUB_REPOSITORY"].split("/")
+  match_org, match_repo = ENV["MATCH_REPOSITORY"].split("/")
+
+  desc "Prepare CI for match"
+  lane :init_ci do
+    github_action(
+      api_token: ENV["CGS_PAT"],
+      org: org,
+      repo: repo,
+      match_org: match_org,
+      match_repo: match_repo,
+      writable_deploy_key: true
+    )
+  end
 
   desc "Push a new release build to the App Store"
   lane :release do
     build
-    app_store_connect_api_key(
-      key_id: "#{ENV['APPSTORE_KEY_ID']}",
-      issuer_id: "#{ENV['APPSTORE_ISSUER_ID']}",
-      key_filepath: "#{ENV['APPSTORE_P8_PATH']}",
-      duration: 1200, # optional
-      in_house: false, # true for enterprise and false for individual accounts
-    )
     deliver
   end
 
   desc "Submit a new Beta Build to Apple TestFlight"
   lane :beta do
     build
-    api_key = app_store_connect_api_key(
-      key_id: "#{ENV['APPSTORE_KEY_ID']}",
-      issuer_id: "#{ENV['APPSTORE_ISSUER_ID']}",
-      key_filepath: "#{ENV['APPSTORE_P8_PATH']}",
-      duration: 1200, # optional
-      in_house: false, # true for enterprise and false for individual accounts
-    )
-    upload_to_testflight(skip_waiting_for_build_processing: true, api_key: api_key)
+    upload_to_testflight(skip_waiting_for_build_processing: true)
   end
 
   desc "Create .ipa"
   lane :build do
-    update_code_signing_settings(use_automatic_signing: false, path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj")
-    certificates
-    update_project_provisioning(
-      xcodeproj: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
-      target_filter: "Unity-iPhone",
-      profile: ENV["sigh_#{ENV["IOS_APP_ID"]}_appstore_profile-path"],
-      code_signing_identity: "Apple Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})"
+    setup_ci
+    app_store_connect_api_key(
+      key_id: ENV["APPSTORE_KEY_ID"],
+      issuer_id: ENV["APPSTORE_ISSUER_ID"],
+      key_content: ENV['APPSTORE_P8']
+    )
+    match(
+      type: "appstore",
+      storage_mode: "git",
+      git_url: "git@github.com:#{match_org}/#{match_repo}.git",
+      app_identifier: ENV["IOS_APP_ID"]
+    )
+    update_code_signing_settings(
+      use_automatic_signing: true,
+      path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
+    )
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      team_id: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_team-id"],
+      code_sign_identity: "iPhone Distribution",
+      targets: 'Unity-iPhone',
+      path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
+      profile_name: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_profile-name"],
+      profile_uuid: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore"]
     )
     increment_build_number(
        xcodeproj: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
     )
-    gym(
+    build_app(
       project: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
       scheme: "Unity-iPhone",
-      clean: true,
-      skip_profile_detection: true,
-      codesigning_identity: "Apple Distribution: #{ENV['APPLE_TEAM_NAME']} (#{ENV['APPLE_TEAM_ID']})",
-      export_method: "app-store",
-      export_options: {
-        method: "app-store",
-        provisioningProfiles: {
-          ENV["IOS_APP_ID"] => "match AppStore #{ENV['IOS_APP_ID']}"
-        }
-      }
+      xcargs: "-allowProvisioningUpdates"
     )
   end
 
-  desc "Synchronize certificates"
-  lane :certificates do
-    cleanup_keychain
-    create_keychain(
-      name: keychain_name,
-      password: keychain_password,
-      default_keychain: true,
-      lock_when_sleeps: true,
-      timeout: 3600,
-      unlock: true
-    )
-    match(
-      type: "appstore",
-      readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password
-    )
-  end
-
-  lane :cleanup_keychain do
-    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
-      delete_keychain(name: keychain_name)
-    end
-  end
-
-  after_all do
-    if File.exist?(File.expand_path("~/Library/Keychains/#{keychain_name}-db"))
-      delete_keychain(name: keychain_name)
-    end
+  desc "Set up codesigning"
+  lane :sync_certificates do
   end
 
 end
@@ -129,11 +99,9 @@ platform :mac do
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do
     app_store_connect_api_key(
-      key_id: "#{ENV['APPSTORE_KEY_ID']}",
-      issuer_id: "#{ENV['APPSTORE_ISSUER_ID']}",
-      key_filepath: "#{ENV['APPSTORE_P8_PATH']}",
-      duration: 1200, # optional
-      in_house: false, # true for enterprise and false for individual accounts
+      key_id: ENV["APPSTORE_KEY_ID"],
+      issuer_id: ENV["APPSTORE_ISSUER_ID"],
+      key_content: ENV['APPSTORE_P8']
     )
     deliver
   end
