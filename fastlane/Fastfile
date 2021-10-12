@@ -19,7 +19,7 @@ platform :ios do
   desc "Prepare CI for match"
   lane :init_ci do
     github_action(
-      api_token: ENV["CGS_PAT"],
+      api_token: ENV["GH_PAT"],
       org: org,
       repo: repo,
       match_org: match_org,

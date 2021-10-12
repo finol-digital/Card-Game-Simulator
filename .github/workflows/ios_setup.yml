@@ -17,6 +17,6 @@ jobs:
         run: |
           bundle exec fastlane ios init_ci
         env:
-          GGS_PAT: ${{ secrets.GGS_PAT }}
+          GH_PAT: ${{ secrets.GGS_IOS_PAT }}
           MATCH_REPOSITORY: ${{ secrets.MATCH_REPOSITORY }}
           GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
