@@ -101,7 +101,7 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
-    fastlane-plugin-github_action (1.0.0)
+    fastlane-plugin-github_action (1.1.0)
       dotenv
       fastlane (>= 2.148.1)
       rbnacl
