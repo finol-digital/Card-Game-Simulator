@@ -12,19 +12,32 @@ Install _fastlane_ using
 ```
 [sudo] gem install fastlane -NV
 ```
-or alternatively using `brew cask install fastlane`
+or alternatively using `brew install fastlane`
 
 # Available Actions
-## Android
-### android playstore
+### fixversion
 ```
-fastlane android playstore
+fastlane fixversion
+```
+Hack so that Apple doesn't reject the mac build due to a mistake in versioning
+
+----
+
+## Android
+### android playprod
+```
+fastlane android playprod
 ```
 Upload a new Android version to the Google Play Store
 
 ----
 
 ## iOS
+### ios init_ci
+```
+fastlane ios init_ci
+```
+Prepare CI for match
 ### ios release
 ```
 fastlane ios release
@@ -40,16 +53,11 @@ Submit a new Beta Build to Apple TestFlight
 fastlane ios build
 ```
 Create .ipa
-### ios certificates
+### ios sync_certificates
 ```
-fastlane ios certificates
+fastlane ios sync_certificates
 ```
-Synchronize certificates
-### ios cleanup_keychain
-```
-fastlane ios cleanup_keychain
-```
-
+Set up codesigning
 
 ----
 
@@ -62,6 +70,6 @@ Upload a new Mac version to the Mac App Store
 
 ----
 
-This README.md is auto-generated and will be re-generated every time [fastlane](https://fastlane.tools) is run.
+This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 More information about fastlane can be found on [fastlane.tools](https://fastlane.tools).
 The documentation of fastlane can be found on [docs.fastlane.tools](https://docs.fastlane.tools).
