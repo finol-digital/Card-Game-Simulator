@@ -33,6 +33,7 @@ platform :ios do
       issuer_id: ENV["APPSTORE_ISSUER_ID"],
       key_content: ENV['APPSTORE_P8']
     )
+    match_org, match_repo = ENV["MATCH_REPOSITORY"].split("/")
     match(
       type: "appstore",
       storage_mode: "git",
@@ -60,10 +61,6 @@ platform :ios do
       scheme: "Unity-iPhone",
       xcargs: "-allowProvisioningUpdates"
     )
-  end
-
-  desc "Set up codesigning"
-  lane :sync_certificates do
   end
 
 end
