@@ -33,11 +33,6 @@ Upload a new Android version to the Google Play Store
 ----
 
 ## iOS
-### ios init_ci
-```
-fastlane ios init_ci
-```
-Prepare CI for match
 ### ios release
 ```
 fastlane ios release

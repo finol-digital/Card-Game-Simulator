@@ -243,8 +243,8 @@ jobs:
       APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
       APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
       APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
-      MATCH_REPOSITORY: ${{ secrets.MATCH_REPOSITORY }}
-      GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
+      MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+      GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
       IOS_APP_ID: com.finoldigital.CardGameSim
       IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
@@ -272,6 +272,8 @@ jobs:
           notes="${notes//$'\r'/%0D}"
           echo "$notes"
           echo "::set-output name=RELEASE_NOTES::$notes"
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${MATCH_DEPLOY_KEY}"
       - name: Install Fastlane
         run: bundle install
       - name: Upload to the App Store

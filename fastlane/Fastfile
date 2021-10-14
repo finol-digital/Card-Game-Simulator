@@ -13,21 +13,6 @@ end
 
 platform :ios do
 
-  org, repo = ENV["GITHUB_REPOSITORY"].split("/")
-  match_org, match_repo = ENV["MATCH_REPOSITORY"].split("/")
-
-  desc "Prepare CI for match"
-  lane :init_ci do
-    github_action(
-      api_token: ENV["GH_PAT"],
-      org: org,
-      repo: repo,
-      match_org: match_org,
-      match_repo: match_repo,
-      writable_deploy_key: true
-    )
-  end
-
   desc "Push a new release build to the App Store"
   lane :release do
     build
