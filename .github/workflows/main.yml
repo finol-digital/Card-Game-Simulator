@@ -247,7 +247,6 @@ jobs:
       MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_REPOSITORY: finol-digital/certificates
-      GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
       IOS_APP_ID: com.finoldigital.CardGameSim
       IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
       PROJECT_NAME: Card Game Simulator
