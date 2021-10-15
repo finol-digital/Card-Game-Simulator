@@ -245,6 +245,7 @@ jobs:
       APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
       USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
       MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       MATCH_REPOSITORY: finol-digital/certificates
       GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
       IOS_APP_ID: com.finoldigital.CardGameSim
