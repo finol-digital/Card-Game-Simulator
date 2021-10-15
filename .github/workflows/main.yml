@@ -220,7 +220,7 @@ jobs:
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Add Authentication
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
-      - name: Install Fastlane
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7.2
@@ -243,6 +243,7 @@ jobs:
       APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
       APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
       APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
+      USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
       MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
       MATCH_REPOSITORY: finol-digital/certificates
       GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
@@ -262,28 +263,24 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-      - name: Fix File Permissions, Code-Sign, and Get Release Notes
-        id: terminal
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true 
+      - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
-          export notes="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
-          notes="${notes//'%'/%25}"
-          notes="${notes//$'\n'/%0A}"
-          notes="${notes//$'\r'/%0D}"
-          echo "$notes"
-          echo "::set-output name=RELEASE_NOTES::$notes"
+          export RELEASE_NOTES="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          RELEASE_NOTES="${RELEASE_NOTES//'%'/%25}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\n'/%0A}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\r'/%0D}"
+          echo "$RELEASE_NOTES"
+          echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-      - name: Install Fastlane
-        run: bundle install
-      - name: Upload to the App Store
-        uses: maierj/fastlane-action@v2.0.1
-        env:
-          RELEASE_NOTES: ${{ steps.terminal.outputs.RELEASE_NOTES }}
-          USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
-        with:
-          lane: 'ios release'
+          bundle exec fastlane ios release
 
   releaseToMacAppStore:
     name: Release to the Mac App Store
@@ -332,12 +329,12 @@ jobs:
           chmod +x fastlane/sign-osx-build.sh
           ./fastlane/sign-osx-build.sh
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
-          export notes="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
-          notes="${notes//'%'/%25}"
-          notes="${notes//$'\n'/%0A}"
-          notes="${notes//$'\r'/%0D}"
-          echo "$notes"
-          echo "::set-output name=RELEASE_NOTES::$notes"
+          export RELEASE_NOTES="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          RELEASE_NOTES="${RELEASE_NOTES//'%'/%25}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\n'/%0A}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\r'/%0D}"
+          echo "$RELEASE_NOTES"
+          echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
       - name: Upload to the Mac App Store
         uses: maierj/fastlane-action@v2.0.1
         env:
