@@ -263,11 +263,6 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.2
-          bundler-cache: true 
       - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
@@ -280,6 +275,7 @@ jobs:
           echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
+          bundle install
           bundle exec fastlane ios release
 
   releaseToMacAppStore:
