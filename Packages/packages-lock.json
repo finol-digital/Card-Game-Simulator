@@ -100,6 +100,20 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "com.yasirkula.nativegallery": {
+      "version": "https://github.com/yasirkula/UnityNativeGallery.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "821b543c58d98aa90a4bc6d62e58ef23f04d85c5"
+    },
+    "com.yasirkula.nativeshare": {
+      "version": "https://github.com/yasirkula/UnityNativeShare.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "9b1575d6e126b98b79b58c487e8cfd09125d1e3b"
+    },
     "jillejr.newtonsoft.json-for-unity": {
       "version": "12.0.301",
       "depth": 0,

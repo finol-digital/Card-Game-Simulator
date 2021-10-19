@@ -9,6 +9,9 @@
     }
   ],
   "dependencies": {
+    "jillejr.newtonsoft.json-for-unity": "12.0.301",
+    "com.yasirkula.nativegallery": "https://github.com/yasirkula/UnityNativeGallery.git",
+    "com.yasirkula.nativeshare": "https://github.com/yasirkula/UnityNativeShare.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.cloud.userreporting": "0.2.4-preview",
     "com.unity.ide.rider": "2.0.7",
@@ -18,7 +21,6 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.toolchain.linux-x86_64": "0.1.18-preview",
     "com.unity.ugui": "1.0.0",
-    "jillejr.newtonsoft.json-for-unity": "12.0.301",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
