@@ -48,11 +48,6 @@ Submit a new Beta Build to Apple TestFlight
 fastlane ios build
 ```
 Create .ipa
-### ios sync_certificates
-```
-fastlane ios sync_certificates
-```
-Set up codesigning
 
 ----
 
