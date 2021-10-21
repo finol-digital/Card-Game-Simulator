@@ -1,0 +1,6 @@
+{
+    "AutomatedSetup": true,
+    "PhotoLibraryUsageDescription": "The app requires access to Photos to load card images.",
+    "PhotoLibraryAdditionsUsageDescription": "The app requires access to Photos to save card images.",
+    "DontAskLimitedPhotosPermissionAutomaticallyOnIos14": true
+}

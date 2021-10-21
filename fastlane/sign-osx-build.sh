@@ -42,9 +42,9 @@ chmod -R a+xr "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
 bundlepaths=$(echo $MAC_APP_BUNDLE_PATHS | tr ";" "\n")
 for bundlepath in $bundlepaths
 do
-    codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app/$bundlepath"
+    codesign --deep --force --verbose --sign "Apple Distribution: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app/$bundlepath"
 done
-codesign --deep --force --verbose --sign "3rd Party Mac Developer Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" --entitlements "fastlane/${PROJECT_NAME}.entitlements" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
+codesign --deep --force --verbose --sign "Apple Distribution: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" --entitlements "fastlane/${PROJECT_NAME}.entitlements" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
 
 sleep 10
 echo "Packaging app..."
