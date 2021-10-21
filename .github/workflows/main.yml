@@ -316,15 +316,10 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-      - name: Install Fastlane
-        run: bundle install
-      - name: Fix version for StandaloneOSX
-        uses: maierj/fastlane-action@v2.0.1
-        with:
-          lane: 'fixversion'
-      - name: Fix File Permissions, Code-Sign, and Get Release Notes
-        id: terminal
+      - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
         run: |
+          bundle install
+          bundle exec fastlane fixversion
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           chmod +x fastlane/sign-osx-build.sh
           ./fastlane/sign-osx-build.sh
@@ -335,12 +330,7 @@ jobs:
           RELEASE_NOTES="${RELEASE_NOTES//$'\r'/%0D}"
           echo "$RELEASE_NOTES"
           echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
-      - name: Upload to the Mac App Store
-        uses: maierj/fastlane-action@v2.0.1
-        env:
-          RELEASE_NOTES: ${{ steps.terminal.outputs.RELEASE_NOTES }}
-        with:
-          lane: 'mac macupload'
+          bundle exec fastlane mac macupload
 
   releaseToGitHubPages:
     name: Release to GitHub Pages
