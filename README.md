@@ -2,7 +2,7 @@
 
 ![Card Game Simulator](https://www.cardgamesimulator.com/assets/img/CGSLogo.png)
 
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![Test, Build, and Release CGS](https://github.com/finol-digital/Card-Game-Simulator/actions/workflows/main.yml/badge.svg)](https://github.com/finol-digital/Card-Game-Simulator/actions/workflows/main.yml)
 
 Public documentation for CGS is provided through GitHub Pages in the docs/ folder. 
