@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.56
+ the game does not install if you copy or paste! only if you write, i.e. copy and paste, erase the last letter and put it back that goes!
 
 ## Active Sprint
 - Fix: Cards duplicated when drawn by multiple players
