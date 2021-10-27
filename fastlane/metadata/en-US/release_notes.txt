@@ -1,0 +1,1 @@
+- Fix: Account for card size differences%0A- Game-Play: Added save to card stacks%0A- Game-Play: Show how many cards each player has in the scoreboard%0A- Game-Play: Multiple hands in hand drawer

@@ -1,0 +1,32 @@
+Create, share, and play card games with Card Game Simulator!
+Create your own original card games, import custom cards, organize your decks and cards, and play card games with your friends.
+All on an intuitive virtual tabletop!
+
+# Create and Share Games:
+You can download additional games by selecting the center card game in the Main Menu. Press the download button that appears and enter the CGS AutoUpdate URL for the game you would like to download.
+If you enable Developer Mode, you can easily create your own games by importing images onto custom boards & tables, and create custom cards and decks.
+You can also define your own custom game(s) by following the Custom Games Documentation on the CGS website!
+
+# Cards Explorer:
+See all the cards laid out neatly and easily search-able, with the option to filter for any search criteria.
+If you enable Developer Mode, you can also add custom cards here.
+
+# Deck Editor:
+Some card games will come with pre-built decks, but you can always create new decks by writing in card names or with the visual Deck Editor.
+You can load up and edit existing decks, or you can start with completely new decks to add and save for later.
+
+# Multi-player:
+Create online rooms with optional passwords to ensure only your friends Join your game.
+You can play over LAN or over the internet.
+
+# Single-player:
+You can immediately Start a game, either to play by yourself or to play with friends hot-seat style.
+
+# Key Features:
+- Online sandbox with unlimited games to play how you want.
+- Create and play your own original games.
+- Play just like you do in real life; pick up, rotate, and flip any card.
+- Up to 5 people can play online together on the same table.
+- Save, load, and share decks.
+- Multiple "drawer"s allow you to play locally on the same computer with your friends.
+- Default games: Standard French-Suited 52-cards, Dominoes, and Mahjong
