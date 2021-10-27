@@ -42,11 +42,13 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Write to Changelog
+      - name: Update Release Notes
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+        run: |
+          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Auto-Commit Changelog
         if: github.event.action == 'published'
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -213,11 +215,13 @@ jobs:
         with:
           name: cgs-Android
           path: build/Android
-      - name: Write to Changelog
+      - name: Update Release Notes
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+        run: |
+          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Add Authentication
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Setup Ruby
@@ -258,16 +262,18 @@ jobs:
         with:
           name: cgs-iOS
           path: build/iOS
-      - name: Write to Changelog
+      - name: Update Release Notes
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+        run: |
+          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
-          export RELEASE_NOTES="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          export RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
           RELEASE_NOTES="${RELEASE_NOTES//'%'/'%25'}"
           RELEASE_NOTES="${RELEASE_NOTES//$'\n'/'%0A'}"
           RELEASE_NOTES="${RELEASE_NOTES//$'\r'/'%0D'}"
@@ -307,11 +313,13 @@ jobs:
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
-      - name: Write to Changelog
+      - name: Update Release Notes
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+        run: |
+          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
         run: |
           bundle install
@@ -320,7 +328,7 @@ jobs:
           chmod +x fastlane/sign-osx-build.sh
           ./fastlane/sign-osx-build.sh
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
-          export RELEASE_NOTES="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          export RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
           RELEASE_NOTES="${RELEASE_NOTES//'%'/'%25'}"
           RELEASE_NOTES="${RELEASE_NOTES//$'\n'/'%0A'}"
           RELEASE_NOTES="${RELEASE_NOTES//$'\r'/'%0D'}"
@@ -371,12 +379,14 @@ jobs:
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
-      - name: Write to Changelog
+      - name: Update Release Notes
         if: github.event.action == 'published'
         shell: bash
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+        run: |
+          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
@@ -428,7 +438,7 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          export notes="$(cat fastlane/metadata/android/en-US/changelogs/default.txt)"
+          export notes="$(cat fastlane/metadata/en-US/release_notes.txt)"
           notes="${notes//'%'/%25}"
           notes="${notes//$'\n'/%0A}"
           notes="${notes//$'\r'/%0D}"
