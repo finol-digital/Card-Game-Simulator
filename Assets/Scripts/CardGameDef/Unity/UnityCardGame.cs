@@ -612,7 +612,7 @@ namespace CardGameDef.Unity
                     imageDefName + PropertyDef.ObjectDelimiter + childName,
                     out PropertyDefValuePair cardObjectImageEntry))
                     cardImageWebUrl = cardObjectImageEntry.Value ?? string.Empty;
-                else if (metaProperties.TryGetValue(isImagePropertyList ? imageDefName : CardImageProperty,
+                else if (metaProperties.TryGetValue(CardImageProperty.Split(new[] { '[' }, StringSplitOptions.None)[0],
                     out PropertyDefValuePair cardImageEntry))
                     cardImageWebUrl =
                         (cardImageEntry.Value ?? string.Empty).Split(new[] { EnumDef.Delimiter },

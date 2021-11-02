@@ -5,15 +5,16 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.56
- the game does not install if you copy or paste! only if you write, i.e. copy and paste, erase the last letter and put it back that goes!
- mac standalonefilebrowser bundle
 
 ## Active Sprint
+- Fix: macOS file browser
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
 - Tech: Clear CgsNetPlayer on restart
 
 ## Next Sprint
+- Integration: Push release announcements to Discord
+- Platforms: Add macOS support to Steam
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks
