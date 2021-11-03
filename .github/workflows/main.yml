@@ -434,17 +434,17 @@ jobs:
       - name: Remove the .pfx
         shell: pwsh
         run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
-      - name: Get release notes
+      - name: Get Release Notes
         id: changelog
         shell: bash
         run: |
-          export notes="$(cat fastlane/metadata/en-US/release_notes.txt)"
-          notes="${notes//'%'/%25}"
-          notes="${notes//$'\n'/%0A}"
-          notes="${notes//$'\r'/%0D}"
-          echo "$notes"
-          echo "::set-output name=RELEASE_NOTES::$notes"
-      - name: Apply release notes
+          export RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
+          RELEASE_NOTES="${RELEASE_NOTES//'%'/%25}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\n'/%0A}"
+          RELEASE_NOTES="${RELEASE_NOTES//$'\r'/%0D}"
+          echo "$RELEASE_NOTES"
+          echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
+      - name: Apply Release Notes
         uses: davidmfinol/replace-action@master
         with:
           files: "storebroker/en-us/PDP.xml"
@@ -476,3 +476,37 @@ jobs:
           New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
+  announceReleaseToSocialMedia:
+    name: Announce Release to Social Media
+    runs-on: ubuntu-latest
+    needs: [releaseToGooglePlay, releaseToAppStore, releaseToMacAppStore, releaseToGitHubPages, releaseToMicrosoftStore]
+    steps:
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          format: "${major}.${minor}.${patch}"
+      - name: Prepare Announcement
+        id: prepare
+        shell: bash
+        env:
+          VERSION: ${{ steps.versioning.outputs.version }}
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: |
+          export ANNOUNCEMENT="CGS $VERSION has been released! It should be available in a day or two:\n$RELEASE_NOTES"
+          echo "$ANNOUNCEMENT"
+          echo "::set-output name=ANNOUNCEMENT::$ANNOUNCEMENT"
+      - name: Discord Announcement
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
+      - name: Twitter Announcement
+        uses: ethomson/send-tweet-action@v1
+        with:
+          status: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
+          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}

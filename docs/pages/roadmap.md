@@ -11,10 +11,11 @@ permalink: roadmap.html
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
 - Tech: Clear CgsNetPlayer on restart
+- Respond to Google Play reviews
 
 ## Next Sprint
-- Integration: Push release announcements to Discord
 - Platforms: Add macOS support to Steam
+- Platforms: Automate deployments to Amazon AppStore and Galaxy Store
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks

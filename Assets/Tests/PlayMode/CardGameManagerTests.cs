@@ -28,7 +28,7 @@ namespace Tests.PlayMode
         [SetUp]
         public void Setup()
         {
-            var manager = new GameObject {tag = Tags.CardGameManager};
+            var manager = new GameObject { tag = Tags.CardGameManager };
             manager.AddComponent<EventSystem>();
             manager.AddComponent<CardGameManager>();
         }
@@ -44,9 +44,18 @@ namespace Tests.PlayMode
 
             foreach (CardGameRef game in cardGameRefList.games)
             {
-                Debug.Log("Testing download for: " + game.name);
-                yield return CardGameManager.Instance.GetCardGame(game.url);
-                yield return new WaitForSeconds(1); // Wait to load set cards
+                // Enable retry if there are a lot of tests to do
+                int maxAttempts = cardGameRefList.games.Length > 10 ? 5 : 1;
+                for (var attempt = 1; attempt <= maxAttempts; attempt++)
+                {
+                    Debug.Log("Testing download for: " + game.name + ", attempt " + attempt);
+                    yield return CardGameManager.Instance.GetCardGame(game.url);
+                    yield return new WaitForSeconds(1); // Wait to load set cards
+                    if (CardGameManager.Current.HasLoaded && string.IsNullOrEmpty(CardGameManager.Current.Error))
+                        break;
+                    yield return new WaitForSeconds(10 * attempt);
+                }
+
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
                 Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
