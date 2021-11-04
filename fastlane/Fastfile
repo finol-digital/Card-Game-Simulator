@@ -62,17 +62,17 @@ platform :ios do
 end
 
 
-desc "Hack so that Apple doesn't reject the mac build due to a mistake in versioning" 
-lane :fixversion do
-  update_plist(
-    plist_path: "#{ENV['MAC_BUILD_PATH']}/StandaloneOSX.app/Contents/Info.plist",
-    block: proc do |plist|
-      plist[:CFBundleVersion] = "9" + plist["CFBundleVersion"]
-    end
-  )
-end
-
 platform :mac do
+
+  desc "Hack so that Apple doesn't reject the mac build due to a mistake in versioning" 
+  lane :fixversion do
+    update_plist(
+      plist_path: "#{ENV['MAC_BUILD_PATH']}/StandaloneOSX.app/Contents/Info.plist",
+      block: proc do |plist|
+        plist[:CFBundleVersion] = "9" + plist["CFBundleVersion"]
+      end
+    )
+  end
 
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do
