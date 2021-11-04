@@ -33,11 +33,10 @@ platform :ios do
       issuer_id: ENV["APPSTORE_ISSUER_ID"],
       key_content: ENV['APPSTORE_P8']
     )
-    match_org, match_repo = ENV["MATCH_REPOSITORY"].split("/")
     match(
       type: "appstore",
       storage_mode: "git",
-      git_url: "git@github.com:#{match_org}/#{match_repo}.git",
+      git_url: "git@github.com:#{ENV['MATCH_REPOSITORY']}.git",
       app_identifier: ENV["IOS_APP_ID"]
     )
     update_code_signing_settings(
@@ -52,9 +51,6 @@ platform :ios do
       path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
       profile_name: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_profile-name"],
       profile_uuid: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore"]
-    )
-    increment_build_number(
-       xcodeproj: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
     )
     build_app(
       project: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",

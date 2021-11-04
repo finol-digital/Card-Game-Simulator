@@ -10,7 +10,6 @@ permalink: roadmap.html
 ## Active Sprint
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
-- Tech: Clear CgsNetPlayer on restart
 - Game-Play: Add number to deck name when it is duplicated
 - Respond to Google Play reviews
 
@@ -50,6 +49,7 @@ permalink: roadmap.html
 - Game-Play: Log all Player actions
 - Fix: Open PDF fails outside of the Unity Editor
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
+- Tech: Clear CgsNetPlayer on restart
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
 - Tech: Amazon App Store
