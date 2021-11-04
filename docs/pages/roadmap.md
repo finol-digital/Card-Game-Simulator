@@ -10,12 +10,12 @@ permalink: roadmap.html
 - Fix: macOS file browser
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
-- Tech: Clear CgsNetPlayer on restart
 - Respond to Google Play reviews
 
 ## Next Sprint
 - Platforms: Add macOS support to Steam
 - Platforms: Automate deployments to Amazon AppStore and Galaxy Store
+- Integration: Steam Workshop
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks
@@ -49,6 +49,7 @@ permalink: roadmap.html
 - Game-Play: Log all Player actions
 - Fix: Open PDF fails outside of the Unity Editor
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database
+- Tech: Clear CgsNetPlayer on restart
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
 - Tech: Amazon App Store
