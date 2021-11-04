@@ -15,14 +15,6 @@ Install _fastlane_ using
 or alternatively using `brew install fastlane`
 
 # Available Actions
-### fixversion
-```
-fastlane fixversion
-```
-Hack so that Apple doesn't reject the mac build due to a mistake in versioning
-
-----
-
 ## Android
 ### android playprod
 ```
@@ -52,6 +44,11 @@ Create .ipa
 ----
 
 ## Mac
+### mac fixversion
+```
+fastlane mac fixversion
+```
+Hack so that Apple doesn't reject the mac build due to a mistake in versioning
 ### mac macupload
 ```
 fastlane mac macupload
