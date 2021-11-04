@@ -5,11 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.56
+- Fix: macOS file browser
 
 ## Active Sprint
-- Fix: macOS file browser
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
+- Game-Play: Add number to deck name when it is duplicated
 - Respond to Google Play reviews
 
 ## Next Sprint
