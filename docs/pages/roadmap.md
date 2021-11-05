@@ -11,7 +11,7 @@ permalink: roadmap.html
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Add number to deck name when it is duplicated
-- Respond to Google Play reviews
+- Respond to Google Play and Microsoft Store reviews
 
 ## Next Sprint
 - Platforms: Add macOS support to Steam
