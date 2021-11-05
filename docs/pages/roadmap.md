@@ -16,6 +16,7 @@ permalink: roadmap.html
 ## Next Sprint
 - Platforms: Add macOS support to Steam
 - Platforms: Automate deployments to Amazon AppStore and Galaxy Store
+- Integration: Steam Workshop
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks
