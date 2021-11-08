@@ -5,7 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.56
-- Fix: macOS file browser
+- Fix: Desktop File Browser
+- Accessibility: Scale resolution/size of UI in Settings
 
 ## Active Sprint
 - Fix: Cards duplicated when drawn by multiple players
@@ -16,26 +17,26 @@ permalink: roadmap.html
 ## Next Sprint
 - Platforms: Add macOS support to Steam
 - Platforms: Automate deployments to Amazon AppStore and Galaxy Store
-- Integration: Steam Workshop
+- Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
+- Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
+- Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
+
+## Backlog
+- Integration: Steam Workshop or alternative
+- Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks
 - Cards: Move card to zone, stack, or drawer (E)
-
-## Backlog
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Game-Play: Allow cards to snap to each other/align on grid
 - Game-Play: Convert card to stack
 - Game-Play: Rotate card stacks
-- Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
-- Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
-- Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 - Game-Play: Support multiple playmats
 - Game-Play: Customize controls/input
 - Game-Play: Face-up cards in cards stacks
 - Tech: Add code coverage
-- Usability: Scale size of UI based off either physical screen size or resolution of display
 - Game-Play: Custom colors for Dice
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
@@ -45,22 +46,21 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Networking: Vertical layout for Lobby
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
+- Decks: Show error(s) when a card is not found
 
 ## Icebox
 - Game-Play: Log all Player actions
 - Fix: Open PDF fails outside of the Unity Editor
-- Integration: Database for user-created card games, with in-app automation to upload and download from this database
 - Tech: Clear CgsNetPlayer on restart
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
-- Tech: Amazon App Store
 - Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
 - Tech: Upgrade json schema version from v4 to v7
 - Tech: Use AllDecks.json for default games
 - Tech: SonarQube Scans
 - Integration: Automate game upload
-- Usability: Alt-text with button name appears when hovering mouse over a button
+- Accessibility: Alt-text with button name appears when hovering mouse over a button
 - Platforms: Networking on WebGL
 - Integration: Android Search Bar Widget
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)

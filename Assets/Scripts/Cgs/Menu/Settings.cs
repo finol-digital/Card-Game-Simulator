@@ -27,6 +27,7 @@ namespace Cgs.Menu
             private set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 
+        public Dropdown resolutionDropdown;
         public Toggle screenOsControlToggle;
         public Toggle screenAutoRotateToggle;
         public Toggle screenPortraitToggle;
@@ -38,6 +39,8 @@ namespace Cgs.Menu
 
         private void Start()
         {
+            resolutionDropdown.value = ResolutionManager.ResolutionIndex;
+
             switch (ScreenOrientationManager.PreferredScreenOrientation)
             {
                 case ScreenOrientationPref.OsControl:
@@ -70,6 +73,11 @@ namespace Cgs.Menu
         {
             if (Inputs.IsCancel)
                 BackToMainMenu();
+        }
+
+        public void SetResolution(int resolutionIndex)
+        {
+            ResolutionManager.ResolutionIndex = resolutionIndex;
         }
 
         [UsedImplicitly]

@@ -281,6 +281,7 @@ namespace Cgs
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            ResolutionManager.ScaleResolution();
             ResetGameScene();
         }
 

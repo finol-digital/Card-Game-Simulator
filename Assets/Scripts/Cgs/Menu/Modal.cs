@@ -180,6 +180,8 @@ namespace Cgs.Menu
             CardGameManager.Instance.ModalCanvases.Add(GetComponent<Canvas>());
             InputFields = new List<InputField>(GetComponentsInChildren<InputField>());
             Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
+            foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
+                canvasScaler.referenceResolution = ResolutionManager.Resolution;
         }
 
         [UsedImplicitly]
