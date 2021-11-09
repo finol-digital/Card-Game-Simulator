@@ -5,25 +5,24 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.56
+- Fix: Online Play
 - Fix: Desktop File Browser
 - Accessibility: Scale resolution/size of UI in Settings
 
 ## Active Sprint
 - Fix: Cards duplicated when drawn by multiple players
+- Platforms: Add macOS support to Steam
+- Platforms: Automate deployments to Steam, Amazon AppStore, and Galaxy Store
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Add number to deck name when it is duplicated
-- Respond to Google Play and Microsoft Store reviews
 
 ## Next Sprint
-- Platforms: Add macOS support to Steam
-- Platforms: Automate deployments to Amazon AppStore and Galaxy Store
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 
 ## Backlog
-- Integration: Steam Workshop or alternative
-- Integration: Database for user-created card games, with in-app automation to upload and download from this database
+- Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Pre-defined card zones/stacks
