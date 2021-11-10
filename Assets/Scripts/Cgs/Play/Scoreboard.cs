@@ -16,10 +16,17 @@ namespace Cgs.Play
 {
     public class Scoreboard : MonoBehaviour
     {
+        public const string Offline = "Offline";
+        public const string IdIpCopiedMessage = "The Room Id has been copied to the clipboard.";
+        public const string IdIpErrorMessage = "Error failed to copy the Room Id to the clipboard!: ";
+
         public const string DefaultPlayerName = "Unnamed Player";
         public const string PlayerNamePlayerPrefs = "PlayerName";
 
-        public Transform scorePanel;
+        public Transform roomInfoPanel;
+
+        public Text roomNameText;
+        public Text roomIdIpText;
 
         public InputField nameInputField;
 
@@ -47,7 +54,8 @@ namespace Cgs.Play
 
         private void Update()
         {
-            Refresh();
+            if (roomInfoPanel.gameObject.activeSelf)
+                Refresh();
         }
 
         public void Decrement()
@@ -66,7 +74,7 @@ namespace Cgs.Play
 
         public void ToggleScorePanel()
         {
-            scorePanel.gameObject.SetActive(!scorePanel.gameObject.activeSelf);
+            roomInfoPanel.gameObject.SetActive(!roomInfoPanel.gameObject.activeSelf);
         }
 
         public void ToggleNameInput()
@@ -83,9 +91,32 @@ namespace Cgs.Play
                 CgsNetManager.Instance.LocalPlayer.RequestNameUpdate(newName);
         }
 
+        [UsedImplicitly]
+        public void Share()
+        {
+            try
+            {
+                string shareText = IsOnline ? CgsNetManager.Instance.playController.Lobby.IdIp : Offline;
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+                (new NativeShare()).SetText(shareText).Share();
+#else
+                UniClipboard.SetText(shareText);
+                CardGameManager.Instance.Messenger.Show(IdIpCopiedMessage);
+#endif
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(IdIpErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(IdIpErrorMessage + e.Message);
+            }
+        }
+
         private void Refresh()
         {
             // TODO: Improve this very slow process
+            roomNameText.text = IsOnline ? CgsNetManager.Instance.playController.Lobby.RoomName : Offline;
+            roomIdIpText.text = IsOnline ? CgsNetManager.Instance.playController.Lobby.IdIp : Offline;
+
             List<Tuple<string, int, string>> scores = GameObject.FindGameObjectsWithTag("Player")
                 .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>
                     new Tuple<string, int, string>(cgsNetPlayer.Name, cgsNetPlayer.Points, cgsNetPlayer.HandCount))
@@ -100,7 +131,8 @@ namespace Cgs.Play
                 entry.nameText.text = playerName;
                 entry.pointsText.text = points.ToString();
                 entry.handCountText.text = string.IsNullOrEmpty(handCount)
-                    ? CgsNetManager.Instance.playController.drawer.cardZoneRectTransforms[CgsNetManager.Instance.LocalPlayer.CurrentHand]
+                    ? CgsNetManager.Instance.playController.drawer
+                        .cardZoneRectTransforms[CgsNetManager.Instance.LocalPlayer.CurrentHand]
                         .GetComponentsInChildren<CardModel>().Length.ToString()
                     : handCount;
             }
