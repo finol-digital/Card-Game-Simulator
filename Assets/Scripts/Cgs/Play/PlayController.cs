@@ -99,9 +99,9 @@ namespace Cgs.Play
                 Lobby.Show();
             else
             {
-                Lobby.IsLanConnectionSource = true;
                 DeckLoader.Show(LoadDeck);
-                CgsNetManager.Instance.RoomName = CardGameManager.Current.Name;
+                Lobby.IsLanConnectionSource = true;
+                Lobby.RoomName = CardGameManager.Current.Name;
                 Lobby.Host();
             }
         }

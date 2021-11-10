@@ -32,6 +32,8 @@ namespace Cgs.Play.Multiplayer
         public InputField roomIdIpInputField;
         public InputField passwordInputField;
 
+        public string RoomName { get; set; } = CardGameManager.Current.Name; // TODO: SET THIS WHEN CLIENT CONNECTS TO SERVER
+
         [UsedImplicitly]
         public bool IsLanConnectionSource
         {
@@ -57,7 +59,7 @@ namespace Cgs.Play.Multiplayer
         public string IdIp => IsInternetConnectionSource
             ? _lrm.serverId
             : _lrm != null && _lrm.IsAuthenticated()
-                ? _lrm.ServerUri().ToString()
+                ? _lrm.ServerUri().ToString() // TODO: CONFIRM THIS LINE WORKS
                 : CgsNetManager.Instance.lanConnector.directConnectTransport.ServerUri().ToString();
 
         private IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
@@ -220,7 +222,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsInternetConnectionSource)
             {
-                _lrm.serverName = CgsNetManager.Instance.RoomName;
+                _lrm.serverName = RoomName;
                 _lrm.isPublicServer = true;
             }
             else

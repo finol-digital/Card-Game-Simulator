@@ -114,7 +114,7 @@ namespace Cgs.Play
         private void Refresh()
         {
             // TODO: Improve this very slow process
-            roomNameText.text = IsOnline ? CgsNetManager.Instance.RoomName : Offline;
+            roomNameText.text = IsOnline ? CgsNetManager.Instance.playController.Lobby.RoomName : Offline;
             roomIdIpText.text = IsOnline ? CgsNetManager.Instance.playController.Lobby.IdIp : Offline;
 
             List<Tuple<string, int, string>> scores = GameObject.FindGameObjectsWithTag("Player")
