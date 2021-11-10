@@ -202,11 +202,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'android'))
-    env:
-      GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
-      GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
-      ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
-      ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -223,6 +218,9 @@ jobs:
           echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
           echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Add Authentication
+        env:
+          GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
+          GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
         run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -230,6 +228,10 @@ jobs:
           ruby-version: 2.7.2
           bundler-cache: true
       - name: Upload to Google Play
+        env:
+          GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
+          ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
+          ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
         uses: maierj/fastlane-action@v2.0.1
         with:
           lane: 'android playprod'
@@ -239,21 +241,6 @@ jobs:
     runs-on: macos-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'ios'))
-    env:
-      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
-      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-      APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
-      USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
-      MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
-      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      MATCH_REPOSITORY: finol-digital/certificates
-      IOS_APP_ID: com.finoldigital.CardGameSim
-      IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
-      PROJECT_NAME: Card Game Simulator
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -270,6 +257,21 @@ jobs:
           echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
           echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
+        env:
+          APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
+          APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
+          USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
+          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_REPOSITORY: finol-digital/certificates
+          IOS_APP_ID: com.finoldigital.CardGameSim
+          IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
+          PROJECT_NAME: Card Game Simulator
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
@@ -289,22 +291,6 @@ jobs:
     runs-on: macos-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'mac'))
-    env:
-      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
-      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-      MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
-      MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
-      MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
-      MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
-      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
-      APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
-      MAC_APP_ID: com.finoldigital.CardGameSimulator
-      MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
-      PROJECT_NAME: Card Game Simulator
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -321,6 +307,22 @@ jobs:
           echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
           echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
+        env:
+          APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
+          APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+          MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
+          MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
+          MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
+          MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
+          APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
+          MAC_APP_ID: com.finoldigital.CardGameSimulator
+          MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
+          PROJECT_NAME: Card Game Simulator
         run: |
           bundle install
           bundle exec fastlane mac fixversion
