@@ -50,7 +50,7 @@ namespace Cgs.Play
 
         public Vector2 NextDeckPosition { get; private set; } = Vector2.zero;
 
-        private LobbyMenu Lobby =>
+        public LobbyMenu Lobby =>
             _lobby ? _lobby : _lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
@@ -109,7 +109,7 @@ namespace Cgs.Play
         private void Update()
         {
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
-                CardGameManager.Instance.ModalCanvas != null || scoreboard.scorePanel.gameObject.activeSelf)
+                CardGameManager.Instance.ModalCanvas != null || scoreboard.roomInfoPanel.gameObject.activeSelf)
                 return;
 
             if (Inputs.IsOption)

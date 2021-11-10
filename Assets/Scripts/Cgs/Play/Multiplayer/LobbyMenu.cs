@@ -54,6 +54,12 @@ namespace Cgs.Play.Multiplayer
             set => IsLanConnectionSource = !value;
         }
 
+        public string IdIp => IsInternetConnectionSource
+            ? _lrm.serverId
+            : _lrm != null && _lrm.IsAuthenticated()
+                ? _lrm.ServerUri().ToString()
+                : CgsNetManager.Instance.lanConnector.directConnectTransport.ServerUri().ToString();
+
         private IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
 
         private readonly Dictionary<long, DiscoveryResponse> _discoveredServers =
@@ -112,7 +118,8 @@ namespace Cgs.Play.Multiplayer
                 return;
 
             _lrmUpdateSecond += Time.deltaTime;
-            if (IsInternetConnectionSource && _lrm != null && _lrm.IsAuthenticated() && _lrmUpdateSecond > ServerListUpdateTime)
+            if (IsInternetConnectionSource && _lrm != null && _lrm.IsAuthenticated() &&
+                _lrmUpdateSecond > ServerListUpdateTime)
             {
                 _lrm.RequestServerList();
                 _lrmUpdateSecond = 0;
@@ -214,7 +221,6 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource)
             {
                 _lrm.serverName = CgsNetManager.Instance.RoomName;
-                _lrm.extraServerData = CardGameManager.Current.Name;
                 _lrm.isPublicServer = true;
             }
             else
@@ -240,7 +246,7 @@ namespace Cgs.Play.Multiplayer
         }
 
         [UsedImplicitly]
-        public void SelectServer(Toggle toggle, String serverId)
+        public void SelectServer(Toggle toggle, string serverId)
         {
             _selectedServerId = null;
             if (toggle.isOn)

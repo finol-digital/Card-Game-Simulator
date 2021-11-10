@@ -10,6 +10,7 @@ permalink: roadmap.html
 - Accessibility: Scale resolution/size of UI in Settings
 
 ## Active Sprint
+- Fix: Error when trying to load deck after choosing not to load at start
 - Fix: Cards duplicated when drawn by multiple players
 - Platforms: Add macOS support to Steam
 - Platforms: Automate deployments to Steam, Amazon AppStore, and Galaxy Store
