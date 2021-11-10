@@ -11,6 +11,7 @@ using LightReflectiveMirror;
 using Mirror;
 using ScrollRects;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -27,17 +28,31 @@ namespace Cgs.Play.Multiplayer
         public Toggle lanToggle;
         public Toggle internetToggle;
         public Button joinButton;
-        public InputField ipInputField;
+        public Text roomIdIpLabel;
+        public InputField roomIdIpInputField;
         public InputField passwordInputField;
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
         {
-            get => !IsInternetConnectionSource;
-            set => IsInternetConnectionSource = !value;
+            get => _isLanConnectionSource;
+            set
+            {
+                _isLanConnectionSource = value;
+                roomIdIpLabel.text = "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
+                ((Text)roomIdIpInputField.placeholder).text =
+                    "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
+            }
         }
 
-        [UsedImplicitly] public bool IsInternetConnectionSource { get; set; }
+        private bool _isLanConnectionSource;
+
+        [UsedImplicitly]
+        public bool IsInternetConnectionSource
+        {
+            get => !IsLanConnectionSource;
+            set => IsLanConnectionSource = !value;
+        }
 
         private IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
 
@@ -86,7 +101,7 @@ namespace Cgs.Play.Multiplayer
 
         private void Start()
         {
-            ipInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            roomIdIpInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
             passwordInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
             EnableLrm();
         }
@@ -97,13 +112,13 @@ namespace Cgs.Play.Multiplayer
                 return;
 
             _lrmUpdateSecond += Time.deltaTime;
-            if (IsInternetConnectionSource && _lrm != null && _lrmUpdateSecond > ServerListUpdateTime)
+            if (IsInternetConnectionSource && _lrm != null && _lrm.IsAuthenticated() && _lrmUpdateSecond > ServerListUpdateTime)
             {
                 _lrm.RequestServerList();
                 _lrmUpdateSecond = 0;
             }
 
-            if (ipInputField.isFocused)
+            if (roomIdIpInputField.isFocused)
             {
                 if (Inputs.IsFocusNext)
                     passwordInputField.ActivateInputField();
@@ -113,7 +128,7 @@ namespace Cgs.Play.Multiplayer
             if (passwordInputField.isFocused)
             {
                 if (Inputs.IsFocusBack)
-                    ipInputField.ActivateInputField();
+                    roomIdIpInputField.ActivateInputField();
                 return;
             }
 
@@ -130,7 +145,7 @@ namespace Cgs.Play.Multiplayer
             else if (Inputs.IsNew)
                 Host();
             else if (Inputs.IsFocusBack)
-                ipInputField.ActivateInputField();
+                roomIdIpInputField.ActivateInputField();
             else if (Inputs.IsFocusNext)
                 passwordInputField.ActivateInputField();
             else if (Inputs.IsPageVertical && !Inputs.IsPageVertical)
@@ -138,7 +153,7 @@ namespace Cgs.Play.Multiplayer
             else if (Inputs.IsPageHorizontal && !Inputs.WasPageHorizontal)
                 ToggleConnectionSource();
             else if (Inputs.IsCancel)
-                Hide();
+                Close();
         }
 
         public void Show()
@@ -198,7 +213,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsInternetConnectionSource)
             {
-                _lrm.serverName = CgsNetManager.Instance.GameName;
+                _lrm.serverName = CgsNetManager.Instance.RoomName;
                 _lrm.extraServerData = CardGameManager.Current.Name;
                 _lrm.isPublicServer = true;
             }
@@ -216,11 +231,11 @@ namespace Cgs.Play.Multiplayer
             if (toggle.isOn)
             {
                 _selectedServerId = serverId;
-                if (!string.IsNullOrEmpty(ipInputField.text))
-                    ipInputField.text = string.Empty;
+                if (!string.IsNullOrEmpty(roomIdIpInputField.text))
+                    roomIdIpInputField.text = string.Empty;
                 joinButton.interactable = true;
             }
-            else if (!ipInputField.isFocused && !toggle.group.AnyTogglesOn() && serverId == _selectedServerId)
+            else if (!roomIdIpInputField.isFocused && !toggle.group.AnyTogglesOn() && serverId == _selectedServerId)
                 Join();
         }
 
@@ -231,11 +246,11 @@ namespace Cgs.Play.Multiplayer
             if (toggle.isOn)
             {
                 _selectedServerIp = serverId;
-                if (!string.IsNullOrEmpty(ipInputField.text))
-                    ipInputField.text = string.Empty;
+                if (!string.IsNullOrEmpty(roomIdIpInputField.text))
+                    roomIdIpInputField.text = string.Empty;
                 joinButton.interactable = true;
             }
-            else if (!ipInputField.isFocused && !toggle.group.AnyTogglesOn() &&
+            else if (!roomIdIpInputField.isFocused && !toggle.group.AnyTogglesOn() &&
                      serverId.Equals(_selectedServerIp))
                 Join();
         }
@@ -288,13 +303,21 @@ namespace Cgs.Play.Multiplayer
             Hide();
         }
 
-        [UsedImplicitly]
         public void Hide()
         {
             if (!NetworkServer.active)
                 CgsNetManager.Instance.Discovery.StopDiscovery();
 
             Menu.Hide();
+        }
+
+        [UsedImplicitly]
+        public void Close()
+        {
+            if (!NetworkServer.active)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
+
+            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }
 
         private void OnDisable()

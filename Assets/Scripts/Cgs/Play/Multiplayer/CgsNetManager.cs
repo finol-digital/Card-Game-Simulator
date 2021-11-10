@@ -16,7 +16,7 @@ namespace Cgs.Play.Multiplayer
     {
         public static CgsNetManager Instance => (CgsNetManager) singleton;
 
-        public string GameName { get; set; } = "";
+        public string RoomName { get; set; } = "";
 
         public CgsNetPlayer LocalPlayer { get; set; }
 

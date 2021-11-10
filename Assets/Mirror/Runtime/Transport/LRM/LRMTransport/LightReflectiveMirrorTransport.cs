@@ -475,6 +475,11 @@ namespace LightReflectiveMirror
         public List<int> clients;
         public int currentPlayers;
         public RelayAddress relayInfo;
+
+        public override string ToString()
+        {
+            return $"{serverName}\n{serverId} - {currentPlayers}/{maxPlayers}";
+        }
     }
 
     [Serializable]

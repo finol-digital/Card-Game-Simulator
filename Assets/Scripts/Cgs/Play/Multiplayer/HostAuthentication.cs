@@ -12,7 +12,7 @@ namespace Cgs.Play.Multiplayer
 {
     public class HostAuthentication : Modal
     {
-        public InputField gameNameInputField;
+        public InputField roomNameInputField;
         public InputField passwordInputField;
 
         private UnityAction _callback;
@@ -34,16 +34,16 @@ namespace Cgs.Play.Multiplayer
         {
             Show();
 
-            CgsNetManager.Instance.GameName = CardGameManager.Current.Name;
-            gameNameInputField.text = CardGameManager.Current.Name;
+            CgsNetManager.Instance.RoomName = CardGameManager.Current.Name;
+            roomNameInputField.text = CardGameManager.Current.Name;
 
             _callback = callback;
         }
 
         [UsedImplicitly]
-        public void SetGameName(string gameName)
+        public void SetRoomName(string roomName)
         {
-            CgsNetManager.Instance.GameName = gameName;
+            CgsNetManager.Instance.RoomName = roomName;
         }
 
         [UsedImplicitly]

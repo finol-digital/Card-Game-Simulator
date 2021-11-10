@@ -21,13 +21,13 @@ namespace Cgs.Play.Multiplayer
         public long ServerId;
         public IPEndPoint EndPoint { get; set; }
         public Uri Uri;
-        public string GameName;
+        public string RoomName;
         public int Players;
         public int Capacity;
 
         public override string ToString()
         {
-            return $"{GameName}\n{Uri.AbsoluteUri} - {Players}/{Capacity}";
+            return $"{RoomName}\n{Uri.AbsoluteUri} - {Players}/{Capacity}";
         }
     }
 
@@ -52,7 +52,7 @@ namespace Cgs.Play.Multiplayer
                 ServerId = _serverId,
                 // the endpoint is populated by the client
                 Uri = _transport.ServerUri(),
-                GameName = CgsNetManager.Instance.GameName,
+                RoomName = CgsNetManager.Instance.RoomName,
                 Players = NetworkServer.connections.Count,
                 Capacity = NetworkManager.singleton.maxConnections
             };
