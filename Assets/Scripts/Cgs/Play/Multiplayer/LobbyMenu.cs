@@ -22,6 +22,9 @@ namespace Cgs.Play.Multiplayer
         public string RoomIdIpLabel => "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
         public string RoomIdIpPlaceholder => "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
 
+        public const string ConnectionErrorMessage =
+            "Error: Attempted to join a game without having selected a valid server!";
+
         private const float ServerListUpdateTime = 5;
 
         public GameObject hostAuthenticationPrefab;
@@ -282,22 +285,22 @@ namespace Cgs.Play.Multiplayer
             if (IsLanConnectionSource)
             {
                 if (_selectedServerId != null && DiscoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
-                    out DiscoveryResponse serverResponse) && serverResponse.Uri != null)
+                    out var discoveryResponse) && discoveryResponse.Uri != null)
                 {
-                    CgsNetManager.Instance.RoomName = serverResponse.RoomName;
+                    CgsNetManager.Instance.RoomName = discoveryResponse.RoomName;
                     Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
-                    NetworkManager.singleton.StartClient(serverResponse.Uri);
+                    NetworkManager.singleton.StartClient(discoveryResponse.Uri);
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute))
                 {
                     Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
-                    NetworkManager.singleton.StartClient(new Uri(_selectedServerIp));
+                    var host = _selectedServerIp.StartsWith("lrm://") ? "" : "lrm://" + _selectedServerIp;
+                    NetworkManager.singleton.StartClient(new Uri(host));
                 }
                 else
                 {
-                    Debug.LogError("Error: Attempted to join a game without having selected a valid server!");
-                    CardGameManager.Instance.Messenger.Show(
-                        "Error: Attempted to join a game without having selected a valid server!");
+                    Debug.LogError(ConnectionErrorMessage);
+                    CardGameManager.Instance.Messenger.Show(ConnectionErrorMessage);
                     return;
                 }
             }

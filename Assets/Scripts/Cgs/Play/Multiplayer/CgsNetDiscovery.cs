@@ -27,7 +27,7 @@ namespace Cgs.Play.Multiplayer
 
         public override string ToString()
         {
-            return $"{RoomName}\n{Uri.AbsoluteUri} - {Players}/{Capacity}";
+            return $"{RoomName}\n{Uri.Host} - {Players}/{Capacity}";
         }
     }
 
