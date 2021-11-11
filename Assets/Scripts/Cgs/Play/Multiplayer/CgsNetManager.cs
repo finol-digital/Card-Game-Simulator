@@ -4,6 +4,8 @@
 
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using Cgs.CardGameView.Multiplayer;
 using LightReflectiveMirror;
 using Mirror;
@@ -15,7 +17,7 @@ namespace Cgs.Play.Multiplayer
     [RequireComponent(typeof(CgsNetDiscovery))]
     public class CgsNetManager : NetworkManager
     {
-        public static CgsNetManager Instance => (CgsNetManager)singleton;
+        public static CgsNetManager Instance => (CgsNetManager) singleton;
 
         public string RoomName
         {
@@ -23,7 +25,12 @@ namespace Cgs.Play.Multiplayer
             set => lrm.serverName = value;
         }
 
-        public string RoomIdIp => networkAddress;
+        public string RoomIdIp => "localhost".Equals(networkAddress, StringComparison.Ordinal)
+            ? string.IsNullOrEmpty(lrm.serverId)
+                ? Dns.GetHostEntry(Dns.GetHostName()).AddressList
+                    .First(f => f.AddressFamily == AddressFamily.InterNetwork).ToString()
+                : lrm.serverId
+            : networkAddress;
 
         public CgsNetPlayer LocalPlayer { get; set; }
 
