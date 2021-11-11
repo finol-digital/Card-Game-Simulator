@@ -23,8 +23,8 @@ namespace Cgs.Play.Multiplayer
             set => lrm.serverName = value;
         }
 
-        public string RoomIdIp => lrm.IsAuthenticated() && !string.IsNullOrEmpty(lrm.serverId)
-            ? lrm.serverId
+        public string RoomIdIp => lrm.IsAuthenticated()
+            ? networkAddress
             : new UriBuilder(lrm.ServerUri()) { Host = networkAddress }.Uri.ToString();
 
         public CgsNetPlayer LocalPlayer { get; set; }

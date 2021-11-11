@@ -303,6 +303,9 @@ namespace Cgs.Play.Multiplayer
             }
             else
             {
+                if (CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
+                    server => server.serverName).TryGetValue(_selectedServerIp, out string serverName))
+                    CgsNetManager.Instance.RoomName = serverName;
                 NetworkManager.singleton.networkAddress = _selectedServerIp;
                 NetworkManager.singleton.StartClient();
             }
