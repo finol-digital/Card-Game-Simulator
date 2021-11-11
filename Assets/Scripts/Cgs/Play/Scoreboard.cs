@@ -17,8 +17,8 @@ namespace Cgs.Play
     public class Scoreboard : MonoBehaviour
     {
         public const string Offline = "Offline";
-        public const string IdIpCopiedMessage = "The Room Id has been copied to the clipboard.";
-        public const string IdIpErrorMessage = "Error failed to copy the Room Id to the clipboard!: ";
+        public const string RoomIdIpCopiedMessage = "The Room Id/IP has been copied to the clipboard.";
+        public const string RoomIdIpErrorMessage = "Error failed to copy the Room Id/IP to the clipboard!: ";
 
         public const string DefaultPlayerName = "Unnamed Player";
         public const string PlayerNamePlayerPrefs = "PlayerName";
@@ -101,13 +101,13 @@ namespace Cgs.Play
                 (new NativeShare()).SetText(shareText).Share();
 #else
                 UniClipboard.SetText(shareText);
-                CardGameManager.Instance.Messenger.Show(IdIpCopiedMessage);
+                CardGameManager.Instance.Messenger.Show(RoomIdIpCopiedMessage);
 #endif
             }
             catch (Exception e)
             {
-                Debug.LogError(IdIpErrorMessage + e.Message);
-                CardGameManager.Instance.Messenger.Show(IdIpErrorMessage + e.Message);
+                Debug.LogError(RoomIdIpErrorMessage + e.Message);
+                CardGameManager.Instance.Messenger.Show(RoomIdIpErrorMessage + e.Message);
             }
         }
 
