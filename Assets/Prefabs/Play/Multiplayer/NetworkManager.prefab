@@ -97,6 +97,7 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs: []
   lanConnector: {fileID: 1644174390015773337}
+  lrm: {fileID: 8073252221323287397}
   playController: {fileID: 0}
 --- !u!114 &2535259625562847021
 MonoBehaviour:

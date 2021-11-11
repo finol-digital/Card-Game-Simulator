@@ -52,7 +52,7 @@ namespace Cgs.Play.Multiplayer
                 ServerId = _serverId,
                 // the endpoint is populated by the client
                 Uri = _transport.ServerUri(),
-                RoomName = CgsNetManager.Instance.playController.Lobby.RoomName,
+                RoomName = CgsNetManager.Instance.RoomName,
                 Players = NetworkServer.connections.Count,
                 Capacity = NetworkManager.singleton.maxConnections
             };

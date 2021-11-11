@@ -34,7 +34,7 @@ namespace Cgs.Play.Multiplayer
         {
             Show();
 
-            CgsNetManager.Instance.playController.Lobby.RoomName = CardGameManager.Current.Name;
+            CgsNetManager.Instance.RoomName = CardGameManager.Current.Name;
             roomNameInputField.text = CardGameManager.Current.Name;
 
             _callback = callback;
@@ -43,13 +43,13 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void SetRoomName(string roomName)
         {
-            CgsNetManager.Instance.playController.Lobby.RoomName = roomName;
+            CgsNetManager.Instance.RoomName = roomName;
         }
 
         [UsedImplicitly]
         public void SetPassword(string password)
         {
-            ((BasicAuthenticator) CgsNetManager.Instance.authenticator).password = password;
+            ((BasicAuthenticator)CgsNetManager.Instance.authenticator).password = password;
         }
 
         [UsedImplicitly]

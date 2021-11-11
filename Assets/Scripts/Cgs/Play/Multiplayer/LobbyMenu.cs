@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cgs.Menu;
 using JetBrains.Annotations;
-using LightReflectiveMirror;
 using Mirror;
 using ScrollRects;
 using UnityEngine;
@@ -35,20 +34,6 @@ namespace Cgs.Play.Multiplayer
         public InputField roomIdIpInputField;
         public InputField passwordInputField;
 
-        public string RoomName
-        {
-            get => _lrm != null ? _lrm.serverName : _roomName;
-            set
-            {
-                if (_lrm != null)
-                    _lrm.serverName = value;
-                else
-                    _roomName = value;
-            }
-        }
-
-        private string _roomName = CardGameManager.Current.Name;
-
         [UsedImplicitly]
         public bool IsLanConnectionSource
         {
@@ -69,12 +54,6 @@ namespace Cgs.Play.Multiplayer
             get => !IsLanConnectionSource;
             set => IsLanConnectionSource = !value;
         }
-
-        public string IdIp => IsInternetConnectionSource
-            ? _lrm != null && _lrm.IsAuthenticated()
-                ? _lrm.serverId
-                : _lrm.ServerUri().ToString()
-            : CgsNetManager.Instance.lanConnector.directConnectTransport.ServerUri().ToString();
 
         private IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
 
@@ -100,9 +79,12 @@ namespace Cgs.Play.Multiplayer
         private Modal Menu =>
             _menu ? _menu : (_menu = gameObject.GetOrAddComponent<Modal>());
 
+        public string IdIp => IsInternetConnectionSource && CgsNetManager.Instance.lrm.IsAuthenticated()
+            ? CgsNetManager.Instance.lrm.serverId
+            : CgsNetManager.Instance.lrm.ServerUri()?.ToString();
+
         private Modal _menu;
 
-        private LightReflectiveMirrorTransport _lrm;
         private float _lrmUpdateSecond = ServerListUpdateTime;
 
         private void OnEnable()
@@ -112,13 +94,8 @@ namespace Cgs.Play.Multiplayer
 
         private void EnableLrm()
         {
-            if (_lrm == null)
-                _lrm = Transport.activeTransport as LightReflectiveMirrorTransport;
-            if (_lrm == null)
-                return;
-
-            _lrm.serverListUpdated.RemoveAllListeners();
-            _lrm.serverListUpdated.AddListener(Redisplay);
+            CgsNetManager.Instance.lrm.serverListUpdated.RemoveAllListeners();
+            CgsNetManager.Instance.lrm.serverListUpdated.AddListener(Redisplay);
         }
 
         private void Start()
@@ -134,10 +111,10 @@ namespace Cgs.Play.Multiplayer
                 return;
 
             _lrmUpdateSecond += Time.deltaTime;
-            if (IsInternetConnectionSource && _lrm != null && _lrm.IsAuthenticated() &&
+            if (IsInternetConnectionSource && CgsNetManager.Instance.lrm.IsAuthenticated() &&
                 _lrmUpdateSecond > ServerListUpdateTime)
             {
-                _lrm.RequestServerList();
+                CgsNetManager.Instance.lrm.RequestServerList();
                 _lrmUpdateSecond = 0;
             }
 
@@ -199,7 +176,9 @@ namespace Cgs.Play.Multiplayer
             if (IsLanConnectionSource)
                 Rebuild(_discoveredServers, SelectServer, _selectedServerId.GetValueOrDefault());
             else
-                Rebuild(_lrm.relayServerList.ToDictionary(server => server.serverId, server => server),
+                Rebuild(
+                    CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
+                        server => server),
                     SelectServer,
                     _selectedServerIp);
 
@@ -236,8 +215,8 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsInternetConnectionSource)
             {
-                _lrm.serverName = RoomName;
-                _lrm.isPublicServer = true;
+                CgsNetManager.Instance.lrm.serverName = CgsNetManager.Instance.RoomName;
+                CgsNetManager.Instance.lrm.isPublicServer = true;
             }
             else
                 Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
@@ -302,20 +281,25 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsLanConnectionSource)
             {
-                if (_selectedServerId == null
-                    || !DiscoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
-                        out DiscoveryResponse serverResponse)
-                    || serverResponse.Uri == null)
+                if (_selectedServerId != null && DiscoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
+                    out DiscoveryResponse serverResponse) && serverResponse.Uri != null)
+                {
+                    CgsNetManager.Instance.RoomName = serverResponse.RoomName;
+                    Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
+                    NetworkManager.singleton.StartClient(serverResponse.Uri);
+                }
+                else if (Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute))
+                {
+                    Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
+                    NetworkManager.singleton.StartClient(new Uri(_selectedServerIp));
+                }
+                else
                 {
                     Debug.LogError("Error: Attempted to join a game without having selected a valid server!");
                     CardGameManager.Instance.Messenger.Show(
                         "Error: Attempted to join a game without having selected a valid server!");
                     return;
                 }
-
-                RoomName = serverResponse.RoomName;
-                Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
-                NetworkManager.singleton.StartClient(serverResponse.Uri);
             }
             else
             {
@@ -345,8 +329,7 @@ namespace Cgs.Play.Multiplayer
 
         private void OnDisable()
         {
-            if (_lrm != null)
-                _lrm.serverListUpdated.RemoveListener(Redisplay);
+            CgsNetManager.Instance.lrm.serverListUpdated.RemoveListener(Redisplay);
         }
     }
 }
