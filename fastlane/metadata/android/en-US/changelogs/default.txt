@@ -1,4 +1,3 @@
-- Fix: Account for card size differences
-- Game-Play: Added save to card stacks
-- Game-Play: Show how many cards each player has in the scoreboard
-- Game-Play: Multiple hands in hand drawer
+- Fix: Online Play
+- Fix: Desktop File Browser
+- Accessibility: Scale resolution/size of UI in Settings
