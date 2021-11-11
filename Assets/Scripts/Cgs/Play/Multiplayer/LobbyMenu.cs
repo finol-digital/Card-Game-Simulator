@@ -20,6 +20,9 @@ namespace Cgs.Play.Multiplayer
     [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
+        public string RoomIdIpLabel => "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
+        public string RoomIdIpPlaceholder => "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
+
         private const float ServerListUpdateTime = 5;
 
         public GameObject hostAuthenticationPrefab;
@@ -32,7 +35,19 @@ namespace Cgs.Play.Multiplayer
         public InputField roomIdIpInputField;
         public InputField passwordInputField;
 
-        public string RoomName { get; set; } = CardGameManager.Current.Name; // TODO: SET THIS WHEN CLIENT CONNECTS TO SERVER
+        public string RoomName
+        {
+            get => _lrm != null ? _lrm.serverName : _roomName;
+            set
+            {
+                if (_lrm != null)
+                    _lrm.serverName = value;
+                else
+                    _roomName = value;
+            }
+        }
+
+        private string _roomName = CardGameManager.Current.Name;
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -41,9 +56,8 @@ namespace Cgs.Play.Multiplayer
             set
             {
                 _isLanConnectionSource = value;
-                roomIdIpLabel.text = "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
-                ((Text)roomIdIpInputField.placeholder).text =
-                    "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
+                roomIdIpLabel.text = RoomIdIpLabel;
+                ((Text)roomIdIpInputField.placeholder).text = RoomIdIpPlaceholder;
             }
         }
 
@@ -57,10 +71,10 @@ namespace Cgs.Play.Multiplayer
         }
 
         public string IdIp => IsInternetConnectionSource
-            ? _lrm.serverId
-            : _lrm != null && _lrm.IsAuthenticated()
-                ? _lrm.ServerUri().ToString() // TODO: CONFIRM THIS LINE WORKS
-                : CgsNetManager.Instance.lanConnector.directConnectTransport.ServerUri().ToString();
+            ? _lrm != null && _lrm.IsAuthenticated()
+                ? _lrm.serverId
+                : _lrm.ServerUri().ToString()
+            : CgsNetManager.Instance.lanConnector.directConnectTransport.ServerUri().ToString();
 
         private IReadOnlyDictionary<long, DiscoveryResponse> DiscoveredServers => _discoveredServers;
 
@@ -299,6 +313,7 @@ namespace Cgs.Play.Multiplayer
                     return;
                 }
 
+                RoomName = serverResponse.RoomName;
                 Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
                 NetworkManager.singleton.StartClient(serverResponse.Uri);
             }
