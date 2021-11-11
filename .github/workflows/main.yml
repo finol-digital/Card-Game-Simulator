@@ -214,9 +214,7 @@ jobs:
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: |
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
       - name: Add Authentication
         env:
           GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
@@ -253,10 +251,8 @@ jobs:
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: |
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      - name: Fix File Permissions, Code-Sign, and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
@@ -277,8 +273,6 @@ jobs:
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          chmod +x fastlane/get-release-notes.sh
-          ./fastlane/get-release-notes.sh
           bundle install
           bundle exec fastlane ios release
 
@@ -299,10 +293,8 @@ jobs:
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: |
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Fix File Permissions, Code-Sign, Get Release Notes, and Run Fastlane
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      - name: Fix File Permissions, Code-Sign, and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
@@ -326,8 +318,6 @@ jobs:
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           chmod +x fastlane/sign-osx-build.sh
           ./fastlane/sign-osx-build.sh
-          chmod +x fastlane/get-release-notes.sh
-          ./fastlane/get-release-notes.sh
           bundle exec fastlane mac macupload
 
   releaseToGitHubPages:
@@ -378,9 +368,7 @@ jobs:
         shell: bash
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
-        run: |
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Setup Unity IL2CPP
         uses: kuler90/setup-unity@v1
         with:
