@@ -1,9 +1,9 @@
 #! /bin/sh
 
-echo "Setting up osx certificates..."
+echo "Setting up macOS certificates..."
 sleep 10
 
-KEYCHAIN_FILE=osx.keychain
+KEYCHAIN_FILE=macos.keychain
 KEYCHAIN_PASSWORD=cicd
 MAC_APPLICATION_CERTIFICATE_P12=mac_application.p12
 MAC_INSTALLER_CERTIFICATE_P12=mac_installer.p12
@@ -32,7 +32,7 @@ security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASSWORD $
 security find-identity -v
 
 sleep 10
-echo "OSX certificate setup complete!"
+echo "Finished setting up macOS certificate!"
 echo "Signing app..."
 sleep 10
 
