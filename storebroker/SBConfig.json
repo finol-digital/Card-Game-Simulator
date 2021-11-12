@@ -386,7 +386,7 @@
             "localMultiplayerMinPlayers": 2,
 
             // Specifies the maximum number of players the game supports for local multiplayer.
-            "localMultiplayerMaxPlayers": 5,
+            "localMultiplayerMaxPlayers": 10,
 
             // Specifies the minimum number of players the game supports for local co-op.
             "localCooperativeMinPlayers": 0,
