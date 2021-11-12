@@ -26,6 +26,7 @@ permalink: roadmap.html
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
+- Game-Play: Option to have top of stack always revealed
 - Game-Play: Pre-defined card zones/stacks
 - Cards: Move card to zone, stack, or drawer (E)
 - Cards: Support more than 1 card face (Dual-Faced Cards)
