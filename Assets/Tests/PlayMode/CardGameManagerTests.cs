@@ -28,7 +28,7 @@ namespace Tests.PlayMode
         [SetUp]
         public void Setup()
         {
-            var manager = new GameObject { tag = Tags.CardGameManager };
+            var manager = new GameObject {tag = Tags.CardGameManager};
             manager.AddComponent<EventSystem>();
             manager.AddComponent<CardGameManager>();
         }
@@ -51,7 +51,8 @@ namespace Tests.PlayMode
                     Debug.Log("Testing download for: " + game.name + ", attempt " + attempt);
                     yield return CardGameManager.Instance.GetCardGame(game.url);
                     yield return new WaitForSeconds(1); // Wait to load set cards
-                    if (CardGameManager.Current.HasLoaded && string.IsNullOrEmpty(CardGameManager.Current.Error))
+                    if (CardGameManager.Current.HasLoaded && string.IsNullOrEmpty(CardGameManager.Current.Error) &&
+                        CardGameManager.Current.Cards.Count > 0)
                         break;
                     yield return new WaitForSeconds(10 * attempt);
                 }
