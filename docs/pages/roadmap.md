@@ -4,16 +4,15 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.56
-- Fix: Online Play
-- Fix: Desktop File Browser
-- Accessibility: Scale resolution/size of UI in Settings
+## What's New - v1.57
+
 
 ## Active Sprint
+- Platforms: Add macOS support to Steam
+- Platforms: Add Windows 64-bit
+- Platforms: Automate deployments to Steam, Amazon AppStore, and Galaxy Store
 - Fix: Error when trying to load deck after choosing not to load at start
 - Fix: Cards duplicated when drawn by multiple players
-- Platforms: Add macOS support to Steam
-- Platforms: Automate deployments to Steam, Amazon AppStore, and Galaxy Store
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Add number to deck name when it is duplicated
 
