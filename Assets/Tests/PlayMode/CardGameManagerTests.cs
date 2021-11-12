@@ -42,14 +42,14 @@ namespace Tests.PlayMode
             var cardGameRefList = JsonUtility.FromJson<CardGameRefList>(jsonFile.text);
             Assert.IsTrue(cardGameRefList.games.Length > 0);
 
-            foreach (CardGameRef game in cardGameRefList.games)
+            foreach (var cardGameRef in cardGameRefList.games)
             {
                 // Enable retry if there are a lot of tests to do
-                int maxAttempts = cardGameRefList.games.Length > 10 ? 5 : 1;
+                var maxAttempts = cardGameRefList.games.Length > 10 ? 5 : 1;
                 for (var attempt = 1; attempt <= maxAttempts; attempt++)
                 {
-                    Debug.Log("Testing download for: " + game.name + ", attempt " + attempt);
-                    yield return CardGameManager.Instance.GetCardGame(game.url);
+                    Debug.Log("Testing download for: " + cardGameRef.name + ", attempt " + attempt);
+                    yield return CardGameManager.Instance.GetCardGame(cardGameRef.url);
                     yield return new WaitForSeconds(1); // Wait to load set cards
                     if (CardGameManager.Current.HasLoaded && string.IsNullOrEmpty(CardGameManager.Current.Error) &&
                         CardGameManager.Current.Cards.Count > 0)
@@ -60,7 +60,7 @@ namespace Tests.PlayMode
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
                 Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
-                Assert.AreEqual(game.name, CardGameManager.Current.Name);
+                Assert.AreEqual(cardGameRef.name, CardGameManager.Current.Name);
             }
 
             // No need to wait for slow card loads
