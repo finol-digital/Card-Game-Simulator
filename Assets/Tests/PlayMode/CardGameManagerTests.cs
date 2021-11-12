@@ -48,7 +48,7 @@ namespace Tests.PlayMode
                 var maxAttempts = cardGameRefList.games.Length > 10 ? 5 : 1;
                 for (var attempt = 1; attempt <= maxAttempts; attempt++)
                 {
-                    Debug.Log("Testing download for: " + cardGameRef.name + ", attempt " + attempt);
+                    Debug.Log($"Testing download for: {cardGameRef.name}, attempt {attempt} of {maxAttempts}");
                     yield return CardGameManager.Instance.GetCardGame(cardGameRef.url);
                     yield return new WaitForSeconds(1); // Wait to load set cards
                     if (CardGameManager.Current.HasLoaded && string.IsNullOrEmpty(CardGameManager.Current.Error) &&
