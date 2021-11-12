@@ -43,7 +43,6 @@ permalink: roadmap.html
 - Cards Explorer: Add card properties in UI
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
-- Networking: Vertical layout for Lobby
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
 
@@ -58,10 +57,8 @@ permalink: roadmap.html
 - Tech: Upgrade json schema version from v4 to v7
 - Tech: Use AllDecks.json for default games
 - Tech: SonarQube Scans
-- Integration: Automate game upload
 - Accessibility: Alt-text with button name appears when hovering mouse over a button
 - Platforms: Networking on WebGL
-- Integration: Android Search Bar Widget
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Deck Editor: Focus buttons move cards
 - Cards Explorer: Search Results View Options
