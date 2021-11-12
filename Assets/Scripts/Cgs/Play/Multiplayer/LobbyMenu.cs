@@ -82,10 +82,6 @@ namespace Cgs.Play.Multiplayer
         private Modal Menu =>
             _menu ? _menu : (_menu = gameObject.GetOrAddComponent<Modal>());
 
-        public string IdIp => IsInternetConnectionSource && CgsNetManager.Instance.lrm.IsAuthenticated()
-            ? CgsNetManager.Instance.lrm.serverId
-            : CgsNetManager.Instance.lrm.ServerUri()?.ToString();
-
         private Modal _menu;
 
         private float _lrmUpdateSecond = ServerListUpdateTime;

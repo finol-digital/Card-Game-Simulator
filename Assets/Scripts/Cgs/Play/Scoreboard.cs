@@ -96,7 +96,7 @@ namespace Cgs.Play
         {
             try
             {
-                string shareText = IsOnline ? CgsNetManager.Instance.playController.Lobby.IdIp : Offline;
+                string shareText = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 (new NativeShare()).SetText(shareText).Share();
 #else
