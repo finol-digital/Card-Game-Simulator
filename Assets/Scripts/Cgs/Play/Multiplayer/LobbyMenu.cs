@@ -45,7 +45,7 @@ namespace Cgs.Play.Multiplayer
             {
                 _isLanConnectionSource = value;
                 roomIdIpLabel.text = RoomIdIpLabel;
-                ((Text)roomIdIpInputField.placeholder).text = RoomIdIpPlaceholder;
+                ((Text) roomIdIpInputField.placeholder).text = RoomIdIpPlaceholder;
             }
         }
 
@@ -68,8 +68,8 @@ namespace Cgs.Play.Multiplayer
 
         private string TargetIpAddress =>
             IsLanConnectionSource && _discoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
-                out DiscoveryResponse lanServer)
-                ? lanServer.Uri.ToString()
+                out var discoveryResponse)
+                ? discoveryResponse.Uri.ToString()
                 : _selectedServerIp;
 
         private HostAuthentication Authenticator =>
@@ -181,14 +181,14 @@ namespace Cgs.Play.Multiplayer
                     SelectServer,
                     _selectedServerIp);
 
-            string ip = TargetIpAddress;
+            var ip = TargetIpAddress;
             joinButton.interactable =
                 !string.IsNullOrEmpty(ip) && Uri.IsWellFormedUriString(ip, UriKind.RelativeOrAbsolute);
         }
 
         private void ToggleConnectionSource()
         {
-            bool isInternetConnectionSource = !IsInternetConnectionSource;
+            var isInternetConnectionSource = !IsInternetConnectionSource;
             lanToggle.isOn = !isInternetConnectionSource;
             internetToggle.isOn = isInternetConnectionSource;
         }
@@ -303,8 +303,8 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 if (CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
-                    server => server.serverName).TryGetValue(_selectedServerIp, out string serverName))
-                    CgsNetManager.Instance.RoomName = serverName;
+                    server => server.serverName).TryGetValue(_selectedServerIp, out var roomName))
+                    CgsNetManager.Instance.RoomName = roomName;
                 NetworkManager.singleton.networkAddress = _selectedServerIp;
                 NetworkManager.singleton.StartClient();
             }
