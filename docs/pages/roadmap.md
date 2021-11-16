@@ -15,6 +15,7 @@ permalink: roadmap.html
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Add number to deck name when it is duplicated
+- Video: CGS Custom Game Creation and Upload 
 
 ## Next Sprint
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
