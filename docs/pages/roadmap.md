@@ -30,6 +30,9 @@ permalink: roadmap.html
 - Cards: Move card to zone, stack, or drawer (E)
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
+- Decks: Show individual deck download progress
+- Decks: Support organizing decks into folders
+- Game-Play: Use two fingers to move stacks
 - Game-Play: Allow cards to snap to each other/align on grid
 - Game-Play: Convert card to stack
 - Game-Play: Rotate card stacks
