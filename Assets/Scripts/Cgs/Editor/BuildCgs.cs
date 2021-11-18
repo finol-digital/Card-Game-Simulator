@@ -52,6 +52,8 @@ namespace Cgs.Editor
                     if (options.TryGetValue("androidKeyaliasPass", out string keyaliasPass) &&
                         !string.IsNullOrEmpty(keyaliasPass))
                         PlayerSettings.Android.keyaliasPass = keyaliasPass;
+                    if (options.TryGetValue("androidTargetSdkVersion", out string androidTargetSdkVersion) && !string.IsNullOrEmpty(androidTargetSdkVersion))
+                        PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions) Enum.Parse(typeof(AndroidSdkVersions), androidTargetSdkVersion);
                     break;
                 }
                 case BuildTarget.StandaloneOSX:

@@ -109,9 +109,10 @@ jobs:
           androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
           androidKeyaliasName: cgs
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          androidTargetSdkVersion:
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release')
+        if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release') || contains(github.event.inputs.mode, 'check')
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
@@ -176,7 +177,7 @@ jobs:
           build-version: ${{ steps.versioning.outputs.version }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release')
+        if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release') || contains(github.event.inputs.mode, 'release')
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
