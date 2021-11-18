@@ -22,12 +22,9 @@ permalink: roadmap.html
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 
 ## Backlog
-- Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Option to have top of stack always revealed
-- Game-Play: Pre-defined card zones/stacks
-- Cards: Move card to zone, stack, or drawer (E)
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Game-Play: Allow cards to snap to each other/align on grid
@@ -36,6 +33,8 @@ permalink: roadmap.html
 - Game-Play: Support multiple playmats
 - Game-Play: Customize controls/input
 - Game-Play: Face-up cards in cards stacks
+- Game-Play: Pre-defined card zones/stacks
+- Cards: Move card to zone, stack, or drawer (E)
 - Tech: Add code coverage
 - Game-Play: Custom colors for Dice
 - Cards: Configurable highlight color
@@ -46,6 +45,7 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
+- Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 
 ## Icebox
 - Game-Play: Log all Player actions
