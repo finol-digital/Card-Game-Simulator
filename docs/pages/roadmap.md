@@ -15,6 +15,7 @@ permalink: roadmap.html
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Add number to deck name when it is duplicated
+- Video: CGS Custom Game Creation and Upload 
 
 ## Next Sprint
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
@@ -27,6 +28,9 @@ permalink: roadmap.html
 - Game-Play: Option to have top of stack always revealed
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
+- Decks: Show individual deck download progress
+- Decks: Support organizing decks into folders
+- Game-Play: Use two fingers to move stacks
 - Game-Play: Allow cards to snap to each other/align on grid
 - Game-Play: Convert card to stack
 - Game-Play: Rotate card stacks
