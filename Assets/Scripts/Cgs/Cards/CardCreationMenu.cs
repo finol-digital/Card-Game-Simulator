@@ -25,6 +25,8 @@ namespace Cgs.Cards
         public const string DownloadCardImagePrompt = "Enter card image url...";
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public const string ImportImage = "Import Image";
+#else
+        public const string SelectCardImageFilePrompt = "Select Card Image File";
 #endif
         public const string ImportImageWarningMessage = "No image file selected for import!";
         public const string ImageCreationFailedWarningMessage = "Failed to get the image! Unable to create the card.";
@@ -97,8 +99,14 @@ namespace Cgs.Cards
             NativeGallery.GetImageFromGallery(ImportCardImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardImageFromFile(UwpFileBrowser.OpenFilePanel());
+#elif UNITY_STANDALONE_LINUX
+            var paths = StandaloneFileBrowser.OpenFilePanel(SelectCardImageFilePrompt, string.Empty, string.Empty, false);
+            if (paths.Length > 0)
+                ImportCardImageFromFile(paths[0]);
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync("Select Card Image File", string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(SelectCardImageFilePrompt, string.Empty, string.Empty, false,
                 paths => { ImportCardImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }

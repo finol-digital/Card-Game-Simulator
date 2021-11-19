@@ -29,6 +29,10 @@ namespace Cgs.Menu
         public const string DownloadPlayMatImagePrompt = "Enter playmat image url...";
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
         public const string ImportImage = "Import Image";
+#else
+        public const string SelectBannerImageFilePrompt = "Select Banner Image File";
+        public const string SelectCardBackImageFilePrompt = "Select Card Back Image File";
+        public const string SelectPlayMatImageFilePrompt = "Select PlayMat Image File";
 #endif
         public const string ImportImageWarningMessage = "No image file selected for import!";
         public const string CreateWarningMessage = "A game with that name already exists!";
@@ -108,8 +112,14 @@ namespace Cgs.Menu
             NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportBannerImageFromFile(UwpFileBrowser.OpenFilePanel());
+#elif UNITY_STANDALONE_LINUX
+            var paths = StandaloneFileBrowser.OpenFilePanel(SelectBannerImageFilePrompt, string.Empty, string.Empty, false);
+            if (paths.Length > 0)
+                ImportBannerImageFromFile(paths[0]);
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync("Select Banner Image File", string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(SelectBannerImageFilePrompt, string.Empty, string.Empty, false,
                 paths => { ImportBannerImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
@@ -170,8 +180,14 @@ namespace Cgs.Menu
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardBackImageFromFile(UwpFileBrowser.OpenFilePanel());
+#elif UNITY_STANDALONE_LINUX
+            var paths = StandaloneFileBrowser.OpenFilePanel(SelectCardBackImageFilePrompt, string.Empty, string.Empty, false);
+            if (paths.Length > 0)
+                ImportCardBackImageFromFile(paths[0]);
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync("Select Card Back Image File", string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(SelectCardBackImageFilePrompt, string.Empty, string.Empty, false,
                 paths => { ImportCardBackImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
@@ -232,8 +248,14 @@ namespace Cgs.Menu
             NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportPlayMatImageFromFile(UwpFileBrowser.OpenFilePanel());
+#elif UNITY_STANDALONE_LINUX
+            var paths = StandaloneFileBrowser.OpenFilePanel(SelectPlayMatImageFilePrompt, string.Empty, string.Empty, false);
+            if (paths.Length > 0)
+                ImportPlayMatImageFromFile(paths[0]);
+            else
+                Debug.LogWarning(ImportImageWarningMessage);
 #else
-            StandaloneFileBrowser.OpenFilePanelAsync("Select PlayMat Image File", string.Empty, string.Empty, false,
+            StandaloneFileBrowser.OpenFilePanelAsync(SelectPlayMatImageFilePrompt, string.Empty, string.Empty, false,
                 paths => { ImportPlayMatImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
         }
