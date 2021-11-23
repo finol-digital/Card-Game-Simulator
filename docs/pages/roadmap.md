@@ -8,9 +8,6 @@ permalink: roadmap.html
 
 
 ## Active Sprint
-- Platforms: Add macOS support to Steam
-- Platforms: Add Windows 64-bit
-- Platforms: Automate deployments to Steam, Amazon AppStore, and Galaxy Store
 - Fix: Error when trying to load deck after choosing not to load at start
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only

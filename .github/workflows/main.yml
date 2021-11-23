@@ -140,7 +140,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - StandaloneWindows
+          - StandaloneWindows64
           - WSAPlayer
     steps:
       - name: Checkout Repository
@@ -321,6 +321,28 @@ jobs:
           chmod +x fastlane/sign-mac-build.sh
           ./fastlane/sign-mac-build.sh
           bundle exec fastlane mac macupload
+      - name: Upload Build
+        uses: actions/upload-artifact@v2
+        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneOSX')
+        with:
+          name: Card Game Simulator.app
+          path: build/StandaloneOSX/Card Game Simulator.app
+      - name: Zip App
+        uses: papeloto/action-zip@v1
+        if: github.event.action == 'published'
+        with:
+          files: build/StandaloneOSX/Card Game Simulator.app
+          dest: build/StandaloneOSX/Card Game Simulator.app.zip
+      - name: Upload App to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event.action == 'published'
+        with:
+          repo_token: ${{ secrets.CGS_PAT }}
+          asset_name: Card Game Simulator.app.zip
+          file: build/StandaloneOSX/Card Game Simulator.app.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
 
   releaseToGitHubPages:
     name: Release to GitHub Pages
@@ -346,6 +368,77 @@ jobs:
           branch: main
           file_pattern: docs/**
           commit_message: Deploy to GitHub Pages
+
+  releaseToSteam:
+    name: Release to Steam
+    runs-on: windows-latest
+    needs: [buildWithWindows, releaseToMacAppStore]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          format: "${major}.${minor}.${patch}"
+      - name: Setup Unity IL2CPP
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: windows-il2cpp
+      - name: Activate Unity
+        uses: kuler90/activate-unity@v1
+        with:
+          unity-username: ${{ secrets.UNITY_EMAIL_2 }}
+          unity-password: ${{ secrets.UNITY_PASSWORD_2 }}
+          unity-serial: ${{ secrets.UNITY_SERIAL_2 }}
+      - name: Build Unity
+        uses: kuler90/build-unity@v1
+        with:
+          build-path: build/StandaloneWindows
+          build-target: StandaloneWindows
+          build-method: Cgs.Editor.BuildCgs.BuildOptions
+          build-version: ${{ steps.versioning.outputs.version }}
+      - name: Upload Build
+        uses: actions/upload-artifact@v2
+        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneWindows')
+        with:
+          name: cgs-StandaloneWindows
+          path: build/StandaloneWindows
+      - name: Zip build/StandaloneWindows
+        uses: papeloto/action-zip@v1
+        if: github.event.action == 'published'
+        with:
+          files: build/StandaloneWindows/
+          dest: build/cgs-StandaloneWindows.zip
+      - name: Upload cgs-StandaloneWindows.zip to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event.action == 'published'
+        with:
+          repo_token: ${{ secrets.CGS_PAT }}
+          asset_name: cgs-StandaloneWindows.zip
+          file: build/cgs-StandaloneWindows.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+      - name: Download StandaloneWindows64 Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-StandaloneWindows64
+          path: build/StandaloneWindows64
+      - name: Download StandaloneLinux64 Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-StandaloneLinux64
+          path: build/StandaloneLinux64
+      - name: Download App
+        uses: actions/download-artifact@v2
+        with:
+          name: Card Game Simulator.app
+          path: build/StandaloneOSX/Card Game Simulator.app
+# TODO: Strip do_not_ship_with_game folder and deploy steam
 
   releaseToMicrosoftStore:
     name: Release to the Microsoft Store
@@ -463,7 +556,7 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [releaseToGooglePlay, releaseToAppStore, releaseToMacAppStore, releaseToGitHubPages, releaseToMicrosoftStore]
+    needs: [releaseToGooglePlay, releaseToAppStore, releaseToMacAppStore, releaseToGitHubPages, releaseToSteam, releaseToMicrosoftStore]
     steps:
       - name: Get Version
         id: versioning
