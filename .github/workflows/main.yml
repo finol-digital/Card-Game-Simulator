@@ -95,7 +95,7 @@ jobs:
             Library-build-${{ matrix.targetPlatform }}-
             Library-build-
       - name: Build Unity Project
-        uses: game-ci/unity-builder@androidApiLevel
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -112,7 +112,7 @@ jobs:
           androidTargetSdkVersion: AndroidApiLevel31
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform)
+        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
@@ -177,7 +177,7 @@ jobs:
           build-version: ${{ steps.versioning.outputs.version }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform)
+        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneWindows64')
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
@@ -281,7 +281,24 @@ jobs:
     name: Release to the Mac App Store
     runs-on: macos-latest
     needs: buildWithLinux
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
+    env:
+      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
+      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+      MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
+      MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
+      MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
+      MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
+      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
+      APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
+      MAC_APP_BUNDLE_PATHS: Contents/PlugIns/StandaloneFileBrowser.bundle
+      MAC_APP_ID: com.finoldigital.CardGameSimulator
+      MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
+      PROJECT_NAME: Card Game Simulator
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && (contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -295,24 +312,7 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Fix File Permissions, Code-Sign, and Run Fastlane
-        env:
-          APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
-          APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-          MAC_APPLICATION_CERTIFICATE: ${{ secrets.MAC_APPLICATION_CERTIFICATE }}
-          MAC_APPLICATION_PASSWORD: ${{ secrets.MAC_APPLICATION_PASSWORD }}
-          MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
-          MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-          APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
-          APPSTORE_P8_PATH: ${{ format('{0}/fastlane/p8.json', github.workspace) }}
-          MAC_APP_BUNDLE_PATHS: Contents/PlugIns/StandaloneFileBrowser.bundle
-          MAC_APP_ID: com.finoldigital.CardGameSimulator
-          MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
-          PROJECT_NAME: Card Game Simulator
+      - name: Fix File Permissions and Code-Sign
         run: |
           bundle install
           bundle exec fastlane mac fixversion
@@ -320,10 +320,13 @@ jobs:
           echo "$APPSTORE_P8" > $APPSTORE_P8_PATH
           chmod +x fastlane/sign-mac-build.sh
           ./fastlane/sign-mac-build.sh
-          bundle exec fastlane mac macupload
+      - name: Run Fastlane
+        uses: actions/upload-artifact@v2
+        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
+        run: bundle exec fastlane mac macupload
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneOSX')
+        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
         with:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
@@ -332,14 +335,14 @@ jobs:
         if: github.event.action == 'published'
         with:
           files: build/StandaloneOSX/Card Game Simulator.app
-          dest: build/StandaloneOSX/Card Game Simulator.app.zip
+          dest: build/StandaloneOSX/Card Game Simulator.zip
       - name: Upload App to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
           asset_name: Card Game Simulator.app.zip
-          file: build/StandaloneOSX/Card Game Simulator.app.zip
+          file: build/StandaloneOSX/Card Game Simulator.zip
           tag: ${{ github.ref }}
           overwrite: true
           body: ${{ github.event.release.body }}
@@ -373,6 +376,7 @@ jobs:
     name: Release to Steam
     runs-on: windows-latest
     needs: [buildWithWindows, releaseToMacAppStore]
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -403,7 +407,6 @@ jobs:
           build-version: ${{ steps.versioning.outputs.version }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneWindows')
         with:
           name: cgs-StandaloneWindows
           path: build/StandaloneWindows
@@ -438,7 +441,33 @@ jobs:
         with:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
-# TODO: Strip do_not_ship_with_game folder and deploy steam
+      - name: Remove BackUpThisFolder_ButDontShipItWithYourGame Folder
+        run: |
+          echo "Cleaning StandaloneWindows..."
+          rm -R build/StandaloneWindows/cgs_BackUpThisFolder_ButDontShipItWithYourGame
+          echo "Cleaned StandaloneWindows! Remains:"
+          ls build/StandaloneWindows
+          echo "Cleaning StandaloneLinux64..."
+          rm -R build/StandaloneLinux64/StandaloneLinux64_BackUpThisFolder_ButDontShipItWithYourGame
+          echo "Cleaned StandaloneLinux64! Remains:"
+          ls build/StandaloneLinux64
+          echo "Cleaning StandaloneWindows64..."
+          rm -R build/StandaloneWindows64/cgs_BackUpThisFolder_ButDontShipItWithYourGame
+          echo "Cleaned StandaloneWindows64! Remains:"
+          ls build/StandaloneWindows64
+      - uses: game-ci/steam-deploy@main
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}
+          password: ${{ secrets.STEAM_PASSWORD }}
+          mfaCode:  ${{ secrets.STEAM_MFA_CODE }}
+          appId: 1742850
+          buildDescription: ${{ steps.versioning.outputs.version }}
+          rootPath: build
+          depot1Path: StandaloneWindows
+          depot2Path: StandaloneLinux64
+          depot3Path: StandaloneWindows64
+          depot4Path: Card Game Simulator.app
+          releaseBranch: prerelease
 
   releaseToMicrosoftStore:
     name: Release to the Microsoft Store
