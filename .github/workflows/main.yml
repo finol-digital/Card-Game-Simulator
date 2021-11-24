@@ -321,7 +321,6 @@ jobs:
           chmod +x fastlane/sign-mac-build.sh
           ./fastlane/sign-mac-build.sh
       - name: Run Fastlane
-        uses: actions/upload-artifact@v2
         if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
         run: bundle exec fastlane mac macupload
       - name: Upload Build
@@ -455,7 +454,8 @@ jobs:
           rm -R build/StandaloneWindows64/cgs_BackUpThisFolder_ButDontShipItWithYourGame
           echo "Cleaned StandaloneWindows64! Remains:"
           ls build/StandaloneWindows64
-      - uses: game-ci/steam-deploy@main
+      - name: Deploy to Steam
+        uses: game-ci/steam-deploy@main
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           password: ${{ secrets.STEAM_PASSWORD }}
