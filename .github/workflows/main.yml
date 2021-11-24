@@ -455,6 +455,8 @@ jobs:
           rm -R build/StandaloneWindows64/cgs_BackUpThisFolder_ButDontShipItWithYourGame
           echo "Cleaned StandaloneWindows64! Remains:"
           ls build/StandaloneWindows64
+          echo "No need to clean StandaloneOSX:"
+          ls build/StandaloneOSX
       - name: Deploy to Steam
         uses: game-ci/steam-deploy@main
         with:
@@ -467,7 +469,7 @@ jobs:
           depot1Path: StandaloneWindows
           depot2Path: StandaloneLinux64
           depot3Path: StandaloneWindows64
-          depot4Path: StandaloneOSX/Card Game Simulator.app
+          depot4Path: StandaloneOSX
           releaseBranch: prerelease
 
   releaseToMicrosoftStore:
