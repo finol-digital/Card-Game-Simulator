@@ -48,7 +48,7 @@ namespace Cgs
         private static readonly string[] SupportedResolutions = {
             "1080 x 1920",
             "2560 x 1440",
-            "3200 × 1800",
+            "3200 x 1800",
             "3840 x 2160"
         };
 

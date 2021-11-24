@@ -465,7 +465,7 @@ PrefabInstance:
     - target: {fileID: 917083975517249680, guid: 8d611347712873941990408a695ae759,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[2].m_Text
-      value: "3200 \xD7 1800"
+      value: 3200 x 1800
       objectReference: {fileID: 0}
     - target: {fileID: 917083975517249680, guid: 8d611347712873941990408a695ae759,
         type: 3}
