@@ -15,13 +15,13 @@ jobs:
         id: secreting
         run: |
           echo "Exporting STEAM_CONFIG_VDF..."
-          export STEAM_CONFIG_VDF="$(cat /home/runner/Steam/config/config.vdf)"
+          export STEAM_CONFIG_VDF="$(cat /home/runner/Steam/config/config.vdf | base64)"
           echo "::set-output name=STEAM_CONFIG_VDF::$STEAM_CONFIG_VDF"
           echo "Exporting STEAM_SSFN_FILE_NAME..."
           export STEAM_SSFN_FILE_NAME="$(ls /home/runner/Steam/ssfn*)"
           echo "::set-output name=STEAM_SSFN_FILE_NAME::$STEAM_SSFN_FILE_NAME"
           echo "Exporting STEAM_SSFN_FILE_CONTENTS..."
-          export STEAM_SSFN_FILE_CONTENTS="$(cat /home/runner/Steam/$STEAM_SSFN_FILE_NAME)"
+          export STEAM_SSFN_FILE_CONTENTS="$(cat /home/runner/Steam/$STEAM_SSFN_FILE_NAME | base64)"
           echo "::set-output name=STEAM_SSFN_FILE_CONTENTS::$STEAM_SSFN_FILE_CONTENTS"
           echo "Exported secrets!"
       - name: Create Secret STEAM_CONFIG_VDF
