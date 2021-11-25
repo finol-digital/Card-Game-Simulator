@@ -10,7 +10,7 @@ jobs:
       - name: Setup steamcmd
         uses: CyberAndrii/setup-steamcmd@v1.1.1
       - name: Run steamcmd
-        run: steamcmd +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} ${{secrets.STEAM_MFA_CODE }}
+        run: steamcmd +login ${{ secrets.STEAM_USERNAME }} ${{ secrets.STEAM_PASSWORD }} ${{secrets.STEAM_MFA_CODE }} +quit
       - name: Export secret values
         id: secreting
         run: |
