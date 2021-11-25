@@ -17,12 +17,12 @@ jobs:
           echo "Exporting STEAM_CONFIG_VDF..."
           export STEAM_CONFIG_VDF="$(cat /home/runner/Steam/config/config.vdf)"
           echo "::set-output name=STEAM_CONFIG_VDF::$STEAM_CONFIG_VDF"
-          echo "Exporting STEAM_SSFN_FILENAME..."
-          export STEAM_SSFN_FILENAME="$(ls /home/runner/Steam/ssfn*)"
-          echo "::set-output name=STEAM_SSFN_FILENAME::$STEAM_SSFN_FILENAME"
-          echo "Exporting STEAM_SSFN..."
-          export STEAM_SSFN="$(cat /home/runner/Steam/$STEAM_SSFN_FILENAME)"
-          echo "::set-output name=STEAM_SSFN::$STEAM_SSFN"
+          echo "Exporting STEAM_SSFN_FILE_NAME..."
+          export STEAM_SSFN_FILE_NAME="$(ls /home/runner/Steam/ssfn*)"
+          echo "::set-output name=STEAM_SSFN_FILE_NAME::$STEAM_SSFN_FILE_NAME"
+          echo "Exporting STEAM_SSFN_FILE_CONTENTS..."
+          export STEAM_SSFN_FILE_CONTENTS="$(cat /home/runner/Steam/$STEAM_SSFN_FILE_CONTENTS)"
+          echo "::set-output name=STEAM_SSFN_FILE_CONTENTS::$STEAM_SSFN_FILE_CONTENTS"
           echo "Exported secrets!"
       - name: Create Secret STEAM_CONFIG_VDF
         uses: gliech/create-github-secret-action@v1
@@ -30,15 +30,15 @@ jobs:
           name: STEAM_CONFIG_VDF
           value: ${{ steps.secreting.outputs.STEAM_CONFIG_VDF }}
           pa_token: ${{ secrets.CGS_PAT }}
-      - name: Create Secret STEAM_SSFN_FILENAME
+      - name: Create Secret STEAM_SSFN_FILE_NAME
         uses: gliech/create-github-secret-action@v1
         with:
-          name: STEAM_SSFN_FILENAME
-          value: ${{ steps.secreting.outputs.STEAM_SSFN_FILENAME }}
+          name: STEAM_SSFN_FILE_NAME
+          value: ${{ steps.secreting.outputs.STEAM_SSFN_FILE_NAME }}
           pa_token: ${{ secrets.CGS_PAT }}
-      - name: Create Secret STEAM_SSFN
+      - name: Create Secret STEAM_SSFN_FILE_CONTENTS
         uses: gliech/create-github-secret-action@v1
         with:
-          name: STEAM_SSFN
-          value: ${{ steps.secreting.outputs.STEAM_SSFN }}
+          name: STEAM_SSFN_FILE_CONTENTS
+          value: ${{ steps.secreting.outputs.STEAM_SSFN_FILE_CONTENTS }}
           pa_token: ${{ secrets.CGS_PAT }}
