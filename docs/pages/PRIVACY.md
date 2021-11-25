@@ -9,11 +9,12 @@ This privacy policy has been compiled to better serve those who are concerned wi
 We do not collect information from visitors of our site.
 
 ## When do we collect information?
-We collect information from you only if you email us at david@finoldigital.com.
+We collect information from you only if you email us at david@finoldigital.com or if there is an exception or crash in the CGS app.
 
 ## How do we use your information? 
 We may use the information we collect from you in the following way:
 - To follow up with after email correspondence
+- For anonymous analysis of exceptions/crashes
 
 ## How do we protect your information?
 We do not use vulnerability scanning and/or scanning to PCI standards.
@@ -93,9 +94,9 @@ If at any time you would like to unsubscribe from receiving future emails, you c
 If there are any questions regarding this privacy policy, you may contact us using the information below.
 
 Card Game Simulator
-219 GLENRIDGE FRST
-HOUSTON, TX 77094 
+10601 Clarence Dr, Suite 250
+Frisco, TX 75033
 United States
 david@finoldigital.com
 
-Last Edited on 2017-11-30
+Last Edited on 2021-11-24
