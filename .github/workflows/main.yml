@@ -199,6 +199,61 @@ jobs:
           overwrite: true
           body: ${{ github.event.release.body }}
 
+  buildWithWindows2:
+    name: Build for StandaloneWindows
+    runs-on: windows-latest
+    needs: buildWithWindows
+    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneWindows') || contains(github.event.inputs.workflow_mode, 'Steam')
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          format: "${major}.${minor}.${patch}"
+      - name: Setup Unity IL2CPP
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: windows-il2cpp
+      - name: Activate Unity
+        uses: kuler90/activate-unity@v1
+        with:
+          unity-username: ${{ secrets.UNITY_EMAIL_2 }}
+          unity-password: ${{ secrets.UNITY_PASSWORD_2 }}
+          unity-serial: ${{ secrets.UNITY_SERIAL_2 }}
+      - name: Build Unity
+        uses: kuler90/build-unity@v1
+        with:
+          build-path: build/StandaloneWindows
+          build-target: StandaloneWindows
+          build-method: Cgs.Editor.BuildCgs.BuildOptions
+          build-version: ${{ steps.versioning.outputs.version }}
+      - name: Upload Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: cgs-StandaloneWindows
+          path: build/StandaloneWindows
+      - name: Zip build/StandaloneWindows
+        uses: papeloto/action-zip@v1
+        if: github.event.action == 'published'
+        with:
+          files: build/StandaloneWindows/
+          dest: build/cgs-StandaloneWindows.zip
+      - name: Upload cgs-StandaloneWindows.zip to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event.action == 'published'
+        with:
+          repo_token: ${{ secrets.CGS_PAT }}
+          asset_name: cgs-StandaloneWindows.zip
+          file: build/cgs-StandaloneWindows.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+
   releaseToGooglePlay:
     name: Release to the Google Play Store
     runs-on: ubuntu-latest
@@ -372,106 +427,6 @@ jobs:
           file_pattern: docs/**
           commit_message: Deploy to GitHub Pages
 
-  releaseToSteam:
-    name: Release to Steam
-    runs-on: windows-latest
-    needs: [buildWithWindows, releaseToMacAppStore]
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          lfs: true
-      - name: Get Version
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
-        with:
-          format: "${major}.${minor}.${patch}"
-      - name: Setup Unity IL2CPP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: windows-il2cpp
-      - name: Activate Unity
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL_2 }}
-          unity-password: ${{ secrets.UNITY_PASSWORD_2 }}
-          unity-serial: ${{ secrets.UNITY_SERIAL_2 }}
-      - name: Build Unity
-        uses: kuler90/build-unity@v1
-        with:
-          build-path: build/StandaloneWindows
-          build-target: StandaloneWindows
-          build-method: Cgs.Editor.BuildCgs.BuildOptions
-          build-version: ${{ steps.versioning.outputs.version }}
-      - name: Upload Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: cgs-StandaloneWindows
-          path: build/StandaloneWindows
-      - name: Zip build/StandaloneWindows
-        uses: papeloto/action-zip@v1
-        if: github.event.action == 'published'
-        with:
-          files: build/StandaloneWindows/
-          dest: build/cgs-StandaloneWindows.zip
-      - name: Upload cgs-StandaloneWindows.zip to GitHub Release
-        uses: svenstaro/upload-release-action@v2
-        if: github.event.action == 'published'
-        with:
-          repo_token: ${{ secrets.CGS_PAT }}
-          asset_name: cgs-StandaloneWindows.zip
-          file: build/cgs-StandaloneWindows.zip
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: ${{ github.event.release.body }}
-      - name: Download StandaloneWindows64 Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: cgs-StandaloneWindows64
-          path: build/StandaloneWindows64
-      - name: Download StandaloneLinux64 Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: cgs-StandaloneLinux64
-          path: build/StandaloneLinux64
-      - name: Download App
-        uses: actions/download-artifact@v2
-        with:
-          name: Card Game Simulator.app
-          path: build/StandaloneOSX/Card Game Simulator.app
-      - name: Remove BackUpThisFolder_ButDontShipItWithYourGame Folder
-        run: |
-          echo "Cleaning StandaloneWindows..."
-          rm -R build/StandaloneWindows/cgs_BackUpThisFolder_ButDontShipItWithYourGame
-          echo "Cleaned StandaloneWindows! Remains:"
-          ls build/StandaloneWindows
-          echo "Cleaning StandaloneLinux64..."
-          rm -R build/StandaloneLinux64/StandaloneLinux64_BackUpThisFolder_ButDontShipItWithYourGame
-          echo "Cleaned StandaloneLinux64! Remains:"
-          ls build/StandaloneLinux64
-          echo "Cleaning StandaloneWindows64..."
-          rm -R build/StandaloneWindows64/cgs_BackUpThisFolder_ButDontShipItWithYourGame
-          echo "Cleaned StandaloneWindows64! Remains:"
-          ls build/StandaloneWindows64
-          echo "No need to clean StandaloneOSX:"
-          ls build/StandaloneOSX
-      - name: Deploy to Steam
-        uses: game-ci/steam-deploy@main
-        with:
-          username: ${{ secrets.STEAM_USERNAME }}
-          password: ${{ secrets.STEAM_PASSWORD }}
-          mfaCode:  ${{ secrets.STEAM_MFA_CODE }}
-          appId: 1742850
-          buildDescription: ${{ steps.versioning.outputs.version }}
-          rootPath: build
-          depot1Path: StandaloneWindows
-          depot2Path: StandaloneLinux64
-          depot3Path: StandaloneWindows64
-          depot4Path: StandaloneOSX
-          releaseBranch: prerelease
-
   releaseToMicrosoftStore:
     name: Release to the Microsoft Store
     runs-on: windows-latest
@@ -584,6 +539,71 @@ jobs:
           Set-StoreBrokerAuthentication -TenantId $env:MICROSOFT_TENANT_ID -Credential $cred
           New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
+
+  releaseToSteam:
+    name: Release to Steam
+    runs-on: ubuntu-latest
+    needs: [buildWithLinux, buildWithWindows, buildWithWindows2, releaseToMacAppStore]
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
+    steps:
+      - name: Download StandaloneWindows Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-StandaloneWindows
+          path: build/StandaloneWindows
+      - name: Download StandaloneLinux64 Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-StandaloneLinux64
+          path: build/StandaloneLinux64
+      - name: Download StandaloneWindows64 Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-StandaloneWindows64
+          path: build/StandaloneWindows64
+      - name: Download App
+        uses: actions/download-artifact@v2
+        with:
+          name: Card Game Simulator.app
+          path: build/StandaloneOSX/Card Game Simulator.app
+      - name: Remove BackUpThisFolder_ButDontShipItWithYourGame Folder
+        run: |
+          echo "Cleaning StandaloneWindows..."
+          rm -R build/StandaloneWindows/cgs_BackUpThisFolder_ButDontShipItWithYourGame
+          echo "Cleaned StandaloneWindows! Remains:"
+          ls build/StandaloneWindows
+          echo "Cleaning StandaloneLinux64..."
+          rm -R build/StandaloneLinux64/StandaloneLinux64_BackUpThisFolder_ButDontShipItWithYourGame
+          echo "Cleaned StandaloneLinux64! Remains:"
+          ls build/StandaloneLinux64
+          echo "Cleaning StandaloneWindows64..."
+          rm -R build/StandaloneWindows64/cgs_BackUpThisFolder_ButDontShipItWithYourGame
+          echo "Cleaned StandaloneWindows64! Remains:"
+          ls build/StandaloneWindows64
+          echo "No need to clean StandaloneOSX:"
+          ls build/StandaloneOSX
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          format: "${major}.${minor}.${patch}"
+      - name: Deploy to Steam
+        uses: game-ci/steam-deploy@authentication
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}
+          password: ${{ secrets.STEAM_PASSWORD }}
+          mfaCode:  ${{ secrets.STEAM_MFA_CODE }}
+          configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
+          ssfnFilename: ${{ secrets.STEAM_SSFN_FILENAME }}
+          ssfn: ${{ secrets.STEAM_SSFN }}
+          appId: 1742850
+          buildDescription: ${{ steps.versioning.outputs.version }}
+          rootPath: build
+          depot1Path: StandaloneWindows
+          depot2Path: StandaloneLinux64
+          depot3Path: StandaloneWindows64
+          depot4Path: StandaloneOSX
+          releaseBranch: prerelease
 
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
