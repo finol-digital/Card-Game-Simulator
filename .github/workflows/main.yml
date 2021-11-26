@@ -596,6 +596,7 @@ jobs:
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           password: ${{ secrets.STEAM_PASSWORD }}
+          mfaCode: ${{ secrets.STEAM_MFA_CODE }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
           ssfnFilePath: ${{ secrets.STEAM_SSFN_FILE_PATH }}
           ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
