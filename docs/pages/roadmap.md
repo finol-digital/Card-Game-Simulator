@@ -5,14 +5,14 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.57
-
+- Game-Play: Cards can Snap to Grid
 
 ## Active Sprint
 - Fix: Error when trying to load deck after choosing not to load at start
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Add number to deck name when it is duplicated
-- Video: CGS Custom Game Creation and Upload 
+- Video: CGS Custom Game Creation and Upload
 
 ## Next Sprint
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
@@ -28,7 +28,6 @@ permalink: roadmap.html
 - Decks: Show individual deck download progress
 - Decks: Support organizing decks into folders
 - Game-Play: Use two fingers to move stacks
-- Game-Play: Allow cards to snap to each other/align on grid
 - Game-Play: Convert card to stack
 - Game-Play: Rotate card stacks
 - Game-Play: Support multiple playmats
