@@ -141,7 +141,7 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - StandaloneWindows64
+          - StandaloneWindows
           - WSAPlayer
     steps:
       - name: Checkout Repository
@@ -200,10 +200,10 @@ jobs:
           body: ${{ github.event.release.body }}
 
   buildWithWindows2:
-    name: Build for StandaloneWindows
+    name: Build for StandaloneWindows64
     runs-on: windows-latest
     needs: buildWithWindows
-    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneWindows') || contains(github.event.inputs.workflow_mode, 'Steam')
+    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneWindows64') || contains(github.event.inputs.workflow_mode, 'Steam')
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -228,28 +228,28 @@ jobs:
       - name: Build Unity
         uses: kuler90/build-unity@v1
         with:
-          build-path: build/StandaloneWindows
-          build-target: StandaloneWindows
+          build-path: build/StandaloneWindows64
+          build-target: StandaloneWindows64
           build-method: Cgs.Editor.BuildCgs.BuildOptions
           build-version: ${{ steps.versioning.outputs.version }}
       - name: Upload Build
         uses: actions/upload-artifact@v2
         with:
-          name: cgs-StandaloneWindows
-          path: build/StandaloneWindows
-      - name: Zip build/StandaloneWindows
+          name: cgs-StandaloneWindows64
+          path: build/StandaloneWindows64
+      - name: Zip build/StandaloneWindows64
         uses: papeloto/action-zip@v1
         if: github.event.action == 'published'
         with:
-          files: build/StandaloneWindows/
-          dest: build/cgs-StandaloneWindows.zip
-      - name: Upload cgs-StandaloneWindows.zip to GitHub Release
+          files: build/StandaloneWindows64/
+          dest: build/cgs-StandaloneWindows64.zip
+      - name: Upload cgs-StandaloneWindows64.zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
-          asset_name: cgs-StandaloneWindows.zip
-          file: build/cgs-StandaloneWindows.zip
+          asset_name: cgs-StandaloneWindows64.zip
+          file: build/cgs-StandaloneWindows64.zip
           tag: ${{ github.ref }}
           overwrite: true
           body: ${{ github.event.release.body }}
