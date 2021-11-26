@@ -1,0 +1,24 @@
+name: Test
+
+on: workflow_dispatch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Steam
+        uses: game-ci/steam-deploy@authentication
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}
+          password: ${{ secrets.STEAM_PASSWORD }}
+          configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
+          ssfnFilePath: ${{ secrets.STEAM_SSFN_FILE_PATH }}
+          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+          appId: 1742850
+          buildDescription: v0.0.1
+          rootPath: build
+          depot1Path: StandaloneWindows
+          depot2Path: StandaloneLinux64
+          depot3Path: StandaloneWindows64
+          depot4Path: StandaloneOSX
+          releaseBranch: prerelease
