@@ -571,6 +571,10 @@ jobs:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
       - name: Remove BackUpThisFolder_ButDontShipItWithYourGame Folder
+        env:
+          STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF}}
+          STEAM_SSFN_FILE_CONTENTS: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+          STEAM_SSFN_FILE_NAME: ${{ secrets.STEAM_SSFN_FILE_NAME }}
         run: |
           echo "Cleaning StandaloneWindows..."
           rm -R build/StandaloneWindows/cgs_BackUpThisFolder_ButDontShipItWithYourGame
@@ -586,6 +590,9 @@ jobs:
           ls build/StandaloneWindows64
           echo "No need to clean StandaloneOSX:"
           ls build/StandaloneOSX
+          echo $STEAM_CONFIG_VDF
+          echo $STEAM_SSFN_FILE_CONTENTS
+          echo $STEAM_SSFN_FILE_NAME
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
@@ -597,8 +604,8 @@ jobs:
           username: ${{ secrets.STEAM_USERNAME }}
           password: ${{ secrets.STEAM_PASSWORD }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
-          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
           ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
           appId: 1742850
           buildDescription: ${{ steps.versioning.outputs.version }}
           rootPath: build
