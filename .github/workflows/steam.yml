@@ -15,7 +15,7 @@ jobs:
         id: secreting
         run: |
           echo "Exporting STEAM_CONFIG_VDF..."
-          export STEAM_CONFIG_VDF="$(cat /home/runner/Steam/config/config.vdf | base64)"
+          export STEAM_CONFIG_VDF="$(cat /home/runner/Steam/config/config.vdf)"
           echo "::set-output name=STEAM_CONFIG_VDF::$STEAM_CONFIG_VDF"
           echo "Exporting STEAM_SSFN_FILE_PATH..."
           export STEAM_SSFN_FILE_PATH="$(ls /home/runner/Steam/ssfn*)"
