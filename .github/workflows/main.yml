@@ -597,7 +597,7 @@ jobs:
           username: ${{ secrets.STEAM_USERNAME }}
           password: ${{ secrets.STEAM_PASSWORD }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
-          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+          ssfnFilePath: ${{ secrets.STEAM_SSFN_FILE_PATH }}
           ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
           appId: 1742850
           buildDescription: v${{ steps.versioning.outputs.version }}
