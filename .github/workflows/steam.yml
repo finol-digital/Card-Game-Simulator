@@ -21,7 +21,7 @@ jobs:
           export STEAM_SSFN_FILE_NAME="$(basename $(ls /home/runner/Steam/ssfn*))"
           echo "::set-output name=STEAM_SSFN_FILE_NAME::$STEAM_SSFN_FILE_NAME"
           echo "Exporting STEAM_SSFN_FILE_CONTENTS..."
-          export STEAM_SSFN_FILE_CONTENTS="$(cat $STEAM_SSFN_FILE_NAME | base64)"
+          export STEAM_SSFN_FILE_CONTENTS="$(cat /home/runner/Steam/$STEAM_SSFN_FILE_NAME | base64)"
           echo "::set-output name=STEAM_SSFN_FILE_CONTENTS::$STEAM_SSFN_FILE_CONTENTS"
           echo "Exported secrets!"
       - name: Create Secret STEAM_CONFIG_VDF
