@@ -17,11 +17,11 @@ jobs:
           echo "Exporting STEAM_CONFIG_VDF..."
           export STEAM_CONFIG_VDF="$(cat /home/runner/Steam/config/config.vdf)"
           echo "::set-output name=STEAM_CONFIG_VDF::$STEAM_CONFIG_VDF"
-          echo "Exporting STEAM_SSFN_FILE_PATH..."
-          export STEAM_SSFN_FILE_PATH="$(ls /home/runner/Steam/ssfn*)"
-          echo "::set-output name=STEAM_SSFN_FILE_PATH::$STEAM_SSFN_FILE_PATH"
+          echo "Exporting STEAM_SSFN_FILE_NAME..."
+          export STEAM_SSFN_FILE_NAME="$(basename $(ls /home/runner/Steam/ssfn*))"
+          echo "::set-output name=STEAM_SSFN_FILE_NAME::$STEAM_SSFN_FILE_NAME"
           echo "Exporting STEAM_SSFN_FILE_CONTENTS..."
-          export STEAM_SSFN_FILE_CONTENTS="$(cat $STEAM_SSFN_FILE_PATH | base64)"
+          export STEAM_SSFN_FILE_CONTENTS="$(cat $STEAM_SSFN_FILE_NAME | base64)"
           echo "::set-output name=STEAM_SSFN_FILE_CONTENTS::$STEAM_SSFN_FILE_CONTENTS"
           echo "Exported secrets!"
       - name: Create Secret STEAM_CONFIG_VDF
@@ -30,11 +30,11 @@ jobs:
           name: STEAM_CONFIG_VDF
           value: ${{ steps.secreting.outputs.STEAM_CONFIG_VDF }}
           pa_token: ${{ secrets.CGS_PAT }}
-      - name: Create Secret STEAM_SSFN_FILE_PATH
+      - name: Create Secret STEAM_SSFN_FILE_NAME
         uses: gliech/create-github-secret-action@v1
         with:
-          name: STEAM_SSFN_FILE_PATH
-          value: ${{ steps.secreting.outputs.STEAM_SSFN_FILE_PATH }}
+          name: STEAM_SSFN_FILE_NAME
+          value: ${{ steps.secreting.outputs.STEAM_SSFN_FILE_NAME }}
           pa_token: ${{ secrets.CGS_PAT }}
       - name: Create Secret STEAM_SSFN_FILE_CONTENTS
         uses: gliech/create-github-secret-action@v1
