@@ -21,10 +21,8 @@ jobs:
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           password: ${{ secrets.STEAM_PASSWORD }}
+          personalAccessToken: ${{ secrets.CGS_PAT }}
           mfaCode: ${{ secrets.STEAM_MFA_CODE }}
-          configVdf: ${{ secrets.STEAM_CONFIG_VDF}}
-          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
-          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
           appId: 1742850
           buildDescription: v0.0.1
           rootPath: build
