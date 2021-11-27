@@ -6,6 +6,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          mkdir -p build/StandaloneWindows
+          mkdir -p build/StandaloneLinux64
+          mkdir -p build/StandaloneWindows64
+          mkdir -p build/StandaloneOSX
+          touch build/StandaloneWindows/test.txt
+          touch build/StandaloneLinux64/test.txt
+          touch build/StandaloneWindows64/test.txt
+          touch build/StandaloneOSX/test.txt
+          chmod -R 777 build
       - name: Deploy to Steam
         uses: game-ci/steam-deploy@authentication
         with:
