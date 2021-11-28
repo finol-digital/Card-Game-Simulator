@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.57
+- Accessibility: Redesigned the Main Menu
 - Game-Play: Cards can Snap to Grid
 
 ## Active Sprint
