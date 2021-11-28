@@ -17,20 +17,7 @@ namespace Cgs.Play
         private const int DefaultMin = 1;
         private const int DefaultMax = 6;
 
-        public Text minText;
         public Text maxText;
-
-        private int Min
-        {
-            get => _min;
-            set
-            {
-                _min = value;
-                minText.text = _min.ToString();
-            }
-        }
-
-        private int _min = DefaultMin;
 
         private int Max
         {
@@ -51,14 +38,7 @@ namespace Cgs.Play
             if (!IsFocused)
                 return;
 
-            if (Inputs.IsHorizontal)
-            {
-                if (Inputs.IsLeft && !Inputs.WasLeft)
-                    DecrementMin();
-                else if (Inputs.IsRight && !Inputs.WasRight)
-                    IncrementMin();
-            }
-            else if (Inputs.IsVertical)
+            if (Inputs.IsVertical)
             {
                 if (Inputs.IsDown && !Inputs.WasDown)
                     DecrementMax();
@@ -79,18 +59,6 @@ namespace Cgs.Play
         }
 
         [UsedImplicitly]
-        public void DecrementMin()
-        {
-            Min--;
-        }
-
-        [UsedImplicitly]
-        public void IncrementMin()
-        {
-            Min++;
-        }
-
-        [UsedImplicitly]
         public void DecrementMax()
         {
             Max--;
@@ -106,9 +74,9 @@ namespace Cgs.Play
         public void CreateAndHide()
         {
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewDie(Min, Max);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDie(DefaultMin, Max);
             else
-                _createDieCallback?.Invoke(Min, Max);
+                _createDieCallback?.Invoke(DefaultMin, Max);
 
             Hide();
         }

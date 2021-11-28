@@ -23,6 +23,8 @@ namespace Cgs.Menu
         public const string TutorialPrompt =
             "If you are new to Card Game Simulator (CGS), you may want to watch the CGS tutorial video.\nGo to the YouTube video?";
 
+        public const string QuitPrompt = "Quit?";
+
         private const string TutorialUrl = "https://youtu.be/PriDuaM6MEk";
 
         private const string PlayerPrefsHasSeenTutorial = "HasSeenTutorial";
@@ -44,6 +46,7 @@ namespace Cgs.Menu
         public GameObject downloadMenuPrefab;
         public GameObject createMenuPrefab;
         public GameObject gameManagement;
+        public GameObject versionInfo;
         public Image currentCardImage;
         public Image currentBannerImage;
         public Image previousCardImage;
@@ -128,9 +131,7 @@ namespace Cgs.Menu
                 else if (Inputs.IsPageRight && !Inputs.WasPageRight)
                     SelectNext();
             }
-            else if (Inputs.IsHorizontal && (EventSystem.current.currentSelectedGameObject == null ||
-                                             EventSystem.current.currentSelectedGameObject ==
-                                             selectableButtons[0].gameObject))
+            else if (Inputs.IsHorizontal && EventSystem.current.currentSelectedGameObject == null)
             {
                 if (Inputs.IsLeft && !Inputs.WasLeft)
                     SelectPrevious();
@@ -161,30 +162,30 @@ namespace Cgs.Menu
                 if (gameManagement.activeSelf)
                     Download();
                 else
-                    JoinGame();
+                    EditDeck();
             }
             else if (Inputs.IsSave)
             {
                 if (gameManagement.activeSelf)
                     Share();
                 else
-                    EditDeck();
-            }
-            else if (Inputs.IsOption)
-            {
-                if (gameManagement.activeSelf)
-                    Delete();
-                else
                     ExploreCards();
             }
             else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 ToggleGameManagement();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
-                ShowSettings();
+                ToggleVersionInfo();
+            else if (Inputs.IsOption)
+            {
+                if (gameManagement.activeSelf)
+                    Delete();
+                else
+                    ShowSettings();
+            }
             else if (Inputs.IsCancel)
             {
                 if (EventSystem.current.currentSelectedGameObject == null)
-                    Quit();
+                    PromptQuit();
                 else if (!EventSystem.current.alreadySelecting)
                     EventSystem.current.SetSelectedGameObject(null);
             }
@@ -303,7 +304,22 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Quit() =>
+        public void ToggleVersionInfo()
+        {
+            versionInfo.SetActive(!versionInfo.activeSelf);
+        }
+
+        [UsedImplicitly]
+        public void PromptQuit()
+        {
+#if UNITY_ANDROID
+            Quit();
+#else
+            CardGameManager.Instance.Messenger.Prompt(QuitPrompt, Quit);
+#endif
+        }
+
+        private void Quit() =>
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;
 #else

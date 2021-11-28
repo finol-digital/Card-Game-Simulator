@@ -11,12 +11,12 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Page-Vertical/Horizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
 - **Sort**: *q* or *j* - Select previous card game.
 - **Filter**: *f* or *\\* - Select next card game.
-- **New**: *e* or *k* - Start Game.
-- **Load**: *r* or *l* - Join Game.
-- **Save**: *t* or *;* - Edit Decks.
-- **Option**: *Delete* or *Backspace* - Explore Cards.
-- **FocusBack**: *\`* or *\[* - Manage Card Games.
-- **FocusNext**: *Tab* or *\]* - Settings.
+- **New**: *e* or *k* - Play Mode.
+- **Load**: *r* or *l* - Deck Editor.
+- **Save**: *t* or *;* - Cards Explorer.
+- **FocusBack**: *\`* or *\[* - Toggle Game Management.
+- **FocusNext**: *Tab* or *\]* - Toggle Version Info.
+- **Option**: *Delete* or *Backspace* - Settings.
 - **Submit**: *Enter* - Click on selected button.
 
 ## Play Mode
@@ -67,7 +67,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Option**: *Delete* - No.
 - **Submit**: *Enter* - Yes/Close.
 
-## LAN Lobby
+## Multiplayer Lobby
 - **Cancel**: *Esc* - Cancel.
 - **Vertical**: *down*, *up* - Scroll through sessions.
 - **PageHorizontal**: *Home*, *End* - Toggle between LAN and Internet.

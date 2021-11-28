@@ -12,11 +12,13 @@ namespace Cgs.Play
     {
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
+        public GameObject panel;
+
         public PlayController controller;
 
         private void Update()
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
+            if (!panel.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
                 CardGameManager.Instance.ModalCanvas != null)
                 return;
 
@@ -32,7 +34,7 @@ namespace Cgs.Play
 
         public void Show()
         {
-            gameObject.SetActive(transform);
+            panel.SetActive(true);
         }
 
         [UsedImplicitly]
@@ -63,9 +65,18 @@ namespace Cgs.Play
             controller.ShowDiceMenu();
         }
 
+        [UsedImplicitly]
+        public void ToggleMenu()
+        {
+            if (panel.gameObject.activeSelf)
+                Hide();
+            else
+                Show();
+        }
+
         public void Hide()
         {
-            gameObject.SetActive(false);
+            panel.SetActive(false);
         }
     }
 }

@@ -1283,6 +1283,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Save Button
       objectReference: {fileID: 0}
+    - target: {fileID: 576404893270305274, guid: c35fca13280ec4344b2150cb17e647ca,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ecfacaa608efc06a3a7c7746b66e32d6,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c35fca13280ec4344b2150cb17e647ca, type: 3}
 --- !u!224 &740716144 stripped

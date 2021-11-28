@@ -189,6 +189,8 @@ namespace Cgs.Menu
         {
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
+            foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
+                canvasScaler.referenceResolution = ResolutionManager.Resolution;
         }
 
         [UsedImplicitly]
