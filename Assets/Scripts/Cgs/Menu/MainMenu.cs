@@ -47,6 +47,7 @@ namespace Cgs.Menu
         public GameObject createMenuPrefab;
         public GameObject gameManagement;
         public GameObject versionInfo;
+        public Text currentGameNameText;
         public Image currentCardImage;
         public Image currentBannerImage;
         public Image previousCardImage;
@@ -193,6 +194,7 @@ namespace Cgs.Menu
 
         private void ResetGameSelectionCarousel()
         {
+            currentGameNameText.text = CardGameManager.Current.Name;
             currentCardImage.sprite = CardGameManager.Current.CardBackImageSprite;
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
