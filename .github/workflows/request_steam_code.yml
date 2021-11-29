@@ -6,7 +6,7 @@ jobs:
   requestSteamCode:
     runs-on: ubuntu-latest
     steps:
-      - uses: game-ci/steam-deploy@v1
+      - uses: game-ci/steam-deploy@authentication
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           password: ${{ secrets.STEAM_PASSWORD }}
