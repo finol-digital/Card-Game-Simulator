@@ -32,11 +32,11 @@ jobs:
           touch build/StandaloneWindows64/test.txt
           touch build/StandaloneOSX/test.txt
           chmod -R 777 build
-    - id: steamsetup
-      uses: CyberAndrii/setup-steamcmd@v1.1.1
-    - id: deploy
-      shell: bash
-      run: |
-        export steamExecutable=${{ steps.steamsetup.outputs.executable }}
-        chmod +x steam_deploy.sh
-        ./steam_deploy.sh
+      - id: steamsetup
+        uses: CyberAndrii/setup-steamcmd@v1.1.1
+      - id: deploy
+        shell: bash
+        run: |
+          export steamExecutable=${{ steps.steamsetup.outputs.executable }}
+          chmod +x steam_deploy.sh
+          ./steam_deploy.sh
