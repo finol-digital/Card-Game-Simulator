@@ -22,6 +22,7 @@ jobs:
       depot4Path: StandaloneOSX
       releaseBranch: prerelease
     steps:
+      - uses: actions/checkout@v2
       - run: |
           mkdir -p build/StandaloneWindows
           mkdir -p build/StandaloneLinux64
