@@ -1,0 +1,36 @@
+name: Test Steam Deploy
+
+on: workflow_dispatch
+
+jobs:
+  testSteamDeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          mkdir -p build/StandaloneWindows
+          mkdir -p build/StandaloneLinux64
+          mkdir -p build/StandaloneWindows64
+          mkdir -p build/StandaloneOSX
+          touch build/StandaloneWindows/test.txt
+          touch build/StandaloneLinux64/test.txt
+          touch build/StandaloneWindows64/test.txt
+          touch build/StandaloneOSX/test.txt
+          chmod -R 777 build
+      - name: Test steam-deploy
+        uses: game-ci/steam-deploy@authentication
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}
+          password: ${{ secrets.STEAM_PASSWORD }}
+          mfaCode: ${{ secrets.STEAM_MFA_CODE }}
+          personalAccessToken: ${{ secrets.CGS_PAT }}
+          configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
+          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+          appId: 1742850
+          buildDescription: v0.0.1
+          rootPath: build
+          depot1Path: StandaloneWindows
+          depot2Path: StandaloneLinux64
+          depot3Path: StandaloneWindows64
+          depot4Path: StandaloneOSX
+          releaseBranch: prerelease
