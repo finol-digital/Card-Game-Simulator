@@ -38,5 +38,5 @@ jobs:
         shell: bash
         run: |
           export steamExecutable=${{ steps.steamsetup.outputs.executable }}
-          chmod +x steam_deploy.sh
+          chmod +x ./steam_deploy.sh
           ./steam_deploy.sh
