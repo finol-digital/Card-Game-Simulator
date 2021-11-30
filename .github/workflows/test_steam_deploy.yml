@@ -38,6 +38,32 @@ jobs:
       - id: deploy
         shell: bash
         run: |
-          export steamExecutable=${{ steps.steamsetup.outputs.executable }}
+          export STEAM_HOME=${{ steps.steamsetup.outputs.directory }}
+          export STEAM_CMD=${{ steps.steamsetup.outputs.executable }}
           chmod +x ./steam_deploy.sh
           ./steam_deploy.sh
+          echo "Exporting STEAM_CONFIG_VDF..."
+          export STEAM_CONFIG_VDF="$(cat $STEAM_HOME/config/config.vdf)"
+          echo "::set-output name=STEAM_CONFIG_VDF::$STEAM_CONFIG_VDF"
+          echo "Exporting STEAM_SSFN_FILE_NAME..."
+          export STEAM_SSFN_FILE_NAME="$(basename $(ls $STEAM_HOME/ssfn*))"
+          echo "::set-output name=STEAM_SSFN_FILE_NAME::$STEAM_SSFN_FILE_NAME"
+          echo "Exporting STEAM_SSFN_FILE_CONTENTS..."
+          export STEAM_SSFN_FILE_CONTENTS="$(cat $STEAM_HOME/$STEAM_SSFN_FILE_NAME | base64)"
+          echo "::set-output name=STEAM_SSFN_FILE_CONTENTS::$STEAM_SSFN_FILE_CONTENTS"
+          echo "Exported secrets!"
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: STEAM_CONFIG_VDF
+          value: ${{ steps.deploy.outputs.STEAM_CONFIG_VDF }}
+          pa_token: ${{ inputs.personalAccessToken }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: STEAM_SSFN_FILE_NAME
+          value: ${{ steps.deploy.outputs.STEAM_SSFN_FILE_NAME }}
+          pa_token: ${{ inputs.personalAccessToken }}
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: STEAM_SSFN_FILE_CONTENTS
+          value: ${{ steps.deploy.outputs.STEAM_SSFN_FILE_CONTENTS }}
+          pa_token: ${{ inputs.personalAccessToken }}

@@ -70,23 +70,23 @@ echo "#    Copying SteamGuard Files   #"
 echo "#################################"
 echo ""
 
-mkdir -p /home/runner/Steam/config
+mkdir -p "$STEAM_HOME/config"
 
 if [ -n "$configVdf" ]; then
   echo "Copying /home/runner/Steam/config/config.vdf..."
-  echo "$configVdf" > /home/runner/Steam/config/config.vdf
-  chmod 777 /home/runner/Steam/config/config.vdf
-  cat /home/runner/Steam/config/config.vdf
+  echo "$configVdf" > "$STEAM_HOME/config/config.vdf"
+  chmod 777 "$STEAM_HOME/config/config.vdf"
+  cat "$STEAM_HOME/config/config.vdf"
 fi;
 
 if [ -n "$ssfnFileName" ]; then
-  echo "Copying /home/runner/Steam/ssfn..."
+  echo "Copying $STEAM_HOME/ssfn..."
   export SSFN_DECODED="$(echo $ssfnFileContents | base64 -d)"
   echo "$SSFN_DECODED"
-  echo "$ssfnFileContents" | base64 -d > "/home/runner/Steam/$ssfnFileName"
-  chmod 777 "/home/runner/Steam/$ssfnFileName"
-  echo "/home/runner/Steam/$ssfnFileName"
-  cat "/home/runner/Steam/$ssfnFileName"
+  echo "$ssfnFileContents" | base64 -d > "$STEAM_HOME/$ssfnFileName"
+  chmod 777 "$STEAM_HOME/$ssfnFileName"
+  echo "$STEAM_HOME/$ssfnFileName"
+  cat "$STEAM_HOME/$ssfnFileName"
 fi;
 
 echo "Finished Copying SteamGuard Files!"
@@ -98,9 +98,7 @@ echo "#        Uploading build        #"
 echo "#################################"
 echo ""
 
-echo "$steamExecutable"
-echo ""
-steamcmd +login "$username" "$password" "$mfaCode" +run_app_build $(pwd)/manifest.vdf +quit || (
+$STEAM_CMD +login "$username" "$password" "$mfaCode" +run_app_build $(pwd)/manifest.vdf +quit || (
     echo ""
     echo "#################################"
     echo "#             Errors            #"
@@ -112,19 +110,19 @@ steamcmd +login "$username" "$password" "$mfaCode" +run_app_build $(pwd)/manifes
     echo ""
     ls -alh $rootPath
     echo ""
-    ls -alh /home/runner/Steam
+    ls -alh $STEAM_HOME
     echo ""
     echo "Listing logs folder:"
     echo ""
-    ls -Ralph /home/runner/Steam/logs/
+    ls -Ralph "$STEAM_HOME/logs/"
     echo ""
     echo "Displaying error log"
     echo ""
-    cat /home/runner/Steam/logs/stderr.txt
+    cat "$STEAM_HOME/logs/stderr.txt"
     echo ""
     echo "Displaying bootstrapper log"
     echo ""
-    cat /home/runner/Steam/logs/bootstrap_log.txt
+    cat "$STEAM_HOME/logs/bootstrap_log.txt"
     echo ""
     echo "#################################"
     echo "#             Output            #"

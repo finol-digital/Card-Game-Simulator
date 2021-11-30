@@ -6,7 +6,8 @@ jobs:
   requestSteamCode:
     runs-on: ubuntu-latest
     steps:
-      - uses: game-ci/steam-deploy@authentication
-        with:
-          username: ${{ secrets.STEAM_USERNAME }}
-          password: ${{ secrets.STEAM_PASSWORD }}
+      - uses: CyberAndrii/setup-steamcmd@v1.1.1
+      - env:
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
+        run: steamcmd +login "$STEAM_USERNAME" "$STEAM_PASSWORD" +quit
