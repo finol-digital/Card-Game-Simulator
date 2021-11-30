@@ -18,7 +18,7 @@ jobs:
           touch build/StandaloneOSX/test.txt
           chmod -R 777 build
       - id: setup-steam
-        uses: CyberAndrii/setup-steamcmd@v1.1.1
+        uses: CyberAndrii/setup-steamcmd@master
       - env:
           username: ${{ secrets.STEAM_USERNAME }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
