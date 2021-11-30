@@ -6,12 +6,12 @@ permalink: roadmap.html
 
 ## What's New - v1.57
 - Accessibility: Redesigned the Main Menu
-- Game-Play: Cards can Snap to Grid
 
 ## Active Sprint
 - Fix: Error when trying to load deck after choosing not to load at start
 - Fix: Cards duplicated when drawn by multiple players
 - Cards: Creation allows for jpg and text-only
+- Game-Play: Cards can Snap to Grid
 - Game-Play: Add number to deck name when it is duplicated
 - Video: CGS Custom Game Creation and Upload
 
