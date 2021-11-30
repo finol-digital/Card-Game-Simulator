@@ -42,7 +42,7 @@ jobs:
           export STEAM_CMD=${{ steps.steamsetup.outputs.executable }}
           chmod +x ./steam_deploy.sh
           ./steam_deploy.sh
-          ls -alh STEAM_HOME
+          ls -alh $STEAM_HOME
           echo "Exporting STEAM_CONFIG_VDF..."
           export STEAM_CONFIG_VDF="$(cat $STEAM_HOME/config/config.vdf)"
           echo "::set-output name=STEAM_CONFIG_VDF::$STEAM_CONFIG_VDF"
