@@ -58,14 +58,14 @@ jobs:
         with:
           name: STEAM_CONFIG_VDF
           value: ${{ steps.deploy.outputs.STEAM_CONFIG_VDF }}
-          pa_token: ${{ inputs.personalAccessToken }}
+          pa_token: ${{ secrets.CGS_PAT }}
       - uses: gliech/create-github-secret-action@v1
         with:
           name: STEAM_SSFN_FILE_NAME
           value: ${{ steps.deploy.outputs.STEAM_SSFN_FILE_NAME }}
-          pa_token: ${{ inputs.personalAccessToken }}
+          pa_token: ${{ secrets.CGS_PAT }}
       - uses: gliech/create-github-secret-action@v1
         with:
           name: STEAM_SSFN_FILE_CONTENTS
           value: ${{ steps.deploy.outputs.STEAM_SSFN_FILE_CONTENTS }}
-          pa_token: ${{ inputs.personalAccessToken }}
+          pa_token: ${{ secrets.CGS_PAT }}
