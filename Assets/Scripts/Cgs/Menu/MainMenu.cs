@@ -163,19 +163,19 @@ namespace Cgs.Menu
                 if (gameManagement.activeSelf)
                     Download();
                 else
-                    EditDeck();
+                    JoinGame();
             }
             else if (Inputs.IsSave)
             {
                 if (gameManagement.activeSelf)
                     Share();
                 else
-                    ExploreCards();
+                    EditDeck();
             }
             else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 ToggleGameManagement();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
-                ToggleVersionInfo();
+                ExploreCards();
             else if (Inputs.IsOption)
             {
                 if (gameManagement.activeSelf)
@@ -208,6 +208,7 @@ namespace Cgs.Menu
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             gameManagement.SetActive(!gameManagement.activeSelf);
+            versionInfo.SetActive(gameManagement.activeSelf);
 #endif
         }
 
@@ -306,14 +307,10 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void ToggleVersionInfo()
-        {
-            versionInfo.SetActive(!versionInfo.activeSelf);
-        }
-
-        [UsedImplicitly]
         public void PromptQuit()
         {
+            if (Time.timeSinceLevelLoad < StartBufferTime)
+                return;
 #if UNITY_ANDROID
             Quit();
 #else

@@ -8,8 +8,8 @@ permalink: roadmap.html
 - Accessibility: Redesigned the Main Menu
 
 ## Active Sprint
-- Fix: Error when trying to load deck after choosing not to load at start
 - Fix: Cards duplicated when drawn by multiple players
+- Fix: Error when trying to load deck after choosing not to load at start
 - Cards: Creation allows for jpg and text-only
 - Game-Play: Cards can Snap to Grid
 - Game-Play: Add number to deck name when it is duplicated

@@ -19,7 +19,7 @@ namespace Cgs.Play
         private void Update()
         {
             if (!panel.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
-                CardGameManager.Instance.ModalCanvas != null)
+                CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
                 return;
 
             if (Inputs.IsNew)

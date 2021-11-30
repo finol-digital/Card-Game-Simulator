@@ -11,11 +11,11 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Page-Vertical/Horizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
 - **Sort**: *q* or *j* - Select previous card game.
 - **Filter**: *f* or *\\* - Select next card game.
-- **New**: *e* or *k* - Play Mode.
-- **Load**: *r* or *l* - Deck Editor.
-- **Save**: *t* or *;* - Cards Explorer.
+- **New**: *e* or *k* - Singleplayer.
+- **Load**: *r* or *l* - Multiplayer.
+- **Save**: *t* or *;* - Deck Editor.
 - **FocusBack**: *\`* or *\[* - Toggle Game Management.
-- **FocusNext**: *Tab* or *\]* - Toggle Version Info.
+- **FocusNext**: *Tab* or *\]* - Cards Explorer.
 - **Option**: *Delete* or *Backspace* - Settings.
 - **Submit**: *Enter* - Click on selected button.
 
