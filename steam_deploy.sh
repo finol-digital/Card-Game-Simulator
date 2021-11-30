@@ -83,9 +83,6 @@ echo "$configVdf" > "/home/runner/Steam/config/config.vdf"
 chmod 777 "/home/runner/Steam/config/config.vdf"
 cat "/home/runner/Steam/config/config.vdf"
 
-export SSFN_DECODED="$(echo $ssfnFileContents | base64 -d)"
-echo "SSFN_DECODED: $SSFN_DECODED"
-
 echo "Copying $STEAM_HOME/ssfn..."
 echo "$ssfnFileContents" | base64 -d > "$STEAM_HOME/$ssfnFileName"
 chmod 777 "$STEAM_HOME/$ssfnFileName"
