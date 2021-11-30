@@ -5,19 +5,6 @@ on: workflow_dispatch
 jobs:
   testSteamDeploy:
     runs-on: ubuntu-latest
-    env:
-      username: ${{ secrets.STEAM_USERNAME }}
-      configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
-      ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
-      ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
-      appId: 1742850
-      buildDescription: v0.0.1
-      rootPath: build
-      depot1Path: StandaloneWindows
-      depot2Path: StandaloneLinux64
-      depot3Path: StandaloneWindows64
-      depot4Path: StandaloneOSX
-      releaseBranch: prerelease
     steps:
       - uses: actions/checkout@v2
       - run: |
@@ -32,9 +19,22 @@ jobs:
           chmod -R 777 build
       - id: setup-steam
         uses: CyberAndrii/setup-steamcmd@v1.1.1
-      - run: |
-          export STEAM_HOME=${{ steps.steamsetup.outputs.directory }}
-          export STEAM_CMD=${{ steps.steamsetup.outputs.executable }}
+      - env:
+          username: ${{ secrets.STEAM_USERNAME }}
+          configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
+          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+          appId: 1742850
+          buildDescription: v0.0.1
+          rootPath: build
+          depot1Path: StandaloneWindows
+          depot2Path: StandaloneLinux64
+          depot3Path: StandaloneWindows64
+          depot4Path: StandaloneOSX
+          releaseBranch: prerelease
+        run: |
+          export STEAM_HOME=${{ steps.setup-steam.outputs.directory }}
+          export STEAM_CMD=${{ steps.setup-steam.outputs.executable }}
           sudo apt-get install libsdl2-2.0
           chmod +x ./steam_deploy.sh
           ./steam_deploy.sh
