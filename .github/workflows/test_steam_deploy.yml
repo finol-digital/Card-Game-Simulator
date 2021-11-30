@@ -35,6 +35,5 @@ jobs:
         run: |
           export STEAM_HOME=${{ steps.setup-steam.outputs.directory }}
           export STEAM_CMD=${{ steps.setup-steam.outputs.executable }}
-          sudo apt-get install libsdl2-2.0
           chmod +x ./steam_deploy.sh
           ./steam_deploy.sh
