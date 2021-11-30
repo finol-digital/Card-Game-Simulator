@@ -592,7 +592,7 @@ jobs:
         with:
           format: "${major}.${minor}.${patch}"
       - name: Deploy to Steam
-        uses: game-ci/steam-deploy@authentication
+        uses: game-ci/steam-deploy@main
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           password:  ${{ secrets.STEAM_PASSWORD }}
