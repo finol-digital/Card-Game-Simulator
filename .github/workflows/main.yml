@@ -595,9 +595,6 @@ jobs:
         uses: game-ci/steam-deploy@authentication
         with:
           username: ${{ secrets.STEAM_USERNAME }}
-          password: ${{ secrets.STEAM_PASSWORD }}
-          mfaCode: ${{ secrets.STEAM_MFA_CODE }}
-          personalAccessToken: ${{ secrets.CGS_PAT }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
           ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
           ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}

@@ -73,34 +73,30 @@ echo ""
 mkdir -p "$STEAM_HOME/config"
 mkdir -p "/home/runner/Steam/config"
 
-if [ -n "$configVdf" ]; then
-  echo "Copying $STEAM_HOME/config/config.vdf..."
-  echo "$configVdf" > "$STEAM_HOME/config/config.vdf"
-  chmod 777 "$STEAM_HOME/config/config.vdf"
-  cat "$STEAM_HOME/config/config.vdf"
-  
-  echo "Copying /home/runner/Steam/config/config.vdf..."
-  echo "$configVdf" > "/home/runner/Steam/config/config.vdf"
-  chmod 777 "/home/runner/Steam/config/config.vdf"
-  cat "/home/runner/Steam/config/config.vdf"
-fi;
+echo "Copying $STEAM_HOME/config/config.vdf..."
+echo "$configVdf" > "$STEAM_HOME/config/config.vdf"
+chmod 777 "$STEAM_HOME/config/config.vdf"
+cat "$STEAM_HOME/config/config.vdf"
 
-if [ -n "$ssfnFileName" ]; then
-  export SSFN_DECODED="$(echo $ssfnFileContents | base64 -d)"
-  echo "SSFN_DECODED: $SSFN_DECODED"
-  
-  echo "Copying $STEAM_HOME/ssfn..."
-  echo "$ssfnFileContents" | base64 -d > "$STEAM_HOME/$ssfnFileName"
-  chmod 777 "$STEAM_HOME/$ssfnFileName"
-  echo "$STEAM_HOME/$ssfnFileName"
-  cat "$STEAM_HOME/$ssfnFileName"
-  
-  echo "Copying /home/runner/Steam/ssfn..."
-  echo "$ssfnFileContents" | base64 -d > "/home/runner/Steam/$ssfnFileName"
-  chmod 777 "/home/runner/Steam/$ssfnFileName"
-  echo "/home/runner/Steam/$ssfnFileName"
-  cat "/home/runner/Steam/$ssfnFileName"
-fi;
+echo "Copying /home/runner/Steam/config/config.vdf..."
+echo "$configVdf" > "/home/runner/Steam/config/config.vdf"
+chmod 777 "/home/runner/Steam/config/config.vdf"
+cat "/home/runner/Steam/config/config.vdf"
+
+export SSFN_DECODED="$(echo $ssfnFileContents | base64 -d)"
+echo "SSFN_DECODED: $SSFN_DECODED"
+
+echo "Copying $STEAM_HOME/ssfn..."
+echo "$ssfnFileContents" | base64 -d > "$STEAM_HOME/$ssfnFileName"
+chmod 777 "$STEAM_HOME/$ssfnFileName"
+echo "$STEAM_HOME/$ssfnFileName"
+cat "$STEAM_HOME/$ssfnFileName"
+
+echo "Copying /home/runner/Steam/ssfn..."
+echo "$ssfnFileContents" | base64 -d > "/home/runner/Steam/$ssfnFileName"
+chmod 777 "/home/runner/Steam/$ssfnFileName"
+echo "/home/runner/Steam/$ssfnFileName"
+cat "/home/runner/Steam/$ssfnFileName"
 
 echo "Finished Copying SteamGuard Files!"
 echo ""
@@ -111,7 +107,7 @@ echo "#        Uploading build        #"
 echo "#################################"
 echo ""
 
-$STEAM_CMD +login "$username" "$password" "$mfaCode" +run_app_build $(pwd)/manifest.vdf +quit || (
+$STEAM_CMD +login "$username" +run_app_build $(pwd)/manifest.vdf +quit || (
     echo ""
     echo "#################################"
     echo "#             Errors            #"
