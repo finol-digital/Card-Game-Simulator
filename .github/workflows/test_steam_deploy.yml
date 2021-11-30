@@ -42,12 +42,14 @@ jobs:
           export STEAM_CMD=${{ steps.steamsetup.outputs.executable }}
           chmod +x ./steam_deploy.sh
           ./steam_deploy.sh
+          ls -alh STEAM_HOME
           echo "Exporting STEAM_CONFIG_VDF..."
           export STEAM_CONFIG_VDF="$(cat $STEAM_HOME/config/config.vdf)"
           echo "::set-output name=STEAM_CONFIG_VDF::$STEAM_CONFIG_VDF"
           echo "Exporting STEAM_SSFN_FILE_NAME..."
           export STEAM_SSFN_FILE_NAME="$(basename $(ls $STEAM_HOME/ssfn*))"
           echo "::set-output name=STEAM_SSFN_FILE_NAME::$STEAM_SSFN_FILE_NAME"
+          echo "$STEAM_SSFN_FILE_NAME"
           echo "Exporting STEAM_SSFN_FILE_CONTENTS..."
           export STEAM_SSFN_FILE_CONTENTS="$(cat $STEAM_HOME/$STEAM_SSFN_FILE_NAME | base64)"
           echo "::set-output name=STEAM_SSFN_FILE_CONTENTS::$STEAM_SSFN_FILE_CONTENTS"
