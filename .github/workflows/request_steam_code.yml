@@ -10,7 +10,4 @@ jobs:
       - env:
           STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
-        run: |
-          steamcmd +login "$STEAM_USERNAME" "$STEAM_PASSWORD" +quit
-          status = [ $? -eq 5 ]
-          exit $status
+        run: steamcmd +login "$STEAM_USERNAME" "$STEAM_PASSWORD" +quit || (status=[ $? -eq 5 ]; exit $status)
