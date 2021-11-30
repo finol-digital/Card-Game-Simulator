@@ -70,27 +70,33 @@ echo "#    Copying SteamGuard Files   #"
 echo "#################################"
 echo ""
 
+export CONFIG_DECODED="$(echo $configVdf | base64 -d)"
+echo "CONFIG_DECODED: $CONFIG_DECODED"
+
 mkdir -p "$STEAM_HOME/config"
 mkdir -p "/home/runner/Steam/config"
 
 echo "Copying $STEAM_HOME/config/config.vdf..."
-echo "$configVdf" > "$STEAM_HOME/config/config.vdf"
+echo "$configVdf" | base64 -d - > "$STEAM_HOME/config/config.vdf"
 chmod 777 "$STEAM_HOME/config/config.vdf"
 cat "$STEAM_HOME/config/config.vdf"
 
 echo "Copying /home/runner/Steam/config/config.vdf..."
-echo "$configVdf" > "/home/runner/Steam/config/config.vdf"
+echo "$configVdf" | base64 -d - > "/home/runner/Steam/config/config.vdf"
 chmod 777 "/home/runner/Steam/config/config.vdf"
 cat "/home/runner/Steam/config/config.vdf"
 
+export SSFN_DECODED="$(echo $ssfnFileContents | base64 -d)"
+echo "SSFN_DECODED: $SSFN_DECODED"
+
 echo "Copying $STEAM_HOME/ssfn..."
-echo "$ssfnFileContents" | base64 -d > "$STEAM_HOME/$ssfnFileName"
+echo "$ssfnFileContents" | base64 -d - > "$STEAM_HOME/$ssfnFileName"
 chmod 777 "$STEAM_HOME/$ssfnFileName"
 echo "$STEAM_HOME/$ssfnFileName"
 cat "$STEAM_HOME/$ssfnFileName"
 
 echo "Copying /home/runner/Steam/ssfn..."
-echo "$ssfnFileContents" | base64 -d > "/home/runner/Steam/$ssfnFileName"
+echo "$ssfnFileContents" | base64 -d - > "/home/runner/Steam/$ssfnFileName"
 chmod 777 "/home/runner/Steam/$ssfnFileName"
 echo "/home/runner/Steam/$ssfnFileName"
 cat "/home/runner/Steam/$ssfnFileName"
