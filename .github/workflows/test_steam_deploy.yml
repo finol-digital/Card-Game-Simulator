@@ -30,11 +30,9 @@ jobs:
           touch build/StandaloneWindows64/test.txt
           touch build/StandaloneOSX/test.txt
           chmod -R 777 build
-      - id: steamsetup
+      - id: setup-steam
         uses: CyberAndrii/setup-steamcmd@v1.1.1
-      - id: deploy
-        shell: bash
-        run: |
+      - run: |
           export STEAM_HOME=${{ steps.steamsetup.outputs.directory }}
           export STEAM_CMD=${{ steps.steamsetup.outputs.executable }}
           sudo apt-get install libsdl2-2.0
