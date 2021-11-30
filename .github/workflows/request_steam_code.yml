@@ -1,9 +1,8 @@
 name: Request Steam Code
-
 on: workflow_dispatch
-
 jobs:
-  requestSteamCode:
+  requestSteamMfaCode:
+    name: Request Steam MFA Code
     runs-on: ubuntu-latest
     steps:
       - uses: CyberAndrii/setup-steamcmd@v1.1.1
