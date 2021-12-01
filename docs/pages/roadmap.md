@@ -24,11 +24,14 @@ permalink: roadmap.html
 - Game-Play: Support multiple card selection
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Option to have top of stack always revealed
+- Game-Play: Always create decks in a convenient location
+- Game-Play: Automatically create D6 by default, with option to modify dice afterwards
+- Game-Play: Unify controls for playable objects, and create an area to drop to delete
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress
 - Decks: Support organizing decks into folders
-- Game-Play: Use two fingers to move stacks
+- Game-Play: Use tap and hold to move stacks
 - Game-Play: Convert card to stack
 - Game-Play: Rotate card stacks
 - Game-Play: Support multiple playmats
