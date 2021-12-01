@@ -117,19 +117,17 @@ jobs:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
       - name: Zip Build
+        uses: montudor/action-zip@v1
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
-        uses: thedoctor0/zip-release@0.6.0
         with:
-          type: 'zip'
-          directory: build/${{ matrix.targetPlatform }}
-          filename: cgs-${{ matrix.targetPlatform }}.zip
+          args: zip -qq -r build/cgs-${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
       - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
           repo_token: ${{ secrets.CGS_PAT }}
           asset_name: cgs-${{ matrix.targetPlatform }}.zip
-          file: build/${{ matrix.targetPlatform }}/cgs-${{ matrix.targetPlatform }}.zip
+          file: build/cgs-${{ matrix.targetPlatform }}.zip
           tag: ${{ github.ref }}
           overwrite: true
           body:  ${{ github.event.release.body }}
