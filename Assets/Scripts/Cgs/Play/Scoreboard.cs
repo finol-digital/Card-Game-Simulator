@@ -23,14 +23,14 @@ namespace Cgs.Play
         public const string DefaultPlayerName = "Unnamed Player";
         public const string PlayerNamePlayerPrefs = "PlayerName";
 
-        public Transform roomInfoPanel;
+        public Transform scoreboardPanel;
 
         public Text roomNameText;
         public Text roomIdIpText;
 
         public InputField nameInputField;
 
-        public Text pointsText;
+        public InputField pointsInputField;
 
         public RectTransform scoreContent;
 
@@ -43,8 +43,13 @@ namespace Cgs.Play
 
         private int Points
         {
-            get => int.Parse(pointsText.text);
-            set => pointsText.text = value.ToString();
+            get => int.Parse(pointsInputField.text);
+            set
+            {
+                pointsInputField.text = value.ToString();
+                if (IsPointsOutOfSync)
+                    CgsNetManager.Instance.LocalPlayer.RequestPointsUpdate(Points);
+            }
         }
 
         private void Start()
@@ -54,29 +59,30 @@ namespace Cgs.Play
 
         private void Update()
         {
-            if (roomInfoPanel.gameObject.activeSelf)
+            if (scoreboardPanel.gameObject.activeInHierarchy)
                 Refresh();
         }
 
+        [UsedImplicitly]
+        public void ChangePoints(string points)
+        {
+            if (int.TryParse(points, out var pointsInt) && pointsInt != Points)
+                Points = pointsInt;
+        }
+
+        [UsedImplicitly]
         public void Decrement()
         {
             Points--;
-            if (IsPointsOutOfSync)
-                CgsNetManager.Instance.LocalPlayer.RequestPointsUpdate(Points);
         }
 
+        [UsedImplicitly]
         public void Increment()
         {
             Points++;
-            if (IsPointsOutOfSync)
-                CgsNetManager.Instance.LocalPlayer.RequestPointsUpdate(Points);
         }
 
-        public void ToggleScorePanel()
-        {
-            roomInfoPanel.gameObject.SetActive(!roomInfoPanel.gameObject.activeSelf);
-        }
-
+        [UsedImplicitly]
         public void ToggleNameInput()
         {
             nameInputField.interactable = !nameInputField.interactable;
@@ -123,7 +129,7 @@ namespace Cgs.Play
                 .ToList();
             scoreContent.DestroyAllChildren();
             scoreContent.sizeDelta = new Vector2(scoreContent.sizeDelta.x,
-                ((RectTransform)scoreTemplate.transform).rect.height * scores.Count);
+                ((RectTransform) scoreTemplate.transform).rect.height * scores.Count);
             foreach ((string playerName, int points, string handCount) in scores)
             {
                 var entry = Instantiate(scoreTemplate.gameObject, scoreContent).GetComponent<ScoreTemplate>();

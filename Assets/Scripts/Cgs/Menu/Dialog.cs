@@ -81,6 +81,9 @@ namespace Cgs.Menu
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
             transform.SetAsLastSibling();
+            foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
+                canvasScaler.referenceResolution = ResolutionManager.Resolution;
+
             DisplayMessage(message);
         }
 

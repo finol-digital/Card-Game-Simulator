@@ -16,7 +16,7 @@ namespace Cgs.Cards
     public class SearchResults : MonoBehaviour
     {
         public static string InputPrompt => $"Search {CardGameManager.Current.Name} cards";
-        public const string CountSeparator = " / ";
+        private const string CountSeparator = " / ";
 
         public GameObject cardSearchMenuPrefab;
         public GameObject cardModelPrefab;
@@ -30,17 +30,25 @@ namespace Cgs.Cards
         {
             get
             {
+                var paddingRectOffset = layoutGroup.padding;
                 float padding = 0;
                 float spacing = 0;
-                float cardWidth = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X;
-                if (layoutGroup is HorizontalLayoutGroup horizontalLayoutGroup)
-                    spacing = horizontalLayoutGroup.spacing;
-                else if (layoutGroup is GridLayoutGroup gridLayoutGroup)
+                var cardWidth = CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X;
+                switch (layoutGroup)
                 {
-                    RectOffset gridPadding = gridLayoutGroup.padding;
-                    padding = gridPadding.left + gridPadding.right;
-                    spacing = gridLayoutGroup.spacing.x;
-                    cardWidth = gridLayoutGroup.cellSize.x;
+                    case HorizontalLayoutGroup horizontalLayoutGroup:
+                    {
+                        padding = paddingRectOffset.left + paddingRectOffset.right;
+                        spacing = horizontalLayoutGroup.spacing;
+                        break;
+                    }
+                    case GridLayoutGroup gridLayoutGroup:
+                    {
+                        padding = paddingRectOffset.left + paddingRectOffset.right;
+                        spacing = gridLayoutGroup.spacing.x;
+                        cardWidth = gridLayoutGroup.cellSize.x;
+                        break;
+                    }
                 }
 
                 return Mathf.FloorToInt((layoutArea.rect.width - padding + spacing) / (cardWidth + spacing));
@@ -67,15 +75,16 @@ namespace Cgs.Cards
             ? 0
             : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
 
-        private CardSearchMenu CardSearcher => _cardSearcher ??
-                                               (_cardSearcher = Instantiate(cardSearchMenuPrefab)
-                                                   .GetOrAddComponent<CardSearchMenu>());
+        private CardSearchMenu CardSearcher => _cardSearcher
+            ? _cardSearcher
+            : (_cardSearcher = Instantiate(cardSearchMenuPrefab)
+                .GetOrAddComponent<CardSearchMenu>());
 
         private CardSearchMenu _cardSearcher;
 
         private List<UnityCard> AllResults
         {
-            get => _allResults ?? (_allResults = new List<UnityCard>());
+            get => _allResults ??= new List<UnityCard>();
             set
             {
                 _allResults = value;

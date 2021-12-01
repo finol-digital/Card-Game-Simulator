@@ -327,7 +327,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0000068856884}
+  m_AnchoredPosition: {x: 0, y: -0.000006237622}
   m_SizeDelta: {x: 0, y: 450}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &114548541032664560
@@ -546,13 +546,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114865119356969238}
   m_TextComponent: {fileID: 114231109089655754}
   m_Placeholder: {fileID: 114649165175743938}
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 1
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -602,8 +602,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 340.31754, y: -150}
-  m_SizeDelta: {x: 680.6351, y: 150}
+  m_AnchoredPosition: {x: 851.5, y: -150}
+  m_SizeDelta: {x: 1703, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1164154321052668
 GameObject:
@@ -726,13 +726,13 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114654593875132798}
   m_TextComponent: {fileID: 114475587301136578}
   m_Placeholder: {fileID: 114563303390078622}
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 1
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -1514,8 +1514,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 340.31754, y: -300}
-  m_SizeDelta: {x: 680.6351, y: 150}
+  m_AnchoredPosition: {x: 851.5, y: -300}
+  m_SizeDelta: {x: 1703, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1437473217570656
 GameObject:
@@ -2701,8 +2701,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 340.31754, y: 0}
-  m_SizeDelta: {x: 680.6351, y: 150}
+  m_AnchoredPosition: {x: 851.5, y: 0}
+  m_SizeDelta: {x: 1703, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &222984315279105940
 CanvasRenderer:
@@ -3354,7 +3354,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 146.45624, y: 44.881752}
+  m_SizeDelta: {x: 153, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6619068237533905207
 CanvasRenderer:
@@ -4054,7 +4054,7 @@ PrefabInstance:
     - target: {fileID: 2971049404758727710, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 36.908768
+      value: 292.5
       objectReference: {fileID: 0}
     - target: {fileID: 2971049404758727710, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
@@ -4400,7 +4400,7 @@ PrefabInstance:
     - target: {fileID: 576404893160410038, guid: c35fca13280ec4344b2150cb17e647ca,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 460.72632
+      value: 1227.5
       objectReference: {fileID: 0}
     - target: {fileID: 576404893160410038, guid: c35fca13280ec4344b2150cb17e647ca,
         type: 3}
@@ -4462,7 +4462,7 @@ PrefabInstance:
     - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.99974257
       objectReference: {fileID: 0}
     - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
@@ -4582,7 +4582,7 @@ PrefabInstance:
     - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
       propertyPath: m_Size
-      value: 1
+      value: 0.99974257
       objectReference: {fileID: 0}
     - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}

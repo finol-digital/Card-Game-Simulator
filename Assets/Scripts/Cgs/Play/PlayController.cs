@@ -109,7 +109,7 @@ namespace Cgs.Play
         private void Update()
         {
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
-                CardGameManager.Instance.ModalCanvas != null || scoreboard.roomInfoPanel.gameObject.activeSelf)
+                CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
                 return;
 
             if (Inputs.IsOption)
