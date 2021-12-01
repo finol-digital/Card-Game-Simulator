@@ -116,14 +116,14 @@ jobs:
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-      - name: Install Zip
+      - name: Zip Build
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         uses: thedoctor0/zip-release@0.6.0
         with:
           type: 'zip'
           directory: build/${{ matrix.targetPlatform }}
           filename: cgs-${{ matrix.targetPlatform }}.zip
-      - name: Upload cgs-${{ matrix.targetPlatform }}.zip to GitHub Release
+      - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
@@ -183,13 +183,13 @@ jobs:
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
-      - name: Zip build/${{ matrix.targetPlatform }}
+      - name: Zip Build
         uses: papeloto/action-zip@v1
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           files: build/${{ matrix.targetPlatform }}/
           dest: build/cgs-${{ matrix.targetPlatform }}.zip
-      - name: Upload cgs-${{ matrix.targetPlatform }}.zip to GitHub Release
+      - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
@@ -238,13 +238,13 @@ jobs:
         with:
           name: cgs-StandaloneWindows64
           path: build/StandaloneWindows64
-      - name: Zip build/StandaloneWindows64
+      - name: Zip Build
         uses: papeloto/action-zip@v1
         if: github.event.action == 'published'
         with:
           files: build/StandaloneWindows64/
           dest: build/cgs-StandaloneWindows64.zip
-      - name: Upload cgs-StandaloneWindows64.zip to GitHub Release
+      - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published'
         with:
