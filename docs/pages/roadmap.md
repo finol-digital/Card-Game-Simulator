@@ -4,7 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.57
+## What's New - v1.58
 - Accessibility: Redesigned the Main Menu
 - Accessibility: Use icons instead of text when possible
 - Game-Play: Place decks in appropriate location in top-left

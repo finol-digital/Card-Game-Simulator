@@ -117,11 +117,10 @@ jobs:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
       - name: Zip build/${{ matrix.targetPlatform }}
-        uses: papeloto/action-zip@v1
+        uses: montudor/action-zip@v1
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
-          files: build/${{ matrix.targetPlatform }}/
-          dest: build/cgs-${{ matrix.targetPlatform }}.zip
+          args: zip -qq -r build/cgs-${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
       - name: Upload cgs-${{ matrix.targetPlatform }}.zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
