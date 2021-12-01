@@ -161,7 +161,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CmdCreateCardStack(deckName, cards.Select(card => card.Id).ToArray(), true,
-                CgsNetManager.Instance.playController.NextDeckPosition);
+                CgsNetManager.Instance.playController.NewDeckPosition);
         }
 
         public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position)

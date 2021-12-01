@@ -20,7 +20,7 @@ namespace Cgs.CardGameView.Multiplayer
         private const float RollDelay = 0.05f;
 
         public Text valueText;
-        public List<CanvasGroup> buttons;
+        public CanvasGroup buttonsCanvasGroup;
 
         [field: SyncVar] public int Min { get; set; }
 
@@ -194,22 +194,16 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void ShowButtons()
         {
-            foreach (CanvasGroup button in buttons)
-            {
-                button.alpha = 1;
-                button.interactable = true;
-                button.blocksRaycasts = true;
-            }
+            buttonsCanvasGroup.alpha = 1;
+            buttonsCanvasGroup.interactable = true;
+            buttonsCanvasGroup.blocksRaycasts = true;
         }
 
         private void HideButtons()
         {
-            foreach (CanvasGroup button in buttons)
-            {
-                button.alpha = 0;
-                button.interactable = false;
-                button.blocksRaycasts = false;
-            }
+            buttonsCanvasGroup.alpha = 0;
+            buttonsCanvasGroup.interactable = false;
+            buttonsCanvasGroup.blocksRaycasts = false;
         }
 
         [Command]

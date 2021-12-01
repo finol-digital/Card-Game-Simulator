@@ -6,27 +6,26 @@ permalink: roadmap.html
 
 ## What's New - v1.57
 - Accessibility: Redesigned the Main Menu
+- Accessibility: Use icons instead of text when possible
+- Game-Play: Place decks in appropriate location in top-left
 
 ## Active Sprint
 - Fix: Cards duplicated when drawn by multiple players
-- Fix: Error when trying to load deck after choosing not to load at start
 - Cards: Creation allows for jpg and text-only
-- Game-Play: Cards can Snap to Grid
-- Game-Play: Add number to deck name when it is duplicated
 - Video: CGS Custom Game Creation and Upload
 
 ## Next Sprint
+- Game-Play: Cards can Snap to Grid
 - Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
 - Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
 - Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
 
 ## Backlog
-- Game-Play: Support multiple card selection
-- Game-Play: Limited visibility of cards in stack
-- Game-Play: Option to have top of stack always revealed
-- Game-Play: Always create decks in a convenient location
 - Game-Play: Automatically create D6 by default, with option to modify dice afterwards
 - Game-Play: Unify controls for playable objects, and create an area to drop to delete
+- Game-Play: Option to have top of stack always revealed
+- Game-Play: Support multiple card selection
+- Game-Play: Limited visibility of cards in stack
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress

@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
@@ -24,7 +25,7 @@ namespace Cgs.Play
             get => _max;
             set
             {
-                _max = value;
+                _max = Math.Max(value, DefaultMin);
                 maxText.text = _max.ToString();
             }
         }
