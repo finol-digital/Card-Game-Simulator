@@ -1,3 +1,3 @@
-- Accessibility: Redesigned Menu Layouts
+- Accessibility: Redesigned Main Menu
 - Accessibility: Use icons instead of text when possible
 - Game-Play: Place decks in appropriate location in top-left
