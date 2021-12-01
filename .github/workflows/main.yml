@@ -118,11 +118,11 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
       - name: Install Zip
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
-        uses: montudor/action-zip@v1
-      - name: Zip build/${{ matrix.targetPlatform }}
-        if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
-        run: zip -qq -r cgs-${{ matrix.targetPlatform }}.zip StandaloneLinux64_BackUpThisFolder_ButDontShipItWithYourGame StandaloneLinux64_Data UnityPlayer.so GameAssembly.so StandaloneLinux64
-        working-directory: build/${{ matrix.targetPlatform }}
+        uses: thedoctor0/zip-release@0.6.0
+        with:
+          type: 'zip'
+          directory: build/${{ matrix.targetPlatform }}
+          filename: cgs-${{ matrix.targetPlatform }}.zip
       - name: Upload cgs-${{ matrix.targetPlatform }}.zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
