@@ -49,13 +49,13 @@ jobs:
         run: |
           echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
           echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Auto-Commit Changelog
+      - name: Auto-Commit Release Notes
         if: github.event.action == 'published'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: main
-          file_pattern: fastlane/metadata/android/en-US/changelogs/*
-          commit_message: Update Changelog
+          file_pattern: fastlane/metadata
+          commit_message: Update Release Notes
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}

@@ -1,3 +1,3 @@
-- Fix: Online Play
-- Fix: Desktop File Browser
-- Accessibility: Scale resolution/size of UI in Settings
+- Accessibility: Redesigned Main Menu
+- Accessibility: Use icons instead of text when possible
+- Game-Play: Place decks in appropriate location in top-left
