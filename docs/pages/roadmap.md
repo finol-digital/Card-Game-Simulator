@@ -16,13 +16,14 @@ permalink: roadmap.html
 - Cards: Input card id, set, and meta data when creating cards in-app
 - Cards: Allows jpg and use card back if no image is provided when creating cards in-app
 - Cards: Add ability to get an entire set of cards from a folder
-- Accessibility: Re-record tutorial video to expand on custom game creation and upload to the internet
+- Accessibility: Re-record tutorial video to expand on custom game creation with uploading to the internet
 
 ## Next Sprint
 - Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click
 - Game-Play: Account for playmat zoom and rotation in new deck position
 - Game-Play: Automatically create D6 by default; double click it to change number of faces
-- Game-Play: Unify controls for Playable Objects (Cards, Stacks, and Dice), and show a red zone up-top where they can be dropped to delete
+- Game-Play: Add Tokens, with settings for size, shape, and color. Also colorize dice.
+- Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
 - Game-Play: Use 2-fingers to move and rotate Stacks
 - Game-Play: Option to have top of stack always revealed
 - Game-Play: Limited visibility of cards in stack
@@ -41,7 +42,6 @@ permalink: roadmap.html
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
-- Game-Play: Custom colors for Dice
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
 - Cards: Popup card text on mouse hover over
