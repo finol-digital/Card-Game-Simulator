@@ -38,6 +38,7 @@ You can also create your own custom game(s) by following the [Custom Games Docum
 See the [current roadmap](roadmap.html). 
 
 Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or join our [Discord](https://discord.gg/MdUHEUJCU4). 
+Please also consider checking out [these projects](external.html).
 
 [![alt text][1.1]][1]
 [![alt text][2.1]][2]
@@ -52,7 +53,7 @@ Please send any additional feature requests/bug reports/other feedback to <david
 [5.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
 
 [1]: https://discord.gg/MdUHEUJCU4
-[2]: http://www.github.com/finoldigital
+[2]: http://www.github.com/finol-digital
 [3]: https://twitter.com/cardgamesim
 [4]: https://www.facebook.com/cardgamesimulator/
 [5]: https://www.reddit.com/r/CardGameSimulator/
