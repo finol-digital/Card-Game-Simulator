@@ -10,80 +10,77 @@ permalink: roadmap.html
 - Game-Play: Place decks in appropriate location in top-left
 
 ## Active Sprint
-- Fix: Cards duplicated when drawn by multiple players
-- Cards: Creation allows for jpg and text-only
-- Video: CGS Custom Game Creation and Upload
+- Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
+- Settings: Scrollable Settings Menu
+- Cards: Set custom card size and add meta data and when creating a custom game in-app
+- Cards: Input card id, set, and meta data when creating cards in-app
+- Cards: Allows jpg and use card back if no image is provided when creating cards in-app
+- Cards: Add ability to get an entire set of cards from a folder
+- Accessibility: Re-record tutorial video to expand on custom game creation and upload to the internet
 
 ## Next Sprint
-- Game-Play: Cards can Snap to Grid
-- Game-Play: Add submenu to control position, rotation, and zoom of playmat (see Tabletopia)
-- Game-Play: Control play area with 2 finger or right-click (see Tabletopia)
-- Game-Play: Play area zoom and rotation sliders in bottom corners (hidden by hand and with reset buttons) (compare Tabletopia)
+- Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click
+- Game-Play: Account for playmat zoom and rotation in new deck position
+- Game-Play: Automatically create D6 by default; double click it to change number of faces
+- Game-Play: Unify controls for Playable Objects (Cards, Stacks, and Dice), and show a red zone up-top where they can be dropped to delete
+- Game-Play: Use 2-fingers to move and rotate Stacks
+- Game-Play: Option to have top of stack always revealed
+- Game-Play: Limited visibility of cards in stack
+- Game-Play: Playable Objects can Snap to Grid
 
 ## Backlog
-- Game-Play: Automatically create D6 by default, with option to modify dice afterwards
-- Game-Play: Unify controls for playable objects, and create an area to drop to delete
-- Game-Play: Option to have top of stack always revealed
 - Game-Play: Support multiple card selection
-- Game-Play: Limited visibility of cards in stack
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress
 - Decks: Support organizing decks into folders
-- Game-Play: Use tap and hold to move stacks
-- Game-Play: Convert card to stack
-- Game-Play: Rotate card stacks
+- Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
+- Decks: Show error(s) when a card is not found
 - Game-Play: Support multiple playmats
-- Game-Play: Customize controls/input
-- Game-Play: Face-up cards in cards stacks
+- Game-Play: Convert card to stack
 - Game-Play: Pre-defined card zones/stacks
-- Cards: Move card to zone, stack, or drawer (E)
-- Tech: Add code coverage
+- Game-Play: Move card to zone, stack, or drawer (E)
+- Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Game-Play: Custom colors for Dice
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
 - Cards: Popup card text on mouse hover over
-- Cards Explorer: Add card properties in UI
+- Tech: Add code coverage
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
-- Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
-- Decks: Show error(s) when a card is not found
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 
 ## Icebox
+- Bug-Fix: Print PDF fails outside of the Unity Editor
 - Game-Play: Log all Player actions
-- Fix: Open PDF fails outside of the Unity Editor
-- Tech: Clear CgsNetPlayer on restart
+- Game-Play: Clear CgsNetPlayer on restart and move the restart to its own button in the Play Menu
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
-- Tech: Google Play Instant
 - Tech: Automate store images through Fastlane
 - Tech: Upgrade json schema version from v4 to v7
 - Tech: Use AllDecks.json for default games
 - Tech: SonarQube Scans
-- Accessibility: Alt-text with button name appears when hovering mouse over a button
-- Platforms: Networking on WebGL
-- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Deck Editor: Focus buttons move cards
+- Platforms: Productionize WebGL version by fixing size and enabling Multiplayer and Developer Mode
+- Cards: Apply autoUpdate to cached images
+- Cards: Set card image cache limit
+- Cards: Allow pre-fetching of card images
+- Cards: Support .svg images
+- Cards: Support default search filters
+- Cards: Support default sort
 - Cards Explorer: Search Results View Options
   - Text-only
   - Small Image
   - Large Image
-- Cards: Support default search filters
-- Cards: Support default sort
-- Deck Editor: Keep current page when orientation changes
 - Card Search Results: Keep viewing the currently selected card when orientation changes
-- Cards: Apply autoUpdate to cached images
-- Cards: Set card image cache limit
-- Cards: Allow pre-fetching of card images
+- Deck Editor: Keep current page when orientation changes
+- Deck Editor: Focus buttons move cards
+- Deck Editor: Organize cards by category when saving
 - Game-Play: Support grouping of dice
 - Game-Play: Automatically roll dice on phone shake
 - Game-Play: Allow automatic deletion of empty zones
-- Deck Editor: Organize cards by category when saving
-- Platforms: Display keyboard shortcuts/hotkeys in-app
-- Cards: Support .svg images
+- Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Integration: Support multiple languages (Spanish,Chinese)
-- Integration: Support different resolutions and languages for card images
 - Integration: NanDeck + Squib + Magic Set Editor
 - Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice/CardWarden
 - Platforms: Support Tilt Five
