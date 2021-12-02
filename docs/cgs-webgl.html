@@ -5,6 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Card Game Simulator</title>
     <link rel="stylesheet" type="text/css" media="screen" href="/assets/css/style.css">
+    <style>
+      p {text-align: center;}
+    </style>
   </head>
   <body>
 
@@ -17,34 +20,23 @@
     </div>
 
     <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>This page is experimental, and we recommend you <a href="https://cgs.link">get CGS from the appropriate app store</a>.</p><br/>
-        <canvas id="unity-canvas" width=960 height=600 style="width: 960px; height: 600px; background: url('WebGL/WebGL.jpg') center / cover"></canvas>
-        <script src="WebGL/WebGL.loader.js"></script>
-        <script>
-          createUnityInstance(document.querySelector("#unity-canvas"), {
-            dataUrl: "WebGL/WebGL.data",
-            frameworkUrl: "WebGL/WebGL.framework.js",
-            codeUrl: "WebGL/WebGL.wasm",
-            streamingAssetsUrl: "StreamingAssets",
-            companyName: "Finol Digital LLC",
-            productName: "Card Game Simulator",
-            productVersion: "1.x",
-            // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-            // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-          });
-        </script>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Card Game Simulator maintained by <a href="https://github.com/finol-digital">finol-digital</a></p>
-        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+	<p>This page is experimental, and we recommend you <a href="https://cgs.link">get CGS from the appropriate app store</a>.</p>
+	<br/>
+	<canvas id="unity-canvas" width=960 height=600 style="width: 960px; height: 600px; background: url('WebGL/WebGL.jpg') center / cover"></canvas>
+	<script src="WebGL/WebGL.loader.js"></script>
+	<script>
+	  createUnityInstance(document.querySelector("#unity-canvas"), {
+		dataUrl: "WebGL/WebGL.data",
+		frameworkUrl: "WebGL/WebGL.framework.js",
+		codeUrl: "WebGL/WebGL.wasm",
+		streamingAssetsUrl: "StreamingAssets",
+		companyName: "Finol Digital LLC",
+		productName: "Card Game Simulator",
+		productVersion: "1.x",
+		// matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+		// devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+	  });
+	</script>
     
   </body>
 </html>

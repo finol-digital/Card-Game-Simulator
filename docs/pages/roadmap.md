@@ -61,7 +61,7 @@ permalink: roadmap.html
 - Tech: Upgrade json schema version from v4 to v7
 - Tech: Use AllDecks.json for default games
 - Tech: SonarQube Scans
-- Platforms: Productionize WebGL version by fixing size and enabling Multiplayer and Developer Mode
+- Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit
 - Cards: Allow pre-fetching of card images
