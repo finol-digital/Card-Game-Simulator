@@ -7,7 +7,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Main Menu
 - **Cancel**: *Esc* - Exit CGS.
-- **Horizontal**/**Vertical**: ARROWS or WASD  - Navigate Main Menu buttons.
+- **Horizontal**/**Vertical**: ARROWS or WASD - Navigate Main Menu buttons.
 - **Page-Vertical/Horizontal**: *PgUp*, *PgDn*, *Home*, *End* or ZXCV - Select previous/next card game.
 - **Sort**: *q* or *j* - Select previous card game.
 - **Filter**: *f* or *\\* - Select next card game.
@@ -113,3 +113,5 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Settings
 - **Cancel**: *Esc* - Back to Main Menu.
+- **Horizontal**/**Vertical**: ARROWS or WASD - Navigate Settings buttons.
+- **Submit**: *Enter* - Click on selected button.

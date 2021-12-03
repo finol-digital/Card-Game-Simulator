@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -71,8 +72,20 @@ namespace Cgs.Menu
 
         private void Update()
         {
-            if (Inputs.IsCancel)
-                BackToMainMenu();
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
+
+            if ((Inputs.IsVertical || Inputs.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(resolutionDropdown.gameObject);
+            }
+            else if (Inputs.IsCancel)
+            {
+                if (EventSystem.current.currentSelectedGameObject == null)
+                    BackToMainMenu();
+                else if (!EventSystem.current.alreadySelecting)
+                    EventSystem.current.SetSelectedGameObject(null);
+            }
         }
 
         public void SetResolution(int resolutionIndex)
