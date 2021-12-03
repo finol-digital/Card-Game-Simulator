@@ -19,7 +19,7 @@ permalink: roadmap.html
 - Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click
 - Game-Play: Account for playmat zoom and rotation in new deck position
 - Game-Play: Automatically create D6 by default; double click it to change number of faces
-- Game-Play: Add Tokens, with settings for size, shape, and color. Also colorize dice.
+- Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
 - Game-Play: Use 2-fingers to move and rotate Stacks
 - Game-Play: Option to have top of stack always revealed
