@@ -4,14 +4,11 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.62
-- Accessibility: Redesigned Main Menu
-- Accessibility: Use icons instead of text when possible
-- Game-Play: Place decks in appropriate location in top-left
+## What's New - v1.63
+- Settings: Scrollable Settings Menu
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
-- Settings: Scrollable Settings Menu
 - Cards: Set custom card size and add meta data and when creating a custom game in-app
 - Cards: Input card id, set, and meta data when creating cards in-app
 - Cards: Allows jpg and use card back if no image is provided when creating cards in-app
