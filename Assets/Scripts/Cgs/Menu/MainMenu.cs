@@ -67,10 +67,10 @@ namespace Cgs.Menu
 
         private DownloadMenu _downloader;
 
-        private CreateMenu Creator =>
-            _creator ? _creator : (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<CreateMenu>());
+        private GameCreationMenu Creator =>
+            _creator ? _creator : (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<GameCreationMenu>());
 
-        private CreateMenu _creator;
+        private GameCreationMenu _creator;
 
         private void OnEnable()
         {
@@ -132,7 +132,8 @@ namespace Cgs.Menu
                 else if (Inputs.IsPageRight && !Inputs.WasPageRight)
                     SelectNext();
             }
-            else if (Inputs.IsHorizontal && EventSystem.current.currentSelectedGameObject == null)
+            else if (Inputs.IsHorizontal && EventSystem.current.currentSelectedGameObject == null ||
+                     EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject)
             {
                 if (Inputs.IsLeft && !Inputs.WasLeft)
                     SelectPrevious();
@@ -209,6 +210,7 @@ namespace Cgs.Menu
                 return;
             gameManagement.SetActive(!gameManagement.activeSelf);
             versionInfo.SetActive(gameManagement.activeSelf);
+            EventSystem.current.SetSelectedGameObject(null);
 #endif
         }
 

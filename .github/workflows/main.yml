@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       workflow_mode:
-        description: 'targetPlatform OR release [targetPlatform]'
+        description: '[release] [Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL, StandaloneWindows, WSAPlayer, StandaloneWindows64, Steam]'
         required: false
         default: ''
 
@@ -314,21 +314,18 @@ jobs:
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+          MATCH_REPOSITORY: ${{ secrets.MATCH_REPOSITORY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
           USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
-          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_REPOSITORY: finol-digital/certificates
           IOS_APP_ID: com.finoldigital.CardGameSim
           IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
           PROJECT_NAME: Card Game Simulator
         run: |
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
-          eval "$(ssh-agent -s)"
-          ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           bundle install
           bundle exec fastlane ios release
 

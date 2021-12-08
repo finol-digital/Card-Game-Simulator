@@ -13,13 +13,13 @@ end
 
 platform :ios do
 
-  desc "Push a new release build to the App Store"
+  desc "Deliver a new Release build to the App Store"
   lane :release do
     build
     deliver
   end
 
-  desc "Submit a new Beta Build to Apple TestFlight"
+  desc "Deliver a new Beta build to Apple TestFlight"
   lane :beta do
     build
     upload_to_testflight(skip_waiting_for_build_processing: true)

@@ -2593,6 +2593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a40e2ef3334bd044a833a50317bc35fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scrollRect: {fileID: 993860725}
   resolutionDropdown: {fileID: 881546529}
   screenOsControlToggle: {fileID: 1161983931}
   screenAutoRotateToggle: {fileID: 811276926}

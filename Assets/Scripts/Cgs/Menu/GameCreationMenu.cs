@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using CardGameDef;
@@ -19,7 +20,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {
-    public class CreateMenu : Modal
+    public class GameCreationMenu : Modal
     {
         public const string DownloadBannerImage = "Download Banner Image";
         public const string DownloadBannerImagePrompt = "Enter banner image url...";
@@ -68,6 +69,45 @@ namespace Cgs.Menu
 
         private readonly CardGame _game = new CardGame(null);
 
+        [UsedImplicitly]
+        public string Width
+        {
+            get => _width.ToString(CultureInfo.InvariantCulture);
+            set
+            {
+                if (float.TryParse(value, out var width) && width > 0)
+                    _width = width;
+                else
+                    Debug.LogWarning("Attempted to set invalid card width: " + value);
+            }
+        }
+
+        private float _width = 2.5f;
+
+        [UsedImplicitly]
+        public string Height
+        {
+            get => _height.ToString(CultureInfo.InvariantCulture);
+            set
+            {
+                if (float.TryParse(value, out var height) && height > 0)
+                    _height = height;
+                else
+                    Debug.LogWarning("Attempted to set invalid card height: " + value);
+            }
+        }
+
+        private float _height = 3.5f;
+
+        [UsedImplicitly]
+        public int BannerImageFileType { get; set; }
+
+        [UsedImplicitly]
+        public int CardBackImageFileType { get; set; }
+
+        [UsedImplicitly]
+        public int PlayMatImageFileType { get; set; }
+
         private void Update()
         {
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
@@ -113,7 +153,8 @@ namespace Cgs.Menu
 #elif ENABLE_WINMD_SUPPORT
             ImportBannerImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
-            var paths = StandaloneFileBrowser.OpenFilePanel(SelectBannerImageFilePrompt, string.Empty, string.Empty, false);
+            var paths =
+ StandaloneFileBrowser.OpenFilePanel(SelectBannerImageFilePrompt, string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportBannerImageFromFile(paths[0]);
             else
@@ -181,7 +222,8 @@ namespace Cgs.Menu
 #elif ENABLE_WINMD_SUPPORT
             ImportCardBackImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
-            var paths = StandaloneFileBrowser.OpenFilePanel(SelectCardBackImageFilePrompt, string.Empty, string.Empty, false);
+            var paths =
+ StandaloneFileBrowser.OpenFilePanel(SelectCardBackImageFilePrompt, string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportCardBackImageFromFile(paths[0]);
             else
@@ -249,7 +291,8 @@ namespace Cgs.Menu
 #elif ENABLE_WINMD_SUPPORT
             ImportPlayMatImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
-            var paths = StandaloneFileBrowser.OpenFilePanel(SelectPlayMatImageFilePrompt, string.Empty, string.Empty, false);
+            var paths =
+ StandaloneFileBrowser.OpenFilePanel(SelectPlayMatImageFilePrompt, string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportPlayMatImageFromFile(paths[0]);
             else
@@ -322,7 +365,12 @@ namespace Cgs.Menu
 
             var newCardGame = new UnityCardGame(CardGameManager.Instance, gameName)
             {
-                AutoUpdate = -1, BannerImageUrl = _game.BannerImageUrl, CardBackImageUrl = _game.CardBackImageUrl,
+                AutoUpdate = -1, CardSize = new Float2(_width, _height),
+                BannerImageFileType = BannerImageFileType == 0 ? "png" : "jpg",
+                BannerImageUrl = _game.BannerImageUrl,
+                CardBackImageFileType = CardBackImageFileType == 0 ? "png" : "jpg",
+                CardBackImageUrl = _game.CardBackImageUrl,
+                PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg",
                 PlayMatImageUrl = _game.PlayMatImageUrl
             };
 

@@ -29,12 +29,12 @@ Upload a new Android version to the Google Play Store
 ```
 fastlane ios release
 ```
-Push a new release build to the App Store
+Deliver a new Release build to the App Store
 ### ios beta
 ```
 fastlane ios beta
 ```
-Submit a new Beta Build to Apple TestFlight
+Deliver a new Beta build to Apple TestFlight
 ### ios build
 ```
 fastlane ios build
