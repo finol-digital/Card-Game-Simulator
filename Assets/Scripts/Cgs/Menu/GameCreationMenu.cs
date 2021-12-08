@@ -370,6 +370,7 @@ namespace Cgs.Menu
                 BannerImageUrl = _game.BannerImageUrl,
                 CardBackImageFileType = CardBackImageFileType == 0 ? "png" : "jpg",
                 CardBackImageUrl = _game.CardBackImageUrl,
+                CardSetIdentifier = "setCode",
                 PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg",
                 PlayMatImageUrl = _game.PlayMatImageUrl
             };

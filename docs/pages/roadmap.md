@@ -6,13 +6,12 @@ permalink: roadmap.html
 
 ## What's New - v1.63
 - Settings: Scrollable Settings Menu
+- Cards: Set custom card size and image file types when creating a custom game in-app
+- Cards: Input card and set code when creating cards in-app
+- Cards: Add ability to get an entire set of cards from a folder
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
-- Cards: Set custom card size and add meta data and when creating a custom game in-app
-- Cards: Input card id, set, and meta data when creating cards in-app
-- Cards: Allows jpg and use card back if no image is provided when creating cards in-app
-- Cards: Add ability to get an entire set of cards from a folder
 - Accessibility: Re-record tutorial video to expand on custom game creation with uploading to the internet
 
 ## Next Sprint

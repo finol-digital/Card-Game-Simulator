@@ -33,6 +33,8 @@ namespace Cgs.Cards
 
         public GameObject downloadMenuPrefab;
         public List<InputField> inputFields;
+        public InputField cardIdInputField;
+        public InputField setCodeInputField;
         public Image cardImage;
         public Button createButton;
 
@@ -49,6 +51,19 @@ namespace Cgs.Cards
         }
 
         private Uri _cardImageUri;
+
+        private Sprite CardImageSprite
+        {
+            get => _cardImageSprite;
+            set
+            {
+                if (_cardImageSprite != null)
+                    Destroy(_cardImageSprite);
+                _cardImageSprite = value;
+            }
+        }
+
+        private Sprite _cardImageSprite;
 
         private DownloadMenu Downloader => _downloader
             ? _downloader
@@ -77,6 +92,8 @@ namespace Cgs.Cards
         public void Show(UnityAction onCreationCallback)
         {
             Show();
+            setCodeInputField.text = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
+            cardImage.sprite = CardImageSprite != null ? CardImageSprite : CardGameManager.Current.CardBackImageSprite;
             _onCreationCallback = onCreationCallback;
         }
 
@@ -100,7 +117,8 @@ namespace Cgs.Cards
 #elif ENABLE_WINMD_SUPPORT
             ImportCardImageFromFile(UwpFileBrowser.OpenFilePanel());
 #elif UNITY_STANDALONE_LINUX
-            var paths = StandaloneFileBrowser.OpenFilePanel(SelectCardImageFilePrompt, string.Empty, string.Empty, false);
+            var paths =
+ StandaloneFileBrowser.OpenFilePanel(SelectCardImageFilePrompt, string.Empty, string.Empty, false);
             if (paths.Length > 0)
                 ImportCardImageFromFile(paths[0]);
             else
@@ -135,12 +153,11 @@ namespace Cgs.Cards
         private IEnumerator UpdateCardImage()
         {
             // NOTE: Memory Leak Potential
-            Sprite newSprite = null;
             yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
                 UnityFileMethods.CreateAndOutputSpriteFromImageFile(CardImageUri?.AbsoluteUri)
-                , output => newSprite = output);
-            if (newSprite != null)
-                cardImage.sprite = newSprite;
+                , output => CardImageSprite = output);
+            if (CardImageSprite != null)
+                cardImage.sprite = CardImageSprite;
             else
                 Debug.LogWarning(ImageCreationFailedWarningMessage);
         }
@@ -165,8 +182,13 @@ namespace Cgs.Cards
 
             createButton.interactable = false;
 
-            var card = new UnityCard(CardGameManager.Current, Guid.NewGuid().ToString().ToUpper(), CardName,
-                Set.DefaultCode, null, false) {ImageWebUrl = CardImageUri.AbsoluteUri};
+            var card = new UnityCard(CardGameManager.Current,
+                    string.IsNullOrEmpty(cardIdInputField.text)
+                        ? Guid.NewGuid().ToString().ToUpper()
+                        : cardIdInputField.text, CardName,
+                    string.IsNullOrEmpty(setCodeInputField.text) ? Set.DefaultCode : setCodeInputField.text, null,
+                    false)
+                {ImageWebUrl = CardImageUri.AbsoluteUri};
             yield return UnityFileMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);
 
             if (!File.Exists(card.ImageFilePath))
