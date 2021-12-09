@@ -9,14 +9,14 @@ permalink: roadmap.html
 - Cards: Set custom card size and image file types when creating a custom game in-app
 - Cards: Input card and set code when creating cards in-app
 - Cards: Add ability to get an entire set of cards from a folder
+- Accessibility: Re-record tutorial video to expand on custom game creation with uploading to the internet
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
-- Accessibility: Re-record tutorial video to expand on custom game creation with uploading to the internet
-
-## Next Sprint
 - Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click
 - Game-Play: Account for playmat zoom and rotation in new deck position
+
+## Next Sprint
 - Game-Play: Automatically create D6 by default; double click it to change number of faces
 - Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
