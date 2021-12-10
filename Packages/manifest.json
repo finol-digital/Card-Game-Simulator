@@ -20,6 +20,7 @@
     "com.unity.ugui": "1.0.0",
     "com.yasirkula.nativegallery": "https://github.com/yasirkula/UnityNativeGallery.git",
     "com.yasirkula.nativeshare": "https://github.com/yasirkula/UnityNativeShare.git",
+	"com.yasirkula.simplefilebrowser": "https://github.com/yasirkula/UnitySimpleFileBrowser.git",
     "jillejr.newtonsoft.json-for-unity": "12.0.301",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",

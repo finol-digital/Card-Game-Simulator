@@ -14,23 +14,37 @@ namespace Cgs.Menu
         public Text progressText;
 
         private UnityCardGame _game;
+        private IProgressible _progressible;
 
         private void Update()
         {
-            if (_game == null)
+            if (_game != null)
             {
-                Debug.LogError("ProgressBar::MissingCardGame");
+                progressBar.fillAmount = _game.DownloadProgress;
+                progressText.text = _game.DownloadStatus;
+            }
+            else if (_progressible != null)
+            {
+                progressBar.fillAmount = _progressible.ProgressPercentage;
+                progressText.text = _progressible.ProgressStatus;
+            }
+            else
+            {
+                Debug.LogError("ProgressBar::MissingIProgressible");
                 Hide();
             }
-
-            progressBar.fillAmount = _game.DownloadProgress;
-            progressText.text = _game.DownloadStatus;
         }
 
         public void Show(UnityCardGame gameToDownload)
         {
             Show();
             _game = gameToDownload;
+        }
+
+        public void Show(IProgressible progressible)
+        {
+            Show();
+            _progressible = progressible;
         }
 
         public override void Hide()

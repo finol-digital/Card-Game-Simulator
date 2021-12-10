@@ -14,6 +14,7 @@ permalink: roadmap.html
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
 - Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click
+- Game-Play: Adde expected player count to determine rotation for each new player
 - Game-Play: Account for playmat zoom and rotation in new deck position
 
 ## Next Sprint

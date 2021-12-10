@@ -172,10 +172,10 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void StartImport()
         {
-            StartCoroutine(CreateCard());
+            StartCoroutine(ImportCard());
         }
 
-        private IEnumerator CreateCard()
+        private IEnumerator ImportCard()
         {
             ValidateImportButton();
             if (!createButton.interactable)

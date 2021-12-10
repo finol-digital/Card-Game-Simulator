@@ -166,7 +166,7 @@ namespace Cgs
 
         private Dialog _messenger;
 
-        private ProgressBar Progress
+        public ProgressBar Progress
         {
             get
             {

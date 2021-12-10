@@ -114,6 +114,13 @@
       "dependencies": {},
       "hash": "9b1575d6e126b98b79b58c487e8cfd09125d1e3b"
     },
+    "com.yasirkula.simplefilebrowser": {
+      "version": "https://github.com/yasirkula/UnitySimpleFileBrowser.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "333c21cbf0acc31e049bfa4b1e84abb57ed200e2"
+    },
     "jillejr.newtonsoft.json-for-unity": {
       "version": "12.0.301",
       "depth": 0,

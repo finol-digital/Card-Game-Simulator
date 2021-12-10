@@ -265,7 +265,7 @@ namespace CardGameDef.Unity
                     if (!string.IsNullOrEmpty(AllDecksUrlDataIdentifier))
                     {
                         JToken childProcessor = root;
-                        foreach (string childName in AllDecksUrlDataIdentifier.Split(new[] { '.' },
+                        foreach (string childName in AllDecksUrlDataIdentifier.Split(new[] {'.'},
                             StringSplitOptions.RemoveEmptyEntries))
                             (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
                         dataContainer = childProcessor as JArray;
@@ -357,7 +357,7 @@ namespace CardGameDef.Unity
                     // Get it from the response header if we can
                     if (headers.TryGetValue(AllCardsUrlPageCountIdentifier, out string pageCount) &&
                         int.TryParse(pageCount, out int pageCountInt))
-                        AllCardsUrlPageCount = Mathf.CeilToInt(pageCountInt / (float)AllCardsUrlPageCountDivisor);
+                        AllCardsUrlPageCount = Mathf.CeilToInt(pageCountInt / (float) AllCardsUrlPageCountDivisor);
                     else // Or load it from the json if we have to
                         LoadCards(page);
                 }
@@ -391,7 +391,7 @@ namespace CardGameDef.Unity
             var daysSinceUpdate = 0;
             try
             {
-                daysSinceUpdate = (int)DateTime.Today.Subtract(File.GetLastWriteTime(GameFilePath).Date).TotalDays;
+                daysSinceUpdate = (int) DateTime.Today.Subtract(File.GetLastWriteTime(GameFilePath).Date).TotalDays;
             }
             catch
             {
@@ -480,12 +480,12 @@ namespace CardGameDef.Unity
                 if (!string.IsNullOrEmpty(dataId))
                 {
                     JToken childProcessor = root;
-                    foreach (string childName in dataId.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string childName in dataId.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries))
                         (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
                     dataContainer = childProcessor;
                 }
                 else
-                    dataContainer = root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues();
+                    dataContainer = root as JArray ?? (IJEnumerable<JToken>) ((JObject) root).PropertyValues();
 
                 if (dataContainer != null)
                     foreach (JToken jToken in dataContainer)
@@ -524,7 +524,7 @@ namespace CardGameDef.Unity
                 AllCardsUrlPageCount = allCardsUrlPageCount;
                 if (AllCardsUrlPageCountDivisor > 0)
                     AllCardsUrlPageCount =
-                        Mathf.CeilToInt(((float)AllCardsUrlPageCount) / AllCardsUrlPageCountDivisor);
+                        Mathf.CeilToInt(((float) AllCardsUrlPageCount) / AllCardsUrlPageCountDivisor);
             }
             catch (Exception e)
             {
@@ -606,16 +606,16 @@ namespace CardGameDef.Unity
                     _ => isImagePropertyList ? PropertyType.StringList : PropertyType.String
                 };
 
-                var imageDef = new PropertyDef(imageDefName, imagePropertyType) { Properties = childProperties };
+                var imageDef = new PropertyDef(imageDefName, imagePropertyType) {Properties = childProperties};
                 PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDefName);
                 if (isImagePropertyObject && metaProperties.TryGetValue(
                     imageDefName + PropertyDef.ObjectDelimiter + childName,
                     out PropertyDefValuePair cardObjectImageEntry))
                     cardImageWebUrl = cardObjectImageEntry.Value ?? string.Empty;
-                else if (metaProperties.TryGetValue(CardImageProperty.Split(new[] { '[' }, StringSplitOptions.None)[0],
+                else if (metaProperties.TryGetValue(CardImageProperty.Split(new[] {'['}, StringSplitOptions.None)[0],
                     out PropertyDefValuePair cardImageEntry))
                     cardImageWebUrl =
-                        (cardImageEntry.Value ?? string.Empty).Split(new[] { EnumDef.Delimiter },
+                        (cardImageEntry.Value ?? string.Empty).Split(new[] {EnumDef.Delimiter},
                             StringSplitOptions.None)[0];
                 else
                     Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
@@ -671,7 +671,7 @@ namespace CardGameDef.Unity
 
             try
             {
-                var newProperty = new PropertyDefValuePair() { Def = property };
+                var newProperty = new PropertyDefValuePair() {Def = property};
                 string listValue;
                 JToken listTokens;
                 JObject jObject;
@@ -695,7 +695,7 @@ namespace CardGameDef.Unity
                     case PropertyType.ObjectList:
                         foreach (PropertyDef childProperty in property.Properties)
                         {
-                            newProperty = new PropertyDefValuePair() { Def = childProperty };
+                            newProperty = new PropertyDefValuePair() {Def = childProperty};
                             listValue = string.Empty;
                             Dictionary<string, PropertyDefValuePair> values =
                                 new Dictionary<string, PropertyDefValuePair>();
@@ -727,7 +727,7 @@ namespace CardGameDef.Unity
                         break;
                     case PropertyType.Object:
                         jObject = cardJToken[property.Name] as JObject;
-                        if (jObject is { HasValues: true })
+                        if (jObject is {HasValues: true})
                             PopulateCardProperties(cardProperties, cardJToken[property.Name], property.Properties,
                                 key + PropertyDef.ObjectDelimiter);
                         else
@@ -750,7 +750,7 @@ namespace CardGameDef.Unity
                         else
                         {
                             foreach (string token in (cardJToken.Value<string>(property.Name) ?? string.Empty).Split(
-                                new[] { property.Delimiter }, StringSplitOptions.RemoveEmptyEntries))
+                                new[] {property.Delimiter}, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 if (!string.IsNullOrEmpty(listValue))
                                     listValue += EnumDef.Delimiter;
@@ -785,7 +785,7 @@ namespace CardGameDef.Unity
         private void PopulateEmptyCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties,
             PropertyDef property, string key)
         {
-            cardProperties[key] = new PropertyDefValuePair() { Def = property, Value = string.Empty };
+            cardProperties[key] = new PropertyDefValuePair() {Def = property, Value = string.Empty};
             foreach (PropertyDef childProperty in property.Properties)
                 PopulateEmptyCardProperty(cardProperties, childProperty,
                     key + PropertyDef.ObjectDelimiter + childProperty.Name);
@@ -803,7 +803,7 @@ namespace CardGameDef.Unity
             if (dataIdentifier.Contains('.'))
             {
                 JToken childProcessor = cardJToken;
-                string[] parentNames = CardSetIdentifier.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] parentNames = CardSetIdentifier.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
                 for (var i = 0; i < parentNames.Length - 1; i++)
                     (childProcessor as JObject)?.TryGetValue(parentNames[i], out childProcessor);
                 cardJToken = childProcessor;
@@ -848,8 +848,8 @@ namespace CardGameDef.Unity
             {
                 string codesCsv = cardJToken?.Value<string>(dataIdentifier) ?? defaultSetCode;
                 string namesCsv = cardJToken?.Value<string>(CardSetNameIdentifier) ?? codesCsv;
-                string[] codes = codesCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                string[] names = namesCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] codes = codesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                string[] names = namesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
                 for (var i = 0; i < codes.Length; i++)
                 {
                     string code = codes[i];
@@ -909,7 +909,7 @@ namespace CardGameDef.Unity
                 LoadCardFromJToken(jToken, setCode);
         }
 
-        public void Add(UnityCard card)
+        public void Add(UnityCard card, bool writeAllCardsJson = true)
         {
             bool isReprint = CardNameIsUnique && CardNames.Contains(card.Name);
             if (!isReprint)
@@ -919,25 +919,27 @@ namespace CardGameDef.Unity
             if (!Sets.ContainsKey(card.SetCode))
                 LoadedSets[card.SetCode] = new Set(card.SetCode, card.SetCode);
 
-            WriteAllCardsJson();
+            if (writeAllCardsJson)
+                WriteAllCardsJson();
         }
 
-        private void WriteAllCardsJson()
+        public void WriteAllCardsJson()
         {
             string allCardsJson = JsonConvert.SerializeObject(Cards.Values.ToList(), SerializerSettings);
             File.WriteAllText(CardsFilePath, allCardsJson);
         }
 
-        public void Remove(Card card)
+        public void Remove(Card card, bool writeAllCardsJson = true)
         {
             if (card?.Id != null)
-                Remove(card.Id);
+                Remove(card.Id, writeAllCardsJson);
         }
 
-        private void Remove(string cardId)
+        private void Remove(string cardId, bool writeAllCardsJson = true)
         {
             LoadedCards.Remove(cardId);
-            WriteAllCardsJson();
+            if (writeAllCardsJson)
+                WriteAllCardsJson();
         }
 
         public IEnumerable<UnityCard> FilterCards(CardSearchFilters filters)
@@ -951,7 +953,7 @@ namespace CardGameDef.Unity
             foreach (UnityCard card in Cards.Values)
             {
                 if (!string.IsNullOrEmpty(filters.Name) && !filters.Name.ToLower().Split(
-                    new[] { CardSearchFilters.Delimiter },
+                    new[] {CardSearchFilters.Delimiter},
                     StringSplitOptions.RemoveEmptyEntries).All(card.Name.ToLower().Contains))
                     continue;
                 if (!string.IsNullOrEmpty(filters.Id) && !card.Id.ToLower().Contains(filters.Id.ToLower()))
