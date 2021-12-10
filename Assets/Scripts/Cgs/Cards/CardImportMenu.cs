@@ -19,7 +19,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {
-    public class CardCreationMenu : Modal
+    public class CardImportMenu : Modal
     {
         public const string DownloadCardImage = "Download Card Image";
         public const string DownloadCardImagePrompt = "Enter card image url...";
@@ -29,7 +29,7 @@ namespace Cgs.Cards
         public const string SelectCardImageFilePrompt = "Select Card Image File";
 #endif
         public const string ImportImageWarningMessage = "No image file selected for import!";
-        public const string ImageCreationFailedWarningMessage = "Failed to get the image! Unable to create the card.";
+        public const string ImageImportFailedWarningMessage = "Failed to get the image! Unable to import the card.";
 
         public GameObject downloadMenuPrefab;
         public List<InputField> inputFields;
@@ -46,7 +46,7 @@ namespace Cgs.Cards
             set
             {
                 _cardImageUri = value;
-                ValidateCreateButton();
+                ValidateImportButton();
             }
         }
 
@@ -80,7 +80,7 @@ namespace Cgs.Cards
                 return;
 
             if ((Inputs.IsSubmit || Inputs.IsNew) && createButton.interactable)
-                StartCreation();
+                StartImport();
             if (Inputs.IsLoad && createButton.interactable)
                 DownloadCardImageFromWeb();
             if (Inputs.IsSave && createButton.interactable)
@@ -159,24 +159,25 @@ namespace Cgs.Cards
             if (CardImageSprite != null)
                 cardImage.sprite = CardImageSprite;
             else
-                Debug.LogWarning(ImageCreationFailedWarningMessage);
+                Debug.LogWarning(ImageImportFailedWarningMessage);
         }
 
-        private void ValidateCreateButton()
+        [UsedImplicitly]
+        public void ValidateImportButton()
         {
             createButton.interactable =
                 !string.IsNullOrEmpty(CardName) && CardImageUri != null && CardImageUri.IsAbsoluteUri;
         }
 
         [UsedImplicitly]
-        public void StartCreation()
+        public void StartImport()
         {
             StartCoroutine(CreateCard());
         }
 
         private IEnumerator CreateCard()
         {
-            ValidateCreateButton();
+            ValidateImportButton();
             if (!createButton.interactable)
                 yield break;
 
@@ -193,14 +194,14 @@ namespace Cgs.Cards
 
             if (!File.Exists(card.ImageFilePath))
             {
-                Debug.LogWarning(ImageCreationFailedWarningMessage);
+                Debug.LogWarning(ImageImportFailedWarningMessage);
                 yield break;
             }
 
             CardGameManager.Current.Add(card);
             _onCreationCallback?.Invoke();
 
-            ValidateCreateButton();
+            ValidateImportButton();
             Hide();
         }
     }

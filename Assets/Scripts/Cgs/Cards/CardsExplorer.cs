@@ -2,11 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using Cgs.CardGameView;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -15,17 +17,35 @@ namespace Cgs.Cards
 {
     public class CardsExplorer : MonoBehaviour
     {
-        public GameObject cardCreationMenuPrefab;
+        public const string CardSetDecisionPrompt = "Import Singe Card or Set of Cards?";
+        public const string SingleCard = "Single Card";
+        public const string SetOfCards = "Set of Cards";
+
+        public GameObject cardSetImportModalPrefab;
+        public GameObject cardImportMenuPrefab;
+        public GameObject setImportMenuPrefab;
         public GameObject cardViewerPrefab;
         public Image bannerImage;
         public List<GameObject> editButtons;
         public SearchResults searchResults;
 
-        private CardCreationMenu CardCreator => _cardCreator
-            ? _cardCreator
-            : _cardCreator = Instantiate(cardCreationMenuPrefab).GetOrAddComponent<CardCreationMenu>();
+        private DecisionModal ImportModal => _importModal
+            ? _importModal
+            : _importModal = Instantiate(cardSetImportModalPrefab).GetOrAddComponent<DecisionModal>();
 
-        private CardCreationMenu _cardCreator;
+        private DecisionModal _importModal;
+
+        private CardImportMenu CardImporter => _cardImporter
+            ? _cardImporter
+            : _cardImporter = Instantiate(cardImportMenuPrefab).GetOrAddComponent<CardImportMenu>();
+
+        private CardImportMenu _cardImporter;
+
+        private SetImportMenu SetImporter => _setImporter
+            ? _setImporter
+            : _setImporter = Instantiate(setImportMenuPrefab).GetOrAddComponent<SetImportMenu>();
+
+        private SetImportMenu _setImporter;
 
         private void OnEnable()
         {
@@ -45,7 +65,7 @@ namespace Cgs.Cards
             else if (Inputs.IsFilter)
                 searchResults.ShowSearchMenu();
             else if (Inputs.IsNew)
-                ShowCardCreationMenu();
+                ShowImportModal();
             else if (Inputs.IsCancel)
                 BackToMainMenu();
         }
@@ -60,9 +80,20 @@ namespace Cgs.Cards
         }
 
         [UsedImplicitly]
-        public void ShowCardCreationMenu()
+        public void ShowImportModal()
         {
-            CardCreator.Show(searchResults.Search);
+            ImportModal.Show(CardSetDecisionPrompt, new Tuple<string, UnityAction>(SingleCard, ShowCardImportMenu),
+                new Tuple<string, UnityAction>(SetOfCards, ShowSetImportMenu));
+        }
+
+        private void ShowCardImportMenu()
+        {
+            CardImporter.Show(searchResults.Search);
+        }
+
+        private void ShowSetImportMenu()
+        {
+            SetImporter.Show(searchResults.Search);
         }
 
         [UsedImplicitly]

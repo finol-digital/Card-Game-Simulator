@@ -248,7 +248,7 @@ RectTransform:
   - {fileID: 1272889841}
   - {fileID: 1473139181}
   m_Father: {fileID: 508283652}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -327,7 +327,7 @@ RectTransform:
   - {fileID: 1956308802}
   - {fileID: 1385403561}
   m_Father: {fileID: 508283652}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -646,10 +646,10 @@ RectTransform:
   - {fileID: 931411704}
   - {fileID: 1198789063}
   - {fileID: 1782536895}
-  - {fileID: 7858367718469537993}
   - {fileID: 294750915}
-  - {fileID: 1606626926}
+  - {fileID: 7858367718469537993}
   - {fileID: 101628742}
+  - {fileID: 1606626926}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -670,7 +670,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24310abe0ee01ff429fae5577df9ab6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardCreationMenuPrefab: {fileID: 7821632309527891152, guid: cafd3a7bba711f44d95d40ed78851829,
+  cardSetImportModalPrefab: {fileID: 5810182567772607080, guid: 864bd2a9f44369e488e6d6f6edc1582e,
+    type: 3}
+  cardImportMenuPrefab: {fileID: 7821632309527891152, guid: cafd3a7bba711f44d95d40ed78851829,
+    type: 3}
+  setImportMenuPrefab: {fileID: 2398510357189043983, guid: 9bc39dcd2680bde4fab89ce05e86ddfb,
     type: 3}
   cardViewerPrefab: {fileID: 1205983077926924, guid: 04f1873b7f6a8324887109e8e76da3d7,
     type: 3}
@@ -2103,7 +2107,12 @@ PrefabInstance:
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ShowCardCreationMenu
+      value: ShowImportModal
+      objectReference: {fileID: 0}
+    - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.Cards.CardsExplorer, Cgs
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096016, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -2113,7 +2122,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_Name
-      value: Create Button
+      value: Import Button
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096018, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -2494,6 +2503,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Card Searchbar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8035886151956225691, guid: f21d26d7d58ad754090ee1fa5ed1746c,
+        type: 3}
+      propertyPath: m_Text
+      value: Search <Game:Name> cards
       objectReference: {fileID: 0}
     - target: {fileID: 8036524127044591431, guid: f21d26d7d58ad754090ee1fa5ed1746c,
         type: 3}

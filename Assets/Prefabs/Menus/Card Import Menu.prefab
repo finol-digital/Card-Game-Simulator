@@ -586,7 +586,7 @@ GameObject:
   - component: {fileID: 7861161494511266388}
   - component: {fileID: 4118894267374975462}
   m_Layer: 5
-  m_Name: Card Create Menu
+  m_Name: Card Import Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1449,7 +1449,12 @@ PrefabInstance:
     - target: {fileID: 837295728007186336, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartCreation
+      value: StartImport
+      objectReference: {fileID: 0}
+    - target: {fileID: 837295728007186336, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.Cards.CardImportMenu, Cgs
       objectReference: {fileID: 0}
     - target: {fileID: 837295728007186336, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
@@ -1589,7 +1594,7 @@ PrefabInstance:
     - target: {fileID: 1636765640200764539, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 100
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 1636765640200764539, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
@@ -1888,7 +1893,7 @@ PrefabInstance:
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ValidateCreateButton
+      value: ValidateImportButton
       objectReference: {fileID: 0}
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
@@ -1899,6 +1904,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: set_CardName
+      objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.Cards.CardImportMenu, Cgs
       objectReference: {fileID: 0}
     - target: {fileID: 4768883952711561113, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
@@ -2262,7 +2272,7 @@ PrefabInstance:
     - target: {fileID: 1758299397351345693, guid: 40676e8920314bd46b8603e701fc1165,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1758299397351345693, guid: 40676e8920314bd46b8603e701fc1165,
         type: 3}
@@ -2412,12 +2422,12 @@ PrefabInstance:
     - target: {fileID: 66792000574508518, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}
       propertyPath: m_Name
-      value: CardCreation Label
+      value: ImportCard Label
       objectReference: {fileID: 0}
     - target: {fileID: 858674133167794374, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}
       propertyPath: m_Text
-      value: Card Creation
+      value: Import Card
       objectReference: {fileID: 0}
     - target: {fileID: 9063206868995599585, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}
