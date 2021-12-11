@@ -7,14 +7,14 @@ permalink: roadmap.html
 ## What's New - v1.63
 - Settings: Scrollable Settings Menu
 - Cards: Set custom card size and image file types when creating a custom game in-app
-- Cards: Input card and set code when creating cards in-app
-- Cards: Add ability to get an entire set of cards from a folder
-- Accessibility: Re-record tutorial video to expand on custom game creation with uploading to the internet
+- Cards: Input card and set code when importing cards
+- Cards: Add ability to import an entire set of cards from a folder
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
-- Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click
-- Game-Play: Adde expected player count to determine rotation for each new player
+- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
+- Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click; locks
+- Game-Play: Add expected player count to determine rotation for each new player
 - Game-Play: Account for playmat zoom and rotation in new deck position
 
 ## Next Sprint
@@ -46,6 +46,7 @@ permalink: roadmap.html
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
+- Game-Play: Tournament Support (PoQ?)
 
 ## Icebox
 - Bug-Fix: Print PDF fails outside of the Unity Editor
