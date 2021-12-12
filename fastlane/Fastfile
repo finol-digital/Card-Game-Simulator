@@ -36,8 +36,8 @@ platform :ios do
     match(
       type: 'appstore',
       storage_mode: 'git',
-      git_url: ENV['MATCH_URL']
-	  git_basic_authorization: ENV['MATCH_GIT_BASIC_AUTHORIZATION'],
+      git_url: ENV['MATCH_URL'],
+      git_basic_authorization: ENV['MATCH_GIT_BASIC_AUTHORIZATION'],
       app_identifier: ENV['IOS_APP_ID']
     )
     update_code_signing_settings(
