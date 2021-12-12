@@ -37,6 +37,7 @@ platform :ios do
       type: "appstore",
       storage_mode: "git",
       git_url: "git@github.com:#{ENV['MATCH_REPOSITORY']}.git",
+	  git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
       app_identifier: ENV["IOS_APP_ID"]
     )
     update_code_signing_settings(
