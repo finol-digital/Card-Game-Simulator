@@ -36,7 +36,7 @@ platform :ios do
     match(
       type: 'appstore',
       storage_mode: 'git',
-      git_url: "git@github.com:#{ENV['MATCH_REPOSITORY']}.git",
+      git_url: ENV['MATCH_URL']
 	  git_basic_authorization: ENV['MATCH_GIT_BASIC_AUTHORIZATION'],
       app_identifier: ENV['IOS_APP_ID']
     )
