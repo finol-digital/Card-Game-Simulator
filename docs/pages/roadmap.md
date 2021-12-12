@@ -4,11 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.63
-- Settings: Scrollable Settings Menu
-- Cards: Set custom card size and image file types when creating a custom game in-app
-- Cards: Input card and set code when importing cards
-- Cards: Add ability to import an entire set of cards from a folder
+## What's New - v1.64
+
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
@@ -52,7 +49,6 @@ permalink: roadmap.html
 - Game-Play: Tournament Support (PoQ?)
 
 ## Icebox
-- Bug-Fix: Print PDF fails outside of the Unity Editor
 - Game-Play: Log all Player actions
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own button in the Play Menu
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)

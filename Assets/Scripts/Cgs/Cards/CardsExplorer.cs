@@ -17,7 +17,7 @@ namespace Cgs.Cards
 {
     public class CardsExplorer : MonoBehaviour
     {
-        public const string CardSetDecisionPrompt = "Import Singe Card or Set of Cards?";
+        public const string CardSetDecisionPrompt = "Import Single Card or Set of Cards?";
         public const string SingleCard = "Single Card";
         public const string SetOfCards = "Set of Cards";
 
