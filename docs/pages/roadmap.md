@@ -16,7 +16,7 @@ permalink: roadmap.html
 - Game-Play: Rotate and Zoom the playmat
   - Sliders in the bottom left and right control rotation and zoom, respectively
   - Lock buttons next to each slider will prevent changes
-  - Control both with 2-fingers; Control rotation with right-click; Control zoom with mouse wheel
+  - Control both with 2-fingers; Control both with right-stick; Control rotation with right-click; Control zoom with mouse wheel
   - Auto-rotate the playmat based on player count
   - Account for playmat zoom and rotation in new deck position
 
