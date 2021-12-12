@@ -13,9 +13,12 @@ permalink: roadmap.html
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
 - Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
-- Game-Play: Add sliders for rotation and zoom in the bottom left and right, respectively; control both with 2-fingers; control rotation with right-click; locks
-- Game-Play: Add expected player count to determine rotation for each new player
-- Game-Play: Account for playmat zoom and rotation in new deck position
+- Game-Play: Rotate and Zoom the playmat
+  - Sliders in the bottom left and right control rotation and zoom, respectively
+  - Lock buttons next to each slider will prevent changes
+  - Control both with 2-fingers; Control rotation with right-click; Control zoom with mouse wheel
+  - Auto-rotate the playmat based on player count
+  - Account for playmat zoom and rotation in new deck position
 
 ## Next Sprint
 - Game-Play: Automatically create D6 by default; double click it to change number of faces
