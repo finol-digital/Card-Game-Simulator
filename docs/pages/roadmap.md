@@ -5,7 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.64
-
+- Game-Creation: Add rules url
+- Game-Creation: Create and Edit buttons available with Developer Mode
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
