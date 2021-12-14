@@ -56,6 +56,8 @@ namespace Cgs.Menu
 
         // ReSharper disable once NotAccessedField.Global
         public GameObject createButton;
+        // ReSharper disable once NotAccessedField.Global
+        public GameObject editButton;
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
@@ -80,6 +82,7 @@ namespace Cgs.Menu
         private void Start()
         {
             createButton.SetActive(Settings.DeveloperMode);
+            editButton.SetActive(Settings.DeveloperMode);
 #if UNITY_WEBGL
             joinButton.interactable = false;
 #endif
@@ -176,7 +179,12 @@ namespace Cgs.Menu
             else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 ToggleGameManagement();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
-                ExploreCards();
+            {
+                if (gameManagement.activeSelf && editButton.activeSelf)
+                    Edit();
+                else
+                    ExploreCards();
+            }
             else if (Inputs.IsOption)
             {
                 if (gameManagement.activeSelf)
@@ -233,6 +241,14 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
+        public void Create()
+        {
+            if (Time.timeSinceLevelLoad < StartBufferTime)
+                return;
+            Creator.Show();
+        }
+
+        [UsedImplicitly]
         public void Download()
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
@@ -241,11 +257,11 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Create()
+        public void Edit()
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            Creator.Show();
+            // TODO: Creator.Edit();
         }
 
         [UsedImplicitly]
