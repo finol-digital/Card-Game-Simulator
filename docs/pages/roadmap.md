@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.64
 - Game-Creation: Add rules url
-- Game-Creation: Create and Edit buttons available with Developer Mode
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
@@ -28,6 +27,7 @@ permalink: roadmap.html
 - Game-Play: Playable Objects can Snap to Grid
 
 ## Backlog
+- Game-Creation: Edit Button in Main Menu
 - Game-Play: Support multiple card selection
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
