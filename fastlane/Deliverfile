@@ -22,6 +22,6 @@ submission_information({
 
 
 for_platform :mac do
-  platform "osx"
+  platform 'osx'
   pkg "#{ENV['PROJECT_NAME']}.pkg"
 end

@@ -29,15 +29,16 @@ platform :ios do
   lane :build do
     setup_ci
     app_store_connect_api_key(
-      key_id: ENV["APPSTORE_KEY_ID"],
-      issuer_id: ENV["APPSTORE_ISSUER_ID"],
+      key_id: ENV['APPSTORE_KEY_ID'],
+      issuer_id: ENV['APPSTORE_ISSUER_ID'],
       key_content: ENV['APPSTORE_P8']
     )
     match(
-      type: "appstore",
-      storage_mode: "git",
-      git_url: "git@github.com:#{ENV['MATCH_REPOSITORY']}.git",
-      app_identifier: ENV["IOS_APP_ID"]
+      type: 'appstore',
+      storage_mode: 'git',
+      git_url: ENV['MATCH_URL'],
+      git_basic_authorization: Base64.strict_encode64("#{ENV['APPLE_CONNECT_EMAIL']}:#{ENV['MATCH_PERSONAL_ACCESS_TOKEN']}"),
+      app_identifier: ENV['IOS_APP_ID']
     )
     update_code_signing_settings(
       use_automatic_signing: true,
@@ -46,7 +47,7 @@ platform :ios do
     update_code_signing_settings(
       use_automatic_signing: false,
       team_id: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_team-id"],
-      code_sign_identity: "iPhone Distribution",
+      code_sign_identity: 'iPhone Distribution',
       targets: 'Unity-iPhone',
       path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
       profile_name: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_profile-name"],
@@ -54,8 +55,8 @@ platform :ios do
     )
     build_app(
       project: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
-      scheme: "Unity-iPhone",
-      xcargs: "-allowProvisioningUpdates"
+      scheme: 'Unity-iPhone',
+      xcargs: '-allowProvisioningUpdates'
     )
   end
 
@@ -69,7 +70,7 @@ platform :mac do
     update_plist(
       plist_path: "#{ENV['MAC_BUILD_PATH']}/StandaloneOSX.app/Contents/Info.plist",
       block: proc do |plist|
-        plist[:CFBundleVersion] = "9" + plist["CFBundleVersion"]
+        plist[:CFBundleVersion] = '9' + plist['CFBundleVersion']
       end
     )
   end
@@ -77,8 +78,8 @@ platform :mac do
   desc "Upload a new Mac version to the Mac App Store"
   lane :macupload do
     app_store_connect_api_key(
-      key_id: ENV["APPSTORE_KEY_ID"],
-      issuer_id: ENV["APPSTORE_ISSUER_ID"],
+      key_id: ENV['APPSTORE_KEY_ID'],
+      issuer_id: ENV['APPSTORE_ISSUER_ID'],
       key_content: ENV['APPSTORE_P8']
     )
     deliver

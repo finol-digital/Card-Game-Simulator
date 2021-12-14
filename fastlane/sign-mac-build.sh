@@ -4,12 +4,12 @@ echo "Setting up macOS certificates..."
 sleep 10
 
 KEYCHAIN_FILE=macos.keychain
-KEYCHAIN_PASSWORD=cicd
-MAC_APPLICATION_CERTIFICATE_P12=mac_application.p12
+KEYCHAIN_PASSWORD=$(openssl rand -base64 12)
+APPLE_DISTRIBUTION_CERTIFICATE_P12=apple_distribution.p12
 MAC_INSTALLER_CERTIFICATE_P12=mac_installer.p12
 
 # Recreate the certificates from the secure environment variable
-echo $MAC_APPLICATION_CERTIFICATE | base64 --decode > $MAC_APPLICATION_CERTIFICATE_P12
+echo $APPLE_DISTRIBUTION_CERTIFICATE | base64 --decode > $APPLE_DISTRIBUTION_CERTIFICATE_P12
 echo $MAC_INSTALLER_CERTIFICATE | base64 --decode > $MAC_INSTALLER_CERTIFICATE_P12
 
 # Create a keychain
@@ -22,7 +22,7 @@ security default-keychain -s $KEYCHAIN_FILE
 security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_FILE
 
 # Import the certificates
-security import $MAC_APPLICATION_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $MAC_APPLICATION_PASSWORD -A
+security import $APPLE_DISTRIBUTION_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $APPLE_DISTRIBUTION_PASSWORD -A
 security import $MAC_INSTALLER_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $MAC_INSTALLER_PASSWORD -A
 
 # Fix for OS X Sierra that hangs in the codesign step

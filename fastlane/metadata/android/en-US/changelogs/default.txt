@@ -1,3 +1,4 @@
-- Accessibility: Redesigned Main Menu
-- Accessibility: Use icons instead of text when possible
-- Game-Play: Place decks in appropriate location in top-left
+- Settings: Scrollable Settings Menu
+- Cards: Set custom card size and image file types when creating a custom game in-app
+- Cards: Input card and set code when importing cards
+- Cards: Add ability to import an entire set of cards from a folder
