@@ -36,5 +36,18 @@ namespace Cgs.Menu
             button2.onClick.AddListener(Hide);
             text2.text = button2Text;
         }
+
+        private void Update()
+        {
+            if (!IsFocused)
+                return;
+
+            if (Inputs.IsSubmit || Inputs.IsNew)
+                button1.onClick.Invoke();
+            if (Inputs.IsLoad || Inputs.IsSave)
+                button2.onClick.Invoke();
+            else if (Inputs.IsCancel || Inputs.IsOption)
+                Hide();
+        }
     }
 }
