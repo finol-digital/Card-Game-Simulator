@@ -244,7 +244,7 @@ namespace Cgs.CardGameView.Multiplayer
                 PopCard();
 
             CardModel.CreateDrag(eventData, cardModelPrefab, transform, card, true,
-                CgsNetManager.Instance.playController.playArea);
+                CgsNetManager.Instance.playController.playMat);
 
             RemovePointer(eventData);
         }

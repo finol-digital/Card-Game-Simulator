@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ScrollRects
+namespace Cgs.ScrollRects
 {
     public enum CardScrollDirection
     {

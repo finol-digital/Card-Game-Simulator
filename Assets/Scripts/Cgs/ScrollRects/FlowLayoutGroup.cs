@@ -6,7 +6,7 @@ using UnityEngine.UI;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedType.Global
 
-namespace ScrollRects
+namespace Cgs.ScrollRects
 {
     [AddComponentMenu("Layout/Flow Layout Group", 153)]
     public class FlowLayoutGroup : LayoutGroup
@@ -92,8 +92,6 @@ namespace ScrollRects
 
 
         private int _cellsPerMainAxis, _actualCellCountX, _actualCellCountY;
-        private int _positionX;
-        private int _positionY;
         private float _totalWidth;
         private float _totalHeight;
 

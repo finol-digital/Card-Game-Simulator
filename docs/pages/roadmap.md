@@ -5,18 +5,16 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.64
+- Game-Play: Rotate and Zoom the playmat
+  - Left Slider for Rotation and Right Slider for Zoom
+  - Reset with buttons next to rotation and zoom sliders 
+  - Control both with 2-fingers; Control rotation with right-click and zoom with mouse wheel
+  - Account for playmat rotation and zoom in new deck position
+  - Auto-rotate the playmat based on player count
+- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
-- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
-- Game-Play: Rotate and Zoom the playmat
-  - Sliders in the bottom left and right control rotation and zoom, respectively
-  - Lock buttons next to each slider will prevent changes
-  - Control both with 2-fingers; Control both with right-stick; Control rotation with right-click; Control zoom with mouse wheel
-  - Auto-rotate the playmat based on player count
-  - Account for playmat zoom and rotation in new deck position
-
-## Next Sprint
 - Game-Play: Automatically create D6 by default; double click it to change number of faces
 - Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete

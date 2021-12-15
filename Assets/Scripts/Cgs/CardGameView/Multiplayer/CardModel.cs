@@ -35,7 +35,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
                                                                && transform.parent == CgsNetManager.Instance
-                                                                   .playController.playArea.transform;
+                                                                   .playController.playMat.transform;
 
         private bool IsProcessingSecondaryDragAction =>
             PointerDragOffsets.Count > 1

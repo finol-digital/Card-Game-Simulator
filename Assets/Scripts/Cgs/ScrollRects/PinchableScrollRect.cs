@@ -4,16 +4,23 @@ using Cgs.CardGameView.Multiplayer;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace ScrollRects
+namespace Cgs.ScrollRects
 {
     public class PinchableScrollRect : SecondaryScrollView, IPointerEnterHandler, IPointerExitHandler
     {
-        public const float MinZoom = 0.66f;
-        public const float MaxZoom = 1.5f;
-        public const float ZoomLerpSpeed = 7.5f;
-        public const float MouseWheelSensitivity = 0.1f;
+        private const float MinZoom = 0.66f; // Also in PlayMatZoom slider
+        private const float MaxZoom = 1.33f; // Also in PlayMatZoom slider
+        private const float ZoomLerpSpeed = 7.5f;
+        private const float MouseWheelSensitivity = 0.2f;
 
-        public List<Vector2> Touches { get; private set; } = new List<Vector2>();
+        // ReSharper disable once MemberCanBePrivate.Global
+        public List<Vector2> Touches { get; set; } = new List<Vector2>();
+
+        public float CurrentZoom
+        {
+            get => _currentZoom;
+            set => _currentZoom = Mathf.Clamp(value, MinZoom, MaxZoom);
+        }
 
         private float _currentZoom = 1;
         private bool _isPinching;
@@ -71,8 +78,7 @@ namespace ScrollRects
                 RectTransform content1 = content;
                 Rect rect = content1.rect;
 
-                _currentZoom *= 1 + scrollWheelInput * MouseWheelSensitivity;
-                _currentZoom = Mathf.Clamp(_currentZoom, MinZoom, MaxZoom);
+               CurrentZoom *= 1 + scrollWheelInput * MouseWheelSensitivity;
                 _startPinchScreenPosition = Input.mousePosition;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(content, _startPinchScreenPosition, null,
                     out _startPinchCenterPosition);
@@ -85,8 +91,8 @@ namespace ScrollRects
             }
 
             // Scale to zoom
-            if (Mathf.Abs(content.localScale.x - _currentZoom) > 0.001f)
-                content.localScale = Vector3.Lerp(content.localScale, Vector3.one * _currentZoom,
+            if (Mathf.Abs(content.localScale.x - CurrentZoom) > 0.001f)
+                content.localScale = Vector3.Lerp(content.localScale, Vector3.one * CurrentZoom,
                     ZoomLerpSpeed * Time.deltaTime);
         }
 
@@ -102,7 +108,7 @@ namespace ScrollRects
             Rect rect = content1.rect;
 
             _startPinchDist = Distance(Touches[0], Touches[1]) * content1.localScale.x;
-            _startPinchZoom = _currentZoom;
+            _startPinchZoom = CurrentZoom;
             _startPinchScreenPosition = (Touches[0] + Touches[1]) / 2;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(content1, _startPinchScreenPosition, null,
                 out _startPinchCenterPosition);
@@ -119,8 +125,7 @@ namespace ScrollRects
         private void OnPinch()
         {
             float currentPinchDist = Distance(Touches[0], Touches[1]) * content.localScale.x;
-            _currentZoom = (currentPinchDist / _startPinchDist) * _startPinchZoom;
-            _currentZoom = Mathf.Clamp(_currentZoom, MinZoom, MaxZoom);
+            CurrentZoom = (currentPinchDist / _startPinchDist) * _startPinchZoom;
         }
 
         private float Distance(Vector2 pos1, Vector2 pos2)

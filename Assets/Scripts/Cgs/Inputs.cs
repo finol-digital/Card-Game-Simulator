@@ -52,10 +52,12 @@ namespace Cgs
 
         public static bool IsOption => Input.GetButtonDown(Option);
 
+        public static float FPageVertical => Input.GetAxis(PageVertical);
         public static bool IsPageVertical => Math.Abs(Input.GetAxis(PageVertical)) > Tolerance;
         public static bool IsPageDown => Input.GetAxis(PageVertical) < 0;
         public static bool IsPageUp => Input.GetAxis(PageVertical) > 0;
 
+        public static float FPageHorizontal => Input.GetAxis(PageHorizontal);
         public static bool IsPageHorizontal => Math.Abs(Input.GetAxis(PageHorizontal)) > Tolerance;
         public static bool IsPageLeft => Input.GetAxis(PageHorizontal) < 0;
         public static bool IsPageRight => Input.GetAxis(PageHorizontal) > 0;

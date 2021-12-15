@@ -14,6 +14,7 @@ using Cgs.Decks;
 using Cgs.Menu;
 using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
+using Cgs.ScrollRects;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -44,7 +45,8 @@ namespace Cgs.Play
 
         public Transform stackViewers;
 
-        public CardZone playArea;
+        public PinchableScrollRect playArea;
+        public CardZone playMat;
         public List<CardDropArea> playDropZones;
         public CardDrawer drawer;
         public PlayMenu menu;
@@ -66,7 +68,7 @@ namespace Cgs.Play
                 var nextDeckPosition = left + up - ((RectTransform)playArea.transform).anchoredPosition;
                 var nextOffset = new Rect(nextDeckPosition, cardSize);
                 while (AllCardStacks.Any(stack =>
-                    (new Rect(stack.transform.localPosition, cardSize)).Overlaps(nextOffset)))
+                           (new Rect(stack.transform.localPosition, cardSize)).Overlaps(nextOffset)))
                 {
                     nextDeckPosition +=
                         Vector2.down * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) +
@@ -78,7 +80,7 @@ namespace Cgs.Play
             }
         }
 
-        private CardStack[] AllCardStacks => playArea.GetComponentsInChildren<CardStack>();
+        private CardStack[] AllCardStacks => playMat.GetComponentsInChildren<CardStack>();
 
         private LobbyMenu Lobby =>
             _lobby ? _lobby : _lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
@@ -122,7 +124,7 @@ namespace Cgs.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
-            playArea.OnAddCardActions.Add(AddCardToPlay);
+            playMat.OnAddCardActions.Add(AddCardToPlay);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             if (CardGameManager.Instance.IsSearchingForServer)
@@ -163,16 +165,16 @@ namespace Cgs.Play
 
         public void ResetPlayArea()
         {
-            var rectTransform = (RectTransform) playArea.transform;
+            var rectTransform = (RectTransform) playMat.transform;
             if (!NetworkManager.singleton.isNetworkActive)
                 rectTransform.DestroyAllChildren();
             else if (CgsNetManager.Instance.LocalPlayer != null && CgsNetManager.Instance.LocalPlayer.isServer)
             {
-                foreach (CardStack cardStack in playArea.GetComponentsInChildren<CardStack>())
+                foreach (CardStack cardStack in playMat.GetComponentsInChildren<CardStack>())
                     NetworkServer.UnSpawn(cardStack.gameObject);
-                foreach (CardModel cardModel in playArea.GetComponentsInChildren<CardModel>())
+                foreach (CardModel cardModel in playMat.GetComponentsInChildren<CardModel>())
                     NetworkServer.UnSpawn(cardModel.gameObject);
-                foreach (Die die in playArea.GetComponentsInChildren<Die>())
+                foreach (Die die in playMat.GetComponentsInChildren<Die>())
                     NetworkServer.UnSpawn(die.gameObject);
                 rectTransform.DestroyAllChildren();
             }
@@ -180,7 +182,7 @@ namespace Cgs.Play
             var size = new Vector2(CardGameManager.Current.PlayMatSize.X,
                 CardGameManager.Current.PlayMatSize.Y);
             rectTransform.sizeDelta = size * CardGameManager.PixelsPerInch;
-            playArea.GetComponent<Image>().sprite = CardGameManager.Current.PlayMatImageSprite;
+            playMat.GetComponent<Image>().sprite = CardGameManager.Current.PlayMatImageSprite;
         }
 
         public void ShowDeckMenu()
@@ -202,7 +204,7 @@ namespace Cgs.Play
         {
             foreach (var card in deck.Cards)
             foreach (var gameBoardCard in CardGameManager.Current.GameBoardCards.Where(boardCard =>
-                card.Id.Equals(boardCard.Card)))
+                         card.Id.Equals(boardCard.Card)))
                 CreateGameBoards(gameBoardCard.Boards);
 
             Dictionary<string, List<Card>> extraGroups = deck.GetExtraGroups();
@@ -254,7 +256,7 @@ namespace Cgs.Play
         {
             var newBoard = new GameObject(board.Id, typeof(RectTransform));
             var boardRectTransform = (RectTransform) newBoard.transform;
-            boardRectTransform.SetParent(playArea.transform);
+            boardRectTransform.SetParent(playMat.transform);
             boardRectTransform.anchorMin = Vector2.zero;
             boardRectTransform.anchorMax = Vector2.zero;
             boardRectTransform.offsetMin =
@@ -276,7 +278,7 @@ namespace Cgs.Play
 
         public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position)
         {
-            var playAreaTransform = playArea.transform;
+            var playAreaTransform = playMat.transform;
             var cardStack = Instantiate(cardStackPrefab, playAreaTransform.parent).GetComponent<CardStack>();
             if (!string.IsNullOrEmpty(stackName))
                 cardStack.Name = stackName;
@@ -355,7 +357,7 @@ namespace Cgs.Play
 
         public Die CreateDie(int min, int max)
         {
-            var playAreaTransform = playArea.transform;
+            var playAreaTransform = playMat.transform;
             var die = Instantiate(diePrefab, playAreaTransform.parent).GetOrAddComponent<Die>();
             die.transform.SetParent(playAreaTransform);
             die.Min = min;
@@ -365,7 +367,7 @@ namespace Cgs.Play
 
         public void OnDrop(CardModel cardModel)
         {
-            AddCardToPlay(playArea, cardModel);
+            AddCardToPlay(playMat, cardModel);
         }
 
         [UsedImplicitly]
