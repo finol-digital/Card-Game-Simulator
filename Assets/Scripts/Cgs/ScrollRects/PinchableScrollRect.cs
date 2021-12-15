@@ -13,6 +13,23 @@ namespace Cgs.ScrollRects
         private const float ZoomLerpSpeed = 7.5f;
         private const float MouseWheelSensitivity = 0.2f;
 
+        private const float MinRotation = -180;
+        private const float MaxRotation = 180;
+
+        public float CurrentRotation
+        {
+            get => _currentEulerAngles.z;
+            set
+            {
+                _currentEulerAngles = Vector3.forward * Mathf.Clamp(value, MinRotation, MaxRotation);
+                _currentRotation.eulerAngles = _currentEulerAngles;
+                content.rotation = _currentRotation;
+            }
+        }
+
+        private Vector3 _currentEulerAngles = Vector3.zero;
+        private Quaternion _currentRotation = Quaternion.identity;
+
         // ReSharper disable once MemberCanBePrivate.Global
         public List<Vector2> Touches { get; set; } = new List<Vector2>();
 
@@ -78,7 +95,7 @@ namespace Cgs.ScrollRects
                 RectTransform content1 = content;
                 Rect rect = content1.rect;
 
-               CurrentZoom *= 1 + scrollWheelInput * MouseWheelSensitivity;
+                CurrentZoom *= 1 + scrollWheelInput * MouseWheelSensitivity;
                 _startPinchScreenPosition = Input.mousePosition;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(content, _startPinchScreenPosition, null,
                     out _startPinchCenterPosition);

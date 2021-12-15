@@ -327,8 +327,8 @@ namespace Cgs.CardGameView
 
         public void SetImageSprite(Sprite imageSprite)
         {
-            foreach (Image cardImage in cardImages)
-                cardImage.sprite = imageSprite ?? CardGameManager.Current.CardBackImageSprite;
+            foreach (var cardImage in cardImages)
+                cardImage.sprite = imageSprite ? imageSprite : CardGameManager.Current.CardBackImageSprite;
         }
 
         public void OnPointerDown(PointerEventData eventData)

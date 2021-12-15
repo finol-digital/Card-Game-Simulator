@@ -16,7 +16,7 @@ namespace Cgs.Play
         public Slider slider;
         public CanvasGroup sliderCanvasGroup;
 
-        private const float PageHorizontalSensitivity = 0.2f;
+        private const float PageHorizontalSensitivity = 45f;
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 2f;
 
@@ -31,10 +31,9 @@ namespace Cgs.Play
         private void Update()
         {
             // Update Visuals
-            if (false)//(Math.Abs(slider.value - _playController.playMat.transform.localRotation.eulerAngles.z) > Tolerance)
+            if (Math.Abs(slider.value - _playController.playArea.CurrentRotation) > Tolerance)
             {
-                // TODO
-                slider.value = _playController.playArea.CurrentZoom;
+                slider.value = _playController.playArea.CurrentRotation;
                 _timeSinceChange = 0;
             }
             else
@@ -59,21 +58,22 @@ namespace Cgs.Play
                 return;
 
             if (Inputs.IsPageHorizontal)
-                _playController.playMat.transform.rotation = Quaternion.identity; // TODO
+                _playController.playArea.CurrentRotation +=
+                    Time.deltaTime * Inputs.FPageHorizontal * PageHorizontalSensitivity;
         }
 
         [UsedImplicitly]
         public void UpdateRotation(float rotation)
         {
             _timeSinceChange = 0;
-            _playController.playMat.transform.rotation = Quaternion.identity; // TODO
+            _playController.playArea.CurrentRotation = rotation;
         }
 
         [UsedImplicitly]
         public void ResetRotation()
         {
             _timeSinceChange = 0;
-            _playController.playMat.transform.rotation = Quaternion.identity;
+            _playController.playArea.CurrentRotation = 0;
         }
     }
 }
