@@ -99,14 +99,13 @@ namespace Cgs.Menu
 
         private float _height = 3.5f;
 
-        [UsedImplicitly]
-        public int BannerImageFileType { get; set; }
+        [UsedImplicitly] public int BannerImageFileType { get; set; }
 
-        [UsedImplicitly]
-        public int CardBackImageFileType { get; set; }
+        [UsedImplicitly] public int CardBackImageFileType { get; set; }
 
-        [UsedImplicitly]
-        public int PlayMatImageFileType { get; set; }
+        [UsedImplicitly] public int PlayMatImageFileType { get; set; }
+
+        [UsedImplicitly] public string RulesUrl { get; set; }
 
         private void Update()
         {
@@ -372,7 +371,8 @@ namespace Cgs.Menu
                 CardBackImageUrl = _game.CardBackImageUrl,
                 CardSetIdentifier = "setCode",
                 PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg",
-                PlayMatImageUrl = _game.PlayMatImageUrl
+                PlayMatImageUrl = _game.PlayMatImageUrl,
+                RulesUrl = Uri.IsWellFormedUriString(RulesUrl, UriKind.Absolute) ? new Uri(RulesUrl) : null
             };
 
             if (!Directory.Exists(newCardGame.GameDirectoryPath))
