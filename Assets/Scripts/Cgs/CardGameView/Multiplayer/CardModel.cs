@@ -149,7 +149,7 @@ namespace Cgs.CardGameView.Multiplayer
                 PlaceHolder = (RectTransform) placeholder.transform;
                 PlaceHolder.SetParent(_placeHolderCardZone.transform);
                 PlaceHolder.sizeDelta = ((RectTransform) transform).sizeDelta;
-                PlaceHolder.anchoredPosition = Vector2.zero;
+                PlaceHolder.localPosition = Vector2.zero;
             }
         }
 
@@ -206,7 +206,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsOnline)
             {
                 if (Vector2.zero != position)
-                    ((RectTransform) transform).anchoredPosition = position;
+                    ((RectTransform) transform).localPosition = position;
                 if (Quaternion.identity != rotation)
                     transform.rotation = rotation;
             }
@@ -480,7 +480,7 @@ namespace Cgs.CardGameView.Multiplayer
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, targetPosition);
 
             if (IsOnline)
-                CmdUpdatePosition(((RectTransform) transform).anchoredPosition);
+                CmdUpdatePosition(((RectTransform) transform).localPosition);
         }
 
         private void UpdateCardZonePosition(Vector2 targetPosition)
@@ -523,7 +523,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnChangePosition(Vector2 oldPosition, Vector2 newPosition)
         {
             if (!hasAuthority)
-                ((RectTransform) transform).anchoredPosition = newPosition;
+                transform.localPosition = newPosition;
         }
 
         private void ParentToCanvas(Vector3 targetPosition)

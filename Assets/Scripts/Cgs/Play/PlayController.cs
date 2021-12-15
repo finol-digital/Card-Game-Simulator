@@ -57,22 +57,23 @@ namespace Cgs.Play
             get
             {
                 var cardStack = cardStackPrefab.GetComponent<CardStack>();
-                var cardStackButtonsHeight = ((RectTransform) cardStack.buttons.transform).rect.height;
-                var cardStackLabelHeight = ((RectTransform) cardStack.deckLabel.transform).rect.height;
-                var cardSize = CardGameManager.PixelsPerInch *
+                var cardStackLabelHeight =
+                    ((RectTransform) cardStack.deckLabel.transform).rect.height * playArea.CurrentZoom;
+                var cardStackButtonsHeight =
+                    ((RectTransform) cardStack.buttons.transform).rect.height * playArea.CurrentZoom;
+                var cardSize = CardGameManager.PixelsPerInch * playArea.CurrentZoom *
                                new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
-                var rectTransformRect = ((RectTransform) transform).rect;
-                var left = Vector2.left * (rectTransformRect.width / 2f - cardSize.x / 2f - DeckPositionBuffer);
-                var up = Vector2.up * (rectTransformRect.height / 2f - cardSize.y / 2f - DeckPositionBuffer -
-                                       cardStackLabelHeight);
-                var nextDeckPosition = left + up - ((RectTransform)playArea.transform).anchoredPosition;
+
+                var up = Vector2.up * (Screen.height - cardSize.y / 2f - cardStackLabelHeight);
+                var right = Vector2.right * (cardSize.x / 2f);
+                RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) playMat.transform, (up + right),
+                    null, out var nextDeckPosition);
+
                 var nextOffset = new Rect(nextDeckPosition, cardSize);
                 while (AllCardStacks.Any(stack =>
                            (new Rect(stack.transform.localPosition, cardSize)).Overlaps(nextOffset)))
                 {
-                    nextDeckPosition +=
-                        Vector2.down * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) +
-                        Vector2.down * (cardStackButtonsHeight + cardStackLabelHeight);
+                    nextDeckPosition += Vector2.down * (cardSize.y + cardStackButtonsHeight + cardStackLabelHeight);
                     nextOffset = new Rect(nextDeckPosition, cardSize);
                 }
 
@@ -287,8 +288,8 @@ namespace Cgs.Play
             var rectTransform = (RectTransform) cardStack.transform;
             rectTransform.SetParent(playAreaTransform);
             if (!Vector2.zero.Equals(position))
-                rectTransform.anchoredPosition = position;
-            cardStack.position = rectTransform.anchoredPosition;
+                rectTransform.localPosition = position;
+            cardStack.position = rectTransform.localPosition;
             return cardStack;
         }
 

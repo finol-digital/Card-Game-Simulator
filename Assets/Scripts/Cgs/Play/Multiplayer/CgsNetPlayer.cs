@@ -339,7 +339,7 @@ namespace Cgs.Play.Multiplayer
         {
             Transform cardModelTransform = cardModel.transform;
             cardModelTransform.SetParent(cardZone.transform);
-            cardModel.position = ((RectTransform)cardModelTransform).anchoredPosition;
+            cardModel.position = ((RectTransform)cardModelTransform).localPosition;
             cardModel.rotation = cardModelTransform.rotation;
             CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.isFacedown);
             if (cardModel.IsOnline && cardModel.hasAuthority)

@@ -116,7 +116,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 deckLabel.text = Name;
                 countLabel.text = _cardIds.Count.ToString();
-                rectTransform.anchoredPosition = position;
+                rectTransform.localPosition = position;
             }
 
             _cardIds.Callback += OnCardsUpdated;
@@ -261,7 +261,7 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.SetAsLastSibling();
 
             if (hasAuthority)
-                CmdUpdatePosition(rectTransform.anchoredPosition);
+                CmdUpdatePosition(rectTransform.localPosition);
         }
 
         [Command(requiresAuthority = false)]
@@ -280,7 +280,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
-            ((RectTransform)transform).anchoredPosition = newValue;
+            transform.localPosition = newValue;
         }
 
         [PublicAPI]
