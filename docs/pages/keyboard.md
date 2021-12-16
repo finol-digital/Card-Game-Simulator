@@ -21,12 +21,16 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 
 ## Play Mode
 - **Cancel**: *Esc* - Back to Main Menu.
-- **Option**: *Delete* - Toggle the Play Mode Menu.
-- **Sort**: *q* - Show/Hide Hand.
+- **Horizontal**: *left*, *right* - Rotate PlayMat 90 degrees.
+- **Page-Vertical/Horizontal**: ZXCV - Zoom/Rotate or Pan PlayMat.
+- **Sort**: *q* - Toggle Zoom/Rotate or Pan PlayMat.
 - **New**: *e* - View rules for current game online.
 - **Load**: *r* - Brings up the Deck Load Menu.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
 - **Save**: *t* - Brings up the Dice Menu.
+- **FocusNext**: *Tab* or *\]* - Show/Hide Hand.
+- **FocusBack**: *\`* - Draw.
+- **Option**: *Delete* - Toggle the Play Mode Menu.
 
 ## Card Viewer
 - **Cancel**: *Esc* - Hide the Card Viewer.

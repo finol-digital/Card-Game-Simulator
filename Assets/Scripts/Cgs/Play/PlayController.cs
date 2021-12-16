@@ -145,7 +145,9 @@ namespace Cgs.Play
                 CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsOption)
+            if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
+                Deal(1);
+            else if (Inputs.IsOption)
                 menu.ToggleMenu();
             else if (Inputs.IsCancel)
                 PromptBackToMainMenu();

@@ -23,6 +23,8 @@ namespace Cgs.Play
         private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;
 
+        private bool _rotationEnabled = true;
+
         private void Start()
         {
             _playController = GetComponent<PlayController>();
@@ -57,9 +59,22 @@ namespace Cgs.Play
                 CardGameManager.Instance.ModalCanvas != null || _playController.scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsPageHorizontal)
+            if (Inputs.IsLeft && !Inputs.WasLeft)
+                _playController.playArea.CurrentRotation -= 90;
+            else if (Inputs.IsRight && !Inputs.WasRight)
+                _playController.playArea.CurrentRotation += 90;
+
+            if (Inputs.IsSort)
+                _rotationEnabled = !_rotationEnabled;
+
+            if (!Inputs.IsPageHorizontal)
+                return;
+            if (_rotationEnabled)
                 _playController.playArea.CurrentRotation +=
                     Time.deltaTime * Inputs.FPageHorizontal * PageHorizontalSensitivity;
+            else
+                _playController.playArea.horizontalNormalizedPosition -=
+                    Inputs.FPageHorizontal * PageHorizontalSensitivity * Time.deltaTime;
         }
 
         [UsedImplicitly]

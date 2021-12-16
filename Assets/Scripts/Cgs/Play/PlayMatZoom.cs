@@ -57,9 +57,17 @@ namespace Cgs.Play
                 CardGameManager.Instance.ModalCanvas != null || _playController.scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsPageVertical)
+            if (Inputs.IsSort)
+                _playController.playArea.ZoomEnabled = !_playController.playArea.ZoomEnabled;
+
+            if (!Inputs.IsPageVertical)
+                return;
+            if (_playController.playArea.ZoomEnabled)
                 _playController.playArea.CurrentZoom *=
                     1 - Inputs.FPageVertical * PageVerticalSensitivity * Time.deltaTime;
+            else
+                _playController.playArea.verticalNormalizedPosition -=
+                    Inputs.FPageVertical * PageVerticalSensitivity * Time.deltaTime;
         }
 
         [UsedImplicitly]

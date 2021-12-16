@@ -12,9 +12,10 @@ namespace Cgs.ScrollRects
         private const float MaxZoom = 1.33f; // Also in PlayMatZoom slider
         private const float ZoomLerpSpeed = 7.5f;
         private const float MouseWheelSensitivity = 0.2f;
+        private const float DefaultScrollWheelSensitivity = 15f;
 
-        private const float MinRotation = -180;
-        private const float MaxRotation = 180;
+        private const float MinRotation = -180; // Also in PlayMatRotation slider
+        private const float MaxRotation = 180; // Also in PlayMatRotation slider
 
         public float CurrentRotation
         {
@@ -30,16 +31,29 @@ namespace Cgs.ScrollRects
         private Vector3 _currentEulerAngles = Vector3.zero;
         private Quaternion _currentRotation = Quaternion.identity;
 
-        // ReSharper disable once MemberCanBePrivate.Global
-        public List<Vector2> Touches { get; set; } = new List<Vector2>();
-
         public float CurrentZoom
         {
             get => _currentZoom;
-            set => _currentZoom = Mathf.Clamp(value, MinZoom, MaxZoom);
+            set
+            {
+                if (ZoomEnabled)
+                    _currentZoom = Mathf.Clamp(value, MinZoom, MaxZoom);
+            }
         }
 
         private float _currentZoom = 1;
+
+        public bool ZoomEnabled
+        {
+            get => scrollSensitivity == 0;
+            set => scrollSensitivity = value ? 0 : _scrollSensitivity;
+        }
+
+        private float _scrollSensitivity;
+
+        // ReSharper disable once MemberCanBePrivate.Global
+        public List<Vector2> Touches { get; set; } = new List<Vector2>();
+
         private bool _isPinching;
         private float _startPinchDist;
         private float _startPinchZoom;
@@ -51,6 +65,8 @@ namespace Cgs.ScrollRects
         protected override void Awake()
         {
             Input.multiTouchEnabled = true;
+            _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : DefaultScrollWheelSensitivity;
+            ZoomEnabled = true;
         }
 
         protected override void SetContentAnchoredPosition(Vector2 position)
@@ -60,7 +76,7 @@ namespace Cgs.ScrollRects
             base.SetContentAnchoredPosition(position);
         }
 
-        void Update()
+        private void Update()
         {
             // Touch input
             Touches = new List<Vector2>(Input.touches.Select(touch => touch.position));
@@ -115,7 +131,7 @@ namespace Cgs.ScrollRects
 
         private bool IsTouchingCard(Vector2 position)
         {
-            CardModel[] cardModels = content.GetComponentsInChildren<CardModel>();
+            var cardModels = content.GetComponentsInChildren<CardModel>();
             return cardModels.Any(cardModel => cardModel.PointerPositions.ContainsValue(position));
         }
 

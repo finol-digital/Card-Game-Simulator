@@ -69,7 +69,7 @@ namespace Cgs.Play.Drawer
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (!Inputs.IsSort)
+            if (!Inputs.IsFocusNext || Inputs.WasFocusNext)
                 return;
 
             if (upButton.interactable)
