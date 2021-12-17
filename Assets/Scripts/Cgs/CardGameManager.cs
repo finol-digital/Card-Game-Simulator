@@ -227,11 +227,6 @@ namespace Cgs
                 Directory.CreateDirectory(mahjongDirectory);
             File.WriteAllText(mahjongDirectory + "/" + Tags.MahjongJsonFileName, Tags.MahjongJsonFileContent);
             StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.MahjongCardBackUrl, mahjongDirectory + "/CardBack.png"));
-            string arcmageDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.ArcmageDirectoryName;
-            if (!Directory.Exists(arcmageDirectory))
-                Directory.CreateDirectory(arcmageDirectory);
-            File.WriteAllText(arcmageDirectory + "/" + Tags.ArcmageJsonFileName, Tags.ArcmageJsonFileContent);
-            StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.ArcmageCardBackUrl, arcmageDirectory + "/CardBack.png"));
 #else
             UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
