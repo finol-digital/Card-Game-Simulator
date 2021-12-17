@@ -93,6 +93,31 @@ namespace Cgs.Play.Multiplayer
                 CardGameManager.Instance.Select(gameId);
                 StartCoroutine(WaitToStartGame());
             }
+
+            CmdApplyPlayerRotation();
+        }
+
+        [Command]
+        private void CmdApplyPlayerRotation()
+        {
+            TargetApplyPlayerRotation(CgsNetManager.ActiveConnectionCount);
+        }
+
+        [TargetRpc]
+        private void TargetApplyPlayerRotation(int playerCount)
+        {
+            // 1st player no rotation, second player -180, 3rd 90, and 4th -90
+            if (playerCount % 4 == 0)
+                CgsNetManager.Instance.playController.playArea.CurrentRotation = -90;
+            else if (playerCount % 3 == 0)
+                CgsNetManager.Instance.playController.playArea.CurrentRotation = 90;
+            else if (playerCount % 2 == 0)
+                CgsNetManager.Instance.playController.playArea.CurrentRotation = -180;
+            else
+                CgsNetManager.Instance.playController.playArea.CurrentRotation = 0;
+            Debug.Log(
+                "[CgsNet Player] Set PlayMat rotation based off player count: " +
+                CgsNetManager.Instance.playController.playArea.CurrentRotation);
         }
 
         private IEnumerator DownloadGame(string url)
@@ -339,7 +364,7 @@ namespace Cgs.Play.Multiplayer
         {
             Transform cardModelTransform = cardModel.transform;
             cardModelTransform.SetParent(cardZone.transform);
-            cardModel.position = ((RectTransform)cardModelTransform).localPosition;
+            cardModel.position = ((RectTransform) cardModelTransform).localPosition;
             cardModel.rotation = cardModelTransform.rotation;
             CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.isFacedown);
             if (cardModel.IsOnline && cardModel.hasAuthority)

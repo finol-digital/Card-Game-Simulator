@@ -17,6 +17,9 @@ namespace Cgs.Cards
 {
     public class CardsExplorer : MonoBehaviour
     {
+        public const string CannotImportMessage =
+            "This game has already been uploaded, and it is currently not possible to edit uploaded games.";
+
         public const string CardSetDecisionPrompt = "Import Single Card or Set of Cards?";
         public const string SingleCard = "Single Card";
         public const string SetOfCards = "Set of Cards";
@@ -82,6 +85,15 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void ShowImportModal()
         {
+            if (CardGameManager.Current.CgsDeepLink != null &&
+                CardGameManager.Current.CgsDeepLink.IsWellFormedOriginalString()
+                || CardGameManager.Current.AutoUpdateUrl != null &&
+                CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
+            {
+                CardGameManager.Instance.Messenger.Show(CannotImportMessage);
+                return;
+            }
+
             ImportModal.Show(CardSetDecisionPrompt, new Tuple<string, UnityAction>(SingleCard, ShowCardImportMenu),
                 new Tuple<string, UnityAction>(SetOfCards, ShowSetImportMenu));
         }

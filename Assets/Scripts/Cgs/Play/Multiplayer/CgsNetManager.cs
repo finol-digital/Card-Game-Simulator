@@ -32,6 +32,8 @@ namespace Cgs.Play.Multiplayer
                 : lrm.serverId
             : networkAddress;
 
+        public static int ActiveConnectionCount => NetworkServer.connections.Count(con => con.Value.isReady);
+
         public CgsNetPlayer LocalPlayer { get; set; }
 
         public CgsNetDiscovery Discovery { get; private set; }

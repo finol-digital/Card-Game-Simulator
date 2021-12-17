@@ -1,0 +1,148 @@
+{
+	"name": "Grand Archive",
+	"allCardsUrl": "https://www.cardgamesimulator.com/games/grand_archive/AllCards.json",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
+	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
+	"cardImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/sets/{cardSet}/{cardId}.{cardImageFileType}",
+	"cardPrimaryProperty": "rulesText",
+	"cardProperties": [
+		{
+			"name": "cost",
+			"display": "Cost",
+			"type": "integer"
+		},
+		{
+			"name": "superType",
+			"display": "Supertype",
+			"type": "stringEnumList"
+		},
+		{
+			"name": "subType",
+			"display": "Subtype",
+			"type": "stringEnumList"
+		},
+		{
+			"name": "element",
+			"display": "Element",
+			"type": "stringEnum"
+		},
+		{
+			"name": "rulesText",
+			"display": "Rules Text",
+			"type": "string"
+		},
+		{
+			"name": "flavorText",
+			"display": "Flavor Text",
+			"type": "string"
+		},
+		{
+			"name": "speed",
+			"display": "Speed",
+			"displayEmpty": "N / A",
+			"type": "stringEnum"
+		},
+		{
+			"name": "attack",
+			"display": "Attack",
+			"displayEmpty": "N / A",
+			"type": "integer"
+		},
+		{
+			"name": "health",
+			"display": "Health",
+			"displayEmpty": "N / A",
+			"type": "integer"
+		},
+		{
+			"name": "durability",
+			"display": "Durability",
+			"displayEmpty": "N / A",
+			"type": "integer"
+		}
+	],
+	"cardSetIdentifier": "setCode",
+	"cgsDeepLink": "https://cgs.link/grand_archive",
+	"deckSharePreference": "individual",
+	"deckUrls": [
+		{
+			"name": "Lorraine Starter PnP",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20PnP.txt"
+		},
+		{
+			"name": "Rai Starter PnP",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20PnP.txt"
+		}
+	],
+	"enums": [
+		{
+			"property": "superType",
+			"values": {
+				"Champion": "Champion",
+				"Regalia": "Regalia",
+				"Ally": "Ally",
+				"Action": "Action",
+				"Attack": "Attack",
+				"Item": "Item",
+				"Weapon": "Weapon"
+			}
+		},
+		{
+			"property": "subType",
+			"values": {
+				"Warrior": "Warrior",
+				"Mage": "Mage",
+				"Tamer": "Tamer",
+				"Ranger": "Ranger",
+				"Guardian": "Guardian",
+				"Cleric": "Cleric",
+				"Assassin": "Assassin",
+				"Spirit": "Spirit",
+				"Sword": "Sword",
+				"Bauble": "Bauble",
+				"Artifact": "Artifact",
+				"Sceptre": "Sceptre",
+				"Book": "Book"
+			}
+		},
+		{
+			"property": "element",
+			"values": {
+				"Normal": "Normal",
+				"Wind": "Wind",
+				"Crux": "Crux",
+				"Fire": "Fire",
+				"Arcane": "Arcane"
+			}
+		},
+		{
+			"property": "speed",
+			"values": {
+				"Slow": "Slow",
+				"Fast": "Fast"
+			}
+		}
+	],
+	"extras": [
+		{
+			"group": "Material Deck",
+			"property": "superType",
+			"value": "Champion"
+		},
+		{
+			"group": "Material Deck",
+			"property": "superType",
+			"value": "Regalia"
+		}
+	],
+	"gameDefaultCardAction": "tap",
+	"gamePlayDeckName": "Main Deck",
+	"gameStartHandCount": 6,
+	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.png",
+	"playMatSize": {
+		"x": 36.0,
+		"y": 41.0
+	},
+	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf"
+}

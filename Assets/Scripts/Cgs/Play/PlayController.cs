@@ -240,7 +240,7 @@ namespace Cgs.Play
                 {
                     var position = newDeckPosition + Vector2.right *
                         (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X);
-                    CreateCardStack(cardGroup.Key, (List<UnityCard>) cardGroup.Value.Cast<UnityCard>(), position);
+                    CreateCardStack(cardGroup.Key, cardGroup.Value.Cast<UnityCard>().ToList(), position);
                     i++;
                 }
             }

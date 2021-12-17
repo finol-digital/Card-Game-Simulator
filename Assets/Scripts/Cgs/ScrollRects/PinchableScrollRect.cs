@@ -11,8 +11,8 @@ namespace Cgs.ScrollRects
         private const float MinZoom = 0.66f; // Also in PlayMatZoom slider
         private const float MaxZoom = 1.33f; // Also in PlayMatZoom slider
         private const float ZoomLerpSpeed = 7.5f;
-        private const float MouseWheelSensitivity = 0.2f;
-        private const float DefaultScrollWheelSensitivity = 15f;
+        private const float ZoomWheelSensitivity = 0.2f;
+        private const float ScrollWheelSensitivity = 20; // Can be overridden by scrollSensitivity
 
         private const float MinRotation = -180; // Also in PlayMatRotation slider
         private const float MaxRotation = 180; // Also in PlayMatRotation slider
@@ -65,7 +65,7 @@ namespace Cgs.ScrollRects
         protected override void Awake()
         {
             Input.multiTouchEnabled = true;
-            _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : DefaultScrollWheelSensitivity;
+            _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
             ZoomEnabled = true;
         }
 
@@ -111,7 +111,7 @@ namespace Cgs.ScrollRects
                 RectTransform content1 = content;
                 Rect rect = content1.rect;
 
-                CurrentZoom *= 1 + scrollWheelInput * MouseWheelSensitivity;
+                CurrentZoom *= 1 + scrollWheelInput * ZoomWheelSensitivity;
                 _startPinchScreenPosition = Input.mousePosition;
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(content, _startPinchScreenPosition, null,
                     out _startPinchCenterPosition);
@@ -119,8 +119,8 @@ namespace Cgs.ScrollRects
                 var pivotPosition =
                     new Vector2(content1.pivot.x * content1.rect.size.x, content1.pivot.y * rect.size.y);
                 Vector2 posFromBottomLeft = pivotPosition + _startPinchCenterPosition;
-                SetPivot(content1,
-                    new Vector2(posFromBottomLeft.x / rect.width, posFromBottomLeft.y / rect.height));
+                //SetPivot(content1,
+                //    new Vector2(posFromBottomLeft.x / rect.width, posFromBottomLeft.y / rect.height));
             }
 
             // Scale to zoom
@@ -150,8 +150,8 @@ namespace Cgs.ScrollRects
                 new Vector3(content.pivot.x * content1.rect.size.x, content1.pivot.y * rect.size.y);
             Vector2 posFromBottomLeft = pivotPosition + _startPinchCenterPosition;
 
-            SetPivot(content1,
-                new Vector2(posFromBottomLeft.x / rect.width, posFromBottomLeft.y / rect.height));
+            //SetPivot(content1,
+            //    new Vector2(posFromBottomLeft.x / rect.width, posFromBottomLeft.y / rect.height));
             _blockPan = true;
         }
 

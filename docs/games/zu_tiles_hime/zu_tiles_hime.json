@@ -1,0 +1,120 @@
+{
+	"name": "ZU Tiles: Hime",
+	"allCardsUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/AllCards.json",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/zu_tiles_hime.json",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/Banner.png",
+	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/CardBack.png",
+	"cardImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/sets/{cardSet}/{cardId}.{cardImageFileType}",
+	"cardPrimaryProperty": "description",
+	"cardProperties": [
+		{
+			"name": "type",
+			"display": "Type",
+			"type": "stringEnum"
+		},
+		{
+			"name": "description",
+			"display": "Description",
+			"type": "string"
+		},
+		{
+			"name": "creatureClass",
+			"display": "Creature Class",
+			"displayEmpty": "N / A",
+			"type": "stringEnum"
+		},
+		{
+			"name": "creatureCompatibility",
+			"display": "Creature Compatibility",
+			"displayEmpty": "N / A",
+			"type": "stringEnumList"
+		},
+		{
+			"name": "strength",
+			"display": "STR",
+			"displayEmpty": "X",
+			"type": "integer"
+		},
+		{
+			"name": "intelligence",
+			"display": "INT",
+			"displayEmpty": "X",
+			"type": "integer"
+		}
+	],
+	"cardSetIdentifier": "setCode",
+	"cardSize": {
+		"x": 3.0,
+		"y": 3.0
+	},
+	"cgsDeepLink": "https://cgs.link/zu_tiles_hime",
+	"deckSharePreference": "individual",
+	"deckUrls": [
+		{
+			"name": "Dragon Snake Rooster",
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Dragon%20Snake%20Rooster.txt"
+		},
+		{
+			"name": "Rabbit Pig Ram",
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Rabbit%20Pig%20Ram.txt"
+		},
+		{
+			"name": "Rat Ox Monkey",
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Rat%20Ox%20Monkey.txt"
+		},
+		{
+			"name": "Tiger Horse Dog",
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Tiger%20Horse%20Dog.txt"
+		}
+	],
+	"enums": [
+		{
+			"property": "type",
+			"values": {
+				"creature": "Creature",
+				"item": "Item",
+				"obstacle": "Obstacle",
+				"action": "Action",
+				"actionReaction": "Action/Reaction",
+				"reaction": "Reaction"
+			}
+		},
+		{
+			"property": "creatureClass",
+			"values": {
+				"snake": "Snake",
+				"dragon": "Dragon",
+				"rabbit": "Rabbit",
+				"tiger": "Tiger",
+				"ox": "Ox",
+				"rat": "Rat",
+				"horse": "Horse",
+				"ram": "Ram",
+				"monkey": "Monkey",
+				"rooster": "Rooster",
+				"dog": "Dog",
+				"pig": "Pig"
+			}
+		},
+		{
+			"property": "creatureCompatibility",
+			"values": {
+				"snake": "Snake",
+				"dragon": "Dragon",
+				"rabbit": "Rabbit",
+				"tiger": "Tiger",
+				"ox": "Ox",
+				"rat": "Rat",
+				"horse": "Horse",
+				"ram": "Ram",
+				"monkey": "Monkey",
+				"rooster": "Rooster",
+				"dog": "Dog",
+				"pig": "Pig"
+			}
+		}
+	],
+	"gameDefaultCardAction": "rotate",
+	"gameStartHandCount": 5,
+	"rulesUrl": "https://boardgamegeek.com/filepage/227657/zu-tiles-hime-revised-rulebook"
+}
