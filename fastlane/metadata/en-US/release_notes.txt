@@ -1,4 +1,4 @@
-- Settings: Scrollable Settings Menu
-- Cards: Set custom card size and image file types when creating a custom game in-app
-- Cards: Input card and set code when importing cards
-- Cards: Add ability to import an entire set of cards from a folder
+- Game-Play: Rotate and Zoom the playmat
+  - Left Slider for Rotation and Right Slider for Zoom
+  - Reset with buttons next to sliders 
+  - Control with 2-fingers and mouse right button + wheel
