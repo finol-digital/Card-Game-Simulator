@@ -1,8 +1,8 @@
 [
 	{
-		"id": "Anger the Skies",
+		"id": "Anger_the_Skies",
 		"name": "Anger the Skies",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 4,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -15,9 +15,9 @@
 		"durability": null
 	},
 	{
-		"id": "Arcane Blast",
+		"id": "Arcane_Blast",
 		"name": "Arcane Blast",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 11,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -30,9 +30,9 @@
 		"durability": null
 	},
 	{
-		"id": "Arcane Disposition",
+		"id": "Arcane_Disposition",
 		"name": "Arcane Disposition",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -45,9 +45,9 @@
 		"durability": null
 	},
 	{
-		"id": "Arcane Sight",
+		"id": "Arcane_Sight",
 		"name": "Arcane Sight",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -60,9 +60,9 @@
 		"durability": null
 	},
 	{
-		"id": "Arcanists Prism",
+		"id": "Arcanists_Prism",
 		"name": "Arcanist's Prism",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Artifact"],
@@ -75,9 +75,9 @@
 		"durability": null
 	},
 	{
-		"id": "Avengers Ring",
+		"id": "Avengers_Ring",
 		"name": "Avenger's Ring",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Bauble"],
@@ -90,9 +90,9 @@
 		"durability": null
 	},
 	{
-		"id": "Banner Knight",
+		"id": "Banner_Knight",
 		"name": "Banner Knight",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 4,
 		"superType": ["Ally"],
 		"subType": ["Warrior"],
@@ -105,9 +105,9 @@
 		"durability": null
 	},
 	{
-		"id": "Barrier Servant",
+		"id": "Barrier_Servant",
 		"name": "Barrier Servant",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Ally"],
 		"subType": ["Mage", "Cleric"],
@@ -120,9 +120,9 @@
 		"durability": null
 	},
 	{
-		"id": "Bauble of Empowerment",
+		"id": "Bauble_of_Empowerment",
 		"name": "Bauble of Empowerment",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Bauble"],
@@ -135,9 +135,9 @@
 		"durability": null
 	},
 	{
-		"id": "Blitz Mage",
+		"id": "Blitz_Mage",
 		"name": "Blitz Mage",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Ally"],
 		"subType": ["Mage"],
@@ -150,9 +150,9 @@
 		"durability": null
 	},
 	{
-		"id": "Careful Study",
+		"id": "Careful_Study",
 		"name": "Careful Study",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 8,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -165,9 +165,9 @@
 		"durability": null
 	},
 	{
-		"id": "Clarent, Sword of Peace",
+		"id": "Clarent,_Sword_of_Peace",
 		"name": "Clarent, Sword of Peace",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Regalia", "Weapon"],
 		"subType": ["Warrior", "Sword"],
@@ -180,9 +180,9 @@
 		"durability": 3
 	},
 	{
-		"id": "Commanders Blade",
+		"id": "Commanders_Blade",
 		"name": "Commander's Blade",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Regalia", "Weapon"],
 		"subType": ["Warrior", "Sword"],
@@ -195,9 +195,9 @@
 		"durability": 1
 	},
 	{
-		"id": "Creative Shock",
+		"id": "Creative_Shock",
 		"name": "Creative Shock",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -210,9 +210,9 @@
 		"durability": null
 	},
 	{
-		"id": "Crusader of Aesa",
+		"id": "Crusader_of_Aesa",
 		"name": "Crusader of Aesa",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Ally"],
 		"subType": ["Warrior"],
@@ -225,9 +225,9 @@
 		"durability": null
 	},
 	{
-		"id": "Crux Sight",
+		"id": "Crux_Sight",
 		"name": "Crux Sight",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -240,9 +240,9 @@
 		"durability": null
 	},
 	{
-		"id": "Disorienting Winds",
+		"id": "Disorienting_Winds",
 		"name": "Disorienting Winds",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 5,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -255,9 +255,9 @@
 		"durability": null
 	},
 	{
-		"id": "Dream Fairy",
+		"id": "Dream_Fairy",
 		"name": "Dream Fairy",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Ally"],
 		"subType": ["Mage"],
@@ -270,9 +270,9 @@
 		"durability": null
 	},
 	{
-		"id": "Dungeon Guide",
+		"id": "Dungeon_Guide",
 		"name": "Dungeon Guide",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Ally"],
 		"subType": ["Mage"],
@@ -285,9 +285,9 @@
 		"durability": null
 	},
 	{
-		"id": "Endura, Sceptre of Ignition",
+		"id": "Endura,_Sceptre_of_Ignition",
 		"name": "Endura, Sceptre of Ignition",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Mage", "Sceptre"],
@@ -300,9 +300,9 @@
 		"durability": null
 	},
 	{
-		"id": "Esteemed Knight",
+		"id": "Esteemed_Knight",
 		"name": "Esteemed Knight",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Ally"],
 		"subType": ["Warrior"],
@@ -315,9 +315,9 @@
 		"durability": null
 	},
 	{
-		"id": "Favorable Winds",
+		"id": "Favorable_Winds",
 		"name": "Favorable Winds",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -330,9 +330,9 @@
 		"durability": null
 	},
 	{
-		"id": "Fire Resonance Bauble",
+		"id": "Fire_Resonance_Bauble",
 		"name": "Fire Resonance Bauble",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Bauble"],
@@ -347,7 +347,7 @@
 	{
 		"id": "Fireball",
 		"name": "Fireball",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 4,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -360,9 +360,9 @@
 		"durability": null
 	},
 	{
-		"id": "Focused Flames",
+		"id": "Focused_Flames",
 		"name": "Focused Flames",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -375,9 +375,9 @@
 		"durability": null
 	},
 	{
-		"id": "Honorable Vanguard",
+		"id": "Honorable_Vanguard",
 		"name": "Honorable Vanguard",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Ally"],
 		"subType": ["Warrior"],
@@ -390,9 +390,9 @@
 		"durability": null
 	},
 	{
-		"id": "Hurricane Sweep",
+		"id": "Hurricane_Sweep",
 		"name": "Hurricane Sweep",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 5,
 		"superType": ["Attack"],
 		"subType": ["Warrior"],
@@ -405,9 +405,9 @@
 		"durability": null
 	},
 	{
-		"id": "Impassioned Tutor",
+		"id": "Impassioned_Tutor",
 		"name": "Impassioned Tutor",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Ally"],
 		"subType": ["Mage"],
@@ -420,9 +420,9 @@
 		"durability": null
 	},
 	{
-		"id": "Inspiring Call",
+		"id": "Inspiring_Call",
 		"name": "Inspiring Call",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Action"],
 		"subType": ["Warrior"],
@@ -435,9 +435,9 @@
 		"durability": null
 	},
 	{
-		"id": "Library Witch",
+		"id": "Library_Witch",
 		"name": "Library Witch",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Ally"],
 		"subType": ["Mage"],
@@ -450,9 +450,9 @@
 		"durability": null
 	},
 	{
-		"id": "Life Essence Amulet",
+		"id": "Life_Essence_Amulet",
 		"name": "Life Essence Amulet",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Bauble"],
@@ -465,9 +465,9 @@
 		"durability": null
 	},
 	{
-		"id": "Lorraine, Blademaster",
+		"id": "Lorraine,_Blademaster",
 		"name": "Lorraine, Blademaster",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Champion"],
 		"subType": ["Warrior"],
@@ -480,9 +480,9 @@
 		"durability": null
 	},
 	{
-		"id": "Lorraine, Crux Knight",
+		"id": "Lorraine,_Crux_Knight",
 		"name": "Lorraine, Crux Knight",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Champion"],
 		"subType": ["Warrior"],
@@ -495,9 +495,9 @@
 		"durability": null
 	},
 	{
-		"id": "Lorraine, Wandering Warrior",
+		"id": "Lorraine,_Wandering_Warrior",
 		"name": "Lorraine, Wandering Warrior",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Champion"],
 		"subType": ["Warrior"],
@@ -510,9 +510,9 @@
 		"durability": null
 	},
 	{
-		"id": "Magus Disciple",
+		"id": "Magus_Disciple",
 		"name": "Magus Disciple",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Ally"],
 		"subType": ["Mage"],
@@ -525,9 +525,9 @@
 		"durability": null
 	},
 	{
-		"id": "Mana Limiter",
+		"id": "Mana_Limiter",
 		"name": "Mana Limiter",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Bauble"],
@@ -540,9 +540,9 @@
 		"durability": null
 	},
 	{
-		"id": "Peer Into Mana",
+		"id": "Peer_Into_Mana",
 		"name": "Peer Into Mana",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 4,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -555,9 +555,9 @@
 		"durability": null
 	},
 	{
-		"id": "Power Overwhelming",
+		"id": "Power_Overwhelming",
 		"name": "Power Overwhelming",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -570,9 +570,9 @@
 		"durability": null
 	},
 	{
-		"id": "Prismatic Edge",
+		"id": "Prismatic_Edge",
 		"name": "Prismatic Edge",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Regalia", "Weapon"],
 		"subType": ["Warrior", "Sword"],
@@ -585,9 +585,9 @@
 		"durability": 1
 	},
 	{
-		"id": "Purge in Flames",
+		"id": "Purge_in_Flames",
 		"name": "Purge in Flames",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 7,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -600,9 +600,9 @@
 		"durability": null
 	},
 	{
-		"id": "Rai, Archmage",
+		"id": "Rai,_Archmage",
 		"name": "Rai, Archmage",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Champion"],
 		"subType": ["Mage"],
@@ -615,9 +615,9 @@
 		"durability": null
 	},
 	{
-		"id": "Rai, Spellcrafter",
+		"id": "Rai,_Spellcrafter",
 		"name": "Rai, Spellcrafter",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Champion"],
 		"subType": ["Mage"],
@@ -630,9 +630,9 @@
 		"durability": null
 	},
 	{
-		"id": "Rai, Storm Seer",
+		"id": "Rai,_Storm_Seer",
 		"name": "Rai, Storm Seer",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Champion"],
 		"subType": ["Mage"],
@@ -645,9 +645,9 @@
 		"durability": null
 	},
 	{
-		"id": "Savage Slash",
+		"id": "Savage_Slash",
 		"name": "Savage Slash",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Attack"],
 		"subType": ["Warrior"],
@@ -660,9 +660,9 @@
 		"durability": null
 	},
 	{
-		"id": "Scry the Skies",
+		"id": "Scry_the_Skies",
 		"name": "Scry the Skies",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -675,9 +675,9 @@
 		"durability": null
 	},
 	{
-		"id": "Seers Sword",
+		"id": "Seers_Sword",
 		"name": "Seer's Sword",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Regalia", "Weapon"],
 		"subType": ["Warrior", "Sword"],
@@ -690,9 +690,9 @@
 		"durability": 3
 	},
 	{
-		"id": "Spellshield Arcane",
+		"id": "Spellshield_Arcane",
 		"name": "Spellshield: Arcane",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 3,
 		"superType": ["Action"],
 		"subType": ["Mage", "Cleric"],
@@ -705,9 +705,9 @@
 		"durability": null
 	},
 	{
-		"id": "Spirit Blade Ascension",
+		"id": "Spirit_Blade_Ascension",
 		"name": "Spirit Blade: Ascension",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Action"],
 		"subType": ["Warrior"],
@@ -720,9 +720,9 @@
 		"durability": null
 	},
 	{
-		"id": "Spirit Blade Dispersion",
+		"id": "Spirit_Blade_Dispersion",
 		"name": "Spirit Blade: Dispersion",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Action"],
 		"subType": ["Warrior"],
@@ -735,9 +735,9 @@
 		"durability": null
 	},
 	{
-		"id": "Spirit Blade Ghost Strike",
+		"id": "Spirit_Blade_Ghost_Strike",
 		"name": "Spirit Blade: Ghost Strike",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Attack"],
 		"subType": ["Warrior"],
@@ -750,9 +750,9 @@
 		"durability": null
 	},
 	{
-		"id": "Spirit Blade Infusion",
+		"id": "Spirit_Blade_Infusion",
 		"name": "Spirit Blade: Infusion",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Action"],
 		"subType": ["Warrior"],
@@ -765,9 +765,9 @@
 		"durability": null
 	},
 	{
-		"id": "Spirit of Fire",
+		"id": "Spirit_of_Fire",
 		"name": "Spirit of Fire",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Champion"],
 		"subType": ["Spirit"],
@@ -780,9 +780,9 @@
 		"durability": null
 	},
 	{
-		"id": "Spirit of Wind",
+		"id": "Spirit_of_Wind",
 		"name": "Spirit of Wind",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Champion"],
 		"subType": ["Spirit"],
@@ -795,9 +795,9 @@
 		"durability": null
 	},
 	{
-		"id": "Spirits Blessing",
+		"id": "Spirits_Blessing",
 		"name": "Spirit's Blessing",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Action"],
 		"subType": ["Mage"],
@@ -810,9 +810,9 @@
 		"durability": null
 	},
 	{
-		"id": "Sudden Steel",
+		"id": "Sudden_Steel",
 		"name": "Sudden Steel",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 4,
 		"superType": ["Attack"],
 		"subType": ["Warrior"],
@@ -825,9 +825,9 @@
 		"durability": null
 	},
 	{
-		"id": "Surveillance Stone",
+		"id": "Surveillance_Stone",
 		"name": "Surveillance Stone",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 0,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Bauble"],
@@ -840,9 +840,9 @@
 		"durability": null
 	},
 	{
-		"id": "Tome of Knowledge",
+		"id": "Tome_of_Knowledge",
 		"name": "Tome of Knowledge",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Mage", "Book"],
@@ -855,9 +855,9 @@
 		"durability": null
 	},
 	{
-		"id": "Warriors Longsword",
+		"id": "Warriors_Longsword",
 		"name": "Warrior's Longsword",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Regalia", "Weapon"],
 		"subType": ["Warrior", "Sword"],
@@ -872,7 +872,7 @@
 	{
 		"id": "Weaponsmith",
 		"name": "Weaponsmith",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Ally"],
 		"subType": ["Warrior"],
@@ -885,9 +885,9 @@
 		"durability": 3
 	},
 	{
-		"id": "Wind Cutter",
+		"id": "Wind_Cutter",
 		"name": "Wind Cutter",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 2,
 		"superType": ["Attack"],
 		"subType": ["Warrior"],
@@ -900,9 +900,9 @@
 		"durability": null
 	},
 	{
-		"id": "Wind Resonance Bauble",
+		"id": "Wind_Resonance_Bauble",
 		"name": "Wind Resonance Bauble",
-		"setCode": "Dawn of Ashes Kickstarter PnP",
+		"setCode": "Dawn_of_Ashes_Kickstarter_PnP",
 		"cost": 1,
 		"superType": ["Regalia", "Item"],
 		"subType": ["Bauble"],

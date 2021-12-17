@@ -13,6 +13,7 @@ permalink: roadmap.html
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
 - Bug-Fix: Decks do not account for rotation
+- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
 - Game-Play: Automatically create D6 by default; double click it to change number of faces
 - Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
@@ -20,7 +21,6 @@ permalink: roadmap.html
 - Game-Play: Option to have top of stack always revealed
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Playable Objects can Snap to Grid
-- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
 
 ## Backlog
 - Game-Creation: Edit Button in Main Menu

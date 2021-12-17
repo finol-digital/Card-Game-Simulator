@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -25,9 +29,9 @@ namespace Cgs.ScrollRects
             selectionContent.sizeDelta =
                 new Vector2(selectionContent.sizeDelta.x, selectionTemplate.rect.height * options.Count);
 
-            int currentSelectionIndex = -1;
+            var currentSelectionIndex = -1;
             var i = 0;
-            foreach (KeyValuePair<TKey, TValue> option in options)
+            foreach (var option in options)
             {
                 var toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
                 toggle.gameObject.SetActive(true);
@@ -77,7 +81,7 @@ namespace Cgs.ScrollRects
                 return;
             }
 
-            for (int i = Toggles.Count - 1; i >= 0; i--)
+            for (var i = Toggles.Count - 1; i >= 0; i--)
             {
                 if (!Toggles[i].isOn)
                     continue;

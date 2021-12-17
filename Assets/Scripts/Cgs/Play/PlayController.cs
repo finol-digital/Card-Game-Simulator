@@ -45,7 +45,7 @@ namespace Cgs.Play
 
         public Transform stackViewers;
 
-        public PinchableScrollRect playArea;
+        public RotateZoomableScrollRect playArea;
         public CardZone playMat;
         public List<CardDropArea> playDropZones;
         public CardDrawer drawer;
