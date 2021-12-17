@@ -624,7 +624,10 @@ jobs:
           VERSION: ${{ steps.versioning.outputs.version }}
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: |
-          export ANNOUNCEMENT="CGS $VERSION is out for release! \n$RELEASE_NOTES"
+          export ANNOUNCEMENT="CGS $VERSION is out for release! $RELEASE_NOTES"
+          ANNOUNCEMENT="${ANNOUNCEMENT//'%'/'%25'}"
+          ANNOUNCEMENT="${ANNOUNCEMENT//$'\n'/'%0A'}"
+          ANNOUNCEMENT="${ANNOUNCEMENT//$'\r'/'%0D'}"
           echo "$ANNOUNCEMENT"
           echo "::set-output name=ANNOUNCEMENT::$ANNOUNCEMENT"
       - name: Discord Announcement

@@ -4,11 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.64
-- Game-Play: Rotate and Zoom the playmat
-  - Left Slider for Rotation and Right Slider for Zoom
-  - Reset with buttons next to sliders 
-  - Control with 2-fingers and mouse right button + wheel
+## What's New - v1.65
+
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
