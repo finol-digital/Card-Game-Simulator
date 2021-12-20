@@ -13,6 +13,11 @@
 			"type": "integer"
 		},
 		{
+			"name": "element",
+			"display": "Element",
+			"type": "stringEnum"
+		},
+		{
 			"name": "superType",
 			"display": "Supertype",
 			"type": "stringEnumList"
@@ -21,11 +26,6 @@
 			"name": "subType",
 			"display": "Subtype",
 			"type": "stringEnumList"
-		},
-		{
-			"name": "element",
-			"display": "Element",
-			"type": "stringEnum"
 		},
 		{
 			"name": "rulesText",
@@ -77,6 +77,17 @@
 	],
 	"enums": [
 		{
+			"property": "element",
+			"values": {
+				"Normal": "Normal",
+				"Wind": "Wind",
+				"Fire": "Fire",
+				"Water": "Water",
+				"Crux": "Crux",
+				"Arcane": "Arcane"
+			}
+		},
+		{
 			"property": "superType",
 			"values": {
 				"Champion": "Champion",
@@ -104,16 +115,6 @@
 				"Artifact": "Artifact",
 				"Sceptre": "Sceptre",
 				"Book": "Book"
-			}
-		},
-		{
-			"property": "element",
-			"values": {
-				"Normal": "Normal",
-				"Wind": "Wind",
-				"Crux": "Crux",
-				"Fire": "Fire",
-				"Arcane": "Arcane"
 			}
 		},
 		{
