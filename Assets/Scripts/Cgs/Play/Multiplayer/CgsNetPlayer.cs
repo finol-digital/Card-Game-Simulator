@@ -106,13 +106,12 @@ namespace Cgs.Play.Multiplayer
         [TargetRpc]
         private void TargetApplyPlayerRotation(int playerCount)
         {
-            // 1st player no rotation, second player -180, 3rd 90, and 4th -90
             if (playerCount % 4 == 0)
-                CgsNetManager.Instance.playController.playArea.CurrentRotation = -90;
+                CgsNetManager.Instance.playController.playArea.CurrentRotation = 270;
             else if (playerCount % 3 == 0)
                 CgsNetManager.Instance.playController.playArea.CurrentRotation = 90;
             else if (playerCount % 2 == 0)
-                CgsNetManager.Instance.playController.playArea.CurrentRotation = -180;
+                CgsNetManager.Instance.playController.playArea.CurrentRotation = 180;
             else
                 CgsNetManager.Instance.playController.playArea.CurrentRotation = 0;
             Debug.Log(

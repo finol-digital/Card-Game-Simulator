@@ -18,7 +18,7 @@ namespace Cgs.Play
 
         private const float PageVerticalSensitivity = 0.2f;
         private const float Tolerance = 0.01f;
-        private const float TimeToDisappear = 2f;
+        private const float TimeToDisappear = 3f;
 
         private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;

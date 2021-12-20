@@ -125,6 +125,7 @@ namespace Cgs.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
+            playArea.CurrentZoom = RotateZoomableScrollRect.MinZoom;
             playMat.OnAddCardActions.Add(AddCardToPlay);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 

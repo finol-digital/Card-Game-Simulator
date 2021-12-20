@@ -13,9 +13,9 @@ namespace Cgs.ScrollRects
 {
     public class RotateZoomableScrollRect : ScrollRect, IPointerEnterHandler, IPointerExitHandler
     {
-        private const float MinRotation = -180; // Also in PlayMatRotation slider
-        private const float MaxRotation = 180; // Also in PlayMatRotation slider
-        private const float MinZoom = 0.66f; // Also in PlayMatZoom slider
+        private const float MinRotation = 0; // Also in PlayMatRotation slider
+        private const float MaxRotation = 360; // Also in PlayMatRotation slider
+        public const float MinZoom = 0.66f; // Also in PlayMatZoom slider
         private const float MaxZoom = 1.33f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;
         private const float ZoomLerpSpeed = 7.5f;
@@ -27,7 +27,12 @@ namespace Cgs.ScrollRects
             get => _currentEulerAngles.z;
             set
             {
-                _currentEulerAngles = Vector3.forward * Mathf.Clamp(value, MinRotation, MaxRotation);
+                var desiredRotation = value;
+                if (desiredRotation < MinRotation)
+                    desiredRotation += MaxRotation;
+                else if (desiredRotation > MaxRotation)
+                    desiredRotation -= MaxRotation;
+                _currentEulerAngles = Vector3.forward * Mathf.Clamp(desiredRotation, MinRotation, MaxRotation);
                 _currentRotation.eulerAngles = _currentEulerAngles;
                 content.rotation = _currentRotation;
             }
@@ -56,11 +61,11 @@ namespace Cgs.ScrollRects
 
         private float _scrollSensitivity;
 
-        private List<Vector2> _touches = new List<Vector2>();
+        private Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
         private bool _isPinching;
+        private bool _blockPan;
         private float _startPinchDist;
         private float _startPinchZoom;
-        private bool _blockPan;
         private bool _isOver;
 
         protected override void Awake()
@@ -77,62 +82,90 @@ namespace Cgs.ScrollRects
             base.SetContentAnchoredPosition(position);
         }
 
-        public override void OnDrag(PointerEventData eventData)
+        public override void OnDrag(PointerEventData pointerEventData)
         {
-            switch (eventData.button)
+            PointerPositions[pointerEventData.pointerId] = pointerEventData.position;
+            switch (pointerEventData.button)
             {
                 case PointerEventData.InputButton.Right:
-                    CurrentRotation += eventData.delta.x / Screen.width * MouseRotationSensitivity;
+                    if (ZoomEnabled)
+                        CurrentRotation += pointerEventData.delta.x / Screen.width * MouseRotationSensitivity;
+                    else
+                        OnDragPan(pointerEventData);
                     break;
+
                 case PointerEventData.InputButton.Middle:
-                    content.localPosition += new Vector3(eventData.delta.x * 2, eventData.delta.y);
-                    normalizedPosition = new Vector2(Mathf.Clamp(normalizedPosition.x, 0.0f, 1.0f),
-                        Mathf.Clamp(normalizedPosition.y, 0.0f, 1.0f));
+                    if (ZoomEnabled)
+                        OnDragPan(pointerEventData);
+                    else
+                        base.OnDrag(pointerEventData);
                     break;
+
                 case PointerEventData.InputButton.Left:
                 default:
-                    base.OnDrag(eventData);
+                    OnDragRotate(pointerEventData);
                     break;
             }
         }
 
+        private void OnDragPan(PointerEventData mouseEventData)
+        {
+            content.localPosition += new Vector3(mouseEventData.delta.x, mouseEventData.delta.y);
+            normalizedPosition = new Vector2(Mathf.Clamp(normalizedPosition.x, 0.0f, 1.0f),
+                Mathf.Clamp(normalizedPosition.y, 0.0f, 1.0f));
+        }
+
+        private void OnDragRotate(PointerEventData touchEventData)
+        {
+            if (PointerPositions.Count < 2)
+            {
+                base.OnDrag(touchEventData);
+                return;
+            }
+
+            Vector2 referencePoint = content.position;
+            foreach (var position in
+                     PointerPositions.Where(position => position.Key != touchEventData.pointerId))
+                referencePoint = position.Value;
+            var previousDirection = (touchEventData.position - touchEventData.delta) - referencePoint;
+            var currentDirection = touchEventData.position - referencePoint;
+            CurrentRotation += Vector2.SignedAngle(previousDirection, currentDirection);
+        }
+
+        public override void OnEndDrag(PointerEventData eventData)
+        {
+            base.OnEndDrag(eventData);
+            PointerPositions.Remove(eventData.pointerId);
+        }
+
         private void Update()
         {
-            // Touch input
-            _touches = new List<Vector2>(Input.touches.Select(touch => touch.position));
-            for (var i = _touches.Count - 1; i >= 0; i--)
-                if (IsTouchingCard(_touches[i]))
-                    _touches.RemoveAt(i);
-            if (_touches.Count == 2)
+            // Touch zoom
+            var touches = new List<Vector2>(Input.touches.Select(touch => touch.position));
+            for (var i = touches.Count - 1; i >= 0; i--)
+                if (IsTouchingCard(touches[i]))
+                    touches.RemoveAt(i);
+            if (touches.Count == 2)
             {
                 if (!_isPinching)
                 {
                     _isPinching = true;
                     _blockPan = true;
-                    var contentRectTransform = content;
-                    _startPinchDist = Distance(_touches[0], _touches[1]) * contentRectTransform.localScale.x;
+                    _startPinchDist = Distance(touches[0], touches[1]) * content.localScale.x;
                     _startPinchZoom = CurrentZoom;
                 }
 
-/*
-                Vector2 referencePoint = transform.position;
-                foreach (KeyValuePair<int, Vector2> pointerDragPosition in PointerPositions)
-                    if (pointerDragPosition.Key != CurrentPointerEventData.pointerId)
-                        referencePoint = pointerDragPosition.Value;
-                Vector2 prevDir = (CurrentPointerEventData.position - CurrentPointerEventData.delta) - referencePoint;
-                Vector2 currDir = CurrentPointerEventData.position - referencePoint;
-                transform.Rotate(0, 0, Vector2.SignedAngle(prevDir, currDir));*/
-                var currentPinchDist = Distance(_touches[0], _touches[1]) * content.localScale.x;
+                var currentPinchDist = Distance(touches[0], touches[1]) * content.localScale.x;
                 CurrentZoom = (currentPinchDist / _startPinchDist) * _startPinchZoom;
             }
             else
             {
                 _isPinching = false;
-                if (_touches.Count == 0)
+                if (touches.Count == 0)
                     _blockPan = false;
             }
 
-            // Mouse input
+            // Mouse ScrollWheel zoom
             var scrollWheelInput = Input.GetAxis("Mouse ScrollWheel");
             if (Mathf.Abs(scrollWheelInput) > float.Epsilon && EventSystem.current.IsPointerOverGameObject() && _isOver)
                 CurrentZoom *= 1 + scrollWheelInput * ZoomWheelSensitivity;
