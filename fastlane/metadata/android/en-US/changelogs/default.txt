@@ -1,4 +1,2 @@
-- Game-Play: Rotate and Zoom the playmat
-  - Left Slider for Rotation and Right Slider for Zoom
-  - Reset with buttons next to sliders 
-  - Control with 2-fingers and mouse right button + wheel
+- Accessibility: Share Dynamic Links
+- Game-Play: Keep on Top or Move to Bottom of deck
