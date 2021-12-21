@@ -17,12 +17,12 @@
     updateLinkAndUrl = () => {
         address = window.location.search;
         parameterList = new URLSearchParams(address);
-        let map = new Map();
+        map = new Map();
         parameterList.forEach((value, key) => {
             map.set(key, value);
         });
-        let autoUpdateUrl = map["url"];
-        let deepLink = "cardgamesim://link?url=" + encodeURIComponent(autoUpdateUrl);
+        autoUpdateUrl = map.get("url");
+        deepLink = "cardgamesim://link?url=" + encodeURIComponent(autoUpdateUrl);
         document.getElementById("autoupdateurl").innerHTML = autoUpdateUrl;
         document.getElementById("deeplink").href = deepLink;
     }
@@ -37,6 +37,7 @@
 
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         {{ content }}
         <ol>
             <li>Get CGS from the <a href="https://www.microsoft.com/store/apps/9N96N5S4W3J0">Microsoft Store</a></li>
