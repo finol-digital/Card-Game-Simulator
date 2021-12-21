@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Web;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
@@ -15,6 +16,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+using Firebase;
+using Firebase.DynamicLinks;
+#endif
 
 [assembly: InternalsVisibleTo("PlayMode")]
 
@@ -25,9 +30,6 @@ namespace Cgs
         // Show all Debug.Log() to help with debugging?
         public const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
-        public const string GameUrl = "GameUrl";
-        public const string BranchCallbackErrorMessage = "Branch Callback Error!: ";
-        public const string BranchCallbackWarning = "Branch Callback has GameUrl, but it is not a string?";
         public const string DefaultNameWarning = "Found game with default name. Deleting it.";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
         public const string DownloadErrorMessage = "Error downloading game!: ";
@@ -200,6 +202,14 @@ namespace Cgs
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            DynamicLinks.DynamicLinkReceived += OnDynamicLink;
+            Debug.Log("Using Firebase Dynamic Links!");
+#else
+            Application.deepLinkActivated += OnDeepLinkActivated;
+            Debug.Log("Using Native Deep Links!");
+#endif
+
             ResetCurrentToDefault();
         }
 
@@ -286,52 +296,38 @@ namespace Cgs
         }
 
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-        public void MobileBranchCallback(Dictionary<string, object> parameters, string error)
+        private void OnDynamicLink(object sender, EventArgs args)
         {
-            Debug.Log("Branch.Callback");
-            if (!string.IsNullOrEmpty(error))
-            {
-                Debug.LogWarning(BranchCallbackErrorMessage + error);
-                return;
-            }
+            var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
+            var deepLink = dynamicLinkEventArgs?.ReceivedDynamicLink.Url.OriginalString;
 
-            if (!parameters.TryGetValue(GameUrl, out object gameUrlObj))
-            {
-                Debug.LogWarning(BranchCallbackWarning);
-                return;
-            }
-
-            string gameUrl = gameUrlObj as string;
-            if (!string.IsNullOrEmpty(gameUrl))
-                StartCoroutine(GetCardGame(gameUrl));
+            if (string.IsNullOrEmpty(deepLink))
+                Debug.LogWarning("OnDynamicLink::deepLinkEmpty");
             else
-                Debug.LogWarning(BranchCallbackWarning);
+                OnDeepLinkActivated(deepLink);
         }
 #endif
 
-#if (UNITY_STANDALONE_WIN || UNITY_WSA || ENABLE_WINMD_SUPPORT)
-        public void WindowsBranchCallback(BranchSdk.BranchUniversalObject buo, BranchSdk.BranchLinkProperties link,
-            BranchSdk.BranchError error)
+        private void OnDeepLinkActivated(string deepLink)
         {
-            Debug.Log("Branch.Callback");
-            if (error != null && !string.IsNullOrEmpty(error.GetMessage()))
-            {
-                Debug.LogWarning(BranchCallbackErrorMessage + error);
-                return;
-            }
-
-            if (link?.ControlParams == null || !link.ControlParams.TryGetValue(GameUrl, out string gameUrl))
-            {
-                Debug.LogWarning(BranchCallbackErrorMessage);
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(gameUrl))
-                StartCoroutine(GetCardGame(gameUrl));
+            var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
+            if (!Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
+                Debug.LogWarning("OnDeepLinkActivated::autoUpdateUrlMalformed" + deepLink);
             else
-                Debug.LogWarning(BranchCallbackWarning);
+                StartCoroutine(GetCardGame(autoUpdateUrl));
         }
-#endif
+
+        private static string GetAutoUpdateUrl(string deepLink)
+        {
+            if (!Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
+            {
+                Debug.LogWarning("GetAutoUpdateUrl::deepLinkMalformed:" + deepLink);
+                return null;
+            }
+
+            var uri = new Uri(deepLink);
+            return HttpUtility.UrlDecode(HttpUtility.ParseQueryString(uri.Query).Get("url"));
+        }
 
         // Note: Does NOT Reset Game Scene
         internal void ResetCurrentToDefault()
@@ -432,8 +428,8 @@ namespace Cgs
             cardGame ??= Current;
 
             for (int page = cardGame.AllCardsUrlPageCountStartIndex;
-                page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount;
-                page++)
+                 page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount;
+                 page++)
             {
                 cardGame.LoadCards(page);
                 if (page == cardGame.AllCardsUrlPageCountStartIndex &&

@@ -5,7 +5,6 @@
         "GUID:de5fde282a2c8e0489b04b065584c338",
         "GUID:a145925718f93ac4380e53283d16d5a9",
         "GUID:ab425aab4b86fce43a60190dfdddb1ad",
-        "GUID:bf5c66b763c13af418c2c04eed41331f",
         "GUID:30817c1a0e6d646d99c048fc403f5979",
         "GUID:72872094b21c16e48b631b2224833d49",
         "GUID:e720aa64e3f58fb4880566a322584340",
@@ -23,7 +22,12 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "Newtonsoft.Json.dll",
-        "branchwindows.dll"
+        "Unity.Tasks.dll",
+        "Firebase.App.dll",
+        "Firebase.DynamicLinks.dll",
+        "Firebase.Editor.dll",
+        "Firebase.Platform.dll",
+        "Firebase.TaskExtension.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

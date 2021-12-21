@@ -53,8 +53,12 @@ platform :ios do
       profile_name: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_profile-name"],
       profile_uuid: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore"]
     )
+    cocoapods(
+      clean_install: true,
+      podfile: "#{ENV['IOS_BUILD_PATH']}/iOS/"
+    )
     build_app(
-      project: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
+      workspace: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcworkspace",
       scheme: 'Unity-iPhone',
       xcargs: '-allowProvisioningUpdates'
     )

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>599014659905-7cl4gdneshl9cbn28lfmei3rm8e46mk6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.599014659905-7cl4gdneshl9cbn28lfmei3rm8e46mk6</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCw88xZo6nJ1wvp3xUPkS9OqnU30MMynvk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>599014659905</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.finoldigital.CardGameSim</string>
+	<key>PROJECT_ID</key>
+	<string>card-game-simulator</string>
+	<key>STORAGE_BUCKET</key>
+	<string>card-game-simulator.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:599014659905:ios:c6ed1342bfe595346df3c0</string>
+</dict>
+</plist>

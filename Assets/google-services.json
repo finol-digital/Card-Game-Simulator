@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "599014659905",
+    "project_id": "card-game-simulator",
+    "storage_bucket": "card-game-simulator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599014659905:android:113ab15de7ed15f56df3c0",
+        "android_client_info": {
+          "package_name": "com.finoldigital.cardgamesim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599014659905-eaujisr3i7mt3nu2e5aehj79rft3vf4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZQnZUEOfNLY3rUJg0CC-1gkB7LRLBgcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599014659905-eaujisr3i7mt3nu2e5aehj79rft3vf4a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "599014659905-7cl4gdneshl9cbn28lfmei3rm8e46mk6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.finoldigital.CardGameSim"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

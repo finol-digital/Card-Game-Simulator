@@ -13,8 +13,8 @@ namespace Cgs.ScrollRects
 {
     public class RotateZoomableScrollRect : ScrollRect, IPointerEnterHandler, IPointerExitHandler
     {
-        private const float MinRotation = 0; // Also in PlayMatRotation slider
-        private const float MaxRotation = 360; // Also in PlayMatRotation slider
+        private const float MinRotation = -180; // Also in PlayMatRotation slider
+        private const float MaxRotation = 180; // Also in PlayMatRotation slider
         public const float MinZoom = 0.66f; // Also in PlayMatZoom slider
         private const float MaxZoom = 1.33f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;
@@ -29,9 +29,9 @@ namespace Cgs.ScrollRects
             {
                 var desiredRotation = value;
                 if (desiredRotation < MinRotation)
-                    desiredRotation += MaxRotation;
+                    desiredRotation += (MaxRotation - MinRotation);
                 else if (desiredRotation > MaxRotation)
-                    desiredRotation -= MaxRotation;
+                    desiredRotation -= (MaxRotation - MinRotation);
                 _currentEulerAngles = Vector3.forward * Mathf.Clamp(desiredRotation, MinRotation, MaxRotation);
                 _currentRotation.eulerAngles = _currentEulerAngles;
                 content.rotation = _currentRotation;

@@ -15,23 +15,13 @@ cgsYoutubeId: PriDuaM6MEk
 
 {% include youtubePlayer.html id=page.cgsYoutubeId %}
 
-When navigating through CGS, you may find it useful to use [keyboard shortcuts](keyboard.html).
+[Keyboard Shortcuts/Hotkeys](keyboard.html)
 
 ## How to Create and Share
 
-You can mange your card games by tapping the center card game in the Main Menu:
+Tutorial video for how to create and share is coming soon!
 
-![Game Selection Menu Image](assets/img/selectionmenu.webp)
-
-You can then tap on the "Share" button to create a CGS Deep Link that you can send to other people, so that they can click on it and get access to that card game.
-For example, the CGS Deep Link for [Arcmage](https://arcmage.org/) is: [https://cgs.link/arcmage](https://cgs.link/arcmage)
-
-You can also tap the "Download" button to manually enter the CGS AutoUpdate URL for the game you would like to download.
-For example, the CGS AutoUpdate URL for Arcmage is: https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json
-
-![Game Download Menu Image](assets/img/downloadmenu.webp)
-
-You can also create your own custom game(s) by following the [Custom Games Documentation](custom.html).
+[Custom Game - Developer Docs](custom.html)
 
 ## Feedback
 
