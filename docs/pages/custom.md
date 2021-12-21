@@ -2,7 +2,7 @@
 permalink: custom.html
 ---
 
-# Defining Custom Games
+# CGS Custom Games
 Card Game Simulator allows users to [download custom card games to use within the application](index.html#how-to-create-and-share).
 
 ## CGS Core Concept
@@ -12,8 +12,8 @@ A custom game in CGS is a specification for a collection of information about a 
 Custom games are created with a new folder within the persistent games data directory. The location of this persistent data directory varies depending on platform. Some examples include:
 - Android: /Data/Data/com.finoldigital.cardgamesim/files/games/
 - Mac: ~/Library/Containers/com.finoldigital.CardGameSimulator/Data/Library/Application Support/com.finoldigital.CardGameSimulator/games
-- Windows: C:\Users\\<user\>\AppData\LocalLow\Finol Digital LLC\Card Game Simulator\games
-- Windows UWP: C:\Users\\<user \>\AppData\Local\Packages\FinolDigitalLLC.CardGameSimulator_499qk536pdy94\LocalState\games
+- Windows (Steam): C:\Users\\<user\>\AppData\LocalLow\Finol Digital LLC\Card Game Simulator\games
+- Windows UWP (Microsoft Store): C:\Users\\<user \>\AppData\Local\Packages\FinolDigitalLLC.CardGameSimulator_499qk536pdy94\LocalState\games
 
 ## Custom game folder structure
 The structure of this custom game folder is:
