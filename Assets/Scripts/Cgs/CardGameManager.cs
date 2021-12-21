@@ -300,9 +300,11 @@ namespace Cgs
         {
             var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
             var deepLink = dynamicLinkEventArgs?.ReceivedDynamicLink.Url.OriginalString;
-
             if (string.IsNullOrEmpty(deepLink))
-                Debug.LogWarning("OnDynamicLink::deepLinkEmpty");
+            {
+                Debug.LogError("OnDynamicLink::deepLinkEmpty");
+                Messenger.Show("OnDynamicLink::deepLinkEmpty");
+            }
             else
                 OnDeepLinkActivated(deepLink);
         }
@@ -312,7 +314,10 @@ namespace Cgs
         {
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
             if (!Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
-                Debug.LogWarning("OnDeepLinkActivated::autoUpdateUrlMalformed" + deepLink);
+            {
+                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMalformed" + deepLink);
+                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMalformed" + deepLink);
+            }
             else
                 StartCoroutine(GetCardGame(autoUpdateUrl));
         }

@@ -13,6 +13,7 @@ using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -44,20 +45,24 @@ namespace Cgs.CardGameView.Multiplayer
     public class CardStack : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
         IBeginDragHandler, IDragHandler, IEndDragHandler, ICardDropHandler
     {
-        private const string ShuffleText = "Shuffled!";
-        private const string SaveText = "Saved";
+        public const string ShuffleText = "Shuffled!";
+        public const string SaveText = "Saved";
+        public const string TopOrBottomPrompt = "Keep on Top or Move to Bottom?";
+        public const string Top = "Keep on Top";
+        public const string Bottom = "Move to Bottom";
+
         private const string SaveDelimiter = "_";
 
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
 
-        public bool IsDraggingCard => _pointerPositions.Count == 1 && _currentPointerEventData != null &&
-                                      _currentPointerEventData.button != PointerEventData.InputButton.Middle &&
-                                      _currentPointerEventData.button != PointerEventData.InputButton.Right
-                                      || _pointerPositions.Count > 1;
+        private bool IsDraggingCard => _pointerPositions.Count == 1 && _currentPointerEventData != null &&
+                                       _currentPointerEventData.button != PointerEventData.InputButton.Middle &&
+                                       _currentPointerEventData.button != PointerEventData.InputButton.Right
+                                       || _pointerPositions.Count > 1;
 
-        public bool LacksAuthority => NetworkManager.singleton.isNetworkActive && !hasAuthority;
+        private bool LacksAuthority => NetworkManager.singleton.isNetworkActive && !hasAuthority;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -106,7 +111,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             GetComponent<CardDropArea>().DropHandler = this;
 
-            var rectTransform = (RectTransform)transform;
+            var rectTransform = (RectTransform) transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             rectTransform.sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             rectTransform.localScale = Vector3.one;
@@ -132,6 +137,7 @@ namespace Cgs.CardGameView.Multiplayer
                 actionLabel.gameObject.SetActive(isAction);
                 actionLabel.text = _actionText;
             }
+
             if (isAction && (!CgsNetManager.Instance.isNetworkActive || isServer))
                 _actionTime -= Time.deltaTime;
         }
@@ -140,7 +146,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _currentPointerEventData = eventData;
             _pointerPositions[eventData.pointerId] = eventData.position;
-            _pointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
+            _pointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -220,7 +226,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Vector2 removedOffset = Vector2.zero;
             if (_pointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
-                removedOffset = (Vector2)transform.position - eventData.position - pointerDragOffset;
+                removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
             _pointerPositions.Remove(eventData.pointerId);
             _pointerDragOffsets.Remove(eventData.pointerId);
             foreach (int offsetKey in _pointerDragOffsets.Keys.ToList())
@@ -256,7 +262,7 @@ namespace Cgs.CardGameView.Multiplayer
             targetPosition +=
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
 
-            var rectTransform = (RectTransform)transform;
+            var rectTransform = (RectTransform) transform;
             rectTransform.position = targetPosition;
             rectTransform.SetAsLastSibling();
 
@@ -313,15 +319,45 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnDrop(CardModel cardModel)
         {
             cardModel.PlaceHolderCardZone = null;
-            if (CgsNetManager.Instance.isNetworkActive)
-                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
+            if (CgsNetManager.Instance.isNetworkActive && !hasAuthority)
+                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id, true);
             else
-                Insert(Cards.Count, cardModel.Id);
+                Insert(Cards.Count, cardModel.Id, true);
         }
 
-        public void Insert(int index, string cardId)
+        public void Insert(int index, string cardId, bool prompt = false)
         {
             _cardIds.Insert(index, cardId);
+            Debug.Log(index + " " + _cardIds.Count + " " + prompt);
+            if (index == _cardIds.Count - 1 && prompt)
+                PromptMoveToBottom();
+        }
+
+        public void PromptMoveToBottom()
+        {
+            CgsNetManager.Instance.playController.Decider.Show(TopOrBottomPrompt,
+                new Tuple<string, UnityAction>(Top, () => { }),
+                new Tuple<string, UnityAction>(Bottom, RequestMoveToBottom));
+        }
+
+        private void RequestMoveToBottom()
+        {
+            if (CgsNetManager.Instance.isNetworkActive)
+                CmdMoveToBottom();
+            else
+            {
+                var cardId = _cardIds[_cardIds.Count - 1];
+                _cardIds.RemoveAt(_cardIds.Count - 1);
+                _cardIds.Insert(0, cardId);
+            }
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdMoveToBottom()
+        {
+            var cardId = _cardIds[_cardIds.Count - 1];
+            _cardIds.RemoveAt(_cardIds.Count - 1);
+            _cardIds.Insert(0, cardId);
         }
 
         public string RemoveAt(int index)

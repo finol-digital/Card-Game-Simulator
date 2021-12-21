@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## What's New - v1.65
 - Accessibility: Share Dynamic Links
+- Game-Play: Keep on Top or Move to Bottom of deck
 
 ## Active Sprint
 - Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time

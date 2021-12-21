@@ -245,19 +245,27 @@ namespace Cgs.Play.Multiplayer
             cardStack.DoShuffle();
         }
 
-        public void RequestInsert(GameObject stack, int index, string cardId)
+        public void RequestInsert(GameObject stack, int index, string cardId, bool prompt = false)
         {
             Debug.Log($"[CgsNet Player] Requesting insert {cardId} at {index}...");
-            CmdInsert(stack, index, cardId);
+            CmdInsert(stack, index, cardId, prompt);
         }
 
         [Command]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdInsert(GameObject stack, int index, string cardId)
+        private void CmdInsert(GameObject stack, int index, string cardId, bool prompt)
         {
             Debug.Log($"[CgsNet Player] Insert {cardId} at {index}!");
             var cardStack = stack.GetComponent<CardStack>();
             cardStack.Insert(index, cardId);
+            if (prompt)
+                TargetPromptMoveToBottom(stack);
+        }
+
+        [TargetRpc]
+        private void TargetPromptMoveToBottom(GameObject stack)
+        {
+            stack.GetComponent<CardStack>().PromptMoveToBottom();
         }
 
         public void RequestRemoveAt(GameObject stack, int index)

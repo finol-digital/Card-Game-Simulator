@@ -42,6 +42,7 @@ namespace Cgs.Play
         public GameObject cardStackPrefab;
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
+        public GameObject decisionModalPrefab;
 
         public Transform stackViewers;
 
@@ -111,6 +112,12 @@ namespace Cgs.Play
             : _dealer = Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
+
+        public DecisionModal Decider => _decider
+            ? _decider
+            : _decider = Instantiate(decisionModalPrefab).GetOrAddComponent<DecisionModal>();
+
+        private DecisionModal _decider;
 
         private CardStack _soloDeckStack;
 
