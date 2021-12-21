@@ -1,6 +1,6 @@
 ---
 layout: home
-cgsYoutubeId: PriDuaM6MEk
+playYoutubeId: PriDuaM6MEk
 ---
 
 # Play Anywhere
@@ -13,7 +13,7 @@ cgsYoutubeId: PriDuaM6MEk
 
 ## How to Play
 
-{% include youtubePlayer.html id=page.cgsYoutubeId %}
+{% include youtubePlayer.html id=page.playYoutubeId %}
 
 [Keyboard Shortcuts/Hotkeys](keyboard.html)
 
