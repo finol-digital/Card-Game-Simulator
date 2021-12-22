@@ -16,8 +16,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-using Firebase;
+#if UNITY_ANDROID || UNITY_IOS
 using Firebase.DynamicLinks;
 #endif
 
@@ -28,7 +27,7 @@ namespace Cgs
     public class CardGameManager : MonoBehaviour
     {
         // Show all Debug.Log() to help with debugging?
-        public const bool IsMessengerDebugLogVerbose = false;
+        private const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
         public const string DefaultNameWarning = "Found game with default name. Deleting it.";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
@@ -202,15 +201,16 @@ namespace Cgs
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
 
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            ResetCurrentToDefault();
+
+            Debug.Log("CardGameManager Awake");
+#if UNITY_ANDROID || UNITY_IOS
             DynamicLinks.DynamicLinkReceived += OnDynamicLink;
             Debug.Log("Using Firebase Dynamic Links!");
 #else
             Application.deepLinkActivated += OnDeepLinkActivated;
             Debug.Log("Using Native Deep Links!");
 #endif
-
-            ResetCurrentToDefault();
         }
 
         private void CreateDefaultCardGames()
@@ -295,7 +295,7 @@ namespace Cgs
             OnSceneActions.Clear();
         }
 
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if UNITY_ANDROID || UNITY_IOS
         private void OnDynamicLink(object sender, EventArgs args)
         {
             var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;

@@ -27,7 +27,13 @@
         "Firebase.DynamicLinks.dll",
         "Firebase.Editor.dll",
         "Firebase.Platform.dll",
-        "Firebase.TaskExtension.dll"
+        "Firebase.TaskExtension.dll",
+        "Google.IOSResolver.dll",
+        "Google.JarResolver.dll",
+        "Google.MiniJson.dll",
+        "Google.PackageManagerResolver.dll",
+        "Google.VersionHandler.dll",
+        "Google.VersionHandlerImpl.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],
