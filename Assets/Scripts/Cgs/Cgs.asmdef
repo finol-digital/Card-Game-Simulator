@@ -33,7 +33,8 @@
         "Google.MiniJson.dll",
         "Google.PackageManagerResolver.dll",
         "Google.VersionHandler.dll",
-        "Google.VersionHandlerImpl.dll"
+        "Google.VersionHandlerImpl.dll",
+        "Unity.Compat.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],
