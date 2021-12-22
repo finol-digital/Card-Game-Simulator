@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Web;
 using CardGameDef;
 using CardGameDef.Unity;
@@ -47,10 +48,7 @@ namespace Cgs
         public const string DeletePrompt =
             "Deleting a card game also deletes all decks saved for that card game. Are you sure you would like to delete this card game?";
 
-        public const string ShareBranchMessage = "Get CGS for {0}: {1}";
-
-        public const string ShareUrlMessage =
-            "CGS Deep Link Not Found!\nThe AutoUpdate Url for {0} has been copied to your clipboard:\n{1}";
+        public const string ShareDeepLinkMessage = "Get CGS for {0}: {1}";
 
         public const string ShareWarningMessage =
             "Sharing {0} on CGS requires that it be uploaded to the web.\nIf you would like help with this upload, please contact david@finoldigital.com";
@@ -562,9 +560,10 @@ namespace Cgs
         public void Share()
         {
             Debug.Log("CGS Share:: Deep:" + Current.CgsDeepLink + " Auto:" + Current.AutoUpdateUrl);
-            if (Current.CgsDeepLink != null && Current.CgsDeepLink.IsWellFormedOriginalString())
+            if (Current.AutoUpdateUrl != null && Current.AutoUpdateUrl.IsWellFormedOriginalString())
             {
-                string shareMessage = string.Format(ShareBranchMessage, Current.Name, Current.CgsDeepLink);
+                var deepLink = Current.CgsDeepLink?.OriginalString ?? BuildDeepLink();
+                var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, deepLink);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 var nativeShare = new NativeShare();
                 nativeShare.SetText(shareMessage).Share();
@@ -573,16 +572,31 @@ namespace Cgs
                 Messenger.Show(shareMessage);
 #endif
             }
-            else if (Current.AutoUpdateUrl != null && Current.AutoUpdateUrl.IsWellFormedOriginalString())
-            {
-                UniClipboard.SetText(Current.AutoUpdateUrl.ToString());
-                Messenger.Show(string.Format(ShareUrlMessage, Current.Name, Current.AutoUpdateUrl));
-            }
             else
             {
                 Debug.LogWarningFormat(ShareWarningMessage, Current.Name);
                 Messenger.Show(string.Format(ShareWarningMessage, Current.Name));
             }
+        }
+
+        private string BuildDeepLink()
+        {
+            if (Current.AutoUpdateUrl == null || !Current.AutoUpdateUrl.IsWellFormedOriginalString())
+            {
+                Debug.LogErrorFormat(ShareWarningMessage, Current.Name);
+                Messenger.Show(string.Format(ShareWarningMessage, Current.Name));
+                return null;
+            }
+
+            var deepLink = "https://cgs.link/?link=";
+            deepLink += "https://www.cardgamesimulator.com/link?url%3D" + Current.AutoUpdateUrl.OriginalString;
+            deepLink += "&apn=com.finoldigital.cardgamesim&isi=1392877362&ibi=com.finoldigital.CardGameSim";
+            var regex = new Regex("[^a-zA-Z0-9 -]");
+            var encodedName = regex.Replace(Current.Name, "+");
+            deepLink += "&st=Card+Game+Simulator+-+" + encodedName + "&sd=Play+" + encodedName + "+on+CGS!";
+            if (Current.BannerImageUrl != null && Current.BannerImageUrl.IsWellFormedOriginalString())
+                deepLink += "&si=" + Current.BannerImageUrl.OriginalString;
+            return deepLink;
         }
 
         private void LateUpdate()
