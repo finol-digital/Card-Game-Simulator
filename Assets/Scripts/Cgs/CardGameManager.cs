@@ -18,6 +18,8 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
 #if UNITY_ANDROID || UNITY_IOS
+using Firebase;
+using Firebase.Extensions;
 using Firebase.DynamicLinks;
 #endif
 
@@ -306,8 +308,20 @@ namespace Cgs
             else
             {
 #if UNITY_ANDROID || UNITY_IOS
-                DynamicLinks.DynamicLinkReceived += OnDynamicLink;
-                Debug.Log("Using Firebase Dynamic Links!");
+                Debug.Log("Should use Firebase Dynamic Links...");
+                FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+                {
+                    var dependencyStatus = task.Result;
+                    if (dependencyStatus == DependencyStatus.Available)
+                    {
+                        DynamicLinks.DynamicLinkReceived += OnDynamicLink;
+                        Debug.Log("Using Firebase Dynamic Links!");
+                    }
+                    else
+                    {
+                        Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
+                    }
+                });
 #else
                 Application.deepLinkActivated += OnDeepLinkActivated;
                 Debug.Log("Using Native Deep Links!");
