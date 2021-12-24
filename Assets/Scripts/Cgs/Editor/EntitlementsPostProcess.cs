@@ -1,4 +1,4 @@
-﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
@@ -42,7 +42,8 @@ namespace Cgs.Editor
             var src = AssetDatabase.GetAssetPath(file);
             var fileName = Path.GetFileName(src);
             var dst = buildPath + "/" + targetName + "/" + fileName;
-            FileUtil.CopyFileOrDirectory(src, dst);
+            if (!File.Exists(dst))
+                FileUtil.CopyFileOrDirectory(src, dst);
             pbxProject.AddFile(targetName + "/" + fileName, fileName);
             pbxProject.AddBuildProperty(targetGuid, "CODE_SIGN_ENTITLEMENTS", targetName + "/" + fileName);
             pbxProject.WriteToFile(pbxProjectPath);
