@@ -2,11 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.IO;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode;
 using UnityEngine;
+#if UNITY_IOS
+using UnityEditor.iOS.Xcode;
+using System.IO;
+#endif
 
 namespace Cgs.Editor
 {
@@ -22,13 +24,15 @@ namespace Cgs.Editor
 
             var dummy = CreateInstance<EntitlementsPostProcess>();
             var file = dummy.entitlementsFile;
-            DestroyImmediate(dummy);
             if (file == null)
             {
                 Debug.LogError("EntitlementsPostProcess::entitlementsFileMissing!");
                 return;
             }
 
+            DestroyImmediate(dummy);
+
+#if UNITY_IOS
             var pbxProjectPath = PBXProject.GetPBXProjectPath(buildPath);
             var pbxProject = new PBXProject();
             pbxProject.ReadFromFile(pbxProjectPath);
@@ -42,6 +46,7 @@ namespace Cgs.Editor
             pbxProject.AddFile(targetName + "/" + fileName, fileName);
             pbxProject.AddBuildProperty(targetGuid, "CODE_SIGN_ENTITLEMENTS", targetName + "/" + fileName);
             pbxProject.WriteToFile(pbxProjectPath);
+#endif
         }
     }
 }
