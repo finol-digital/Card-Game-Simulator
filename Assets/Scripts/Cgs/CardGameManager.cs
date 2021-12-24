@@ -201,13 +201,14 @@ namespace Cgs
 
             ResetCurrentToDefault();
 
-            Debug.Log("CardGameManager Awake");
-#if UNITY_ANDROID || UNITY_IOS
-            DynamicLinks.DynamicLinkReceived += OnDynamicLink;
-            Debug.Log("Using Firebase Dynamic Links!");
-#else
-            Application.deepLinkActivated += OnDeepLinkActivated;
-            Debug.Log("Using Native Deep Links!");
+            Debug.Log("CardGameManager is Awake!");
+        }
+
+        private void Start()
+        {
+#if !UNITY_WEBGL
+            Debug.Log("CardGameManager::Start:CheckDeepLinks");
+            CheckDeepLinks();
 #endif
         }
 
@@ -291,6 +292,27 @@ namespace Cgs
         private void OnSceneUnloaded(Scene scene)
         {
             OnSceneActions.Clear();
+        }
+
+        private void CheckDeepLinks()
+        {
+            Debug.Log("Checking Deep Links...");
+            if (!string.IsNullOrEmpty(Application.absoluteURL) &&
+                Uri.IsWellFormedUriString(Application.absoluteURL, UriKind.RelativeOrAbsolute))
+            {
+                Debug.Log("Detected deep link:" + Application.absoluteURL);
+                OnDeepLinkActivated(Application.absoluteURL);
+            }
+            else
+            {
+#if UNITY_ANDROID || UNITY_IOS
+                DynamicLinks.DynamicLinkReceived += OnDynamicLink;
+                Debug.Log("Using Firebase Dynamic Links!");
+#else
+                Application.deepLinkActivated += OnDeepLinkActivated;
+                Debug.Log("Using Native Deep Links!");
+#endif
+            }
         }
 
 #if UNITY_ANDROID || UNITY_IOS
