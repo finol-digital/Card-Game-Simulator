@@ -76,16 +76,17 @@ namespace Cgs.CardGameView.Multiplayer
             get
             {
                 if (string.IsNullOrEmpty(Id) ||
-                    !CardGameManager.Current.Cards.TryGetValue(Id, out UnityCard cardValue))
+                    !CardGameManager.Current.Cards.TryGetValue(Id, out var unityCard))
                     return UnityCard.Blank;
-                return cardValue;
+                return unityCard;
             }
             set
             {
                 Value.UnregisterDisplay(this);
                 Id = value != null ? value.Id : string.Empty;
                 gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
-                value?.RegisterDisplay(this);
+                if (!isFacedown)
+                    value?.RegisterDisplay(this);
             }
         }
 
@@ -311,11 +312,11 @@ namespace Cgs.CardGameView.Multiplayer
                 CardViewer.Instance.IsVisible = false;
         }
 
-        public static void CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
+        public static CardModel CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
             UnityCard value, bool isFacedown, CardZone placeHolderCardZone = null)
         {
-            Vector3 position = transform.position;
-            GameObject newGameObject = Instantiate(gameObject, position, transform.rotation,
+            var position = transform.position;
+            var newGameObject = Instantiate(gameObject, position, transform.rotation,
                 transform.gameObject.FindInParents<Canvas>().transform);
             eventData.pointerPress = newGameObject;
             eventData.pointerDrag = newGameObject;
@@ -328,6 +329,7 @@ namespace Cgs.CardGameView.Multiplayer
             cardModel.DoesCloneOnDrag = false;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2) position - eventData.position;
             cardModel.OnBeginDrag(eventData);
+            return cardModel;
         }
 
         public void OnBeginDrag(PointerEventData eventData)

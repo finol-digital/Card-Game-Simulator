@@ -242,15 +242,16 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            UnityCard card = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
+            var unityCard = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
 
             if (CgsNetManager.Instance.isNetworkActive)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, _cardIds.Count - 1);
             else
                 PopCard();
 
-            CardModel.CreateDrag(eventData, cardModelPrefab, transform, card, true,
+            var cardModel = CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
                 CgsNetManager.Instance.playController.playMat);
+            CgsNetManager.Instance.LocalPlayer.RemovedCard = cardModel;
 
             RemovePointer(eventData);
         }

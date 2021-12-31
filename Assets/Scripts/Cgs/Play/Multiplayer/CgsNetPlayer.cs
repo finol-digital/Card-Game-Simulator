@@ -43,6 +43,8 @@ namespace Cgs.Play.Multiplayer
 
         private readonly SyncList<string> _handNames = new SyncList<string>();
 
+        public CardModel RemovedCard { get; set; }
+
         #region StartGame
 
         public override void OnStartLocalPlayer()
@@ -280,7 +282,16 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Remove at {index}!");
             var cardStack = stack.GetComponent<CardStack>();
-            cardStack.RemoveAt(index);
+            var removedCardId = cardStack.RemoveAt(index);
+            TargetSyncRemovedCard(removedCardId);
+        }
+
+        [TargetRpc]
+        private void TargetSyncRemovedCard(string removedCardId)
+        {
+            if (RemovedCard != null)
+                RemovedCard.Value = CardGameManager.Current.Cards[removedCardId];
+            RemovedCard = null;
         }
 
         public void RequestDeal(GameObject stack, int count)
