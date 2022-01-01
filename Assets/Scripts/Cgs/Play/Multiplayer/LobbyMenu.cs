@@ -86,6 +86,8 @@ namespace Cgs.Play.Multiplayer
 
         private float _lrmUpdateSecond = ServerListUpdateTime;
 
+        private bool _shouldRedisplay;
+
         private void OnEnable()
         {
             EnableLrm();
@@ -106,6 +108,10 @@ namespace Cgs.Play.Multiplayer
 
         private void Update()
         {
+            if (_shouldRedisplay)
+                Redisplay();
+            _shouldRedisplay = false;
+
             if (!Menu.IsFocused)
                 return;
 
@@ -164,8 +170,8 @@ namespace Cgs.Play.Multiplayer
             _selectedServerId = null;
             _selectedServerIp = null;
 
-            CgsNetManager.Instance.Discovery.OnServerFound = OnDiscoveredServer;
             CgsNetManager.Instance.Discovery.StartDiscovery();
+            CgsNetManager.Instance.Discovery.OnServerFound = OnDiscoveredServer;
 
             Redisplay();
         }
@@ -196,7 +202,7 @@ namespace Cgs.Play.Multiplayer
         private void OnDiscoveredServer(DiscoveryResponse info)
         {
             _discoveredServers[info.ServerId] = info;
-            Redisplay();
+            _shouldRedisplay = true;
         }
 
         [UsedImplicitly]

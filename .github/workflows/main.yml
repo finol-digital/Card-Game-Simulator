@@ -182,7 +182,7 @@ jobs:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: papeloto/action-zip@v1
+        uses: vimtor/action-zip@v1
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           files: build/${{ matrix.targetPlatform }}/
@@ -237,7 +237,7 @@ jobs:
           name: cgs-StandaloneWindows64
           path: build/StandaloneWindows64
       - name: Zip Build
-        uses: papeloto/action-zip@v1
+        uses: vimtor/action-zip@v1
         if: github.event.action == 'published'
         with:
           files: build/StandaloneWindows64/
@@ -381,7 +381,7 @@ jobs:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
       - name: Zip App
-        uses: papeloto/action-zip@v1
+        uses: vimtor/action-zip@v1
         if: github.event.action == 'published'
         with:
           files: build/StandaloneOSX/
@@ -565,29 +565,13 @@ jobs:
         with:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
-      - name: Remove BackUpThisFolder_ButDontShipItWithYourGame Folder
-        run: |
-          echo "Cleaning StandaloneWindows..."
-          rm -R build/StandaloneWindows/cgs_BackUpThisFolder_ButDontShipItWithYourGame
-          echo "Cleaned StandaloneWindows! Remains:"
-          ls -alh build/StandaloneWindows
-          echo "Cleaning StandaloneLinux64..."
-          rm -R build/StandaloneLinux64/StandaloneLinux64_BackUpThisFolder_ButDontShipItWithYourGame
-          echo "Cleaned StandaloneLinux64! Remains:"
-          ls -alh build/StandaloneLinux64
-          echo "Cleaning StandaloneWindows64..."
-          rm -R build/StandaloneWindows64/cgs_BackUpThisFolder_ButDontShipItWithYourGame
-          echo "Cleaned StandaloneWindows64! Remains:"
-          ls -alh build/StandaloneWindows64
-          echo "No need to clean StandaloneOSX:"
-          ls -alh build/StandaloneOSX
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
         with:
           format: "${major}.${minor}.${patch}"
       - name: Deploy to Steam
-        uses: game-ci/steam-deploy@main
+        uses: game-ci/steam-deploy@v1
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           password:  ${{ secrets.STEAM_PASSWORD }}

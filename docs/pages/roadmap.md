@@ -4,21 +4,20 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.65
-- Accessibility: Share Dynamic Links
-- Game-Play: Keep on Top or Move to Bottom of deck
+## What's New - v1.66
+- Bug-Fix: Set Import and Multiplayer Menu freeze
+- Bug-Fix: Deep Links
+- Bug-Fix: Cards duplicated when multiple players draw from the same stack at the same time
 
 ## Active Sprint
-- Bug-Fix: Cards are duplicated when multiple players draw from the same stack at the same time
-- Bug-Fix: Decks do not account for rotation
 - Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
-- Game-Play: Automatically create D6 by default; double click it to change number of faces
 - Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
 - Game-Play: Use 2-fingers to move and rotate Stacks
 - Game-Play: Option to have top of stack always revealed
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Playable Objects can Snap to Grid
+- Game-Play: Automatically create D6 by default; double click it to change number of faces
 
 ## Backlog
 - Game-Creation: Edit Button in Main Menu

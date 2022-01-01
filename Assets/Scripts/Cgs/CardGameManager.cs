@@ -2,6 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#if UNITY_IOS
+using Firebase;
+using Firebase.Extensions;
+#endif
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,8 +22,6 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
 #if UNITY_ANDROID || UNITY_IOS
-using Firebase;
-using Firebase.Extensions;
 using Firebase.DynamicLinks;
 #endif
 
@@ -299,45 +301,58 @@ namespace Cgs
         private void CheckDeepLinks()
         {
             Debug.Log("Checking Deep Links...");
-            if (!string.IsNullOrEmpty(Application.absoluteURL) &&
-                Uri.IsWellFormedUriString(Application.absoluteURL, UriKind.RelativeOrAbsolute))
+#if UNITY_IOS
+            Debug.Log("Should use Firebase Dynamic Links for iOS...");
+            Application.deepLinkActivated += OnDeepLinkActivated;/*
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
             {
-                Debug.Log("Detected deep link:" + Application.absoluteURL);
-                OnDeepLinkActivated(Application.absoluteURL);
-            }
-            else
-            {
-#if UNITY_ANDROID || UNITY_IOS
-                Debug.Log("Should use Firebase Dynamic Links...");
-                FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+                var dependencyStatus = task.Result;
+                if (dependencyStatus != DependencyStatus.Available)
                 {
-                    var dependencyStatus = task.Result;
-                    if (dependencyStatus == DependencyStatus.Available)
-                    {
-                        DynamicLinks.DynamicLinkReceived += OnDynamicLink;
-                        Debug.Log("Using Firebase Dynamic Links!");
-                    }
-                    else
-                    {
-                        Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
-                    }
-                });
-#else
-                Application.deepLinkActivated += OnDeepLinkActivated;
-                Debug.Log("Using Native Deep Links!");
-#endif
+                    Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
+                    Messenger.Show("Could not resolve all Firebase dependencies: " + dependencyStatus);
+                    return;
+                }
+
+                DynamicLinks.DynamicLinkReceived += OnDynamicLinkReceived;
+                Debug.Log("Using Firebase Dynamic Links for iOS!");
+            });*/
+#elif UNITY_ANDROID
+            if (string.IsNullOrEmpty(Application.absoluteURL))
+            {
+                DynamicLinks.DynamicLinkReceived += OnDynamicLinkReceived;
+                Debug.Log("Using Firebase Dynamic Links for Android!");
             }
+#else
+            Application.deepLinkActivated += OnDeepLinkActivated;
+            Debug.Log("Using Native Deep Links!");
+#endif
+
+            if (string.IsNullOrEmpty(Application.absoluteURL))
+            {
+                Debug.Log("No Start Deep Link");
+                return;
+            }
+
+            if (!Uri.IsWellFormedUriString(Application.absoluteURL, UriKind.RelativeOrAbsolute))
+            {
+                Debug.LogWarning("Start Deep Link malformed: " + Application.absoluteURL);
+                return;
+            }
+
+            Debug.Log("Start Deep Link: " + Application.absoluteURL);
+            OnDeepLinkActivated(Application.absoluteURL);
         }
 
 #if UNITY_ANDROID || UNITY_IOS
-        private void OnDynamicLink(object sender, EventArgs args)
+        private void OnDynamicLinkReceived(object sender, EventArgs args)
         {
             var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
             var deepLink = dynamicLinkEventArgs?.ReceivedDynamicLink.Url.OriginalString;
             if (string.IsNullOrEmpty(deepLink))
             {
-                Debug.LogError("OnDynamicLink::deepLinkEmpty");
-                Messenger.Show("OnDynamicLink::deepLinkEmpty");
+                Debug.LogError("OnDynamicLinkReceived::deepLinkEmpty");
+                Messenger.Show("OnDynamicLinkReceived::deepLinkEmpty");
             }
             else
                 OnDeepLinkActivated(deepLink);
@@ -347,10 +362,10 @@ namespace Cgs
         private void OnDeepLinkActivated(string deepLink)
         {
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
-            if (!Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
+            if (string.IsNullOrEmpty(autoUpdateUrl) || !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
             {
-                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMalformed" + deepLink);
-                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMalformed" + deepLink);
+                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
+                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
             }
             else
                 StartCoroutine(GetCardGame(autoUpdateUrl));
@@ -358,14 +373,30 @@ namespace Cgs
 
         private static string GetAutoUpdateUrl(string deepLink)
         {
-            if (!Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
+            Debug.Log("GetAutoUpdateUrl::deepLink: " + deepLink);
+            if (string.IsNullOrEmpty(deepLink) || !Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
             {
-                Debug.LogWarning("GetAutoUpdateUrl::deepLinkMalformed:" + deepLink);
+                Debug.LogWarning("GetAutoUpdateUrl::deepLinkMalformed: " + deepLink);
                 return null;
             }
 
-            var uri = new Uri(deepLink);
-            return HttpUtility.UrlDecode(HttpUtility.ParseQueryString(uri.Query).Get("url"));
+            if (deepLink.StartsWith(Tags.DynamicLinkUriDomain))
+            {
+                var dynamicLinkUri = new Uri(deepLink);
+                deepLink = HttpUtility.UrlDecode(HttpUtility.ParseQueryString(dynamicLinkUri.Query).Get("link"));
+                Debug.Log("GetAutoUpdateUrl::dynamicLink: " + deepLink);
+                if (string.IsNullOrEmpty(deepLink) || !Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
+                {
+                    Debug.LogWarning("GetAutoUpdateUrl::dynamicLinkMalformed: " + deepLink);
+                    return null;
+                }
+            }
+
+            var deepLinkUri = new Uri(deepLink);
+            var autoUpdateUrl = HttpUtility.UrlDecode(HttpUtility.ParseQueryString(deepLinkUri.Query).Get("url"));
+            Debug.Log("GetAutoUpdateUrl::autoUpdateUrl: " + autoUpdateUrl);
+
+            return autoUpdateUrl;
         }
 
         // Note: Does NOT Reset Game Scene

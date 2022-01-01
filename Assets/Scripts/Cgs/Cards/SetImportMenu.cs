@@ -35,14 +35,14 @@ namespace Cgs.Cards
 
         private string ImportStatus => $"Importing {SetName}...";
 
-        private string SetName => Path.GetFileName(_setFolderPath);
+        private string SetName => FileBrowserHelpers.GetFilename(_setFolderPath);
 
         private string SetFolderPath
         {
             get => _setFolderPath;
             set
             {
-                if (!Directory.Exists(value))
+                if (!FileBrowserHelpers.DirectoryExists(value))
                 {
                     Debug.LogWarning(ImportFolderWarningMessage + value);
                     CardGameManager.Instance.Messenger.Show(ImportFolderWarningMessage + value);
@@ -53,16 +53,20 @@ namespace Cgs.Cards
 
                 Debug.Log("Import Set Folder Path set: " + _setFolderPath);
                 setNameText.text = SetName;
-                var cardNames = Directory.GetFiles(_setFolderPath)
-                    .Where(filePath => filePath.EndsWith(CardGameManager.Current.CardImageFileType)).Aggregate(
-                        string.Empty,
-                        (current, filePath) =>
-                        {
-                            var fileName = Path.GetFileName(filePath);
-                            var end = fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
-                                StringComparison.Ordinal);
-                            return current + fileName.Substring(0, end - 1) + "\n";
-                        });
+                var cardNames = FileBrowserHelpers.GetEntriesInDirectory(_setFolderPath, true)
+                    .Where(fileSystemEntry =>
+                        !fileSystemEntry.IsDirectory && !string.IsNullOrEmpty(fileSystemEntry.Extension)
+                                                     && fileSystemEntry.Extension.EndsWith(CardGameManager.Current
+                                                         .CardImageFileType))
+                    .Aggregate(string.Empty, (current, file) =>
+                    {
+                        var fileName = file.Name;
+                        if (fileName.EndsWith(CardGameManager.Current.CardImageFileType))
+                            fileName = fileName.Substring(0,
+                                fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
+                                    StringComparison.Ordinal) - 1);
+                        return current + fileName + "\n";
+                    });
                 cardNamesText.text = cardNames;
                 ValidateImportButton();
             }
@@ -106,7 +110,7 @@ namespace Cgs.Cards
 
         private void ValidateImportButton()
         {
-            importButton.interactable = Directory.Exists(SetFolderPath);
+            importButton.interactable = FileBrowserHelpers.DirectoryExists(SetFolderPath);
         }
 
         [UsedImplicitly]
@@ -120,7 +124,11 @@ namespace Cgs.Cards
         {
             ValidateImportButton();
             if (!importButton.interactable)
+            {
+                Debug.LogError("ImportSet::invalid: " + SetFolderPath);
+                CardGameManager.Instance.Messenger.Show("ImportSet::invalid: " + SetFolderPath);
                 yield break;
+            }
 
             importButton.interactable = false;
             yield return null;
@@ -132,20 +140,23 @@ namespace Cgs.Cards
             CardGameManager.Instance.Progress.Show(this);
             ProgressStatus = ImportStatus;
 
-            var cardPathsToImport = Directory.GetFiles(_setFolderPath)
-                .Where(filePath => filePath.EndsWith(CardGameManager.Current.CardImageFileType)).ToList();
+            var cardPathsToImport = FileBrowserHelpers.GetEntriesInDirectory(_setFolderPath, true)
+                .Where(fileSystemEntry => !fileSystemEntry.IsDirectory &&
+                                          !string.IsNullOrEmpty(fileSystemEntry.Extension) &&
+                                          fileSystemEntry.Extension.EndsWith(CardGameManager.Current.CardImageFileType))
+                .ToList();
             var cardCount = cardPathsToImport.Count;
             for (var i = 0; i < cardCount; i++)
             {
                 try
                 {
                     ProgressPercentage = (float) i / cardCount;
-                    var fileName = Path.GetFileName(cardPathsToImport[i]);
+                    var fileName = cardPathsToImport[i].Name;
                     var end = fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
                         StringComparison.Ordinal);
                     var cardName = fileName.Substring(0, end - 1);
                     var card = new UnityCard(CardGameManager.Current, cardName, cardName, SetName, null, false);
-                    File.Copy(cardPathsToImport[i], card.ImageFilePath);
+                    FileBrowserHelpers.CopyFile(cardPathsToImport[i].Path, card.ImageFilePath);
 
                     if (!File.Exists(card.ImageFilePath))
                     {

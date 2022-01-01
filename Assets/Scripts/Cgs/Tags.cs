@@ -9,6 +9,8 @@ namespace Cgs
         public const string CardGameManager = "CardGameManager";
         public const string CardViewer = "CardViewer";
 
+        public const string DynamicLinkUriDomain = "https://cgs.link";
+
         public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@www.cardgamesimulator.com";
 
 #if UNITY_WEBGL
