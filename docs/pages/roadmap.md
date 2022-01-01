@@ -4,13 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.66
-- Bug-Fix: Set Import and Multiplayer Menu freeze
-- Bug-Fix: Deep Links
-- Bug-Fix: Cards duplicated when multiple players draw from the same stack at the same time
+## What's New - v1.67
+- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
 
 ## Active Sprint
-- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
 - Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
 - Game-Play: Use 2-fingers to move and rotate Stacks
