@@ -1,2 +1,3 @@
-- Accessibility: Share Dynamic Links
-- Game-Play: Keep on Top or Move to Bottom of deck
+- Bug-Fix: Set Import and Multiplayer Menu freeze
+- Bug-Fix: Deep Links
+- Bug-Fix: Cards duplicated when multiple players draw from the same stack at the same time
