@@ -303,7 +303,7 @@ namespace Cgs
             Debug.Log("Checking Deep Links...");
 #if UNITY_IOS
             Debug.Log("Should use Firebase Dynamic Links for iOS...");
-            Application.deepLinkActivated += OnDeepLinkActivated;
+            Application.deepLinkActivated += OnDeepLinkActivated;/*
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
             {
                 var dependencyStatus = task.Result;
@@ -316,7 +316,7 @@ namespace Cgs
 
                 DynamicLinks.DynamicLinkReceived += OnDynamicLinkReceived;
                 Debug.Log("Using Firebase Dynamic Links for iOS!");
-            });
+            });*/
 #elif UNITY_ANDROID
             if (string.IsNullOrEmpty(Application.absoluteURL))
             {
