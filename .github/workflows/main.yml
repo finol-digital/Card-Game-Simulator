@@ -513,6 +513,11 @@ jobs:
         uses: paulhatch/semantic-version@v4.0.2
         with:
           format: "${major}.${minor}.${patch}"
+      - name: Upload .appxupload
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', steps.versioning.outputs.version) }}
+          path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
       - name: Upload to the Microsoft Store
         shell: pwsh
         env:

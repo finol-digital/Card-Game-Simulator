@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.67
+- Bug-Fix: Deep Links and Multiplayer
 - Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
 
 ## Active Sprint
