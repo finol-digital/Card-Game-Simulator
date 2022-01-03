@@ -13,16 +13,23 @@
   </head>
 
   <body onload="updateLinkAndUrl()">
-    <script type="text/javascript">
+    <script>
     updateLinkAndUrl = () => {
-        address = window.location.search;
-        parameterList = new URLSearchParams(address);
-        map = new Map();
+        const path = location.pathname;
+        console.log(path);
+        let address = decodeURIComponent(path);
+        if (path == "link")
+            address = location.search;
+        else
+            address = address.substring(address.indexOf('?') + 1);
+        console.log(address);
+        const parameterList = new URLSearchParams(address);
+        const map = new Map();
         parameterList.forEach((value, key) => {
             map.set(key, value);
         });
-        autoUpdateUrl = map.get("url");
-        deepLink = "cardgamesim://link?url=" + encodeURIComponent(autoUpdateUrl);
+        const autoUpdateUrl = map.get("url");
+        const deepLink = "cardgamesim://link?url=" + encodeURIComponent(autoUpdateUrl);
         document.getElementById("autoupdateurl").innerHTML = autoUpdateUrl;
         document.getElementById("deeplink").href = deepLink;
     }
@@ -39,19 +46,6 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         {{ content }}
-        <ol>
-            <li>Get CGS from <a href="https://www.microsoft.com/store/apps/9N96N5S4W3J0">the Microsoft Store</a></li>
-            <li>With CGS installed from the Microsoft Store, click <a id="deeplink" href="">this deep link</a></li>
-        </ol>
-        <p>Alternatively, you can follow these steps:</p>
-        <ol>
-            <li>Copy this url to your clipboard: <div id="autoupdateurl"></div></li>
-            <li>Get CGS from <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/">Steam</a></li>
-            <li>Use Steam to start playing CGS, and go to the Main Menu</li>
-            <li>Click the center card game so that the Selection Menu appears: <img src="assets/img/selectionmenu.webp" alt="Selection Menu"/></li>
-            <li>Click the Download button so that the Download Menu appears: <img src="assets/img/downloadmenu.webp" alt="Download Menu"/></li>
-            <li>Paste the url from step 1 and click Download</li>
-        </ol>
       </section>
     </div>
 
