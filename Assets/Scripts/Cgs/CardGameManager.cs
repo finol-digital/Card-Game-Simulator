@@ -362,7 +362,8 @@ namespace Cgs
         private void OnDeepLinkActivated(string deepLink)
         {
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
-            if (string.IsNullOrEmpty(autoUpdateUrl) || !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
+            if (string.IsNullOrEmpty(autoUpdateUrl) ||
+                !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
             {
                 Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
                 Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
@@ -656,7 +657,8 @@ namespace Cgs
             }
 
             var deepLink = "https://cgs.link/?link=";
-            deepLink += "https://www.cardgamesimulator.com/link?url%3D" + Current.AutoUpdateUrl.OriginalString;
+            deepLink += "https://www.cardgamesimulator.com/link?url%3D" +
+                        HttpUtility.UrlEncode(HttpUtility.UrlEncode(Current.AutoUpdateUrl.OriginalString));
             deepLink += "&apn=com.finoldigital.cardgamesim&isi=1392877362&ibi=com.finoldigital.CardGameSim";
             var regex = new Regex("[^a-zA-Z0-9 -]");
             var encodedName = regex.Replace(Current.Name, "+");
