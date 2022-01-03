@@ -17,7 +17,7 @@
     updateLinkAndUrl = () => {
         const path = location.pathname;
         console.log(path);
-        let address = decodeURI(path);
+        let address = decodeURIComponent(path);
         if (path == "link")
             address = location.search;
         else
