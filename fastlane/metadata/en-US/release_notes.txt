@@ -1,3 +1,1 @@
-- Bug-Fix: Set Import and Multiplayer Menu freeze
-- Bug-Fix: Deep Links
-- Bug-Fix: Cards duplicated when multiple players draw from the same stack at the same time
+- Bug-Fix: Small fixes
