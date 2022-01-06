@@ -5,9 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.67
-- Accessibility: Re-record tutorial video, with emphasis on a) custom game creation and b) uploading to the internet
+- Bug-Fix: Small fixes
 
 ## Active Sprint
+- Accessibility: New how-to videos, with emphasis on a) custom game creation and b) uploading to the internet
 - Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
 - Game-Play: Use 2-fingers to move and rotate Stacks
@@ -17,7 +18,8 @@ permalink: roadmap.html
 - Game-Play: Automatically create D6 by default; double click it to change number of faces
 
 ## Backlog
-- Bug-Fix: Multiplayer freeze and disconnect on Android
+- Bug-Fix: Freeze in Multiplayer Lobby on Android client
+- Bug-Fix: Multiplayer Disconnect in game-play on Android client with Android Host
 - Game-Creation: Edit Button in Main Menu
 - Game-Play: Support multiple card selection
 - Cards: Support more than 1 card face (Dual-Faced Cards)
