@@ -19,9 +19,9 @@
         console.log(path);
         let address = decodeURIComponent(path);
         if (path == "/link")
-            address = location.search;
+            address = decodeURIComponent(location.search);
         else
-            address = address.substring(address.indexOf('?') + 1);
+            address = address.substring(address.indexOf('?'));
         console.log(address);
         const parameterList = new URLSearchParams(address);
         const map = new Map();
