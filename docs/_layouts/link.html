@@ -18,7 +18,7 @@
         const path = location.pathname;
         console.log(path);
         let address = decodeURIComponent(path);
-        if (path == "link")
+        if (path == "/link")
             address = location.search;
         else
             address = address.substring(address.indexOf('?') + 1);
