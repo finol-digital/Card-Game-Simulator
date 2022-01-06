@@ -26,14 +26,17 @@ namespace Cgs.Cards
         public const string ImportCardFailedWarningMessage = "Failed to find card: ";
         public const string ImportErrorMessage = "Error during import!: ";
 
+        public string SetImportMissingWarningMessage =>
+            $"No images found! Does the selected folder have image files saved as {CardGameManager.Current.CardImageFileType}?";
+
+        public string ImportStatus => $"Importing {SetName}...";
+
         public Text setNameText;
         public TMP_Text cardNamesText;
         public Button importButton;
 
         public float ProgressPercentage { get; private set; }
         public string ProgressStatus { get; private set; }
-
-        private string ImportStatus => $"Importing {SetName}...";
 
         private string SetName => FileBrowserHelpers.GetFilename(_setFolderPath);
 
@@ -67,7 +70,7 @@ namespace Cgs.Cards
                                     StringComparison.Ordinal) - 1);
                         return current + fileName + "\n";
                     });
-                cardNamesText.text = cardNames;
+                cardNamesText.text = !string.IsNullOrWhiteSpace(cardNames) ? cardNames : SetImportMissingWarningMessage;
                 ValidateImportButton();
             }
         }
