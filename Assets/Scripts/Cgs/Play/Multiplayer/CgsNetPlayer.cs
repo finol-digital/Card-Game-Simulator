@@ -29,6 +29,8 @@ namespace Cgs.Play.Multiplayer
 
         [field: SyncVar] public int CurrentHand { get; private set; }
 
+        public int DefaultRotation { get; private set; }
+
         public string HandCount => HandCards.Count > 0 && CurrentHand >= 0 && CurrentHand < HandCards.Count
             ? HandCards[CurrentHand].Count.ToString()
             : string.Empty;
@@ -109,16 +111,15 @@ namespace Cgs.Play.Multiplayer
         private void TargetApplyPlayerRotation(int playerCount)
         {
             if (playerCount % 4 == 0)
-                CgsNetManager.Instance.playController.playArea.CurrentRotation = 270;
+                DefaultRotation = 270;
             else if (playerCount % 3 == 0)
-                CgsNetManager.Instance.playController.playArea.CurrentRotation = 90;
+                DefaultRotation = 90;
             else if (playerCount % 2 == 0)
-                CgsNetManager.Instance.playController.playArea.CurrentRotation = 180;
+                DefaultRotation = 180;
             else
-                CgsNetManager.Instance.playController.playArea.CurrentRotation = 0;
-            Debug.Log(
-                "[CgsNet Player] Set PlayMat rotation based off player count: " +
-                CgsNetManager.Instance.playController.playArea.CurrentRotation);
+                DefaultRotation = 0;
+            Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultRotation);
+            CgsNetManager.Instance.playController.playArea.CurrentRotation = DefaultRotation;
         }
 
         private IEnumerator DownloadGame(string url)

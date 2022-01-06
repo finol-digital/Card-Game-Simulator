@@ -4,6 +4,7 @@
 
 using System;
 using Cgs.CardGameView;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -88,7 +89,10 @@ namespace Cgs.Play
         public void ResetRotation()
         {
             _timeSinceChange = 0;
-            _playController.playArea.CurrentRotation = 0;
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
+                _playController.playArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultRotation;
+            else
+                _playController.playArea.CurrentRotation = 0;
         }
     }
 }
