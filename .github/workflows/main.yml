@@ -613,7 +613,7 @@ jobs:
           VERSION: v${{ steps.versioning.outputs.version }}
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: |
-          export ANNOUNCEMENT="Released CGS $VERSION!\n$RELEASE_NOTES"
+          export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"
           ANNOUNCEMENT="${ANNOUNCEMENT//'%'/'%25'}"
           ANNOUNCEMENT="${ANNOUNCEMENT//$'\n'/'%0A'}"
           ANNOUNCEMENT="${ANNOUNCEMENT//$'\r'/'%0D'}"
