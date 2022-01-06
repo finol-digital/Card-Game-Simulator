@@ -29,7 +29,7 @@
             map.set(key, value);
         });
         const autoUpdateUrl = map.get("url");
-        const deepLink = "cardgamesim://link?url=" + encodeURIComponent(autoUpdateUrl);
+        const deepLink = "cardgamesim://link?url=" + encodeURIComponent(encodeURIComponent(autoUpdateUrl));
         document.getElementById("autoupdateurl").innerHTML = autoUpdateUrl;
         document.getElementById("deeplink").href = deepLink;
     }
