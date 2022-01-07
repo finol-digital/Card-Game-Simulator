@@ -394,8 +394,11 @@ namespace Cgs
                 }
             }
 
-            var deepLinkUri = new Uri(HttpUtility.UrlDecode(deepLink));
-            var autoUpdateUrl = HttpUtility.UrlDecode(HttpUtility.ParseQueryString(deepLinkUri.Query).Get("url"));
+            var deepLinkDecoded = HttpUtility.UrlDecode(deepLink);
+            Debug.Log("GetAutoUpdateUrl::deepLinkDecoded: " + deepLinkDecoded);
+            var deepLinkUriQuery = new Uri(deepLinkDecoded).Query;
+            Debug.Log("GetAutoUpdateUrl::deepLinkUriQuery: " + deepLinkUriQuery);
+            var autoUpdateUrl = HttpUtility.ParseQueryString(deepLinkUriQuery).Get("url");
             Debug.Log("GetAutoUpdateUrl::autoUpdateUrl: " + autoUpdateUrl);
 
             return autoUpdateUrl;
