@@ -56,8 +56,12 @@ namespace Cgs.Menu
 
         // ReSharper disable once NotAccessedField.Global
         public GameObject createButton;
+        public GameObject syncButton;
+
         // ReSharper disable once NotAccessedField.Global
         public GameObject editButton;
+
+        // ReSharper disable once NotAccessedField.Global
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
@@ -208,6 +212,8 @@ namespace Cgs.Menu
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
             nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
+
+            syncButton.SetActive(CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false);
         }
 
         [UsedImplicitly]
@@ -254,6 +260,14 @@ namespace Cgs.Menu
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame);
+        }
+
+        [UsedImplicitly]
+        public void Sync()
+        {
+            if (Time.timeSinceLevelLoad < StartBufferTime)
+                return;
+            CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
         }
 
         [UsedImplicitly]
