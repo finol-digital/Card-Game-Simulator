@@ -12,21 +12,22 @@ using System.IO;
 
 namespace Cgs.Editor
 {
-    public class EntitlementsPostProcess : ScriptableObject
+    public class EntitlementsAndPlistPostProcess : ScriptableObject
     {
         public DefaultAsset entitlementsFile;
 
+        // For Firebase Dynamic Links
         [PostProcessBuild]
         public static void OnPostProcess(BuildTarget buildTarget, string buildPath)
         {
             if (buildTarget != BuildTarget.iOS)
                 return;
 
-            var dummy = CreateInstance<EntitlementsPostProcess>();
+            var dummy = CreateInstance<EntitlementsAndPlistPostProcess>();
             var file = dummy.entitlementsFile;
             if (file == null)
             {
-                Debug.LogError("EntitlementsPostProcess::entitlementsFileMissing!");
+                Debug.LogError("EntitlementsAndPlistPostProcess::entitlementsFileMissing!");
                 return;
             }
 
@@ -47,6 +48,15 @@ namespace Cgs.Editor
             pbxProject.AddFile(targetName + "/" + fileName, fileName);
             pbxProject.AddBuildProperty(targetGuid, "CODE_SIGN_ENTITLEMENTS", targetName + "/" + fileName);
             pbxProject.WriteToFile(pbxProjectPath);
+
+            var plistPath = buildPath + "/Info.plist";
+            var plistDocument = new PlistDocument();
+            plistDocument.ReadFromString(File.ReadAllText(plistPath));
+            var rootDict = plistDocument.root;
+            rootDict.SetBoolean("FirebaseAppDelegateProxyEnabled", false);
+            PlistElementArray customDomains = rootDict.CreateArray("FirebaseDynamicLinksCustomDomains");
+            customDomains.AddString("https://cgs.link");
+            File.WriteAllText(plistPath, plistDocument.WriteToString());
 #endif
         }
     }
