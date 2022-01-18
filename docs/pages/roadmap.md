@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.67
-- Bug-Fix: Small fixes
+## What's New - v1.68
+- Accessibility: Add FPS limiter
 
 ## Active Sprint
 - Accessibility: New how-to videos, with emphasis on a) custom game creation and b) uploading to the internet
