@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Cgs
@@ -9,7 +11,8 @@ namespace Cgs
     public class FpsManager : MonoBehaviour
     {
         // These options are reiterated in the Settings dropdown
-        private static readonly string[] SupportedFps = {
+        private static readonly string[] SupportedFps =
+        {
             "30",
             "60",
             "120",
@@ -18,7 +21,9 @@ namespace Cgs
         };
 
 #if UNITY_ANDROID || UNITY_IOS
-        private const int DefaultFpsIndex = 0;
+        private static int DefaultFpsIndex => SupportedFps.Contains(Application.targetFrameRate.ToString())
+            ? Array.IndexOf(SupportedFps, Application.targetFrameRate.ToString())
+            : 0;
 #else
         private const int DefaultFpsIndex = 1;
 #endif
@@ -59,6 +64,11 @@ namespace Cgs
 
                 return -1;
             }
+        }
+
+        private void Start()
+        {
+            Application.targetFrameRate = Fps;
         }
     }
 }
