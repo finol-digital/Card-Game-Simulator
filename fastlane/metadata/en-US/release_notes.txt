@@ -1,1 +1,1 @@
-- Bug-Fix: Small fixes
+- Accessibility: Add FPS limiter
