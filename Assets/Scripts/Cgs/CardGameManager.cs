@@ -482,7 +482,7 @@ namespace Cgs
             cardGame ??= Current;
 
             Progress.Show(cardGame);
-            yield return cardGame.Download();
+            yield return cardGame.Download(true);
             Progress.Hide();
 
             // Notify about the failed update, but otherwise ignore errors
