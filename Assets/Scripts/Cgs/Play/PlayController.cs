@@ -59,7 +59,7 @@ namespace Cgs.Play
             {
                 var cardStack = cardStackPrefab.GetComponent<CardStack>();
                 var cardStackLabelHeight =
-                    ((RectTransform) cardStack.deckLabel.transform).rect.height * playArea.CurrentZoom;
+                    ((RectTransform) cardStack.deckLabel.transform.parent).rect.height * playArea.CurrentZoom;
                 var cardStackButtonsHeight =
                     ((RectTransform) cardStack.buttons.transform).rect.height * playArea.CurrentZoom;
                 var cardSize = CardGameManager.PixelsPerInch * playArea.CurrentZoom *

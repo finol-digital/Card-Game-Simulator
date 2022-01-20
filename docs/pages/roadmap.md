@@ -4,14 +4,18 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.68
-- Accessibility: Add FPS limiter
+## What's New - v1.69
+- Accessibility: New how-to videos
+- Add warning sign for connecting to Android game
+- Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
+- Game-Play: Use 2-fingers AND press and hold to move and rotate Stacks
 
 ## Active Sprint
-- Accessibility: New how-to videos, with emphasis on a) custom game creation and b) uploading to the internet
+- Bug-Fix: Sometimes cards do not go onto top of deck
+- Game-Play: Stack Buttons scale with Zoom
+- Accessibility: Button Tooltips OnMouseHover
+- Accessibility: Card Autoselect OnMouseHover
 - Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
-- Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
-- Game-Play: Use 2-fingers to move and rotate Stacks
 - Game-Play: Option to have top of stack always revealed
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Playable Objects can Snap to Grid
