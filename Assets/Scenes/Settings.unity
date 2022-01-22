@@ -435,7 +435,7 @@ GameObject:
   m_Component:
   - component: {fileID: 235335102}
   m_Layer: 5
-  m_Name: FPS Dropdown
+  m_Name: FrameRate Dropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1122,7 +1122,7 @@ PrefabInstance:
     - target: {fileID: 917083975517249680, guid: 8d611347712873941990408a695ae759,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetFps
+      value: SetFramerate
       objectReference: {fileID: 0}
     - target: {fileID: 917083975517249680, guid: 8d611347712873941990408a695ae759,
         type: 3}
@@ -2092,7 +2092,7 @@ PrefabInstance:
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
       propertyPath: m_Text
-      value: FPS
+      value: Framerate
       objectReference: {fileID: 0}
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
@@ -3008,7 +3008,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scrollRect: {fileID: 993860725}
-  fpsDropdown: {fileID: 1553265539}
+  framerateDropdown: {fileID: 1553265539}
   resolutionDropdown: {fileID: 881546529}
   screenOsControlToggle: {fileID: 1161983931}
   screenAutoRotateToggle: {fileID: 811276926}

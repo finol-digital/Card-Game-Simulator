@@ -29,7 +29,7 @@ namespace Cgs.Menu
         }
 
         public ScrollRect scrollRect;
-        public Dropdown fpsDropdown;
+        public Dropdown framerateDropdown;
         public Dropdown resolutionDropdown;
         public Toggle screenOsControlToggle;
         public Toggle screenAutoRotateToggle;
@@ -42,7 +42,7 @@ namespace Cgs.Menu
 
         private void Start()
         {
-            fpsDropdown.value = FpsManager.FpsIndex;
+            framerateDropdown.value = FrameRateManager.FrameRateIndex;
             resolutionDropdown.value = ResolutionManager.ResolutionIndex;
 
             switch (ScreenOrientationManager.PreferredScreenOrientation)
@@ -79,7 +79,7 @@ namespace Cgs.Menu
                 return;
 
             if ((Inputs.IsVertical || Inputs.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null)
-                EventSystem.current.SetSelectedGameObject(fpsDropdown.gameObject);
+                EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
                 ScrollPage(Inputs.IsPageDown);
             else if (Inputs.IsCancel)
@@ -98,9 +98,9 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void SetFps(int fpsIndex)
+        public void SetFramerate(int framerateIndex)
         {
-            FpsManager.FpsIndex = fpsIndex;
+            FrameRateManager.FrameRateIndex = framerateIndex;
         }
 
         [UsedImplicitly]
