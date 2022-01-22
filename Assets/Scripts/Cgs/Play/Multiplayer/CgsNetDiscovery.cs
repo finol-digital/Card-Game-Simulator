@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using Mirror;
 using Mirror.Discovery;
+using UnityEngine;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -24,6 +25,7 @@ namespace Cgs.Play.Multiplayer
         public string RoomName;
         public int Players;
         public int Capacity;
+        public string HostPlatform;
 
         public override string ToString()
         {
@@ -54,7 +56,8 @@ namespace Cgs.Play.Multiplayer
                 Uri = _transport.ServerUri(),
                 RoomName = CgsNetManager.Instance.RoomName,
                 Players = CgsNetManager.ActiveConnectionCount,
-                Capacity = NetworkManager.singleton.maxConnections
+                Capacity = NetworkManager.singleton.maxConnections,
+                HostPlatform = Application.platform.ToString()
             };
         }
 

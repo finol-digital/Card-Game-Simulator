@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.69
 - Accessibility: New how-to videos
-- Add warning sign for connecting to Android game
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
 - Game-Play: Use 2-fingers AND press and hold to move and rotate Stacks
 
