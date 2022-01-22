@@ -57,10 +57,6 @@ platform :ios do
       clean_install: true,
       podfile: "#{ENV['IOS_BUILD_PATH']}/iOS/"
     )
-    set_info_plist_value(path: "#{ENV['IOS_BUILD_PATH']}/iOS/Info.plist",
-      key: "FirebaseDynamicLinksCustomDomains",
-      value: "https://cgs.link"
-    )
     build_app(
       workspace: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcworkspace",
       scheme: 'Unity-iPhone',
