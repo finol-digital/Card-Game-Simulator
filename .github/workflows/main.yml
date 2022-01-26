@@ -157,7 +157,7 @@ jobs:
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
       - name: Build Unity Project
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@windows-git
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
