@@ -141,6 +141,7 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows
+          - StandaloneWindows64
           - WSAPlayer
     steps:
       - name: Checkout Repository
@@ -148,36 +149,25 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - name: Get Version
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
+      - uses: actions/cache@v2
         with:
-          format: "${major}.${minor}.${patch}"
-      - name: Setup Unity IL2CPP
-        uses: kuler90/setup-unity@v1
+          path: Library
+          key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-buildWindows-${{ matrix.targetPlatform }}-
+            Library-buildWindows-
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          unity-modules: windows-il2cpp
-      - name: Setup Unity UWP
-        uses: kuler90/setup-unity@v1
-        if: matrix.targetPlatform == 'WSAPlayer'
-        with:
-          unity-modules: universal-windows-platform
-      - name: Activate Unity
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL_2 }}
-          unity-password: ${{ secrets.UNITY_PASSWORD_2 }}
-          unity-serial: ${{ secrets.UNITY_SERIAL_2 }}
-      - name: Build Unity
-        uses: kuler90/build-unity@v1
-        with:
-          build-path: build/${{ matrix.targetPlatform }}
-          build-target: ${{ matrix.targetPlatform }}
-          build-method: Cgs.Editor.BuildCgs.BuildOptions
-          build-version: ${{ steps.versioning.outputs.version }}
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Upload Build
         uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneWindows64')
+        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
         with:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
@@ -194,61 +184,6 @@ jobs:
           repo_token: ${{ secrets.CGS_PAT }}
           asset_name: cgs-${{ matrix.targetPlatform }}.zip
           file: build/cgs-${{ matrix.targetPlatform }}.zip
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: ${{ github.event.release.body }}
-
-  buildWithWindows2:
-    name: Build for StandaloneWindows64
-    runs-on: windows-latest
-    needs: buildWithWindows
-    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'StandaloneWindows64') || contains(github.event.inputs.workflow_mode, 'Steam')
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          lfs: true
-      - name: Get Version
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
-        with:
-          format: "${major}.${minor}.${patch}"
-      - name: Setup Unity IL2CPP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: windows-il2cpp
-      - name: Activate Unity
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL_2 }}
-          unity-password: ${{ secrets.UNITY_PASSWORD_2 }}
-          unity-serial: ${{ secrets.UNITY_SERIAL_2 }}
-      - name: Build Unity
-        uses: kuler90/build-unity@v1
-        with:
-          build-path: build/StandaloneWindows64
-          build-target: StandaloneWindows64
-          build-method: Cgs.Editor.BuildCgs.BuildOptions
-          build-version: ${{ steps.versioning.outputs.version }}
-      - name: Upload Build
-        uses: actions/upload-artifact@v2
-        with:
-          name: cgs-StandaloneWindows64
-          path: build/StandaloneWindows64
-      - name: Zip Build
-        uses: vimtor/action-zip@v1
-        if: github.event.action == 'published'
-        with:
-          files: build/StandaloneWindows64/
-          dest: build/cgs-StandaloneWindows64.zip
-      - name: Upload Zip to GitHub Release
-        uses: svenstaro/upload-release-action@v2
-        if: github.event.action == 'published'
-        with:
-          repo_token: ${{ secrets.CGS_PAT }}
-          asset_name: cgs-StandaloneWindows64.zip
-          file: build/cgs-StandaloneWindows64.zip
           tag: ${{ github.ref }}
           overwrite: true
           body: ${{ github.event.release.body }}
@@ -328,7 +263,7 @@ jobs:
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
           bundle install
-          bundle exec fastlane ios release
+#          bundle exec fastlane ios release
 
   releaseToMacAppStore:
     name: Release to the Mac App Store
@@ -543,7 +478,7 @@ jobs:
   releaseToSteam:
     name: Release to Steam
     runs-on: ubuntu-latest
-    needs: [buildWithLinux, buildWithWindows, buildWithWindows2, releaseToMacAppStore]
+    needs: [buildWithLinux, buildWithWindows, releaseToMacAppStore]
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
