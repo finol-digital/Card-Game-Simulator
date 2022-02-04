@@ -10,6 +10,8 @@ permalink: roadmap.html
 - Game-Play: Use 2-fingers AND press and hold to move and rotate Stacks
 
 ## Active Sprint
+- Add error message if imported card is wrong type
+- Type in dice number
 - Bug-Fix: Sometimes cards do not go onto top of deck
 - Game-Play: Stack Buttons scale with Zoom
 - Accessibility: Button Tooltips OnMouseHover
@@ -29,6 +31,7 @@ permalink: roadmap.html
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress
 - Decks: Support organizing decks into folders
+  - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
 - Game-Play: Support multiple playmats
