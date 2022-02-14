@@ -13,8 +13,34 @@ namespace Cgs.Menu
 {
     public class Settings : MonoBehaviour
     {
+#if UNITY_IOS || UNITY_ANDROID
+        private const int DefaultSelectOnMouseOver = 0;
+#else
+        private const int DefaultSelectOnMouseOver = 1;
+#endif
+
+#if UNITY_IOS || UNITY_ANDROID
+        private const int DefaultButtonToolTips = 0;
+#else
+        private const int DefaultButtonToolTips = 1;
+#endif
+
+        private const string PlayerPrefsSelectOnMouseOver = "SelectOnMouseOver";
+        private const string PlayerPrefsButtonToolTips = "ButtonToolTips";
         private const string PlayerPrefsHideReprints = "HideReprints";
         private const string PlayerPrefsDeveloperMode = "DeveloperMode";
+
+        public static bool SelectOnMouseOver
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsSelectOnMouseOver, DefaultSelectOnMouseOver) == 1;
+            private set => PlayerPrefs.SetInt(PlayerPrefsSelectOnMouseOver, value ? 1 : 0);
+        }
+
+        public static bool ButtonToolTips
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsButtonToolTips, DefaultButtonToolTips) == 1;
+            private set => PlayerPrefs.SetInt(PlayerPrefsButtonToolTips, value ? 1 : 0);
+        }
 
         public static bool HideReprints
         {
@@ -36,6 +62,8 @@ namespace Cgs.Menu
         public Toggle screenPortraitToggle;
         public Toggle screenLandscapeToggle;
         public Toggle controllerLockToLandscapeToggle;
+        public Toggle selectOnMouseOverToggle;
+        public Toggle buttonToolTipsToggle;
         public Toggle hideReprintsToggle;
         public Toggle developerModeToggle;
         public List<Transform> orientationOptions;
@@ -65,6 +93,8 @@ namespace Cgs.Menu
             }
 
             controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
+            selectOnMouseOverToggle.isOn = SelectOnMouseOver;
+            buttonToolTipsToggle.isOn = ButtonToolTips;
             hideReprintsToggle.isOn = HideReprints;
             developerModeToggle.isOn = DeveloperMode;
 #if !UNITY_ANDROID && !UNITY_IOS
@@ -141,6 +171,18 @@ namespace Cgs.Menu
         public void SetControllerLockToLandscape(bool controllerLockToLandscape)
         {
             ScreenOrientationManager.DoesControllerLockToLandscape = controllerLockToLandscape;
+        }
+
+        [UsedImplicitly]
+        public void SetSelectOnMouseOver(bool selectOnMouseOver)
+        {
+            SelectOnMouseOver = selectOnMouseOver;
+        }
+
+        [UsedImplicitly]
+        public void SetButtonToolTips(bool buttonToolTips)
+        {
+            ButtonToolTips = buttonToolTips;
         }
 
         [UsedImplicitly]
