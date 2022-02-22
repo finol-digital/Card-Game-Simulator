@@ -95,7 +95,7 @@ jobs:
             Library-build-${{ matrix.targetPlatform }}-
             Library-build-
       - name: Build Unity Project
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@fix/android
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -136,6 +136,7 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-latest
     needs: tests
+    if: false
     strategy:
       fail-fast: false
       matrix:
