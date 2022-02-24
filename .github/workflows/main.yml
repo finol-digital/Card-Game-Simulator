@@ -134,7 +134,7 @@ jobs:
 
   buildWithWindows:
     name: Build for ${{ matrix.targetPlatform }}
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: tests
     strategy:
       fail-fast: false
