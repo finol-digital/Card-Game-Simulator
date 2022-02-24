@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.Menu;
-using Cgs.ScrollRects;
+using Cgs.UI;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;

@@ -14,7 +14,7 @@ using Cgs.Decks;
 using Cgs.Menu;
 using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
-using Cgs.ScrollRects;
+using Cgs.UI.ScrollRects;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;

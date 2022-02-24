@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
 
-namespace Cgs.ScrollRects.Editor
+namespace Cgs.UI.ScrollRects.Editor
 {
     [CustomEditor(typeof(PassThroughScrollRect))]
     public class ScrollRectNestedEditor : ScrollRectEditor
