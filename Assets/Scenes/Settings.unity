@@ -1843,7 +1843,7 @@ PrefabInstance:
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
       propertyPath: m_Text
-      value: Button Tooltips
+      value: Button Details Text
       objectReference: {fileID: 0}
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
@@ -2762,8 +2762,8 @@ RectTransform:
   - {fileID: 488250594}
   - {fileID: 703849161}
   - {fileID: 1617632011}
-  - {fileID: 1461293144}
   - {fileID: 2145185692}
+  - {fileID: 1461293144}
   - {fileID: 103203312}
   - {fileID: 1124697572}
   m_Father: {fileID: 865622360}
@@ -3378,8 +3378,8 @@ MonoBehaviour:
   screenPortraitToggle: {fileID: 633972502}
   screenLandscapeToggle: {fileID: 1877749623}
   controllerLockToLandscapeToggle: {fileID: 1617632012}
-  selectOnMouseOverToggle: {fileID: 1461293145}
-  buttonToolTipsToggle: {fileID: 2145185693}
+  buttonInfoEnabledToggle: {fileID: 2145185693}
+  viewInfoOnMouseOverToggle: {fileID: 1461293145}
   hideReprintsToggle: {fileID: 103203313}
   developerModeToggle: {fileID: 1124697573}
   orientationOptions:
@@ -3471,7 +3471,7 @@ GameObject:
   - component: {fileID: 1461293144}
   - component: {fileID: 1461293145}
   m_Layer: 5
-  m_Name: SelectOnMouseOver Toggle
+  m_Name: ViewInfoOnMouseOver Toggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3491,7 +3491,7 @@ RectTransform:
   - {fileID: 1982864401}
   - {fileID: 1893226347}
   m_Father: {fileID: 1166931000}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3547,7 +3547,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1331247145}
         m_TargetAssemblyTypeName: Cgs.Menu.Settings, Cgs
-        m_MethodName: SetSelectOnMouseOver
+        m_MethodName: SetViewInfoOnMouseOver
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4438,7 +4438,7 @@ PrefabInstance:
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
       propertyPath: m_Text
-      value: Select on Mouse-over
+      value: View Details on Mouse-over
       objectReference: {fileID: 0}
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
@@ -4727,7 +4727,7 @@ GameObject:
   - component: {fileID: 2145185692}
   - component: {fileID: 2145185693}
   m_Layer: 5
-  m_Name: ButtonToolTips Toggle
+  m_Name: ButtonInfoEnabled Toggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4747,7 +4747,7 @@ RectTransform:
   - {fileID: 1095123946}
   - {fileID: 926462579}
   m_Father: {fileID: 1166931000}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4803,7 +4803,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1331247145}
         m_TargetAssemblyTypeName: Cgs.Menu.Settings, Cgs
-        m_MethodName: SetButtonToolTips
+        m_MethodName: SetButtonInfoEnabled
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

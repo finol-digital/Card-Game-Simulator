@@ -14,32 +14,32 @@ namespace Cgs.Menu
     public class Settings : MonoBehaviour
     {
 #if UNITY_IOS || UNITY_ANDROID
-        private const int DefaultSelectOnMouseOver = 0;
+        private const int DefaultButtonInfoEnabled = 0;
 #else
-        private const int DefaultSelectOnMouseOver = 1;
+        private const int DefaultButtonInfoEnabled = 1;
 #endif
 
 #if UNITY_IOS || UNITY_ANDROID
-        private const int DefaultButtonToolTips = 0;
+        private const int DefaultViewInfoOnMouseOver = 0;
 #else
-        private const int DefaultButtonToolTips = 1;
+        private const int DefaultViewInfoOnMouseOver = 1;
 #endif
 
-        private const string PlayerPrefsSelectOnMouseOver = "SelectOnMouseOver";
-        private const string PlayerPrefsButtonToolTips = "ButtonToolTips";
+        private const string PlayerPrefsButtonInfoEnabled = "ButtonInfoEnabled";
+        private const string PlayerPrefsViewInfoOnMouseOver = "ViewInfoOnMouseOver";
         private const string PlayerPrefsHideReprints = "HideReprints";
         private const string PlayerPrefsDeveloperMode = "DeveloperMode";
 
-        public static bool SelectOnMouseOver
+        public static bool ButtonInfoEnabled
         {
-            get => PlayerPrefs.GetInt(PlayerPrefsSelectOnMouseOver, DefaultSelectOnMouseOver) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsSelectOnMouseOver, value ? 1 : 0);
+            get => PlayerPrefs.GetInt(PlayerPrefsButtonInfoEnabled, DefaultButtonInfoEnabled) == 1;
+            private set => PlayerPrefs.SetInt(PlayerPrefsButtonInfoEnabled, value ? 1 : 0);
         }
 
-        public static bool ButtonToolTips
+        public static bool ViewInfoOnMouseOver
         {
-            get => PlayerPrefs.GetInt(PlayerPrefsButtonToolTips, DefaultButtonToolTips) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsButtonToolTips, value ? 1 : 0);
+            get => PlayerPrefs.GetInt(PlayerPrefsViewInfoOnMouseOver, DefaultViewInfoOnMouseOver) == 1;
+            private set => PlayerPrefs.SetInt(PlayerPrefsViewInfoOnMouseOver, value ? 1 : 0);
         }
 
         public static bool HideReprints
@@ -62,8 +62,8 @@ namespace Cgs.Menu
         public Toggle screenPortraitToggle;
         public Toggle screenLandscapeToggle;
         public Toggle controllerLockToLandscapeToggle;
-        public Toggle selectOnMouseOverToggle;
-        public Toggle buttonToolTipsToggle;
+        public Toggle buttonInfoEnabledToggle;
+        public Toggle viewInfoOnMouseOverToggle;
         public Toggle hideReprintsToggle;
         public Toggle developerModeToggle;
         public List<Transform> orientationOptions;
@@ -93,8 +93,8 @@ namespace Cgs.Menu
             }
 
             controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
-            selectOnMouseOverToggle.isOn = SelectOnMouseOver;
-            buttonToolTipsToggle.isOn = ButtonToolTips;
+            viewInfoOnMouseOverToggle.isOn = ViewInfoOnMouseOver;
+            buttonInfoEnabledToggle.isOn = ButtonInfoEnabled;
             hideReprintsToggle.isOn = HideReprints;
             developerModeToggle.isOn = DeveloperMode;
 #if !UNITY_ANDROID && !UNITY_IOS
@@ -174,15 +174,15 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void SetSelectOnMouseOver(bool selectOnMouseOver)
+        public void SetButtonInfoEnabled(bool buttonInfoEnabled)
         {
-            SelectOnMouseOver = selectOnMouseOver;
+            ButtonInfoEnabled = buttonInfoEnabled;
         }
 
         [UsedImplicitly]
-        public void SetButtonToolTips(bool buttonToolTips)
+        public void SetViewInfoOnMouseOver(bool viewInfoOnMouseOver)
         {
-            ButtonToolTips = buttonToolTips;
+            ViewInfoOnMouseOver = viewInfoOnMouseOver;
         }
 
         [UsedImplicitly]
