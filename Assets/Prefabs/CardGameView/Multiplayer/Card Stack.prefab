@@ -405,6 +405,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.CardGameView.Multiplayer.CardStack, Cgs
       objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: tooltip
+      value: View
+      objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
       propertyPath: m_Sprite
@@ -589,6 +594,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.CardGameView.Multiplayer.CardStack, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: tooltip
+      value: Save
       objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
@@ -1206,6 +1216,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.CardGameView.Multiplayer.CardStack, Cgs
       objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: tooltip
+      value: Shuffle
+      objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
       propertyPath: m_Sprite
@@ -1380,6 +1395,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.CardGameView.Multiplayer.CardStack, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634861638736528653, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
+        type: 3}
+      propertyPath: tooltip
+      value: Delete
       objectReference: {fileID: 0}
     - target: {fileID: 7136752755737282221, guid: 7dc4df6ef81af5745aaf0b3e9d186737,
         type: 3}
