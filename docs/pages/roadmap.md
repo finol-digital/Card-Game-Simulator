@@ -12,7 +12,7 @@ permalink: roadmap.html
 - Accessibility: New how-to videos
 - Bug-Fix: Sometimes cards do not go onto top of deck
 - Bug-Fix: Add error message if imported single card is wrong image type
-- Bug-Fix: Stack Buttons scale with Zoom
+- Bug-Fix: Stack Buttons Zoom scale
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
 - Game-Play: Use 2-fingers AND press and hold to move and rotate Stacks
 - Game-Play: Type in dice number

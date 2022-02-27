@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       workflow_mode:
-        description: '[release] [Android, iOS, StandaloneOSX, StandaloneLinux64, WebGL, StandaloneWindows, StandaloneWindows64, WSAPlayer, Steam]'
+        description: '[release] [Android, iOS, StandaloneLinux64, WebGL, StandaloneWindows, StandaloneWindows64, WSAPlayer, StandaloneOSX, Steam]'
         required: false
         default: ''
 
@@ -67,7 +67,6 @@ jobs:
         targetPlatform:
           - Android
           - iOS
-          - StandaloneOSX
           - StandaloneLinux64
           - WebGL
     steps:
@@ -188,6 +187,90 @@ jobs:
           overwrite: true
           body: ${{ github.event.release.body }}
 
+  buildAndReleaseToMacAppStore:
+    name: Build and Release to the Mac App Store
+    runs-on: macos-latest
+    needs: buildWithLinux
+    env:
+      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
+      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+      APPLE_DISTRIBUTION_CERTIFICATE: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE }}
+      APPLE_DISTRIBUTION_PASSWORD: ${{ secrets.APPLE_DISTRIBUTION_PASSWORD }}
+      MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
+      MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
+      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
+      MAC_APP_BUNDLE_PATHS: Contents/PlugIns/StandaloneFileBrowser.bundle
+      MAC_APP_ID: com.finoldigital.CardGameSimulator
+      MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
+      PROJECT_NAME: Card Game Simulator
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && (contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')))
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-buildMac-
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: StandaloneOSX
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+      - name: Upload Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: cgs-StandaloneOSX
+          path: build/StandaloneOSX
+      - name: Update Release Notes
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      - name: Fix File Permissions and Code-Sign
+        run: |
+          bundle install
+          bundle exec fastlane mac fixversion
+          find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
+          chmod +x fastlane/sign-mac-build.sh
+          ./fastlane/sign-mac-build.sh
+      - name: Run Fastlane
+        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
+        run: bundle exec fastlane mac macupload
+      - name: Upload App
+        uses: actions/upload-artifact@v2
+        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
+        with:
+          name: Card Game Simulator.app
+          path: build/StandaloneOSX/Card Game Simulator.app
+      - name: Zip App
+        uses: vimtor/action-zip@v1
+        if: github.event.action == 'published'
+        with:
+          files: build/StandaloneOSX/
+          dest: build/cgs-StandaloneOSX.zip
+      - name: Upload App to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event.action == 'published'
+        with:
+          repo_token: ${{ secrets.CGS_PAT }}
+          asset_name: cgs-StandaloneOSX.zip
+          file: build/cgs-StandaloneOSX.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
+
   releaseToGooglePlay:
     name: Release to the Google Play Store
     runs-on: ubuntu-latest
@@ -264,73 +347,6 @@ jobs:
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
           bundle install
 #          bundle exec fastlane ios release
-
-  releaseToMacAppStore:
-    name: Release to the Mac App Store
-    runs-on: macos-latest
-    needs: buildWithLinux
-    env:
-      APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
-      APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-      APPLE_DISTRIBUTION_CERTIFICATE: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE }}
-      APPLE_DISTRIBUTION_PASSWORD: ${{ secrets.APPLE_DISTRIBUTION_PASSWORD }}
-      MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
-      MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
-      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-      APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
-      MAC_APP_BUNDLE_PATHS: Contents/PlugIns/StandaloneFileBrowser.bundle
-      MAC_APP_ID: com.finoldigital.CardGameSimulator
-      MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
-      PROJECT_NAME: Card Game Simulator
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && (contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')))
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      - name: Download StandaloneOSX Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: cgs-StandaloneOSX
-          path: build/StandaloneOSX
-      - name: Update Release Notes
-        if: github.event.action == 'published'
-        env:
-          RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Fix File Permissions and Code-Sign
-        run: |
-          bundle install
-          bundle exec fastlane mac fixversion
-          find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
-          chmod +x fastlane/sign-mac-build.sh
-          ./fastlane/sign-mac-build.sh
-      - name: Run Fastlane
-        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
-        run: bundle exec fastlane mac macupload
-      - name: Upload Build
-        uses: actions/upload-artifact@v2
-        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
-        with:
-          name: Card Game Simulator.app
-          path: build/StandaloneOSX/Card Game Simulator.app
-      - name: Zip App
-        uses: vimtor/action-zip@v1
-        if: github.event.action == 'published'
-        with:
-          files: build/StandaloneOSX/
-          dest: build/cgs-StandaloneOSX.zip
-      - name: Upload App to GitHub Release
-        uses: svenstaro/upload-release-action@v2
-        if: github.event.action == 'published'
-        with:
-          repo_token: ${{ secrets.CGS_PAT }}
-          asset_name: cgs-StandaloneOSX.zip
-          file: build/cgs-StandaloneOSX.zip
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: ${{ github.event.release.body }}
 
   releaseToGitHubPages:
     name: Release to the Web via GitHub Pages
@@ -478,7 +494,7 @@ jobs:
   releaseToSteam:
     name: Release to Steam
     runs-on: ubuntu-latest
-    needs: [buildWithLinux, buildWithWindows, releaseToMacAppStore]
+    needs: [buildWithLinux, buildWithWindows, buildAndReleaseToMacAppStore]
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
@@ -530,7 +546,7 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [releaseToGooglePlay, releaseToAppStore, releaseToMacAppStore, releaseToGitHubPages, releaseToSteam, releaseToMicrosoftStore]
+    needs: [buildAndReleaseToMacAppStore, releaseToGooglePlay, releaseToAppStore, releaseToGitHubPages, releaseToMicrosoftStore, releaseToSteam]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

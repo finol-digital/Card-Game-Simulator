@@ -54,9 +54,6 @@ namespace Cgs.Editor
                         PlayerSettings.Android.keyaliasPass = keyaliasPass;
                     break;
                 }
-                case BuildTarget.StandaloneOSX:
-                    PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
-                    break;
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
                     if (!options["customBuildPath"].EndsWith(".exe"))
