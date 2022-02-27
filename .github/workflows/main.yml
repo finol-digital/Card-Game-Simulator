@@ -239,7 +239,7 @@ jobs:
           MAC_APP_ID: com.finoldigital.CardGameSimulator
           MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
           PROJECT_NAME: Card Game Simulator
-          UPLOAD_LANE: ${{ contains(github.event.inputs.workflow_mode, 'StandaloneOSX') ? 'macupload' : 'skipupload' }}
+          UPLOAD_LANE: ${{ contains(github.event.inputs.workflow_mode, 'StandaloneOSX') && 'macupload' || 'skipupload' }}
         run: |
           bundle install
           bundle exec fastlane mac fixversion
