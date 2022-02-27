@@ -552,6 +552,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5160799671364235437}
     m_Modifications:
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: tooltip
+      value: Share
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -737,6 +742,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4134978338369308125}
     m_Modifications:
+    - target: {fileID: 1912139460416580352, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
+        type: 3}
+      propertyPath: tooltip
+      value: No
+      objectReference: {fileID: 0}
     - target: {fileID: 6042467856956256676, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
         type: 3}
       propertyPath: m_TargetGraphic
@@ -1005,6 +1015,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Yes Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 5669377753387585809, guid: c35fca13280ec4344b2150cb17e647ca,
+        type: 3}
+      propertyPath: tooltip
+      value: OK
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c35fca13280ec4344b2150cb17e647ca, type: 3}
