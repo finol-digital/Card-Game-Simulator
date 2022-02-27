@@ -89,4 +89,9 @@ platform :mac do
     deliver
   end
 
+  desc "Hack to avoid uploading" 
+  lane :skipupload do
+    # do nothing
+  end
+
 end
