@@ -79,7 +79,7 @@ Upload a new Mac version to the Mac App Store
 [bundle exec] fastlane mac skipupload
 ```
 
-Hack to avoid uploading
+Hack to activate fastlane without uploading (do nothing)
 
 ----
 
