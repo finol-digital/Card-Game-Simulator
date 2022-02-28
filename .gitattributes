@@ -10,7 +10,8 @@
 * text=auto
 
 # Increase probability of success for merging files with specific extensions
-*.cs diff=csharp
+*.cs diff=csharp eol=lf
+*.md text eol=lf
 
 # Macro attribute: Files with Unity's yaml format
 # linguist-generated means the file is ignored for the repository's language statistics and diffs are hidden by default.

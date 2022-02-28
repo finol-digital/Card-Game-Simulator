@@ -23,4 +23,4 @@ If you'd like to help out with the project, either join our [Discord](https://di
 
 ## License
 
-Code released under the [Mozilla Public License 2.0](LICENSE)
+Code released under the [Mozilla Public License 2.0](LICENSE.md)
