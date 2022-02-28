@@ -13,8 +13,34 @@ namespace Cgs.Menu
 {
     public class Settings : MonoBehaviour
     {
+#if UNITY_IOS || UNITY_ANDROID
+        private const int DefaultButtonInfoEnabled = 0;
+#else
+        private const int DefaultButtonInfoEnabled = 1;
+#endif
+
+#if UNITY_IOS || UNITY_ANDROID
+        private const int DefaultViewInfoOnMouseOver = 0;
+#else
+        private const int DefaultViewInfoOnMouseOver = 1;
+#endif
+
+        private const string PlayerPrefsButtonInfoEnabled = "ButtonInfoEnabled";
+        private const string PlayerPrefsViewInfoOnMouseOver = "ViewInfoOnMouseOver";
         private const string PlayerPrefsHideReprints = "HideReprints";
         private const string PlayerPrefsDeveloperMode = "DeveloperMode";
+
+        public static bool ButtonInfoEnabled
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsButtonInfoEnabled, DefaultButtonInfoEnabled) == 1;
+            private set => PlayerPrefs.SetInt(PlayerPrefsButtonInfoEnabled, value ? 1 : 0);
+        }
+
+        public static bool ViewInfoOnMouseOver
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsViewInfoOnMouseOver, DefaultViewInfoOnMouseOver) == 1;
+            private set => PlayerPrefs.SetInt(PlayerPrefsViewInfoOnMouseOver, value ? 1 : 0);
+        }
 
         public static bool HideReprints
         {
@@ -29,20 +55,22 @@ namespace Cgs.Menu
         }
 
         public ScrollRect scrollRect;
-        public Dropdown fpsDropdown;
+        public Dropdown framerateDropdown;
         public Dropdown resolutionDropdown;
         public Toggle screenOsControlToggle;
         public Toggle screenAutoRotateToggle;
         public Toggle screenPortraitToggle;
         public Toggle screenLandscapeToggle;
         public Toggle controllerLockToLandscapeToggle;
+        public Toggle buttonInfoEnabledToggle;
+        public Toggle viewInfoOnMouseOverToggle;
         public Toggle hideReprintsToggle;
         public Toggle developerModeToggle;
         public List<Transform> orientationOptions;
 
         private void Start()
         {
-            fpsDropdown.value = FpsManager.FpsIndex;
+            framerateDropdown.value = FrameRateManager.FrameRateIndex;
             resolutionDropdown.value = ResolutionManager.ResolutionIndex;
 
             switch (ScreenOrientationManager.PreferredScreenOrientation)
@@ -65,6 +93,8 @@ namespace Cgs.Menu
             }
 
             controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
+            viewInfoOnMouseOverToggle.isOn = ViewInfoOnMouseOver;
+            buttonInfoEnabledToggle.isOn = ButtonInfoEnabled;
             hideReprintsToggle.isOn = HideReprints;
             developerModeToggle.isOn = DeveloperMode;
 #if !UNITY_ANDROID && !UNITY_IOS
@@ -79,7 +109,7 @@ namespace Cgs.Menu
                 return;
 
             if ((Inputs.IsVertical || Inputs.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null)
-                EventSystem.current.SetSelectedGameObject(fpsDropdown.gameObject);
+                EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
                 ScrollPage(Inputs.IsPageDown);
             else if (Inputs.IsCancel)
@@ -98,9 +128,9 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void SetFps(int fpsIndex)
+        public void SetFramerate(int framerateIndex)
         {
-            FpsManager.FpsIndex = fpsIndex;
+            FrameRateManager.FrameRateIndex = framerateIndex;
         }
 
         [UsedImplicitly]
@@ -141,6 +171,18 @@ namespace Cgs.Menu
         public void SetControllerLockToLandscape(bool controllerLockToLandscape)
         {
             ScreenOrientationManager.DoesControllerLockToLandscape = controllerLockToLandscape;
+        }
+
+        [UsedImplicitly]
+        public void SetButtonInfoEnabled(bool buttonInfoEnabled)
+        {
+            ButtonInfoEnabled = buttonInfoEnabled;
+        }
+
+        [UsedImplicitly]
+        public void SetViewInfoOnMouseOver(bool viewInfoOnMouseOver)
+        {
+            ViewInfoOnMouseOver = viewInfoOnMouseOver;
         }
 
         [UsedImplicitly]

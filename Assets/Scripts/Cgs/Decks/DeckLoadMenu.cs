@@ -10,7 +10,7 @@ using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.Menu;
-using Cgs.ScrollRects;
+using Cgs.UI;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;

@@ -202,7 +202,7 @@ namespace CardGameDef.Unity
             }
         }
 
-        public IEnumerator Download()
+        public IEnumerator Download(bool isRedo = false)
         {
             if (IsDownloading)
             {
@@ -211,6 +211,14 @@ namespace CardGameDef.Unity
             }
 
             IsDownloading = true;
+
+            if (isRedo)
+            {
+                DeckUrls.Clear();
+                LoadedSets.Clear();
+                LoadedCards.Clear();
+                CardNames.Clear();
+            }
 
             // We should always first get the *Game:Name*.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);

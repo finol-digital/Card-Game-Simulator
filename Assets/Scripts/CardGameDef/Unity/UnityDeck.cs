@@ -13,7 +13,6 @@ using Didstopia.PDFSharp;
 using Didstopia.PDFSharp.Drawing;
 using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
-
 #endif
 
 namespace CardGameDef.Unity
@@ -251,7 +250,9 @@ namespace CardGameDef.Unity
         // NOTE: CAN THROW EXCEPTION
         public Uri PrintPdf()
         {
-#if !UNITY_WEBGL
+#if UNITY_WEBGL
+            throw new System.NotImplementedException();
+#else
             if (!Directory.Exists(PrintPdfDirectory))
                 Directory.CreateDirectory(PrintPdfDirectory);
 
@@ -261,7 +262,7 @@ namespace CardGameDef.Unity
 
             var cardsPerRow = (int) Math.Floor((PrintPdfWidth - PrintPdfMargin * 2) / SourceGame.CardSize.X);
             var rowsPerPage = (int) Math.Floor((PrintPdfHeight - PrintPdfMargin * 2) / SourceGame.CardSize.Y);
-            int cardsPerPage = cardsPerRow * rowsPerPage;
+            var cardsPerPage = cardsPerRow * rowsPerPage;
             PdfPage page = null;
             XGraphics gfx = null;
             double px = PrintPdfMargin * PrintPdfPixelsPerInch, py = PrintPdfMargin * PrintPdfPixelsPerInch;
@@ -275,8 +276,8 @@ namespace CardGameDef.Unity
                     py = PrintPdfMargin * PrintPdfPixelsPerInch;
                 }
 
-                XImage image = XImage.FromFile(_cards[cardNumber].ImageFilePath);
-                gfx.DrawImage(image, px, py, SourceGame.CardSize.X * PrintPdfPixelsPerInch,
+                var xImage = XImage.FromFile(_cards[cardNumber].ImageFilePath);
+                gfx.DrawImage(xImage, px, py, SourceGame.CardSize.X * PrintPdfPixelsPerInch,
                     SourceGame.CardSize.Y * PrintPdfPixelsPerInch);
                 px += SourceGame.CardSize.X * PrintPdfPixelsPerInch;
 
@@ -292,8 +293,6 @@ namespace CardGameDef.Unity
             pdfDocument.Dispose();
 
             return new Uri(UnityFileMethods.FilePrefix + PrintPdfFilePath);
-#else
-            throw new System.NotImplementedException();
 #endif
         }
     }

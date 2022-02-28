@@ -4,14 +4,19 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.68
-- Accessibility: Add FPS limiter
+## What's New - v1.69
+- Accessibility: Button Detail Text
+- Accessibility: View Details on Mouse-over
 
 ## Active Sprint
-- Accessibility: New how-to videos, with emphasis on a) custom game creation and b) uploading to the internet
-- Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
+- Accessibility: New how-to videos
+- Bug-Fix: Sometimes cards do not go onto top of deck
+- Bug-Fix: Add error message if imported single card is wrong image type
+- Bug-Fix: Scale CardStack and Dice Buttons on Zoom
 - Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
-- Game-Play: Use 2-fingers to move and rotate Stacks
+- Game-Play: Use 2-fingers AND press and hold to move and rotate Stacks
+- Game-Play: Type in dice number
+- Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
 - Game-Play: Option to have top of stack always revealed
 - Game-Play: Limited visibility of cards in stack
 - Game-Play: Playable Objects can Snap to Grid
@@ -26,6 +31,7 @@ permalink: roadmap.html
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress
 - Decks: Support organizing decks into folders
+  - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
 - Game-Play: Support multiple playmats

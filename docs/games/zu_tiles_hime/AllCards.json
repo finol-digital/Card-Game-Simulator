@@ -686,7 +686,7 @@
 		"name": "Sapphire Monkey Totem",
 		"setCode": "StarterSet2",
 		"type": "item",
-		"description": "All Monkeys you control that become part of a compatible squre completed by your opponent are not removed from the playing area. (2)",
+		"description": "All Monkeys you control that become part of a compatible square completed by your opponent are not removed from the playing area. (2)",
 		"creatureClass": null,
 		"creatureCompatibility": null,
 		"strength": 9,

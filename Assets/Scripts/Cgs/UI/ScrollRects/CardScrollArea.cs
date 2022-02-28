@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Cgs.ScrollRects
+namespace Cgs.UI.ScrollRects
 {
     public enum CardScrollDirection
     {

@@ -308,8 +308,8 @@ namespace Cgs
                 var dependencyStatus = task.Result;
                 if (dependencyStatus != DependencyStatus.Available)
                 {
-                    Debug.LogError("Could not resolve all Firebase dependencies: " + dependencyStatus);
-                    Messenger.Show("Could not resolve all Firebase dependencies: " + dependencyStatus);
+                    Debug.LogError("Error with Links! Could not resolve all Firebase dependencies: " + dependencyStatus);
+                    Messenger.Show("Error with Links! Could not resolve all Firebase dependencies: " + dependencyStatus);
                     return;
                 }
 
@@ -362,6 +362,7 @@ namespace Cgs
 
         private void OnDeepLinkActivated(string deepLink)
         {
+            Debug.Log("OnDeepLinkActivated!");
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
             if (string.IsNullOrEmpty(autoUpdateUrl) ||
                 !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
@@ -432,7 +433,7 @@ namespace Cgs
                 if (string.IsNullOrEmpty(existingGame.Error))
                     Select(existingGame.Id);
                 else
-                    Debug.LogError("GetCardGame: Not selecting card game because of error after update");
+                    Debug.LogError("GetCardGame: Not selecting card game because of an error after update!");
             }
             else
                 yield return DownloadCardGame(gameUrl);
@@ -482,7 +483,7 @@ namespace Cgs
             cardGame ??= Current;
 
             Progress.Show(cardGame);
-            yield return cardGame.Download();
+            yield return cardGame.Download(true);
             Progress.Hide();
 
             // Notify about the failed update, but otherwise ignore errors

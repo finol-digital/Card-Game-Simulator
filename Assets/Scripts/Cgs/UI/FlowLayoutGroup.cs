@@ -6,7 +6,7 @@ using UnityEngine.UI;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedType.Global
 
-namespace Cgs.ScrollRects
+namespace Cgs.UI
 {
     [AddComponentMenu("Layout/Flow Layout Group", 153)]
     public class FlowLayoutGroup : LayoutGroup

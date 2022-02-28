@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
-namespace Cgs.ScrollRects
+namespace Cgs.UI
 {
     public delegate void OnSelectDelegate<in T>(Toggle toggle, T selection);
 

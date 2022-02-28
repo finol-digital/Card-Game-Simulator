@@ -155,6 +155,7 @@ GameObject:
   - component: {fileID: 124745896}
   - component: {fileID: 124745895}
   - component: {fileID: 124745894}
+  - component: {fileID: 124745897}
   m_Layer: 5
   m_Name: Share Button
   m_TagString: Untagged
@@ -276,6 +277,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 124745892}
   m_CullTransparentMesh: 0
+--- !u!114 &124745897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124745892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Share
+  avoidOverlap: 0
 --- !u!1001 &179654168
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -773,6 +790,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: Join
       objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: tooltip
+      value: Join or Host a Multi-player game.
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057614825002507373, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: tooltip
+      value: Start a Single-player game.
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ab22cc3401977e43821548819f8b3ef, type: 3}
 --- !u!224 &223206892 stripped
@@ -989,6 +1016,7 @@ GameObject:
   - component: {fileID: 616227658}
   - component: {fileID: 616227657}
   - component: {fileID: 616227656}
+  - component: {fileID: 616227659}
   m_Layer: 5
   m_Name: Create Button
   m_TagString: Untagged
@@ -1110,6 +1138,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616227654}
   m_CullTransparentMesh: 0
+--- !u!114 &616227659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616227654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Create
+  avoidOverlap: 0
 --- !u!1 &634069382
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,6 +1479,7 @@ GameObject:
   - component: {fileID: 812590939}
   - component: {fileID: 812590938}
   - component: {fileID: 812590937}
+  - component: {fileID: 812590940}
   m_Layer: 5
   m_Name: Sync Button
   m_TagString: Untagged
@@ -1556,6 +1601,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 812590935}
   m_CullTransparentMesh: 0
+--- !u!114 &812590940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812590935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Sync
+  avoidOverlap: 0
 --- !u!224 &834215179 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1636765640200764539, guid: 1ab22cc3401977e43821548819f8b3ef,
@@ -2928,6 +2989,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: tooltip
+      value: Settings
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06f7fede5f8506f4aaaca01736a75a9b, type: 3}
 --- !u!224 &1488130159 stripped
@@ -3023,6 +3089,7 @@ GameObject:
   - component: {fileID: 1597549899}
   - component: {fileID: 1597549898}
   - component: {fileID: 1597549897}
+  - component: {fileID: 1597549900}
   m_Layer: 5
   m_Name: Delete Button
   m_TagString: Untagged
@@ -3144,6 +3211,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1597549895}
   m_CullTransparentMesh: 0
+--- !u!114 &1597549900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1597549895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Delete
+  avoidOverlap: 0
 --- !u!1 &1670108861
 GameObject:
   m_ObjectHideFlags: 0
@@ -3337,6 +3420,7 @@ GameObject:
   - component: {fileID: 1756191891}
   - component: {fileID: 1756191890}
   - component: {fileID: 1756191889}
+  - component: {fileID: 1756191892}
   m_Layer: 5
   m_Name: Download Button
   m_TagString: Untagged
@@ -3458,6 +3542,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1756191887}
   m_CullTransparentMesh: 0
+--- !u!114 &1756191892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1756191887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Download
+  avoidOverlap: 0
 --- !u!1 &1826579656
 GameObject:
   m_ObjectHideFlags: 0
@@ -3620,6 +3720,7 @@ GameObject:
   - component: {fileID: 1948568114}
   - component: {fileID: 1948568113}
   - component: {fileID: 1948568112}
+  - component: {fileID: 1948568115}
   m_Layer: 5
   m_Name: Edit Button
   m_TagString: Untagged
@@ -3741,6 +3842,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948568110}
   m_CullTransparentMesh: 0
+--- !u!114 &1948568115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948568110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Edit
+  avoidOverlap: 0
 --- !u!224 &2048750634 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8266031536408079399, guid: 79e94f8a015a0e242a9b4cc04523d574,
@@ -4285,6 +4402,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: tooltip
+      value: Explore Cards.
+      objectReference: {fileID: 0}
+    - target: {fileID: 9057614825002507373, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: tooltip
+      value: Edit Decks.
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ab22cc3401977e43821548819f8b3ef, type: 3}
 --- !u!224 &1636765641010717041 stripped
@@ -4555,6 +4682,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 1f1d5baae1d26404a8a639a07e5c7766,
         type: 3}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: tooltip
+      value: Quit
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06f7fede5f8506f4aaaca01736a75a9b, type: 3}
 --- !u!1001 &8266031537919285261

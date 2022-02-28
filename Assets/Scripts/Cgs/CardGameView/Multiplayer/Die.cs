@@ -21,16 +21,16 @@ namespace Cgs.CardGameView.Multiplayer
         public Text valueText;
         public CanvasGroup buttonsCanvasGroup;
 
-        [field: SyncVar] public int Min { get; set; }
+        [field: SyncVar] public int Min { get; set; } = 1;
 
-        [field: SyncVar] public int Max { get; set; }
+        [field: SyncVar] public int Max { get; set; } = 6;
 
         private int Value
         {
             get => _value;
             set
             {
-                int newValue = value;
+                var newValue = value;
                 if (newValue > Max)
                     newValue = Min;
                 if (newValue < Min)
@@ -40,9 +40,8 @@ namespace Cgs.CardGameView.Multiplayer
                     CmdUpdateValue(newValue);
                 else
                 {
-                    int oldValue = value;
                     _value = newValue;
-                    OnChangeValue(oldValue, newValue);
+                    OnChangeValue(value, newValue);
                 }
             }
         }
@@ -60,6 +59,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Start()
         {
+            _value = Min;
             valueText.text = _value.ToString();
             if (Vector2.zero != position)
                 ((RectTransform) transform).localPosition = position;

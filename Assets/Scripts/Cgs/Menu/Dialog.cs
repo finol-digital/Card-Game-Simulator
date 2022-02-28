@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -16,12 +17,14 @@ namespace Cgs.Menu
         public Text messageText;
         public Button noButton;
         public Button yesButton;
+        private bool _ignoreClose;
 
         protected struct Message : IEquatable<Message>
         {
             public string Text;
             public UnityAction NoAction;
             public UnityAction YesAction;
+            public bool Unskippable;
 
             public bool Equals(Message other)
             {
@@ -47,29 +50,30 @@ namespace Cgs.Menu
                 if (yesButton.gameObject.activeInHierarchy)
                     yesButton.onClick?.Invoke();
                 else
-                    Close();
+                    OkClose();
             }
             else if (Inputs.IsOption && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
             else if (Inputs.IsSave)
                 Share();
             else if (Inputs.IsCancel)
-                Close();
+                OkClose();
         }
 
-        public void Show(string text)
+        public void Show(string text, bool unskippable = false)
         {
-            Prompt(text, null);
+            Prompt(text, null, unskippable);
         }
 
-        public void Prompt(string text, UnityAction yesAction)
+        public void Prompt(string text, UnityAction yesAction, bool unskippable = false)
         {
-            Ask(text, null, yesAction);
+            Ask(text, null, yesAction, unskippable);
         }
 
-        public void Ask(string text, UnityAction noAction, UnityAction yesAction)
+        public void Ask(string text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
         {
-            var message = new Message() {Text = text, NoAction = noAction, YesAction = yesAction};
+            var message = new Message()
+                {Text = text, NoAction = noAction, YesAction = yesAction, Unskippable = unskippable};
             if (gameObject.activeSelf)
             {
                 if (!MessageQueue.Contains(message))
@@ -95,12 +99,14 @@ namespace Cgs.Menu
             yesButton.onClick.RemoveAllListeners();
             if (message.YesAction != null)
                 yesButton.onClick.AddListener(message.YesAction);
-            yesButton.onClick.AddListener(Close);
+            yesButton.onClick.AddListener(OkClose);
 
             noButton.onClick.RemoveAllListeners();
             if (message.NoAction != null)
                 noButton.onClick.AddListener(message.NoAction);
-            noButton.onClick.AddListener(Close);
+            noButton.onClick.AddListener(OkClose);
+
+            _ignoreClose = message.Unskippable;
 
             _isNewMessage = true;
         }
@@ -117,7 +123,19 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Close()
+        public void IgnoreableClose()
+        {
+            if (_ignoreClose)
+            {
+                Debug.Log("IgnoreableClose");
+                return;
+            }
+
+            OkClose();
+        }
+
+        [UsedImplicitly]
+        public void OkClose()
         {
             if (!EventSystem.current.alreadySelecting && EventSystem.current.currentSelectedGameObject == gameObject)
                 EventSystem.current.SetSelectedGameObject(null);

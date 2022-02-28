@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 87173af1a955a394ab6ca53cd8f6e986
-timeCreated: 1513898168
-licenseType: Free
+guid: 408cb2d37149c09469b9cc1f7c271a96
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
