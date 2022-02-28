@@ -190,7 +190,7 @@ jobs:
   buildAndReleaseToMacAppStore:
     name: Build and Release to the Mac App Store
     runs-on: macos-latest
-    needs: buildWithLinux
+    needs: buildWithWindows
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
