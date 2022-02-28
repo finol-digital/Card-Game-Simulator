@@ -1,1 +1,2 @@
-- Accessibility: Add FPS limiter
+- Accessibility: Button Detail Text
+- Accessibility: View Details on Mouse-over
