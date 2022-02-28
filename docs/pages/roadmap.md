@@ -10,6 +10,7 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Accessibility: New how-to videos
+- Bug-Fix: Share on Android
 - Bug-Fix: Sometimes cards do not go onto top of deck
 - Bug-Fix: Add error message if imported single card is wrong image type
 - Bug-Fix: Scale CardStack and Dice Buttons on Zoom

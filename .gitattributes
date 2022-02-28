@@ -10,7 +10,8 @@
 * text=auto
 
 # Increase probability of success for merging files with specific extensions
-*.cs diff=csharp
+*.cs diff=csharp eol=lf
+*.md text eol=lf
 
 # Macro attribute: Files with Unity's yaml format
 # linguist-generated means the file is ignored for the repository's language statistics and diffs are hidden by default.
@@ -70,16 +71,16 @@
 *.ai lfs-file
 *.bmp lfs-file
 *.dds lfs-file
-*.jpg lfs-file
+#*.jpg lfs-file
 *.gif lfs-file
 *.iff lfs-file
 *.pict lfs-file
-*.png lfs-file
+#*.png lfs-file
 *.psd lfs-file
-*.svg lfs-file
+#*.svg lfs-file
 *.tga lfs-file
 *.tiff lfs-file
-*.webp lfs-file
+#*.webp lfs-file
 
 # Audio formats
 *.aif lfs-file
