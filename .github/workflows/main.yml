@@ -212,6 +212,7 @@ jobs:
           targetPlatform: StandaloneOSX
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Upload Build
+        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
         uses: actions/upload-artifact@v2
         with:
           name: cgs-StandaloneOSX
