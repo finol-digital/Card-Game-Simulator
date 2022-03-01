@@ -312,7 +312,7 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Fix File Permissions, Code-Sign, and Run Fastlane
+      - name: Fix File Permissions and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
@@ -332,7 +332,7 @@ jobs:
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
           bundle install
-#          bundle exec fastlane ios release
+          bundle exec fastlane ios release
 
   releaseToGitHubPages:
     name: Release to the Web via GitHub Pages
