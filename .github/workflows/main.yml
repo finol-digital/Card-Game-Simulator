@@ -375,7 +375,7 @@ jobs:
 
   releaseToMicrosoftStore:
     name: Release to the Microsoft Store
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: buildWithWindows
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     env:
