@@ -73,14 +73,6 @@ Hack so that Apple doesn't reject the mac build due to a mistake in versioning
 
 Upload a new Mac version to the Mac App Store
 
-### mac skipupload
-
-```sh
-[bundle exec] fastlane mac skipupload
-```
-
-Hack to activate fastlane without uploading (do nothing)
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

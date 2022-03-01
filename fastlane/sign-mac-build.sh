@@ -50,7 +50,7 @@ sleep 10
 echo "Packaging app..."
 sleep 10
 
-productbuild --component "${MAC_BUILD_PATH}/${PROJECT_NAME}.app" /Applications --sign "3rd Party Mac Developer Installer: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${PROJECT_NAME}.pkg"
+productbuild --component "${MAC_BUILD_PATH}/${PROJECT_NAME}.app" /Applications --sign "3rd Party Mac Developer Installer: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${MAC_BUILD_PATH}/${PROJECT_NAME}.pkg"
 STATUS_CODE=$?
 
 sleep 10

@@ -23,5 +23,5 @@ submission_information({
 
 for_platform :mac do
   platform 'osx'
-  pkg "#{ENV['PROJECT_NAME']}.pkg"
+  pkg "#{ENV['MAC_BUILD_PATH']}/#{ENV['PROJECT_NAME']}.pkg"
 end

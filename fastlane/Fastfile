@@ -89,9 +89,4 @@ platform :mac do
     deliver
   end
 
-  desc "Hack to activate fastlane without uploading (do nothing)" 
-  lane :skipupload do
-    # do nothing
-  end
-
 end

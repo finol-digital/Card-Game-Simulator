@@ -187,10 +187,10 @@ jobs:
           overwrite: true
           body: ${{ github.event.release.body }}
 
-  buildAndReleaseToMacAppStore:
-    name: Build and Release to the Mac App Store
+  buildWithMac:
+    name: Build for StandaloneOSX
     runs-on: macos-latest
-    needs: buildWithWindows
+    needs: buildWithLinux
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -211,43 +211,29 @@ jobs:
         with:
           targetPlatform: StandaloneOSX
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
-      - name: Upload Build
-        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
-        uses: actions/upload-artifact@v2
-        with:
-          name: cgs-StandaloneOSX
-          path: build/StandaloneOSX
-      - name: Update Release Notes
-        if: github.event.action == 'published'
+      - name: Fix File Permissions and Code-Sign
         env:
-          RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Fix File Permissions, Code-Sign, and Run Fastlane
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release')
-        env:
-          APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
-          APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
           APPLE_DISTRIBUTION_CERTIFICATE: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE }}
           APPLE_DISTRIBUTION_PASSWORD: ${{ secrets.APPLE_DISTRIBUTION_PASSWORD }}
           MAC_INSTALLER_CERTIFICATE: ${{ secrets.MAC_INSTALLER_CERTIFICATE }}
           MAC_INSTALLER_PASSWORD: ${{ secrets.MAC_INSTALLER_PASSWORD }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
-          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-          APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
           MAC_APP_BUNDLE_PATHS: Contents/PlugIns/StandaloneFileBrowser.bundle
-          MAC_APP_ID: com.finoldigital.CardGameSimulator
           MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
           PROJECT_NAME: Card Game Simulator
-          UPLOAD_LANE: ${{ (github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'StandaloneOSX')) && 'macupload' || 'skipupload' }}
         run: |
           bundle install
           bundle exec fastlane mac fixversion
           find $MAC_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
           chmod +x fastlane/sign-mac-build.sh
           ./fastlane/sign-mac-build.sh
-          bundle exec fastlane mac $UPLOAD_LANE
+      - name: Upload Build
+        if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
+        uses: actions/upload-artifact@v2
+        with:
+          name: cgs-StandaloneOSX
+          path: build/StandaloneOSX
       - name: Upload App
         uses: actions/upload-artifact@v2
         if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
@@ -491,10 +477,45 @@ jobs:
           New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
+  releaseToMacAppStore:
+    name: Release to the Mac App Store
+    runs-on: macos-latest
+    needs: buildWithMac
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Download iOS Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-StandaloneOSX
+          path: build/StandaloneOSX
+      - name: Update Release Notes
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      - name: Run Fastlane
+        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release')
+        env:
+          APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
+          APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+          APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
+          MAC_APP_ID: com.finoldigital.CardGameSimulator
+          MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
+          PROJECT_NAME: Card Game Simulator
+        run: |
+          bundle install
+          bundle exec fastlane mac macupload
+
   releaseToSteam:
     name: Release to Steam
     runs-on: ubuntu-latest
-    needs: [buildWithLinux, buildWithWindows, buildAndReleaseToMacAppStore]
+    needs: [buildWithLinux, buildWithWindows, buildWithMac]
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
@@ -546,7 +567,7 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [buildAndReleaseToMacAppStore, releaseToGooglePlay, releaseToAppStore, releaseToGitHubPages, releaseToMicrosoftStore, releaseToSteam]
+    needs: [releaseToGooglePlay, releaseToAppStore, releaseToGitHubPages, releaseToMicrosoftStore, releaseToMacAppStore, releaseToSteam]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
