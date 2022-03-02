@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class Die : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
+    public class Die : CgsNetPlayable, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
         IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public const string DeletePrompt = "Delete die?";
@@ -49,20 +49,15 @@ namespace Cgs.CardGameView.Multiplayer
         [SyncVar(hook = nameof(OnChangeValue))]
         private int _value;
 
-        [SyncVar(hook = nameof(OnChangePosition))]
-        public Vector2 position;
-
         private Vector2 _dragOffset;
 
         private float _rollTime;
         private float _rollDelay;
 
-        private void Start()
+        protected override void OnStart()
         {
             _value = Min;
             valueText.text = _value.ToString();
-            if (Vector2.zero != position)
-                ((RectTransform) transform).localPosition = position;
             if (!NetworkManager.singleton.isNetworkActive || isServer)
                 _rollTime = RollTime;
 
@@ -144,12 +139,6 @@ namespace Cgs.CardGameView.Multiplayer
         private void CmdUpdatePosition(Vector2 newPosition)
         {
             position = newPosition;
-        }
-
-        [PublicAPI]
-        public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
-        {
-            transform.localPosition = newValue;
         }
 
         [Command(requiresAuthority = false)]
