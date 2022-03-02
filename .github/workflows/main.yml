@@ -496,7 +496,6 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Run Fastlane
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release')
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
