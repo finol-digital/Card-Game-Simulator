@@ -722,7 +722,9 @@ PlayerSettings:
   switchPlayerConnectionEnabled: 1
   switchUseNewStyleFilepaths: 0
   switchUseMicroSleepForYield: 1
+  switchEnableRamDiskSupport: 0
   switchMicroSleepForYieldTime: 25
+  switchRamDiskSpaceSize: 12
   ps4NPAgeRating: 12
   ps4NPTitleSecret: 
   ps4NPTrophyPackPath: 
@@ -875,7 +877,7 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 801dda0bb8b2d801
+  metroCertificateNotAfter: 80d50571154dd901
   metroApplicationDescription: Create, Share, and Play
   wsaImages:
     65636: Assets/Sprites and Textures/UWP/StoreLogo.scale-100.png
@@ -927,7 +929,6 @@ PlayerSettings:
   metroSplashScreenUseBackgroundColor: 1
   platformCapabilities:
     WindowsStoreApps:
-      EnterpriseAuthentication: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -940,6 +941,7 @@ PlayerSettings:
       InternetClientServer: True
       VideosLibrary: False
       Objects3D: False
+      InternetClient: True
       RemoteSystem: False
       BlockedChatMessages: False
       PhoneCall: False
@@ -962,9 +964,9 @@ PlayerSettings:
       RecordedCallsFolder: False
       Contacts: False
       Proximity: False
-      InternetClient: True
       CodeGeneration: False
       BackgroundMediaPlayback: False
+      EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False

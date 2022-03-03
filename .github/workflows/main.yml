@@ -376,7 +376,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cgs-WSAPlayer
-          path: build/WSAPlayer
+          path: build
+      - name: Display Downloaded Files
+        run: ls build; ls build/WSAPlayer
       - name: Update Release Notes
         if: github.event.action == 'published'
         shell: bash
