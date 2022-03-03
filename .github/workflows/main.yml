@@ -451,12 +451,12 @@ jobs:
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
         with:
-          format: "${major}.${minor}.${patch}"
+          format: "${major}.${minor}"
       - name: Upload .appxupload
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', steps.versioning.outputs.version) }}
-          path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
+          name: ${{ format('CardGameSimulator_{0}.{1}.0_x64_bundle_Master.appxupload', steps.versioning.outputs.version, steps.versioning.outputs.increment) }}
+          path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.{2}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version, steps.versioning.outputs.increment) }}
       - name: Upload to the Microsoft Store
         shell: pwsh
         env:
@@ -467,7 +467,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', github.workspace) }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', github.workspace) }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', github.workspace) }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.{2}.0_x64_bundle_Master.appxupload', github.workspace, steps.versioning.outputs.version, steps.versioning.outputs.increment) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\', github.workspace) }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\upload.json', github.workspace) }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\upload.zip', github.workspace) }}
