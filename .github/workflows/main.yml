@@ -377,7 +377,7 @@ jobs:
         with:
           name: cgs-WSAPlayer
           path: build
-      - name: Check build files
+      - name: Display Downloaded Files
         run: ls build; ls build/WSAPlayer
       - name: Update Release Notes
         if: github.event.action == 'published'
