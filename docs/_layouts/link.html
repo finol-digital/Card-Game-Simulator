@@ -35,7 +35,7 @@
           if (navigator.clipboard) {
             let button = document.createElement("button");
             button.innerText = "Copy";
-            button.addEventListener("click", (event) => {
+            button.addEventListener("click", async event => {
               const innerButton = event.srcElement;
               await navigator.clipboard.writeText(autoUpdateUrl);
               innerButton.innerText = "Copied!";
