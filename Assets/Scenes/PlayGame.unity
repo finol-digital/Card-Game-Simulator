@@ -3048,7 +3048,7 @@ PrefabInstance:
     - target: {fileID: 1198181613964418112, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: tooltip
-      value: Launch web browser and go to rules url.
+      value: Launch web browser and go to the rules url.
       objectReference: {fileID: 0}
     - target: {fileID: 1198181613964418112, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
