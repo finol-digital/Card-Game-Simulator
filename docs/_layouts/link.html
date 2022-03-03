@@ -18,10 +18,11 @@
         const path = location.pathname;
         console.log(path);
         let address = decodeURIComponent(path);
-        if (path == "/link")
+        if (path == "/link") {
             address = decodeURIComponent(location.search);
-        else
+        } else {
             address = address.substring(address.indexOf('?'));
+        }
         console.log(address);
         const parameterList = new URLSearchParams(address);
         const map = new Map();
@@ -30,6 +31,21 @@
         });
         const autoUpdateUrl = map.get("url");
         const deepLink = "cardgamesim://link?url=" + encodeURIComponent(encodeURIComponent(autoUpdateUrl));
+        document.querySelectorAll("pre").forEach((block) => {
+          if (navigator.clipboard) {
+            let button = document.createElement("button");
+            button.innerText = "Copy";
+            button.addEventListener("click", (event) => {
+              const innerButton = event.srcElement;
+              await navigator.clipboard.writeText(autoUpdateUrl);
+              innerButton.innerText = "Copied!";
+              setTimeout(()=> {
+                innerButton.innerText = "Copy";
+              },1000);
+            });
+            block.appendChild(button);
+          }
+        });
         document.getElementById("autoupdateurl").innerHTML = autoUpdateUrl;
         document.getElementById("deeplink").href = deepLink;
     }
