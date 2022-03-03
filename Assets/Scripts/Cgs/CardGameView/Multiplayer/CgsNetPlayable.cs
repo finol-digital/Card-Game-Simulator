@@ -17,10 +17,12 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (Vector2.zero != position)
                 ((RectTransform) transform).localPosition = position;
+            OnStart();
         }
 
         protected virtual void OnStart()
         {
+            // Child classes may override
         }
 
         [PublicAPI]
