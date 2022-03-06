@@ -17,13 +17,6 @@ using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public enum DragPhase
-    {
-        Begin,
-        Drag,
-        End
-    }
-
     [RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(Outline))]
     public class CardModel : NetworkBehaviour, ICardDisplay, IPointerDownHandler, IPointerUpHandler, ISelectHandler,
         IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler

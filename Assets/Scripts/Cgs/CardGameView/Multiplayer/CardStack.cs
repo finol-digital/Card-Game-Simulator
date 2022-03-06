@@ -31,19 +31,18 @@ namespace Cgs.CardGameView.Multiplayer
 
         public static void Shuffle<T>(this IList<T> list)
         {
-            int n = list.Count;
+            var n = list.Count;
             while (n > 1)
             {
                 n--;
-                int k = ThisThreadsRandom.Next(n + 1);
+                var k = ThisThreadsRandom.Next(n + 1);
                 (list[k], list[n]) = (list[n], list[k]);
             }
         }
     }
 
     [RequireComponent(typeof(CardDropArea))]
-    public class CardStack : NetworkBehaviour, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
-        IBeginDragHandler, IDragHandler, IEndDragHandler, ICardDropHandler
+    public class CardStack : CgsNetPlayable, ICardDropHandler
     {
         public const string ShuffleText = "Shuffled!";
         public const string SaveText = "Saved";
@@ -57,12 +56,10 @@ namespace Cgs.CardGameView.Multiplayer
         public string SavePrompt => $"Save {deckLabel.text}?";
         public string DeletePrompt => $"Delete {deckLabel.text}?";
 
-        private bool IsDraggingCard => _pointerPositions.Count == 1 && _currentPointerEventData != null &&
-                                       _currentPointerEventData.button != PointerEventData.InputButton.Middle &&
-                                       _currentPointerEventData.button != PointerEventData.InputButton.Right
-                                       || _pointerPositions.Count > 1;
-
-        private bool LacksAuthority => NetworkManager.singleton.isNetworkActive && !hasAuthority;
+        private bool IsDraggingCard => PointerPositions.Count == 1 && CurrentPointerEventData != null &&
+                                       CurrentPointerEventData.button != PointerEventData.InputButton.Middle &&
+                                       CurrentPointerEventData.button != PointerEventData.InputButton.Right
+                                       || PointerPositions.Count > 1;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -93,21 +90,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         private readonly SyncList<string> _cardIds = new SyncList<string>();
 
-        [SyncVar(hook = nameof(OnChangePosition))]
-        public Vector2 position;
-
         [SyncVar] private string _actionText = "";
         [SyncVar] private float _actionTime;
 
         private StackViewer _viewer;
 
-        private PointerEventData _currentPointerEventData;
-        private DragPhase _currentDragPhase;
-
-        private readonly Dictionary<int, Vector2> _pointerPositions = new Dictionary<int, Vector2>();
-        private readonly Dictionary<int, Vector2> _pointerDragOffsets = new Dictionary<int, Vector2>();
-
-        private void Start()
+        protected override void OnStartPlayable()
         {
             GetComponent<CardDropArea>().DropHandler = this;
 
@@ -121,7 +109,6 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 deckLabel.text = Name;
                 countLabel.text = _cardIds.Count.ToString();
-                rectTransform.localPosition = position;
             }
 
             _cardIds.Callback += OnCardsUpdated;
@@ -131,7 +118,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
-            bool isAction = _actionTime > 0;
+            var isAction = _actionTime > 0;
             if (actionLabel.gameObject.activeSelf != isAction)
             {
                 actionLabel.gameObject.SetActive(isAction);
@@ -142,96 +129,56 @@ namespace Cgs.CardGameView.Multiplayer
                 _actionTime -= Time.deltaTime;
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        protected override void OnPointerUpSelect(PointerEventData eventData)
         {
-            _currentPointerEventData = eventData;
-            _pointerPositions[eventData.pointerId] = eventData.position;
-            _pointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
-        }
-
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            if (_currentPointerEventData != null && _currentPointerEventData.pointerId == eventData.pointerId &&
-                !eventData.dragging && eventData.button != PointerEventData.InputButton.Middle &&
-                eventData.button != PointerEventData.InputButton.Right)
-            {
-                if (EventSystem.current.currentSelectedGameObject == gameObject)
-                    View();
-                else if (!EventSystem.current.alreadySelecting)
-                    EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-            }
-
-            _currentPointerEventData = eventData;
-
-            if (_currentDragPhase == DragPhase.Drag)
+            if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
+                eventData.dragging || eventData.button == PointerEventData.InputButton.Middle ||
+                eventData.button == PointerEventData.InputButton.Right)
                 return;
-            _pointerPositions.Remove(eventData.pointerId);
-            _pointerDragOffsets.Remove(eventData.pointerId);
+
+            if (EventSystem.current.currentSelectedGameObject == gameObject)
+                View();
+            else if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
-        public void OnSelect(BaseEventData eventData)
+        protected override void OnSelectPlayable(BaseEventData eventData)
         {
             ShowButtons();
         }
 
-        public void OnDeselect(BaseEventData eventData)
+        protected override void OnDeselectPlayable(BaseEventData eventData)
         {
             HideButtons();
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            _currentPointerEventData = eventData;
-            _currentDragPhase = DragPhase.Begin;
-            _pointerPositions[eventData.pointerId] = eventData.position;
-
             HideButtons();
 
             if (IsDraggingCard)
                 DragCard(eventData);
             else if (LacksAuthority)
-                CmdTransferAuthority();
+                RequestTransferAuthority();
             else
                 UpdatePosition();
         }
 
-        public void OnDrag(PointerEventData eventData)
+        protected override void OnDragPlayable(PointerEventData eventData)
         {
-            _currentPointerEventData = eventData;
-            _currentDragPhase = DragPhase.Drag;
-            _pointerPositions[eventData.pointerId] = eventData.position;
             if (IsDraggingCard)
                 return;
 
             if (LacksAuthority)
-                CmdTransferAuthority();
+                RequestTransferAuthority();
             else
                 UpdatePosition();
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            _currentPointerEventData = eventData;
-            _currentDragPhase = DragPhase.End;
-
             if (!IsDraggingCard && !LacksAuthority)
                 UpdatePosition();
-            if (hasAuthority)
-                CmdReleaseAuthority();
-
-            RemovePointer(eventData);
-        }
-
-        private void RemovePointer(PointerEventData eventData)
-        {
-            Vector2 removedOffset = Vector2.zero;
-            if (_pointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
-                removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
-            _pointerPositions.Remove(eventData.pointerId);
-            _pointerDragOffsets.Remove(eventData.pointerId);
-            foreach (int offsetKey in _pointerDragOffsets.Keys.ToList())
-                if (_pointerDragOffsets.TryGetValue(offsetKey, out Vector2 otherOffset))
-                    _pointerDragOffsets[offsetKey] = otherOffset - removedOffset;
         }
 
         private void DragCard(PointerEventData eventData)
@@ -256,40 +203,6 @@ namespace Cgs.CardGameView.Multiplayer
             RemovePointer(eventData);
         }
 
-        private void UpdatePosition()
-        {
-            Vector2 targetPosition =
-                UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerPositions.Values.ToList());
-            targetPosition +=
-                UnityExtensionMethods.UnityExtensionMethods.CalculateMean(_pointerDragOffsets.Values.ToList());
-
-            var rectTransform = (RectTransform) transform;
-            rectTransform.position = targetPosition;
-            rectTransform.SetAsLastSibling();
-
-            if (hasAuthority)
-                CmdUpdatePosition(rectTransform.localPosition);
-        }
-
-        [Command(requiresAuthority = false)]
-        private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
-        {
-            if (sender != null && netIdentity.connectionToClient == null)
-                netIdentity.AssignClientAuthority(sender);
-        }
-
-        [Command]
-        private void CmdUpdatePosition(Vector2 newPosition)
-        {
-            position = newPosition;
-        }
-
-        [PublicAPI]
-        public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
-        {
-            transform.localPosition = newValue;
-        }
-
         [PublicAPI]
         public void OnChangeName(string oldName, string newName)
         {
@@ -302,12 +215,6 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _cardIds.Clear();
             _cardIds.AddRange(cardIds);
-        }
-
-        [Command]
-        private void CmdReleaseAuthority()
-        {
-            netIdentity.RemoveClientAuthority();
         }
 
         private void OnCardsUpdated(SyncList<string>.Operation op, int index, string oldId, string newId)
@@ -365,7 +272,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (index < 0 || index >= _cardIds.Count)
                 return UnityCard.Blank.Id;
-            string cardId = _cardIds[index];
+            var cardId = _cardIds[index];
             _cardIds.RemoveAt(index);
             return cardId;
         }
@@ -420,7 +327,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            List<string> cards = new List<string>(_cardIds);
+            var cards = new List<string>(_cardIds);
             cards.Shuffle();
             _cardIds.Clear();
             _cardIds.AddRange(cards);
@@ -458,27 +365,6 @@ namespace Cgs.CardGameView.Multiplayer
         public void PromptDelete()
         {
             CardGameManager.Instance.Messenger.Prompt(DeletePrompt, Delete);
-        }
-
-        private void Delete()
-        {
-            if (NetworkManager.singleton.isNetworkActive)
-                CmdDelete();
-            else
-                Destroy(gameObject);
-        }
-
-        [Command(requiresAuthority = false)]
-        private void CmdDelete()
-        {
-            if (netIdentity.connectionToClient != null)
-            {
-                Debug.LogWarning("Ignoring request to delete, since it is currently owned by a client!");
-                return;
-            }
-
-            NetworkServer.UnSpawn(gameObject);
-            Destroy(gameObject);
         }
     }
 }

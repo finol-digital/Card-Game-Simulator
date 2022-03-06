@@ -10,8 +10,7 @@ using UnityEngine.UI;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class Die : CgsNetPlayable, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler,
-        IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class Die : CgsNetPlayable
     {
         public const string DeletePrompt = "Delete die?";
 
@@ -49,12 +48,10 @@ namespace Cgs.CardGameView.Multiplayer
         [SyncVar(hook = nameof(OnChangeValue))]
         private int _value;
 
-        private Vector2 _dragOffset;
-
         private float _rollTime;
         private float _rollDelay;
 
-        protected override void OnStart()
+        protected override void OnStartPlayable()
         {
             _value = Min;
             valueText.text = _value.ToString();
@@ -78,67 +75,29 @@ namespace Cgs.CardGameView.Multiplayer
             _rollDelay = 0;
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        protected override void OnPointerDownPlayable(PointerEventData eventData)
         {
             // OnPointerDown is required for OnPointerUp to trigger
         }
 
-        public void OnPointerUp(PointerEventData eventData)
-        {
-            if (!EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-            ShowButtons();
-        }
-
-        public void OnSelect(BaseEventData eventData)
+        protected override void OnPointerUpPlayable(PointerEventData eventData)
         {
             ShowButtons();
         }
 
-        public void OnDeselect(BaseEventData eventData)
+        protected override void OnSelectPlayable(BaseEventData eventData)
+        {
+            ShowButtons();
+        }
+
+        protected override void OnDeselectPlayable(BaseEventData eventData)
         {
             HideButtons();
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            _dragOffset = eventData.position - ((Vector2) transform.position);
-            transform.SetAsLastSibling();
-
             HideButtons();
-
-            if (NetworkManager.singleton.isNetworkActive)
-                CmdTransferAuthority();
-        }
-
-        public void OnDrag(PointerEventData eventData)
-        {
-            if (NetworkManager.singleton.isNetworkActive && !hasAuthority)
-                return;
-            var rectTransform = ((RectTransform) transform);
-            rectTransform.position = eventData.position - _dragOffset;
-            if (NetworkManager.singleton.isNetworkActive)
-                CmdUpdatePosition(rectTransform.localPosition);
-        }
-
-        public void OnEndDrag(PointerEventData eventData)
-        {
-            if (!hasAuthority)
-                return;
-            CmdReleaseAuthority();
-        }
-
-        [Command(requiresAuthority = false)]
-        private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
-        {
-            if (sender != null && netIdentity.connectionToClient == null)
-                netIdentity.AssignClientAuthority(sender);
-        }
-
-        [Command]
-        private void CmdUpdatePosition(Vector2 newPosition)
-        {
-            position = newPosition;
         }
 
         [Command(requiresAuthority = false)]
@@ -180,6 +139,7 @@ namespace Cgs.CardGameView.Multiplayer
             _rollTime = RollTime;
         }
 
+        // TODO: VIEWER
         private void ShowButtons()
         {
             buttonsCanvasGroup.alpha = 1;
@@ -187,6 +147,7 @@ namespace Cgs.CardGameView.Multiplayer
             buttonsCanvasGroup.blocksRaycasts = true;
         }
 
+        // TODO: VIEWER
         private void HideButtons()
         {
             buttonsCanvasGroup.alpha = 0;
@@ -194,37 +155,10 @@ namespace Cgs.CardGameView.Multiplayer
             buttonsCanvasGroup.blocksRaycasts = false;
         }
 
-        [Command]
-        private void CmdReleaseAuthority()
-        {
-            netIdentity.RemoveClientAuthority();
-        }
-
         [UsedImplicitly]
         public void PromptDelete()
         {
             CardGameManager.Instance.Messenger.Prompt(DeletePrompt, Delete);
-        }
-
-        private void Delete()
-        {
-            if (NetworkManager.singleton.isNetworkActive)
-                CmdDelete();
-            else
-                Destroy(gameObject);
-        }
-
-        [Command(requiresAuthority = false)]
-        private void CmdDelete()
-        {
-            if (netIdentity.connectionToClient != null)
-            {
-                Debug.LogWarning("Ignoring request to delete, since it is currently owned by a client!");
-                return;
-            }
-
-            NetworkServer.UnSpawn(gameObject);
-            Destroy(gameObject);
         }
     }
 }
