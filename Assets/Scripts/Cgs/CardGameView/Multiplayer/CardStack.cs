@@ -44,6 +44,7 @@ namespace Cgs.CardGameView.Multiplayer
     [RequireComponent(typeof(CardDropArea))]
     public class CardStack : CgsNetPlayable, ICardDropHandler
     {
+        private const float DragHoldTime = 0.75f;
         public const string ShuffleText = "Shuffled!";
         public const string SaveText = "Saved";
         public const string TopOrBottomPrompt = "Keep on Top or Move to Bottom?";
@@ -54,9 +55,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
-        public string DeletePrompt => $"Delete {deckLabel.text}?";
+        public string DeletePrompt => $"RequestDelete {deckLabel.text}?";
 
-        private bool IsDraggingCard => PointerPositions.Count == 1 && CurrentPointerEventData != null &&
+        private bool IsDraggingCard => HoldTime < DragHoldTime && PointerPositions.Count == 1 &&
+                                       CurrentPointerEventData != null &&
                                        CurrentPointerEventData.button != PointerEventData.InputButton.Middle &&
                                        CurrentPointerEventData.button != PointerEventData.InputButton.Right
                                        || PointerPositions.Count > 1;
@@ -68,7 +70,6 @@ namespace Cgs.CardGameView.Multiplayer
         public Text countLabel;
         public Text actionLabel;
         public Image topCard;
-        public CanvasGroup buttons;
 
         [field: SyncVar(hook = nameof(OnChangeName))]
         public string Name { get; set; }
@@ -116,7 +117,7 @@ namespace Cgs.CardGameView.Multiplayer
             topCard.sprite = CardGameManager.Current.CardBackImageSprite;
         }
 
-        private void Update()
+        protected override void OnUpdatePlayable()
         {
             var isAction = _actionTime > 0;
             if (actionLabel.gameObject.activeSelf != isAction)
@@ -127,9 +128,12 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (isAction && (!CgsNetManager.Instance.isNetworkActive || isServer))
                 _actionTime -= Time.deltaTime;
+
+            if (HoldTime > DragHoldTime)
+                AuthorizedHighlight();
         }
 
-        protected override void OnPointerUpSelect(PointerEventData eventData)
+        protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
             if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
                 eventData.dragging || eventData.button == PointerEventData.InputButton.Middle ||
@@ -142,20 +146,28 @@ namespace Cgs.CardGameView.Multiplayer
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
+        protected override void OnPointerEnterPlayable(PointerEventData eventData)
+        {
+            // TODO: VIEWER
+        }
+
+        protected override void OnPointerExitPlayable(PointerEventData eventData)
+        {
+            // TODO: VIEWER
+        }
+
         protected override void OnSelectPlayable(BaseEventData eventData)
         {
-            ShowButtons();
+            // TODO: VIEWER
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
         {
-            HideButtons();
+            // TODO: VIEWER
         }
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            HideButtons();
-
             if (IsDraggingCard)
                 DragCard(eventData);
             else if (LacksAuthority)
@@ -282,20 +294,6 @@ namespace Cgs.CardGameView.Multiplayer
             return RemoveAt(_cardIds.Count - 1);
         }
 
-        private void ShowButtons()
-        {
-            buttons.alpha = 1;
-            buttons.interactable = true;
-            buttons.blocksRaycasts = true;
-        }
-
-        private void HideButtons()
-        {
-            buttons.alpha = 0;
-            buttons.interactable = false;
-            buttons.blocksRaycasts = false;
-        }
-
         [UsedImplicitly]
         public void View()
         {
@@ -364,7 +362,7 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void PromptDelete()
         {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, Delete);
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
     }
 }

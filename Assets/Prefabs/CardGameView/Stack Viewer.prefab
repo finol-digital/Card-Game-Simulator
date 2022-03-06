@@ -731,6 +731,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
+      propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
       propertyPath: tooltip
       value: Close
       objectReference: {fileID: 0}

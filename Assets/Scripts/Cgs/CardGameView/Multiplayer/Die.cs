@@ -12,13 +12,12 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public class Die : CgsNetPlayable
     {
-        public const string DeletePrompt = "Delete die?";
+        public const string DeletePrompt = "RequestDelete die?";
 
         private const float RollTime = 1.0f;
         private const float RollDelay = 0.05f;
 
         public Text valueText;
-        public CanvasGroup buttonsCanvasGroup;
 
         [field: SyncVar] public int Min { get; set; } = 1;
 
@@ -57,11 +56,9 @@ namespace Cgs.CardGameView.Multiplayer
             valueText.text = _value.ToString();
             if (!NetworkManager.singleton.isNetworkActive || isServer)
                 _rollTime = RollTime;
-
-            HideButtons();
         }
 
-        private void Update()
+        protected override void OnUpdatePlayable()
         {
             if (_rollTime <= 0 || (NetworkManager.singleton.isNetworkActive && !isServer))
                 return;
@@ -75,29 +72,44 @@ namespace Cgs.CardGameView.Multiplayer
             _rollDelay = 0;
         }
 
-        protected override void OnPointerDownPlayable(PointerEventData eventData)
+        protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            // OnPointerDown is required for OnPointerUp to trigger
+            // TODO: VIEWER
         }
 
-        protected override void OnPointerUpPlayable(PointerEventData eventData)
+        protected override void OnPointerExitPlayable(PointerEventData eventData)
         {
-            ShowButtons();
+            // TODO: VIEWER
         }
 
         protected override void OnSelectPlayable(BaseEventData eventData)
         {
-            ShowButtons();
+            // TODO: VIEWER
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
         {
-            HideButtons();
+            // TODO: VIEWER
         }
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            HideButtons();
+            if (NetworkManager.singleton.isNetworkActive)
+                RequestTransferAuthority();
+        }
+
+        protected override void OnDragPlayable(PointerEventData eventData)
+        {
+            if (LacksAuthority)
+                RequestTransferAuthority();
+            else
+                UpdatePosition();
+        }
+
+        protected override void OnEndDragPlayable(PointerEventData eventData)
+        {
+            if (!LacksAuthority)
+                UpdatePosition();
         }
 
         [Command(requiresAuthority = false)]
@@ -139,26 +151,10 @@ namespace Cgs.CardGameView.Multiplayer
             _rollTime = RollTime;
         }
 
-        // TODO: VIEWER
-        private void ShowButtons()
-        {
-            buttonsCanvasGroup.alpha = 1;
-            buttonsCanvasGroup.interactable = true;
-            buttonsCanvasGroup.blocksRaycasts = true;
-        }
-
-        // TODO: VIEWER
-        private void HideButtons()
-        {
-            buttonsCanvasGroup.alpha = 0;
-            buttonsCanvasGroup.interactable = false;
-            buttonsCanvasGroup.blocksRaycasts = false;
-        }
-
         [UsedImplicitly]
         public void PromptDelete()
         {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, Delete);
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
     }
 }

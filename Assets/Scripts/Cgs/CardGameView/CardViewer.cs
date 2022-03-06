@@ -36,9 +36,9 @@ namespace Cgs.CardGameView
                 if (_instance != null)
                     return _instance;
 
-                GameObject cardViewer = GameObject.FindWithTag(Tags.CardViewer);
-                if (cardViewer != null)
-                    _instance = cardViewer.GetOrAddComponent<CardViewer>();
+                var cardViewerGameObject = GameObject.FindWithTag(Tags.CardViewer);
+                if (cardViewerGameObject != null)
+                    _instance = cardViewerGameObject.GetOrAddComponent<CardViewer>();
                 return _instance;
             }
         }
@@ -57,6 +57,7 @@ namespace Cgs.CardGameView
 
         private CardViewerMode _mode;
 
+        public CanvasGroup preview;
         public CanvasGroup minimal;
         public CanvasGroup expanded;
         public CanvasGroup maximal;
@@ -65,6 +66,8 @@ namespace Cgs.CardGameView
 
         public RectTransform zoomPanel;
 
+        public Text previewNameText;
+        public Text previewIdText;
         public List<AspectRatioFitter> cardAspectRatioFitters;
         public List<Image> cardImages;
         public List<Text> nameTexts;
@@ -78,9 +81,9 @@ namespace Cgs.CardGameView
         public List<Dropdown> propertySelectors;
         public List<Text> propertyValueTexts;
 
-        public List<Text> PropertyTexts { get; } = new List<Text>();
-        public List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
-        public Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
+        private List<Text> PropertyTexts { get; } = new List<Text>();
+        private List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
+        private Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
 
         private int PrimaryPropertyIndex
         {
@@ -99,7 +102,7 @@ namespace Cgs.CardGameView
         {
             get
             {
-                string selectedName = SetLabel;
+                var selectedName = SetLabel;
                 if (SelectedPropertyIndex == 1)
                     selectedName = IdLabel;
                 if (SelectedPropertyIndex > 1 && SelectedPropertyIndex < PropertyOptions.Count)
@@ -112,7 +115,7 @@ namespace Cgs.CardGameView
         {
             get
             {
-                string selectedDisplay = SetLabel;
+                var selectedDisplay = SetLabel;
                 if (SelectedPropertyIndex == 1)
                     selectedDisplay = IdLabel;
                 if (SelectedPropertyIndex > 1 && SelectedPropertyIndex < PropertyOptions.Count)
@@ -131,7 +134,7 @@ namespace Cgs.CardGameView
                     _selectedPropertyIndex = PropertyOptions.Count - 1;
                 if (_selectedPropertyIndex >= PropertyOptions.Count)
                     _selectedPropertyIndex = 0;
-                foreach (Dropdown propertySelector in propertySelectors)
+                foreach (var propertySelector in propertySelectors)
                     propertySelector.value = _selectedPropertyIndex;
                 ResetPropertyValueText();
             }
@@ -154,7 +157,7 @@ namespace Cgs.CardGameView
 
                 if (_selectedCardModel != null)
                 {
-                    UnityCard selectedCard = _selectedCardModel.Value;
+                    var selectedCard = _selectedCardModel.Value;
                     ResetTexts();
                     selectedCard.RegisterDisplay(this);
                 }
@@ -225,7 +228,7 @@ namespace Cgs.CardGameView
 
             if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.isFacedown)
                 nameVisibleButton.gameObject.SetActive(SelectedCardModel.isFacedown);
-            bool isNameVisible = IsNameVisible;
+            var isNameVisible = IsNameVisible;
             if (nameVisibleButtonImage.gameObject.activeSelf != isNameVisible)
                 nameVisibleButtonImage.gameObject.SetActive(isNameVisible);
             if (nameInvisibleButtonImage.gameObject.activeSelf == isNameVisible)
@@ -269,21 +272,28 @@ namespace Cgs.CardGameView
             }
         }
 
+        public void Preview(CardModel cardModel)
+        {
+            preview.alpha = 1;
+            previewNameText.text = cardModel.Value.Name;
+            previewIdText.text = cardModel.Value.Id;
+        }
+
         private void ResetInfo()
         {
-            foreach (AspectRatioFitter cardAspectRatioFitter in cardAspectRatioFitters)
+            foreach (var cardAspectRatioFitter in cardAspectRatioFitters)
                 cardAspectRatioFitter.aspectRatio = CardGameManager.Current.CardAspectRatio;
-            foreach (Text text in uniqueIdTexts)
+            foreach (var text in uniqueIdTexts)
                 text.transform.parent.parent.gameObject.SetActive(!CardGameManager.Current.CardNameIsUnique);
 
             PropertyOptions.Clear();
             PropertyOptions.Add(new Dropdown.OptionData() {text = SetLabel});
             PropertyOptions.Add(new Dropdown.OptionData() {text = IdLabel});
             DisplayNameLookup.Clear();
-            foreach (PropertyDef propertyDef in CardGameManager.Current.CardProperties)
+            foreach (var propertyDef in CardGameManager.Current.CardProperties)
                 AddProperty(propertyDef);
 
-            foreach (Dropdown propertySelector in propertySelectors)
+            foreach (var propertySelector in propertySelectors)
             {
                 propertySelector.options = PropertyOptions;
                 propertySelector.value = PrimaryPropertyIndex;
@@ -301,13 +311,12 @@ namespace Cgs.CardGameView
 
             if (propertyDef.Type == PropertyType.Object || propertyDef.Type == PropertyType.ObjectList)
             {
-                foreach (PropertyDef childProperty in propertyDef.Properties)
+                foreach (var childProperty in propertyDef.Properties)
                     AddProperty(childProperty, parentPrefix + propertyDef.Name + PropertyDef.ObjectDelimiter);
             }
             else
             {
-                string displayName =
-                    !string.IsNullOrEmpty(propertyDef.Display) ? propertyDef.Display : propertyDef.Name;
+                var displayName = !string.IsNullOrEmpty(propertyDef.Display) ? propertyDef.Display : propertyDef.Name;
                 PropertyOptions.Add(new Dropdown.OptionData() {text = displayName});
                 DisplayNameLookup[displayName] = parentPrefix + propertyDef.Name;
             }
@@ -356,7 +365,7 @@ namespace Cgs.CardGameView
 
         public void ZoomOn(CardModel cardModel)
         {
-            bool isVisible = IsVisible;
+            var isVisible = IsVisible;
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
             SelectedCardModel = cardModel;
@@ -378,6 +387,7 @@ namespace Cgs.CardGameView
 
         private void Redisplay()
         {
+            HidePreview();
             minimal.alpha = IsVisible && Mode == CardViewerMode.Minimal ? 1 : 0;
             minimal.interactable = IsVisible && Mode == CardViewerMode.Minimal;
             minimal.blocksRaycasts = IsVisible && Mode == CardViewerMode.Minimal;
@@ -391,17 +401,17 @@ namespace Cgs.CardGameView
 
         private void ResetTexts()
         {
-            foreach (Text nameText in nameTexts)
+            foreach (var nameText in nameTexts)
                 nameText.text = SelectedCardModel.Value.Name;
-            foreach (Text uniqueId in uniqueIdTexts)
-                uniqueId.text = SelectedCardModel.Id;
+            foreach (var uniqueIdText in uniqueIdTexts)
+                uniqueIdText.text = SelectedCardModel.Id;
             idText.text = IdLabel + Delimiter + SelectedCardModel.Id;
             setText.text = SetLabel + Delimiter
                                     + (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode,
-                                        out Set currentSet)
+                                        out var currentSet)
                                         ? currentSet.ToString()
                                         : SelectedCardModel.Value.SetCode);
-            foreach (Text propertyText in PropertyTexts)
+            foreach (var propertyText in PropertyTexts)
                 Destroy(propertyText.gameObject);
             PropertyTexts.Clear();
             for (var i = 2; i < PropertyOptions.Count; i++)
@@ -411,7 +421,7 @@ namespace Cgs.CardGameView
                 newPropertyText.gameObject.SetActive(true);
                 newPropertyText.text = PropertyOptions[i].text + Delimiter
                                                                + (DisplayNameLookup.TryGetValue(PropertyOptions[i].text,
-                                                                   out string propertyName)
+                                                                   out var propertyName)
                                                                    ? SelectedCardModel.Value.GetPropertyValueString(
                                                                        propertyName)
                                                                    : string.Empty);
@@ -426,7 +436,7 @@ namespace Cgs.CardGameView
         {
             if (SelectedCardModel == null)
             {
-                foreach (Text propertyValueText in propertyValueTexts)
+                foreach (var propertyValueText in propertyValueTexts)
                     propertyValueText.text = string.Empty;
                 return;
             }
@@ -436,11 +446,16 @@ namespace Cgs.CardGameView
                 newContentTextValue = SelectedCardModel.Value.GetPropertyValueString(SelectedPropertyName);
             else if (SelectedPropertyIndex == 1)
                 newContentTextValue = SelectedCardModel.Id;
-            else if (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out Set currentSet))
+            else if (CardGameManager.Current.Sets.TryGetValue(SelectedCardModel.Value.SetCode, out var currentSet))
                 newContentTextValue = currentSet.ToString();
 
-            foreach (Text propertyValueText in propertyValueTexts)
+            foreach (var propertyValueText in propertyValueTexts)
                 propertyValueText.text = newContentTextValue;
+        }
+
+        public void HidePreview()
+        {
+            preview.alpha = 0;
         }
     }
 }

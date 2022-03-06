@@ -40,7 +40,7 @@ namespace Cgs
         public const string LoadErrorMessage = "Error loading game!: ";
 
         public const string LoadErrorPrompt =
-            "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
+            "Error loading game! The game may be corrupted. RequestDelete (note that any decks would also be deleted)?";
 
         public const string CardsLoadedMessage = "{0} cards loaded!";
         public const string CardsLoadingMessage = "{0} cards loading...";

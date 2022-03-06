@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
-using Cgs.Play.Multiplayer;
+using Cgs.Menu;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -17,26 +17,10 @@ using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    [RequireComponent(typeof(Image), typeof(CanvasGroup), typeof(Outline))]
-    public class CardModel : NetworkBehaviour, ICardDisplay, IPointerDownHandler, IPointerUpHandler, ISelectHandler,
-        IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class CardModel : CgsNetPlayable, ICardDisplay
     {
         private const float ZoomHoldTime = 1.5f;
         private const float MovementSpeed = 600f;
-        private static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
-        private static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
-
-        public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
-                                                               && transform.parent == CgsNetManager.Instance
-                                                                   .playController.playMat.transform;
-
-        private bool IsProcessingSecondaryDragAction =>
-            PointerDragOffsets.Count > 1
-            || CurrentPointerEventData != null &&
-            (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
-             CurrentPointerEventData.button == PointerEventData.InputButton.Right);
-
-        public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         public int Index { get; set; }
 
@@ -45,22 +29,6 @@ namespace Cgs.CardGameView.Multiplayer
         public CardAction DefaultAction { get; set; }
         public UnityAction SecondaryDragAction { get; set; }
         public CardDropArea DropTarget { get; set; }
-
-        public PointerEventData CurrentPointerEventData { get; private set; }
-
-        public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
-        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
-
-        private float _holdTime;
-        private bool _didSelectOnDown;
-        private bool _didDrag;
-        private DragPhase _currentDragPhase;
-
-        [SyncVar(hook = nameof(OnChangePosition))]
-        public Vector2 position;
-
-        [SyncVar(hook = nameof(OnChangeRotation))]
-        public Quaternion rotation;
 
         [field: SyncVar] public string Id { get; private set; }
 
@@ -94,7 +62,7 @@ namespace Cgs.CardGameView.Multiplayer
                     CmdUpdateFacedown(value);
                 else
                 {
-                    bool oldValue = isFacedown;
+                    var oldValue = isFacedown;
                     isFacedown = value;
                     OnChangeFacedown(oldValue, isFacedown);
                 }
@@ -162,48 +130,17 @@ namespace Cgs.CardGameView.Multiplayer
         public GameObject nameLabel;
         public Text nameText;
 
-        public bool IsHighlighted
-        {
-            set
-            {
-                if (value)
-                {
-                    Highlight.effectColor = SelectedHighlightColor;
-                    Highlight.effectDistance = OutlineHighlightDistance;
-                }
-                else
-                {
-                    bool isOthers = IsOnline && _isClientAuthorized && !hasAuthority;
-                    Highlight.effectColor = isOthers ? Color.yellow : Color.black;
-                    Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
-                }
-            }
-        }
-
-        private Outline Highlight => _highlight ? _highlight : _highlight = GetComponent<Outline>();
-        private Outline _highlight;
-
         private Image View => _view ? _view : _view = GetComponent<Image>();
         private Image _view;
 
         private CanvasGroup Visibility => _visibility ? _visibility : _visibility = GetComponent<CanvasGroup>();
         private CanvasGroup _visibility;
 
-        [SyncVar] private bool _isClientAuthorized;
-
-        private void Start()
+        protected override void OnStartPlayable()
         {
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
-
-            if (IsOnline)
-            {
-                if (Vector2.zero != position)
-                    ((RectTransform) transform).localPosition = position;
-                if (Quaternion.identity != rotation)
-                    transform.rotation = rotation;
-            }
 
             IsNameVisible = !isFacedown;
             if (!isFacedown)
@@ -229,14 +166,9 @@ namespace Cgs.CardGameView.Multiplayer
                 IsNameVisible = true;
         }
 
-        private void Update()
+        protected override void OnUpdatePlayable()
         {
-            if (PointerPositions.Count > 0 && !_didDrag)
-                _holdTime += Time.deltaTime;
-            else
-                _holdTime = 0;
-
-            if (_holdTime > ZoomHoldTime)
+            if (HoldTime > ZoomHoldTime)
                 RequestZoomOnThis();
         }
 
@@ -249,57 +181,55 @@ namespace Cgs.CardGameView.Multiplayer
                 CardViewer.Instance.ZoomOn(this);
         }
 
-        public void OnPointerDown(PointerEventData eventData)
+        protected override void OnPointerDownPlayable(PointerEventData eventData)
         {
-            _didSelectOnDown =
+            DidSelectOnDown =
                 eventData.button != PointerEventData.InputButton.Middle && eventData.button !=
                                                                         PointerEventData.InputButton.Right
                                                                         && CardViewer.Instance.SelectedCardModel !=
                                                                         this && CardViewer.Instance.WasVisible;
-            if (_didSelectOnDown && !EventSystem.current.alreadySelecting)
+            if (DidSelectOnDown && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-
-            CurrentPointerEventData = eventData;
-
-            PointerPositions[eventData.pointerId] = eventData.position;
-            PointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
         }
 
-        public void OnPointerUp(PointerEventData eventData)
+        protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
-            if (CurrentPointerEventData != null && CurrentPointerEventData.pointerId == eventData.pointerId &&
-                !eventData.dragging && eventData.button != PointerEventData.InputButton.Middle &&
-                eventData.button != PointerEventData.InputButton.Right)
-            {
-                if (!_didSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
-                    DefaultAction != null)
-                    DefaultAction(this);
-                else if (PlaceHolder == null)
-                {
-                    if (CardViewer.Instance != null && CardViewer.Instance.Mode == CardViewerMode.Maximal)
-                        CardViewer.Instance.Mode = CardViewerMode.Expanded;
-                    if (!EventSystem.current.alreadySelecting)
-                        EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-                }
-            }
-
-            CurrentPointerEventData = eventData;
-            if (_currentDragPhase == DragPhase.Drag)
+            if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
+                eventData.dragging || eventData.button == PointerEventData.InputButton.Middle ||
+                eventData.button == PointerEventData.InputButton.Right)
                 return;
 
-            PointerPositions.Remove(eventData.pointerId);
-            PointerDragOffsets.Remove(eventData.pointerId);
-            if (_didDrag && PointerDragOffsets.Count == 0)
-                _didDrag = false;
+            if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
+                DefaultAction != null)
+                DefaultAction(this);
+            else if (PlaceHolder == null)
+            {
+                if (CardViewer.Instance != null && CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                    CardViewer.Instance.Mode = CardViewerMode.Expanded;
+                if (!EventSystem.current.alreadySelecting)
+                    EventSystem.current.SetSelectedGameObject(gameObject, eventData);
+            }
         }
 
-        public void OnSelect(BaseEventData eventData)
+        protected override void OnPointerEnterPlayable(PointerEventData eventData)
+        {
+            if (Settings.ViewInfoOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible)
+                CardViewer.Instance.Preview(this);
+        }
+
+        protected override void OnPointerExitPlayable(PointerEventData eventData)
+        {
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.HidePreview();
+        }
+
+        protected override void OnSelectPlayable(BaseEventData eventData)
         {
             if (CardViewer.Instance != null)
                 CardViewer.Instance.SelectedCardModel = this;
         }
 
-        public void OnDeselect(BaseEventData eventData)
+        protected override void OnDeselectPlayable(BaseEventData eventData)
         {
             if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
@@ -325,60 +255,45 @@ namespace Cgs.CardGameView.Multiplayer
             return cardModel;
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        protected override bool PreBeginDrag(PointerEventData eventData)
         {
-            _didDrag = true;
+            DidDrag = true;
             if (DoesCloneOnDrag)
             {
                 if (!IsOnline)
                     NetworkServer.UnSpawn(gameObject); // Avoid Mirror error
                 CreateDrag(eventData, gameObject, transform, Value, isFacedown);
-                return;
+                return true;
             }
 
             EventSystem.current.SetSelectedGameObject(null, eventData);
-            CurrentPointerEventData = eventData;
-            _currentDragPhase = DragPhase.Begin;
-            PointerPositions[eventData.pointerId] = eventData.position;
+            return false;
+        }
 
+        protected override void OnBeginDragPlayable(PointerEventData eventData)
+        {
             if (!IsOnline)
                 ActOnDrag();
             else
-                CmdTransferAuthority();
+                RequestTransferAuthority();
         }
 
-        public void OnDrag(PointerEventData eventData)
+        protected override void OnDragPlayable(PointerEventData eventData)
         {
-            CurrentPointerEventData = eventData;
-            _currentDragPhase = DragPhase.Drag;
-            PointerPositions[eventData.pointerId] = eventData.position;
-
             if (!IsOnline || hasAuthority)
                 ActOnDrag();
             else
-                CmdTransferAuthority();
+                RequestTransferAuthority();
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            CurrentPointerEventData = eventData;
-            _currentDragPhase = DragPhase.End;
-
             if (!IsOnline || hasAuthority)
                 ActOnDrag();
+        }
 
-            Vector2 removedOffset = Vector2.zero;
-            if (PointerDragOffsets.TryGetValue(eventData.pointerId, out Vector2 pointerDragOffset))
-                removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
-            PointerPositions.Remove(eventData.pointerId);
-            PointerDragOffsets.Remove(eventData.pointerId);
-            foreach (int offsetKey in PointerDragOffsets.Keys.ToList())
-                if (PointerDragOffsets.TryGetValue(offsetKey, out Vector2 otherOffset))
-                    PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
-
-            if (IsOnline && hasAuthority)
-                CmdReleaseAuthority();
-
+        protected override void PostDragPlayable(PointerEventData eventData)
+        {
             if (IsProcessingSecondaryDragAction)
                 return;
 
@@ -389,10 +304,10 @@ namespace Cgs.CardGameView.Multiplayer
                 var shouldDiscard = true;
                 if (Visibility.blocksRaycasts)
                 {
-                    List<RaycastResult> hits = new List<RaycastResult>();
+                    var hits = new List<RaycastResult>();
                     EventSystem.current.RaycastAll(eventData, hits);
-                    bool pointerOverDropTarget = hits.Any(hit => hit.gameObject == DropTarget.gameObject);
-                    if (pointerOverDropTarget)
+                    var isPointerOverDropTarget = hits.Any(hit => hit.gameObject == DropTarget.gameObject);
+                    if (isPointerOverDropTarget)
                         DropTarget.OnDrop(eventData);
                     else
                         shouldDiscard = false;
@@ -418,19 +333,6 @@ namespace Cgs.CardGameView.Multiplayer
             return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardModel>();
         }
 
-        [Command(requiresAuthority = false)]
-        private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
-        {
-            if (sender == null || netIdentity.connectionToClient != null)
-            {
-                Debug.Log("CardModel: Ignoring request to transfer authority, as it is already transferred");
-                return;
-            }
-
-            _isClientAuthorized = true;
-            netIdentity.AssignClientAuthority(sender);
-        }
-
         private void ActOnDrag()
         {
             UpdatePosition();
@@ -438,7 +340,7 @@ namespace Cgs.CardGameView.Multiplayer
                 SecondaryDragAction();
         }
 
-        private void UpdatePosition()
+        protected override void UpdatePosition()
         {
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             if (SecondaryDragAction != Rotate && IsProcessingSecondaryDragAction)
@@ -451,12 +353,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !hasAuthority))
                 return;
 
-            IsHighlighted = _currentDragPhase != DragPhase.End;
-            Highlight.effectColor = DropTarget != null || PlaceHolder != null || ParentCardZone != null
-                ? Color.green
-                : Color.red;
+            if (DropTarget != null || PlaceHolder != null || ParentCardZone != null)
+                AuthorizedHighlight();
+            else
+                WarnHighlight();
+            IsHighlighted = CurrentDragPhase != DragPhase.End;
 
-            Vector2 targetPosition =
+            var targetPosition =
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
             targetPosition +=
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
@@ -475,18 +378,18 @@ namespace Cgs.CardGameView.Multiplayer
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, targetPosition);
 
             if (IsOnline)
-                CmdUpdatePosition(((RectTransform) transform).localPosition);
+                RequestUpdatePosition(((RectTransform) transform).localPosition);
         }
 
         private void UpdateCardZonePosition(Vector2 targetPosition)
         {
-            CardZone cardZone = ParentCardZone;
+            var cardZone = ParentCardZone;
             if (cardZone == null || (IsOnline && !hasAuthority))
                 return;
 
             if (!cardZone.DoesImmediatelyRelease &&
                 (cardZone.type == CardZoneType.Vertical || cardZone.type == CardZoneType.Horizontal))
-                cardZone.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
+                cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
             else if (!IsStatic)
                 cardZone.UpdateLayout(transform as RectTransform, targetPosition);
 
@@ -496,10 +399,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardZone.type == CardZoneType.Area)
                 transform.SetAsLastSibling();
 
-            Vector3[] zoneCorners = new Vector3[4];
+            var zoneCorners = new Vector3[4];
             ((RectTransform) cardZone.transform).GetWorldCorners(zoneCorners);
-            bool isOutYBounds = targetPosition.y < zoneCorners[0].y || targetPosition.y > zoneCorners[1].y;
-            bool isOutXBounds = targetPosition.x < zoneCorners[0].x || targetPosition.y > zoneCorners[2].x;
+            var isOutYBounds = targetPosition.y < zoneCorners[0].y || targetPosition.y > zoneCorners[1].y;
+            var isOutXBounds = targetPosition.x < zoneCorners[0].x || targetPosition.y > zoneCorners[2].x;
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
                 || (cardZone.type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
@@ -508,30 +411,17 @@ namespace Cgs.CardGameView.Multiplayer
                 ParentToCanvas(targetPosition);
         }
 
-        [Command]
-        private void CmdUpdatePosition(Vector2 newPosition)
-        {
-            position = newPosition;
-        }
-
-        [UsedImplicitly]
-        public void OnChangePosition(Vector2 oldPosition, Vector2 newPosition)
-        {
-            if (!hasAuthority)
-                transform.localPosition = newPosition;
-        }
-
         private void ParentToCanvas(Vector3 targetPosition)
         {
             if (IsOnline && hasAuthority)
                 CmdUnspawnCard(true);
-            CardZone prevParentZone = ParentCardZone;
-            if (_currentDragPhase == DragPhase.Drag)
-                prevParentZone.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
+            var previousParentCardZone = ParentCardZone;
+            if (CurrentDragPhase == DragPhase.Drag)
+                previousParentCardZone.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
             transform.SetParent(CardGameManager.Instance.CardCanvas.transform);
             transform.SetAsLastSibling();
-            if (prevParentZone != null)
-                prevParentZone.OnRemove(this);
+            if (previousParentCardZone != null)
+                previousParentCardZone.OnRemove(this);
             Visibility.blocksRaycasts = false;
             var rectTransform = (RectTransform) transform;
             rectTransform.anchorMax = 0.5f * Vector2.one;
@@ -541,35 +431,12 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.localScale = Vector3.one;
         }
 
-        [Command]
-        private void CmdReleaseAuthority()
-        {
-            netIdentity.RemoveClientAuthority();
-            _isClientAuthorized = false;
-        }
-
-        [Command(requiresAuthority = false)]
-        private void CmdUnspawnCard(bool shouldClientKeep)
-        {
-            RpcUnspawnCard(shouldClientKeep);
-        }
-
-        [ClientRpc]
-        private void RpcUnspawnCard(bool shouldClientKeep)
-        {
-            bool shouldKeep = shouldClientKeep && hasAuthority;
-            if (isServer)
-                NetworkServer.UnSpawn(gameObject);
-            if (!shouldKeep)
-                Destroy(gameObject);
-        }
-
         private IEnumerator MoveToPlaceHolder()
         {
             while (PlaceHolder != null && Vector3.Distance(transform.position, PlaceHolder.position) > 1)
             {
-                float step = MovementSpeed * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, PlaceHolder.position, step);
+                var distance = MovementSpeed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, PlaceHolder.position, distance);
                 yield return null;
             }
 
@@ -579,13 +446,13 @@ namespace Cgs.CardGameView.Multiplayer
                 yield break;
             }
 
-            CardZone prevParentZone = ParentCardZone;
-            Transform transform1 = transform;
-            transform1.SetParent(PlaceHolder.parent);
-            transform1.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
-            transform1.localScale = Vector3.one;
-            if (prevParentZone != null)
-                prevParentZone.OnRemove(this);
+            var previousParentCardZone = ParentCardZone;
+            var cachedTransform = transform;
+            cachedTransform.SetParent(PlaceHolder.parent);
+            cachedTransform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
+            cachedTransform.localScale = Vector3.one;
+            if (previousParentCardZone != null)
+                previousParentCardZone.OnRemove(this);
             if (ParentCardZone != null)
                 ParentCardZone.OnAdd(this);
             PlaceHolder = null;
@@ -594,36 +461,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void UpdateParentCardZoneScrollRect()
         {
-            CardZone cardZone = ParentCardZone;
+            var cardZone = ParentCardZone;
             if (cardZone != null)
-                cardZone.UpdateScrollRect(_currentDragPhase, CurrentPointerEventData);
-        }
-
-        public void Rotate()
-        {
-            Vector2 referencePoint = transform.position;
-            foreach (KeyValuePair<int, Vector2> pointerDragPosition in PointerPositions)
-                if (pointerDragPosition.Key != CurrentPointerEventData.pointerId)
-                    referencePoint = pointerDragPosition.Value;
-            Vector2 prevDir = (CurrentPointerEventData.position - CurrentPointerEventData.delta) - referencePoint;
-            Vector2 currDir = CurrentPointerEventData.position - referencePoint;
-            transform.Rotate(0, 0, Vector2.SignedAngle(prevDir, currDir));
-
-            if (IsOnline)
-                CmdUpdateRotation(transform.rotation);
-        }
-
-        [Command(requiresAuthority = false)]
-        public void CmdUpdateRotation(Quaternion newRotation)
-        {
-            rotation = newRotation;
-        }
-
-        [UsedImplicitly]
-        public void OnChangeRotation(Quaternion oldRotation, Quaternion newRotation)
-        {
-            if (!hasAuthority)
-                transform.rotation = newRotation;
+                cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
         [Command(requiresAuthority = false)]
@@ -641,23 +481,27 @@ namespace Cgs.CardGameView.Multiplayer
                 Value.UnregisterDisplay(this);
         }
 
-        private void WarnHighlight()
-        {
-            Highlight.effectColor = Color.red;
-            Highlight.effectDistance = OutlineHighlightDistance;
-        }
-
-        [ClientRpc]
-        public void RpcHideHighlight()
-        {
-            IsHighlighted = false;
-        }
-
         private void Discard()
         {
             if (IsOnline)
                 CmdUnspawnCard(false);
             Destroy(gameObject);
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdUnspawnCard(bool shouldClientKeep)
+        {
+            RpcUnspawnCard(shouldClientKeep);
+        }
+
+        [ClientRpc]
+        private void RpcUnspawnCard(bool shouldClientKeep)
+        {
+            var shouldKeep = shouldClientKeep && hasAuthority;
+            if (isServer)
+                NetworkServer.UnSpawn(gameObject);
+            if (!shouldKeep)
+                Destroy(gameObject);
         }
 
         private void OnDestroy()

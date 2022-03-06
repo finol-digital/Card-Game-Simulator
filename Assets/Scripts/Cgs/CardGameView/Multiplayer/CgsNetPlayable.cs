@@ -9,6 +9,8 @@ using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
@@ -22,42 +24,112 @@ namespace Cgs.CardGameView.Multiplayer
     public class CgsNetPlayable : NetworkBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
         IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        private static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
+        private static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
+
+        public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
+
         public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
                                                                && transform.parent == CgsNetManager.Instance
                                                                    .playController.playMat.transform;
 
         protected bool LacksAuthority => NetworkManager.singleton.isNetworkActive && !hasAuthority;
 
+        protected bool IsProcessingSecondaryDragAction =>
+            PointerDragOffsets.Count > 1
+            || CurrentPointerEventData != null &&
+            (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
+             CurrentPointerEventData.button == PointerEventData.InputButton.Right);
+
         [SyncVar(hook = nameof(OnChangePosition))]
         public Vector2 position;
 
-        protected PointerEventData CurrentPointerEventData;
-        protected DragPhase CurrentDragPhase;
+        [SyncVar(hook = nameof(OnChangeRotation))]
+        public Quaternion rotation;
 
-        protected Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
-        protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
+        [SyncVar] public bool isClientAuthorized;
 
-        private void Start()
+        public PointerEventData CurrentPointerEventData { get; protected set; }
+        public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
+        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
+
+        protected bool DidSelectOnDown { get; set; }
+        protected bool DidDrag { get; set; }
+        protected DragPhase CurrentDragPhase { get; private set; }
+        protected float HoldTime { get; private set; }
+
+        public bool IsHighlighted
         {
-            OnStartPlayable();
-
-            if (IsOnline && Vector2.zero != position)
-                ((RectTransform) transform).localPosition = position;
+            set
+            {
+                if (value)
+                {
+                    Highlight.effectColor = SelectedHighlightColor;
+                    Highlight.effectDistance = OutlineHighlightDistance;
+                }
+                else
+                {
+                    var isOthers = IsOnline && isClientAuthorized && !hasAuthority;
+                    Highlight.effectColor = isOthers ? Color.yellow : Color.black;
+                    Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+                }
+            }
         }
+
+        private Outline Highlight => _highlight ? _highlight : _highlight = gameObject.GetOrAddComponent<Outline>();
+        private Outline _highlight;
 
         protected virtual void OnStartPlayable()
         {
             // Child classes may override
         }
 
+        private void Start()
+        {
+            OnStartPlayable();
+
+            if (!IsOnline)
+                return;
+
+            if (Vector2.zero != position)
+                ((RectTransform) transform).localPosition = position;
+            if (Quaternion.identity != rotation)
+                transform.rotation = rotation;
+        }
+
+        private void Update()
+        {
+            if (PointerPositions.Count > 0 && !DidDrag)
+                HoldTime += Time.deltaTime;
+            else
+                HoldTime = 0;
+
+            OnUpdatePlayable();
+        }
+
+        protected virtual void OnUpdatePlayable()
+        {
+            // Child classes may override
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
-            // TODO: PREVIEW
+            OnPointerEnterPlayable(eventData);
+        }
+
+        protected virtual void OnPointerEnterPlayable(PointerEventData eventData)
+        {
+            // Child classes may override
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            // TODO: PREVIEW
+            OnPointerExitPlayable(eventData);
+        }
+
+        protected virtual void OnPointerExitPlayable(PointerEventData eventData)
+        {
+            // Child classes may override
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -74,29 +146,25 @@ namespace Cgs.CardGameView.Multiplayer
             // Child classes may override
         }
 
-        protected virtual void OnPointerUpSelect(PointerEventData eventData)
+        protected virtual void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
-        protected virtual void OnPointerUpPlayable(PointerEventData eventData)
-        {
-            // Child classes may override
-        }
-
         public void OnPointerUp(PointerEventData eventData)
         {
-            OnPointerUpSelect(eventData);
-
-            OnPointerUpPlayable(eventData);
+            OnPointerUpSelectPlayable(eventData);
 
             CurrentPointerEventData = eventData;
 
             if (CurrentDragPhase == DragPhase.Drag)
                 return;
+
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
+            if (DidDrag && PointerDragOffsets.Count == 0)
+                DidDrag = false;
         }
 
         public void OnSelect(BaseEventData eventData)
@@ -119,8 +187,16 @@ namespace Cgs.CardGameView.Multiplayer
             // Child classes may override
         }
 
+        protected virtual bool PreBeginDrag(PointerEventData eventData)
+        {
+            return false;
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (PreBeginDrag(eventData))
+                return;
+
             CurrentPointerEventData = eventData;
             CurrentDragPhase = DragPhase.Begin;
             PointerPositions[eventData.pointerId] = eventData.position;
@@ -130,8 +206,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnBeginDragPlayable(PointerEventData eventData)
         {
-            if (NetworkManager.singleton.isNetworkActive)
-                CmdTransferAuthority();
+            // Child classes may override
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -145,10 +220,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnDragPlayable(PointerEventData eventData)
         {
-            if (LacksAuthority)
-                CmdTransferAuthority();
-            else
-                UpdatePosition();
+            // Child classes may override
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -161,9 +233,16 @@ namespace Cgs.CardGameView.Multiplayer
             if (hasAuthority)
                 CmdReleaseAuthority();
             RemovePointer(eventData);
+
+            PostDragPlayable(eventData);
         }
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
+        {
+            // Child classes may override
+        }
+
+        protected virtual void PostDragPlayable(PointerEventData eventData)
         {
             // Child classes may override
         }
@@ -180,8 +259,11 @@ namespace Cgs.CardGameView.Multiplayer
                     PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
         }
 
-        protected void UpdatePosition()
+        protected virtual void UpdatePosition()
         {
+            IsHighlighted = CurrentDragPhase != DragPhase.End;
+            Highlight.effectColor = ParentCardZone != null ? Color.green : Color.red;
+
             var targetPosition =
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
             targetPosition +=
@@ -192,7 +274,21 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.SetAsLastSibling();
 
             if (hasAuthority)
-                CmdUpdatePosition(rectTransform.localPosition);
+                RequestUpdatePosition(rectTransform.localPosition);
+        }
+
+        public void Rotate()
+        {
+            Vector2 referencePoint = transform.position;
+            foreach (var pointerPosition in PointerPositions.Where(pointerPosition =>
+                         pointerPosition.Key != CurrentPointerEventData.pointerId))
+                referencePoint = pointerPosition.Value;
+            var previousDirection = (CurrentPointerEventData.position - CurrentPointerEventData.delta) - referencePoint;
+            var currentDirection = CurrentPointerEventData.position - referencePoint;
+            transform.Rotate(0, 0, Vector2.SignedAngle(previousDirection, currentDirection));
+
+            if (IsOnline)
+                RequestUpdateRotation(transform.rotation);
         }
 
         protected void RequestTransferAuthority()
@@ -203,8 +299,19 @@ namespace Cgs.CardGameView.Multiplayer
         [Command(requiresAuthority = false)]
         private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
         {
-            if (sender != null && netIdentity.connectionToClient == null)
-                netIdentity.AssignClientAuthority(sender);
+            if (sender == null || netIdentity.connectionToClient != null)
+            {
+                Debug.Log("CgsNetPlayable: Ignoring request to transfer authority, as it is already transferred");
+                return;
+            }
+
+            isClientAuthorized = true;
+            netIdentity.AssignClientAuthority(sender);
+        }
+
+        protected void RequestUpdatePosition(Vector2 newPosition)
+        {
+            CmdUpdatePosition(newPosition);
         }
 
         [Command]
@@ -216,16 +323,60 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
-            transform.localPosition = newValue;
+            if (!hasAuthority)
+                transform.localPosition = newValue;
+        }
+
+        private void RequestUpdateRotation(Quaternion newRotation)
+        {
+            CmdUpdateRotation(newRotation);
+        }
+
+        [Command(requiresAuthority = false)]
+        public void CmdUpdateRotation(Quaternion newRotation)
+        {
+            rotation = newRotation;
+        }
+
+        [PublicAPI]
+        public void OnChangeRotation(Quaternion oldRotation, Quaternion newRotation)
+        {
+            if (!hasAuthority)
+                transform.rotation = newRotation;
         }
 
         [Command]
         private void CmdReleaseAuthority()
         {
             netIdentity.RemoveClientAuthority();
+            isClientAuthorized = false;
         }
 
-        protected void Delete()
+        [ClientRpc]
+        public void RpcHideHighlight()
+        {
+            IsHighlighted = false;
+        }
+
+        protected void AuthorizedHighlight()
+        {
+            Highlight.effectColor = Color.green;
+            Highlight.effectDistance = OutlineHighlightDistance;
+        }
+
+        protected void UnauthorizedHighlight()
+        {
+            Highlight.effectColor = Color.yellow;
+            Highlight.effectDistance = OutlineHighlightDistance;
+        }
+
+        protected void WarnHighlight()
+        {
+            Highlight.effectColor = Color.red;
+            Highlight.effectDistance = OutlineHighlightDistance;
+        }
+
+        protected void RequestDelete()
         {
             if (NetworkManager.singleton.isNetworkActive)
                 CmdDelete();
