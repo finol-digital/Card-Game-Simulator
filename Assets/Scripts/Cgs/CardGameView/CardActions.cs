@@ -61,7 +61,7 @@ namespace Cgs.CardGameView
                 return;
             }
 
-            bool isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
+            var isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
             cardModel.transform.rotation = isVertical
                 ? Quaternion.AngleAxis(CardGameManager.Current.GameCardRotationDegrees, Vector3.back)
                 : Quaternion.identity;
@@ -76,26 +76,26 @@ namespace Cgs.CardGameView
 
         public void Show()
         {
-            foreach (Transform panel in buttonPanels)
+            foreach (var panel in buttonPanels)
                 panel.gameObject.SetActive(true);
         }
 
         public void Update()
         {
-            bool isCardSelected = CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
-                                  CardViewer.Instance.SelectedCardModel != null;
+            var isCardSelected = CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
+                                 CardViewer.Instance.SelectedCardModel != null;
 
-            foreach (Button flipButton in flipButtons)
+            foreach (var flipButton in flipButtons)
                 flipButton.interactable =
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
 
-            foreach (Button rotateButton in rotateButtons)
+            foreach (var rotateButton in rotateButtons)
                 rotateButton.interactable =
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
 
-            foreach (Button tapButton in tapButtons)
+            foreach (var tapButton in tapButtons)
                 tapButton.interactable =
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;

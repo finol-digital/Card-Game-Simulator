@@ -5,9 +5,9 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.70
-- Accessibility: Preview cards on hover
 - Accessibility: Match card stack and dice view to the card view
-- Game-Play: Automatically create D6 by default; use viewer to modify it, with option to type in dice number
+- Accessibility: Preview cards, stacks, and dice on hover
+- Game-Play: Automatically create D6 by default; use viewer to modify it
 
 ## Active Sprint
 - Accessibility: New how-to videos

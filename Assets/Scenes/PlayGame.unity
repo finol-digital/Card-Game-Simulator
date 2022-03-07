@@ -1251,11 +1251,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardViewerPrefab: {fileID: 1205983077926924, guid: 04f1873b7f6a8324887109e8e76da3d7,
     type: 3}
+  playableViewerPrefab: {fileID: 1205983077926924, guid: b4fb760e8a81a114d9ced961a953b615,
+    type: 3}
   lobbyMenuPrefab: {fileID: 1652207733575986, guid: 61b579ded7c51a4409a9f5bee03d3dff,
     type: 3}
   deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
-    type: 3}
-  diceMenuPrefab: {fileID: 1257987102104264, guid: 0a553e85694d0e64ca920258e2fdd78d,
     type: 3}
   searchMenuPrefab: {fileID: 1332435347197338, guid: 3193cd5bbf6276147a6652aff7dca225,
     type: 3}

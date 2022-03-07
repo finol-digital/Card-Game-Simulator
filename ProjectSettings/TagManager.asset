@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CardGameManager
   - CardViewer
+  - PlayableViewer
   layers:
   - Default
   - TransparentFX

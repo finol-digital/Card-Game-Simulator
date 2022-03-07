@@ -27,7 +27,7 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **New**: *e* - View rules for current game online.
 - **Load**: *r* - Brings up the Deck Load Menu.
 - **Filter**: *f* - Brings up the Card Search/Filter Menu.
-- **Save**: *t* - Brings up the Dice Menu.
+- **Save**: *t* - Create dice.
 - **FocusNext**: *Tab* or *\]* - Show/Hide Hand.
 - **FocusBack**: *\`* - Draw.
 - **Option**: *Delete* - Toggle the Play Mode Menu.
@@ -99,10 +99,6 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Load**: *r* - Copies deck text to the text clipboard.
 - **Save**: *t* - Creates a printable pdf of the deck.
 - **Submit**: *Enter* - Save.
-
-## Dice Menu
-- **Cancel**: *Esc* - Cancel.
-- **Submit**: *Enter* - Create dice.
 
 ## Card Search/Filter Menu
 - **Cancel**: *Esc* - Cancel.

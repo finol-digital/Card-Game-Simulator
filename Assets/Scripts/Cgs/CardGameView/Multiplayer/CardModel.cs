@@ -32,6 +32,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         [field: SyncVar] public string Id { get; private set; }
 
+        public override string ViewValue => Value.Name;
+
         public UnityCard Value
         {
             get
@@ -84,11 +86,11 @@ namespace Cgs.CardGameView.Multiplayer
                 if (_placeHolder == null)
                 {
                     if (ParentCardZone == null && DropTarget == null)
-                        WarnHighlight();
+                        HighlightMode = HighlightMode.Warn;
                     _placeHolderCardZone = null;
                 }
                 else
-                    IsHighlighted = false;
+                    HighlightMode = HighlightMode.Off;
             }
         }
 
@@ -213,25 +215,23 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            if (Settings.ViewInfoOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible)
+            if (Settings.ViewInfoOnMouseOver && !CardViewer.Instance.IsVisible && !PlayableViewer.Instance.IsVisible)
                 CardViewer.Instance.Preview(this);
         }
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)
         {
-            if (CardViewer.Instance != null)
-                CardViewer.Instance.HidePreview();
+            CardViewer.Instance.HidePreview();
         }
 
         protected override void OnSelectPlayable(BaseEventData eventData)
         {
-            if (CardViewer.Instance != null)
-                CardViewer.Instance.SelectedCardModel = this;
+            CardViewer.Instance.SelectedCardModel = this;
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
         {
-            if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
+            if (!CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
         }
 
@@ -245,7 +245,7 @@ namespace Cgs.CardGameView.Multiplayer
             eventData.pointerDrag = newGameObject;
             var cardModel = newGameObject.GetOrAddComponent<CardModel>();
             cardModel.Visibility.blocksRaycasts = false;
-            cardModel.IsHighlighted = false;
+            cardModel.HighlightMode = HighlightMode.Off;
             cardModel.Value = value;
             cardModel.IsFacedown = isFacedown;
             cardModel.PlaceHolderCardZone = placeHolderCardZone;
@@ -353,11 +353,12 @@ namespace Cgs.CardGameView.Multiplayer
             if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !hasAuthority))
                 return;
 
-            if (DropTarget != null || PlaceHolder != null || ParentCardZone != null)
-                AuthorizedHighlight();
+            if (DropTarget == null && PlaceHolder == null && ParentCardZone == null)
+                HighlightMode = HighlightMode.Warn;
+            else if (CurrentDragPhase != DragPhase.End)
+                HighlightMode = HighlightMode.Authorized;
             else
-                WarnHighlight();
-            IsHighlighted = CurrentDragPhase != DragPhase.End;
+                HighlightMode = HighlightMode.Off;
 
             var targetPosition =
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());

@@ -31,24 +31,24 @@ namespace Cgs.CardGameView
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            CardModel cardModel = CardModel.GetPointerDrag(eventData);
+            var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel == null)
                 return;
 
             cardModel.DropTarget = this;
-            cardModel.IsHighlighted = false;
+            cardModel.HighlightMode = HighlightMode.Off;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            CardModel cardModel = CardModel.GetPointerDrag(eventData);
+            var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && cardModel.DropTarget == this)
                 cardModel.DropTarget = null;
         }
 
         public void OnDrop(PointerEventData eventData)
         {
-            CardModel cardModel = CardModel.GetPointerDrag(eventData);
+            var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel == null
                 || cardModel.ParentCardZone != null && cardModel.ParentCardZone.type != CardZoneType.Area
                 || cardModel.PlaceHolderCardZone != null && cardModel.PlaceHolderCardZone.type != CardZoneType.Area)

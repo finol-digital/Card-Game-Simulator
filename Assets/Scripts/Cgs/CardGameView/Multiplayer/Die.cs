@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Menu;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -12,16 +13,20 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public class Die : CgsNetPlayable
     {
-        public const string DeletePrompt = "RequestDelete die?";
+        public const int DefaultMin = 1;
+        public const int DefaultMax = 6;
+        public const string DeletePrompt = "Delete die?";
 
         private const float RollTime = 1.0f;
         private const float RollDelay = 0.05f;
 
         public Text valueText;
 
-        [field: SyncVar] public int Min { get; set; } = 1;
+        [field: SyncVar] public int Min { get; set; } = DefaultMin;
 
-        [field: SyncVar] public int Max { get; set; } = 6;
+        [field: SyncVar] public int Max { get; set; } = DefaultMax;
+
+        public override string ViewValue => $"Dice Value: {Value}";
 
         private int Value
         {
@@ -74,22 +79,23 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            // TODO: VIEWER
+            if (Settings.ViewInfoOnMouseOver && !CardViewer.Instance.IsVisible && !PlayableViewer.Instance.IsVisible)
+                PlayableViewer.Instance.Preview(this);
         }
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)
         {
-            // TODO: VIEWER
+            PlayableViewer.Instance.HidePreview();
         }
 
         protected override void OnSelectPlayable(BaseEventData eventData)
         {
-            // TODO: VIEWER
+            PlayableViewer.Instance.SelectedPlayable = this;
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
         {
-            // TODO: VIEWER
+            PlayableViewer.Instance.IsVisible = false;
         }
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)

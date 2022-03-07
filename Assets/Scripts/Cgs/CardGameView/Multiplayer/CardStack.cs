@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using CardGameDef.Unity;
 using Cgs.Decks;
+using Cgs.Menu;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
@@ -55,7 +56,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
-        public string DeletePrompt => $"RequestDelete {deckLabel.text}?";
+        public string DeletePrompt => $"Delete {deckLabel.text}?";
 
         private bool IsDraggingCard => HoldTime < DragHoldTime && PointerPositions.Count == 1 &&
                                        CurrentPointerEventData != null &&
@@ -73,6 +74,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         [field: SyncVar(hook = nameof(OnChangeName))]
         public string Name { get; set; }
+
+        public override string ViewValue => Name;
 
         public IReadOnlyList<UnityCard> Cards
         {
@@ -130,7 +133,7 @@ namespace Cgs.CardGameView.Multiplayer
                 _actionTime -= Time.deltaTime;
 
             if (HoldTime > DragHoldTime)
-                AuthorizedHighlight();
+                HighlightMode = HighlightMode.Authorized;
         }
 
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
@@ -148,22 +151,23 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            // TODO: VIEWER
+            if (Settings.ViewInfoOnMouseOver && !CardViewer.Instance.IsVisible && !PlayableViewer.Instance.IsVisible)
+                PlayableViewer.Instance.Preview(this);
         }
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)
         {
-            // TODO: VIEWER
+            PlayableViewer.Instance.HidePreview();
         }
 
         protected override void OnSelectPlayable(BaseEventData eventData)
         {
-            // TODO: VIEWER
+            PlayableViewer.Instance.SelectedPlayable = this;
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
         {
-            // TODO: VIEWER
+            PlayableViewer.Instance.IsVisible = false;
         }
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)

@@ -33,9 +33,9 @@ namespace Cgs.Play
         private const float DeckPositionBuffer = 50;
 
         public GameObject cardViewerPrefab;
+        public GameObject playableViewerPrefab;
         public GameObject lobbyMenuPrefab;
         public GameObject deckLoadMenuPrefab;
-        public GameObject diceMenuPrefab;
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
 
@@ -93,12 +93,6 @@ namespace Cgs.Play
 
         private DeckLoadMenu _deckLoader;
 
-        private DiceMenu DiceManager => _diceManager
-            ? _diceManager
-            : _diceManager = Instantiate(diceMenuPrefab).GetOrAddComponent<DiceMenu>();
-
-        private DiceMenu _diceManager;
-
         private CardSearchMenu CardSearcher => _cardSearcher
             ? _cardSearcher
             : _cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
@@ -122,6 +116,7 @@ namespace Cgs.Play
         private void OnEnable()
         {
             Instantiate(cardViewerPrefab);
+            Instantiate(playableViewerPrefab);
             CardViewer.Instance.GetComponent<CardActions>().Show();
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
@@ -202,11 +197,6 @@ namespace Cgs.Play
         public void ShowCardsMenu()
         {
             CardSearcher.Show(DisplayResults);
-        }
-
-        public void ShowDiceMenu()
-        {
-            DiceManager.Show(CreateDie);
         }
 
         private void LoadDeck(UnityDeck deck)
@@ -362,6 +352,14 @@ namespace Cgs.Play
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(filters, cards, position);
             else
                 CreateCardStack(filters, cards, position);
+        }
+
+        public void CreateDefaultDie()
+        {
+            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewDie(Die.DefaultMin, Die.DefaultMax);
+            else
+                CreateDie(Die.DefaultMin, Die.DefaultMax);
         }
 
         public Die CreateDie(int min, int max)

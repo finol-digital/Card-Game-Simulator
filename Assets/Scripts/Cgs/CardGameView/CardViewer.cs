@@ -149,7 +149,7 @@ namespace Cgs.CardGameView
             {
                 if (_selectedCardModel != null)
                 {
-                    _selectedCardModel.IsHighlighted = false;
+                    _selectedCardModel.HighlightMode = HighlightMode.Off;
                     _selectedCardModel.Value.UnregisterDisplay(this);
                 }
 
@@ -192,7 +192,7 @@ namespace Cgs.CardGameView
                 if (!_isVisible && zoomPanel != null)
                     zoomPanel.gameObject.SetActive(false);
                 if (SelectedCardModel != null)
-                    SelectedCardModel.IsHighlighted = _isVisible;
+                    SelectedCardModel.HighlightMode = _isVisible ? HighlightMode.Selected : HighlightMode.Off;
                 Redisplay();
             }
         }

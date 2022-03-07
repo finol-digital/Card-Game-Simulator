@@ -428,7 +428,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CmdCreateDie(int min, int max)
         {
-            Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
+            var die = CgsNetManager.Instance.playController.CreateDie(min, max);
             NetworkServer.Spawn(die.gameObject);
         }
 

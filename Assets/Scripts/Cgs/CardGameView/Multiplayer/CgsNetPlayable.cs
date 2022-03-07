@@ -21,6 +21,15 @@ namespace Cgs.CardGameView.Multiplayer
         End
     }
 
+    public enum HighlightMode
+    {
+        Off,
+        Selected,
+        Authorized,
+        Unauthorized,
+        Warn
+    }
+
     public class CgsNetPlayable : NetworkBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
         IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
@@ -58,23 +67,43 @@ namespace Cgs.CardGameView.Multiplayer
         protected DragPhase CurrentDragPhase { get; private set; }
         protected float HoldTime { get; private set; }
 
-        public bool IsHighlighted
+        public virtual string ViewValue => "<Playable:Value>";
+
+        public HighlightMode HighlightMode
         {
+            get => _highlightMode;
             set
             {
-                if (value)
+                _highlightMode = value;
+                switch (_highlightMode)
                 {
-                    Highlight.effectColor = SelectedHighlightColor;
-                    Highlight.effectDistance = OutlineHighlightDistance;
-                }
-                else
-                {
-                    var isOthers = IsOnline && isClientAuthorized && !hasAuthority;
-                    Highlight.effectColor = isOthers ? Color.yellow : Color.black;
-                    Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+                    case HighlightMode.Selected:
+                        Highlight.effectColor = SelectedHighlightColor;
+                        Highlight.effectDistance = OutlineHighlightDistance;
+                        break;
+                    case HighlightMode.Authorized:
+                        Highlight.effectColor = Color.green;
+                        Highlight.effectDistance = OutlineHighlightDistance;
+                        break;
+                    case HighlightMode.Unauthorized:
+                        Highlight.effectColor = Color.yellow;
+                        Highlight.effectDistance = OutlineHighlightDistance;
+                        break;
+                    case HighlightMode.Warn:
+                        Highlight.effectColor = Color.red;
+                        Highlight.effectDistance = OutlineHighlightDistance;
+                        break;
+                    default:
+                    case HighlightMode.Off:
+                        var isOthers = IsOnline && isClientAuthorized && !hasAuthority;
+                        Highlight.effectColor = isOthers ? Color.yellow : Color.black;
+                        Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
+                        break;
                 }
             }
         }
+
+        private HighlightMode _highlightMode = HighlightMode.Off;
 
         private Outline Highlight => _highlight ? _highlight : _highlight = gameObject.GetOrAddComponent<Outline>();
         private Outline _highlight;
@@ -148,7 +177,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
-            if (!EventSystem.current.alreadySelecting)
+            if (CurrentDragPhase != DragPhase.Drag && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
@@ -261,8 +290,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void UpdatePosition()
         {
-            IsHighlighted = CurrentDragPhase != DragPhase.End;
-            Highlight.effectColor = ParentCardZone != null ? Color.green : Color.red;
+            if (ParentCardZone == null)
+                HighlightMode = HighlightMode.Warn;
+            else if (CurrentDragPhase != DragPhase.End)
+                HighlightMode = HighlightMode.Authorized;
+            else
+                HighlightMode = HighlightMode.Off;
 
             var targetPosition =
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
@@ -297,6 +330,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [Command(requiresAuthority = false)]
+        // ReSharper disable once SuggestBaseTypeForParameter
         private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
         {
             if (sender == null || netIdentity.connectionToClient != null)
@@ -355,25 +389,7 @@ namespace Cgs.CardGameView.Multiplayer
         [ClientRpc]
         public void RpcHideHighlight()
         {
-            IsHighlighted = false;
-        }
-
-        protected void AuthorizedHighlight()
-        {
-            Highlight.effectColor = Color.green;
-            Highlight.effectDistance = OutlineHighlightDistance;
-        }
-
-        protected void UnauthorizedHighlight()
-        {
-            Highlight.effectColor = Color.yellow;
-            Highlight.effectDistance = OutlineHighlightDistance;
-        }
-
-        protected void WarnHighlight()
-        {
-            Highlight.effectColor = Color.red;
-            Highlight.effectDistance = OutlineHighlightDistance;
+            HighlightMode = HighlightMode.Off;
         }
 
         protected void RequestDelete()

@@ -29,7 +29,7 @@ namespace Cgs.Play
             else if (Inputs.IsFilter)
                 ShowCardsMenu();
             else if (Inputs.IsSave)
-                ShowDiceMenu();
+                CreateDie();
         }
 
         public void Show()
@@ -60,9 +60,9 @@ namespace Cgs.Play
         }
 
         [UsedImplicitly]
-        public void ShowDiceMenu()
+        public void CreateDie()
         {
-            controller.ShowDiceMenu();
+            controller.CreateDefaultDie();
         }
 
         [UsedImplicitly]
