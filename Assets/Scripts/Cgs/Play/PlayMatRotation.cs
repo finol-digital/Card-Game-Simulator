@@ -4,6 +4,7 @@
 
 using System;
 using Cgs.CardGameView;
+using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;

@@ -6,6 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
+using Cgs.CardGameView.Actions;
+using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using Mirror;

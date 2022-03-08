@@ -9,6 +9,7 @@ using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.CardGameView.Viewer;
 using Cgs.Cards;
 using Cgs.Menu;
 using JetBrains.Annotations;

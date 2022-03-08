@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Cgs.CardGameView
+namespace Cgs.CardGameView.Viewer
 {
     public class StackViewerHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {

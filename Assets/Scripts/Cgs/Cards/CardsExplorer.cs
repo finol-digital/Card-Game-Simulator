@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using Cgs.CardGameView;
+using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;

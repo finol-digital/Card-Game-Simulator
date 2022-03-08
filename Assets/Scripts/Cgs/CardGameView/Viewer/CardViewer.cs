@@ -12,7 +12,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
-namespace Cgs.CardGameView
+namespace Cgs.CardGameView.Viewer
 {
     public enum CardViewerMode
     {

@@ -4,6 +4,7 @@
 
 using CardGameDef;
 using Cgs.CardGameView;
+using Cgs.CardGameView.Viewer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;

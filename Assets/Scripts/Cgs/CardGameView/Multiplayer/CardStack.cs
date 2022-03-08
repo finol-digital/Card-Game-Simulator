@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using CardGameDef.Unity;
+using Cgs.CardGameView.Viewer;
 using Cgs.Decks;
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;

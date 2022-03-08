@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.CardGameView.Viewer;
 using Cgs.Cards;
 using JetBrains.Annotations;
 using UnityEngine;

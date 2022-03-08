@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
+using Cgs.CardGameView.Actions;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
@@ -13,7 +14,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
-namespace Cgs.CardGameView
+namespace Cgs.CardGameView.Viewer
 {
     public class StackViewer : MonoBehaviour, ICardDropHandler
     {

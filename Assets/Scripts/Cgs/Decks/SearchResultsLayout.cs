@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.CardGameView;
+using Cgs.CardGameView.Viewer;
 using Cgs.Cards;
 using UnityEngine;
 
