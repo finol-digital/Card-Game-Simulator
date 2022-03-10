@@ -4,11 +4,10 @@
 
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
-using Cgs.CardGameView.Viewer;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Cgs.CardGameView.Actions
+namespace Cgs.CardGameView.Viewer
 {
     public delegate void CardAction(CardModel cardModel);
 

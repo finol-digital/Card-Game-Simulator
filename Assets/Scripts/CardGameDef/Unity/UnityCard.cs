@@ -32,7 +32,7 @@ namespace CardGameDef.Unity
                 }
 
                 _imageSprite = value;
-                foreach (ICardDisplay cardDisplay in DisplaysUsingImage)
+                foreach (var cardDisplay in DisplaysUsingImage)
                     cardDisplay.SetImageSprite(_imageSprite);
             }
         }

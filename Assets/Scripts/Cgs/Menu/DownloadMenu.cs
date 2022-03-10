@@ -73,7 +73,7 @@ namespace Cgs.Menu
 
         private IEnumerator Download()
         {
-            string url = urlInputField.text.Trim();
+            var url = urlInputField.text.Trim();
 
             urlInputField.text = string.Empty;
             urlInputField.interactable = false;

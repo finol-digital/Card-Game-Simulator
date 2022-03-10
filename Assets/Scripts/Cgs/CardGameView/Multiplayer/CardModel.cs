@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
-using Cgs.CardGameView.Actions;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using JetBrains.Annotations;
@@ -217,23 +216,26 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            if (Settings.ViewInfoOnMouseOver && !CardViewer.Instance.IsVisible && !PlayableViewer.Instance.IsVisible)
+            if (Settings.ViewInfoOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
+                && (PlayableViewer.Instance == null || !PlayableViewer.Instance.IsVisible))
                 CardViewer.Instance.Preview(this);
         }
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)
         {
-            CardViewer.Instance.HidePreview();
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.HidePreview();
         }
 
         protected override void OnSelectPlayable(BaseEventData eventData)
         {
-            CardViewer.Instance.SelectedCardModel = this;
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.SelectedCardModel = this;
         }
 
         protected override void OnDeselectPlayable(BaseEventData eventData)
         {
-            if (!CardViewer.Instance.Zoom)
+            if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
         }
 

@@ -81,16 +81,16 @@ namespace Cgs
             }
             else
             {
-                bool autoRotationOn = PreferredScreenOrientation == ScreenOrientationPref.AutoRotate
-                                      || (PreferredScreenOrientation == ScreenOrientationPref.OsControl &&
-                                          DoesOsWantAutoRotation);
+                var isAutoRotationOn = PreferredScreenOrientation == ScreenOrientationPref.AutoRotate
+                                       || (PreferredScreenOrientation == ScreenOrientationPref.OsControl &&
+                                           DoesOsWantAutoRotation);
                 Screen.autorotateToPortrait =
-                    autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
+                    isAutoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
                 Screen.autorotateToPortraitUpsideDown =
-                    autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
+                    isAutoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Portrait;
                 Screen.autorotateToLandscapeLeft =
-                    autoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
-                Screen.autorotateToLandscapeRight = autoRotationOn;
+                    isAutoRotationOn || PreferredScreenOrientation == ScreenOrientationPref.Landscape;
+                Screen.autorotateToLandscapeRight = isAutoRotationOn;
                 switch (PreferredScreenOrientation)
                 {
                     case ScreenOrientationPref.Landscape:

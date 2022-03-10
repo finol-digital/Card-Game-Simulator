@@ -22,6 +22,7 @@ permalink: roadmap.html
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
 - Bug-Fix: Multiplayer Disconnect in game-play on Android client with Android Host
 - Game-Creation: Edit Button in Main Menu
+- Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Support multiple card selection
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs

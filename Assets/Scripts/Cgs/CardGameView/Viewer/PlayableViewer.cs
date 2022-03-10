@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -43,14 +44,21 @@ namespace Cgs.CardGameView.Viewer
                     EventSystem.current.SetSelectedGameObject(null);
 
                 IsVisible = _selectedPlayable != null;
+                dieActions.SetActive(_selectedPlayable is Die);
+                stackActions.SetActive(_selectedPlayable is CardStack);
             }
         }
 
         private CgsNetPlayable _selectedPlayable;
 
+        private CardStack Stack => SelectedPlayable as CardStack;
+        private Die Dice => SelectedPlayable as Die;
+
         public CanvasGroup preview;
         public CanvasGroup view;
         public List<Text> valueTexts;
+        public GameObject dieActions;
+        public GameObject stackActions;
 
         public bool IsVisible
         {
@@ -88,6 +96,33 @@ namespace Cgs.CardGameView.Viewer
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
+
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (SelectedPlayable is Die)
+            {
+                if (Inputs.IsNew)
+                    DecrementDie();
+                else if (Inputs.IsLoad || Inputs.IsSubmit)
+                    RollDie();
+                else if (Inputs.IsSave)
+                    IncrementDie();
+                else if (Inputs.IsOption)
+                    DeleteDie();
+            }
+            else if (SelectedPlayable is CardStack)
+            {
+                if (Inputs.IsNew || Inputs.IsSubmit)
+                    ViewStack();
+                else if (Inputs.IsLoad)
+                    ShuffleStack();
+                else if (Inputs.IsSave)
+                    SaveStack();
+                else if (Inputs.IsOption)
+                    DeleteStack();
+            }
+
+            if (Inputs.IsCancel)
+                SelectedPlayable = null;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -129,6 +164,102 @@ namespace Cgs.CardGameView.Viewer
         public void HidePreview()
         {
             preview.alpha = 0;
+        }
+
+        [UsedImplicitly]
+        public void IncrementDie()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring increment request since there is no die selected.");
+                return;
+            }
+
+            Dice.Increment();
+        }
+
+        [UsedImplicitly]
+        public void DecrementDie()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring decrement request since there is no die selected.");
+                return;
+            }
+
+            Dice.Decrement();
+        }
+
+        [UsedImplicitly]
+        public void RollDie()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring roll request since there is no die selected.");
+                return;
+            }
+
+            Dice.Roll();
+        }
+
+        [UsedImplicitly]
+        public void DeleteDie()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring delete request since there is no die selected.");
+                return;
+            }
+
+            Dice.PromptDelete();
+        }
+
+        [UsedImplicitly]
+        public void ViewStack()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring view request since there is no stack selected.");
+                return;
+            }
+
+            Stack.View();
+        }
+
+        [UsedImplicitly]
+        public void ShuffleStack()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring shuffle request since there is no stack selected.");
+                return;
+            }
+
+            Stack.PromptShuffle();
+        }
+
+        [UsedImplicitly]
+        public void SaveStack()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring save request since there is no stack selected.");
+                return;
+            }
+
+            Stack.PromptSave();
+        }
+
+        [UsedImplicitly]
+        public void DeleteStack()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring save request since there is no stack selected.");
+                return;
+            }
+
+            Stack.PromptDelete();
         }
     }
 }

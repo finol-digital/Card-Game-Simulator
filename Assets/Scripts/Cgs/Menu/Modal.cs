@@ -59,8 +59,8 @@ namespace Cgs.Menu
             if (Inputs.IsFocusBack)
             {
                 // up
-                InputField previous = InputFields.Last();
-                foreach (InputField inputField in InputFields)
+                var previous = InputFields.Last();
+                foreach (var inputField in InputFields)
                 {
                     if (ActiveInputField == inputField)
                     {
@@ -75,8 +75,8 @@ namespace Cgs.Menu
             else if (Inputs.IsFocusNext)
             {
                 // down
-                InputField next = InputFields.First();
-                for (int i = InputFields.Count - 1; i >= 0; i--)
+                var next = InputFields.First();
+                for (var i = InputFields.Count - 1; i >= 0; i--)
                 {
                     if (ActiveInputField == InputFields[i])
                     {
@@ -103,8 +103,8 @@ namespace Cgs.Menu
                 if (Inputs.IsUp && !Inputs.WasUp)
                 {
                     // up
-                    Toggle previous = Toggles.Last();
-                    foreach (Toggle toggle in Toggles)
+                    var previous = Toggles.Last();
+                    foreach (var toggle in Toggles)
                     {
                         if (ActiveToggle == toggle)
                         {
@@ -119,8 +119,8 @@ namespace Cgs.Menu
                 else if (Inputs.IsDown && !Inputs.WasDown)
                 {
                     // down
-                    Toggle next = Toggles.First();
-                    for (int i = Toggles.Count - 1; i >= 0; i--)
+                    var next = Toggles.First();
+                    for (var i = Toggles.Count - 1; i >= 0; i--)
                     {
                         if (ActiveToggle == Toggles[i])
                         {
@@ -138,8 +138,8 @@ namespace Cgs.Menu
                 if (Inputs.IsRight && !Inputs.WasRight)
                 {
                     // right
-                    Toggle next = Toggles.First();
-                    for (int i = Toggles.Count - 1; i >= 0; i--)
+                    var next = Toggles.First();
+                    for (var i = Toggles.Count - 1; i >= 0; i--)
                     {
                         if (ActiveToggle == Toggles[i])
                         {
@@ -153,8 +153,8 @@ namespace Cgs.Menu
                 else if (Inputs.IsLeft && !Inputs.WasLeft)
                 {
                     // left
-                    Toggle previous = Toggles.Last();
-                    foreach (Toggle toggle in Toggles)
+                    var previous = Toggles.Last();
+                    foreach (var toggle in Toggles)
                     {
                         if (ActiveToggle == toggle)
                         {

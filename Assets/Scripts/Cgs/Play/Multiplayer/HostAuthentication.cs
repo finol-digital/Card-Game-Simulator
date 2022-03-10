@@ -49,7 +49,7 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void SetPassword(string password)
         {
-            ((BasicAuthenticator)CgsNetManager.Instance.authenticator).password = password;
+            ((BasicAuthenticator) CgsNetManager.Instance.authenticator).password = password;
         }
 
         [UsedImplicitly]

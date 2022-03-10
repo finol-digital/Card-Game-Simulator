@@ -114,7 +114,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Share()
         {
-            string shareText = messageText.text;
+            var shareText = messageText.text;
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             (new NativeShare()).SetText(shareText).Share();
 #else

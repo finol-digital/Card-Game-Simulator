@@ -8,7 +8,6 @@ using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
-using Cgs.CardGameView.Actions;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Cards;
@@ -144,8 +143,9 @@ namespace Cgs.Play
 
         private void Update()
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
-                CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible ||
+                !Input.anyKeyDown || CardGameManager.Instance.ModalCanvas != null ||
+                scoreboard.nameInputField.isFocused)
                 return;
 
             if (Inputs.IsFocusBack && !Inputs.WasFocusBack)

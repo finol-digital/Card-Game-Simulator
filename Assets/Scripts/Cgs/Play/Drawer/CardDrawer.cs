@@ -104,7 +104,7 @@ namespace Cgs.Play.Drawer
         public void AddTab()
         {
             Vector2 sizeDelta = tabsRectTransform.sizeDelta;
-            sizeDelta = new Vector2(sizeDelta.x + ((RectTransform)tabPrefab.transform).sizeDelta.x, sizeDelta.y);
+            sizeDelta = new Vector2(sizeDelta.x + ((RectTransform) tabPrefab.transform).sizeDelta.x, sizeDelta.y);
             tabsRectTransform.sizeDelta = sizeDelta;
 
             var tabTemplate = Instantiate(tabPrefab, tabsRectTransform).GetComponent<TabTemplate>();
