@@ -21,7 +21,7 @@ namespace Cgs.Play.Drawer
                 switch (CardGameManager.Current.DeckSharePreference)
                 {
                     case SharePreference.Ask:
-                        CgsNetPlayer localPlayer = CgsNetManager.Instance.LocalPlayer;
+                        var localPlayer = CgsNetManager.Instance.LocalPlayer;
                         result = localPlayer != null && localPlayer.IsDeckShared ? "Deal" : "Draw";
                         break;
                     case SharePreference.Share:

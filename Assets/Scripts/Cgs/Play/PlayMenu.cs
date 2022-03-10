@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.CardGameView;
+using Cgs.CardGameView.Viewer;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -29,7 +29,7 @@ namespace Cgs.Play
             else if (Inputs.IsFilter)
                 ShowCardsMenu();
             else if (Inputs.IsSave)
-                ShowDiceMenu();
+                CreateDie();
         }
 
         public void Show()
@@ -60,9 +60,9 @@ namespace Cgs.Play
         }
 
         [UsedImplicitly]
-        public void ShowDiceMenu()
+        public void CreateDie()
         {
-            controller.ShowDiceMenu();
+            controller.CreateDefaultDie();
         }
 
         [UsedImplicitly]

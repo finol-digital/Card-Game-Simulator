@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,18 +19,18 @@ namespace Cgs.UI.ScrollRects
         private Vector2 _nextScrollPosition = Vector2.up;
         private readonly List<Selectable> _selectables = new List<Selectable>();
 
-        void Awake()
+        private void Awake()
         {
             _scrollRect = GetComponent<ScrollRect>();
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (_scrollRect)
                 _scrollRect.content.GetComponentsInChildren(_selectables);
         }
 
-        void Start()
+        private void Start()
         {
             if (_scrollRect)
                 _scrollRect.content.GetComponentsInChildren(_selectables);
@@ -34,7 +38,7 @@ namespace Cgs.UI.ScrollRects
             ScrollToSelected(true);
         }
 
-        void Update()
+        private void Update()
         {
             // Scroll via input
             InputScroll();
@@ -51,7 +55,7 @@ namespace Cgs.UI.ScrollRects
             }
         }
 
-        void InputScroll()
+        private void InputScroll()
         {
             if (_selectables.Count <= 0)
                 return;
@@ -63,10 +67,10 @@ namespace Cgs.UI.ScrollRects
             }
         }
 
-        void ScrollToSelected(bool quickScroll)
+        private void ScrollToSelected(bool quickScroll)
         {
-            int selectedIndex = -1;
-            Selectable selectedElement = EventSystem.current.currentSelectedGameObject
+            var selectedIndex = -1;
+            var selectedElement = EventSystem.current.currentSelectedGameObject
                 ? EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>()
                 : null;
 

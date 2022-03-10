@@ -5,9 +5,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Cgs.CardGameView
+namespace Cgs.CardGameView.Viewer
 {
-    public class CardViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
+    public class ViewerSelectable : MonoBehaviour, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
         public bool ignoreDeselect;
 
@@ -20,15 +20,21 @@ namespace Cgs.CardGameView
         {
             if (CardViewer.Instance != null && CardViewer.Instance.WasVisible)
                 CardViewer.Instance.IsVisible = true;
+
+            if (PlayableViewer.Instance != null && PlayableViewer.Instance.WasVisible)
+                PlayableViewer.Instance.IsVisible = true;
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-            if (ignoreDeselect || CardViewer.Instance == null)
+            if (ignoreDeselect)
                 return;
 
-            if (!CardViewer.Instance.Zoom)
+            if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
+
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.IsVisible = false;
         }
     }
 }

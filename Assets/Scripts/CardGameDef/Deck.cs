@@ -58,8 +58,8 @@ namespace CardGameDef
 
         public Dictionary<Card, int> GetCardCounts()
         {
-            Dictionary<Card, int> cardCounts = new Dictionary<Card, int>();
-            foreach (Card card in Cards)
+            var cardCounts = new Dictionary<Card, int>();
+            foreach (var card in Cards)
             {
                 cardCounts.TryGetValue(card, out int currentCount);
                 currentCount++;
@@ -71,18 +71,17 @@ namespace CardGameDef
 
         public Dictionary<string, List<Card>> GetExtraGroups()
         {
-            Dictionary<string, List<Card>> extraGroups = new Dictionary<string, List<Card>>();
-            foreach (Card card in Cards)
+            var extraGroups = new Dictionary<string, List<Card>>();
+            foreach (var card in Cards)
             {
-                foreach (ExtraDef extraDef in SourceGame.Extras)
+                foreach (var groupName in from extraDef in SourceGame.Extras
+                         where SourceGame.IsEnumProperty(extraDef.Property)
+                             ? card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
+                             : card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)
+                         select !string.IsNullOrEmpty(extraDef.Group)
+                             ? extraDef.Group
+                             : ExtraDef.DefaultExtraGroup)
                 {
-                    if (SourceGame.IsEnumProperty(extraDef.Property)
-                        ? !card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
-                        : !card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value))
-                        continue;
-                    string groupName = !string.IsNullOrEmpty(extraDef.Group)
-                        ? extraDef.Group
-                        : ExtraDef.DefaultExtraGroup;
                     if (!extraGroups.ContainsKey(groupName))
                         extraGroups[groupName] = new List<Card>();
                     extraGroups[groupName].Add(card);
@@ -95,8 +94,8 @@ namespace CardGameDef
 
         public List<Card> GetExtraCards()
         {
-            List<Card> extraCards = new List<Card>();
-            foreach (KeyValuePair<string, List<Card>> cardGroup in GetExtraGroups())
+            var extraCards = new List<Card>();
+            foreach (var cardGroup in GetExtraGroups())
                 extraCards.AddRange(cardGroup.Value);
             return extraCards;
         }
@@ -104,21 +103,21 @@ namespace CardGameDef
         public string ToDec()
         {
             var text = string.Empty;
-            Dictionary<Card, int> cardCounts = GetCardCounts();
+            var cardCounts = GetCardCounts();
             return cardCounts.Keys.Aggregate(text,
                 (current, card) => current + (cardCounts[card] + " " + card.Name + Environment.NewLine));
         }
 
         public string ToHsd()
         {
-            string text = "### " + Name + Environment.NewLine;
-            List<Card> extraCards = GetExtraCards();
+            var text = "### " + Name + Environment.NewLine;
+            var extraCards = GetExtraCards();
             if (extraCards.Count > 0 && !string.IsNullOrEmpty(extraCards[0].GetPropertyValueString("cardClass")))
                 text += "# Class: " + extraCards[0].GetPropertyValueString("cardClass") + Environment.NewLine;
             text += "# Format: Wild" + Environment.NewLine;
             text += "#" + Environment.NewLine;
 
-            Dictionary<Card, int> cardCounts = GetCardCounts();
+            var cardCounts = GetCardCounts();
             text = cardCounts.Keys.Where(card => !extraCards.Contains(card)).Aggregate(text,
                 (current, card) => current + ("# " + cardCounts[card] + "x (" + card.GetPropertyValueString("cost") +
                                               ") " + card.Name + Environment.NewLine));
@@ -130,48 +129,46 @@ namespace CardGameDef
 
         public string SerializeHsd()
         {
-            using (var memoryStream = new MemoryStream())
+            using var memoryStream = new MemoryStream();
+            memoryStream.WriteByte(0);
+            Varint.Write(memoryStream, 1);
+            Varint.Write(memoryStream, 1);
+
+            var cardCounts = GetCardCounts();
+            var extraCards = GetExtraCards();
+            var singleCopy = cardCounts.Where(x => x.Value == 1).ToList();
+            var doubleCopy = cardCounts.Where(x => x.Value == 2).ToList();
+            var nCopy = cardCounts.Where(x => x.Value > 2).ToList();
+            singleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
+            doubleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
+            nCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
+
+            Varint.Write(memoryStream, extraCards.Count);
+            foreach (var card in extraCards)
+                Varint.Write(memoryStream, card.GetPropertyValueInt(SourceGame.DeckFileAltId));
+
+            Varint.Write(memoryStream, singleCopy.Count);
+            foreach (var cardCount in singleCopy)
+                Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+
+            Varint.Write(memoryStream, doubleCopy.Count);
+            foreach (var cardCount in doubleCopy)
+                Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+
+            Varint.Write(memoryStream, nCopy.Count);
+            foreach (var cardCount in nCopy)
             {
-                memoryStream.WriteByte(0);
-                Varint.Write(memoryStream, 1);
-                Varint.Write(memoryStream, 1);
-
-                Dictionary<Card, int> cardCounts = GetCardCounts();
-                List<Card> extraCards = GetExtraCards();
-                List<KeyValuePair<Card, int>> singleCopy = cardCounts.Where(x => x.Value == 1).ToList();
-                List<KeyValuePair<Card, int>> doubleCopy = cardCounts.Where(x => x.Value == 2).ToList();
-                List<KeyValuePair<Card, int>> nCopy = cardCounts.Where(x => x.Value > 2).ToList();
-                singleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
-                doubleCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
-                nCopy.RemoveAll(cardCount => extraCards.Contains(cardCount.Key));
-
-                Varint.Write(memoryStream, extraCards.Count);
-                foreach (Card card in extraCards)
-                    Varint.Write(memoryStream, card.GetPropertyValueInt(SourceGame.DeckFileAltId));
-
-                Varint.Write(memoryStream, singleCopy.Count);
-                foreach (KeyValuePair<Card, int> cardCount in singleCopy)
-                    Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
-
-                Varint.Write(memoryStream, doubleCopy.Count);
-                foreach (KeyValuePair<Card, int> cardCount in doubleCopy)
-                    Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
-
-                Varint.Write(memoryStream, nCopy.Count);
-                foreach (KeyValuePair<Card, int> cardCount in nCopy)
-                {
-                    Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
-                    Varint.Write(memoryStream, cardCount.Value);
-                }
-
-                return Convert.ToBase64String(memoryStream.ToArray());
+                Varint.Write(memoryStream, cardCount.Key.GetPropertyValueInt(SourceGame.DeckFileAltId));
+                Varint.Write(memoryStream, cardCount.Value);
             }
+
+            return Convert.ToBase64String(memoryStream.ToArray());
         }
 
         public string ToLor()
         {
-            Dictionary<Card, int> cardCounts = GetCardCounts();
-            List<CardCodeAndCount> cardCodeAndCounts = cardCounts.Select(
+            var cardCounts = GetCardCounts();
+            var cardCodeAndCounts = cardCounts.Select(
                 cardCount => new CardCodeAndCount()
                 {
                     CardCode = cardCount.Key.Id, Count = cardCount.Value
@@ -181,9 +178,9 @@ namespace CardGameDef
 
         public string ToYdk()
         {
-            string text = "#created by Card Game Simulator" + Environment.NewLine;
-            List<Card> mainCards = new List<Card>(Cards);
-            List<Card> extraCards = GetExtraCards();
+            var text = "#created by Card Game Simulator" + Environment.NewLine;
+            var mainCards = new List<Card>(Cards);
+            var extraCards = GetExtraCards();
             mainCards.RemoveAll(card => extraCards.Contains(card));
 
             text += "#main" + Environment.NewLine;
@@ -203,10 +200,10 @@ namespace CardGameDef
         {
             var text = new StringBuilder();
             text.AppendFormat("### {0} Deck: {1} {2}", SourceGame.Name, Name, Environment.NewLine);
-            Dictionary<Card, int> cardCounts = GetCardCounts();
-            foreach (KeyValuePair<Card, int> cardCount in cardCounts)
+            var cardCounts = GetCardCounts();
+            foreach (var cardCount in cardCounts)
             {
-                bool isDeckFileTxtIdRequired = !SourceGame.CardNameIsUnique || cardCount.Key.IsReprint;
+                var isDeckFileTxtIdRequired = !SourceGame.CardNameIsUnique || cardCount.Key.IsReprint;
                 text.Append(cardCount.Value);
                 text.Append(" ");
                 if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Id)

@@ -19,7 +19,7 @@ namespace Cgs.Cards
             if (!gameObject.activeInHierarchy)
                 return;
 
-            Vector2 sizeDelta = cardsViewContent.sizeDelta;
+            var sizeDelta = cardsViewContent.sizeDelta;
             sizeDelta = ((RectTransform) transform).rect.width < MinWidth
                 ? new Vector2(sizeDelta.x, CardsPortraitHeight)
                 : new Vector2(sizeDelta.x, CardsLandscapeHeight);

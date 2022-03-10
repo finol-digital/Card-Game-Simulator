@@ -19,7 +19,9 @@ namespace Cgs.Cards
 {
     public class SetImportMenu : Modal, IProgressible
     {
+#if ENABLE_WINMD_SUPPORT
         public const string PlatformWarningMessage = "Sorry, Set Import is not supported from Windows Store!";
+#endif
 
         public const string SelectFolderPrompt = "Select Folder";
         public const string ImportFolderWarningMessage = "No folder found for import! ";
@@ -104,11 +106,11 @@ namespace Cgs.Cards
 #if ENABLE_WINMD_SUPPORT
             CardGameManager.Instance.Messenger.Show(PlatformWarningMessage);
             Hide();
-            return;
-#endif
+#else
             FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; },
                 () => { Debug.Log("FileBrowser Canceled"); }, FileBrowser.PickMode.Folders, false, null, null,
                 SelectFolderPrompt);
+#endif
         }
 
         private void ValidateImportButton()

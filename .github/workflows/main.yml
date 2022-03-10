@@ -364,74 +364,22 @@ jobs:
     runs-on: windows-2019
     needs: buildWithWindows
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
-    env:
-      Wap_Project_Directory: build\WSAPlayer\Card Game Simulator
-      SigningCertificate: Card Game Simulator_StoreKey.pfx
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Download WSAPlayer Artifact
-        uses: actions/download-artifact@v2
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
         with:
-          name: cgs-WSAPlayer
-          path: build
-      - name: Display Downloaded Files
-        run: ls build; ls build/WSAPlayer
+          bump_each_commit: true
       - name: Update Release Notes
         if: github.event.action == 'published'
         shell: bash
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Setup Unity IL2CPP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: windows-il2cpp
-      - name: Setup Unity UWP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: universal-windows-platform
-      - uses: ilammy/msvc-dev-cmd@v1
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
-      - name: Remove spaces from project name
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "build/WSAPlayer/Card Game Simulator.sln"
-          replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
-      - name: Remove spaces from project name 2
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "build/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
-          replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-      - name: Restore the Wpf application to populate the obj folder
-        shell: pwsh
-        env:
-          SolutionPath: build\WSAPlayer\Card Game Simulator.sln
-          Configuration: Master
-          RuntimeIdentifier: win-x64
-        run: msbuild $env:SolutionPath /t:Restore /p:Configuration=$env:Configuration /p:RuntimeIdentifier=$env:RuntimeIdentifier
-      - name: Decode the Pfx
-        shell: pwsh
-        run: |
-          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.MICROSOFT_STORE_PFX_FILE }}")
-          $currentDirectory = Get-Location
-          $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
-          [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-      - name: Build the .appxupload
-        shell: pwsh
-        env:
-          SolutionPath: build\WSAPlayer\Card Game Simulator.sln
-          Configuration: Master
-          TargetPlatform: x64
-          BuildMode: StoreUpload
-          AppxBundle: Always
-        run: msbuild $env:SolutionPath /p:Configuration=$env:Configuration /p:Platform=$env:TargetPlatform /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle
-      - name: Remove the .pfx
-        shell: pwsh
-        run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
       - name: Get Release Notes
         id: changelog
         shell: bash
@@ -447,11 +395,65 @@ jobs:
         with:
           files: "storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Get Version
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
+      - name: Setup Unity IL2CPP
+        uses: kuler90/setup-unity@v1
         with:
-          bump_each_commit: true
+          unity-modules: windows-il2cpp
+      - name: Setup Unity UWP
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: universal-windows-platform
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Download WSAPlayer Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-WSAPlayer
+          path: build
+      - name: Display Downloaded Files
+        run: ls build; ls build/WSAPlayer
+      - name: Remove spaces from project name
+        uses: davidmfinol/replace-action@master
+        with:
+          files: "build/WSAPlayer/Card Game Simulator.sln"
+          replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
+      - name: Remove spaces from project name 2
+        uses: davidmfinol/replace-action@master
+        with:
+          files: "build/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
+          replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
+      - name: Update manifest name
+        shell: pwsh
+        env:
+          UwpProjectDirectory: build\WSAPlayer\Card Game Simulator
+        run: |
+          [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
+          $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
+          $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
+          $manifest.save(".\$env:UwpProjectDirectory\Package.appxmanifest")
+      - name: Decode the Pfx
+        shell: pwsh
+        env:
+          UwpProjectDirectory: build\WSAPlayer\Card Game Simulator
+          SigningCertificate: Card Game Simulator_StoreKey.pfx
+        run: |
+          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.MICROSOFT_STORE_PFX_FILE }}")
+          $currentDirectory = Get-Location
+          $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:UwpProjectDirectory -AdditionalChildPath $env:SigningCertificate
+          [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+      - name: Build the .appxupload
+        shell: pwsh
+        env:
+          SolutionPath: build\WSAPlayer\Card Game Simulator.sln
+          SigningCertificate: Card Game Simulator_StoreKey.pfx
+        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x86|x64|arm" /p:PackageCertificateKeyFile=$env:SigningCertificate
+      - name: Remove the .pfx
+        shell: pwsh
+        env:
+          UwpProjectDirectory: build\WSAPlayer\Card Game Simulator
+          SigningCertificate: Card Game Simulator_StoreKey.pfx
+        run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
       - name: Upload .appxupload
         uses: actions/upload-artifact@v2
         with:
@@ -498,7 +500,6 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Run Fastlane
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release')
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
@@ -524,6 +525,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Get Version
+        id: versioning
+        uses: paulhatch/semantic-version@v4.0.2
+        with:
+          bump_each_commit: true
       - name: Download StandaloneWindows Artifact
         uses: actions/download-artifact@v2
         with:
@@ -544,11 +550,6 @@ jobs:
         with:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
-      - name: Get Version
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
-        with:
-          format: "${major}.${minor}.${patch}"
       - name: Deploy to Steam
         uses: game-ci/steam-deploy@v1
         with:
@@ -579,7 +580,7 @@ jobs:
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
         with:
-          format: "${major}.${minor}.${patch}"
+          bump_each_commit: true
       - name: Prepare Announcement
         id: prepare
         shell: bash

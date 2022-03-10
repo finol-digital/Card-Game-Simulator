@@ -202,9 +202,9 @@ namespace Cgs.Play.Multiplayer
         private void CmdCreateCardStack(string stackName, string[] cardIds, bool isDeck, Vector2 position)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
-            CardStack stack = CgsNetManager.Instance.playController.CreateCardStack(stackName,
+            var cardStack = CgsNetManager.Instance.playController.CreateCardStack(stackName,
                 cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position);
-            GameObject stackGameObject = stack.gameObject;
+            var stackGameObject = cardStack.gameObject;
             NetworkServer.Spawn(stackGameObject);
             if (isDeck)
                 CurrentDeck = stackGameObject;
@@ -266,6 +266,7 @@ namespace Cgs.Play.Multiplayer
         }
 
         [TargetRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void TargetPromptMoveToBottom(GameObject stack)
         {
             stack.GetComponent<CardStack>().PromptMoveToBottom();
@@ -381,7 +382,7 @@ namespace Cgs.Play.Multiplayer
 
         public void MoveCardToServer(CardZone cardZone, CardModel cardModel)
         {
-            Transform cardModelTransform = cardModel.transform;
+            var cardModelTransform = cardModel.transform;
             cardModelTransform.SetParent(cardZone.transform);
             cardModel.position = ((RectTransform) cardModelTransform).localPosition;
             cardModel.rotation = cardModelTransform.rotation;
@@ -395,15 +396,15 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
-            PlayController controller = CgsNetManager.Instance.playController;
-            GameObject newCard = Instantiate(controller.cardModelPrefab, controller.playMat.transform);
-            var cardModel = newCard.GetComponent<CardModel>();
+            var playController = CgsNetManager.Instance.playController;
+            var newCardGameObject = Instantiate(playController.cardModelPrefab, playController.playMat.transform);
+            var cardModel = newCardGameObject.GetComponent<CardModel>();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.position = position;
             cardModel.rotation = rotation;
             cardModel.isFacedown = isFacedown;
             PlayController.SetPlayActions(cardModel);
-            NetworkServer.Spawn(newCard);
+            NetworkServer.Spawn(newCardGameObject);
             cardModel.RpcHideHighlight();
         }
 
@@ -428,7 +429,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CmdCreateDie(int min, int max)
         {
-            Die die = CgsNetManager.Instance.playController.CreateDie(min, max);
+            var die = CgsNetManager.Instance.playController.CreateDie(min, max);
             NetworkServer.Spawn(die.gameObject);
         }
 

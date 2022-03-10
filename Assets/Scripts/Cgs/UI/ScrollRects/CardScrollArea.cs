@@ -58,33 +58,32 @@ namespace Cgs.UI.ScrollRects
                 return;
 
             _canvasGroup.alpha = 1;
+            var rect = scrollRect.content.rect;
+            var deltaWidth = ScrollSpeed / rect.width * Time.deltaTime;
+            var deltaHeight = ScrollSpeed / rect.height * Time.deltaTime;
             switch (scrollDirection)
             {
                 case CardScrollDirection.Left:
-                    float delta = ScrollSpeed / scrollRect.content.rect.width * Time.deltaTime;
                     scrollRect.horizontalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition - delta);
+                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition - deltaWidth);
                     if (scrollRect.horizontalNormalizedPosition <= 0)
                         _isScrolling = false;
                     break;
                 case CardScrollDirection.Down:
-                    float delta2 = ScrollSpeed / scrollRect.content.rect.height * Time.deltaTime;
                     scrollRect.verticalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition - delta2);
+                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition - deltaHeight);
                     if (scrollRect.verticalNormalizedPosition <= 0)
                         _isScrolling = false;
                     break;
                 case CardScrollDirection.Right:
-                    float delta3 = ScrollSpeed / scrollRect.content.rect.width * Time.deltaTime;
                     scrollRect.horizontalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition + delta3);
+                        Mathf.Clamp01(scrollRect.horizontalNormalizedPosition + deltaWidth);
                     if (scrollRect.horizontalNormalizedPosition >= 1)
                         _isScrolling = false;
                     break;
                 case CardScrollDirection.Up:
-                    float delta4 = ScrollSpeed / scrollRect.content.rect.height * Time.deltaTime;
                     scrollRect.verticalNormalizedPosition =
-                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta4);
+                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition + deltaHeight);
                     if (scrollRect.verticalNormalizedPosition >= 1)
                         _isScrolling = false;
                     break;
@@ -98,9 +97,9 @@ namespace Cgs.UI.ScrollRects
             if (eventData.pointerDrag == null)
                 return;
 
-            var cardModel = eventData.pointerDrag.GetComponent<CardModel>();
-            if (cardModel != null &&
-                (cardModel.ParentCardZone == null || cardModel.ParentCardZone.type == CardZoneType.Area))
+            var playable = eventData.pointerDrag.GetComponent<CgsNetPlayable>();
+            if (playable != null &&
+                (playable.ParentCardZone == null || playable.ParentCardZone.type == CardZoneType.Area))
                 _isScrolling = true;
         }
 

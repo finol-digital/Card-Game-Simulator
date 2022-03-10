@@ -351,6 +351,7 @@ namespace Cgs.Menu
 #endif
         }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void Quit() =>
 #if UNITY_EDITOR
             EditorApplication.isPlaying = false;

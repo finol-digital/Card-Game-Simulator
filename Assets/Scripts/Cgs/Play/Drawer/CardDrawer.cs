@@ -7,6 +7,7 @@ using System.Linq;
 using CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -103,7 +104,7 @@ namespace Cgs.Play.Drawer
         public void AddTab()
         {
             Vector2 sizeDelta = tabsRectTransform.sizeDelta;
-            sizeDelta = new Vector2(sizeDelta.x + ((RectTransform)tabPrefab.transform).sizeDelta.x, sizeDelta.y);
+            sizeDelta = new Vector2(sizeDelta.x + ((RectTransform) tabPrefab.transform).sizeDelta.x, sizeDelta.y);
             tabsRectTransform.sizeDelta = sizeDelta;
 
             var tabTemplate = Instantiate(tabPrefab, tabsRectTransform).GetComponent<TabTemplate>();

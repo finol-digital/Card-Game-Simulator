@@ -4,29 +4,25 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.69
-- Accessibility: Button Detail Text
-- Accessibility: View Details on Mouse-over
+## What's New - v1.70
+- Accessibility: Match card stack and dice view to the card view
+- Accessibility: Preview cards, stacks, and dice on hover
+- Game-Play: Automatically create D6 by default; use viewer to modify it
 
 ## Active Sprint
 - Accessibility: New how-to videos
 - Bug-Fix: Share on Android
 - Bug-Fix: Sometimes cards do not go onto top of deck
 - Bug-Fix: Add error message if imported single card is wrong image type
-- Bug-Fix: Scale CardStack and Dice Buttons on Zoom
-- Game-Play: Unify controls for Playable Objects (Cards, Stacks, Dice, and Tokens), and show a red zone up-top where they can be dropped to delete
-- Game-Play: Use 2-fingers AND press and hold to move and rotate Stacks
-- Game-Play: Type in dice number
-- Game-Play: Add Tokens, with settings for label, size, shape, and color. Also colorize dice.
-- Game-Play: Option to have top of stack always revealed
-- Game-Play: Limited visibility of cards in stack
-- Game-Play: Playable Objects can Snap to Grid
-- Game-Play: Automatically create D6 by default; double click it to change number of faces
+- Game-Play: Always reveal the top card of a stack
+- Game-Play: Snap to Grid in Play Area
+- Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 
 ## Backlog
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
 - Bug-Fix: Multiplayer Disconnect in game-play on Android client with Android Host
 - Game-Creation: Edit Button in Main Menu
+- Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Support multiple card selection
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs

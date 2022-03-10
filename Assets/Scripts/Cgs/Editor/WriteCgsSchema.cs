@@ -29,13 +29,13 @@ namespace Cgs.Editor
                 DefaultReferenceTypeNullHandling = ReferenceTypeNullHandling.NotNull,
                 SerializerSettings = CardGame.SerializerSettings
             };
-            JsonSchema schema = JsonSchema.FromType<CardGame>(settings);
-            schema.Id = SchemaId;
-            schema.Title = SchemaTitle;
-            schema.Description = SchemaDescription;
+            var jsonSchema = JsonSchema.FromType<CardGame>(settings);
+            jsonSchema.Id = SchemaId;
+            jsonSchema.Title = SchemaTitle;
+            jsonSchema.Description = SchemaDescription;
             // HACK: cardImageUrl uses a custom implementation of uri-template to allow for more versatility
-            schema.Properties["cardImageUrl"].Format = "uri-template";
-            File.WriteAllText(SchemaFilePath, schema.ToJson());
+            jsonSchema.Properties["cardImageUrl"].Format = "uri-template";
+            File.WriteAllText(SchemaFilePath, jsonSchema.ToJson());
             Debug.Log($"Schema written to {SchemaFilePath}!");
         }
     }

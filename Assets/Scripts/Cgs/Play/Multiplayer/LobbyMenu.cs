@@ -321,6 +321,7 @@ namespace Cgs.Play.Multiplayer
                     if (RuntimePlatform.Android.ToString().Equals(serverRoom.serverData))
                         CardGameManager.Instance.Messenger.Show(AndroidWarningMessage, true);
                 }
+
                 NetworkManager.singleton.networkAddress = _selectedServerIp;
                 NetworkManager.singleton.StartClient();
             }

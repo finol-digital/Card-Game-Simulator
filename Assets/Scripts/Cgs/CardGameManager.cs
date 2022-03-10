@@ -40,7 +40,7 @@ namespace Cgs
         public const string LoadErrorMessage = "Error loading game!: ";
 
         public const string LoadErrorPrompt =
-            "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
+            "Error loading game! The game may be corrupted. RequestDelete (note that any decks would also be deleted)?";
 
         public const string CardsLoadedMessage = "{0} cards loaded!";
         public const string CardsLoadingMessage = "{0} cards loading...";
@@ -86,20 +86,19 @@ namespace Cgs
         {
             get
             {
-                UnityCardGame previous = AllCardGames.Values.LastOrDefault() ?? UnityCardGame.UnityInvalid;
+                var previousCardGame = AllCardGames.Values.LastOrDefault() ?? UnityCardGame.UnityInvalid;
 
-                using SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
-                    AllCardGames.GetEnumerator();
+                using var allCardGamesEnumerator = AllCardGames.GetEnumerator();
                 var found = false;
-                while (!found && allCardGamesEnum.MoveNext())
+                while (!found && allCardGamesEnumerator.MoveNext())
                 {
-                    if (allCardGamesEnum.Current.Value != Current)
-                        previous = allCardGamesEnum.Current.Value;
+                    if (allCardGamesEnumerator.Current.Value != Current)
+                        previousCardGame = allCardGamesEnumerator.Current.Value;
                     else
                         found = true;
                 }
 
-                return previous;
+                return previousCardGame;
             }
         }
 
@@ -107,18 +106,17 @@ namespace Cgs
         {
             get
             {
-                UnityCardGame next = AllCardGames.Values.FirstOrDefault() ?? UnityCardGame.UnityInvalid;
+                var nextCardGame = AllCardGames.Values.FirstOrDefault() ?? UnityCardGame.UnityInvalid;
 
-                using SortedDictionary<string, UnityCardGame>.Enumerator allCardGamesEnum =
-                    AllCardGames.GetEnumerator();
+                using var allCardGamesEnumerator = AllCardGames.GetEnumerator();
                 var found = false;
-                while (!found && allCardGamesEnum.MoveNext())
-                    if (allCardGamesEnum.Current.Value == Current)
+                while (!found && allCardGamesEnumerator.MoveNext())
+                    if (allCardGamesEnumerator.Current.Value == Current)
                         found = true;
-                if (allCardGamesEnum.MoveNext())
-                    next = allCardGamesEnum.Current.Value;
+                if (allCardGamesEnumerator.MoveNext())
+                    nextCardGame = allCardGamesEnumerator.Current.Value;
 
-                return next;
+                return nextCardGame;
             }
         }
 
@@ -132,7 +130,8 @@ namespace Cgs
             {
                 Canvas topCanvas = null;
                 CardCanvases.RemoveWhere((canvas) => canvas == null);
-                foreach (Canvas canvas in CardCanvases)
+                // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+                foreach (var canvas in CardCanvases)
                     if (canvas.gameObject.activeSelf &&
                         (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
                         topCanvas = canvas;
@@ -148,7 +147,8 @@ namespace Cgs
             {
                 Canvas topCanvas = null;
                 ModalCanvases.RemoveWhere((canvas) => canvas == null);
-                foreach (Canvas canvas in ModalCanvases)
+                // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+                foreach (var canvas in ModalCanvases)
                     if (canvas.gameObject.activeSelf &&
                         (topCanvas == null || canvas.sortingOrder > topCanvas.sortingOrder))
                         topCanvas = canvas;
@@ -216,6 +216,7 @@ namespace Cgs
 #endif
         }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CreateDefaultCardGames()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -251,10 +252,10 @@ namespace Cgs
                 Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
                 CreateDefaultCardGames();
 
-            foreach (string gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
+            foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
-                string gameDirectoryName = gameDirectory.Substring(UnityCardGame.GamesDirectoryPath.Length + 1);
-                (string gameName, _) = CardGame.GetNameAndHost(gameDirectoryName);
+                var gameDirectoryName = gameDirectory.Substring(UnityCardGame.GamesDirectoryPath.Length + 1);
+                var (gameName, _) = CardGame.GetNameAndHost(gameDirectoryName);
                 if (gameName.Equals(CardGame.DefaultName))
                 {
                     Debug.LogWarning(DefaultNameWarning);
@@ -408,9 +409,9 @@ namespace Cgs
         // Note: Does NOT Reset Game Scene
         internal void ResetCurrentToDefault()
         {
-            string preferredGameId =
+            var preferredGameId =
                 PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
-            Current = AllCardGames.TryGetValue(preferredGameId, out UnityCardGame currentGame) &&
+            Current = AllCardGames.TryGetValue(preferredGameId, out var currentGame) &&
                       string.IsNullOrEmpty(currentGame.Error)
                 ? currentGame
                 : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
@@ -421,9 +422,9 @@ namespace Cgs
             Debug.Log("GetCardGame: Starting...");
             // If user attempts to download a game they already have, we should just update that game
             UnityCardGame existingGame = null;
-            foreach (UnityCardGame cardGame in AllCardGames.Values)
-                if (cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl)))
-                    existingGame = cardGame;
+            foreach (var cardGame in AllCardGames.Values.Where(cardGame =>
+                         cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl))))
+                existingGame = cardGame;
             Debug.Log("GetCardGame: Existing game search complete...");
             if (existingGame != null)
             {
@@ -503,7 +504,7 @@ namespace Cgs
         {
             cardGame ??= Current;
 
-            for (int page = cardGame.AllCardsUrlPageCountStartIndex;
+            for (var page = cardGame.AllCardsUrlPageCountStartIndex;
                  page < cardGame.AllCardsUrlPageCountStartIndex + cardGame.AllCardsUrlPageCount;
                  page++)
             {
@@ -525,14 +526,14 @@ namespace Cgs
             cardGame ??= Current;
 
             var setCardsLoaded = false;
-            foreach (Set set in cardGame.Sets.Values)
+            foreach (var set in cardGame.Sets.Values)
             {
                 if (string.IsNullOrEmpty(set.CardsUrl))
                     continue;
                 if (!setCardsLoaded)
                     Messenger.Show(string.Format(SetCardsLoadingMessage, cardGame.Name));
                 setCardsLoaded = true;
-                string setCardsFilePath = Path.Combine(cardGame.SetsDirectoryPath,
+                var setCardsFilePath = Path.Combine(cardGame.SetsDirectoryPath,
                     UnityFileMethods.GetSafeFileName(set.Code + UnityFileMethods.JsonExtension));
                 if (!File.Exists(setCardsFilePath))
                     yield return UnityFileMethods.SaveUrlToFile(set.CardsUrl, setCardsFilePath);
@@ -581,7 +582,7 @@ namespace Cgs
             }
 
 #if UNITY_WEBGL
-            foreach (UnityCardGame game in AllCardGames.Values)
+            foreach (var game in AllCardGames.Values)
                 game.ReadProperties();
 #endif
 
@@ -590,7 +591,7 @@ namespace Cgs
 
             // Each scene is responsible for adding to OnSceneActions, but they may not remove
             OnSceneActions.RemoveWhere((action) => action == null);
-            foreach (UnityAction action in OnSceneActions)
+            foreach (var action in OnSceneActions)
                 action();
         }
 

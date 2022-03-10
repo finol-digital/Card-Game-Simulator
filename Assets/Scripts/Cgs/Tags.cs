@@ -8,6 +8,7 @@ namespace Cgs
     {
         public const string CardGameManager = "CardGameManager";
         public const string CardViewer = "CardViewer";
+        public const string PlayableViewer = "PlayableViewer";
 
         public const string DynamicLinkUriDomain = "https://cgs.link";
 

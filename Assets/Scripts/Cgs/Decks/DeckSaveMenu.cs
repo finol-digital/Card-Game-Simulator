@@ -75,7 +75,7 @@ namespace Cgs.Decks
             if (!string.IsNullOrEmpty(newName))
                 nameInputField.text = newName;
             var deck = new UnityDeck(CardGameManager.Current, newName, CardGameManager.Current.DeckFileType);
-            foreach (Card card in _currentDeck.Cards)
+            foreach (var card in _currentDeck.Cards)
                 deck.Add((UnityCard) card);
             textOutputArea.text = deck.ToString();
         }
@@ -83,7 +83,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void Share()
         {
-            string shareText = textOutputArea.text;
+            var shareText = textOutputArea.text;
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             (new NativeShare()).SetText(shareText).Share();
 #else
@@ -96,7 +96,7 @@ namespace Cgs.Decks
         public void PrintPdf()
         {
             _currentDeck.Name = nameInputField.text;
-            UnityDeck deck = _currentDeck;
+            var deck = _currentDeck;
             Uri pdfUri = null;
             try
             {
@@ -123,7 +123,7 @@ namespace Cgs.Decks
                     if (file != null)
                     {
                         // Launch the retrieved file
-                        bool success = await Windows.System.Launcher.LaunchFileAsync(file);
+                        var success = await Windows.System.Launcher.LaunchFileAsync(file);
                         if (!success)
                         {
                             Debug.LogError(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);

@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Linq;
-using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.CardGameView.Viewer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -132,7 +132,7 @@ namespace Cgs.Cards
                 return;
             }
 
-            for (int i = results.layoutArea.childCount - 1; i >= 0; i--)
+            for (var i = results.layoutArea.childCount - 1; i >= 0; i--)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;
@@ -166,7 +166,7 @@ namespace Cgs.Cards
                 return;
             }
 
-            for (int i = results.layoutArea.childCount - 1; i >= 0; i--)
+            for (var i = results.layoutArea.childCount - 1; i >= 0; i--)
             {
                 if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
                     continue;

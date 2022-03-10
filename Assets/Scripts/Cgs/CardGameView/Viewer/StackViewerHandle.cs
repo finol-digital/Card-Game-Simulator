@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Cgs.CardGameView
+namespace Cgs.CardGameView.Viewer
 {
     public class StackViewerHandle : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
@@ -30,9 +30,9 @@ namespace Cgs.CardGameView
 
         public void OnDrag(PointerEventData eventData)
         {
-            Vector2 targetPosition = eventData.position - _dragOffset;
-            float y = Mathf.Clamp(targetPosition.y, MinY, MaxY);
-            _rectTransform.position = new Vector3(_rectTransform.position.x, y);
+            var targetPosition = eventData.position - _dragOffset;
+            var targetY = Mathf.Clamp(targetPosition.y, MinY, MaxY);
+            _rectTransform.position = new Vector3(_rectTransform.position.x, targetY);
         }
 
         public void OnEndDrag(PointerEventData eventData)

@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.CardGameView;
+using Cgs.CardGameView.Viewer;
 using UnityEngine;
 
 namespace Cgs.Cards
@@ -20,6 +20,8 @@ namespace Cgs.Cards
             searchResults.UpdateSearchResultsPanel();
             if (CardViewer.Instance != null)
                 CardViewer.Instance.IsVisible = false;
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.IsVisible = false;
         }
     }
 }

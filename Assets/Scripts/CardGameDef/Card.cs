@@ -23,8 +23,8 @@ namespace CardGameDef
         {
             get
             {
-                string url = _imageWebUrl;
-                string cardImageUrl = SourceGame.CardImageUrl;
+                var url = _imageWebUrl;
+                var cardImageUrl = SourceGame.CardImageUrl;
                 if (!string.IsNullOrEmpty(url) && !url.Equals(cardImageUrl))
                     return url;
                 // NOTE: cardImageUrl uses this custom implementation of uri-template to allow for more versatility
@@ -39,11 +39,12 @@ namespace CardGameDef
                 var listPropertyRegex = new Regex(@"\{(?<property>[\w\.]+)\[(?<index>\d+)\](?<child>[\w\.]*)\}");
                 foreach (Match match in listPropertyRegex.Matches(url))
                 {
-                    string list = GetPropertyValueString(match.Groups["property"].Value + match.Groups["child"].Value);
-                    string[] splitList = list.Split(new[] {EnumDef.Delimiter}, StringSplitOptions.None);
-                    if (int.TryParse(match.Groups["index"].Value, out int index) && index >= 0 &&
-                        index < splitList.Length)
-                        url = url.Replace(match.Value, splitList[index]);
+                    var stringList =
+                        GetPropertyValueString(match.Groups["property"].Value + match.Groups["child"].Value);
+                    var splitStringList = stringList.Split(new[] {EnumDef.Delimiter}, StringSplitOptions.None);
+                    if (int.TryParse(match.Groups["index"].Value, out var index) && index >= 0 &&
+                        index < splitStringList.Length)
+                        url = url.Replace(match.Value, splitStringList[index]);
                 }
 
                 return url;
@@ -76,10 +77,10 @@ namespace CardGameDef
         public string GetPropertyValueString(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName) ||
-                !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
+                !Properties.TryGetValue(propertyName, out var property))
                 return string.Empty;
 
-            EnumDef enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
+            var enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
             if (enumDef == null || string.IsNullOrEmpty(property.Value))
                 return !string.IsNullOrEmpty(property.Value)
                     ? property.Value
@@ -90,16 +91,16 @@ namespace CardGameDef
         public int GetPropertyValueInt(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName) ||
-                !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
+                !Properties.TryGetValue(propertyName, out var property))
                 return 0;
 
-            return EnumDef.TryParseInt(property.Value, out int intValue) ? intValue : 0;
+            return EnumDef.TryParseInt(property.Value, out var intValue) ? intValue : 0;
         }
 
         public bool GetPropertyValueBool(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName) ||
-                !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
+                !Properties.TryGetValue(propertyName, out var property))
                 return false;
 
             return "true".Equals(property.Value, StringComparison.OrdinalIgnoreCase)
@@ -111,10 +112,10 @@ namespace CardGameDef
         public int GetPropertyValueEnum(string propertyName)
         {
             if (string.IsNullOrEmpty(propertyName) ||
-                !Properties.TryGetValue(propertyName, out PropertyDefValuePair property))
+                !Properties.TryGetValue(propertyName, out var property))
                 return 0;
 
-            EnumDef enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
+            var enumDef = SourceGame.Enums.FirstOrDefault(def => def.Property.Equals(propertyName));
             return enumDef?.GetEnumFromPropertyValue(property.Value) ?? 0;
         }
 
@@ -123,7 +124,7 @@ namespace CardGameDef
             if (other == null)
                 return -1;
 
-            PropertyDefValuePair propertyToCompare = Properties.FirstOrDefault().Value;
+            var propertyToCompare = Properties.FirstOrDefault().Value;
             if (propertyToCompare == null)
                 return 0;
 
@@ -134,12 +135,12 @@ namespace CardGameDef
                 case PropertyType.StringEnum:
                 case PropertyType.StringEnumList:
                 case PropertyType.Boolean:
-                    bool thisBool = GetPropertyValueBool(propertyToCompare.Def.Name);
-                    bool otherBool = other.GetPropertyValueBool(propertyToCompare.Def.Name);
+                    var thisBool = GetPropertyValueBool(propertyToCompare.Def.Name);
+                    var otherBool = other.GetPropertyValueBool(propertyToCompare.Def.Name);
                     return otherBool.CompareTo(thisBool);
                 case PropertyType.Integer:
-                    int thisInt = GetPropertyValueInt(propertyToCompare.Def.Name);
-                    int otherInt = other.GetPropertyValueInt(propertyToCompare.Def.Name);
+                    var thisInt = GetPropertyValueInt(propertyToCompare.Def.Name);
+                    var otherInt = other.GetPropertyValueInt(propertyToCompare.Def.Name);
                     return thisInt.CompareTo(otherInt);
                 case PropertyType.Object:
                 case PropertyType.ObjectList:
