@@ -12,9 +12,12 @@ permalink: roadmap.html
 ## Active Sprint
 - Accessibility: New how-to videos
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
-- Bug-Fix: Share on Android
-- Bug-Fix: Sometimes cards do not go onto top of deck
 - Bug-Fix: Add error message if imported single card is wrong image type
+- Bug-Fix: Sometimes cards do not go onto top of deck
+- Bug-Fix: Share on Android
+- Bug-Fix: Freeze in Multiplayer Lobby on Android client
+
+## Backlog
 - Game-Play: Snap to Grid in Play Area
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Button for max zoom out
@@ -22,10 +25,6 @@ permalink: roadmap.html
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Game-Play: Color the default card action green
 - Game-Play: Always reveal the top card of a stack
-
-## Backlog
-- Bug-Fix: Freeze in Multiplayer Lobby on Android client
-- Bug-Fix: Multiplayer Disconnect in game-play on Android client with Android Host
 - Game-Creation: Edit Button in Main Menu
 - Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Support multiple card selection

@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Multiplayer;
@@ -102,7 +101,7 @@ namespace Cgs.Play
         {
             try
             {
-                string shareText = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
+                var shareText = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 (new NativeShare()).SetText(shareText).Share();
 #else
@@ -123,14 +122,14 @@ namespace Cgs.Play
             roomNameText.text = IsOnline ? CgsNetManager.Instance.RoomName : Offline;
             roomIdIpText.text = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
 
-            List<Tuple<string, int, string>> scores = GameObject.FindGameObjectsWithTag("Player")
+            var scores = GameObject.FindGameObjectsWithTag("Player")
                 .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>
                     new Tuple<string, int, string>(cgsNetPlayer.Name, cgsNetPlayer.Points, cgsNetPlayer.HandCount))
                 .ToList();
             scoreContent.DestroyAllChildren();
             scoreContent.sizeDelta = new Vector2(scoreContent.sizeDelta.x,
                 ((RectTransform) scoreTemplate.transform).rect.height * scores.Count);
-            foreach ((string playerName, int points, string handCount) in scores)
+            foreach (var (playerName, points, handCount) in scores)
             {
                 var entry = Instantiate(scoreTemplate.gameObject, scoreContent).GetComponent<ScoreTemplate>();
                 entry.gameObject.SetActive(true);

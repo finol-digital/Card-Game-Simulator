@@ -62,9 +62,9 @@ namespace Cgs.Cards
                 if (!(layoutGroup is GridLayoutGroup gridLayoutGroup))
                     return CardsPerRow;
 
-                RectOffset gridPadding = gridLayoutGroup.padding;
+                var gridPadding = gridLayoutGroup.padding;
                 float padding = gridPadding.top + gridPadding.bottom;
-                int rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height - padding + gridLayoutGroup.spacing.y)
+                var rowsPerPage = Mathf.FloorToInt((layoutArea.rect.height - padding + gridLayoutGroup.spacing.y)
                                                    / (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y));
 
                 return CardsPerRow * rowsPerPage;
@@ -164,13 +164,13 @@ namespace Cgs.Cards
             layoutArea.DestroyAllChildren();
 
             for (var i = 0;
-                i < CardsPerPage && CurrentPageIndex >= 0 && CurrentPageIndex * CardsPerPage + i < AllResults.Count;
-                i++)
+                 i < CardsPerPage && CurrentPageIndex >= 0 && CurrentPageIndex * CardsPerPage + i < AllResults.Count;
+                 i++)
             {
-                string cardId = AllResults[CurrentPageIndex * CardsPerPage + i].Id;
+                var cardId = AllResults[CurrentPageIndex * CardsPerPage + i].Id;
                 if (!CardGameManager.Current.Cards.ContainsKey(cardId))
                     continue;
-                UnityCard cardToShow = CardGameManager.Current.Cards[cardId];
+                var cardToShow = CardGameManager.Current.Cards[cardId];
                 var cardModel = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
                 cardModel.Value = cardToShow;
                 cardModel.IsStatic = layoutGroup is GridLayoutGroup;

@@ -97,7 +97,7 @@ namespace Cgs.Decks
                 if (Inputs.IsSubmit && loadFromFileButton.interactable)
                     LoadFromFileAndHide();
                 else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
-                    .Contains(EventSystem.current.currentSelectedGameObject))
+                             .Contains(EventSystem.current.currentSelectedGameObject))
                     EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
                 else if (Inputs.IsSort && shareFileButton.interactable)
                     Share();
@@ -149,12 +149,12 @@ namespace Cgs.Decks
         private void BuildDeckFileSelectionOptions()
         {
             _deckFiles.Clear();
-            string[] files = Directory.Exists(CardGameManager.Current.DecksDirectoryPath)
+            var filePaths = Directory.Exists(CardGameManager.Current.DecksDirectoryPath)
                 ? Directory.GetFiles(CardGameManager.Current.DecksDirectoryPath)
                 : Array.Empty<string>();
-            foreach (string file in files)
-                if (GetFileTypeFromPath(file) == CardGameManager.Current.DeckFileType)
-                    _deckFiles[file] = GetNameFromPath(file);
+            foreach (var filePath in filePaths)
+                if (GetFileTypeFromPath(filePath) == CardGameManager.Current.DeckFileType)
+                    _deckFiles[filePath] = GetNameFromPath(filePath);
 
             Rebuild(_deckFiles, SelectFile, _selectedFilePath);
 
@@ -188,15 +188,15 @@ namespace Cgs.Decks
 
         private static string GetNameFromPath(string filePath)
         {
-            int startName = filePath.LastIndexOf(Path.DirectorySeparatorChar) + 1;
-            int endName = filePath.LastIndexOf('.');
-            return filePath.Substring(startName, endName > 0 ? endName - startName : 0);
+            var startNameIndex = filePath.LastIndexOf(Path.DirectorySeparatorChar) + 1;
+            var endNameIndex = filePath.LastIndexOf('.');
+            return filePath.Substring(startNameIndex, endNameIndex > 0 ? endNameIndex - startNameIndex : 0);
         }
 
         private static DeckFileType GetFileTypeFromPath(string filePath)
         {
             var deckFileType = DeckFileType.Txt;
-            string extension = filePath.Substring(filePath.LastIndexOf('.') + 1);
+            var extension = filePath.Substring(filePath.LastIndexOf('.') + 1);
             if (extension.ToLower().Equals(DeckFileType.Dec.ToString().ToLower()))
                 deckFileType = DeckFileType.Dec;
             else if (extension.ToLower().Equals(DeckFileType.Hsd.ToString().ToLower()))
@@ -235,7 +235,7 @@ namespace Cgs.Decks
         {
             try
             {
-                string shareText = File.ReadAllText(_selectedFilePath);
+                var shareText = File.ReadAllText(_selectedFilePath);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 (new NativeShare()).SetText(shareText).Share();
 #else
@@ -255,8 +255,8 @@ namespace Cgs.Decks
         {
             try
             {
-                string deckText = File.ReadAllText(_selectedFilePath);
-                UnityDeck newDeck = UnityDeck.Parse(CardGameManager.Current, _deckFiles[_selectedFilePath],
+                var deckText = File.ReadAllText(_selectedFilePath);
+                var newDeck = UnityDeck.Parse(CardGameManager.Current, _deckFiles[_selectedFilePath],
                     CardGameManager.Current.DeckFileType, deckText);
                 _loadCallback?.Invoke(newDeck);
                 Hide();
@@ -342,7 +342,7 @@ namespace Cgs.Decks
 
                 HideNewDeckPanel();
                 BuildDeckFileSelectionOptions();
-                foreach (string path in _deckFiles.Keys)
+                foreach (var path in _deckFiles.Keys)
                     Debug.Log(path);
 
                 LoadFromFileAndHide();

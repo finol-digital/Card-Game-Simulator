@@ -81,10 +81,10 @@ namespace Cgs.Play.Drawer
 
         private void Resize()
         {
-            float cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
+            var cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
             panelRectTransform.sizeDelta = new Vector2(panelRectTransform.sizeDelta.x, HandleHeight + cardHeight);
             cardZonesRectTransform.sizeDelta = new Vector2(cardZonesRectTransform.sizeDelta.x, cardHeight);
-            foreach (RectTransform cardZoneRectTransform in cardZoneRectTransforms)
+            foreach (var cardZoneRectTransform in cardZoneRectTransforms)
                 cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
         }
 
@@ -103,12 +103,12 @@ namespace Cgs.Play.Drawer
         [UsedImplicitly]
         public void AddTab()
         {
-            Vector2 sizeDelta = tabsRectTransform.sizeDelta;
+            var sizeDelta = tabsRectTransform.sizeDelta;
             sizeDelta = new Vector2(sizeDelta.x + ((RectTransform) tabPrefab.transform).sizeDelta.x, sizeDelta.y);
             tabsRectTransform.sizeDelta = sizeDelta;
 
             var tabTemplate = Instantiate(tabPrefab, tabsRectTransform).GetComponent<TabTemplate>();
-            int tabIndex = tabsRectTransform.childCount - 2;
+            var tabIndex = tabsRectTransform.childCount - 2;
             tabTemplate.transform.SetSiblingIndex(tabIndex);
 
             _toggles.Add(tabTemplate.toggle);
@@ -125,7 +125,7 @@ namespace Cgs.Play.Drawer
             tabTemplate.drawerHandle.cardDrawer = this;
 
             var cardZoneRectTransform = (RectTransform) Instantiate(cardZonePrefab, cardZonesRectTransform).transform;
-            float cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
+            var cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
             cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
             cardZoneRectTransforms.Add(cardZoneRectTransform);
 
@@ -153,13 +153,13 @@ namespace Cgs.Play.Drawer
             if (!CgsNetManager.Instance.isNetworkActive || CgsNetManager.Instance.LocalPlayer == null)
                 return;
 
-            int index = CgsNetManager.Instance.LocalPlayer.CurrentHand;
+            var index = CgsNetManager.Instance.LocalPlayer.CurrentHand;
             CgsNetManager.Instance.LocalPlayer.RequestSyncHand(index, cardIds);
         }
 
         public void Clear()
         {
-            foreach (CardZone cardZone in cardZonesRectTransform.GetComponentsInChildren<CardZone>())
+            foreach (var cardZone in cardZonesRectTransform.GetComponentsInChildren<CardZone>())
                 cardZone.Clear();
         }
 
