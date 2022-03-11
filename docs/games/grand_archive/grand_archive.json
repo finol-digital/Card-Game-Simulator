@@ -110,29 +110,11 @@
 					"name": "rarity",
 					"display": "Rarity",
 					"type": "integer"
-				},
-				{
-					"name": "set",
-					"display": "Set",
-					"type": "object",
-					"properties": [
-						{
-							"name": "name",
-							"display": "Set Name",
-							"type": "string"
-						},
-						{
-							"name": "prefix",
-							"display": "Set Prefix",
-							"type": "string"
-						}
-					]
 				}
 			]
 		}
 	],
 	"cardSetIsObject": true,
-	"cardSetNameIdentifier": "editions[0].set.name",
 	"cardSetsInList": true,
 	"cardSetIdentifier": "editions",
 	"cgsDeepLink": "https://cgs.link/grand_archive",
@@ -237,5 +219,7 @@
 		"x": 36.0,
 		"y": 41.0
 	},
-	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf"
+	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf",
+	"setCodeIdentifier": "set.prefix",
+	"setNameIdentifier": "set.name"
 }
