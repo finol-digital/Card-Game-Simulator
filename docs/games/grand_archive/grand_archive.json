@@ -29,7 +29,7 @@
 		{
 			"name": "element",
 			"display": "Element",
-			"displayEmpty": "NORM",
+			"displayEmpty": "Normal",
 			"type": "stringEnum"
 		},
 		{
@@ -203,12 +203,12 @@
 		{
 			"group": "Material Deck",
 			"property": "types",
-			"value": "CHAMPION"
+			"value": "Champion"
 		},
 		{
 			"group": "Material Deck",
 			"property": "types",
-			"value": "REGALIA"
+			"value": "Regalia"
 		}
 	],
 	"gameDefaultCardAction": "tap",
