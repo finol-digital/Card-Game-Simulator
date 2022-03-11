@@ -1,68 +1,94 @@
 {
 	"name": "Grand Archive",
-	"allCardsUrl": "https://www.cardgamesimulator.com/games/grand_archive/AllCards.json",
+	"allCardsUrl": "https://index.gatcg.com:8090/api/cards/search",
+	"allCardsUrlPageCountIdentifier": "total_pages",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
-	"cardImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/sets/{cardSet}/{cardId}.{cardImageFileType}",
-	"cardPrimaryProperty": "rulesText",
+	"cardDataIdentifier": "data",
+	"cardIdIdentifier": "result_editions[0].card_id",
+	"cardImageFileType": "jpg",
+	"cardImageUrl": "https://index.gatcg.com:8090/images/cards/{card.result_editions[0].slug}.jpg",
+	"cardPrimaryProperty": "effect",
 	"cardProperties": [
 		{
-			"name": "cost",
-			"display": "Cost",
-			"type": "integer"
-		},
-		{
-			"name": "element",
-			"display": "Element",
-			"type": "stringEnum"
-		},
-		{
-			"name": "superType",
-			"display": "Supertype",
+			"name": "types",
+			"display": "Type",
 			"type": "stringEnumList"
 		},
 		{
-			"name": "subType",
+			"name": "classes",
+			"display": "Class",
+			"type": "stringEnumList"
+		},
+		{
+			"name": "subtypes",
 			"display": "Subtype",
 			"type": "stringEnumList"
 		},
 		{
-			"name": "rulesText",
-			"display": "Rules Text",
-			"type": "string"
-		},
-		{
-			"name": "flavorText",
-			"display": "Flavor Text",
-			"type": "string"
-		},
-		{
-			"name": "speed",
-			"display": "Speed",
-			"displayEmpty": "N / A",
+			"name": "element",
+			"display": "Element",
+			"displayEmpty": "NORM",
 			"type": "stringEnum"
+		},
+		{
+			"name": "effect",
+			"display": "Effect",
+			"displayEmpty": "-",
+			"type": "string"
+		},
+		{
+			"name": "flavor",
+			"display": "Flavor",
+			"displayEmpty": "-",
+			"type": "string"
+		},
+		{
+			"name": "cost_memory",
+			"display": "Memory Cost",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "cost_reserve",
+			"display": "Reserve Cost",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "level",
+			"display": "Level",
+			"displayEmpty": "-",
+			"type": "integer"
 		},
 		{
 			"name": "attack",
 			"display": "Attack",
-			"displayEmpty": "N / A",
+			"displayEmpty": "-",
 			"type": "integer"
 		},
 		{
-			"name": "health",
-			"display": "Health",
-			"displayEmpty": "N / A",
+			"name": "life",
+			"display": "Life",
+			"displayEmpty": "-",
 			"type": "integer"
 		},
 		{
 			"name": "durability",
 			"display": "Durability",
-			"displayEmpty": "N / A",
+			"displayEmpty": "-",
 			"type": "integer"
+		},
+		{
+			"name": "speed",
+			"display": "Speed: Fast?",
+			"displayEmpty": "-",
+			"type": "boolean"
 		}
 	],
-	"cardSetIdentifier": "setCode",
+	"cardSetIsObject": true,
+	"cardSetIdentifier": "result_editions[0].set",
 	"cgsDeepLink": "https://cgs.link/grand_archive",
 	"deckSharePreference": "individual",
 	"deckUrls": [
@@ -77,73 +103,94 @@
 	],
 	"enums": [
 		{
+			"property": "types",
+			"values": {
+				"ACTION": "Action",
+				"ALLY": "Ally",
+				"ATTACK": "Attack",
+				"CHAMPION": "Champion",
+				"ITEM": "Item",
+				"REGALIA": "Regalia",
+				"WEAPON": "Weapon"
+			}
+		},
+		{
+			"property": "classes",
+			"values": {
+				"ASSASSIN": "Assassin",
+				"CLERIC": "Cleric",
+				"GUARDIAN": "Guardian",
+				"MAGE": "Mage",
+				"RANGER": "Ranger",
+				"TAMER": "Tamer",
+				"WARRIOR": "Warrior"
+			}
+		},
+		{
+			"property": "subtypes",
+			"values": {
+				"ACCESSORY": "Accessory",
+				"ANIMAL": "Animal",
+				"ARTIFACT": "Artifact",
+				"ASSASSIN": "Assassin",
+				"BAUBLE": "Bauble",
+				"BEAST": "Beast",
+				"BIRD": "Bird",
+				"BOAR": "Boar",
+				"BOOK": "Book",
+				"CLERIC": "Cleric",
+				"CRAFT": "Craft",
+				"CRYSTAL": "Crystal",
+				"FAIRY": "Fairy",
+				"GUARDIAN": "Guardian",
+				"HORSE": "Horse",
+				"HUMAN": "Human",
+				"MAGE": "Mage",
+				"RANGER": "Ranger",
+				"REACTION": "Reaction",
+				"SCEPTER": "Scepter",
+				"SKILL": "Skill",
+				"SPELL": "Spell",
+				"SPIRIT": "Spirit",
+				"SQUIRREL": "Squirrel",
+				"SWORD": "Sword",
+				"TAMER": "Tamer",
+				"WARRIOR": "Warrior",
+				"WOLF": "Wolf"
+			}
+		},
+		{
 			"property": "element",
 			"values": {
-				"Normal": "Normal",
-				"Wind": "Wind",
-				"Fire": "Fire",
-				"Water": "Water",
-				"Crux": "Crux",
-				"Arcane": "Arcane"
-			}
-		},
-		{
-			"property": "superType",
-			"values": {
-				"Champion": "Champion",
-				"Regalia": "Regalia",
-				"Ally": "Ally",
-				"Action": "Action",
-				"Attack": "Attack",
-				"Item": "Item",
-				"Weapon": "Weapon"
-			}
-		},
-		{
-			"property": "subType",
-			"values": {
-				"Warrior": "Warrior",
-				"Mage": "Mage",
-				"Tamer": "Tamer",
-				"Ranger": "Ranger",
-				"Guardian": "Guardian",
-				"Cleric": "Cleric",
-				"Assassin": "Assassin",
-				"Spirit": "Spirit",
-				"Sword": "Sword",
-				"Bauble": "Bauble",
-				"Artifact": "Artifact",
-				"Sceptre": "Sceptre",
-				"Book": "Book"
-			}
-		},
-		{
-			"property": "speed",
-			"values": {
-				"Slow": "Slow",
-				"Fast": "Fast"
+				"NORM": "Normal",
+				"WIND": "Wind",
+				"FIRE": "Fire",
+				"WATER": "Water",
+				"CRUX": "Crux",
+				"ARCANE": "Arcane"
 			}
 		}
 	],
 	"extras": [
 		{
 			"group": "Material Deck",
-			"property": "superType",
-			"value": "Champion"
+			"property": "types",
+			"value": "CHAMPION"
 		},
 		{
 			"group": "Material Deck",
-			"property": "superType",
-			"value": "Regalia"
+			"property": "types",
+			"value": "REGALIA"
 		}
 	],
 	"gameDefaultCardAction": "tap",
 	"gamePlayDeckName": "Main Deck",
-	"gameStartHandCount": 6,
+	"gameStartHandCount": 7,
 	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.png",
 	"playMatSize": {
 		"x": 36.0,
 		"y": 41.0
 	},
-	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf"
+	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf",
+	"setCodeIdentifier": "prefix"
 }
