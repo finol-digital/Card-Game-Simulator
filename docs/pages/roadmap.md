@@ -14,6 +14,7 @@ permalink: roadmap.html
 - Bug-Fix: Share on Android
 - Bug-Fix: Sometimes cards do not go onto top of deck
 - Bug-Fix: Add error message if imported single card is wrong image type
+- Game-Play: Color the default card action green
 - Game-Play: Always reveal the top card of a stack
 - Game-Play: Snap to Grid in Play Area
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
