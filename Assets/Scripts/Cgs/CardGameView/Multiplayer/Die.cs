@@ -74,7 +74,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (_rollDelay < RollDelay)
                 return;
 
-            Value = Random.Range(Min, Max);
+            Value = Random.Range(Min, Max + 1);
             _rollDelay = 0;
         }
 
