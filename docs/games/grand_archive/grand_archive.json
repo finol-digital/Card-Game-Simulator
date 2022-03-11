@@ -6,9 +6,9 @@
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
 	"cardDataIdentifier": "data",
-	"cardIdIdentifier": "result_editions[0].card_id",
+	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageUrl": "https://index.gatcg.com:8090/images/cards/{card.result_editions[0].slug}.jpg",
+	"cardImageUrl": "https://index.gatcg.com:8090/images/cards/{editions[0].slug}.jpg",
 	"cardPrimaryProperty": "effect",
 	"cardProperties": [
 		{
@@ -85,10 +85,38 @@
 			"display": "Speed: Fast?",
 			"displayEmpty": "-",
 			"type": "boolean"
+		},
+		{
+			"name": "editions",
+			"display": "Edition(s)",
+			"type": "objectList",
+			"properties": [
+				{
+					"name": "card_id",
+					"display": "Card Id",
+					"type": "string"
+				},
+				{
+					"name": "slug",
+					"display": "Slug",
+					"type": "string"
+				},
+				{
+					"name": "illustrator",
+					"display": "Illustrator",
+					"type": "string"
+				},
+				{
+					"name": "rarity",
+					"display": "Rarity",
+					"type": "integer"
+				}
+			]
 		}
 	],
 	"cardSetIsObject": true,
-	"cardSetIdentifier": "result_editions[0].set",
+	"cardSetsInList": true,
+	"cardSetIdentifier": "editions",
 	"cgsDeepLink": "https://cgs.link/grand_archive",
 	"deckSharePreference": "individual",
 	"deckUrls": [
@@ -192,5 +220,6 @@
 		"y": 41.0
 	},
 	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf",
-	"setCodeIdentifier": "prefix"
+	"setCodeIdentifier": "set.prefix",
+	"setNameIdentifier": "set.name"
 }
