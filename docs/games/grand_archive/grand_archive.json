@@ -194,8 +194,15 @@
 				"WIND": "Wind",
 				"FIRE": "Fire",
 				"WATER": "Water",
+				"ARCANE": "Arcane",
+				"ASTRA": "Astra", 
 				"CRUX": "Crux",
-				"ARCANE": "Arcane"
+				"LUXEM": "Luxem",
+				"NEOS": "Neos",
+				"TECHA": "Techa",
+				"TERA": "Tera", 
+				"UMBRA": "Umbra",
+				"WRATH": "Wrath"
 			}
 		}
 	],
