@@ -318,6 +318,7 @@ MonoBehaviour:
   tooltip: When searching/filtering cards, only show the first card with a given
     name and hide duplicates.
   avoidOverlap: 0
+  isBelow: 0
 --- !u!1001 &216619222
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -733,6 +734,7 @@ MonoBehaviour:
   tooltip: Smaller displays may prefer a lower resolution, while larger displays
     may prefer higher.
   avoidOverlap: 0
+  isBelow: 0
 --- !u!1001 &440945639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1325,6 +1327,7 @@ MonoBehaviour:
     type: 3}
   tooltip: Frames per Second
   avoidOverlap: 0
+  isBelow: 0
 --- !u!114 &633972502 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5235115287894202190, guid: 987a410d27ea7074e981d400767aded3,
@@ -2582,6 +2585,7 @@ MonoBehaviour:
     type: 3}
   tooltip: Create and Share. See the CGS website for a tutorial.
   avoidOverlap: 0
+  isBelow: 0
 --- !u!1001 &1154342669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3653,9 +3657,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
-  tooltip: View button details and card info whenever you mouse over buttons and
-    cards.
+  tooltip: View button details and card names whenever you hover/mouse-over buttons
+    and cards.
   avoidOverlap: 0
+  isBelow: 0
 --- !u!1 &1463601133
 GameObject:
   m_ObjectHideFlags: 0
@@ -3936,6 +3941,7 @@ MonoBehaviour:
   tooltip: Connecting a gamepad/controller will apply the landscape orientation,
     regardless of the screen orientation setting.
   avoidOverlap: 0
+  isBelow: 0
 --- !u!1001 &1678149193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4559,7 +4565,7 @@ PrefabInstance:
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
       propertyPath: m_Text
-      value: View Details on Mouse-over
+      value: Preview on Mouse-over
       objectReference: {fileID: 0}
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
@@ -4953,6 +4959,7 @@ MonoBehaviour:
   tooltip: Tooltips like this one are visible because of this "Button Details Text"
     setting.
   avoidOverlap: 0
+  isBelow: 0
 --- !u!1001 &5235115288888140021
 PrefabInstance:
   m_ObjectHideFlags: 0
