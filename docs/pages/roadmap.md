@@ -23,11 +23,15 @@ permalink: roadmap.html
 - Game-Play: Button for max zoom out
 - Game-Play: Click outside card stack viewer to close it
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
-- Game-Play: Color the default card action green
-- Game-Play: Always reveal the top card of a stack
-- Game-Creation: Edit Button in Main Menu
 - Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Support multiple card selection
+- Game-Play: Color the default card action green
+- Game-Play: Always reveal the top card of a stack
+- Integration: Deep links to join multiplayer rooms
+- Game-Play: Label which player is moving cards
+- Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
+  - Option to keep points and reset or delete decks
+- Game-Creation: Edit Button in Main Menu
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress
@@ -51,7 +55,6 @@ permalink: roadmap.html
 
 ## Icebox
 - Game-Play: Log all Player actions
-- Game-Play: Clear CgsNetPlayer on restart and move the restart to its own button in the Play Menu
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Tech: Pooling to improve performance of opening stack viewer
 - Tech: Replace SwipeManager
