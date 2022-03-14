@@ -47,21 +47,17 @@ permalink: roadmap.html
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
 - Cards: Popup card text on mouse hover over
-- Tech: Add code coverage
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Tournament Support (PoQ?)
 
 ## Icebox
-- Game-Play: Log all Player actions
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Tech: Pooling to improve performance of opening stack viewer
-- Tech: Replace SwipeManager
-- Tech: Automate store images through Fastlane
+- Tech: Log all Player actions
 - Tech: Upgrade json schema version from v4 to v7
 - Tech: Use AllDecks.json for default games
-- Tech: SonarQube Scans
+- Tech: Automate store images through Fastlane
 - Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit
