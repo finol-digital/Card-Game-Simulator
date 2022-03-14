@@ -83,8 +83,7 @@ namespace Cgs.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (Settings.ViewInfoOnMouseOver)
-                Show();
+            Show();
         }
 
         public void OnPointerExit(PointerEventData eventData)

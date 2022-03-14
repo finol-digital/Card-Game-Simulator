@@ -1909,7 +1909,7 @@ PrefabInstance:
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
       propertyPath: m_Text
-      value: Button Details Text
+      value: Button Tooltips
       objectReference: {fileID: 0}
     - target: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
         type: 3}
@@ -3657,8 +3657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
-  tooltip: View button details and card names whenever you hover/mouse-over buttons
-    and cards.
+  tooltip: View card names whenever you hover/mouse-over cards.
   avoidOverlap: 0
   isBelow: 0
 --- !u!1 &1463601133
@@ -4956,8 +4955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
-  tooltip: Tooltips like this one are visible because of this "Button Details Text"
-    setting.
+  tooltip: Tooltips like this one are visible because of this "Button Tooltips" setting.
   avoidOverlap: 0
   isBelow: 0
 --- !u!1001 &5235115288888140021
