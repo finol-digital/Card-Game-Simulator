@@ -3000,16 +3000,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 746987234696038969, guid: 6c8f698bdb10af641a0fdff4f6f16781,
-        type: 3}
-      propertyPath: tooltip
-      value: Share Room Id
-      objectReference: {fileID: 0}
-    - target: {fileID: 759350306770482691, guid: 6c8f698bdb10af641a0fdff4f6f16781,
-        type: 3}
-      propertyPath: tooltip
-      value: Edit Name
-      objectReference: {fileID: 0}
     - target: {fileID: 1198181613345073415, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: isBelow

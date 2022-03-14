@@ -29,7 +29,6 @@
 		{
 			"name": "element",
 			"display": "Element",
-			"displayEmpty": "Normal",
 			"type": "stringEnum"
 		},
 		{

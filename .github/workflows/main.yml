@@ -395,10 +395,6 @@ jobs:
         with:
           files: "storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Setup Unity IL2CPP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: windows-il2cpp
       - name: Setup Unity UWP
         uses: kuler90/setup-unity@v1
         with:

@@ -731,8 +731,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
-  tooltip: Smaller displays may prefer a lower resolution, while larger displays
-    may prefer higher.
+  tooltip: Smaller displays may prefer a lower internal resolution, while larger
+    displays may prefer higher.
   avoidOverlap: 0
   isBelow: 0
 --- !u!1001 &440945639

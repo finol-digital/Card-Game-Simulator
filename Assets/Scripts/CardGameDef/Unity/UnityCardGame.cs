@@ -424,6 +424,7 @@ namespace CardGameDef.Unity
                 enumDef.InitializeLookups();
 
             // The main load action is to load cards and sets
+            CardNames.Clear();
             if (CoroutineRunner != null)
                 CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
             else

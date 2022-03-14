@@ -172,7 +172,7 @@ RectTransform:
   - {fileID: 1040194064564028071}
   - {fileID: 5489046745421019570}
   m_Father: {fileID: 8661135368498000168}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -795,7 +795,7 @@ RectTransform:
   - {fileID: 8661135369251335048}
   - {fileID: 4664577512828430299}
   m_Father: {fileID: 8661135368498000168}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -911,9 +911,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 8227187841470613533}
   - {fileID: 997653154827725589}
   - {fileID: 2551385174690193818}
-  - {fileID: 8227187841470613533}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1484,6 +1484,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4664577512828430299}
     m_Modifications:
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: tooltip
+      value: Edit Name
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1685,6 +1695,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4664577512828430299}
     m_Modifications:
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: tooltip
+      value: Share Room Id
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2115,7 +2135,7 @@ PrefabInstance:
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2431982676814096019, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -2349,12 +2369,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e885b7dcac6cff447a150d9f185e8af7, type: 3}
---- !u!224 &6037041312716342982 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7456223291527984051, guid: e885b7dcac6cff447a150d9f185e8af7,
-    type: 3}
-  m_PrefabInstance: {fileID: 3800530672348837237}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3320351255440006170 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1921475035861756271, guid: e885b7dcac6cff447a150d9f185e8af7,
@@ -2367,6 +2381,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &6037041312716342982 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7456223291527984051, guid: e885b7dcac6cff447a150d9f185e8af7,
+    type: 3}
+  m_PrefabInstance: {fileID: 3800530672348837237}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5320001604781743647
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2827,6 +2847,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4698c1a75d36a640afc1bea8b676ff4, type: 3}
+--- !u!224 &1040194064564028071 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4658356562677211595, guid: f4698c1a75d36a640afc1bea8b676ff4,
+    type: 3}
+  m_PrefabInstance: {fileID: 5677434260969169772}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &929568006857575721 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
@@ -2839,12 +2865,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &1040194064564028071 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4658356562677211595, guid: f4698c1a75d36a640afc1bea8b676ff4,
-    type: 3}
-  m_PrefabInstance: {fileID: 5677434260969169772}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6160729150006634178
 PrefabInstance:
   m_ObjectHideFlags: 0
