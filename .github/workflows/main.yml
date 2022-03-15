@@ -84,11 +84,11 @@ jobs:
             /v:"$VERSION" \
             /d:sonar.login="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io \
-            /d:sonar.exclusions=Assets/Plugins/**,Assets/Mirror/**, \
-            /d:sonar.cpd.exclusions=Assets/Tests/** \
-            /d:sonar.coverage.exclusions=Assets/Tests/** \
-            /d:sonar.cs.nunit.reportsPaths=artifacts/editmode-results.xml,artifacts/playmode-results.xml \
-            /d:sonar.cs.opencover.reportsPaths=artifacts/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,artifacts/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
+            /d:sonar.exclusions=Card-Game-Simulator/Assets/Plugins/**,Card-Game-Simulator/Assets/Mirror/**, \
+            /d:sonar.cpd.exclusions=Card-Game-Simulator/Assets/Tests/** \
+            /d:sonar.coverage.exclusions=Card-Game-Simulator/Assets/Tests/** \
+            /d:sonar.cs.nunit.reportsPaths=Card-Game-Simulator/artifacts/editmode-results.xml,Card-Game-Simulator/artifacts/playmode-results.xml \
+            /d:sonar.cs.opencover.reportsPaths=Card-Game-Simulator/artifacts/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,Card-Game-Simulator/artifacts/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
           dotnet build workspace.sln
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd Card-Game-Simulator
