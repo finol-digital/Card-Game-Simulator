@@ -57,6 +57,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
+          targetPlatform: StandaloneLinux64
           buildMethod: UnityEditor.SyncVS.SyncSolution
           allowDirtyBuild: true
       - name: SonarQube Analysis
