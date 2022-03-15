@@ -57,7 +57,11 @@ jobs:
           customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Activate Unity
-        run: ${{ steps.setup-unity.outputs.unity-path }} -nographics -logFile /dev/stdout -serial ${{ secrets.UNITY_SERIAL }} -username ${{ secrets.UNITY_EMAIL }} -password ${{ secrets.UNITY_PASSWORD }}  -quit
+        uses: kuler90/activate-unity@v1
+        with:
+          unity-username: ${{ secrets.UNITY_USERNAME }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          unity-serial: ${{ secrets.UNITY_SERIAL }}
       - name: Generate Solution
         run: ${{ steps.setup-unity.outputs.unity-path }} -nographics -logFile /dev/stdout -projectPath Card-Game-Simulator -executeMethod  UnityEditor.SyncVS.SyncSolution -quit
       - name: SonarQube Analysis
