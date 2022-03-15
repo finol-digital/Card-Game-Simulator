@@ -71,6 +71,7 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' workspace.sln
           mv workspace.sln ..
           cd ..
+          sudo apt install mono-complete
           dotnet tool install --global dotnet-sonarscanner
           dotnet sonarscanner begin \
             /o:"finol-digital" \
