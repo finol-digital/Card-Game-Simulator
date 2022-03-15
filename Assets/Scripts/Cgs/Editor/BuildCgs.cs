@@ -19,13 +19,6 @@ namespace Cgs.Editor
             {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
 
         [UsedImplicitly]
-        public static void CreateSln()
-        {
-            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
-            BuildOptions();
-        }
-
-        [UsedImplicitly]
         public static void BuildOptions()
         {
             // Gather values from args
