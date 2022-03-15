@@ -67,13 +67,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.solution.outputs.buildVersion }}
         run: |
+          mv Card-Game-Simulator.sln ..
+          cd ..
           dotnet tool install --global dotnet-sonarscanner
           dotnet sonarscanner.msbuild.dll begin \
             /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
-            /v:$VERSION \
-            /d:sonar.verbose=false \
-            /d:sonar.login=$SONAR_TOKEN \
+            /v:"$VERSION" \
+            /d:sonar.login="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io \
             /d:sonar.exclusions=Assets/Plugins/**,Assets/Mirror/**, \
             /d:sonar.cpd.exclusions=Assets/Tests/** \
@@ -82,6 +83,7 @@ jobs:
             /d:sonar.cs.opencover.reportsPaths=artifacts/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,artifacts/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
           dotnet build Card-Game-Simulator.sln
           dotnet sonarscanner.msbuild.dll end /d:sonar.login=$SONAR_TOKEN
+          cd Card-Game-Simulator
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
