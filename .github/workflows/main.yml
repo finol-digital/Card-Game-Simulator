@@ -60,13 +60,23 @@ jobs:
           targetPlatform: StandaloneLinux64
           buildMethod: Cgs.Editor.BuildCgs.CreateSln
           allowDirtyBuild: true
+      - name: Generate Solution 2
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: StandaloneLinux64
+          buildMethod: UnityEditor.SyncVS.SyncSolution
+          allowDirtyBuild: true
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.solution.outputs.buildVersion }}
         run: |
-          ls -l
+          pwd; ls -alh
           sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
           mv Card-Game-Simulator.sln ..
           cd ..
