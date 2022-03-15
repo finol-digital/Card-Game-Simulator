@@ -32,6 +32,7 @@ jobs:
           lfs: true
           fetch-depth: 0
       - name: Setup Unity
+        id: setup-unity
         uses: kuler90/setup-unity@v1
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
@@ -52,7 +53,7 @@ jobs:
         with:
           customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Generate Solution 
+      - name: Generate Solution
         id: solution
         uses: game-ci/unity-builder@main
         env:
@@ -65,7 +66,7 @@ jobs:
           allowDirtyBuild: true
       - name: SonarQube Analysis
         env:
-          FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
+          FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.solution.outputs.buildVersion }}
