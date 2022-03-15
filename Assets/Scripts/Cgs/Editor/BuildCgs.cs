@@ -21,6 +21,7 @@ namespace Cgs.Editor
         [UsedImplicitly]
         public static void CreateSln()
         {
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
             EditorApplication.ExecuteMenuItem("Assets/Open C# Project");
         }
 
