@@ -59,18 +59,18 @@ jobs:
         with:
           buildMethod: UnityEditor.SyncVS.SyncSolution
           allowDirtyBuild: true
-      - name: Fix .csproj
-        run: sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.solution.outputs.buildVersion }}
         run: |
+          ls -l
+          sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
           mv Card-Game-Simulator.sln ..
           cd ..
           dotnet tool install --global dotnet-sonarscanner
-          dotnet sonarscanner.msbuild.dll begin \
+          dotnet sonarscanner begin \
             /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
             /v:"$VERSION" \
@@ -82,7 +82,7 @@ jobs:
             /d:sonar.cs.nunit.reportsPaths=artifacts/editmode-results.xml,artifacts/playmode-results.xml \
             /d:sonar.cs.opencover.reportsPaths=artifacts/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,artifacts/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
           dotnet build Card-Game-Simulator.sln
-          dotnet sonarscanner.msbuild.dll end /d:sonar.login=$SONAR_TOKEN
+          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd Card-Game-Simulator
       - name: Update Release Notes
         if: github.event.action == 'published'
