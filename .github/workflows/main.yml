@@ -58,7 +58,7 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           targetPlatform: StandaloneLinux64
-          buildMethod: UnityEditor.SyncVS.SyncSolution
+          buildMethod: Cgs.Editor.BuildCgs.CreateSln
           allowDirtyBuild: true
       - name: SonarQube Analysis
         env:
