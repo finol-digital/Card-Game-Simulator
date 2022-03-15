@@ -68,7 +68,7 @@ jobs:
         run: |
           pwd; ls -alh
           sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
-          sed -i 's/\([A-Za-z0-9\-.]\+csproj\)/Card-Game-Simulator\/&/g' workspace.sln
+          sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' workspace.sln
           mv workspace.sln ..
           cd ..
           dotnet tool install --global dotnet-sonarscanner
