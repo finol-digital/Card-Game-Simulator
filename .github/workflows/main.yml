@@ -29,6 +29,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
+          fetch-depth: 0
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
       - name: Cache Library
         uses: actions/cache@v2
         with:
@@ -45,6 +50,7 @@ jobs:
           customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate Solution
+        id: solution
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -59,11 +65,13 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.solution.outputs.buildVersion }}
         run: |
           dotnet tool install --global dotnet-sonarscanner
           dotnet tool run dotnet-sonarscanner begin \
-            /o:"davidmfinol" \
+            /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
+            /v:$VERSION \
             /d:sonar.verbose=false \
             /d:sonar.login=$SONAR_TOKEN \
             /d:sonar.host.url=https://sonarcloud.io \
