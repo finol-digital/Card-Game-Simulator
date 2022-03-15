@@ -59,7 +59,7 @@ jobs:
       - name: Activate Unity
         uses: kuler90/activate-unity@v1
         with:
-          unity-username: ${{ secrets.UNITY_USERNAME }}
+          unity-username: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
       - name: Generate Solution
