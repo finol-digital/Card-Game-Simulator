@@ -65,7 +65,7 @@ jobs:
           allowDirtyBuild: true
       - name: SonarQube Analysis
         env:
-          FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/Data/MonoBleedingEdge/
+          FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.solution.outputs.buildVersion }}
