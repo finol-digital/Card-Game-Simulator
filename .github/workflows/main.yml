@@ -57,7 +57,9 @@ jobs:
           customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Generate Solution
-        run: ${{ steps.setup-unity.outputs.unity-path }} -nographics -logFile /dev/stdout -projectPath Card-Game-Simulator -executeMethod  UnityEditor.SyncVS.SyncSolution -quit
+        run: |
+          ${{ steps.setup-unity.outputs.unity-path }} -nographics -logFile /dev/stdout -projectPath Card-Game-Simulator -executeMethod  UnityEditor.SyncVS.SyncSolution \
+          -username ${{ secrets.UNITY_EMAIL }} -password ${{ secrets.UNITY_PASSWORD }} -serial ${{ secrets.UNITY_SERIAL }} -quit
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
