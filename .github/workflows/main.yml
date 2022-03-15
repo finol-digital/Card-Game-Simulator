@@ -7,6 +7,7 @@ on:
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
+  pull_request: {}
   release:
     types:
       - published
@@ -41,7 +42,29 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
+          customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fix .csproj
+        run: sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
+      - name: SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool run dotnet-sonarscanner begin \
+            /o:"davidmfinol" \
+            /k:"finol-digital_Card-Game-Simulator" \
+            /d:sonar.verbose=false \
+            /d:sonar.login=$SONAR_TOKEN \
+            /d:sonar.host.url=https://sonarcloud.io \
+            /d:sonar.exclusions=Assets/Plugins/**,Assets/Mirror/**, \
+            /d:sonar.cpd.exclusions=Assets/Tests/** \
+            /d:sonar.coverage.exclusions=Assets/Tests/** \
+            /d:sonar.cs.nunit.reportsPaths=artifacts/editmode-results.xml,artifacts/playmode-results.xml \
+            /d:sonar.cs.opencover.reportsPaths=artifacts/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,artifacts/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
+          dotnet build Card-Game-Simulator.sln
+          dotnet tool run dotnet-sonarscanner end /d:sonar.login=$SONAR_TOKEN
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
@@ -603,4 +626,22 @@ jobs:
           consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
           consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
           access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }} 
+
+  lint:
+    needs: tests
+    name: Lint Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Generate Solution
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          buildMethod: UnityEditor.SyncVS.SyncSolution
