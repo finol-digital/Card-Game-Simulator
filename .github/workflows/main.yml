@@ -24,12 +24,15 @@ jobs:
   tests:
     name: Test Code Quality
     runs-on: ubuntu-latest
+    container: unityci/editor:ubuntu-2020.3.30f1-base-0
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           lfs: true
           fetch-depth: 0
+      - name: Setup Unity
+        uses: kuler90/setup-unity@v1
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -62,6 +65,7 @@ jobs:
           allowDirtyBuild: true
       - name: SonarQube Analysis
         env:
+          FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.solution.outputs.buildVersion }}
@@ -71,7 +75,8 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' workspace.sln
           mv workspace.sln ..
           cd ..
-          sudo apt install mono-complete
+          apt update
+          apt install -y openjdk-11-jre-headless
           dotnet tool install --global dotnet-sonarscanner
           dotnet sonarscanner begin \
             /o:"finol-digital" \
