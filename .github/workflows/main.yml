@@ -44,6 +44,15 @@ jobs:
         with:
           customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: UnityEditor.SyncVS.SyncSolution
       - name: Fix .csproj
         run: sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
       - name: SonarQube Analysis
