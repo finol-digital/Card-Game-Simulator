@@ -52,6 +52,7 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           buildMethod: UnityEditor.SyncVS.SyncSolution
+          allowDirty: true
       - name: Fix .csproj
         run: sed -i 's/<ReferenceOutputAssembly>false<\/ReferenceOutputAssembly>/<ReferenceOutputAssembly>true<\/ReferenceOutputAssembly>/g' *.csproj
       - name: SonarQube Analysis
