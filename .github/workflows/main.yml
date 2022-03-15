@@ -68,7 +68,7 @@ jobs:
           VERSION: ${{ steps.solution.outputs.buildVersion }}
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          dotnet tool run dotnet-sonarscanner begin \
+          dotnet sonarscanner.msbuild.dll begin \
             /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
             /v:$VERSION \
@@ -81,7 +81,7 @@ jobs:
             /d:sonar.cs.nunit.reportsPaths=artifacts/editmode-results.xml,artifacts/playmode-results.xml \
             /d:sonar.cs.opencover.reportsPaths=artifacts/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,artifacts/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
           dotnet build Card-Game-Simulator.sln
-          dotnet tool run dotnet-sonarscanner end /d:sonar.login=$SONAR_TOKEN
+          dotnet sonarscanner.msbuild.dll end /d:sonar.login=$SONAR_TOKEN
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
