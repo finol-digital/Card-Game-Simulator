@@ -24,7 +24,6 @@ jobs:
   tests:
     name: Test Code Quality
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-2020.3.30f1-base-0
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
