@@ -1,4 +1,4 @@
-name: Test, Build, and Release CGS
+name: Test, Build, and Deploy with GameCI
 on:
   push:
     branches:
@@ -304,8 +304,8 @@ jobs:
           overwrite: true
           body: ${{ github.event.release.body }}
 
-  releaseToGooglePlay:
-    name: Release to the Google Play Store
+  deployToGooglePlay:
+    name: Deploy to the Google Play Store
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
@@ -341,8 +341,8 @@ jobs:
         with:
           lane: 'android playprod'
 
-  releaseToAppStore:
-    name: Release to the App Store
+  deployToAppStore:
+    name: Deploy to the App Store
     runs-on: macos-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
@@ -381,8 +381,8 @@ jobs:
           bundle install
           bundle exec fastlane ios release
 
-  releaseToGitHubPages:
-    name: Release to the Web via GitHub Pages
+  deployToGitHubPages:
+    name: Deploy to the Web via GitHub Pages
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
@@ -406,8 +406,8 @@ jobs:
           file_pattern: docs/**
           commit_message: Deploy to GitHub Pages
 
-  releaseToMicrosoftStore:
-    name: Release to the Microsoft Store
+  deployToMicrosoftStore:
+    name: Deploy to the Microsoft Store
     runs-on: windows-2019
     needs: buildWithWindows
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
@@ -524,7 +524,7 @@ jobs:
           New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
-  releaseToMacAppStore:
+  deployToMacAppStore:
     name: Release to the Mac App Store
     runs-on: macos-latest
     needs: buildWithMac
@@ -558,8 +558,8 @@ jobs:
           bundle install
           bundle exec fastlane mac macupload
 
-  releaseToSteam:
-    name: Release to Steam
+  deployToSteam:
+    name: Deploy to Steam
     runs-on: ubuntu-latest
     needs: [buildWithLinux, buildWithWindows, buildWithMac]
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
@@ -613,7 +613,8 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [releaseToGooglePlay, releaseToAppStore, releaseToGitHubPages, releaseToMicrosoftStore, releaseToMacAppStore, releaseToSteam]
+    needs: [deployToGooglePlay, deployToAppStore, deployToGitHubPages, deployToMicrosoftStore, deployToMacAppStore, deployToSteam]
+    if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2

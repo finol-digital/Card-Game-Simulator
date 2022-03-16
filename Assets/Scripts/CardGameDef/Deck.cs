@@ -61,7 +61,7 @@ namespace CardGameDef
             var cardCounts = new Dictionary<Card, int>();
             foreach (var card in Cards)
             {
-                cardCounts.TryGetValue(card, out int currentCount);
+                cardCounts.TryGetValue(card, out var currentCount);
                 currentCount++;
                 cardCounts[card] = currentCount;
             }
@@ -74,19 +74,19 @@ namespace CardGameDef
             var extraGroups = new Dictionary<string, List<Card>>();
             foreach (var card in Cards)
             {
-                foreach (var groupName in from extraDef in SourceGame.Extras
-                         where SourceGame.IsEnumProperty(extraDef.Property)
-                             ? card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
-                             : card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)
-                         select !string.IsNullOrEmpty(extraDef.Group)
-                             ? extraDef.Group
-                             : ExtraDef.DefaultExtraGroup)
-                {
-                    if (!extraGroups.ContainsKey(groupName))
-                        extraGroups[groupName] = new List<Card>();
-                    extraGroups[groupName].Add(card);
-                    break;
-                }
+                var applicableExtraGroups = from extraDef in SourceGame.Extras
+                    where SourceGame.IsEnumProperty(extraDef.Property)
+                        ? card.GetPropertyValueString(extraDef.Property).Contains(extraDef.Value)
+                        : card.GetPropertyValueString(extraDef.Property).Equals(extraDef.Value)
+                    select !string.IsNullOrEmpty(extraDef.Group)
+                        ? extraDef.Group
+                        : ExtraDef.DefaultExtraGroup;
+                var cardExtraGroup = applicableExtraGroups.FirstOrDefault();
+                if (string.IsNullOrEmpty(cardExtraGroup))
+                    continue;
+                if (!extraGroups.ContainsKey(cardExtraGroup))
+                    extraGroups[cardExtraGroup] = new List<Card>();
+                extraGroups[cardExtraGroup].Add(card);
             }
 
             return extraGroups;
