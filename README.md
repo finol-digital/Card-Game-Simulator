@@ -18,7 +18,7 @@ For additional resources, see: https://drive.google.com/open?id=1kVms-_CXRw1e4Ob
 
 Built with [Unity](https://unity.com/)
 
-To build and run the project, you just need to clone the repo and run it in Unity, available from https://unity3d.com/get-unity/download
+To build and run the project, you just need to clone the repo and run it in Unity, available from https://unity.com/download
 
 ## Contributing
 
