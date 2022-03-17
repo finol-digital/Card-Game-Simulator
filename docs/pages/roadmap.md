@@ -11,11 +11,11 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Accessibility: New how-to videos
+- Tech: Code Coverage
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
-- Bug-Fix: Add error message if imported single card is wrong image type
-- Bug-Fix: Sometimes cards do not go onto top of deck
 - Bug-Fix: Share on Android
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
+
 
 ## Backlog
 - Game-Play: Snap to Grid in Play Area

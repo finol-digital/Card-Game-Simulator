@@ -172,6 +172,10 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void StartImport()
         {
+            if (CardImageUri != null && !CardImageUri.AbsoluteUri.EndsWith(CardGameManager.Current.CardImageFileType))
+                CardGameManager.Instance.Messenger.Show(
+                    "WARNING!: Image file type does not match " + CardGameManager.Current.CardImageFileType, true);
+
             StartCoroutine(ImportCard());
         }
 

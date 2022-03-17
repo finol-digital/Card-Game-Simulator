@@ -98,7 +98,7 @@ namespace Cgs.UI
 
         public void Show()
         {
-            if (Settings.ButtonInfoEnabled)
+            if (Settings.ButtonTooltipsEnabled)
                 ToolTipCanvasGroup.alpha = 1;
         }
 

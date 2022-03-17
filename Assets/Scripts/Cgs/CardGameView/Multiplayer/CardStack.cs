@@ -152,7 +152,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            if (Settings.ViewInfoOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
+            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
                 && PlayableViewer.Instance != null && !PlayableViewer.Instance.IsVisible)
                 PlayableViewer.Instance.Preview(this);
         }

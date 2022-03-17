@@ -94,6 +94,7 @@ namespace Cgs.UI.ScrollRects
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            _canvasGroup.alpha = 1;
             if (eventData.pointerDrag == null)
                 return;
 
