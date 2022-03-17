@@ -14,7 +14,8 @@ permalink: roadmap.html
 - Tech: Code Coverage
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
 - Bug-Fix: Share on Android
-- Bug-Fix: Freeze in Multiplayer Lobby on Android client
+- Bug-Fix: Freeze in Multiplayer Lobby on Android client]
+- Drop card onto drawer
 
 
 ## Backlog

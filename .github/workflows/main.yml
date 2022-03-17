@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           lfs: true
           fetch-depth: 0
@@ -129,7 +129,7 @@ jobs:
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           df -h
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
@@ -191,7 +191,7 @@ jobs:
           - WSAPlayer
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
@@ -240,7 +240,7 @@ jobs:
     needs: buildWithLinux
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
@@ -311,7 +311,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Download Android Artifact
         uses: actions/download-artifact@v2
         with:
@@ -348,7 +348,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Download iOS Artifact
         uses: actions/download-artifact@v2
         with:
@@ -388,7 +388,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v2
         with:
@@ -413,9 +413,9 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 2
       - name: Get Version
         id: versioning
         uses: paulhatch/semantic-version@v4.0.2
@@ -531,7 +531,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Download iOS Artifact
         uses: actions/download-artifact@v2
         with:
@@ -565,7 +565,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Get Version
@@ -617,7 +617,7 @@ jobs:
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Get Version
