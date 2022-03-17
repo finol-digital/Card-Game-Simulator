@@ -36,15 +36,6 @@ jobs:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
-      - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@main
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup dotnet for SonarQube
         uses: actions/setup-dotnet@v1
         with:
@@ -64,6 +55,15 @@ jobs:
           unity-serial: ${{ secrets.UNITY_SERIAL }}
       - name: Generate Solution for SonarQube
         run: xvfb-run -ae /dev/stdout ${{ steps.setup-unity.outputs.unity-path }} -batchmode -logFile /dev/stdout -quit -customBuildName Card-Game-Simulator -projectPath . -executeMethod  UnityEditor.SyncVS.SyncSolution
+      - name: Run Unit Tests
+        uses: game-ci/unity-test-runner@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
