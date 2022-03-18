@@ -15,10 +15,10 @@ permalink: roadmap.html
 - Tech: Code Coverage
 
 ## Backlog
+- Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Button for max zoom out
 - Game-Play: Click outside card stack viewer to close it
-- Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Support multiple card selection
 - Game-Play: Color the default card action green

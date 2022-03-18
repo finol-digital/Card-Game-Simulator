@@ -148,26 +148,28 @@ namespace Cgs.Play.Drawer
         {
             for (var i = 0; i < cardZoneRectTransforms.Count; i++)
                 cardZoneRectTransforms[i].gameObject.SetActive(i == tabIndex);
-            CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
 
             var cardZone = cardZoneRectTransforms[tabIndex].GetComponentInChildren<CardZone>();
             var localCardIds = cardZone.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Id).ToList();
-            var serverCards = CgsNetManager.Instance.LocalPlayer.HandCards[tabIndex];
-            var serverCardIds = serverCards.Select(unityCard => unityCard.Id).ToList();
-
-            if (!localCardIds.SequenceEqual(serverCardIds))
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
             {
-                cardZone.transform.DestroyAllChildren();
-                foreach (var unityCard in serverCards)
+                CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
+                var serverCards = CgsNetManager.Instance.LocalPlayer.HandCards[tabIndex];
+                var serverCardIds = serverCards.Select(unityCard => unityCard.Id).ToList();
+                if (!localCardIds.SequenceEqual(serverCardIds))
                 {
-                    var cardModel = Instantiate(viewer.cardModelPrefab, cardZone.transform)
-                        .GetOrAddComponent<CardModel>();
-                    cardModel.Value = unityCard;
-                    var cardTransform = cardModel.transform;
-                    cardTransform.SetAsFirstSibling();
-                    cardTransform.rotation = Quaternion.identity;
-                    cardModel.IsFacedown = false;
-                    cardModel.DefaultAction = CardActions.Flip;
+                    cardZone.transform.DestroyAllChildren();
+                    foreach (var unityCard in serverCards)
+                    {
+                        var cardModel = Instantiate(viewer.cardModelPrefab, cardZone.transform)
+                            .GetOrAddComponent<CardModel>();
+                        cardModel.Value = unityCard;
+                        var cardTransform = cardModel.transform;
+                        cardTransform.SetAsFirstSibling();
+                        cardTransform.rotation = Quaternion.identity;
+                        cardModel.IsFacedown = false;
+                        cardModel.DefaultAction = CardActions.Flip;
+                    }
                 }
             }
 
