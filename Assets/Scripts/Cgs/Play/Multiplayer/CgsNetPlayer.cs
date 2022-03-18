@@ -60,6 +60,7 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.playController.ShowDeckMenu();
             else
                 RequestCardGameSelection();
+
             Debug.Log("[CgsNet Player] Started local player!");
         }
 
@@ -73,7 +74,6 @@ namespace Cgs.Play.Multiplayer
         private void CmdSelectCardGame()
         {
             Debug.Log("[CgsNet Player] Sending game id...");
-            Points = CardGameManager.Current.GameStartPointsCount;
             TargetSelectCardGame(CardGameManager.Current.Id, CardGameManager.Current.AutoUpdateUrl?.OriginalString);
         }
 

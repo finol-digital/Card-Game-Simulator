@@ -189,6 +189,7 @@ namespace Cgs.Play
                 CardGameManager.Current.PlayMatSize.Y);
             rectTransform.sizeDelta = size * CardGameManager.PixelsPerInch;
             playMat.GetComponent<Image>().sprite = CardGameManager.Current.PlayMatImageSprite;
+            scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
         }
 
         public void ShowDeckMenu()
