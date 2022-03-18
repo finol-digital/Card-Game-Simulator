@@ -4,22 +4,17 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.70
-- Accessibility: Match card stack and dice view to the card view
-- Accessibility: Preview cards, stacks, and dice on hover
-- Game-Play: Create dice with 6 faces; use viewer to modify it
+## What's New - v1.71
+- New How-To Videos
+- Various Bug Fixes
 
 ## Active Sprint
-- Accessibility: New how-to videos
-- Tech: Code Coverage
+- Game-Play: Snap to Grid in Play Area
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
-- Bug-Fix: Share on Android
-- Drop card onto drawer
-
+- Tech: Code Coverage
 
 ## Backlog
-- Game-Play: Snap to Grid in Play Area
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Button for max zoom out
 - Game-Play: Click outside card stack viewer to close it

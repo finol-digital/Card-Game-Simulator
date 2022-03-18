@@ -38,7 +38,7 @@ platform :ios do
       storage_mode: 'git',
       git_url: ENV['MATCH_URL'],
       git_basic_authorization: Base64.strict_encode64("#{ENV['APPLE_CONNECT_EMAIL']}:#{ENV['MATCH_PERSONAL_ACCESS_TOKEN']}"),
-      app_identifier: ENV['IOS_APP_ID']
+      app_identifier: ENV['IOS_BUNDLE_ID']
     )
     update_code_signing_settings(
       use_automatic_signing: true,
@@ -46,12 +46,12 @@ platform :ios do
     )
     update_code_signing_settings(
       use_automatic_signing: false,
-      team_id: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_team-id"],
+      team_id: ENV["sigh_#{ENV['IOS_BUNDLE_ID']}_appstore_team-id"],
       code_sign_identity: 'iPhone Distribution',
       targets: 'Unity-iPhone',
       path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj",
-      profile_name: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore_profile-name"],
-      profile_uuid: ENV["sigh_#{ENV['IOS_APP_ID']}_appstore"]
+      profile_name: ENV["sigh_#{ENV['IOS_BUNDLE_ID']}_appstore_profile-name"],
+      profile_uuid: ENV["sigh_#{ENV['IOS_BUNDLE_ID']}_appstore"]
     )
     cocoapods(
       clean_install: false,

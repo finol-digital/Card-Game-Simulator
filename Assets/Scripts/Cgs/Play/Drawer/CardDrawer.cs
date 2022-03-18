@@ -12,6 +12,7 @@ using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Play.Drawer
 {
@@ -58,6 +59,7 @@ namespace Cgs.Play.Drawer
             _nameTexts.Add(handNameText);
             _countTexts.Add(handCountText);
 
+            _toggles[0].GetComponent<CardDropArea>().Index = 0;
             _toggles[0].onValueChanged.AddListener(isOn =>
             {
                 if (isOn)
@@ -124,14 +126,19 @@ namespace Cgs.Play.Drawer
 
             tabTemplate.drawerHandle.cardDrawer = this;
 
+            var tabCardDropArea = _toggles[tabIndex].GetComponent<CardDropArea>();
+            tabCardDropArea.DropHandler = viewer;
+            tabCardDropArea.Index = tabIndex;
+            viewer.drops.Add(tabCardDropArea);
+
             var cardZoneRectTransform = (RectTransform) Instantiate(cardZonePrefab, cardZonesRectTransform).transform;
             var cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
             cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
             cardZoneRectTransforms.Add(cardZoneRectTransform);
 
-            var cardDropArea = cardZoneRectTransform.GetComponent<CardDropArea>();
-            cardDropArea.DropHandler = viewer;
-            viewer.drops.Add(cardDropArea);
+            var cardZoneCardDropArea = cardZoneRectTransform.GetComponent<CardDropArea>();
+            cardZoneCardDropArea.DropHandler = viewer;
+            viewer.drops.Add(cardZoneCardDropArea);
 
             CgsNetManager.Instance.LocalPlayer.RequestNewHand(DefaultDrawerName);
         }
@@ -142,19 +149,34 @@ namespace Cgs.Play.Drawer
             for (var i = 0; i < cardZoneRectTransforms.Count; i++)
                 cardZoneRectTransforms[i].gameObject.SetActive(i == tabIndex);
             CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
+
             var cardZone = cardZoneRectTransforms[tabIndex].GetComponentInChildren<CardZone>();
-            viewer.Sync(tabIndex, cardZone,
-                _nameTexts[tabIndex], _countTexts[tabIndex]);
-            SyncNetwork(cardZone.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Id).ToArray());
+            var localCardIds = cardZone.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Id).ToList();
+            var serverCards = CgsNetManager.Instance.LocalPlayer.HandCards[tabIndex];
+            var serverCardIds = serverCards.Select(unityCard => unityCard.Id).ToList();
+
+            if (!localCardIds.SequenceEqual(serverCardIds))
+            {
+                cardZone.transform.DestroyAllChildren();
+                foreach (var unityCard in serverCards)
+                {
+                    var cardModel = Instantiate(viewer.cardModelPrefab, cardZone.transform)
+                        .GetOrAddComponent<CardModel>();
+                    cardModel.Value = unityCard;
+                    var cardTransform = cardModel.transform;
+                    cardTransform.SetAsFirstSibling();
+                    cardTransform.rotation = Quaternion.identity;
+                    cardModel.IsFacedown = false;
+                    cardModel.DefaultAction = CardActions.Flip;
+                }
+            }
+
+            viewer.Sync(tabIndex, cardZone, _nameTexts[tabIndex], _countTexts[tabIndex]);
         }
 
-        private static void SyncNetwork(string[] cardIds)
+        public void SyncHand(int handIndex, string[] cardIds)
         {
-            if (!CgsNetManager.Instance.isNetworkActive || CgsNetManager.Instance.LocalPlayer == null)
-                return;
-
-            var index = CgsNetManager.Instance.LocalPlayer.CurrentHand;
-            CgsNetManager.Instance.LocalPlayer.RequestSyncHand(index, cardIds);
+            _countTexts[handIndex].text = cardIds.Length.ToString();
         }
 
         public void Clear()

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5731612820041499258}
   - component: {fileID: 5508083173256874553}
+  - component: {fileID: 7249797241551894050}
   m_Layer: 5
   m_Name: Hand Tab
   m_TagString: Untagged
@@ -86,6 +87,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!114 &7249797241551894050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156274460941876991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBlocker: 1
 --- !u!1 &296699903980624543
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +112,7 @@ GameObject:
   - component: {fileID: 6385166982977569535}
   - component: {fileID: 5232481029855442035}
   - component: {fileID: 6028831546910974512}
+  - component: {fileID: 1933028636379126538}
   m_Layer: 5
   m_Name: CardDrawer Handle
   m_TagString: Untagged
@@ -176,6 +191,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardDrawer: {fileID: 3475859695529778837}
   offsetHeight: 0
+--- !u!114 &1933028636379126538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296699903980624543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBlocker: 1
 --- !u!1 &443291896729396978
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,8 +424,7 @@ GameObject:
   - component: {fileID: 3475859695529778833}
   - component: {fileID: 3475859695529778832}
   - component: {fileID: 3475859695529778837}
-  - component: {fileID: 1098799366171000606}
-  - component: {fileID: 5966199503739119134}
+  - component: {fileID: 2478768440402080412}
   m_Layer: 5
   m_Name: Card Drawer
   m_TagString: Untagged
@@ -479,7 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ea7c0c6bbc13944bae17f491fe8b58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewer: {fileID: 1098799366171000606}
+  viewer: {fileID: 2478768440402080412}
   downButton: {fileID: 1871971257440497774}
   upButton: {fileID: 5712793710300922022}
   panelRectTransform: {fileID: 3475859695529778835}
@@ -494,7 +521,7 @@ MonoBehaviour:
     type: 3}
   cardZonePrefab: {fileID: 1142628642874478386, guid: 83a70ade3a5017c489cdc866aabcb972,
     type: 3}
---- !u!114 &1098799366171000606
+--- !u!114 &2478768440402080412
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -503,31 +530,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 3475859695529778834}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da0cc102d19b7684f84e390aa28941a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 0db69f67991b4a545aeb0200b0fa1723, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   cardZoneTransform: {fileID: 2398153831763885075}
   drops:
-  - {fileID: 5966199503739119134}
+  - {fileID: 1933028636379126538}
+  - {fileID: 4395455572271736059}
   - {fileID: 2579611708363832797}
+  - {fileID: 7249797241551894050}
   contentCardZone: {fileID: 2576783282754660735}
   nameLabel: {fileID: 5810782456423762137}
   countLabel: {fileID: 5810782454670843981}
---- !u!114 &5966199503739119134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3475859695529778834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isBlocker: 1
 --- !u!1 &3983014160469541490
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,6 +629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6505893261598143532}
   - component: {fileID: 4376115802589409653}
+  - component: {fileID: 4395455572271736059}
   m_Layer: 5
   m_Name: CardDrawer Handle Buttons
   m_TagString: Untagged
@@ -667,6 +684,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &4395455572271736059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4987143733186916445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBlocker: 1
 --- !u!1 &5389552466019431720
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,12 +1478,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb9a84c1b0b6d25479b907acb118cde9, type: 3}
---- !u!224 &2776591115319594238 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1636166841839465175, guid: eb9a84c1b0b6d25479b907acb118cde9,
-    type: 3}
-  m_PrefabInstance: {fileID: 3475859696487530025}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5810782456423762137 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6960506880217691888, guid: eb9a84c1b0b6d25479b907acb118cde9,
@@ -1466,6 +1490,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &2776591115319594238 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1636166841839465175, guid: eb9a84c1b0b6d25479b907acb118cde9,
+    type: 3}
+  m_PrefabInstance: {fileID: 3475859696487530025}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5086677941932483486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1605,6 +1635,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86a2b588a71aa914e9e8545728c3160c, type: 3}
+--- !u!224 &2398153831763885075 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7480609374066728845, guid: 86a2b588a71aa914e9e8545728c3160c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5086677941932483486}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2579611708363832797 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7303463712823025219, guid: 86a2b588a71aa914e9e8545728c3160c,
@@ -1629,12 +1665,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31afb6b7aa57adc4d905221f62e956a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &2398153831763885075 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7480609374066728845, guid: 86a2b588a71aa914e9e8545728c3160c,
-    type: 3}
-  m_PrefabInstance: {fileID: 5086677941932483486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8968796215011926450
 PrefabInstance:
   m_ObjectHideFlags: 0

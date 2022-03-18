@@ -366,7 +366,7 @@ namespace Cgs.Play.Multiplayer
         [Command]
         private void CmdSyncHand(int handIndex, string[] cardIds)
         {
-            Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds.Length}!");
+            Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds.Length} cards on Server!");
             if (handIndex < 0 || handIndex >= _handCards.Count)
             {
                 Debug.LogError($"[CgsNet Player] {handIndex} is out of bounds of {_handCards.Count}");
@@ -374,6 +374,15 @@ namespace Cgs.Play.Multiplayer
             }
 
             _handCards[handIndex] = cardIds;
+            TargetSyncHand(handIndex, cardIds);
+        }
+
+        [TargetRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void TargetSyncHand(int handIndex, string[] cardIds)
+        {
+            Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds.Length} cards on client!");
+            CgsNetManager.Instance.playController.drawer.SyncHand(handIndex, cardIds);
         }
 
         #endregion

@@ -1276,7 +1276,7 @@ MonoBehaviour:
   - {fileID: 1232275701}
   - {fileID: 1323445182}
   - {fileID: 766251267}
-  drawer: {fileID: 8986865417088439884}
+  drawer: {fileID: 1921030143}
   menu: {fileID: 866348971}
   scoreboard: {fileID: 866348970}
 --- !u!114 &709840749
@@ -3217,6 +3217,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c8f698bdb10af641a0fdff4f6f16781, type: 3}
+--- !u!114 &1921030143 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3475859695529778837, guid: 73eb2297a0629694bbe390c58d10e332,
+    type: 3}
+  m_PrefabInstance: {fileID: 5515635765027719385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3ea7c0c6bbc13944bae17f491fe8b58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1927297045
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4187,15 +4199,3 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5515635765027719385}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8986865417088439884 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3475859695529778837, guid: 73eb2297a0629694bbe390c58d10e332,
-    type: 3}
-  m_PrefabInstance: {fileID: 5515635765027719385}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3ea7c0c6bbc13944bae17f491fe8b58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
