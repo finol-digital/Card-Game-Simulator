@@ -1,3 +1,1 @@
-- Accessibility: Match card stack and dice view to the card view
-- Accessibility: Preview cards, stacks, and dice on hover
-- Game-Play: Create dice with 6 faces; use viewer to modify it
+- Various Bug Fixes
