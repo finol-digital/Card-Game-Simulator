@@ -98,7 +98,7 @@ namespace Cgs.Menu
             hideReprintsToggle.isOn = HideReprints;
             developerModeToggle.isOn = DeveloperMode;
 #if !UNITY_ANDROID && !UNITY_IOS
-            foreach (Transform option in orientationOptions)
+            foreach (var option in orientationOptions)
                 option.gameObject.SetActive(false);
 #endif
         }
