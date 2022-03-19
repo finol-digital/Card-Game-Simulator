@@ -18,6 +18,7 @@ permalink: roadmap.html
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Button for max zoom out
 - Game-Play: Click outside card stack viewer to close it
+- Game-Play: Cut and merge stacks
 - Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Support multiple card selection
 - Game-Play: Color the default card action green
