@@ -447,7 +447,6 @@ jobs:
         with:
           unity-modules: universal-windows-platform
       - name: Setup Developer Command Prompt for Microsoft Visual C++
-        working-directory: C:/Card-Game-Simulator.git
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
         working-directory: C:/Card-Game-Simulator.git
