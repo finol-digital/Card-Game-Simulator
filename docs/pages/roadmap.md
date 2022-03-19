@@ -4,13 +4,12 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.71
-- Various Bug Fixes
+## What's New - v1.72
+- Accessibility: New How-To-Play Videos
+- Bug-Fix: Cards dissappearing and duplicating in multiplayer
 
 ## Active Sprint
-- Accessibility: New How-To Videos
 - Game-Play: Snap to Grid in Play Area
-- Bug-Fix: Cards dissappearing and duplicating in multiplayer
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
 - Tech: Code Coverage
 

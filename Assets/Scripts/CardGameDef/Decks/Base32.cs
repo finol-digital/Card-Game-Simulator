@@ -117,9 +117,7 @@ namespace CardGameDef.Decks
 
             // We'll ignore leftover bits for now.
             //
-            // if (next != outLength || bitsLeft >= SHIFT) {
-            //  throw new DecodingException("Bits left: " + bitsLeft);
-            // }
+            // *Commented out code removed*
             return result;
         }
 

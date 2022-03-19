@@ -48,7 +48,7 @@ namespace CardGameDef.Decks
             List<byte> byteList = bytes.ToList();
 
             //grab format and version
-            //int format = bytes[0] >> 4;
+            //*commented code removed*
             int version = bytes[0] & 0xF;
             byteList.RemoveAt(0);
 
