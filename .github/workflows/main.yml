@@ -7,7 +7,16 @@ on:
       - 'Assets/**'
       - 'Packages/**'
       - 'ProjectSettings/**'
-  pull_request: {}
+  pull_request:
+    types:
+      - opened
+    branches:    
+      - develop
+      - main
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
   release:
     types:
       - published
