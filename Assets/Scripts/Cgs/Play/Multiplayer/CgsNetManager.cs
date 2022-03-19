@@ -71,9 +71,9 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] Server adding player...");
         }
 
-        public override void OnClientConnect(NetworkConnection connection)
+        public override void OnClientConnect(NetworkConnection conn)
         {
-            base.OnClientConnect(connection);
+            base.OnClientConnect(conn);
             Debug.Log("[CgsNet Manager] Client connected!");
         }
 

@@ -52,7 +52,8 @@ jobs:
       - name: Set up JDK 11 for SonarQube
         uses: actions/setup-java@v3
         with:
-          java-version: 1.11
+          distribution: 'zulu'
+          java-version: 11
       - name: Setup Unity for SonarQube
         id: setup-unity
         uses: kuler90/setup-unity@v1
