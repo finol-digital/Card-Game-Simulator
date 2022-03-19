@@ -17,7 +17,7 @@ for_platform :ios do
 end
 
 for_platform :mac do
-  app_identifier(ENV['MAC_APP_ID'])
+  app_identifier(ENV['MAC_BUNDLE_ID'])
 
   apple_dev_portal_id(ENV['APPLE_DEVELOPER_EMAIL'])  # Apple Developer Account
   itunes_connect_id(ENV['APPLE_CONNECT_EMAIL'])     # App Store Connect Account

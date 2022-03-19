@@ -28,8 +28,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          lfs: true
           fetch-depth: 0
+          lfs: true
       - name: Cache Library
         uses: actions/cache@v2
         with:
@@ -116,6 +116,8 @@ jobs:
           - iOS
           - StandaloneLinux64
           - WebGL
+    outputs:
+      buildVersion: ${{ steps.build.outputs.buildVersion }}
     steps:
       - name: Free Disk Space for Android
         if: matrix.targetPlatform == 'Android'
@@ -141,6 +143,7 @@ jobs:
             Library-build-${{ matrix.targetPlatform }}-
             Library-build-
       - name: Build Unity Project
+        id: build
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -415,13 +418,7 @@ jobs:
       - name: Checkout Card-Game-Simulator
         run: |
           mkdir C:/Card-Game-Simulator.git
-          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git
-      - name: Get Version
-        working-directory: C:/Card-Game-Simulator.git
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
-        with:
-          bump_each_commit: true
+          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --depth 1
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -451,8 +448,9 @@ jobs:
         uses: kuler90/setup-unity@v1
         with:
           unity-modules: universal-windows-platform
-      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup Developer Command Prompt for Microsoft Visual C++
         working-directory: C:/Card-Game-Simulator.git
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
         working-directory: C:/Card-Game-Simulator.git
         uses: microsoft/setup-msbuild@v1
@@ -516,8 +514,8 @@ jobs:
         working-directory: C:/Card-Game-Simulator.git
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', steps.versioning.outputs.version) }}
-          path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', steps.versioning.outputs.version) }}
+          name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', needs.buildWithLinux.outputs.buildVersion) }}
+          path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWithLinux.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -529,7 +527,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', 'C:\Card-Game-Simulator.git') }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', steps.versioning.outputs.version) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWithLinux.outputs.buildVersion) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\upload.zip', 'C:\Card-Game-Simulator.git') }}
@@ -568,8 +566,8 @@ jobs:
           APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
-          MAC_APP_ID: com.finoldigital.CardGameSimulator
           MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
+          MAC_BUNDLE_ID: com.finoldigital.CardGameSimulator
           PROJECT_NAME: Card Game Simulator
         run: |
           bundle install
@@ -583,13 +581,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Get Version
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
-        with:
-          bump_each_commit: true
       - name: Download StandaloneWindows Artifact
         uses: actions/download-artifact@v2
         with:
@@ -619,7 +610,7 @@ jobs:
           ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
           ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
           appId: 1742850
-          buildDescription: v${{ steps.versioning.outputs.version }}
+          buildDescription: v${{ needs.buildWithLinux.outputs.buildVersion }}
           rootPath: build
           depot1Path: StandaloneWindows
           depot2Path: StandaloneLinux64
@@ -630,23 +621,16 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [deployToGooglePlay, deployToAppStore, deployToGitHubPages, deployToMicrosoftStore, deployToMacAppStore, deployToSteam]
+    needs: [buildWithLinux, deployToGooglePlay, deployToAppStore, deployToGitHubPages, deployToMicrosoftStore, deployToMacAppStore, deployToSteam]
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Get Version
-        id: versioning
-        uses: paulhatch/semantic-version@v4.0.2
-        with:
-          bump_each_commit: true
       - name: Prepare Announcement
         id: prepare
         shell: bash
         env:
-          VERSION: v${{ steps.versioning.outputs.version }}
+          VERSION: v${{ needs.buildWithLinux.outputs.buildVersion }}
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: |
           export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"
