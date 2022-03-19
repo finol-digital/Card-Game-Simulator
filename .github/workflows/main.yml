@@ -438,13 +438,11 @@ jobs:
           echo "$RELEASE_NOTES"
           echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
       - name: Apply Release Notes
-        working-directory: C:/Card-Game-Simulator.git
         uses: davidmfinol/replace-action@master
         with:
-          files: "storebroker/en-us/PDP.xml"
+          files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
       - name: Setup Unity UWP
-        working-directory: C:/Card-Game-Simulator.git
         uses: kuler90/setup-unity@v1
         with:
           unity-modules: universal-windows-platform
@@ -455,25 +453,22 @@ jobs:
         working-directory: C:/Card-Game-Simulator.git
         uses: microsoft/setup-msbuild@v1
       - name: Download WSAPlayer Artifact
-        working-directory: C:/Card-Game-Simulator.git
         uses: actions/download-artifact@v2
         with:
-          name: cgs-WSAPlayer
+          name: C:/Card-Game-Simulator.git/cgs-WSAPlayer
           path: build
       - name: Display Downloaded Files
         working-directory: C:/Card-Game-Simulator.git
         run: ls build; ls build/WSAPlayer
       - name: Remove spaces from project name
-        working-directory: C:/Card-Game-Simulator.git
         uses: davidmfinol/replace-action@master
         with:
-          files: "build/WSAPlayer/Card Game Simulator.sln"
+          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/Card Game Simulator.sln"
           replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
       - name: Remove spaces from project name 2
-        working-directory: C:/Card-Game-Simulator.git
         uses: davidmfinol/replace-action@master
         with:
-          files: "build/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
+          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
           replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
       - name: Update manifest name
         working-directory: C:/Card-Game-Simulator.git
@@ -511,7 +506,6 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
       - name: Upload .appxupload
-        working-directory: C:/Card-Game-Simulator.git
         uses: actions/upload-artifact@v2
         with:
           name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', needs.buildWithLinux.outputs.buildVersion) }}
