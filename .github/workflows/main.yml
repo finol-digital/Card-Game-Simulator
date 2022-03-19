@@ -449,7 +449,6 @@ jobs:
       - name: Setup Developer Command Prompt for Microsoft Visual C++
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
-        working-directory: C:/Card-Game-Simulator.git
         uses: microsoft/setup-msbuild@v1
       - name: Download WSAPlayer Artifact
         uses: actions/download-artifact@v2
