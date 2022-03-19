@@ -175,7 +175,7 @@ namespace CardGameDef.Decks
             return result.ToString();
         }
 
-        private class DecodingException : Exception
+        public class DecodingException : Exception
         {
             public DecodingException(string message) : base(message)
             {

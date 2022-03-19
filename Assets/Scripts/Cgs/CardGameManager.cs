@@ -70,6 +70,7 @@ namespace Cgs
                     _instance = GameObject.FindGameObjectWithTag(Tags.CardGameManager).GetComponent<CardGameManager>();
                 return _instance;
             }
+            private set => _instance = value;
         }
 
         private static CardGameManager _instance;
@@ -190,7 +191,7 @@ namespace Cgs
                 return;
             }
 
-            _instance = this;
+            Instance = this;
             UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 
