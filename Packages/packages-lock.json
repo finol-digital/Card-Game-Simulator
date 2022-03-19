@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.davidmfinol.sfb": {
+      "version": "https://github.com/davidmfinol/UnityStandaloneFileBrowser.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "65aa6b13a629ff91b45e20bfb1543f8839aad75b"
+    },
     "com.google.external-dependency-manager": {
       "version": "file:../GooglePackages/com.google.external-dependency-manager-1.2.168.tgz",
       "depth": 0,
@@ -54,7 +61,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.vscode": {
-      "version": "1.2.4",
+      "version": "1.2.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -77,7 +84,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.30",
+      "version": "1.1.31",
       "depth": 0,
       "source": "registry",
       "dependencies": {
