@@ -138,6 +138,7 @@
 				"CHAMPION": "Champion",
 				"ITEM": "Item",
 				"REGALIA": "Regalia",
+				"UNIQUE": "Unique",
 				"WEAPON": "Weapon"
 			}
 		},
@@ -189,18 +190,18 @@
 		{
 			"property": "element",
 			"values": {
-				"NORM": "Normal",
-				"WIND": "Wind",
-				"FIRE": "Fire",
-				"WATER": "Water",
 				"ARCANE": "Arcane",
 				"ASTRA": "Astra", 
 				"CRUX": "Crux",
+				"FIRE": "Fire",
 				"LUXEM": "Luxem",
+				"NORM": "Normal",
 				"NEOS": "Neos",
 				"TECHA": "Techa",
 				"TERA": "Tera", 
 				"UMBRA": "Umbra",
+				"WATER": "Water",
+				"WIND": "Wind",
 				"WRATH": "Wrath"
 			}
 		}
