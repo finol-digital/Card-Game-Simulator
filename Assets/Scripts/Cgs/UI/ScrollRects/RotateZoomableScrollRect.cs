@@ -82,28 +82,28 @@ namespace Cgs.UI.ScrollRects
             base.SetContentAnchoredPosition(position);
         }
 
-        public override void OnDrag(PointerEventData pointerEventData)
+        public override void OnDrag(PointerEventData eventData)
         {
-            PointerPositions[pointerEventData.pointerId] = pointerEventData.position;
-            switch (pointerEventData.button)
+            PointerPositions[eventData.pointerId] = eventData.position;
+            switch (eventData.button)
             {
                 case PointerEventData.InputButton.Right:
                     if (ZoomEnabled)
-                        CurrentRotation += pointerEventData.delta.x / Screen.width * MouseRotationSensitivity;
+                        CurrentRotation += eventData.delta.x / Screen.width * MouseRotationSensitivity;
                     else
-                        OnDragPan(pointerEventData);
+                        OnDragPan(eventData);
                     break;
 
                 case PointerEventData.InputButton.Middle:
                     if (ZoomEnabled)
-                        OnDragPan(pointerEventData);
+                        OnDragPan(eventData);
                     else
-                        base.OnDrag(pointerEventData);
+                        base.OnDrag(eventData);
                     break;
 
                 case PointerEventData.InputButton.Left:
                 default:
-                    OnDragRotate(pointerEventData);
+                    OnDragRotate(eventData);
                     break;
             }
         }

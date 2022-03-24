@@ -205,9 +205,11 @@ namespace Cgs.Play
         private void LoadDeck(UnityDeck deck)
         {
             foreach (var card in deck.Cards)
-            foreach (var gameBoardCard in CardGameManager.Current.GameBoardCards.Where(boardCard =>
-                         card.Id.Equals(boardCard.Card)))
-                CreateGameBoards(gameBoardCard.Boards);
+            {
+                foreach (var gameBoardCard in CardGameManager.Current.GameBoardCards.Where(boardCard =>
+                             card.Id.Equals(boardCard.Card)))
+                    CreateGameBoards(gameBoardCard.Boards);
+            }
 
             var extraGroups = deck.GetExtraGroups();
             var extraCards = deck.GetExtraCards();
