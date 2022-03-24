@@ -40,7 +40,7 @@ jobs:
           fetch-depth: 0
           lfs: true
       - name: Cache Library
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -145,7 +145,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: Library
           key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -208,7 +208,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: Library
           key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -257,7 +257,7 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: Library
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
