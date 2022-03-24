@@ -31,17 +31,27 @@ namespace Cgs.Play.Multiplayer
 
         public int DefaultRotation { get; private set; }
 
-        public string HandCount => HandCards.Count > 0 && CurrentHand >= 0 && CurrentHand < HandCards.Count
-            ? HandCards[CurrentHand].Count.ToString()
-            : string.Empty;
+        public string GetHandCount()
+        {
+            var handCards = GetHandCards();
+            return handCards.Count > 0 && CurrentHand >= 0 && CurrentHand < handCards.Count
+                ? handCards[CurrentHand].Count.ToString()
+                : string.Empty;
+        }
 
-        public IReadOnlyList<IReadOnlyList<UnityCard>> HandCards => _handCards.Select(hand =>
-                hand.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList())
-            .Cast<IReadOnlyList<UnityCard>>().ToList();
+        public IReadOnlyList<IReadOnlyList<UnityCard>> GetHandCards()
+        {
+            return _handCards.Select(hand =>
+                    hand.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList())
+                .Cast<IReadOnlyList<UnityCard>>().ToList();
+        }
 
         private readonly SyncList<string[]> _handCards = new SyncList<string[]>();
 
-        public IReadOnlyList<string> HandNames => _handNames.Select(handName => handName).ToList();
+        public IReadOnlyList<string> GetHandNames()
+        {
+            return _handNames.Select(handName => handName).ToList();
+        }
 
         private readonly SyncList<string> _handNames = new SyncList<string>();
 

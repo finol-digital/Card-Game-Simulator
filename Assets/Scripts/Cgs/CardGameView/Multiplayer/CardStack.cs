@@ -80,6 +80,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public IReadOnlyList<UnityCard> Cards
         {
+            // This getter is slow, so it should be cached when appropriate
             get => _cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
             set
             {

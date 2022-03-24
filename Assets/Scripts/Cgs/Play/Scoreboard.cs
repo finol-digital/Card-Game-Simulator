@@ -124,7 +124,7 @@ namespace Cgs.Play
 
             var scores = GameObject.FindGameObjectsWithTag("Player")
                 .Select(player => player.GetComponent<CgsNetPlayer>()).Select(cgsNetPlayer =>
-                    new Tuple<string, int, string>(cgsNetPlayer.Name, cgsNetPlayer.Points, cgsNetPlayer.HandCount))
+                    new Tuple<string, int, string>(cgsNetPlayer.Name, cgsNetPlayer.Points, cgsNetPlayer.GetHandCount()))
                 .ToList();
             scoreContent.DestroyAllChildren();
             scoreContent.sizeDelta = new Vector2(scoreContent.sizeDelta.x,

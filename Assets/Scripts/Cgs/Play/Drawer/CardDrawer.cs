@@ -154,7 +154,7 @@ namespace Cgs.Play.Drawer
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
             {
                 CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
-                var serverCards = CgsNetManager.Instance.LocalPlayer.HandCards[tabIndex];
+                var serverCards = CgsNetManager.Instance.LocalPlayer.GetHandCards()[tabIndex];
                 var serverCardIds = serverCards.Select(unityCard => unityCard.Id).ToList();
                 if (!localCardIds.SequenceEqual(serverCardIds))
                 {

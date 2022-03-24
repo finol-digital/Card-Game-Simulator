@@ -22,7 +22,7 @@ namespace Cgs.Play.Drawer
             }
 
             Debug.Log($"[DrawerViewer] Add {card.Id} to tab {handIndex}!");
-            var cards = new List<string>(CgsNetManager.Instance.LocalPlayer.HandCards[handIndex]
+            var cards = new List<string>(CgsNetManager.Instance.LocalPlayer.GetHandCards()[handIndex]
                 .Select(unityCard => unityCard.Id).ToList()) {card.Id};
             CgsNetManager.Instance.LocalPlayer.RequestSyncHand(handIndex, cards.ToArray());
         }
