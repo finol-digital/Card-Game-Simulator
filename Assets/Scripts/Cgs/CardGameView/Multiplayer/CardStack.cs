@@ -46,7 +46,7 @@ namespace Cgs.CardGameView.Multiplayer
     [RequireComponent(typeof(CardDropArea))]
     public class CardStack : CgsNetPlayable, ICardDropHandler
     {
-        private const float DragHoldTime = 0.75f;
+        private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
         public const string SaveText = "Saved";
         public const string TopOrBottomPrompt = "Keep on Top or Move to Bottom?";

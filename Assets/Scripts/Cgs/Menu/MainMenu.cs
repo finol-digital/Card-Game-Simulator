@@ -66,15 +66,13 @@ namespace Cgs.Menu
         public GameObject quitButton;
         public Text versionText;
 
-        private DownloadMenu Downloader => _downloader
-            ? _downloader
-            : (_downloader = Instantiate(downloadMenuPrefab)
-                .GetOrAddComponent<DownloadMenu>());
+        private DownloadMenu Downloader => _downloader ??= Instantiate(downloadMenuPrefab)
+            .GetOrAddComponent<DownloadMenu>();
 
         private DownloadMenu _downloader;
 
         private GameCreationMenu Creator =>
-            _creator ? _creator : (_creator = Instantiate(createMenuPrefab).GetOrAddComponent<GameCreationMenu>());
+            _creator ??= Instantiate(createMenuPrefab).GetOrAddComponent<GameCreationMenu>();
 
         private GameCreationMenu _creator;
 
