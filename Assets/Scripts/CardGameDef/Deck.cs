@@ -56,10 +56,10 @@ namespace CardGameDef
             Cards = cards;
         }
 
-        public Dictionary<Card, int> GetCardCounts()
+        public Dictionary<Card, int> DetermineCardCounts(IReadOnlyCollection<Card> cards)
         {
             var cardCounts = new Dictionary<Card, int>();
-            foreach (var card in Cards)
+            foreach (var card in cards)
             {
                 cardCounts.TryGetValue(card, out var currentCount);
                 currentCount++;
@@ -103,7 +103,7 @@ namespace CardGameDef
         public string ToDec()
         {
             var text = string.Empty;
-            var cardCounts = GetCardCounts();
+            var cardCounts = DetermineCardCounts(Cards);
             return cardCounts.Keys.Aggregate(text,
                 (current, card) => current + (cardCounts[card] + " " + card.Name + Environment.NewLine));
         }
@@ -117,7 +117,7 @@ namespace CardGameDef
             text += "# Format: Wild" + Environment.NewLine;
             text += "#" + Environment.NewLine;
 
-            var cardCounts = GetCardCounts();
+            var cardCounts = DetermineCardCounts(Cards);
             text = cardCounts.Keys.Where(card => !extraCards.Contains(card)).Aggregate(text,
                 (current, card) => current + ("# " + cardCounts[card] + "x (" + card.GetPropertyValueString("cost") +
                                               ") " + card.Name + Environment.NewLine));
@@ -134,7 +134,7 @@ namespace CardGameDef
             Varint.Write(memoryStream, 1);
             Varint.Write(memoryStream, 1);
 
-            var cardCounts = GetCardCounts();
+            var cardCounts = DetermineCardCounts(Cards);
             var extraCards = GetExtraCards();
             var singleCopy = cardCounts.Where(x => x.Value == 1).ToList();
             var doubleCopy = cardCounts.Where(x => x.Value == 2).ToList();
@@ -167,7 +167,7 @@ namespace CardGameDef
 
         public string ToLor()
         {
-            var cardCounts = GetCardCounts();
+            var cardCounts = DetermineCardCounts(Cards);
             var cardCodeAndCounts = cardCounts.Select(
                 cardCount => new CardCodeAndCount()
                 {
@@ -199,30 +199,53 @@ namespace CardGameDef
         public string ToTxt()
         {
             var text = new StringBuilder();
-            text.AppendFormat("### {0} Deck: {1} {2}", SourceGame.Name, Name, Environment.NewLine);
-            var cardCounts = GetCardCounts();
-            foreach (var cardCount in cardCounts)
+            text.AppendFormat("### {0} Deck: {1}{2}", SourceGame.Name, Name, Environment.NewLine);
+            var mainCards = new List<Card>(Cards);
+            var extraGroups = GetExtraGroups();
+            var extraCards = new List<Card>();
+            foreach (var cardGroup in GetExtraGroups())
+                extraCards.AddRange(cardGroup.Value);
+            mainCards.RemoveAll(card => extraCards.Contains(card));
+
+            if (extraGroups.Count > 0)
             {
-                var isDeckFileTxtIdRequired = !SourceGame.CardNameIsUnique || cardCount.Key.IsReprint;
-                text.Append(cardCount.Value);
-                text.Append(" ");
-                if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Id)
+                foreach (var extraGroup in extraGroups)
                 {
-                    text.AppendFormat("[{0}]", cardCount.Key.Id);
-                    text.Append(" ");
+                    text.AppendFormat("# {0}{1}", extraGroup.Key, Environment.NewLine);
+                    var extraCardCounts = DetermineCardCounts(extraGroup.Value);
+                    foreach (var cardCount in extraCardCounts)
+                        BuildTxtLine(text, cardCount);
                 }
 
-                text.Append(cardCount.Key.Name);
-                if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Set)
-                {
-                    text.Append(" ");
-                    text.AppendFormat("({0})", cardCount.Key.SetCode);
-                }
-
-                text.AppendLine();
+                text.AppendFormat("# Main Deck{0}", Environment.NewLine);
             }
 
+            var mainCardCounts = DetermineCardCounts(mainCards);
+            foreach (var cardCount in mainCardCounts)
+                BuildTxtLine(text, cardCount);
+
             return text.ToString();
+        }
+
+        private void BuildTxtLine(StringBuilder text, KeyValuePair<Card, int> cardCount)
+        {
+            var isDeckFileTxtIdRequired = !SourceGame.CardNameIsUnique || cardCount.Key.IsReprint;
+            text.Append(cardCount.Value);
+            text.Append(" ");
+            if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Id)
+            {
+                text.AppendFormat("[{0}]", cardCount.Key.Id);
+                text.Append(" ");
+            }
+
+            text.Append(cardCount.Key.Name);
+            if (isDeckFileTxtIdRequired && SourceGame.DeckFileTxtId == DeckFileTxtId.Set)
+            {
+                text.Append(" ");
+                text.AppendFormat("({0})", cardCount.Key.SetCode);
+            }
+
+            text.AppendLine();
         }
 
         public override string ToString()
@@ -251,7 +274,7 @@ namespace CardGameDef
             return text;
         }
 
-        public bool Equals(Deck other)
+        public virtual bool Equals(Deck other)
         {
             return other != null && ToString().Equals(other.ToString());
         }

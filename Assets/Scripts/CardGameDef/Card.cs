@@ -153,7 +153,7 @@ namespace CardGameDef
             }
         }
 
-        public bool Equals(Card other)
+        public virtual bool Equals(Card other)
         {
             return other != null && Id.Equals(other.Id);
         }

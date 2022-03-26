@@ -306,7 +306,7 @@ jobs:
         with:
           files: build/StandaloneOSX/
           dest: build/cgs-StandaloneOSX.zip
-      - name: Upload App to GitHub Release
+      - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published'
         with:
