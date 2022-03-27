@@ -31,20 +31,25 @@ namespace Cgs.Decks
         public const float CardPrefabHeight = 350f;
         public const float CardZonePrefabSpacing = -225f;
 
+        public bool IsZoomed { get; private set; }
+
         public GameObject cardViewerPrefab;
         public GameObject cardModelPrefab;
         public GameObject cardZonePrefab;
         public GameObject deckLoadMenuPrefab;
         public GameObject deckSaveMenuPrefab;
+        public DeckEditorLayout deckEditorLayout;
         public RectTransform layoutContent;
+        public RectTransform searchContent;
         public List<CardDropArea> dropZones;
         public ScrollRect scrollRect;
         public Text nameText;
         public Text countText;
         public SearchResults searchResults;
 
-        private static int CardsPerZone =>
-            Mathf.FloorToInt(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / CardPrefabHeight * 4);
+        private int CardsPerZone =>
+            Mathf.FloorToInt(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / CardPrefabHeight *
+                             (IsZoomed ? 8 : 4));
 
         public List<CardModel> CardModels
         {
@@ -59,19 +64,17 @@ namespace Cgs.Decks
 
         private List<CardZone> CardZones { get; } = new List<CardZone>();
 
-        private float CardZoneWidth => _cardZoneWidth > 0
-            ? _cardZoneWidth
-            : _cardZoneWidth = cardZonePrefab.GetComponent<RectTransform>().rect.width;
+        private float CardZoneWidth => _cardZoneWidth ??= cardZonePrefab.GetComponent<RectTransform>().rect.width;
 
-        private float _cardZoneWidth = -1f;
+        private float? _cardZoneWidth;
 
         private DeckLoadMenu DeckLoader =>
-            _deckLoader ? _deckLoader : _deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
+            _deckLoader ??= Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
 
         private DeckLoadMenu _deckLoader;
 
         private DeckSaveMenu DeckSaver =>
-            _deckSaver ? _deckSaver : _deckSaver = Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>();
+            _deckSaver ??= Instantiate(deckSaveMenuPrefab).GetOrAddComponent<DeckSaveMenu>();
 
         private DeckSaveMenu _deckSaver;
 
@@ -302,6 +305,16 @@ namespace Cgs.Decks
                 cardZone.transform.DestroyAllChildren();
             foreach (var card in sortedDeck.Cards)
                 AddCard((UnityCard) card);
+        }
+
+        [UsedImplicitly]
+        public void ToggleZoom()
+        {
+            IsZoomed = !IsZoomed;
+            searchContent.gameObject.SetActive(!IsZoomed);
+            var deckEditorLayoutRectTransform = (RectTransform) deckEditorLayout.transform;
+            deckEditorLayoutRectTransform.anchorMin = IsZoomed ? Vector2.zero : DeckEditorLayout.DeckButtonsPortraitAnchor;
+            deckEditorLayoutRectTransform.offsetMin = Vector2.up * (IsZoomed && deckEditorLayout.IsPortrait ? 90 : 10);
         }
 
         [UsedImplicitly]

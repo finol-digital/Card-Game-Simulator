@@ -8,9 +8,9 @@ namespace Cgs.Decks
 {
     public class DeckEditorLayout : MonoBehaviour
     {
-        private const float MinWidth = 1200;
+        public bool IsPortrait => searchResultsLayout.IsPortrait;
 
-        private static readonly Vector2 DeckButtonsPortraitAnchor = new Vector2(0, 0.43f);
+        public static readonly Vector2 DeckButtonsPortraitAnchor = new Vector2(0, 0.43f);
         private static readonly Vector2 DeckButtonsLandscapePosition = new Vector2(-650, 0);
 
         private static readonly Vector2 SelectButtonsPortraitPosition = new Vector2(0, 10);
@@ -18,18 +18,21 @@ namespace Cgs.Decks
 
         public RectTransform deckButtons;
         public RectTransform selectButtons;
+        public DeckEditor deckEditor;
+        public SearchResultsLayout searchResultsLayout;
 
         private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform) transform).rect.width < MinWidth) // Portrait
+            if (IsPortrait) // Portrait
             {
-                deckButtons.anchorMin = DeckButtonsPortraitAnchor;
-                deckButtons.anchorMax = DeckButtonsPortraitAnchor;
+                deckButtons.anchorMin = deckEditor.IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
+                deckButtons.anchorMax = deckEditor.IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
                 deckButtons.pivot = Vector2.up;
-                deckButtons.anchoredPosition = Vector2.zero;
+                deckButtons.anchoredPosition =
+                    deckEditor.IsZoomed ? Vector2.up * deckButtons.rect.height : Vector2.zero;
                 selectButtons.anchoredPosition = SelectButtonsPortraitPosition;
             }
             else // Landscape

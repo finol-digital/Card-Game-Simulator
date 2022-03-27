@@ -10,7 +10,14 @@ namespace Cgs.Decks
 {
     public class SearchResultsLayout : MonoBehaviour
     {
-        private const float MinWidth = 1200;
+        public bool IsPortrait
+        {
+            get
+            {
+                var rectTransformRect = ((RectTransform) transform).rect;
+                return rectTransformRect.width < 1200 || rectTransformRect.width < rectTransformRect.height;
+            }
+        }
 
         private static readonly Vector2 PageButtonsPortraitPosition = new Vector2(0, 447.5f);
         private static readonly Vector2 PageButtonsLandscapePosition = new Vector2(1050, 375);
@@ -23,7 +30,7 @@ namespace Cgs.Decks
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform) transform).rect.width < MinWidth) // Portrait
+            if (IsPortrait) // Portrait
             {
                 pageButtons.anchorMin = Vector2.right;
                 pageButtons.anchorMax = Vector2.right;
