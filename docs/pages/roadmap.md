@@ -7,7 +7,6 @@ permalink: roadmap.html
 ## What's New - v1.72
 - Accessibility: New How-To-Play Videos
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
-- Bug-Fix: Auto-rotation on Android
 Test Steam on Mac
 
 ## Active Sprint

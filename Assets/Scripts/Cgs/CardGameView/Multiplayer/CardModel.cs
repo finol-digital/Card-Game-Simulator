@@ -57,18 +57,15 @@ namespace Cgs.CardGameView.Multiplayer
         [SyncVar(hook = nameof(OnChangeFacedown))]
         public bool isFacedown;
 
-        public bool IsFacedown
+        public void SetIsFacedown(bool value)
         {
-            set
+            if (IsOnline)
+                CmdUpdateFacedown(value);
+            else
             {
-                if (IsOnline)
-                    CmdUpdateFacedown(value);
-                else
-                {
-                    var oldValue = isFacedown;
-                    isFacedown = value;
-                    OnChangeFacedown(oldValue, isFacedown);
-                }
+                var oldValue = isFacedown;
+                isFacedown = value;
+                OnChangeFacedown(oldValue, isFacedown);
             }
         }
 
@@ -133,10 +130,10 @@ namespace Cgs.CardGameView.Multiplayer
         public GameObject nameLabel;
         public Text nameText;
 
-        private Image View => _view ? _view : _view = GetComponent<Image>();
+        private Image View => _view ??= GetComponent<Image>();
         private Image _view;
 
-        private CanvasGroup Visibility => _visibility ? _visibility : _visibility = GetComponent<CanvasGroup>();
+        private CanvasGroup Visibility => _visibility ??= GetComponent<CanvasGroup>();
         private CanvasGroup _visibility;
 
         protected override void OnStartPlayable()
@@ -251,7 +248,7 @@ namespace Cgs.CardGameView.Multiplayer
             cardModel.Visibility.blocksRaycasts = false;
             cardModel.HighlightMode = HighlightMode.Off;
             cardModel.Value = value;
-            cardModel.IsFacedown = isFacedown;
+            cardModel.SetIsFacedown(isFacedown);
             cardModel.PlaceHolderCardZone = placeHolderCardZone;
             cardModel.DoesCloneOnDrag = false;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2) position - eventData.position;

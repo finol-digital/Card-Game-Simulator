@@ -105,7 +105,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private HighlightMode _highlightMode = HighlightMode.Off;
 
-        private Outline Highlight => _highlight ? _highlight : _highlight = gameObject.GetOrAddComponent<Outline>();
+        private Outline Highlight => _highlight ??= gameObject.GetOrAddComponent<Outline>();
         private Outline _highlight;
 
         protected virtual void OnStartPlayable()

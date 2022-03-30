@@ -111,7 +111,7 @@ namespace Cgs.CardGameView.Viewer
         private void OnAddCardModel(CardZone cardZone, CardModel cardModel)
         {
             cardModel.transform.rotation = Quaternion.identity;
-            cardModel.IsFacedown = false;
+            cardModel.SetIsFacedown(false);
             cardModel.DefaultAction = CardActions.Flip;
 
             var cardModels = contentCardZone.GetComponentsInChildren<CardModel>();

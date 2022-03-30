@@ -238,17 +238,14 @@ namespace Cgs.CardGameView.Viewer
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            if (Inputs.IsPageVertical)
+            if (Inputs.IsPageVertical && Instance.Mode == CardViewerMode.Maximal)
             {
-                if (Instance.Mode == CardViewerMode.Maximal)
-                {
-                    if (Inputs.IsPageDown && !Inputs.WasPageDown)
-                        maximalScrollRect.verticalNormalizedPosition =
-                            Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
-                    else if (Inputs.IsPageUp && !Inputs.WasPageDown)
-                        maximalScrollRect.verticalNormalizedPosition =
-                            Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
-                }
+                if (Inputs.IsPageDown && !Inputs.WasPageDown)
+                    maximalScrollRect.verticalNormalizedPosition =
+                        Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
+                else if (Inputs.IsPageUp && !Inputs.WasPageDown)
+                    maximalScrollRect.verticalNormalizedPosition =
+                        Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
             }
 
             if (Inputs.IsSubmit)

@@ -37,7 +37,7 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            cardModel.IsFacedown = !cardModel.isFacedown;
+            cardModel.SetIsFacedown(!cardModel.isFacedown);
         }
 
         public static void Rotate(CardModel cardModel)
