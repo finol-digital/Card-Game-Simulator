@@ -66,7 +66,7 @@ jobs:
       - name: Generate Solution for SonarQube
         run: xvfb-run -ae /dev/stdout ${{ steps.setup-unity.outputs.unity-path }} -batchmode -logFile /dev/stdout -quit -customBuildName Card-Game-Simulator -projectPath . -executeMethod  UnityEditor.SyncVS.SyncSolution
       - name: Run Unit Tests
-        uses: paulpach/unity-test-runner@nobuild
+        uses: game-ci/unity-test-runner@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -154,7 +154,7 @@ jobs:
             Library-build-
       - name: Build Unity Project
         id: build
-        uses: paulpach/unity-builder@nobuild
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
