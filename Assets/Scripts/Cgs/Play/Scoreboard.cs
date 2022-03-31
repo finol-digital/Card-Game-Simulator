@@ -118,7 +118,6 @@ namespace Cgs.Play
 
         private void Refresh()
         {
-            // TODO: Improve this very slow process
             roomNameText.text = IsOnline ? CgsNetManager.Instance.RoomName : Offline;
             roomIdIpText.text = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
 

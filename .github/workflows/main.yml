@@ -99,6 +99,10 @@ jobs:
           dotnet build Card-Game-Simulator.sln
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd Card-Game-Simulator
+      - name: SonarQube Quality Gate Check
+        uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:

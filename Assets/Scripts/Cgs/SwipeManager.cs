@@ -82,8 +82,6 @@ namespace Cgs
             remove => _OnSwipeDetected -= value;
         }
 
-        private static Vector2 swipeVelocity;
-
         static float dpcm;
         static float swipeStartTime;
         static bool autoDetectSwipes;
@@ -134,7 +132,7 @@ namespace Cgs
                 }
 
                 float swipeEndTime = Time.time;
-                swipeVelocity = currentSwipe * (swipeEndTime - swipeStartTime);
+                Vector2 swipeVelocity = currentSwipe * (swipeEndTime - swipeStartTime);
                 swipeDirection = GetSwipeDirByTouch(currentSwipe);
                 swipeEnded = true;
 

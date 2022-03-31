@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +27,7 @@ namespace Cgs.CardGameView.Viewer
 
         public static void Move(CardModel cardModel)
         {
-            // TODO
+            CardGameManager.Instance.Messenger.Show("Move Feature is Coming Soon!");
         }
 
         public static void Flip(CardModel cardModel)
@@ -71,6 +72,7 @@ namespace Cgs.CardGameView.Viewer
 
         public List<Transform> buttonPanels;
         public List<Button> flipButtons;
+        public List<Button> moveButtons;
         public List<Button> rotateButtons;
         public List<Button> tapButtons;
 
@@ -102,7 +104,7 @@ namespace Cgs.CardGameView.Viewer
 
             if (Inputs.IsFilter && flipButtons[0].interactable)
                 Flip(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsNew) // TODO
+            else if (Inputs.IsNew && moveButtons[0].interactable)
                 Move(CardViewer.Instance.SelectedCardModel);
             else if (Inputs.IsLoad && rotateButtons[0].interactable)
                 Rotate(CardViewer.Instance.SelectedCardModel);
@@ -110,16 +112,25 @@ namespace Cgs.CardGameView.Viewer
                 Tap(CardViewer.Instance.SelectedCardModel);
         }
 
+        [UsedImplicitly]
         public void Flip()
         {
             Flip(CardViewer.Instance.SelectedCardModel);
         }
 
+        [UsedImplicitly]
+        public void Move()
+        {
+            Move(CardViewer.Instance.SelectedCardModel);
+        }
+
+        [UsedImplicitly]
         public void Rotate()
         {
             Rotate(CardViewer.Instance.SelectedCardModel);
         }
 
+        [UsedImplicitly]
         public void Tap()
         {
             Tap(CardViewer.Instance.SelectedCardModel);

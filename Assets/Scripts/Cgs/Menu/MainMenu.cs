@@ -274,7 +274,6 @@ namespace Cgs.Menu
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.Messenger.Show("Edit is Coming Soon!");
-            // TODO: Creator Edit
         }
 
         [UsedImplicitly]
