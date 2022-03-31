@@ -46,22 +46,18 @@ namespace Cgs.Play.Multiplayer
 
         public PlayController playController;
 
-        private Guid _cardStackAssetId;
-        private Guid _cardAssetId;
-        private Guid _dieAssetId;
-
         public override void Start()
         {
             base.Start();
 
-            _cardStackAssetId = playController.cardStackPrefab.GetComponent<NetworkIdentity>().assetId;
-            NetworkClient.RegisterSpawnHandler(_cardStackAssetId, SpawnStack, UnSpawn);
+            var cardStackAssetId = playController.cardStackPrefab.GetComponent<NetworkIdentity>().assetId;
+            NetworkClient.RegisterSpawnHandler(cardStackAssetId, SpawnStack, UnSpawn);
 
-            _cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
-            NetworkClient.RegisterSpawnHandler(_cardAssetId, SpawnCard, UnSpawnCard);
+            var cardAssetId = playController.cardModelPrefab.GetComponent<NetworkIdentity>().assetId;
+            NetworkClient.RegisterSpawnHandler(cardAssetId, SpawnCard, UnSpawnCard);
 
-            _dieAssetId = playController.diePrefab.GetComponent<NetworkIdentity>().assetId;
-            NetworkClient.RegisterSpawnHandler(_dieAssetId, SpawnDie, UnSpawn);
+            var dieAssetId = playController.diePrefab.GetComponent<NetworkIdentity>().assetId;
+            NetworkClient.RegisterSpawnHandler(dieAssetId, SpawnDie, UnSpawn);
 
             Discovery = GetComponent<CgsNetDiscovery>();
             Debug.Log("[CgsNet Manager] Acquired NetworkDiscovery.");

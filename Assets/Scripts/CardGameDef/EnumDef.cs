@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace CardGameDef
@@ -62,17 +63,19 @@ namespace CardGameDef
 
         public string GetStringFromLookupFlags(int flags)
         {
-            var stringValue = string.Empty;
+            var stringBuilder = new StringBuilder();
+            var hasValue = false;
             foreach (var enumValue in Values)
             {
                 if (!Lookups.TryGetValue(enumValue.Key, out var lookupValue) || ((lookupValue & flags) == 0))
                     continue;
-                if (!string.IsNullOrEmpty(stringValue))
-                    stringValue += Delimiter;
-                stringValue += enumValue.Value;
+                if (hasValue)
+                    stringBuilder.Append(Delimiter);
+                stringBuilder.Append(enumValue.Value);
+                hasValue = true;
             }
 
-            return stringValue;
+            return stringBuilder.ToString();
         }
 
         public string GetStringFromPropertyValue(string propertyValue)
@@ -80,18 +83,22 @@ namespace CardGameDef
             if (string.IsNullOrEmpty(propertyValue))
                 return string.Empty;
 
-            var stringValue = string.Empty;
+            var stringBuilder = new StringBuilder();
+            var hasValue = false;
             foreach (var splitValue in propertyValue.Split(new[] {Delimiter}, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (!string.IsNullOrEmpty(stringValue))
-                    stringValue += Delimiter;
+                if (hasValue)
+                    stringBuilder.Append(Delimiter);
                 if (Lookups.TryGetValue(splitValue, out var lookupFlags) || TryParseInt(splitValue, out lookupFlags))
-                    stringValue += GetStringFromLookupFlags(lookupFlags);
+                    stringBuilder.Append(GetStringFromLookupFlags(lookupFlags));
                 else
-                    stringValue += Values.TryGetValue(splitValue, out var mappedValue) ? mappedValue : splitValue;
+                    stringBuilder.Append(Values.TryGetValue(splitValue, out var mappedValue)
+                        ? mappedValue
+                        : splitValue);
+                hasValue = true;
             }
 
-            return stringValue;
+            return stringBuilder.ToString();
         }
 
         public int GetEnumFromPropertyValue(string propertyValue)

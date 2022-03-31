@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -677,31 +678,31 @@ namespace CardGameDef.Unity
             try
             {
                 var newProperty = new PropertyDefValuePair() {Def = property};
-                string listValue;
+                StringBuilder listValueBuilder;
                 JToken listTokens;
                 JObject jObject;
                 switch (property.Type)
                 {
                     case PropertyType.ObjectEnumList:
-                        listValue = string.Empty;
+                        listValueBuilder = new StringBuilder();
                         listTokens = cardJToken[property.Name];
                         if (listTokens != null)
                             foreach (var jToken in listTokens)
                             {
-                                if (!string.IsNullOrEmpty(listValue))
-                                    listValue += EnumDef.Delimiter;
+                                if (listValueBuilder.Length > 0)
+                                    listValueBuilder.Append(EnumDef.Delimiter);
                                 jObject = jToken as JObject;
-                                listValue += jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty;
+                                listValueBuilder.Append(jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty);
                             }
 
-                        newProperty.Value = listValue;
+                        newProperty.Value = listValueBuilder.ToString();
                         cardProperties[key] = newProperty;
                         break;
                     case PropertyType.ObjectList:
                         foreach (var childProperty in property.Properties)
                         {
                             newProperty = new PropertyDefValuePair() {Def = childProperty};
-                            listValue = string.Empty;
+                            listValueBuilder = new StringBuilder();
                             var values = new Dictionary<string, PropertyDefValuePair>();
                             var i = 0;
                             listTokens = cardJToken[property.Name];
@@ -714,12 +715,12 @@ namespace CardGameDef.Unity
 
                             foreach (var entry in values)
                             {
-                                if (!string.IsNullOrEmpty(listValue))
-                                    listValue += EnumDef.Delimiter;
-                                listValue += entry.Value.Value.Replace(EnumDef.Delimiter, ", ");
+                                if (listValueBuilder.Length > 0)
+                                    listValueBuilder.Append(EnumDef.Delimiter);
+                                listValueBuilder.Append(entry.Value.Value.Replace(EnumDef.Delimiter, ", "));
                             }
 
-                            newProperty.Value = listValue;
+                            newProperty.Value = listValueBuilder.ToString();
                             cardProperties[key + PropertyDef.ObjectDelimiter + childProperty.Name] = newProperty;
                         }
 
@@ -739,16 +740,16 @@ namespace CardGameDef.Unity
                         break;
                     case PropertyType.StringEnumList:
                     case PropertyType.StringList:
-                        listValue = string.Empty;
+                        listValueBuilder = new StringBuilder();
                         if (string.IsNullOrEmpty(property.Delimiter))
                         {
                             listTokens = cardJToken[property.Name];
                             if (listTokens != null)
                                 foreach (var jToken in listTokens)
                                 {
-                                    if (!string.IsNullOrEmpty(listValue))
-                                        listValue += EnumDef.Delimiter;
-                                    listValue += jToken.Value<string>() ?? string.Empty;
+                                    if (listValueBuilder.Length > 0)
+                                        listValueBuilder.Append(EnumDef.Delimiter);
+                                    listValueBuilder.Append(jToken.Value<string>() ?? string.Empty);
                                 }
                         }
                         else
@@ -756,13 +757,13 @@ namespace CardGameDef.Unity
                             foreach (var token in (cardJToken.Value<string>(property.Name) ?? string.Empty).Split(
                                          new[] {property.Delimiter}, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                if (!string.IsNullOrEmpty(listValue))
-                                    listValue += EnumDef.Delimiter;
-                                listValue += token;
+                                if (listValueBuilder.Length > 0)
+                                    listValueBuilder.Append(EnumDef.Delimiter);
+                                listValueBuilder.Append(token);
                             }
                         }
 
-                        newProperty.Value = listValue;
+                        newProperty.Value = listValueBuilder.ToString();
                         cardProperties[key] = newProperty;
                         break;
                     case PropertyType.EscapedString:

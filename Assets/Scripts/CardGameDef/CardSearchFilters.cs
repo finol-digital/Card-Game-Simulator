@@ -90,6 +90,7 @@ namespace CardGameDef
                     : unprocessedInput.Substring(rightQuoteIndex + Quote.Length);
             }
 
+            var nameBuilder = new StringBuilder(Name);
             processedInput.Append(unprocessedInput);
             foreach (var word in processedInput.ToString()
                          .Split(new[] {Delimiter}, StringSplitOptions.RemoveEmptyEntries))
@@ -127,8 +128,10 @@ namespace CardGameDef
                     EnumProperties.Add(token.Substring(0, token.IndexOf(KeywordEnum, StringComparison.Ordinal)),
                         enumValue);
                 else
-                    Name += (string.IsNullOrEmpty(Name) ? string.Empty : Delimiter) + token;
+                    nameBuilder.Append((nameBuilder.Length == 0 ? string.Empty : Delimiter) + token);
             }
+
+            Name = nameBuilder.ToString();
         }
 
         public override string ToString()
