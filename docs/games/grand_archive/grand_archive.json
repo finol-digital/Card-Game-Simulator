@@ -1,6 +1,6 @@
 {
 	"name": "Grand Archive",
-	"allCardsUrl": "https://index.gatcg.com:8090/api/cards/search",
+	"allCardsUrl": "https://api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
@@ -8,7 +8,7 @@
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageUrl": "https://index.gatcg.com:8090/images/cards/{editions[0].slug}.jpg",
+	"cardImageUrl": "https://api.gatcg.com/images/cards/{editions[0].slug}.jpg",
 	"cardPrimaryProperty": "effect",
 	"cardProperties": [
 		{
