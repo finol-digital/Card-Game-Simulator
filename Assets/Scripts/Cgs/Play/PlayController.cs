@@ -81,34 +81,25 @@ namespace Cgs.Play
             }
         }
 
-        private CardStack[] AllCardStacks => playMat.GetComponentsInChildren<CardStack>();
+        private IEnumerable<CardStack> AllCardStacks => playMat.GetComponentsInChildren<CardStack>();
 
-        private LobbyMenu Lobby =>
-            _lobby ? _lobby : _lobby = Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
+        private LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
 
-        private DeckLoadMenu DeckLoader => _deckLoader
-            ? _deckLoader
-            : _deckLoader = Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
+        private DeckLoadMenu DeckLoader => _deckLoader ??= Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
 
         private DeckLoadMenu _deckLoader;
 
-        private CardSearchMenu CardSearcher => _cardSearcher
-            ? _cardSearcher
-            : _cardSearcher = Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
+        private CardSearchMenu CardSearcher => _cardSearcher ??= Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
 
         private CardSearchMenu _cardSearcher;
 
-        private HandDealer Dealer => _dealer
-            ? _dealer
-            : _dealer = Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
+        private HandDealer Dealer => _dealer ??= Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
 
-        public DecisionModal Decider => _decider
-            ? _decider
-            : _decider = Instantiate(decisionModalPrefab).GetOrAddComponent<DecisionModal>();
+        public DecisionModal Decider => _decider ??= Instantiate(decisionModalPrefab).GetOrAddComponent<DecisionModal>();
 
         private DecisionModal _decider;
 

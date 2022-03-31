@@ -73,12 +73,12 @@ namespace Cgs.Cards
 
         private int TotalPageCount => CardsPerPage == 0
             ? 0
-            : (AllResults.Count / CardsPerPage) + ((AllResults.Count % CardsPerPage) == 0 ? -1 : 0);
+            : AllResults.Count / CardsPerPage + TotalPageCountOffset;
 
-        private CardSearchMenu CardSearcher => _cardSearcher
-            ? _cardSearcher
-            : (_cardSearcher = Instantiate(cardSearchMenuPrefab)
-                .GetOrAddComponent<CardSearchMenu>());
+        private int TotalPageCountOffset => AllResults.Count % CardsPerPage == 0 ? -1 : 0;
+
+        private CardSearchMenu CardSearcher =>
+            _cardSearcher ??= Instantiate(cardSearchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
 
         private CardSearchMenu _cardSearcher;
 

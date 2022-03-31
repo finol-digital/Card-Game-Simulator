@@ -18,21 +18,16 @@ namespace Cgs.UI
         public bool avoidOverlap;
         public bool isBelow;
 
-        private GameObject ToolTipGameObject => _toolTipGameObject
-            ? _toolTipGameObject
-            : _toolTipGameObject = Instantiate(tooltipPrefab, transform);
+        private GameObject ToolTipGameObject => _toolTipGameObject ??= Instantiate(tooltipPrefab, transform);
 
         private GameObject _toolTipGameObject;
 
         private CanvasGroup ToolTipCanvasGroup =>
-            _toolTipCanvasGroup
-                ? _toolTipCanvasGroup
-                : _toolTipCanvasGroup = ToolTipGameObject.GetOrAddComponent<CanvasGroup>();
+            _toolTipCanvasGroup ??= ToolTipGameObject.GetOrAddComponent<CanvasGroup>();
 
         private CanvasGroup _toolTipCanvasGroup;
 
-        private Text ToolTipText =>
-            _toolTipText ? _toolTipText : _toolTipText = ToolTipGameObject.GetComponentInChildren<Text>();
+        private Text ToolTipText => _toolTipText ??= ToolTipGameObject.GetComponentInChildren<Text>();
 
         private Text _toolTipText;
 

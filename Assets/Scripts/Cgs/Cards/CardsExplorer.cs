@@ -32,21 +32,15 @@ namespace Cgs.Cards
         public List<GameObject> editButtons;
         public SearchResults searchResults;
 
-        private DecisionModal ImportModal => _importModal
-            ? _importModal
-            : _importModal = Instantiate(cardSetImportModalPrefab).GetOrAddComponent<DecisionModal>();
+        private DecisionModal ImportModal => _importModal ??= Instantiate(cardSetImportModalPrefab).GetOrAddComponent<DecisionModal>();
 
         private DecisionModal _importModal;
 
-        private CardImportMenu CardImporter => _cardImporter
-            ? _cardImporter
-            : _cardImporter = Instantiate(cardImportMenuPrefab).GetOrAddComponent<CardImportMenu>();
+        private CardImportMenu CardImporter => _cardImporter ??= Instantiate(cardImportMenuPrefab).GetOrAddComponent<CardImportMenu>();
 
         private CardImportMenu _cardImporter;
 
-        private SetImportMenu SetImporter => _setImporter
-            ? _setImporter
-            : _setImporter = Instantiate(setImportMenuPrefab).GetOrAddComponent<SetImportMenu>();
+        private SetImportMenu SetImporter => _setImporter ??= Instantiate(setImportMenuPrefab).GetOrAddComponent<SetImportMenu>();
 
         private SetImportMenu _setImporter;
 

@@ -57,8 +57,7 @@ namespace Cgs.Decks
 
         private readonly SortedList<string, string> _deckFiles = new SortedList<string, string>();
 
-        private Modal Menu =>
-            _menu ? _menu : (_menu = gameObject.GetOrAddComponent<Modal>());
+        private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
 
         private Modal _menu;
 

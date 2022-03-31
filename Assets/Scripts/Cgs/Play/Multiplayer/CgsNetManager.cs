@@ -26,11 +26,13 @@ namespace Cgs.Play.Multiplayer
         }
 
         public string RoomIdIp => "localhost".Equals(networkAddress, StringComparison.Ordinal)
-            ? string.IsNullOrEmpty(lrm.serverId)
-                ? Dns.GetHostEntry(Dns.GetHostName()).AddressList
-                    .First(f => f.AddressFamily == AddressFamily.InterNetwork).ToString()
-                : lrm.serverId
+            ? RoomId
             : networkAddress;
+
+        private string RoomId => string.IsNullOrEmpty(lrm.serverId)
+            ? Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(f => f.AddressFamily == AddressFamily.InterNetwork)
+                .ToString()
+            : lrm.serverId;
 
         public static int ActiveConnectionCount => NetworkServer.connections.Count(con => con.Value.isReady);
 

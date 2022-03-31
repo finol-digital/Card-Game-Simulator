@@ -73,10 +73,6 @@ namespace Cgs.UI
 
         public override void CalculateLayoutInputVertical()
         {
-//            float width = rectTransform.rect.size.x;
-//            int cellCountX = Mathf.Max(1,
-//                Mathf.FloorToInt((width - padding.horizontal + spacing.x + 0.001f) / (cellSize.x + spacing.x)));
-//            minRows = Mathf.CeilToInt(rectChildren.Count / (float)cellCountX);
             const int minRows = 1;
             float minSpace = padding.vertical + (cellSize.y + spacing.y) * minRows - spacing.y;
             SetLayoutInputForAxis(minSpace, minSpace, -1, 1);

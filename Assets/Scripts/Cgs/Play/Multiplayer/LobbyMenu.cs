@@ -76,14 +76,11 @@ namespace Cgs.Play.Multiplayer
                 : _selectedServerIp;
 
         private HostAuthentication Authenticator =>
-            _authenticator
-                ? _authenticator
-                : (_authenticator = Instantiate(hostAuthenticationPrefab).GetComponent<HostAuthentication>());
+            _authenticator ??= Instantiate(hostAuthenticationPrefab).GetComponent<HostAuthentication>();
 
         private HostAuthentication _authenticator;
 
-        private Modal Menu =>
-            _menu ? _menu : (_menu = gameObject.GetOrAddComponent<Modal>());
+        private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
 
         private Modal _menu;
 

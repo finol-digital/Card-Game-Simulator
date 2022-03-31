@@ -65,10 +65,7 @@ namespace Cgs.Cards
 
         private Sprite _cardImageSprite;
 
-        private DownloadMenu Downloader => _downloader
-            ? _downloader
-            : (_downloader = Instantiate(downloadMenuPrefab)
-                .GetOrAddComponent<DownloadMenu>());
+        private DownloadMenu Downloader => _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
 
         private DownloadMenu _downloader;
 

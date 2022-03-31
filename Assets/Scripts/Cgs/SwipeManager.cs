@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Cgs
 {
-    class CardinalDirection
+    internal static class CardinalDirection
     {
         public static readonly Vector2 Up = new Vector2(0, 1);
         public static readonly Vector2 Down = new Vector2(0, -1);

@@ -117,14 +117,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         private CardZone _placeHolderCardZone;
 
-        private bool IsNameVisible
+        private void SetIsNameVisible(bool value)
         {
-            set
-            {
-                nameLabel.SetActive(value);
-                if (value)
-                    nameText.text = Value.Name;
-            }
+            nameLabel.SetActive(value);
+            if (value)
+                nameText.text = Value.Name;
         }
 
         public GameObject nameLabel;
@@ -142,7 +139,7 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            IsNameVisible = !isFacedown;
+            SetIsNameVisible(!isFacedown);
             if (!isFacedown)
                 Value.RegisterDisplay(this);
         }
@@ -156,14 +153,14 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             View.sprite = imageSprite;
-            IsNameVisible = false;
+            SetIsNameVisible(false);
         }
 
         private void RemoveImageSprite()
         {
             View.sprite = CardGameManager.Current.CardBackImageSprite;
             if (!isFacedown)
-                IsNameVisible = true;
+                SetIsNameVisible(true);
         }
 
         protected override void OnUpdatePlayable()

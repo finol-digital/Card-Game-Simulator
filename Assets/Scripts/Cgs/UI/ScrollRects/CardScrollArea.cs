@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using UnityEngine;
@@ -88,7 +87,8 @@ namespace Cgs.UI.ScrollRects
                         _isScrolling = false;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    Debug.LogError("Card Scroll Area needs direction!");
+                    break;
             }
         }
 
@@ -106,11 +106,15 @@ namespace Cgs.UI.ScrollRects
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            _canvasGroup.alpha = 0;
-            _isScrolling = false;
+            Hide();
         }
 
         public void OnPointerUp(PointerEventData eventData)
+        {
+            Hide();
+        }
+
+        private void Hide()
         {
             _canvasGroup.alpha = 0;
             _isScrolling = false;
