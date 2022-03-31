@@ -28,8 +28,10 @@ namespace Cgs.UI
             FixedRowCount = 2
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         protected Vector2 m_CellSize = new Vector2(100, 100);
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public Vector2 cellSize
         {
             get => m_CellSize;
@@ -38,6 +40,7 @@ namespace Cgs.UI
 
         [SerializeField] protected Vector2 m_Spacing = Vector2.zero;
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public Vector2 spacing
         {
             get => m_Spacing;
@@ -47,6 +50,7 @@ namespace Cgs.UI
 
         [SerializeField] protected bool m_Horizontal = true;
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public bool horizontal
         {
             get => m_Horizontal;
@@ -88,8 +92,6 @@ namespace Cgs.UI
             SetCellsAlongAxis();
         }
 
-
-        private int _cellsPerMainAxis, _actualCellCountX, _actualCellCountY;
         private float _totalWidth;
         private float _totalHeight;
 
@@ -122,9 +124,9 @@ namespace Cgs.UI
                 cellCountY = Mathf.Max(1,
                     Mathf.FloorToInt((height - padding.vertical + spacing.y + 0.001f) / (cellSize.y + spacing.y)));
 
-            _cellsPerMainAxis = cellCountX;
-            _actualCellCountX = Mathf.Clamp(cellCountX, 1, rectChildren.Count);
-            _actualCellCountY =
+            var _cellsPerMainAxis = cellCountX;
+            var _actualCellCountX = Mathf.Clamp(cellCountX, 1, rectChildren.Count);
+            var _actualCellCountY =
                 Mathf.Clamp(cellCountY, 1, Mathf.CeilToInt(rectChildren.Count / (float) _cellsPerMainAxis));
 
             var requiredSpace = new Vector2(

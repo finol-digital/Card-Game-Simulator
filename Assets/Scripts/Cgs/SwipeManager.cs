@@ -56,7 +56,7 @@ namespace Cgs
         const float defaultDPI = 72f;
         const float dpcmFactor = 2.54f;
 
-        static Dictionary<Swipe, Vector2> cardinalDirections = new Dictionary<Swipe, Vector2>()
+        static readonly Dictionary<Swipe, Vector2> cardinalDirections = new Dictionary<Swipe, Vector2>()
         {
             {Swipe.Up, CardinalDirection.Up},
             {Swipe.Down, CardinalDirection.Down},
@@ -79,14 +79,13 @@ namespace Cgs
                 _OnSwipeDetected += value;
                 autoDetectSwipes = true;
             }
-            remove { _OnSwipeDetected -= value; }
+            remove => _OnSwipeDetected -= value;
         }
 
-        public static Vector2 swipeVelocity;
+        private static Vector2 swipeVelocity;
 
         static float dpcm;
         static float swipeStartTime;
-        static float swipeEndTime;
         static bool autoDetectSwipes;
         static bool swipeEnded;
         static Swipe swipeDirection;
@@ -134,7 +133,7 @@ namespace Cgs
                     return false;
                 }
 
-                swipeEndTime = Time.time;
+                float swipeEndTime = Time.time;
                 swipeVelocity = currentSwipe * (swipeEndTime - swipeStartTime);
                 swipeDirection = GetSwipeDirByTouch(currentSwipe);
                 swipeEnded = true;
