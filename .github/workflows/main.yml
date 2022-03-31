@@ -101,6 +101,8 @@ jobs:
           cd Card-Game-Simulator
       - name: SonarQube Quality Gate Check
         uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
+        with:
+          scanMetadataReportFile: .sonarqube/out/.sonar/report-task.txt
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Update Release Notes
