@@ -72,7 +72,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          customParameters: -enableCodeCoverage -coverageResultsPath artifacts -debugCodeOptimization
+          customParameters: -enableCodeCoverage -coverageResultsPath artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: SonarQube Analysis
         env:

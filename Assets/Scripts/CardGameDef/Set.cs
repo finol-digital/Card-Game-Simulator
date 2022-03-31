@@ -24,7 +24,7 @@ namespace CardGameDef
             CardsUrl = !string.IsNullOrEmpty(cardsUrl) ? cardsUrl.Clone() as string : string.Empty;
         }
 
-        public bool Equals(Set other)
+        public virtual bool Equals(Set other)
         {
             return other != null && Code.Equals(other.Code);
         }
