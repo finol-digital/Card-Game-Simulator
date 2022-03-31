@@ -25,6 +25,9 @@ namespace Cgs.Play.Drawer
 
         public static readonly Vector2 ShownPosition = Vector2.zero;
 
+        private static Vector2 MidPosition =>
+            new Vector2(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) / 2 - 10);
+
         public static Vector2 HiddenPosition =>
             new Vector2(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) - 10);
 
@@ -90,11 +93,20 @@ namespace Cgs.Play.Drawer
                 cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
         }
 
+        [UsedImplicitly]
         public void Show()
         {
             panelRectTransform.anchoredPosition = ShownPosition;
             downButton.interactable = true;
             upButton.interactable = false;
+        }
+
+        [UsedImplicitly]
+        public void SemiShow()
+        {
+            panelRectTransform.anchoredPosition = MidPosition;
+            downButton.interactable = true;
+            upButton.interactable = true;
         }
 
         public void AddCard(UnityCard card)
