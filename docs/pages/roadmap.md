@@ -5,13 +5,14 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.72
-- Accessibility: New How-To-Play Videos
-- Bug-Fix: Cards dissappearing and duplicating in multiplayer
+- Deck Editor: Zoom to hide card searchbar
+- Bug-Fixes
 
 ## Active Sprint
-- Game-Play: Snap to Grid in Play Area
+- Accessibility: New How-To-Play Video
+- Bug-Fix: Cards dissappearing and duplicating in multiplayer
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
-- Tech: Code Coverage
+- Game-Play: Snap to Grid in Play Area
 
 ## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
