@@ -36,17 +36,37 @@ namespace Cgs.Decks
 
             if (Inputs.IsVertical)
             {
-                if (Inputs.IsDown && !Inputs.WasDown)
-                    SelectResultsDown();
-                else if (Inputs.IsUp && !Inputs.WasUp)
-                    SelectResultsUp();
+                if (editor.IsZoomed)
+                {
+                    if (Inputs.IsDown && !Inputs.WasDown)
+                        SelectEditorDown();
+                    else if (Inputs.IsUp && !Inputs.WasUp)
+                        SelectEditorUp();
+                }
+                else
+                {
+                    if (Inputs.IsDown && !Inputs.WasDown)
+                        SelectResultsDown();
+                    else if (Inputs.IsUp && !Inputs.WasUp)
+                        SelectResultsUp();
+                }
             }
             else if (Inputs.IsHorizontal)
             {
-                if (Inputs.IsLeft && !Inputs.WasLeft)
-                    SelectResultsLeft();
-                else if (Inputs.IsRight && !Inputs.WasRight)
-                    SelectResultsRight();
+                if (editor.IsZoomed)
+                {
+                    if (Inputs.IsLeft && !Inputs.WasLeft)
+                        SelectEditorLeft();
+                    else if (Inputs.IsRight && !Inputs.WasRight)
+                        SelectEditorRight();
+                }
+                else
+                {
+                    if (Inputs.IsLeft && !Inputs.WasLeft)
+                        SelectResultsLeft();
+                    else if (Inputs.IsRight && !Inputs.WasRight)
+                        SelectResultsRight();
+                }
             }
 
             if (Inputs.IsPageVertical)
@@ -251,7 +271,7 @@ namespace Cgs.Decks
 
             Transform startParent = null;
             foreach (var cardModel in editorCardModels.Where(t =>
-                startParent != null || t == CardViewer.Instance.SelectedCardModel))
+                         startParent != null || t == CardViewer.Instance.SelectedCardModel))
             {
                 if (cardModel == CardViewer.Instance.SelectedCardModel)
                     startParent = cardModel.transform.parent;

@@ -131,9 +131,9 @@ namespace Cgs.Decks
                 ShowDeckLoadMenu();
             else if (Inputs.IsSave)
                 ShowDeckSaveMenu();
-            else if (Inputs.IsFocus)
+            else if (Inputs.IsFocus && !IsZoomed)
                 searchResults.inputField.ActivateInputField();
-            else if (Inputs.IsFilter)
+            else if (Inputs.IsFilter && !IsZoomed)
                 searchResults.ShowSearchMenu();
             else if (Inputs.IsCancel)
                 CheckBackToMainMenu();
