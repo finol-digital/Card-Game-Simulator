@@ -7,7 +7,6 @@ permalink: roadmap.html
 ## What's New - v1.72
 - Accessibility: New How-To-Play Videos
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
-Test Steam on Mac
 
 ## Active Sprint
 - Game-Play: Snap to Grid in Play Area
