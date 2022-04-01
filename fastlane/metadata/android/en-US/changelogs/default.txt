@@ -1,1 +1,2 @@
-- Various Bug Fixes
+- Deck Editor: Zoom to hide card searchbar
+- Bug-Fixes
