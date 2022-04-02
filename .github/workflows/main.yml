@@ -201,6 +201,8 @@ jobs:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-2019
     needs: tests
+    outputs:
+      buildVersion: ${{ steps.build.outputs.buildVersion }}
     strategy:
       fail-fast: false
       matrix:
@@ -222,6 +224,7 @@ jobs:
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
       - name: Build Unity Project
+        id: build
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
@@ -520,8 +523,8 @@ jobs:
       - name: Upload .appxupload
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', needs.buildWithLinux.outputs.buildVersion) }}
-          path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWithLinux.outputs.buildVersion) }}
+          name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', needs.buildWithWindows.outputs.buildVersion) }}
+          path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWithWindows.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -533,7 +536,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', 'C:\Card-Game-Simulator.git') }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWithLinux.outputs.buildVersion) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWithWindows.outputs.buildVersion) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\upload.zip', 'C:\Card-Game-Simulator.git') }}
