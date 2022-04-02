@@ -4,9 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.72
-- Deck Editor: Zoom to hide card searchbar
-- Bug-Fixes
+## What's New - v1.73
+
 
 ## Active Sprint
 - Accessibility: New How-To-Play Video
