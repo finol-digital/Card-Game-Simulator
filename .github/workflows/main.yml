@@ -435,6 +435,11 @@ jobs:
         run: |
           mkdir C:/Card-Game-Simulator.git
           git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --depth 1
+      - name: Download WSAPlayer Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: cgs-WSAPlayer
+          path: C:/Card-Game-Simulator.git/build
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -458,11 +463,6 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Download WSAPlayer Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: C:/Card-Game-Simulator.git/cgs-WSAPlayer
-          path: build
       - name: Setup Unity UWP
         uses: kuler90/setup-unity@v1
         with:
