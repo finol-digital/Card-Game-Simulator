@@ -17,15 +17,15 @@ permalink: roadmap.html
 ## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Game-Play: Name-Plates indicating player seats
+- Game-Play: Label which player is moving cards
 - Game-Play: Button for max zoom out
 - Game-Play: Click outside card stack viewer to close it
 - Game-Play: Cut and merge stacks
 - Game-Play: Modify dice to have more than 6 faces
-- Game-Play: Support multiple card selection
 - Game-Play: Color the default card action green
 - Game-Play: Always reveal the top card of a stack
+- Game-Play: Support multiple card selection
 - Integration: Deep links to join multiplayer rooms
-- Game-Play: Label which player is moving cards
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
 - Game-Creation: Edit Button in Main Menu

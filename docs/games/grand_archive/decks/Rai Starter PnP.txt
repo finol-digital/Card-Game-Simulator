@@ -1,5 +1,5 @@
 ### Grand Archive Deck: Rai Starter PnP
-# Material Deck
+## Material Deck
 1 Spirit of Fire
 1 Rai, Spellcrafter
 1 Rai, Archmage
@@ -12,7 +12,7 @@
 1 Life Essence Amulet
 1 Crystal of Empowerment
 1 Arcanist's Prism
-# Main Deck
+## Main Deck
 2 Blitz Mage
 2 Dungeon Guide
 3 Impassioned Tutor

@@ -1,5 +1,5 @@
 ### Grand Archive Deck: Lorraine Starter PnP
-# Material Deck
+## Material Deck
 1 Spirit of Wind
 1 Lorraine, Wandering Warrior
 1 Lorraine, Blademaster
@@ -12,7 +12,7 @@
 1 Life Essence Amulet
 1 Prismatic Edge
 1 Seer's Sword
-# Main Deck
+## Main Deck
 3 Banner Knight
 4 Crusader of Aesa
 3 Dream Fairy
