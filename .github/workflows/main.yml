@@ -458,22 +458,20 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Setup Unity UWP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: universal-windows-platform
-      - name: Setup Developer Command Prompt for Microsoft Visual C++
-        uses: ilammy/msvc-dev-cmd@v1
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
       - name: Download WSAPlayer Artifact
         uses: actions/download-artifact@v2
         with:
           name: C:/Card-Game-Simulator.git/cgs-WSAPlayer
           path: build
-      - name: Display Downloaded Files
-        working-directory: C:/Card-Game-Simulator.git
-        run: ls build; ls build/WSAPlayer
+      - name: Setup Unity UWP
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: universal-windows-platform
+          project-path: C:/Card-Game-Simulator.git
+      - name: Setup Developer Command Prompt for Microsoft Visual C++
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
       - name: Remove spaces from project name
         uses: davidmfinol/replace-action@master
         with:
