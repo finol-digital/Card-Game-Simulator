@@ -66,7 +66,7 @@ jobs:
       - name: Generate Solution for SonarQube
         run: xvfb-run -ae /dev/stdout ${{ steps.setup-unity.outputs.unity-path }} -batchmode -logFile /dev/stdout -quit -customBuildName Card-Game-Simulator -projectPath . -executeMethod  UnityEditor.SyncVS.SyncSolution
       - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@main
+        uses: game-ci/unity-test-runner@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -160,7 +160,7 @@ jobs:
             Library-build-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -225,7 +225,7 @@ jobs:
             Library-buildWindows-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -272,7 +272,7 @@ jobs:
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildMac-
       - name: Build Unity Project
-        uses: game-ci/unity-builder@main
+        uses: game-ci/unity-builder@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
