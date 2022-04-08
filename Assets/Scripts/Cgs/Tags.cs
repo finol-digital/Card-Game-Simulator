@@ -11,6 +11,7 @@ namespace Cgs
         public const string PlayableViewer = "PlayableViewer";
 
         public const string DynamicLinkUriDomain = "https://cgs.link";
+        public const string CgsWebsite = "https://www.cardgamesimulator.com/";
 
         public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@www.cardgamesimulator.com";
 

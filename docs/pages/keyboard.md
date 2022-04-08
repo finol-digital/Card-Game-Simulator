@@ -116,4 +116,5 @@ If [your CGS device](index.html#play-anywhere) has a keyboard, you can use these
 - **Cancel**: *Esc* - Back to Main Menu.
 - **Horizontal**/**Vertical**: ARROWS or WASD - Navigate Settings buttons.
 - **PageVertical**: *PgUp*, *PgDn* - Move the scrollbar.
+- **Option**: *Delete* - Open a web browser to this website.
 - **Submit**: *Enter* - Click on selected button.
