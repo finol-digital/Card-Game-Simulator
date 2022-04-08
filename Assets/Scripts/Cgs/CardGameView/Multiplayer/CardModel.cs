@@ -465,11 +465,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (previousParentCardZone != null)
                 previousParentCardZone.OnRemove(this);
             if (ParentCardZone != null)
-            {
                 ParentCardZone.OnAdd(this);
-                if (ParentCardZone.type == CardZoneType.Area)
-                    SnapToGrid();
-            }
 
             PlaceHolder = null;
             Visibility.blocksRaycasts = true;

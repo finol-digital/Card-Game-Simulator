@@ -324,11 +324,16 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected Vector2 CalculateGridPosition()
         {
+            var rectTransform = (RectTransform) transform;
+            var currentPosition = rectTransform.position;
+            if (CardGameManager.Current.PlayMatGridCellSize == null ||
+                CardGameManager.Current.PlayMatGridCellSize.X <= 0 ||
+                CardGameManager.Current.PlayMatGridCellSize.Y <= 0)
+                return currentPosition;
+
             var gridCellSize = new Vector2(CardGameManager.Current.PlayMatGridCellSize.X,
                 CardGameManager.Current.PlayMatGridCellSize.Y) * CardGameManager.PixelsPerInch;
 
-            var rectTransform = (RectTransform) transform;
-            var currentPosition = rectTransform.position;
             var x = Mathf.Round(currentPosition.x / gridCellSize.x) * gridCellSize.x;
             var y = Mathf.Round(currentPosition.y / gridCellSize.y) * gridCellSize.y;
             return new Vector2(x, y);
