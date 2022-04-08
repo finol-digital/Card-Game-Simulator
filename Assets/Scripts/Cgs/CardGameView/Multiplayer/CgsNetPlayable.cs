@@ -259,11 +259,12 @@ namespace Cgs.CardGameView.Multiplayer
 
             OnEndDragPlayable(eventData);
 
-            if (hasAuthority)
-                CmdReleaseAuthority();
             RemovePointer(eventData);
 
             PostDragPlayable(eventData);
+
+            if (hasAuthority)
+                CmdReleaseAuthority();
         }
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
@@ -273,7 +274,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (ParentCardZone != null && ParentCardZone.type == CardZoneType.Area)
+                SnapToGrid();
         }
 
         protected void RemovePointer(PointerEventData eventData)
@@ -308,6 +310,28 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (hasAuthority)
                 RequestUpdatePosition(rectTransform.localPosition);
+        }
+
+        public virtual void SnapToGrid()
+        {
+            var rectTransform = (RectTransform) transform;
+            var gridPosition = CalculateGridPosition();
+            rectTransform.position = gridPosition;
+
+            if (hasAuthority)
+                RequestUpdatePosition(rectTransform.localPosition);
+        }
+
+        protected Vector2 CalculateGridPosition()
+        {
+            var gridCellSize = new Vector2(CardGameManager.Current.PlayMatGridCellSize.X,
+                CardGameManager.Current.PlayMatGridCellSize.Y) * CardGameManager.PixelsPerInch;
+
+            var rectTransform = (RectTransform) transform;
+            var currentPosition = rectTransform.position;
+            var x = Mathf.Round(currentPosition.x / gridCellSize.x) * gridCellSize.x;
+            var y = Mathf.Round(currentPosition.y / gridCellSize.y) * gridCellSize.y;
+            return new Vector2(x, y);
         }
 
         public void Rotate()

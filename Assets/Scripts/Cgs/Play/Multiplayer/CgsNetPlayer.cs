@@ -403,6 +403,7 @@ namespace Cgs.Play.Multiplayer
         {
             var cardModelTransform = cardModel.transform;
             cardModelTransform.SetParent(cardZone.transform);
+            cardModel.SnapToGrid();
             cardModel.position = ((RectTransform) cardModelTransform).localPosition;
             cardModel.rotation = cardModelTransform.rotation;
             CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.isFacedown);

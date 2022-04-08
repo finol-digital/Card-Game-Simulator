@@ -5,13 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.73
-
+- Game-Play: Snap to Grid in Play Area
+- Accessibility: New How-To-Play Video
 
 ## Active Sprint
-- Accessibility: New How-To-Play Video
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
-- Game-Play: Snap to Grid in Play Area
 
 ## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)

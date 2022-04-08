@@ -356,6 +356,12 @@ namespace CardGameDef
         public Float2 PlayMatSize { get; set; } = new Float2(36f, 36f);
 
         [JsonProperty]
+        [Description(
+            "playMatGridCellSize indicates the width and height in inches of each cell in the play area in Play Mode.")]
+        [DefaultValue("(x: 0.5, y: 0.5)")]
+        public Float2 PlayMatGridCellSize { get; set; } = new Float2(0.5f, 0.5f);
+
+        [JsonProperty]
         [Description("rulesUrl should link to this game's online rulebook.")]
         public Uri RulesUrl { get; set; }
 

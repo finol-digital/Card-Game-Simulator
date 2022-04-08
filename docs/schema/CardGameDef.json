@@ -335,6 +335,15 @@
         }
       ]
     },
+    "playMatGridCellSize": {
+      "description": "playMatGridCellSize indicates the width and height in inches of each cell in the play area in Play Mode.",
+      "default": "(x: 0.5, y: 0.5)",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Float2"
+        }
+      ]
+    },
     "rulesUrl": {
       "type": "string",
       "description": "rulesUrl should link to this game's online rulebook.",

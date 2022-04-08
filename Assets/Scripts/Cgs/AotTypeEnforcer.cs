@@ -84,6 +84,7 @@ namespace Cgs
                 cardGame.PlayMatImageFileType = string.Empty;
                 cardGame.PlayMatImageUrl = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.PlayMatSize = new Float2(1, 1);
+                cardGame.PlayMatGridCellSize = new Float2(1, 1);
                 cardGame.RulesUrl = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.SetCardsIdentifier = string.Empty;
                 cardGame.SetCardsUrlIdentifier = string.Empty;
