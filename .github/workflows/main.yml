@@ -176,7 +176,7 @@ jobs:
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
           androidTargetSdkVersion: AndroidApiLevel31
       - name: Upload Build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
         with:
           name: cgs-${{ matrix.targetPlatform }}
@@ -234,7 +234,7 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Upload Build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
         with:
           name: cgs-${{ matrix.targetPlatform }}
@@ -299,12 +299,12 @@ jobs:
           ./fastlane/sign-mac-build.sh
       - name: Upload Build
         if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
       - name: Upload App
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
         with:
           name: Card Game Simulator.app
@@ -521,7 +521,7 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
       - name: Upload .appxupload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ format('CardGameSimulator_{0}.0_x64_bundle_Master.appxupload', needs.buildWithWindows.outputs.buildVersion) }}
           path: ${{ format('{0}\build\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWithWindows.outputs.buildVersion) }}
