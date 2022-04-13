@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.73
 - Game-Play: Snap to Grid in Play Area
-parallel imports and adaptive performance and code coverage
 
 ## Active Sprint
 - Bug-Fix: Cards dissappearing and duplicating in multiplayer
