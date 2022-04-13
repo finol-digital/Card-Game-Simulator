@@ -75,6 +75,7 @@ jobs:
           customParameters: -enableCodeCoverage -coverageResultsPath artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: SonarQube Analysis
+        if: false
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

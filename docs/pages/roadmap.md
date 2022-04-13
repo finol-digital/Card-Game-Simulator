@@ -12,6 +12,7 @@ permalink: roadmap.html
 - Bug-Fix: Freeze in Multiplayer Lobby on Android client
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
 - Accessibility: New How-To-Play Video
+- Tech: Restore SonarQube and Code Coverage
 
 ## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
