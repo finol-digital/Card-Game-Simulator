@@ -71,7 +71,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.14",
+      "version": "2.0.15",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -196,7 +196,7 @@
       "hash": "333c21cbf0acc31e049bfa4b1e84abb57ed200e2"
     },
     "jillejr.newtonsoft.json-for-unity": {
-      "version": "12.0.301",
+      "version": "13.0.102",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
