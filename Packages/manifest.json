@@ -10,9 +10,9 @@
   ],
   "dependencies": {
     "com.davidmfinol.sfb": "https://github.com/davidmfinol/UnityStandaloneFileBrowser.git",
-    "com.google.external-dependency-manager": "file:../GooglePackages/com.google.external-dependency-manager-1.2.168.tgz",
-    "com.google.firebase.app": "file:../GooglePackages/com.google.firebase.app-8.7.0.tgz",
-    "com.google.firebase.dynamic-links": "file:../GooglePackages/com.google.firebase.dynamic-links-8.7.0.tgz",
+    "com.google.external-dependency-manager": "file:../GooglePackages/com.google.external-dependency-manager-1.2.170.tgz",
+    "com.google.firebase.app": "file:../GooglePackages/com.google.firebase.app-8.9.0.tgz",
+    "com.google.firebase.dynamic-links": "file:../GooglePackages/com.google.firebase.dynamic-links-8.9.0.tgz",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.adaptiveperformance": "4.0.0",
     "com.unity.adaptiveperformance.samsung.android": "4.0.0",
