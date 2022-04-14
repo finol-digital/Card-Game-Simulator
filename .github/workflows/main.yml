@@ -58,6 +58,7 @@ jobs:
         id: setup-unity
         uses: kuler90/setup-unity@v1
       - name: Activate Unity for SonarQube
+        if: false
         uses: kuler90/activate-unity@v1
         with:
           unity-username: ${{ secrets.UNITY_EMAIL }}
