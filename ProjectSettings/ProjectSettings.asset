@@ -138,9 +138,7 @@ PlayerSettings:
     16:9: 1
     Others: 0
   bundleVersion: 0.0.0
-  preloadedAssets:
-  - {fileID: 1757169410873258989, guid: 44d0e49b87671d24fad4289e95e84419, type: 2}
-  - {fileID: 11400000, guid: 0e6f7d19dcb1e45499fff51cea4dc550, type: 2}
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -945,8 +943,8 @@ PlayerSettings:
       PrivateNetworkClientServer: False
       InternetClientServer: True
       VideosLibrary: False
-      BackgroundMediaPlayback: False
       Objects3D: False
+      InternetClient: True
       RemoteSystem: False
       BlockedChatMessages: False
       PhoneCall: False
@@ -968,9 +966,9 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
-      InternetClient: True
       Proximity: False
       CodeGeneration: False
+      BackgroundMediaPlayback: False
       EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False
