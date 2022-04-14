@@ -6,14 +6,12 @@ permalink: roadmap.html
 
 ## What's New - v1.73
 - Game-Play: Snap to Grid in Play Area
+- Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
-- Bug-Fix: Cards dissappearing and duplicating in multiplayer
-- Bug-Fix: Freeze in Multiplayer Lobby on Android client
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
-- Accessibility: New How-To-Play Video
 - Tech: Restore SonarQube and Code Coverage
-- Platforms: mac deep link
+- Accessibility: New How-To-Play Video
 
 ## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)

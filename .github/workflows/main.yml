@@ -46,15 +46,18 @@ jobs:
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
       - name: Setup dotnet for SonarQube
+        if: false
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: Set up JDK 11 for SonarQube
+        if: false
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
       - name: Setup Unity for SonarQube
+        if: false
         id: setup-unity
         uses: kuler90/setup-unity@v1
       - name: Activate Unity for SonarQube
