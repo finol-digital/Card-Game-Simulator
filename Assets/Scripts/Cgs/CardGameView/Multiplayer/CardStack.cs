@@ -246,7 +246,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             cardModel.PlaceHolderCardZone = null;
             if (CgsNetManager.Instance.isNetworkActive && !hasAuthority)
-                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id, true);
+                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
             else
                 Insert(Cards.Count, cardModel.Id, true);
         }
