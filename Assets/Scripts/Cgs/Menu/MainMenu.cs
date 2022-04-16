@@ -96,7 +96,7 @@ namespace Cgs.Menu
             versionText.text = VersionMessage;
 
             if (!HasSeenTutorial)
-                CardGameManager.Instance.Messenger.Ask(TutorialPrompt, ConfirmHasSeenTutorial, GoToTutorial);
+                CardGameManager.Instance.Messenger.Ask(TutorialPrompt, ConfirmHasSeenTutorial, GoToTutorial, true);
         }
 
         private static void ConfirmHasSeenTutorial()
