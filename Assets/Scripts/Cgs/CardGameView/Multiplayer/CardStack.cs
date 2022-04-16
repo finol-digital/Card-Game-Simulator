@@ -15,7 +15,6 @@ using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -49,9 +48,6 @@ namespace Cgs.CardGameView.Multiplayer
         private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
         public const string SaveText = "Saved";
-        public const string TopOrBottomPrompt = "Keep on Top or Move to Bottom?";
-        public const string Top = "Keep on Top";
-        public const string Bottom = "Move to Bottom";
 
         private const string SaveDelimiter = "_";
 
@@ -259,35 +255,6 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _cardIds.Insert(index, cardId);
             Debug.Log(index + " " + _cardIds.Count + " " + prompt);
-            if (index == _cardIds.Count - 1 && prompt)
-                PromptMoveToBottom();
-        }
-
-        public void PromptMoveToBottom()
-        {
-            CgsNetManager.Instance.playController.Decider.Show(TopOrBottomPrompt,
-                new Tuple<string, UnityAction>(Top, () => { }),
-                new Tuple<string, UnityAction>(Bottom, RequestMoveToBottom));
-        }
-
-        private void RequestMoveToBottom()
-        {
-            if (CgsNetManager.Instance.isNetworkActive)
-                CmdMoveToBottom();
-            else
-            {
-                var cardId = _cardIds[_cardIds.Count - 1];
-                _cardIds.RemoveAt(_cardIds.Count - 1);
-                _cardIds.Insert(0, cardId);
-            }
-        }
-
-        [Command(requiresAuthority = false)]
-        private void CmdMoveToBottom()
-        {
-            var cardId = _cardIds[_cardIds.Count - 1];
-            _cardIds.RemoveAt(_cardIds.Count - 1);
-            _cardIds.Insert(0, cardId);
         }
 
         public string RemoveAt(int index)

@@ -9,6 +9,8 @@ permalink: roadmap.html
 - Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
+- Add warning for pc on mobile
+convert to stack and convert to card
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
 - Tech: Restore SonarQube and Code Coverage
 - Accessibility: New How-To-Play Video
