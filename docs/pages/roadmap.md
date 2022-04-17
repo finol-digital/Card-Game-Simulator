@@ -25,8 +25,8 @@ It could be an int column that contains values 0 - 360, with null being consider
 - Game-Play: Cut and merge stacks
 - Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Color the default card action green
-- Game-Play: Always reveal the top card of a stack
 - Game-Play: Support multiple card selection
+- Game-Play: Always reveal the top card of a stack
 - Integration: Deep links to join multiplayer rooms
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
