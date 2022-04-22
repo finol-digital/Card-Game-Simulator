@@ -6,15 +6,14 @@ permalink: roadmap.html
 
 ## What's New - v1.73
 - Game-Play: Snap to Grid in Play Area
-- Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
-convert to stack and convert to card
+- Game-Play: Convert to stack and convert to card
+- Bug-Fix: Multiplayer/Networking
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
 - Tech: Restore SonarQube and Code Coverage
 - Accessibility: New How-To-Play Video
-- For portrait vs landscape: Easiest way I can think of to handle it would be an optional property in the gameid.json file that lets you specify a column from the allcards.json file that will be "CardRotation".
-It could be an int column that contains values 0 - 360, with null being considered to be 0. Or null could default to a DefaultCardRotation property that is also in the gameid.json file.
+- Cards: CardRotation field in json for portrait vs landscape.
 
 ## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)

@@ -14,7 +14,7 @@
     "com.google.firebase.app": "file:../GooglePackages/com.google.firebase.app-8.9.0.tgz",
     "com.google.firebase.dynamic-links": "file:../GooglePackages/com.google.firebase.dynamic-links-8.9.0.tgz",
     "com.unity.2d.sprite": "1.0.0",
-    "com.unity.ide.rider": "3.0.13",
+    "com.unity.ide.rider": "3.0.14",
     "com.unity.ide.visualstudio": "2.0.15",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.test-framework": "1.1.31",

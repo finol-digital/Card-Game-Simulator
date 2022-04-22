@@ -13,7 +13,7 @@ namespace Mirror
     /// <para>If the object has authority on the server, then it should be animated on the server and state information will be sent to all clients. This is common for objects not related to a specific client, such as an enemy unit.</para>
     /// <para>The NetworkAnimator synchronizes all animation parameters of the selected Animator. It does not automatically synchronize triggers. The function SetTrigger can by used by an object with authority to fire an animation trigger on other clients.</para>
     /// </remarks>
-    [AddComponentMenu("Network/NetworkAnimator")]
+    [AddComponentMenu("Network/Network Animator")]
     [RequireComponent(typeof(NetworkIdentity))]
     [HelpURL("https://mirror-networking.gitbook.io/docs/components/network-animator")]
     public class NetworkAnimator : NetworkBehaviour
@@ -106,7 +106,7 @@ namespace Mirror
                     continue;
                 }
 
-                using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
+                using (NetworkWriterPooled writer = NetworkWriterPool.Get())
                 {
                     WriteParameters(writer);
                     SendAnimationMessage(stateHash, normalizedTime, i, layerWeight[i], writer.ToArray());
@@ -193,7 +193,7 @@ namespace Mirror
             {
                 nextSendTime = now + syncInterval;
 
-                using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
+                using (NetworkWriterPooled writer = NetworkWriterPool.Get())
                 {
                     if (WriteParameters(writer))
                         SendAnimationParametersMessage(writer.ToArray());
@@ -524,10 +524,10 @@ namespace Mirror
             if (!clientAuthority)
                 return;
 
-            // Debug.Log("OnAnimationMessage for netId=" + netId);
+            //Debug.Log($"OnAnimationMessage for netId {netId}");
 
             // handle and broadcast
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
+            using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(parameters))
             {
                 HandleAnimMsg(stateHash, normalizedTime, layerId, weight, networkReader);
                 RpcOnAnimationClientMessage(stateHash, normalizedTime, layerId, weight, parameters);
@@ -542,7 +542,7 @@ namespace Mirror
                 return;
 
             // handle and broadcast
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
+            using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(parameters))
             {
                 HandleAnimParamsMsg(networkReader);
                 RpcOnAnimationParametersClientMessage(parameters);
@@ -600,14 +600,14 @@ namespace Mirror
         [ClientRpc]
         void RpcOnAnimationClientMessage(int stateHash, float normalizedTime, int layerId, float weight, byte[] parameters)
         {
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
+            using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(parameters))
                 HandleAnimMsg(stateHash, normalizedTime, layerId, weight, networkReader);
         }
 
         [ClientRpc]
         void RpcOnAnimationParametersClientMessage(byte[] parameters)
         {
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
+            using (NetworkReaderPooled networkReader = NetworkReaderPool.Get(parameters))
                 HandleAnimParamsMsg(networkReader);
         }
 

@@ -73,7 +73,7 @@ namespace Mirror
 
         public override bool HasPreviewGUI()
         {
-            // need to check if target is null to stop MissingReferenceException 
+            // need to check if target is null to stop MissingReferenceException
             return target != null && target is GameObject gameObject && gameObject.GetComponent<NetworkIdentity>() != null;
         }
 
@@ -180,9 +180,9 @@ namespace Mirror
                 observerRect.x += 20;
                 observerRect.y += observerRect.height;
 
-                foreach (KeyValuePair<int, NetworkConnection> kvp in identity.observers)
+                foreach (KeyValuePair<int, NetworkConnectionToClient> kvp in identity.observers)
                 {
-                    GUI.Label(observerRect, kvp.Value.address + ":" + kvp.Value, styles.componentName);
+                    GUI.Label(observerRect, $"{kvp.Value.address}:{kvp.Value}", styles.componentName);
                     observerRect.y += observerRect.height;
                     Y = observerRect.y;
                 }
@@ -196,7 +196,7 @@ namespace Mirror
             if (identity.connectionToClient != null)
             {
                 Rect ownerRect = new Rect(initialX, Y + 10, 400, 20);
-                GUI.Label(ownerRect, new GUIContent("Client Authority: " + identity.connectionToClient), styles.labelStyle);
+                GUI.Label(ownerRect, new GUIContent($"Client Authority: {identity.connectionToClient}"), styles.labelStyle);
                 Y += ownerRect.height;
             }
             return Y;
@@ -277,7 +277,7 @@ namespace Mirror
         NetworkIdentityInfo GetAssetId(NetworkIdentity identity)
         {
             string assetId = identity.assetId.ToString();
-            if (string.IsNullOrEmpty(assetId))
+            if (string.IsNullOrWhiteSpace(assetId))
             {
                 assetId = "<object has no prefab>";
             }

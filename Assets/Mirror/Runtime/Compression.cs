@@ -1,5 +1,6 @@
 // Quaternion compression from DOTSNET
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Mirror
@@ -77,6 +78,7 @@ namespace Mirror
         const ushort TenBitsMax = 0x3FF;
 
         // helper function to access 'nth' component of quaternion
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static float QuaternionElement(Quaternion q, int element)
         {
             switch (element)
@@ -137,6 +139,7 @@ namespace Mirror
         // Quaternion normalizeSAFE from ECS math.normalizesafe()
         // => useful to produce valid quaternions even if client sends invalid
         //    data
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static Quaternion QuaternionNormalizeSafe(Quaternion value)
         {
             // The smallest positive normal number representable in a float.
@@ -198,89 +201,89 @@ namespace Mirror
         {
             if (value <= 240)
             {
-                writer.Write((byte)value);
+                writer.WriteByte((byte)value);
                 return;
             }
             if (value <= 2287)
             {
-                writer.Write((byte)(((value - 240) >> 8) + 241));
-                writer.Write((byte)((value - 240) & 0xFF));
+                writer.WriteByte((byte)(((value - 240) >> 8) + 241));
+                writer.WriteByte((byte)((value - 240) & 0xFF));
                 return;
             }
             if (value <= 67823)
             {
-                writer.Write((byte)249);
-                writer.Write((byte)((value - 2288) >> 8));
-                writer.Write((byte)((value - 2288) & 0xFF));
+                writer.WriteByte((byte)249);
+                writer.WriteByte((byte)((value - 2288) >> 8));
+                writer.WriteByte((byte)((value - 2288) & 0xFF));
                 return;
             }
             if (value <= 16777215)
             {
-                writer.Write((byte)250);
-                writer.Write((byte)(value & 0xFF));
-                writer.Write((byte)((value >> 8) & 0xFF));
-                writer.Write((byte)((value >> 16) & 0xFF));
+                writer.WriteByte((byte)250);
+                writer.WriteByte((byte)(value & 0xFF));
+                writer.WriteByte((byte)((value >> 8) & 0xFF));
+                writer.WriteByte((byte)((value >> 16) & 0xFF));
                 return;
             }
             if (value <= 4294967295)
             {
-                writer.Write((byte)251);
-                writer.Write((byte)(value & 0xFF));
-                writer.Write((byte)((value >> 8) & 0xFF));
-                writer.Write((byte)((value >> 16) & 0xFF));
-                writer.Write((byte)((value >> 24) & 0xFF));
+                writer.WriteByte((byte)251);
+                writer.WriteByte((byte)(value & 0xFF));
+                writer.WriteByte((byte)((value >> 8) & 0xFF));
+                writer.WriteByte((byte)((value >> 16) & 0xFF));
+                writer.WriteByte((byte)((value >> 24) & 0xFF));
                 return;
             }
             if (value <= 1099511627775)
             {
-                writer.Write((byte)252);
-                writer.Write((byte)(value & 0xFF));
-                writer.Write((byte)((value >> 8) & 0xFF));
-                writer.Write((byte)((value >> 16) & 0xFF));
-                writer.Write((byte)((value >> 24) & 0xFF));
-                writer.Write((byte)((value >> 32) & 0xFF));
+                writer.WriteByte((byte)252);
+                writer.WriteByte((byte)(value & 0xFF));
+                writer.WriteByte((byte)((value >> 8) & 0xFF));
+                writer.WriteByte((byte)((value >> 16) & 0xFF));
+                writer.WriteByte((byte)((value >> 24) & 0xFF));
+                writer.WriteByte((byte)((value >> 32) & 0xFF));
                 return;
             }
             if (value <= 281474976710655)
             {
-                writer.Write((byte)253);
-                writer.Write((byte)(value & 0xFF));
-                writer.Write((byte)((value >> 8) & 0xFF));
-                writer.Write((byte)((value >> 16) & 0xFF));
-                writer.Write((byte)((value >> 24) & 0xFF));
-                writer.Write((byte)((value >> 32) & 0xFF));
-                writer.Write((byte)((value >> 40) & 0xFF));
+                writer.WriteByte((byte)253);
+                writer.WriteByte((byte)(value & 0xFF));
+                writer.WriteByte((byte)((value >> 8) & 0xFF));
+                writer.WriteByte((byte)((value >> 16) & 0xFF));
+                writer.WriteByte((byte)((value >> 24) & 0xFF));
+                writer.WriteByte((byte)((value >> 32) & 0xFF));
+                writer.WriteByte((byte)((value >> 40) & 0xFF));
                 return;
             }
             if (value <= 72057594037927935)
             {
-                writer.Write((byte)254);
-                writer.Write((byte)(value & 0xFF));
-                writer.Write((byte)((value >> 8) & 0xFF));
-                writer.Write((byte)((value >> 16) & 0xFF));
-                writer.Write((byte)((value >> 24) & 0xFF));
-                writer.Write((byte)((value >> 32) & 0xFF));
-                writer.Write((byte)((value >> 40) & 0xFF));
-                writer.Write((byte)((value >> 48) & 0xFF));
+                writer.WriteByte((byte)254);
+                writer.WriteByte((byte)(value & 0xFF));
+                writer.WriteByte((byte)((value >> 8) & 0xFF));
+                writer.WriteByte((byte)((value >> 16) & 0xFF));
+                writer.WriteByte((byte)((value >> 24) & 0xFF));
+                writer.WriteByte((byte)((value >> 32) & 0xFF));
+                writer.WriteByte((byte)((value >> 40) & 0xFF));
+                writer.WriteByte((byte)((value >> 48) & 0xFF));
                 return;
             }
 
             // all others
             {
-                writer.Write((byte)255);
-                writer.Write((byte)(value & 0xFF));
-                writer.Write((byte)((value >> 8) & 0xFF));
-                writer.Write((byte)((value >> 16) & 0xFF));
-                writer.Write((byte)((value >> 24) & 0xFF));
-                writer.Write((byte)((value >> 32) & 0xFF));
-                writer.Write((byte)((value >> 40) & 0xFF));
-                writer.Write((byte)((value >> 48) & 0xFF));
-                writer.Write((byte)((value >> 56) & 0xFF));
+                writer.WriteByte((byte)255);
+                writer.WriteByte((byte)(value & 0xFF));
+                writer.WriteByte((byte)((value >> 8) & 0xFF));
+                writer.WriteByte((byte)((value >> 16) & 0xFF));
+                writer.WriteByte((byte)((value >> 24) & 0xFF));
+                writer.WriteByte((byte)((value >> 32) & 0xFF));
+                writer.WriteByte((byte)((value >> 40) & 0xFF));
+                writer.WriteByte((byte)((value >> 48) & 0xFF));
+                writer.WriteByte((byte)((value >> 56) & 0xFF));
             }
         }
 
-
         // zigzag encoding https://gist.github.com/mfuerstenau/ba870a29e16536fdbaba
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void CompressVarInt(NetworkWriter writer, long i)
         {
             ulong zigzagged = (ulong)((i >> 63) ^ (i << 1));
@@ -297,7 +300,7 @@ namespace Mirror
             }
 
             byte a1 = reader.ReadByte();
-            if (a0 >= 241 && a0 <= 248)
+            if (a0 <= 248)
             {
                 return 240 + ((a0 - (ulong)241) << 8) + a1;
             }
@@ -344,10 +347,11 @@ namespace Mirror
                 return a1 + (((ulong)a2) << 8) + (((ulong)a3) << 16) + (((ulong)a4) << 24) + (((ulong)a5) << 32) + (((ulong)a6) << 40) + (((ulong)a7) << 48)  + (((ulong)a8) << 56);
             }
 
-            throw new IndexOutOfRangeException("DecompressVarInt failure: " + a0);
+            throw new IndexOutOfRangeException($"DecompressVarInt failure: {a0}");
         }
 
         // zigzag decoding https://gist.github.com/mfuerstenau/ba870a29e16536fdbaba
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long DecompressVarInt(NetworkReader reader)
         {
             ulong data = DecompressVarUInt(reader);

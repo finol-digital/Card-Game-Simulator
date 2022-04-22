@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Mirror
@@ -9,9 +10,10 @@ namespace Mirror
     {
         public const int LocalConnectionId = 0;
 
-        // NetworkIdentities that this connection can see
-        // TODO move to server's NetworkConnectionToClient?
-        internal readonly HashSet<NetworkIdentity> observing = new HashSet<NetworkIdentity>();
+        /// <summary>NetworkIdentities that this connection can see</summary>
+        // DEPRECATED 2022-02-05
+        [Obsolete("Cast to NetworkConnectionToClient to access .observing")]
+        public HashSet<NetworkIdentity> observing => ((NetworkConnectionToClient)this).observing;
 
         /// <summary>Unique identifier for this connection that is assigned by the transport layer.</summary>
         // assigned by transport, this id is unique for every connection on server.
@@ -44,7 +46,9 @@ namespace Mirror
         //            fixes a bug where DestroyOwnedObjects wouldn't find the
         //            netId anymore: https://github.com/vis2k/Mirror/issues/1380
         //            Works fine with NetworkIdentity pointers though.
-        public readonly HashSet<NetworkIdentity> clientOwnedObjects = new HashSet<NetworkIdentity>();
+        // DEPRECATED 2022-02-05
+        [Obsolete("Cast to NetworkConnectionToClient to access .clientOwnedObjects")]
+        public HashSet<NetworkIdentity> clientOwnedObjects => ((NetworkConnectionToClient)this).clientOwnedObjects;
 
         // batching from server to client & client to server.
         // fewer transport calls give us significantly better performance/scale.
@@ -76,7 +80,6 @@ namespace Mirror
         internal NetworkConnection(int networkConnectionId) : this()
         {
             connectionId = networkConnectionId;
-            // TODO why isn't lastMessageTime set in here like in the other ctor?
         }
 
         // TODO if we only have Reliable/Unreliable, then we could initialize
@@ -124,10 +127,11 @@ namespace Mirror
 
         // Send stage one: NetworkMessage<T>
         /// <summary>Send a NetworkMessage to this connection over the given channel.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Send<T>(T message, int channelId = Channels.Reliable)
             where T : struct, NetworkMessage
         {
-            using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
+            using (NetworkWriterPooled writer = NetworkWriterPool.Get())
             {
                 // pack message and send allocation free
                 MessagePacking.Pack(message, writer);
@@ -139,9 +143,10 @@ namespace Mirror
         // Send stage two: serialized NetworkMessage as ArraySegment<byte>
         // internal because no one except Mirror should send bytes directly to
         // the client. they would be detected as a message. send messages instead.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal virtual void Send(ArraySegment<byte> segment, int channelId = Channels.Reliable)
         {
-            //Debug.Log("ConnectionSend " + this + " bytes:" + BitConverter.ToString(segment.Array, segment.Offset, segment.Count));
+            //Debug.Log($"ConnectionSend {this} bytes:{BitConverter.ToString(segment.Array, segment.Offset, segment.Count)}");
 
             // add to batch no matter what.
             // batching will try to fit as many as possible into MTU.
@@ -159,10 +164,11 @@ namespace Mirror
             //
             // NOTE: we do NOT ValidatePacketSize here yet. the final packet
             //       will be the full batch, including timestamp.
-            GetBatchForChannelId(channelId).AddMessage(segment);
+            GetBatchForChannelId(channelId).AddMessage(segment, NetworkTime.localTime);
         }
 
         // Send stage three: hand off to transport
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected abstract void SendToTransport(ArraySegment<byte> segment, int channelId = Channels.Reliable);
 
         // flush batched messages at the end of every Update.
@@ -174,10 +180,10 @@ namespace Mirror
                 // make and send as many batches as necessary from the stored
                 // messages.
                 Batcher batcher = kvp.Value;
-                using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
+                using (NetworkWriterPooled writer = NetworkWriterPool.Get())
                 {
                     // make a batch with our local time (double precision)
-                    while (batcher.MakeNextBatch(writer, NetworkTime.localTime))
+                    while (batcher.GetBatch(writer))
                     {
                         // validate packet before handing the batch to the
                         // transport. this guarantees that we always stay
@@ -198,6 +204,9 @@ namespace Mirror
                 }
             }
         }
+
+        /// <summary>Check if we received a message within the last 'timeout' seconds.</summary>
+        internal virtual bool IsAlive(float timeout) => Time.time - lastMessageTime < timeout;
 
         /// <summary>Disconnects this connection.</summary>
         // for future reference, here is how Disconnects work in Mirror.
@@ -220,65 +229,5 @@ namespace Mirror
         public abstract void Disconnect();
 
         public override string ToString() => $"connection({connectionId})";
-
-        // TODO move to server's NetworkConnectionToClient?
-        internal void AddToObserving(NetworkIdentity netIdentity)
-        {
-            observing.Add(netIdentity);
-
-            // spawn identity for this conn
-            NetworkServer.ShowForConnection(netIdentity, this);
-        }
-
-        // TODO move to server's NetworkConnectionToClient?
-        internal void RemoveFromObserving(NetworkIdentity netIdentity, bool isDestroyed)
-        {
-            observing.Remove(netIdentity);
-
-            if (!isDestroyed)
-            {
-                // hide identity for this conn
-                NetworkServer.HideForConnection(netIdentity, this);
-            }
-        }
-
-        // TODO move to server's NetworkConnectionToClient?
-        internal void RemoveFromObservingsObservers()
-        {
-            foreach (NetworkIdentity netIdentity in observing)
-            {
-                netIdentity.RemoveObserverInternal(this);
-            }
-            observing.Clear();
-        }
-
-        /// <summary>Check if we received a message within the last 'timeout' seconds.</summary>
-        internal virtual bool IsAlive(float timeout) => Time.time - lastMessageTime < timeout;
-
-        internal void AddOwnedObject(NetworkIdentity obj)
-        {
-            clientOwnedObjects.Add(obj);
-        }
-
-        internal void RemoveOwnedObject(NetworkIdentity obj)
-        {
-            clientOwnedObjects.Remove(obj);
-        }
-
-        internal void DestroyOwnedObjects()
-        {
-            // create a copy because the list might be modified when destroying
-            HashSet<NetworkIdentity> tmp = new HashSet<NetworkIdentity>(clientOwnedObjects);
-            foreach (NetworkIdentity netIdentity in tmp)
-            {
-                if (netIdentity != null)
-                {
-                    NetworkServer.Destroy(netIdentity.gameObject);
-                }
-            }
-
-            // clear the hashset because we destroyed them all
-            clientOwnedObjects.Clear();
-        }
     }
 }

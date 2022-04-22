@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Mirror
 {
+    [AddComponentMenu("Network/ Interest Management/ Spatial Hash/Spatial Hashing Interest Management")]
     public class SpatialHashingInterestManagement : InterestManagement
     {
         [Tooltip("The maximum range that objects will be visible at.")]
@@ -30,7 +31,7 @@ namespace Mirror
         public bool showSlider;
 
         // the grid
-        Grid2D<NetworkConnection> grid = new Grid2D<NetworkConnection>();
+        Grid2D<NetworkConnectionToClient> grid = new Grid2D<NetworkConnectionToClient>();
 
         // project 3d world position to grid position
         Vector2Int ProjectToGrid(Vector3 position) =>
@@ -38,7 +39,7 @@ namespace Mirror
             ? Vector2Int.RoundToInt(new Vector2(position.x, position.z) / resolution)
             : Vector2Int.RoundToInt(new Vector2(position.x, position.y) / resolution);
 
-        public override bool OnCheckObserver(NetworkIdentity identity, NetworkConnection newObserver)
+        public override bool OnCheckObserver(NetworkIdentity identity, NetworkConnectionToClient newObserver)
         {
             // calculate projected positions
             Vector2Int projected = ProjectToGrid(identity.transform.position);
@@ -51,7 +52,7 @@ namespace Mirror
             return (projected - observerProjected).sqrMagnitude <= 2;
         }
 
-        public override void OnRebuildObservers(NetworkIdentity identity, HashSet<NetworkConnection> newObservers, bool initialize)
+        public override void OnRebuildObservers(NetworkIdentity identity, HashSet<NetworkConnectionToClient> newObservers)
         {
             // add everyone in 9 neighbour grid
             // -> pass observers to GetWithNeighbours directly to avoid allocations
@@ -60,13 +61,17 @@ namespace Mirror
             grid.GetWithNeighbours(current, newObservers);
         }
 
+        [ServerCallback]
+        public override void Reset()
+        {
+            lastRebuildTime = 0D;
+        }
+
         // update everyone's position in the grid
         // (internal so we can update from tests)
+        [ServerCallback]
         internal void Update()
         {
-            // only on server
-            if (!NetworkServer.active) return;
-
             // NOTE: unlike Scene/MatchInterestManagement, this rebuilds ALL
             //       entities every INTERVAL. consider the other approach later.
 
@@ -113,6 +118,8 @@ namespace Mirror
             }
         }
 
+// OnGUI allocates even if it does nothing. avoid in release.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         // slider from dotsnet. it's nice to play around with in the benchmark
         // demo.
         void OnGUI()
@@ -132,5 +139,6 @@ namespace Mirror
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
         }
+#endif
     }
 }
