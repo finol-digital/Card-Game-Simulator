@@ -473,51 +473,6 @@ jobs:
           overwrite: true
           body: ${{ github.event.release.body }}
 
-  deployToSteam:
-    name: Deploy to Steam
-    runs-on: ubuntu-latest
-    needs: [buildWithMac, buildWithWindows]
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Download StandaloneWindows Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: cgs-StandaloneWindows
-          path: build/StandaloneWindows
-      - name: Download StandaloneLinux64 Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: cgs-StandaloneLinux64
-          path: build/StandaloneLinux64
-      - name: Download StandaloneWindows64 Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: cgs-StandaloneWindows64
-          path: build/StandaloneWindows64
-      - name: Download App
-        uses: actions/download-artifact@v3
-        with:
-          name: Card Game Simulator.app
-          path: build/StandaloneOSX/Card Game Simulator.app
-      - name: Deploy to Steam
-        uses: game-ci/steam-deploy@v1
-        with:
-          username: ${{ secrets.STEAM_USERNAME }}
-          password:  ${{ secrets.STEAM_PASSWORD }}
-          configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
-          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
-          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
-          appId: 1742850
-          buildDescription: v${{ needs.buildWithLinux.outputs.buildVersion }}
-          rootPath: build
-          depot1Path: StandaloneWindows
-          depot2Path: StandaloneLinux64
-          depot3Path: StandaloneWindows64
-          depot4Path: StandaloneOSX
-          releaseBranch: prerelease
-
   deployToMicrosoftStore:
     name: Deploy to the Microsoft Store
     runs-on: windows-2019
@@ -638,10 +593,55 @@ jobs:
           New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
+  deployToSteam:
+    name: Deploy to Steam
+    runs-on: ubuntu-latest
+    needs:  buildWithWindows
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Download StandaloneWindows Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cgs-StandaloneWindows
+          path: build/StandaloneWindows
+      - name: Download StandaloneLinux64 Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cgs-StandaloneLinux64
+          path: build/StandaloneLinux64
+      - name: Download StandaloneWindows64 Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cgs-StandaloneWindows64
+          path: build/StandaloneWindows64
+      - name: Download App
+        uses: actions/download-artifact@v3
+        with:
+          name: Card Game Simulator.app
+          path: build/StandaloneOSX/Card Game Simulator.app
+      - name: Deploy to Steam
+        uses: game-ci/steam-deploy@v1
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}
+          password:  ${{ secrets.STEAM_PASSWORD }}
+          configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
+          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
+          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
+          appId: 1742850
+          buildDescription: v${{ needs.buildWithWindows.outputs.buildVersion }}
+          rootPath: build
+          depot1Path: StandaloneWindows
+          depot2Path: StandaloneLinux64
+          depot3Path: StandaloneWindows64
+          depot4Path: StandaloneOSX
+          releaseBranch: prerelease
+
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [buildWithLinux, deployToGooglePlay, deployToAppStore, deployToGitHubPages, deployToMacAppStore, deployToSteam, deployToMicrosoftStore]
+    needs: [buildWithWindows, deployToGooglePlay, deployToAppStore, deployToGitHubPages, deployToMacAppStore, deployToMicrosoftStore, deployToSteam]
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
@@ -650,7 +650,7 @@ jobs:
         id: prepare
         shell: bash
         env:
-          VERSION: v${{ needs.buildWithLinux.outputs.buildVersion }}
+          VERSION: v${{ needs.buildWithWindows.outputs.buildVersion }}
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: |
           export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"

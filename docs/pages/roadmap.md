@@ -6,10 +6,10 @@ permalink: roadmap.html
 
 ## What's New - v1.73
 - Game-Play: Snap to Grid in Play Area
+- Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
 - Game-Play: Convert to stack and convert to card
-- Bug-Fix: Multiplayer/Networking
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
 - Tech: Restore SonarQube and Code Coverage
 - Accessibility: New How-To-Play Video
