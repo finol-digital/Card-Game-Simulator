@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
@@ -94,14 +95,14 @@ namespace Cgs.Play.Multiplayer
 
         private void EnableLrm()
         {
-            // TODO: CgsNetManager.Instance.lrm.serverListUpdated.RemoveAllListeners();
-            // TODO: CgsNetManager.Instance.lrm.serverListUpdated.AddListener(Redisplay);
+            CgsNetManager.Instance.lrm.serverListUpdated.RemoveAllListeners();
+            CgsNetManager.Instance.lrm.serverListUpdated.AddListener(Redisplay);
         }
 
         private void Start()
         {
-            roomIdIpInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
-            passwordInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            passwordInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
             EnableLrm();
         }
 
@@ -115,12 +116,12 @@ namespace Cgs.Play.Multiplayer
                 return;
 
             _lrmUpdateSecond += Time.deltaTime;
-           /* if (IsInternetConnectionSource && CgsNetManager.Instance.lrm.IsAuthenticated() &&
+            if (IsInternetConnectionSource && CgsNetManager.Instance.lrm.IsAuthenticated() &&
                 _lrmUpdateSecond > ServerListUpdateTime)
             {
                 CgsNetManager.Instance.lrm.RequestServerList();
                 _lrmUpdateSecond = 0;
-            }// TODO: */
+            }
 
             if (roomIdIpInputField.isFocused)
             {
@@ -179,12 +180,10 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsLanConnectionSource)
                 Rebuild(_discoveredServers, SelectServer, _selectedServerId.GetValueOrDefault());
-            // TODO: else
-            /*    Rebuild(
+            else
+                Rebuild(
                     CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
-                        server => server),
-                    SelectServer,
-                    _selectedServerIp);*/
+                        server => server), SelectServer, _selectedServerIp);
 
             var ip = TargetIpAddress;
             joinButton.interactable =
@@ -217,8 +216,6 @@ namespace Cgs.Play.Multiplayer
 
         private void StartHost()
         {
-            // TODO:
-            /*
             if (IsInternetConnectionSource)
             {
                 CgsNetManager.Instance.lrm.serverName = CgsNetManager.Instance.RoomName;
@@ -226,7 +223,7 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.lrm.isPublicServer = true;
             }
             else
-                Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;*/
+                Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
 
             NetworkManager.singleton.StartHost();
             CgsNetManager.Instance.Discovery.AdvertiseServer();
@@ -292,14 +289,14 @@ namespace Cgs.Play.Multiplayer
                         out var discoveryResponse) && discoveryResponse.Uri != null)
                 {
                     CgsNetManager.Instance.RoomName = discoveryResponse.RoomName;
-                    // TODO: Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
+                    Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
                     if (RuntimePlatform.Android.ToString().Equals(discoveryResponse.HostPlatform))
                         CardGameManager.Instance.Messenger.Show(AndroidWarningMessage, true);
                     NetworkManager.singleton.StartClient(discoveryResponse.Uri);
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute))
                 {
-                    // TODO: Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
+                    Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
                     var host = _selectedServerIp.StartsWith("lrm://") ? "" : "lrm://" + _selectedServerIp;
                     NetworkManager.singleton.StartClient(new Uri(host));
                 }
@@ -312,15 +309,13 @@ namespace Cgs.Play.Multiplayer
             }
             else
             {
-                // TODO:
-                /*
                 if (CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
                         server => server).TryGetValue(_selectedServerIp, out var serverRoom))
                 {
                     CgsNetManager.Instance.RoomName = serverRoom.serverName;
                     if (RuntimePlatform.Android.ToString().Equals(serverRoom.serverData))
                         CardGameManager.Instance.Messenger.Show(AndroidWarningMessage, true);
-                }*/
+                }
 
                 NetworkManager.singleton.networkAddress = _selectedServerIp;
                 NetworkManager.singleton.StartClient();
@@ -348,7 +343,7 @@ namespace Cgs.Play.Multiplayer
 
         private void OnDisable()
         {
-            // TODO: CgsNetManager.Instance.lrm.serverListUpdated.RemoveListener(Redisplay);
+            CgsNetManager.Instance.lrm.serverListUpdated.RemoveListener(Redisplay);
         }
     }
 }

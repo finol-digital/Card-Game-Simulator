@@ -7,10 +7,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Cgs.CardGameView.Multiplayer;
+using LightReflectiveMirror;
 using Mirror;
 using UnityEngine;
 using UnityExtensionMethods;
-// TODO: using LightReflectiveMirror;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -21,18 +21,18 @@ namespace Cgs.Play.Multiplayer
 
         public string RoomName
         {
-            get => CardGameManager.Current.Name;// TODO: lrm.serverName ?? CardGameManager.Current.Name;
-            set => Debug.Log(value);// TODO: lrm.serverName = value);
+            get => lrm.serverName ?? CardGameManager.Current.Name;
+            set => lrm.serverName = value;
         }
 
         public string RoomIdIp => "localhost".Equals(networkAddress, StringComparison.Ordinal)
             ? RoomId
             : networkAddress;
 
-        private string RoomId => // TODO: string.IsNullOrEmpty(lrm.serverId) ?
-            Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(f => f.AddressFamily == AddressFamily.InterNetwork)
-                .ToString();
-        // TODO: : lrm.serverId;
+        private string RoomId => string.IsNullOrEmpty(lrm.serverId)
+            ? Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(f => f.AddressFamily == AddressFamily.InterNetwork)
+                .ToString()
+            : lrm.serverId;
 
         public static int ActiveConnectionCount => NetworkServer.connections.Count(con => con.Value.isReady);
 
@@ -40,9 +40,9 @@ namespace Cgs.Play.Multiplayer
 
         public CgsNetDiscovery Discovery { get; private set; }
 
-        // TODO: public LRMDirectConnectModule lanConnector;
+        public LRMDirectConnectModule lanConnector;
 
-        // TODO: public LightReflectiveMirrorTransport lrm;
+        public LightReflectiveMirrorTransport lrm;
 
         public PlayController playController;
 
