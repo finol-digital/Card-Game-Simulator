@@ -40,8 +40,8 @@ namespace Cgs
         private const int DefaultResolutionIndex = 0;
         private static readonly Vector2 DefaultResolution = new Vector2(1920, 1080);
 #else
-        private const int DefaultResolutionIndex = 1;
-        private static readonly Vector2 DefaultResolution = new Vector2(2560, 1440);
+        private const int DefaultResolutionIndex = 2;
+        private static readonly Vector2 DefaultResolution = new Vector2(3200, 1800);
 #endif
 
         // These options are reiterated in the Settings dropdown
