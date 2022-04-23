@@ -425,7 +425,7 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows
-          - StandaloneWindows64
+#          - StandaloneWindows64
           - WSAPlayer
     steps:
       - name: Checkout Repository
