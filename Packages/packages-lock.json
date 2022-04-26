@@ -7,28 +7,6 @@
       "dependencies": {},
       "hash": "65aa6b13a629ff91b45e20bfb1543f8839aad75b"
     },
-    "com.google.external-dependency-manager": {
-      "version": "file:../GooglePackages/com.google.external-dependency-manager-1.2.170.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {}
-    },
-    "com.google.firebase.app": {
-      "version": "file:../GooglePackages/com.google.firebase.app-8.9.0.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.google.external-dependency-manager": "1.2.170"
-      }
-    },
-    "com.google.firebase.dynamic-links": {
-      "version": "file:../GooglePackages/com.google.firebase.dynamic-links-8.9.0.tgz",
-      "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {
-        "com.google.firebase.app": "8.9.0"
-      }
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
