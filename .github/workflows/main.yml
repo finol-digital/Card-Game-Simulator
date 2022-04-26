@@ -205,7 +205,6 @@ jobs:
           body:  ${{ github.event.release.body }}
 
   buildWithMac:
-    if: false
     name: Build for StandaloneOSX
     runs-on: macos-latest
     needs: tests
@@ -417,7 +416,7 @@ jobs:
   buildWithWindows:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-2019
-    needs: [buildWithLinux]
+    needs: [buildWithLinux, buildWithMac]
     outputs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     strategy:
