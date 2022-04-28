@@ -14,6 +14,7 @@ permalink: roadmap.html
 - Tech: Restore SonarQube and Code Coverage
 - Accessibility: New How-To-Play Video
 - Cards: CardRotation field in json for portrait vs landscape.
+- Game-Play: Counters
 
 ## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)

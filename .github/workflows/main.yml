@@ -167,7 +167,7 @@ jobs:
             Library-build-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@fix/logs2021
+        uses: game-ci/unity-builder@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -182,6 +182,13 @@ jobs:
           androidKeyaliasName: cgs
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
           androidTargetSdkVersion: AndroidApiLevel31
+      - name: Return license
+        uses: game-ci/unity-return-license@v2
+        if: always()
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
       - name: Upload Build
         uses: actions/upload-artifact@v3
         if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
@@ -207,6 +214,7 @@ jobs:
   buildWithMac:
     name: Build for StandaloneOSX
     runs-on: macos-latest
+    if: false
     needs: tests
     outputs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
@@ -223,7 +231,7 @@ jobs:
           restore-keys: Library-buildMac-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@fix/logs2021
+        uses: game-ci/unity-builder@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -424,7 +432,7 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows
-#          - StandaloneWindows64
+          - StandaloneWindows64
           - WSAPlayer
     steps:
       - name: Checkout Repository
@@ -441,7 +449,7 @@ jobs:
             Library-buildWindows-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@fix/logs2021
+        uses: game-ci/unity-builder@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
