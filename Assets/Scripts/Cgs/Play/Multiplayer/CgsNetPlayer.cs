@@ -46,14 +46,14 @@ namespace Cgs.Play.Multiplayer
                 .Cast<IReadOnlyList<UnityCard>>().ToList();
         }
 
-        private readonly SyncList<string[]> _handCards = new SyncList<string[]>();
+        private readonly SyncList<string[]> _handCards = new();
 
         public IReadOnlyList<string> GetHandNames()
         {
             return _handNames.Select(handName => handName).ToList();
         }
 
-        private readonly SyncList<string> _handNames = new SyncList<string>();
+        private readonly SyncList<string> _handNames = new();
 
         public CardModel RemovedCard { get; set; }
 

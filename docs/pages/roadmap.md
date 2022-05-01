@@ -9,21 +9,20 @@ permalink: roadmap.html
 - Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
-- Game-Play: Convert to stack and convert to card
-- Bug-Fix: Account for playmat rotation and zoom on snap to grid
-- Tech: Restore SonarQube and Code Coverage
-- Accessibility: New How-To-Play Video
 - Cards: CardRotation field in json for portrait vs landscape.
-- Game-Play: Counters
+- Game-Play: Convert to stack and convert to card
+- Game-Play: Modify dice to have more than 6 faces and rotate
+- Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
+- Bug-Fix: Account for playmat rotation and zoom on snap to grid
 
 ## Backlog
-- Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
+- Tech: Restore SonarQube and Code Coverage
+- Accessibility: New How-To-Play Video
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is moving cards
 - Game-Play: Button for max zoom out
 - Game-Play: Click outside card stack viewer to close it
 - Game-Play: Cut and merge stacks
-- Game-Play: Modify dice to have more than 6 faces
 - Game-Play: Color the default card action green
 - Game-Play: Support multiple card selection
 - Game-Play: Always reveal the top card of a stack

@@ -64,7 +64,7 @@ namespace Cgs.Play
                 var cardSize = CardGameManager.PixelsPerInch * playArea.CurrentZoom *
                                new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
 
-                var up = Vector2.up * (Screen.height - cardSize.y / 2f - cardStackLabelHeight);
+                var up = Vector2.up * (Screen.height - cardSize.y - cardStackLabelHeight);
                 var right = Vector2.right * (cardSize.x / 2f);
                 RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) playMat.transform, (up + right),
                     null, out var nextDeckPosition);
@@ -77,6 +77,12 @@ namespace Cgs.Play
                     nextOffset = new Rect(nextDeckPosition, cardSize);
                 }
 
+                var widthDelta = CardGameManager.Current.PlayMatSize.X * CardGameManager.PixelsPerInch / 2.0f;
+                var heightDelta = CardGameManager.Current.PlayMatSize.Y * CardGameManager.PixelsPerInch / 2.0f;
+                nextDeckPosition = new Vector2(
+                    Mathf.Clamp(nextDeckPosition.x, -widthDelta + cardSize.x / 2.0f, widthDelta - cardSize.x / 2.0f),
+                    Mathf.Clamp(nextDeckPosition.y, -heightDelta + cardSize.y / 2.0f, heightDelta - cardSize.y / 2.0f));
+
                 return nextDeckPosition;
             }
         }
@@ -87,11 +93,13 @@ namespace Cgs.Play
 
         private LobbyMenu _lobby;
 
-        private DeckLoadMenu DeckLoader => _deckLoader ??= Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
+        private DeckLoadMenu DeckLoader =>
+            _deckLoader ??= Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
 
         private DeckLoadMenu _deckLoader;
 
-        private CardSearchMenu CardSearcher => _cardSearcher ??= Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
+        private CardSearchMenu CardSearcher =>
+            _cardSearcher ??= Instantiate(searchMenuPrefab).GetOrAddComponent<CardSearchMenu>();
 
         private CardSearchMenu _cardSearcher;
 
@@ -99,7 +107,8 @@ namespace Cgs.Play
 
         private HandDealer _dealer;
 
-        public DecisionModal Decider => _decider ??= Instantiate(decisionModalPrefab).GetOrAddComponent<DecisionModal>();
+        public DecisionModal Decider =>
+            _decider ??= Instantiate(decisionModalPrefab).GetOrAddComponent<DecisionModal>();
 
         private DecisionModal _decider;
 
@@ -215,12 +224,12 @@ namespace Cgs.Play
             {
                 CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
                 var i = 1;
-                foreach (var cardGroup in extraGroups)
+                foreach (var (stackName, cards) in extraGroups)
                 {
                     var position = newDeckPosition + Vector2.right *
                         (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X + DeckPositionBuffer);
-                    CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(cardGroup.Key,
-                        cardGroup.Value.Cast<UnityCard>().Reverse(), position);
+                    CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(stackName, cards.Cast<UnityCard>().Reverse(),
+                        position);
                     i++;
                 }
             }
@@ -228,11 +237,11 @@ namespace Cgs.Play
             {
                 _soloDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition);
                 var i = 1;
-                foreach (var cardGroup in extraGroups)
+                foreach (var (groupName, cards) in extraGroups)
                 {
                     var position = newDeckPosition + Vector2.right *
                         (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X);
-                    CreateCardStack(cardGroup.Key, cardGroup.Value.Cast<UnityCard>().Reverse().ToList(), position);
+                    CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position);
                     i++;
                 }
             }
@@ -295,7 +304,7 @@ namespace Cgs.Play
 
         private void DealStartingHand()
         {
-            drawer.Show();
+            drawer.SemiShow();
             Deal(Dealer.Count);
         }
 

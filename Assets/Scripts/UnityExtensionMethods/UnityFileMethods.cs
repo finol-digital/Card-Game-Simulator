@@ -92,11 +92,11 @@ namespace UnityExtensionMethods
             if (!Directory.Exists(targetDir))
                 Directory.CreateDirectory(targetDir);
 
-            foreach (string filePath in Directory.GetFiles(sourceDir))
+            foreach (var filePath in Directory.GetFiles(sourceDir))
                 if (!filePath.EndsWith(MetaExtension))
                     File.Copy(filePath, Path.Combine(targetDir, Path.GetFileName(filePath)));
 
-            foreach (string directory in Directory.GetDirectories(sourceDir))
+            foreach (var directory in Directory.GetDirectories(sourceDir))
                 if (!string.IsNullOrEmpty(directory))
                     CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
         }
@@ -115,10 +115,10 @@ namespace UnityExtensionMethods
 #elif UNITY_STANDALONE
         public static string CacheFile(string sourceFilePath)
         {
-            string fileName = Path.GetFileName(sourceFilePath);
-            string cacheFilePath =
+            var fileName = Path.GetFileName(sourceFilePath);
+            var cacheFilePath =
                 Path.Combine(Application.temporaryCachePath, fileName ?? throw new FileNotFoundException());
-            File.Copy(sourceFilePath, cacheFilePath);
+            File.Copy(sourceFilePath, cacheFilePath, true);
             return cacheFilePath;
         }
 #endif
