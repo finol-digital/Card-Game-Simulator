@@ -228,6 +228,8 @@ namespace Cgs.CardGameView.Viewer
 
             if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.isFacedown)
                 nameVisibleButton.gameObject.SetActive(SelectedCardModel.isFacedown);
+            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.isFacedown)
+                nameVisibleButton.gameObject.SetActive(SelectedCardModel.isFacedown);
             var isNameVisible = IsNameVisible;
             if (nameVisibleButtonImage.gameObject.activeSelf != isNameVisible)
                 nameVisibleButtonImage.gameObject.SetActive(isNameVisible);
@@ -259,8 +261,6 @@ namespace Cgs.CardGameView.Viewer
                 DecrementProperty();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
                 IncrementProperty();
-            else if (Inputs.IsOption)
-                Zoom = !Zoom;
             else if (Inputs.IsCancel)
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)

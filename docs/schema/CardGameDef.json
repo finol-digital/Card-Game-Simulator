@@ -642,13 +642,15 @@
         "Move",
         "Flip",
         "Rotate",
-        "Tap"
+        "Tap",
+        "Zoom"
       ],
       "enum": [
         "move",
         "flip",
         "rotate",
-        "tap"
+        "tap",
+        "zoom"
       ]
     }
   }

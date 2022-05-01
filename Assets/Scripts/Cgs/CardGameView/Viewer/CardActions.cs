@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using CardGameDef;
 using Cgs.CardGameView.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -20,7 +21,8 @@ namespace Cgs.CardGameView.Viewer
                 [CardGameDef.CardAction.Move] = Move,
                 [CardGameDef.CardAction.Flip] = Flip,
                 [CardGameDef.CardAction.Rotate] = Rotate,
-                [CardGameDef.CardAction.Tap] = Tap
+                [CardGameDef.CardAction.Tap] = Tap,
+                [CardGameDef.CardAction.Zoom] = Zoom
             };
 
         private static Dictionary<CardGameDef.CardAction, CardAction> _actionsDictionary;
@@ -70,11 +72,18 @@ namespace Cgs.CardGameView.Viewer
                 cardModel.CmdUpdateRotation(cardModel.transform.rotation);
         }
 
+        public static void Zoom(CardModel cardModel)
+        {
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.ZoomOn(cardModel);
+        }
+
         public List<Transform> buttonPanels;
         public List<Button> flipButtons;
         public List<Button> moveButtons;
         public List<Button> rotateButtons;
         public List<Button> tapButtons;
+        public Transform zoomButton;
 
         public void Show()
         {
@@ -102,6 +111,10 @@ namespace Cgs.CardGameView.Viewer
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
 
+            var zoomButtonActive = isCardSelected && !CardViewer.Instance.nameVisibleButton.gameObject.activeSelf;
+            if (zoomButtonActive != zoomButton.gameObject.activeSelf)
+                zoomButton.gameObject.SetActive(zoomButtonActive);
+
             if (Inputs.IsFilter && flipButtons[0].interactable)
                 Flip(CardViewer.Instance.SelectedCardModel);
             else if (Inputs.IsNew && moveButtons[0].interactable)
@@ -110,6 +123,8 @@ namespace Cgs.CardGameView.Viewer
                 Rotate(CardViewer.Instance.SelectedCardModel);
             else if (Inputs.IsSave && tapButtons[0].interactable)
                 Tap(CardViewer.Instance.SelectedCardModel);
+            else if (Inputs.IsOption && zoomButton.gameObject.activeSelf)
+                CardViewer.Instance.Zoom = !CardViewer.Instance.Zoom;
         }
 
         [UsedImplicitly]
@@ -134,6 +149,12 @@ namespace Cgs.CardGameView.Viewer
         public void Tap()
         {
             Tap(CardViewer.Instance.SelectedCardModel);
+        }
+
+        [UsedImplicitly]
+        public void Zoom()
+        {
+            Zoom(CardViewer.Instance.SelectedCardModel);
         }
     }
 }

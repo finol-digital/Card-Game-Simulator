@@ -14,6 +14,9 @@ permalink: roadmap.html
 - Game-Play: Modify dice to have more than 6 faces and rotate
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
+- Dev option (GUI): Create a default 'Setup' for more complicated card games. 
+For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
+The game dev should be able to put all of this down on the 'table' so that all future players will just be able to play when launching a game without manual setup.
 
 ## Backlog
 - Tech: Restore SonarQube and Code Coverage
