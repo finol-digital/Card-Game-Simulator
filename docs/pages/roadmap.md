@@ -6,19 +6,18 @@ permalink: roadmap.html
 
 ## What's New - v1.73
 - Game-Play: Snap to Grid in Play Area
+- Cards: CardRotation field through json
 - Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
-- Cards: CardRotation field in json for portrait vs landscape.
-- Game-Play: Convert to stack and convert to card
 - Game-Play: Modify dice to have more than 6 faces and rotate
-- Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
+- Game-Play: Convert to stack and convert to card
+- Game-Play: Context menu on press and hold or right-click
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
-- Dev option (GUI): Create a default 'Setup' for more complicated card games. 
-For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
-The game dev should be able to put all of this down on the 'table' so that all future players will just be able to play when launching a game without manual setup.
+- Game-Play: Magnet files for grid
 
 ## Backlog
+- Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Tech: Restore SonarQube and Code Coverage
 - Accessibility: New How-To-Play Video
 - Game-Play: Name-Plates indicating player seats
@@ -52,6 +51,9 @@ The game dev should be able to put all of this down on the 'table' so that all f
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Tournament Support (PoQ?)
+- Dev option (GUI): Create a default 'Setup' for more complicated card games. 
+For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
+The game dev should be able to put all of this down on the 'table' so that all future players will just be able to play when launching a game without manual setup.
 
 ## Icebox
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)

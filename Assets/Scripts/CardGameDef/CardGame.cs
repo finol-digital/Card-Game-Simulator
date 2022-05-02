@@ -227,6 +227,17 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
+            "Cards will be rotated <cardRotationDefault> degrees, unless you override with cardRotationIdentifier. Most custom games will likely want to keep the default cardRotationDefault.")]
+        [DefaultValue(0)]
+        public int CardRotationDefault { get; set; }
+
+        [JsonProperty]
+        [Description(
+            "When defining a Card in AllCards.json or AllSets.json, you can set <cardRotationIdentifier> to an int field that indicates the rotation of a card in degrees. If left blank or missing, cards will be rotated <cardRotationDefault> degrees.")]
+        public string CardRotationIdentifier { get; set; } = "";
+
+        [JsonProperty]
+        [Description(
             "When defining a Card in AllCards.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. If the mapping is missing, CGS will use <setCodeDefault>. Most custom games will likely want to keep the default cardSetIdentifier.")]
         [DefaultValue("set")]
         public string CardSetIdentifier { get; set; } = "set";

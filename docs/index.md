@@ -13,13 +13,9 @@ playYoutubeId: PriDuaM6MEk
 
 ## How to Play
 
-{% include youtubePlayer.html id=page.playYoutubeId %}
-
-[Keyboard Shortcuts/Hotkeys](keyboard.html)
+[See the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki)
 
 ## How to Create and Share
-
-Tutorial video for how to create and share is coming soon!
 
 [Custom Game - Developer Docs](custom.html)
 

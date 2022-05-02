@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameDef;
 using Cgs.CardGameView.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -123,8 +122,15 @@ namespace Cgs.CardGameView.Viewer
                 Rotate(CardViewer.Instance.SelectedCardModel);
             else if (Inputs.IsSave && tapButtons[0].interactable)
                 Tap(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsOption && zoomButton.gameObject.activeSelf)
-                CardViewer.Instance.Zoom = !CardViewer.Instance.Zoom;
+            else if (Inputs.IsOption && CardViewer.Instance != null)
+            {
+                if (CardViewer.Instance.Zoom)
+                    CardViewer.Instance.Zoom = false;
+                else if (zoomButton.gameObject.activeSelf)
+                    CardViewer.Instance.Zoom = !CardViewer.Instance.Zoom;
+                else if (CardViewer.Instance.nameVisibleButton.gameObject.activeSelf)
+                    CardViewer.Instance.ToggleIsNameVisible();
+            }
         }
 
         [UsedImplicitly]

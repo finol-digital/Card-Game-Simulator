@@ -390,7 +390,7 @@ namespace Cgs.CardGameView.Multiplayer
                 transform.localPosition = newValue;
         }
 
-        private void RequestUpdateRotation(Quaternion newRotation)
+        protected void RequestUpdateRotation(Quaternion newRotation)
         {
             CmdUpdateRotation(newRotation);
         }

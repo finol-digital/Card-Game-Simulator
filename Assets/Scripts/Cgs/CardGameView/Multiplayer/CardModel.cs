@@ -139,6 +139,16 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
+            var targetRotation = Value.GetPropertyValueInt(CardGameManager.Current.CardRotationIdentifier);
+            if (targetRotation == 0)
+                targetRotation = CardGameManager.Current.CardRotationDefault;
+            if (targetRotation != 0)
+            {
+                transform.Rotate(0, 0, targetRotation);
+                if (IsOnline)
+                    RequestUpdateRotation(transform.rotation);
+            }
+
             SetIsNameVisible(!isFacedown);
             if (!isFacedown)
                 Value.RegisterDisplay(this);
