@@ -257,7 +257,7 @@ namespace Cgs.Menu
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame);
+            Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame, true);
         }
 
         [UsedImplicitly]

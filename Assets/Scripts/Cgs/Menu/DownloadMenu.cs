@@ -17,6 +17,7 @@ namespace Cgs.Menu
         public Text labelText;
         public InputField urlInputField;
         public Button downloadButton;
+        public Transform gamesButton;
 
         private DownloadCoroutineDelegate _downloadCoroutine;
 
@@ -33,19 +34,22 @@ namespace Cgs.Menu
                 Paste();
             else if (Inputs.IsFocus && urlInputField.interactable)
                 urlInputField.ActivateInputField();
-            else if (Inputs.IsOption)
+            else if (Inputs.IsOption && gamesButton.gameObject.activeSelf)
                 GoToGamesList();
             else if (Inputs.IsCancel)
                 Hide();
         }
 
-        public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine)
+        public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine, bool showGamesButton = false)
         {
             Show();
 
             labelText.text = label;
             ((Text) urlInputField.placeholder).text = prompt;
             _downloadCoroutine = downloadCoroutine;
+
+            if (!showGamesButton)
+                gamesButton.gameObject.SetActive(false);
         }
 
         [UsedImplicitly]
