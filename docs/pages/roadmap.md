@@ -15,14 +15,14 @@ permalink: roadmap.html
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Create Stack when Card is dropped on Card
 - Game-Play: Remove Stack when last card is removed from Stack
-- Game-Play: Press and hold or right-click on Playable for Context Menu
 
 ## Backlog
+- Game-Play: Press and hold or right-click on Playable for Context Menu
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
 - Game-Play: Magnet files for grid
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Tech: Restore SonarQube and Code Coverage
-- Accessibility: New How-To-Play Video
+- Accessibility: New How-To-Play and How-To-Create-And-Share videos
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is moving cards
 - Game-Play: Button for max zoom out
