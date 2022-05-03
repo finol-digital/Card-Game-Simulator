@@ -10,6 +10,7 @@ permalink: roadmap.html
 - Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
+- Bug-Fix: Multiplayer/Networking
 - Game-Play: Variable number of faces for Dice (other than 6)
 - Game-Play: Rotate Dice
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card

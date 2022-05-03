@@ -167,7 +167,7 @@ jobs:
             Library-build-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -223,7 +223,7 @@ jobs:
           restore-keys: Library-buildMac-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -441,7 +441,7 @@ jobs:
             Library-buildWindows-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
