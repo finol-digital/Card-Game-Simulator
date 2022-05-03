@@ -6,17 +6,17 @@ permalink: roadmap.html
 
 ## What's New - v1.73
 - Game-Play: Snap to Grid in Play Area
-- Cards: CardRotation field through json
+- Cards: CardRotation field in json
 - Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
 - Game-Play: Modify dice to have more than 6 faces and rotate
 - Game-Play: Convert to stack and convert to card
 - Game-Play: Context menu on press and hold or right-click
-- Bug-Fix: Account for playmat rotation and zoom on snap to grid
-- Game-Play: Magnet files for grid
 
 ## Backlog
+- Bug-Fix: Account for playmat rotation and zoom on snap to grid
+- Game-Play: Magnet files for grid
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Tech: Restore SonarQube and Code Coverage
 - Accessibility: New How-To-Play Video
