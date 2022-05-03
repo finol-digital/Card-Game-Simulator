@@ -10,9 +10,12 @@ permalink: roadmap.html
 - Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
-- Game-Play: Modify dice to have more than 6 faces and rotate
-- Game-Play: Convert to stack and convert to card
-- Game-Play: Context menu on press and hold or right-click
+- Game-Play: Variable number of faces for Dice (other than 6)
+- Game-Play: Rotate Dice
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+- Game-Play: Create Stack when Card is dropped on Card
+- Game-Play: Remove Stack when last card is removed from Stack
+- Game-Play: Press and hold or right-click on Playable for Context Menu
 
 ## Backlog
 - Bug-Fix: Account for playmat rotation and zoom on snap to grid
