@@ -415,6 +415,7 @@ jobs:
 
   buildWithWindows:
     name: Build for ${{ matrix.targetPlatform }}
+    if: false
     runs-on: windows-2019
     needs: [buildWithLinux, buildWithMac]
     outputs:
