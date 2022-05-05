@@ -415,7 +415,6 @@ jobs:
 
   buildWithWindows:
     name: Build for ${{ matrix.targetPlatform }}
-    if: false
     runs-on: windows-2019
     needs: [buildWithLinux, buildWithMac]
     outputs:
@@ -426,7 +425,6 @@ jobs:
         targetPlatform:
           - StandaloneWindows
           - StandaloneWindows64
-          - WSAPlayer
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -482,7 +480,46 @@ jobs:
       - name: Checkout Card-Game-Simulator
         run: |
           mkdir C:/Card-Game-Simulator.git
-          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --depth 1
+          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-buildWindows-${{ matrix.targetPlatform }}-
+            Library-buildWindows-
+      - name: Build Unity Project
+        id: build
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+      - name: Upload Build
+        uses: actions/upload-artifact@v3
+        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
+        with:
+          name: cgs-${{ matrix.targetPlatform }}
+          path: build/${{ matrix.targetPlatform }}
+      - name: Zip Build
+        uses: vimtor/action-zip@v1
+        if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
+        with:
+          files: build/${{ matrix.targetPlatform }}/
+          dest: build/cgs-${{ matrix.targetPlatform }}.zip
+      - name: Upload Zip to GitHub Release
+        uses: svenstaro/upload-release-action@v2
+        if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
+        with:
+          repo_token: ${{ secrets.CGS_PAT }}
+          asset_name: cgs-${{ matrix.targetPlatform }}.zip
+          file: build/cgs-${{ matrix.targetPlatform }}.zip
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
       - name: Download WSAPlayer Artifact
         uses: actions/download-artifact@v3
         with:
