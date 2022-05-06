@@ -10,7 +10,7 @@ on:
   pull_request:
     types:
       - opened
-    branches:    
+    branches:
       - develop
       - main
     paths:
@@ -77,7 +77,6 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          customParameters: -enableCodeCoverage -coverageResultsPath artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: SonarQube Analysis
         if: false
