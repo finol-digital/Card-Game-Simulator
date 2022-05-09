@@ -309,7 +309,7 @@ jobs:
           GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
           ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
-        uses: maierj/fastlane-action@v2.2.0
+        uses: maierj/fastlane-action@v2.2.1
         with:
           lane: 'android playprod'
 
