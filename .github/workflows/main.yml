@@ -476,10 +476,11 @@ jobs:
     needs: buildWithWindows
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
-      - name: Checkout Card-Game-Simulator
-        run: |
-          mkdir C:/Card-Game-Simulator.git
-          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
       - name: Build Unity Project
         id: build
         uses: game-ci/unity-builder@v2
@@ -488,14 +489,17 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath: C:/Card-Game-Simulator.git
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Upload Build
         uses: actions/upload-artifact@v3
         with:
           name: cgs-WSAPlayer
-          path: C:/Card-Game-Simulator.git/build/WSAPlayer
+          path: build/WSAPlayer
+      - name: Checkout Card-Game-Simulator
+        run: |
+          mkdir C:/Card-Game-Simulator.git
+          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --fetch-depth=1
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
