@@ -3,7 +3,7 @@ permalink: custom.html
 ---
 
 # CGS Custom Games
-Card Game Simulator allows users to [download custom card games to use within the application](index.html#how-to-create-and-share).
+Card Game Simulator allows users to create, share, and play custom card games.
 
 ## CGS Core Concept
 A custom game in CGS is a specification for a collection of information about a card game. This information primarily includes sets of cards and a definition of what properties those cards have. Ancillary information can include decks and boards to use with the game. See below for the full specification.
