@@ -101,8 +101,8 @@ namespace Cgs.Play.Multiplayer
 
         private void Start()
         {
-            roomIdIpInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
-            passwordInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            passwordInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
             EnableLrm();
         }
 
@@ -183,9 +183,7 @@ namespace Cgs.Play.Multiplayer
             else
                 Rebuild(
                     CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
-                        server => server),
-                    SelectServer,
-                    _selectedServerIp);
+                        server => server), SelectServer, _selectedServerIp);
 
             var ip = TargetIpAddress;
             joinButton.interactable =

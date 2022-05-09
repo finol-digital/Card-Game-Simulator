@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Mirror.Examples.Additive
+namespace Mirror.Examples.AdditiveScenes
 {
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(CharacterController))]
@@ -14,36 +14,21 @@ namespace Mirror.Examples.Additive
         {
             if (characterController == null)
                 characterController = GetComponent<CharacterController>();
-        }
 
-        void Start()
-        {
-            characterController.enabled = isLocalPlayer;
+            characterController.enabled = false;
+            GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<NetworkTransform>().clientAuthority = true;
         }
 
         public override void OnStartLocalPlayer()
         {
-            Camera.main.orthographic = false;
-            Camera.main.transform.SetParent(transform);
-            Camera.main.transform.localPosition = new Vector3(0f, 3f, -8f);
-            Camera.main.transform.localEulerAngles = new Vector3(10f, 0f, 0f);
-        }
-
-        void OnDisable()
-        {
-            if (isLocalPlayer && Camera.main != null)
-            {
-                Camera.main.orthographic = true;
-                Camera.main.transform.SetParent(null);
-                Camera.main.transform.localPosition = new Vector3(0f, 70f, 0f);
-                Camera.main.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
-            }
+            characterController.enabled = true;
         }
 
         [Header("Movement Settings")]
         public float moveSpeed = 8f;
         public float turnSensitivity = 5f;
-        public float maxTurnSpeed = 150f;
+        public float maxTurnSpeed = 100f;
 
         [Header("Diagnostics")]
         public float horizontal;
@@ -56,7 +41,7 @@ namespace Mirror.Examples.Additive
 
         void Update()
         {
-            if (!isLocalPlayer || !characterController.enabled)
+            if (!isLocalPlayer || characterController == null || !characterController.enabled)
                 return;
 
             horizontal = Input.GetAxis("Horizontal");
@@ -88,7 +73,7 @@ namespace Mirror.Examples.Additive
 
         void FixedUpdate()
         {
-            if (!isLocalPlayer || characterController == null)
+            if (!isLocalPlayer || characterController == null || !characterController.enabled)
                 return;
 
             transform.Rotate(0f, turn * Time.fixedDeltaTime, 0f);

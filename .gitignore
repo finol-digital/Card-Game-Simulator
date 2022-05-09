@@ -79,3 +79,7 @@ crashlytics-build.properties
 *.pfx*
 *.pem
 fastlane/api-*.json
+
+# Custom for Rider and Code Coverage
+ProjectSettings/RiderScriptEditorPersistedState.asset
+CodeCoverage/

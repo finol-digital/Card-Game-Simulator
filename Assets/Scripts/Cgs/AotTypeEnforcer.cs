@@ -51,6 +51,8 @@ namespace Cgs
                 cardGame.CardPrimaryProperty = string.Empty;
                 cardGame.CardProperties = new List<PropertyDef>();
                 cardGame.CardPropertyIdentifier = string.Empty;
+                cardGame.CardRotationDefault = 0;
+                cardGame.CardRotationIdentifier = string.Empty;
                 cardGame.CardSetIdentifier = string.Empty;
                 cardGame.CardSetIsObject = false;
                 cardGame.CardSetNameIdentifier = string.Empty;
@@ -84,6 +86,7 @@ namespace Cgs
                 cardGame.PlayMatImageFileType = string.Empty;
                 cardGame.PlayMatImageUrl = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.PlayMatSize = new Float2(1, 1);
+                cardGame.PlayMatGridCellSize = new Float2(1, 1);
                 cardGame.RulesUrl = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.SetCardsIdentifier = string.Empty;
                 cardGame.SetCardsUrlIdentifier = string.Empty;

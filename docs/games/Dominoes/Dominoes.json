@@ -62,6 +62,7 @@
       }
     }
   ],
+  "gameDefaultCardAction": "rotate",
   "gamePlayDeckName": "Stock",
   "gameStartHandCount": 7,
   "name": "Dominoes",

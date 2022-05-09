@@ -211,13 +211,13 @@ namespace CardGameDef
             {
                 foreach (var extraGroup in extraGroups)
                 {
-                    text.AppendFormat("# {0}{1}", extraGroup.Key, Environment.NewLine);
+                    text.AppendFormat("## {0}{1}", extraGroup.Key, Environment.NewLine);
                     var extraCardCounts = DetermineCardCounts(extraGroup.Value);
                     foreach (var cardCount in extraCardCounts)
                         BuildTxtLine(text, cardCount);
                 }
 
-                text.AppendFormat("# Main Deck{0}", Environment.NewLine);
+                text.AppendFormat("## Main Deck{0}", Environment.NewLine);
             }
 
             var mainCardCounts = DetermineCardCounts(mainCards);

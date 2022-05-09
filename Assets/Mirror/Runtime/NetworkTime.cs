@@ -1,5 +1,9 @@
 using System;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+#if !UNITY_2020_3_OR_NEWER
 using Stopwatch = System.Diagnostics.Stopwatch;
+#endif
 
 namespace Mirror
 {
@@ -14,15 +18,6 @@ namespace Mirror
 
         static double lastPingTime;
 
-        // Date and time when the application started
-        // TODO Unity 2020 / 2021 supposedly has double Time.time now?
-        static readonly Stopwatch stopwatch = new Stopwatch();
-
-        static NetworkTime()
-        {
-            stopwatch.Start();
-        }
-
         static ExponentialMovingAverage _rtt = new ExponentialMovingAverage(10);
         static ExponentialMovingAverage _offset = new ExponentialMovingAverage(10);
 
@@ -31,11 +26,20 @@ namespace Mirror
         static double offsetMax = double.MaxValue;
 
         /// <summary>Returns double precision clock time _in this system_, unaffected by the network.</summary>
-        // useful until we have Unity's 'double' Time.time
-        //
+#if UNITY_2020_3_OR_NEWER
+        public static double localTime
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => Time.timeAsDouble;
+        }
+#else
+        // need stopwatch for older Unity versions, but it's quite slow.
         // CAREFUL: unlike Time.time, this is not a FRAME time.
         //          it changes during the frame too.
+        static readonly Stopwatch stopwatch = new Stopwatch();
+        static NetworkTime() => stopwatch.Start();
         public static double localTime => stopwatch.Elapsed.TotalSeconds;
+#endif
 
         /// <summary>The time in seconds since the server started.</summary>
         //
@@ -49,23 +53,19 @@ namespace Mirror
         // and you cast down to float,  then the time will jump in 0.4s intervals.
         //
         // TODO consider using Unbatcher's remoteTime for NetworkTime
-        public static double time => localTime - _offset.Value;
+        public static double time
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => localTime - _offset.Value;
+        }
 
         /// <summary>Time measurement variance. The higher, the less accurate the time is.</summary>
         // TODO does this need to be public? user should only need NetworkTime.time
         public static double timeVariance => _offset.Var;
 
-        // Deprecated 2021-03-10
-        [Obsolete("NetworkTime.timeVar was renamed to timeVariance")]
-        public static double timeVar => timeVariance;
-
         /// <summary>Time standard deviation. The highe, the less accurate the time is.</summary>
         // TODO does this need to be public? user should only need NetworkTime.time
         public static double timeStandardDeviation => Math.Sqrt(timeVariance);
-
-        // Deprecated 2021-03-10
-        [Obsolete("NetworkTime.timeSd was renamed to timeStandardDeviation")]
-        public static double timeSd => timeStandardDeviation;
 
         /// <summary>Clock difference in seconds between the client and the server. Always 0 on server.</summary>
         public static double offset => _offset.Value;
@@ -77,26 +77,24 @@ namespace Mirror
         // TODO does this need to be public? user should only need NetworkTime.time
         public static double rttVariance => _rtt.Var;
 
-        // Deprecated 2021-03-02
-        [Obsolete("NetworkTime.rttVar was renamed to rttVariance")]
-        public static double rttVar => rttVariance;
-
         /// <summary>Round trip time standard deviation. The higher, the less accurate the rtt is.</summary>
         // TODO does this need to be public? user should only need NetworkTime.time
         public static double rttStandardDeviation => Math.Sqrt(rttVariance);
 
-        // Deprecated 2021-03-02
-        [Obsolete("NetworkTime.rttSd was renamed to rttStandardDeviation")]
-        public static double rttSd => rttStandardDeviation;
-
-        public static void Reset()
+        // RuntimeInitializeOnLoadMethod -> fast playmode without domain reload
+        [UnityEngine.RuntimeInitializeOnLoadMethod]
+        public static void ResetStatics()
         {
-            stopwatch.Restart();
+            PingFrequency = 2.0f;
+            PingWindowSize = 10;
+            lastPingTime = 0;
             _rtt = new ExponentialMovingAverage(PingWindowSize);
             _offset = new ExponentialMovingAverage(PingWindowSize);
             offsetMin = double.MinValue;
             offsetMax = double.MaxValue;
-            lastPingTime = 0;
+#if !UNITY_2020_3_OR_NEWER
+            stopwatch.Restart();
+#endif
         }
 
         internal static void UpdateClient()
@@ -113,9 +111,9 @@ namespace Mirror
         // executed at the server when we receive a ping message
         // reply with a pong containing the time from the client
         // and time from the server
-        internal static void OnServerPing(NetworkConnection conn, NetworkPingMessage message)
+        internal static void OnServerPing(NetworkConnectionToClient conn, NetworkPingMessage message)
         {
-            // Debug.Log("OnPingServerMessage  conn=" + conn);
+            // Debug.Log($"OnPingServerMessage conn:{conn}");
             NetworkPongMessage pongMessage = new NetworkPongMessage
             {
                 clientTime = message.clientTime,

@@ -33,8 +33,8 @@ namespace Cgs.CardGameView.Multiplayer
     public class CgsNetPlayable : NetworkBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
         IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        private static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
-        private static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
+        private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
+        private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
@@ -59,13 +59,15 @@ namespace Cgs.CardGameView.Multiplayer
         [SyncVar] public bool isClientAuthorized;
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
-        public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
-        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
+        public Dictionary<int, Vector2> PointerPositions { get; } = new();
+        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
 
         protected bool DidSelectOnDown { get; set; }
         protected bool DidDrag { get; set; }
         protected DragPhase CurrentDragPhase { get; private set; }
         protected float HoldTime { get; private set; }
+
+        protected bool ToDiscard { get; set; }
 
         public virtual string ViewValue => "<Playable:Value>";
 
@@ -259,11 +261,12 @@ namespace Cgs.CardGameView.Multiplayer
 
             OnEndDragPlayable(eventData);
 
-            if (hasAuthority)
-                CmdReleaseAuthority();
             RemovePointer(eventData);
 
             PostDragPlayable(eventData);
+
+            if (IsOnline && hasAuthority && !ToDiscard)
+                CmdReleaseAuthority();
         }
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
@@ -273,7 +276,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (ParentCardZone != null && ParentCardZone.type == CardZoneType.Area)
+                SnapToGrid();
         }
 
         protected void RemovePointer(PointerEventData eventData)
@@ -308,6 +312,33 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (hasAuthority)
                 RequestUpdatePosition(rectTransform.localPosition);
+        }
+
+        public virtual void SnapToGrid()
+        {
+            var rectTransform = (RectTransform) transform;
+            var gridPosition = CalculateGridPosition();
+            rectTransform.position = gridPosition;
+
+            if (hasAuthority)
+                RequestUpdatePosition(rectTransform.localPosition);
+        }
+
+        protected Vector2 CalculateGridPosition()
+        {
+            var rectTransform = (RectTransform) transform;
+            var currentPosition = rectTransform.position;
+            if (CardGameManager.Current.PlayMatGridCellSize == null ||
+                CardGameManager.Current.PlayMatGridCellSize.X <= 0 ||
+                CardGameManager.Current.PlayMatGridCellSize.Y <= 0)
+                return currentPosition;
+
+            var gridCellSize = new Vector2(CardGameManager.Current.PlayMatGridCellSize.X,
+                CardGameManager.Current.PlayMatGridCellSize.Y) * CardGameManager.PixelsPerInch;
+
+            var x = Mathf.Round(currentPosition.x / gridCellSize.x) * gridCellSize.x;
+            var y = Mathf.Round(currentPosition.y / gridCellSize.y) * gridCellSize.y;
+            return new Vector2(x, y);
         }
 
         public void Rotate()
@@ -361,7 +392,7 @@ namespace Cgs.CardGameView.Multiplayer
                 transform.localPosition = newValue;
         }
 
-        private void RequestUpdateRotation(Quaternion newRotation)
+        protected void RequestUpdateRotation(Quaternion newRotation)
         {
             CmdUpdateRotation(newRotation);
         }

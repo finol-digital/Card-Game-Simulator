@@ -23,7 +23,7 @@ namespace CardGameDef.Unity
 
     public class UnityCardGame : CardGame
     {
-        public static UnityCardGame UnityInvalid => new UnityCardGame(null);
+        public static UnityCardGame UnityInvalid => new(null);
 
         public static string GamesDirectoryPath => Application.persistentDataPath + "/games";
 
@@ -131,7 +131,7 @@ namespace CardGameDef.Unity
 
         public Sprite PlayMatImageSprite
         {
-            get => _playMatImageSprite ??= Resources.Load<Sprite>("Table");
+            get => _playMatImageSprite ??= Resources.Load<Sprite>("PlayMat");
             private set
             {
                 if (_playMatImageSprite != null)
@@ -812,7 +812,7 @@ namespace CardGameDef.Unity
                 for (var i = 0; i < parentNames.Length - 1; i++)
                     (childProcessorJToken as JObject)?.TryGetValue(parentNames[i], out childProcessorJToken);
                 cardJToken = childProcessorJToken;
-                dataIdentifier = parentNames[parentNames.Length - 1];
+                dataIdentifier = parentNames[^1];
             }
 
             if (CardSetsInList)

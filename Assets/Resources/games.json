@@ -5,20 +5,8 @@
       "url": "https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json"
     },
     {
-      "name": "Century Of Trust",
-      "url": "https://www.cardgamesimulator.com/games/CenturyOfTrust/CenturyOfTrust.json"
-    },
-    {
-      "name": "Gaia",
-      "url": "https://drive.google.com/uc?export=download&id=15F161XnBSoJzaYjmSrV5zI8D3OlPxZsY"
-    },
-    {
-      "name": "LifeDekho",
-      "url": "https://www.cardgamesimulator.com/games/LifeDekho/LifeDekho.json"
-    },
-    {
-      "name": "Saga",
-      "url": "https://drive.google.com/uc?export=download&id=1QwsI6K6XgLqN053gFOjMEI9L0FuJ19AH"
+      "name": "Grand Archive",
+      "url": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json"
     }
   ]
 }

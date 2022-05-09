@@ -39,7 +39,7 @@ namespace Cgs.CardGameView
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            CardModel cardModel = CardModel.GetPointerDrag(eventData);
+            var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && (type != CardZoneType.Area || cardModel.transform.parent != transform) &&
                 !cardModel.IsStatic)
                 cardModel.PlaceHolderCardZone = this;
@@ -47,7 +47,7 @@ namespace Cgs.CardGameView
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            CardModel cardModel = CardModel.GetPointerDrag(eventData);
+            var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && cardModel.PlaceHolderCardZone == this)
                 cardModel.PlaceHolderCardZone = null;
             OnLayout?.Invoke();
@@ -58,8 +58,8 @@ namespace Cgs.CardGameView
             if (cardModel == null)
                 return;
 
-            foreach (OnAddCardDelegate cardAddAction in OnAddCardActions)
-                cardAddAction(this, cardModel);
+            foreach (var onAddCardDelegate in OnAddCardActions)
+                onAddCardDelegate(this, cardModel);
         }
 
         public void OnRemove(CardModel cardModel)
@@ -67,8 +67,8 @@ namespace Cgs.CardGameView
             if (cardModel == null)
                 return;
 
-            foreach (OnRemoveCardDelegate cardRemoveAction in OnRemoveCardActions)
-                cardRemoveAction(this, cardModel);
+            foreach (var onRemoveCardDelegate in OnRemoveCardActions)
+                onRemoveCardDelegate(this, cardModel);
         }
 
         public void UpdateLayout(RectTransform child, Vector2 targetPosition)
@@ -80,7 +80,7 @@ namespace Cgs.CardGameView
             {
                 case CardZoneType.Vertical:
                 case CardZoneType.Horizontal:
-                    int newSiblingIndex = transform.childCount;
+                    var newSiblingIndex = transform.childCount;
                     for (var i = 0; i < transform.childCount; i++)
                     {
                         if (type == CardZoneType.Vertical

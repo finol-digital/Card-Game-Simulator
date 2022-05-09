@@ -139,6 +139,16 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
+            var targetRotation = Value.GetPropertyValueInt(CardGameManager.Current.CardRotationIdentifier);
+            if (targetRotation == 0)
+                targetRotation = CardGameManager.Current.CardRotationDefault;
+            if (targetRotation != 0)
+            {
+                transform.Rotate(0, 0, targetRotation);
+                if (IsOnline)
+                    RequestUpdateRotation(transform.rotation);
+            }
+
             SetIsNameVisible(!isFacedown);
             if (!isFacedown)
                 Value.RegisterDisplay(this);
@@ -211,7 +221,8 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
             if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
-                && (PlayableViewer.Instance == null || !PlayableViewer.Instance.IsVisible))
+                && (PlayableViewer.Instance == null || !PlayableViewer.Instance.IsVisible)
+                && CurrentDragPhase != DragPhase.Drag && !isFacedown)
                 CardViewer.Instance.Preview(this);
         }
 
@@ -270,6 +281,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.HidePreview();
+
             if (!IsOnline)
                 ActOnDrag();
             else
@@ -324,6 +338,8 @@ namespace Cgs.CardGameView.Multiplayer
                 StartCoroutine(MoveToPlaceHolder());
             else if (ParentCardZone == null)
                 Discard();
+            else if (ParentCardZone.type == CardZoneType.Area)
+                SnapToGrid();
         }
 
         public static CardModel GetPointerDrag(PointerEventData eventData)
@@ -336,6 +352,16 @@ namespace Cgs.CardGameView.Multiplayer
             UpdatePosition();
             if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
                 SecondaryDragAction();
+        }
+
+        public override void SnapToGrid()
+        {
+            var rectTransform = (RectTransform) transform;
+            var gridPosition = CalculateGridPosition();
+            rectTransform.position = gridPosition;
+
+            if (IsOnline && hasAuthority)
+                RequestUpdatePosition(rectTransform.localPosition);
         }
 
         protected override void UpdatePosition()
@@ -454,6 +480,7 @@ namespace Cgs.CardGameView.Multiplayer
                 previousParentCardZone.OnRemove(this);
             if (ParentCardZone != null)
                 ParentCardZone.OnAdd(this);
+
             PlaceHolder = null;
             Visibility.blocksRaycasts = true;
         }
@@ -482,6 +509,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Discard()
         {
+            ToDiscard = true;
             if (IsOnline)
                 CmdUnspawnCard(false);
             Destroy(gameObject);

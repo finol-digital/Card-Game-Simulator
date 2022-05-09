@@ -112,6 +112,8 @@ namespace Cgs.Menu
                 EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
                 ScrollPage(Inputs.IsPageDown);
+            else if (Inputs.IsOption)
+                GoToWebsite();
             else if (Inputs.IsCancel)
             {
                 if (EventSystem.current.currentSelectedGameObject == null)
@@ -195,6 +197,12 @@ namespace Cgs.Menu
         public void SetDeveloperMode(bool developerMode)
         {
             DeveloperMode = developerMode;
+        }
+
+        [UsedImplicitly]
+        public void GoToWebsite()
+        {
+            Application.OpenURL(Tags.CgsWebsite);
         }
 
         [UsedImplicitly]

@@ -9,7 +9,7 @@
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
 	"cardImageUrl": "https://api.gatcg.com/images/cards/{editions[0].slug}.jpg",
-	"cardPrimaryProperty": "effect",
+	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
 			"name": "types",
@@ -32,7 +32,7 @@
 			"type": "stringEnum"
 		},
 		{
-			"name": "effect",
+			"name": "effect_raw",
 			"display": "Effect",
 			"displayEmpty": "-",
 			"type": "string"

@@ -63,18 +63,6 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Manager] Acquired NetworkDiscovery.");
         }
 
-        public override void OnServerAddPlayer(NetworkConnection conn)
-        {
-            base.OnServerAddPlayer(conn);
-            Debug.Log("[CgsNet Manager] Server adding player...");
-        }
-
-        public override void OnClientConnect(NetworkConnection conn)
-        {
-            base.OnClientConnect(conn);
-            Debug.Log("[CgsNet Manager] Client connected!");
-        }
-
         private GameObject SpawnStack(Vector3 position, Guid assetId)
         {
             Debug.Log("[CgsNet Manager] SpawnStack");

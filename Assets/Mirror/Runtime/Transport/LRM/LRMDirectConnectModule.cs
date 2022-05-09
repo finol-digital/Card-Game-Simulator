@@ -88,15 +88,15 @@ public class LRMDirectConnectModule : MonoBehaviour
         return directConnectTransport is kcp2k.KcpTransport;
     }
 
-    public void KickClient(int clientID)
+    public bool KickClient(int clientID)
     {
         if (showDebugLogs)
             Debug.Log("Kicked direct connect client.");
 #if MIRROR_37_0_OR_NEWER
         directConnectTransport.ServerDisconnect(clientID);
-        //return true;
+        return true;
 #else
-        directConnectTransport.ServerDisconnect(clientID);
+        return directConnectTransport.ServerDisconnect(clientID);
 #endif
     }
 

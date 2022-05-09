@@ -15,7 +15,6 @@ using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -49,9 +48,6 @@ namespace Cgs.CardGameView.Multiplayer
         private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
         public const string SaveText = "Saved";
-        public const string TopOrBottomPrompt = "Keep on Top or Move to Bottom?";
-        public const string Top = "Keep on Top";
-        public const string Bottom = "Move to Bottom";
 
         private const string SaveDelimiter = "_";
 
@@ -94,7 +90,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private readonly SyncList<string> _cardIds = new SyncList<string>();
+        private readonly SyncList<string> _cardIds = new();
 
         [SyncVar] private string _actionText = "";
         [SyncVar] private float _actionTime;
@@ -211,7 +207,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            var unityCard = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
+            var unityCard = CardGameManager.Current.Cards[_cardIds[^1]];
 
             if (CgsNetManager.Instance.isNetworkActive)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, _cardIds.Count - 1);
@@ -250,44 +246,15 @@ namespace Cgs.CardGameView.Multiplayer
         {
             cardModel.PlaceHolderCardZone = null;
             if (CgsNetManager.Instance.isNetworkActive && !hasAuthority)
-                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id, true);
+                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
             else
-                Insert(Cards.Count, cardModel.Id, true);
+                Insert(Cards.Count, cardModel.Id);
         }
 
-        public void Insert(int index, string cardId, bool prompt = false)
+        public void Insert(int index, string cardId)
         {
+            Debug.Log($"CardStack: {name} insert {cardId} at {index} of {_cardIds.Count}");
             _cardIds.Insert(index, cardId);
-            Debug.Log(index + " " + _cardIds.Count + " " + prompt);
-            if (index == _cardIds.Count - 1 && prompt)
-                PromptMoveToBottom();
-        }
-
-        public void PromptMoveToBottom()
-        {
-            CgsNetManager.Instance.playController.Decider.Show(TopOrBottomPrompt,
-                new Tuple<string, UnityAction>(Top, () => { }),
-                new Tuple<string, UnityAction>(Bottom, RequestMoveToBottom));
-        }
-
-        private void RequestMoveToBottom()
-        {
-            if (CgsNetManager.Instance.isNetworkActive)
-                CmdMoveToBottom();
-            else
-            {
-                var cardId = _cardIds[_cardIds.Count - 1];
-                _cardIds.RemoveAt(_cardIds.Count - 1);
-                _cardIds.Insert(0, cardId);
-            }
-        }
-
-        [Command(requiresAuthority = false)]
-        private void CmdMoveToBottom()
-        {
-            var cardId = _cardIds[_cardIds.Count - 1];
-            _cardIds.RemoveAt(_cardIds.Count - 1);
-            _cardIds.Insert(0, cardId);
         }
 
         public string RemoveAt(int index)

@@ -4,27 +4,34 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.72
-- Deck Editor: Zoom to hide card searchbar
-- Bug-Fixes
+## What's New - v1.73
+- Game-Play: Snap to Grid in Play Area
+- Cards: CardRotation field in json
+- Bug-Fix: Multiplayer/Networking
 
 ## Active Sprint
-- Accessibility: New How-To-Play Video
-- Bug-Fix: Cards dissappearing and duplicating in multiplayer
-- Bug-Fix: Freeze in Multiplayer Lobby on Android client
-- Game-Play: Snap to Grid in Play Area
+- Bug-Fix: Multiplayer/Networking
+- Bug-Fix: Cards in hand disappear when switching between drawer and hand
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+- Game-Play: Create Stack when Card is dropped on Card
+- Game-Play: Remove Stack when last card is removed from Stack
+- Game-Play: Press and hold or right-click on Playable for Context Menu
+- Game-Play: Variable number of faces for Dice (other than 6)
+- Game-Play: Rotate Dice
 
 ## Backlog
+- Game-Play: Magnet files for grid
+- Game-Play: Prevent player from looking through deck in certain situations
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
-- Game-Play: Name-Plates indicating player seats
-- Game-Play: Label which player is moving cards
+- Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Game-Play: Button for max zoom out
 - Game-Play: Click outside card stack viewer to close it
 - Game-Play: Cut and merge stacks
-- Game-Play: Modify dice to have more than 6 faces
+- Game-Play: Name-Plates indicating player seats
+- Game-Play: Label which player is moving cards
+- Game-Play: Support multiple card selection
 - Game-Play: Color the default card action green
 - Game-Play: Always reveal the top card of a stack
-- Game-Play: Support multiple card selection
 - Integration: Deep links to join multiplayer rooms
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
@@ -37,7 +44,6 @@ permalink: roadmap.html
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
 - Game-Play: Support multiple playmats
-- Game-Play: Convert card to stack
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
@@ -48,6 +54,9 @@ permalink: roadmap.html
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Tournament Support (PoQ?)
+- Dev option (GUI): Create a default 'Setup' for more complicated card games. 
+For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
+The game dev should be able to put all of this down on the 'table' so that all future players will just be able to play when launching a game without manual setup.
 
 ## Icebox
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)

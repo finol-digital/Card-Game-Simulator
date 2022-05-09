@@ -21,11 +21,11 @@ namespace Cgs.Menu
         public static string VersionMessage => $"VERSION {Application.version}";
 
         public const string TutorialPrompt =
-            "If you are new to Card Game Simulator (CGS), you may want to watch the CGS tutorial video.\nGo to the YouTube video?";
+            "If you are new to Card Game Simulator (CGS), you may wish to see the wiki.\nGo to the wiki?";
 
         public const string QuitPrompt = "Quit?";
 
-        private const string TutorialUrl = "https://youtu.be/PriDuaM6MEk";
+        private const string TutorialUrl = "https://github.com/finol-digital/Card-Game-Simulator/wiki";
 
         private const string PlayerPrefsHasSeenTutorial = "HasSeenTutorial";
 
@@ -96,7 +96,7 @@ namespace Cgs.Menu
             versionText.text = VersionMessage;
 
             if (!HasSeenTutorial)
-                CardGameManager.Instance.Messenger.Ask(TutorialPrompt, ConfirmHasSeenTutorial, GoToTutorial);
+                CardGameManager.Instance.Messenger.Ask(TutorialPrompt, ConfirmHasSeenTutorial, GoToTutorial, true);
         }
 
         private static void ConfirmHasSeenTutorial()
@@ -257,7 +257,7 @@ namespace Cgs.Menu
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame);
+            Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame, true);
         }
 
         [UsedImplicitly]

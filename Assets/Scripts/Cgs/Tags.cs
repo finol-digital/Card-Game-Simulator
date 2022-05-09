@@ -10,7 +10,9 @@ namespace Cgs
         public const string CardViewer = "CardViewer";
         public const string PlayableViewer = "PlayableViewer";
 
+        public const string GameListUrl = "https://www.reddit.com/r/CardGameSimulator/comments/fl1p5z/official_games_list/";
         public const string DynamicLinkUriDomain = "https://cgs.link";
+        public const string CgsWebsite = "https://www.cardgamesimulator.com/";
 
         public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@www.cardgamesimulator.com";
 

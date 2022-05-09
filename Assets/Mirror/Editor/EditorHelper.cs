@@ -10,8 +10,8 @@ namespace Mirror
         {
             string typeName = typeof(T).Name;
 
-            string[] guidsFound = AssetDatabase.FindAssets($"t:Script " + typeName);
-            if (guidsFound.Length >= 1 && !string.IsNullOrEmpty(guidsFound[0]))
+            string[] guidsFound = AssetDatabase.FindAssets($"t:Script {typeName}");
+            if (guidsFound.Length >= 1 && !string.IsNullOrWhiteSpace(guidsFound[0]))
             {
                 if (guidsFound.Length > 1)
                 {
