@@ -13,7 +13,7 @@ playYoutubeId: PriDuaM6MEk
 
 ## How to Play & How to Create and Share
 
-[See the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki)
+See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki)
 
 [Custom Game - Developer Docs](custom.html)
 
