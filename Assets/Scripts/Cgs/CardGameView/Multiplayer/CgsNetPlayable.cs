@@ -33,8 +33,8 @@ namespace Cgs.CardGameView.Multiplayer
     public class CgsNetPlayable : NetworkBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
         IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        private static readonly Vector2 OutlineHighlightDistance = new Vector2(15, 15);
-        private static readonly Color SelectedHighlightColor = new Color(0.02f, 0.5f, 0.4f);
+        private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
+        private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
@@ -59,13 +59,15 @@ namespace Cgs.CardGameView.Multiplayer
         [SyncVar] public bool isClientAuthorized;
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
-        public Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
-        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new Dictionary<int, Vector2>();
+        public Dictionary<int, Vector2> PointerPositions { get; } = new();
+        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
 
         protected bool DidSelectOnDown { get; set; }
         protected bool DidDrag { get; set; }
         protected DragPhase CurrentDragPhase { get; private set; }
         protected float HoldTime { get; private set; }
+
+        protected bool ToDiscard { get; set; }
 
         public virtual string ViewValue => "<Playable:Value>";
 
@@ -263,7 +265,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             PostDragPlayable(eventData);
 
-            if (hasAuthority)
+            if (IsOnline && hasAuthority && !ToDiscard)
                 CmdReleaseAuthority();
         }
 

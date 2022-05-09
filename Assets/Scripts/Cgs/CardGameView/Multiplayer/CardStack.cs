@@ -90,7 +90,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private readonly SyncList<string> _cardIds = new SyncList<string>();
+        private readonly SyncList<string> _cardIds = new();
 
         [SyncVar] private string _actionText = "";
         [SyncVar] private float _actionTime;
@@ -207,7 +207,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            var unityCard = CardGameManager.Current.Cards[_cardIds[_cardIds.Count - 1]];
+            var unityCard = CardGameManager.Current.Cards[_cardIds[^1]];
 
             if (CgsNetManager.Instance.isNetworkActive)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, _cardIds.Count - 1);
@@ -248,13 +248,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (CgsNetManager.Instance.isNetworkActive && !hasAuthority)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
             else
-                Insert(Cards.Count, cardModel.Id, true);
+                Insert(Cards.Count, cardModel.Id);
         }
 
-        public void Insert(int index, string cardId, bool prompt = false)
+        public void Insert(int index, string cardId)
         {
+            Debug.Log($"CardStack: {name} insert {cardId} at {index} of {_cardIds.Count}");
             _cardIds.Insert(index, cardId);
-            Debug.Log(index + " " + _cardIds.Count + " " + prompt);
         }
 
         public string RemoveAt(int index)

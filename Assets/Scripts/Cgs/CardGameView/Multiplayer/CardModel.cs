@@ -221,7 +221,8 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
             if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
-                && (PlayableViewer.Instance == null || !PlayableViewer.Instance.IsVisible))
+                && (PlayableViewer.Instance == null || !PlayableViewer.Instance.IsVisible)
+                && CurrentDragPhase != DragPhase.Drag && !isFacedown)
                 CardViewer.Instance.Preview(this);
         }
 
@@ -280,6 +281,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
+            if (CardViewer.Instance != null)
+                CardViewer.Instance.HidePreview();
+
             if (!IsOnline)
                 ActOnDrag();
             else
@@ -505,6 +509,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Discard()
         {
+            ToDiscard = true;
             if (IsOnline)
                 CmdUnspawnCard(false);
             Destroy(gameObject);

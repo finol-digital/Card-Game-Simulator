@@ -306,7 +306,7 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            if (propertyDef.Type == PropertyType.Object || propertyDef.Type == PropertyType.ObjectList)
+            if (propertyDef.Type is PropertyType.Object or PropertyType.ObjectList)
             {
                 foreach (var childProperty in propertyDef.Properties)
                     AddProperty(childProperty, parentPrefix + propertyDef.Name + PropertyDef.ObjectDelimiter);
