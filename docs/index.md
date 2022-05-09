@@ -11,11 +11,9 @@ playYoutubeId: PriDuaM6MEk
 - Windows via [the Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
 - Web via [GitHub Pages/Unity WebGL](cgs-webgl.html) *(experimental)*
 
-## How to Play
+## How to Play & How to Create and Share
 
 [See the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki)
-
-## How to Create and Share
 
 [Custom Game - Developer Docs](custom.html)
 
