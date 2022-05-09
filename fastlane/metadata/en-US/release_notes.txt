@@ -1,2 +1,3 @@
-- Deck Editor: Zoom to hide card searchbar
-- Bug-Fixes
+- Game-Play: Snap to Grid in Play Area
+- Cards: CardRotation field in json
+- Bug-Fix: Multiplayer/Networking
