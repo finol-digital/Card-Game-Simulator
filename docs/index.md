@@ -19,7 +19,7 @@ See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki)
 
 ## Feedback
 
-See the [current roadmap](roadmap.html). 
+See [the roadmap](roadmap.html). 
 
 Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or join our [Discord](https://discord.gg/MdUHEUJCU4). 
 Please also consider checking out [these projects](external.html).
