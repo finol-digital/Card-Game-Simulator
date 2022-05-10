@@ -499,7 +499,9 @@ jobs:
       - name: Checkout Card-Game-Simulator
         run: |
           mkdir C:/Card-Game-Simulator.git
-          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --fetch-depth=1
+          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --depth=1
+          mkdir C:/Card-Game-Simulator.git/build
+          cp -R build/WSAPlayer C:/Card-Game-Simulator.git/build/WSAPlayer
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
