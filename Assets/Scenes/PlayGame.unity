@@ -3072,7 +3072,7 @@ PrefabInstance:
     - target: {fileID: 1198181614327318542, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: tooltip
-      value: Add a deck to the Play Area.
+      value: Load/add a deck to the Play Area.
       objectReference: {fileID: 0}
     - target: {fileID: 1198181614327318542, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}

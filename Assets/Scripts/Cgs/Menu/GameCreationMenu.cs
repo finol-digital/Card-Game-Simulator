@@ -60,6 +60,7 @@ namespace Cgs.Menu
                 _gameName = value != null ? value.Replace("@", "") : string.Empty;
                 if (!_gameName.Equals(inputFields[0].text))
                     inputFields[0].text = _gameName;
+                ValidateCreateButton();
             }
         }
 
@@ -335,8 +336,7 @@ namespace Cgs.Menu
 
         #endregion
 
-        [UsedImplicitly]
-        public void ValidateCreateButton()
+        private void ValidateCreateButton()
         {
             createButton.interactable = !string.IsNullOrEmpty(GameName);
         }
