@@ -13,13 +13,13 @@ playYoutubeId: PriDuaM6MEk
 
 ## How to Play & How to Create and Share
 
-See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki)
+See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
 
 [Custom Game - Developer Docs](custom.html)
 
 ## Feedback
 
-See the [current roadmap](roadmap.html). 
+See [the roadmap](roadmap.html). 
 
 Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or join our [Discord](https://discord.gg/MdUHEUJCU4). 
 Please also consider checking out [these projects](external.html).

@@ -14,7 +14,7 @@ permalink: roadmap.html
 - Bug-Fix: Cards in hand disappear when switching between drawer and hand
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Create Stack when Card is dropped on Card
-- Game-Play: Remove Stack when last card is removed from Stack
+- Game-Play: Remove Stack when last Card is removed from Stack
 - Game-Play: Press and hold or right-click on Playable for Context Menu
 - Game-Play: Variable number of faces for Dice (other than 6)
 - Game-Play: Rotate Dice
@@ -49,7 +49,6 @@ permalink: roadmap.html
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
-- Cards: Popup card text on mouse hover over
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
