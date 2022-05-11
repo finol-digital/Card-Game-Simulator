@@ -18,7 +18,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class CardModel : CgsNetPlayable, ICardDisplay
+    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler
     {
         private const float ZoomHoldTime = 1.5f;
         private const float MovementSpeed = 600f;
@@ -135,6 +135,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
+            GetComponent<CardDropArea>().DropHandler = this;
+
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
@@ -242,6 +244,11 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
+        }
+
+        public void OnDrop(CardModel cardModel)
+        {
+            // TODO: CREATE STACK WITH 2 CARDS
         }
 
         public static CardModel CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,

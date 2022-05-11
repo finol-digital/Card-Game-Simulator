@@ -4,15 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.73
-- Game-Play: Snap to Grid in Play Area
-- Cards: CardRotation field in json
-- Bug-Fix: Multiplayer/Networking
+## What's New - v1.74
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 
 ## Active Sprint
-- Bug-Fix: Multiplayer/Networking
-- Bug-Fix: Cards in hand disappear when switching between drawer and hand
-- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Create Stack when Card is dropped on Card
 - Game-Play: Remove Stack when last Card is removed from Stack
 - Game-Play: Press and hold or right-click on Playable for Context Menu
