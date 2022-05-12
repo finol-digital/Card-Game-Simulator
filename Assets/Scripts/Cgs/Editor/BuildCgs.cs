@@ -4,7 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
@@ -22,6 +24,11 @@ namespace Cgs.Editor
         public static void CreateSln()
         {
             EditorApplication.ExecuteMenuItem("Assets/Open C# Project");
+            var T = Type.GetType("UnityEditor.SyncVS,UnityEditor");
+            Debug.Assert(T != null, nameof(T) + " != null");
+            var syncSolution = T.GetMethod("SyncSolution", BindingFlags.Public | BindingFlags.Static);
+            Debug.Assert(syncSolution != null, nameof(syncSolution) + " != null");
+            syncSolution.Invoke(null, null);
         }
 
         [UsedImplicitly]
