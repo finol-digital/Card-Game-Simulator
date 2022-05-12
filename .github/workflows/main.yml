@@ -52,7 +52,7 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup dotnet for SonarQube
+      - name: Setup dotnet 5 for SonarQube
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
@@ -61,6 +61,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 11
+      - name: Setup Unity for SonarQube
+        id: setup-unity
+        uses: kuler90/setup-unity@v1
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
