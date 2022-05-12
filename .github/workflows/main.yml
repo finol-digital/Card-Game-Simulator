@@ -44,6 +44,14 @@ jobs:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
+      - name: Run Unit Tests
+        uses: game-ci/unity-test-runner@v2
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup dotnet for SonarQube
         uses: actions/setup-dotnet@v2
         with:
@@ -53,25 +61,6 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 11
-      - name: Setup Unity for SonarQube
-        id: setup-unity
-        uses: kuler90/setup-unity@v1
-      - name: Activate Unity for SonarQube
-        uses: kuler90/activate-unity@v1
-        with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-serial: ${{ secrets.UNITY_SERIAL }}
-      - name: Generate Solution for SonarQube
-        run: xvfb-run -ae /dev/stdout ${{ steps.setup-unity.outputs.unity-path }} -batchmode -logFile /dev/stdout -quit -customBuildName Card-Game-Simulator -projectPath . -executeMethod Cgs.Editor.BuildCgs.CreateSln
-      - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@v2
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
