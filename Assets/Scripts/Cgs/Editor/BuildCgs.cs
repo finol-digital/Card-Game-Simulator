@@ -19,6 +19,12 @@ namespace Cgs.Editor
             {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
 
         [UsedImplicitly]
+        public static void CreateSln()
+        {
+            EditorApplication.ExecuteMenuItem("Assets/Open C# Project");
+        }
+
+        [UsedImplicitly]
         public static void BuildOptions()
         {
             // Gather values from args

@@ -63,7 +63,7 @@ jobs:
           unity-password: ${{ secrets.UNITY_PASSWORD }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
       - name: Generate Solution for SonarQube
-        run: xvfb-run -ae /dev/stdout ${{ steps.setup-unity.outputs.unity-path }} -batchmode -logFile /dev/stdout -quit -customBuildName Card-Game-Simulator -projectPath . -executeMethod  UnityEditor.SyncVS.SyncSolution
+        run: xvfb-run -ae /dev/stdout ${{ steps.setup-unity.outputs.unity-path }} -batchmode -logFile /dev/stdout -quit -customBuildName Card-Game-Simulator -projectPath . -executeMethod Cgs.Editor.BuildCgs.CreateSln
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@v2
         env:
@@ -93,7 +93,7 @@ jobs:
             /d:sonar.cpd.exclusions=Assets/Tests/** \
             /d:sonar.coverage.exclusions=Assets/Tests/** \
             /d:sonar.cs.nunit.reportsPaths=Card-Game-Simulator/artifacts/editmode-results.xml,Card-Game-Simulator/artifacts/playmode-results.xml \
-            /d:sonar.cs.opencover.reportsPaths=Card-Game-Simulator/artifacts/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,Card-Game-Simulator/artifacts/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
+            /d:sonar.cs.opencover.reportsPaths=Card-Game-Simulator/CodeCoverage/Card-Game-Simulator-opencov/EditMode/TestCoverageResults_0000.xml,Card-Game-Simulator/CodeCoverage/Card-Game-Simulator-opencov/PlayMode/TestCoverageResults_0000.xml
           dotnet build Card-Game-Simulator.sln
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd Card-Game-Simulator
