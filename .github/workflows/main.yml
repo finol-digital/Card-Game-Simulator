@@ -45,29 +45,24 @@ jobs:
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
       - name: Setup dotnet for SonarQube
-        if: false
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '5.0.x'
       - name: Set up JDK 11 for SonarQube
-        if: false
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
       - name: Setup Unity for SonarQube
-        if: false
         id: setup-unity
         uses: kuler90/setup-unity@v1
       - name: Activate Unity for SonarQube
-        if: false
         uses: kuler90/activate-unity@v1
         with:
           unity-username: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
           unity-serial: ${{ secrets.UNITY_SERIAL }}
       - name: Generate Solution for SonarQube
-        if: false
         run: xvfb-run -ae /dev/stdout ${{ steps.setup-unity.outputs.unity-path }} -batchmode -logFile /dev/stdout -quit -customBuildName Card-Game-Simulator -projectPath . -executeMethod  UnityEditor.SyncVS.SyncSolution
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@v2
@@ -78,7 +73,6 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: SonarQube Analysis
-        if: false
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -104,7 +98,6 @@ jobs:
           dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd Card-Game-Simulator
       - name: SonarQube Quality Gate Check
-        if: false
         uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
         with:
           scanMetadataReportFile: ../.sonarqube/out/.sonar/report-task.txt
