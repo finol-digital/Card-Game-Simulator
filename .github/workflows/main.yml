@@ -193,7 +193,7 @@ jobs:
           file: build/cgs-${{ matrix.targetPlatform }}.zip
           tag: ${{ github.ref }}
           overwrite: true
-          body:  ${{ github.event.release.body }}
+          body: ${{ github.event.release.body }}
 
   buildWithMac:
     name: Build for StandaloneOSX
