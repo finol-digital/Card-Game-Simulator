@@ -248,7 +248,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardModel cardModel)
         {
-            // TODO: CREATE STACK WITH 2 CARDS
+            // CREATE STACK WITH 2 CARDS
         }
 
         public static CardModel CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
