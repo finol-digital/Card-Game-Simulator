@@ -4,11 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Annotations;
-using Unity.CodeEditor;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 
@@ -21,25 +18,9 @@ namespace Cgs.Editor
         private static readonly string[] Secrets =
             {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
 
-        private static void CreateSln()
-        {
-            var editor = Type.GetType("UnityEditor.SyncVS, UnityEditor");
-            Debug.Assert(editor != null, nameof(editor) + " != null");
-            var syncSolution = editor.GetMethod("SyncSolution", BindingFlags.Public | BindingFlags.Static);
-            Debug.Assert(syncSolution != null, nameof(syncSolution) + " != null");
-            syncSolution.Invoke(null, null);
-
-            AssetDatabase.Refresh();
-            CodeEditor.Editor.CurrentCodeEditor.SyncAll();
-
-            EditorApplication.ExecuteMenuItem("Assets/Open C# Project");
-        }
-
         [UsedImplicitly]
         public static void BuildOptions()
         {
-            CreateSln();
-
             // Gather values from args
             var options = GetValidatedOptions();
 
