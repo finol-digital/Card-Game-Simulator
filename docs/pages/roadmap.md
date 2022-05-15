@@ -5,10 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.74
+- Game-Play: Create Stack when Card is dropped on Card
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 
 ## Active Sprint
-- Game-Play: Create Stack when Card is dropped on Card
 - Game-Play: Remove Stack when last Card is removed from Stack
 - Game-Play: Press and hold or right-click on Playable for Context Menu
 - Game-Play: Variable number of faces for Dice (other than 6)
