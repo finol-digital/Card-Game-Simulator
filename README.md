@@ -8,9 +8,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=finol-digital_Card-Game-Simulator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=finol-digital_Card-Game-Simulator)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=finol-digital_Card-Game-Simulator&metric=coverage)](https://sonarcloud.io/summary/new_code?id=finol-digital_Card-Game-Simulator)
 
-The CGS website is available through GitHub Pages in the `docs/` folder. 
-
-See: https://www.cardgamesimulator.com
+The CGS website is available through GitHub Pages in the `docs/` folder: https://www.cardgamesimulator.com
 
 For user documentation, see the wiki: https://github.com/finol-digital/Card-Game-Simulator/wiki
 
