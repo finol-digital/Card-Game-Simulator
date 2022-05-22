@@ -6,26 +6,27 @@ permalink: roadmap.html
 
 ## What's New - v1.74
 - Game-Play: Create Stack when Card is dropped on Card
-- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 
 ## Active Sprint
+- Bug-Fixes: Multiplayer/Networking
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Remove Stack when last Card is removed from Stack
 - Game-Play: Press and hold or right-click on Playable for Context Menu
 - Game-Play: Variable number of faces for Dice (other than 6)
 - Game-Play: Rotate Dice
 
 ## Backlog
+- Game-Play: Click outside card stack viewer to close it
+- Game-Play: Color the default card action green
 - Game-Play: Magnet files for grid
 - Game-Play: Prevent player from looking through deck in certain situations
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Game-Play: Button for max zoom out
-- Game-Play: Click outside card stack viewer to close it
 - Game-Play: Cut and merge stacks
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
-- Game-Play: Color the default card action green
 - Game-Play: Always reveal the top card of a stack
 - Integration: Deep links to join multiplayer rooms
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu

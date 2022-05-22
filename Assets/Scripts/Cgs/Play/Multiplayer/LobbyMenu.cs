@@ -153,7 +153,7 @@ namespace Cgs.Play.Multiplayer
                 roomIdIpInputField.ActivateInputField();
             else if (Inputs.IsFocusNext)
                 passwordInputField.ActivateInputField();
-            else if (Inputs.IsPageVertical && !Inputs.IsPageVertical)
+            else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
                 ScrollPage(Inputs.IsPageDown);
             else if (Inputs.IsPageHorizontal && !Inputs.WasPageHorizontal)
                 ToggleConnectionSource();

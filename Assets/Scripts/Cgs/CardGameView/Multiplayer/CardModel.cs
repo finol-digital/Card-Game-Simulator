@@ -8,6 +8,7 @@ using System.Linq;
 using CardGameDef.Unity;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -135,7 +136,13 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            GetComponent<CardDropArea>().DropHandler = this;
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.playController != null
+                && CgsNetManager.Instance.playController.playMat.transform == transform.parent)
+            {
+                var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
+                cardDropArea.isBlocker = true;
+                cardDropArea.DropHandler = this;
+            }
 
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
