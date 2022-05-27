@@ -30,6 +30,7 @@ namespace Cgs.Play
     {
         public const string MainMenuPrompt = "Go back to the main menu?";
         public const string RestartPrompt = "Restart?";
+        public const string DefaultStackName = "Stack";
 
         private const float DeckPositionBuffer = 50;
 

@@ -8,6 +8,7 @@ using System.Linq;
 using CardGameDef.Unity;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
+using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
@@ -21,6 +22,8 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler
     {
+        public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
+
         private const float ZoomHoldTime = 1.5f;
         private const float MovementSpeed = 600f;
 
@@ -137,7 +140,8 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnStartPlayable()
         {
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.playController != null
-                && CgsNetManager.Instance.playController.playMat.transform == transform.parent)
+                                               && CgsNetManager.Instance.playController.playMat.transform ==
+                                               transform.parent)
             {
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
                 cardDropArea.isBlocker = true;
@@ -255,7 +259,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardModel cardModel)
         {
-            // CREATE STACK WITH 2 CARDS
+            if (CgsNetManager.Instance == null || CgsNetManager.Instance.playController == null)
+            {
+                Debug.LogError(DropErrorMessage);
+                CardGameManager.Instance.Messenger.Show(DropErrorMessage);
+            }
+
+            var cards = new List<UnityCard> {Value, cardModel.Value};
+            if (IsOnline)
+                CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
+                    position);
+            else
+                CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName, cards, position);
+
+            Discard();
         }
 
         public static CardModel CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
@@ -454,6 +471,11 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (IsOnline && hasAuthority)
                 CmdUnspawnCard(true);
+
+            var cardDropArea = GetComponent<CardDropArea>();
+            if (cardDropArea != null)
+                Destroy(cardDropArea);
+
             var previousParentCardZone = ParentCardZone;
             if (CurrentDragPhase == DragPhase.Drag)
                 previousParentCardZone.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
