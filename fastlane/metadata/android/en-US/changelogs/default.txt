@@ -1,3 +1,1 @@
-- Game-Play: Snap to Grid in Play Area
-- Cards: CardRotation field in json
-- Bug-Fix: Multiplayer/Networking
+- Game-Play: Create Stack when Card is dropped on Card
