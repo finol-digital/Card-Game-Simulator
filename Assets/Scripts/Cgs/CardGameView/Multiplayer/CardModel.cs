@@ -259,6 +259,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardModel cardModel)
         {
+            if (cardModel == this || (_placeHolder != null && cardModel == _placeHolder.GetComponent<CardModel>()))
+                return;
+
             if (CgsNetManager.Instance == null || CgsNetManager.Instance.playController == null)
             {
                 Debug.LogError(DropErrorMessage);

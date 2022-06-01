@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.74
-- Game-Play: Create Stack when Card is dropped on Card
+## What's New - v1.75
+- Fix: Card duplicated in Stack instead of moving
 
 ## Active Sprint
 - Bug-Fixes: Multiplayer/Networking
