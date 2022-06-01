@@ -1,1 +1,1 @@
-- Game-Play: Create Stack when Card is dropped on Card
+- Fix: Card duplicated in Stack instead of moving
