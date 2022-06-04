@@ -262,10 +262,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardModel == this || (_placeHolder != null && cardModel == _placeHolder.GetComponent<CardModel>()))
                 return;
 
+            Debug.Log($"Dropped {gameObject.name} on {cardModel.gameObject.name}");
+
             if (CgsNetManager.Instance == null || CgsNetManager.Instance.playController == null)
             {
                 Debug.LogError(DropErrorMessage);
                 CardGameManager.Instance.Messenger.Show(DropErrorMessage);
+                return;
             }
 
             var cards = new List<UnityCard> {Value, cardModel.Value};

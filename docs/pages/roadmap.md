@@ -4,7 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.75
+## What's New - v1.76
 - Fix: Card duplicated in Stack instead of moving
 
 ## Active Sprint
