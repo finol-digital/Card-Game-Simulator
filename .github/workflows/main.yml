@@ -608,8 +608,10 @@ jobs:
         run: |
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
-          $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
+          $manifest.Package.Identity.Publisher = "CN=Finol Digital LLC"
           $manifest.save(".\$env:UwpProjectDirectory\Package.appxmanifest")
+          echo ".\$env:UwpProjectDirectory\Package.appxmanifest"
+          cat ".\$env:UwpProjectDirectory\Package.appxmanifest"
       - name: Decode the Pfx
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
