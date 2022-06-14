@@ -11,6 +11,7 @@ permalink: roadmap.html
 - Bug-Fixes: Multiplayer/Networking
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Remove Stack when last Card is removed from Stack
+- Game-Play: Add Shuffle button to Stack Viewer
 - Game-Play: Press and hold or right-click on Playable for Context Menu
 - Game-Play: Variable number of faces for Dice (other than 6)
 - Game-Play: Rotate Dice

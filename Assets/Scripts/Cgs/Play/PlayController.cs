@@ -386,9 +386,8 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void FocusPlayArea()
         {
-            foreach (var cardStack in AllCardStacks)
-                if (cardStack.Viewer != null && !cardStack.Viewer.IsNew)
-                    cardStack.Viewer.Close();
+            foreach (var stackViewer in AllCardStacks.Select(stack => stack.Viewer).Where(v => v != null && !v.IsNew))
+                stackViewer.Close();
         }
 
         [UsedImplicitly]
