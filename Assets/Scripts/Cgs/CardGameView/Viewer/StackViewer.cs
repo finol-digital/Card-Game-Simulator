@@ -29,6 +29,8 @@ namespace Cgs.CardGameView.Viewer
         public Text nameLabel;
         public Text countLabel;
 
+        public bool IsNew { get; private set; }
+
         private CardStack _cardStack;
         private int? _handIndex;
 
@@ -38,6 +40,11 @@ namespace Cgs.CardGameView.Viewer
                 cardDropArea.DropHandler = this;
             contentCardZone.OnAddCardActions.Add(OnAddCardModel);
             contentCardZone.OnRemoveCardActions.Add(OnRemoveCardModel);
+        }
+
+        private void Update()
+        {
+            IsNew = false;
         }
 
         public void Show(CardStack stack)
@@ -52,6 +59,7 @@ namespace Cgs.CardGameView.Viewer
 
             Sync(stack);
             contentCardZone.scrollRectContainer.horizontalNormalizedPosition = 0;
+            IsNew = true;
         }
 
         private void Resize()

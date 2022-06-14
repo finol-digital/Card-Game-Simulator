@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.76
-- Fix: Card duplicated in Stack instead of moving
+## What's New - v1.77
+- Game-Play: Click on play area to close card stack viewer
 
 ## Active Sprint
 - Bug-Fixes: Multiplayer/Networking
@@ -16,7 +16,6 @@ permalink: roadmap.html
 - Game-Play: Rotate Dice
 
 ## Backlog
-- Game-Play: Click outside card stack viewer to close it
 - Game-Play: Color the default card action green
 - Game-Play: Magnet files for grid
 - Game-Play: Prevent player from looking through deck in certain situations

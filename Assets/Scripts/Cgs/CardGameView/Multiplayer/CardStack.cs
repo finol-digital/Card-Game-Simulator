@@ -95,7 +95,7 @@ namespace Cgs.CardGameView.Multiplayer
         [SyncVar] private string _actionText = "";
         [SyncVar] private float _actionTime;
 
-        private StackViewer _viewer;
+        public StackViewer Viewer { get; private set; }
 
         protected override void OnStartPlayable()
         {
@@ -137,8 +137,8 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
             if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
-                eventData.dragging || eventData.button == PointerEventData.InputButton.Middle ||
-                eventData.button == PointerEventData.InputButton.Right)
+                eventData.dragging ||
+                eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
                 return;
 
             if (EventSystem.current.currentSelectedGameObject == gameObject)
@@ -238,8 +238,8 @@ namespace Cgs.CardGameView.Multiplayer
         private void OnCardsUpdated(SyncList<string>.Operation op, int index, string oldId, string newId)
         {
             countLabel.text = _cardIds.Count.ToString();
-            if (_viewer != null)
-                _viewer.Sync(this);
+            if (Viewer != null)
+                Viewer.Sync(this);
         }
 
         public void OnDrop(CardModel cardModel)
@@ -274,10 +274,10 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void View()
         {
-            if (_viewer == null)
-                _viewer = Instantiate(stackViewerPrefab, CgsNetManager.Instance.playController.stackViewers)
+            if (Viewer == null)
+                Viewer = Instantiate(stackViewerPrefab, CgsNetManager.Instance.playController.stackViewers)
                     .GetComponent<StackViewer>();
-            _viewer.Show(this);
+            Viewer.Show(this);
         }
 
         [UsedImplicitly]

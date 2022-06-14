@@ -384,6 +384,14 @@ namespace Cgs.Play
         }
 
         [UsedImplicitly]
+        public void FocusPlayArea()
+        {
+            foreach (var cardStack in AllCardStacks)
+                if (cardStack.Viewer != null && !cardStack.Viewer.IsNew)
+                    cardStack.Viewer.Close();
+        }
+
+        [UsedImplicitly]
         public void PromptBackToMainMenu()
         {
             CardGameManager.Instance.Messenger.Ask(MainMenuPrompt, PromptRestart, BackToMainMenu);
