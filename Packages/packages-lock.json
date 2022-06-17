@@ -64,6 +64,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.0.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.profiling.core": {
       "version": "1.0.2",
       "depth": 1,
@@ -172,13 +179,6 @@
       "source": "git",
       "dependencies": {},
       "hash": "333c21cbf0acc31e049bfa4b1e84abb57ed200e2"
-    },
-    "jillejr.newtonsoft.json-for-unity": {
-      "version": "13.0.102",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://npm.cloudsmith.io/jillejr/newtonsoft-json-for-unity"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
