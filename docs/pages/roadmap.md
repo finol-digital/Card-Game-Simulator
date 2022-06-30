@@ -15,12 +15,14 @@ permalink: roadmap.html
 - Game-Play: Variable number of faces for Dice (other than 6)
 - Game-Play: Rotate Dice
 
-## Backlog
+## Backlog - 2022 Q3
 - Game-Play: Click outside card stack viewer to close it
 - Game-Play: Color the default card action green
 - Game-Play: Magnet files for grid
 - Game-Play: Prevent player from looking through deck in certain situations
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
+
+## Backlog - 2022 Q4
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Game-Play: Button for max zoom out
 - Game-Play: Cut and merge stacks
@@ -31,6 +33,8 @@ permalink: roadmap.html
 - Integration: Deep links to join multiplayer rooms
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
+
+## Backlog - 2023 Q1
 - Game-Creation: Edit Button in Main Menu
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
@@ -39,6 +43,8 @@ permalink: roadmap.html
   - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
+
+## Backlog - 2023 Q2
 - Game-Play: Support multiple playmats
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Move card to zone, stack, or drawer (E)
@@ -47,6 +53,8 @@ permalink: roadmap.html
 - Cards: Support mix of different card sizes in the same game
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
+
+## Backlog - 2023 Q3
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Tournament Support (PoQ?)
 - Dev option (GUI): Create a default 'Setup' for more complicated card games. 
