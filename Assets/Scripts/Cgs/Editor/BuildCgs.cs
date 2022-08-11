@@ -43,7 +43,10 @@ namespace Cgs.Editor
                     EditorUserBuildSettings.buildAppBundle = options["customBuildPath"].EndsWith(".aab");
                     if (options.TryGetValue("androidKeystoreName", out var keystoreName) &&
                         !string.IsNullOrEmpty(keystoreName))
+                    {
+                        PlayerSettings.Android.useCustomKeystore = true;
                         PlayerSettings.Android.keystoreName = keystoreName;
+                    }
                     if (options.TryGetValue("androidKeystorePass", out var keystorePass) &&
                         !string.IsNullOrEmpty(keystorePass))
                         PlayerSettings.Android.keystorePass = keystorePass;
