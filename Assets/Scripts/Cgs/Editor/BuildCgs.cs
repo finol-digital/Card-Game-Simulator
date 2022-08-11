@@ -8,6 +8,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 
 namespace Cgs.Editor
 {
@@ -47,6 +48,7 @@ namespace Cgs.Editor
                         PlayerSettings.Android.useCustomKeystore = true;
                         PlayerSettings.Android.keystoreName = keystoreName;
                     }
+
                     if (options.TryGetValue("androidKeystorePass", out var keystorePass) &&
                         !string.IsNullOrEmpty(keystorePass))
                         PlayerSettings.Android.keystorePass = keystorePass;
@@ -56,6 +58,24 @@ namespace Cgs.Editor
                     if (options.TryGetValue("androidKeyaliasPass", out var keyaliasPass) &&
                         !string.IsNullOrEmpty(keyaliasPass))
                         PlayerSettings.Android.keyaliasPass = keyaliasPass;
+
+                    if (options.TryGetValue("androidTargetSdkVersion", out var androidTargetSdkVersion) &&
+                        !string.IsNullOrEmpty(androidTargetSdkVersion))
+                    {
+                        var targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
+                        try
+                        {
+                            targetSdkVersion =
+                                (AndroidSdkVersions) Enum.Parse(typeof(AndroidSdkVersions), androidTargetSdkVersion);
+                        }
+                        catch
+                        {
+                            Debug.Log("Failed to parse androidTargetSdkVersion! Fallback to AndroidApiLevelAuto");
+                        }
+
+                        PlayerSettings.Android.targetSdkVersion = targetSdkVersion;
+                    }
+
                     break;
                 }
                 case BuildTarget.StandaloneWindows:
