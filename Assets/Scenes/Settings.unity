@@ -3346,7 +3346,7 @@ PrefabInstance:
     - target: {fileID: 858674133167794374, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}
       propertyPath: m_Text
-      value: Settings
+      value: Global Settings
       objectReference: {fileID: 0}
     - target: {fileID: 9063206868995599585, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}

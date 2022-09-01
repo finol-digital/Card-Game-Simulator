@@ -10,6 +10,8 @@ MonoImporter:
       type: 3}
   - lobbyMenuPrefab: {fileID: 1652207733575986, guid: 61b579ded7c51a4409a9f5bee03d3dff,
       type: 3}
+  - playSettingsMenuPrefab: {fileID: 9064384807446097588, guid: ddf938ce2c5b322429c63267cd84d076,
+      type: 3}
   - deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
       type: 3}
   - searchMenuPrefab: {fileID: 1332435347197338, guid: 3193cd5bbf6276147a6652aff7dca225,
@@ -22,7 +24,8 @@ MonoImporter:
       type: 3}
   - diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e,
       type: 3}
-  - decisionModalPrefab: {instanceID: 0}
+  - decisionModalPrefab: {fileID: 5810182567772607080, guid: 864bd2a9f44369e488e6d6f6edc1582e,
+      type: 3}
   - stackViewers: {instanceID: 0}
   - playArea: {instanceID: 0}
   - playMat: {instanceID: 0}

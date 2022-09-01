@@ -23,7 +23,7 @@ namespace Cgs.Play
                 return;
 
             if (Inputs.IsNew)
-                ViewRules();
+                ShowPlaySettingsMenu();
             else if (Inputs.IsLoad)
                 ShowDeckMenu();
             else if (Inputs.IsFilter)
@@ -38,13 +38,9 @@ namespace Cgs.Play
         }
 
         [UsedImplicitly]
-        public void ViewRules()
+        public void ShowPlaySettingsMenu()
         {
-            if (CardGameManager.Current.RulesUrl != null &&
-                CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
-                Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
-            else
-                CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
+            controller.ShowPlaySettingsMenu();
         }
 
         [UsedImplicitly]

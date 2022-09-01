@@ -1317,6 +1317,8 @@ MonoBehaviour:
     type: 3}
   lobbyMenuPrefab: {fileID: 1652207733575986, guid: 61b579ded7c51a4409a9f5bee03d3dff,
     type: 3}
+  playSettingsMenuPrefab: {fileID: 9064384807446097588, guid: ddf938ce2c5b322429c63267cd84d076,
+    type: 3}
   deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
     type: 3}
   searchMenuPrefab: {fileID: 1332435347197338, guid: 3193cd5bbf6276147a6652aff7dca225,
@@ -3114,7 +3116,7 @@ PrefabInstance:
     - target: {fileID: 1198181613964418112, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: tooltip
-      value: Launch web browser and go to the rules url.
+      value: Brings up the Play Settings Menu.
       objectReference: {fileID: 0}
     - target: {fileID: 1198181613964418112, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}

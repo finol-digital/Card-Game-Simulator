@@ -37,6 +37,7 @@ namespace Cgs.Play
         public GameObject cardViewerPrefab;
         public GameObject playableViewerPrefab;
         public GameObject lobbyMenuPrefab;
+        public GameObject playSettingsMenuPrefab;
         public GameObject deckLoadMenuPrefab;
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
@@ -93,6 +94,11 @@ namespace Cgs.Play
         private LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
+
+        private PlaySettingsMenu Settings =>
+            _settings ??= Instantiate(playSettingsMenuPrefab).GetOrAddComponent<PlaySettingsMenu>();
+
+        private PlaySettingsMenu _settings;
 
         private DeckLoadMenu DeckLoader =>
             _deckLoader ??= Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
@@ -191,6 +197,11 @@ namespace Cgs.Play
             rectTransform.sizeDelta = size * CardGameManager.PixelsPerInch;
             playMat.GetComponent<Image>().sprite = CardGameManager.Current.PlayMatImageSprite;
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
+        }
+
+        public void ShowPlaySettingsMenu()
+        {
+            Settings.Show();
         }
 
         public void ShowDeckMenu()
