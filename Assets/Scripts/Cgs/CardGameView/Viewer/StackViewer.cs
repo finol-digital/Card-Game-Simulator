@@ -159,6 +159,12 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
+        public void PromptShuffle()
+        {
+            _cardStack.PromptShuffle();
+        }
+
+        [UsedImplicitly]
         public void Close()
         {
             Destroy(gameObject);

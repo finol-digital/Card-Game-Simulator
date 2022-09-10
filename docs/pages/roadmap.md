@@ -5,18 +5,19 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.77
+- Game-Play: Add Shuffle button to Stack Viewer
 - Game-Play: Click on play area to close card stack viewer
 
 ## Active Sprint
-- Bug-Fixes: Multiplayer/Networking
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Remove Stack when last Card is removed from Stack
-- Game-Play: Add Shuffle button to Stack Viewer
-- Game-Play: Press and hold or right-click on Playable for Context Menu
+- Game-Play: Overlap Cards in Stack Viewer
 - Game-Play: Variable number of faces for Dice (other than 6)
-- Game-Play: Rotate Dice
+- Game-Play: Press and hold or right-click on Playable for Context Menu
+- Bug-Fixes: Multiplayer/Networking
 
 ## Backlog
+- Game-Play: Rotate Dice
 - Game-Play: Color the default card action green
 - Game-Play: Magnet files for grid
 - Game-Play: Prevent player from looking through deck in certain situations
