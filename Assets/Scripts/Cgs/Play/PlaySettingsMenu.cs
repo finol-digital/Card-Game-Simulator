@@ -5,14 +5,33 @@
 using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Cgs.Play
 {
     public class PlaySettingsMenu : Modal
     {
+        private const string PlayerPrefsAutoStackCards = "AutoStackCards";
+
+        public static bool AutoStackCards
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsAutoStackCards, 0) == 1;
+            private set => PlayerPrefs.SetInt(PlayerPrefsAutoStackCards, value ? 1 : 0);
+        }
+
+        public Toggle autoStackCardsToggle;
+        public Dropdown stackViewerOverlapDropdown;
+        public InputField dieFaceCountInputField;
+
+        public override void Show()
+        {
+            base.Show();
+            autoStackCardsToggle.enabled = AutoStackCards;
+        }
+
         private void Update()
         {
-            if (!IsFocused)
+            if (!IsFocused || dieFaceCountInputField.isFocused)
                 return;
 
             if (Inputs.IsOption)
@@ -29,6 +48,12 @@ namespace Cgs.Play
                 Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
             else
                 CardGameManager.Instance.Messenger.Show("NoRulesErrorMessage");
+        }
+
+        [UsedImplicitly]
+        public void SetAutoStackCards(bool autoStackCards)
+        {
+            AutoStackCards = autoStackCards;
         }
     }
 }

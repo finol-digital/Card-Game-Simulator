@@ -264,6 +264,12 @@ namespace Cgs.CardGameView.Multiplayer
 
             Debug.Log($"Dropped {gameObject.name} on {cardModel.gameObject.name}");
 
+            if (!PlaySettingsMenu.AutoStackCards)
+            {
+                Debug.Log(" Ignoring drop request because PlaySettingsMenu.AutoStackCards is false.");
+                return;
+            }
+
             if (CgsNetManager.Instance == null || CgsNetManager.Instance.playController == null)
             {
                 Debug.LogError(DropErrorMessage);
@@ -362,11 +368,21 @@ namespace Cgs.CardGameView.Multiplayer
                         shouldDiscard = false;
                 }
 
-                if (!shouldDiscard)
-                    return;
+                var dropTargetCardModel = DropTarget.GetComponent<CardModel>();
+                if (!PlaySettingsMenu.AutoStackCards && dropTargetCardModel != null)
+                    shouldDiscard = false;
 
-                Discard();
-                return;
+                if (shouldDiscard)
+                {
+                    Discard();
+                    return;
+                }
+
+                if (!PlaySettingsMenu.AutoStackCards && dropTargetCardModel != null)
+                {
+                    PlaceHolderCardZone = dropTargetCardModel.ParentCardZone;
+                    PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
+                }
             }
 
             DropTarget = null;
