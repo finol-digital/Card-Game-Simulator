@@ -366,7 +366,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (sender == null || netIdentity.connectionToClient != null)
             {
-                Debug.Log("CgsNetPlayable: Ignoring request to transfer authority, as it is already transferred");
+                Debug.Log($"CgsNetPlayable: Ignoring request to transfer authority for {gameObject.name}");
                 return;
             }
 

@@ -15,7 +15,7 @@ namespace Cgs.Play
 
         public static bool AutoStackCards
         {
-            get => PlayerPrefs.GetInt(PlayerPrefsAutoStackCards, 0) == 1;
+            get => PlayerPrefs.GetInt(PlayerPrefsAutoStackCards, 1) == 1;
             private set => PlayerPrefs.SetInt(PlayerPrefsAutoStackCards, value ? 1 : 0);
         }
 
@@ -26,7 +26,7 @@ namespace Cgs.Play
         public override void Show()
         {
             base.Show();
-            autoStackCardsToggle.enabled = AutoStackCards;
+            autoStackCardsToggle.isOn = AutoStackCards;
         }
 
         private void Update()

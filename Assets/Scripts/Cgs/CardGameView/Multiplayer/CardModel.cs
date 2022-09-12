@@ -262,7 +262,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardModel == this || (_placeHolder != null && cardModel == _placeHolder.GetComponent<CardModel>()))
                 return;
 
-            Debug.Log($"Dropped {gameObject.name} on {cardModel.gameObject.name}");
+            Debug.Log($"Dropped {cardModel.gameObject.name} on {gameObject.name}");
 
             if (!PlaySettingsMenu.AutoStackCards)
             {
@@ -284,6 +284,8 @@ namespace Cgs.CardGameView.Multiplayer
             else
                 CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName, cards, position);
 
+            Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
+            cardModel.Discard();
             Discard();
         }
 
@@ -352,25 +354,25 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsProcessingSecondaryDragAction)
                 return;
 
-            if (DropTarget != null &&
-                (ParentCardZone != null && ParentCardZone.type == CardZoneType.Area
-                 || PlaceHolderCardZone != null && PlaceHolderCardZone.type == CardZoneType.Area))
+            if (DropTarget != null)
             {
-                var shouldDiscard = true;
-                if (Visibility.blocksRaycasts)
+                var dropTargetCardModel = DropTarget.GetComponent<CardModel>();
+
+                var shouldDiscard = false;
+                if (Visibility.blocksRaycasts && ParentCardZone != null && ParentCardZone.type == CardZoneType.Area
+                    || PlaceHolderCardZone != null && PlaceHolderCardZone.type == CardZoneType.Area
+                    || dropTargetCardModel != null && dropTargetCardModel.ParentCardZone != null &&
+                    dropTargetCardModel.ParentCardZone.type == CardZoneType.Area)
                 {
                     var hits = new List<RaycastResult>();
                     EventSystem.current.RaycastAll(eventData, hits);
                     var isPointerOverDropTarget = hits.Any(hit => hit.gameObject == DropTarget.gameObject);
                     if (isPointerOverDropTarget)
+                    {
                         DropTarget.OnDrop(eventData);
-                    else
-                        shouldDiscard = false;
+                        shouldDiscard = PlaySettingsMenu.AutoStackCards || dropTargetCardModel == null;
+                    }
                 }
-
-                var dropTargetCardModel = DropTarget.GetComponent<CardModel>();
-                if (!PlaySettingsMenu.AutoStackCards && dropTargetCardModel != null)
-                    shouldDiscard = false;
 
                 if (shouldDiscard)
                 {
@@ -378,11 +380,19 @@ namespace Cgs.CardGameView.Multiplayer
                     return;
                 }
 
-                if (!PlaySettingsMenu.AutoStackCards && dropTargetCardModel != null)
+                if (dropTargetCardModel != null && dropTargetCardModel.ParentCardZone != null &&
+                    dropTargetCardModel.ParentCardZone.type == CardZoneType.Area)
                 {
                     PlaceHolderCardZone = dropTargetCardModel.ParentCardZone;
                     PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
                 }
+            }
+
+            if (DropTarget == null && ParentCardZone == null && PlaceHolderCardZone == null &&
+                CgsNetManager.Instance != null && CgsNetManager.Instance.playController != null)
+            {
+                PlaceHolderCardZone = CgsNetManager.Instance.playController.playMat;
+                PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
             }
 
             DropTarget = null;
@@ -525,6 +535,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (PlaceHolder == null)
             {
+                Debug.Log($"Discarding {gameObject.name} MoveToPlaceHolder");
                 Discard();
                 yield break;
             }
@@ -567,6 +578,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Discard()
         {
+            Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;
             if (IsOnline)
                 CmdUnspawnCard(false);
