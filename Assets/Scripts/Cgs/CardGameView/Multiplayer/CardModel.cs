@@ -419,8 +419,50 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void SnapToGrid()
         {
-            var rectTransform = (RectTransform) transform;
+            if (ToDiscard)
+                return;
+
             var gridPosition = CalculateGridPosition();
+
+            if (PlaySettingsMenu.AutoStackCards && CgsNetManager.Instance.playController != null)
+            {
+                var playMatTransform = CgsNetManager.Instance.playController.playMat.transform;
+                for (var i = 0; i < playMatTransform.childCount; i++)
+                {
+                    var siblingTransform = playMatTransform.GetChild(i);
+                    if (siblingTransform == transform)
+                        continue;
+
+                    var distance = Vector2.Distance(siblingTransform.position, gridPosition);
+                    if (distance > 0.1f)
+                        continue;
+
+                    var siblingCardModel = siblingTransform.GetComponent<CardModel>();
+                    if (siblingCardModel != null)
+                    {
+                        var cards = new List<UnityCard> {siblingCardModel.Value, Value};
+                        if (IsOnline)
+                            CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
+                                cards, siblingCardModel.position);
+                        else
+                            CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName,
+                                cards, siblingCardModel.position);
+                        siblingCardModel.Discard();
+                        Discard();
+                        return;
+                    }
+
+                    var siblingCardStack = siblingTransform.GetComponent<CardStack>();
+                    if (siblingCardStack == null)
+                        continue;
+
+                    siblingCardStack.OnDrop(this);
+                    Discard();
+                    return;
+                }
+            }
+
+            var rectTransform = (RectTransform) transform;
             rectTransform.position = gridPosition;
 
             if (IsOnline && hasAuthority)
@@ -580,7 +622,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;
-            if (IsOnline)
+            if (IsOnline && netId != 0)
                 CmdUnspawnCard(false);
             Destroy(gameObject);
         }

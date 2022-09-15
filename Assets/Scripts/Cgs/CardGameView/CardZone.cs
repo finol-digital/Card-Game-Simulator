@@ -58,6 +58,12 @@ namespace Cgs.CardGameView
             if (cardModel == null)
                 return;
 
+            if (type == CardZoneType.Area)
+                cardModel.SnapToGrid();
+
+            if (cardModel.ToDiscard)
+                return;
+
             foreach (var onAddCardDelegate in OnAddCardActions)
                 onAddCardDelegate(this, cardModel);
         }

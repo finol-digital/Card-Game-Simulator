@@ -67,7 +67,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected DragPhase CurrentDragPhase { get; private set; }
         protected float HoldTime { get; private set; }
 
-        protected bool ToDiscard { get; set; }
+        public bool ToDiscard { get; protected set; }
 
         public virtual string ViewValue => "<Playable:Value>";
 

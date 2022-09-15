@@ -7,10 +7,10 @@ permalink: roadmap.html
 ## What's New - v1.77
 - Game-Play: Add Shuffle button to Stack Viewer
 - Game-Play: Click on play area to close card stack viewer
+- Game-Play: Auto Stack Cards Setting
 
 ## Active Sprint
-- Game-Play: Create Stack when cards go to same location in snaptogrid
-- Game-Play: Remove Stack when last Card is removed from Stack
+- Game-Play: Remove Stack when second to last Card is removed from Stack
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Overlap Cards in Stack Viewer

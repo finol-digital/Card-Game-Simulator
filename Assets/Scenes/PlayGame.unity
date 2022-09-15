@@ -2272,6 +2272,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1940045023}
     m_Modifications:
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: tooltip
+      value: Reset Zoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2346,7 +2356,7 @@ PrefabInstance:
     - target: {fileID: 7317508625903915486, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_Name
-      value: Navigation Button
+      value: ResetZoom Button
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -2468,6 +2478,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 867063781}
     m_Modifications:
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: tooltip
+      value: Reset Rotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2542,7 +2562,7 @@ PrefabInstance:
     - target: {fileID: 7317508625903915486, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_Name
-      value: Navigation Button
+      value: ResetRotation Button
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
