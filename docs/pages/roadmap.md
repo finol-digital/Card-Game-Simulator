@@ -10,15 +10,14 @@ permalink: roadmap.html
 - Game-Play: Auto Stack Cards Setting
 
 ## Active Sprint
-- Game-Play: Remove Stack when second to last Card is removed from Stack
-- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
-- Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Overlap Cards in Stack Viewer
 - Game-Play: Variable number of faces for Dice (other than 6)
-- Game-Play: Press and hold or right-click on Dice and Cards for Context Menu
 - Bug-Fixes: Multiplayer/Networking
 
 ## Backlog
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+- Game-Play: Combine Stacks when dropped on each other
+- Game-Play: Press and hold or right-click on Dice and Cards for Context Menu
 - Game-Play: Rotate Dice
 - Game-Play: Color the default card action green
 - Game-Play: Magnet files for grid

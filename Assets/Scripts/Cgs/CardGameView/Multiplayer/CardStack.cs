@@ -11,6 +11,7 @@ using CardGameDef.Unity;
 using Cgs.CardGameView.Viewer;
 using Cgs.Decks;
 using Cgs.Menu;
+using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Mirror;
@@ -29,7 +30,6 @@ namespace Cgs.CardGameView.Multiplayer
         private static Random ThisThreadsRandom => _local ??= new Random(
             unchecked(Environment.TickCount * 31 + Thread
                 .CurrentThread.ManagedThreadId));
-
         public static void Shuffle<T>(this IList<T> list)
         {
             var n = list.Count;
@@ -219,6 +219,9 @@ namespace Cgs.CardGameView.Multiplayer
             CgsNetManager.Instance.LocalPlayer.RemovedCard = cardModel;
 
             RemovePointer(eventData);
+
+            if (PlaySettingsMenu.AutoStackCards && _cardIds.Count < 1)
+                RequestDelete();
         }
 
         [PublicAPI]

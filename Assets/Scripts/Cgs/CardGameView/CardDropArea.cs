@@ -61,7 +61,11 @@ namespace Cgs.CardGameView
             if (drawerViewer != null && Index != null)
                 drawerViewer.AddCard(cardModel.Value, Index ?? 0);
             else
+            {
+                if (GetComponent<CardStack>() != null)
+                    cardModel.DropTarget = this;
                 DropHandler.OnDrop(cardModel);
+            }
         }
     }
 }
