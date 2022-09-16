@@ -28,6 +28,8 @@ namespace Cgs.Play.Multiplayer
         public const string ConnectionErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
+        public const string PasswordErrorMessage = "Error: Wrong Password!";
+
         private const float ServerListUpdateTime = 5;
 
         public GameObject hostAuthenticationPrefab;
@@ -39,6 +41,8 @@ namespace Cgs.Play.Multiplayer
         public Text roomIdIpLabel;
         public InputField roomIdIpInputField;
         public InputField passwordInputField;
+
+        private string _password = "";
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -219,7 +223,7 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource)
             {
                 CgsNetManager.Instance.lrm.serverName = CgsNetManager.Instance.RoomName;
-                CgsNetManager.Instance.lrm.extraServerData = Application.platform.ToString();
+                CgsNetManager.Instance.lrm.extraServerData = JsonUtility.ToJson(CgsNetManager.Instance.RoomData);
                 CgsNetManager.Instance.lrm.isPublicServer = true;
             }
             else
@@ -276,13 +280,14 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void SetPassword(string password)
         {
-            Authenticator.passwordInputField.text = password;
-            Authenticator.SetPassword(password);
+            _password = password;
         }
 
         [UsedImplicitly]
         public void Join()
         {
+            NetworkManager.singleton.authenticator.OnClientAuthenticated.AddListener(CheckPassword);
+
             if (IsLanConnectionSource)
             {
                 if (_selectedServerId != null && DiscoveredServers.TryGetValue(_selectedServerId.GetValueOrDefault(),
@@ -322,6 +327,16 @@ namespace Cgs.Play.Multiplayer
             }
 
             Hide();
+        }
+
+        private void CheckPassword()
+        {
+            if(_password.Equals(CgsNetManager.Instance.RoomPassword))
+                return;
+
+            Debug.LogError(PasswordErrorMessage);
+            CardGameManager.Instance.Messenger.Show(PasswordErrorMessage);
+            PlayController.BackToMainMenu();
         }
 
         public void Hide()

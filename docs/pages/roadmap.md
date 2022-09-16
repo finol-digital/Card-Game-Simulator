@@ -15,11 +15,11 @@ permalink: roadmap.html
 - Bug-Fixes: Multiplayer/Networking
 
 ## Backlog
-- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
-- Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Press and hold or right-click on Dice and Cards for Context Menu
 - Game-Play: Rotate Dice
 - Game-Play: Color the default card action green
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+- Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Magnet files for grid
 - Game-Play: Prevent player from looking through deck in certain situations
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)

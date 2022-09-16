@@ -25,6 +25,33 @@ namespace Cgs.Play.Multiplayer
             set => lrm.serverName = value;
         }
 
+        public string RoomPassword
+        {
+            get => RoomData.Password;
+            set
+            {
+                var data = RoomData;
+                data.Password = value;
+                RoomData = data;
+            }
+        }
+
+        public ExtraServerData RoomData
+        {
+            get
+            {
+                try
+                {
+                    return (ExtraServerData) JsonUtility.FromJson(lrm.extraServerData, typeof(ExtraServerData));
+                }
+                catch
+                {
+                    return new ExtraServerData();
+                }
+            }
+            private set => lrm.extraServerData = JsonUtility.ToJson(value);
+        }
+
         public string RoomIdIp => "localhost".Equals(networkAddress, StringComparison.Ordinal)
             ? RoomId
             : networkAddress;

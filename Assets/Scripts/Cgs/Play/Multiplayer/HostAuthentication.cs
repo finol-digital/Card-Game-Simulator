@@ -4,7 +4,6 @@
 
 using Cgs.Menu;
 using JetBrains.Annotations;
-using Mirror.Authenticators;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -13,7 +12,6 @@ namespace Cgs.Play.Multiplayer
     public class HostAuthentication : Modal
     {
         public InputField roomNameInputField;
-        public InputField passwordInputField;
 
         private UnityAction _callback;
 
@@ -49,7 +47,7 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void SetPassword(string password)
         {
-            ((BasicAuthenticator) CgsNetManager.Instance.authenticator).password = password;
+            CgsNetManager.Instance.RoomPassword = password;
         }
 
         [UsedImplicitly]

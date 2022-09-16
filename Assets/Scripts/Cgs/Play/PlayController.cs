@@ -412,7 +412,7 @@ namespace Cgs.Play
             CardGameManager.Instance.Messenger.Prompt(RestartPrompt, Restart);
         }
 
-        private static void BackToMainMenu()
+        public static void BackToMainMenu()
         {
             if (NetworkManager.singleton.isNetworkActive)
             {
