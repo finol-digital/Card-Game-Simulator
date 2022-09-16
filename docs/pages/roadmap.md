@@ -20,16 +20,15 @@ permalink: roadmap.html
 - Game-Play: Color the default card action green
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Combine Stacks when dropped on each other
-- Game-Play: Magnet files for grid
-- Game-Play: Prevent player from looking through deck in certain situations
+- Game-Play: Face-Up Stacks (Always reveal the top card)
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
-- Game-Play: Button for max zoom out
-- Game-Play: Cut and merge stacks
+- Game-Play: Magnet files for grid
+- Game-Play: Prevent player from looking through deck in certain situations
+- Game-Play: Cut Stacks
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
-- Game-Play: Always reveal the top card of a stack
 - Integration: Deep links to join multiplayer rooms
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
