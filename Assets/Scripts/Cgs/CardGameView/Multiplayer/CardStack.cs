@@ -220,7 +220,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             RemovePointer(eventData);
 
-            if (PlaySettingsMenu.AutoStackCards && _cardIds.Count < 1)
+            if (PlaySettings.AutoStackCards && _cardIds.Count < 1)
                 RequestDelete();
         }
 

@@ -11,14 +11,6 @@ namespace Cgs.Play
 {
     public class PlaySettingsMenu : Modal
     {
-        private const string PlayerPrefsAutoStackCards = "AutoStackCards";
-
-        public static bool AutoStackCards
-        {
-            get => PlayerPrefs.GetInt(PlayerPrefsAutoStackCards, 1) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsAutoStackCards, value ? 1 : 0);
-        }
-
         public Toggle autoStackCardsToggle;
         public Dropdown stackViewerOverlapDropdown;
         public InputField dieFaceCountInputField;
@@ -26,7 +18,9 @@ namespace Cgs.Play
         public override void Show()
         {
             base.Show();
-            autoStackCardsToggle.isOn = AutoStackCards;
+            autoStackCardsToggle.isOn = PlaySettings.AutoStackCards;
+            stackViewerOverlapDropdown.value = PlaySettings.StackViewerOverlap;
+            dieFaceCountInputField.text = PlaySettings.DieFaceCount.ToString();
         }
 
         private void Update()
@@ -53,7 +47,20 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void SetAutoStackCards(bool autoStackCards)
         {
-            AutoStackCards = autoStackCards;
+            PlaySettings.AutoStackCards = autoStackCards;
+        }
+
+        [UsedImplicitly]
+        public void SetStackViewerOverlap(int stackViewerOverlap)
+        {
+            PlaySettings.StackViewerOverlap = stackViewerOverlap;
+        }
+
+        [UsedImplicitly]
+        public void SetDieFaceCount(string dieFaceCount)
+        {
+            if (int.TryParse(dieFaceCount, out var intValue))
+                PlaySettings.DieFaceCount = intValue;
         }
     }
 }

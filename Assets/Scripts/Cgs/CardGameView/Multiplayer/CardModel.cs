@@ -264,9 +264,9 @@ namespace Cgs.CardGameView.Multiplayer
 
             Debug.Log($"Dropped {cardModel.gameObject.name} on {gameObject.name}");
 
-            if (!PlaySettingsMenu.AutoStackCards)
+            if (!PlaySettings.AutoStackCards)
             {
-                Debug.Log(" Ignoring drop request because PlaySettingsMenu.AutoStackCards is false.");
+                Debug.Log(" Ignoring drop request because PlaySettings.AutoStackCards is false.");
                 return;
             }
 
@@ -370,7 +370,7 @@ namespace Cgs.CardGameView.Multiplayer
                     if (isPointerOverDropTarget)
                     {
                         DropTarget.OnDrop(eventData);
-                        shouldDiscard = PlaySettingsMenu.AutoStackCards || dropTargetCardModel == null;
+                        shouldDiscard = PlaySettings.AutoStackCards || dropTargetCardModel == null;
                     }
                 }
 
@@ -424,7 +424,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             var gridPosition = CalculateGridPosition();
 
-            if (PlaySettingsMenu.AutoStackCards && CgsNetManager.Instance.playController != null)
+            if (PlaySettings.AutoStackCards && CgsNetManager.Instance.playController != null)
             {
                 var playMatTransform = CgsNetManager.Instance.playController.playMat.transform;
                 for (var i = 0; i < playMatTransform.childCount; i++)

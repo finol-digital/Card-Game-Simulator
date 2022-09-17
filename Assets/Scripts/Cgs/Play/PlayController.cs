@@ -374,9 +374,9 @@ namespace Cgs.Play
         public void CreateDefaultDie()
         {
             if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewDie(Die.DefaultMin, Die.DefaultMax);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDie(Die.DefaultMin, PlaySettings.DieFaceCount);
             else
-                CreateDie(Die.DefaultMin, Die.DefaultMax);
+                CreateDie(Die.DefaultMin, PlaySettings.DieFaceCount);
         }
 
         public Die CreateDie(int min, int max)

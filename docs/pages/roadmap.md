@@ -8,10 +8,10 @@ permalink: roadmap.html
 - Game-Play: Add Shuffle button to Stack Viewer
 - Game-Play: Click on play area to close card stack viewer
 - Game-Play: Auto Stack Cards Setting
-
-## Active Sprint
 - Game-Play: Overlap Cards in Stack Viewer
 - Game-Play: Variable number of faces for Dice (other than 6)
+
+## Active Sprint
 - Bug-Fixes: Multiplayer/Networking
 
 ## Backlog
