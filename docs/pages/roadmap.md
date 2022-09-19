@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.77
+- Bug-Fixes: Multiplayer/Networking
 - Game-Play: Add Shuffle button to Stack Viewer
 - Game-Play: Click on play area to close card stack viewer
 - Game-Play: Auto Stack Cards Setting
@@ -12,15 +13,14 @@ permalink: roadmap.html
 - Game-Play: Variable number of faces for Dice (other than 6)
 
 ## Active Sprint
-- Bug-Fixes: Multiplayer/Networking
-
-## Backlog
 - Game-Play: Press and hold or right-click on Dice and Cards for Context Menu
 - Game-Play: Rotate Dice
 - Game-Play: Color the default card action green
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Face-Up Stacks (Always reveal the top card)
+
+## Backlog
 - Game-Play: Add Tokens, with settings for label, size, shape, and color (also add color to dice)
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Game-Play: Magnet files for grid

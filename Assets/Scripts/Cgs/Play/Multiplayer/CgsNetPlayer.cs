@@ -343,6 +343,14 @@ namespace Cgs.Play.Multiplayer
             _handCards.Add(Array.Empty<string>());
             _handNames.Add(handName);
             CurrentHand = _handNames.Count - 1;
+            TargetUseHand(CurrentHand);
+        }
+
+        [TargetRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void TargetUseHand(int handIndex)
+        {
+            CgsNetManager.Instance.playController.drawer.SelectTab(handIndex);
         }
 
         public void RequestUseHand(int handIndex)
