@@ -207,6 +207,7 @@ MonoBehaviour:
   - {fileID: 1351510956653137345}
   - {fileID: 1834811848209287355}
   contentCardZone: {fileID: 1835360023883422745}
+  contentLayoutGroup: {fileID: 1835343220522794695}
   nameLabel: {fileID: 1200685389633118982}
   countLabel: {fileID: 1200685390900153234}
 --- !u!1 &8084244049043195940
@@ -1227,6 +1228,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 29e5f42c2967f4040977bc18d0b016e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1835343220522794695 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7301989511571597375, guid: 86a2b588a71aa914e9e8545728c3160c,
+    type: 3}
+  m_PrefabInstance: {fileID: 8947968746743715576}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1835360023883422745 stripped

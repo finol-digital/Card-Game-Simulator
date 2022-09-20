@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -19,6 +20,9 @@ namespace Cgs.CardGameView.Viewer
     {
         private const float HandleHeight = 100.0f;
         private const float ScrollbarHeight = 50.0f;
+        private const float NoOverlapSpacing = 10.0f;
+        private const float LowOverlapSpacing = -125.0f;
+        private const float HighOverlapSpacing = -200.0f;
 
         public GameObject cardModelPrefab;
 
@@ -26,6 +30,7 @@ namespace Cgs.CardGameView.Viewer
 
         public List<CardDropArea> drops;
         public CardZone contentCardZone;
+        public HorizontalLayoutGroup contentLayoutGroup;
         public Text nameLabel;
         public Text countLabel;
 
@@ -52,15 +57,30 @@ namespace Cgs.CardGameView.Viewer
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
 
+            ApplyOverlapSpacing();
+
             Resize();
 
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
             Sync(stack);
+
             contentCardZone.scrollRectContainer.horizontalNormalizedPosition = 0;
+
             IsNew = true;
         }
+
+        public void ApplyOverlapSpacing()
+        {
+            var spacing = PlaySettings.StackViewerOverlap switch
+            {
+                2 => HighOverlapSpacing,
+                1 => LowOverlapSpacing,
+                _ => NoOverlapSpacing
+            };
+
+            contentLayoutGroup.spacing = spacing;}
 
         private void Resize()
         {

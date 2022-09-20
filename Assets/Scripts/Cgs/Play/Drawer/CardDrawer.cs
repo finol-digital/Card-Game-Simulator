@@ -51,6 +51,8 @@ namespace Cgs.Play.Drawer
         private readonly List<Text> _nameTexts = new List<Text>();
         private readonly List<Text> _countTexts = new List<Text>();
 
+        private int _previousOverlapSpacing;
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(Resize);
@@ -72,6 +74,10 @@ namespace Cgs.Play.Drawer
 
         private void Update()
         {
+            if (PlaySettings.StackViewerOverlap != _previousOverlapSpacing)
+                viewer.ApplyOverlapSpacing();
+            _previousOverlapSpacing = PlaySettings.StackViewerOverlap;
+
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
@@ -186,6 +192,9 @@ namespace Cgs.Play.Drawer
             }
 
             viewer.Sync(tabIndex, cardZone, _nameTexts[tabIndex], _countTexts[tabIndex]);
+
+            if (!_toggles[tabIndex].isOn)
+                _toggles[tabIndex].isOn = true;
         }
 
         public void SyncHand(int handIndex, string[] cardIds)
