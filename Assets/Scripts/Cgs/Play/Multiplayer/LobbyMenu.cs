@@ -358,7 +358,8 @@ namespace Cgs.Play.Multiplayer
 
         private void OnDisable()
         {
-            CgsNetManager.Instance.lrm.serverListUpdated.RemoveListener(Redisplay);
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.lrm != null && CgsNetManager.Instance != null)
+                CgsNetManager.Instance.lrm.serverListUpdated.RemoveListener(Redisplay);
         }
     }
 }
