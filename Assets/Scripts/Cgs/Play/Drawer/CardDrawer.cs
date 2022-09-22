@@ -164,6 +164,12 @@ namespace Cgs.Play.Drawer
         [UsedImplicitly]
         public void SelectTab(int tabIndex)
         {
+            if (tabIndex >= cardZoneRectTransforms.Count)
+            {
+                Debug.Log($"SelectTab {tabIndex} but not created yet.");
+                return;
+            }
+
             for (var i = 0; i < cardZoneRectTransforms.Count; i++)
                 cardZoneRectTransforms[i].gameObject.SetActive(i == tabIndex);
 
@@ -172,7 +178,14 @@ namespace Cgs.Play.Drawer
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
             {
                 CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
-                var serverCards = CgsNetManager.Instance.LocalPlayer.GetHandCards()[tabIndex];
+                var handCards = CgsNetManager.Instance.LocalPlayer.GetHandCards();
+                if (tabIndex >= handCards.Count)
+                {
+                    Debug.Log($"SelectTab {tabIndex} but not on server yet.");
+                    cardZone.transform.DestroyAllChildren();
+                    return;
+                }
+                var serverCards = handCards[tabIndex];
                 var serverCardIds = serverCards.Select(unityCard => unityCard.Id).ToList();
                 if (!localCardIds.SequenceEqual(serverCardIds))
                 {

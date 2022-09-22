@@ -297,13 +297,22 @@ namespace Cgs.Play.Multiplayer
                     Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
                     if (RuntimePlatform.Android.ToString().Equals(discoveryResponse.HostPlatform))
                         CardGameManager.Instance.Messenger.Show(AndroidWarningMessage, true);
-                    NetworkManager.singleton.StartClient(discoveryResponse.Uri);
+                    var uriBuilder = new UriBuilder(discoveryResponse.Uri.AbsoluteUri)
+                    {
+                        Scheme = "kcp",
+                        Port = 7777
+                    };
+                    NetworkManager.singleton.StartClient(uriBuilder.Uri);
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServerIp, UriKind.RelativeOrAbsolute))
                 {
                     Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;
-                    var host = _selectedServerIp.StartsWith("lrm://") ? "" : "lrm://" + _selectedServerIp;
-                    NetworkManager.singleton.StartClient(new Uri(host));
+                    var uriBuilder = new UriBuilder(_selectedServerIp)
+                    {
+                        Scheme = "kcp",
+                        Port = 7777
+                    };
+                    NetworkManager.singleton.StartClient(uriBuilder.Uri);
                 }
                 else
                 {
