@@ -15,7 +15,7 @@ jobs:
         env:
           VERSION: ${{ steps.get_version.outputs.version }}
         run: |
-          RELEASE_NOTES=$( cat fastlane/metadata/en-US/release_notes.txt )
+          RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
           export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"
           ANNOUNCEMENT="${ANNOUNCEMENT//'%'/'%25'}"
           ANNOUNCEMENT="${ANNOUNCEMENT//$'\n'/'%0A'}"
