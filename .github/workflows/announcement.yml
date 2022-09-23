@@ -1,0 +1,38 @@
+name: Release Announcement
+on: workflow_dispatch
+jobs:
+  announceReleaseToSocialMedia:
+    name: Announce Release to Social Media
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - id: get_version
+        uses: battila7/get-version-action@v2
+      - name: Prepare Announcement
+        id: prepare
+        shell: bash
+        env:
+          VERSION: ${{ steps.get_version.outputs.version }}
+        run: |
+          RELEASE_NOTES=$( cat fastlane/metadata/en-US/release_notes.txt )
+          export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"
+          ANNOUNCEMENT="${ANNOUNCEMENT//'%'/'%25'}"
+          ANNOUNCEMENT="${ANNOUNCEMENT//$'\n'/'%0A'}"
+          ANNOUNCEMENT="${ANNOUNCEMENT//$'\r'/'%0D'}"
+          echo "$ANNOUNCEMENT"
+          echo "::set-output name=ANNOUNCEMENT::$ANNOUNCEMENT"
+      - name: Discord Announcement
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@0.3.2
+        with:
+          args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
+      - name: Twitter Announcement
+        uses: ethomson/send-tweet-action@v1
+        with:
+          status: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
+          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}

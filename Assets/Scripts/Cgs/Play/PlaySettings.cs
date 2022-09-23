@@ -21,7 +21,7 @@ namespace Cgs.Play
 
         public static int StackViewerOverlap
         {
-            get => PlayerPrefs.GetInt(PlayerPrefsStackViewerOverlap, 0);
+            get => PlayerPrefs.GetInt(PlayerPrefsStackViewerOverlap, 1);
             set => PlayerPrefs.SetInt(PlayerPrefsStackViewerOverlap, value);
         }
 

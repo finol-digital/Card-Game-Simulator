@@ -88,6 +88,10 @@ namespace Cgs.CardGameView.Viewer
         private void Update()
         {
             WasVisible = IsVisible;
+
+            if (Input.anyKeyDown && _selectedPlayable == null)
+                IsVisible = false;
+
             if (!IsVisible || SelectedPlayable == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
 

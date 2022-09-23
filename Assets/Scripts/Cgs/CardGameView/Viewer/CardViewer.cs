@@ -223,6 +223,10 @@ namespace Cgs.CardGameView.Viewer
             else
                 ZoomTime = 0;
             WasVisible = IsVisible;
+
+            if (Input.anyKeyDown && _selectedCardModel == null)
+                IsVisible = false;
+
             if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
