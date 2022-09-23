@@ -694,7 +694,7 @@ jobs:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
       - name: Deploy to Steam
-        uses: game-ci/steam-deploy@daec6fc2db6aa5f073e3b1530cd19f6648bb4171
+        uses: game-ci/steam-deploy@main
         with:
           username: ${{ secrets.STEAM_USERNAME }}
           password:  ${{ secrets.STEAM_PASSWORD }}
