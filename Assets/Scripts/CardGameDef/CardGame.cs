@@ -269,7 +269,7 @@ namespace CardGameDef
 
         [JsonProperty]
         [Description(
-            "cgsDeepLink is a clickable url that will take the user directly to this game in CGS, which can be shared between users. This functionality must be configured through Branch.io.")]
+            "cgsDeepLink is a clickable url that will take the user directly to this game in CGS, which can be shared between users. This functionality must be configured through Firebase Dynamic Links.")]
         public Uri CgsDeepLink { get; set; }
 
         [JsonProperty]
