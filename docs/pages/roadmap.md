@@ -82,7 +82,6 @@ The game dev should be able to put all of this down on the 'table' so that all f
 - Deck Editor: Organize cards by category when saving
 - Game-Play: Support grouping of dice
 - Game-Play: Automatically roll dice on phone shake
-- Game-Play: Allow automatic deletion of empty zones
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Integration: Support multiple languages (Spanish,Chinese)
 - Integration: NanDeck + Squib + Magic Set Editor
