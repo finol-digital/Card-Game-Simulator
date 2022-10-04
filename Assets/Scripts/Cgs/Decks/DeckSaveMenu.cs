@@ -144,7 +144,9 @@ namespace Cgs.Decks
             }, false);
 #elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             var nativeShare = new NativeShare();
-            nativeShare.AddFile(pdfUri.AbsoluteUri, "application/pdf").Share();
+            nativeShare.AddFile(pdfUri.AbsolutePath);
+            nativeShare.SetUrl(pdfUri.AbsoluteUri);
+            nativeShare.Share();
 #else
             Application.OpenURL(pdfUri.AbsoluteUri);
 #endif
