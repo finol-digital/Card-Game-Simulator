@@ -12,6 +12,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+#if UNITY_ANDROID && !UNITY_EDITOR
+using System.Collections;
+using UnityEngine.Networking;
+#endif
 
 namespace Cgs.Decks
 {
@@ -142,15 +146,25 @@ namespace Cgs.Decks
                     CardGameManager.Instance.Messenger.Show(DeckPrintOpenPathErrorMessage + pdfUri.LocalPath);
                 }
             }, false);
-#elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            var nativeShare = new NativeShare();
-            nativeShare.AddFile(pdfUri.AbsolutePath);
-            nativeShare.SetUrl(pdfUri.AbsoluteUri);
-            nativeShare.Share();
+#elif UNITY_ANDROID && !UNITY_EDITOR
+            StartCoroutine(OpenPrintPdf(pdfUri));
+#elif UNITY_IOS && !UNITY_EDITOR
+            new NativeShare().AddFile(pdfUri.AbsoluteUri).Share();
 #else
             Application.OpenURL(pdfUri.AbsoluteUri);
 #endif
         }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        public IEnumerator OpenPrintPdf(Uri uri)
+        {
+            var uwr = new UnityWebRequest( uri, UnityWebRequest.kHttpVerbGET );
+            var path = Path.Combine( Application.temporaryCachePath, "temp.pdf" );
+            uwr.downloadHandler = new DownloadHandlerFile( path );
+            yield return uwr.SendWebRequest();
+            new NativeShare().AddFile(path, "application/pdf").Share();
+        }
+#endif
 
         [UsedImplicitly]
         public void EnableSubmit()
