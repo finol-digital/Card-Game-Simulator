@@ -65,7 +65,7 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup dotnet 5 for SonarQube
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3.0.1
         with:
           dotnet-version: '5.0.x'
       - name: Set up JDK 11 for SonarQube
@@ -608,7 +608,7 @@ jobs:
         run: |
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
-          $manifest.Package.Identity.Publisher = "CN=Finol Digital LLC"
+          $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
           $manifest.save(".\$env:UwpProjectDirectory\Package.appxmanifest")
           echo ".\$env:UwpProjectDirectory\Package.appxmanifest"
           cat ".\$env:UwpProjectDirectory\Package.appxmanifest"

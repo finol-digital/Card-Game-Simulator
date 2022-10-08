@@ -4,21 +4,15 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.77
-- Bug-Fixes: Multiplayer/Networking
-- Game-Play: Add Shuffle button to Stack Viewer
-- Game-Play: Click on play area to close card stack viewer
-- Game-Play: Auto Stack Cards Setting
-- Game-Play: Overlap Cards in Stack Viewer
-- Game-Play: Variable number of faces for Dice (other than 6)
+## What's New - v1.78
+- Game-Play: Double-Click to View Stacks and Roll Dice
 
 ## Active Sprint
 - Game-Play: Press and hold or right-click on Dice and Cards for Context Menu
 - Game-Play: Rotate Dice
-- Game-Play: Color the default card action green
-- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
-- Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Face-Up Stacks (Always reveal the top card)
+- Game-Play: Combine Stacks when dropped on each other
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 
 ## Backlog - 2022 Q4
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
@@ -82,7 +76,6 @@ The game dev should be able to put all of this down on the 'table' so that all f
 - Deck Editor: Organize cards by category when saving
 - Game-Play: Support grouping of dice
 - Game-Play: Automatically roll dice on phone shake
-- Game-Play: Allow automatic deletion of empty zones
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Integration: Support multiple languages (Spanish,Chinese)
 - Integration: NanDeck + Squib + Magic Set Editor
