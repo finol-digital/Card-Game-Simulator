@@ -96,19 +96,37 @@ namespace Cgs.CardGameView.Viewer
                                  CardViewer.Instance.SelectedCardModel != null;
 
             foreach (var flipButton in flipButtons)
+            {
                 flipButton.interactable =
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
+                flipButton.transform.GetChild(0).GetComponent<Image>().color =
+                    isCardSelected && CardGameManager.Current.GameDefaultCardAction == CardGameDef.CardAction.Flip
+                        ? Color.green
+                        : Color.white;
+            }
 
             foreach (var rotateButton in rotateButtons)
+            {
                 rotateButton.interactable =
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+                rotateButton.transform.GetChild(0).GetComponent<Image>().color =
+                    isCardSelected && CardGameManager.Current.GameDefaultCardAction == CardGameDef.CardAction.Rotate
+                        ? Color.green
+                        : Color.white;
+            }
 
             foreach (var tapButton in tapButtons)
+            {
                 tapButton.interactable =
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
+                tapButton.transform.GetChild(0).GetComponent<Image>().color =
+                    isCardSelected && CardGameManager.Current.GameDefaultCardAction == CardGameDef.CardAction.Tap
+                        ? Color.green
+                        : Color.white;
+            }
 
             var zoomButtonActive = isCardSelected && !CardViewer.Instance.nameVisibleButton.gameObject.activeSelf;
             if (zoomButtonActive != zoomButton.gameObject.activeSelf)
