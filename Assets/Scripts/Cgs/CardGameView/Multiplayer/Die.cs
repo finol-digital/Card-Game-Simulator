@@ -4,6 +4,7 @@
 
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
+using Cgs.Play;
 using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
@@ -76,6 +77,20 @@ namespace Cgs.CardGameView.Multiplayer
 
             Value = Random.Range(Min, Max + 1);
             _rollDelay = 0;
+        }
+
+        protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
+        {
+            if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
+                eventData.dragging ||
+                eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
+                return;
+
+            if (PlaySettings.DoubleClickToRollDice && EventSystem.current.currentSelectedGameObject == gameObject)
+                Roll();
+            else if (!EventSystem.current.alreadySelecting &&
+                     EventSystem.current.currentSelectedGameObject != gameObject)
+                EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)

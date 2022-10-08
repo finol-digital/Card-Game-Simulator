@@ -12,14 +12,18 @@ namespace Cgs.Play
     public class PlaySettingsMenu : Modal
     {
         public Toggle autoStackCardsToggle;
+        public Toggle doubleClickToViewStacksToggle;
         public Dropdown stackViewerOverlapDropdown;
+        public Toggle doubleClickToRollDiceToggle;
         public InputField dieFaceCountInputField;
 
         public override void Show()
         {
             base.Show();
             autoStackCardsToggle.isOn = PlaySettings.AutoStackCards;
+            doubleClickToViewStacksToggle.isOn = PlaySettings.DoubleClickToViewStacks;
             stackViewerOverlapDropdown.value = PlaySettings.StackViewerOverlap;
+            doubleClickToRollDiceToggle.isOn = PlaySettings.DoubleClickToRollDice;
             dieFaceCountInputField.text = PlaySettings.DieFaceCount.ToString();
         }
 
@@ -51,9 +55,21 @@ namespace Cgs.Play
         }
 
         [UsedImplicitly]
+        public void SetDoubleClickToViewStacks(bool doubleClickToViewStacks)
+        {
+            PlaySettings.DoubleClickToViewStacks = doubleClickToViewStacks;
+        }
+
+        [UsedImplicitly]
         public void SetStackViewerOverlap(int stackViewerOverlap)
         {
             PlaySettings.StackViewerOverlap = stackViewerOverlap;
+        }
+
+        [UsedImplicitly]
+        public void SetDoubleClickToRollDice(bool doubleClickToRollDice)
+        {
+            PlaySettings.DoubleClickToRollDice = doubleClickToRollDice;
         }
 
         [UsedImplicitly]

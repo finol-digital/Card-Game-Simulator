@@ -10,8 +10,10 @@ namespace Cgs.Play
     public static class PlaySettings
     {
         private const string PlayerPrefsAutoStackCards = "AutoStackCards";
-        private const string PlayerPrefsStackViewerOverlap = "StackViewerOverlap";
         private const string PlayerPrefsDieFaceCount = "DieFaceCount";
+        private const string PlayerPrefsDoubleClickToRollDice = "DoubleClickToRollDice";
+        private const string PlayerPrefsDoubleClickToViewStacks = "DoubleClickToViewStacks";
+        private const string PlayerPrefsStackViewerOverlap = "StackViewerOverlap";
 
         public static bool AutoStackCards
         {
@@ -19,16 +21,28 @@ namespace Cgs.Play
             set => PlayerPrefs.SetInt(PlayerPrefsAutoStackCards, value ? 1 : 0);
         }
 
-        public static int StackViewerOverlap
-        {
-            get => PlayerPrefs.GetInt(PlayerPrefsStackViewerOverlap, 1);
-            set => PlayerPrefs.SetInt(PlayerPrefsStackViewerOverlap, value);
-        }
-
         public static int DieFaceCount
         {
             get => PlayerPrefs.GetInt(PlayerPrefsDieFaceCount, Die.DefaultMax);
             set => PlayerPrefs.SetInt(PlayerPrefsDieFaceCount, value);
+        }
+
+        public static bool DoubleClickToRollDice
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsDoubleClickToRollDice, 1) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsDoubleClickToRollDice, value ? 1 : 0);
+        }
+
+        public static bool DoubleClickToViewStacks
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsDoubleClickToViewStacks, 1) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsDoubleClickToViewStacks, value ? 1 : 0);
+        }
+
+        public static int StackViewerOverlap
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsStackViewerOverlap, 1);
+            set => PlayerPrefs.SetInt(PlayerPrefsStackViewerOverlap, value);
         }
     }
 }

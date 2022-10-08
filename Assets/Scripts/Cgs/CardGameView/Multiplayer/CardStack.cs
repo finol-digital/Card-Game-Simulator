@@ -30,6 +30,7 @@ namespace Cgs.CardGameView.Multiplayer
         private static Random ThisThreadsRandom => _local ??= new Random(
             unchecked(Environment.TickCount * 31 + Thread
                 .CurrentThread.ManagedThreadId));
+
         public static void Shuffle<T>(this IList<T> list)
         {
             var n = list.Count;
@@ -141,9 +142,10 @@ namespace Cgs.CardGameView.Multiplayer
                 eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
                 return;
 
-            if (EventSystem.current.currentSelectedGameObject == gameObject)
+            if (PlaySettings.DoubleClickToViewStacks && EventSystem.current.currentSelectedGameObject == gameObject)
                 View();
-            else if (!EventSystem.current.alreadySelecting)
+            else if (!EventSystem.current.alreadySelecting &&
+                     EventSystem.current.currentSelectedGameObject != gameObject)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
