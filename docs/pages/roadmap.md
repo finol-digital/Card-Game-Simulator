@@ -4,13 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.77
-- Bug-Fixes: Multiplayer/Networking
-- Game-Play: Add Shuffle button to Stack Viewer
-- Game-Play: Click on play area to close card stack viewer
-- Game-Play: Auto Stack Cards Setting
-- Game-Play: Overlap Cards in Stack Viewer
-- Game-Play: Variable number of faces for Dice (other than 6)
+## What's New - v1.78
+- Game-Play: Double-Click to View Stacks and Roll Dice
 
 ## Active Sprint
 - Game-Play: Press and hold or right-click on Dice and Cards for Context Menu
