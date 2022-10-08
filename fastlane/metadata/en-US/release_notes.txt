@@ -1,6 +1,1 @@
-- Bug-Fixes: Multiplayer/Networking
-- Game-Play: Add Shuffle button to Stack Viewer
-- Game-Play: Click on play area to close card stack viewer
-- Game-Play: Auto Stack Cards Setting
-- Game-Play: Overlap Cards in Stack Viewer
-- Game-Play: Variable number of faces for Dice (other than 6)
+- Game-Play: Double-Click to View Stacks and Roll Dice
