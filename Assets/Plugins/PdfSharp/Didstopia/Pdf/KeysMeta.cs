@@ -235,6 +235,7 @@ namespace Didstopia.PDFSharp.Pdf
             var fields = type.GetTypeInfo().DeclaredFields;
             foreach (FieldInfo field in fields)
             {
+                UnityEngine.Debug.Log($"CollectKeyDescriptors: {type} field: {field}");
                 var attributes = field.GetCustomAttributes(typeof(KeyInfoAttribute), false);
                 foreach (var attribute in attributes)
                 {
