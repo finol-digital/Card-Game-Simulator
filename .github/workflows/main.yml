@@ -65,7 +65,7 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup dotnet 5 for SonarQube
-        uses: actions/setup-dotnet@v3.0.1
+        uses: actions/setup-dotnet@v3.0.2
         with:
           dotnet-version: '5.0.x'
       - name: Set up JDK 11 for SonarQube
