@@ -222,7 +222,7 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsInternetConnectionSource)
             {
-                CgsNetManager.Instance.lrm.serverName = CgsNetManager.Instance.RoomName;
+                CgsNetManager.Instance.lrm.serverName = CardGameManager.Current.Name;
                 CgsNetManager.Instance.lrm.extraServerData = JsonUtility.ToJson(CgsNetManager.Instance.RoomData);
                 CgsNetManager.Instance.lrm.isPublicServer = true;
             }
