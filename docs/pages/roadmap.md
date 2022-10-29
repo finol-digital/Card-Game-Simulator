@@ -4,18 +4,16 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.78
-- Game-Play: Double-Click to View Stacks and Roll Dice
+## What's New - v1.79
+- Bug Fixes
 
 ## Active Sprint
-- Game-Play: Press and hold or right-click on Dice and Cards for Context Menu
 - Game-Play: Rotate Dice
 - Game-Play: Face-Up Stacks (Always reveal the top card)
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 
 ## Backlog - 2022 Q4
-- Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Game-Play: Magnet files for grid
 - Game-Play: Prevent player from looking through deck in certain situations
 - Game-Play: Cut Stacks
@@ -28,6 +26,7 @@ permalink: roadmap.html
 
 ## Backlog - 2023 Q1
 - Game-Creation: Edit Button in Main Menu
+- Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress
