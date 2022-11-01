@@ -239,6 +239,7 @@ namespace Didstopia.PDFSharp.Pdf
                 var attributes = field.GetCustomAttributes(typeof(KeyInfoAttribute), false);
                 foreach (var attribute in attributes)
                 {
+                    UnityEngine.Debug.Log($" CollectKeyDescriptors: {type} field: {field} attribute: {attribute}");
                     KeyDescriptor descriptor = new KeyDescriptor((KeyInfoAttribute)attribute);
                     descriptor.KeyValue = (string)field.GetValue(null);
                     _keyDescriptors[descriptor.KeyValue] = descriptor;
