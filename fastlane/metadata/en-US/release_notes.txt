@@ -1,1 +1,1 @@
-- Game-Play: Double-Click to View Stacks and Roll Dice
+- Bug Fixes
