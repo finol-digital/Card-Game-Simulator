@@ -22,6 +22,9 @@ namespace Cgs.Play.Multiplayer
         public const string AndroidWarningMessage =
             "WARNING!!!\nYou are connecting to an Android host, which is likely to lose connection or have errors.\nIt is recommended to use a PC host.";
 
+        public const string ShareWarningMessage =
+            "WARNING!!!\nYou are hosting a game that has not been properly uploaded.\nContact david@finoldigital.com for assistance in uploading.";
+
         public string RoomIdIpLabel => "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
         public string RoomIdIpPlaceholder => "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
 
@@ -220,6 +223,13 @@ namespace Cgs.Play.Multiplayer
 
         private void StartHost()
         {
+            if (CardGameManager.Current.AutoUpdateUrl == null ||
+                !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
+            {
+                Debug.LogWarning(ShareWarningMessage);
+                CardGameManager.Instance.Messenger.Show(ShareWarningMessage, true);
+            }
+
             if (IsInternetConnectionSource)
             {
                 CgsNetManager.Instance.lrm.serverName = CardGameManager.Current.Name;
@@ -340,7 +350,7 @@ namespace Cgs.Play.Multiplayer
 
         private void CheckPassword()
         {
-            if(_password.Equals(CgsNetManager.Instance.RoomPassword))
+            if (_password.Equals(CgsNetManager.Instance.RoomPassword))
                 return;
 
             Debug.LogError(PasswordErrorMessage);
