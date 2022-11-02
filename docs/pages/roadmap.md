@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.79
-- Bug Fixes
+## What's New - v1.80
+
 
 ## Active Sprint
 - Game-Play: Rotate Dice
