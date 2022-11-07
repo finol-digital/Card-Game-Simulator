@@ -23,7 +23,7 @@
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 // THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 #endregion
 
@@ -94,20 +94,11 @@ namespace Didstopia.PDFSharp.Pdf.IO
             {
                 case '%':
                     // Eat comments, the parser doesn't handle them
-                    //return symbol = ScanComment();
                     ScanComment();
                     goto Again;
 
                 case '/':
                     return _symbol = ScanName();
-
-                //case 'R':
-                //  if (Lexer.IsWhiteSpace(nextChar))
-                //  {
-                //    ScanNextChar();
-                //    return Symbol.R;
-                //  }
-                //  break;
 
                 case '+': //TODO is it so easy?
                 case '-':
@@ -175,11 +166,11 @@ namespace Didstopia.PDFSharp.Pdf.IO
         {
             int pos;
 
-            // Skip illegal blanks behind «stream».
+            // Skip illegal blanks behind ï¿½streamï¿½.
             while (_currChar == Chars.SP)
                 ScanNextChar(true);
 
-            // Skip new line behind «stream».
+            // Skip new line behind ï¿½streamï¿½.
             if (_currChar == Chars.CR)
             {
                 if (_nextChar == Chars.LF)
@@ -264,18 +255,16 @@ namespace Didstopia.PDFSharp.Pdf.IO
         /// </summary>
         public Symbol ScanNumber()
         {
-            // I found a PDF file created with Acrobat 7 with this entry 
+            // I found a PDF file created with Acrobat 7 with this entry
             //   /Checksum 2996984786
             // What is this? It is neither an integer nor a real.
             // I introduced an UInteger...
             bool period = false;
-            //bool sign;
 
             _token = new StringBuilder();
             char ch = _currChar;
             if (ch == '+' || ch == '-')
             {
-                //sign = true;
                 _token.Append(ch);
                 ch = ScanNextChar(true);
             }
@@ -309,7 +298,6 @@ namespace Didstopia.PDFSharp.Pdf.IO
             // Got an AutoCAD PDF file that contains this: /C 264584027963392
             // Best we can do is to convert it to real value.
             return Symbol.Real;
-            //thr ow new PdfReaderException("Number exceeds integer range.");
         }
 
         public Symbol ScanNumberOrReference()
@@ -448,7 +436,7 @@ namespace Didstopia.PDFSharp.Pdf.IO
                                     ch = Chars.BackSlash;
                                     break;
 
-                                // AutoCAD PDFs my contain such strings: (\ ) 
+                                // AutoCAD PDFs my contain such strings: (\ )
                                 case ' ':
                                     ch = ' ';
                                     break;
@@ -503,7 +491,7 @@ namespace Didstopia.PDFSharp.Pdf.IO
             }
 
             // Phase 2: deal with UTF-16BE if necessary.
-            // UTF-16BE Unicode strings start with U+FEFF ("þÿ"). There can be empty strings with UTF-16BE prefix.
+            // UTF-16BE Unicode strings start with U+FEFF ("ï¿½ï¿½"). There can be empty strings with UTF-16BE prefix.
             Phase2:
             if (_token.Length >= 2 && _token[0] == '\xFE' && _token[1] == '\xFF')
             {
@@ -619,19 +607,11 @@ namespace Didstopia.PDFSharp.Pdf.IO
             return _currChar;
         }
 
-        ///// <summary>
-        ///// Resets the current token to the empty string.
-        ///// </summary>
-        //void ClearToken()
-        //{
-        //    _token.Length = 0;
-        //}
-
         bool PeekReference()
         {
             // A Reference has the form "nnn mmm R". The implementation of the the parser used a
             // reduce/shift algorithm in the first place. But this case is the only one we need to
-            // look ahead 3 tokens. 
+            // look ahead 3 tokens.
             int positon = Position;
 
             // Skip digits.
@@ -783,7 +763,6 @@ namespace Didstopia.PDFSharp.Pdf.IO
         {
             get
             {
-                //Debug.As sert(_token.ToString().IndexOf('.') == -1);
                 return int.Parse(_token.ToString(), CultureInfo.InvariantCulture);
             }
         }
@@ -795,7 +774,6 @@ namespace Didstopia.PDFSharp.Pdf.IO
         {
             get
             {
-                //Debug.As sert(_token.ToString().IndexOf('.') == -1);
                 return uint.Parse(_token.ToString(), CultureInfo.InvariantCulture);
             }
         }

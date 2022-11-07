@@ -19,8 +19,8 @@ namespace UnityExtensionMethods
 #if UNITY_ANDROID && !UNITY_EDITOR
         public const string AndroidStreamingAssetsDirectory = "assets/";
         public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
-        public const string DirectorySeparator = "/";
 #endif
+        public const string DirectorySeparator = "/";
         public const string FilePrefix = "file://";
         public const string MetaExtension = ".meta";
         public const string ZipExtension = ".zip";
@@ -245,7 +245,7 @@ namespace UnityExtensionMethods
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            File.WriteAllBytes(directory + "/" + fileName, www.downloadHandler.data);
+            File.WriteAllBytes(directory + DirectorySeparator + fileName, www.downloadHandler.data);
         }
 
         public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
