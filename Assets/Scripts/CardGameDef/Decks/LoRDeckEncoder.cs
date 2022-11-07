@@ -254,10 +254,9 @@ namespace CardGameDef.Decks
                 bytes.AddRange(Varint.GetVarint((ulong) currentFactionNumber));
 
                 //what are the cards, as identified by the third section of card code only now, within this group?
-                foreach (CardCodeAndCount cd in currentList)
+                foreach (var sequenceNumber in currentList.Select(cd => cd.CardCode)
+                             .Select(code => int.Parse(code.Substring(4, 3))))
                 {
-                    string code = cd.CardCode;
-                    int sequenceNumber = int.Parse(code.Substring(4, 3));
                     bytes.AddRange(Varint.GetVarint((ulong) sequenceNumber));
                 }
             }
