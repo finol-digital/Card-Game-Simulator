@@ -604,7 +604,7 @@ jobs:
         uses: davidmfinol/replace-action@master
         with:
           files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
-          replacements: "<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />=<ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup><Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />"
+          replacements: "<Import Project='$(VCTargetsPath)\Microsoft.Cpp.targets' />=<ItemGroup><None Include='Package.StoreAssociation.xml' /></ItemGroup><Import Project='$(VCTargetsPath)\Microsoft.Cpp.targets' />"
       - name: Add Package.StoreAssociation.xml and Update manifest name
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
