@@ -75,7 +75,7 @@ jobs:
           java-version: 11
       - name: Setup Unity for SonarQube
         id: setup-unity
-        uses: kuler90/setup-unity@v1
+        uses: davidmfinol/setup-unity@main
       - name: Activate Unity for SonarQube
         uses: kuler90/activate-unity@v1
         with:
@@ -575,7 +575,7 @@ jobs:
           RELEASE_NOTES="${RELEASE_NOTES//$'\n'/'%0A'}"
           RELEASE_NOTES="${RELEASE_NOTES//$'\r'/'%0D'}"
           echo "$RELEASE_NOTES"
-          echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_OUTPUT
       - name: Apply Release Notes
         uses: davidmfinol/replace-action@master
         with:
@@ -600,15 +600,22 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
           replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-      - name: Update manifest name
+      - name: Add Package.StoreAssociation.xml to vcxproj
+        uses: davidmfinol/replace-action@master
+        with:
+          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
+          replacements: "<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />=<ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup><Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />"
+      - name: Add Package.StoreAssociation.xml and Update manifest name
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
         run: |
+          Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
           $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
+          $manifest.Package.mp:PhoneIdentity.PhoneProductId = "833d30e8-ff14-43bd-b090-1eda8a4c3116"
           $manifest.save(".\$env:UwpProjectDirectory\Package.appxmanifest")
           echo ".\$env:UwpProjectDirectory\Package.appxmanifest"
           cat ".\$env:UwpProjectDirectory\Package.appxmanifest"
@@ -730,7 +737,7 @@ jobs:
           ANNOUNCEMENT="${ANNOUNCEMENT//$'\n'/'%0A'}"
           ANNOUNCEMENT="${ANNOUNCEMENT//$'\r'/'%0D'}"
           echo "$ANNOUNCEMENT"
-          echo "::set-output name=ANNOUNCEMENT::$ANNOUNCEMENT"
+          echo "ANNOUNCEMENT=$ANNOUNCEMENT" >> $GITHUB_OUTPUT
       - name: Discord Announcement
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
