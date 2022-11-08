@@ -77,7 +77,7 @@ jobs:
         id: setup-unity
         uses: davidmfinol/setup-unity@master
       - name: Activate Unity for SonarQube
-        uses: kuler90/activate-unity@v1
+        uses: davidmfinol/activate-unity@master
         with:
           unity-username: ${{ secrets.UNITY_EMAIL }}
           unity-password: ${{ secrets.UNITY_PASSWORD }}
