@@ -17,7 +17,7 @@ using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
 using Cgs.UI.ScrollRects;
 using JetBrains.Annotations;
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -165,7 +165,7 @@ namespace Cgs.Play
 
         private void Restart()
         {
-            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestRestart();
             else
             {
@@ -179,16 +179,16 @@ namespace Cgs.Play
         public void ResetPlayArea()
         {
             var rectTransform = (RectTransform) playMat.transform;
-            if (!NetworkManager.singleton.isNetworkActive)
+            if (!NetworkManager.Singleton.IsConnectedClient)
                 rectTransform.DestroyAllChildren();
-            else if (CgsNetManager.Instance.LocalPlayer != null && CgsNetManager.Instance.LocalPlayer.isServer)
+            else if (CgsNetManager.Instance.IsHost)
             {
                 foreach (var cardStack in playMat.GetComponentsInChildren<CardStack>())
-                    NetworkServer.UnSpawn(cardStack.gameObject);
+                    cardStack.MyNetworkObject.Despawn();
                 foreach (var cardModel in playMat.GetComponentsInChildren<CardModel>())
-                    NetworkServer.UnSpawn(cardModel.gameObject);
+                    cardModel.MyNetworkObject.Despawn();
                 foreach (var die in playMat.GetComponentsInChildren<Die>())
-                    NetworkServer.UnSpawn(die.gameObject);
+                    die.MyNetworkObject.Despawn();
                 rectTransform.DestroyAllChildren();
             }
 
@@ -232,7 +232,7 @@ namespace Cgs.Play
                 ? CardGameManager.Current.GamePlayDeckName
                 : deck.Name;
             var newDeckPosition = NewDeckPosition;
-            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
             {
                 CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
                 var i = 1;
@@ -304,7 +304,7 @@ namespace Cgs.Play
             rectTransform.SetParent(playAreaTransform);
             if (!Vector2.zero.Equals(position))
                 rectTransform.localPosition = position;
-            cardStack.position = rectTransform.localPosition;
+            cardStack.Position = rectTransform.localPosition;
             return cardStack;
         }
 
@@ -322,7 +322,7 @@ namespace Cgs.Play
 
         private void Deal(int cardCount)
         {
-            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null &&
+            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.CurrentDeck != null)
                 CgsNetManager.Instance.LocalPlayer.RequestDeal(CgsNetManager.Instance.LocalPlayer.CurrentDeck,
                     cardCount);
@@ -350,7 +350,7 @@ namespace Cgs.Play
 
         private static void AddCardToPlay(CardZone cardZone, CardModel cardModel)
         {
-            if (NetworkManager.singleton.isNetworkActive)
+            if (NetworkManager.Singleton.IsConnectedClient)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
                 SetPlayActions(cardModel);
@@ -365,7 +365,7 @@ namespace Cgs.Play
         private void DisplayResults(string filters, List<UnityCard> cards)
         {
             var position = Vector2.left * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X);
-            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(filters, cards, position);
             else
                 CreateCardStack(filters, cards, position);
@@ -373,7 +373,7 @@ namespace Cgs.Play
 
         public void CreateDefaultDie()
         {
-            if (CgsNetManager.Instance.isNetworkActive && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewDie(Die.DefaultMin, PlaySettings.DieFaceCount);
             else
                 CreateDie(Die.DefaultMin, PlaySettings.DieFaceCount);
@@ -414,13 +414,10 @@ namespace Cgs.Play
 
         public static void BackToMainMenu()
         {
-            if (NetworkManager.singleton.isNetworkActive)
+            if (NetworkManager.Singleton.IsConnectedClient)
             {
-                CgsNetManager.Instance.Discovery.StopDiscovery();
-                if (NetworkServer.active)
-                    NetworkManager.singleton.StopHost();
-                else if (NetworkClient.isConnected)
-                    NetworkManager.singleton.StopClient();
+                // TODO: CgsNetManager.Instance.Discovery.StopDiscovery();
+                NetworkManager.Singleton.Shutdown();
             }
 
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

@@ -860,8 +860,14 @@ namespace CardGameDef.Unity
                     }
                     else
                     {
-                        var code = setJToken.Value<string>(dataIdentifier) ?? defaultSetCode;
-                        var name = setJToken.Value<string>(CardSetNameIdentifier) ?? code;
+                        var code = setJToken.ToString();
+                        var name = code;
+                        if (setJToken.HasValues)
+                        {
+                            code = setJToken.Value<string>(dataIdentifier) ?? defaultSetCode;
+                            name = setJToken.Value<string>(CardSetNameIdentifier) ?? code;
+                        }
+
                         cardSets[code] = name;
                     }
                 }

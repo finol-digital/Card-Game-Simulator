@@ -6,6 +6,7 @@ namespace Cgs.Play.Multiplayer
 {
     public class ExtraServerData
     {
+        public string Name = CardGameManager.Current.Name;
         public string Password = "";
     }
 }

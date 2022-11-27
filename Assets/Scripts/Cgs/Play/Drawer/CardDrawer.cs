@@ -26,10 +26,10 @@ namespace Cgs.Play.Drawer
         public static readonly Vector2 ShownPosition = Vector2.zero;
 
         private static Vector2 MidPosition =>
-            new Vector2(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) / 2 - 10);
+            new(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) / 2 - 10);
 
         public static Vector2 HiddenPosition =>
-            new Vector2(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) - 10);
+            new(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) - 10);
 
         public StackViewer viewer;
         public Button downButton;
@@ -47,9 +47,9 @@ namespace Cgs.Play.Drawer
         public GameObject tabPrefab;
         public GameObject cardZonePrefab;
 
-        private readonly List<Toggle> _toggles = new List<Toggle>();
-        private readonly List<Text> _nameTexts = new List<Text>();
-        private readonly List<Text> _countTexts = new List<Text>();
+        private readonly List<Toggle> _toggles = new();
+        private readonly List<Text> _nameTexts = new();
+        private readonly List<Text> _countTexts = new();
 
         private int _previousOverlapSpacing;
 
@@ -178,13 +178,14 @@ namespace Cgs.Play.Drawer
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
             {
                 CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
-                var handCards = CgsNetManager.Instance.LocalPlayer.GetHandCards();
+                var handCards = CgsNetManager.Instance.LocalPlayer.HandCards;
                 if (tabIndex >= handCards.Count)
                 {
                     Debug.Log($"SelectTab {tabIndex} but not on server yet.");
                     cardZone.transform.DestroyAllChildren();
                     return;
                 }
+
                 var serverCards = handCards[tabIndex];
                 var serverCardIds = serverCards.Select(unityCard => unityCard.Id).ToList();
                 if (!localCardIds.SequenceEqual(serverCardIds))
@@ -198,7 +199,7 @@ namespace Cgs.Play.Drawer
                         var cardTransform = cardModel.transform;
                         cardTransform.SetAsFirstSibling();
                         cardTransform.rotation = Quaternion.identity;
-                        cardModel.SetIsFacedown(false);
+                        cardModel.IsFacedown = false;
                         cardModel.DefaultAction = CardActions.Flip;
                     }
                 }
@@ -210,7 +211,7 @@ namespace Cgs.Play.Drawer
                 _toggles[tabIndex].isOn = true;
         }
 
-        public void SyncHand(int handIndex, string[] cardIds)
+        public void SyncHand(int handIndex, CgsNetString[] cardIds)
         {
             _countTexts[handIndex].text = cardIds.Length.ToString();
         }

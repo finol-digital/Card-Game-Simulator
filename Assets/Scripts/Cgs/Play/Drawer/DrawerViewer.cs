@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardGameDef.Unity;
+using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
 using UnityEngine;
@@ -22,8 +23,8 @@ namespace Cgs.Play.Drawer
             }
 
             Debug.Log($"[DrawerViewer] Add {card.Id} to tab {handIndex}!");
-            var cards = new List<string>(CgsNetManager.Instance.LocalPlayer.GetHandCards()[handIndex]
-                .Select(unityCard => unityCard.Id).ToList()) {card.Id};
+            var cards = new List<CgsNetString>(CgsNetManager.Instance.LocalPlayer.HandCards[handIndex]
+                .Select(unityCard => (CgsNetString) unityCard.Id).ToList()) {card.Id};
             CgsNetManager.Instance.LocalPlayer.RequestSyncHand(handIndex, cards.ToArray());
         }
     }

@@ -11,7 +11,7 @@ using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -35,7 +35,13 @@ namespace Cgs.CardGameView.Multiplayer
         public UnityAction SecondaryDragAction { get; set; }
         public CardDropArea DropTarget { get; set; }
 
-        [field: SyncVar] public string Id { get; private set; }
+        public string Id
+        {
+            get => _id.Value;
+            private set => _id.Value = value;
+        }
+
+        private readonly NetworkVariable<string> _id = new();
 
         public override string ViewValue => Value.Name;
 
@@ -53,25 +59,28 @@ namespace Cgs.CardGameView.Multiplayer
                 Value.UnregisterDisplay(this);
                 Id = value != null ? value.Id : string.Empty;
                 gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
-                if (!isFacedown)
+                if (!IsFacedown)
                     value?.RegisterDisplay(this);
             }
         }
 
-        [SyncVar(hook = nameof(OnChangeFacedown))]
-        public bool isFacedown;
-
-        public void SetIsFacedown(bool value)
+        public bool IsFacedown
         {
-            if (IsOnline)
-                CmdUpdateFacedown(value);
-            else
+            get => _isFacedown.Value;
+            set
             {
-                var oldValue = isFacedown;
-                isFacedown = value;
-                OnChangeFacedown(oldValue, isFacedown);
+                if (IsOnline)
+                    UpdateIsFacedownServerRpc(value);
+                else
+                {
+                    var oldValue = _isFacedown.Value;
+                    _isFacedown.Value = value;
+                    OnChangeIsFacedown(oldValue, _isFacedown.Value);
+                }
             }
         }
+
+        private readonly NetworkVariable<bool> _isFacedown = new();
 
         public RectTransform PlaceHolder
         {
@@ -137,6 +146,11 @@ namespace Cgs.CardGameView.Multiplayer
         private CanvasGroup Visibility => _visibility ??= GetComponent<CanvasGroup>();
         private CanvasGroup _visibility;
 
+        protected override void OnAwakePlayable()
+        {
+            _isFacedown.OnValueChanged += OnChangeIsFacedown;
+        }
+
         protected override void OnStartPlayable()
         {
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.playController != null
@@ -162,8 +176,8 @@ namespace Cgs.CardGameView.Multiplayer
                     RequestUpdateRotation(transform.rotation);
             }
 
-            SetIsNameVisible(!isFacedown);
-            if (!isFacedown)
+            SetIsNameVisible(!IsFacedown);
+            if (!IsFacedown)
                 Value.RegisterDisplay(this);
         }
 
@@ -182,7 +196,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void RemoveImageSprite()
         {
             View.sprite = CardGameManager.Current.CardBackImageSprite;
-            if (!isFacedown)
+            if (!IsFacedown)
                 SetIsNameVisible(true);
         }
 
@@ -235,7 +249,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
                 && (PlayableViewer.Instance == null || !PlayableViewer.Instance.IsVisible)
-                && CurrentDragPhase != DragPhase.Drag && !isFacedown)
+                && CurrentDragPhase != DragPhase.Drag && !IsFacedown)
                 CardViewer.Instance.Preview(this);
         }
 
@@ -280,9 +294,9 @@ namespace Cgs.CardGameView.Multiplayer
             var cards = new List<UnityCard> {Value, cardModel.Value};
             if (IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
-                    position);
+                    Position);
             else
-                CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName, cards, position);
+                CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName, cards, Position);
 
             Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
             cardModel.Discard();
@@ -301,7 +315,7 @@ namespace Cgs.CardGameView.Multiplayer
             cardModel.Visibility.blocksRaycasts = false;
             cardModel.HighlightMode = HighlightMode.Off;
             cardModel.Value = value;
-            cardModel.SetIsFacedown(isFacedown);
+            cardModel.IsFacedown = isFacedown;
             cardModel.PlaceHolderCardZone = placeHolderCardZone;
             cardModel.DoesCloneOnDrag = false;
             cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2) position - eventData.position;
@@ -315,8 +329,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (DoesCloneOnDrag)
             {
                 if (!IsOnline)
-                    NetworkServer.UnSpawn(gameObject); // Avoid Mirror error
-                CreateDrag(eventData, gameObject, transform, Value, isFacedown);
+                    MyNetworkObject.Despawn(false);
+                CreateDrag(eventData, gameObject, transform, Value, IsFacedown);
                 return true;
             }
 
@@ -332,20 +346,20 @@ namespace Cgs.CardGameView.Multiplayer
             if (!IsOnline)
                 ActOnDrag();
             else
-                RequestTransferAuthority();
+                RequestChangeOwnership();
         }
 
         protected override void OnDragPlayable(PointerEventData eventData)
         {
-            if (!IsOnline || hasAuthority)
+            if (!IsOnline || MyNetworkObject.IsOwner)
                 ActOnDrag();
             else
-                RequestTransferAuthority();
+                RequestChangeOwnership();
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (!IsOnline || hasAuthority)
+            if (!IsOnline || MyNetworkObject.IsOwner)
                 ActOnDrag();
         }
 
@@ -443,10 +457,10 @@ namespace Cgs.CardGameView.Multiplayer
                         var cards = new List<UnityCard> {siblingCardModel.Value, Value};
                         if (IsOnline)
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.position);
+                                cards, siblingCardModel.Position);
                         else
                             CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.position);
+                                cards, siblingCardModel.Position);
                         siblingCardModel.Discard();
                         Discard();
                         return;
@@ -465,7 +479,7 @@ namespace Cgs.CardGameView.Multiplayer
             var rectTransform = (RectTransform) transform;
             rectTransform.position = gridPosition;
 
-            if (IsOnline && hasAuthority)
+            if (IsOnline && MyNetworkObject.IsOwner)
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
@@ -479,7 +493,7 @@ namespace Cgs.CardGameView.Multiplayer
                 Input.GetMouseButtonUp(2))
                 return;
 #endif
-            if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !hasAuthority))
+            if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !MyNetworkObject.IsOwner))
                 return;
 
             if (DropTarget == null && PlaceHolder == null && ParentCardZone == null)
@@ -514,7 +528,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void UpdateCardZonePosition(Vector2 targetPosition)
         {
             var cardZone = ParentCardZone;
-            if (cardZone == null || (IsOnline && !hasAuthority))
+            if (cardZone == null || (IsOnline && !MyNetworkObject.IsOwner))
                 return;
 
             if (!cardZone.DoesImmediatelyRelease &&
@@ -543,8 +557,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void ParentToCanvas(Vector3 targetPosition)
         {
-            if (IsOnline && hasAuthority)
-                CmdUnspawnCard(true);
+            if (IsOnline && MyNetworkObject.IsOwner)
+                UnspawnCardServerRpc(true);
 
             var cardDropArea = GetComponent<CardDropArea>();
             if (cardDropArea != null)
@@ -603,16 +617,16 @@ namespace Cgs.CardGameView.Multiplayer
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
-        [Command(requiresAuthority = false)]
-        private void CmdUpdateFacedown(bool facedown)
+        [ServerRpc(RequireOwnership = false)]
+        private void UpdateIsFacedownServerRpc(bool isFacedown)
         {
-            isFacedown = facedown;
+            IsFacedown = isFacedown;
         }
 
         [PublicAPI]
-        public void OnChangeFacedown(bool oldValue, bool newValue)
+        public void OnChangeIsFacedown(bool oldValue, bool newValue)
         {
-            if (!isFacedown)
+            if (!IsFacedown)
                 Value.RegisterDisplay(this);
             else
                 Value.UnregisterDisplay(this);
@@ -622,28 +636,28 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;
-            if (IsOnline && netId != 0)
-                CmdUnspawnCard(false);
+            if (IsOnline && MyNetworkObject.IsSpawned)
+                UnspawnCardServerRpc(false);
             Destroy(gameObject);
         }
 
-        [Command(requiresAuthority = false)]
-        private void CmdUnspawnCard(bool shouldClientKeep)
+        [ServerRpc(RequireOwnership = false)]
+        private void UnspawnCardServerRpc(bool shouldClientKeep)
         {
-            RpcUnspawnCard(shouldClientKeep);
+            UnspawnCardClientRpc(shouldClientKeep);
         }
 
         [ClientRpc]
-        private void RpcUnspawnCard(bool shouldClientKeep)
+        private void UnspawnCardClientRpc(bool shouldClientKeep)
         {
-            var shouldKeep = shouldClientKeep && hasAuthority;
-            if (isServer)
-                NetworkServer.UnSpawn(gameObject);
+            var shouldKeep = shouldClientKeep && MyNetworkObject.IsOwner;
+            if (IsServer)
+                MyNetworkObject.Despawn(!shouldKeep);
             if (!shouldKeep)
                 Destroy(gameObject);
         }
 
-        private void OnDestroy()
+        public override void OnDestroy()
         {
             if (CardGameManager.IsQuitting)
                 return;
@@ -651,6 +665,13 @@ namespace Cgs.CardGameView.Multiplayer
             Value.UnregisterDisplay(this);
             if (PlaceHolder != null)
                 Destroy(PlaceHolder.gameObject);
+
+            base.OnDestroy();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            PlayController.SetPlayActions(this);
         }
     }
 }

@@ -90,10 +90,10 @@ GameObject:
   - component: {fileID: 114062300179596830}
   - component: {fileID: 225568299236548108}
   - component: {fileID: 114876689799331718}
-  - component: {fileID: 8376689150067307621}
   - component: {fileID: 114835859699800120}
   - component: {fileID: 7639427688690172772}
   - component: {fileID: 1352160631689584580}
+  - component: {fileID: 5891176745178795336}
   m_Layer: 5
   m_Name: Card Model
   m_TagString: Untagged
@@ -187,23 +187,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 0, y: 0}
   m_UseGraphicAlpha: 1
---- !u!114 &8376689150067307621
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1700305412181862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 3b506588d6983aa468c58a6d81eea204
-  hasSpawned: 0
 --- !u!114 &114835859699800120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,12 +199,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da0cfd7bd166ba43bf3e99b8d74f2e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  position: {x: 0, y: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
-  isClientAuthorized: 0
-  isFacedown: 0
   nameLabel: {fileID: 1250748804858204}
   nameText: {fileID: 4176064457514051419}
 --- !u!61 &7639427688690172772
@@ -271,6 +248,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5891176745178795336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700305412181862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1001 &6443785057500647851
 PrefabInstance:
   m_ObjectHideFlags: 0

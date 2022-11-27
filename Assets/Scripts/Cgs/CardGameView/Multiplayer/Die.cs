@@ -5,8 +5,9 @@
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -24,15 +25,27 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Text valueText;
 
-        [field: SyncVar] public int Min { get; set; } = DefaultMin;
+        public int Min
+        {
+            get => _min.Value;
+            set => _min.Value = value;
+        }
 
-        [field: SyncVar] public int Max { get; set; } = DefaultMax;
+        private readonly NetworkVariable<int> _min = new();
 
-        public override string ViewValue => $"Dice Value: {Value}";
+        public int Max
+        {
+            get => _max.Value;
+            set => _max.Value = value;
+        }
+
+        private readonly NetworkVariable<int> _max = new();
+
+        public override string ViewValue => $"Value: {Value}";
 
         private int Value
         {
-            get => _value;
+            get => _value.Value;
             set
             {
                 var newValue = value;
@@ -41,33 +54,39 @@ namespace Cgs.CardGameView.Multiplayer
                 if (newValue < Min)
                     newValue = Max;
 
-                if (NetworkManager.singleton.isNetworkActive)
-                    CmdUpdateValue(newValue);
+                if (NetworkManager.Singleton.IsConnectedClient)
+                    UpdateValueServerRpc(newValue);
                 else
                 {
-                    _value = newValue;
+                    _value.Value = newValue;
                     OnChangeValue(value, newValue);
                 }
             }
         }
 
-        [SyncVar(hook = nameof(OnChangeValue))]
-        private int _value;
+        private readonly NetworkVariable<int> _value = new();
 
         private float _rollTime;
         private float _rollDelay;
 
+        protected override void OnAwakePlayable()
+        {
+            _value.OnValueChanged += OnChangeValue;
+        }
+
         protected override void OnStartPlayable()
         {
-            _value = Min;
-            valueText.text = _value.ToString();
-            if (!NetworkManager.singleton.isNetworkActive || isServer)
+            Max = DefaultMax;
+            Min = DefaultMin;
+            _value.Value = Min;
+            valueText.text = _value.Value.ToString();
+            if (!NetworkManager.Singleton.IsConnectedClient || IsServer)
                 _rollTime = RollTime;
         }
 
         protected override void OnUpdatePlayable()
         {
-            if (_rollTime <= 0 || (NetworkManager.singleton.isNetworkActive && !isServer))
+            if (_rollTime <= 0 || (NetworkManager.Singleton.IsConnectedClient && !IsServer))
                 return;
 
             _rollTime -= Time.deltaTime;
@@ -120,28 +139,28 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            if (NetworkManager.singleton.isNetworkActive)
-                RequestTransferAuthority();
+            if (NetworkManager.Singleton.IsConnectedClient)
+                RequestChangeOwnership();
         }
 
         protected override void OnDragPlayable(PointerEventData eventData)
         {
-            if (LacksAuthority)
-                RequestTransferAuthority();
+            if (LacksOwnership)
+                RequestChangeOwnership();
             else
                 UpdatePosition();
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (!LacksAuthority)
+            if (!LacksOwnership)
                 UpdatePosition();
         }
 
-        [Command(requiresAuthority = false)]
-        private void CmdUpdateValue(int value)
+        [ServerRpc(RequireOwnership = false)]
+        private void UpdateValueServerRpc(int value)
         {
-            _value = value;
+            _value.Value = value;
         }
 
         [PublicAPI]
@@ -153,26 +172,26 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void Decrement()
         {
-            Value--;
+            Value -= 1;
         }
 
         [UsedImplicitly]
         public void Increment()
         {
-            Value++;
+            Value += 1;
         }
 
         [UsedImplicitly]
         public void Roll()
         {
-            if (NetworkManager.singleton.isNetworkActive)
-                CmdRoll();
+            if (CgsNetManager.Instance.IsConnectedClient)
+                RollServerRpc();
             else
                 _rollTime = RollTime;
         }
 
-        [Command(requiresAuthority = false)]
-        private void CmdRoll()
+        [ServerRpc(RequireOwnership = false)]
+        private void RollServerRpc()
         {
             _rollTime = RollTime;
         }

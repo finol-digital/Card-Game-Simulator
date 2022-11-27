@@ -81,9 +81,9 @@ namespace Cgs.CardGameView.Viewer
         public List<Dropdown> propertySelectors;
         public List<Text> propertyValueTexts;
 
-        private List<Text> PropertyTexts { get; } = new List<Text>();
-        private List<Dropdown.OptionData> PropertyOptions { get; } = new List<Dropdown.OptionData>();
-        private Dictionary<string, string> DisplayNameLookup { get; } = new Dictionary<string, string>();
+        private List<Text> PropertyTexts { get; } = new();
+        private List<Dropdown.OptionData> PropertyOptions { get; } = new();
+        private Dictionary<string, string> DisplayNameLookup { get; } = new();
 
         private int PrimaryPropertyIndex
         {
@@ -91,7 +91,7 @@ namespace Cgs.CardGameView.Viewer
             {
                 var primaryPropertyIndex = 0;
                 for (var i = 0; i < PropertyOptions.Count; i++)
-                    if (DisplayNameLookup.TryGetValue(PropertyOptions[i].text, out string propertyName)
+                    if (DisplayNameLookup.TryGetValue(PropertyOptions[i].text, out var propertyName)
                         && propertyName.Equals(CardGameManager.Current.CardPrimaryProperty))
                         primaryPropertyIndex = i;
                 return primaryPropertyIndex;
@@ -103,10 +103,16 @@ namespace Cgs.CardGameView.Viewer
             get
             {
                 var selectedName = SetLabel;
-                if (SelectedPropertyIndex == 1)
-                    selectedName = IdLabel;
-                if (SelectedPropertyIndex > 1 && SelectedPropertyIndex < PropertyOptions.Count)
-                    DisplayNameLookup.TryGetValue(SelectedPropertyDisplay, out selectedName);
+                switch (SelectedPropertyIndex)
+                {
+                    case 1:
+                        selectedName = IdLabel;
+                        break;
+                    case > 1 when SelectedPropertyIndex < PropertyOptions.Count:
+                        DisplayNameLookup.TryGetValue(SelectedPropertyDisplay, out selectedName);
+                        break;
+                }
+
                 return selectedName;
             }
         }
@@ -115,11 +121,13 @@ namespace Cgs.CardGameView.Viewer
         {
             get
             {
-                var selectedDisplay = SetLabel;
-                if (SelectedPropertyIndex == 1)
-                    selectedDisplay = IdLabel;
-                if (SelectedPropertyIndex > 1 && SelectedPropertyIndex < PropertyOptions.Count)
-                    selectedDisplay = PropertyOptions[SelectedPropertyIndex].text;
+                var selectedDisplay = SelectedPropertyIndex switch
+                {
+                    1 => IdLabel,
+                    > 1 when SelectedPropertyIndex < PropertyOptions.Count => PropertyOptions[SelectedPropertyIndex]
+                        .text,
+                    _ => SetLabel
+                };
                 return selectedDisplay;
             }
         }
@@ -230,16 +238,16 @@ namespace Cgs.CardGameView.Viewer
             if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.isFacedown)
-                nameVisibleButton.gameObject.SetActive(SelectedCardModel.isFacedown);
-            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.isFacedown)
-                nameVisibleButton.gameObject.SetActive(SelectedCardModel.isFacedown);
+            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.IsFacedown)
+                nameVisibleButton.gameObject.SetActive(SelectedCardModel.IsFacedown);
+            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.IsFacedown)
+                nameVisibleButton.gameObject.SetActive(SelectedCardModel.IsFacedown);
             var isNameVisible = IsNameVisible;
             if (nameVisibleButtonImage.gameObject.activeSelf != isNameVisible)
                 nameVisibleButtonImage.gameObject.SetActive(isNameVisible);
             if (nameInvisibleButtonImage.gameObject.activeSelf == isNameVisible)
                 nameInvisibleButtonImage.gameObject.SetActive(!isNameVisible);
-            nameTexts[0].color = isNameVisible || !SelectedCardModel.isFacedown ? Color.white : Color.clear;
+            nameTexts[0].color = isNameVisible || !SelectedCardModel.IsFacedown ? Color.white : Color.clear;
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);

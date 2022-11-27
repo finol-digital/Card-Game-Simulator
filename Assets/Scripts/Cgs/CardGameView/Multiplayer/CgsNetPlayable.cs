@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -38,11 +38,15 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive
+        public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.IsConnectedClient
                                                                && transform.parent == CgsNetManager.Instance
                                                                    .playController.playMat.transform;
 
-        protected bool LacksAuthority => NetworkManager.singleton.isNetworkActive && !hasAuthority;
+        public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !MyNetworkObject.IsOwner;
+
+        public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
+
+        private NetworkObject _networkObject;
 
         protected bool IsProcessingSecondaryDragAction =>
             PointerDragOffsets.Count > 1
@@ -50,13 +54,23 @@ namespace Cgs.CardGameView.Multiplayer
             (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
              CurrentPointerEventData.button == PointerEventData.InputButton.Right);
 
-        [SyncVar(hook = nameof(OnChangePosition))]
-        public Vector2 position;
+        public Vector2 Position
+        {
+            get => _position.Value;
+            set => _position.Value = value;
+        }
 
-        [SyncVar(hook = nameof(OnChangeRotation))]
-        public Quaternion rotation;
+        private readonly NetworkVariable<Vector2> _position = new();
 
-        [SyncVar] public bool isClientAuthorized;
+        public Quaternion Rotation
+        {
+            get => _rotation.Value;
+            set => _rotation.Value = value;
+        }
+
+        private readonly NetworkVariable<Quaternion> _rotation = new();
+
+        private readonly NetworkVariable<bool> _isClientOwner = new();
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
@@ -97,7 +111,7 @@ namespace Cgs.CardGameView.Multiplayer
                         break;
                     default:
                     case HighlightMode.Off:
-                        var isOthers = IsOnline && isClientAuthorized && !hasAuthority;
+                        var isOthers = IsOnline && _isClientOwner.Value && !MyNetworkObject.IsOwner;
                         Highlight.effectColor = isOthers ? Color.yellow : Color.black;
                         Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                         break;
@@ -109,6 +123,19 @@ namespace Cgs.CardGameView.Multiplayer
 
         private Outline Highlight => _highlight ??= gameObject.GetOrAddComponent<Outline>();
         private Outline _highlight;
+
+        private void Awake()
+        {
+            _position.OnValueChanged += OnChangePosition;
+            _rotation.OnValueChanged += OnChangeRotation;
+
+            OnAwakePlayable();
+        }
+
+        protected virtual void OnAwakePlayable()
+        {
+            // Child classes may override
+        }
 
         protected virtual void OnStartPlayable()
         {
@@ -122,10 +149,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (!IsOnline)
                 return;
 
-            if (Vector2.zero != position)
-                ((RectTransform) transform).localPosition = position;
-            if (Quaternion.identity != rotation)
-                transform.rotation = rotation;
+            if (Vector2.zero != Position)
+                ((RectTransform) transform).localPosition = Position;
+            if (Quaternion.identity != Rotation)
+                transform.rotation = Rotation;
         }
 
         private void Update()
@@ -265,8 +292,8 @@ namespace Cgs.CardGameView.Multiplayer
 
             PostDragPlayable(eventData);
 
-            if (IsOnline && hasAuthority && !ToDiscard)
-                CmdReleaseAuthority();
+            if (IsOnline && MyNetworkObject.IsOwner && !ToDiscard)
+                RemoveOwnershipServerRpc();
         }
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
@@ -310,7 +337,7 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.position = targetPosition;
             rectTransform.SetAsLastSibling();
 
-            if (hasAuthority)
+            if (MyNetworkObject.IsOwner)
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
@@ -320,7 +347,7 @@ namespace Cgs.CardGameView.Multiplayer
             var gridPosition = CalculateGridPosition();
             rectTransform.position = gridPosition;
 
-            if (hasAuthority)
+            if (MyNetworkObject.IsOwner)
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
@@ -355,92 +382,93 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestUpdateRotation(transform.rotation);
         }
 
-        protected void RequestTransferAuthority()
+        protected void RequestChangeOwnership()
         {
-            CmdTransferAuthority();
+            ChangeOwnershipServerRpc();
         }
 
-        [Command(requiresAuthority = false)]
+        [ServerRpc(RequireOwnership = false)]
         // ReSharper disable once SuggestBaseTypeForParameter
-        private void CmdTransferAuthority(NetworkConnectionToClient sender = null)
+        private void ChangeOwnershipServerRpc(ServerRpcParams serverRpcParams = default)
         {
-            if (sender == null || netIdentity.connectionToClient != null)
+            var clientId = serverRpcParams.Receive.SenderClientId;
+            if (!NetworkManager.ConnectedClients.ContainsKey(clientId))
             {
                 Debug.Log($"CgsNetPlayable: Ignoring request to transfer authority for {gameObject.name}");
                 return;
             }
 
-            isClientAuthorized = true;
-            netIdentity.AssignClientAuthority(sender);
+            _isClientOwner.Value = true;
+            MyNetworkObject.ChangeOwnership(clientId);
         }
 
-        protected void RequestUpdatePosition(Vector2 newPosition)
+        protected void RequestUpdatePosition(Vector2 position)
         {
-            CmdUpdatePosition(newPosition);
+            UpdatePositionServerRpc(position);
         }
 
-        [Command]
-        private void CmdUpdatePosition(Vector2 newPosition)
+        [ServerRpc]
+        private void UpdatePositionServerRpc(Vector2 position)
         {
-            position = newPosition;
+            Position = position;
         }
 
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
-            if (!hasAuthority)
+            if (!MyNetworkObject.IsOwner)
                 transform.localPosition = newValue;
         }
 
-        protected void RequestUpdateRotation(Quaternion newRotation)
+        protected void RequestUpdateRotation(Quaternion rotation)
         {
-            CmdUpdateRotation(newRotation);
+            UpdateRotationServerRpc(rotation);
         }
 
-        [Command(requiresAuthority = false)]
-        public void CmdUpdateRotation(Quaternion newRotation)
+        [ServerRpc(RequireOwnership = false)]
+        public void UpdateRotationServerRpc(Quaternion rotation)
         {
-            rotation = newRotation;
+            Rotation = rotation;
         }
 
         [PublicAPI]
-        public void OnChangeRotation(Quaternion oldRotation, Quaternion newRotation)
+        public void OnChangeRotation(Quaternion oldValue, Quaternion newValue)
         {
-            if (!hasAuthority)
-                transform.rotation = newRotation;
+            if (!MyNetworkObject.IsOwner)
+                transform.rotation = newValue;
         }
 
-        [Command]
-        private void CmdReleaseAuthority()
+        [ServerRpc]
+        private void RemoveOwnershipServerRpc()
         {
-            netIdentity.RemoveClientAuthority();
-            isClientAuthorized = false;
+            MyNetworkObject.RemoveOwnership();
+            _isClientOwner.Value = false;
         }
 
         [ClientRpc]
-        public void RpcHideHighlight()
+        public void HideHighlightClientRpc()
         {
             HighlightMode = HighlightMode.Off;
         }
 
         protected void RequestDelete()
         {
-            if (NetworkManager.singleton.isNetworkActive)
-                CmdDelete();
+            if (NetworkManager.Singleton.IsConnectedClient)
+                DeleteServerRpc();
             else
                 Destroy(gameObject);
         }
 
-        [Command(requiresAuthority = false)]
-        private void CmdDelete()
+        [ServerRpc(RequireOwnership = false)]
+        private void DeleteServerRpc()
         {
-            if (netIdentity.connectionToClient != null)
+            if (!MyNetworkObject.IsOwnedByServer)
             {
                 Debug.LogWarning("Ignoring request to delete, since it is currently owned by a client!");
                 return;
             }
 
-            NetworkServer.UnSpawn(gameObject);
+            MyNetworkObject.Despawn();
             Destroy(gameObject);
         }
     }

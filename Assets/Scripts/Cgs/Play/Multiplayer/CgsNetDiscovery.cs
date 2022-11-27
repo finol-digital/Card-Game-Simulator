@@ -2,77 +2,55 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.Net;
-using Mirror;
-using Mirror.Discovery;
-using UnityEngine;
+using Unity.Netcode;
 
 namespace Cgs.Play.Multiplayer
 {
-    public delegate void OnServerDiscoveredDelegate(DiscoveryResponse response);
-
-    public class DiscoveryRequest : NetworkMessage
+    public struct DiscoveryBroadcastData : INetworkSerializable
     {
-        // Can be used to add filters, client info, etc...
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+        }
     }
 
-    public class DiscoveryResponse : NetworkMessage
+    public struct DiscoveryResponseData : INetworkSerializable
     {
-        public long ServerId;
-        public IPEndPoint EndPoint { get; set; }
-        public Uri Uri;
-        public string RoomName;
-        public int Players;
-        public int Capacity;
-        public string HostPlatform;
+        public ushort Port;
+        public string ServerName;
 
         public override string ToString()
         {
-            return $"{RoomName}\n{Uri.Host} - {Players}/{Capacity}";
+            return $"{ServerName}";
+        }
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref Port);
+            serializer.SerializeValue(ref ServerName);
         }
     }
 
-    public class CgsNetDiscovery : NetworkDiscoveryBase<DiscoveryRequest, DiscoveryResponse>
+    public class CgsNetDiscovery : NetworkDiscovery<DiscoveryBroadcastData, DiscoveryResponseData>
     {
-        public OnServerDiscoveredDelegate OnServerFound { get; set; }
+        public delegate void OnServerFoundDelegate(IPEndPoint ipEndPoint, DiscoveryResponseData discoveryResponseData);
 
-        private long _serverId;
-        private Transport _transport;
+        public OnServerFoundDelegate OnServerFound { get; set; }
 
-        public override void Start()
+        protected override bool ProcessBroadcast(IPEndPoint sender, DiscoveryBroadcastData broadCast,
+            out DiscoveryResponseData response)
         {
-            base.Start();
-            _serverId = RandomLong();
-            _transport = GetComponent<Transport>() ?? Transport.activeTransport;
+            response = new DiscoveryResponseData()
+            {
+                ServerName = CardGameManager.Current.Name,
+                Port = CgsNetManager.Instance.Transport.ConnectionData.Port
+            };
+            return true;
         }
 
-        protected override DiscoveryResponse ProcessRequest(DiscoveryRequest request, IPEndPoint endpoint)
+        protected override void ResponseReceived(IPEndPoint sender, DiscoveryResponseData response)
         {
-            return new DiscoveryResponse
-            {
-                ServerId = _serverId,
-                // the endpoint is populated by the client
-                Uri = _transport.ServerUri(),
-                RoomName = CgsNetManager.Instance.RoomName,
-                Players = CgsNetManager.ActiveConnectionCount,
-                Capacity = NetworkManager.singleton.maxConnections,
-                HostPlatform = Application.platform.ToString()
-            };
-        }
-
-        protected override DiscoveryRequest GetRequest() => new DiscoveryRequest();
-
-        protected override void ProcessResponse(DiscoveryResponse response, IPEndPoint endpoint)
-        {
-            response.EndPoint = endpoint;
-            var realUri = new UriBuilder(response.Uri)
-            {
-                Host = response.EndPoint.Address.ToString()
-            };
-            response.Uri = realUri.Uri;
-
-            OnServerFound(response);
+            OnServerFound(sender, response);
         }
     }
 }
