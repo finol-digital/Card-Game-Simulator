@@ -16,12 +16,9 @@ using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {
-    [RequireComponent(typeof(Modal))]
+    [RequireComponent(typeof(Modal), typeof(CgsNetDiscovery))]
     public class LobbyMenu : SelectionPanel
     {
-        public const string AndroidWarningMessage =
-            "WARNING!!!\nYou are connecting to an Android host, which is likely to lose connection or have errors.\nIt is recommended to use a PC host.";
-
         public const string ShareWarningMessage =
             "WARNING!!!\nYou are hosting a game that has not been properly uploaded.\nContact david@finoldigital.com for assistance in uploading.";
 
@@ -31,16 +28,9 @@ namespace Cgs.Play.Multiplayer
         public const string ConnectionErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
-        public const string PasswordErrorMessage = "Error: Wrong Password!";
-
-        private CgsNetDiscovery Discovery => _discovery ??= CgsNetManager.Instance.GetComponent<CgsNetDiscovery>();
-
-        private CgsNetDiscovery _discovery;
-
         private const float ServerListUpdateTime = 5;
 
-        public GameObject hostAuthenticationPrefab;
-
+        public CgsNetDiscovery discovery;
         public ToggleGroup lanToggleGroup;
         public Toggle lanToggle;
         public Toggle internetToggle;
@@ -48,8 +38,6 @@ namespace Cgs.Play.Multiplayer
         public Text roomIdIpLabel;
         public InputField roomIdIpInputField;
         public InputField passwordInputField;
-
-        private string _password = "";
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -75,11 +63,6 @@ namespace Cgs.Play.Multiplayer
         private Dictionary<string, DiscoveryResponseData> DiscoveredServers { get; } = new();
 
         private string _selectedServer = string.Empty;
-
-        private HostAuthentication Authenticator =>
-            _authenticator ??= Instantiate(hostAuthenticationPrefab).GetComponent<HostAuthentication>();
-
-        private HostAuthentication _authenticator;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
 
@@ -172,8 +155,8 @@ namespace Cgs.Play.Multiplayer
             DiscoveredServers.Clear();
             _selectedServer = string.Empty;
 
-            Discovery.StartClient();
-            Discovery.OnServerFound = OnServerFound;
+            discovery.StartClient();
+            discovery.OnServerFound = OnServerFound;
 
             Redisplay();
         }
@@ -208,11 +191,7 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Host()
         {
-            if (CardGameManager.Instance.IsSearchingForServer)
-                Authenticator.Show(StartHost);
-            else
-                StartHost();
-
+            StartHost();
             Hide();
         }
 
@@ -236,7 +215,7 @@ namespace Cgs.Play.Multiplayer
                 Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;*/
 
             NetworkManager.Singleton.StartHost();
-            Discovery.StartServer();
+            discovery.StartServer();
         }
 
         [UsedImplicitly]
@@ -267,27 +246,17 @@ namespace Cgs.Play.Multiplayer
         }
 
         [UsedImplicitly]
-        public void SetPassword(string password)
-        {
-            _password = password;
-        }
-
-        [UsedImplicitly]
         public void Join()
         {
-            NetworkManager.Singleton.ConnectionApprovalCallback += PasswordCheck;
-
             if (IsLanConnectionSource)
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
                 {
-                    CgsNetManager.Instance.RoomName = discoveryResponse.ServerName;
                     CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, discoveryResponse.Port);
                     CgsNetManager.Instance.StartClient();
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute))
                 {
-                    CgsNetManager.Instance.RoomName = discoveryResponse.ServerName;
                     CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, 7777);
                     CgsNetManager.Instance.StartClient();
                 }
@@ -316,23 +285,10 @@ namespace Cgs.Play.Multiplayer
             Hide();
         }
 
-        private void PasswordCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
-        {
-            response.Approved = _password.Equals(CgsNetManager.Instance.RoomPassword);
-
-            if (!response.Approved)
-                return;
-
-            Debug.LogError(PasswordErrorMessage);
-            CardGameManager.Instance.Messenger.Show(PasswordErrorMessage);
-
-            PlayController.BackToMainMenu();
-        }
-
         public void Hide()
         {
-            if (Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                Discovery.StopDiscovery();
+            if (discovery.IsRunning && !CgsNetManager.Instance.IsServer)
+                discovery.StopDiscovery();
 
             Menu.Hide();
         }
@@ -340,8 +296,8 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Close()
         {
-            if (Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                Discovery.StopDiscovery();
+            if (discovery.IsRunning && !CgsNetManager.Instance.IsServer)
+                discovery.StopDiscovery();
 
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }

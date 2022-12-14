@@ -34,6 +34,8 @@ namespace Cgs.Play
 
         private const float DeckPositionBuffer = 50;
 
+        public static PlayController Instance { get; private set; }
+
         public GameObject cardViewerPrefab;
         public GameObject playableViewerPrefab;
         public GameObject lobbyMenuPrefab;
@@ -121,6 +123,11 @@ namespace Cgs.Play
 
         private CardStack _soloDeckStack;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         private void OnEnable()
         {
             Instantiate(cardViewerPrefab);
@@ -141,7 +148,6 @@ namespace Cgs.Play
                 Lobby.Show();
             else
             {
-                CgsNetManager.Instance.RoomName = CardGameManager.Current.Name;
                 Lobby.IsLanConnectionSource = true;
                 Lobby.Host();
                 DeckLoader.Show(LoadDeck);
@@ -416,8 +422,8 @@ namespace Cgs.Play
         {
             if (NetworkManager.Singleton.IsConnectedClient)
             {
-                // TODO: CgsNetManager.Instance.Discovery.StopDiscovery();
                 NetworkManager.Singleton.Shutdown();
+                Instance.Lobby.discovery.StopDiscovery();
             }
 
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);

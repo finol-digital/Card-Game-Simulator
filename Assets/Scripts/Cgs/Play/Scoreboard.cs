@@ -118,7 +118,7 @@ namespace Cgs.Play
 
         private void Refresh()
         {
-            roomNameText.text = IsOnline ? CgsNetManager.Instance.RoomName : Offline;
+            roomNameText.text = IsOnline ? CardGameManager.Current.Name : Offline;
             roomIdIpText.text = IsOnline ? CgsNetManager.Instance.RoomIdIp : Offline;
 
             var scores = GameObject.FindGameObjectsWithTag("Player")
@@ -135,7 +135,7 @@ namespace Cgs.Play
                 entry.nameText.text = playerName;
                 entry.pointsText.text = points.ToString();
                 entry.handCountText.text = string.IsNullOrEmpty(handCount)
-                    ? CgsNetManager.Instance.playController.drawer
+                    ? PlayController.Instance.drawer
                         .cardZoneRectTransforms[CgsNetManager.Instance.LocalPlayer.CurrentHand]
                         .GetComponentsInChildren<CardModel>().Length.ToString()
                     : handCount;

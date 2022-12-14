@@ -16,39 +16,7 @@ namespace Cgs.Play.Multiplayer
     {
         public static CgsNetManager Instance => (CgsNetManager) Singleton;
 
-        public PlayController playController;
-
         public CgsNetPlayer LocalPlayer { get; set; }
-
-        public string RoomName
-        {
-            get => RoomData.Name;
-            set
-            {
-                var data = RoomData;
-                data.Name = value;
-                RoomData = data;
-            }
-        }
-
-        public string RoomPassword
-        {
-            get => RoomData.Password;
-            set
-            {
-                var data = RoomData;
-                data.Password = value;
-                RoomData = data;
-            }
-        }
-
-        private ExtraServerData RoomData
-        {
-            get => _extraServerData ??= new ExtraServerData();
-            set => _extraServerData = value;
-        }
-
-        private ExtraServerData _extraServerData;
 
         public UnityTransport Transport => (UnityTransport) NetworkConfig.NetworkTransport;
 
@@ -65,11 +33,11 @@ namespace Cgs.Play.Multiplayer
 
         public void Restart()
         {
-            foreach (var cardStack in playController.playMat.GetComponentsInChildren<CardStack>())
+            foreach (var cardStack in PlayController.Instance.playMat.GetComponentsInChildren<CardStack>())
                 cardStack.MyNetworkObject.Despawn();
-            foreach (var cardModel in playController.playMat.GetComponentsInChildren<CardModel>())
+            foreach (var cardModel in PlayController.Instance.playMat.GetComponentsInChildren<CardModel>())
                 cardModel.MyNetworkObject.Despawn();
-            foreach (var die in playController.playMat.GetComponentsInChildren<Die>())
+            foreach (var die in PlayController.Instance.playMat.GetComponentsInChildren<Die>())
                 die.MyNetworkObject.Despawn();
             foreach (var player in FindObjectsOfType<CgsNetPlayer>())
                 player.RestartClientRpc(player.OwnerClientRpcParams);

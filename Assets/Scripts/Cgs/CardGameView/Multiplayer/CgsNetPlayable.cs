@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -38,9 +39,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        public bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.IsConnectedClient
-                                                               && transform.parent == CgsNetManager.Instance
-                                                                   .playController.playMat.transform;
+        public bool IsOnline => CgsNetManager.Instance != null
+                                && CgsNetManager.Instance.IsConnectedClient
+                                && transform.parent == PlayController.Instance.playMat.transform;
 
         public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !MyNetworkObject.IsOwner;
 
@@ -74,7 +75,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
-        public Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
+        protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
 
         protected bool DidSelectOnDown { get; set; }
         protected bool DidDrag { get; set; }

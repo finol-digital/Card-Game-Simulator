@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using JetBrains.Annotations;
 using Unity.Collections;
 using Unity.Netcode;
 
@@ -12,6 +13,7 @@ namespace Cgs.CardGameView.Multiplayer
     {
         private ForceNetworkSerializeByMemcpy<FixedString32Bytes> _info;
 
+        [UsedImplicitly]
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref _info);

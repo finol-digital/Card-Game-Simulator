@@ -153,8 +153,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.playController != null
-                                               && CgsNetManager.Instance.playController.playMat.transform ==
+            if (CgsNetManager.Instance != null && PlayController.Instance != null
+                                               && PlayController.Instance.playMat.transform ==
                                                transform.parent)
             {
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
@@ -284,7 +284,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            if (CgsNetManager.Instance == null || CgsNetManager.Instance.playController == null)
+            if (CgsNetManager.Instance == null || PlayController.Instance == null)
             {
                 Debug.LogError(DropErrorMessage);
                 CardGameManager.Instance.Messenger.Show(DropErrorMessage);
@@ -296,7 +296,7 @@ namespace Cgs.CardGameView.Multiplayer
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
                     Position);
             else
-                CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName, cards, Position);
+                PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position);
 
             Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
             cardModel.Discard();
@@ -403,9 +403,9 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             if (DropTarget == null && ParentCardZone == null && PlaceHolderCardZone == null &&
-                CgsNetManager.Instance != null && CgsNetManager.Instance.playController != null)
+                CgsNetManager.Instance != null && PlayController.Instance != null)
             {
-                PlaceHolderCardZone = CgsNetManager.Instance.playController.playMat;
+                PlaceHolderCardZone = PlayController.Instance.playMat;
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
             }
 
@@ -438,9 +438,9 @@ namespace Cgs.CardGameView.Multiplayer
 
             var gridPosition = CalculateGridPosition();
 
-            if (PlaySettings.AutoStackCards && CgsNetManager.Instance.playController != null)
+            if (PlaySettings.AutoStackCards && PlayController.Instance != null)
             {
-                var playMatTransform = CgsNetManager.Instance.playController.playMat.transform;
+                var playMatTransform = PlayController.Instance.playMat.transform;
                 for (var i = 0; i < playMatTransform.childCount; i++)
                 {
                     var siblingTransform = playMatTransform.GetChild(i);
@@ -459,7 +459,7 @@ namespace Cgs.CardGameView.Multiplayer
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
                                 cards, siblingCardModel.Position);
                         else
-                            CgsNetManager.Instance.playController.CreateCardStack(PlayController.DefaultStackName,
+                            PlayController.Instance.CreateCardStack(PlayController.DefaultStackName,
                                 cards, siblingCardModel.Position);
                         siblingCardModel.Discard();
                         Discard();

@@ -100,7 +100,7 @@ namespace Cgs.CardGameView.Multiplayer
                         _cardIds.Add(card);
                 }
                 else
-                    UpdateCardsServerRpc(value.Select(card => (CgsNetString)card.Id).ToArray());
+                    UpdateCardsServerRpc(value.Select(card => (CgsNetString) card.Id).ToArray());
             }
         }
 
@@ -235,7 +235,7 @@ namespace Cgs.CardGameView.Multiplayer
                 PopCard();
 
             var cardModel = CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
-                CgsNetManager.Instance.playController.playMat);
+                PlayController.Instance.playMat);
             CgsNetManager.Instance.LocalPlayer.RemovedCard = cardModel;
 
             RemovePointer(eventData);
@@ -299,7 +299,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void View()
         {
             if (Viewer == null)
-                Viewer = Instantiate(stackViewerPrefab, CgsNetManager.Instance.playController.stackViewers)
+                Viewer = Instantiate(stackViewerPrefab, PlayController.Instance.stackViewers)
                     .GetComponent<StackViewer>();
             Viewer.Show(this);
         }
