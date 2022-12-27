@@ -14,7 +14,7 @@ using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -70,33 +70,51 @@ namespace Cgs.CardGameView.Multiplayer
         public Text actionLabel;
         public Image topCard;
 
-        [field: SyncVar(hook = nameof(OnChangeName))]
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name.Value;
+            set => _name.Value = value;
+        }
+
+        private readonly NetworkVariable<string> _name = new();
 
         public override string ViewValue => Name;
 
+        [NotNull]
         public IReadOnlyList<UnityCard> Cards
         {
             // This getter is slow, so it should be cached when appropriate
-            get => _cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList();
+            get
+            {
+                List<UnityCard> cards = new();
+                foreach (var cardId in _cardIds)
+                    cards.Add(CardGameManager.Current.Cards[cardId]);
+                return cards;
+            }
             set
             {
-                if (!CgsNetManager.Instance.isNetworkActive || !hasAuthority)
+                if (!CgsNetManager.Instance.IsConnectedClient || !MyNetworkObject.IsOwner)
                 {
                     _cardIds.Clear();
-                    _cardIds.AddRange(value?.Select(card => card.Id).ToArray());
+                    foreach (var card in value.Select(card => card.Id).ToArray())
+                        _cardIds.Add(card);
                 }
                 else
-                    CmdUpdateCards(value?.Select(card => card.Id).ToArray());
+                    UpdateCardsServerRpc(value.Select(card => (CgsNetString) card.Id).ToArray());
             }
         }
 
-        private readonly SyncList<string> _cardIds = new();
+        private readonly NetworkList<CgsNetString> _cardIds = new();
 
-        [SyncVar] private string _actionText = "";
-        [SyncVar] private float _actionTime;
+        private readonly NetworkVariable<string> _actionText = new();
+        private readonly NetworkVariable<float> _actionTime = new();
 
         public StackViewer Viewer { get; private set; }
+
+        protected override void OnAwakePlayable()
+        {
+            _name.OnValueChanged += OnChangeName;
+        }
 
         protected override void OnStartPlayable()
         {
@@ -108,28 +126,28 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.localScale = Vector3.one;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            if (!hasAuthority)
+            if (!MyNetworkObject.IsOwner)
             {
                 deckLabel.text = Name;
                 countLabel.text = _cardIds.Count.ToString();
             }
 
-            _cardIds.Callback += OnCardsUpdated;
+            _cardIds.OnListChanged += OnCardsUpdated;
 
             topCard.sprite = CardGameManager.Current.CardBackImageSprite;
         }
 
         protected override void OnUpdatePlayable()
         {
-            var isAction = _actionTime > 0;
+            var isAction = _actionTime.Value > 0;
             if (actionLabel.gameObject.activeSelf != isAction)
             {
                 actionLabel.gameObject.SetActive(isAction);
-                actionLabel.text = _actionText;
+                actionLabel.text = _actionText.Value;
             }
 
-            if (isAction && (!CgsNetManager.Instance.isNetworkActive || isServer))
-                _actionTime -= Time.deltaTime;
+            if (isAction && (!CgsNetManager.Instance.IsConnectedClient || IsServer))
+                _actionTime.Value -= Time.deltaTime;
 
             if (HoldTime > DragHoldTime)
                 HighlightMode = HighlightMode.Authorized;
@@ -178,8 +196,8 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (IsDraggingCard)
                 DragCard(eventData);
-            else if (LacksAuthority)
-                RequestTransferAuthority();
+            else if (LacksOwnership)
+                RequestChangeOwnership();
             else
                 UpdatePosition();
         }
@@ -189,15 +207,15 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsDraggingCard)
                 return;
 
-            if (LacksAuthority)
-                RequestTransferAuthority();
+            if (LacksOwnership)
+                RequestChangeOwnership();
             else
                 UpdatePosition();
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (!IsDraggingCard && !LacksAuthority)
+            if (!IsDraggingCard && !LacksOwnership)
                 UpdatePosition();
         }
 
@@ -211,13 +229,13 @@ namespace Cgs.CardGameView.Multiplayer
 
             var unityCard = CardGameManager.Current.Cards[_cardIds[^1]];
 
-            if (CgsNetManager.Instance.isNetworkActive)
+            if (CgsNetManager.Instance.IsConnectedClient)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, _cardIds.Count - 1);
             else
                 PopCard();
 
             var cardModel = CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
-                CgsNetManager.Instance.playController.playMat);
+                PlayController.Instance.playMat);
             CgsNetManager.Instance.LocalPlayer.RemovedCard = cardModel;
 
             RemovePointer(eventData);
@@ -232,15 +250,16 @@ namespace Cgs.CardGameView.Multiplayer
             deckLabel.text = newName;
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void CmdUpdateCards(string[] cardIds)
+        private void UpdateCardsServerRpc(CgsNetString[] cardIds)
         {
             _cardIds.Clear();
-            _cardIds.AddRange(cardIds);
+            foreach (var cardId in cardIds)
+                _cardIds.Add(cardId);
         }
 
-        private void OnCardsUpdated(SyncList<string>.Operation op, int index, string oldId, string newId)
+        private void OnCardsUpdated(NetworkListEvent<CgsNetString> changeEvent)
         {
             countLabel.text = _cardIds.Count.ToString();
             if (Viewer != null)
@@ -250,7 +269,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnDrop(CardModel cardModel)
         {
             cardModel.PlaceHolderCardZone = null;
-            if (CgsNetManager.Instance.isNetworkActive && !hasAuthority)
+            if (LacksOwnership)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
             else
                 Insert(Cards.Count, cardModel.Id);
@@ -280,7 +299,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void View()
         {
             if (Viewer == null)
-                Viewer = Instantiate(stackViewerPrefab, CgsNetManager.Instance.playController.stackViewers)
+                Viewer = Instantiate(stackViewerPrefab, PlayController.Instance.stackViewers)
                     .GetComponent<StackViewer>();
             Viewer.Show(this);
         }
@@ -293,7 +312,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Shuffle()
         {
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.isNetworkActive)
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsConnectedClient)
                 CgsNetManager.Instance.LocalPlayer.RequestShuffle(gameObject);
             else
                 DoShuffle();
@@ -301,19 +320,22 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void DoShuffle()
         {
-            if (NetworkManager.singleton.isNetworkActive && !isServer)
+            if (CgsNetManager.Instance.IsConnectedClient && !IsServer)
             {
                 Debug.LogError("Attempted to shuffle on client!");
                 return;
             }
 
-            var cards = new List<string>(_cardIds);
+            var cards = new List<string>();
+            foreach (var card in _cardIds)
+                cards.Add(card);
             cards.Shuffle();
             _cardIds.Clear();
-            _cardIds.AddRange(cards);
+            foreach (var card in cards)
+                _cardIds.Add(card);
 
-            _actionText = ShuffleText;
-            _actionTime = 1;
+            _actionText.Value = ShuffleText;
+            _actionTime.Value = 1;
         }
 
         [UsedImplicitly]
@@ -332,8 +354,8 @@ namespace Cgs.CardGameView.Multiplayer
                     Directory.CreateDirectory(CardGameManager.Current.DecksDirectoryPath);
                 File.WriteAllText(unityDeck.FilePath, unityDeck.ToString());
 
-                _actionText = SaveText;
-                _actionTime = 1;
+                _actionText.Value = SaveText;
+                _actionTime.Value = 1;
             }
             catch (Exception e)
             {

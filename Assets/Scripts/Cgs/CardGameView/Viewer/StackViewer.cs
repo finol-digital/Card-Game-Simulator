@@ -139,7 +139,7 @@ namespace Cgs.CardGameView.Viewer
         private void OnAddCardModel(CardZone cardZone, CardModel cardModel)
         {
             cardModel.transform.rotation = Quaternion.identity;
-            cardModel.SetIsFacedown(false);
+            cardModel.IsFacedown = false;
             cardModel.DefaultAction = CardActions.Flip;
 
             var cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
@@ -147,14 +147,14 @@ namespace Cgs.CardGameView.Viewer
 
             if (_handIndex != null)
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
-                    cardModels.Select(card => card.Id).ToArray());
+                    cardModels.Select(card => (CgsNetString) card.Id).ToArray());
 
             if (_cardStack == null)
                 return;
 
             var cardCount = cardZone.GetComponentsInChildren<CardModel>().Length;
             var cardIndex = cardCount - 1 - cardModel.transform.GetSiblingIndex();
-            if (CgsNetManager.Instance.isNetworkActive)
+            if (CgsNetManager.Instance.IsConnectedClient)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(_cardStack.gameObject, cardIndex, cardModel.Id);
             else
                 _cardStack.Insert(cardIndex, cardModel.Id);
@@ -167,12 +167,12 @@ namespace Cgs.CardGameView.Viewer
 
             if (_handIndex != null)
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
-                    cardModels.Select(card => card.Id).ToArray());
+                    cardModels.Select(card => (CgsNetString)card.Id).ToArray());
 
             if (_cardStack == null)
                 return;
 
-            if (CgsNetManager.Instance.isNetworkActive)
+            if (CgsNetManager.Instance.IsConnectedClient)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(_cardStack.gameObject, cardModel.Index);
             else
                 _cardStack.RemoveAt(cardModel.Index);

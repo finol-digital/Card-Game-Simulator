@@ -11,7 +11,7 @@ using CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Drawer;
-using Mirror;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Cgs.Play.Multiplayer
@@ -21,53 +21,100 @@ namespace Cgs.Play.Multiplayer
         public const string GameSelectionErrorMessage = "The host has selected a game that is not available!";
         public const string ShareDeckRequest = "Would you like to share the host's deck?";
 
-        [field: SyncVar] public string Name { get; private set; }
-        [field: SyncVar] public int Points { get; private set; }
+        public ClientRpcParams OwnerClientRpcParams => new()
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new[] {OwnerClientId}
+            }
+        };
 
-        [field: SyncVar] public GameObject CurrentDeck { get; private set; }
-        [field: SyncVar] public bool IsDeckShared { get; private set; }
+        public string Name
+        {
+            get => _name.Value;
+            private set => _name.Value = value;
+        }
 
-        [field: SyncVar] public int CurrentHand { get; private set; }
+        private readonly NetworkVariable<string> _name = new();
+
+        public int Points
+        {
+            get => _points.Value;
+            private set => _points.Value = value;
+        }
+
+        private readonly NetworkVariable<int> _points = new();
+
+        public GameObject CurrentDeck
+        {
+            get => _currentDeck.Value;
+            private set => _currentDeck.Value = value;
+        }
+
+        private readonly NetworkVariable<GameObject> _currentDeck = new();
+
+        public bool IsDeckShared
+        {
+            get => _isDeckShared.Value;
+            private set => _isDeckShared.Value = value;
+        }
+
+        private readonly NetworkVariable<bool> _isDeckShared = new();
+
+        public int CurrentHand
+        {
+            get => _currentHand.Value;
+            private set => _currentHand.Value = value;
+        }
+
+        private readonly NetworkVariable<int> _currentHand = new();
 
         public int DefaultRotation { get; private set; }
 
         public string GetHandCount()
         {
-            var handCards = GetHandCards();
+            var handCards = HandCards;
             return handCards.Count > 0 && CurrentHand >= 0 && CurrentHand < handCards.Count
                 ? handCards[CurrentHand].Count.ToString()
                 : string.Empty;
         }
 
-        public IReadOnlyList<IReadOnlyList<UnityCard>> GetHandCards()
+        public IReadOnlyList<IReadOnlyList<UnityCard>> HandCards
         {
-            return _handCards.Select(hand =>
-                    hand.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList())
-                .Cast<IReadOnlyList<UnityCard>>().ToList();
+            // This getter is slow, so it should be cached when appropriate
+            get
+            {
+                List<IReadOnlyList<UnityCard>> handCards = new();
+                foreach (var stringList in _handCards)
+                {
+                    var cardList = stringList.ToListString().Select(cardId => CardGameManager.Current.Cards[cardId])
+                        .ToList();
+                    handCards.Add(cardList);
+                }
+
+                return handCards;
+            }
         }
 
-        private readonly SyncList<string[]> _handCards = new();
+        private readonly NetworkList<CgsNetStringList> _handCards = new();
 
-        public IReadOnlyList<string> GetHandNames()
-        {
-            return _handNames.Select(handName => handName).ToList();
-        }
-
-        private readonly SyncList<string> _handNames = new();
+        private readonly NetworkList<CgsNetString> _handNames = new();
 
         public CardModel RemovedCard { get; set; }
 
         #region StartGame
 
-        public override void OnStartLocalPlayer()
+        public override void OnNetworkSpawn()
         {
-            base.OnStartLocalPlayer();
+            if (!GetComponent<NetworkObject>().IsOwner)
+                return;
+
             Debug.Log("[CgsNet Player] Starting local player...");
             CgsNetManager.Instance.LocalPlayer = this;
             RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
             RequestNewHand(CardDrawer.DefaultHandName);
-            if (isServer)
-                CgsNetManager.Instance.playController.ShowDeckMenu();
+            if (IsServer)
+                PlayController.Instance.ShowDeckMenu();
             else
                 RequestCardGameSelection();
 
@@ -77,18 +124,22 @@ namespace Cgs.Play.Multiplayer
         private void RequestCardGameSelection()
         {
             Debug.Log("[CgsNet Player] Requesting game id...");
-            CmdSelectCardGame();
+            SelectCardGameServerRpc();
         }
 
-        [Command]
-        private void CmdSelectCardGame()
+        [ServerRpc]
+        private void SelectCardGameServerRpc()
         {
             Debug.Log("[CgsNet Player] Sending game id...");
-            TargetSelectCardGame(CardGameManager.Current.Id, CardGameManager.Current.AutoUpdateUrl?.OriginalString);
+            SelectCardGameOwnerClientRpc(CardGameManager.Current.Id,
+                CardGameManager.Current.AutoUpdateUrl?.OriginalString, OwnerClientRpcParams);
         }
 
-        [TargetRpc]
-        private void TargetSelectCardGame(string gameId, string autoUpdateUrl)
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Local
+        private void SelectCardGameOwnerClientRpc(string gameId, string autoUpdateUrl,
+            // ReSharper disable once UnusedParameter.Local
+            ClientRpcParams clientRpcParams = default)
         {
             Debug.Log($"[CgsNet Player] Game id is {gameId}! Loading game details...");
             if (!CardGameManager.Instance.AllCardGames.ContainsKey(gameId))
@@ -108,17 +159,18 @@ namespace Cgs.Play.Multiplayer
                 StartCoroutine(WaitToStartGame());
             }
 
-            CmdApplyPlayerRotation();
+            ApplyPlayerRotationServerRpc();
         }
 
-        [Command]
-        private void CmdApplyPlayerRotation()
+        [ServerRpc]
+        private void ApplyPlayerRotationServerRpc()
         {
-            TargetApplyPlayerRotation(CgsNetManager.ActiveConnectionCount);
+            ApplyPlayerRotationOwnerClientRpc(NetworkManager.Singleton.ConnectedClients.Count, OwnerClientRpcParams);
         }
 
-        [TargetRpc]
-        private void TargetApplyPlayerRotation(int playerCount)
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Local
+        private void ApplyPlayerRotationOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
         {
             if (playerCount % 4 == 0)
                 DefaultRotation = 270;
@@ -129,7 +181,7 @@ namespace Cgs.Play.Multiplayer
             else
                 DefaultRotation = 0;
             Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultRotation);
-            CgsNetManager.Instance.playController.playArea.CurrentRotation = DefaultRotation;
+            PlayController.Instance.playArea.CurrentRotation = DefaultRotation;
         }
 
         private IEnumerator DownloadGame(string url)
@@ -149,7 +201,7 @@ namespace Cgs.Play.Multiplayer
             switch (CardGameManager.Current.DeckSharePreference)
             {
                 case SharePreference.Individual:
-                    CgsNetManager.Instance.playController.ShowDeckMenu();
+                    PlayController.Instance.ShowDeckMenu();
                     break;
                 case SharePreference.Share:
                     RequestSharedDeck();
@@ -157,7 +209,7 @@ namespace Cgs.Play.Multiplayer
                 case SharePreference.Ask:
                 default:
                     CardGameManager.Instance.Messenger.Ask(ShareDeckRequest,
-                        CgsNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+                        PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
                     break;
             }
 
@@ -170,22 +222,22 @@ namespace Cgs.Play.Multiplayer
 
         public void RequestNameUpdate(string playerName)
         {
-            CmdUpdateName(playerName);
+            UpdateNameServerRpc(playerName);
         }
 
-        [Command]
-        private void CmdUpdateName(string playerName)
+        [ServerRpc]
+        private void UpdateNameServerRpc(string playerName)
         {
             Name = playerName;
         }
 
         public void RequestPointsUpdate(int points)
         {
-            CmdUpdatePoints(points);
+            UpdatePointsServerRpc(points);
         }
 
-        [Command]
-        private void CmdUpdatePoints(int points)
+        [ServerRpc]
+        private void UpdatePointsServerRpc(int points)
         {
             Points = points;
         }
@@ -197,100 +249,104 @@ namespace Cgs.Play.Multiplayer
         public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards)
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
-            CmdCreateCardStack(deckName, cards.Select(card => card.Id).ToArray(), true,
-                CgsNetManager.Instance.playController.NewDeckPosition);
+            CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
+                PlayController.Instance.NewDeckPosition);
         }
 
         public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position)
         {
             Debug.Log($"[CgsNet Player] Requesting new card stack {stackName}...");
-            CmdCreateCardStack(stackName, cards.Select(card => card.Id).ToArray(), false, position);
+            CreateCardStackServerRpc(stackName, cards.Select(card => (CgsNetString) card.Id).ToArray(), false,
+                position);
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void CmdCreateCardStack(string stackName, string[] cardIds, bool isDeck, Vector2 position)
+        private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
-            var cardStack = CgsNetManager.Instance.playController.CreateCardStack(stackName,
+            var cardStack = PlayController.Instance.CreateCardStack(stackName,
                 cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position);
-            var stackGameObject = cardStack.gameObject;
-            NetworkServer.Spawn(stackGameObject);
+            cardStack.MyNetworkObject.Spawn();
             if (isDeck)
-                CurrentDeck = stackGameObject;
+                CurrentDeck = cardStack.gameObject;
             Debug.Log($"[CgsNet Player] Created new card stack {stackName}!");
         }
 
         private void RequestSharedDeck()
         {
             Debug.Log("[CgsNet Player] Requesting shared deck..");
-            CmdShareDeck();
+            ShareDeckServerRpc();
         }
 
-        [Command]
-        private void CmdShareDeck()
+        [ServerRpc]
+        private void ShareDeckServerRpc()
         {
             Debug.Log("[CgsNet Player] Sending shared deck...");
-            TargetShareDeck(CgsNetManager.Instance.LocalPlayer.CurrentDeck);
+            ShareDeckOwnerClientRpc(CgsNetManager.Instance.LocalPlayer.CurrentDeck, OwnerClientRpcParams);
         }
 
-        [TargetRpc]
-        private void TargetShareDeck(GameObject deckStack)
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Local
+        private void ShareDeckOwnerClientRpc(NetworkObjectReference deckStack,
+            // ReSharper disable once UnusedParameter.Local
+            ClientRpcParams clientRpcParams = default)
         {
             Debug.Log("[CgsNet Player] Received shared deck!");
-            CurrentDeck = deckStack;
+            CurrentDeck = ((NetworkObject) deckStack).gameObject;
             IsDeckShared = true;
-            CgsNetManager.Instance.playController.PromptForHand();
+            PlayController.Instance.PromptForHand();
         }
 
         public void RequestShuffle(GameObject toShuffle)
         {
             Debug.Log("[CgsNet Player] Requesting shuffle...");
-            CmdShuffle(toShuffle);
+            ShuffleServerRpc(toShuffle);
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdShuffle(GameObject toShuffle)
+        private void ShuffleServerRpc(NetworkObjectReference toShuffle)
         {
             Debug.Log("[CgsNet Player] Shuffling!");
-            var cardStack = toShuffle.GetComponent<CardStack>();
+            var cardStack = ((NetworkObject) toShuffle).GetComponent<CardStack>();
             cardStack.DoShuffle();
         }
 
         public void RequestInsert(GameObject stack, int index, string cardId)
         {
             Debug.Log($"[CgsNet Player] Requesting insert {cardId} at {index}...");
-            CmdInsert(stack, index, cardId);
+            InsertServerRpc(stack, index, cardId);
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdInsert(GameObject stack, int index, string cardId)
+        private void InsertServerRpc(NetworkObjectReference stack, int index, string cardId)
         {
             Debug.Log($"[CgsNet Player] Insert {cardId} at {index}!");
-            var cardStack = stack.GetComponent<CardStack>();
+            var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
             cardStack.Insert(index, cardId);
         }
 
         public void RequestRemoveAt(GameObject stack, int index)
         {
             Debug.Log($"[CgsNet Player] Requesting remove at {index}...");
-            CmdRemoveAt(stack, index);
+            RemoveAtServerRpc(stack, index);
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdRemoveAt(GameObject stack, int index)
+        private void RemoveAtServerRpc(NetworkObjectReference stack, int index)
         {
             Debug.Log($"[CgsNet Player] Remove at {index}!");
-            var cardStack = stack.GetComponent<CardStack>();
+            var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
             var removedCardId = cardStack.RemoveAt(index);
-            TargetSyncRemovedCard(removedCardId);
+            SyncRemovedCardOwnerClientRpc(removedCardId, OwnerClientRpcParams);
         }
 
-        [TargetRpc]
-        private void TargetSyncRemovedCard(string removedCardId)
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Local
+        private void SyncRemovedCardOwnerClientRpc(string removedCardId, ClientRpcParams clientRpcParams = default)
         {
             if (RemovedCard != null)
                 RemovedCard.Value = CardGameManager.Current.Cards[removedCardId];
@@ -300,28 +356,29 @@ namespace Cgs.Play.Multiplayer
         public void RequestDeal(GameObject stack, int count)
         {
             Debug.Log($"[CgsNet Player] Requesting deal {count}...");
-            CmdDeal(stack, count);
+            DealServerRpc(stack, count);
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdDeal(GameObject stack, int count)
+        private void DealServerRpc(NetworkObjectReference stack, int count)
         {
             Debug.Log($"[CgsNet Player] Dealing {count}!");
-            var cardStack = stack.GetComponent<CardStack>();
-            var cardIds = new string[count];
+            var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
+            var cardIds = new CgsNetString[count];
             for (var i = 0; i < count && cardStack.Cards.Count > 0; i++)
                 cardIds[i] = cardStack.PopCard();
-            TargetDeal(cardIds);
+            DealClientRpc(cardIds, OwnerClientRpcParams);
         }
 
-        [TargetRpc]
+        [ClientRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void TargetDeal(string[] cardIds)
+        // ReSharper disable once UnusedParameter.Local
+        private void DealClientRpc(CgsNetString[] cardIds, ClientRpcParams clientRpcParams = default)
         {
             Debug.Log($"[CgsNet Player] Dealt {cardIds}!");
-            CgsNetManager.Instance.playController.AddCardsToHand(
+            PlayController.Instance.AddCardsToHand(
                 cardIds.Where(cardId => !string.IsNullOrEmpty(cardId) && !UnityCard.Blank.Id.Equals(cardId))
                     .Select(cardId => CardGameManager.Current.Cards[cardId]));
         }
@@ -333,47 +390,48 @@ namespace Cgs.Play.Multiplayer
         public void RequestNewHand(string handName)
         {
             Debug.Log($"[CgsNet Player] Requesting new hand {handName}...");
-            CmdAddHand(handName);
+            AddHandServerRpc(handName);
         }
 
-        [Command]
-        private void CmdAddHand(string handName)
+        [ServerRpc]
+        private void AddHandServerRpc(string handName)
         {
             Debug.Log($"[CgsNet Player] Add hand {handName}!");
-            _handCards.Add(Array.Empty<string>());
+            _handCards.Add(new CgsNetStringList());
             _handNames.Add(handName);
             CurrentHand = _handNames.Count - 1;
-            TargetUseHand(CurrentHand);
+            UseHandClientRpc(CurrentHand, OwnerClientRpcParams);
         }
 
-        [TargetRpc]
+        [ClientRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void TargetUseHand(int handIndex)
+        // ReSharper disable once UnusedParameter.Local
+        private void UseHandClientRpc(int handIndex, ClientRpcParams clientRpcParams = default)
         {
-            CgsNetManager.Instance.playController.drawer.SelectTab(handIndex);
+            PlayController.Instance.drawer.SelectTab(handIndex);
         }
 
         public void RequestUseHand(int handIndex)
         {
             Debug.Log($"[CgsNet Player] Requesting use hand {handIndex}...");
-            CmdUseHand(handIndex);
+            UseHandServerRpc(handIndex);
         }
 
-        [Command]
-        private void CmdUseHand(int handIndex)
+        [ServerRpc]
+        private void UseHandServerRpc(int handIndex)
         {
             Debug.Log($"[CgsNet Player] Use hand {handIndex}!");
             CurrentHand = handIndex;
         }
 
-        public void RequestSyncHand(int handIndex, string[] cardIds)
+        public void RequestSyncHand(int handIndex, CgsNetString[] cardIds)
         {
             Debug.Log($"[CgsNet Player] Requesting sync hand {handIndex} to {cardIds.Length}...");
-            CmdSyncHand(handIndex, cardIds);
+            SyncHandServerRpc(handIndex, cardIds);
         }
 
-        [Command]
-        private void CmdSyncHand(int handIndex, string[] cardIds)
+        [ServerRpc]
+        private void SyncHandServerRpc(int handIndex, CgsNetString[] cardIds)
         {
             Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds.Length} cards on Server!");
             if (handIndex < 0 || handIndex >= _handCards.Count)
@@ -382,16 +440,17 @@ namespace Cgs.Play.Multiplayer
                 return;
             }
 
-            _handCards[handIndex] = cardIds;
-            TargetSyncHand(handIndex, cardIds);
+            _handCards[handIndex] = CgsNetStringList.Of(cardIds);
+            SyncHandClientRpc(handIndex, cardIds, OwnerClientRpcParams);
         }
 
-        [TargetRpc]
+        [ClientRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void TargetSyncHand(int handIndex, string[] cardIds)
+        // ReSharper disable once UnusedParameter.Local
+        private void SyncHandClientRpc(int handIndex, CgsNetString[] cardIds, ClientRpcParams clientRpcParams = default)
         {
             Debug.Log($"[CgsNet Player] Sync hand {handIndex} to {cardIds.Length} cards on client!");
-            CgsNetManager.Instance.playController.drawer.SyncHand(handIndex, cardIds);
+            PlayController.Instance.drawer.SyncHand(handIndex, cardIds);
         }
 
         #endregion
@@ -403,36 +462,37 @@ namespace Cgs.Play.Multiplayer
             var cardModelTransform = cardModel.transform;
             cardModelTransform.SetParent(cardZone.transform);
             cardModel.SnapToGrid();
-            cardModel.position = ((RectTransform) cardModelTransform).localPosition;
-            cardModel.rotation = cardModelTransform.rotation;
-            CmdSpawnCard(cardModel.Id, cardModel.position, cardModel.rotation, cardModel.isFacedown);
-            if (cardModel.IsOnline && cardModel.hasAuthority)
-                CmdUnSpawnCard(cardModel.gameObject);
+            cardModel.Position = ((RectTransform) cardModelTransform).localPosition;
+            cardModel.Rotation = cardModelTransform.rotation;
+            SpawnCardServerRpc(cardModel.Id, cardModel.Position, cardModel.Rotation, cardModel.IsFacedown);
+            if (cardModel.IsOnline && cardModel.LacksOwnership)
+                DespawnCardServerRpc(cardModel.gameObject);
             Destroy(cardModel.gameObject);
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdSpawnCard(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
+        private void SpawnCardServerRpc(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
-            var playController = CgsNetManager.Instance.playController;
+            var playController = PlayController.Instance;
             var newCardGameObject = Instantiate(playController.cardModelPrefab, playController.playMat.transform);
             var cardModel = newCardGameObject.GetComponent<CardModel>();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
-            cardModel.position = position;
-            cardModel.rotation = rotation;
-            cardModel.isFacedown = isFacedown;
+            cardModel.Position = position;
+            cardModel.Rotation = rotation;
+            cardModel.IsFacedown = isFacedown;
             PlayController.SetPlayActions(cardModel);
-            NetworkServer.Spawn(newCardGameObject);
-            cardModel.RpcHideHighlight();
+            cardModel.MyNetworkObject.Spawn();
+            cardModel.HideHighlightClientRpc();
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdUnSpawnCard(GameObject toUnSpawn)
+        private void DespawnCardServerRpc(NetworkObjectReference toDespawn)
         {
-            NetworkServer.UnSpawn(toUnSpawn);
-            Destroy(toUnSpawn);
+            var go = ((NetworkObject) toDespawn).gameObject;
+            go.GetComponent<NetworkObject>().Despawn();
+            Destroy(go);
         }
 
         #endregion
@@ -441,15 +501,15 @@ namespace Cgs.Play.Multiplayer
 
         public void RequestNewDie(int min, int max)
         {
-            CmdCreateDie(min, max);
+            CreateDieServerRpc(min, max);
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdCreateDie(int min, int max)
+        private void CreateDieServerRpc(int min, int max)
         {
-            var die = CgsNetManager.Instance.playController.CreateDie(min, max);
-            NetworkServer.Spawn(die.gameObject);
+            var die = PlayController.Instance.CreateDie(min, max);
+            die.MyNetworkObject.Spawn();
         }
 
         #endregion
@@ -459,32 +519,33 @@ namespace Cgs.Play.Multiplayer
         public void RequestRestart()
         {
             Debug.Log("[CgsNet Player] Requesting restart!...");
-            CmdRestart();
+            RestartServerRpc();
         }
 
-        [Command]
+        [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdRestart()
+        private void RestartServerRpc()
         {
             Debug.Log("[CgsNet Player] Game server to restart!...");
             CgsNetManager.Instance.Restart();
         }
 
-        [TargetRpc]
-        public void TargetRestart()
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Global
+        public void RestartClientRpc(ClientRpcParams clientRpcParams = default)
         {
             Debug.Log("[CgsNet Player] Game is restarting!...");
-            CgsNetManager.Instance.playController.ResetPlayArea();
-            CgsNetManager.Instance.playController.drawer.Clear();
+            PlayController.Instance.ResetPlayArea();
+            PlayController.Instance.drawer.Clear();
             CurrentDeck = null;
             StartCoroutine(WaitToRestartGame());
         }
 
         private IEnumerator WaitToRestartGame()
         {
-            if (isServer || CardGameManager.Current.DeckSharePreference == SharePreference.Individual)
+            if (IsServer || CardGameManager.Current.DeckSharePreference == SharePreference.Individual)
             {
-                CgsNetManager.Instance.playController.ShowDeckMenu();
+                PlayController.Instance.ShowDeckMenu();
                 Debug.Log("[CgsNet Player] Game restarted!");
                 yield break;
             }
@@ -496,7 +557,7 @@ namespace Cgs.Play.Multiplayer
             switch (CardGameManager.Current.DeckSharePreference)
             {
                 case SharePreference.Individual:
-                    CgsNetManager.Instance.playController.ShowDeckMenu();
+                    PlayController.Instance.ShowDeckMenu();
                     break;
                 case SharePreference.Share:
                     RequestSharedDeck();
@@ -504,7 +565,7 @@ namespace Cgs.Play.Multiplayer
                 case SharePreference.Ask:
                 default:
                     CardGameManager.Instance.Messenger.Ask(ShareDeckRequest,
-                        CgsNetManager.Instance.playController.ShowDeckMenu, RequestSharedDeck);
+                        PlayController.Instance.ShowDeckMenu, RequestSharedDeck);
                     break;
             }
         }

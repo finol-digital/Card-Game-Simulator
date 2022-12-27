@@ -25,6 +25,7 @@ permalink: roadmap.html
   - Option to keep points and reset or delete decks
 
 ## Backlog - 2023 Q1
+- Game-Play: Counter system for players and cards
 - Game-Creation: Edit Button in Main Menu
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Cards: Support more than 1 card face (Dual-Faced Cards)
