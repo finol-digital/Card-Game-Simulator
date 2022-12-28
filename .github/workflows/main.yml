@@ -30,7 +30,7 @@ on:
 jobs:
 
   tests:
-    name: Test Code Quality
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -64,6 +64,12 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  lint:
+    name: Quality Check
+    runs-on: ubuntu-latest
+    if: false
+    steps:
       - name: Setup dotnet 5 for SonarQube
         uses: actions/setup-dotnet@v3.0.3
         with:
@@ -73,15 +79,20 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 11
-      - name: Setup Unity for SonarQube
-        id: setup-unity
-        uses: kuler90/setup-unity@master
-      - name: Activate Unity for SonarQube
-        uses: kuler90/activate-unity@master
+      - name: Update Release Notes
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: |
+          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      - name: Auto-Commit Release Notes
+        if: github.event.action == 'published'
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          unity-username: ${{ secrets.UNITY_EMAIL }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-serial: ${{ secrets.UNITY_SERIAL }}
+          branch: main
+          file_pattern: fastlane/metadata
+          commit_message: Update Release Notes
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: ${{ steps.setup-unity.outputs.unity-path }}/../Data/MonoBleedingEdge/
@@ -116,20 +127,6 @@ jobs:
           scanMetadataReportFile: ../.sonarqube/out/.sonar/report-task.txt
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Update Release Notes
-        if: github.event.action == 'published'
-        env:
-          RELEASE_NOTES: ${{ github.event.release.body }}
-        run: |
-          echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
-          echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
-      - name: Auto-Commit Release Notes
-        if: github.event.action == 'published'
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: main
-          file_pattern: fastlane/metadata
-          commit_message: Update Release Notes
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
