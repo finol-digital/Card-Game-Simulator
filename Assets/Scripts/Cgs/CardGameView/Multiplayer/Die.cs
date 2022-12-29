@@ -54,7 +54,7 @@ namespace Cgs.CardGameView.Multiplayer
                 if (newValue < Min)
                     newValue = Max;
 
-                if (NetworkManager.Singleton.IsConnectedClient)
+                if (CgsNetManager.Instance.IsOnline)
                     UpdateValueServerRpc(newValue);
                 else
                 {
@@ -139,7 +139,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            if (NetworkManager.Singleton.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
                 RequestChangeOwnership();
         }
 
@@ -184,7 +184,7 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void Roll()
         {
-            if (CgsNetManager.Instance.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
                 RollServerRpc();
             else
                 _rollTime = RollTime;

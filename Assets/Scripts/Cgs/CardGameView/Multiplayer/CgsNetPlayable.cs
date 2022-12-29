@@ -40,7 +40,7 @@ namespace Cgs.CardGameView.Multiplayer
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         public bool IsOnline => CgsNetManager.Instance != null
-                                && CgsNetManager.Instance.IsConnectedClient
+                                && CgsNetManager.Instance.IsOnline
                                 && transform.parent == PlayController.Instance.playMat.transform;
 
         public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !MyNetworkObject.IsOwner;
@@ -454,7 +454,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected void RequestDelete()
         {
-            if (NetworkManager.Singleton.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
                 DeleteServerRpc();
             else
                 Destroy(gameObject);

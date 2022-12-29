@@ -171,7 +171,7 @@ namespace Cgs.Play
 
         private void Restart()
         {
-            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestRestart();
             else
             {
@@ -238,7 +238,7 @@ namespace Cgs.Play
                 ? CardGameManager.Current.GamePlayDeckName
                 : deck.Name;
             var newDeckPosition = NewDeckPosition;
-            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
             {
                 CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
                 var i = 1;
@@ -328,7 +328,7 @@ namespace Cgs.Play
 
         private void Deal(int cardCount)
         {
-            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null &&
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.CurrentDeck != null)
                 CgsNetManager.Instance.LocalPlayer.RequestDeal(CgsNetManager.Instance.LocalPlayer.CurrentDeck,
                     cardCount);
@@ -356,7 +356,7 @@ namespace Cgs.Play
 
         private static void AddCardToPlay(CardZone cardZone, CardModel cardModel)
         {
-            if (NetworkManager.Singleton.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
                 SetPlayActions(cardModel);
@@ -371,7 +371,7 @@ namespace Cgs.Play
         private void DisplayResults(string filters, List<UnityCard> cards)
         {
             var position = Vector2.left * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X);
-            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(filters, cards, position);
             else
                 CreateCardStack(filters, cards, position);
@@ -379,7 +379,7 @@ namespace Cgs.Play
 
         public void CreateDefaultDie()
         {
-            if (CgsNetManager.Instance.IsConnectedClient && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewDie(Die.DefaultMin, PlaySettings.DieFaceCount);
             else
                 CreateDie(Die.DefaultMin, PlaySettings.DieFaceCount);
@@ -420,7 +420,7 @@ namespace Cgs.Play
 
         public static void BackToMainMenu()
         {
-            if (NetworkManager.Singleton.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
             {
                 NetworkManager.Singleton.Shutdown();
                 Instance.Lobby.discovery.StopDiscovery();

@@ -16,12 +16,14 @@ namespace Cgs.Play.Multiplayer
     {
         public static CgsNetManager Instance => (CgsNetManager) Singleton;
 
+        public bool IsOnline => IsHost || IsConnectedClient;
+
         public CgsNetPlayer LocalPlayer { get; set; }
 
         public UnityTransport Transport => (UnityTransport) NetworkConfig.NetworkTransport;
 
         // TODO:
-        public string RoomIdIp => "localhost".Equals(Transport.ConnectionData.Address,
+        public string RoomIdIp => "127.0.0.1".Equals(Transport.ConnectionData.Address,
             StringComparison.Ordinal)
             ? RoomId
             : Transport.ConnectionData.Address;

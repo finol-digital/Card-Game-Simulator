@@ -35,7 +35,7 @@ namespace Cgs.Play
 
         public ScoreTemplate scoreTemplate;
 
-        private static bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.IsConnectedClient;
+        private static bool IsOnline => CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline;
 
         private bool IsPointsOutOfSync => IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                                           CgsNetManager.Instance.LocalPlayer.Points != Points;

@@ -154,7 +154,7 @@ namespace Cgs.CardGameView.Viewer
 
             var cardCount = cardZone.GetComponentsInChildren<CardModel>().Length;
             var cardIndex = cardCount - 1 - cardModel.transform.GetSiblingIndex();
-            if (CgsNetManager.Instance.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(_cardStack.gameObject, cardIndex, cardModel.Id);
             else
                 _cardStack.Insert(cardIndex, cardModel.Id);
@@ -172,7 +172,7 @@ namespace Cgs.CardGameView.Viewer
             if (_cardStack == null)
                 return;
 
-            if (CgsNetManager.Instance.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(_cardStack.gameObject, cardModel.Index);
             else
                 _cardStack.RemoveAt(cardModel.Index);

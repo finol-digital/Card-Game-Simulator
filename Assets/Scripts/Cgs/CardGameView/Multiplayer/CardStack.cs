@@ -230,7 +230,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             var unityCard = CardGameManager.Current.Cards[_cardIds[^1]];
 
-            if (CgsNetManager.Instance.IsConnectedClient)
+            if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, _cardIds.Count - 1);
             else
                 PopCard();
@@ -313,7 +313,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Shuffle()
         {
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsConnectedClient)
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestShuffle(gameObject);
             else
                 DoShuffle();
