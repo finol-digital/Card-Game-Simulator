@@ -31,7 +31,7 @@ namespace Cgs.CardGameView.Multiplayer
         public List<string> ToListString()
         {
             var toString = ToString();
-            return new List<string>(toString.Split(Delimiter));
+            return new List<string>(toString.Split(Delimiter, StringSplitOptions.RemoveEmptyEntries));
         }
 
         public override string ToString()

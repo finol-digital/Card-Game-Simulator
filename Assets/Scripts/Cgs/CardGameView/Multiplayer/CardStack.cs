@@ -104,7 +104,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private readonly NetworkList<CgsNetString> _cardIds = new();
+        private NetworkList<CgsNetString> _cardIds;
 
         private readonly NetworkVariable<string> _actionText = new();
         private readonly NetworkVariable<float> _actionTime = new();
@@ -113,6 +113,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnAwakePlayable()
         {
+            _cardIds = new NetworkList<CgsNetString>();
             _name.OnValueChanged += OnChangeName;
         }
 

@@ -58,12 +58,15 @@ namespace Cgs.Play.Drawer
             CardGameManager.Instance.OnSceneActions.Add(Resize);
         }
 
-        private void Start()
+        private void Awake()
         {
             _toggles.Add(handToggle);
             _nameTexts.Add(handNameText);
             _countTexts.Add(handCountText);
+        }
 
+        private void Start()
+        {
             _toggles[0].GetComponent<CardDropArea>().Index = 0;
             _toggles[0].onValueChanged.AddListener(isOn =>
             {

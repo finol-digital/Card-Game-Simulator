@@ -96,11 +96,17 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private readonly NetworkList<CgsNetStringList> _handCards = new();
+        private NetworkList<CgsNetStringList> _handCards;
 
-        private readonly NetworkList<CgsNetString> _handNames = new();
+        private NetworkList<CgsNetString> _handNames;
 
         public CardModel RemovedCard { get; set; }
+
+        private void Awake()
+        {
+            _handCards = new NetworkList<CgsNetStringList>();
+            _handNames = new NetworkList<CgsNetString>();
+        }
 
         #region StartGame
 
