@@ -35,7 +35,7 @@ namespace Cgs.Play.Multiplayer
             private set => _name.Value = value;
         }
 
-        private readonly NetworkVariable<string> _name = new();
+        private readonly NetworkVariable<CgsNetString> _name = new();
 
         public int Points
         {
@@ -45,13 +45,13 @@ namespace Cgs.Play.Multiplayer
 
         private readonly NetworkVariable<int> _points = new();
 
-        public GameObject CurrentDeck
+        public NetworkObject CurrentDeck
         {
             get => _currentDeck.Value;
             private set => _currentDeck.Value = value;
         }
 
-        private readonly NetworkVariable<GameObject> _currentDeck = new();
+        private readonly NetworkVariable<NetworkObjectReference> _currentDeck = new();
 
         public bool IsDeckShared
         {
@@ -273,9 +273,8 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
                 cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position);
-            cardStack.MyNetworkObject.Spawn();
             if (isDeck)
-                CurrentDeck = cardStack.gameObject;
+                CurrentDeck = cardStack.GetComponent<NetworkObject>();
             Debug.Log($"[CgsNet Player] Created new card stack {stackName}!");
         }
 
@@ -299,7 +298,7 @@ namespace Cgs.Play.Multiplayer
             ClientRpcParams clientRpcParams = default)
         {
             Debug.Log("[CgsNet Player] Received shared deck!");
-            CurrentDeck = ((NetworkObject) deckStack).gameObject;
+            CurrentDeck = deckStack;
             IsDeckShared = true;
             PlayController.Instance.PromptForHand();
         }
@@ -359,7 +358,7 @@ namespace Cgs.Play.Multiplayer
             RemovedCard = null;
         }
 
-        public void RequestDeal(GameObject stack, int count)
+        public void RequestDeal(NetworkObject stack, int count)
         {
             Debug.Log($"[CgsNet Player] Requesting deal {count}...");
             DealServerRpc(stack, count);
@@ -480,16 +479,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void SpawnCardServerRpc(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
-            var playController = PlayController.Instance;
-            var newCardGameObject = Instantiate(playController.cardModelPrefab, playController.playMat.transform);
-            var cardModel = newCardGameObject.GetComponent<CardModel>();
-            cardModel.Value = CardGameManager.Current.Cards[cardId];
-            cardModel.Position = position;
-            cardModel.Rotation = rotation;
-            cardModel.IsFacedown = isFacedown;
-            PlayController.SetPlayActions(cardModel);
-            cardModel.MyNetworkObject.Spawn();
-            cardModel.HideHighlightClientRpc();
+            PlayController.Instance.CreateCardModel(cardId, position, rotation, isFacedown);
         }
 
         [ServerRpc]
@@ -514,8 +504,7 @@ namespace Cgs.Play.Multiplayer
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void CreateDieServerRpc(int min, int max)
         {
-            var die = PlayController.Instance.CreateDie(min, max);
-            die.MyNetworkObject.Spawn();
+            PlayController.Instance.CreateDie(min, max);
         }
 
         #endregion

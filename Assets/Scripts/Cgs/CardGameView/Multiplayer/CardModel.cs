@@ -38,10 +38,12 @@ namespace Cgs.CardGameView.Multiplayer
         public string Id
         {
             get => _id.Value;
-            private set => _id.Value = value;
+            private set  {
+                _id.Value = value;
+            }
         }
 
-        private readonly NetworkVariable<string> _id = new();
+        private readonly NetworkVariable<CgsNetString> _id = new();
 
         public override string ViewValue => Value.Name;
 
@@ -57,8 +59,8 @@ namespace Cgs.CardGameView.Multiplayer
             set
             {
                 Value.UnregisterDisplay(this);
-                Id = value != null ? value.Id : string.Empty;
-                gameObject.name = value != null ? "[" + value.Id + "] " + value.Name : string.Empty;
+                Id = value?.Id ?? UnityCard.Blank.Id;
+                gameObject.name = $"[{Id}] {value?.Name}";
                 if (!IsFacedown)
                     value?.RegisterDisplay(this);
             }

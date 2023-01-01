@@ -47,7 +47,6 @@ namespace Cgs.Play
         public GameObject cardStackPrefab;
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
-        public GameObject decisionModalPrefab;
 
         public Transform stackViewers;
 
@@ -115,11 +114,6 @@ namespace Cgs.Play
         private HandDealer Dealer => _dealer ??= Instantiate(handDealerPrefab).GetOrAddComponent<HandDealer>();
 
         private HandDealer _dealer;
-
-        public DecisionModal Decider =>
-            _decider ??= Instantiate(decisionModalPrefab).GetOrAddComponent<DecisionModal>();
-
-        private DecisionModal _decider;
 
         private CardStack _soloDeckStack;
 
@@ -302,6 +296,8 @@ namespace Cgs.Play
         {
             var playAreaTransform = playMat.transform;
             var cardStack = Instantiate(cardStackPrefab, playAreaTransform.parent).GetComponent<CardStack>();
+            if (NetworkManager.Singleton.IsServer)
+                cardStack.MyNetworkObject.Spawn();
             if (!string.IsNullOrEmpty(stackName))
                 cardStack.Name = stackName;
             if (cards != null)
@@ -377,6 +373,18 @@ namespace Cgs.Play
                 CreateCardStack(filters, cards, position);
         }
 
+        public void CreateCardModel(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
+        {
+            var cardModel = Instantiate(cardModelPrefab, playMat.transform).GetComponent<CardModel>();
+            cardModel.MyNetworkObject.Spawn();
+            cardModel.Value = CardGameManager.Current.Cards[cardId];
+            /*cardModel.Position = position;
+            cardModel.Rotation = rotation;
+            cardModel.IsFacedown = isFacedown;
+            SetPlayActions(cardModel);
+            cardModel.HideHighlightClientRpc();*/
+        }
+
         public void CreateDefaultDie()
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
@@ -389,6 +397,8 @@ namespace Cgs.Play
         {
             var playAreaTransform = playMat.transform;
             var die = Instantiate(diePrefab, playAreaTransform.parent).GetOrAddComponent<Die>();
+            if (NetworkManager.Singleton.IsServer)
+                die.MyNetworkObject.Spawn();
             die.transform.SetParent(playAreaTransform);
             die.Min = min;
             die.Max = max;
@@ -420,13 +430,21 @@ namespace Cgs.Play
 
         public static void BackToMainMenu()
         {
-            if (CgsNetManager.Instance.IsOnline)
-            {
-                NetworkManager.Singleton.Shutdown();
-                Instance.Lobby.discovery.StopDiscovery();
-            }
-
+            StopNetworking();
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+        }
+
+        private static void StopNetworking()
+        {
+            if (NetworkManager.Singleton != null)
+                NetworkManager.Singleton.Shutdown();
+            if (Instance != null && Instance.Lobby != null && Instance.Lobby.discovery != null)
+                Instance.Lobby.discovery.StopDiscovery();
+        }
+
+        private void OnDisable()
+        {
+            StopNetworking();
         }
     }
 }

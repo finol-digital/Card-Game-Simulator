@@ -34,8 +34,8 @@ namespace Cgs.CardGameView
 
         public UnityAction OnLayout { get; set; }
 
-        public List<OnAddCardDelegate> OnAddCardActions { get; } = new List<OnAddCardDelegate>();
-        public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new List<OnRemoveCardDelegate>();
+        public List<OnAddCardDelegate> OnAddCardActions { get; } = new();
+        public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new();
 
         public void OnPointerEnter(PointerEventData eventData)
         {

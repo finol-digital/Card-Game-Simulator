@@ -76,7 +76,7 @@ namespace Cgs.CardGameView.Multiplayer
             set => _name.Value = value;
         }
 
-        private readonly NetworkVariable<string> _name = new();
+        private readonly NetworkVariable<CgsNetString> _name = new();
 
         public override string ViewValue => Name;
 
@@ -106,7 +106,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkList<CgsNetString> _cardIds;
 
-        private readonly NetworkVariable<string> _actionText = new();
+        private readonly NetworkVariable<CgsNetString> _actionText = new();
         private readonly NetworkVariable<float> _actionTime = new();
 
         public StackViewer Viewer { get; private set; }
@@ -246,7 +246,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [PublicAPI]
-        public void OnChangeName(string oldName, string newName)
+        public void OnChangeName(CgsNetString oldName, CgsNetString newName)
         {
             deckLabel.text = newName;
         }
