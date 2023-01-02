@@ -37,13 +37,18 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string Id
         {
-            get => _id.Value;
-            private set  {
-                _id.Value = value;
+            get => _id;
+            private set
+            {
+                _id = value;
+                if (IsOnline)
+                    _idN.Value = value;
             }
         }
 
-        private readonly NetworkVariable<CgsNetString> _id = new();
+        private string _id = UnityCard.Blank.Id;
+
+        private readonly NetworkVariable<CgsNetString> _idN = new();
 
         public override string ViewValue => Value.Name;
 
@@ -68,21 +73,21 @@ namespace Cgs.CardGameView.Multiplayer
 
         public bool IsFacedown
         {
-            get => _isFacedown.Value;
+            get => _isFacedown;
             set
             {
+                var oldValue = _isFacedown;
+                _isFacedown = value;
                 if (IsOnline)
-                    UpdateIsFacedownServerRpc(value);
-                else
-                {
-                    var oldValue = _isFacedown.Value;
-                    _isFacedown.Value = value;
-                    OnChangeIsFacedown(oldValue, _isFacedown.Value);
-                }
+                    _isFacedownN.Value = _isFacedown;
+                else if (oldValue != _isFacedown)
+                    OnChangeIsFacedown(oldValue, _isFacedown);
             }
         }
 
-        private readonly NetworkVariable<bool> _isFacedown = new();
+        private bool _isFacedown;
+
+        private readonly NetworkVariable<bool> _isFacedownN = new();
 
         public RectTransform PlaceHolder
         {
@@ -150,7 +155,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnAwakePlayable()
         {
-            _isFacedown.OnValueChanged += OnChangeIsFacedown;
+            _idN.OnValueChanged += OnChangeId;
+            _isFacedownN.OnValueChanged += OnChangeIsFacedown;
         }
 
         protected override void OnStartPlayable()
@@ -619,15 +625,16 @@ namespace Cgs.CardGameView.Multiplayer
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void UpdateIsFacedownServerRpc(bool isFacedown)
+        [PublicAPI]
+        public void OnChangeId(CgsNetString oldValue, CgsNetString newValue)
         {
-            IsFacedown = isFacedown;
+            _id = newValue;
         }
 
         [PublicAPI]
         public void OnChangeIsFacedown(bool oldValue, bool newValue)
         {
+            _isFacedown = newValue;
             if (!IsFacedown)
                 Value.RegisterDisplay(this);
             else

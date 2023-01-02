@@ -39,9 +39,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        public bool IsOnline => CgsNetManager.Instance != null
-                                && CgsNetManager.Instance.IsOnline
-                                && transform.parent == PlayController.Instance.playMat.transform;
+        public bool IsOnline =>
+            transform.parent == PlayController.Instance.playMat.transform && MyNetworkObject.IsSpawned;
 
         public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !MyNetworkObject.IsOwner;
 
@@ -57,19 +56,33 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Vector2 Position
         {
-            get => _position.Value;
-            set => _position.Value = value;
+            get => IsOnline ? _position.Value : _position2;
+            set
+            {
+                _position2 = value;
+                if (IsOnline)
+                    _position.Value = value;
+            }
         }
 
         private readonly NetworkVariable<Vector2> _position = new();
 
+        private Vector2 _position2;
+
         public Quaternion Rotation
         {
-            get => _rotation.Value;
-            set => _rotation.Value = value;
+            get => IsOnline ? _rotation.Value : _rotation2;
+            set
+            {
+                _rotation2 = value;
+                if (IsOnline)
+                    _rotation.Value = value;
+            }
         }
 
         private readonly NetworkVariable<Quaternion> _rotation = new();
+
+        private Quaternion _rotation2;
 
         private readonly NetworkVariable<bool> _isClientOwner = new();
 
@@ -417,6 +430,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
+            _position2 = newValue;
             if (!MyNetworkObject.IsOwner)
                 transform.localPosition = newValue;
         }

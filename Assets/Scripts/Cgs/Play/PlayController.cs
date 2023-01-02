@@ -378,11 +378,11 @@ namespace Cgs.Play
             var cardModel = Instantiate(cardModelPrefab, playMat.transform).GetComponent<CardModel>();
             cardModel.MyNetworkObject.Spawn();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
-            /*cardModel.Position = position;
+            cardModel.Position = position;
             cardModel.Rotation = rotation;
             cardModel.IsFacedown = isFacedown;
             SetPlayActions(cardModel);
-            cardModel.HideHighlightClientRpc();*/
+            cardModel.HideHighlightClientRpc();
         }
 
         public void CreateDefaultDie()

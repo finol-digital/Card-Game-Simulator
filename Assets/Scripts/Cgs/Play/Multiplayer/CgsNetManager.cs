@@ -22,7 +22,6 @@ namespace Cgs.Play.Multiplayer
 
         public UnityTransport Transport => (UnityTransport) NetworkConfig.NetworkTransport;
 
-        // TODO:
         public string RoomIdIp => "127.0.0.1".Equals(Transport.ConnectionData.Address,
             StringComparison.Ordinal)
             ? RoomId

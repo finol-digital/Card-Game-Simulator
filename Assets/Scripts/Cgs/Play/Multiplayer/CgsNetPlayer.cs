@@ -467,9 +467,9 @@ namespace Cgs.Play.Multiplayer
             var cardModelTransform = cardModel.transform;
             cardModelTransform.SetParent(cardZone.transform);
             cardModel.SnapToGrid();
-            cardModel.Position = ((RectTransform) cardModelTransform).localPosition;
-            cardModel.Rotation = cardModelTransform.rotation;
-            SpawnCardServerRpc(cardModel.Id, cardModel.Position, cardModel.Rotation, cardModel.IsFacedown);
+            var position = ((RectTransform) cardModelTransform).localPosition;
+            var rotation = cardModelTransform.rotation;
+            SpawnCardServerRpc(cardModel.Id, position, rotation, cardModel.IsFacedown);
             if (cardModel.IsOnline && cardModel.LacksOwnership)
                 DespawnCardServerRpc(cardModel.gameObject);
             Destroy(cardModel.gameObject);
