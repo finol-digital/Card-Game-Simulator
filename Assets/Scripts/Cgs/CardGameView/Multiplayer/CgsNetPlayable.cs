@@ -40,9 +40,9 @@ namespace Cgs.CardGameView.Multiplayer
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         public bool IsOnline =>
-            transform.parent == PlayController.Instance.playMat.transform && MyNetworkObject.IsSpawned;
+            transform.parent == PlayController.Instance.playMat.transform && IsSpawned;
 
-        public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !MyNetworkObject.IsOwner;
+        public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
@@ -125,7 +125,7 @@ namespace Cgs.CardGameView.Multiplayer
                         break;
                     default:
                     case HighlightMode.Off:
-                        var isOthers = IsOnline && _isClientOwner.Value && !MyNetworkObject.IsOwner;
+                        var isOthers = IsOnline && _isClientOwner.Value && !IsOwner;
                         Highlight.effectColor = isOthers ? Color.yellow : Color.black;
                         Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                         break;
@@ -306,7 +306,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             PostDragPlayable(eventData);
 
-            if (IsOnline && MyNetworkObject.IsOwner && !ToDiscard)
+            if (IsOnline && IsOwner && !ToDiscard)
                 RemoveOwnershipServerRpc();
         }
 
@@ -351,7 +351,7 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.position = targetPosition;
             rectTransform.SetAsLastSibling();
 
-            if (MyNetworkObject.IsOwner)
+            if (IsOwner)
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
@@ -361,7 +361,7 @@ namespace Cgs.CardGameView.Multiplayer
             var gridPosition = CalculateGridPosition();
             rectTransform.position = gridPosition;
 
-            if (MyNetworkObject.IsOwner)
+            if (IsOwner)
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
@@ -431,7 +431,7 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
             _position2 = newValue;
-            if (!MyNetworkObject.IsOwner)
+            if (!IsOwner)
                 transform.localPosition = newValue;
         }
 
@@ -449,7 +449,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeRotation(Quaternion oldValue, Quaternion newValue)
         {
-            if (!MyNetworkObject.IsOwner)
+            if (!IsOwner)
                 transform.rotation = newValue;
         }
 
@@ -477,7 +477,7 @@ namespace Cgs.CardGameView.Multiplayer
         [ServerRpc(RequireOwnership = false)]
         private void DeleteServerRpc()
         {
-            if (!MyNetworkObject.IsOwnedByServer)
+            if (!IsOwnedByServer)
             {
                 Debug.LogWarning("Ignoring request to delete, since it is currently owned by a client!");
                 return;

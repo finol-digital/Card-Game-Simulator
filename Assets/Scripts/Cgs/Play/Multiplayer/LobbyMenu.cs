@@ -3,12 +3,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
 using Unity.Netcode;
+using Unity.Services.Lobbies;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -20,15 +25,20 @@ namespace Cgs.Play.Multiplayer
     public class LobbyMenu : SelectionPanel
     {
         public const string ShareWarningMessage =
-            "WARNING!!!\nYou are hosting a game that has not been properly uploaded.\nContact david@finoldigital.com for assistance in uploading.";
+            "WARNING: \n" +
+            "You may need to ensure that all connecting players have manually loaded the latest .zip for this game.\n" +
+            "For assistance, contact david@finoldigital.com";
 
         public string RoomIdIpLabel => "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
         public string RoomIdIpPlaceholder => "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
 
-        public const string ConnectionErrorMessage =
+        public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
-        private const float ServerListUpdateTime = 5;
+        public const string GenericConnectionErrorMessage =
+            "Exception thrown when attempting to connect to Server. Exception: ";
+
+        private const float SecondsPerRefresh = 15;
 
         public CgsNetDiscovery discovery;
         public ToggleGroup lanToggleGroup;
@@ -60,7 +70,11 @@ namespace Cgs.Play.Multiplayer
             set => IsLanConnectionSource = !value;
         }
 
+        public string RelayCode { get; set; }
+
         private Dictionary<string, DiscoveryResponseData> DiscoveredServers { get; } = new();
+
+        private Dictionary<string, LobbyData> Lobbies { get; } = new();
 
         private string _selectedServer = string.Empty;
 
@@ -68,26 +82,14 @@ namespace Cgs.Play.Multiplayer
 
         private Modal _menu;
 
-        // TODO: private float _lrmUpdateSecond = ServerListUpdateTime;
+        private float _secondsSinceRefresh = SecondsPerRefresh;
 
         private bool _shouldRedisplay;
-
-        private void OnEnable()
-        {
-            ListenToRelay();
-        }
-
-        private void ListenToRelay()
-        {
-            // TODO: CgsNetManager.Instance.lrm.serverListUpdated.RemoveAllListeners();
-            // TODO: CgsNetManager.Instance.lrm.serverListUpdated.AddListener(Redisplay);
-        }
 
         private void Start()
         {
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
             passwordInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
-            ListenToRelay();
         }
 
         private void Update()
@@ -99,15 +101,12 @@ namespace Cgs.Play.Multiplayer
             if (!Menu.IsFocused)
                 return;
 
-            /*
-            // TODO:
-            _lrmUpdateSecond += Time.deltaTime;
-            if (IsInternetConnectionSource && CgsNetManager.Instance.lrm.IsAuthenticated() &&
-                _lrmUpdateSecond > ServerListUpdateTime)
+            _secondsSinceRefresh += Time.deltaTime;
+            if (IsInternetConnectionSource && _secondsSinceRefresh > SecondsPerRefresh)
             {
-                CgsNetManager.Instance.lrm.RequestServerList();
-                _lrmUpdateSecond = 0;
-            }*/
+                _secondsSinceRefresh = 0;
+                RefreshLobbies();
+            }
 
             if (roomIdIpInputField.isFocused)
             {
@@ -165,14 +164,44 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsLanConnectionSource)
                 Rebuild(DiscoveredServers, SelectServer, _selectedServer);
-            /* todo: else
-                Rebuild(
-                    CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
-                        server => server), SelectServer, _selectedServer);*/
+            else
+                Rebuild(Lobbies, SelectServer, _selectedServer);
 
             joinButton.interactable =
                 !string.IsNullOrEmpty(_selectedServer) &&
                 Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
+        }
+
+        private async void RefreshLobbies()
+        {
+            var queryLobbiesOptions = new QueryLobbiesOptions
+            {
+                // Filter for open lobbies only
+                Filters = new List<QueryFilter>
+                {
+                    new(field: QueryFilter.FieldOptions.AvailableSlots, op: QueryFilter.OpOptions.GT, value: "0")
+                },
+                // Order by newest lobbies first
+                Order = new List<QueryOrder>
+                {
+                    new(asc: false, field: QueryOrder.FieldOptions.Created)
+                }
+            };
+
+            var response = await LobbyService.Instance.QueryLobbiesAsync(queryLobbiesOptions);
+            Lobbies.Clear();
+            foreach (var lobbyData in response.Results.Select(lobby => new LobbyData
+                     {
+                         Id = lobby.Id,
+                         Name = lobby.Name,
+                         PlayerCount = lobby.Players.Count,
+                         MaxPlayers = lobby.MaxPlayers,
+                         LobbyCode = lobby.LobbyCode,
+                         RelayCode = lobby.Data[LobbyData.KeyRelayCode].Value
+                     }))
+            {
+                Lobbies[lobbyData.Id] = lobbyData;
+            }
         }
 
         private void ToggleConnectionSource()
@@ -204,18 +233,35 @@ namespace Cgs.Play.Multiplayer
                 CardGameManager.Instance.Messenger.Show(ShareWarningMessage, true);
             }
 
-            /* todo:
             if (IsInternetConnectionSource)
-            {
-                CgsNetManager.Instance.lrm.serverName = CardGameManager.Current.Name;
-                CgsNetManager.Instance.lrm.extraServerData = JsonUtility.ToJson(CgsNetManager.Instance.RoomData);
-                CgsNetManager.Instance.lrm.isPublicServer = true;
-            }
+                StartCoroutine(StartBroadcastingHost());
             else
-                Transport.activeTransport = CgsNetManager.Instance.lanConnector.directConnectTransport;*/
+            {
+                NetworkManager.Singleton.StartHost();
+                discovery.StartServer();
+            }
+        }
 
+        private IEnumerator StartBroadcastingHost()
+        {
+            var serverRelayUtilityTask = CgsNetManager.AllocateRelayServerAndGetCode(CgsNetManager.MaxPlayers);
+            while (!serverRelayUtilityTask.IsCompleted)
+                yield return null;
+
+            if (serverRelayUtilityTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
+                yield break;
+            }
+
+            var relayServerData = serverRelayUtilityTask.Result;
+            CgsNetManager.Instance.Transport.SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
-            discovery.StartServer();
+
+            yield return null;
+
+            CgsNetManager.Instance.CreateLobbyWithHeartbeatAsync(RelayCode);
         }
 
         [UsedImplicitly]
@@ -248,7 +294,25 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Join()
         {
-            if (IsLanConnectionSource)
+            if (IsInternetConnectionSource)
+            {
+                if (Lobbies.ContainsKey(_selectedServer))
+                {
+                    RelayCode = Lobbies[_selectedServer].RelayCode;
+                    StartCoroutine(JoinRelayCoroutine());
+                }
+                else
+                {
+                    if (Uri.IsWellFormedUriString(_selectedServer, UriKind.Absolute))
+                    {
+                        CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, CgsNetManager.DefaultPort);
+                        NetworkManager.Singleton.StartClient();
+                    }
+                    else
+                        StartCoroutine(JoinLobbyCoroutine());
+                }
+            }
+            else
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
                 {
@@ -257,32 +321,69 @@ namespace Cgs.Play.Multiplayer
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute))
                 {
-                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, 7777);
+                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, CgsNetManager.DefaultPort);
                     CgsNetManager.Instance.StartClient();
                 }
                 else
                 {
-                    Debug.LogError(ConnectionErrorMessage);
-                    CardGameManager.Instance.Messenger.Show(ConnectionErrorMessage);
+                    Debug.LogError(InvalidServerErrorMessage);
+                    CardGameManager.Instance.Messenger.Show(InvalidServerErrorMessage);
                     return;
                 }
             }
-            else
-            {
-                /* todo
-                if (CgsNetManager.Instance.lrm.relayServerList.ToDictionary(server => server.serverId,
-                        server => server).TryGetValue(_selectedServer, out var serverRoom))
-                {
-                    CgsNetManager.Instance.RoomName = serverRoom.serverName;
-                    if (RuntimePlatform.Android.ToString().Equals(serverRoom.serverData))
-                        CardGameManager.Instance.Messenger.Show(AndroidWarningMessage, true);
-                }
-
-                NetworkManager.Singleton.networkAddress = _selectedServer;
-                NetworkManager.Singleton.StartClient();*/
-            }
 
             Hide();
+        }
+
+        private IEnumerator JoinLobbyCoroutine()
+        {
+            var lobbyTask = GetLobby(_selectedServer);
+            while (!lobbyTask.IsCompleted)
+                yield return null;
+
+            if (lobbyTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + lobbyTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage + lobbyTask.Exception?.Message);
+                yield break;
+            }
+
+            var lobby = lobbyTask.Result;
+            if (lobby is {Data: { }} && lobby.Data.TryGetValue(LobbyData.KeyRelayCode, out var dataObject))
+            {
+                RelayCode = dataObject.Value;
+                yield return JoinRelayCoroutine();
+            }
+            else
+            {
+                Debug.LogError(InvalidServerErrorMessage);
+                CardGameManager.Instance.Messenger.Show(InvalidServerErrorMessage);
+            }
+        }
+
+        private static async Task<Lobby> GetLobby(string lobbyId)
+        {
+            var lobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
+            return lobby;
+        }
+
+        private IEnumerator JoinRelayCoroutine()
+        {
+            var clientRelayUtilityTask = CgsNetManager.JoinRelayServerFromJoinCode(RelayCode);
+            while (!clientRelayUtilityTask.IsCompleted)
+                yield return null;
+
+            if (clientRelayUtilityTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
+                yield break;
+            }
+
+            var relayServerData = clientRelayUtilityTask.Result;
+
+            CgsNetManager.Instance.Transport.SetRelayServerData(relayServerData);
+            NetworkManager.Singleton.StartClient();
         }
 
         public void Hide()
@@ -300,13 +401,6 @@ namespace Cgs.Play.Multiplayer
                 discovery.StopDiscovery();
 
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
-        }
-
-        private void OnDisable()
-        {
-            /* TODO:
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.lrm != null)
-                CgsNetManager.Instance.lrm.serverListUpdated.RemoveListener(Redisplay);*/
         }
     }
 }

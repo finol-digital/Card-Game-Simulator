@@ -92,7 +92,7 @@ namespace Cgs.Play
 
         private IEnumerable<CardStack> AllCardStacks => playMat.GetComponentsInChildren<CardStack>();
 
-        private LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
+        public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;
 
@@ -436,10 +436,14 @@ namespace Cgs.Play
 
         private static void StopNetworking()
         {
+            if (Instance != null && Instance.Lobby != null)
+            {
+                Instance.Lobby.RelayCode = null;
+                if (Instance.Lobby.discovery != null)
+                    Instance.Lobby.discovery.StopDiscovery();
+            }
             if (NetworkManager.Singleton != null)
                 NetworkManager.Singleton.Shutdown();
-            if (Instance != null && Instance.Lobby != null && Instance.Lobby.discovery != null)
-                Instance.Lobby.discovery.StopDiscovery();
         }
 
         private void OnDisable()

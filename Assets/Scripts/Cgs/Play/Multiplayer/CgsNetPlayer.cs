@@ -522,7 +522,7 @@ namespace Cgs.Play.Multiplayer
         private void RestartServerRpc()
         {
             Debug.Log("[CgsNet Player] Game server to restart!...");
-            CgsNetManager.Instance.Restart();
+            CgsNetManager.Restart();
         }
 
         [ClientRpc]

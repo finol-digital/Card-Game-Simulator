@@ -93,7 +93,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
             set
             {
-                if (!CgsNetManager.Instance.IsConnectedClient || !MyNetworkObject.IsOwner)
+                if (!CgsNetManager.Instance.IsConnectedClient || IsOwner)
                 {
                     _cardIds.Clear();
                     foreach (var card in value.Select(card => card.Id).ToArray())
@@ -127,7 +127,7 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.localScale = Vector3.one;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            if (!MyNetworkObject.IsOwner)
+            if (!IsOwner)
             {
                 deckLabel.text = Name;
                 countLabel.text = _cardIds.Count.ToString();

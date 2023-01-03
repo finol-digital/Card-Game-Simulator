@@ -359,7 +359,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnDragPlayable(PointerEventData eventData)
         {
-            if (!IsOnline || MyNetworkObject.IsOwner)
+            if (!IsOnline || IsOwner)
                 ActOnDrag();
             else
                 RequestChangeOwnership();
@@ -367,7 +367,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (!IsOnline || MyNetworkObject.IsOwner)
+            if (!IsOnline || IsOwner)
                 ActOnDrag();
         }
 
@@ -487,7 +487,7 @@ namespace Cgs.CardGameView.Multiplayer
             var rectTransform = (RectTransform) transform;
             rectTransform.position = gridPosition;
 
-            if (IsOnline && MyNetworkObject.IsOwner)
+            if (IsOnline && IsOwner)
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
@@ -501,7 +501,7 @@ namespace Cgs.CardGameView.Multiplayer
                 Input.GetMouseButtonUp(2))
                 return;
 #endif
-            if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !MyNetworkObject.IsOwner))
+            if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !IsOwner))
                 return;
 
             if (DropTarget == null && PlaceHolder == null && ParentCardZone == null)
@@ -536,7 +536,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void UpdateCardZonePosition(Vector2 targetPosition)
         {
             var cardZone = ParentCardZone;
-            if (cardZone == null || (IsOnline && !MyNetworkObject.IsOwner))
+            if (cardZone == null || (IsOnline && !IsOwner))
                 return;
 
             if (!cardZone.DoesImmediatelyRelease &&
@@ -565,7 +565,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void ParentToCanvas(Vector3 targetPosition)
         {
-            if (IsOnline && MyNetworkObject.IsOwner)
+            if (IsOnline && IsOwner)
                 UnspawnCardServerRpc(true);
 
             var cardDropArea = GetComponent<CardDropArea>();
@@ -645,7 +645,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;
-            if (IsOnline && MyNetworkObject.IsSpawned)
+            if (IsOnline && IsSpawned)
                 UnspawnCardServerRpc(false);
             Destroy(gameObject);
         }
@@ -659,7 +659,7 @@ namespace Cgs.CardGameView.Multiplayer
         [ClientRpc]
         private void UnspawnCardClientRpc(bool shouldClientKeep)
         {
-            var shouldKeep = shouldClientKeep && MyNetworkObject.IsOwner;
+            var shouldKeep = shouldClientKeep && IsOwner;
             if (IsServer)
                 MyNetworkObject.Despawn(!shouldKeep);
             if (!shouldKeep)

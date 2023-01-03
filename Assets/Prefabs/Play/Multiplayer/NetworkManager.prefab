@@ -84,7 +84,6 @@ MonoBehaviour:
     LoadSceneTimeOut: 120
     SpawnTimeout: 1
     EnableNetworkLogs: 1
-  playController: {fileID: 0}
 --- !u!114 &2971744441422892114
 MonoBehaviour:
   m_ObjectHideFlags: 0
