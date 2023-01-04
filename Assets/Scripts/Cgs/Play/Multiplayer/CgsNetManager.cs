@@ -33,7 +33,13 @@ namespace Cgs.Play.Multiplayer
 
         public CgsNetPlayer LocalPlayer { get; set; }
 
-        public UnityTransport Transport => (UnityTransport) NetworkConfig.NetworkTransport;
+        public UnityTransport Transport
+        {
+            get => (UnityTransport) NetworkConfig.NetworkTransport;
+            set => NetworkConfig.NetworkTransport = value;
+        }
+
+        public Transports Transports { get; private set; }
 
         public string RoomIdIp => "127.0.0.1".Equals(Transport.ConnectionData.Address,
             StringComparison.Ordinal)
@@ -67,6 +73,7 @@ namespace Cgs.Play.Multiplayer
 
         private void Start()
         {
+            Transports = GetComponent<Transports>();
 #pragma warning disable CS4014
             SignInAnonymouslyAsync();
 #pragma warning restore CS4014

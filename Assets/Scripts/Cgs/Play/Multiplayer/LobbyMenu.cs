@@ -47,7 +47,6 @@ namespace Cgs.Play.Multiplayer
         public Button joinButton;
         public Text roomIdIpLabel;
         public InputField roomIdIpInputField;
-        public InputField passwordInputField;
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -89,7 +88,6 @@ namespace Cgs.Play.Multiplayer
         private void Start()
         {
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
-            passwordInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
         }
 
         private void Update()
@@ -108,20 +106,6 @@ namespace Cgs.Play.Multiplayer
                 RefreshLobbies();
             }
 
-            if (roomIdIpInputField.isFocused)
-            {
-                if (Inputs.IsFocusNext)
-                    passwordInputField.ActivateInputField();
-                return;
-            }
-
-            if (passwordInputField.isFocused)
-            {
-                if (Inputs.IsFocusBack)
-                    roomIdIpInputField.ActivateInputField();
-                return;
-            }
-
             if (Inputs.IsVertical)
             {
                 if (Inputs.IsUp && !Inputs.WasUp)
@@ -134,10 +118,8 @@ namespace Cgs.Play.Multiplayer
                 Join();
             else if (Inputs.IsNew)
                 Host();
-            else if (Inputs.IsFocusBack)
-                roomIdIpInputField.ActivateInputField();
             else if (Inputs.IsFocusNext)
-                passwordInputField.ActivateInputField();
+                roomIdIpInputField.ActivateInputField();
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
                 ScrollPage(Inputs.IsPageDown);
             else if (Inputs.IsPageHorizontal && !Inputs.WasPageHorizontal)
@@ -237,6 +219,7 @@ namespace Cgs.Play.Multiplayer
                 StartCoroutine(StartBroadcastingHost());
             else
             {
+                CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
                 NetworkManager.Singleton.StartHost();
                 discovery.StartServer();
             }
@@ -251,11 +234,13 @@ namespace Cgs.Play.Multiplayer
             if (serverRelayUtilityTask.IsFaulted)
             {
                 Debug.LogError(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                        serverRelayUtilityTask.Exception?.Message);
                 yield break;
             }
 
             var relayServerData = serverRelayUtilityTask.Result;
+            CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.relayUnityTransport;
             CgsNetManager.Instance.Transport.SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartHost();
 
@@ -305,6 +290,7 @@ namespace Cgs.Play.Multiplayer
                 {
                     if (Uri.IsWellFormedUriString(_selectedServer, UriKind.Absolute))
                     {
+                        CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
                         CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, CgsNetManager.DefaultPort);
                         NetworkManager.Singleton.StartClient();
                     }
@@ -316,11 +302,13 @@ namespace Cgs.Play.Multiplayer
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
                 {
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
                     CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, discoveryResponse.Port);
                     CgsNetManager.Instance.StartClient();
                 }
                 else if (Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute))
                 {
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
                     CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, CgsNetManager.DefaultPort);
                     CgsNetManager.Instance.StartClient();
                 }
@@ -376,12 +364,14 @@ namespace Cgs.Play.Multiplayer
             if (clientRelayUtilityTask.IsFaulted)
             {
                 Debug.LogError(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                        clientRelayUtilityTask.Exception?.Message);
                 yield break;
             }
 
             var relayServerData = clientRelayUtilityTask.Result;
 
+            CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.relayUnityTransport;
             CgsNetManager.Instance.Transport.SetRelayServerData(relayServerData);
             NetworkManager.Singleton.StartClient();
         }

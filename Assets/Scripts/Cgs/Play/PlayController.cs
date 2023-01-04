@@ -296,8 +296,7 @@ namespace Cgs.Play
         {
             var playAreaTransform = playMat.transform;
             var cardStack = Instantiate(cardStackPrefab, playAreaTransform.parent).GetComponent<CardStack>();
-            if (NetworkManager.Singleton.IsServer)
-                cardStack.MyNetworkObject.Spawn();
+            cardStack.MyNetworkObject.Spawn();
             if (!string.IsNullOrEmpty(stackName))
                 cardStack.Name = stackName;
             if (cards != null)
@@ -397,8 +396,7 @@ namespace Cgs.Play
         {
             var playAreaTransform = playMat.transform;
             var die = Instantiate(diePrefab, playAreaTransform.parent).GetOrAddComponent<Die>();
-            if (NetworkManager.Singleton.IsServer)
-                die.MyNetworkObject.Spawn();
+            die.MyNetworkObject.Spawn();
             die.transform.SetParent(playAreaTransform);
             die.Min = min;
             die.Max = max;

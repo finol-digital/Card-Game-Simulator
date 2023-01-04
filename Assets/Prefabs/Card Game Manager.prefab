@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 114356562771634316}
   - component: {fileID: 3697196322200913119}
   - component: {fileID: 4526732702672025491}
+  - component: {fileID: 6923891613179369379}
+  - component: {fileID: 4788133414692729551}
   m_Layer: 0
   m_Name: Card Game Manager
   m_TagString: CardGameManager
@@ -117,7 +119,7 @@ MonoBehaviour:
   LogLevel: 1
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 4526732702672025491}
+    NetworkTransport: {fileID: 6923891613179369379}
     PlayerPrefab: {fileID: 1833244134286464, guid: 576a15ab1b0e4f34c8981877e9ab8029,
       type: 3}
     NetworkPrefabs:
@@ -179,3 +181,44 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
+--- !u!114 &6923891613179369379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565440365293990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ProtocolType: 1
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    ServerListenAddress: 
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
+--- !u!114 &4788133414692729551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565440365293990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0dd3a5cd635f974eb56984dee8a648d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unityTransport: {fileID: 4526732702672025491}
+  relayUnityTransport: {fileID: 6923891613179369379}
