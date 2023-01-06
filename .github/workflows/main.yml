@@ -172,6 +172,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
+        uses: actions/cache@v3
         with:
           path: Library
           key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -239,7 +240,8 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - uses: actions/cache@v3
+      - name: Cache Library
+        uses: actions/cache@v3
         with:
           path: Library
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -467,6 +469,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
+        uses: actions/cache@v3
         with:
           path: Library
           key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
