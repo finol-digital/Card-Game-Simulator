@@ -10,14 +10,14 @@ namespace Cgs.Play.Multiplayer
 
         public string Id { get; set; }
         public string Name { get; set; }
+        public string LobbyCode { get; set; }
         public int PlayerCount { get; set; }
         public int MaxPlayers { get; set; }
-        public string LobbyCode { get; set; }
         public string RelayCode { get; set; }
 
         public override string ToString()
         {
-            return $"{Name}\n{PlayerCount} / {MaxPlayers} - {LobbyCode}";
+            return $"{Name}\n{LobbyCode} - {PlayerCount} / {MaxPlayers}";
         }
     }
 }

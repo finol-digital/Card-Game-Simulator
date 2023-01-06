@@ -436,12 +436,10 @@ namespace Cgs.Play
         {
             if (Instance != null && Instance.Lobby != null)
             {
-                Instance.Lobby.RelayCode = null;
                 if (Instance.Lobby.discovery != null)
                     Instance.Lobby.discovery.StopDiscovery();
             }
-            if (NetworkManager.Singleton != null)
-                NetworkManager.Singleton.Shutdown();
+            CgsNetManager.Instance.Stop();
         }
 
         private void OnDisable()

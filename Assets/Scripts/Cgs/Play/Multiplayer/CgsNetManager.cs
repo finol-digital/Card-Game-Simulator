@@ -4,11 +4,11 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Cgs.CardGameView.Multiplayer;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -24,8 +24,11 @@ namespace Cgs.Play.Multiplayer
 {
     public class CgsNetManager : NetworkManager
     {
+        public const string GenericConnectionErrorMessage =
+            "Exception thrown when attempting to connect to Server. Exception: ";
+
         public const int DefaultPort = 7777;
-        public const int MaxPlayers = 10;
+        private const int MaxPlayers = 10;
 
         public static CgsNetManager Instance => (CgsNetManager) Singleton;
 
@@ -46,9 +49,9 @@ namespace Cgs.Play.Multiplayer
             ? RoomId
             : Transport.ConnectionData.Address;
 
-        private static string RoomId => PlayController.Instance != null && PlayController.Instance.Lobby != null &&
-                                        !string.IsNullOrEmpty(PlayController.Instance.Lobby.RelayCode)
-            ? PlayController.Instance.Lobby.RelayCode
+        private string RoomId => PlayController.Instance != null && PlayController.Instance.Lobby != null &&
+                                 !string.IsNullOrEmpty(CurrentLobby?.LobbyCode)
+            ? CurrentLobby.LobbyCode
             : Dns.GetHostEntry(Dns.GetHostName()).AddressList.First(f => f.AddressFamily == AddressFamily.InterNetwork)
                 .ToString();
 
@@ -65,6 +68,7 @@ namespace Cgs.Play.Multiplayer
                     else
                         LobbyService.Instance.RemovePlayerAsync(_currentLobby.Id, playerId);
                 }
+
                 _currentLobby = value;
             }
         }
@@ -74,12 +78,10 @@ namespace Cgs.Play.Multiplayer
         private void Start()
         {
             Transports = GetComponent<Transports>();
-#pragma warning disable CS4014
             SignInAnonymouslyAsync();
-#pragma warning restore CS4014
         }
 
-        private static async Task SignInAnonymouslyAsync()
+        private static async void SignInAnonymouslyAsync()
         {
             try
             {
@@ -90,10 +92,65 @@ namespace Cgs.Play.Multiplayer
             catch (Exception ex)
             {
                 Debug.LogException(ex);
+                Debug.LogError("[CgsNet] Sign in anonymously failed!");
             }
         }
 
-        public static async Task<RelayServerData> AllocateRelayServerAndGetCode(int maxConnections, string region = null)
+        public void StartBroadcastHost()
+        {
+            StartCoroutine(BroadcastHostCoroutine());
+        }
+
+        private IEnumerator BroadcastHostCoroutine()
+        {
+            var serverRelayUtilityTask = AllocateRelayServerAndGetCode(MaxPlayers);
+            while (!serverRelayUtilityTask.IsCompleted)
+                yield return null;
+
+            if (serverRelayUtilityTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + serverRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                        serverRelayUtilityTask.Exception?.Message);
+                yield break;
+            }
+
+            var relayServerData = serverRelayUtilityTask.Result;
+            Transport = Transports.relayUnityTransport;
+            Transport.SetRelayServerData(relayServerData.Item1);
+            StartHost();
+
+            yield return null;
+
+            Debug.Log($"[CgsNet] Creating lobby with relay code {relayServerData.Item2}...");
+
+            var createLobbyUtilityTask = CreateLobby(relayServerData.Item2);
+            while (!createLobbyUtilityTask.IsCompleted)
+                yield return null;
+
+            if (createLobbyUtilityTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + createLobbyUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                        createLobbyUtilityTask.Exception?.Message);
+                yield break;
+            }
+
+            Debug.Log($"[CgsNet] Created lobby with lobby code {createLobbyUtilityTask.Result.LobbyCode} success!");
+
+            CurrentLobby = createLobbyUtilityTask.Result;
+
+            while (IsOnline)
+            {
+                LobbyService.Instance.SendHeartbeatPingAsync(CurrentLobby.Id);
+                yield return new WaitForSecondsRealtime(15);
+            }
+
+            CurrentLobby = null;
+        }
+
+        private static async Task<Tuple<RelayServerData, string>> AllocateRelayServerAndGetCode(int maxConnections,
+            string region = null)
         {
             Allocation allocation;
             try
@@ -109,9 +166,11 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet] server: {allocation.ConnectionData[0]} {allocation.ConnectionData[1]}");
             Debug.Log($"[CgsNet] server: {allocation.AllocationId}");
 
+            string relayCode;
             try
             {
-                PlayController.Instance.Lobby.RelayCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+                relayCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+                Debug.Log($"[CgsNet] RelayCode: {relayCode}");
             }
             catch
             {
@@ -119,10 +178,69 @@ namespace Cgs.Play.Multiplayer
                 throw;
             }
 
-            return new RelayServerData(allocation, "dtls");
+            return Tuple.Create(new RelayServerData(allocation, "dtls"), relayCode);
         }
 
-        public static async Task<RelayServerData> JoinRelayServerFromJoinCode(string joinCode)
+        private static async Task<Lobby> CreateLobby(string relayCode)
+        {
+            Lobby lobby;
+            var data = new Dictionary<string, DataObject>
+            {
+                [LobbyData.KeyRelayCode] = new(DataObject.VisibilityOptions.Public, relayCode)
+            };
+            var createLobbyOptions = new CreateLobbyOptions
+            {
+                Data = data,
+                Player = new Player(id: AuthenticationService.Instance.PlayerId)
+            };
+            try
+            {
+                lobby = await LobbyService.Instance.CreateLobbyAsync(CardGameManager.Current.Name, MaxPlayers,
+                    createLobbyOptions);
+            }
+            catch
+            {
+                Debug.LogError("Lobby create request failed");
+                throw;
+            }
+
+            return lobby;
+        }
+
+        public void StartJoin(string address, ushort port = DefaultPort)
+        {
+            Transport = Transports.unityTransport;
+            Transport.SetConnectionData(address, port);
+            StartClient();
+        }
+
+        public void StartJoinRelay(string relayCode)
+        {
+            StartCoroutine(JoinRelayCoroutine(relayCode));
+        }
+
+        private IEnumerator JoinRelayCoroutine(string relayCode)
+        {
+            var clientRelayUtilityTask = JoinRelayServerFromJoinCode(relayCode);
+            while (!clientRelayUtilityTask.IsCompleted)
+                yield return null;
+
+            if (clientRelayUtilityTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                        clientRelayUtilityTask.Exception?.Message);
+                yield break;
+            }
+
+            var relayServerData = clientRelayUtilityTask.Result;
+
+            Transport = Transports.relayUnityTransport;
+            Transport.SetRelayServerData(relayServerData);
+            StartClient();
+        }
+
+        private static async Task<RelayServerData> JoinRelayServerFromJoinCode(string joinCode)
         {
             JoinAllocation allocation;
             try
@@ -142,48 +260,63 @@ namespace Cgs.Play.Multiplayer
             return new RelayServerData(allocation, "dtls");
         }
 
-        public static void Restart()
+        public void StartJoinLobby(string lobbyCode)
         {
-            foreach (var cardStack in PlayController.Instance.playMat.GetComponentsInChildren<CardStack>())
-                cardStack.MyNetworkObject.Despawn();
-            foreach (var cardModel in PlayController.Instance.playMat.GetComponentsInChildren<CardModel>())
-                cardModel.MyNetworkObject.Despawn();
-            foreach (var die in PlayController.Instance.playMat.GetComponentsInChildren<Die>())
-                die.MyNetworkObject.Despawn();
-            foreach (var player in FindObjectsOfType<CgsNetPlayer>())
-                player.RestartClientRpc(player.OwnerClientRpcParams);
+            StartCoroutine(JoinLobbyCoroutine(lobbyCode));
         }
 
-        public async void CreateLobbyWithHeartbeatAsync(string relayCode)
+        private IEnumerator JoinLobbyCoroutine(string lobbyCode)
         {
-            var createLobbyOptions = new CreateLobbyOptions
-            {
-                Data =
-                {
-                    [LobbyData.KeyRelayCode] = new DataObject(DataObject.VisibilityOptions.Public, relayCode)
-                }
-            };
-            CurrentLobby = await LobbyService.Instance.CreateLobbyAsync(CardGameManager.Current.Name, MaxPlayers,
-                createLobbyOptions);
+            var joinLobbyTask = JoinLobby(lobbyCode);
+            while (!joinLobbyTask.IsCompleted)
+                yield return null;
 
-            StartCoroutine(HeartbeatLobbyCoroutine());
-        }
-
-        private IEnumerator HeartbeatLobbyCoroutine()
-        {
-            while (IsOnline)
+            if (joinLobbyTask.IsFaulted)
             {
-                LobbyService.Instance.SendHeartbeatPingAsync(CurrentLobby.Id);
-                yield return new WaitForSecondsRealtime(15);
+                Debug.LogError(GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(
+                    GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
+                yield break;
             }
 
+            var lobby = joinLobbyTask.Result;
+            if (lobby is {Data: { }} && lobby.Data.TryGetValue(LobbyData.KeyRelayCode, out var dataObject))
+            {
+                yield return JoinRelayCoroutine(dataObject.Value);
+            }
+            else
+            {
+                Debug.LogError(LobbyMenu.InvalidServerErrorMessage);
+                CardGameManager.Instance.Messenger.Show(LobbyMenu.InvalidServerErrorMessage);
+            }
+        }
+
+        private static async Task<Lobby> JoinLobby(string lobbyCode)
+        {
+            Lobby lobby;
+            try
+            {
+                lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+            }
+            catch
+            {
+                Debug.LogError("Lobby join request failed");
+                throw;
+            }
+
+            return lobby;
+        }
+
+        public void Stop()
+        {
+            Shutdown();
             CurrentLobby = null;
+            StopAllCoroutines();
         }
 
         private void OnApplicationQuit()
         {
-            if (CurrentLobby != null)
-                CurrentLobby = null;
+            CurrentLobby = null;
         }
     }
 }

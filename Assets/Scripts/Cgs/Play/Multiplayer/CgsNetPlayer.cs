@@ -522,7 +522,14 @@ namespace Cgs.Play.Multiplayer
         private void RestartServerRpc()
         {
             Debug.Log("[CgsNet Player] Game server to restart!...");
-            CgsNetManager.Restart();
+            foreach (var cardStack in PlayController.Instance.playMat.GetComponentsInChildren<CardStack>())
+                cardStack.MyNetworkObject.Despawn();
+            foreach (var cardModel in PlayController.Instance.playMat.GetComponentsInChildren<CardModel>())
+                cardModel.MyNetworkObject.Despawn();
+            foreach (var die in PlayController.Instance.playMat.GetComponentsInChildren<Die>())
+                die.MyNetworkObject.Despawn();
+            foreach (var player in FindObjectsOfType<CgsNetPlayer>())
+                player.RestartClientRpc(player.OwnerClientRpcParams);
         }
 
         [ClientRpc]
