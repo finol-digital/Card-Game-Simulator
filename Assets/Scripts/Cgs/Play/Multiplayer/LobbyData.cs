@@ -6,14 +6,14 @@ namespace Cgs.Play.Multiplayer
 {
     public struct LobbyData
     {
-        public const string KeyRelayCode = nameof(RelayCode);
+        public const string KeyRelayJoinCode = nameof(RelayJoinCode);
 
         public string Id { get; set; }
         public string Name { get; set; }
         public string LobbyCode { get; set; }
         public int PlayerCount { get; set; }
         public int MaxPlayers { get; set; }
-        public string RelayCode { get; set; }
+        public string RelayJoinCode { get; set; }
 
         public override string ToString()
         {

@@ -171,13 +171,11 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - uses: actions/cache@v3
+      - name: Cache Library
         with:
           path: Library
           key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-build-${{ matrix.targetPlatform }}-
-            Library-build-
+          restore-keys: Library-build-${{ matrix.targetPlatform }}-
       - name: Build Unity Project
         id: build
         uses: game-ci/unity-builder@v2
@@ -468,7 +466,7 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - uses: actions/cache@v3
+      - name: Cache Library
         with:
           path: Library
           key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}

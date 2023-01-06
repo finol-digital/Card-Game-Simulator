@@ -5,7 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.80
-
+- Bug-Fix: Networking issues
+- Integration: ZIP File support
 
 ## Active Sprint
 - Game-Play: Rotate Dice
@@ -13,7 +14,7 @@ permalink: roadmap.html
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 
-## Backlog - 2022 Q4
+## Backlog - 2023 Q1
 - Game-Play: Magnet files for grid
 - Game-Play: Prevent player from looking through deck in certain situations
 - Game-Play: Cut Stacks
@@ -23,8 +24,6 @@ permalink: roadmap.html
 - Integration: Deep links to join multiplayer rooms
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
-
-## Backlog - 2023 Q1
 - Game-Play: Counter system for players and cards
 - Game-Creation: Edit Button in Main Menu
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share

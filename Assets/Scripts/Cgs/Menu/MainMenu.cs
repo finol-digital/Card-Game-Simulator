@@ -2,10 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,8 +17,12 @@ namespace Cgs.Menu
 {
     public class MainMenu : MonoBehaviour
     {
-        public const string GameLabel = "Download Game";
-        public const string GamePrompt = "Enter CGS AutoUpdate URL...";
+        public const string ImportGamePrompt = "Download from Web URL,\n or Load from ZIP File?";
+        public const string DownloadFromWeb = "Download from Web URL";
+        public const string LoadFromFile = "Load from ZIP File";
+
+        public const string DownloadLabel = "Download Game";
+        public const string DownloadPrompt = "Enter CGS AutoUpdate URL...";
 
         public static string VersionMessage => $"VERSION {Application.version}";
 
@@ -43,6 +49,7 @@ namespace Cgs.Menu
 
         private const float StartBufferTime = 0.1f;
 
+        public GameObject gameImportModalPrefab;
         public GameObject downloadMenuPrefab;
         public GameObject createMenuPrefab;
         public GameObject gameManagement;
@@ -65,6 +72,11 @@ namespace Cgs.Menu
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
+
+        private DecisionModal ImportModal =>
+            _importModal ??= Instantiate(gameImportModalPrefab).GetOrAddComponent<DecisionModal>();
+
+        private DecisionModal _importModal;
 
         private DownloadMenu Downloader => _downloader ??= Instantiate(downloadMenuPrefab)
             .GetOrAddComponent<DownloadMenu>();
@@ -167,7 +179,7 @@ namespace Cgs.Menu
             else if (Inputs.IsLoad)
             {
                 if (gameManagement.activeSelf)
-                    Download();
+                    Import();
                 else
                     JoinGame();
             }
@@ -253,11 +265,23 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Download()
+        public void Import()
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            Downloader.Show(GameLabel, GamePrompt, CardGameManager.Instance.GetCardGame, true);
+
+            ImportModal.Show(ImportGamePrompt, new Tuple<string, UnityAction>(DownloadFromWeb, ShowDownloader),
+                new Tuple<string, UnityAction>(LoadFromFile, ShowFileLoader));
+        }
+
+        private void ShowDownloader()
+        {
+            Downloader.Show(DownloadLabel, DownloadPrompt, CardGameManager.Instance.GetCardGame, true);
+        }
+
+        private void ShowFileLoader()
+        {
+            // TODO:
         }
 
         [UsedImplicitly]

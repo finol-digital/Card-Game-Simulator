@@ -124,7 +124,7 @@ namespace Cgs.Play.Multiplayer
 
             Debug.Log($"[CgsNet] Creating lobby with relay code {relayServerData.Item2}...");
 
-            var createLobbyUtilityTask = CreateLobby(relayServerData.Item2);
+            var createLobbyUtilityTask = CreateLobby(relayServerData.Item1, relayServerData.Item2);
             while (!createLobbyUtilityTask.IsCompleted)
                 yield return null;
 
@@ -166,11 +166,11 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet] server: {allocation.ConnectionData[0]} {allocation.ConnectionData[1]}");
             Debug.Log($"[CgsNet] server: {allocation.AllocationId}");
 
-            string relayCode;
+            string relayJoinCode;
             try
             {
-                relayCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-                Debug.Log($"[CgsNet] RelayCode: {relayCode}");
+                relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+                Debug.Log($"[CgsNet] relayJoinCode: {relayJoinCode}");
             }
             catch
             {
@@ -178,20 +178,23 @@ namespace Cgs.Play.Multiplayer
                 throw;
             }
 
-            return Tuple.Create(new RelayServerData(allocation, "dtls"), relayCode);
+            return Tuple.Create(new RelayServerData(allocation, "dtls"), relayJoinCode);
         }
 
-        private static async Task<Lobby> CreateLobby(string relayCode)
+        private static async Task<Lobby> CreateLobby(RelayServerData relayServerData, string relayJoinCode)
         {
             Lobby lobby;
             var data = new Dictionary<string, DataObject>
             {
-                [LobbyData.KeyRelayCode] = new(DataObject.VisibilityOptions.Public, relayCode)
+                [LobbyData.KeyRelayJoinCode] = new(DataObject.VisibilityOptions.Member, relayJoinCode)
             };
             var createLobbyOptions = new CreateLobbyOptions
             {
                 Data = data,
-                Player = new Player(id: AuthenticationService.Instance.PlayerId)
+                Player = new Player(id: AuthenticationService.Instance.PlayerId,
+                    connectionInfo: relayServerData.ConnectionData.ToString(),
+                    data: new Dictionary<string, PlayerDataObject>(),
+                    allocationId: relayServerData.AllocationId.ToString())
             };
             try
             {
@@ -214,52 +217,6 @@ namespace Cgs.Play.Multiplayer
             StartClient();
         }
 
-        public void StartJoinRelay(string relayCode)
-        {
-            StartCoroutine(JoinRelayCoroutine(relayCode));
-        }
-
-        private IEnumerator JoinRelayCoroutine(string relayCode)
-        {
-            var clientRelayUtilityTask = JoinRelayServerFromJoinCode(relayCode);
-            while (!clientRelayUtilityTask.IsCompleted)
-                yield return null;
-
-            if (clientRelayUtilityTask.IsFaulted)
-            {
-                Debug.LogError(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
-                                                        clientRelayUtilityTask.Exception?.Message);
-                yield break;
-            }
-
-            var relayServerData = clientRelayUtilityTask.Result;
-
-            Transport = Transports.relayUnityTransport;
-            Transport.SetRelayServerData(relayServerData);
-            StartClient();
-        }
-
-        private static async Task<RelayServerData> JoinRelayServerFromJoinCode(string joinCode)
-        {
-            JoinAllocation allocation;
-            try
-            {
-                allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
-            }
-            catch
-            {
-                Debug.LogError("Relay create join code request failed");
-                throw;
-            }
-
-            Debug.Log($"[CgsNet] client: {allocation.ConnectionData[0]} {allocation.ConnectionData[1]}");
-            Debug.Log($"[CgsNet] host: {allocation.HostConnectionData[0]} {allocation.HostConnectionData[1]}");
-            Debug.Log($"[CgsNet] client: {allocation.AllocationId}");
-
-            return new RelayServerData(allocation, "dtls");
-        }
-
         public void StartJoinLobby(string lobbyCode)
         {
             StartCoroutine(JoinLobbyCoroutine(lobbyCode));
@@ -279,8 +236,9 @@ namespace Cgs.Play.Multiplayer
                 yield break;
             }
 
-            var lobby = joinLobbyTask.Result;
-            if (lobby is {Data: { }} && lobby.Data.TryGetValue(LobbyData.KeyRelayCode, out var dataObject))
+            CurrentLobby = joinLobbyTask.Result;
+            if (CurrentLobby is {Data: { }} &&
+                CurrentLobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var dataObject))
             {
                 yield return JoinRelayCoroutine(dataObject.Value);
             }
@@ -305,6 +263,64 @@ namespace Cgs.Play.Multiplayer
             }
 
             return lobby;
+        }
+
+        private IEnumerator JoinRelayCoroutine(string relayJoinCode)
+        {
+            var clientRelayUtilityTask = JoinRelay(relayJoinCode);
+            while (!clientRelayUtilityTask.IsCompleted)
+                yield return null;
+
+            if (clientRelayUtilityTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + clientRelayUtilityTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                        clientRelayUtilityTask.Exception?.Message);
+                yield break;
+            }
+
+            var relayServerData = clientRelayUtilityTask.Result;
+
+            Transport = Transports.relayUnityTransport;
+            Transport.SetRelayServerData(relayServerData);
+            StartClient();
+
+            yield return null;
+
+            UpdatePlayerRelayInfoAsync(relayServerData.AllocationId.ToString(),
+                relayServerData.ConnectionData.ToString());
+        }
+
+        private static async Task<RelayServerData> JoinRelay(string relayJoinCode)
+        {
+            JoinAllocation allocation;
+            try
+            {
+                allocation = await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
+            }
+            catch
+            {
+                Debug.LogError("Relay create join code request failed");
+                throw;
+            }
+
+            Debug.Log($"[CgsNet] client: {allocation.ConnectionData[0]} {allocation.ConnectionData[1]}");
+            Debug.Log($"[CgsNet] host: {allocation.HostConnectionData[0]} {allocation.HostConnectionData[1]}");
+            Debug.Log($"[CgsNet] client: {allocation.AllocationId}");
+
+            return new RelayServerData(allocation, "dtls");
+        }
+
+        private async void UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)
+        {
+            var updatePlayerOptions = new UpdatePlayerOptions
+            {
+                Data = new Dictionary<string, PlayerDataObject>(),
+                AllocationId = allocationId,
+                ConnectionInfo = connectionInfo
+            };
+            CurrentLobby = await LobbyService.Instance.UpdatePlayerAsync(CurrentLobby.Id,
+                AuthenticationService.Instance.PlayerId, updatePlayerOptions);
         }
 
         public void Stop()

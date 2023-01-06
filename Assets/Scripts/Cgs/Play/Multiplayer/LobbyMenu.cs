@@ -172,7 +172,7 @@ namespace Cgs.Play.Multiplayer
                          LobbyCode = lobby.LobbyCode,
                          PlayerCount = lobby.Players.Count,
                          MaxPlayers = lobby.MaxPlayers,
-                         RelayCode = lobby.Data[LobbyData.KeyRelayCode].Value
+                         RelayJoinCode = lobby.Data[LobbyData.KeyRelayJoinCode].Value
                      }))
             {
                 Lobbies[lobbyData.Id] = lobbyData;
@@ -251,7 +251,7 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource)
             {
                 if (Lobbies.ContainsKey(_selectedServer))
-                    CgsNetManager.Instance.StartJoinRelay(Lobbies[_selectedServer].RelayCode);
+                    CgsNetManager.Instance.StartJoinLobby(Lobbies[_selectedServer].LobbyCode);
                 else
                 {
                     if (Uri.IsWellFormedUriString(_selectedServer, UriKind.Absolute))
