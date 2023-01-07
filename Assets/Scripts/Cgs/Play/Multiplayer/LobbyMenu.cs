@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,7 @@ using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -78,9 +80,23 @@ namespace Cgs.Play.Multiplayer
 
         private bool _shouldRedisplay;
 
-        private void Start()
+        private IEnumerator Start()
         {
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+
+            yield return null;
+
+            if (AuthenticationService.Instance.IsSignedIn)
+                yield break;
+
+            var signInTask = CgsNetManager.SignInAnonymouslyAsync();
+            while (!signInTask.IsCompleted)
+                yield return null;
+            if (!signInTask.IsFaulted)
+                yield break;
+            Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
+            CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
+                                                    signInTask.Exception?.Message);
         }
 
         private void Update()

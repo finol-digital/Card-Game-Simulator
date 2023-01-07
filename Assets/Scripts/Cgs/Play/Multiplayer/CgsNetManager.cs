@@ -78,14 +78,13 @@ namespace Cgs.Play.Multiplayer
         private void Start()
         {
             Transports = GetComponent<Transports>();
-            SignInAnonymouslyAsync();
+            UnityServices.InitializeAsync();
         }
 
-        private static async void SignInAnonymouslyAsync()
+        public static async Task SignInAnonymouslyAsync()
         {
             try
             {
-                await UnityServices.InitializeAsync();
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
                 Debug.Log("[CgsNet] Sign in anonymously succeeded!");
             }
@@ -103,6 +102,20 @@ namespace Cgs.Play.Multiplayer
 
         private IEnumerator BroadcastHostCoroutine()
         {
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                var signInTask = SignInAnonymouslyAsync();
+                while (!signInTask.IsCompleted)
+                    yield return null;
+                if (signInTask.IsFaulted)
+                {
+                    Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
+                    CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                            signInTask.Exception?.Message);
+                    yield break;
+                }
+            }
+
             var serverRelayUtilityTask = AllocateRelayServerAndGetCode(MaxPlayers);
             while (!serverRelayUtilityTask.IsCompleted)
                 yield return null;
@@ -224,6 +237,20 @@ namespace Cgs.Play.Multiplayer
 
         private IEnumerator JoinLobbyCoroutine(string lobbyCode)
         {
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                var signInTask = SignInAnonymouslyAsync();
+                while (!signInTask.IsCompleted)
+                    yield return null;
+                if (signInTask.IsFaulted)
+                {
+                    Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
+                    CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                            signInTask.Exception?.Message);
+                    yield break;
+                }
+            }
+
             var joinLobbyTask = JoinLobby(lobbyCode);
             while (!joinLobbyTask.IsCompleted)
                 yield return null;
@@ -319,8 +346,10 @@ namespace Cgs.Play.Multiplayer
                 AllocationId = allocationId,
                 ConnectionInfo = connectionInfo
             };
-            CurrentLobby = await LobbyService.Instance.UpdatePlayerAsync(CurrentLobby.Id,
+            var lobby = await LobbyService.Instance.UpdatePlayerAsync(CurrentLobby.Id,
                 AuthenticationService.Instance.PlayerId, updatePlayerOptions);
+            if (lobby.Id != CurrentLobby.Id)
+                Debug.LogError("[CgsNet] Lobby changed!?");
         }
 
         public void Stop()
@@ -332,7 +361,7 @@ namespace Cgs.Play.Multiplayer
 
         private void OnApplicationQuit()
         {
-            CurrentLobby = null;
+            Stop();
         }
     }
 }

@@ -27,6 +27,8 @@ permalink: roadmap.html
 - Game-Play: Counter system for players and cards
 - Game-Creation: Edit Button in Main Menu
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
+
+## Backlog - 2023 Q2
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Show individual deck download progress
@@ -34,8 +36,6 @@ permalink: roadmap.html
   - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
-
-## Backlog - 2023 Q2
 - Game-Play: Support multiple playmats
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Move card to zone, stack, or drawer (E)

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using SimpleFileBrowser;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -281,7 +282,9 @@ namespace Cgs.Menu
 
         private void ShowFileLoader()
         {
-            // TODO:
+            // TODO: FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; },
+              //  () => { Debug.Log("FileBrowser Canceled"); }, FileBrowser.PickMode.Files, false, null, null,
+             //   SelectFolderPrompt);
         }
 
         [UsedImplicitly]
