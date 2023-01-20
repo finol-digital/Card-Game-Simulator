@@ -39,6 +39,10 @@ namespace Cgs
         public const string DownloadErrorMessage = "Error downloading game!: ";
         public const string LoadErrorMessage = "Error loading game!: ";
 
+        public const string FileNotFoundErrorMessage = "ERROR: File Not Found at {0}";
+        public const string OverwriteGamePrompt = "Game already exists. Overwrite?";
+        public const string ImportFailureErrorMessage = "ERROR: Failed to Import! ";
+
         public const string LoadErrorPrompt =
             "Error loading game! The game may be corrupted. RequestDelete (note that any decks would also be deleted)?";
 
@@ -80,8 +84,7 @@ namespace Cgs
 
         public bool IsSearchingForServer { get; set; }
 
-        public SortedDictionary<string, UnityCardGame> AllCardGames { get; } =
-            new SortedDictionary<string, UnityCardGame>();
+        public SortedDictionary<string, UnityCardGame> AllCardGames { get; } = new();
 
         public UnityCardGame Previous
         {
@@ -121,9 +124,9 @@ namespace Cgs
             }
         }
 
-        public HashSet<UnityAction> OnSceneActions { get; } = new HashSet<UnityAction>();
+        public HashSet<UnityAction> OnSceneActions { get; } = new();
 
-        public HashSet<Canvas> CardCanvases { get; } = new HashSet<Canvas>();
+        public HashSet<Canvas> CardCanvases { get; } = new();
 
         public Canvas CardCanvas
         {
@@ -140,7 +143,7 @@ namespace Cgs
             }
         }
 
-        public HashSet<Canvas> ModalCanvases { get; } = new HashSet<Canvas>();
+        public HashSet<Canvas> ModalCanvases { get; } = new();
 
         public Canvas ModalCanvas
         {
@@ -255,7 +258,7 @@ namespace Cgs
 
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
-                var gameDirectoryName = gameDirectory.Substring(UnityCardGame.GamesDirectoryPath.Length + 1);
+                var gameDirectoryName = gameDirectory[(UnityCardGame.GamesDirectoryPath.Length + 1)..];
                 var (gameName, _) = CardGame.GetNameAndHost(gameDirectoryName);
                 if (gameName.Equals(CardGame.DefaultName))
                 {
@@ -278,6 +281,81 @@ namespace Cgs
                     else
                         AllCardGames[newCardGame.Id] = newCardGame;
                 }
+            }
+        }
+
+        public void ImportCardGame(string zipFilePath)
+        {
+            if (!File.Exists(zipFilePath))
+            {
+                var errorMessage = string.Format(FileNotFoundErrorMessage, zipFilePath);
+                Debug.LogError(errorMessage);
+                Messenger.Show(errorMessage);
+                return;
+            }
+
+            var gameId = Path.GetFileNameWithoutExtension(zipFilePath);
+            var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
+            if (File.Exists(targetGameDirectory))
+            {
+                Messenger.Ask(OverwriteGamePrompt, () => { },
+                    () => ForceImportCardGame(zipFilePath));
+                return;
+            }
+
+            ForceImportCardGame(zipFilePath);
+        }
+
+        private void ForceImportCardGame(string zipFilePath)
+        {
+            var gameId = Path.GetFileNameWithoutExtension(zipFilePath);
+            if (string.IsNullOrEmpty(gameId))
+            {
+                var errorMessage = string.Format(FileNotFoundErrorMessage, zipFilePath);
+                Debug.LogError(errorMessage);
+                Messenger.Show(errorMessage);
+                return;
+            }
+
+            try
+            {
+                UnityFileMethods.ExtractZip(zipFilePath, UnityCardGame.GamesImportPath);
+
+                var importGameDirectory = Path.Combine(UnityCardGame.GamesImportPath, gameId);
+                if (!Directory.Exists(importGameDirectory))
+                {
+                    var errorMessage = string.Format(FileNotFoundErrorMessage, importGameDirectory);
+                    Debug.LogError(errorMessage);
+                    Messenger.Show(errorMessage);
+                    return;
+                }
+
+                var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
+                if (Directory.Exists(targetGameDirectory))
+                    Directory.Delete(targetGameDirectory, true);
+
+                UnityFileMethods.CopyDirectory(importGameDirectory, targetGameDirectory);
+
+                var newCardGame = new UnityCardGame(this, gameId);
+                newCardGame.ReadProperties();
+                if (!string.IsNullOrEmpty(newCardGame.Error))
+                {
+                    Debug.LogError(LoadErrorMessage + newCardGame.Error);
+                    Messenger.Show(LoadErrorMessage + newCardGame.Error);
+                }
+                else
+                {
+                    AllCardGames[newCardGame.Id] = newCardGame;
+                    Select(newCardGame.Id);
+                }
+
+                if (Directory.Exists(importGameDirectory))
+                    Directory.Delete(importGameDirectory, true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(ImportFailureErrorMessage + e);
+                Messenger.Show(ImportFailureErrorMessage + e);
             }
         }
 

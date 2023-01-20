@@ -25,7 +25,9 @@ namespace CardGameDef.Unity
     {
         public static UnityCardGame UnityInvalid => new(null);
 
-        public static string GamesDirectoryPath => Application.persistentDataPath + "/games";
+        public static string GamesImportPath => Path.Combine(Application.temporaryCachePath, "cgsGamesImport");
+        public static string GamesDirectoryPath => Path.Combine(Application.persistentDataPath, "games");
+        public static string GamesExportPath => GamesDirectoryPath + "Export";
 
         public string GameDirectoryPath => Path.Combine(GamesDirectoryPath, UnityFileMethods.GetSafeFileName(Id));
 

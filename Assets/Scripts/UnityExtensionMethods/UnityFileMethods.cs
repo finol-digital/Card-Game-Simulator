@@ -7,7 +7,6 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using UnityEngine;
 using UnityEngine.Networking;
-
 #if UNITY_ANDROID && !UNITY_EDITOR
 using ICSharpCode.SharpZipLib.Core;
 #endif
@@ -20,7 +19,7 @@ namespace UnityExtensionMethods
         public const string AndroidStreamingAssetsDirectory = "assets/";
         public const string AndroidStreamingAssetsInternalDataDirectory = "assets/bin/";
 #endif
-        public const string DirectorySeparator = "/";
+        private const string DirectorySeparator = "/";
         public const string FilePrefix = "file://";
         public const string MetaExtension = ".meta";
         public const string ZipExtension = ".zip";
@@ -45,7 +44,7 @@ namespace UnityExtensionMethods
             if (string.IsNullOrEmpty(path))
                 return path;
 
-            string pathTemp = path.Trim();
+            var pathTemp = path.Trim();
 
             // ReSharper disable once JoinDeclarationAndInitializer
             string result;
@@ -67,24 +66,21 @@ namespace UnityExtensionMethods
             if (string.IsNullOrEmpty(path))
                 return path;
 
-            string result = ValidatePath(path);
+            var result = ValidatePath(path);
 
             if (result.EndsWith("\\") || result.EndsWith("/"))
-                result = result.Substring(0, result.Length - 1);
+                result = result[..^1];
 
             // ReSharper disable once JoinDeclarationAndInitializer
             string fileName;
 #if UNITY_STANDALONE_WIN
-            fileName = result.Substring(result.LastIndexOf('\\') + 1);
+            fileName = result[(result.LastIndexOf('\\') + 1)..];
 #else
-            fileName = result.Substring(result.LastIndexOf('/') + 1);
+            fileName = result[(result.LastIndexOf('/') + 1)..];
 #endif
 
-            string newName =
-                string.Join(string.Empty,
-                    fileName.Split(Path
-                        .GetInvalidFileNameChars()));
-            return result.Substring(0, result.Length - fileName.Length) + newName;
+            var newName = string.Join(string.Empty, fileName.Split(Path.GetInvalidFileNameChars()));
+            return result[..^fileName.Length] + newName;
         }
 
         public static void CopyDirectory(string sourceDir, string targetDir)
@@ -195,8 +191,8 @@ namespace UnityExtensionMethods
             if (!File.Exists(filePath))
                 return;
 
-            string fileContents = File.ReadAllText(filePath);
-            string unwrappedContent = string.Concat(fileContents.Skip(1).Take(fileContents.Length - 2));
+            var fileContents = File.ReadAllText(filePath);
+            var unwrappedContent = string.Concat(fileContents.Skip(1).Take(fileContents.Length - 2));
             File.WriteAllText(filePath, unwrappedContent);
         }
 
@@ -209,43 +205,45 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            string directory = Path.GetDirectoryName(filePath);
-            string fileName = Path.GetFileName(filePath);
+            var directory = Path.GetDirectoryName(filePath);
+            var fileName = Path.GetFileName(filePath);
             if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
             {
                 Debug.LogWarning("SaveUrlToFile::FilepathInvalid:" + url + "," + filePath);
                 yield break;
             }
 
-            using UnityWebRequest www =
+            using var unityWebRequest =
                 (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST"));
             if (postJsonBody != null)
             {
-                byte[] bodyRaw = Encoding.UTF8.GetBytes(postJsonBody);
-                www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                www.downloadHandler = new DownloadHandlerBuffer();
-                www.SetRequestHeader("Content-Type", "application/json");
+                var bytes = Encoding.UTF8.GetBytes(postJsonBody);
+                unityWebRequest.uploadHandler = new UploadHandlerRaw(bytes);
+                unityWebRequest.downloadHandler = new DownloadHandlerBuffer();
+                unityWebRequest.SetRequestHeader("Content-Type", "application/json");
             }
 
             if (headers != null)
-                foreach (KeyValuePair<string, string> header in headers)
-                    www.SetRequestHeader(header.Key, header.Value);
+                foreach (var header in headers)
+                    unityWebRequest.SetRequestHeader(header.Key, header.Value);
 
-            yield return www.SendWebRequest();
+            yield return unityWebRequest.SendWebRequest();
 
-            if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
+            if (unityWebRequest.result != UnityWebRequest.Result.Success ||
+                !string.IsNullOrEmpty(unityWebRequest.error))
             {
-                Debug.LogWarning("SaveUrlToFile::www.error:" + www.responseCode + " " + www.error + " " + www.url);
+                Debug.LogWarning("SaveUrlToFile::www.error:" + unityWebRequest.responseCode + " " +
+                                 unityWebRequest.error + " " + unityWebRequest.url);
                 yield break;
             }
 
             if (headers != null)
-                foreach (KeyValuePair<string, string> responseHeader in www.GetResponseHeaders())
+                foreach (var responseHeader in unityWebRequest.GetResponseHeaders())
                     headers.Add(responseHeader.Key, responseHeader.Value);
 
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-            File.WriteAllBytes(directory + DirectorySeparator + fileName, www.downloadHandler.data);
+            File.WriteAllBytes(directory + DirectorySeparator + fileName, unityWebRequest.downloadHandler.data);
         }
 
         public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
@@ -272,16 +270,18 @@ namespace UnityExtensionMethods
             if (!File.Exists(imageFilePath))
                 yield return SaveUrlToFile(backUpImageUrl, imageFilePath);
 
-            using UnityWebRequest www = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath);
-            yield return www.SendWebRequest();
-            if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
+            using var unityWebRequest = UnityWebRequestTexture.GetTexture(FilePrefix + imageFilePath);
+            yield return unityWebRequest.SendWebRequest();
+            if (unityWebRequest.result != UnityWebRequest.Result.Success ||
+                !string.IsNullOrEmpty(unityWebRequest.error))
             {
-                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error + " " + www.url);
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + unityWebRequest.error + " " +
+                                 unityWebRequest.url);
                 yield return null;
             }
             else
             {
-                Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+                var texture = ((DownloadHandlerTexture) unityWebRequest.downloadHandler).texture;
                 yield return CreateSprite(texture);
             }
         }
@@ -289,16 +289,18 @@ namespace UnityExtensionMethods
         // Note: Memory Leak Potential
         public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageUrl)
         {
-            using UnityWebRequest www = UnityWebRequestTexture.GetTexture(imageUrl);
-            yield return www.SendWebRequest();
-            if (www.result != UnityWebRequest.Result.Success || !string.IsNullOrEmpty(www.error))
+            using var unityWebRequest = UnityWebRequestTexture.GetTexture(imageUrl);
+            yield return unityWebRequest.SendWebRequest();
+            if (unityWebRequest.result != UnityWebRequest.Result.Success ||
+                !string.IsNullOrEmpty(unityWebRequest.error))
             {
-                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + www.error + " " + www.url);
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:" + unityWebRequest.error + " " +
+                                 unityWebRequest.url);
                 yield return null;
             }
             else
             {
-                Texture2D texture = ((DownloadHandlerTexture) www.downloadHandler).texture;
+                var texture = ((DownloadHandlerTexture) unityWebRequest.downloadHandler).texture;
                 yield return CreateSprite(texture);
             }
         }
@@ -318,15 +320,12 @@ namespace UnityExtensionMethods
         }
 
         // Note: Memory Leak Potential
-        public static Sprite CreateSprite(Texture2D texture)
+        private static Sprite CreateSprite(Texture2D texture)
         {
-            if (texture == null)
-            {
-                Debug.LogWarning("CreateSprite::TextureNull");
-                return null;
-            }
-
-            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            if (texture != null)
+                return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            Debug.LogWarning("CreateSprite::TextureNull");
+            return null;
         }
     }
 }

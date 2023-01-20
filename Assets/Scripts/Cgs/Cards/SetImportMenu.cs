@@ -107,9 +107,8 @@ namespace Cgs.Cards
             CardGameManager.Instance.Messenger.Show(PlatformWarningMessage);
             Hide();
 #else
-            FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; },
-                () => { Debug.Log("FileBrowser Canceled"); }, FileBrowser.PickMode.Folders, false, null, null,
-                SelectFolderPrompt);
+            FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; }, () => { },
+                FileBrowser.PickMode.Folders, false, null, null, SelectFolderPrompt);
 #endif
         }
 

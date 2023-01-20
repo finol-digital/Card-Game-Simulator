@@ -21,6 +21,7 @@ namespace Cgs.Menu
         public const string ImportGamePrompt = "Download from Web URL,\n or Load from ZIP File?";
         public const string DownloadFromWeb = "Download from Web URL";
         public const string LoadFromFile = "Load from ZIP File";
+        public const string SelectZipFilePrompt = "Select ZIP File";
 
         public const string DownloadLabel = "Download Game";
         public const string DownloadPrompt = "Enter CGS AutoUpdate URL...";
@@ -280,11 +281,11 @@ namespace Cgs.Menu
             Downloader.Show(DownloadLabel, DownloadPrompt, CardGameManager.Instance.GetCardGame, true);
         }
 
-        private void ShowFileLoader()
+        private static void ShowFileLoader()
         {
-            // TODO: FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; },
-              //  () => { Debug.Log("FileBrowser Canceled"); }, FileBrowser.PickMode.Files, false, null, null,
-             //   SelectFolderPrompt);
+            FileBrowser.ShowLoadDialog((paths) => CardGameManager.Instance.ImportCardGame(paths[0]),
+                () => {}, FileBrowser.PickMode.Files, false, null, null,
+                SelectZipFilePrompt);
         }
 
         [UsedImplicitly]

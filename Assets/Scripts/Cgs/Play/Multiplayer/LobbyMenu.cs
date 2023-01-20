@@ -217,15 +217,13 @@ namespace Cgs.Play.Multiplayer
 
         private void StartHost()
         {
-            if (CardGameManager.Current.AutoUpdateUrl == null ||
-                !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
-            {
-                Debug.LogWarning(ShareWarningMessage);
-                CardGameManager.Instance.Messenger.Show(ShareWarningMessage, true);
-            }
-
             if (IsInternetConnectionSource)
+            {
+                if (CardGameManager.Current.AutoUpdateUrl == null ||
+                    !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
+                    CardGameManager.Instance.Messenger.Show(ShareWarningMessage);
                 CgsNetManager.Instance.StartBroadcastHost();
+            }
             else
             {
                 CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
