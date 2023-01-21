@@ -112,7 +112,8 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource && _secondsSinceRefresh > SecondsPerRefresh)
             {
                 _secondsSinceRefresh = 0;
-                RefreshLobbies();
+                if (AuthenticationService.Instance.IsSignedIn)
+                    RefreshLobbies();
             }
 
             if (Inputs.IsVertical)

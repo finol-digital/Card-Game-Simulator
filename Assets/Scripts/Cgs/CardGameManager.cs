@@ -58,9 +58,6 @@ namespace Cgs
 
         public const string ShareDeepLinkMessage = "Get CGS for {0}: {1}";
 
-        public const string ShareWarningMessage =
-            "Sharing {0} on CGS requires that it be uploaded to the web.\nIf you would like help with this upload, please contact david@finoldigital.com";
-
         public const int CardsLoadingMessageThreshold = 60;
         public const int PixelsPerInch = 100;
 
@@ -726,21 +723,11 @@ namespace Cgs
 #endif
             }
             else
-            {
-                Debug.LogWarningFormat(ShareWarningMessage, Current.Name);
-                Messenger.Show(string.Format(ShareWarningMessage, Current.Name));
-            }
+                ExportGame();
         }
 
-        private string BuildDeepLink()
+        private static string BuildDeepLink()
         {
-            if (Current.AutoUpdateUrl == null || !Current.AutoUpdateUrl.IsWellFormedOriginalString())
-            {
-                Debug.LogErrorFormat(ShareWarningMessage, Current.Name);
-                Messenger.Show(string.Format(ShareWarningMessage, Current.Name));
-                return null;
-            }
-
             var deepLink = "https://cgs.link/?link=";
             deepLink += "https://www.cardgamesimulator.com/link?url%3D" +
                         HttpUtility.UrlEncode(HttpUtility.UrlEncode(Current.AutoUpdateUrl.OriginalString));
@@ -752,6 +739,67 @@ namespace Cgs
                 deepLink += "&si=" + Current.BannerImageUrl.OriginalString;
             return deepLink;
         }
+
+        private static void ExportGame()
+        {
+            var container = Path.Combine(UnityCardGame.GamesExportPath, UnityFileMethods.GetSafeFileName(Current.Id));
+            var subContainer = Path.Combine(container, UnityFileMethods.GetSafeFileName(Current.Id));
+            UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
+
+            var zipFileName = Current.Id + ".zip";
+            UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
+            Directory.Delete(container, true);
+
+            var targetZipFilePath = Path.Combine(UnityCardGame.GamesExportPath, zipFileName);
+            var exportGameZipUri = new Uri(targetZipFilePath);
+
+#if ENABLE_WINMD_SUPPORT
+            var ExportGameErrorMessage = "ERROR: Failed to Export! ";
+            UnityEngine.WSA.Application.InvokeOnUIThread(async () => {
+                try
+                {
+                    var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(exportGameZipUri.LocalPath);
+                    if (file != null)
+                    {
+                        // Launch the retrieved file
+                        var success = await Windows.System.Launcher.LaunchFileAsync(file);
+                        if (!success)
+                        {
+                            Debug.LogError(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                            CardGameManager.Instance.Messenger.Show(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                        CardGameManager.Instance.Messenger.Show(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.Message + e.StackTrace);
+                    CardGameManager.Instance.Messenger.Show(ExportGameErrorMessage + exportGameZipUri.LocalPath);
+                }
+            }, false);
+#elif UNITY_ANDROID && !UNITY_EDITOR
+            StartCoroutine(OpenZip(exportGameZipUri, CardGameManager.Current.Id));
+#elif UNITY_IOS && !UNITY_EDITOR
+            new NativeShare().AddFile(exportGameZipUri.AbsoluteUri).Share();
+#else
+            Application.OpenURL(exportGameZipUri.AbsoluteUri);
+#endif
+        }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        public IEnumerator OpenZip(Uri uri, string gameId)
+        {
+            var uwr = new UnityWebRequest( uri, UnityWebRequest.kHttpVerbGET );
+            var path = Path.Combine( Application.temporaryCachePath, gameId + ".zip" );
+            uwr.downloadHandler = new DownloadHandlerFile( path );
+            yield return uwr.SendWebRequest();
+            new NativeShare().AddFile(path, "application/zip").Share();
+        }
+#endif
 
         private void LateUpdate()
         {

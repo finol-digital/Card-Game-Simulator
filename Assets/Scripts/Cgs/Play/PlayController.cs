@@ -157,7 +157,7 @@ namespace Cgs.Play
 
             if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 Deal(1);
-            else if (Inputs.IsOption)
+            else if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == null)
                 menu.ToggleMenu();
             else if (Inputs.IsCancel)
                 PromptBackToMainMenu();
@@ -439,7 +439,8 @@ namespace Cgs.Play
                 if (Instance.Lobby.discovery != null)
                     Instance.Lobby.discovery.StopDiscovery();
             }
-            CgsNetManager.Instance.Stop();
+            if (CgsNetManager.Instance != null)
+                CgsNetManager.Instance.Stop();
         }
 
         private void OnDisable()

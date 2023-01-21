@@ -147,7 +147,7 @@ namespace Cgs.Decks
                 }
             }, false);
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            StartCoroutine(OpenPrintPdf(pdfUri));
+            StartCoroutine(OpenPdf(pdfUri));
 #elif UNITY_IOS && !UNITY_EDITOR
             new NativeShare().AddFile(pdfUri.AbsoluteUri).Share();
 #else
@@ -156,7 +156,7 @@ namespace Cgs.Decks
         }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        public IEnumerator OpenPrintPdf(Uri uri)
+        public IEnumerator OpenPdf(Uri uri)
         {
             var uwr = new UnityWebRequest( uri, UnityWebRequest.kHttpVerbGET );
             var path = Path.Combine( Application.temporaryCachePath, "temp.pdf" );

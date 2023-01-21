@@ -179,6 +179,8 @@ namespace Cgs.CardGameView.Viewer
 
         private CardModel _selectedCardModel;
 
+        public CardModel PreviewCardModel { get; set; }
+
         public bool Zoom
         {
             get => zoomPanel.gameObject.activeSelf;
@@ -286,6 +288,7 @@ namespace Cgs.CardGameView.Viewer
             preview.alpha = 1;
             previewNameText.text = cardModel.Value.Name;
             previewIdText.text = cardModel.Value.Id;
+            PreviewCardModel = cardModel;
         }
 
         private void ResetInfo()

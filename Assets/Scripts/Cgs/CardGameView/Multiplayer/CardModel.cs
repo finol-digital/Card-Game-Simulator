@@ -210,7 +210,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnUpdatePlayable()
         {
-            if (HoldTime > ZoomHoldTime)
+            if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == this || HoldTime > ZoomHoldTime)
                 RequestZoomOnThis();
         }
 
@@ -263,8 +263,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)
         {
-            if (CardViewer.Instance != null)
-                CardViewer.Instance.HidePreview();
+            if (CardViewer.Instance == null)
+                return;
+            CardViewer.Instance.HidePreview();
+            if (CardViewer.Instance.PreviewCardModel == this)
+                CardViewer.Instance.PreviewCardModel = null;
         }
 
         protected override void OnSelectPlayable(BaseEventData eventData)
@@ -336,7 +339,7 @@ namespace Cgs.CardGameView.Multiplayer
             DidDrag = true;
             if (DoesCloneOnDrag)
             {
-                if (!IsOnline)
+                if (!IsOnline && IsSpawned)
                     MyNetworkObject.Despawn(false);
                 CreateDrag(eventData, gameObject, transform, Value, IsFacedown);
                 return true;

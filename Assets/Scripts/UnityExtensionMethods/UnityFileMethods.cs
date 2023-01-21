@@ -174,16 +174,32 @@ namespace UnityExtensionMethods
         }
 #endif
 
-        public static void ExtractZip(string zipPath, string targetDir)
+        public static void CreateZip(string sourceDirectory, string targetDirectory, string zipFileName)
+        {
+            if (!Directory.Exists(sourceDirectory))
+                return;
+
+            if (!Directory.Exists(targetDirectory))
+                Directory.CreateDirectory(targetDirectory);
+
+            var zipFilePath = Path.Combine(targetDirectory, zipFileName);
+            var fastZip = new FastZip
+            {
+                CreateEmptyDirectories = true
+            };
+            fastZip.CreateZip(zipFilePath, sourceDirectory, true, null);
+        }
+
+        public static void ExtractZip(string zipPath, string targetDirectory)
         {
             if (!File.Exists(zipPath))
                 return;
 
-            if (!Directory.Exists(targetDir))
-                Directory.CreateDirectory(targetDir);
+            if (!Directory.Exists(targetDirectory))
+                Directory.CreateDirectory(targetDirectory);
 
             var fastZip = new FastZip();
-            fastZip.ExtractZip(zipPath, targetDir, null);
+            fastZip.ExtractZip(zipPath, targetDirectory, null);
         }
 
         public static void UnwrapFile(string filePath)
