@@ -255,8 +255,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
-                && (PlayableViewer.Instance == null || !PlayableViewer.Instance.IsVisible)
+            if (CardViewer.Instance == null)
+                return;
+
+            CardViewer.Instance.PreviewCardModel = this;
+            if (Settings.PreviewOnMouseOver && !CardViewer.Instance.IsVisible
+                && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
                 && CurrentDragPhase != DragPhase.Drag && !IsFacedown)
                 CardViewer.Instance.Preview(this);
         }
@@ -265,6 +269,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (CardViewer.Instance == null)
                 return;
+
             CardViewer.Instance.HidePreview();
             if (CardViewer.Instance.PreviewCardModel == this)
                 CardViewer.Instance.PreviewCardModel = null;

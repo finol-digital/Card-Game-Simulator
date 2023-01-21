@@ -288,7 +288,6 @@ namespace Cgs.CardGameView.Viewer
             preview.alpha = 1;
             previewNameText.text = cardModel.Value.Name;
             previewIdText.text = cardModel.Value.Id;
-            PreviewCardModel = cardModel;
         }
 
         private void ResetInfo()

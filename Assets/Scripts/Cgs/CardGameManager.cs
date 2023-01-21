@@ -788,7 +788,7 @@ namespace Cgs
                 }
             }, false);
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            StartCoroutine(OpenZip(exportGameZipUri, CardGameManager.Current.Id));
+            Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, CardGameManager.Current.Id));
 #elif UNITY_IOS && !UNITY_EDITOR
             new NativeShare().AddFile(exportGameZipUri.AbsoluteUri).Share();
 #else
