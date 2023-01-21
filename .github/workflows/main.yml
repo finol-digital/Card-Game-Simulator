@@ -107,7 +107,6 @@ jobs:
         run: unity-editor -logFile /dev/stdout -quit -returnlicense
       - name: SonarQube Analysis
         env:
-          DOTNET_ROOT: /opt/unity/Editor/Data/NetCoreRuntime
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -115,16 +114,17 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
-          apt update
-          apt install -y openjdk-11-jre-headless
-          $DOTNET_ROOT/dotnet tool install dotnet-sonarscanner --tool-path . --version 5.4.0
-          ./dotnet-sonarscanner begin \
+          apt-get update
+          apt-get install -y openjdk-11-jre-headless
+          apt-get install -y dotnet-runtime-7.0
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin \
             /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
             /d:sonar.login="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io 
-          $DOTNET_ROOT/dotnet build Card-Game-Simulator.sln
-          ./dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          dotnet build Card-Game-Simulator.sln
+          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd Card-Game-Simulator
       - name: SonarQube Quality Gate Check
         uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
