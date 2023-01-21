@@ -107,7 +107,7 @@ jobs:
         run: unity-editor -logFile /dev/stdout -quit -returnlicense
       - name: SonarQube Analysis
         env:
-          DOTNET_ROOT: '/opt/unity/Editor/Data/NetCore/Sdk-2.2.107'
+          DOTNET_ROOT: /opt/unity/Editor/Data/NetCoreRuntime/dotnet
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
