@@ -24,6 +24,9 @@ using UnityExtensionMethods;
 #if UNITY_ANDROID || UNITY_IOS
 using Firebase.DynamicLinks;
 #endif
+#if UNITY_ANDROID && !UNITY_EDITOR
+using UnityEngine.Networking;
+#endif
 
 [assembly: InternalsVisibleTo("PlayMode")]
 
@@ -743,6 +746,9 @@ namespace Cgs
         private static void ExportGame()
         {
             var container = Path.Combine(UnityCardGame.GamesExportPath, UnityFileMethods.GetSafeFileName(Current.Id));
+            if (Directory.Exists(container))
+                Directory.Delete(container, true);
+
             var subContainer = Path.Combine(container, UnityFileMethods.GetSafeFileName(Current.Id));
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
