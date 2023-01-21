@@ -84,12 +84,11 @@ jobs:
     runs-on: ubuntu-latest
     container: unityci/editor:ubuntu-2021.3.11f1-linux-il2cpp-1
     steps:
-      - name: Update Git, JDK, and SonarScanner
+      - name: Update Git and JDK
         run: |
           apt update
           apt install -y git
           apt install -y openjdk-11-jre-headless
-          dotnet tool install --global dotnet-sonarscanner
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
@@ -127,6 +126,7 @@ jobs:
         run: unity-editor -logFile /dev/stdout -quit -returnlicense
       - name: SonarQube Analysis
         env:
+          DOTNET_ROOT: '/opt/unity/Editor/Data/NetCore/Sdk-2.2.107'
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -134,13 +134,14 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
-          dotnet sonarscanner begin \
+          $DOTNET_ROOT/dotnet tool install dotnet-sonarscanner --tool-path . --version 5.4.0
+          ./dotnet-sonarscanner begin \
             /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
             /d:sonar.login="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io 
-          dotnet build Card-Game-Simulator.sln
-          dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          $DOTNET_ROOT/dotnet build Card-Game-Simulator.sln
+          ./dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
           cd Card-Game-Simulator
       - name: SonarQube Quality Gate Check
         uses: SonarSource/sonarqube-quality-gate-action@v1.1.0
