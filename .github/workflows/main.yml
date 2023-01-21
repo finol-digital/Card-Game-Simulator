@@ -84,15 +84,9 @@ jobs:
     runs-on: ubuntu-latest
     container: unityci/editor:ubuntu-2021.3.11f1-linux-il2cpp-1
     steps:
-      - name: Update Git and JDK
-        run: |
-          apt update
-          apt install -y git
-          apt install -y openjdk-11-jre-headless
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v1
         with:
-          lfs: true
           fetch-depth: 0
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
@@ -134,6 +128,8 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
+          apt update
+          apt install -y openjdk-11-jre-headless
           $DOTNET_ROOT/dotnet tool install dotnet-sonarscanner --tool-path . --version 5.4.0
           ./dotnet-sonarscanner begin \
             /o:"finol-digital" \
