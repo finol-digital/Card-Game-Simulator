@@ -84,6 +84,12 @@ jobs:
     runs-on: ubuntu-latest
     container: unityci/editor:ubuntu-2021.3.11f1-linux-il2cpp-1
     steps:
+      - name: Update Git, JDK, and SonarScanner
+        run: |
+          apt update
+          apt install -y git
+          apt install -y openjdk-11-jre-headless
+          dotnet tool install --global dotnet-sonarscanner
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
@@ -108,9 +114,6 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
-          apt update
-          apt install -y openjdk-11-jre-headless
-          dotnet tool install --global dotnet-sonarscanner
           dotnet sonarscanner begin \
             /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
