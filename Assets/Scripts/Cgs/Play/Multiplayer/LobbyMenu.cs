@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
@@ -113,7 +114,9 @@ namespace Cgs.Play.Multiplayer
             {
                 _secondsSinceRefresh = 0;
                 if (AuthenticationService.Instance.IsSignedIn)
+#pragma warning disable CS4014
                     RefreshLobbies();
+#pragma warning restore CS4014
             }
 
             if (Inputs.IsVertical)
@@ -164,7 +167,7 @@ namespace Cgs.Play.Multiplayer
                 Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
         }
 
-        private async void RefreshLobbies()
+        private async Task RefreshLobbies()
         {
             var queryLobbiesOptions = new QueryLobbiesOptions
             {

@@ -27,7 +27,7 @@ namespace Cgs.Play.Multiplayer
         public const string GenericConnectionErrorMessage =
             "Exception thrown when attempting to connect to Server. Exception: ";
 
-        public const int DefaultPort = 7777;
+        private const int DefaultPort = 7777;
         private const int MaxPlayers = 10;
 
         public static CgsNetManager Instance => (CgsNetManager) Singleton;
@@ -314,8 +314,10 @@ namespace Cgs.Play.Multiplayer
 
             yield return null;
 
+#pragma warning disable CS4014
             UpdatePlayerRelayInfoAsync(relayServerData.AllocationId.ToString(),
                 relayServerData.ConnectionData.ToString());
+#pragma warning restore CS4014
         }
 
         private static async Task<RelayServerData> JoinRelay(string relayJoinCode)
@@ -338,7 +340,7 @@ namespace Cgs.Play.Multiplayer
             return new RelayServerData(allocation, "dtls");
         }
 
-        private async void UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)
+        private async Task UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)
         {
             var updatePlayerOptions = new UpdatePlayerOptions
             {
