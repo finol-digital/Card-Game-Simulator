@@ -11,6 +11,7 @@ namespace Cgs.Play.Multiplayer
     {
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
+            // Required by interface
         }
     }
 

@@ -426,19 +426,16 @@ namespace Cgs.Play
             CardGameManager.Instance.Messenger.Prompt(RestartPrompt, Restart);
         }
 
-        public static void BackToMainMenu()
+        public void BackToMainMenu()
         {
             StopNetworking();
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }
 
-        private static void StopNetworking()
+        private void StopNetworking()
         {
-            if (Instance != null && Instance.Lobby != null)
-            {
-                if (Instance.Lobby.discovery != null)
-                    Instance.Lobby.discovery.StopDiscovery();
-            }
+            if (Lobby != null && Lobby.discovery != null)
+                Lobby.discovery.StopDiscovery();
             if (CgsNetManager.Instance != null)
                 CgsNetManager.Instance.Stop();
         }

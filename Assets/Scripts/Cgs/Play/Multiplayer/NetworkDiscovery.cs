@@ -189,7 +189,7 @@ namespace Cgs.Play.Multiplayer
 
             try
             {
-                if (ReadAndCheckHeader(reader, MessageType.Response) == false)
+                if (!ReadAndCheckHeader(reader, MessageType.Response))
                 {
                     return;
                 }
@@ -212,7 +212,7 @@ namespace Cgs.Play.Multiplayer
 
             try
             {
-                if (ReadAndCheckHeader(reader, MessageType.BroadCast) == false)
+                if (!ReadAndCheckHeader(reader, MessageType.BroadCast))
                 {
                     return;
                 }
