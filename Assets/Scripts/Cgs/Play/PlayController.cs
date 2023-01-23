@@ -296,7 +296,8 @@ namespace Cgs.Play
         {
             var playAreaTransform = playMat.transform;
             var cardStack = Instantiate(cardStackPrefab, playAreaTransform.parent).GetComponent<CardStack>();
-            cardStack.MyNetworkObject.Spawn();
+            if (CgsNetManager.Instance.IsOnline)
+                cardStack.MyNetworkObject.Spawn();
             if (!string.IsNullOrEmpty(stackName))
                 cardStack.Name = stackName;
             if (cards != null)
@@ -375,7 +376,8 @@ namespace Cgs.Play
         public void CreateCardModel(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
             var cardModel = Instantiate(cardModelPrefab, playMat.transform).GetComponent<CardModel>();
-            cardModel.MyNetworkObject.Spawn();
+            if (CgsNetManager.Instance.IsOnline)
+                cardModel.MyNetworkObject.Spawn();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
             cardModel.Position = position;
             cardModel.Rotation = rotation;
@@ -396,7 +398,8 @@ namespace Cgs.Play
         {
             var playAreaTransform = playMat.transform;
             var die = Instantiate(diePrefab, playAreaTransform.parent).GetOrAddComponent<Die>();
-            die.MyNetworkObject.Spawn();
+            if (CgsNetManager.Instance.IsOnline)
+                die.MyNetworkObject.Spawn();
             die.transform.SetParent(playAreaTransform);
             die.Min = min;
             die.Max = max;

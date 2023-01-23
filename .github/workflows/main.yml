@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
     inputs:
       workflow_mode:
-        description: '[release] [Android, iOS, StandaloneLinux64, WebGL, StandaloneWindows, StandaloneWindows64, WSAPlayer, StandaloneOSX, Steam]'
+        description: '[release] [Android, iOS, StandaloneLinux64, WebGL, StandaloneWindows64, WSAPlayer, StandaloneOSX, Steam]'
         required: false
         default: ''
 
