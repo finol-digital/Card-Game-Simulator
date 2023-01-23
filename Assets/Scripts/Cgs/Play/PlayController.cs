@@ -143,7 +143,9 @@ namespace Cgs.Play
             else
             {
                 Lobby.IsLanConnectionSource = true;
+#if !UNITY_WEBGL
                 Lobby.Host();
+#endif
                 DeckLoader.Show(LoadDeck);
             }
         }
