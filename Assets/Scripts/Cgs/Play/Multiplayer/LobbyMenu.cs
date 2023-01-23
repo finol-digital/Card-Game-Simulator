@@ -87,20 +87,26 @@ namespace Cgs.Play.Multiplayer
 
             yield return null;
 
-            if (AuthenticationService.Instance.IsSignedIn)
-                yield break;
-
-            var signInTask = CgsNetManager.SignInAnonymouslyAsync();
-            while (!signInTask.IsCompleted)
-                yield return null;
-
-            if (signInTask.IsFaulted)
+            if (!AuthenticationService.Instance.IsSignedIn)
             {
-                Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
-                                                        signInTask.Exception?.Message);
-                yield break;
+                Debug.Log("Start Signing in...");
+                var signInTask = CgsNetManager.SignInAnonymouslyAsync();
+                while (!signInTask.IsCompleted)
+                    yield return null;
+
+                if (signInTask.IsFaulted)
+                {
+                    Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
+                    CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
+                                                            signInTask.Exception?.Message);
+                    yield break;
+                }
             }
+
+            Debug.Log("Start Signed In!");
+
+            if (!IsInternetConnectionSource)
+                yield break;
 
             var refreshLobbiesTask = RefreshLobbies();
             while (!refreshLobbiesTask.IsCompleted)
@@ -111,23 +117,21 @@ namespace Cgs.Play.Multiplayer
 
         private void Update()
         {
-            if (_shouldRedisplay)
-                Redisplay();
-
-            if (!Menu.IsFocused)
-                return;
-
             _secondsSinceRefresh += Time.deltaTime;
             if (IsInternetConnectionSource && _secondsSinceRefresh > SecondsPerRefresh)
             {
                 _secondsSinceRefresh = 0;
+                Debug.Log("Should Refresh...");
                 if (AuthenticationService.Instance.IsSignedIn)
 #pragma warning disable CS4014
                     RefreshLobbies();
 #pragma warning restore CS4014
             }
 
-            if (roomIdIpInputField.isFocused)
+            if (_shouldRedisplay)
+                Redisplay();
+
+            if (!Menu.IsFocused || roomIdIpInputField.isFocused)
                 return;
 
             if (Inputs.IsVertical)
@@ -182,22 +186,14 @@ namespace Cgs.Play.Multiplayer
 
         private async Task RefreshLobbies()
         {
-            var queryLobbiesOptions = new QueryLobbiesOptions
-            {
-                // Filter for open lobbies only
-                Filters = new List<QueryFilter>
-                {
-                    new(field: QueryFilter.FieldOptions.AvailableSlots, op: QueryFilter.OpOptions.GT, value: "0")
-                },
-                // Order by newest lobbies first
-                Order = new List<QueryOrder>
-                {
-                    new(asc: false, field: QueryOrder.FieldOptions.Created)
-                }
-            };
+            Debug.Log("RefreshLobbies...");
 
-            var response = await LobbyService.Instance.QueryLobbiesAsync(queryLobbiesOptions);
+            var response = await LobbyService.Instance.QueryLobbiesAsync(new QueryLobbiesOptions());
+
+            Debug.Log("RefreshLobbies responded.");
+
             Lobbies.Clear();
+            Debug.Log("RefreshLobbies 1.");
             foreach (var lobbyData in response.Results.Select(lobby => new LobbyData
                      {
                          Id = lobby.Id,
@@ -208,7 +204,9 @@ namespace Cgs.Play.Multiplayer
                          RelayJoinCode = lobby.Data[LobbyData.KeyRelayJoinCode].Value
                      }))
             {
+                Debug.Log("RefreshLobbies 2.");
                 Lobbies[lobbyData.Id] = lobbyData;
+                Debug.Log("RefreshLobbies 3.");
             }
 
             Debug.Log($"RefreshLobbies: {Lobbies.Count}");
