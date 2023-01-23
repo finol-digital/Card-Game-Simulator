@@ -77,7 +77,7 @@ namespace Cgs.Play.Multiplayer
 
         private Modal _menu;
 
-        private float _secondsSinceRefresh = SecondsPerRefresh;
+        private float _secondsSinceRefresh;
 
         private bool _shouldRedisplay;
 
@@ -93,18 +93,26 @@ namespace Cgs.Play.Multiplayer
             var signInTask = CgsNetManager.SignInAnonymouslyAsync();
             while (!signInTask.IsCompleted)
                 yield return null;
-            if (!signInTask.IsFaulted)
+
+            if (signInTask.IsFaulted)
+            {
+                Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
+                                                        signInTask.Exception?.Message);
                 yield break;
-            Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-            CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
-                                                    signInTask.Exception?.Message);
+            }
+
+            var refreshLobbiesTask = RefreshLobbies();
+            while (!refreshLobbiesTask.IsCompleted)
+                yield return null;
+
+            Debug.Log($"Start Lobbies: {Lobbies.Count}");
         }
 
         private void Update()
         {
             if (_shouldRedisplay)
                 Redisplay();
-            _shouldRedisplay = false;
 
             if (!Menu.IsFocused)
                 return;
@@ -118,6 +126,9 @@ namespace Cgs.Play.Multiplayer
                     RefreshLobbies();
 #pragma warning restore CS4014
             }
+
+            if (roomIdIpInputField.isFocused)
+                return;
 
             if (Inputs.IsVertical)
             {
@@ -165,6 +176,8 @@ namespace Cgs.Play.Multiplayer
             joinButton.interactable =
                 !string.IsNullOrEmpty(_selectedServer) &&
                 Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
+
+            _shouldRedisplay = false;
         }
 
         private async Task RefreshLobbies()
@@ -197,6 +210,10 @@ namespace Cgs.Play.Multiplayer
             {
                 Lobbies[lobbyData.Id] = lobbyData;
             }
+
+            Debug.Log($"RefreshLobbies: {Lobbies.Count}");
+
+            _shouldRedisplay = true;
         }
 
         private void ToggleConnectionSource()
