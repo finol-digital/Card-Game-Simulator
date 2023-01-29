@@ -4,20 +4,19 @@
 
 namespace Cgs.Play.Multiplayer
 {
-    public struct LobbyData
+    public class LobbyData
     {
         public const string KeyRelayJoinCode = nameof(RelayJoinCode);
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public string LobbyCode { get; set; }
         public int PlayerCount { get; set; }
         public int MaxPlayers { get; set; }
         public string RelayJoinCode { get; set; }
 
         public override string ToString()
         {
-            return $"{Name}\n{LobbyCode} - {PlayerCount} / {MaxPlayers}";
+            return $"{Name}\n{PlayerCount} / {MaxPlayers}";
         }
     }
 }

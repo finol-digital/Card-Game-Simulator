@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Cgs.Menu;
@@ -89,7 +88,6 @@ namespace Cgs.Play.Multiplayer
 
             if (!AuthenticationService.Instance.IsSignedIn)
             {
-                Debug.Log("Start Signing in...");
                 var signInTask = CgsNetManager.SignInAnonymouslyAsync();
                 while (!signInTask.IsCompleted)
                     yield return null;
@@ -103,8 +101,6 @@ namespace Cgs.Play.Multiplayer
                 }
             }
 
-            Debug.Log("Start Signed In!");
-
             if (!IsInternetConnectionSource)
                 yield break;
 
@@ -112,7 +108,7 @@ namespace Cgs.Play.Multiplayer
             while (!refreshLobbiesTask.IsCompleted)
                 yield return null;
 
-            Debug.Log($"Start Lobbies: {Lobbies.Count}");
+            Debug.Log($"[CgsNet LobbyMenu] Start Lobbies: {Lobbies.Count}");
         }
 
         private void Update()
@@ -121,7 +117,6 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource && _secondsSinceRefresh > SecondsPerRefresh)
             {
                 _secondsSinceRefresh = 0;
-                Debug.Log("Should Refresh...");
                 if (AuthenticationService.Instance.IsSignedIn)
 #pragma warning disable CS4014
                     RefreshLobbies();
@@ -186,30 +181,44 @@ namespace Cgs.Play.Multiplayer
 
         private async Task RefreshLobbies()
         {
-            Debug.Log("RefreshLobbies...");
+            var queryLobbiesOptions = new QueryLobbiesOptions
+            {
+                Count = 15,
+                // Filter for open lobbies only
+                Filters = new List<QueryFilter>
+                {
+                    new(
+                        field: QueryFilter.FieldOptions.AvailableSlots,
+                        op: QueryFilter.OpOptions.GT,
+                        value: "0")
+                },
+                // Order by newest lobbies first
+                Order = new List<QueryOrder>
+                {
+                    new(
+                        asc: false,
+                        field: QueryOrder.FieldOptions.Created)
+                }
+            };
 
-            var response = await LobbyService.Instance.QueryLobbiesAsync(new QueryLobbiesOptions());
-
-            Debug.Log("RefreshLobbies responded.");
+            var response = await LobbyService.Instance.QueryLobbiesAsync(queryLobbiesOptions);
 
             Lobbies.Clear();
-            Debug.Log("RefreshLobbies 1.");
-            foreach (var lobbyData in response.Results.Select(lobby => new LobbyData
-                     {
-                         Id = lobby.Id,
-                         Name = lobby.Name,
-                         LobbyCode = lobby.LobbyCode,
-                         PlayerCount = lobby.Players.Count,
-                         MaxPlayers = lobby.MaxPlayers,
-                         RelayJoinCode = lobby.Data[LobbyData.KeyRelayJoinCode].Value
-                     }))
+            foreach (var lobby in response.Results)
             {
-                Debug.Log("RefreshLobbies 2.");
+                var lobbyData = new LobbyData
+                {
+                    Id = lobby.Id,
+                    Name = lobby.Name,
+                    PlayerCount = lobby.Players.Count,
+                    MaxPlayers = lobby.MaxPlayers
+                };
+                if (lobby.Data != null && lobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var code))
+                    lobbyData.RelayJoinCode = code.Value;
                 Lobbies[lobbyData.Id] = lobbyData;
-                Debug.Log("RefreshLobbies 3.");
             }
 
-            Debug.Log($"RefreshLobbies: {Lobbies.Count}");
+            Debug.Log($"[CgsNet LobbyMenu] RefreshLobbies: {Lobbies.Count}");
 
             _shouldRedisplay = true;
         }
@@ -284,13 +293,13 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource)
             {
                 if (Lobbies.ContainsKey(_selectedServer))
-                    CgsNetManager.Instance.StartJoinLobby(Lobbies[_selectedServer].LobbyCode);
+                    CgsNetManager.Instance.StartJoinLobby(Lobbies[_selectedServer].Id);
                 else
                 {
                     if (Uri.IsWellFormedUriString(_selectedServer, UriKind.Absolute))
                         CgsNetManager.Instance.StartJoin(_selectedServer);
                     else
-                        CgsNetManager.Instance.StartJoinLobby(_selectedServer);
+                        CgsNetManager.Instance.StartJoinLobbyCode(_selectedServer);
                 }
             }
             else

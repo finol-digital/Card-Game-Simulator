@@ -185,7 +185,9 @@ jobs:
         with:
           path: Library
           key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: Library-build-${{ matrix.targetPlatform }}-
+          restore-keys: |
+            Library-build-${{ matrix.targetPlatform }}-
+            Library-build-
       - name: Build Unity Project
         id: build
         uses: game-ci/unity-builder@v2

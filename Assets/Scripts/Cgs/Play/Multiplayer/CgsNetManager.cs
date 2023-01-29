@@ -25,7 +25,7 @@ namespace Cgs.Play.Multiplayer
     public class CgsNetManager : NetworkManager
     {
         public const string GenericConnectionErrorMessage =
-            "Exception thrown when attempting to connect to Server. Exception: ";
+            "[CgsNet] ERROR: Exception thrown when attempting to connect to Server! Exception: ";
 
         private const int DefaultPort = 7777;
         private const int MaxPlayers = 10;
@@ -172,7 +172,7 @@ namespace Cgs.Play.Multiplayer
             }
             catch (Exception e)
             {
-                Debug.LogError($"Relay allocation request failed {e.Message}");
+                Debug.LogError($"[CgsNet] ERROR: Relay allocation request failed {e.Message}!");
                 throw;
             }
 
@@ -187,7 +187,7 @@ namespace Cgs.Play.Multiplayer
             }
             catch
             {
-                Debug.LogError("Relay create join code request failed");
+                Debug.LogError("[CgsNet] ERROR: Relay create join code request failed!");
                 throw;
             }
 
@@ -199,24 +199,26 @@ namespace Cgs.Play.Multiplayer
             Lobby lobby;
             var data = new Dictionary<string, DataObject>
             {
-                [LobbyData.KeyRelayJoinCode] = new(DataObject.VisibilityOptions.Member, relayJoinCode)
+                [LobbyData.KeyRelayJoinCode] = new(DataObject.VisibilityOptions.Public, relayJoinCode)
             };
             var createLobbyOptions = new CreateLobbyOptions
             {
-                Data = data,
+                IsPrivate = false,
                 Player = new Player(id: AuthenticationService.Instance.PlayerId,
                     connectionInfo: relayServerData.ConnectionData.ToString(),
                     data: new Dictionary<string, PlayerDataObject>(),
-                    allocationId: relayServerData.AllocationId.ToString())
+                    allocationId: relayServerData.AllocationId.ToString()),
+                Data = data
             };
             try
             {
                 lobby = await LobbyService.Instance.CreateLobbyAsync(CardGameManager.Current.Name, MaxPlayers,
                     createLobbyOptions);
+                Debug.Log($"[CgsNet] Lobby created: {lobby}");
             }
             catch
             {
-                Debug.LogError("Lobby create request failed");
+                Debug.LogError("[CgsNet] ERROR: Lobby create request failed!");
                 throw;
             }
 
@@ -230,12 +232,12 @@ namespace Cgs.Play.Multiplayer
             StartClient();
         }
 
-        public void StartJoinLobby(string lobbyCode)
+        public void StartJoinLobby(string lobbyId)
         {
-            StartCoroutine(JoinLobbyCoroutine(lobbyCode));
+            StartCoroutine(JoinLobbyCoroutine(lobbyId));
         }
 
-        private IEnumerator JoinLobbyCoroutine(string lobbyCode)
+        private IEnumerator JoinLobbyCoroutine(string lobbyId)
         {
             if (!AuthenticationService.Instance.IsSignedIn)
             {
@@ -251,7 +253,7 @@ namespace Cgs.Play.Multiplayer
                 }
             }
 
-            var joinLobbyTask = JoinLobby(lobbyCode);
+            var joinLobbyTask = JoinLobby(lobbyId);
             while (!joinLobbyTask.IsCompleted)
                 yield return null;
 
@@ -276,7 +278,69 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private static async Task<Lobby> JoinLobby(string lobbyCode)
+        private static async Task<Lobby> JoinLobby(string lobbyId)
+        {
+            Lobby lobby;
+            try
+            {
+                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+            }
+            catch
+            {
+                Debug.LogError("[CgsNet] ERROR: Lobby join request failed!");
+                throw;
+            }
+
+            return lobby;
+        }
+
+        public void StartJoinLobbyCode(string lobbyCode)
+        {
+            StartCoroutine(JoinLobbyCodeCoroutine(lobbyCode));
+        }
+
+        private IEnumerator JoinLobbyCodeCoroutine(string lobbyCode)
+        {
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                var signInTask = SignInAnonymouslyAsync();
+                while (!signInTask.IsCompleted)
+                    yield return null;
+                if (signInTask.IsFaulted)
+                {
+                    Debug.LogError(GenericConnectionErrorMessage + signInTask.Exception?.Message);
+                    CardGameManager.Instance.Messenger.Show(GenericConnectionErrorMessage +
+                                                            signInTask.Exception?.Message);
+                    yield break;
+                }
+            }
+
+            var joinLobbyTask = JoinLobbyCode(lobbyCode);
+            while (!joinLobbyTask.IsCompleted)
+                yield return null;
+
+            if (joinLobbyTask.IsFaulted)
+            {
+                Debug.LogError(GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(
+                    GenericConnectionErrorMessage + joinLobbyTask.Exception?.Message);
+                yield break;
+            }
+
+            CurrentLobby = joinLobbyTask.Result;
+            if (CurrentLobby is {Data: { }} &&
+                CurrentLobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var dataObject))
+            {
+                yield return JoinRelayCoroutine(dataObject.Value);
+            }
+            else
+            {
+                Debug.LogError(LobbyMenu.InvalidServerErrorMessage);
+                CardGameManager.Instance.Messenger.Show(LobbyMenu.InvalidServerErrorMessage);
+            }
+        }
+
+        private static async Task<Lobby> JoinLobbyCode(string lobbyCode)
         {
             Lobby lobby;
             try
@@ -285,7 +349,7 @@ namespace Cgs.Play.Multiplayer
             }
             catch
             {
-                Debug.LogError("Lobby join request failed");
+                Debug.LogError("[CgsNet] ERROR: Lobby join request failed!");
                 throw;
             }
 
@@ -329,7 +393,7 @@ namespace Cgs.Play.Multiplayer
             }
             catch
             {
-                Debug.LogError("Relay create join code request failed");
+                Debug.LogError("[CgsNet] ERROR: Relay join request failed!");
                 throw;
             }
 
