@@ -6,7 +6,6 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![Test, Build, and Deploy with GameCI](https://github.com/finol-digital/Card-Game-Simulator/actions/workflows/main.yml/badge.svg)](https://github.com/finol-digital/Card-Game-Simulator/actions/workflows/main.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=finol-digital_Card-Game-Simulator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=finol-digital_Card-Game-Simulator)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=finol-digital_Card-Game-Simulator&metric=coverage)](https://sonarcloud.io/summary/new_code?id=finol-digital_Card-Game-Simulator)
 
 The CGS website is available through GitHub Pages in the `docs/` folder: https://www.cardgamesimulator.com
 

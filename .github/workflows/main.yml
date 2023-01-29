@@ -82,7 +82,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-2021.3.11f1-linux-il2cpp-1
+    container: unityci/editor:ubuntu-2021.3.16f1-linux-il2cpp-1
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -94,14 +94,14 @@ jobs:
           path: Library
           key: Library-lint-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-lint-
-      - name: Generate Solution
+      - name: Activate Unity
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        run: |
-          unity-editor -nographics -logFile /dev/stdout -quit -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
-          unity-editor -nographics -logFile /dev/stdout -customBuildName Card-Game-Simulator -projectPath . -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution -quit
+        run: unity-editor -nographics -logFile /dev/stdout -quit -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
+      - name: Generate Solution
+        run: unity-editor -nographics -logFile /dev/stdout -customBuildName Card-Game-Simulator -projectPath . -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution -quit
       - name: Return License
         if: always()
         run: unity-editor -logFile /dev/stdout -quit -returnlicense
