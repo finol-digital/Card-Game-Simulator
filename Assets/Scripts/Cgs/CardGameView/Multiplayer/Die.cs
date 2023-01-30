@@ -78,8 +78,6 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Max = DefaultMax;
             Min = DefaultMin;
-            _value.Value = Min;
-            valueText.text = _value.Value.ToString();
             if (!NetworkManager.Singleton.IsConnectedClient || IsServer)
                 _rollTime = RollTime;
         }

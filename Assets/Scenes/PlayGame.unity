@@ -474,6 +474,7 @@ GameObject:
   - component: {fileID: 217919979}
   - component: {fileID: 217919978}
   - component: {fileID: 217919981}
+  - component: {fileID: 217919982}
   m_Layer: 5
   m_Name: PlayMat
   m_TagString: Untagged
@@ -623,6 +624,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &217919982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217919976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3163440592
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1 &315778610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1218,6 +1235,7 @@ GameObject:
   - component: {fileID: 709840748}
   - component: {fileID: 709840750}
   - component: {fileID: 709840749}
+  - component: {fileID: 709840751}
   m_Layer: 5
   m_Name: PlayGame Canvas
   m_TagString: Untagged
@@ -1381,6 +1399,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 315778612}
   sliderCanvasGroup: {fileID: 867063784}
+--- !u!114 &709840751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709840743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1110549136
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1 &743650639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1597,6 +1631,7 @@ GameObject:
   - component: {fileID: 892208557}
   - component: {fileID: 892208556}
   - component: {fileID: 892208555}
+  - component: {fileID: 892208558}
   m_Layer: 5
   m_Name: PlayArea Viewport
   m_TagString: Untagged
@@ -1676,6 +1711,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+--- !u!114 &892208558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892208553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2272069427
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1 &914716392
 GameObject:
   m_ObjectHideFlags: 0
@@ -2824,6 +2875,7 @@ GameObject:
   - component: {fileID: 1507733847}
   - component: {fileID: 1507733846}
   - component: {fileID: 1507733848}
+  - component: {fileID: 1507733849}
   m_Layer: 5
   m_Name: PlayArea
   m_TagString: Untagged
@@ -2922,6 +2974,22 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1507733849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507733844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1420592636
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 0
 --- !u!1 &1519985459
 GameObject:
   m_ObjectHideFlags: 0
