@@ -288,18 +288,17 @@ namespace Cgs.Play.Multiplayer
         private void ShareDeckServerRpc()
         {
             Debug.Log("[CgsNet Player] Sending shared deck...");
-            ShareDeckOwnerClientRpc(CgsNetManager.Instance.LocalPlayer.CurrentDeck, OwnerClientRpcParams);
+            CurrentDeck = CgsNetManager.Instance.LocalPlayer.CurrentDeck;
+            IsDeckShared = true;
+            ShareDeckOwnerClientRpc(OwnerClientRpcParams);
         }
 
         [ClientRpc]
         // ReSharper disable once UnusedParameter.Local
-        private void ShareDeckOwnerClientRpc(NetworkObjectReference deckStack,
-            // ReSharper disable once UnusedParameter.Local
-            ClientRpcParams clientRpcParams = default)
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void ShareDeckOwnerClientRpc(ClientRpcParams clientRpcParams = default)
         {
             Debug.Log("[CgsNet Player] Received shared deck!");
-            CurrentDeck = deckStack;
-            IsDeckShared = true;
             PlayController.Instance.PromptForHand();
         }
 
@@ -533,8 +532,8 @@ namespace Cgs.Play.Multiplayer
         }
 
         [ClientRpc]
-        // ReSharper disable once UnusedParameter.Global
-        public void RestartClientRpc(ClientRpcParams clientRpcParams = default)
+        // ReSharper disable once UnusedParameter.Local
+        private void RestartClientRpc(ClientRpcParams clientRpcParams = default)
         {
             Debug.Log("[CgsNet Player] Game is restarting!...");
             PlayController.Instance.ResetPlayArea();
