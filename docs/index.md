@@ -21,7 +21,7 @@ See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
 
 See [the roadmap](roadmap.html). 
 
-Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or join our [Discord](https://discord.gg/RkCCAXb5sz). 
+Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or join our [Discord](https://discord.cgs.link). 
 Please also consider checking out [these projects](external.html).
 
 [![alt text][1.1]][1]
@@ -36,7 +36,7 @@ Please also consider checking out [these projects](external.html).
 [4.1]: http://i.imgur.com/P3YfQoD.png (facebook icon with padding)
 [5.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
 
-[1]: https://discord.gg/RkCCAXb5sz
+[1]: https://discord.cgs.link
 [2]: http://www.github.com/finol-digital
 [3]: https://twitter.com/cardgamesim
 [4]: https://www.facebook.com/cardgamesimulator/
