@@ -37,7 +37,7 @@ Please also consider checking out [these projects](external.html).
 [5.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
 
 [1]: https://discord.cgs.link
-[2]: http://www.github.com/finol-digital
+[2]: https://www.github.com/finol-digital
 [3]: https://twitter.com/cardgamesim
 [4]: https://www.facebook.com/cardgamesimulator/
 [5]: https://www.reddit.com/r/CardGameSimulator/
