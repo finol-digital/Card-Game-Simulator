@@ -60,16 +60,18 @@ namespace Cgs.CardGameView.Multiplayer
             get => CgsNetManager.Instance.IsOnline ? _valueNetworkVariable.Value : _value;
             set
             {
+                var oldValue = _value;
                 var newValue = value;
                 if (newValue > Max)
                     newValue = Min;
                 if (newValue < Min)
                     newValue = Max;
 
+                _value = newValue;
                 if (CgsNetManager.Instance.IsOnline)
                     UpdateValueServerRpc(newValue);
                 else
-                    OnChangeValue(_value, newValue);
+                    OnChangeValue(oldValue, newValue);
             }
         }
 
