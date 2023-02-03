@@ -296,8 +296,7 @@ namespace Cgs.Play
 
         public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position)
         {
-            var playAreaTransform = playMat.transform;
-            var cardStack = Instantiate(cardStackPrefab, playAreaTransform.parent).GetComponent<CardStack>();
+            var cardStack = Instantiate(cardStackPrefab, playMat.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
                 cardStack.MyNetworkObject.Spawn();
             if (!string.IsNullOrEmpty(stackName))
@@ -305,7 +304,6 @@ namespace Cgs.Play
             if (cards != null)
                 cardStack.Cards = cards;
             var rectTransform = (RectTransform) cardStack.transform;
-            rectTransform.SetParent(playAreaTransform);
             if (!Vector2.zero.Equals(position))
                 rectTransform.localPosition = position;
             cardStack.Position = rectTransform.localPosition;
@@ -398,11 +396,9 @@ namespace Cgs.Play
 
         public Die CreateDie(int min, int max)
         {
-            var playAreaTransform = playMat.transform;
-            var die = Instantiate(diePrefab, playAreaTransform.parent).GetOrAddComponent<Die>();
+            var die = Instantiate(diePrefab, playMat.transform).GetOrAddComponent<Die>();
             if (CgsNetManager.Instance.IsOnline)
                 die.MyNetworkObject.Spawn();
-            die.transform.SetParent(playAreaTransform);
             die.Min = min;
             die.Max = max;
             return die;

@@ -115,6 +115,8 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _cardIds = new NetworkList<CgsNetString>();
             _name.OnValueChanged += OnChangeName;
+            if (PlayController.Instance != null)
+                transform.SetParent(PlayController.Instance.playMat.transform);
         }
 
         protected override void OnStartPlayable()

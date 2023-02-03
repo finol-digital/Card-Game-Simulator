@@ -56,33 +56,31 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Vector2 Position
         {
-            get => IsOnline ? _position.Value : _position2;
+            get => IsOnline ? _positionNetworkVariable.Value : _position;
             set
             {
-                _position2 = value;
+                _position = value;
                 if (IsOnline)
-                    _position.Value = value;
+                    _positionNetworkVariable.Value = value;
             }
         }
 
-        private readonly NetworkVariable<Vector2> _position = new();
-
-        private Vector2 _position2;
+        private Vector2 _position;
+        private readonly NetworkVariable<Vector2> _positionNetworkVariable = new();
 
         public Quaternion Rotation
         {
-            get => IsOnline ? _rotation.Value : _rotation2;
+            get => IsOnline ? _rotationNetworkVariable.Value : _rotation;
             set
             {
-                _rotation2 = value;
+                _rotation = value;
                 if (IsOnline)
-                    _rotation.Value = value;
+                    _rotationNetworkVariable.Value = value;
             }
         }
 
-        private readonly NetworkVariable<Quaternion> _rotation = new();
-
-        private Quaternion _rotation2;
+        private Quaternion _rotation;
+        private readonly NetworkVariable<Quaternion> _rotationNetworkVariable = new();
 
         private readonly NetworkVariable<bool> _isClientOwner = new();
 
@@ -140,8 +138,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Awake()
         {
-            _position.OnValueChanged += OnChangePosition;
-            _rotation.OnValueChanged += OnChangeRotation;
+            _positionNetworkVariable.OnValueChanged += OnChangePosition;
+            _rotationNetworkVariable.OnValueChanged += OnChangeRotation;
 
             OnAwakePlayable();
         }
@@ -430,7 +428,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
-            _position2 = newValue;
+            _position = newValue;
             if (!IsOwner)
                 transform.localPosition = newValue;
         }

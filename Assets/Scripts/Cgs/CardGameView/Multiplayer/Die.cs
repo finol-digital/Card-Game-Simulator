@@ -27,25 +27,37 @@ namespace Cgs.CardGameView.Multiplayer
 
         public int Min
         {
-            get => _min.Value;
-            set => _min.Value = value;
+            get => CgsNetManager.Instance.IsOnline ? _minNetworkVariable.Value : _min;
+            set
+            {
+                _min = value;
+                if (CgsNetManager.Instance.IsOnline)
+                    _minNetworkVariable.Value = value;
+            }
         }
 
-        private readonly NetworkVariable<int> _min = new();
+        private int _min;
+        private readonly NetworkVariable<int> _minNetworkVariable = new();
 
         public int Max
         {
-            get => _max.Value;
-            set => _max.Value = value;
+            get => CgsNetManager.Instance.IsOnline ? _maxNetworkVariable.Value : _max;
+            set
+            {
+                _max = value;
+                if (CgsNetManager.Instance.IsOnline)
+                    _maxNetworkVariable.Value = value;
+            }
         }
 
-        private readonly NetworkVariable<int> _max = new();
+        private int _max;
+        private readonly NetworkVariable<int> _maxNetworkVariable = new();
 
         public override string ViewValue => $"Value: {Value}";
 
         private int Value
         {
-            get => _value.Value;
+            get => CgsNetManager.Instance.IsOnline ? _valueNetworkVariable.Value : _value;
             set
             {
                 var newValue = value;
@@ -57,21 +69,21 @@ namespace Cgs.CardGameView.Multiplayer
                 if (CgsNetManager.Instance.IsOnline)
                     UpdateValueServerRpc(newValue);
                 else
-                {
-                    _value.Value = newValue;
-                    OnChangeValue(value, newValue);
-                }
+                    OnChangeValue(_value, newValue);
             }
         }
 
-        private readonly NetworkVariable<int> _value = new();
+        private int _value;
+        private readonly NetworkVariable<int> _valueNetworkVariable = new();
 
         private float _rollTime;
         private float _rollDelay;
 
         protected override void OnAwakePlayable()
         {
-            _value.OnValueChanged += OnChangeValue;
+            _valueNetworkVariable.OnValueChanged += OnChangeValue;
+            if (PlayController.Instance != null)
+                transform.SetParent(PlayController.Instance.playMat.transform);
         }
 
         protected override void OnStartPlayable()
@@ -158,12 +170,13 @@ namespace Cgs.CardGameView.Multiplayer
         [ServerRpc(RequireOwnership = false)]
         private void UpdateValueServerRpc(int value)
         {
-            _value.Value = value;
+            _valueNetworkVariable.Value = value;
         }
 
         [PublicAPI]
         public void OnChangeValue(int oldValue, int newValue)
         {
+            _value = newValue;
             valueText.text = newValue.ToString();
         }
 

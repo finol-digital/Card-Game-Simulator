@@ -42,13 +42,12 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 _id = value;
                 if (IsOnline)
-                    _idN.Value = value;
+                    _idNetworkVariable.Value = value;
             }
         }
 
         private string _id = UnityCard.Blank.Id;
-
-        private readonly NetworkVariable<CgsNetString> _idN = new();
+        private readonly NetworkVariable<CgsNetString> _idNetworkVariable = new();
 
         public override string ViewValue => Value.Name;
 
@@ -79,15 +78,14 @@ namespace Cgs.CardGameView.Multiplayer
                 var oldValue = _isFacedown;
                 _isFacedown = value;
                 if (IsOnline)
-                    _isFacedownN.Value = _isFacedown;
+                    _isFacedownNetworkVariable.Value = _isFacedown;
                 else if (oldValue != _isFacedown)
                     OnChangeIsFacedown(oldValue, _isFacedown);
             }
         }
 
         private bool _isFacedown;
-
-        private readonly NetworkVariable<bool> _isFacedownN = new();
+        private readonly NetworkVariable<bool> _isFacedownNetworkVariable = new();
 
         public RectTransform PlaceHolder
         {
@@ -155,8 +153,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnAwakePlayable()
         {
-            _idN.OnValueChanged += OnChangeId;
-            _isFacedownN.OnValueChanged += OnChangeIsFacedown;
+            _idNetworkVariable.OnValueChanged += OnChangeId;
+            _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
+            if (PlayController.Instance != null && IsSpawned)
+                transform.SetParent(PlayController.Instance.playMat.transform);
         }
 
         protected override void OnStartPlayable()
@@ -260,8 +260,8 @@ namespace Cgs.CardGameView.Multiplayer
 
             CardViewer.Instance.PreviewCardModel = this;
             if (Settings.PreviewOnMouseOver && !CardViewer.Instance.IsVisible
-                && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
-                && CurrentDragPhase != DragPhase.Drag && !IsFacedown)
+                                            && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
+                                            && CurrentDragPhase != DragPhase.Drag && !IsFacedown)
                 CardViewer.Instance.Preview(this);
         }
 
