@@ -5,7 +5,6 @@
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
-using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -27,11 +26,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public int Min
         {
-            get => CgsNetManager.Instance.IsOnline ? _minNetworkVariable.Value : _min;
+            get => IsOnline ? _minNetworkVariable.Value : _min;
             set
             {
                 _min = value;
-                if (CgsNetManager.Instance.IsOnline)
+                if (IsOnline)
                     _minNetworkVariable.Value = value;
             }
         }
@@ -41,11 +40,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public int Max
         {
-            get => CgsNetManager.Instance.IsOnline ? _maxNetworkVariable.Value : _max;
+            get => IsOnline ? _maxNetworkVariable.Value : _max;
             set
             {
                 _max = value;
-                if (CgsNetManager.Instance.IsOnline)
+                if (IsOnline)
                     _maxNetworkVariable.Value = value;
             }
         }
@@ -57,7 +56,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private int Value
         {
-            get => CgsNetManager.Instance.IsOnline ? _valueNetworkVariable.Value : _value;
+            get => IsOnline ? _valueNetworkVariable.Value : _value;
             set
             {
                 var oldValue = _value;
@@ -68,7 +67,7 @@ namespace Cgs.CardGameView.Multiplayer
                     newValue = Max;
 
                 _value = newValue;
-                if (CgsNetManager.Instance.IsOnline)
+                if (IsOnline)
                     UpdateValueServerRpc(newValue);
                 else
                     OnChangeValue(oldValue, newValue);
@@ -84,14 +83,16 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnAwakePlayable()
         {
             _valueNetworkVariable.OnValueChanged += OnChangeValue;
-            if (PlayController.Instance != null)
-                transform.SetParent(PlayController.Instance.playMat.transform);
         }
 
         protected override void OnStartPlayable()
         {
-            Max = DefaultMax;
             Min = DefaultMin;
+            Max = DefaultMax;
+
+            ParentToPlayMat();
+            transform.localPosition = Position;
+
             if (!NetworkManager.Singleton.IsConnectedClient || IsServer)
                 _rollTime = RollTime;
         }
@@ -151,7 +152,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            if (CgsNetManager.Instance.IsOnline)
+            if (IsOnline)
                 RequestChangeOwnership();
         }
 
@@ -197,7 +198,7 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void Roll()
         {
-            if (CgsNetManager.Instance.IsOnline)
+            if (IsOnline)
                 RollServerRpc();
             else
                 _rollTime = RollTime;

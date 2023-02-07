@@ -37,7 +37,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string Id
         {
-            get => _id;
+            get => IsOnline ? _idNetworkVariable.Value : _id;
             private set
             {
                 _id = value;
@@ -155,15 +155,14 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _idNetworkVariable.OnValueChanged += OnChangeId;
             _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
-            if (PlayController.Instance != null && IsSpawned)
-                transform.SetParent(PlayController.Instance.playMat.transform);
         }
 
         protected override void OnStartPlayable()
         {
-            if (CgsNetManager.Instance != null && PlayController.Instance != null
-                                               && PlayController.Instance.playMat.transform ==
-                                               transform.parent)
+            if (IsSpawned)
+                ParentToPlayMat();
+
+            if (PlayController.Instance != null && PlayController.Instance.playMat.transform == transform.parent)
             {
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
                 cardDropArea.isBlocker = true;
@@ -636,7 +635,18 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeId(CgsNetString oldValue, CgsNetString newValue)
         {
+            Value.UnregisterDisplay(this);
             _id = newValue;
+            if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out var unityCard) ||
+                unityCard == null)
+            {
+                Debug.LogError("ERROR: Id changed to unknown card!");
+                return;
+            }
+
+            gameObject.name = $"[{_id}] {unityCard.Name}";
+            if (!IsFacedown)
+                unityCard.RegisterDisplay(this);
         }
 
         [PublicAPI]

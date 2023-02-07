@@ -11,7 +11,7 @@ namespace CardGameDef.Unity
 {
     public class UnityCard : Card
     {
-        public static readonly UnityCard Blank = new UnityCard(UnityCardGame.UnityInvalid,
+        public static readonly UnityCard Blank = new(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
         public string ImageFileName => UnityFileMethods.GetSafeFileName(Id + "." + SourceGame.CardImageFileType);

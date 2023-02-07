@@ -23,7 +23,7 @@ namespace CardGameDef.Unity
 
     public class UnityCardGame : CardGame
     {
-        public static UnityCardGame UnityInvalid => new(null);
+        public static readonly UnityCardGame UnityInvalid = new(null);
 
         public static string GamesImportPath => Path.Combine(Application.temporaryCachePath, "cgsGamesImport");
         public static string GamesDirectoryPath => Path.Combine(Application.persistentDataPath, "games");

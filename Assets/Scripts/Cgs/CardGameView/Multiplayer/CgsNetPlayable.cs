@@ -353,6 +353,19 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
+        protected void ParentToPlayMat()
+        {
+            if (PlayController.Instance == null || PlayController.Instance.playMat == null)
+            {
+                Debug.LogError($"ERROR: Attempted to parent {gameObject.name} to non-existent play mat!");
+                return;
+            }
+
+            var rectTransform = (RectTransform) transform;
+            rectTransform.SetParent(PlayController.Instance.playMat.transform);
+            rectTransform.localScale = Vector3.one;
+        }
+
         public virtual void SnapToGrid()
         {
             var rectTransform = (RectTransform) transform;

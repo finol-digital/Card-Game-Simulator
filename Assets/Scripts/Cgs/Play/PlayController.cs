@@ -401,6 +401,9 @@ namespace Cgs.Play
                 die.MyNetworkObject.Spawn();
             die.Min = min;
             die.Max = max;
+            var rectTransform = (RectTransform) die.transform;
+            rectTransform.localPosition = Vector2.zero;
+            die.Position = rectTransform.localPosition;
             return die;
         }
 
