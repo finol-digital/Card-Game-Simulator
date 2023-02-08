@@ -236,8 +236,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
             if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
-                eventData.dragging || eventData.button == PointerEventData.InputButton.Middle ||
-                eventData.button == PointerEventData.InputButton.Right)
+                eventData.dragging || eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
                 return;
 
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&

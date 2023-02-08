@@ -48,11 +48,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkObject _networkObject;
 
-        protected bool IsProcessingSecondaryDragAction =>
-            PointerDragOffsets.Count > 1
-            || CurrentPointerEventData != null &&
-            (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
-             CurrentPointerEventData.button == PointerEventData.InputButton.Right);
+        protected bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 || CurrentPointerEventData is
+            {button: PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right};
 
         public Vector2 Position
         {
@@ -81,8 +78,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         private Quaternion _rotation;
         private readonly NetworkVariable<Quaternion> _rotationNetworkVariable = new();
-
-        private readonly NetworkVariable<bool> _isClientOwner = new();
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
@@ -123,7 +118,7 @@ namespace Cgs.CardGameView.Multiplayer
                         break;
                     default:
                     case HighlightMode.Off:
-                        var isOthers = IsOnline && _isClientOwner.Value && !IsOwner;
+                        var isOthers = IsOnline && !IsOwner;
                         Highlight.effectColor = isOthers ? Color.yellow : Color.black;
                         Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                         break;
@@ -423,7 +418,6 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            _isClientOwner.Value = true;
             MyNetworkObject.ChangeOwnership(clientId);
         }
 
@@ -468,7 +462,6 @@ namespace Cgs.CardGameView.Multiplayer
         private void RemoveOwnershipServerRpc()
         {
             MyNetworkObject.RemoveOwnership();
-            _isClientOwner.Value = false;
         }
 
         [ClientRpc]
