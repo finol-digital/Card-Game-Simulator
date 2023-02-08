@@ -11,33 +11,34 @@ playYoutubeId: PriDuaM6MEk
 - Windows via [the Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
 - Web via [GitHub Pages/Unity WebGL](cgs-webgl.html) *(experimental)*
 
-## How to Play & How to Create and Share
+## How to Play
 
 See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
 
-[Custom Game - Developer Docs](custom.html)
+## How to Create and Share
+
+Check [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and [the Custom Game Developer Docs](custom.html).
 
 ## Feedback
 
 See [the roadmap](roadmap.html). 
 
-Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com> or join our [Discord](https://discord.cgs.link). 
-Please also consider checking out [these projects](external.html).
+Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com>.
 
-[![alt text][1.1]][1]
-[![alt text][2.1]][2]
-[![alt text][3.1]][3]
-[![alt text][4.1]][4]
-[![alt text][5.1]][5]
+# External Links
+
+Consider checking out [these projects](external.html).
+
+Also consider joining our social media:
+
+- [![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com)
+- [![alt text][2.1]][2] [Twitter](https://twitter.com/cardgamesim)
+- [![alt text][3.1]][3] [Reddit](https://www.reddit.com/r/CardGameSimulator/)
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
-[2.1]: http://i.imgur.com/0o48UoR.png (github icon with padding)
-[3.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
-[4.1]: http://i.imgur.com/P3YfQoD.png (facebook icon with padding)
-[5.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
+[2.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
+[3.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
 
-[1]: https://discord.cgs.link
-[2]: https://www.github.com/finol-digital
-[3]: https://twitter.com/cardgamesim
-[4]: https://www.facebook.com/cardgamesimulator/
-[5]: https://www.reddit.com/r/CardGameSimulator/
+[1]: http://discord.cardgamesimulator.com
+[2]: https://twitter.com/cardgamesim
+[3]: https://www.reddit.com/r/CardGameSimulator/
