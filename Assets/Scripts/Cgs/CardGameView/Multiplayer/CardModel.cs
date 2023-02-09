@@ -675,6 +675,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void UnspawnCardServerRpc(bool shouldClientKeep)
         {
             UnspawnCardClientRpc(shouldClientKeep);
+            MyNetworkObject.DontDestroyWithOwner = shouldClientKeep;
             MyNetworkObject.Despawn(!shouldClientKeep);
         }
 
