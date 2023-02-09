@@ -78,7 +78,7 @@ namespace Cgs.CardGameView.Multiplayer
                 var oldValue = _isFacedown;
                 _isFacedown = value;
                 if (IsOnline)
-                    _isFacedownNetworkVariable.Value = _isFacedown;
+                    SetIsFacedownServerRpc(_isFacedown);
                 else if (oldValue != _isFacedown)
                     OnChangeIsFacedown(oldValue, _isFacedown);
             }
@@ -545,8 +545,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardZone == null || (IsOnline && !IsOwner))
                 return;
 
-            if (!cardZone.DoesImmediatelyRelease &&
-                (cardZone.type == CardZoneType.Vertical || cardZone.type == CardZoneType.Horizontal))
+            if (!cardZone.DoesImmediatelyRelease && cardZone.type is CardZoneType.Vertical or CardZoneType.Horizontal)
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
             else if (!IsStatic)
                 cardZone.UpdateLayout(transform as RectTransform, targetPosition);
@@ -564,8 +563,7 @@ namespace Cgs.CardGameView.Multiplayer
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
                 || (cardZone.type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
-                || (cardZone.type == CardZoneType.Area
-                    && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
+                || (cardZone.type == CardZoneType.Area && PlaceHolder != null && PlaceHolder.parent != transform.parent))
                 ParentToCanvas(targetPosition);
         }
 
@@ -639,13 +637,19 @@ namespace Cgs.CardGameView.Multiplayer
             if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out var unityCard) ||
                 unityCard == null)
             {
-                Debug.LogError("ERROR: Id changed to unknown card!");
+                Debug.LogError($"ERROR: Id for {gameObject.name} changed to unknown card!");
                 return;
             }
 
             gameObject.name = $"[{_id}] {unityCard.Name}";
             if (!IsFacedown)
                 unityCard.RegisterDisplay(this);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetIsFacedownServerRpc(bool isFacedown)
+        {
+            _isFacedownNetworkVariable.Value = isFacedown;
         }
 
         [PublicAPI]
@@ -671,14 +675,14 @@ namespace Cgs.CardGameView.Multiplayer
         private void UnspawnCardServerRpc(bool shouldClientKeep)
         {
             UnspawnCardClientRpc(shouldClientKeep);
+            MyNetworkObject.Despawn(!shouldClientKeep);
         }
 
         [ClientRpc]
         private void UnspawnCardClientRpc(bool shouldClientKeep)
         {
             var shouldKeep = shouldClientKeep && IsOwner;
-            if (IsServer)
-                MyNetworkObject.Despawn(!shouldKeep);
+            Debug.Log($"UnspawnCardClientRpc: shouldClientKeep is {shouldClientKeep}, shouldKeep is {shouldKeep}");
             if (!shouldKeep)
                 Destroy(gameObject);
         }
