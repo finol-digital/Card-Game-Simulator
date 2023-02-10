@@ -154,6 +154,8 @@ namespace Cgs.CardGameView.Multiplayer
         public override void OnNetworkSpawn()
         {
             PlayController.SetPlayActions(this);
+            _id = _idNetworkVariable.Value;
+            _isFacedown = _isFacedownNetworkVariable.Value;
         }
 
         protected override void OnAwakePlayable()
