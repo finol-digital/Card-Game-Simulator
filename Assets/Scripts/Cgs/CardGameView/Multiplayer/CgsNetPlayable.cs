@@ -42,7 +42,7 @@ namespace Cgs.CardGameView.Multiplayer
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playMat != null &&
-                                (PlayController.Instance.playMat.transform == transform.parent && IsSpawned);
+                                PlayController.Instance.playMat.transform == transform.parent && IsSpawned;
 
         public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
 

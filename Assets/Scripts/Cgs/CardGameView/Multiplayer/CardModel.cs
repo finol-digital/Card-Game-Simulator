@@ -596,8 +596,12 @@ namespace Cgs.CardGameView.Multiplayer
         private void MoveToClientServerRpc(ServerRpcParams serverRpcParams = default)
         {
             foreach(var clientId in NetworkManager.ConnectedClientsIds)
-                if (clientId != serverRpcParams.Receive.SenderClientId)
+                if (clientId != 0 && clientId != serverRpcParams.Receive.SenderClientId)
                     MyNetworkObject.NetworkHide(clientId);
+            MyNetworkObject.CheckObjectVisibility = _ => false;
+            Visibility.blocksRaycasts = false;
+            Visibility.interactable = false;
+            Visibility.alpha = 0;
         }
 
         private IEnumerator MoveToPlaceHolder()

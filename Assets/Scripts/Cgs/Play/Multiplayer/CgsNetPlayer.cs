@@ -469,9 +469,10 @@ namespace Cgs.Play.Multiplayer
             var position = ((RectTransform) cardModelTransform).localPosition;
             var rotation = cardModelTransform.rotation;
             SpawnCardServerRpc(cardModel.Id, position, rotation, cardModel.IsFacedown);
-            if (cardModel.IsOnline && cardModel.LacksOwnership)
+            if (cardModel.IsSpawned)
                 DespawnCardServerRpc(cardModel.gameObject);
-            Destroy(cardModel.gameObject);
+            else
+                Destroy(cardModel.gameObject);
         }
 
         [ServerRpc]
