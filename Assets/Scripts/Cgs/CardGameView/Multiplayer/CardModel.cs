@@ -570,7 +570,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void ParentToCanvas(Vector3 targetPosition)
         {
             if (IsOnline && IsOwner)
-                UnspawnKeepServerRpc();
+                MoveToClientServerRpc();
 
             var cardDropArea = GetComponent<CardDropArea>();
             if (cardDropArea != null)
@@ -590,6 +590,14 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.pivot = 0.5f * Vector2.one;
             rectTransform.position = targetPosition;
             rectTransform.localScale = Vector3.one;
+        }
+
+        [ServerRpc]
+        private void MoveToClientServerRpc(ServerRpcParams serverRpcParams = default)
+        {
+            foreach(var clientId in NetworkManager.ConnectedClientsIds)
+                if (clientId != serverRpcParams.Receive.SenderClientId)
+                    MyNetworkObject.NetworkHide(clientId);
         }
 
         private IEnumerator MoveToPlaceHolder()
@@ -667,21 +675,13 @@ namespace Cgs.CardGameView.Multiplayer
             Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;
             if (IsOnline && IsSpawned)
-                UnspawnDiscardServerRpc();
+                DiscardDespawnServerRpc();
             Destroy(gameObject);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void UnspawnKeepServerRpc()
+        private void DiscardDespawnServerRpc()
         {
-            MyNetworkObject.DontDestroyWithOwner = true;
-            MyNetworkObject.Despawn(false);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void UnspawnDiscardServerRpc()
-        {
-            MyNetworkObject.DontDestroyWithOwner = false;
             MyNetworkObject.Despawn();
         }
 

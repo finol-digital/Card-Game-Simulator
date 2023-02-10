@@ -37,6 +37,8 @@ namespace Cgs.CardGameView.Multiplayer
         private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
+        private const float DisownTime = 5.0f;
+
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playMat != null &&
@@ -87,6 +89,9 @@ namespace Cgs.CardGameView.Multiplayer
         protected bool DidDrag { get; set; }
         protected DragPhase CurrentDragPhase { get; private set; }
         protected float HoldTime { get; private set; }
+
+        private float _disownedTime;
+        private Vector2 _previousPosition;
 
         public bool ToDiscard { get; protected set; }
 
@@ -168,6 +173,19 @@ namespace Cgs.CardGameView.Multiplayer
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
+
+            if (IsOnline && IsServer && !IsOwner)
+            {
+                if (_previousPosition == Position)
+                    _disownedTime += Time.deltaTime;
+                else
+                    _disownedTime = 0;
+
+                _previousPosition = Position;
+
+                if (_disownedTime > DisownTime)
+                    MyNetworkObject.RemoveOwnership();
+            }
 
             OnUpdatePlayable();
         }
