@@ -151,6 +151,11 @@ namespace Cgs.CardGameView.Multiplayer
         private CanvasGroup Visibility => _visibility ??= GetComponent<CanvasGroup>();
         private CanvasGroup _visibility;
 
+        public override void OnNetworkSpawn()
+        {
+            PlayController.SetPlayActions(this);
+        }
+
         protected override void OnAwakePlayable()
         {
             _idNetworkVariable.OnValueChanged += OnChangeId;
@@ -236,7 +241,8 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
             if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
-                eventData.dragging || eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
+                eventData.dragging ||
+                eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
                 return;
 
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
@@ -563,7 +569,8 @@ namespace Cgs.CardGameView.Multiplayer
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
                 || (cardZone.type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
-                || (cardZone.type == CardZoneType.Area && PlaceHolder != null && PlaceHolder.parent != transform.parent))
+                || (cardZone.type == CardZoneType.Area && PlaceHolder != null &&
+                    PlaceHolder.parent != transform.parent))
                 ParentToCanvas(targetPosition);
         }
 
@@ -595,10 +602,17 @@ namespace Cgs.CardGameView.Multiplayer
         [ServerRpc]
         private void MoveToClientServerRpc(ServerRpcParams serverRpcParams = default)
         {
-            foreach(var clientId in NetworkManager.ConnectedClientsIds)
+            foreach (var clientId in NetworkManager.ConnectedClientsIds)
                 if (clientId != 0 && clientId != serverRpcParams.Receive.SenderClientId)
                     MyNetworkObject.NetworkHide(clientId);
             MyNetworkObject.CheckObjectVisibility = _ => false;
+
+            if (serverRpcParams.Receive.SenderClientId != 0)
+                HideInvisible();
+        }
+
+        private void HideInvisible()
+        {
             Visibility.blocksRaycasts = false;
             Visibility.interactable = false;
             Visibility.alpha = 0;
@@ -678,15 +692,17 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;
-            if (IsOnline && IsSpawned)
-                DiscardDespawnServerRpc();
-            Destroy(gameObject);
+            if (IsSpawned)
+                DespawnAndDestroyServerRpc();
+            else
+                Destroy(gameObject);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void DiscardDespawnServerRpc()
+        private void DespawnAndDestroyServerRpc()
         {
             MyNetworkObject.Despawn();
+            Destroy(gameObject);
         }
 
         public override void OnDestroy()
@@ -699,11 +715,6 @@ namespace Cgs.CardGameView.Multiplayer
                 Destroy(PlaceHolder.gameObject);
 
             base.OnDestroy();
-        }
-
-        public override void OnNetworkSpawn()
-        {
-            PlayController.SetPlayActions(this);
         }
     }
 }
