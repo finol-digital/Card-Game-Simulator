@@ -1,1 +1,2 @@
-- Bug Fixes
+- Bug-Fix: Networking issues
+- Integration: ZIP File support
