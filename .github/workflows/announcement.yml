@@ -22,9 +22,6 @@ jobs:
         run: |
           RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
           export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"
-          ANNOUNCEMENT="${ANNOUNCEMENT//'%'/'%25'}"
-          ANNOUNCEMENT="${ANNOUNCEMENT//$'\n'/'%0A'}"
-          ANNOUNCEMENT="${ANNOUNCEMENT//$'\r'/'%0D'}"
           echo "$ANNOUNCEMENT"
           echo "ANNOUNCEMENT=$ANNOUNCEMENT" >> $GITHUB_OUTPUT
       - name: Discord Announcement
