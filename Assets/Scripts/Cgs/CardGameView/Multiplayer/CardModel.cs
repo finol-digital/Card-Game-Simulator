@@ -78,7 +78,7 @@ namespace Cgs.CardGameView.Multiplayer
                 var oldValue = _isFacedown;
                 _isFacedown = value;
                 if (IsOnline)
-                    _isFacedownNetworkVariable.Value = _isFacedown;
+                    SetIsFacedownServerRpc(_isFacedown);
                 else if (oldValue != _isFacedown)
                     OnChangeIsFacedown(oldValue, _isFacedown);
             }
@@ -150,6 +150,13 @@ namespace Cgs.CardGameView.Multiplayer
 
         private CanvasGroup Visibility => _visibility ??= GetComponent<CanvasGroup>();
         private CanvasGroup _visibility;
+
+        public override void OnNetworkSpawn()
+        {
+            PlayController.SetPlayActions(this);
+            _id = _idNetworkVariable.Value;
+            _isFacedown = _isFacedownNetworkVariable.Value;
+        }
 
         protected override void OnAwakePlayable()
         {
@@ -236,8 +243,8 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
             if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
-                eventData.dragging || eventData.button == PointerEventData.InputButton.Middle ||
-                eventData.button == PointerEventData.InputButton.Right)
+                eventData.dragging ||
+                eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
                 return;
 
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
@@ -546,8 +553,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardZone == null || (IsOnline && !IsOwner))
                 return;
 
-            if (!cardZone.DoesImmediatelyRelease &&
-                (cardZone.type == CardZoneType.Vertical || cardZone.type == CardZoneType.Horizontal))
+            if (!cardZone.DoesImmediatelyRelease && cardZone.type is CardZoneType.Vertical or CardZoneType.Horizontal)
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
             else if (!IsStatic)
                 cardZone.UpdateLayout(transform as RectTransform, targetPosition);
@@ -565,15 +571,15 @@ namespace Cgs.CardGameView.Multiplayer
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
                 || (cardZone.type == CardZoneType.Vertical && isOutXBounds)
                 || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
-                || (cardZone.type == CardZoneType.Area
-                    && (isOutYBounds || (PlaceHolder != null && PlaceHolder.parent != transform.parent))))
+                || (cardZone.type == CardZoneType.Area && PlaceHolder != null &&
+                    PlaceHolder.parent != transform.parent))
                 ParentToCanvas(targetPosition);
         }
 
         private void ParentToCanvas(Vector3 targetPosition)
         {
             if (IsOnline && IsOwner)
-                UnspawnCardServerRpc(true);
+                MoveToClientServerRpc();
 
             var cardDropArea = GetComponent<CardDropArea>();
             if (cardDropArea != null)
@@ -593,6 +599,25 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.pivot = 0.5f * Vector2.one;
             rectTransform.position = targetPosition;
             rectTransform.localScale = Vector3.one;
+        }
+
+        [ServerRpc]
+        private void MoveToClientServerRpc(ServerRpcParams serverRpcParams = default)
+        {
+            foreach (var clientId in NetworkManager.ConnectedClientsIds)
+                if (clientId != 0 && clientId != serverRpcParams.Receive.SenderClientId)
+                    MyNetworkObject.NetworkHide(clientId);
+            MyNetworkObject.CheckObjectVisibility = _ => false;
+
+            if (serverRpcParams.Receive.SenderClientId != 0)
+                HideInvisible();
+        }
+
+        private void HideInvisible()
+        {
+            Visibility.blocksRaycasts = false;
+            Visibility.interactable = false;
+            Visibility.alpha = 0;
         }
 
         private IEnumerator MoveToPlaceHolder()
@@ -640,13 +665,19 @@ namespace Cgs.CardGameView.Multiplayer
             if (string.IsNullOrEmpty(_id) || !CardGameManager.Current.Cards.TryGetValue(_id, out var unityCard) ||
                 unityCard == null)
             {
-                Debug.LogError("ERROR: Id changed to unknown card!");
+                Debug.LogError($"ERROR: Id for {gameObject.name} changed to unknown card!");
                 return;
             }
 
             gameObject.name = $"[{_id}] {unityCard.Name}";
             if (!IsFacedown)
                 unityCard.RegisterDisplay(this);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetIsFacedownServerRpc(bool isFacedown)
+        {
+            _isFacedownNetworkVariable.Value = isFacedown;
         }
 
         [PublicAPI]
@@ -663,25 +694,17 @@ namespace Cgs.CardGameView.Multiplayer
         {
             Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;
-            if (IsOnline && IsSpawned)
-                UnspawnCardServerRpc(false);
-            Destroy(gameObject);
+            if (IsSpawned)
+                DespawnAndDestroyServerRpc();
+            else
+                Destroy(gameObject);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void UnspawnCardServerRpc(bool shouldClientKeep)
+        private void DespawnAndDestroyServerRpc()
         {
-            UnspawnCardClientRpc(shouldClientKeep);
-        }
-
-        [ClientRpc]
-        private void UnspawnCardClientRpc(bool shouldClientKeep)
-        {
-            var shouldKeep = shouldClientKeep && IsOwner;
-            if (IsServer)
-                MyNetworkObject.Despawn(!shouldKeep);
-            if (!shouldKeep)
-                Destroy(gameObject);
+            MyNetworkObject.Despawn();
+            Destroy(gameObject);
         }
 
         public override void OnDestroy()
@@ -694,11 +717,6 @@ namespace Cgs.CardGameView.Multiplayer
                 Destroy(PlaceHolder.gameObject);
 
             base.OnDestroy();
-        }
-
-        public override void OnNetworkSpawn()
-        {
-            PlayController.SetPlayActions(this);
         }
     }
 }

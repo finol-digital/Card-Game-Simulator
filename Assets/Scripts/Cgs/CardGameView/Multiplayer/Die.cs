@@ -15,12 +15,13 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public class Die : CgsNetPlayable
     {
-        public const int DefaultMin = 1;
-        public const int DefaultMax = 6;
         public const string DeletePrompt = "Delete die?";
 
-        private const float RollTime = 1.0f;
-        private const float RollDelay = 0.05f;
+        public const int DefaultMin = 1;
+        public const int DefaultMax = 6;
+
+        private const float RollTotalTime = 1.0f;
+        private const float RollPeriodTime = 0.05f;
 
         public Text valueText;
 
@@ -77,8 +78,8 @@ namespace Cgs.CardGameView.Multiplayer
         private int _value;
         private readonly NetworkVariable<int> _valueNetworkVariable = new();
 
-        private float _rollTime;
-        private float _rollDelay;
+        private float _rollRemainingTime;
+        private float _rollPeriodTime;
 
         protected override void OnAwakePlayable()
         {
@@ -94,21 +95,21 @@ namespace Cgs.CardGameView.Multiplayer
             transform.localPosition = Position;
 
             if (!NetworkManager.Singleton.IsConnectedClient || IsServer)
-                _rollTime = RollTime;
+                _rollRemainingTime = RollTotalTime;
         }
 
         protected override void OnUpdatePlayable()
         {
-            if (_rollTime <= 0 || (NetworkManager.Singleton.IsConnectedClient && !IsServer))
+            if ((NetworkManager.Singleton.IsConnectedClient && !IsServer) || _rollRemainingTime <= 0)
                 return;
 
-            _rollTime -= Time.deltaTime;
-            _rollDelay += Time.deltaTime;
-            if (_rollDelay < RollDelay)
+            _rollRemainingTime -= Time.deltaTime;
+            _rollPeriodTime += Time.deltaTime;
+            if (_rollPeriodTime < RollPeriodTime)
                 return;
 
             Value = Random.Range(Min, Max + 1);
-            _rollDelay = 0;
+            _rollPeriodTime = 0;
         }
 
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
@@ -201,13 +202,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsOnline)
                 RollServerRpc();
             else
-                _rollTime = RollTime;
+                _rollRemainingTime = RollTotalTime;
         }
 
         [ServerRpc(RequireOwnership = false)]
         private void RollServerRpc()
         {
-            _rollTime = RollTime;
+            _rollRemainingTime = RollTotalTime;
         }
 
         [UsedImplicitly]

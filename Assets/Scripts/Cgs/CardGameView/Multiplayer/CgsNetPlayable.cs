@@ -37,10 +37,12 @@ namespace Cgs.CardGameView.Multiplayer
         private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
+        private const float DisownTime = 5.0f;
+
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
         public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playMat != null &&
-                                (PlayController.Instance.playMat.transform == transform.parent && IsSpawned);
+                                PlayController.Instance.playMat.transform == transform.parent && IsSpawned;
 
         public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
 
@@ -48,11 +50,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkObject _networkObject;
 
-        protected bool IsProcessingSecondaryDragAction =>
-            PointerDragOffsets.Count > 1
-            || CurrentPointerEventData != null &&
-            (CurrentPointerEventData.button == PointerEventData.InputButton.Middle ||
-             CurrentPointerEventData.button == PointerEventData.InputButton.Right);
+        protected bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 || CurrentPointerEventData is
+            {button: PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right};
 
         public Vector2 Position
         {
@@ -82,8 +81,6 @@ namespace Cgs.CardGameView.Multiplayer
         private Quaternion _rotation;
         private readonly NetworkVariable<Quaternion> _rotationNetworkVariable = new();
 
-        private readonly NetworkVariable<bool> _isClientOwner = new();
-
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
         protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
@@ -92,6 +89,9 @@ namespace Cgs.CardGameView.Multiplayer
         protected bool DidDrag { get; set; }
         protected DragPhase CurrentDragPhase { get; private set; }
         protected float HoldTime { get; private set; }
+
+        private float _disownedTime;
+        private Vector2 _previousPosition;
 
         public bool ToDiscard { get; protected set; }
 
@@ -123,7 +123,7 @@ namespace Cgs.CardGameView.Multiplayer
                         break;
                     default:
                     case HighlightMode.Off:
-                        var isOthers = IsOnline && _isClientOwner.Value && !IsOwner;
+                        var isOthers = IsOnline && !IsOwner;
                         Highlight.effectColor = isOthers ? Color.yellow : Color.black;
                         Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                         break;
@@ -173,6 +173,19 @@ namespace Cgs.CardGameView.Multiplayer
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
+
+            if (IsOnline && IsServer && !IsOwner)
+            {
+                if (_previousPosition == Position)
+                    _disownedTime += Time.deltaTime;
+                else
+                    _disownedTime = 0;
+
+                _previousPosition = Position;
+
+                if (_disownedTime > DisownTime)
+                    MyNetworkObject.RemoveOwnership();
+            }
 
             OnUpdatePlayable();
         }
@@ -423,7 +436,6 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            _isClientOwner.Value = true;
             MyNetworkObject.ChangeOwnership(clientId);
         }
 
@@ -468,7 +480,6 @@ namespace Cgs.CardGameView.Multiplayer
         private void RemoveOwnershipServerRpc()
         {
             MyNetworkObject.RemoveOwnership();
-            _isClientOwner.Value = false;
         }
 
         [ClientRpc]
