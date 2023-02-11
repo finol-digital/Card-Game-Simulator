@@ -23,7 +23,9 @@ jobs:
           RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
           export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"
           echo "$ANNOUNCEMENT"
-          echo "ANNOUNCEMENT=$ANNOUNCEMENT" >> $GITHUB_OUTPUT
+          echo 'ANNOUNCEMENT<<EOF' >> $GITHUB_OUTPUT
+          echo "$ANNOUNCEMENT" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Discord Announcement
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
