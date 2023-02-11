@@ -77,7 +77,7 @@ jobs:
         with:
           branch: main
           file_pattern: fastlane/metadata
-          commit_message: Update Release Notes
+          commit_message: Update Release Notes (MINOR)
 
   lint:
     name: Quality Check
