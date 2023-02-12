@@ -60,18 +60,7 @@ platform :ios do
   desc "Create .ipa"
   lane :build do
     setup_ci
-    app_store_connect_api_key(
-      key_id: ENV['APPSTORE_KEY_ID'],
-      issuer_id: ENV['APPSTORE_ISSUER_ID'],
-      key_content: ENV['APPSTORE_P8']
-    )
-    match(
-      type: 'appstore',
-      storage_mode: 'git',
-      git_url: ENV['MATCH_URL'],
-      git_basic_authorization: Base64.strict_encode64("#{ENV['APPLE_CONNECT_EMAIL']}:#{ENV['MATCH_PERSONAL_ACCESS_TOKEN']}"),
-      app_identifier: ENV['IOS_BUNDLE_ID']
-    )
+    sync_certificates
     update_code_signing_settings(
       use_automatic_signing: true,
       path: "#{ENV['IOS_BUILD_PATH']}/iOS/Unity-iPhone.xcodeproj"
@@ -86,7 +75,7 @@ platform :ios do
       profile_uuid: ENV["sigh_#{ENV['IOS_BUNDLE_ID']}_appstore"]
     )
     cocoapods(
-      clean_install: false,
+      clean_install: true,
       podfile: "#{ENV['IOS_BUILD_PATH']}/iOS/"
     )
     build_app(
