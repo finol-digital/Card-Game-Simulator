@@ -4,9 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.80
-- Bug-Fix: Networking issues
-- Integration: ZIP File support
+## What's New - v1.81
+
 
 ## Active Sprint
 - Cards: Preview on mouse-over
