@@ -29,7 +29,8 @@ jobs:
           APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
 
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
-          CGS_PAT: ${{ secrets.CGS_PAT }}
+          MATCH_PERSONAL_ACCCESS_TOKEN: ${{ secrets.CGS_PAT }}
+
           GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}
           MATCH_REPOSITORY: ${{ secrets.MATCH_REPOSITORY }}
           MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
