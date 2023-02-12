@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/joshdholtz/fastlane-plugin-github_action
+  revision: 5cfdcb334fdf603409e94b09b6b10ab472f2ea35
+  specs:
+    fastlane-plugin-github_action (1.1.0)
+      dotenv
+      fastlane (>= 2.148.1)
+      rbnacl
+      sshkey
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -223,6 +233,8 @@ GEM
     plist (3.6.0)
     public_suffix (4.0.7)
     rake (13.0.6)
+    rbnacl (7.1.1)
+      ffi
     representable (3.2.0)
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
@@ -242,6 +254,7 @@ GEM
     simctl (1.6.8)
       CFPropertyList
       naturally
+    sshkey (2.0.0)
     terminal-notifier (2.0.0)
     terminal-table (1.8.0)
       unicode-display_width (~> 1.1, >= 1.1.1)
@@ -285,6 +298,7 @@ PLATFORMS
 DEPENDENCIES
   cocoapods
   fastlane
+  fastlane-plugin-github_action!
 
 BUNDLED WITH
    2.3.8

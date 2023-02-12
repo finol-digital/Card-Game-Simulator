@@ -622,7 +622,7 @@ jobs:
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
           $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
-          $manifest.Package.mp:PhoneIdentity.PhoneProductId = "833d30e8-ff14-43bd-b090-1eda8a4c3116"
+#          $manifest.Package.mp:PhoneIdentity.PhoneProductId = "833d30e8-ff14-43bd-b090-1eda8a4c3116"
           $manifest.save(".\$env:UwpProjectDirectory\Package.appxmanifest")
           echo ".\$env:UwpProjectDirectory\Package.appxmanifest"
           cat ".\$env:UwpProjectDirectory\Package.appxmanifest"
