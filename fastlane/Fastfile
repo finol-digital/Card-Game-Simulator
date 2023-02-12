@@ -19,7 +19,7 @@ platform :ios do
     match_org, match_repo = (ENV["MATCH_REPOSITORY"]||"").split("/")
     setup_ci
     github_action(
-      api_token: ENV["CGS_PAT"],
+      api_token: ENV["MATCH_PERSONAL_ACCESS_TOKEN"],
       org: org,
       repo: repo,
       match_org: match_org,
