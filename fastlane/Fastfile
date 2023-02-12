@@ -75,7 +75,7 @@ platform :ios do
       profile_uuid: ENV["sigh_#{ENV['IOS_BUNDLE_ID']}_appstore"]
     )
     cocoapods(
-      clean_install: true,
+      clean_install: false,
       podfile: "#{ENV['IOS_BUILD_PATH']}/iOS/"
     )
     build_app(
