@@ -339,9 +339,9 @@ jobs:
           MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_PERSONAL_ACCESS_TOKEN: ${{ secrets.CGS_PAT }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
-          APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID_GITHUB }}
+          APPSTORE_P8: ${{ secrets.APPSTORE_P8_GITHUB }}
           USYM_UPLOAD_AUTH_TOKEN: ${{ secrets.USYM_UPLOAD_AUTH_TOKEN }}
           IOS_BUILD_PATH: ${{ format('{0}/build/iOS', github.workspace) }}
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
@@ -439,9 +439,8 @@ jobs:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
           APPLE_DEVELOPER_EMAIL: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_TEAM_NAME: ${{ secrets.APPLE_TEAM_NAME }}
-          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+          APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_P8: ${{ secrets. APPSTORE_P8 }}
           MAC_BUILD_PATH: ${{ format('{0}/build/StandaloneOSX', github.workspace) }}
           MAC_BUNDLE_ID: com.finoldigital.CardGameSimulator
