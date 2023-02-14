@@ -39,14 +39,18 @@ namespace Cgs.Editor
             pbxProject.ReadFromFile(pbxProjectPath);
 
             const string targetName = "Unity-iPhone";
-            var targetGuid = pbxProject.GetUnityMainTargetGuid();
+            var unityMainTargetGuid = pbxProject.GetUnityMainTargetGuid();
             var src = AssetDatabase.GetAssetPath(file);
             var fileName = Path.GetFileName(src);
             var dst = buildPath + "/" + targetName + "/" + fileName;
             if (!File.Exists(dst))
                 FileUtil.CopyFileOrDirectory(src, dst);
             pbxProject.AddFile(targetName + "/" + fileName, fileName);
-            pbxProject.AddBuildProperty(targetGuid, "CODE_SIGN_ENTITLEMENTS", targetName + "/" + fileName);
+            pbxProject.AddBuildProperty(unityMainTargetGuid, "CODE_SIGN_ENTITLEMENTS", targetName + "/" + fileName);
+
+            foreach (var targetGuid in new[] {unityMainTargetGuid, pbxProject.GetUnityFrameworkTargetGuid()})
+                pbxProject.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
+
             pbxProject.WriteToFile(pbxProjectPath);
 
             var plistPath = buildPath + "/Info.plist";
