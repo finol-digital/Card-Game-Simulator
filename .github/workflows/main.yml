@@ -196,7 +196,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
-          androidAppBundle: true
+          androidExportType: 'androidAppBundle'
           androidKeystoreName: finoldigital.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
@@ -265,6 +265,7 @@ jobs:
         with:
           targetPlatform: StandaloneOSX
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          cacheUnityInstallationOnMac: true
       - name: Fix File Permissions and Code-Sign
         env:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
