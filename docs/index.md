@@ -36,7 +36,7 @@ Also consider joining our social media:
 [![alt text][3.1]][3] [Reddit](https://www.reddit.com/r/CardGameSimulator/)
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
-[2.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
+[2.1]: https://i.imgur.com/tXSoThF.png (twitter icon with padding)
 [3.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
 
 [1]: http://discord.cardgamesimulator.com
