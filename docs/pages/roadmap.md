@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.81
-
+- Bug-Fix: Die Max Value
 
 ## Active Sprint
 - Cards: Preview on mouse-over
