@@ -57,12 +57,13 @@ jobs:
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
       - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@fixlicense
+        uses: game-ci/unity-test-runner@v2
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
+          testMode: playmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Release Notes
         if: github.event.action == 'published'
