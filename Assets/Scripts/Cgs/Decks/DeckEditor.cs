@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CardGameDef;
 using CardGameDef.Unity;
@@ -114,7 +115,9 @@ namespace Cgs.Decks
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
             dropZones.ForEach(dropZone => dropZone.DropHandler = this);
-            ShowDeckLoadMenu();
+            if (Directory.Exists(CardGameManager.Current.DecksDirectoryPath) &&
+                Directory.GetFiles(CardGameManager.Current.DecksDirectoryPath).Length > 0)
+                ShowDeckLoadMenu();
         }
 
         private void Update()
@@ -313,7 +316,8 @@ namespace Cgs.Decks
             IsZoomed = !IsZoomed;
             searchContent.gameObject.SetActive(!IsZoomed);
             var deckEditorLayoutRectTransform = (RectTransform) deckEditorLayout.transform;
-            deckEditorLayoutRectTransform.anchorMin = IsZoomed ? Vector2.zero : DeckEditorLayout.DeckButtonsPortraitAnchor;
+            deckEditorLayoutRectTransform.anchorMin =
+                IsZoomed ? Vector2.zero : DeckEditorLayout.DeckButtonsPortraitAnchor;
             deckEditorLayoutRectTransform.offsetMin = Vector2.up * (IsZoomed && deckEditorLayout.IsPortrait ? 90 : 10);
         }
 

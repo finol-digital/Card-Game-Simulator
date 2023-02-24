@@ -36,7 +36,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private int _min;
+        private int _min = DefaultMin;
         private readonly NetworkVariable<int> _minNetworkVariable = new();
 
         public int Max
@@ -50,7 +50,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private int _max;
+        private int _max = DefaultMax;
         private readonly NetworkVariable<int> _maxNetworkVariable = new();
 
         public override string ViewValue => $"Value: {Value}";
@@ -88,9 +88,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            Min = DefaultMin;
-            Max = DefaultMax;
-
             ParentToPlayMat();
             transform.localPosition = Position;
 
