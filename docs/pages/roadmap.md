@@ -9,11 +9,12 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Cards: Preview on mouse-over
-- Game-Play: Face-Up Stacks (Always reveal the top card)
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+- Game-Play: Face-Up Stacks (Always reveal the top card)
 
 ## Backlog - 2023 Q1
+- Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
@@ -43,7 +44,6 @@ permalink: roadmap.html
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
-- Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Deck Editor: Edit Deck List in the Deck Save Menu
 
 ## Backlog - 2023 Q3
