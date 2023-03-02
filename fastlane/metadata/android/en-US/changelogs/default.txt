@@ -1,2 +1,2 @@
-- Bug-Fix: Networking issues
-- Integration: ZIP File support
+- Bug-Fix: Die Max Value
+- Bug-Fix: Card not found in multiplayer
