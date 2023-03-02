@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## What's New - v1.81
 - Bug-Fix: Die Max Value
+- Bug-Fix: Card not found in multiplayer
 
 ## Active Sprint
 - Cards: Preview on mouse-over
