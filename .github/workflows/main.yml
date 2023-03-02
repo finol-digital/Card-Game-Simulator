@@ -63,7 +63,6 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          testMode: editMode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Release Notes
         if: github.event.action == 'published'
@@ -197,6 +196,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          androidAppBundle: true
           androidExportType: 'androidAppBundle'
           androidKeystoreName: finoldigital.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
