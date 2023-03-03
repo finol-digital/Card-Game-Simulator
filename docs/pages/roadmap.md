@@ -9,12 +9,15 @@ permalink: roadmap.html
 - Bug-Fix: Card not found in multiplayer
 
 ## Active Sprint
+- Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
+- Cards Transforming Bug: Card in hand turns into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA
+- Image File Compression: Images fail to load and the zip export file gets corrupted
+
+## Backlog - 2023 Q1
 - Cards: Preview on mouse-over
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card)
-
-## Backlog - 2023 Q1
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
