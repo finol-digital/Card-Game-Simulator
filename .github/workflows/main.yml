@@ -611,12 +611,14 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
           replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-      - name: Add Package.StoreAssociation.xml to vcxproj
-        uses: davidmfinol/replace-action@master
+      - name: Add Package.StoreAssociation.xml to .vcxproj
+        uses: jacobtomlinson/gha-find-replace@v3
         with:
-          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
-          replacements: "<Import Project='$(VCTargetsPath)\\Microsoft.Cpp.targets' />=<ItemGroup><None Include='Package.StoreAssociation.xml' /></ItemGroup><Import Project='$(VCTargetsPath)\\Microsoft.Cpp.targets' />"
-      - name: Add Package.StoreAssociation.xml and Update manifest name
+          find: "<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
+          replace: "<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include='Package.StoreAssociation.xml' /></ItemGroup>"
+          regex: false
+          include: "**Card Game Simulator.vcxproj"
+      - name: Move the Package.StoreAssociation.xml and Update manifest name
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
