@@ -10,8 +10,8 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
-- Cards Transforming Bug: Card in hand turns into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA
 - Image File Compression: Images fail to load and the zip export file gets corrupted
+- Cards Transforming Bug: Card in hand turns into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA
 - Progress Bar not appearing when downloading a card game from Steam
 
 ## Backlog - 2023 Q1

@@ -6,10 +6,15 @@ permalink: custom.html
 Card Game Simulator allows users to create, share, and play custom card games.
 
 ## CGS Core Concept
-A custom game in CGS is a specification for a collection of information about a card game. This information primarily includes sets of cards and a definition of what properties those cards have. Ancillary information can include decks and boards to use with the game. See below for the full specification.
+A custom card game in CGS follows the `Cgs.CardGameDef` specification. 
+This specification primarily includes information on sets of cards and a definition of what properties those cards have. 
+Ancillary information can include decks and boards to use with the game. 
+See below for the full specification.
 
 ## CGS games directory
-Custom games are created with a new folder within the persistent games data directory. The location of this persistent data directory varies depending on platform. Some examples include:
+Custom games are created with a new folder within the persistent games data directory. 
+The location of this persistent data directory varies depending on platform. 
+Some examples include:
 - Android: /Data/Data/com.finoldigital.cardgamesim/files/games/
 - Mac: ~/Library/Containers/com.finoldigital.CardGameSimulator/Data/Library/Application Support/com.finoldigital.CardGameSimulator/games
 - Windows (Steam): C:\Users\\<user\>\AppData\LocalLow\Finol Digital LLC\Card Game Simulator\games
@@ -38,7 +43,8 @@ The structure of this custom game folder is:
     * ...
 
 ## JSON File Structure
-The GGS AutoUpdate Url that is used to download a card game is actually a pointer to the *Game:Name*.json file. CGS generates the rest of the folder structure based off that *CardGameDef.json* file. 
+The GGS AutoUpdate Url that is used to download a card game is actually a pointer to the *Game:Name*.json file. 
+CGS generates the rest of the folder structure based off that *CardGameDef.json* file. 
 
 You can create your own json and [validate](https://www.jsonschemavalidator.net/) against these schema:
 - [CardGameDef](schema/CardGameDef.json)
