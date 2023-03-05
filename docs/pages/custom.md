@@ -2,7 +2,7 @@
 permalink: custom.html
 ---
 
-# CGS Custom Games
+# CGS Custom Card Game
 Card Game Simulator allows users to create, share, and play custom card games.
 
 ## CGS Core Concept
