@@ -1,18 +1,22 @@
 {
     "name": "PlayMode",
+    "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Cgs",
         "CardGameDef.Unity",
-        "CardGameDef"
+        "CardGameDef",
+        "UnityExtensionMethods"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll",
+        "Newtonsoft.Json.Schema.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

@@ -1,36 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Cgs.Editor;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using NUnit.Framework;
 using UnityEngine;
 using UnityExtensionMethods;
 
-namespace Tests.EditMode
+namespace Tests.PlayMode
 {
     public class SchemaTests
     {
-        [Test]
-        public void UpdatedSchema()
-        {
-            string previous = File.ReadAllText(WriteCgsSchema.SchemaFilePath);
-            WriteCgsSchema.WriteCardGameDef();
-            string current = File.ReadAllText(WriteCgsSchema.SchemaFilePath);
-            Assert.AreEqual(previous, current);
-        }
+        private static string SchemaFilePath => Application.dataPath.Remove(Application.dataPath.Length - 6, 6)
+                                                + "docs/schema/CardGameDef.json";
 
         [Test]
         public void ValidatedSchema()
         {
-            JSchema schema = JSchema.Parse(File.ReadAllText(WriteCgsSchema.SchemaFilePath));
-            string streamingAssetsPath = Path.Combine(Application.dataPath, "StreamingAssets");
-            foreach (string directory in Directory.EnumerateDirectories(streamingAssetsPath))
+            var schema = JSchema.Parse(File.ReadAllText(SchemaFilePath));
+            var streamingAssetsPath = Path.Combine(Application.dataPath, "StreamingAssets");
+            foreach (var directory in Directory.EnumerateDirectories(streamingAssetsPath))
             {
-                string fileName = Path.GetFileName(directory);
-                string name = fileName.Substring(0, fileName.IndexOf('@'));
-                JToken json = JToken.Parse(File.ReadAllText(Path.Combine(directory, $"{name}.json")));
+                var fileName = Path.GetFileName(directory);
+                var name = fileName[..fileName.IndexOf('@')];
+                var json = JToken.Parse(File.ReadAllText(Path.Combine(directory, $"{name}.json")));
                 Assert.IsTrue(json.IsValid(schema));
             }
         }
@@ -38,11 +31,11 @@ namespace Tests.EditMode
         [Test]
         public void ValidatedGames()
         {
-            string streamingAssetsPath = Path.Combine(Application.dataPath, "StreamingAssets");
-            foreach (string directory in Directory.EnumerateDirectories(streamingAssetsPath))
+            var streamingAssetsPath = Path.Combine(Application.dataPath, "StreamingAssets");
+            foreach (var directory in Directory.EnumerateDirectories(streamingAssetsPath))
             {
-                string fileName = Path.GetFileName(directory);
-                string name = fileName.Substring(0, fileName.IndexOf('@'));
+                var fileName = Path.GetFileName(directory);
+                var name = fileName[..fileName.IndexOf('@')];
                 if ("Standard Playing Cards".Equals(name))
                     name = "Standard";
 
@@ -51,7 +44,7 @@ namespace Tests.EditMode
                     Application.dataPath.Remove(Application.dataPath.Length - 6, 6)
                     + $"docs/games/{name}");
 
-                IEnumerable<FileInfo> streamingFiles =
+                var streamingFiles =
                     streamingDirectoryInfo.GetFiles("*.*", SearchOption.AllDirectories)
                         .Where(file =>
                             !file.Name.EndsWith(UnityFileMethods.MetaExtension) &&
@@ -60,7 +53,7 @@ namespace Tests.EditMode
 
                 // A custom file comparer defined below
                 var fileCompare = new FileCompare();
-                IEnumerable<FileInfo> missingFiles =
+                var missingFiles =
                     (from file in streamingFiles select file).Except(docsFiles, fileCompare);
                 Assert.IsEmpty(missingFiles);
             }

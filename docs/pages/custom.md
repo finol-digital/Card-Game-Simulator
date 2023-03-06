@@ -6,7 +6,7 @@ permalink: custom.html
 Card Game Simulator allows users to create, share, and play custom card games.
 
 ## CGS Core Concept
-A custom card game in CGS follows the `Cgs.CardGameDef` specification. 
+A custom card game in CGS follows the `FinolDigital.Cgs.CardGameDef` specification. 
 This specification primarily includes information on sets of cards and a definition of what properties those cards have. 
 Ancillary information can include decks and boards to use with the game. 
 See below for the full specification.
@@ -47,10 +47,10 @@ The GGS AutoUpdate Url that is used to download a card game is actually a pointe
 CGS generates the rest of the folder structure based off that *CardGameDef.json* file. 
 
 You can create your own json and [validate](https://www.jsonschemavalidator.net/) against these schema:
-- [CardGameDef](schema/CardGameDef.json)
-- [AllCards](schema/AllCards.json)
-- [AllDecks](schema/AllDecks.json)
-- [AllSets](schema/AllSets.json)
+- [CardGameDef](https://github.com/finol-digital/FinolDigital.Cgs.CardGameDef/blob/main/schema/CardGameDef.json)
+- [AllCards](https://github.com/finol-digital/FinolDigital.Cgs.CardGameDef/blob/main/schema/AllCards.json)
+- [AllDecks](https://github.com/finol-digital/FinolDigital.Cgs.CardGameDef/blob/main/schema/AllDecks.json)
+- [AllSets](https://github.com/finol-digital/FinolDigital.Cgs.CardGameDef/blob/main/schema/AllSets.json)
 
 ## Examples
 The default examples can be found in the [CGS GitHub Repository](https://github.com/finol-digital/Card-Game-Simulator/tree/develop/docs/games).
