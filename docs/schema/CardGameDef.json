@@ -1,9 +1,9 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://cardgamesim.finoldigital.com/schema/CardGameDef.json",
-  "title": "CGS Custom Game",
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "https://cardgamesim.finoldigital.com/schema/CardGameDef.json",
+  "title": "CGS Custom Card Game",
   "type": "object",
-  "description": "A custom card game definition to be used within Card Game Simulator",
+  "description": "Card Game Simulator (CGS) custom card game specification",
   "additionalProperties": false,
   "required": [
     "name"
@@ -14,7 +14,10 @@
       "description": "The name of the custom card game as it appears to the user. This name is required for the *Game:Id*."
     },
     "allCardsUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "From allCardsUrl, CGS downloads the json that contains the Card data for the game. If CGS is able to successfully download this file, it will save it as AllCards.json.",
       "format": "uri"
     },
@@ -67,7 +70,10 @@
       "description": "If allCardsUrl points to zipped file(s), set allCardsUrlZipped to true, and CGS will unzip the file(s)."
     },
     "allDecksUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "From allDecksUrl, CGS downloads the json that contains the Deck data for the game. If CGS is able to successfully download this file, it will save it as AllDecks.json.",
       "format": "uri"
     },
@@ -84,7 +90,10 @@
       "description": "If allDecksUrlTxtRoot is set, CGS will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*"
     },
     "allSetsUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "From allSetsUrl, CGS downloads the json that contains the Set data for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
       "format": "uri"
     },
@@ -103,7 +112,10 @@
       "default": 30
     },
     "autoUpdateUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "autoUpdateUrl indicates the url from which users download *Game:Name*.json, and CGS will automatically re-download the custom game from this url every <autoUpdate> days. This url is used in the *Game:Id*. You should host *Game:Name*.json at this url, but if you do not, you can set autoUpdate to -1, and there should be no issues.",
       "format": "uri"
     },
@@ -113,7 +125,10 @@
       "default": "png"
     },
     "bannerImageUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "If bannerImageUrl is a valid url, CGS will download the image at that url and save it as Banner.<bannerImageFileType>. CGS will attempt to display the Banner.<bannerImageFileType> as an identifier to the user. If it is unable to read Banner.<bannerImageFileType>, CGS will simply display the CGS logo.",
       "format": "uri"
     },
@@ -123,7 +138,10 @@
       "default": "png"
     },
     "cardBackImageUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "If cardBackImageUrl is a valid url, CGS will download the image at that url and save it as CardBack.<cardBackImageFileType>. CGS will display the CardBack.<cardBackImageFileType> when the user turns a card facedown or if CGS is unable to find the appropriate card image. If CGS is unable to get a custom card back, CGS will use the default CGS card back.",
       "format": "uri"
     },
@@ -222,7 +240,10 @@
       ]
     },
     "cgsDeepLink": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "cgsDeepLink is a clickable url that will take the user directly to this game in CGS, which can be shared between users. This functionality must be configured through Firebase Dynamic Links.",
       "format": "uri"
     },
@@ -332,7 +353,10 @@
       "default": "png"
     },
     "playMatImageUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "If playMatImageUrl is a valid url, CGS will download the image at that url and save it as PlayMat.<playMatImageFileType>. CGS will use the PlayMat.<playMatImageFileType> as the background image while in Play Mode. If CGS is unable to get this image, CGS will use the default table image.",
       "format": "uri"
     },
@@ -355,7 +379,10 @@
       ]
     },
     "rulesUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "rulesUrl should link to this game's online rulebook.",
       "format": "uri"
     },
@@ -476,11 +503,11 @@
       "properties": {
         "x": {
           "type": "number",
-          "format": "double"
+          "format": "float"
         },
         "y": {
           "type": "number",
-          "format": "double"
+          "format": "float"
         }
       }
     },
