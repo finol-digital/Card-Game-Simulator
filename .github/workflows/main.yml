@@ -189,7 +189,7 @@ jobs:
           restore-keys: Library-build-${{ matrix.targetPlatform }}-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-buildsormain
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
