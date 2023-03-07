@@ -14,9 +14,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Web;
-using CardGameDef;
-using CardGameDef.Unity;
 using Cgs.Menu;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -24,6 +24,7 @@ using UnityExtensionMethods;
 #if UNITY_ANDROID || UNITY_IOS
 using Firebase.DynamicLinks;
 #endif
+
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine.Networking;
 #endif
@@ -502,7 +503,7 @@ namespace Cgs
             // If user attempts to download a game they already have, we should just update that game
             UnityCardGame existingGame = null;
             foreach (var cardGame in AllCardGames.Values.Where(cardGame =>
-                         cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl))))
+                         cardGame.AutoUpdateUrl != null && cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl))))
                 existingGame = cardGame;
             Debug.Log("GetCardGame: Existing game search complete...");
             if (existingGame != null)
@@ -733,7 +734,7 @@ namespace Cgs
         {
             var deepLink = "https://cgs.link/?link=";
             deepLink += "https://www.cardgamesimulator.com/link?url%3D" +
-                        HttpUtility.UrlEncode(HttpUtility.UrlEncode(Current.AutoUpdateUrl.OriginalString));
+                        HttpUtility.UrlEncode(HttpUtility.UrlEncode(Current.AutoUpdateUrl?.OriginalString));
             deepLink += "&apn=com.finoldigital.cardgamesim&isi=1392877362&ibi=com.finoldigital.CardGameSim";
             var regex = new Regex("[^a-zA-Z0-9 -]");
             var encodedName = regex.Replace(Current.Name, "+");

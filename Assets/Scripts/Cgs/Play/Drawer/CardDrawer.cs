@@ -4,11 +4,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;

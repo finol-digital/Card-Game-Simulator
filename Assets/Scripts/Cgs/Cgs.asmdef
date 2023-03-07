@@ -24,6 +24,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
+        "FinolDigital.Cgs.CardGameDef.dll",
         "Newtonsoft.Json.dll",
         "Unity.Tasks.dll",
         "Firebase.App.dll",

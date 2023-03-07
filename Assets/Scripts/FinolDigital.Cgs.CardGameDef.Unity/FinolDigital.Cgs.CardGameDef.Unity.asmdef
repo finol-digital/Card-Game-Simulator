@@ -1,0 +1,17 @@
+{
+    "name": "FinolDigital.Cgs.CardGameDef.Unity",
+    "rootNamespace": "",
+    "references": [
+        "GUID:d7528a878641bff40a1fd2651047d55f",
+        "GUID:ab425aab4b86fce43a60190dfdddb1ad"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

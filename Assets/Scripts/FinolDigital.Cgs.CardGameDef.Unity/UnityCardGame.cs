@@ -15,7 +15,7 @@ using UnityEngine;
 using UnityExtensionMethods;
 using Object = UnityEngine.Object;
 
-namespace CardGameDef.Unity
+namespace FinolDigital.Cgs.CardGameDef.Unity
 {
     public delegate void LoadJTokenDelegate(JToken jToken, string defaultValue);
 
@@ -250,7 +250,7 @@ namespace CardGameDef.Unity
             DownloadProgress = 4f / (8f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Boards";
             foreach (var gameBoardUrl in GameBoardUrls.Where(gameBoardUrl =>
-                         !string.IsNullOrEmpty(gameBoardUrl.Id) && gameBoardUrl.Url != null &&
+                         !string.IsNullOrEmpty(gameBoardUrl.Id) &&
                          gameBoardUrl.Url.IsAbsoluteUri))
                 yield return UnityFileMethods.SaveUrlToFile(gameBoardUrl.Url.AbsoluteUri,
                     GameBoardsDirectoryPath + "/" + gameBoardUrl.Id + "." + GameBoardImageFileType);
@@ -575,7 +575,7 @@ namespace CardGameDef.Unity
             PopulateCardProperty(metaProperties, cardJToken, nameDef, nameDef.Name);
             var cardName = string.Empty;
             if (metaProperties.TryGetValue(CardNameIdentifier, out var cardNameEntry))
-                cardName = cardNameEntry.Value ?? string.Empty;
+                cardName = cardNameEntry.Value;
             else
                 Debug.LogWarning("LoadCardFromJToken::ParseNameError");
 
@@ -619,11 +619,11 @@ namespace CardGameDef.Unity
                 if (isImagePropertyObject && metaProperties.TryGetValue(
                         imageDefName + PropertyDef.ObjectDelimiter + childName,
                         out var cardObjectImageEntry))
-                    cardImageWebUrl = cardObjectImageEntry.Value ?? string.Empty;
+                    cardImageWebUrl = cardObjectImageEntry.Value;
                 else if (metaProperties.TryGetValue(CardImageProperty.Split(new[] {'['}, StringSplitOptions.None)[0],
                              out var cardImageEntry))
                     cardImageWebUrl =
-                        (cardImageEntry.Value ?? string.Empty).Split(new[] {EnumDef.Delimiter},
+                        (cardImageEntry.Value).Split(new[] {EnumDef.Delimiter},
                             StringSplitOptions.None)[0];
                 else
                     Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
@@ -1021,7 +1021,7 @@ namespace CardGameDef.Unity
 
                     if ((card.GetPropertyValueEnum(filter.Key) & filter.Value) != 0)
                         continue;
-                    var propertyDef = CardProperties?.FirstOrDefault(prop => prop.Name.Equals(filter.Key));
+                    var propertyDef = CardProperties.FirstOrDefault(prop => prop.Name.Equals(filter.Key));
                     if (propertyDef != null)
                         propsMatch = propsMatch && (filter.Value == (1 << enumDef.Values.Count)) && propertyDef
                             .DisplayEmpty

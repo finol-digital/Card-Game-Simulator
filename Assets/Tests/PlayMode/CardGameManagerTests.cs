@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
-using CardGameDef.Unity;
 using Cgs;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CardGameDef.Decks;
+using FinolDigital.Cgs.CardGameDef.Decks;
 using UnityExtensionMethods;
 #if !UNITY_WEBGL
 using Didstopia.PDFSharp;
@@ -15,7 +15,7 @@ using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 #endif
 
-namespace CardGameDef.Unity
+namespace FinolDigital.Cgs.CardGameDef.Unity
 {
     public class UnityDeck : Deck
     {
@@ -38,7 +38,7 @@ namespace CardGameDef.Unity
         public UnityDeck(UnityCardGame sourceGame, string name = DefaultName, DeckFileType fileType = DeckFileType.Txt,
             IReadOnlyCollection<UnityCard> cards = null) : base(sourceGame, name, fileType, cards)
         {
-            SourceGame = sourceGame ?? UnityCardGame.UnityInvalid;
+            SourceGame = sourceGame;
             _cards = cards != null ? new List<UnityCard>(cards) : new List<UnityCard>();
         }
 
@@ -108,7 +108,7 @@ namespace CardGameDef.Unity
             if (line.StartsWith("#"))
             {
                 if (line.StartsWith("###"))
-                    Name = line.Substring(3).Trim();
+                    Name = line[3..].Trim();
                 return;
             }
 
@@ -161,7 +161,7 @@ namespace CardGameDef.Unity
             if (line.StartsWith("#"))
             {
                 if (line.StartsWith("###"))
-                    Name = line.Substring(3).Trim();
+                    Name = line[3..].Trim();
                 return;
             }
 
@@ -208,10 +208,10 @@ namespace CardGameDef.Unity
                     tokens.RemoveAt(0);
                 }
 
-                if (tokens.Count > 0 && tokens[tokens.Count - 1].StartsWith("(") &&
-                    tokens[tokens.Count - 1].EndsWith(")"))
+                if (tokens.Count > 0 && tokens[^1].StartsWith("(") &&
+                    tokens[^1].EndsWith(")"))
                 {
-                    var inParens = tokens[tokens.Count - 1].Substring(1, tokens[tokens.Count - 1].Length - 2);
+                    var inParens = tokens[^1].Substring(1, tokens[^1].Length - 2);
                     if (((UnityCardGame) SourceGame).Sets.ContainsKey(inParens))
                     {
                         cardSet = inParens;

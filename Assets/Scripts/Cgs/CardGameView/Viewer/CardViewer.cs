@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameDef;
-using CardGameDef.Unity;
 using Cgs.CardGameView.Multiplayer;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;

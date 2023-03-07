@@ -5,8 +5,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CardGameDef;
-using CardGameDef.Unity;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;

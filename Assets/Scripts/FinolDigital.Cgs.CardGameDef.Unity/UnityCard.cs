@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityExtensionMethods;
 
-namespace CardGameDef.Unity
+namespace FinolDigital.Cgs.CardGameDef.Unity
 {
     public class UnityCard : Card
     {
@@ -47,7 +47,7 @@ namespace CardGameDef.Unity
             Dictionary<string, PropertyDefValuePair> properties, bool isReprint) : base(sourceGame, id, name, setCode,
             properties, isReprint)
         {
-            SourceGame = sourceGame ?? UnityCardGame.UnityInvalid;
+            SourceGame = sourceGame;
             DisplaysUsingImage = new HashSet<ICardDisplay>();
         }
 

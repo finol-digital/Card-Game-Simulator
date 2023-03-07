@@ -5,11 +5,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef.Unity;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;

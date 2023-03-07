@@ -5,9 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Cgs",
-        "CardGameDef.Unity",
-        "CardGameDef",
-        "UnityExtensionMethods"
+        "UnityExtensionMethods",
+        "FinolDigital.Cgs.CardGameDef.Unity"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -16,7 +15,8 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "Newtonsoft.Json.dll",
-        "Newtonsoft.Json.Schema.dll"
+        "Newtonsoft.Json.Schema.dll",
+        "FinolDigital.Cgs.CardGameDef.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using CardGameDef;
-using CardGameDef.Unity;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -47,7 +47,8 @@ namespace Cgs.Menu
         public Image playMatImage;
         public Button createButton;
 
-        private DownloadMenu Downloader => _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
+        private DownloadMenu Downloader =>
+            _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
 
         private DownloadMenu _downloader;
 
@@ -66,7 +67,7 @@ namespace Cgs.Menu
 
         private string _gameName = string.Empty;
 
-        private readonly CardGame _game = new CardGame(null);
+        private readonly CardGame _game = new();
 
         [UsedImplicitly]
         public string Width
