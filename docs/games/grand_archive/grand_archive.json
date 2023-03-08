@@ -221,10 +221,11 @@
 	"gameDefaultCardAction": "tap",
 	"gamePlayDeckName": "Main Deck",
 	"gameStartHandCount": 7,
-	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.png",
+	"playMatImageFileType": "jpg",
+	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.jpg",
 	"playMatSize": {
-		"x": 36.0,
-		"y": 41.0
+		"x": 36.75,
+		"y": 42.75
 	},
 	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf",
 	"setCodeIdentifier": "set.prefix",
