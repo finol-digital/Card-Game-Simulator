@@ -9,10 +9,10 @@ permalink: roadmap.html
 - Bug-Fix: Card not found in multiplayer
 
 ## Active Sprint
-- Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
-- Image File Compression: Images fail to load and the zip export file gets corrupted
 - Cards Transforming Bug: Card in hand turns into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA
 - Progress Bar not appearing when downloading a card game from Steam
+- Image File Compression: Images fail to load and the zip export file gets corrupted
+- Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
 
 ## Backlog - 2023 Q1
 - Cards: Preview on mouse-over
