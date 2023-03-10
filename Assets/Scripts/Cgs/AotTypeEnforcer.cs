@@ -50,6 +50,8 @@ namespace Cgs
                 cardGame.CardNameIsUnique = false;
                 cardGame.CardPrimaryProperty = string.Empty;
                 cardGame.CardProperties = new List<PropertyDef>();
+                var propertyDef = new PropertyDef(string.Empty, PropertyType.String, string.Empty, string.Empty, false,
+                    string.Empty, new List<PropertyDef>());
                 cardGame.CardPropertyIdentifier = string.Empty;
                 cardGame.CardRotationDefault = 0;
                 cardGame.CardRotationIdentifier = string.Empty;
@@ -66,8 +68,7 @@ namespace Cgs
                 cardGame.DeckUrls = new List<DeckUrl>();
                 var deckUrl = new DeckUrl(string.Empty, string.Empty, new Uri(UnityFileMethods.FilePrefix));
                 cardGame.Enums = new List<EnumDef>();
-                var enumDef = new EnumDef(string.Empty,
-                    new Dictionary<string, string>());
+                var enumDef = new EnumDef(string.Empty, new Dictionary<string, string>());
                 cardGame.Extras = new List<ExtraDef>();
                 var extraDef = new ExtraDef(string.Empty, string.Empty, string.Empty);
                 cardGame.GameBoardCards = new List<GameBoardCard>();

@@ -618,7 +618,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     _ => isImagePropertyList ? PropertyType.StringList : PropertyType.String
                 };
 
-                var imageDef = new PropertyDef(imageDefName, imagePropertyType) {Properties = childProperties};
+                var imageDef = new PropertyDef(imageDefName, imagePropertyType, "", "", false, "", childProperties);
                 PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDefName);
                 if (isImagePropertyObject && metaProperties.TryGetValue(
                         imageDefName + PropertyDef.ObjectDelimiter + childName,
@@ -683,7 +683,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 
             try
             {
-                var newProperty = new PropertyDefValuePair() {Def = property};
+                var newProperty = new PropertyDefValuePair {Def = property};
                 StringBuilder listValueBuilder;
                 JToken listTokens;
                 JObject jObject;
@@ -707,7 +707,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     case PropertyType.ObjectList:
                         foreach (var childProperty in property.Properties)
                         {
-                            newProperty = new PropertyDefValuePair() {Def = childProperty};
+                            newProperty = new PropertyDefValuePair {Def = childProperty};
                             listValueBuilder = new StringBuilder();
                             var values = new Dictionary<string, PropertyDefValuePair>();
                             var i = 0;
@@ -796,7 +796,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         private void PopulateEmptyCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties,
             PropertyDef property, string key)
         {
-            cardProperties[key] = new PropertyDefValuePair() {Def = property, Value = string.Empty};
+            cardProperties[key] = new PropertyDefValuePair {Def = property, Value = string.Empty};
             foreach (var childProperty in property.Properties)
                 PopulateEmptyCardProperty(cardProperties, childProperty,
                     key + PropertyDef.ObjectDelimiter + childProperty.Name);
