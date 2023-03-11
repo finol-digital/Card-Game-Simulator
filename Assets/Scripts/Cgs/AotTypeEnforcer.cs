@@ -8,7 +8,6 @@ using UnityExtensionMethods;
 
 namespace Cgs
 {
-    // ReSharper disable UnusedVariable
     public class AotTypeEnforcer : MonoBehaviour
     {
         public void Awake()
@@ -50,8 +49,6 @@ namespace Cgs
                 cardGame.CardNameIsUnique = false;
                 cardGame.CardPrimaryProperty = string.Empty;
                 cardGame.CardProperties = new List<PropertyDef>();
-                var propertyDef = new PropertyDef(string.Empty, PropertyType.String, string.Empty, string.Empty, false,
-                    string.Empty, new List<PropertyDef>());
                 cardGame.CardPropertyIdentifier = string.Empty;
                 cardGame.CardRotationDefault = 0;
                 cardGame.CardRotationIdentifier = string.Empty;
@@ -65,21 +62,19 @@ namespace Cgs
                 cardGame.DeckFileAltId = string.Empty;
                 cardGame.DeckFileTxtId = DeckFileTxtId.Id;
                 cardGame.DeckFileType = DeckFileType.Dec;
-                cardGame.DeckUrls = new List<DeckUrl>();
                 var deckUrl = new DeckUrl(string.Empty, string.Empty, new Uri(UnityFileMethods.FilePrefix));
-                cardGame.Enums = new List<EnumDef>();
+                cardGame.DeckUrls = new List<DeckUrl> {deckUrl};
                 var enumDef = new EnumDef(string.Empty, new Dictionary<string, string>());
-                cardGame.Extras = new List<ExtraDef>();
+                cardGame.Enums = new List<EnumDef> {enumDef};
                 var extraDef = new ExtraDef(string.Empty, string.Empty, string.Empty);
-                cardGame.GameBoardCards = new List<GameBoardCard>();
+                cardGame.Extras = new List<ExtraDef> {extraDef};
                 var float2 = new Float2(0f, 0f);
                 var gameBoard = new GameBoard(string.Empty, float2, float2);
-                var gameBoardCard = new GameBoardCard(string.Empty,
-                    new List<GameBoard>());
+                var gameBoardCard = new GameBoardCard(string.Empty, new List<GameBoard> {gameBoard});
+                cardGame.GameBoardCards = new List<GameBoardCard> {gameBoardCard};
                 cardGame.GameBoardImageFileType = string.Empty;
-                cardGame.GameBoardUrls = new List<GameBoardUrl>();
-                var gameBoardUrl =
-                    new GameBoardUrl(string.Empty, new Uri(UnityFileMethods.FilePrefix));
+                var gameBoardUrl = new GameBoardUrl(string.Empty, new Uri(UnityFileMethods.FilePrefix));
+                cardGame.GameBoardUrls = new List<GameBoardUrl> {gameBoardUrl};
                 cardGame.GamePlayDeckName = string.Empty;
                 cardGame.GameStartHandCount = 1;
                 cardGame.GameStartPointsCount = 1;
