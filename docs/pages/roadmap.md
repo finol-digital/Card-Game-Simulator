@@ -4,9 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.81
-- Bug-Fix: Die Max Value
-- Bug-Fix: Card not found in multiplayer
+## What's New - v1.82
+
 
 ## Active Sprint
 - Cards Transforming Bug: Card in hand turns into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA

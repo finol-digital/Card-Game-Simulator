@@ -48,7 +48,8 @@ namespace Cgs
                 cardGame.CardNameIdentifier = string.Empty;
                 cardGame.CardNameIsUnique = false;
                 cardGame.CardPrimaryProperty = string.Empty;
-                cardGame.CardProperties = new List<PropertyDef>();
+                var propertyDef = new PropertyDef(string.Empty, PropertyType.String);
+                cardGame.CardProperties = new List<PropertyDef> {propertyDef};
                 cardGame.CardPropertyIdentifier = string.Empty;
                 cardGame.CardRotationDefault = 0;
                 cardGame.CardRotationIdentifier = string.Empty;

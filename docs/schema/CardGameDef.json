@@ -455,15 +455,15 @@
           "type": "boolean",
           "description": "List <displayEmpty> as the first option if this property is an enum?"
         },
+        "delimiter": {
+          "type": "string",
+          "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter"
+        },
         "properties": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/PropertyDef"
           }
-        },
-        "delimiter": {
-          "type": "string",
-          "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter"
         }
       }
     },
