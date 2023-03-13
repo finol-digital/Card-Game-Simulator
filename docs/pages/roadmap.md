@@ -12,8 +12,9 @@ permalink: roadmap.html
 - Progress Bar not appearing when downloading a card game from Steam
 - Image File Compression: Images fail to load and the zip export file gets corrupted
 - Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
+- File import on Linux
 
-## Backlog - 2023 Q1
+## Backlog - 2023 Q2
 - Cards: Preview on mouse-over
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
@@ -34,10 +35,9 @@ permalink: roadmap.html
 - Game-Creation: Edit Button in Main Menu
 - Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 
-## Backlog - 2023 Q2
+## Backlog - 2023 Q3
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
-- Decks: Show individual deck download progress
 - Decks: Support organizing decks into folders
   - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
@@ -50,7 +50,7 @@ permalink: roadmap.html
 - Cards: Support mix of different card sizes in the same game
 - Deck Editor: Edit Deck List in the Deck Save Menu
 
-## Backlog - 2023 Q3
+## Backlog - 2023 Q4
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Game-Play: Tournament Support (PoQ?)
 - Dev option (GUI): Create a default 'Setup' for more complicated card games. 
@@ -61,7 +61,6 @@ The game dev should be able to put all of this down on the 'table' so that all f
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Tech: Log all Player actions
 - Tech: Upgrade json schema version from v4 to v7
-- Tech: Use AllDecks.json for default games
 - Tech: Automate store images through Fastlane
 - Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
 - Cards: Apply autoUpdate to cached images
@@ -84,7 +83,4 @@ The game dev should be able to put all of this down on the 'table' so that all f
 - Integration: Support multiple languages (Spanish,Chinese)
 - Integration: NanDeck + Squib + Magic Set Editor
 - Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice/CardWarden
-- Platforms: Support Tilt Five
-- Platforms: Support VR + AR
-- Platforms: Support Android TV and tvOS
 - Only to be pursued if all other goals have been completed: Support game-specific rules enforcement
