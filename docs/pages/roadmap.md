@@ -14,10 +14,12 @@ permalink: roadmap.html
 - Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
 - File import on Linux`
 
-## Backlog - 2023 Q2
+## Next Sprint
 - Cards: Preview on mouse-over
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+
+## Backlog - 2023 Q2
 - Game-Play: Face-Up Stacks (Always reveal the top card)
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Label which player is moving cards
