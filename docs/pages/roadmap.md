@@ -12,7 +12,7 @@ permalink: roadmap.html
 - Progress Bar not appearing when downloading a card game from Steam
 - Image File Compression: Images fail to load and the zip export file gets corrupted
 - Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
-- File import on Linux`
+- File import on Linux
 
 ## Next Sprint
 - Cards: Preview on mouse-over
