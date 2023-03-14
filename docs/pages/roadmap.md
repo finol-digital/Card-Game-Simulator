@@ -5,13 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.82
-
+Bug Fixes
 
 ## Active Sprint
-- Cards Transforming Bug: Card in hand turns into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA
-- File import on Linux
-
-## Next Sprint
+- Bug: Card in hand transforms into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA
 - Cards: Preview on mouse-over
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
