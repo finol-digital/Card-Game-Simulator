@@ -5,8 +5,8 @@ using Cgs;
 using FinolDigital.Cgs.CardGameDef.Unity;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
+using Object = UnityEngine.Object;
 
 namespace Tests.PlayMode
 {
@@ -28,9 +28,7 @@ namespace Tests.PlayMode
         [SetUp]
         public void Setup()
         {
-            var manager = new GameObject {tag = Tags.CardGameManager};
-            manager.AddComponent<EventSystem>();
-            manager.AddComponent<CardGameManager>();
+            Object.Instantiate(Resources.Load<GameObject>("Card Game Manager"));
         }
 
         [UnityTest]
