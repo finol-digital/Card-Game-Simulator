@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityExtensionMethods;
 
@@ -11,6 +12,11 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 {
     public class UnityCard : Card
     {
+        public static string SizeWarningMessage = "WARNING: Card image for {0} ({1}) is too large! \n" +
+                                                  "Recommended Action: Delete the Card, compress the image file using a tool like " +
+                                                  "https://www.iloveimg.com/compress-image " +
+                                                  ", then re-import.";
+
         public static readonly UnityCard Blank = new(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
@@ -80,6 +86,12 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
                 UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl)
                 , output => newSprite = output);
+            var fileInfo = new FileInfo(ImageFilePath);
+            if (fileInfo.Exists && fileInfo.Length > 1_000_000)
+            {
+                var sizeWarningMessage = string.Format(SizeWarningMessage, Name, Id);
+                Debug.LogError(sizeWarningMessage);
+            }
 #endif
             if (newSprite != null)
                 ImageSprite = newSprite;

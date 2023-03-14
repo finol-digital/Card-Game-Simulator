@@ -57,7 +57,7 @@ jobs:
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
       - name: Run Unit Tests
-        uses: game-ci/unity-test-runner@v2
+        uses: game-ci/unity-test-runner@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -197,8 +197,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
-          androidAppBundle: true
-          androidExportType: 'androidAppBundle'
+          androidExportType: androidAppBundle
           androidKeystoreName: finoldigital.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
@@ -260,7 +259,7 @@ jobs:
           restore-keys: Library-buildMac-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
@@ -494,7 +493,7 @@ jobs:
             Library-buildWindows-
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}

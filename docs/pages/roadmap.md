@@ -9,7 +9,6 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Cards Transforming Bug: Card in hand turns into card that is drawn https://www.youtube.com/shorts/pYG0N9TqMmA
-- Image File Compression: Images fail to load and the zip export file gets corrupted
 - Online Multiplayer Error: You are not signed in to the Authentication Service. Please sign in.
 - File import on Linux
 
