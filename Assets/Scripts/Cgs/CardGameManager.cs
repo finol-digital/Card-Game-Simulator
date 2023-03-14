@@ -161,35 +161,13 @@ namespace Cgs
             }
         }
 
-        public Dialog Messenger
-        {
-            get
-            {
-                if (_messenger != null) return _messenger;
-                _messenger = Instantiate(dialogPrefab).GetOrAddComponent<Dialog>();
-                _messenger.transform.SetParent(transform);
-                return _messenger;
-            }
-        }
+        public Dialog Messenger => messenger;
 
-        public GameObject dialogPrefab;
+        public Dialog messenger;
 
-        private Dialog _messenger;
+        public ProgressBar Progress => progress;
 
-        public ProgressBar Progress
-        {
-            get
-            {
-                if (_progress != null) return _progress;
-                _progress = Instantiate(progressBarPrefab).GetOrAddComponent<ProgressBar>();
-                _progress.transform.SetParent(transform);
-                return _progress;
-            }
-        }
-
-        public GameObject progressBarPrefab;
-
-        private ProgressBar _progress;
+        public ProgressBar progress;
 
         private void Awake()
         {
@@ -514,7 +492,9 @@ namespace Cgs
             // If user attempts to download a game they already have, we should just update that game
             UnityCardGame existingGame = null;
             foreach (var cardGame in AllCardGames.Values.Where(cardGame => cardGame != null &&
-                         cardGame.AutoUpdateUrl != null && cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl))))
+                                                                           cardGame.AutoUpdateUrl != null &&
+                                                                           cardGame.AutoUpdateUrl.Equals(
+                                                                               new Uri(gameUrl))))
                 existingGame = cardGame;
             Debug.Log("GetCardGame: Existing game search complete...");
             if (existingGame != null)
