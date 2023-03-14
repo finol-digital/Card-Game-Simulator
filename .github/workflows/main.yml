@@ -233,6 +233,7 @@ jobs:
     needs: [tests, lint]
     outputs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
+    timeout-minutes: 90
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -464,6 +465,7 @@ jobs:
         targetPlatform:
           - StandaloneWindows
           - StandaloneWindows64
+    timeout-minutes: 90
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
