@@ -506,6 +506,7 @@ namespace Cgs
             if (string.IsNullOrEmpty(gameUrl))
             {
                 Debug.LogError("ERROR: GetCardGame has gameUrl missing!");
+                Messenger.Show("ERROR: GetCardGame has gameUrl missing!");
                 yield break;
             }
 
