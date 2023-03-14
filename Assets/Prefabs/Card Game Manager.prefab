@@ -52,6 +52,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6920e0423b49035438e0f18dd7c0581c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogPrefab: {fileID: 5160799671764584669, guid: c99b406c42e378f45b33a243427bd060,
+    type: 3}
+  progressBarPrefab: {fileID: 4748678306131802333, guid: 3d6e3a494e413eb4fbe7271639692623,
+    type: 3}
 --- !u!114 &6097987813815254947
 MonoBehaviour:
   m_ObjectHideFlags: 0

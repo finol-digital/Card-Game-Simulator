@@ -166,11 +166,13 @@ namespace Cgs
             get
             {
                 if (_messenger != null) return _messenger;
-                _messenger = Instantiate(Resources.Load<GameObject>("Dialog")).GetOrAddComponent<Dialog>();
+                _messenger = Instantiate(dialogPrefab).GetOrAddComponent<Dialog>();
                 _messenger.transform.SetParent(transform);
                 return _messenger;
             }
         }
+
+        public GameObject dialogPrefab;
 
         private Dialog _messenger;
 
@@ -179,11 +181,13 @@ namespace Cgs
             get
             {
                 if (_progress != null) return _progress;
-                _progress = Instantiate(Resources.Load<GameObject>("ProgressBar")).GetOrAddComponent<ProgressBar>();
+                _progress = Instantiate(progressBarPrefab).GetOrAddComponent<ProgressBar>();
                 _progress.transform.SetParent(transform);
                 return _progress;
             }
         }
+
+        public GameObject progressBarPrefab;
 
         private ProgressBar _progress;
 
@@ -499,10 +503,16 @@ namespace Cgs
 
         public IEnumerator GetCardGame(string gameUrl)
         {
+            if (string.IsNullOrEmpty(gameUrl))
+            {
+                Debug.LogError("ERROR: GetCardGame has gameUrl missing!");
+                yield break;
+            }
+
             Debug.Log("GetCardGame: Starting...");
             // If user attempts to download a game they already have, we should just update that game
             UnityCardGame existingGame = null;
-            foreach (var cardGame in AllCardGames.Values.Where(cardGame =>
+            foreach (var cardGame in AllCardGames.Values.Where(cardGame => cardGame != null &&
                          cardGame.AutoUpdateUrl != null && cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl))))
                 existingGame = cardGame;
             Debug.Log("GetCardGame: Existing game search complete...");
