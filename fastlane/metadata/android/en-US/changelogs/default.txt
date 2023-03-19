@@ -1,2 +1,1 @@
-- Bug-Fix: Die Max Value
-- Bug-Fix: Card not found in multiplayer
+- Bug Fixes
