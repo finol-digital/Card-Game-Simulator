@@ -27,12 +27,14 @@ jobs:
           echo "$ANNOUNCEMENT" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
       - name: Discord Announcement
+        if: github.ref == 'refs/heads/master'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
       - name: Twitter Announcement
+        if: github.ref == 'refs/heads/master'
         uses: ethomson/send-tweet-action@v1
         with:
           status: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
