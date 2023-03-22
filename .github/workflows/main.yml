@@ -616,10 +616,9 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v3
         uses: mingjun97/file-regex-replace
         with:
-          regex: "<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-          replacement: "<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include='Package.StoreAssociation.xml' /></ItemGroup>"
-          include: "Card Game Simulator\.vcxproj"
-          path: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator"
+          regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
+          replacement: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
+          path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
       - name: Move the Package.StoreAssociation.xml and Update manifest name
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
