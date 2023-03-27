@@ -665,6 +665,7 @@ jobs:
       - name: Upload to the Microsoft Store
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
+        if: false
         env:
           MICROSOFT_TENANT_ID: ${{ secrets.MICROSOFT_TENANT_ID }}
           MICROSOFT_CLIENT_ID: ${{ secrets.MICROSOFT_CLIENT_ID }}
