@@ -6,7 +6,7 @@
             {
                 "type": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "IncludeAssemblies",
-                "value": "{\"m_Value\":\"Assembly-CSharp-Editor,CardGameDef,CardGameDef.Unity,Cgs,Cgs.Editor,EditMode,kcp2k,LRM,Mirror,Mirror.Authenticators,Mirror.CompilerSymbols,Mirror.Components,Mirror.Editor,Mirror.Examples,Mirror.Weaver,PdfSharp,PlayMode,SimpleWebTransport,Telepathy,UniClipboard,UnityExtensionMethods,where-allocations\"}"
+                "value": "{\"m_Value\":\"Cgs\"}"
             },
             {
                 "type": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
@@ -21,7 +21,7 @@
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "EnableCodeCoverage",
-                "value": "{\"m_Value\":true}"
+                "value": "{\"m_Value\":false}"
             },
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
