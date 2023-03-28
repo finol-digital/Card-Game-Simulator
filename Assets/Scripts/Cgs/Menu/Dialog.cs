@@ -82,7 +82,7 @@ namespace Cgs.Menu
             }
 
             gameObject.SetActive(true);
-            if (!EventSystem.current.alreadySelecting)
+            if (EventSystem.current != null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
             transform.SetAsLastSibling();
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
@@ -137,7 +137,8 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void OkClose()
         {
-            if (!EventSystem.current.alreadySelecting && EventSystem.current.currentSelectedGameObject == gameObject)
+            if (EventSystem.current != null && !EventSystem.current.alreadySelecting &&
+                EventSystem.current.currentSelectedGameObject == gameObject)
                 EventSystem.current.SetSelectedGameObject(null);
 
             if (MessageQueue.Count > 0)
