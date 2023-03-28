@@ -16,22 +16,20 @@ permalink: roadmap.html
 ## Backlog - 2023 Q2
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
-- Game-Play: Face-Up Stacks (Always reveal the top card)
-- Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Custom Tokens
 - Game-Play: Rotate Dice
+- Game-Play: Face-Up Stacks (Always reveal the top card)
+- Game-Play: Prevent player from looking through Stacks in certain situations
 - Game-Play: Cut Stacks
-- Game-Play: Prevent player from looking through deck in certain situations
+- Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Games + Log of all (Player) actions
 - Integration: Private Lobbies & Deep links to join multiplayer rooms
-- Game-Play: Counter system for players and cards
-- Game-Creation: Edit Button in Main Menu
-- Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 
 ## Backlog - 2023 Q3
+- Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Support organizing decks into folders
@@ -45,11 +43,14 @@ permalink: roadmap.html
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Cards: Configurable highlight color
 - Cards: Support mix of different card sizes in the same game
+- Game-Creation: Edit Button in Main Menu
+- Deck Editor: Layout/Redesign (https://discord.com/channels/877422409769177158/932359810303807508/1082580945997139988)
 
 ## Backlog - 2023 Q4
-- Deck Editor: Layout/Redesign (https://discord.com/channels/877422409769177158/932359810303807508/1082580945997139988)
 - Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
+- Platforms: Full controller support (Steam)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
+- Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
 - Game-Play: Tournament Support (PoQ?)
 - Dev option (GUI): Create a default 'Setup' for more complicated card games. 
 For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
