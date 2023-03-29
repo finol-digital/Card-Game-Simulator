@@ -637,7 +637,7 @@ jobs:
         shell: pwsh
         env:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
-        run:
+        run: |
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
           $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
