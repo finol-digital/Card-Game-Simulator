@@ -619,19 +619,36 @@ jobs:
           regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
           replacement: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
-      - name: Move the Package.StoreAssociation.xml and Update manifest name
+      - name: Add Package.StoreAssociation.xml to .vcxproj.filters
+        uses: mingjun97/file-regex-replace@v1
+        with:
+          regex: '</ItemGroup>'
+          replacement: '</ItemGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
+          path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
+          include: 'Card Game Simulator\.vcxproj\.filters'
+      - name: Copy the Package.StoreAssociation.xml
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
-        run: |
-          Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
+        run: Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
+      - name: Update the Package.appxmanifest
+        working-directory: C:/Card-Game-Simulator.git
+        shell: pwsh
+        env:
+          UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
+        run:
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
           $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
           $manifest.save(".\$env:UwpProjectDirectory\Package.appxmanifest")
           echo ".\$env:UwpProjectDirectory\Package.appxmanifest"
           cat ".\$env:UwpProjectDirectory\Package.appxmanifest"
+      - name: Upload Build2
+        uses: actions/upload-artifact@v3
+        with:
+          name: cgs-WSAPlayer2
+          path: build/WSAPlayer
       - name: Decode the Pfx
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
