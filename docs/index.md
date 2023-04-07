@@ -9,7 +9,7 @@ playYoutubeId: PriDuaM6MEk
 - iOS via [the App Store](https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1)
 - macOS via [the Mac App Store](https://apps.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
 - Windows via [the Microsoft Store](https://www.microsoft.com/store/apps/9N96N5S4W3J0)
-- Web via [GitHub Pages/Unity WebGL](cgs-webgl.html) *(experimental)*
+- Web via [Firebase/Unity WebGL](https://cgs.games/) *(experimental)*
 
 ## How to Play
 
@@ -32,13 +32,13 @@ Consider checking out [these projects](external.html).
 Also consider joining our social media:
 
 [![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com) 
-[![alt text][2.1]][2] [Twitter](https://twitter.com/cardgamesim) 
-[![alt text][3.1]][3] [Reddit](https://www.reddit.com/r/CardGameSimulator/)
+[![alt text][2.1]][2] [Twitter](http://twitter.cardgamesimulator.com) 
+[![alt text][3.1]][3] [Reddit](http://reddit.cardgamesimulator.com) 
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
 [2.1]: https://i.imgur.com/tXSoThF.png (twitter icon with padding)
 [3.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
 
 [1]: http://discord.cardgamesimulator.com
-[2]: https://twitter.com/cardgamesim
-[3]: https://www.reddit.com/r/CardGameSimulator/
+[2]: http://twitter.cardgamesimulator.com
+[3]: http://reddit.cardgamesimulator.com

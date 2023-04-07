@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Bug Fixes
 
 ## Active Sprint
+- Validation for id
 - Bug: Card in hand transforms into card that is drawn (https://www.youtube.com/shorts/pYG0N9TqMmA)
 - Cards: Preview card image on mouse-over
 - Game-Play: Combine Stacks when dropped on each other

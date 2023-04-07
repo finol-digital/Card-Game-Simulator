@@ -395,8 +395,8 @@ jobs:
         with:
           lane: 'android playprod'
 
-  deployToGitHubPages:
-    name: Deploy to the Web via GitHub Pages
+  deployToFirebase:
+    name: Deploy to the Web via Firebase
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
