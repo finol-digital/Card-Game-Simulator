@@ -403,22 +403,36 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+          path: Card-Game-Simulator
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v3
         with:
           name: cgs-WebGL
-          path: build/WebGL
-      - name: Copy the WebGL build artifacts to the GitHub Pages directory
-        env:
-          WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL', github.workspace) }}
-          WEBGL_PAGES_PATH: ${{ format('{0}/docs/WebGL', github.workspace) }}
-        run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
-      - name: Deploy to GitHub Pages
-        uses: stefanzweifel/git-auto-commit-action@v4
+          path: Card-Game-Simulator/build/WebGL
+      - name: Checkout Firebase project
+      - uses: actions/checkout@v3
         with:
-          branch: main
-          file_pattern: docs/**
-          commit_message: Deploy to GitHub Pages
+          repository: finol-digital/cgs-backend
+          token: ${{ secrets.CGS_PAT }}
+          path: cgs-backend
+      - name: Copy the WebGL build artifacts to the Firebase public directory
+        env:
+          UNITY_BUILD_WEBGL_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL', github.workspace) }}
+          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/cgs-backend/public/Build', github.workspace) }}
+        run: find $UNITY_BUILD_WEBGL_PATH -type f -name "**WebGL.*" -exec cp {} $FIREBASE_PUBLIC_BUILD_PATH \;
+      - name: Update Release Notes
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
+      - name: Raise PR to backend
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.CGS_PAT }}
+          path: cgs-backend
+          branch: ${{ needs.buildWithLinux.outputs.buildVersion) }}
+          title: ${{ needs.buildWithLinux.outputs.buildVersion) }}
+          body-path: Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
 
   deployToMacAppStore:
     name: Deploy to the Mac App Store
@@ -751,7 +765,7 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [buildWithWindows, deployToAppStore, deployToGooglePlay, deployToGitHubPages, deployToMacAppStore, deployToMicrosoftStore, deployToSteam]
+    needs: [buildWithWindows, deployToAppStore, deployToGooglePlay, deployToFirebase, deployToMacAppStore, deployToMicrosoftStore, deployToSteam]
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
