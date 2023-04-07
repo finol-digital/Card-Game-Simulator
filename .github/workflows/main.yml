@@ -411,7 +411,7 @@ jobs:
           name: cgs-WebGL
           path: Card-Game-Simulator/build/WebGL
       - name: Checkout Firebase project
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
         with:
           repository: finol-digital/cgs-backend
           token: ${{ secrets.CGS_PAT }}
@@ -431,8 +431,8 @@ jobs:
         with:
           token: ${{ secrets.CGS_PAT }}
           path: cgs-backend
-          branch: ${{ needs.buildWithLinux.outputs.buildVersion) }}
-          title: ${{ needs.buildWithLinux.outputs.buildVersion) }}
+          branch: ${{ needs.buildWithLinux.outputs.buildVersion }}
+          title: ${{ needs.buildWithLinux.outputs.buildVersion }}
           body-path: Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
 
   deployToMacAppStore:
