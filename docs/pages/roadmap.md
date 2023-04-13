@@ -10,13 +10,13 @@ permalink: roadmap.html
 ## Active Sprint
 - Bug: Card in hand transforms into card that is drawn (https://www.youtube.com/shorts/pYG0N9TqMmA)
 - Cards: Validation for id
-- Cards: Preview card image on mouse-over
-- Game-Play: Combine Stacks when dropped on each other
-- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Bug: Load from zip file on mobile
 - Bug: Crash in multiplayer on Android
 
 ## Backlog - 2023 Q2
+- Cards: Preview card image on mouse-over
+- Game-Play: Combine Stacks when dropped on each other
+- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
   - Option to keep points and reset or delete decks
 - Game-Play: Label which player is moving cards
