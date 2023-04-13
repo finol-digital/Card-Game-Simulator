@@ -8,7 +8,7 @@
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageUrl": "https://api.gatcg.com/images/cards/{editions[0].slug}-{cardSet}.jpg",
+	"cardImageUrl": "https://ga-index-public.s3.us-west-2.amazonaws.com/cards/{editions[0].slug}.jpg",
 	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
