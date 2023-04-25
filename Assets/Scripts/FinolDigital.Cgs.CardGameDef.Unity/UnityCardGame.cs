@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using UnityExtensionMethods;
 using Object = UnityEngine.Object;
@@ -964,7 +965,11 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 
         public void WriteAllCardsJson()
         {
-            var allCardsJson = JsonConvert.SerializeObject(Cards.Values.ToList(), SerializerSettings);
+            var allCardsJson = JsonConvert.SerializeObject(Cards.Values.ToList(), new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
             File.WriteAllText(CardsFilePath, allCardsJson);
         }
 
