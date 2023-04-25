@@ -8,11 +8,10 @@
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": true,
+    "overrideReferences": false,
     "precompiledReferences": [
         "FinolDigital.Cgs.CardGameDef.dll",
-        "Newtonsoft.Json.dll",
-        "Newtonsoft.Json.Schema.dll"
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

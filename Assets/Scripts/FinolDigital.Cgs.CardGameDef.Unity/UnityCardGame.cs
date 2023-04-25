@@ -253,7 +253,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                          !string.IsNullOrEmpty(gameBoardUrl.Id) &&
                          gameBoardUrl.Url.IsAbsoluteUri))
                 yield return UnityFileMethods.SaveUrlToFile(gameBoardUrl.Url.AbsoluteUri,
-                    GameBoardsDirectoryPath + "/" + gameBoardUrl.Id + "." + GameBoardImageFileType);
+                    GameBoardsDirectoryPath + Path.PathSeparator + gameBoardUrl.Id + "." + GameBoardImageFileType);
 
             DownloadProgress = 5f / (8f + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Decks";
@@ -304,7 +304,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     continue;
                 }
 
-                var deckFilePath = DecksDirectoryPath + "/" + deckUrl.Name + "." + DeckFileType.ToString().ToLower();
+                var deckFilePath = DecksDirectoryPath + Path.PathSeparator + deckUrl.Name + "." + DeckFileType.ToString().ToLower();
                 if (!string.IsNullOrEmpty(AllDecksUrlTxtRoot) && !string.IsNullOrEmpty(deckUrl.Txt))
                     yield return UnityFileMethods.SaveUrlToFile(AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
                 else if (deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)
