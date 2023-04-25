@@ -12,7 +12,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 {
     public class UnityCard : Card
     {
-        public static string SizeWarningMessage = "WARNING: Card image for {0} ({1}) is too large! \n" +
+        public const string SizeWarningMessage = "WARNING: Card image for {0} ({1}) is too large! \n" +
                                                   "Recommended Action: Delete the Card, compress the image file using a tool like " +
                                                   "https://www.iloveimg.com/compress-image " +
                                                   ", then re-import.";

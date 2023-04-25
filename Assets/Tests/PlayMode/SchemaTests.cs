@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 using NUnit.Framework;
 using UnityEngine;
 using UnityExtensionMethods;
@@ -11,23 +9,6 @@ namespace Tests.PlayMode
 {
     public class SchemaTests
     {
-        private static string SchemaFilePath => Application.dataPath.Remove(Application.dataPath.Length - 6, 6)
-                                                + "docs/schema/CardGameDef.json";
-
-        [Test]
-        public void ValidatedSchema()
-        {
-            var schema = JSchema.Parse(File.ReadAllText(SchemaFilePath));
-            var streamingAssetsPath = Path.Combine(Application.dataPath, "StreamingAssets");
-            foreach (var directory in Directory.EnumerateDirectories(streamingAssetsPath))
-            {
-                var fileName = Path.GetFileName(directory);
-                var name = fileName[..fileName.IndexOf('@')];
-                var json = JToken.Parse(File.ReadAllText(Path.Combine(directory, $"{name}.json")));
-                Assert.IsTrue(json.IsValid(schema));
-            }
-        }
-
         [Test]
         public void ValidatedGames()
         {
