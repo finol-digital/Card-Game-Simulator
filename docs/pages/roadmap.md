@@ -4,7 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.82
+## What's New - v1.83
 - Bug Fixes
 
 ## Active Sprint
