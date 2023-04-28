@@ -120,12 +120,24 @@
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{
-			"name": "Lorraine Starter PnP",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20PnP.txt"
+			"name": "Lorraine Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20Deck.txt"
 		},
 		{
-			"name": "Rai Starter PnP",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20PnP.txt"
+			"name": "Lorraine Starter Prelude PnP",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20Prelude%20PnP.txt"
+		},
+		{
+			"name": "Rai Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Rai Starter Prelude PnP",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20Prelude%20PnP.txt"
+		},
+		{
+			"name": "Silvie Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Silvie%20Starter%20Deck.txt"
 		}
 	],
 	"enums": [
