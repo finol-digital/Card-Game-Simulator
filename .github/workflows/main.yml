@@ -790,11 +790,3 @@ jobs:
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
-      - name: Twitter Announcement
-        uses: devigned/go-twitter-action@v1
-        with:
-          message: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
-          apiKey: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
-          apiKeySecret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
-          accessToken: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          accessTokenSecret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
