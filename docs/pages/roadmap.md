@@ -29,7 +29,7 @@ permalink: roadmap.html
 - Game-Play: Cut Stacks
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Games + Log of all (Player) actions
-- Game-Play: Copy/paste cards
+- Game-Play: Copy/Paste Cards
 - Integration: Private Lobbies & Deep links to join multiplayer rooms
 
 ## Backlog - 2023 Q3
