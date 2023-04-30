@@ -9,6 +9,7 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Bug: Card in hand transforms into card that is drawn (https://www.youtube.com/shorts/pYG0N9TqMmA)
+- Bug: Card gets stuck on screen
 - Cards: Validation for id
 - Bug: Load from zip file on mobile
 - Bug: Crash in multiplayer on Android
@@ -29,7 +30,8 @@ permalink: roadmap.html
 - Game-Play: Cut Stacks
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Games + Log of all (Player) actions
-- Game-Play: Copy/Paste Cards
+- Game-Play: Cut/Copy/Paste Cards
+- Game-Play: Undo with Ctrl-Z
 - Integration: Private Lobbies & Deep links to join multiplayer rooms
 
 ## Backlog - 2023 Q3
