@@ -56,7 +56,16 @@ permalink: roadmap.html
 - Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
 - Platforms: Full controller support (Steam)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
-- Accessibility: Tutorial Videos for How-To-Play and How-To-Create-And-Share
+- Accessibility: Tutorial Video for How-To-Play
+  - 0:00 Intro (Name/Website)
+  - 0:00 Playing Solo (Single-player/Goldfishing)
+  - 0:00 Playing Online (Multi-player)
+  - 0:00 Playing Custom Games
+  - 0:00 Editing Decks
+  - 0:00 Browsing Cards
+  - 0:00 Settings/Contact
+  - CGS Website: https://www.cardgamesimulator.com/
+- Accessibility: Tutorial Video for How-To-Create-And-Share
 - Game-Play: Tournament Support (PoQ?)
 - Dev option (GUI): Create a default 'Setup' for more complicated card games. 
 For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
