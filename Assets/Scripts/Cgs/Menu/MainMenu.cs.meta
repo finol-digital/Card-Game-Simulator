@@ -1,10 +1,28 @@
 fileFormatVersion: 2
 guid: 49fc900b90bc87e4f91d1bfa3ed95f14
-timeCreated: 1505411142
-licenseType: Free
 MonoImporter:
+  externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cardGameEditorMenuPrefab: {fileID: 7821632309527891152, guid: 5e7b999d6a486c7479e9f4d1cb76d27c,
+      type: 3}
+  - gameImportModalPrefab: {fileID: 5810182567772607080, guid: 864bd2a9f44369e488e6d6f6edc1582e,
+      type: 3}
+  - downloadMenuPrefab: {fileID: 2330282487462195437, guid: 2d4784779890ecb41954d3181de7ad9e,
+      type: 3}
+  - gameManagement: {instanceID: 0}
+  - versionInfo: {instanceID: 0}
+  - currentGameNameText: {instanceID: 0}
+  - currentCardImage: {instanceID: 0}
+  - currentBannerImage: {instanceID: 0}
+  - previousCardImage: {instanceID: 0}
+  - nextCardImage: {instanceID: 0}
+  - newCardGameButton: {instanceID: 0}
+  - syncButton: {instanceID: 0}
+  - editCardGameButton: {instanceID: 0}
+  - joinButton: {instanceID: 0}
+  - quitButton: {instanceID: 0}
+  - versionText: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

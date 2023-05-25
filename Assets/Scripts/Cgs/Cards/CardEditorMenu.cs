@@ -19,7 +19,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {
-    public class CardImportMenu : Modal
+    public class CardEditorMenu : Modal
     {
         public const string DownloadCardImage = "Download Card Image";
         public const string DownloadCardImagePrompt = "Enter card image url...";
@@ -36,7 +36,7 @@ namespace Cgs.Cards
         public InputField cardIdInputField;
         public InputField setCodeInputField;
         public Image cardImage;
-        public Button createButton;
+        public Button saveButton;
 
         [UsedImplicitly] public string CardName { get; set; }
 
@@ -46,7 +46,7 @@ namespace Cgs.Cards
             set
             {
                 _cardImageUri = value;
-                ValidateImportButton();
+                ValidateSaveButton();
             }
         }
 
@@ -76,11 +76,11 @@ namespace Cgs.Cards
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            if ((Inputs.IsSubmit || Inputs.IsNew) && createButton.interactable)
-                StartImport();
-            if (Inputs.IsLoad && createButton.interactable)
+            if ((Inputs.IsSubmit || Inputs.IsNew) && saveButton.interactable)
+                StartSaveCard();
+            if (Inputs.IsLoad && saveButton.interactable)
                 DownloadCardImageFromWeb();
-            if (Inputs.IsSave && createButton.interactable)
+            if (Inputs.IsSave && saveButton.interactable)
                 ImportCardImageFromFile();
             else if (Inputs.IsCancel || Inputs.IsOption)
                 Hide();
@@ -160,29 +160,29 @@ namespace Cgs.Cards
         }
 
         [UsedImplicitly]
-        public void ValidateImportButton()
+        public void ValidateSaveButton()
         {
-            createButton.interactable =
+            saveButton.interactable =
                 !string.IsNullOrEmpty(CardName) && CardImageUri != null && CardImageUri.IsAbsoluteUri;
         }
 
         [UsedImplicitly]
-        public void StartImport()
+        public void StartSaveCard()
         {
             if (CardImageUri != null && !CardImageUri.AbsoluteUri.EndsWith(CardGameManager.Current.CardImageFileType))
                 CardGameManager.Instance.Messenger.Show(
                     "WARNING!: Image file type does not match " + CardGameManager.Current.CardImageFileType, true);
 
-            StartCoroutine(ImportCard());
+            StartCoroutine(SaveCard());
         }
 
-        private IEnumerator ImportCard()
+        private IEnumerator SaveCard()
         {
-            ValidateImportButton();
-            if (!createButton.interactable)
+            ValidateSaveButton();
+            if (!saveButton.interactable)
                 yield break;
 
-            createButton.interactable = false;
+            saveButton.interactable = false;
 
             var card = new UnityCard(CardGameManager.Current,
                     string.IsNullOrEmpty(cardIdInputField.text)
@@ -202,7 +202,7 @@ namespace Cgs.Cards
             CardGameManager.Current.Add(card);
             _onCreationCallback?.Invoke();
 
-            ValidateImportButton();
+            ValidateSaveButton();
             Hide();
         }
     }

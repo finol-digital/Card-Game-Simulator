@@ -4,10 +4,16 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
+  - cardSetImportModalPrefab: {fileID: 5810182567772607080, guid: 864bd2a9f44369e488e6d6f6edc1582e,
+      type: 3}
+  - cardEditorMenuPrefab: {fileID: 7821632309527891152, guid: cafd3a7bba711f44d95d40ed78851829,
+      type: 3}
+  - setImportMenuPrefab: {fileID: 2398510357189043983, guid: 9bc39dcd2680bde4fab89ce05e86ddfb,
+      type: 3}
   - cardViewerPrefab: {fileID: 1205983077926924, guid: 04f1873b7f6a8324887109e8e76da3d7,
       type: 3}
-  - cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
-      type: 3}
+  - bannerImage: {instanceID: 0}
+  - searchResults: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

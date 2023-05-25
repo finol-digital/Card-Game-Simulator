@@ -10,6 +10,7 @@ permalink: roadmap.html
 ## Active Sprint
 - Bug: Card in hand transforms into card that is drawn (https://www.youtube.com/shorts/pYG0N9TqMmA)
 - Bug: Card gets stuck on screen
+- Bug: Card get stuck on screen when dragging from search results in deck editor
 - Cards: Validation for id
 - Bug: Load from zip file on mobile
 - Bug: Crash in multiplayer on Android

@@ -458,11 +458,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49fc900b90bc87e4f91d1bfa3ed95f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardGameEditorMenuPrefab: {fileID: 7821632309527891152, guid: 5e7b999d6a486c7479e9f4d1cb76d27c,
+    type: 3}
   gameImportModalPrefab: {fileID: 5810182567772607080, guid: 864bd2a9f44369e488e6d6f6edc1582e,
     type: 3}
   downloadMenuPrefab: {fileID: 2330282487462195437, guid: 2d4784779890ecb41954d3181de7ad9e,
-    type: 3}
-  createMenuPrefab: {fileID: 7821632309527891152, guid: 5e7b999d6a486c7479e9f4d1cb76d27c,
     type: 3}
   gameManagement: {fileID: 1710066302}
   versionInfo: {fileID: 883526797}
@@ -478,9 +478,9 @@ MonoBehaviour:
   - {fileID: 1603417254}
   - {fileID: 446466192385613729}
   - {fileID: 1048141420}
-  createButton: {fileID: 616227654}
+  newCardGameButton: {fileID: 616227654}
   syncButton: {fileID: 812590935}
-  editButton: {fileID: 1948568110}
+  editCardGameButton: {fileID: 1948568110}
   joinButton: {fileID: 223206894}
   quitButton: {fileID: 1452764036}
   versionText: {fileID: 398350573}
@@ -1097,7 +1097,7 @@ GameObject:
   - component: {fileID: 616227656}
   - component: {fileID: 616227659}
   m_Layer: 5
-  m_Name: Create Button
+  m_Name: New Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1170,7 +1170,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 222978328}
         m_TargetAssemblyTypeName: 
-        m_MethodName: Create
+        m_MethodName: CreateNew
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1232,7 +1232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
     type: 3}
-  tooltip: Create
+  tooltip: New
   avoidOverlap: 0
   isBelow: 0
 --- !u!1 &634069382

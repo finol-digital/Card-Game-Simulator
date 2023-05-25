@@ -15,12 +15,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SFB;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {
-    public class GameCreationMenu : Modal
+    public class CardGameEditorMenu : Modal
     {
         public const string DownloadBannerImage = "Download Banner Image";
         public const string DownloadBannerImagePrompt = "Enter banner image url...";
@@ -45,7 +46,7 @@ namespace Cgs.Menu
         public Image bannerImage;
         public Image cardBackImage;
         public Image playMatImage;
-        public Button createButton;
+        [FormerlySerializedAs("newCardGameButton")] public Button saveButton;
 
         private DownloadMenu Downloader =>
             _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
@@ -112,7 +113,7 @@ namespace Cgs.Menu
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            if ((Inputs.IsSubmit || Inputs.IsNew) && createButton.interactable)
+            if ((Inputs.IsSubmit || Inputs.IsNew) && saveButton.interactable)
                 StartCreation();
             else if (Inputs.IsSort)
                 DownloadBannerImageFromWeb();
@@ -339,7 +340,7 @@ namespace Cgs.Menu
 
         private void ValidateCreateButton()
         {
-            createButton.interactable = !string.IsNullOrEmpty(GameName);
+            saveButton.interactable = !string.IsNullOrEmpty(GameName);
         }
 
         [UsedImplicitly]
@@ -351,7 +352,7 @@ namespace Cgs.Menu
         private IEnumerator CreateGame()
         {
             ValidateCreateButton();
-            if (!createButton.interactable)
+            if (!saveButton.interactable)
                 yield break;
 
             var gameName = GameName.Trim().Replace("@", "");

@@ -51,9 +51,9 @@ namespace Cgs.Menu
 
         private const float StartBufferTime = 0.1f;
 
+        public GameObject cardGameEditorMenuPrefab;
         public GameObject gameImportModalPrefab;
         public GameObject downloadMenuPrefab;
-        public GameObject createMenuPrefab;
         public GameObject gameManagement;
         public GameObject versionInfo;
         public Text currentGameNameText;
@@ -64,16 +64,21 @@ namespace Cgs.Menu
         public List<GameObject> selectableButtons;
 
         // ReSharper disable once NotAccessedField.Global
-        public GameObject createButton;
+        public GameObject newCardGameButton;
         public GameObject syncButton;
 
         // ReSharper disable once NotAccessedField.Global
-        public GameObject editButton;
+        public GameObject editCardGameButton;
 
         // ReSharper disable once NotAccessedField.Global
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
+
+        private CardGameEditorMenu CardGameEditor =>
+            _cardGameEditor ??= Instantiate(cardGameEditorMenuPrefab).GetOrAddComponent<CardGameEditorMenu>();
+
+        private CardGameEditorMenu _cardGameEditor;
 
         private DecisionModal ImportModal =>
             _importModal ??= Instantiate(gameImportModalPrefab).GetOrAddComponent<DecisionModal>();
@@ -85,11 +90,6 @@ namespace Cgs.Menu
 
         private DownloadMenu _downloader;
 
-        private GameCreationMenu Creator =>
-            _creator ??= Instantiate(createMenuPrefab).GetOrAddComponent<GameCreationMenu>();
-
-        private GameCreationMenu _creator;
-
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
@@ -97,8 +97,8 @@ namespace Cgs.Menu
 
         private void Start()
         {
-            createButton.SetActive(Settings.DeveloperMode);
-            editButton.SetActive(Settings.DeveloperMode);
+            newCardGameButton.SetActive(Settings.DeveloperMode);
+            editCardGameButton.SetActive(Settings.DeveloperMode);
 #if UNITY_WEBGL
             joinButton.interactable = false;
 #endif
@@ -173,8 +173,8 @@ namespace Cgs.Menu
                 SelectNext();
             else if (Inputs.IsNew)
             {
-                if (gameManagement.activeSelf && createButton.activeSelf)
-                    Create();
+                if (gameManagement.activeSelf && newCardGameButton.activeSelf)
+                    CreateNew();
                 else
                     StartGame();
             }
@@ -196,7 +196,7 @@ namespace Cgs.Menu
                 ToggleGameManagement();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
             {
-                if (gameManagement.activeSelf && editButton.activeSelf)
+                if (gameManagement.activeSelf && editCardGameButton.activeSelf)
                     Edit();
                 else
                     ExploreCards();
@@ -259,11 +259,11 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Create()
+        public void CreateNew()
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            Creator.Show();
+            CardGameEditor.Show();
         }
 
         [UsedImplicitly]
