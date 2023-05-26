@@ -26,6 +26,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 272195889258446653}
   - {fileID: 1141915803944256473}
@@ -315,12 +316,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1885672064148231139}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &7945912002026293589 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8389867583769451190, guid: d1e8db11665f7c142a87a43f37ba0be0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1885672064148231139}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &132291671865859789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,6 +330,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   promptText: {fileID: 5654140450429539469}
   countText: {fileID: 8787793274339592190}
+--- !u!224 &7945912002026293589 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8389867583769451190, guid: d1e8db11665f7c142a87a43f37ba0be0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1885672064148231139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2637530526351541818
 PrefabInstance:
   m_ObjectHideFlags: 0
