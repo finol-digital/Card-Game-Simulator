@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.83
-- Bug Fixes
+## What's New - v1.84
+- Added labels to buttons
 
 ## Active Sprint
 - Bug: Card in hand transforms into card that is drawn (https://www.youtube.com/shorts/pYG0N9TqMmA)
