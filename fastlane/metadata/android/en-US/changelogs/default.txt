@@ -1,1 +1,2 @@
-- Bug Fixes
+- Bug-Fix: Card in hand transforms into card that is drawn
+- Added labels to buttons
