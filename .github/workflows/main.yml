@@ -747,13 +747,10 @@ jobs:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
       - name: Deploy to Steam
-        uses: game-ci/steam-deploy@v2
+        uses: awesolabs/steam-deploy@main
         with:
           username: ${{ secrets.STEAM_USERNAME }}
-          password:  ${{ secrets.STEAM_PASSWORD }}
           configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
-          ssfnFileName: ${{ secrets.STEAM_SSFN_FILE_NAME }}
-          ssfnFileContents: ${{ secrets.STEAM_SSFN_FILE_CONTENTS }}
           appId: 1742850
           buildDescription: v${{ needs.buildWithWindows.outputs.buildVersion }}
           rootPath: build
