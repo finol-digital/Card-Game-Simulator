@@ -236,9 +236,8 @@ namespace Cgs.CardGameView.Multiplayer
             else
                 PopCard();
 
-            var cardModel = CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
+            CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
                 PlayController.Instance.playMat);
-            CgsNetManager.Instance.LocalPlayer.RemovedCard = cardModel;
 
             RemovePointer(eventData);
 

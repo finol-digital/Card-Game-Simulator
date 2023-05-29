@@ -100,8 +100,6 @@ namespace Cgs.Play.Multiplayer
 
         private NetworkList<CgsNetString> _handNames;
 
-        public CardModel RemovedCard { get; set; }
-
         private void Awake()
         {
             _handCards = new NetworkList<CgsNetStringList>();
@@ -344,17 +342,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Remove at {index}!");
             var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
-            var removedCardId = cardStack.RemoveAt(index);
-            SyncRemovedCardOwnerClientRpc(removedCardId, OwnerClientRpcParams);
-        }
-
-        [ClientRpc]
-        // ReSharper disable once UnusedParameter.Local
-        private void SyncRemovedCardOwnerClientRpc(string removedCardId, ClientRpcParams clientRpcParams = default)
-        {
-            if (RemovedCard != null)
-                RemovedCard.Value = CardGameManager.Current.Cards[removedCardId];
-            RemovedCard = null;
+            cardStack.RemoveAt(index);
         }
 
         public void RequestDeal(NetworkObject stack, int count)
