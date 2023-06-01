@@ -13,6 +13,7 @@ permalink: roadmap.html
 - Bug: Card get stuck on screen when dragging from search results in deck editor
 - Cards: Validation for id
 - Bug: Load from zip file on mobile
+- Don't rely on zip file name (iterate through folders)
 - Bug: Crash in multiplayer on Android
 
 ## Backlog - 2023 Q2
