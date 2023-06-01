@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelText: {fileID: 3232551570050638536}
   urlInputField: {fileID: 5886603172183116289}
-  downloadButton: {fileID: 0}
+  downloadButton: {fileID: 3115901022483616878}
   gamesButton: {fileID: 7282008802760407122}
 --- !u!1 &6141397892966411063
 GameObject:
@@ -1196,6 +1196,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30c175fe170c9e0459ee166821450a03, type: 3}
+--- !u!114 &3115901022483616878 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7269854554250268640, guid: 30c175fe170c9e0459ee166821450a03,
+    type: 3}
+  m_PrefabInstance: {fileID: 5755126758583982990}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &7519051921297118673 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2848342772243254879, guid: 30c175fe170c9e0459ee166821450a03,
