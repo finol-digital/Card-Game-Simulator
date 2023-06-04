@@ -56,7 +56,7 @@ namespace Cgs.Play
             }
 
             // Handle Input
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || _playController.menu.panels.activeSelf ||
                 CardGameManager.Instance.ModalCanvas != null || _playController.scoreboard.nameInputField.isFocused)
                 return;
 

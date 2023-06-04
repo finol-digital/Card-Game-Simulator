@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.CardGameView.Viewer;
-using Cgs.Menu;
 using Cgs.Play;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -121,51 +119,6 @@ namespace Cgs.CardGameView.Multiplayer
             else if (!EventSystem.current.alreadySelecting &&
                      EventSystem.current.currentSelectedGameObject != gameObject)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-        }
-
-        protected override void OnPointerEnterPlayable(PointerEventData eventData)
-        {
-            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
-                && PlayableViewer.Instance != null && !PlayableViewer.Instance.IsVisible)
-                PlayableViewer.Instance.Preview(this);
-        }
-
-        protected override void OnPointerExitPlayable(PointerEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.HidePreview();
-        }
-
-        protected override void OnSelectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.SelectedPlayable = this;
-        }
-
-        protected override void OnDeselectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.IsVisible = false;
-        }
-
-        protected override void OnBeginDragPlayable(PointerEventData eventData)
-        {
-            if (IsOnline)
-                RequestChangeOwnership();
-        }
-
-        protected override void OnDragPlayable(PointerEventData eventData)
-        {
-            if (LacksOwnership)
-                RequestChangeOwnership();
-            else
-                UpdatePosition();
-        }
-
-        protected override void OnEndDragPlayable(PointerEventData eventData)
-        {
-            if (!LacksOwnership)
-                UpdatePosition();
         }
 
         [ServerRpc(RequireOwnership = false)]

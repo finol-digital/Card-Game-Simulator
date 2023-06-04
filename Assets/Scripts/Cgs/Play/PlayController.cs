@@ -5,8 +5,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FinolDigital.Cgs.CardGameDef;
-using FinolDigital.Cgs.CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
@@ -16,6 +14,8 @@ using Cgs.Menu;
 using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
 using Cgs.UI.ScrollRects;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -47,6 +47,7 @@ namespace Cgs.Play
         public GameObject cardStackPrefab;
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
+        public GameObject tokenPrefab;
 
         public Transform stackViewers;
 
@@ -405,6 +406,17 @@ namespace Cgs.Play
             rectTransform.localPosition = Vector2.zero;
             die.Position = rectTransform.localPosition;
             return die;
+        }
+
+        public Token CreateToken()
+        {
+            var token = Instantiate(tokenPrefab, playMat.transform).GetOrAddComponent<Token>();
+            if (CgsNetManager.Instance.IsOnline)
+                token.MyNetworkObject.Spawn();
+            var rectTransform = (RectTransform) token.transform;
+            rectTransform.localPosition = Vector2.zero;
+            token.Position = rectTransform.localPosition;
+            return token;
         }
 
         public void OnDrop(CardModel cardModel)

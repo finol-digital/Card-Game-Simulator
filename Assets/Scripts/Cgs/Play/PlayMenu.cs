@@ -22,14 +22,16 @@ namespace Cgs.Play
                 CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsNew)
+            if (Inputs.IsSort)
                 ShowPlaySettingsMenu();
-            else if (Inputs.IsLoad)
+            if (Inputs.IsNew)
                 ShowDeckMenu();
+            else if (Inputs.IsLoad)
+                CreateDie();
             else if (Inputs.IsFilter)
                 ShowCardsMenu();
             else if (Inputs.IsSave)
-                CreateDie();
+                CreateToken();
         }
 
         public void Show()
@@ -59,6 +61,12 @@ namespace Cgs.Play
         public void CreateDie()
         {
             controller.CreateDefaultDie();
+        }
+
+        [UsedImplicitly]
+        public void CreateToken()
+        {
+            controller.CreateToken();
         }
 
         [UsedImplicitly]

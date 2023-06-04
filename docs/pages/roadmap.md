@@ -4,9 +4,9 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.84
-- Bug-Fix: Card in hand transforms into card that is drawn
-- Added labels to buttons
+## What's New - v1.85
+- Bug-Fix: Loading cards and sets
+- Added Tokens
 
 ## Active Sprint
 - Bug: Card gets stuck on screen

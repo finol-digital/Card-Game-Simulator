@@ -4,6 +4,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Cgs.CardGameView.Viewer;
+using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
@@ -202,7 +204,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
+                && PlayableViewer.Instance != null && !PlayableViewer.Instance.IsVisible)
+                PlayableViewer.Instance.Preview(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -212,7 +216,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnPointerExitPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.HidePreview();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -257,7 +262,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnSelectPlayable(BaseEventData eventData)
         {
-            // Child classes may override
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.SelectedPlayable = this;
         }
 
         public void OnDeselect(BaseEventData eventData)
@@ -267,7 +273,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnDeselectPlayable(BaseEventData eventData)
         {
-            // Child classes may override
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.IsVisible = false;
         }
 
         protected virtual bool PreBeginDrag(PointerEventData eventData)
@@ -289,7 +296,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnBeginDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (IsOnline)
+                RequestChangeOwnership();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -303,7 +311,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (LacksOwnership)
+                RequestChangeOwnership();
+            else
+                UpdatePosition();
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -323,7 +334,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (!LacksOwnership)
+                UpdatePosition();
         }
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
@@ -393,8 +405,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             var rectTransform = (RectTransform) transform;
             var currentPosition = rectTransform.position;
-            if (CardGameManager.Current.PlayMatGridCellSize == null ||
-                CardGameManager.Current.PlayMatGridCellSize.X <= 0 ||
+            if (CardGameManager.Current.PlayMatGridCellSize.X <= 0 ||
                 CardGameManager.Current.PlayMatGridCellSize.Y <= 0)
                 return currentPosition;
 

@@ -169,31 +169,6 @@ namespace Cgs.CardGameView.Multiplayer
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
-        protected override void OnPointerEnterPlayable(PointerEventData eventData)
-        {
-            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
-                && PlayableViewer.Instance != null && !PlayableViewer.Instance.IsVisible)
-                PlayableViewer.Instance.Preview(this);
-        }
-
-        protected override void OnPointerExitPlayable(PointerEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.HidePreview();
-        }
-
-        protected override void OnSelectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.SelectedPlayable = this;
-        }
-
-        protected override void OnDeselectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.IsVisible = false;
-        }
-
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
             if (IsDraggingCard)

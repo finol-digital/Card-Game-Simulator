@@ -1342,6 +1342,8 @@ MonoBehaviour:
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e, type: 3}
+  tokenPrefab: {fileID: 5127053305123712531, guid: c6a1cf8ae8ec3d647b7d1abc3b0a4b7b,
+    type: 3}
   stackViewers: {fileID: 1930199089}
   playArea: {fileID: 1507733848}
   playMat: {fileID: 217919978}
@@ -2234,6 +2236,11 @@ PrefabInstance:
     - target: {fileID: 4566502268858140, guid: 7aeec7aac0a4d0446bb25fbba25238ea, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4526732702672025491, guid: 7aeec7aac0a4d0446bb25fbba25238ea,
+        type: 3}
+      propertyPath: ConnectionData.ServerListenAddress
+      value: 127.0.0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7aeec7aac0a4d0446bb25fbba25238ea, type: 3}

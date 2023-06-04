@@ -4134,11 +4134,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7269854554250268640, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
-      propertyPath: m_Interactable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7269854554250268640, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -4175,7 +4170,7 @@ PrefabInstance:
     - target: {fileID: 7269854554250268640, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: CreateToken
       objectReference: {fileID: 0}
     - target: {fileID: 7269854554250268640, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
