@@ -4,13 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.85
-- Bug-Fix: Loading cards and sets
-- Added Tokens
+## What's New - v1.86
+- Bug-Fix: Card gets stuck on screen
 
 ## Active Sprint
-- Bug: Card gets stuck on screen
-- Bug: Card get stuck on screen when dragging from search results in deck editor
 - Cards: Validation for id
 - Bug: Load from zip file on mobile
 - Don't rely on zip file name (iterate through folders)

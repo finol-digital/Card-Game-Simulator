@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading;
 using Cgs.CardGameView.Viewer;
 using Cgs.Decks;
-using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using FinolDigital.Cgs.CardGameDef.Unity;
@@ -129,11 +128,8 @@ namespace Cgs.CardGameView.Multiplayer
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
             if (!IsOwner)
-            {
                 deckLabel.text = Name;
-                countLabel.text = _cardIds.Count.ToString();
-            }
-
+            countLabel.text = _cardIds.Count.ToString();
             _cardIds.OnListChanged += OnCardsUpdated;
 
             topCard.sprite = CardGameManager.Current.CardBackImageSprite;

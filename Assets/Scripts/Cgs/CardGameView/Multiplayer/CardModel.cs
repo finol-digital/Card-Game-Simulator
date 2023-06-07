@@ -348,7 +348,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override bool PreBeginDrag(PointerEventData eventData)
         {
             DidDrag = true;
-            if (DoesCloneOnDrag)
+            if (DoesCloneOnDrag && !IsProcessingSecondaryDragAction)
             {
                 if (!IsOnline && IsSpawned)
                     MyNetworkObject.Despawn(false);
