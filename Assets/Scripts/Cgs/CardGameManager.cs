@@ -307,10 +307,15 @@ namespace Cgs
                 var importGameDirectory = Path.Combine(UnityCardGame.GamesImportPath, gameId);
                 if (!Directory.Exists(importGameDirectory))
                 {
-                    var errorMessage = string.Format(FileNotFoundErrorMessage, importGameDirectory);
-                    Debug.LogError(errorMessage);
-                    Messenger.Show(errorMessage);
-                    return;
+                    gameId = Path.GetFileName(Directory.GetDirectories(UnityCardGame.GamesImportPath)[0]);
+                    importGameDirectory = Path.Combine(UnityCardGame.GamesImportPath, gameId);
+                    if (!Directory.Exists(importGameDirectory))
+                    {
+                        var errorMessage = string.Format(FileNotFoundErrorMessage, importGameDirectory);
+                        Debug.LogError(errorMessage);
+                        Messenger.Show(errorMessage);
+                        return;
+                    }
                 }
 
                 var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);

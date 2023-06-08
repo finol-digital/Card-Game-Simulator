@@ -8,7 +8,6 @@ permalink: roadmap.html
 - Bug-Fix: Card gets stuck on screen
 
 ## Active Sprint
-- Don't rely on zip file name (iterate through folders)
 - Bug: Load from zip file on mobile
 - Bug: Crash in multiplayer on Android
 
