@@ -40,6 +40,34 @@ namespace Cgs.Cards
 
         [UsedImplicitly] public string CardName { get; set; }
 
+        [UsedImplicitly]
+        public string CardId
+        {
+            get => _cardId;
+            set
+            {
+                _cardId = UnityFileMethods.GetSafeFileName(value)[..64];
+                if (!_cardId.Equals(cardIdInputField.text))
+                    cardIdInputField.text = _cardId;
+            }
+        }
+
+        private string _cardId = string.Empty;
+
+        [UsedImplicitly]
+        public string SetCode
+        {
+            get => _setCode;
+            set
+            {
+                _setCode = UnityFileMethods.GetSafeFilePath(value);
+                if (!_setCode.Equals(setCodeInputField.text))
+                    setCodeInputField.text = _setCode;
+            }
+        }
+
+        private string _setCode = string.Empty;
+
         private Uri CardImageUri
         {
             get => _cardImageUri;
@@ -65,7 +93,8 @@ namespace Cgs.Cards
 
         private Sprite _cardImageSprite;
 
-        private DownloadMenu Downloader => _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
+        private DownloadMenu Downloader =>
+            _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
 
         private DownloadMenu _downloader;
 
@@ -89,7 +118,7 @@ namespace Cgs.Cards
         public void Show(UnityAction onCreationCallback)
         {
             Show();
-            setCodeInputField.text = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
+            SetCode = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
             cardImage.sprite = CardImageSprite != null ? CardImageSprite : CardGameManager.Current.CardBackImageSprite;
             _onCreationCallback = onCreationCallback;
         }
@@ -185,10 +214,10 @@ namespace Cgs.Cards
             saveButton.interactable = false;
 
             var card = new UnityCard(CardGameManager.Current,
-                    string.IsNullOrEmpty(cardIdInputField.text)
+                    string.IsNullOrEmpty(CardId)
                         ? Guid.NewGuid().ToString().ToUpper()
-                        : cardIdInputField.text, CardName,
-                    string.IsNullOrEmpty(setCodeInputField.text) ? Set.DefaultCode : setCodeInputField.text, null,
+                        : CardId, CardName,
+                    string.IsNullOrEmpty(SetCode) ? Set.DefaultCode : SetCode, null,
                     false)
                 {ImageWebUrl = CardImageUri.AbsoluteUri};
             yield return UnityFileMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);

@@ -780,6 +780,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
+      propertyPath: m_OnSubmit.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
       propertyPath: m_OnSubmit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 4118894267374975462}
@@ -806,7 +811,12 @@ PrefabInstance:
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: set_CardName
+      value: set_SetCode
+      objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.Cards.CardEditorMenu, Cgs
       objectReference: {fileID: 0}
     - target: {fileID: 4768883952711561113, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
@@ -3041,6 +3051,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
+      propertyPath: m_OnSubmit.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
       propertyPath: m_OnSubmit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 4118894267374975462}
@@ -3067,7 +3082,12 @@ PrefabInstance:
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: set_CardName
+      value: set_CardId
+      objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.Cards.CardEditorMenu, Cgs
       objectReference: {fileID: 0}
     - target: {fileID: 4768883952711561113, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
