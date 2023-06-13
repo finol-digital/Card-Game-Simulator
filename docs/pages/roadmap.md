@@ -4,19 +4,16 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.86
-- Bug-Fix: Card gets stuck on screen
+## What's New - v1.87
+- Deck Editor: Redesigned horizontal layout
 
 ## Active Sprint
-- Bug: Load from zip file on mobile
-- Bug: Crash in multiplayer on Android
-
-## Backlog - 2023 Q2
 - Cards: Preview card image on mouse-over
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
-- Game-Play: Clear CgsNetPlayer on restart and move the restart to its own Reset button in the Play Menu
-  - Option to keep points and reset or delete decks
+
+## Backlog - 2023 Q3
+- Game-Play: Add restart button in Play Settings Menu
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
@@ -31,7 +28,7 @@ permalink: roadmap.html
 - Game-Play: Undo with Ctrl-Z
 - Integration: Private Lobbies & Deep links to join multiplayer rooms
 
-## Backlog - 2023 Q3
+## Backlog - 2023 Q4
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
@@ -49,7 +46,7 @@ permalink: roadmap.html
 - Game-Creation: Edit Button in Main Menu
 - Deck Editor: Layout/Redesign (https://discord.com/channels/877422409769177158/932359810303807508/1082580945997139988)
 
-## Backlog - 2023 Q4
+## Backlog - 2024
 - Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
 - Platforms: Full controller support (Steam)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)

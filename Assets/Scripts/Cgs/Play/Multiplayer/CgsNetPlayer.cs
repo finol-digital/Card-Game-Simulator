@@ -516,6 +516,8 @@ namespace Cgs.Play.Multiplayer
                 cardModel.MyNetworkObject.Despawn();
             foreach (var die in PlayController.Instance.playMat.GetComponentsInChildren<Die>())
                 die.MyNetworkObject.Despawn();
+            foreach (var token in PlayController.Instance.playMat.GetComponentsInChildren<Token>())
+                token.MyNetworkObject.Despawn();
             foreach (var player in FindObjectsOfType<CgsNetPlayer>())
                 player.RestartClientRpc(player.OwnerClientRpcParams);
         }
@@ -527,7 +529,9 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Player] Game is restarting!...");
             PlayController.Instance.ResetPlayArea();
             PlayController.Instance.drawer.Clear();
+            Points = CardGameManager.Current.GameStartPointsCount;
             CurrentDeck = null;
+            CurrentHand = 0;
             StartCoroutine(WaitToRestartGame());
         }
 

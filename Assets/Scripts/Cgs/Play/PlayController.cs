@@ -434,10 +434,11 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void PromptBackToMainMenu()
         {
-            CardGameManager.Instance.Messenger.Ask(MainMenuPrompt, PromptRestart, BackToMainMenu);
+            CardGameManager.Instance.Messenger.Prompt(MainMenuPrompt, BackToMainMenu);
         }
 
-        private void PromptRestart()
+        [UsedImplicitly]
+        public void PromptRestart()
         {
             CardGameManager.Instance.Messenger.Prompt(RestartPrompt, Restart);
         }
