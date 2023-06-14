@@ -32,8 +32,6 @@ namespace Cgs.Decks
         public const float CardPrefabHeight = 350f;
         public const float CardZonePrefabSpacing = -225f;
 
-        public bool IsZoomed { get; private set; }
-
         public GameObject cardViewerPrefab;
         public GameObject cardModelPrefab;
         public GameObject cardZonePrefab;
@@ -41,7 +39,6 @@ namespace Cgs.Decks
         public GameObject deckSaveMenuPrefab;
         public DeckEditorLayout deckEditorLayout;
         public RectTransform layoutContent;
-        public RectTransform searchContent;
         public List<CardDropArea> dropZones;
         public ScrollRect scrollRect;
         public Text nameText;
@@ -50,7 +47,7 @@ namespace Cgs.Decks
 
         private int CardsPerZone =>
             Mathf.FloorToInt(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / CardPrefabHeight *
-                             (IsZoomed ? 8 : 4));
+                             (deckEditorLayout.IsZoomed ? 16 : 8));
 
         public List<CardModel> CardModels
         {
@@ -63,7 +60,7 @@ namespace Cgs.Decks
             }
         }
 
-        private List<CardZone> CardZones { get; } = new List<CardZone>();
+        private List<CardZone> CardZones { get; } = new();
 
         private float CardZoneWidth => _cardZoneWidth ??= cardZonePrefab.GetComponent<RectTransform>().rect.width;
 
@@ -134,9 +131,9 @@ namespace Cgs.Decks
                 ShowDeckLoadMenu();
             else if (Inputs.IsSave)
                 ShowDeckSaveMenu();
-            else if (Inputs.IsFocus && !IsZoomed)
+            else if (Inputs.IsFocus && !deckEditorLayout.IsZoomed)
                 searchResults.inputField.ActivateInputField();
-            else if (Inputs.IsFilter && !IsZoomed)
+            else if (Inputs.IsFilter && !deckEditorLayout.IsZoomed)
                 searchResults.ShowSearchMenu();
             else if (Inputs.IsCancel)
                 CheckBackToMainMenu();
@@ -313,12 +310,7 @@ namespace Cgs.Decks
         [UsedImplicitly]
         public void ToggleZoom()
         {
-            IsZoomed = !IsZoomed;
-            searchContent.gameObject.SetActive(!IsZoomed);
-            var deckEditorLayoutRectTransform = (RectTransform) deckEditorLayout.transform;
-            deckEditorLayoutRectTransform.anchorMin =
-                IsZoomed ? Vector2.zero : DeckEditorLayout.DeckButtonsPortraitAnchor;
-            deckEditorLayoutRectTransform.offsetMin = Vector2.up * (IsZoomed && deckEditorLayout.IsPortrait ? 90 : 10);
+            deckEditorLayout.IsZoomed = !deckEditorLayout.IsZoomed;
         }
 
         [UsedImplicitly]

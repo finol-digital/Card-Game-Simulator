@@ -36,7 +36,7 @@ namespace Cgs.Decks
 
             if (Inputs.IsVertical)
             {
-                if (editor.IsZoomed)
+                if (editor.deckEditorLayout.IsZoomed)
                 {
                     if (Inputs.IsDown && !Inputs.WasDown)
                         SelectEditorDown();
@@ -53,7 +53,7 @@ namespace Cgs.Decks
             }
             else if (Inputs.IsHorizontal)
             {
-                if (editor.IsZoomed)
+                if (editor.deckEditorLayout.IsZoomed)
                 {
                     if (Inputs.IsLeft && !Inputs.WasLeft)
                         SelectEditorLeft();
@@ -217,8 +217,8 @@ namespace Cgs.Decks
                 return;
             }
 
-            EventSystem.current.SetSelectedGameObject(editorCardModels[editorCardModels.Count - 1].gameObject);
-            editor.FocusScrollRectOn(editorCardModels[editorCardModels.Count - 1]);
+            EventSystem.current.SetSelectedGameObject(editorCardModels[^1].gameObject);
+            editor.FocusScrollRectOn(editorCardModels[^1]);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }
@@ -251,7 +251,7 @@ namespace Cgs.Decks
             }
 
             editor.scrollRect.horizontalNormalizedPosition = 1;
-            EventSystem.current.SetSelectedGameObject(editorCardModels[editorCardModels.Count - 1].gameObject);
+            EventSystem.current.SetSelectedGameObject(editorCardModels[^1].gameObject);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }

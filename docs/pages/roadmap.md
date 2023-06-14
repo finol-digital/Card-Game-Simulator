@@ -5,10 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.87
+- Bug-Fix: Load zip file
 - Deck Editor: Redesigned horizontal layout
+- Cards: Preview card image on hover
 
 ## Active Sprint
-- Cards: Preview card image on mouse-over
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 

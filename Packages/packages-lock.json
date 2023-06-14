@@ -283,6 +283,13 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "com.yasirkula.nativefilepicker": {
+      "version": "https://github.com/yasirkula/UnityNativeFilePicker.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "17e20eb9bbc97efb6644d5d561942da8019b7dac"
+    },
     "com.yasirkula.nativegallery": {
       "version": "https://github.com/yasirkula/UnityNativeGallery.git",
       "depth": 0,

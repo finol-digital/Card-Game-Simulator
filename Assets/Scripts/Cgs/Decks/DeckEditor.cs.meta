@@ -1,24 +1,23 @@
 fileFormatVersion: 2
 guid: 35b18cfe75039ac46bde6a5d25517a2f
-timeCreated: 1519347046
-licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
   - cardViewerPrefab: {fileID: 1205983077926924, guid: 04f1873b7f6a8324887109e8e76da3d7,
-      type: 2}
+      type: 3}
   - cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
-      type: 2}
-  - cardStackPrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
-      type: 2}
+      type: 3}
+  - cardZonePrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
+      type: 3}
   - deckLoadMenuPrefab: {fileID: 1561040649185706, guid: 5c3d8b7a61d7d5c4c8341ed45fd83bcb,
-      type: 2}
+      type: 3}
   - deckSaveMenuPrefab: {fileID: 1855235277117932, guid: 0e1b94959fbbbb44e8022d149694aae5,
-      type: 2}
-  - layoutArea: {instanceID: 0}
+      type: 3}
+  - deckEditorLayout: {instanceID: 0}
   - layoutContent: {instanceID: 0}
-  - scrollBar: {instanceID: 0}
+  - searchContent: {instanceID: 0}
+  - scrollRect: {instanceID: 0}
   - nameText: {instanceID: 0}
   - countText: {instanceID: 0}
   - searchResults: {instanceID: 0}
