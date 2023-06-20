@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using SimpleFileBrowser;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -77,6 +76,8 @@ namespace Cgs.Menu
 
         private DownloadMenu _downloader;
 
+        private static string _zipFileType;
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
@@ -95,6 +96,8 @@ namespace Cgs.Menu
             quitButton.SetActive(false);
 #endif
             versionText.text = VersionMessage;
+
+            _zipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
         }
 
         private void Update()
@@ -256,9 +259,20 @@ namespace Cgs.Menu
 
         private static void ShowFileLoader()
         {
+#if UNITY_ANDROID || UNITY_IOS
+            var permission = NativeFilePicker.PickFile(path =>
+            {
+                if (path == null)
+                    Debug.Log("Operation cancelled");
+                else
+                    CardGameManager.Instance.ImportCardGame(path);
+            }, _zipFileType);
+            Debug.Log( "Permission result: " + permission );
+#else
             FileBrowser.ShowLoadDialog((paths) => CardGameManager.Instance.ImportCardGame(paths[0]),
                 () => { }, FileBrowser.PickMode.Files, false, null, null,
                 SelectZipFilePrompt);
+#endif
         }
 
         [UsedImplicitly]
