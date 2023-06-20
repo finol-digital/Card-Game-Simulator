@@ -28,20 +28,7 @@ namespace Cgs.Menu
 
         public static string VersionMessage => $"VERSION {Application.version}";
 
-        public const string TutorialPrompt =
-            "If you are new to Card Game Simulator (CGS), you may wish to see the wiki.\nGo to the wiki?";
-
         public const string QuitPrompt = "Quit?";
-
-        private const string TutorialUrl = "https://github.com/finol-digital/Card-Game-Simulator/wiki";
-
-        private const string PlayerPrefsHasSeenTutorial = "HasSeenTutorial";
-
-        private static bool HasSeenTutorial
-        {
-            get => PlayerPrefs.GetInt(PlayerPrefsHasSeenTutorial, 0) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsHasSeenTutorial, value ? 1 : 0);
-        }
 
         public const int MainMenuSceneIndex = 1;
         private const int PlayModeSceneIndex = 2;
@@ -108,20 +95,6 @@ namespace Cgs.Menu
             quitButton.SetActive(false);
 #endif
             versionText.text = VersionMessage;
-
-            if (!HasSeenTutorial)
-                CardGameManager.Instance.Messenger.Ask(TutorialPrompt, ConfirmHasSeenTutorial, GoToTutorial, true);
-        }
-
-        private static void ConfirmHasSeenTutorial()
-        {
-            HasSeenTutorial = true;
-        }
-
-        private static void GoToTutorial()
-        {
-            ConfirmHasSeenTutorial();
-            Application.OpenURL(TutorialUrl);
         }
 
         private void Update()
@@ -284,7 +257,7 @@ namespace Cgs.Menu
         private static void ShowFileLoader()
         {
             FileBrowser.ShowLoadDialog((paths) => CardGameManager.Instance.ImportCardGame(paths[0]),
-                () => {}, FileBrowser.PickMode.Files, false, null, null,
+                () => { }, FileBrowser.PickMode.Files, false, null, null,
                 SelectZipFilePrompt);
         }
 

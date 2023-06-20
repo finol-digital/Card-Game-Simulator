@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Bug-Fix: Load zip file
 - Deck Editor: Redesigned horizontal layout
 - Cards: Preview card image on hover
+- Game-Play: Remove drawers and delete tokens
 
 ## Active Sprint
 - Game-Play: Combine Stacks when dropped on each other
