@@ -12,6 +12,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
+#if !UNITY_ANDROID && !UNITY_IOS
+using SimpleFileBrowser;
+#endif
 
 namespace Cgs.Menu
 {
@@ -76,7 +79,9 @@ namespace Cgs.Menu
 
         private DownloadMenu _downloader;
 
+#if UNITY_ANDROID || UNITY_IOS
         private static string _zipFileType;
+#endif
 
         private void OnEnable()
         {

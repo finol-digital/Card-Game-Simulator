@@ -45,9 +45,9 @@ namespace Cgs.Decks
         public Text countText;
         public SearchResults searchResults;
 
-        private int CardsPerZone =>
+        private static int CardsPerZone =>
             Mathf.FloorToInt(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / CardPrefabHeight *
-                             (deckEditorLayout.IsZoomed ? 16 : 8));
+                             8);
 
         public List<CardModel> CardModels
         {
@@ -131,9 +131,9 @@ namespace Cgs.Decks
                 ShowDeckLoadMenu();
             else if (Inputs.IsSave)
                 ShowDeckSaveMenu();
-            else if (Inputs.IsFocus && !deckEditorLayout.IsZoomed)
+            else if (Inputs.IsFocus && !deckEditorLayout.IsPortrait)
                 searchResults.inputField.ActivateInputField();
-            else if (Inputs.IsFilter && !deckEditorLayout.IsZoomed)
+            else if (Inputs.IsFilter && !deckEditorLayout.IsPortrait)
                 searchResults.ShowSearchMenu();
             else if (Inputs.IsCancel)
                 CheckBackToMainMenu();
@@ -305,12 +305,6 @@ namespace Cgs.Decks
                 cardZone.transform.DestroyAllChildren();
             foreach (var card in sortedDeck.Cards)
                 AddCard((UnityCard) card);
-        }
-
-        [UsedImplicitly]
-        public void ToggleZoom()
-        {
-            deckEditorLayout.IsZoomed = !deckEditorLayout.IsZoomed;
         }
 
         [UsedImplicitly]

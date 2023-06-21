@@ -8,30 +8,18 @@ namespace Cgs.Decks
 {
     public class DeckEditorLayout : MonoBehaviour
     {
-        private static bool IsPortrait => Screen.orientation == ScreenOrientation.Portrait;
+        private const float Buffer = 20f;
+        private const float SearchAreaPortraitHeight = 550f;
+        private const float SearchAreaLandscapeWidth = 500f;
 
-        private static readonly Vector2 DeckButtonsPortraitAnchor = new(0, 0.43f);
-        private static readonly Vector2 DeckButtonsLandscapePosition = new(-650, 0);
+        public bool IsPortrait => ((RectTransform) transform).rect.width < 1200f;
 
-        public RectTransform deckButtons;
-        public RectTransform searchLayoutArea;
+        public RectTransform deckEditorButtonsGroup;
+        public RectTransform deckEditorLayoutArea;
 
-        public bool IsZoomed
-        {
-            get => _isZoomed;
-            set
-            {
-                _isZoomed = value;
-                searchLayoutArea.gameObject.SetActive(!_isZoomed);
-                var deckEditorLayoutRectTransform = (RectTransform) transform;
-                deckEditorLayoutRectTransform.anchorMin =
-                    IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
-                deckEditorLayoutRectTransform.offsetMin =
-                    Vector2.up * (_isZoomed && IsPortrait ? 90 : 10);
-            }
-        }
+        public RectTransform searchArea;
 
-        private bool _isZoomed;
+        public RectTransform cardCountLabel;
 
         private void OnRectTransformDimensionsChange()
         {
@@ -40,17 +28,41 @@ namespace Cgs.Decks
 
             if (IsPortrait) // Portrait
             {
+                deckEditorButtonsGroup.gameObject.SetActive(false);
+                /*
                 deckButtons.anchorMin = IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
                 deckButtons.anchorMax = IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
                 deckButtons.pivot = Vector2.up;
-                deckButtons.anchoredPosition = IsZoomed ? Vector2.up * deckButtons.rect.height : Vector2.zero;
+                deckButtons.anchoredPosition = IsZoomed ? Vector2.up * deckButtons.rect.height : Vector2.zero;*/
+                deckEditorLayoutArea.offsetMin =
+                    new Vector2(deckEditorLayoutArea.offsetMin.x, SearchAreaPortraitHeight);
+                deckEditorLayoutArea.offsetMax = new Vector2(-Buffer, deckEditorLayoutArea.offsetMax.y);
+                searchArea.anchorMin = Vector2.zero;
+                searchArea.anchorMax = Vector2.right;
+                searchArea.pivot = Vector2.one;
+                searchArea.offsetMin = Vector2.down * SearchAreaPortraitHeight;
+                searchArea.offsetMax = Vector2.zero;
+                searchArea.anchoredPosition = Vector2.up * SearchAreaPortraitHeight;
+                cardCountLabel.anchoredPosition = Vector2.zero;
             }
             else // Landscape
             {
+                deckEditorButtonsGroup.gameObject.SetActive(true);
+                /*
                 deckButtons.anchorMin = Vector2.one;
                 deckButtons.anchorMax = Vector2.one;
                 deckButtons.pivot = Vector2.one;
-                deckButtons.anchoredPosition = DeckButtonsLandscapePosition;
+                deckButtons.anchoredPosition = DeckButtonsLandscapePosition;*/
+                deckEditorLayoutArea.offsetMin = new Vector2(deckEditorLayoutArea.offsetMin.x, Buffer);
+                deckEditorLayoutArea.offsetMax =
+                    new Vector2(-SearchAreaLandscapeWidth, deckEditorLayoutArea.offsetMax.y);
+                searchArea.anchorMin = Vector2.right;
+                searchArea.anchorMax = Vector2.one;
+                searchArea.pivot = Vector2.one;
+                searchArea.offsetMin = Vector2.left * SearchAreaLandscapeWidth;
+                searchArea.offsetMax = Vector2.zero;
+                searchArea.anchoredPosition = Vector2.zero;
+                cardCountLabel.anchoredPosition = Vector2.zero;
             }
         }
     }

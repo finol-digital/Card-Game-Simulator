@@ -36,7 +36,7 @@ namespace Cgs.Decks
 
             if (Inputs.IsVertical)
             {
-                if (editor.deckEditorLayout.IsZoomed)
+                if (editor.deckEditorLayout.IsPortrait)
                 {
                     if (Inputs.IsDown && !Inputs.WasDown)
                         SelectEditorDown();
@@ -53,7 +53,7 @@ namespace Cgs.Decks
             }
             else if (Inputs.IsHorizontal)
             {
-                if (editor.deckEditorLayout.IsZoomed)
+                if (editor.deckEditorLayout.IsPortrait)
                 {
                     if (Inputs.IsLeft && !Inputs.WasLeft)
                         SelectEditorLeft();

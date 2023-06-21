@@ -6,11 +6,11 @@ permalink: roadmap.html
 
 ## What's New - v1.87
 - Bug-Fix: Load zip file
-- Deck Editor: Redesigned horizontal layout
+- Deck Editor: Redesigned layout
 - Cards: Preview card image on hover
-- Game-Play: Remove drawers and delete tokens
 
 ## Active Sprint
+- Game-Play: Remove drawers and delete tokens
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 

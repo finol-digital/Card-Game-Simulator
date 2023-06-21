@@ -59,7 +59,10 @@ namespace Cgs.Cards
         {
             get
             {
-                if (!(layoutGroup is GridLayoutGroup gridLayoutGroup))
+                if (layoutArea.rect.height < CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y * 2)
+                    return CardsPerRow;
+
+                if (layoutGroup is not GridLayoutGroup gridLayoutGroup)
                     return CardsPerRow;
 
                 var gridPadding = gridLayoutGroup.padding;
