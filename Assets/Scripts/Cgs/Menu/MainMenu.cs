@@ -102,7 +102,9 @@ namespace Cgs.Menu
 #endif
             versionText.text = VersionMessage;
 
+#if UNITY_ANDROID || UNITY_IOS
             _zipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
+#endif
         }
 
         private void Update()
