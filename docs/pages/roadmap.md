@@ -4,7 +4,7 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.87
+## What's New - v1.86
 - Bug-Fix: Load zip file
 - Deck Editor: Redesigned layout
 
