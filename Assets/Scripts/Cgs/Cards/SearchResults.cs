@@ -25,6 +25,7 @@ namespace Cgs.Cards
         public InputField inputField;
         public Text countText;
         public ScrollRect scrollRect;
+        public bool isInteractable;
 
         public int CardsPerRow
         {
@@ -176,8 +177,8 @@ namespace Cgs.Cards
                 var cardToShow = CardGameManager.Current.Cards[cardId];
                 var cardModel = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
                 cardModel.Value = cardToShow;
-                cardModel.IsStatic = layoutGroup is GridLayoutGroup;
-                cardModel.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
+                cardModel.IsStatic = !isInteractable;
+                cardModel.DoesCloneOnDrag = isInteractable;
                 if (HorizontalDoubleClickAction != null
                     && ((RectTransform) transform).rect.width > ((RectTransform) transform).rect.height)
                     cardModel.DefaultAction = HorizontalDoubleClickAction;

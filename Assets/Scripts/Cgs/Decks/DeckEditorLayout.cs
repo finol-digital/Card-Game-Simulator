@@ -14,6 +14,8 @@ namespace Cgs.Decks
 
         public bool IsPortrait => ((RectTransform) transform).rect.width < 1200f;
 
+        public RectTransform deckLabel;
+        public RectTransform deckButtonsContainer;
         public RectTransform deckEditorButtonsGroup;
         public RectTransform deckEditorLayoutArea;
 
@@ -28,12 +30,9 @@ namespace Cgs.Decks
 
             if (IsPortrait) // Portrait
             {
-                deckEditorButtonsGroup.gameObject.SetActive(false);
-                /*
-                deckButtons.anchorMin = IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
-                deckButtons.anchorMax = IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
-                deckButtons.pivot = Vector2.up;
-                deckButtons.anchoredPosition = IsZoomed ? Vector2.up * deckButtons.rect.height : Vector2.zero;*/
+                deckEditorButtonsGroup.SetParent(deckButtonsContainer);
+                deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
+                deckEditorButtonsGroup.localScale = Vector3.one;
                 deckEditorLayoutArea.offsetMin =
                     new Vector2(deckEditorLayoutArea.offsetMin.x, SearchAreaPortraitHeight);
                 deckEditorLayoutArea.offsetMax = new Vector2(-Buffer, deckEditorLayoutArea.offsetMax.y);
@@ -47,12 +46,9 @@ namespace Cgs.Decks
             }
             else // Landscape
             {
-                deckEditorButtonsGroup.gameObject.SetActive(true);
-                /*
-                deckButtons.anchorMin = Vector2.one;
-                deckButtons.anchorMax = Vector2.one;
-                deckButtons.pivot = Vector2.one;
-                deckButtons.anchoredPosition = DeckButtonsLandscapePosition;*/
+                deckEditorButtonsGroup.SetParent(deckLabel);
+                deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
+                deckEditorButtonsGroup.localScale = Vector3.one;
                 deckEditorLayoutArea.offsetMin = new Vector2(deckEditorLayoutArea.offsetMin.x, Buffer);
                 deckEditorLayoutArea.offsetMax =
                     new Vector2(-SearchAreaLandscapeWidth, deckEditorLayoutArea.offsetMax.y);

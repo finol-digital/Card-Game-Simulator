@@ -28,141 +28,44 @@ namespace Cgs.Decks
                     SelectEditorDown();
                 else if (SwipeManager.IsSwipingDown())
                     SelectEditorUp();
-                if (SwipeManager.IsSwipingRight())
-                    SelectResultsLeft();
+                else if (SwipeManager.IsSwipingRight())
+                    SelectEditorLeft();
                 else if (SwipeManager.IsSwipingLeft())
-                    SelectResultsRight();
+                    SelectEditorRight();
             }
 
             if (Inputs.IsVertical)
             {
-                if (editor.deckEditorLayout.IsPortrait)
-                {
-                    if (Inputs.IsDown && !Inputs.WasDown)
-                        SelectEditorDown();
-                    else if (Inputs.IsUp && !Inputs.WasUp)
-                        SelectEditorUp();
-                }
-                else
-                {
-                    if (Inputs.IsDown && !Inputs.WasDown)
-                        SelectResultsDown();
-                    else if (Inputs.IsUp && !Inputs.WasUp)
-                        SelectResultsUp();
-                }
+                if (Inputs.IsDown && !Inputs.WasDown)
+                    SelectEditorDown();
+                else if (Inputs.IsUp && !Inputs.WasUp)
+                    SelectEditorUp();
             }
             else if (Inputs.IsHorizontal)
             {
-                if (editor.deckEditorLayout.IsPortrait)
-                {
-                    if (Inputs.IsLeft && !Inputs.WasLeft)
-                        SelectEditorLeft();
-                    else if (Inputs.IsRight && !Inputs.WasRight)
-                        SelectEditorRight();
-                }
-                else
-                {
-                    if (Inputs.IsLeft && !Inputs.WasLeft)
-                        SelectResultsLeft();
-                    else if (Inputs.IsRight && !Inputs.WasRight)
-                        SelectResultsRight();
-                }
+                if (Inputs.IsLeft && !Inputs.WasLeft)
+                    SelectEditorLeft();
+                else if (Inputs.IsRight && !Inputs.WasRight)
+                    SelectEditorRight();
             }
 
             if (Inputs.IsPageVertical)
             {
                 if (Inputs.IsPageDown && !Inputs.WasPageDown)
-                    SelectEditorDown();
+                    SelectResultsDown();
                 else if (Inputs.IsPageUp && !Inputs.WasPageUp)
-                    SelectEditorUp();
+                    SelectResultsUp();
             }
             else if (Inputs.IsPageHorizontal)
             {
                 if (Inputs.IsPageLeft && !Inputs.WasPageLeft)
-                    SelectEditorLeft();
+                    SelectResultsLeft();
                 else if (Inputs.IsPageRight && !Inputs.WasPageRight)
-                    SelectEditorRight();
+                    SelectResultsRight();
             }
         }
 
-        [UsedImplicitly]
-        public void SelectResultsLeft()
-        {
-            if (EventSystem.current.alreadySelecting)
-                return;
-
-            if (results.layoutArea.childCount < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = results.layoutArea.childCount - 1; i >= 0; i--)
-            {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i--;
-                if (i < 0)
-                {
-                    results.DecrementPage();
-                    i = results.layoutArea.childCount - 1;
-                }
-
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
-        }
-
-        [UsedImplicitly]
-        public void SelectResultsRight()
-        {
-            if (EventSystem.current.alreadySelecting)
-                return;
-
-            if (results.layoutArea.childCount < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = 0; i < results.layoutArea.childCount; i++)
-            {
-                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i++;
-                if (i == results.layoutArea.childCount)
-                {
-                    results.IncrementPage();
-                    i = 0;
-                }
-
-                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
-        }
-
-        [UsedImplicitly]
-        public void SelectResultsDown()
-        {
-            results.IncrementPage();
-        }
-
-        [UsedImplicitly]
-        public void SelectResultsUp()
-        {
-            results.DecrementPage();
-        }
-
-        [UsedImplicitly]
-        public void SelectEditorDown()
+        private void SelectEditorDown()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -192,8 +95,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
-        [UsedImplicitly]
-        public void SelectEditorUp()
+        private void SelectEditorUp()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -223,8 +125,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
-        [UsedImplicitly]
-        public void SelectEditorLeft()
+        private void SelectEditorLeft()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -256,8 +157,7 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
-        [UsedImplicitly]
-        public void SelectEditorRight()
+        private void SelectEditorRight()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -289,43 +189,87 @@ namespace Cgs.Decks
         }
 
         [UsedImplicitly]
-        public void DecrementPage()
-        {
-            var rectTransform = GetComponent<RectTransform>();
-            if (rectTransform.rect.width > rectTransform.rect.height) // Landscape
-                SelectEditorLeft();
-            else // Portrait
-                results.DecrementPage();
-        }
-
-        [UsedImplicitly]
-        public void IncrementPage()
-        {
-            var rectTransform = GetComponent<RectTransform>();
-            if (rectTransform.rect.width > rectTransform.rect.height) // Landscape
-                SelectEditorRight();
-            else // Portrait
-                results.IncrementPage();
-        }
-
-        [UsedImplicitly]
         public void NavigateLeft()
         {
-            var rectTransform = GetComponent<RectTransform>();
-            if (rectTransform.rect.width < rectTransform.rect.height) // Portrait
-                SelectResultsLeft();
-            else // Landscape
-                results.DecrementPage();
+            results.DecrementPage();
         }
 
         [UsedImplicitly]
         public void NavigateRight()
         {
-            var rectTransform = GetComponent<RectTransform>();
-            if (rectTransform.rect.width < rectTransform.rect.height) // Portrait
-                SelectResultsRight();
-            else // Landscape
-                results.IncrementPage();
+            results.IncrementPage();
+        }
+
+        private void SelectResultsLeft()
+        {
+            results.DecrementPage();
+        }
+
+        private void SelectResultsRight()
+        {
+            results.IncrementPage();
+        }
+
+        private void SelectResultsDown()
+        {
+            if (EventSystem.current.alreadySelecting)
+                return;
+
+            if (results.layoutArea.childCount < 1)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                return;
+            }
+
+            for (var i = 0; i < results.layoutArea.childCount; i++)
+            {
+                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
+                    continue;
+                i++;
+                if (i == results.layoutArea.childCount)
+                {
+                    results.IncrementPage();
+                    i = 0;
+                }
+
+                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                return;
+            }
+
+            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
+        }
+
+        private void SelectResultsUp()
+        {
+            if (EventSystem.current.alreadySelecting)
+                return;
+
+            if (results.layoutArea.childCount < 1)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                return;
+            }
+
+            for (var i = results.layoutArea.childCount - 1; i >= 0; i--)
+            {
+                if (results.layoutArea.GetChild(i).GetComponent<CardModel>() != CardViewer.Instance.SelectedCardModel)
+                    continue;
+                i--;
+                if (i < 0)
+                {
+                    results.DecrementPage();
+                    i = results.layoutArea.childCount - 1;
+                }
+
+                EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
+                return;
+            }
+
+            EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
         }
     }
 }
