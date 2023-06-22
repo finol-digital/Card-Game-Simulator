@@ -1,2 +1,2 @@
-- Bug-Fix: Loading cards and sets
-- Added Tokens
+- Bug-Fix: Load zip file
+- Deck Editor: Redesigned layout
