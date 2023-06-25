@@ -118,7 +118,10 @@ namespace Cgs.Play.Multiplayer
             RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
             RequestNewHand(CardDrawer.DefaultHandName);
             if (IsServer)
+            {
                 PlayController.Instance.ShowDeckMenu();
+                ApplyPlayerTranslationServerRpc();
+            }
             else
                 RequestCardGameSelection();
 
@@ -186,6 +189,21 @@ namespace Cgs.Play.Multiplayer
                 DefaultRotation = 0;
             Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultRotation);
             PlayController.Instance.playArea.CurrentRotation = DefaultRotation;
+
+            ApplyPlayerTranslationServerRpc();
+        }
+
+        [ServerRpc]
+        private void ApplyPlayerTranslationServerRpc()
+        {
+            ApplyPlayerTranslationOwnerClientRpc(OwnerClientRpcParams);
+        }
+
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Local
+        private void ApplyPlayerTranslationOwnerClientRpc(ClientRpcParams clientRpcParams = default)
+        {
+            PlayController.Instance.playArea.verticalNormalizedPosition = 0;
         }
 
         private IEnumerator DownloadGame(string url)

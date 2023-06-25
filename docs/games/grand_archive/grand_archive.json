@@ -232,6 +232,10 @@
 	],
 	"gameDefaultCardAction": "tap",
 	"gamePlayDeckName": "Main Deck",
+	"gamePlayDeckPositions": [
+	],
+	"gamePlayZones": [
+	],
 	"gameStartHandCount": 7,
 	"playMatImageFileType": "jpg",
 	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.jpg",
