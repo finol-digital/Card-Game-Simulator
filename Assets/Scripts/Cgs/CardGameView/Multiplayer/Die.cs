@@ -13,7 +13,7 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public class Die : CgsNetPlayable
     {
-        public const string DeletePrompt = "Delete die?";
+        public override string DeletePrompt => "Delete die?";
 
         public const int DefaultMin = 1;
         public const int DefaultMax = 6;
@@ -159,12 +159,6 @@ namespace Cgs.CardGameView.Multiplayer
         private void RollServerRpc()
         {
             _rollRemainingTime = RollTotalTime;
-        }
-
-        [UsedImplicitly]
-        public void PromptDelete()
-        {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
     }
 }

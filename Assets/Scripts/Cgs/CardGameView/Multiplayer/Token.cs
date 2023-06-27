@@ -7,5 +7,6 @@ namespace Cgs.CardGameView.Multiplayer
     public class Token : CgsNetPlayable
     {
         public override string ViewValue => "Token";
+        public override string DeletePrompt => "Delete token?";
     }
 }

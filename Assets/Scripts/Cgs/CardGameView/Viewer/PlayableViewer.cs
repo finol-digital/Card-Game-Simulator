@@ -102,7 +102,7 @@ namespace Cgs.CardGameView.Viewer
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
             // ReSharper disable once ConvertIfStatementToSwitchStatement
-            if (SelectedPlayable is Die)
+            else if (SelectedPlayable is Die)
             {
                 if (Inputs.IsNew)
                     DecrementDie();
@@ -110,8 +110,6 @@ namespace Cgs.CardGameView.Viewer
                     RollDie();
                 else if (Inputs.IsSave)
                     IncrementDie();
-                else if (Inputs.IsOption)
-                    DeleteDie();
             }
             else if (SelectedPlayable is CardStack)
             {
@@ -121,12 +119,13 @@ namespace Cgs.CardGameView.Viewer
                     ShuffleStack();
                 else if (Inputs.IsSave)
                     SaveStack();
-                else if (Inputs.IsOption)
-                    DeleteStack();
             }
 
             if (Inputs.IsCancel)
                 SelectedPlayable = null;
+
+            if (Inputs.IsOption)
+                DeletePlayable();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -207,18 +206,6 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
-        public void DeleteDie()
-        {
-            if (Dice == null)
-            {
-                Debug.LogWarning("Ignoring delete request since there is no die selected.");
-                return;
-            }
-
-            Dice.PromptDelete();
-        }
-
-        [UsedImplicitly]
         public void ViewStack()
         {
             if (Stack == null)
@@ -255,15 +242,15 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
-        public void DeleteStack()
+        public void DeletePlayable()
         {
-            if (Stack == null)
+            if (SelectedPlayable == null)
             {
-                Debug.LogWarning("Ignoring save request since there is no stack selected.");
+                Debug.LogWarning("Ignoring delete request since there is no playable selected.");
                 return;
             }
 
-            Stack.PromptDelete();
+            SelectedPlayable.PromptDelete();
         }
     }
 }

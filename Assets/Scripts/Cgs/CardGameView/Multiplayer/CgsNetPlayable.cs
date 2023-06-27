@@ -36,6 +36,8 @@ namespace Cgs.CardGameView.Multiplayer
     public class CgsNetPlayable : NetworkBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
         IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        public virtual string DeletePrompt => "Delete?";
+
         private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
@@ -497,6 +499,11 @@ namespace Cgs.CardGameView.Multiplayer
         public void HideHighlightClientRpc()
         {
             HighlightMode = HighlightMode.Off;
+        }
+
+        public void PromptDelete()
+        {
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
 
         protected void RequestDelete()

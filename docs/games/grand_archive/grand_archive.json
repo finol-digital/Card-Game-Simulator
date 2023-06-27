@@ -233,6 +233,22 @@
 	"gameDefaultCardAction": "tap",
 	"gamePlayDeckName": "Main Deck",
 	"gamePlayDeckPositions": [
+		{
+			"x": 14.5,
+			"y": -11
+		},
+		{
+			"x": -14.5,
+			"y": -11
+		},
+		{
+			"x": 14.5,
+			"y": 11
+		},
+		{
+			"x": -14.5,
+			"y": 11
+		}
 	],
 	"gamePlayZones": [
 	],

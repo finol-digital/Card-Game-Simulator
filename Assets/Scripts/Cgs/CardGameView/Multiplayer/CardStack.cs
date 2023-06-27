@@ -53,7 +53,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
-        public string DeletePrompt => $"Delete {deckLabel.text}?";
+        public override string DeletePrompt => $"Delete {deckLabel.text}?";
 
         private bool IsDraggingCard => HoldTime < DragHoldTime && PointerPositions.Count == 1 &&
                                        CurrentPointerEventData != null &&
@@ -333,12 +333,6 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 Debug.LogError(DeckLoadMenu.DeckSaveErrorMessage + e.Message);
             }
-        }
-
-        [UsedImplicitly]
-        public void PromptDelete()
-        {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
     }
 }
