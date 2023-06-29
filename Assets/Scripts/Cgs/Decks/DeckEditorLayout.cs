@@ -34,7 +34,7 @@ namespace Cgs.Decks
                 deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
                 deckEditorButtonsGroup.localScale = Vector3.one;
                 deckEditorLayoutArea.offsetMin =
-                    new Vector2(deckEditorLayoutArea.offsetMin.x, SearchAreaPortraitHeight);
+                    new Vector2(deckEditorLayoutArea.offsetMin.x, SearchAreaPortraitHeight + 100);
                 deckEditorLayoutArea.offsetMax = new Vector2(-Buffer, deckEditorLayoutArea.offsetMax.y);
                 searchArea.anchorMin = Vector2.zero;
                 searchArea.anchorMax = Vector2.right;
