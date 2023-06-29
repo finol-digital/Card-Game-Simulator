@@ -304,7 +304,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     continue;
                 }
 
-                var deckFilePath = DecksDirectoryPath + Path.PathSeparator + deckUrl.Name + "." + DeckFileType.ToString().ToLower();
+                var deckFilePath = Path.Combine(DecksDirectoryPath, deckUrl.Name + "." + DeckFileType.ToString().ToLower());
                 if (!string.IsNullOrEmpty(AllDecksUrlTxtRoot) && !string.IsNullOrEmpty(deckUrl.Txt))
                     yield return UnityFileMethods.SaveUrlToFile(AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
                 else if (deckUrl.Url != null && deckUrl.Url.IsAbsoluteUri)

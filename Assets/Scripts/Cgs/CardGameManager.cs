@@ -749,7 +749,7 @@ namespace Cgs
             var subContainer = Path.Combine(container, UnityFileMethods.GetSafeFileName(Current.Id));
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
-            var zipFileName = Current.Id + ".zip";
+            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".zip");
             UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
             Directory.Delete(container, true);
 
