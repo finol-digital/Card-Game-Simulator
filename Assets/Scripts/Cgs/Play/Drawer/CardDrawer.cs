@@ -145,6 +145,7 @@ namespace Cgs.Play.Drawer
             _nameTexts.Add(tabTemplate.nameText);
             _countTexts.Add(tabTemplate.countText);
 
+            tabTemplate.removeButton.onClick.AddListener(() => RemoveTab(tabIndex));
             tabTemplate.drawerHandle.cardDrawer = this;
 
             var tabCardDropArea = _toggles[tabIndex].GetComponent<CardDropArea>();
@@ -217,6 +218,23 @@ namespace Cgs.Play.Drawer
         public void SyncHand(int handIndex, CgsNetString[] cardIds)
         {
             _countTexts[handIndex].text = cardIds.Length.ToString();
+        }
+
+        public void RemoveTab(int tabIndex)
+        {
+            if (tabIndex < 1)
+            {
+                Debug.LogWarning($"RemoveTab {tabIndex}!");
+                return;
+            }
+
+            if (tabIndex >= cardZoneRectTransforms.Count)
+            {
+                Debug.LogWarning($"RemoveTab {tabIndex} but not created yet.");
+                return;
+            }
+
+            Debug.Log("RemoveTab: " + tabIndex);
         }
 
         public void Clear()

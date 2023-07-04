@@ -9,6 +9,7 @@ namespace Cgs.Play.Drawer
 {
     public class TabTemplate : MonoBehaviour
     {
+        public Button removeButton;
         public Toggle toggle;
         public Text nameText;
         public Text countText;
