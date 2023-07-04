@@ -264,11 +264,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance == null)
                 return;
 
-            CardViewer.Instance.PreviewCardModel = this;
             if (Settings.PreviewOnMouseOver && !CardViewer.Instance.IsVisible
                                             && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
                                             && CurrentDragPhase != DragPhase.Drag && !IsFacedown)
-                CardViewer.Instance.Preview(this);
+                CardViewer.Instance.PreviewCardModel = this;
         }
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)

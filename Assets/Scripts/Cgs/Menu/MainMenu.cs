@@ -28,6 +28,24 @@ namespace Cgs.Menu
         public const string DownloadLabel = "Download Game";
         public const string DownloadPrompt = "Enter CGS AutoUpdate URL...";
 
+        public static string WelcomeMessage => "Welcome to CGS!\n" + WelcomeMessageExt;
+
+#if UNITY_ANDROID || UNITY_IOS
+        public static string WelcomeMessageExt =>
+            "This Mobile version of CGS is intended as a companion to the PC version of CGS.\n" +
+            "The PC version of CGS is available from the CGS website.\n" + "Go to the CGS website?";
+#else
+        public static string WelcomeMessageExt =>
+            "The CGS website has guides/resources that may help new users.\n" + "Go to the CGS website?";
+#endif
+        private const string PlayerPrefsHasSeenWelcome = "HasSeenWelcome";
+
+        private static bool HasSeenWelcome
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsHasSeenWelcome, 0) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsHasSeenWelcome, value ? 1 : 0);
+        }
+
         public static string VersionMessage => $"VERSION {Application.version}";
 
         public const string QuitPrompt = "Quit?";
@@ -105,6 +123,21 @@ namespace Cgs.Menu
 #if UNITY_ANDROID || UNITY_IOS
             _zipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
 #endif
+
+            if (!HasSeenWelcome)
+                CardGameManager.Instance.Messenger.Ask(WelcomeMessage, DeclineWelcomeMessage, AcceptWelcomeMessage,
+                    true);
+        }
+
+        private static void DeclineWelcomeMessage()
+        {
+            HasSeenWelcome = true;
+        }
+
+        private static void AcceptWelcomeMessage()
+        {
+            HasSeenWelcome = true;
+            Application.OpenURL(Tags.CgsWebsite);
         }
 
         private void Update()

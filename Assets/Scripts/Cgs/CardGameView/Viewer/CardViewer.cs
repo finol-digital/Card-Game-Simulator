@@ -150,11 +150,36 @@ namespace Cgs.CardGameView.Viewer
 
         private int _selectedPropertyIndex;
 
+        public CardModel PreviewCardModel
+        {
+            get => _previewCardModel;
+            set
+            {
+                if (_previewCardModel != null)
+                    _previewCardModel.Value.UnregisterDisplay(this);
+
+                _previewCardModel = value;
+
+                if (_previewCardModel == null)
+                    return;
+
+                var card = _previewCardModel.Value;
+                card.RegisterDisplay(this);
+                preview.alpha = 1;
+                previewNameText.text = card.Name;
+                previewIdText.text = card.Id;
+            }
+        }
+
+        private CardModel _previewCardModel;
+
         public CardModel SelectedCardModel
         {
             get => _selectedCardModel;
             set
             {
+                PreviewCardModel = null;
+
                 if (_selectedCardModel != null)
                 {
                     _selectedCardModel.HighlightMode = HighlightMode.Off;
@@ -165,9 +190,8 @@ namespace Cgs.CardGameView.Viewer
 
                 if (_selectedCardModel != null)
                 {
-                    var selectedCard = _selectedCardModel.Value;
+                    _selectedCardModel.Value.RegisterDisplay(this);
                     ResetTexts();
-                    selectedCard.RegisterDisplay(this);
                 }
                 else if (!EventSystem.current.alreadySelecting)
                     EventSystem.current.SetSelectedGameObject(null);
@@ -178,8 +202,6 @@ namespace Cgs.CardGameView.Viewer
         }
 
         private CardModel _selectedCardModel;
-
-        public CardModel PreviewCardModel { get; set; }
 
         public bool Zoom
         {
@@ -281,13 +303,6 @@ namespace Cgs.CardGameView.Viewer
                     Mode = CardViewerMode.Expanded;
                 SelectedCardModel = null;
             }
-        }
-
-        public void Preview(CardModel cardModel)
-        {
-            preview.alpha = 1;
-            previewNameText.text = cardModel.Value.Name;
-            previewIdText.text = cardModel.Value.Id;
         }
 
         private void ResetInfo()

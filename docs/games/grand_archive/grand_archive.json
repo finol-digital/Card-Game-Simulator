@@ -203,14 +203,14 @@
 			"property": "element",
 			"values": {
 				"ARCANE": "Arcane",
-				"ASTRA": "Astra", 
+				"ASTRA": "Astra",
 				"CRUX": "Crux",
 				"FIRE": "Fire",
 				"LUXEM": "Luxem",
 				"NORM": "Normal",
 				"NEOS": "Neos",
 				"TECHA": "Techa",
-				"TERA": "Tera", 
+				"TERA": "Tera",
 				"UMBRA": "Umbra",
 				"WATER": "Water",
 				"WIND": "Wind",
@@ -251,6 +251,30 @@
 		}
 	],
 	"gamePlayZones": [
+		{
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": -14
+			},
+			"size": {
+				"x": 28,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		},
+		{
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": 14
+			},
+			"size": {
+				"x": 28,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		}
 	],
 	"gameStartHandCount": 7,
 	"playMatImageFileType": "jpg",
