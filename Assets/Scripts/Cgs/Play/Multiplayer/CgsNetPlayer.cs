@@ -463,6 +463,28 @@ namespace Cgs.Play.Multiplayer
             PlayController.Instance.drawer.SyncHand(handIndex, cardIds);
         }
 
+        public void RequestRemoveHand(int handIndex)
+        {
+            Debug.Log($"[CgsNet Player] Requesting remove hand {handIndex}...");
+            RemoveHandServerRpc(handIndex);
+        }
+
+        [ServerRpc]
+        private void RemoveHandServerRpc(int handIndex)
+        {
+            Debug.Log($"[CgsNet Player] Remove hand {handIndex}!");
+            if (handIndex < 1 || handIndex >= _handCards.Count)
+            {
+                Debug.LogError($"[CgsNet Player] {handIndex} is out of bounds of {_handCards.Count}");
+                return;
+            }
+
+            _handCards.RemoveAt(handIndex);
+
+            CurrentHand = 0;
+            UseHandClientRpc(CurrentHand, OwnerClientRpcParams);
+        }
+
         #endregion
 
         #region Cards

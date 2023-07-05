@@ -9,11 +9,13 @@ permalink: roadmap.html
 - Game-Play: Remove drawers and delete tokens
 
 ## Active Sprint
+- Game-Play: Pre-defined card zones/stacks
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+- Game-Play: Add restart button in Play Settings Menu
+- Game-Creation: Edit Button in Main Menu
 
 ## Backlog - 2023 Q3
-- Game-Play: Add restart button in Play Settings Menu
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
@@ -21,32 +23,30 @@ permalink: roadmap.html
 - Game-Play: Rotate Dice
 - Game-Play: Face-Up Stacks (Always reveal the top card)
 - Game-Play: Prevent player from looking through Stacks in certain situations
+
+## Backlog - 2023 Q4
 - Game-Play: Cut Stacks
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Games + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
-- Integration: Private Lobbies & Deep links to join multiplayer rooms
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Game-Play: Move card to zone, stack, or drawer (E)
 
-## Backlog - 2023 Q4
-- Cards Explorer & Deck Editor: Add sorting + Sort Menu
+## Backlog - 2024 Q1
+- Cards: Support mix of different card sizes in the same game
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 - Decks: Support organizing decks into folders
   - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
-- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Game-Play: Support multiple playmats
-- Game-Play: Pre-defined card zones/stacks
-- Game-Play: Move card to zone, stack, or drawer (E)
-- Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
-- Cards: Configurable highlight color
-- Cards: Support mix of different card sizes in the same game
-- Game-Creation: Edit Button in Main Menu
-- Deck Editor: Layout/Redesign (https://discord.com/channels/877422409769177158/932359810303807508/1082580945997139988)
 
 ## Backlog - 2024
+- Cards Explorer & Deck Editor: Add sorting + Sort Menu
+- Game-Play: Support multiple playmats
+- Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
+- Integration: Private Lobbies & Deep links to join multiplayer rooms
 - Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
 - Platforms: Full controller support (Steam)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
