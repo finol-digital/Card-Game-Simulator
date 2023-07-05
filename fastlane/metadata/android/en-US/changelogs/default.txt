@@ -1,2 +1,2 @@
-- Bug-Fix: Load zip file
-- Deck Editor: Redesigned layout
+- Cards: Preview card image on hover
+- Game-Play: Remove drawers and delete tokens
