@@ -53,10 +53,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override string ViewValue => $"Value: {Value}";
 
-        private int Value
+        public int Value
         {
             get => IsOnline ? _valueNetworkVariable.Value : _value;
-            set
+            private set
             {
                 var oldValue = _value;
                 var newValue = value;
@@ -71,6 +71,17 @@ namespace Cgs.CardGameView.Multiplayer
                 else
                     OnChangeValue(oldValue, newValue);
             }
+        }
+
+        public void SetValue(int value)
+        {
+            var oldValue = _value;
+            _value = value;
+            if (IsOnline)
+                UpdateValueServerRpc(value);
+            else
+                OnChangeValue(oldValue, value);
+
         }
 
         private int _value;

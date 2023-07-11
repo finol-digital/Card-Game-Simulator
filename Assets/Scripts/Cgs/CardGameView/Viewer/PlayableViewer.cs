@@ -206,6 +206,19 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
+        public void ChangeDieValue(string value)
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring change value request since there is no die selected.");
+                return;
+            }
+
+            if (int.TryParse(value, out var valueInt) && valueInt != Dice.Value)
+                Dice.SetValue(valueInt);
+        }
+
+        [UsedImplicitly]
         public void ViewStack()
         {
             if (Stack == null)
