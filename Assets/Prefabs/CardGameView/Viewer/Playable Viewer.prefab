@@ -120,6 +120,7 @@ MonoBehaviour:
   valueTexts:
   - {fileID: 7437930296677555684}
   - {fileID: 4159148351361970319}
+  dieValueInputField: {fileID: 6036904183920258022}
   dieActions: {fileID: 3229226146847586547}
   stackActions: {fileID: 3718179242149436236}
 --- !u!1 &3229226146847586547
@@ -852,6 +853,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreDeselect: 1
+--- !u!114 &6036904183920258022 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1291219257228625315}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5933159655357574242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2527135387751995872
 PrefabInstance:
   m_ObjectHideFlags: 0

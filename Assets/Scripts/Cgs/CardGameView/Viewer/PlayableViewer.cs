@@ -57,6 +57,7 @@ namespace Cgs.CardGameView.Viewer
         public CanvasGroup preview;
         public CanvasGroup view;
         public List<Text> valueTexts;
+        public InputField dieValueInputField;
         public GameObject dieActions;
         public GameObject stackActions;
 
@@ -154,6 +155,7 @@ namespace Cgs.CardGameView.Viewer
             view.alpha = IsVisible ? 1 : 0;
             view.interactable = IsVisible;
             view.blocksRaycasts = IsVisible;
+            dieValueInputField.text = string.Empty;
         }
 
         public void Preview(CgsNetPlayable playable)
