@@ -153,9 +153,6 @@ jobs:
     outputs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     steps:
-      - name: Free Disk Space for Android
-        if: matrix.targetPlatform == 'Android'
-        uses: jlumbroso/free-disk-space@v1.2.0
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
@@ -179,6 +176,11 @@ jobs:
           path: Library
           key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-build-${{ matrix.targetPlatform }}-
+      - name: Free Disk Space for Android
+        if: matrix.targetPlatform == 'Android'
+        uses: jlumbroso/free-disk-space@v1.2.0
+        with:
+          large-packages: false
       - name: Build Unity Project
         id: build
         uses: game-ci/unity-builder@main
