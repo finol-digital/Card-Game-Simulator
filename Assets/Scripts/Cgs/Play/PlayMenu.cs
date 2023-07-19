@@ -10,8 +10,6 @@ namespace Cgs.Play
 {
     public class PlayMenu : MonoBehaviour
     {
-        public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
-
         public GameObject panels;
 
         public PlayController controller;
@@ -66,7 +64,7 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void CreateToken()
         {
-            controller.CreateToken();
+            controller.CreateDefaultToken();
         }
 
         [UsedImplicitly]

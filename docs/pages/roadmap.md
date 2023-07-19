@@ -4,11 +4,13 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.87
-- Cards: Preview card image on hover
-- Game-Play: Remove drawers and delete tokens
+## What's New - v1.88
+- Bug-Fix: Delete token/dice button
+- Bug-Fix: Synchronize tokens in Multi-player
+- Deck-Editor: Change how many cards appear per column based on resolution
 
 ## Active Sprint
+- Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
 - Game-Play: Pre-defined card zones/stacks
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
@@ -41,11 +43,13 @@ permalink: roadmap.html
   - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
+- Decks: Group cards in Deck Editor
 
 ## Backlog - 2024
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
+- Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
 - Integration: Private Lobbies & Deep links to join multiplayer rooms
 - Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
 - Platforms: Full controller support (Steam)

@@ -537,6 +537,22 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
+        #region Tokens
+
+        public void RequestNewToken()
+        {
+            CreateTokenServerRpc();
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CreateTokenServerRpc()
+        {
+            PlayController.Instance.CreateToken();
+        }
+
+        #endregion
+
         #region RestartGame
 
         public void RequestRestart()

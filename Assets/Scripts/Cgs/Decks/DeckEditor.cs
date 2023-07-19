@@ -45,9 +45,14 @@ namespace Cgs.Decks
         public Text countText;
         public SearchResults searchResults;
 
+        private static readonly Dictionary<int, int> ResolutionIndexToCardsPerColumn = new()
+        {
+            {0, 4}, {1, 6}, {2, 8}, {3, 10}
+        };
+
         private static int CardsPerZone =>
             Mathf.FloorToInt(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / CardPrefabHeight *
-                             8);
+                             ResolutionIndexToCardsPerColumn[ResolutionManager.ResolutionIndex]);
 
         public List<CardModel> CardModels
         {

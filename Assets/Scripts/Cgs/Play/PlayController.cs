@@ -408,6 +408,14 @@ namespace Cgs.Play
             return die;
         }
 
+        public void CreateDefaultToken()
+        {
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewToken();
+            else
+                CreateToken();
+        }
+
         public Token CreateToken()
         {
             var token = Instantiate(tokenPrefab, playMat.transform).GetOrAddComponent<Token>();

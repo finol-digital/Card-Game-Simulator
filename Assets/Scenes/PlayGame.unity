@@ -2237,6 +2237,11 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4511551359358340090, guid: 7aeec7aac0a4d0446bb25fbba25238ea,
+        type: 3}
+      propertyPath: ConnectionData.ServerListenAddress
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4526732702672025491, guid: 7aeec7aac0a4d0446bb25fbba25238ea,
         type: 3}
       propertyPath: ConnectionData.ServerListenAddress
@@ -4089,6 +4094,21 @@ PrefabInstance:
     - target: {fileID: 3207366699684921700, guid: 73eb2297a0629694bbe390c58d10e332,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339357086198550866, guid: 73eb2297a0629694bbe390c58d10e332,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339357086198550866, guid: 73eb2297a0629694bbe390c58d10e332,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3339357086198550866, guid: 73eb2297a0629694bbe390c58d10e332,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3475859695529778834, guid: 73eb2297a0629694bbe390c58d10e332,
