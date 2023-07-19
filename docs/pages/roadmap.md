@@ -15,6 +15,7 @@ permalink: roadmap.html
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Add restart button in Play Settings Menu
+- Game-Play: Contextual green button for default action based on card location
 - Game-Creation: Edit Button in Main Menu
 
 ## Backlog - 2023 Q3
