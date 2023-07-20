@@ -1,2 +1,3 @@
-- Cards: Preview card image on hover
-- Game-Play: Remove drawers and delete tokens
+- Bug-Fix: Delete token/dice button
+- Bug-Fix: Synchronize tokens in Multi-player
+- Deck-Editor: Change how many cards appear per column based on resolution
