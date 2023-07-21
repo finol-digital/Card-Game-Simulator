@@ -4,14 +4,11 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.88
-- Bug-Fix: Delete token/dice button
-- Bug-Fix: Synchronize tokens in Multi-player
-- Deck-Editor: Change how many cards appear per column based on resolution
+## What's New - v1.89
+- Game-Play: Pre-defined card zones/stacks
 
 ## Active Sprint
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
-- Game-Play: Pre-defined card zones/stacks
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Add restart button in Play Settings Menu

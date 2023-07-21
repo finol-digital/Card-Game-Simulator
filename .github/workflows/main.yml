@@ -765,6 +765,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      - name: Update Release Notes
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Prepare Announcement
         id: prepare
         shell: bash
