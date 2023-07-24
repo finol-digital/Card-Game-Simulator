@@ -279,6 +279,10 @@
 	"gameStartHandCount": 7,
 	"playMatImageFileType": "jpg",
 	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.jpg",
+	"playMatGridCellSize": {
+		"x": 0,
+		"y": 0
+	},
 	"playMatSize": {
 		"x": 36.75,
 		"y": 42.75

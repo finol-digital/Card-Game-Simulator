@@ -62,6 +62,14 @@ namespace Cgs.Play
         {
             get
             {
+                var allCardStacks = AllCardStacks.ToList();
+                if (allCardStacks.Count < CardGameManager.Current.GamePlayDeckPositions.Count)
+                {
+                    var position = CardGameManager.Current.GamePlayDeckPositions[allCardStacks.Count];
+                    return new Vector2(CardGameManager.PixelsPerInch * position.X,
+                        CardGameManager.PixelsPerInch * position.Y);
+                }
+
                 var cardStack = cardStackPrefab.GetComponent<CardStack>();
                 var cardStackLabelHeight =
                     ((RectTransform) cardStack.deckLabel.transform.parent).rect.height * playArea.CurrentZoom;
@@ -74,7 +82,7 @@ namespace Cgs.Play
                     null, out var nextDeckPosition);
 
                 var nextOffset = new Rect(nextDeckPosition, cardSize);
-                while (AllCardStacks.Any(stack =>
+                while (allCardStacks.Any(stack =>
                            (new Rect(stack.transform.localPosition, cardSize)).Overlaps(nextOffset)))
                 {
                     nextDeckPosition += Vector2.down * (cardSize.y + cardStackLabelHeight);
@@ -241,8 +249,18 @@ namespace Cgs.Play
                 var i = 1;
                 foreach (var (stackName, cards) in extraGroups)
                 {
-                    var position = newDeckPosition + Vector2.right *
-                        (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X + DeckPositionBuffer);
+                    var position = newDeckPosition +
+                                   Vector2.right *
+                                   (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X +
+                                    DeckPositionBuffer);
+
+                    var deckCount = AllCardStacks.ToList().Count;
+                    if (deckCount >= 0  && deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
+                    {
+                        var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
+                        position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
+                    }
+
                     CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(stackName, cards.Cast<UnityCard>().Reverse(),
                         position);
                     i++;
@@ -256,11 +274,18 @@ namespace Cgs.Play
                 {
                     var position = newDeckPosition + Vector2.right *
                         (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X);
+
+                    var deckCount = AllCardStacks.ToList().Count;
+                    if (deckCount >= 0  && deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
+                    {
+                        var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
+                        position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
+                    }
+
                     CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position);
                     i++;
                 }
             }
-
 
             PromptForHand();
         }

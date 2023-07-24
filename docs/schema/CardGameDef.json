@@ -337,6 +337,20 @@
       "type": "string",
       "description": "gamePlayDeckName is the name of the card stack shown when a player loads a deck. If <gamePlayDeckName> is empty, the *Deck:Name* is used."
     },
+    "gamePlayDeckPositions": {
+      "type": "array",
+      "description": "Each deck loaded during a game will be loaded to its corresponding position in gamePlayDeckPositions. The first deck loaded will go to the first position, second to second, etc.",
+      "items": {
+        "$ref": "#/definitions/Float2"
+      }
+    },
+    "gamePlayZones": {
+      "type": "array",
+      "description": "gamePlayZones will appear in the Play Area in Play Mode.",
+      "items": {
+        "$ref": "#/definitions/GamePlayZone"
+      }
+    },
     "gameStartHandCount": {
       "type": "integer",
       "description": "gameStartHandCount indicates how many cards are automatically dealt from the deck to the hand, when a user loads a deck in Play Mode.",
@@ -688,6 +702,74 @@
         "rotate",
         "tap",
         "zoom"
+      ]
+    },
+    "GamePlayZone": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "face": {
+          "description": "When a Card enters the Game Play Zone, the Card will display this face",
+          "default": "any",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/FacePreference"
+            }
+          ]
+        },
+        "position": {
+          "description": "Indicates the Game Play Zone's position in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "size": {
+          "description": "Indicates the Game Play Zone's width and height in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "type": {
+          "description": "The Game Play Zone type from area, horizontal, or vertical",
+          "default": "area",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GamePlayZoneType"
+            }
+          ]
+        }
+      }
+    },
+    "FacePreference": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Any",
+        "Down",
+        "Up"
+      ],
+      "enum": [
+        "any",
+        "down",
+        "up"
+      ]
+    },
+    "GamePlayZoneType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Area",
+        "Horizontal",
+        "Vertical"
+      ],
+      "enum": [
+        "area",
+        "horizontal",
+        "vertical"
       ]
     }
   }
