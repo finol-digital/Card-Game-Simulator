@@ -18,14 +18,14 @@ permalink: roadmap.html
 ## Backlog - 2023 Q4
 - Game-Play: Add restart button in Play Settings Menu
 - Game-Play: Contextual green button for default action based on card location
+- Game-Play: Custom Tokens
+- Game-Play: Rotate Tokens/Dice/Stacks
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
-- Game-Play: Custom Tokens
-- Game-Play: Rotate Dice
-- Game-Play: Prevent player from looking through Stacks in certain situations
 
 ## Backlog - 2024 Q1
+- Game-Play: Prevent player from looking through Stacks in certain situations
 - Game-Play: Cut Stacks
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Games + Log of all (Player) actions
