@@ -456,7 +456,7 @@ namespace Cgs.Play
 
         private void CreateZone(GamePlayZone gamePlayZone)
         {
-
+            Debug.Log("TBD");
         }
 
         public void OnDrop(CardModel cardModel)
