@@ -147,6 +147,8 @@ namespace Cgs.Play
             playMat.OnAddCardActions.Add(AddCardToPlay);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
+            CardGameManager.Current.GamePlayZones.ForEach(CreateZone);
+
             if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show();
             else
@@ -450,6 +452,11 @@ namespace Cgs.Play
             rectTransform.localPosition = Vector2.zero;
             token.Position = rectTransform.localPosition;
             return token;
+        }
+
+        private void CreateZone(GamePlayZone gamePlayZone)
+        {
+
         }
 
         public void OnDrop(CardModel cardModel)
