@@ -456,7 +456,40 @@ namespace Cgs.Play
 
         private void CreateZone(GamePlayZone gamePlayZone)
         {
-            Debug.Log("TBD");
+            var position = CardGameManager.PixelsPerInch *
+                           new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
+            var size = CardGameManager.PixelsPerInch *
+                           new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
+            switch (gamePlayZone.Type)
+            {
+                case GamePlayZoneType.Area:
+                    CreateAreaZone(position, size, gamePlayZone.Face);
+                    break;
+                case GamePlayZoneType.Horizontal:
+                    CreateHorizontalZone(position, size, gamePlayZone.Face);
+                    break;
+                case GamePlayZoneType.Vertical:
+                    CreateVerticalZone(position, size, gamePlayZone.Face);
+                    break;
+                default:
+                    CreateAreaZone(position, size, gamePlayZone.Face);
+                    break;
+            }
+        }
+
+        private void CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference)
+        {
+            Debug.Log($"CreateAreaZone position: {position}, size: {size}, face: {facePreference}");
+        }
+
+        private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference)
+        {
+            Debug.Log($"CreateHorizontalZone position: {position}, size: {size}, face: {facePreference}");
+        }
+
+        private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference)
+        {
+            Debug.Log($"CreateVerticalZone position: {position}, size: {size}, face: {facePreference}");
         }
 
         public void OnDrop(CardModel cardModel)
