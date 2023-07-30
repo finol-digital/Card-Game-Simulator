@@ -49,6 +49,9 @@ namespace Cgs.Play
         public GameObject diePrefab;
         public GameObject tokenPrefab;
 
+        public GameObject horizontalCardZonePrefab;
+        public GameObject verticalCardZonePrefab;
+
         public Transform stackViewers;
 
         public RotateZoomableScrollRect playArea;
@@ -484,12 +487,115 @@ namespace Cgs.Play
 
         private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference)
         {
-            Debug.Log($"CreateHorizontalZone position: {position}, size: {size}, face: {facePreference}");
+            var cardZone = Instantiate(horizontalCardZonePrefab, playMat.transform).GetOrAddComponent<CardZone>();
+            var cardZoneRectTransform = (RectTransform) cardZone.transform;
+            cardZoneRectTransform.anchorMin = 0.5f * Vector2.one;
+            cardZoneRectTransform.anchorMax = 0.5f * Vector2.one;
+            cardZoneRectTransform.anchoredPosition = Vector2.zero;
+            cardZoneRectTransform.localPosition = position;
+            cardZoneRectTransform.sizeDelta = size;
+
+            cardZone.type = CardZoneType.Horizontal;
+            cardZone.allowsFlip = true;
+            cardZone.allowsRotation = false;
+            cardZone.scrollRectContainer = playArea;
+            cardZone.DoesImmediatelyRelease = true;
+
+            var spacing = PlaySettings.StackViewerOverlap switch
+            {
+                2 => StackViewer.HighOverlapSpacing,
+                1 => StackViewer.LowOverlapSpacing,
+                _ => StackViewer.NoOverlapSpacing
+            };
+
+            cardZone.GetComponent<HorizontalLayoutGroup>().spacing = spacing;
+
+            switch (facePreference)
+            {
+                case FacePreference.Any:
+                    cardZone.OnAddCardActions.Add(OnAddCardModel);
+                    break;
+                case FacePreference.Down:
+                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceDown);
+                    break;
+                case FacePreference.Up:
+                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceUp);
+                    break;
+                default:
+                    cardZone.OnAddCardActions.Add(OnAddCardModel);
+                    break;
+            }
         }
 
         private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference)
         {
-            Debug.Log($"CreateVerticalZone position: {position}, size: {size}, face: {facePreference}");
+            var cardZone = Instantiate(verticalCardZonePrefab, playMat.transform).GetComponent<CardZone>();
+            var cardZoneRectTransform = (RectTransform) cardZone.transform;
+            cardZoneRectTransform.anchorMin = 0.5f * Vector2.one;
+            cardZoneRectTransform.anchorMax = 0.5f * Vector2.one;
+            cardZoneRectTransform.anchoredPosition = Vector2.zero;
+            cardZoneRectTransform.localPosition = position;
+            cardZoneRectTransform.sizeDelta = size;
+
+            cardZone.type = CardZoneType.Vertical;
+            cardZone.allowsFlip = true;
+            cardZone.allowsRotation = false;
+            cardZone.scrollRectContainer = playArea;
+            cardZone.DoesImmediatelyRelease = true;
+
+            var spacing = PlaySettings.StackViewerOverlap switch
+            {
+                2 => StackViewer.HighOverlapSpacing,
+                1 => StackViewer.LowOverlapSpacing,
+                _ => StackViewer.NoOverlapSpacing
+            };
+
+            cardZone.GetComponent<VerticalLayoutGroup>().spacing = spacing;
+
+            switch (facePreference)
+            {
+                case FacePreference.Any:
+                    cardZone.OnAddCardActions.Add(OnAddCardModel);
+                    break;
+                case FacePreference.Down:
+                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceDown);
+                    break;
+                case FacePreference.Up:
+                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceUp);
+                    break;
+                default:
+                    cardZone.OnAddCardActions.Add(OnAddCardModel);
+                    break;
+            }
+        }
+
+        private static void OnAddCardModel(CardZone cardZone, CardModel cardModel)
+        {
+            if (cardZone == null || cardModel == null)
+                return;
+
+            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
+            cardModel.DefaultAction = CardActions.Flip;
+        }
+
+        private static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
+        {
+            if (cardZone == null || cardModel == null)
+                return;
+
+            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
+            cardModel.DefaultAction = CardActions.Flip;
+            cardModel.IsFacedown = true;
+        }
+
+        private static void OnAddCardModelFaceUp(CardZone cardZone, CardModel cardModel)
+        {
+            if (cardZone == null || cardModel == null)
+                return;
+
+            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
+            cardModel.DefaultAction = CardActions.Flip;
+            cardModel.IsFacedown = false;
         }
 
         public void OnDrop(CardModel cardModel)

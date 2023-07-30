@@ -1344,6 +1344,10 @@ MonoBehaviour:
   diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e, type: 3}
   tokenPrefab: {fileID: 5127053305123712531, guid: c6a1cf8ae8ec3d647b7d1abc3b0a4b7b,
     type: 3}
+  horizontalCardZonePrefab: {fileID: 3075554628274637118, guid: 21036df1d45067b4387821a32693828f,
+    type: 3}
+  verticalCardZonePrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
+    type: 3}
   stackViewers: {fileID: 1930199089}
   playArea: {fileID: 1507733848}
   playMat: {fileID: 217919978}

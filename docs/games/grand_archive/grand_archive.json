@@ -255,10 +255,10 @@
 			"face": "down",
 			"position": {
 				"x": 0,
-				"y": -14
+				"y": -16.5
 			},
 			"size": {
-				"x": 28,
+				"x": 22,
 				"y": 3.5
 			},
 			"type": "horizontal"
@@ -267,10 +267,10 @@
 			"face": "down",
 			"position": {
 				"x": 0,
-				"y": 14
+				"y": 16.5
 			},
 			"size": {
-				"x": 28,
+				"x": 22,
 				"y": 3.5
 			},
 			"type": "horizontal"

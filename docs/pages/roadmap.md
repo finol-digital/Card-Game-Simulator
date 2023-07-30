@@ -13,9 +13,9 @@ permalink: roadmap.html
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card)
 - Game-Play: Rename Stacks
-- Game-Creation: Edit Button in Main Menu
 
 ## Backlog - 2023 Q4
+- Game-Creation: Edit Button in Main Menu
 - Game-Play: Add restart button in Play Settings Menu
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Custom Tokens
