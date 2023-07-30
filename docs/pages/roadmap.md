@@ -16,6 +16,7 @@ permalink: roadmap.html
 
 ## Backlog - 2023 Q4
 - Game-Creation: Edit Button in Main Menu
+- Game-Play: Cards you receive at the beginning of the game can be defined by default
 - Game-Play: Add restart button in Play Settings Menu
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Custom Tokens
