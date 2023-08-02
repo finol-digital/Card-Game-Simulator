@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using Cgs.CardGameView.Multiplayer;
+using Cgs.UI.ScrollRects;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -23,7 +23,7 @@ namespace Cgs.CardGameView.Multiplayer
         Area
     }
 
-    public class CardZone : CgsNetPlayable, IPointerEnterHandler, IPointerExitHandler
+    public class CardZone : CgsNetPlayable
     {
         public CardZoneType type;
         public bool allowsFlip;
@@ -43,6 +43,9 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardModel != null && (type != CardZoneType.Area || cardModel.transform.parent != transform) &&
                 !cardModel.IsStatic)
                 cardModel.PlaceHolderCardZone = this;
+
+            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+                scrollRect.OnPointerEnter(eventData);
         }
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)
@@ -50,7 +53,11 @@ namespace Cgs.CardGameView.Multiplayer
             var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && cardModel.PlaceHolderCardZone == this)
                 cardModel.PlaceHolderCardZone = null;
+
             OnLayout?.Invoke();
+
+            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+                scrollRect.OnPointerExit(eventData);
         }
 
         protected override void OnPointerDownPlayable(PointerEventData eventData)
@@ -75,17 +82,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            // Nothing
+            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+                scrollRect.OnBeginDrag(eventData);
         }
 
         protected override void OnDragPlayable(PointerEventData eventData)
         {
-            // Nothing
+            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+                scrollRect.OnDrag(eventData);
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            // Nothing
+            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+                scrollRect.OnEndDrag(eventData);
         }
 
         protected override void PostDragPlayable(PointerEventData eventData)

@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Drawer;
 using FinolDigital.Cgs.CardGameDef;

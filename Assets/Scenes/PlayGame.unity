@@ -474,6 +474,7 @@ GameObject:
   - component: {fileID: 217919979}
   - component: {fileID: 217919978}
   - component: {fileID: 217919981}
+  - component: {fileID: 217919982}
   m_Layer: 5
   m_Name: PlayMat
   m_TagString: Untagged
@@ -516,7 +517,7 @@ MonoBehaviour:
   type: 2
   allowsFlip: 1
   allowsRotation: 1
-  scrollRectContainer: {fileID: 0}
+  scrollRectContainer: {fileID: 1507733848}
 --- !u!114 &217919979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,6 +624,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &217919982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217919976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3163440592
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &315778610
 GameObject:
   m_ObjectHideFlags: 0
@@ -3959,6 +3976,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2398126247762757391, guid: 73eb2297a0629694bbe390c58d10e332,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 940.00006
       objectReference: {fileID: 0}
     - target: {fileID: 2439883281868472444, guid: 73eb2297a0629694bbe390c58d10e332,
         type: 3}
