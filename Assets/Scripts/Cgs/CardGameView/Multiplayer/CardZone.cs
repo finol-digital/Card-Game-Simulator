@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
-namespace Cgs.CardGameView
+namespace Cgs.CardGameView.Multiplayer
 {
     public delegate void OnAddCardDelegate(CardZone cardZone, CardModel cardModel);
 
@@ -23,7 +23,7 @@ namespace Cgs.CardGameView
         Area
     }
 
-    public class CardZone : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class CardZone : CgsNetPlayable, IPointerEnterHandler, IPointerExitHandler
     {
         public CardZoneType type;
         public bool allowsFlip;
@@ -37,7 +37,7 @@ namespace Cgs.CardGameView
         public List<OnAddCardDelegate> OnAddCardActions { get; } = new();
         public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new();
 
-        public void OnPointerEnter(PointerEventData eventData)
+        protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
             var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && (type != CardZoneType.Area || cardModel.transform.parent != transform) &&
@@ -45,12 +45,57 @@ namespace Cgs.CardGameView
                 cardModel.PlaceHolderCardZone = this;
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        protected override void OnPointerExitPlayable(PointerEventData eventData)
         {
             var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel != null && cardModel.PlaceHolderCardZone == this)
                 cardModel.PlaceHolderCardZone = null;
             OnLayout?.Invoke();
+        }
+
+        protected override void OnPointerDownPlayable(PointerEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void OnSelectPlayable(BaseEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void OnDeselectPlayable(BaseEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void OnBeginDragPlayable(PointerEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void OnDragPlayable(PointerEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void OnEndDragPlayable(PointerEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void PostDragPlayable(PointerEventData eventData)
+        {
+            // Nothing
+        }
+
+        protected override void UpdatePosition()
+        {
+            // Nothing
         }
 
         public void OnAdd(CardModel cardModel)
