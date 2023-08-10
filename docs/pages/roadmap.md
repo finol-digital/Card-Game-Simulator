@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.89
+- Bug-Fix: Host for some players
 - Game-Play: Pre-defined card zones/stacks
 
 ## Active Sprint
