@@ -3,17 +3,19 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-// ReSharper disable once CheckNamespace
-public class AddNameSpace : UnityEditor.AssetModificationProcessor
+public class AddNameSpace : AssetModificationProcessor
 {
     public static void OnWillCreateAsset(string metaFilePath)
     {
-        string filePath = metaFilePath.Replace(".meta", "");
-        int index = filePath.LastIndexOf(".", StringComparison.Ordinal);
+        if (!metaFilePath.Contains(".meta"))
+            return;
+
+        var filePath = metaFilePath.Replace(".meta", "");
+        var index = filePath.LastIndexOf(".", StringComparison.Ordinal);
         if (index < 0)
             return;
 
-        string fileExtension = filePath.Substring(index);
+        var fileExtension = filePath[index..];
         if (fileExtension != ".cs")
             return;
 
@@ -21,16 +23,16 @@ public class AddNameSpace : UnityEditor.AssetModificationProcessor
         if (index < 0)
             return;
 
-        filePath = Application.dataPath.Substring(0, index) + filePath;
+        filePath = Application.dataPath[..index] + filePath;
         index = filePath.IndexOf("Scripts/", StringComparison.Ordinal);
         if (index < 0)
             return;
 
-        string lastPartOfPath = filePath.Substring(index + 8);
-        string nameSpace = lastPartOfPath.Substring(0, lastPartOfPath.LastIndexOf('/'));
+        var lastPartOfPath = filePath[(index + 8)..];
+        var nameSpace = lastPartOfPath[..lastPartOfPath.LastIndexOf('/')];
         nameSpace = nameSpace.Replace('/', '.');
 
-        string fileContents = File.ReadAllText(filePath);
+        var fileContents = File.ReadAllText(filePath);
         fileContents = fileContents.Replace("#NAMESPACE#", nameSpace);
 
         File.WriteAllText(filePath, fileContents);
