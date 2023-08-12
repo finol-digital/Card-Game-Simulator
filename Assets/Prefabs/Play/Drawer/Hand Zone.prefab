@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 7303322095968924661}
   - component: {fileID: 7303463712823025219}
   m_Layer: 5
-  m_Name: Horizontal Card Zone Holder
+  m_Name: Hand Zone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
