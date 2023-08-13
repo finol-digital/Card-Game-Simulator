@@ -18,11 +18,11 @@ namespace Cgs.CardGameView.Viewer
 {
     public class StackViewer : MonoBehaviour, ICardDropHandler
     {
+        public const float NoOverlapSpacing = 10.0f;
+        public const float LowOverlapSpacing = -125.0f;
+        public const float HighOverlapSpacing = -200.0f;
         private const float HandleHeight = 100.0f;
         private const float ScrollbarHeight = 50.0f;
-        private const float NoOverlapSpacing = 10.0f;
-        private const float LowOverlapSpacing = -125.0f;
-        private const float HighOverlapSpacing = -200.0f;
 
         public GameObject cardModelPrefab;
 
@@ -80,7 +80,8 @@ namespace Cgs.CardGameView.Viewer
                 _ => NoOverlapSpacing
             };
 
-            contentLayoutGroup.spacing = spacing;}
+            contentLayoutGroup.spacing = spacing;
+        }
 
         private void Resize()
         {
@@ -167,7 +168,7 @@ namespace Cgs.CardGameView.Viewer
 
             if (_handIndex != null)
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
-                    cardModels.Select(card => (CgsNetString)card.Id).ToArray());
+                    cardModels.Select(card => (CgsNetString) card.Id).ToArray());
 
             if (_cardStack == null)
                 return;

@@ -31,6 +31,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565440365293990}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,7 +41,6 @@ Transform:
   - {fileID: 6932994526340868355}
   - {fileID: 7878441855092915099}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114614180611090904
 MonoBehaviour:
@@ -119,8 +119,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0811e85c2a95a448a549d2ed1176ac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RunInBackground: 1
-  LogLevel: 1
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 4526732702672025491}
@@ -128,7 +126,7 @@ MonoBehaviour:
       type: 3}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: ddad69d1ebe3a2d4a8a80894f40a8f1d, type: 2}
+      - {fileID: 11400000, guid: 7ca3daa593e7896459fd7c6f11f194c3, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -145,6 +143,8 @@ MonoBehaviour:
     SpawnTimeout: 1
     EnableNetworkLogs: 1
     OldPrefabList: []
+  RunInBackground: 1
+  LogLevel: 1
 --- !u!114 &4526732702672025491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,13 +210,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8839072711635395849}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4566502268858140}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4511551359358340090
 MonoBehaviour:
@@ -250,6 +250,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4566502268858140}
     m_Modifications:
     - target: {fileID: 5160799671764584657, guid: c99b406c42e378f45b33a243427bd060,
@@ -363,6 +364,9 @@ PrefabInstance:
       value: Dialog
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c99b406c42e378f45b33a243427bd060, type: 3}
 --- !u!114 &3640719035468068289 stripped
 MonoBehaviour:
@@ -387,6 +391,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4566502268858140}
     m_Modifications:
     - target: {fileID: 4748678306131802321, guid: 3d6e3a494e413eb4fbe7271639692623,
@@ -500,6 +505,9 @@ PrefabInstance:
       value: ProgressBar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d6e3a494e413eb4fbe7271639692623, type: 3}
 --- !u!114 &3114637488872193508 stripped
 MonoBehaviour:

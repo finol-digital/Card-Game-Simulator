@@ -77,6 +77,9 @@ namespace Cgs
                 var gameBoardUrl = new GameBoardUrl(string.Empty, new Uri(UnityFileMethods.FilePrefix));
                 cardGame.GameBoardUrls = new List<GameBoardUrl> {gameBoardUrl};
                 cardGame.GamePlayDeckName = string.Empty;
+                cardGame.GamePlayDeckPositions = new List<Float2>();
+                var gamePlayZone = new GamePlayZone(FacePreference.Any, float2, float2, GamePlayZoneType.Area);
+                cardGame.GamePlayZones = new List<GamePlayZone> {gamePlayZone};
                 cardGame.GameStartHandCount = 1;
                 cardGame.GameStartPointsCount = 1;
                 cardGame.Name = string.Empty;

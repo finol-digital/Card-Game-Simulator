@@ -83,7 +83,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-2021.3.16f1-linux-il2cpp-1
+    container: unityci/editor:ubuntu-2022.3.7f1-linux-il2cpp-1
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -765,6 +765,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+      - name: Update Release Notes
+        if: github.event.action == 'published'
+        env:
+          RELEASE_NOTES: ${{ github.event.release.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Prepare Announcement
         id: prepare
         shell: bash

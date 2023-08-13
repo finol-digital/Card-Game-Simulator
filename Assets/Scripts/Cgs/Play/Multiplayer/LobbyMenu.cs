@@ -292,8 +292,8 @@ namespace Cgs.Play.Multiplayer
         {
             if (IsInternetConnectionSource)
             {
-                if (Lobbies.ContainsKey(_selectedServer))
-                    CgsNetManager.Instance.StartJoinLobby(Lobbies[_selectedServer].Id);
+                if (Lobbies.TryGetValue(_selectedServer, out var lobby))
+                    CgsNetManager.Instance.StartJoinLobby(lobby.Id);
                 else
                 {
                     if (Uri.IsWellFormedUriString(_selectedServer, UriKind.Absolute))

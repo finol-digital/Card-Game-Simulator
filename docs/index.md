@@ -32,13 +32,10 @@ Consider checking out [these projects](external.html).
 Also consider joining our social media:
 
 [![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com) 
-[![alt text][2.1]][2] [Twitter](http://twitter.cardgamesimulator.com) 
-[![alt text][3.1]][3] [Reddit](http://reddit.cardgamesimulator.com) 
+[![alt text][2.1]][2] [Reddit](http://reddit.cardgamesimulator.com) 
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
-[2.1]: https://i.imgur.com/tXSoThF.png (twitter icon with padding)
-[3.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
+[2.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
 
 [1]: http://discord.cardgamesimulator.com
-[2]: http://twitter.cardgamesimulator.com
-[3]: http://reddit.cardgamesimulator.com
+[2]: http://reddit.cardgamesimulator.com

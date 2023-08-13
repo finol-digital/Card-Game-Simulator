@@ -4,30 +4,30 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.88
-- Bug-Fix: Delete token/dice button
-- Bug-Fix: Synchronize tokens in Multi-player
-- Deck-Editor: Change how many cards appear per column based on resolution
+## What's New - v1.89
+- Bug-Fix: Host for some players
+- Game-Play: Pre-defined card zones/stacks
 
 ## Active Sprint
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
-- Game-Play: Pre-defined card zones/stacks
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
+- Game-Play: Face-Up Stacks (Always reveal the top card)
+- Game-Play: Rename Stacks
+
+## Backlog - 2023 Q4
+- Game-Creation: Edit Button in Main Menu
+- Game-Play: Cards you receive at the beginning of the game can be defined by default
 - Game-Play: Add restart button in Play Settings Menu
 - Game-Play: Contextual green button for default action based on card location
-- Game-Creation: Edit Button in Main Menu
-
-## Backlog - 2023 Q3
+- Game-Play: Custom Tokens
+- Game-Play: Rotate Tokens/Dice/Stacks
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
-- Game-Play: Custom Tokens
-- Game-Play: Rotate Dice
-- Game-Play: Face-Up Stacks (Always reveal the top card)
-- Game-Play: Prevent player from looking through Stacks in certain situations
 
-## Backlog - 2023 Q4
+## Backlog - 2024 Q1
+- Game-Play: Prevent player from looking through Stacks in certain situations
 - Game-Play: Cut Stacks
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Games + Log of all (Player) actions
@@ -36,7 +36,7 @@ permalink: roadmap.html
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Move card to zone, stack, or drawer (E)
 
-## Backlog - 2024 Q1
+## Backlog - 2024 Q2
 - Cards: Support mix of different card sizes in the same game
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
@@ -46,7 +46,7 @@ permalink: roadmap.html
 - Decks: Show error(s) when a card is not found
 - Decks: Group cards in Deck Editor
 
-## Backlog - 2024
+## Backlog - 2024 Q3
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings

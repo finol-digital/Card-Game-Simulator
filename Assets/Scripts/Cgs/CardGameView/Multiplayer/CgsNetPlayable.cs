@@ -48,7 +48,7 @@ namespace Cgs.CardGameView.Multiplayer
         public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playMat != null &&
                                 PlayController.Instance.playMat.transform == transform.parent && IsSpawned;
 
-        public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
+        protected bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
