@@ -61,7 +61,7 @@ namespace Cgs.Menu
         public GameObject cardGameEditorMenuPrefab;
         public GameObject gameImportModalPrefab;
         public GameObject downloadMenuPrefab;
-        public GameObject gameManagement;
+        public GameObject gamesManagement;
         public GameObject versionInfo;
         public Text currentGameNameText;
         public Image currentCardImage;
@@ -118,7 +118,9 @@ namespace Cgs.Menu
 #else
             quitButton.SetActive(false);
 #endif
+            gamesManagement.SetActive(false);
             versionText.text = VersionMessage;
+            versionInfo.SetActive(false);
 
 #if UNITY_ANDROID || UNITY_IOS
             _zipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
@@ -189,21 +191,21 @@ namespace Cgs.Menu
                 SelectNext();
             else if (Inputs.IsNew)
             {
-                if (gameManagement.activeSelf && newCardGameButton.activeSelf)
+                if (gamesManagement.activeSelf && newCardGameButton.activeSelf)
                     CreateNew();
                 else
                     StartGame();
             }
             else if (Inputs.IsLoad)
             {
-                if (gameManagement.activeSelf)
+                if (gamesManagement.activeSelf)
                     Import();
                 else
                     JoinGame();
             }
             else if (Inputs.IsSave)
             {
-                if (gameManagement.activeSelf)
+                if (gamesManagement.activeSelf)
                     Share();
                 else
                     EditDeck();
@@ -212,14 +214,14 @@ namespace Cgs.Menu
                 ToggleGameManagement();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
             {
-                if (gameManagement.activeSelf && editCardGameButton.activeSelf)
+                if (gamesManagement.activeSelf && editCardGameButton.activeSelf)
                     Edit();
                 else
                     ExploreCards();
             }
             else if (Inputs.IsOption)
             {
-                if (gameManagement.activeSelf)
+                if (gamesManagement.activeSelf)
                     Delete();
                 else
                     ShowSettings();
@@ -250,8 +252,8 @@ namespace Cgs.Menu
 #if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            gameManagement.SetActive(!gameManagement.activeSelf);
-            versionInfo.SetActive(gameManagement.activeSelf);
+            gamesManagement.SetActive(!gamesManagement.activeSelf);
+            versionInfo.SetActive(gamesManagement.activeSelf);
             EventSystem.current.SetSelectedGameObject(null);
 #endif
         }
@@ -261,7 +263,7 @@ namespace Cgs.Menu
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            gameManagement.SetActive(false);
+            gamesManagement.SetActive(false);
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
         }
 
@@ -270,7 +272,7 @@ namespace Cgs.Menu
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            gameManagement.SetActive(false);
+            gamesManagement.SetActive(false);
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
         }
 
