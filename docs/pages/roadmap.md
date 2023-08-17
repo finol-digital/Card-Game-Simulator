@@ -4,9 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.89
-- Bug-Fix: Host for some players
-- Game-Play: Pre-defined card zones/stacks
+## What's New - v1.90
+- Fix windows pipeline
 
 ## Active Sprint
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath

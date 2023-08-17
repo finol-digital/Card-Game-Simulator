@@ -25,10 +25,6 @@ See [the roadmap](roadmap.html).
 
 Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com>.
 
-## External Links
-
-Consider checking out [these projects](external.html).
-
 Also consider joining our social media:
 
 [![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com) 
