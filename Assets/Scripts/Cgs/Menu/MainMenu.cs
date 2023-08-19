@@ -71,13 +71,6 @@ namespace Cgs.Menu
         public List<GameObject> selectableButtons;
 
         // ReSharper disable once NotAccessedField.Global
-        public GameObject newCardGameButton;
-        public GameObject syncButton;
-
-        // ReSharper disable once NotAccessedField.Global
-        public GameObject editCardGameButton;
-
-        // ReSharper disable once NotAccessedField.Global
         public Button joinButton;
         public GameObject quitButton;
         public Text versionText;
@@ -108,8 +101,6 @@ namespace Cgs.Menu
 
         private void Start()
         {
-            newCardGameButton.SetActive(Settings.DeveloperMode);
-            editCardGameButton.SetActive(Settings.DeveloperMode);
 #if UNITY_WEBGL
             joinButton.interactable = false;
 #endif
@@ -190,42 +181,17 @@ namespace Cgs.Menu
             else if (Inputs.IsFilter)
                 SelectNext();
             else if (Inputs.IsNew)
-            {
-                if (gamesManagement.activeSelf && newCardGameButton.activeSelf)
-                    CreateNew();
-                else
-                    StartGame();
-            }
+                StartGame();
             else if (Inputs.IsLoad)
-            {
-                if (gamesManagement.activeSelf)
-                    Import();
-                else
-                    JoinGame();
-            }
+                JoinGame();
             else if (Inputs.IsSave)
-            {
-                if (gamesManagement.activeSelf)
-                    Share();
-                else
-                    EditDeck();
-            }
+                EditDeck();
             else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
                 ToggleGameManagement();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
-            {
-                if (gamesManagement.activeSelf && editCardGameButton.activeSelf)
-                    Edit();
-                else
-                    ExploreCards();
-            }
+                ExploreCards();
             else if (Inputs.IsOption)
-            {
-                if (gamesManagement.activeSelf)
-                    Delete();
-                else
-                    ShowSettings();
-            }
+                ShowSettings();
             else if (Inputs.IsCancel)
             {
                 if (EventSystem.current.currentSelectedGameObject == null)
@@ -242,8 +208,6 @@ namespace Cgs.Menu
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
             nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
-
-            syncButton.SetActive(CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false);
         }
 
         [UsedImplicitly]

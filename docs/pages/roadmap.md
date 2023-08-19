@@ -5,7 +5,20 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.90
+- Accessibility: Redesign Games Management Menu
+menu keymaps
+            syncButton.SetActive(CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false);
+- Check GA with turbo Kraal
 - Fix windows pipeline
+Unity Data.vcxitems
+    <None Include="$(MSBuildThisFileDirectory)..\Il2CppOutputProject\Source\il2cppOutput\Symbols\il2cppFileRoot.txt">
+      <DeploymentContent>true</DeploymentContent>
+      <ExcludeFromResourceIndex>true</ExcludeFromResourceIndex>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\Il2CppOutputProject\Source\il2cppOutput\Symbols\LineNumberMappings.json">
+      <DeploymentContent>true</DeploymentContent>
+      <ExcludeFromResourceIndex>true</ExcludeFromResourceIndex>
+    </None>
 - filter box in doesn't scale to right loc
 
 ## Active Sprint
