@@ -44,13 +44,13 @@ namespace Cgs.Menu
         private static string _zipFileType;
 #endif
 
+#if UNITY_ANDROID || UNITY_IOS
         protected override void Start()
         {
             base.Start();
-#if UNITY_ANDROID || UNITY_IOS
             _zipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
-#endif
         }
+#endif
 
         [UsedImplicitly]
         public void CreateNew()

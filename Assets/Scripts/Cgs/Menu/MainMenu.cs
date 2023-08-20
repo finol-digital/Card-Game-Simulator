@@ -34,8 +34,6 @@ namespace Cgs.Menu
             set => PlayerPrefs.SetInt(PlayerPrefsHasSeenWelcome, value ? 1 : 0);
         }
 
-        public static string VersionMessage => $"VERSION {Application.version}";
-
         public const string QuitPrompt = "Quit?";
 
         public const int MainMenuSceneIndex = 1;
@@ -46,7 +44,6 @@ namespace Cgs.Menu
 
         private const float StartBufferTime = 0.1f;
 
-        public GameObject versionInfo;
         public Text currentGameNameText;
         public Image currentCardImage;
         public Image currentBannerImage;
@@ -57,7 +54,6 @@ namespace Cgs.Menu
         // ReSharper disable once NotAccessedField.Global
         public Button joinButton;
         public GameObject quitButton;
-        public Text versionText;
 
         private void OnEnable()
         {
@@ -74,8 +70,6 @@ namespace Cgs.Menu
 #else
             quitButton.SetActive(false);
 #endif
-            versionText.text = VersionMessage;
-            versionInfo.SetActive(false);
 
             if (!HasSeenWelcome)
                 CardGameManager.Instance.Messenger.Ask(WelcomeMessage, DeclineWelcomeMessage, AcceptWelcomeMessage,
