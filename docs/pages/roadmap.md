@@ -9,6 +9,7 @@ permalink: roadmap.html
 menu keymaps
             syncButton.SetActive(CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false);
 - Check GA with turbo Kraal
+default action tap instead of flip
 - Fix windows pipeline
 Unity Data.vcxitems
     <None Include="$(MSBuildThisFileDirectory)..\Il2CppOutputProject\Source\il2cppOutput\Symbols\il2cppFileRoot.txt">
