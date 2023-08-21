@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 #if !UNITY_ANDROID && !UNITY_IOS
 #endif
 
@@ -44,6 +45,8 @@ namespace Cgs.Menu
 
         private const float StartBufferTime = 0.1f;
 
+        public GameObject gamesManagementMenuPrefab;
+
         public Text currentGameNameText;
         public Image currentCardImage;
         public Image currentBannerImage;
@@ -54,6 +57,11 @@ namespace Cgs.Menu
         // ReSharper disable once NotAccessedField.Global
         public Button joinButton;
         public GameObject quitButton;
+
+        private GamesManagementMenu GamesManagement =>
+            _gamesManagement ??= Instantiate(gamesManagementMenuPrefab).GetOrAddComponent<GamesManagementMenu>();
+
+        private GamesManagementMenu _gamesManagement;
 
         private void OnEnable()
         {
@@ -186,7 +194,7 @@ namespace Cgs.Menu
 #if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            Debug.Log("wire it up");
+            GamesManagement.Show();
 #endif
         }
 
