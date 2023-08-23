@@ -19,7 +19,7 @@ namespace Cgs.UI
         public Text emptyText;
         public ScrollRect scrollRect;
 
-        protected List<Toggle> Toggles { get; } = new List<Toggle>();
+        protected List<Toggle> Toggles { get; } = new();
 
         protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
             TKey current)
@@ -39,7 +39,7 @@ namespace Cgs.UI
                 toggle.GetComponentInChildren<Text>().text = option.Value.ToString();
                 toggle.interactable = true;
                 toggle.isOn = option.Key.Equals(current);
-                toggle.onValueChanged.AddListener(isOn => select(toggle, option.Key));
+                toggle.onValueChanged.AddListener(_ => select(toggle, option.Key));
                 Toggles.Add(toggle);
                 if (toggle.isOn)
                     currentSelectionIndex = i;

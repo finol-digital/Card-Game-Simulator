@@ -6,8 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.90
 - Accessibility: Redesign Games Management Menu
-menu keymaps
-            syncButton.SetActive(CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false);
 - Check GA with turbo Kraal
 default action tap instead of flip
 - Fix windows pipeline
