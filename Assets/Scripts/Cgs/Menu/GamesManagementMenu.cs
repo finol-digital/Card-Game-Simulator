@@ -26,12 +26,13 @@ namespace Cgs.Menu
         public const string DownloadLabel = "Download Game";
         public const string DownloadPrompt = "Enter CGS AutoUpdate URL...";
 
+        public static string NoSyncMessage => $"{CardGameManager.Current.Name} does not have a CGS AutoUpdate URL!";
+
         public GameObject cardGameEditorMenuPrefab;
         public GameObject gameImportModalPrefab;
         public GameObject downloadMenuPrefab;
 
         public Button newButton;
-        public Button syncButton;
 
         protected override bool AllowSwitchOff => false;
 
@@ -81,9 +82,9 @@ namespace Cgs.Menu
             if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
                     .Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
-            else if (Inputs.IsSubmit && syncButton.interactable)
+            else if (Inputs.IsSubmit)
                 Sync();
-            else if (Inputs.IsNew && newButton.interactable)
+            else if (Inputs.IsNew && Settings.DeveloperMode)
                 CreateNew();
             else if (Inputs.IsLoad)
                 Import();
@@ -108,7 +109,6 @@ namespace Cgs.Menu
             Rebuild(CardGameManager.Instance.AllCardGames, SelectGame, CardGameManager.Current.Id);
 
             newButton.interactable = Settings.DeveloperMode;
-            syncButton.interactable = CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false;
         }
 
         [UsedImplicitly]
@@ -155,13 +155,6 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Sync()
-        {
-            BuildGameSelectionOptions();
-            CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
-        }
-
-        [UsedImplicitly]
         public void Share()
         {
             CardGameManager.Instance.Share();
@@ -171,6 +164,17 @@ namespace Cgs.Menu
         public void Delete()
         {
             CardGameManager.Instance.PromptDelete();
+        }
+
+        [UsedImplicitly]
+        public void Sync()
+        {
+            if (CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false)
+                CardGameManager.Instance.StartCoroutine(
+                    CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
+            else
+                CardGameManager.Instance.Messenger.Show(NoSyncMessage);
+            Hide();
         }
 
         [UsedImplicitly]
