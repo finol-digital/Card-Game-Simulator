@@ -6,8 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.90
 - Games: Redesign Games Management Menu
-- Check GA with turbo Kraal
-default action tap instead of flip
 - Fix windows pipeline
 Unity Data.vcxitems
     <None Include="$(MSBuildThisFileDirectory)..\Il2CppOutputProject\Source\il2cppOutput\Symbols\il2cppFileRoot.txt">
