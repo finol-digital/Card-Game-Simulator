@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07e97a02d62f0e94f8638201d8e1343b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toggleGroup: {fileID: 0}
   selectionContent: {fileID: 5829138835090463947}
   selectionTemplate: {fileID: 6417834699738146390}
   emptyText: {fileID: 0}
@@ -994,6 +995,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: e4b0afb58da26e347b7ba30bf819e89b,
         type: 3}
+    - target: {fileID: 5606556387005000519, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5606556387005000519, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: tooltip
@@ -1003,6 +1014,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: Sync
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1296,7 +1317,7 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: tooltip
-      value: Import
+      value: Import via Web or File
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -1473,6 +1494,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: Delete
       objectReference: {fileID: 0}
+    - target: {fileID: 1494664878241574619, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1494664878241574619, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: tooltip
@@ -1484,6 +1515,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: c15cb672ac47b3f4cb4f5b8d4c27e3f2,
         type: 3}
+    - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2848342772243254878, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: m_Name
@@ -1651,7 +1692,7 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: tooltip
-      value: New
+      value: Create New Custom Game
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}

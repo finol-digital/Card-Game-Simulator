@@ -33,6 +33,8 @@ namespace Cgs.Menu
         public Button newButton;
         public Button syncButton;
 
+        protected override bool AllowSwitchOff => false;
+
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
 
         private Modal _menu;
@@ -155,6 +157,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Sync()
         {
+            BuildGameSelectionOptions();
             CardGameManager.Instance.StartCoroutine(CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
         }
 
