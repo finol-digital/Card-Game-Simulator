@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.90
-- Accessibility: Redesign Games Management Menu
+- Games: Redesign Games Management Menu
 - Check GA with turbo Kraal
 default action tap instead of flip
 - Fix windows pipeline
