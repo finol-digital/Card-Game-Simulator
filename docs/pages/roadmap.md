@@ -6,6 +6,11 @@ permalink: roadmap.html
 
 ## What's New - v1.90
 - Games: Redesign Games Management Menu
+
+- moving rect
+- increase max zoom out
+- add buffer to play area
+- The issue with the tap button doesn’t move the card 90 degrees, it moves it 90 degrees with respect to the position of the camera. It would make more sense for the button to tap 90 degrees from whatever the cards current position is, like the rotate button.
 - Fix windows pipeline
 Unity Data.vcxitems
     <None Include="$(MSBuildThisFileDirectory)..\Il2CppOutputProject\Source\il2cppOutput\Symbols\il2cppFileRoot.txt">
@@ -21,13 +26,12 @@ Unity Data.vcxitems
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
-- Game-Play: Face-Up Stacks (Always reveal the top card)
+- Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
 - Game-Play: Rename Stacks
 
 ## Backlog - 2023 Q4
-- Game-Creation: Edit Button in Main Menu
+- Game-Creation: Edit Button in Games Management Menu
 - Game-Play: Cards you receive at the beginning of the game can be defined by default
-- Game-Play: Add restart button in Play Settings Menu
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Custom Tokens
 - Game-Play: Rotate Tokens/Dice/Stacks
@@ -36,19 +40,21 @@ Unity Data.vcxitems
 - Game-Play: Name-Plates indicating player seats
 
 ## Backlog - 2024 Q1
-- Game-Play: Prevent player from looking through Stacks in certain situations
-- Game-Play: Cut Stacks
+- Cards: Ability to resize card preview image
+- Cards: Support multiple card backs
+- Cards: Support more than 1 card face (Dual-Faced Cards)
+- Cards: Support mix of different card sizes in the same game
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Games + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
-- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Game-Play: Move card to zone, stack, or drawer (E)
 
 ## Backlog - 2024 Q2
-- Cards: Support mix of different card sizes in the same game
-- Cards: Support more than 1 card face (Dual-Faced Cards)
-- Cards: Support multiple card backs
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Game-Play: Prevent player from looking through Stacks in certain situations
+- Game-Play: Cut Stacks
+- Game-Play: Move card to zone, stack, or drawer (E)
+- Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
   - Decouple games and decks, so you can use any deck from any game
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
