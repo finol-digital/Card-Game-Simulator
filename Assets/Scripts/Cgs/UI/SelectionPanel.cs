@@ -55,7 +55,7 @@ namespace Cgs.UI
             if (toggleGroup != null)
                 toggleGroup.allowSwitchOff = AllowSwitchOff;
 
-            if (!AllowSwitchOff && currentSelectionIndex >= 0 && currentSelectionIndex < Toggles.Count)
+            if (!AllowSwitchOff && currentSelectionIndex >= 0)
                 Toggles[currentSelectionIndex].isOn = true;
 
             if (emptyText == null)
