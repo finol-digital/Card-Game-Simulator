@@ -59,6 +59,11 @@ namespace Cgs.Menu
         private static string _zipFileType;
 #endif
 
+        private void OnEnable()
+        {
+            CardGameManager.Instance.OnSceneActions.Add(BuildGameSelectionOptions);
+        }
+
         private void Start()
         {
 #if UNITY_ANDROID || UNITY_IOS
