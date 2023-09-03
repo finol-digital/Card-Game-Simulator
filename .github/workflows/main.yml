@@ -673,6 +673,9 @@ jobs:
           $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:UwpProjectDirectory -AdditionalChildPath $env:SigningCertificate
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
       - name: Build the .appxupload
+        # Remove None Include for il2cppFileRoot.txt and LineNumberMappings.json
+        if: false
+        # See: https://forum.unity.com/threads/uwp-errors-in-visual-studio.1461980/
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -687,14 +690,20 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
       - name: Upload .appxupload
+        # Remove None Include for il2cppFileRoot.txt and LineNumberMappings.json
+        if: false
+        # See: https://forum.unity.com/threads/uwp-errors-in-visual-studio.1461980/
         uses: actions/upload-artifact@v3
         with:
           name: ${{ format('CardGameSimulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', steps.build.outputs.buildVersion) }}
           path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', steps.build.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
+        # Remove None Include for il2cppFileRoot.txt and LineNumberMappings.json
+        if: false
+        # See: https://forum.unity.com/threads/uwp-errors-in-visual-studio.1461980/
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
-        if: false
+        #if: false
         env:
           MICROSOFT_TENANT_ID: ${{ secrets.MICROSOFT_TENANT_ID }}
           MICROSOFT_CLIENT_ID: ${{ secrets.MICROSOFT_CLIENT_ID }}

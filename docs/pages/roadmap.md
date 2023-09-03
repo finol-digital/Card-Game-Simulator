@@ -5,29 +5,17 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.90
-- Games: Redesign Games Management Menu
-
-- moving rect
-- increase max zoom out
-- add buffer to play area
-- The issue with the tap button doesn’t move the card 90 degrees, it moves it 90 degrees with respect to the position of the camera. It would make more sense for the button to tap 90 degrees from whatever the cards current position is, like the rotate button.
-- Fix windows pipeline
-Unity Data.vcxitems
-    <None Include="$(MSBuildThisFileDirectory)..\Il2CppOutputProject\Source\il2cppOutput\Symbols\il2cppFileRoot.txt">
-      <DeploymentContent>true</DeploymentContent>
-      <ExcludeFromResourceIndex>true</ExcludeFromResourceIndex>
-    </None>
-    <None Include="$(MSBuildThisFileDirectory)..\Il2CppOutputProject\Source\il2cppOutput\Symbols\LineNumberMappings.json">
-      <DeploymentContent>true</DeploymentContent>
-      <ExcludeFromResourceIndex>true</ExcludeFromResourceIndex>
-    </None>
+- Redesigned Games Management Menu
 
 ## Active Sprint
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
+- Game-Play: Increase max zoom out and buffer around edges of playmat
+- Game-Play: Tap button should rotate 90 degrees with respect to original position instead of camera
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
 - Game-Play: Rename Stacks
+- Deck Editor: Card Zone should move containing scrollrect
 
 ## Backlog - 2023 Q4
 - Game-Creation: Edit Button in Games Management Menu
