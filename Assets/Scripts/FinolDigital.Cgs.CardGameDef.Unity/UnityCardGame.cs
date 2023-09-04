@@ -1046,5 +1046,10 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         {
             Error = string.Empty;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

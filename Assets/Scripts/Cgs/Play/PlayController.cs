@@ -260,7 +260,7 @@ namespace Cgs.Play
                                     DeckPositionBuffer);
 
                     var deckCount = AllCardStacks.ToList().Count;
-                    if (deckCount >= 0  && deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
+                    if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
                     {
                         var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
                         position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
@@ -281,7 +281,7 @@ namespace Cgs.Play
                         (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X);
 
                     var deckCount = AllCardStacks.ToList().Count;
-                    if (deckCount >= 0  && deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
+                    if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
                     {
                         var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
                         position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);

@@ -12,6 +12,8 @@ namespace Cgs.Menu
     {
         public const string TouchlessStartMessage = "Press Any Key";
 
+        public static string VersionMessage => $"VERSION {Application.version}";
+
         private const float MinWidth = 1080;
         private const int CenterTextFontSizePortrait = 30;
         private const int CenterTextFontSizeLandscape = 40;
@@ -87,10 +89,10 @@ namespace Cgs.Menu
 
         private void Start()
         {
-            versionText.text = MainMenu.VersionMessage;
 #if !UNITY_ANDROID && !UNITY_IOS
             centerText.text = TouchlessStartMessage;
 #endif
+            versionText.text = VersionMessage;
         }
 
         private void Update()
