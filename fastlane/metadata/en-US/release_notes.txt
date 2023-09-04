@@ -1,2 +1,1 @@
-- Bug-Fix: Host for some players
-- Game-Play: Pre-defined card zones/stacks
+- Redesigned Games Management Menu
