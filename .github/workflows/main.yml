@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -86,7 +86,7 @@ jobs:
     container: unityci/editor:ubuntu-2022.3.7f1-linux-il2cpp-1
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
         with:
           lfs: true
       - name: Cache Library
@@ -154,7 +154,7 @@ jobs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -230,7 +230,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -316,7 +316,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download iOS Artifact
         uses: actions/download-artifact@v3
         with:
@@ -359,7 +359,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download Android Artifact
         uses: actions/download-artifact@v3
         with:
@@ -396,7 +396,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: Card-Game-Simulator
       - name: Download WebGL Artifact
@@ -405,7 +405,7 @@ jobs:
           name: cgs-WebGL
           path: Card-Game-Simulator/build/WebGL
       - name: Checkout Firebase project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: finol-digital/cgs-backend
           token: ${{ secrets.CGS_PAT }}
@@ -436,7 +436,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download StandaloneOSX Artifact
         uses: actions/download-artifact@v3
         with:
@@ -477,7 +477,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -541,7 +541,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -731,7 +731,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download StandaloneWindows Artifact
         uses: actions/download-artifact@v3
         with:
@@ -773,7 +773,7 @@ jobs:
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
