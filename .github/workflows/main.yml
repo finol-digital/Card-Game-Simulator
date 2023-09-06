@@ -83,7 +83,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-2022.3.7f1-linux-il2cpp-1
+    container: unityci/editor:ubuntu-2022.3.8f1-linux-il2cpp-2
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -115,11 +115,11 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
-          wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+          wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
           dpkg -i packages-microsoft-prod.deb
           rm packages-microsoft-prod.deb
           apt-get update
-          apt-get install -y openjdk-11-jre-headless
+          apt-get install -y openjdk-17-jre-headless
           apt-get install -y dotnet-sdk-6.0
           dotnet tool install dotnet-sonarscanner --tool-path .
           ./dotnet-sonarscanner begin \
@@ -224,7 +224,7 @@ jobs:
     name: Build for StandaloneOSX
     runs-on: macos-latest
     needs: [tests, lint]
-    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
+#    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
     outputs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     timeout-minutes: 90
