@@ -115,9 +115,9 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
-          wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-          dpkg -i packages-microsoft-prod.deb
-          rm packages-microsoft-prod.deb
+          wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+          chmod +x ./dotnet-install.sh
+          ./dotnet-install.sh --version latest
           apt-get update
           apt-get install -y openjdk-17-jre-headless
           apt-get install -y dotnet-sdk-6.0
