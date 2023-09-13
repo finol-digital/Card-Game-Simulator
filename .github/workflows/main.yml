@@ -224,7 +224,7 @@ jobs:
     name: Build for StandaloneOSX
     runs-on: macos-latest
     needs: [tests, lint]
-#    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
+    if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
     outputs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     timeout-minutes: 90
