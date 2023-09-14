@@ -62,6 +62,12 @@ namespace Cgs.Menu
                 return;
             }
 
+            if (EventSystem.current.currentSelectedGameObject == null && yesButton.gameObject.activeInHierarchy
+                                                                      && (Inputs.IsVertical || Inputs.IsHorizontal))
+            {
+                EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
+            }
+
             if (Inputs.IsSubmit)
             {
                 if (yesButton.gameObject.activeInHierarchy)

@@ -8,7 +8,6 @@ permalink: roadmap.html
 
 
 ## Active Sprint
-- Add navigation to popup; button to select no
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
 - Game-Play: Increase max zoom out and buffer around edges of playmat
 - Game-Play: Tap button should rotate 90 degrees with respect to original position instead of camera
