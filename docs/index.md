@@ -19,7 +19,7 @@ See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
 
 Refer to [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and [the Custom Card Game Docs](custom.html).
 
-# How to Share
+## How to Share
 
 Check out [the CGS games website](https://cgs.games).
 
