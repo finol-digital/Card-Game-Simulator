@@ -1,1 +1,1 @@
-- Redesigned Games Management Menu
+Game-Play: Increase max zoom out and add buffer around edges of playmat
