@@ -32,6 +32,8 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
 
+        private const float DefaultZoom = 0.75f;
+        private const float PlayAreaBuffer = 8;
         private const float DeckPositionBuffer = 50;
 
         public static PlayController Instance { get; private set; }
@@ -51,11 +53,13 @@ namespace Cgs.Play
 
         public GameObject horizontalCardZonePrefab;
         public GameObject verticalCardZonePrefab;
+        public GameObject playMatPrefab;
 
         public Transform stackViewers;
 
         public RotateZoomableScrollRect playArea;
-        public CardZone playMat;
+        public CardZone playAreaCardZone;
+        public Image playMatImage;
         public List<CardDropArea> playDropZones;
         public CardDrawer drawer;
         public PlayMenu menu;
@@ -81,7 +85,8 @@ namespace Cgs.Play
 
                 var up = Vector2.up * (Screen.height - cardSize.y - cardStackLabelHeight);
                 var right = Vector2.right * (cardSize.x / 2f);
-                RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) playMat.transform, (up + right),
+                RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) playAreaCardZone.transform,
+                    (up + right),
                     null, out var nextDeckPosition);
 
                 var nextOffset = new Rect(nextDeckPosition, cardSize);
@@ -102,7 +107,7 @@ namespace Cgs.Play
             }
         }
 
-        private IEnumerable<CardStack> AllCardStacks => playMat.GetComponentsInChildren<CardStack>();
+        private IEnumerable<CardStack> AllCardStacks => playAreaCardZone.GetComponentsInChildren<CardStack>();
 
         public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
@@ -146,8 +151,8 @@ namespace Cgs.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
-            playArea.CurrentZoom = RotateZoomableScrollRect.MinZoom;
-            playMat.OnAddCardActions.Add(AddCardToPlay);
+            playArea.CurrentZoom = DefaultZoom;
+            playAreaCardZone.OnAddCardActions.Add(AddCardToPlay);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             CardGameManager.Current.GamePlayZones.ForEach(CreateZone);
@@ -194,24 +199,30 @@ namespace Cgs.Play
 
         public void ResetPlayArea()
         {
-            var rectTransform = (RectTransform) playMat.transform;
+            var rectTransform = (RectTransform) playAreaCardZone.transform;
             if (!NetworkManager.Singleton.IsConnectedClient)
                 rectTransform.DestroyAllChildren();
             else if (CgsNetManager.Instance.IsHost)
             {
-                foreach (var cardStack in playMat.GetComponentsInChildren<CardStack>())
+                foreach (var cardStack in playAreaCardZone.GetComponentsInChildren<CardStack>())
                     cardStack.MyNetworkObject.Despawn();
-                foreach (var cardModel in playMat.GetComponentsInChildren<CardModel>())
+                foreach (var cardModel in playAreaCardZone.GetComponentsInChildren<CardModel>())
                     cardModel.MyNetworkObject.Despawn();
-                foreach (var die in playMat.GetComponentsInChildren<Die>())
+                foreach (var die in playAreaCardZone.GetComponentsInChildren<Die>())
                     die.MyNetworkObject.Despawn();
                 rectTransform.DestroyAllChildren();
             }
 
-            var size = new Vector2(CardGameManager.Current.PlayMatSize.X,
-                CardGameManager.Current.PlayMatSize.Y);
-            rectTransform.sizeDelta = size * CardGameManager.PixelsPerInch;
-            playMat.GetComponent<Image>().sprite = CardGameManager.Current.PlayMatImageSprite;
+            rectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X + PlayAreaBuffer,
+                CardGameManager.Current.PlayMatSize.Y + PlayAreaBuffer) * CardGameManager.PixelsPerInch;
+
+            playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform).GetOrAddComponent<Image>();
+            var playMatRectTransform = (RectTransform) playMatImage.transform;
+            playMatRectTransform.anchoredPosition = Vector2.zero;
+            playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
+                CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
+            playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
+
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
         }
 
@@ -305,7 +316,7 @@ namespace Cgs.Play
         {
             var newBoardGameObject = new GameObject(board.Id, typeof(RectTransform));
             var boardRectTransform = (RectTransform) newBoardGameObject.transform;
-            boardRectTransform.SetParent(playMat.transform);
+            boardRectTransform.SetParent(playAreaCardZone.transform);
             boardRectTransform.anchorMin = Vector2.zero;
             boardRectTransform.anchorMax = Vector2.zero;
             boardRectTransform.offsetMin =
@@ -327,7 +338,7 @@ namespace Cgs.Play
 
         public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position)
         {
-            var cardStack = Instantiate(cardStackPrefab, playMat.transform).GetComponent<CardStack>();
+            var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
                 cardStack.MyNetworkObject.Spawn();
             if (!string.IsNullOrEmpty(stackName))
@@ -406,7 +417,7 @@ namespace Cgs.Play
 
         public void CreateCardModel(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
         {
-            var cardModel = Instantiate(cardModelPrefab, playMat.transform).GetComponent<CardModel>();
+            var cardModel = Instantiate(cardModelPrefab, playAreaCardZone.transform).GetComponent<CardModel>();
             if (CgsNetManager.Instance.IsOnline)
                 cardModel.MyNetworkObject.Spawn();
             cardModel.Value = CardGameManager.Current.Cards[cardId];
@@ -427,7 +438,7 @@ namespace Cgs.Play
 
         public Die CreateDie(int min, int max)
         {
-            var die = Instantiate(diePrefab, playMat.transform).GetOrAddComponent<Die>();
+            var die = Instantiate(diePrefab, playAreaCardZone.transform).GetOrAddComponent<Die>();
             if (CgsNetManager.Instance.IsOnline)
                 die.MyNetworkObject.Spawn();
             die.Min = min;
@@ -448,7 +459,7 @@ namespace Cgs.Play
 
         public Token CreateToken()
         {
-            var token = Instantiate(tokenPrefab, playMat.transform).GetOrAddComponent<Token>();
+            var token = Instantiate(tokenPrefab, playAreaCardZone.transform).GetOrAddComponent<Token>();
             if (CgsNetManager.Instance.IsOnline)
                 token.MyNetworkObject.Spawn();
             var rectTransform = (RectTransform) token.transform;
@@ -462,7 +473,7 @@ namespace Cgs.Play
             var position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
             var size = CardGameManager.PixelsPerInch *
-                           new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
+                       new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
             switch (gamePlayZone.Type)
             {
                 case GamePlayZoneType.Area:
@@ -487,7 +498,8 @@ namespace Cgs.Play
 
         private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference)
         {
-            var cardZone = Instantiate(horizontalCardZonePrefab, playMat.transform).GetOrAddComponent<CardZone>();
+            var cardZone = Instantiate(horizontalCardZonePrefab, playAreaCardZone.transform)
+                .GetOrAddComponent<CardZone>();
             var cardZoneRectTransform = (RectTransform) cardZone.transform;
             cardZoneRectTransform.anchorMin = 0.5f * Vector2.one;
             cardZoneRectTransform.anchorMax = 0.5f * Vector2.one;
@@ -529,7 +541,7 @@ namespace Cgs.Play
 
         private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference)
         {
-            var cardZone = Instantiate(verticalCardZonePrefab, playMat.transform).GetComponent<CardZone>();
+            var cardZone = Instantiate(verticalCardZonePrefab, playAreaCardZone.transform).GetComponent<CardZone>();
             var cardZoneRectTransform = (RectTransform) cardZone.transform;
             cardZoneRectTransform.anchorMin = 0.5f * Vector2.one;
             cardZoneRectTransform.anchorMax = 0.5f * Vector2.one;
@@ -600,7 +612,7 @@ namespace Cgs.Play
 
         public void OnDrop(CardModel cardModel)
         {
-            AddCardToPlay(playMat, cardModel);
+            AddCardToPlay(playAreaCardZone, cardModel);
         }
 
         [UsedImplicitly]

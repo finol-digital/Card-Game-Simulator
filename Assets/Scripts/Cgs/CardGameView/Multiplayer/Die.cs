@@ -97,7 +97,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            ParentToPlayMat();
+            ParentToPlayAreaContent();
             transform.localPosition = Position;
 
             if (!NetworkManager.Singleton.IsConnectedClient || IsServer)

@@ -6,12 +6,14 @@ using System;
 using System.Linq;
 using Cgs.UI;
 using JetBrains.Annotations;
-using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
+#if !UNITY_ANDROID && !UNITY_IOS
+using SimpleFileBrowser;
+#endif
 
 namespace Cgs.Menu
 {
@@ -26,13 +28,13 @@ namespace Cgs.Menu
         public const string DownloadLabel = "Download Game";
         public const string DownloadPrompt = "Enter CGS AutoUpdate URL...";
 
+        private const string CgsGamesUrl = "https://cgs.games";
+
         public static string NoSyncMessage => $"{CardGameManager.Current.Name} does not have a CGS AutoUpdate URL!";
 
         public GameObject cardGameEditorMenuPrefab;
         public GameObject gameImportModalPrefab;
         public GameObject downloadMenuPrefab;
-
-        public Button newButton;
 
         protected override bool AllowSwitchOff => false;
 
@@ -89,7 +91,7 @@ namespace Cgs.Menu
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Inputs.IsSubmit)
                 Sync();
-            else if (Inputs.IsNew && Settings.DeveloperMode)
+            else if (Inputs.IsNew)
                 CreateNew();
             else if (Inputs.IsLoad)
                 Import();
@@ -112,8 +114,6 @@ namespace Cgs.Menu
         private void BuildGameSelectionOptions()
         {
             Rebuild(CardGameManager.Instance.AllCardGames, SelectGame, CardGameManager.Current.Id);
-
-            newButton.interactable = Settings.DeveloperMode;
         }
 
         [UsedImplicitly]
@@ -126,7 +126,10 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void CreateNew()
         {
-            CardGameEditor.Show();
+            if (Settings.DeveloperMode)
+                CardGameEditor.Show();
+            else
+                Application.OpenURL(CgsGamesUrl);
         }
 
         [UsedImplicitly]

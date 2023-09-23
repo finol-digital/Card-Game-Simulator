@@ -4,13 +4,12 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.90
-- Redesigned Games Management Menu
+## What's New - v1.91
+- Game-Play: Increase max zoom out and add buffer around edges of playmat
 
 ## Active Sprint
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
-- Game-Play: Increase max zoom out and buffer around edges of playmat
-- Game-Play: Tap button should rotate 90 degrees with respect to original position instead of camera
+- Game-Play: Refine tap button and add tap functionality to card zones
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom

@@ -83,7 +83,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-2022.3.7f1-linux-il2cpp-1
+    container: unityci/editor:ubuntu-2022.3.8f1-linux-il2cpp-2
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -115,11 +115,11 @@ jobs:
           sed -i 's/\([A-Za-z0-9.-]\+csproj\)/Card-Game-Simulator\/&/g' Card-Game-Simulator.sln
           mv Card-Game-Simulator.sln ..
           cd ..
-          wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-          dpkg -i packages-microsoft-prod.deb
-          rm packages-microsoft-prod.deb
+          wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+          chmod +x ./dotnet-install.sh
+          ./dotnet-install.sh --version latest
           apt-get update
-          apt-get install -y openjdk-11-jre-headless
+          apt-get install -y openjdk-17-jre-headless
           apt-get install -y dotnet-sdk-6.0
           dotnet tool install dotnet-sonarscanner --tool-path .
           ./dotnet-sonarscanner begin \
@@ -474,7 +474,6 @@ jobs:
         targetPlatform:
           - StandaloneWindows
           - StandaloneWindows64
-    timeout-minutes: 90
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -503,11 +502,44 @@ jobs:
             Library-buildWindows-
       - name: Build Unity Project
         id: build
+        continue-on-error: true
+        timeout-minutes: 45
         uses: game-ci/unity-builder@main
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+      - name: Sleep for Retry
+        if: ${{ steps.build.outcome == 'failure' }}
+        run: Start-Sleep -s 120
+      - name: Build Retry
+        id: build-2
+        continue-on-error: true
+        timeout-minutes: 45
+        if: steps.build.outcome == 'failure'
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+      - name: Sleep for Retry 2
+        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        run: Start-Sleep -s 240
+      - name: Build Retry 2
+        id: build-3
+        timeout-minutes: 45
+        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
@@ -559,11 +591,44 @@ jobs:
           git reset --hard
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@v3
+        continue-on-error: true
+        timeout-minutes: 45
+        uses: game-ci/unity-builder@main
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        with:
+          targetPlatform: WSAPlayer
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+      - name: Sleep for Retry
+        if: ${{ steps.build.outcome == 'failure' }}
+        run: Start-Sleep -s 120
+      - name: Build Retry
+        id: build-2
+        continue-on-error: true
+        timeout-minutes: 45
+        if: steps.build.outcome == 'failure'
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        with:
+          targetPlatform: WSAPlayer
+          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+      - name: Sleep for Retry 2
+        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        run: Start-Sleep -s 240
+      - name: Build Retry 2
+        id: build-3
+        timeout-minutes: 45
+        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions

@@ -1,10 +1,10 @@
 {
-	"name": "ZU Tiles: Hime",
-	"allCardsUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/AllCards.json",
-	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/zu_tiles_hime.json",
-	"bannerImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/Banner.png",
-	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/CardBack.png",
-	"cardImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles_hime/sets/{cardSet}/{cardId}.{cardImageFileType}",
+	"name": "ZU Tiles",
+	"allCardsUrl": "https://www.cardgamesimulator.com/games/zu_tiles/AllCards.json",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/zu_tiles/zu_tiles.json",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles/Banner.png",
+	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles/CardBack.png",
+	"cardImageUrl": "https://www.cardgamesimulator.com/games/zu_tiles/sets/{cardSet}/{cardId}.{cardImageFileType}",
 	"cardPrimaryProperty": "description",
 	"cardProperties": [
 		{
@@ -47,24 +47,24 @@
 		"x": 3.0,
 		"y": 3.0
 	},
-	"cgsDeepLink": "https://cgs.link/zu_tiles_hime",
+	"cgsDeepLink": "https://cgs.link/zu_tiles",
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{
 			"name": "Dragon Snake Rooster",
-			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Dragon%20Snake%20Rooster.txt"
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles/decks/Dragon%20Snake%20Rooster.txt"
 		},
 		{
 			"name": "Rabbit Pig Ram",
-			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Rabbit%20Pig%20Ram.txt"
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles/decks/Rabbit%20Pig%20Ram.txt"
 		},
 		{
 			"name": "Rat Ox Monkey",
-			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Rat%20Ox%20Monkey.txt"
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles/decks/Rat%20Ox%20Monkey.txt"
 		},
 		{
 			"name": "Tiger Horse Dog",
-			"url": "https://www.cardgamesimulator.com/games/zu_tiles_hime/decks/Tiger%20Horse%20Dog.txt"
+			"url": "https://www.cardgamesimulator.com/games/zu_tiles/decks/Tiger%20Horse%20Dog.txt"
 		}
 	],
 	"enums": [

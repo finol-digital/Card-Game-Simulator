@@ -200,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 7819962467366645064, guid: e885b7dcac6cff447a150d9f185e8af7,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -259.2539
+      value: -259.52023
       objectReference: {fileID: 0}
     - target: {fileID: 7819962467366645064, guid: e885b7dcac6cff447a150d9f185e8af7,
         type: 3}
@@ -1045,6 +1045,16 @@ PrefabInstance:
       propertyPath: m_TargetGraphic
       value: 
       objectReference: {fileID: 534310609511358273}
+    - target: {fileID: 6042467856956256676, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6042467856956256676, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
+      value: 
+      objectReference: {fileID: 6413271493388192227}
     - target: {fileID: 6042467856956256678, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
         type: 3}
       propertyPath: m_Name
@@ -1203,6 +1213,16 @@ PrefabInstance:
       propertyPath: m_TargetGraphic
       value: 
       objectReference: {fileID: 6413271493388192237}
+    - target: {fileID: 576404893160410037, guid: c35fca13280ec4344b2150cb17e647ca,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 576404893160410037, guid: c35fca13280ec4344b2150cb17e647ca,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 534310609511358287}
     - target: {fileID: 576404893160410038, guid: c35fca13280ec4344b2150cb17e647ca,
         type: 3}
       propertyPath: m_Pivot.x

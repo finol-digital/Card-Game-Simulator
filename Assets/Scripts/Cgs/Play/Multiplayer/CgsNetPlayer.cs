@@ -200,6 +200,7 @@ namespace Cgs.Play.Multiplayer
 
         [ClientRpc]
         // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private void ApplyPlayerTranslationOwnerClientRpc(ClientRpcParams clientRpcParams = default)
         {
             PlayController.Instance.playArea.verticalNormalizedPosition = 0;
@@ -565,13 +566,13 @@ namespace Cgs.Play.Multiplayer
         private void RestartServerRpc()
         {
             Debug.Log("[CgsNet Player] Game server to restart!...");
-            foreach (var cardStack in PlayController.Instance.playMat.GetComponentsInChildren<CardStack>())
+            foreach (var cardStack in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<CardStack>())
                 cardStack.MyNetworkObject.Despawn();
-            foreach (var cardModel in PlayController.Instance.playMat.GetComponentsInChildren<CardModel>())
+            foreach (var cardModel in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<CardModel>())
                 cardModel.MyNetworkObject.Despawn();
-            foreach (var die in PlayController.Instance.playMat.GetComponentsInChildren<Die>())
+            foreach (var die in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Die>())
                 die.MyNetworkObject.Despawn();
-            foreach (var token in PlayController.Instance.playMat.GetComponentsInChildren<Token>())
+            foreach (var token in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Token>())
                 token.MyNetworkObject.Despawn();
             foreach (var player in FindObjectsOfType<CgsNetPlayer>())
                 player.RestartClientRpc(player.OwnerClientRpcParams);

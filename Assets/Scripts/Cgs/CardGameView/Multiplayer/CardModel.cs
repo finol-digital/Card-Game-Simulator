@@ -167,9 +167,10 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnStartPlayable()
         {
             if (IsSpawned)
-                ParentToPlayMat();
+                ParentToPlayAreaContent();
 
-            if (PlayController.Instance != null && PlayController.Instance.playMat.transform == transform.parent)
+            if (PlayController.Instance != null &&
+                PlayController.Instance.playAreaCardZone.transform == transform.parent)
             {
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
                 cardDropArea.isBlocker = true;
@@ -426,7 +427,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (DropTarget == null && ParentCardZone == null && PlaceHolderCardZone == null &&
                 CgsNetManager.Instance != null && PlayController.Instance != null)
             {
-                PlaceHolderCardZone = PlayController.Instance.playMat;
+                PlaceHolderCardZone = PlayController.Instance.playAreaCardZone;
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
             }
 
@@ -461,10 +462,10 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (PlaySettings.AutoStackCards && PlayController.Instance != null)
             {
-                var playMatTransform = PlayController.Instance.playMat.transform;
-                for (var i = 0; i < playMatTransform.childCount; i++)
+                var playAreaCardZoneTransform = PlayController.Instance.playAreaCardZone.transform;
+                for (var i = 0; i < playAreaCardZoneTransform.childCount; i++)
                 {
-                    var siblingTransform = playMatTransform.GetChild(i);
+                    var siblingTransform = playAreaCardZoneTransform.GetChild(i);
                     if (siblingTransform == transform)
                         continue;
 
