@@ -28,6 +28,8 @@ namespace Cgs.Menu
         public const string DownloadLabel = "Download Game";
         public const string DownloadPrompt = "Enter CGS AutoUpdate URL...";
 
+        private const string CgsGamesUrl = "https://cgs.games";
+
         public static string NoSyncMessage => $"{CardGameManager.Current.Name} does not have a CGS AutoUpdate URL!";
 
         public GameObject cardGameEditorMenuPrefab;
@@ -127,7 +129,7 @@ namespace Cgs.Menu
             if (Settings.DeveloperMode)
                 CardGameEditor.Show();
             else
-                Application.OpenURL("https://cgs.games");
+                Application.OpenURL(CgsGamesUrl);
         }
 
         [UsedImplicitly]

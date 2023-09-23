@@ -8,8 +8,8 @@ permalink: roadmap.html
 - Game-Play: Increase max zoom out and add buffer around edges of playmat
 
 ## Active Sprint
-- Game-Play: Edit tap button functionality
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
+- Game-Play: Refine tap button and add tap functionality to card zones
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
