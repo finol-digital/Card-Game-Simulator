@@ -45,8 +45,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playMat != null &&
-                                PlayController.Instance.playMat.transform == transform.parent && IsSpawned;
+        public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playAreaCardZone != null &&
+                                PlayController.Instance.playAreaCardZone.transform == transform.parent && IsSpawned;
 
         protected bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
 
@@ -380,16 +380,16 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
-        protected void ParentToPlayMat()
+        protected void ParentToPlayAreaContent()
         {
-            if (PlayController.Instance == null || PlayController.Instance.playMat == null)
+            if (PlayController.Instance == null || PlayController.Instance.playAreaCardZone == null)
             {
-                Debug.LogError($"ERROR: Attempted to parent {gameObject.name} to non-existent play mat!");
+                Debug.LogError($"ERROR: Attempted to parent {gameObject.name} to non-existent play area!");
                 return;
             }
 
             var rectTransform = (RectTransform) transform;
-            rectTransform.SetParent(PlayController.Instance.playMat.transform);
+            rectTransform.SetParent(PlayController.Instance.playAreaCardZone.transform);
             rectTransform.localScale = Vector3.one;
         }
 

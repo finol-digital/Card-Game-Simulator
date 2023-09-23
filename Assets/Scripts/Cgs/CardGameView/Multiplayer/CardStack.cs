@@ -118,7 +118,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            ParentToPlayMat();
+            ParentToPlayAreaContent();
             GetComponent<CardDropArea>().DropHandler = this;
 
             var rectTransform = (RectTransform) transform;
@@ -208,7 +208,7 @@ namespace Cgs.CardGameView.Multiplayer
                 PopCard();
 
             CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
-                PlayController.Instance.playMat);
+                PlayController.Instance.playAreaCardZone);
 
             RemovePointer(eventData);
 
