@@ -509,7 +509,7 @@ namespace Cgs.Play
 
             cardZone.type = CardZoneType.Horizontal;
             cardZone.allowsFlip = true;
-            cardZone.allowsRotation = false;
+            cardZone.allowsRotation = true;
             cardZone.scrollRectContainer = playArea;
             cardZone.DoesImmediatelyRelease = true;
 
@@ -551,7 +551,7 @@ namespace Cgs.Play
 
             cardZone.type = CardZoneType.Vertical;
             cardZone.allowsFlip = true;
-            cardZone.allowsRotation = false;
+            cardZone.allowsRotation = true;
             cardZone.scrollRectContainer = playArea;
             cardZone.DoesImmediatelyRelease = true;
 
@@ -587,7 +587,7 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActions.Flip;
+            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
         }
 
         private static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
@@ -596,7 +596,7 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActions.Flip;
+            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.IsFacedown = true;
         }
 
@@ -606,7 +606,7 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActions.Flip;
+            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.IsFacedown = false;
         }
 
