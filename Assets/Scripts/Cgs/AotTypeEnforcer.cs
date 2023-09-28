@@ -59,7 +59,7 @@ namespace Cgs
                 cardGame.CardSetsInList = false;
                 cardGame.CardSetsInListIsCsv = false;
                 cardGame.CardSize = new Float2(1, 1);
-                cardGame.CgsDeepLink = new Uri(UnityFileMethods.FilePrefix);
+                cardGame.CgsGamesLink = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.DeckFileAltId = string.Empty;
                 cardGame.DeckFileTxtId = DeckFileTxtId.Id;
                 cardGame.DeckFileType = DeckFileType.Dec;
@@ -78,7 +78,8 @@ namespace Cgs
                 cardGame.GameBoardUrls = new List<GameBoardUrl> {gameBoardUrl};
                 cardGame.GamePlayDeckName = string.Empty;
                 cardGame.GamePlayDeckPositions = new List<Float2>();
-                var gamePlayZone = new GamePlayZone(FacePreference.Any, float2, float2, GamePlayZoneType.Area);
+                var gamePlayZone = new GamePlayZone(FacePreference.Any, CardAction.Flip, float2, float2,
+                    GamePlayZoneType.Area);
                 cardGame.GamePlayZones = new List<GamePlayZone> {gamePlayZone};
                 cardGame.GameStartHandCount = 1;
                 cardGame.GameStartPointsCount = 1;

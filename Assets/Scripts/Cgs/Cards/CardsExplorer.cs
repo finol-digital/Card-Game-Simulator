@@ -82,8 +82,8 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void ShowNewCardSetModal()
         {
-            if (CardGameManager.Current.CgsDeepLink != null &&
-                CardGameManager.Current.CgsDeepLink.IsWellFormedOriginalString()
+            if (CardGameManager.Current.CgsGamesLink != null &&
+                CardGameManager.Current.CgsGamesLink.IsWellFormedOriginalString()
                 || CardGameManager.Current.AutoUpdateUrl != null &&
                 CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
             {

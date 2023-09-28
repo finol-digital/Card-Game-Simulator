@@ -709,10 +709,10 @@ namespace Cgs
 
         public void Share()
         {
-            Debug.Log("CGS Share:: Deep:" + Current.CgsDeepLink + " Auto:" + Current.AutoUpdateUrl);
+            Debug.Log("CGS Share:: Deep:" + Current.CgsGamesLink + " Auto:" + Current.AutoUpdateUrl);
             if (Current.AutoUpdateUrl != null && Current.AutoUpdateUrl.IsWellFormedOriginalString())
             {
-                var deepLink = Current.CgsDeepLink?.OriginalString ?? BuildDeepLink();
+                var deepLink = Current.CgsGamesLink?.OriginalString ?? BuildDeepLink();
                 var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, deepLink);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 var nativeShare = new NativeShare();
