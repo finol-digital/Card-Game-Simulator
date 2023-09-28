@@ -27,7 +27,7 @@
     "x": 1,
     "y": 2
   },
-  "cgsDeepLink": "https://cgs.link/dominoes",
+  "cgsGamesLink": "https://cgs.games/link/dominoes",
   "deckUrls": [
     {
       "name": "Double Six Dominoes",
