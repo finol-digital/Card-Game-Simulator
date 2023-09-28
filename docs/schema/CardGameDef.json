@@ -239,12 +239,12 @@
         }
       ]
     },
-    "cgsDeepLink": {
+    "cgsGamesLink": {
       "type": [
         "null",
         "string"
       ],
-      "description": "cgsDeepLink is a clickable url that will take the user directly to this game in CGS, which can be shared between users. This functionality must be configured through Firebase Dynamic Links.",
+      "description": "cgsGamesLink is a clickable url that will take the user directly to this game on the CGS Games website, which can be shared between users.",
       "format": "uri"
     },
     "deckFileAltId": {
@@ -714,6 +714,17 @@
           "oneOf": [
             {
               "$ref": "#/definitions/FacePreference"
+            }
+          ]
+        },
+        "defaultCardAction": {
+          "description": "If possible, CGS will take the defaultCardAction when a Card is double-clicked in the Game Play Zone. If null, defaults to <gameDefaulCardAction>",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CardAction"
             }
           ]
         },
