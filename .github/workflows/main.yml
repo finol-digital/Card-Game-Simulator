@@ -467,7 +467,7 @@ jobs:
     runs-on: windows-2019
     needs: [buildWithLinux, buildWithMac]
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.build-1.outputs.buildVersion }}
     strategy:
       fail-fast: false
       matrix:
@@ -501,7 +501,7 @@ jobs:
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
       - name: Build Unity Project
-        id: build
+        id: build-0
         continue-on-error: true
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
@@ -513,13 +513,13 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry
-        if: ${{ steps.build.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' }}
         run: Start-Sleep -s 120
       - name: Build Retry
-        id: build-2
+        id: build-1
         continue-on-error: true
         timeout-minutes: 45
-        if: steps.build.outcome == 'failure'
+        if: steps.build-0.outcome == 'failure'
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -529,12 +529,12 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry 2
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         run: Start-Sleep -s 240
       - name: Build Retry 2
-        id: build-3
+        id: build-2
         timeout-minutes: 45
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -590,7 +590,7 @@ jobs:
           git add .
           git reset --hard
       - name: Build Unity Project
-        id: build
+        id: build-0
         continue-on-error: true
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
@@ -602,13 +602,13 @@ jobs:
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry
-        if: ${{ steps.build.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' }}
         run: Start-Sleep -s 120
       - name: Build Retry
-        id: build-2
+        id: build-1
         continue-on-error: true
         timeout-minutes: 45
-        if: steps.build.outcome == 'failure'
+        if: steps.build-0.outcome == 'failure'
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -618,12 +618,12 @@ jobs:
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry 2
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         run: Start-Sleep -s 240
       - name: Build Retry 2
-        id: build-3
+        id: build-2
         timeout-minutes: 45
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
