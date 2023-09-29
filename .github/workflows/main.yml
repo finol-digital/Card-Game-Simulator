@@ -178,7 +178,7 @@ jobs:
           restore-keys: Library-build-${{ matrix.targetPlatform }}-
       - name: Free Disk Space for Android
         if: matrix.targetPlatform == 'Android'
-        uses: jlumbroso/free-disk-space@v1.2.0
+        uses: jlumbroso/free-disk-space@v1.3.0
         with:
           large-packages: false
       - name: Build Unity Project
