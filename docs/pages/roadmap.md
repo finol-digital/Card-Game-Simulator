@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.91
-- Game-Play: Increase max zoom out and add buffer around edges of playmat
+## What's New - v1.92
+- Game-Play: Rotate Tokens/Dice/Stacks
 
 ## Active Sprint
 - Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
@@ -21,7 +21,6 @@ permalink: roadmap.html
 - Game-Play: Cards you receive at the beginning of the game can be defined by default
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Custom Tokens
-- Game-Play: Rotate Tokens/Dice/Stacks
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
