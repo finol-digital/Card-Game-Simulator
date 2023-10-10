@@ -22,6 +22,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
+using CardAction = Cgs.CardGameView.Viewer.CardAction;
 
 namespace Cgs.Play
 {
@@ -474,29 +475,32 @@ namespace Cgs.Play
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
             var size = CardGameManager.PixelsPerInch *
                        new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
+            var cardAction = gamePlayZone.DefaultCardAction != null
+                ? CardActions.ActionsDictionary[gamePlayZone.DefaultCardAction.Value]
+                : CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
             switch (gamePlayZone.Type)
             {
                 case GamePlayZoneType.Area:
-                    CreateAreaZone(position, size, gamePlayZone.Face);
+                    CreateAreaZone(position, size, gamePlayZone.Face, cardAction);
                     break;
                 case GamePlayZoneType.Horizontal:
-                    CreateHorizontalZone(position, size, gamePlayZone.Face);
+                    CreateHorizontalZone(position, size, gamePlayZone.Face, cardAction);
                     break;
                 case GamePlayZoneType.Vertical:
-                    CreateVerticalZone(position, size, gamePlayZone.Face);
+                    CreateVerticalZone(position, size, gamePlayZone.Face, cardAction);
                     break;
                 default:
-                    CreateAreaZone(position, size, gamePlayZone.Face);
+                    CreateAreaZone(position, size, gamePlayZone.Face, cardAction);
                     break;
             }
         }
 
-        private void CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference)
+        private void CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference, CardAction cardAction)
         {
-            Debug.Log($"CreateAreaZone position: {position}, size: {size}, face: {facePreference}");
+            Debug.Log($"CreateAreaZone position: {position}, size: {size}, face: {facePreference}, cardAction: {cardAction}");
         }
 
-        private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference)
+        private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference, CardAction cardAction)
         {
             var cardZone = Instantiate(horizontalCardZonePrefab, playAreaCardZone.transform)
                 .GetOrAddComponent<CardZone>();
@@ -537,9 +541,11 @@ namespace Cgs.Play
                     cardZone.OnAddCardActions.Add(OnAddCardModel);
                     break;
             }
+
+            cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = cardAction);
         }
 
-        private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference)
+        private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference, CardAction cardAction)
         {
             var cardZone = Instantiate(verticalCardZonePrefab, playAreaCardZone.transform).GetComponent<CardZone>();
             var cardZoneRectTransform = (RectTransform) cardZone.transform;
@@ -579,6 +585,8 @@ namespace Cgs.Play
                     cardZone.OnAddCardActions.Add(OnAddCardModel);
                     break;
             }
+
+            cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = cardAction);
         }
 
         private static void OnAddCardModel(CardZone cardZone, CardModel cardModel)

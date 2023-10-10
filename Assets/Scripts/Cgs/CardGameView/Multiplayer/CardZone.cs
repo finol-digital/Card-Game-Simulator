@@ -145,8 +145,8 @@ namespace Cgs.CardGameView.Multiplayer
                     for (var i = 0; i < transform.childCount; i++)
                     {
                         if (type == CardZoneType.Vertical
-                            ? targetPosition.y < transform.GetChild(i).position.y
-                            : targetPosition.x > transform.GetChild(i).position.x)
+                                ? targetPosition.y < transform.GetChild(i).position.y
+                                : targetPosition.x > transform.GetChild(i).position.x)
                             continue;
                         newSiblingIndex = i;
                         if (child.GetSiblingIndex() < newSiblingIndex)
@@ -189,6 +189,5 @@ namespace Cgs.CardGameView.Multiplayer
         {
             transform.DestroyAllChildren();
         }
-
     }
 }
