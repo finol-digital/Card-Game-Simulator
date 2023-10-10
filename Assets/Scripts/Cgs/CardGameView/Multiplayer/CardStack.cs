@@ -172,7 +172,7 @@ namespace Cgs.CardGameView.Multiplayer
             else if (LacksOwnership)
                 RequestChangeOwnership();
             else
-                UpdatePosition();
+                ActOnDrag();
         }
 
         protected override void OnDragPlayable(PointerEventData eventData)
@@ -183,13 +183,13 @@ namespace Cgs.CardGameView.Multiplayer
             if (LacksOwnership)
                 RequestChangeOwnership();
             else
-                UpdatePosition();
+                ActOnDrag();
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
             if (!IsDraggingCard && !LacksOwnership)
-                UpdatePosition();
+                ActOnDrag();
         }
 
         private void DragCard(PointerEventData eventData)
