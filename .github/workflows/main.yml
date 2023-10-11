@@ -176,8 +176,8 @@ jobs:
           path: Library
           key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-build-${{ matrix.targetPlatform }}-
-      - name: Free Disk Space for Android
-        if: matrix.targetPlatform == 'Android'
+      - name: Free Disk Space
+        if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneLinux64'
         uses: jlumbroso/free-disk-space@v1.3.0
         with:
           large-packages: false
