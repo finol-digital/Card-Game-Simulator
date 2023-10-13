@@ -9,6 +9,7 @@ permalink: roadmap.html
 - Game-Play: Rotate Tokens/Dice/Stacks
 switch footer in cgs app
 remove firebase
+web build should with unity react
 
 # Active Sprint
 - Deck-Editor: Card Zone should move containing scrollrect

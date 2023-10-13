@@ -407,24 +407,24 @@ jobs:
       - name: Checkout Firebase project
         uses: actions/checkout@v3
         with:
-          repository: finol-digital/cgs-backend
+          repository: finol-digital/cgs-games
           token: ${{ secrets.CGS_PAT }}
-          path: cgs-backend
+          path: cgs-games
       - name: Copy the WebGL build artifacts to the Firebase public directory
         env:
           UNITY_BUILD_WEBGL_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL', github.workspace) }}
-          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/cgs-backend/public/Build', github.workspace) }}
+          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/cgs-games/public/Unity', github.workspace) }}
         run: find $UNITY_BUILD_WEBGL_PATH -type f -name "**WebGL.*" -exec cp {} $FIREBASE_PUBLIC_BUILD_PATH \;
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
-      - name: Raise PR to backend
+      - name: Raise PR to CGS games
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.CGS_PAT }}
-          path: cgs-backend
+          path: cgs-games
           branch: ${{ needs.buildWithLinux.outputs.buildVersion }}
           title: ${{ needs.buildWithLinux.outputs.buildVersion }}
           body-path: Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
