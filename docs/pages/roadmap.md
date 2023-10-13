@@ -7,6 +7,10 @@ permalink: roadmap.html
 ## What's New - v1.92
 - Bug-Fix: Tapping Cards
 - Game-Play: Rotate Tokens/Dice/Stacks
+switch footer in cgs app
+remove firebase
+
+# Active Sprint
 - Deck-Editor: Card Zone should move containing scrollrect
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
