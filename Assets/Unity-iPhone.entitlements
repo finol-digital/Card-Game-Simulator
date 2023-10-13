@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:cgs.link</string>
+		<string>applinks:cgs.games</string>
 	</array>
 </dict>
 </plist>

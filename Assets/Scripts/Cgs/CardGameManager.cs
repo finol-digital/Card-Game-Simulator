@@ -2,10 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#if UNITY_IOS
-using Firebase;
-using Firebase.Extensions;
-#endif
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,9 +17,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
-#if UNITY_ANDROID || UNITY_IOS
-using Firebase.DynamicLinks;
-#endif
 
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine.Networking;
@@ -208,27 +201,7 @@ namespace Cgs
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#elif UNITY_WEBGL
-            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
-                Directory.CreateDirectory(UnityCardGame.GamesDirectoryPath);
-            string standardPlayingCardsDirectory =
-                UnityCardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
-            if (!Directory.Exists(standardPlayingCardsDirectory))
-                Directory.CreateDirectory(standardPlayingCardsDirectory);
-            File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName,
-                Tags.StandPlayingCardsJsonFileContent);
-            string dominoesDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
-            if (!Directory.Exists(dominoesDirectory))
-                Directory.CreateDirectory(dominoesDirectory);
-            File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
-            StartCoroutine(
-                UnityFileMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
-            string mahjongDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.MahjongDirectoryName;
-            if (!Directory.Exists(mahjongDirectory))
-                Directory.CreateDirectory(mahjongDirectory);
-            File.WriteAllText(mahjongDirectory + "/" + Tags.MahjongJsonFileName, Tags.MahjongJsonFileContent);
-            StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.MahjongCardBackUrl, mahjongDirectory + "/CardBack.png"));
-#else
+#elif !UNITY_WEBGL
             UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
@@ -368,34 +341,9 @@ namespace Cgs
 
         private void CheckDeepLinks()
         {
-            Debug.Log("Checking Deep Links...");
-#if UNITY_IOS
-            Debug.Log("Should use Firebase Dynamic Links for iOS...");
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-            {
-                var dependencyStatus = task.Result;
-                if (dependencyStatus != DependencyStatus.Available)
-                {
-                    Debug.LogError("Error with Links! Could not resolve all Firebase dependencies: " + dependencyStatus);
-                    Messenger.Show("Error with Links! Could not resolve all Firebase dependencies: " + dependencyStatus);
-                    return;
-                }
-
-                DynamicLinks.DynamicLinkReceived += OnDynamicLinkReceived;
-                Debug.Log("Using Firebase Dynamic Links for iOS!");
-            });
-            return;
-#elif UNITY_ANDROID
-            if (string.IsNullOrEmpty(Application.absoluteURL))
-            {
-                DynamicLinks.DynamicLinkReceived += OnDynamicLinkReceived;
-                Debug.Log("Using Firebase Dynamic Links for Android!");
-            }
-#else
             Application.deepLinkActivated += OnDeepLinkActivated;
-            Debug.Log("Using Native Deep Links!");
-#endif
 
+            Debug.Log("Checking Deep Links...");
             if (string.IsNullOrEmpty(Application.absoluteURL))
             {
                 Debug.Log("No Start Deep Link");
@@ -411,22 +359,6 @@ namespace Cgs
             Debug.Log("Start Deep Link: " + Application.absoluteURL);
             OnDeepLinkActivated(Application.absoluteURL);
         }
-
-#if UNITY_ANDROID || UNITY_IOS
-        private void OnDynamicLinkReceived(object sender, EventArgs args)
-        {
-            Debug.Log("OnDynamicLinkReceived!");
-            var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
-            var deepLink = dynamicLinkEventArgs?.ReceivedDynamicLink.Url.OriginalString;
-            if (string.IsNullOrEmpty(deepLink))
-            {
-                Debug.LogError("OnDynamicLinkReceived::deepLinkEmpty");
-                Messenger.Show("OnDynamicLinkReceived::deepLinkEmpty");
-            }
-            else
-                OnDeepLinkActivated(deepLink);
-        }
-#endif
 
         private void OnDeepLinkActivated(string deepLink)
         {

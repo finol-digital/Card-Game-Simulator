@@ -8,7 +8,6 @@ permalink: roadmap.html
 - Bug-Fix: Tapping Cards
 - Game-Play: Rotate Tokens/Dice/Stacks
 switch footer in cgs app
-remove firebase
 web build should with unity react
 
 # Active Sprint
