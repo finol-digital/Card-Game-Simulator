@@ -1,4 +1,5 @@
 name: Test, Build, and Deploy with GameCI
+concurrency: unity
 on:
   push:
     branches:
