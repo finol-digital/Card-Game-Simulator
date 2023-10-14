@@ -13,8 +13,8 @@ permalink: roadmap.html
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
 - Game-Play: Rename Stacks
-- Main Menu: Add setting for footer
 - Deck-Editor: Card Zone should move containing scrollrect
+- Main Menu: Add setting for footer
 
 ## Backlog - 2023 Q4
 - Game-Creation: Edit Button in Games Management Menu
