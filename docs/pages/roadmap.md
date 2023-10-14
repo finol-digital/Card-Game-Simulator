@@ -7,15 +7,14 @@ permalink: roadmap.html
 ## What's New - v1.92
 - Bug-Fix: Tapping Cards
 - Game-Play: Rotate Tokens/Dice/Stacks
-switch footer in cgs app
-web build should with unity react
 
 # Active Sprint
-- Deck-Editor: Card Zone should move containing scrollrect
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
 - Game-Play: Rename Stacks
+- Main Menu: Add setting for footer
+- Deck-Editor: Card Zone should move containing scrollrect
 
 ## Backlog - 2023 Q4
 - Game-Creation: Edit Button in Games Management Menu

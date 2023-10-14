@@ -17,7 +17,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
-
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine.Networking;
 #endif
@@ -371,7 +370,7 @@ namespace Cgs
                 Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
             }
             else
-                StartCoroutine(GetCardGame(autoUpdateUrl));
+                StartGetCardGame(autoUpdateUrl);
         }
 
         private static string GetAutoUpdateUrl(string deepLink)
@@ -414,6 +413,11 @@ namespace Cgs
                       string.IsNullOrEmpty(currentGame.Error)
                 ? currentGame
                 : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
+        }
+
+        private void StartGetCardGame(string autoUpdateUrl)
+        {
+            StartCoroutine(GetCardGame(autoUpdateUrl));
         }
 
         public IEnumerator GetCardGame(string gameUrl)

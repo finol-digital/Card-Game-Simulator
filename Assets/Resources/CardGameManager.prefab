@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 4526732702672025491}
   - component: {fileID: 4788133414692729551}
   m_Layer: 0
-  m_Name: Card Game Manager
+  m_Name: CardGameManager
   m_TagString: CardGameManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
