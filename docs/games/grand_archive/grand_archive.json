@@ -116,7 +116,7 @@
 	"cardSetIsObject": true,
 	"cardSetsInList": true,
 	"cardSetIdentifier": "editions",
-	"cgsDeepLink": "https://cgs.link/grand_archive",
+	"cgsGamesLink": "https://cgs.games/link/grand_archive",
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{

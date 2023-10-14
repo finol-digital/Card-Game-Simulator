@@ -1,4 +1,5 @@
 name: Test, Build, and Deploy with GameCI
+concurrency: unity
 on:
   push:
     branches:
@@ -74,7 +75,7 @@ jobs:
           echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Auto-Commit Release Notes
         if: github.event.action == 'published'
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
           file_pattern: fastlane/metadata
@@ -176,9 +177,9 @@ jobs:
           path: Library
           key: Library-build-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-build-${{ matrix.targetPlatform }}-
-      - name: Free Disk Space for Android
-        if: matrix.targetPlatform == 'Android'
-        uses: jlumbroso/free-disk-space@v1.2.0
+      - name: Free Disk Space
+        if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneLinux64'
+        uses: jlumbroso/free-disk-space@v1.3.0
         with:
           large-packages: false
       - name: Build Unity Project
@@ -407,24 +408,24 @@ jobs:
       - name: Checkout Firebase project
         uses: actions/checkout@v3
         with:
-          repository: finol-digital/cgs-backend
+          repository: finol-digital/cgs-games
           token: ${{ secrets.CGS_PAT }}
-          path: cgs-backend
+          path: cgs-games
       - name: Copy the WebGL build artifacts to the Firebase public directory
         env:
           UNITY_BUILD_WEBGL_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL', github.workspace) }}
-          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/cgs-backend/public/Build', github.workspace) }}
+          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/cgs-games/public/Unity', github.workspace) }}
         run: find $UNITY_BUILD_WEBGL_PATH -type f -name "**WebGL.*" -exec cp {} $FIREBASE_PUBLIC_BUILD_PATH \;
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
-      - name: Raise PR to backend
+      - name: Raise PR to CGS games
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.CGS_PAT }}
-          path: cgs-backend
+          path: cgs-games
           branch: ${{ needs.buildWithLinux.outputs.buildVersion }}
           title: ${{ needs.buildWithLinux.outputs.buildVersion }}
           body-path: Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
@@ -467,7 +468,7 @@ jobs:
     runs-on: windows-2019
     needs: [buildWithLinux, buildWithMac]
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.build-1.outputs.buildVersion }}
     strategy:
       fail-fast: false
       matrix:
@@ -501,7 +502,7 @@ jobs:
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
       - name: Build Unity Project
-        id: build
+        id: build-0
         continue-on-error: true
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
@@ -513,13 +514,13 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry
-        if: ${{ steps.build.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' }}
         run: Start-Sleep -s 120
       - name: Build Retry
-        id: build-2
+        id: build-1
         continue-on-error: true
         timeout-minutes: 45
-        if: steps.build.outcome == 'failure'
+        if: steps.build-0.outcome == 'failure'
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -529,12 +530,12 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry 2
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         run: Start-Sleep -s 240
       - name: Build Retry 2
-        id: build-3
+        id: build-2
         timeout-minutes: 45
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -590,7 +591,7 @@ jobs:
           git add .
           git reset --hard
       - name: Build Unity Project
-        id: build
+        id: build-0
         continue-on-error: true
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
@@ -602,13 +603,13 @@ jobs:
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry
-        if: ${{ steps.build.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' }}
         run: Start-Sleep -s 120
       - name: Build Retry
-        id: build-2
+        id: build-1
         continue-on-error: true
         timeout-minutes: 45
-        if: steps.build.outcome == 'failure'
+        if: steps.build-0.outcome == 'failure'
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -618,12 +619,12 @@ jobs:
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
       - name: Sleep for Retry 2
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         run: Start-Sleep -s 240
       - name: Build Retry 2
-        id: build-3
+        id: build-2
         timeout-minutes: 45
-        if: ${{ steps.build.outcome == 'failure' && steps.build-2.outcome == 'failure' }}
+        if: ${{ steps.build-0.outcome == 'failure' && steps.build-1.outcome == 'failure' }}
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}

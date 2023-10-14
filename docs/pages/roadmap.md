@@ -4,24 +4,23 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.91
-- Game-Play: Increase max zoom out and add buffer around edges of playmat
+## What's New - v1.92
+- Bug-Fix: Tapping Cards
+- Game-Play: Rotate Tokens/Dice/Stacks
 
-## Active Sprint
-- Bug: Sometimes stacks will duplicate the bottom two cards below the stack, creating another stack underneath
+# Active Sprint
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
 - Game-Play: Rename Stacks
-- Game-Play: Refine tap button and add tap functionality to card zones
-- Deck Editor: Card Zone should move containing scrollrect
+- Deck-Editor: Card Zone should move containing scrollrect
+- Main Menu: Add setting for footer
 
 ## Backlog - 2023 Q4
 - Game-Creation: Edit Button in Games Management Menu
 - Game-Play: Cards you receive at the beginning of the game can be defined by default
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Custom Tokens
-- Game-Play: Rotate Tokens/Dice/Stacks
 - Game-Play: Label which player is moving cards
 - Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats

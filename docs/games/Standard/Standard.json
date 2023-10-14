@@ -22,7 +22,7 @@
       "type": "stringEnum"
     }
   ],
-  "cgsDeepLink": "https://cgs.link/standard",
+  "cgsGamesLink": "https://cgs.games/link/standard",
   "deckUrls": [
     {
       "name": "Standard 52-card Deck",

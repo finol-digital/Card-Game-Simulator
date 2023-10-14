@@ -446,7 +446,7 @@ namespace Cgs.CardGameView.Multiplayer
             return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardModel>();
         }
 
-        private void ActOnDrag()
+        protected override void ActOnDrag()
         {
             UpdatePosition();
             if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)

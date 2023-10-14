@@ -28,7 +28,7 @@ namespace Tests.PlayMode
         [SetUp]
         public void Setup()
         {
-            Object.Instantiate(Resources.Load<GameObject>("Card Game Manager"));
+            Object.Instantiate(Resources.Load<GameObject>("CardGameManager"));
         }
 
         [UnityTest]

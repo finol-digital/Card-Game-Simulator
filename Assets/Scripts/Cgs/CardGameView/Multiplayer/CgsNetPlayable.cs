@@ -300,6 +300,8 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (IsOnline)
                 RequestChangeOwnership();
+            else
+                ActOnDrag();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -316,7 +318,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (LacksOwnership)
                 RequestChangeOwnership();
             else
-                UpdatePosition();
+                ActOnDrag();
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -337,7 +339,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
         {
             if (!LacksOwnership)
-                UpdatePosition();
+                ActOnDrag();
         }
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
@@ -358,8 +360,25 @@ namespace Cgs.CardGameView.Multiplayer
                     PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
         }
 
+        protected virtual void ActOnDrag()
+        {
+            UpdatePosition();
+            if (IsProcessingSecondaryDragAction)
+                Rotate();
+        }
+
         protected virtual void UpdatePosition()
         {
+
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            if (IsProcessingSecondaryDragAction)
+                return;
+#else
+            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) ||
+                Input.GetMouseButtonUp(2))
+                return;
+#endif
+
             if (ParentCardZone == null)
                 HighlightMode = HighlightMode.Warn;
             else if (CurrentDragPhase != DragPhase.End)
