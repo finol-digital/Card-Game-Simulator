@@ -1,1 +1,2 @@
-Game-Play: Increase max zoom out and add buffer around edges of playmat
+- Bug-Fix: Tapping Cards
+- Game-Play: Rotate Tokens/Dice/Stacks
