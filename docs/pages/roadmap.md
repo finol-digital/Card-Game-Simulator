@@ -8,7 +8,7 @@ permalink: roadmap.html
 - Bug-Fix: Tapping Cards
 - Game-Play: Rotate Tokens/Dice/Stacks
 
-# Active Sprint
+## Active Sprint
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
