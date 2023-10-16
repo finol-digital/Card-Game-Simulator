@@ -173,9 +173,11 @@ namespace Cgs
             UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 
+#if !UNITY_WEBGL
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 CreateDefaultCardGames();
             LookupCardGames();
+#endif
 
             if (Debug.isDebugBuild)
                 Application.logMessageReceived += ShowLogToUser;
@@ -200,7 +202,7 @@ namespace Cgs
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#elif !UNITY_WEBGL
+#else
             UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
