@@ -206,10 +206,11 @@ jobs:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: montudor/action-zip@v1
+        uses: vimtor/action-zip@v1.1
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
-          args: zip -qq -r build/cgs-${{ matrix.targetPlatform }}.zip build/${{ matrix.targetPlatform }}
+          files: build/${{ matrix.targetPlatform }}/
+          dest: build/cgs-${{ matrix.targetPlatform }}.zip
       - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
@@ -294,7 +295,7 @@ jobs:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
       - name: Zip App
-        uses: vimtor/action-zip@v1
+        uses: vimtor/action-zip@v1.1
         if: github.event.action == 'published'
         with:
           files: build/StandaloneOSX/
@@ -551,7 +552,7 @@ jobs:
           name: cgs-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: vimtor/action-zip@v1
+        uses: vimtor/action-zip@v1.1
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           files: build/${{ matrix.targetPlatform }}/
