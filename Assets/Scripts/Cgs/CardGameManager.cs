@@ -173,11 +173,9 @@ namespace Cgs
             UnityCardGame.UnityInvalid.CoroutineRunner = this;
             DontDestroyOnLoad(gameObject);
 
-#if !UNITY_WEBGL
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
                 CreateDefaultCardGames();
             LookupCardGames();
-#endif
 
             if (Debug.isDebugBuild)
                 Application.logMessageReceived += ShowLogToUser;
@@ -186,15 +184,12 @@ namespace Cgs
 
             ResetCurrentToDefault();
 
-            Debug.Log("CardGameManager is Awake!");
-        }
-
-        private void Start()
-        {
 #if !UNITY_WEBGL
-            Debug.Log("CardGameManager::Start:CheckDeepLinks");
+            Debug.Log("CardGameManager::Awake:CheckDeepLinks");
             CheckDeepLinks();
 #endif
+
+            Debug.Log("CardGameManager is Awake!");
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
@@ -203,7 +198,9 @@ namespace Cgs
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
 #else
-            UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
+            UnityFileMethods.CopyDirectory(
+                Application.streamingAssetsPath + Tags.StandardPlayingCardsDirectoryName,
+                UnityCardGame.GamesDirectoryPath + Tags.StandardPlayingCardsDirectoryName);
 #endif
         }
 
@@ -384,23 +381,9 @@ namespace Cgs
                 return null;
             }
 
-            if (deepLink.StartsWith(Tags.DynamicLinkUriDomain))
-            {
-                var dynamicLinkUri = new Uri(deepLink);
-                deepLink = HttpUtility.UrlDecode(HttpUtility.ParseQueryString(dynamicLinkUri.Query).Get("link"));
-                Debug.Log("GetAutoUpdateUrl::dynamicLink: " + deepLink);
-                if (string.IsNullOrEmpty(deepLink) || !Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
-                {
-                    Debug.LogWarning("GetAutoUpdateUrl::dynamicLinkMalformed: " + deepLink);
-                    return null;
-                }
-            }
-
-            var deepLinkDecoded = HttpUtility.UrlDecode(deepLink);
-            Debug.Log("GetAutoUpdateUrl::deepLinkDecoded: " + deepLinkDecoded);
-            var deepLinkUriQuery = new Uri(deepLinkDecoded).Query;
+            var deepLinkUriQuery = new Uri(deepLink).Query;
             Debug.Log("GetAutoUpdateUrl::deepLinkUriQuery: " + deepLinkUriQuery);
-            var autoUpdateUrl = HttpUtility.ParseQueryString(deepLinkUriQuery).Get("url");
+            var autoUpdateUrl = HttpUtility.UrlDecode(HttpUtility.ParseQueryString(deepLinkUriQuery).Get("url"));
             Debug.Log("GetAutoUpdateUrl::autoUpdateUrl: " + autoUpdateUrl);
 
             return autoUpdateUrl;

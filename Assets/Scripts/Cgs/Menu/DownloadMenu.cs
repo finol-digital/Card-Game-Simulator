@@ -96,7 +96,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void GoToGamesList()
         {
-            Application.OpenURL(Tags.GameListUrl);
+            Application.OpenURL(Tags.CgsGamesListUrl);
         }
     }
 }
