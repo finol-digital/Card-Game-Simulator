@@ -197,10 +197,14 @@ namespace Cgs
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#else
+#elif UNITY_WEBGL
             UnityFileMethods.CopyDirectory(
                 Application.streamingAssetsPath + Tags.StandardPlayingCardsDirectoryName,
                 UnityCardGame.GamesDirectoryPath + Tags.StandardPlayingCardsDirectoryName);
+#else
+            UnityFileMethods.CopyDirectory(
+                Application.streamingAssetsPath,
+                UnityCardGame.GamesDirectoryPath);
 #endif
         }
 
