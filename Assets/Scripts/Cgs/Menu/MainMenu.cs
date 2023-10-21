@@ -47,6 +47,7 @@ namespace Cgs.Menu
 
         public GameObject gamesManagementMenuPrefab;
 
+        public Text versionText;
         public Text currentGameNameText;
         public Image currentCardImage;
         public Image currentBannerImage;
@@ -70,6 +71,8 @@ namespace Cgs.Menu
 
         private void Start()
         {
+            versionText.text = TitleScreen.VersionMessage;
+
 #if UNITY_WEBGL
             joinButton.interactable = false;
 #endif
