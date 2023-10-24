@@ -317,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gamesManagementMenuPrefab: {fileID: 622408515558105024, guid: a8f47c13e131e5942b6e88f7f829ea47,
     type: 3}
+  versionText: {fileID: 1766486735}
   currentGameNameText: {fileID: 2076869372}
   currentCardImage: {fileID: 735687766}
   currentBannerImage: {fileID: 1186619955}
@@ -331,7 +332,6 @@ MonoBehaviour:
   - {fileID: 179463890}
   joinButton: {fileID: 223206894}
   quitButton: {fileID: 1328835476}
-  versionText: {fileID: 1766486735}
 --- !u!1001 &223206891
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -970,8 +970,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1426684015}
   - {fileID: 1766486734}
+  - {fileID: 1426684015}
   - {fileID: 2076869371}
   m_Father: {fileID: 828762961}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

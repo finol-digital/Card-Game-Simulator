@@ -60,6 +60,7 @@ namespace Cgs
                 cardGame.CardSetsInListIsCsv = false;
                 cardGame.CardSize = new Float2(1, 1);
                 cardGame.CgsGamesLink = new Uri(UnityFileMethods.FilePrefix);
+                cardGame.Copyright = string.Empty;
                 cardGame.DeckFileAltId = string.Empty;
                 cardGame.DeckFileTxtId = DeckFileTxtId.Id;
                 cardGame.DeckFileType = DeckFileType.Dec;

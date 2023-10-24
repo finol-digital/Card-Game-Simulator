@@ -5,13 +5,13 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.93
-
+- Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
+- Main Menu: Footer with copyright
 
 ## Active Sprint
 - Deck-Editor: Card Zone should move containing scrollrect
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
-- Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
 - Game-Play: Rename Stacks
 
 ## Backlog - 2023 Q4
