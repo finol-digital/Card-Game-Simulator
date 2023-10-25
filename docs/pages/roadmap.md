@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## What's New - v1.93
 - Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
+- default rotation for players objects
 - Main Menu: Footer with copyright
 
 ## Active Sprint

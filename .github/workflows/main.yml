@@ -184,7 +184,7 @@ jobs:
           large-packages: false
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@fix/android-tools
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
