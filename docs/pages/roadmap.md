@@ -5,9 +5,9 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.93
-- Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
-- default rotation for players objects
 - Main Menu: Footer with copyright
+- default rotation for players objects
+- Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
 
 ## Active Sprint
 - Deck-Editor: Card Zone should move containing scrollrect

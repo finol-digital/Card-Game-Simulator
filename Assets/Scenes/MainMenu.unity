@@ -318,6 +318,7 @@ MonoBehaviour:
   gamesManagementMenuPrefab: {fileID: 622408515558105024, guid: a8f47c13e131e5942b6e88f7f829ea47,
     type: 3}
   versionText: {fileID: 1766486735}
+  copyrightText: {fileID: 1426684016}
   currentGameNameText: {fileID: 2076869372}
   currentCardImage: {fileID: 735687766}
   currentBannerImage: {fileID: 1186619955}
@@ -2102,6 +2103,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1426684014}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1426684016 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7177719679463343299, guid: d2e78dd463da065408903b597c1d1333,
+    type: 3}
+  m_PrefabInstance: {fileID: 1426684014}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1463328263
 PrefabInstance:
   m_ObjectHideFlags: 0

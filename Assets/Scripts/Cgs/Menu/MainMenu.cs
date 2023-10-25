@@ -68,6 +68,13 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
+            CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
+        }
+
+        private void SetCopyright()
+        {
+            if (!string.IsNullOrWhiteSpace(CardGameManager.Current.Copyright))
+                copyrightText.text = CardGameManager.Current.Copyright;
         }
 
         private void Start()

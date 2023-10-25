@@ -15,7 +15,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SFB;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -46,7 +45,7 @@ namespace Cgs.Menu
         public Image bannerImage;
         public Image cardBackImage;
         public Image playMatImage;
-        [FormerlySerializedAs("newCardGameButton")] public Button saveButton;
+        public Button saveButton;
 
         private DownloadMenu Downloader =>
             _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
@@ -105,6 +104,8 @@ namespace Cgs.Menu
         [UsedImplicitly] public int CardBackImageFileType { get; set; }
 
         [UsedImplicitly] public int PlayMatImageFileType { get; set; }
+
+        [UsedImplicitly] public string Copyright { get; set; }
 
         [UsedImplicitly] public string RulesUrl { get; set; }
 
@@ -372,6 +373,7 @@ namespace Cgs.Menu
                 CardSetIdentifier = "setCode",
                 PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg",
                 PlayMatImageUrl = _game.PlayMatImageUrl,
+                Copyright = string.IsNullOrWhiteSpace(Copyright) ? "" : Copyright,
                 RulesUrl = Uri.IsWellFormedUriString(RulesUrl, UriKind.Absolute) ? new Uri(RulesUrl) : null
             };
 

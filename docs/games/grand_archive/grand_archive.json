@@ -117,6 +117,7 @@
 	"cardSetsInList": true,
 	"cardSetIdentifier": "editions",
 	"cgsGamesLink": "https://cgs.games/link/grand_archive",
+	"copyright": "Weebs of the Shore",
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{
@@ -252,6 +253,7 @@
 	],
 	"gamePlayZones": [
 		{
+			"defaultCardAction": "flip",
 			"face": "down",
 			"position": {
 				"x": 0,
@@ -264,6 +266,7 @@
 			"type": "horizontal"
 		},
 		{
+			"defaultCardAction": "flip",
 			"face": "down",
 			"position": {
 				"x": 0,
