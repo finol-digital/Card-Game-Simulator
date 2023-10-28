@@ -47,6 +47,8 @@ namespace Cgs.Menu
 
         public GameObject gamesManagementMenuPrefab;
 
+        public Text versionText;
+        public Text copyrightText;
         public Text currentGameNameText;
         public Image currentCardImage;
         public Image currentBannerImage;
@@ -66,10 +68,19 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
+            CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
+        }
+
+        private void SetCopyright()
+        {
+            if (!string.IsNullOrWhiteSpace(CardGameManager.Current.Copyright))
+                copyrightText.text = CardGameManager.Current.Copyright;
         }
 
         private void Start()
         {
+            versionText.text = TitleScreen.VersionMessage;
+
 #if UNITY_WEBGL
             joinButton.interactable = false;
 #endif

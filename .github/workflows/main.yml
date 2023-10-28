@@ -179,12 +179,12 @@ jobs:
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
       - name: Free Disk Space
         if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneLinux64'
-        uses: jlumbroso/free-disk-space@v1.3.0
+        uses: jlumbroso/free-disk-space@v1.3.1
         with:
           large-packages: false
       - name: Build Unity Project
         id: build
-        uses: game-ci/unity-builder@fix/android-tools
+        uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}

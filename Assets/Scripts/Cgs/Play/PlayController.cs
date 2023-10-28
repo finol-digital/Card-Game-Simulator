@@ -262,7 +262,7 @@ namespace Cgs.Play
             var newDeckPosition = NewDeckPosition;
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
             {
-                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards, false);
                 var i = 1;
                 foreach (var (stackName, cards) in extraGroups)
                 {
@@ -279,13 +279,13 @@ namespace Cgs.Play
                     }
 
                     CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(stackName, cards.Cast<UnityCard>().Reverse(),
-                        position);
+                        position, false);
                     i++;
                 }
             }
             else
             {
-                _soloDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition);
+                _soloDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, false);
                 var i = 1;
                 foreach (var (groupName, cards) in extraGroups)
                 {
@@ -299,7 +299,7 @@ namespace Cgs.Play
                         position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
                     }
 
-                    CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position);
+                    CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position, false);
                     i++;
                 }
             }
@@ -337,7 +337,7 @@ namespace Cgs.Play
             boardRectTransform.localScale = Vector3.one;
         }
 
-        public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position)
+        public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position, bool isFaceup)
         {
             var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
@@ -350,6 +350,8 @@ namespace Cgs.Play
             if (!Vector2.zero.Equals(position))
                 rectTransform.localPosition = position;
             cardStack.Position = rectTransform.localPosition;
+            if (isFaceup)
+                cardStack.IsTopFaceup = true;
             return cardStack;
         }
 
@@ -411,9 +413,9 @@ namespace Cgs.Play
         {
             var position = Vector2.left * (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X);
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(filters, cards, position);
+                CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(filters, cards, position, false);
             else
-                CreateCardStack(filters, cards, position);
+                CreateCardStack(filters, cards, position, false);
         }
 
         public void CreateCardModel(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)

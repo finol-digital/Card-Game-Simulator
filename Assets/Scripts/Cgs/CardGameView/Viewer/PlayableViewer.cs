@@ -120,6 +120,8 @@ namespace Cgs.CardGameView.Viewer
                     ShuffleStack();
                 else if (Inputs.IsSave)
                     SaveStack();
+                else if (Inputs.IsFilter)
+                    FlipStackTopFace();
             }
 
             if (Inputs.IsCancel)
@@ -254,6 +256,18 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Stack.PromptSave();
+        }
+
+        [UsedImplicitly]
+        public void FlipStackTopFace()
+        {
+            if (Stack == null)
+            {
+                Debug.LogWarning("Ignoring flip top face request since there is no stack selected.");
+                return;
+            }
+
+            Stack.FlipTopFace();
         }
 
         [UsedImplicitly]

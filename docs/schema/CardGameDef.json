@@ -247,6 +247,10 @@
       "description": "cgsGamesLink is a clickable url that will take the user directly to this game on the CGS Games website, which can be shared between users.",
       "format": "uri"
     },
+    "copyright": {
+      "type": "string",
+      "description": "copyright indicates the legal owner of this Card Game. CGS will display this value in the bottom-left corner of the Main Menu."
+    },
     "deckFileAltId": {
       "type": "string",
       "description": "When saving or loading a deck with <deckFileType> NOT txt, deckFileAltId refers to the *Card:Property* used to uniquely identify each Card. For hsd, this is stored as a varint within the deck string.",
