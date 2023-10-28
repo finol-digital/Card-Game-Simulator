@@ -316,9 +316,9 @@ namespace Cgs.CardGameView.Multiplayer
             var cards = new List<UnityCard> {Value, cardModel.Value};
             if (IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
-                    Position);
+                    Position, !IsFacedown);
             else
-                PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position);
+                PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position, !IsFacedown);
 
             Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
             cardModel.Discard();
@@ -479,10 +479,10 @@ namespace Cgs.CardGameView.Multiplayer
                         var cards = new List<UnityCard> {siblingCardModel.Value, Value};
                         if (IsOnline)
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.Position);
+                                cards, siblingCardModel.Position, !siblingCardModel.IsFacedown);
                         else
                             PlayController.Instance.CreateCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.Position);
+                                cards, siblingCardModel.Position, !siblingCardModel.IsFacedown);
                         siblingCardModel.Discard();
                         Discard();
                         return;

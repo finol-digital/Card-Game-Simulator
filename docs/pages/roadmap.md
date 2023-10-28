@@ -6,10 +6,10 @@ permalink: roadmap.html
 
 ## What's New - v1.93
 - Main Menu: Footer with copyright
-- default rotation for players objects
-- Game-Play: Face-Up Stacks (Always reveal the top card); default based on bottom
+- Game-Play: Face-Up Stacks
 
 ## Active Sprint
+- Bug: Apply rotation when spawning players objects
 - Deck-Editor: Card Zone should move containing scrollrect
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card

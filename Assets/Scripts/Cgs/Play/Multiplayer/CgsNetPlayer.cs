@@ -268,27 +268,28 @@ namespace Cgs.Play.Multiplayer
 
         #region CardStacks
 
-        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards)
+        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
-                PlayController.Instance.NewDeckPosition);
+                PlayController.Instance.NewDeckPosition, isFaceup);
         }
 
-        public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position)
+        public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Requesting new card stack {stackName}...");
             CreateCardStackServerRpc(stackName, cards.Select(card => (CgsNetString) card.Id).ToArray(), false,
-                position);
+                position, isFaceup);
         }
 
         [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position)
+        private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
+            bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
-                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position);
+                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, isFaceup);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             Debug.Log($"[CgsNet Player] Created new card stack {stackName}!");

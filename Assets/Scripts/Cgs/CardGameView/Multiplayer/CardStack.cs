@@ -43,7 +43,7 @@ namespace Cgs.CardGameView.Multiplayer
     }
 
     [RequireComponent(typeof(CardDropArea))]
-    public class CardStack : CgsNetPlayable, ICardDropHandler
+    public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler
     {
         private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
@@ -108,12 +108,44 @@ namespace Cgs.CardGameView.Multiplayer
         private readonly NetworkVariable<CgsNetString> _actionText = new();
         private readonly NetworkVariable<float> _actionTime = new();
 
+        private UnityCard TopCard
+        {
+            get
+            {
+                var cards = Cards;
+                return cards.Count > 0 ? cards[^1] : null;
+            }
+        }
+
+        public bool IsTopFaceup
+        {
+            get => _isTopFaceup;
+            set
+            {
+                var oldValue = _isTopFaceup;
+                _isTopFaceup = value;
+                if (IsOnline)
+                    SetIsTopFaceupServerRpc(_isTopFaceup);
+                else if (oldValue != _isTopFaceup)
+                    OnChangeIsTopFaceup(oldValue, _isTopFaceup);
+            }
+        }
+
+        private bool _isTopFaceup;
+        private readonly NetworkVariable<bool> _isTopFaceupNetworkVariable = new();
+
         public StackViewer Viewer { get; private set; }
+
+        public override void OnNetworkSpawn()
+        {
+            _isTopFaceup = _isTopFaceupNetworkVariable.Value;
+        }
 
         protected override void OnAwakePlayable()
         {
             _cardIds = new NetworkList<CgsNetString>();
             _name.OnValueChanged += OnChangeName;
+            _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
         }
 
         protected override void OnStartPlayable()
@@ -132,6 +164,24 @@ namespace Cgs.CardGameView.Multiplayer
             countLabel.text = _cardIds.Count.ToString();
             _cardIds.OnListChanged += OnCardsUpdated;
 
+            topCard.sprite = CardGameManager.Current.CardBackImageSprite;
+            if (IsTopFaceup)
+                TopCard?.RegisterDisplay(this);
+        }
+
+        public void SetImageSprite(Sprite imageSprite)
+        {
+            if (imageSprite == null)
+            {
+                RemoveImageSprite();
+                return;
+            }
+
+            topCard.sprite = imageSprite;
+        }
+
+        private void RemoveImageSprite()
+        {
             topCard.sprite = CardGameManager.Current.CardBackImageSprite;
         }
 
@@ -207,7 +257,7 @@ namespace Cgs.CardGameView.Multiplayer
             else
                 PopCard();
 
-            CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
+            CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, !IsTopFaceup,
                 PlayController.Instance.playAreaCardZone);
 
             RemovePointer(eventData);
@@ -233,6 +283,27 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void OnCardsUpdated(NetworkListEvent<CgsNetString> changeEvent)
         {
+            if (IsTopFaceup)
+            {
+                if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.RemoveAt) &&
+                    changeEvent.Index == _cardIds.Count)
+                {
+                    if (CardGameManager.Current.Cards.TryGetValue(changeEvent.PreviousValue, out var previous))
+                        previous.UnregisterDisplay(this);
+                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^1], out var current))
+                        current.RegisterDisplay(this);
+                }
+
+                if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.Insert) &&
+                    changeEvent.Index == _cardIds.Count -1)
+                {
+                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^2], out var previous))
+                        previous.UnregisterDisplay(this);
+                    if (CardGameManager.Current.Cards.TryGetValue(changeEvent.Value, out var current))
+                        current.RegisterDisplay(this);
+                }
+            }
+
             countLabel.text = _cardIds.Count.ToString();
             if (Viewer != null)
                 Viewer.Sync(this);
@@ -265,6 +336,22 @@ namespace Cgs.CardGameView.Multiplayer
         public string PopCard()
         {
             return RemoveAt(_cardIds.Count - 1);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetIsTopFaceupServerRpc(bool isFacedown)
+        {
+            _isTopFaceupNetworkVariable.Value = isFacedown;
+        }
+
+        [PublicAPI]
+        public void OnChangeIsTopFaceup(bool oldValue, bool newValue)
+        {
+            _isTopFaceup = newValue;
+            if (IsTopFaceup)
+                TopCard?.RegisterDisplay(this);
+            else
+                TopCard?.UnregisterDisplay(this);
         }
 
         [UsedImplicitly]
@@ -333,6 +420,19 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 Debug.LogError(DeckLoadMenu.DeckSaveErrorMessage + e.Message);
             }
+        }
+
+        [UsedImplicitly]
+        public void FlipTopFace()
+        {
+            IsTopFaceup = !IsTopFaceup;
+        }
+
+        public override void OnDestroy()
+        {
+            TopCard?.UnregisterDisplay(this);
+
+            base.OnDestroy();
         }
     }
 }
