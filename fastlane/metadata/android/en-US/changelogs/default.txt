@@ -1,2 +1,2 @@
-- Bug-Fix: Tapping Cards
-- Game-Play: Rotate Tokens/Dice/Stacks
+- Main Menu: Footer with copyright
+- Game-Play: Face-Up Stacks
