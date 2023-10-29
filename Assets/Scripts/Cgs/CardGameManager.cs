@@ -13,6 +13,7 @@ using System.Web;
 using Cgs.Menu;
 using FinolDigital.Cgs.CardGameDef;
 using FinolDigital.Cgs.CardGameDef.Unity;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -199,8 +200,8 @@ namespace Cgs
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
 #elif UNITY_WEBGL
             UnityFileMethods.CopyDirectory(
-                Application.streamingAssetsPath + Tags.StandardPlayingCardsDirectoryName,
-                UnityCardGame.GamesDirectoryPath + Tags.StandardPlayingCardsDirectoryName);
+                Path.Join(Application.streamingAssetsPath, Tags.StandardPlayingCardsDirectoryName),
+                Path.Join(UnityCardGame.GamesDirectoryPath, Tags.StandardPlayingCardsDirectoryName));
 #else
             UnityFileMethods.CopyDirectory(
                 Application.streamingAssetsPath,
@@ -341,6 +342,7 @@ namespace Cgs
             OnSceneActions.Clear();
         }
 
+#if !UNITY_WEBGL
         private void CheckDeepLinks()
         {
             Application.deepLinkActivated += OnDeepLinkActivated;
@@ -392,6 +394,7 @@ namespace Cgs
 
             return autoUpdateUrl;
         }
+#endif
 
         // Note: Does NOT Reset Game Scene
         internal void ResetCurrentToDefault()
@@ -404,7 +407,8 @@ namespace Cgs
                 : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
         }
 
-        private void StartGetCardGame(string autoUpdateUrl)
+        [PublicAPI]
+        public void StartGetCardGame(string autoUpdateUrl)
         {
             StartCoroutine(GetCardGame(autoUpdateUrl));
         }
