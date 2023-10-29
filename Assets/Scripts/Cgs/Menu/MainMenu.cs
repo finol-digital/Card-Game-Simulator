@@ -27,6 +27,7 @@ namespace Cgs.Menu
         public static string WelcomeMessageExt =>
             "The CGS website has guides/resources that may help new users.\n" + "Go to the CGS website?";
 #endif
+        private const string FinolDigitalLlc = "Finol Digital LLC";
         private const string PlayerPrefsHasSeenWelcome = "HasSeenWelcome";
 
         private static bool HasSeenWelcome
@@ -73,8 +74,8 @@ namespace Cgs.Menu
 
         private void SetCopyright()
         {
-            if (!string.IsNullOrWhiteSpace(CardGameManager.Current.Copyright))
-                copyrightText.text = CardGameManager.Current.Copyright;
+            var copyright = CardGameManager.Current.Copyright;
+            copyrightText.text = string.IsNullOrWhiteSpace(copyright) ? FinolDigitalLlc : copyright;
         }
 
         private void Start()

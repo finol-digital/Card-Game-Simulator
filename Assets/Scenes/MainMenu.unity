@@ -1992,6 +1992,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Company Text
       objectReference: {fileID: 0}
+    - target: {fileID: 7177719679463343299, guid: d2e78dd463da065408903b597c1d1333,
+        type: 3}
+      propertyPath: m_FontData.m_Alignment
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8148115609625756720, guid: d2e78dd463da065408903b597c1d1333,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2025,7 +2030,7 @@ PrefabInstance:
     - target: {fileID: 8148115609625756720, guid: d2e78dd463da065408903b597c1d1333,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 8148115609625756720, guid: d2e78dd463da065408903b597c1d1333,
         type: 3}
@@ -2070,7 +2075,7 @@ PrefabInstance:
     - target: {fileID: 8148115609625756720, guid: d2e78dd463da065408903b597c1d1333,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8148115609625756720, guid: d2e78dd463da065408903b597c1d1333,
         type: 3}
@@ -2452,7 +2457,7 @@ PrefabInstance:
     - target: {fileID: 2960542575557885926, guid: fd471243b9f5d054e89c705b32ed2b06,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 2960542575557885926, guid: fd471243b9f5d054e89c705b32ed2b06,
         type: 3}
@@ -2478,6 +2483,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Version Text
+      objectReference: {fileID: 0}
+    - target: {fileID: 7724970348257012245, guid: fd471243b9f5d054e89c705b32ed2b06,
+        type: 3}
+      propertyPath: m_FontData.m_Alignment
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
