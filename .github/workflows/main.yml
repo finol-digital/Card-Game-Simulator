@@ -466,7 +466,7 @@ jobs:
 
   buildWithWindows:
     name: Build for ${{ matrix.targetPlatform }}
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [buildWithLinux, buildWithMac]
     outputs:
       buildVersion: ${{ steps.build-1.outputs.buildVersion }}
@@ -570,7 +570,7 @@ jobs:
 
   deployToMicrosoftStore:
     name: Deploy to the Microsoft Store
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: buildWithWindows
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:

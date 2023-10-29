@@ -1,5 +1,5 @@
 {
-	"name": "Grand Archive",
+	"name": "Grand Archive TCG",
 	"allCardsUrl": "https://api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json",
@@ -117,7 +117,7 @@
 	"cardSetsInList": true,
 	"cardSetIdentifier": "editions",
 	"cgsGamesLink": "https://cgs.games/link/grand_archive",
-	"copyright": "Weebs of the Shore",
+	"copyright": "Weebs of the Shore LLC",
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{
