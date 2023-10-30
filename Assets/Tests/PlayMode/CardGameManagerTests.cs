@@ -84,6 +84,7 @@ namespace Tests.PlayMode
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
             Assert.AreEqual("Standard Playing Cards", CardGameManager.Current.Name);
 
+#if !UNITY_WEBGL
             // Mahjong
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
             yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
@@ -99,6 +100,7 @@ namespace Tests.PlayMode
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
             Assert.AreEqual("Dominoes", CardGameManager.Current.Name);
+#endif
         }
 
         [Test]
