@@ -5,10 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.94
-1) Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
-2) Option for card count limits, i.e. 3 copies per deck
-- Bug: Apply rotation when spawning players objects
-- Deck-Editor: Card Zone should move containing scrollrect
+- Bug-Fix: Apply rotation when spawning players objects
+- Bug-Fix: Card Zone should move containing scrollrect in Deck Editor
 
 ## Active Sprint
 - Game-Play: Combine Stacks when dropped on each other
@@ -45,6 +43,8 @@ permalink: roadmap.html
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
 - Decks: Group cards in Deck Editor
+  - Option for card count limits, i.e. 3 copies per deck
+  - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
 
 ## Backlog - 2024 Q3
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
