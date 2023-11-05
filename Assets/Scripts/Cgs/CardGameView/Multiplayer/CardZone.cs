@@ -84,18 +84,24 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnBeginDrag(eventData);
+            else if (scrollRectContainer != null)
+                scrollRectContainer.OnBeginDrag(eventData);
         }
 
         protected override void OnDragPlayable(PointerEventData eventData)
         {
             if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnDrag(eventData);
+            else if (scrollRectContainer != null)
+                scrollRectContainer.OnDrag(eventData);
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
             if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnEndDrag(eventData);
+            else if (scrollRectContainer != null)
+                scrollRectContainer.OnEndDrag(eventData);
         }
 
         protected override void PostDragPlayable(PointerEventData eventData)

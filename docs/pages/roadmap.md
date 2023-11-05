@@ -5,10 +5,10 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.94
-- Bug-Fix: Apply rotation when spawning players objects
-- Bug-Fix: Card Zone should move containing scrollrect in Deck Editor
+- Bug-Fix: Card Zone should move container in Deck Editor
 
 ## Active Sprint
+- Bug-Fix: Apply rotation when spawning players objects
 - Game-Play: Combine Stacks when dropped on each other
 - Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
 - Game-Play: Rename Stacks
@@ -28,7 +28,7 @@ permalink: roadmap.html
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support mix of different card sizes in the same game
 - Game-Play: Counter system for players and cards
-- Game-Play: Save/Load Games + Log of all (Player) actions
+- Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
 
@@ -47,6 +47,8 @@ permalink: roadmap.html
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
 
 ## Backlog - 2024 Q3
+- Cards: Image quality management/LODs for card images
+- Accessibility: Add audio and sounds throughout the app
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
