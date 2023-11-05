@@ -25,9 +25,6 @@ security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_FILE
 security import $APPLE_DISTRIBUTION_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $APPLE_DISTRIBUTION_PASSWORD -A
 security import $MAC_INSTALLER_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $MAC_INSTALLER_PASSWORD -A
 
-# Fix for OS X Sierra that hangs in the codesign step
-security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_FILE > /dev/null
-
 # Confirm the certificate imports
 security find-identity -v
 
