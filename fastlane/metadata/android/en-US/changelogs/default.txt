@@ -1,2 +1,1 @@
-- Main Menu: Footer with copyright
-- Game-Play: Face-Up Stacks
+- Bug-Fix: Card Zone should move container in Deck Editor
