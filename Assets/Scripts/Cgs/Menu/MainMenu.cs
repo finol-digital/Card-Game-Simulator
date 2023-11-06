@@ -10,8 +10,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
-#if !UNITY_ANDROID && !UNITY_IOS
-#endif
 
 namespace Cgs.Menu
 {
@@ -187,17 +185,21 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void SelectPrevious()
         {
+#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
+#endif
         }
 
         [UsedImplicitly]
         public void SelectNext()
         {
+#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
+#endif
         }
 
         [UsedImplicitly]

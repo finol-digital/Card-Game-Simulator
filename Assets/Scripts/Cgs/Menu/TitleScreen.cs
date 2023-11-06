@@ -5,11 +5,18 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
 
 namespace Cgs.Menu
 {
     public class TitleScreen : MonoBehaviour
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [DllImport("__Internal")]
+        private static extern void GameReady();
+#endif
         public const string TouchlessStartMessage = "Press Any Key";
 
         public static string VersionMessage => $"VERSION {Application.version}";
@@ -93,6 +100,9 @@ namespace Cgs.Menu
             centerText.text = TouchlessStartMessage;
 #endif
             versionText.text = VersionMessage;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            GameReady();
+#endif
         }
 
         private void Update()
