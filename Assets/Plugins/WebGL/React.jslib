@@ -1,5 +1,5 @@
 mergeInto(LibraryManager.library, {
-  GameReady: function (userName, score) {
+  GameReady: function () {
     window.dispatchReactUnityEvent("GameReady");
   },
 });
