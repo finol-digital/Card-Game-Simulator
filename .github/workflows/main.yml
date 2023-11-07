@@ -648,6 +648,23 @@ jobs:
         run: |
           Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
           Copy-Item "C:\Card-Game-Simulator.git\storebroker\CardGameSimulator.vcxproj.user" -Destination ".\$env:UwpProjectDirectory\"
+      - name: Read contents from file
+        working-directory: C:/Card-Game-Simulator.git
+        shell: pwsh
+        id: read-contents
+        run: |
+            $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\storebroker\to_remove.txt
+            Write-Output "::set-output name=content::$content_to_remove"
+      - name: Remove contents from another file
+        working-directory: C:/Card-Game-Simulator.git
+        shell: pwsh
+        env:
+          UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
+        run: |
+          $content_to_remove = $env:content
+          (Get-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems") | ForEach-Object {
+              $_ -replace $content_to_remove, ""
+          } | Set-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
       - name: Update the Package.appxmanifest
         if: false
         working-directory: C:/Card-Game-Simulator.git
