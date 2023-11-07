@@ -33,9 +33,9 @@ permalink: roadmap.html
 - Game-Play: Undo with Ctrl-Z
 
 ## Backlog - 2024 Q2
+- Game-Play: Right-click on playable for context menu
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Game-Play: Prevent player from looking through Stacks in certain situations
-- Game-Play: Apply permissions for each other's decks, shuffling, moving, deleting, viewing facedown, etc
+- Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Cut Stacks
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Add restart button in Play Settings Menu
@@ -55,7 +55,7 @@ permalink: roadmap.html
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
 - Integration: Private Lobbies & Deep links to join multiplayer rooms
-- Platforms: Productionize WebGL version by adding fullscreen and enabling Multiplayer and Developer Mode
+- Platforms: Productionize WebGL version by enabling Multiplayer and Developer Mode
 - Platforms: Full controller support (Steam)
 - Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
 - Accessibility: Tutorial Video for How-To-Play
