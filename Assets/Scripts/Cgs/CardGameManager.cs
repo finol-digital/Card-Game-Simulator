@@ -607,8 +607,14 @@ namespace Cgs
         }
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-        private void Start()
+        private IEnumerator Start()
         {
+            Debug.Log("CardGameManager::Start:WaitForCurrentIsDownloading");
+
+            yield return null;
+            while (Current is {IsDownloading: true})
+                yield return null;
+
             Debug.Log("CardGameManager::Start:GameReady");
             GameReady();
         }
