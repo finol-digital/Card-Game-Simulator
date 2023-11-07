@@ -416,6 +416,12 @@ namespace Cgs
         [PublicAPI]
         public void StartGetCardGame(string autoUpdateUrl)
         {
+            if (Current is {IsDownloading: true})
+            {
+                Debug.LogError("ERROR: StartGetCardGame while already downloading");
+                return;
+            }
+
             StartCoroutine(GetCardGame(autoUpdateUrl));
         }
 
