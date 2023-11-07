@@ -18,6 +18,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
+
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine.Networking;
 #endif
@@ -28,6 +32,10 @@ namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [DllImport("__Internal")]
+        private static extern void GameReady();
+#endif
         // Show all Debug.Log() to help with debugging?
         private const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
@@ -185,12 +193,10 @@ namespace Cgs
 
             ResetCurrentToDefault();
 
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
             Debug.Log("CardGameManager::Awake:CheckDeepLinks");
             CheckDeepLinks();
 #endif
-
-            Debug.Log("CardGameManager is Awake!");
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
@@ -342,7 +348,7 @@ namespace Cgs
             OnSceneActions.Clear();
         }
 
-#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
         private void CheckDeepLinks()
         {
             Application.deepLinkActivated += OnDeepLinkActivated;
@@ -600,40 +606,19 @@ namespace Cgs
                 action();
         }
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private void Start()
+        {
+            Debug.Log("CardGameManager::Start:GameReady");
+            GameReady();
+        }
+#endif
+
         private void IgnoreCurrentErroredGame()
         {
             Current.ClearError();
             ResetCurrentToDefault();
             ResetGameScene();
-        }
-
-        public void PromptDelete()
-        {
-            if (AllCardGames.Count > 1)
-                Messenger.Prompt(DeletePrompt, Delete);
-            else
-                Messenger.Show(DeleteWarningMessage);
-        }
-
-        private void Delete()
-        {
-            if (AllCardGames.Count < 1)
-            {
-                Debug.LogError(DeleteErrorMessage + DeleteWarningMessage);
-                return;
-            }
-
-            try
-            {
-                Directory.Delete(Current.GameDirectoryPath, true);
-                AllCardGames.Remove(Current.Id);
-                ResetCurrentToDefault();
-                ResetGameScene();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(DeleteErrorMessage + ex.Message);
-            }
         }
 
         public void Share()
@@ -732,6 +717,35 @@ namespace Cgs
             new NativeShare().AddFile(path, "application/zip").Share();
         }
 #endif
+
+        public void PromptDelete()
+        {
+            if (AllCardGames.Count > 1)
+                Messenger.Prompt(DeletePrompt, Delete);
+            else
+                Messenger.Show(DeleteWarningMessage);
+        }
+
+        private void Delete()
+        {
+            if (AllCardGames.Count < 1)
+            {
+                Debug.LogError(DeleteErrorMessage + DeleteWarningMessage);
+                return;
+            }
+
+            try
+            {
+                Directory.Delete(Current.GameDirectoryPath, true);
+                AllCardGames.Remove(Current.Id);
+                ResetCurrentToDefault();
+                ResetGameScene();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(DeleteErrorMessage + ex.Message);
+            }
+        }
 
         private void LateUpdate()
         {
