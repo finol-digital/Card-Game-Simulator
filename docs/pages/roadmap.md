@@ -35,6 +35,7 @@ permalink: roadmap.html
 ## Backlog - 2024 Q2
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Prevent player from looking through Stacks in certain situations
+- Game-Play: Apply permissions for each other's decks, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Cut Stacks
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Add restart button in Play Settings Menu
