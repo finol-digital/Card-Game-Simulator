@@ -8,7 +8,7 @@
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageUrl": "https://ga-index-public.s3.us-west-2.amazonaws.com/cards/{editions[0].slug}.jpg",
+	"cardImageUrl": "https://cgs.games/api/proxy/ga-index-public.s3.us-west-2.amazonaws.com/cards/{editions[0].slug}.jpg",
 	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
