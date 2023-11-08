@@ -1,6 +1,6 @@
 {
 	"name": "Grand Archive TCG",
-	"allCardsUrl": "https://cgs.games/api/proxy/https://api.gatcg.com/cards/search",
+	"allCardsUrl": "https://cgs.games/api/proxy/api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",

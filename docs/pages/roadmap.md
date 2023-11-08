@@ -27,6 +27,7 @@ permalink: roadmap.html
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support mix of different card sizes in the same game
+- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
