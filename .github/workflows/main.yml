@@ -65,7 +65,6 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           testMode: playmode
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
