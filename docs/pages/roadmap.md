@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.94
-- Bug-Fix: Card Zone should move container in Deck Editor
+## What's New - v1.95
+- Minor Bug Fixes
 
 ## Active Sprint
 - Bug-Fix: Apply rotation when spawning players objects
