@@ -622,7 +622,8 @@ namespace Cgs
                 yield return null;
 
             Debug.Log("CardGameManager::Start:GameReady");
-            GameReady();
+            if (Current == null || Current == UnityCardGame.UnityInvalid || Current.Id.equals(Tags.StandardPlayingCardsDirectoryName))
+                GameReady();
         }
 #endif
 
