@@ -4,11 +4,11 @@ playYoutubeId: PriDuaM6MEk
 ---
 
 # Play Anywhere
-- PC via [Steam](https://store.steampowered.com/app/1742850/Card_Game_Simulator/)
-- Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
-- iOS via [the App Store](https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1)
-- macOS via [the Mac App Store](https://apps.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
 - Windows via [the Microsoft Store](https://www.microsoft.com/en-us/p/card-game-simulator/9N96N5S4W3J0)
+- macOS via [the Mac App Store](https://apps.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
+- iOS via [the App Store](https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1)
+- Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
+- Linux via [Steam](https://store.steampowered.com/app/1742850/Card_Game_Simulator/)
 
 ## How to Play
 
