@@ -33,7 +33,7 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
 
-        private const float DefaultZoom = 0.75f;
+        private const float DefaultZoom = 0.5f;
         private const float PlayAreaBuffer = 8;
         private const float DeckPositionBuffer = 50;
 
