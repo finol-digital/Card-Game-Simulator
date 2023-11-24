@@ -4,40 +4,36 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.95
-- Minor Bug Fixes
+## What's New - v1.96
+- Game-Play: Drop Stack on top of Cards or other Stacks
 
 ## Active Sprint
 - Bug-Fix: Apply rotation when spawning players objects
-- Game-Play: Combine Stacks when dropped on each other
-- Game-Play: Put Card on bottom of Stack when Stack is dropped on Card
-- Game-Play: Rename Stacks
+- Game-Play: Group dice onto cards (Dice drop target)
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Game-Play: Contextual green button for default action based on card location
+- Game-Play: Right-click on playable for context menu
 
 ## Backlog - 2023 Q4
-- Game-Creation: Edit Button in Games Management Menu
-- Game-Play: Cards you receive at the beginning of the game can be defined by default
-- Game-Play: Contextual green button for default action based on card location
-- Game-Play: Custom Tokens
-- Game-Play: Label which player is moving cards
-- Game-Play: Support multiple card selection
 - Game-Play: Name-Plates indicating player seats
+- Game-Play: Label which player is moving cards
+- Game-Play: Rename Stacks
+- Game-Play: Custom Tokens
+- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
+- Game-Play: Support multiple card selection
 
 ## Backlog - 2024 Q1
-- Cards: Ability to resize card preview image
+- Game-Creation: Edit Button in Games Management Menu
 - Cards: Support multiple card backs
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support mix of different card sizes in the same game
-- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Play: Counter system for players and cards
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
 
 ## Backlog - 2024 Q2
-- Game-Play: Right-click on playable for context menu
-- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
-- Game-Play: Cut Stacks
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
@@ -54,11 +50,9 @@ permalink: roadmap.html
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
-- Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
-- Integration: Private Lobbies & Deep links to join multiplayer rooms
-- Platforms: Productionize WebGL version by enabling Multiplayer and Developer Mode
 - Platforms: Full controller support (Steam)
-- Integration: Database for user-created card games, with in-app automation to upload and download from this database (Steam Workshop?)
+- Integration: Private Lobbies & Deep links to join multiplayer rooms
+- Platforms: Add Multiplayer and Developer Mode to Web browser
 - Accessibility: Tutorial Video for How-To-Play
   - 0:00 Intro (Name/Website)
   - 0:00 Playing Solo (Single-player/Goldfishing)
@@ -69,7 +63,7 @@ permalink: roadmap.html
   - 0:00 Settings/Contact
   - CGS Website: https://www.cardgamesimulator.com/
 - Accessibility: Tutorial Video for How-To-Create-And-Share
-- Game-Play: Tournament Support (PoQ?)
+- Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
 - Dev option (GUI): Create a default 'Setup' for more complicated card games. 
 For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
 The game dev should be able to put all of this down on the 'table' so that all future players will just be able to play when launching a game without manual setup.

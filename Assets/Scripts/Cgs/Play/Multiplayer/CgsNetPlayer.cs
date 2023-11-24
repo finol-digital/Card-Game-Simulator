@@ -346,7 +346,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Insert {cardId} at {index}!");
             var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
-            cardStack.Insert(index, cardId);
+            cardStack.OwnerInsert(index, cardId);
         }
 
         public void RequestRemoveAt(GameObject stack, int index)

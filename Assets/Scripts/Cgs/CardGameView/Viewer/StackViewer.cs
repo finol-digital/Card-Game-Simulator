@@ -158,7 +158,7 @@ namespace Cgs.CardGameView.Viewer
             if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(_cardStack.gameObject, cardIndex, cardModel.Id);
             else
-                _cardStack.Insert(cardIndex, cardModel.Id);
+                _cardStack.OwnerInsert(cardIndex, cardModel.Id);
         }
 
         private void OnRemoveCardModel(CardZone cardZone, CardModel cardModel)
