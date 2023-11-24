@@ -43,7 +43,7 @@ namespace Cgs.CardGameView.Multiplayer
     }
 
     [RequireComponent(typeof(CardDropArea))]
-    public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler
+    public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
@@ -60,6 +60,12 @@ namespace Cgs.CardGameView.Multiplayer
                                        CurrentPointerEventData.button != PointerEventData.InputButton.Middle &&
                                        CurrentPointerEventData.button != PointerEventData.InputButton.Right
                                        || PointerPositions.Count > 1;
+
+        private bool IsDraggingStack => HoldTime >= DragHoldTime || CurrentPointerEventData is
+            {button: PointerEventData.InputButton.Middle};
+
+        protected override bool IsProcessingSecondaryDragAction =>
+            !IsDraggingStack && base.IsProcessingSecondaryDragAction;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -152,6 +158,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             ParentToPlayAreaContent();
             GetComponent<CardDropArea>().DropHandler = this;
+            GetComponent<StackDropArea>().DropHandler = this;
 
             var rectTransform = (RectTransform) transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -240,6 +247,12 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (!IsDraggingCard && !LacksOwnership)
                 ActOnDrag();
+            Visibility.blocksRaycasts = true;
+        }
+
+        public static CardStack GetPointerDrag(PointerEventData eventData)
+        {
+            return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardStack>();
         }
 
         private void DragCard(PointerEventData eventData)
@@ -295,7 +308,7 @@ namespace Cgs.CardGameView.Multiplayer
                 }
 
                 if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.Insert) &&
-                    changeEvent.Index == _cardIds.Count -1)
+                    changeEvent.Index == _cardIds.Count - 1)
                 {
                     if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^2], out var previous))
                         previous.UnregisterDisplay(this);
@@ -312,13 +325,25 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnDrop(CardModel cardModel)
         {
             cardModel.PlaceHolderCardZone = null;
-            if (LacksOwnership)
-                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
-            else
-                Insert(Cards.Count, cardModel.Id);
+            RequestInsert(Cards.Count, cardModel.Id);
         }
 
-        public void Insert(int index, string cardId)
+        public void OnDrop(CardStack cardStack)
+        {
+            for (var i = _cardIds.Count - 1; i >= 0; i--)
+                cardStack.RequestInsert(0, _cardIds[i]);
+            RequestDelete();
+        }
+
+        public void RequestInsert(int index, string cardId)
+        {
+            if (LacksOwnership)
+                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, index, cardId);
+            else
+                OwnerInsert(index, cardId);
+        }
+
+        public void OwnerInsert(int index, string cardId)
         {
             Debug.Log($"CardStack: {name} insert {cardId} at {index} of {_cardIds.Count}");
             _cardIds.Insert(index, cardId);

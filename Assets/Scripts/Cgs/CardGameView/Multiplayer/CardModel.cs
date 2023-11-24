@@ -20,7 +20,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler
+    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
 
@@ -148,9 +148,6 @@ namespace Cgs.CardGameView.Multiplayer
         private Image View => _view ??= GetComponent<Image>();
         private Image _view;
 
-        private CanvasGroup Visibility => _visibility ??= GetComponent<CanvasGroup>();
-        private CanvasGroup _visibility;
-
         public override void OnNetworkSpawn()
         {
             PlayController.SetPlayActions(this);
@@ -175,6 +172,9 @@ namespace Cgs.CardGameView.Multiplayer
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
                 cardDropArea.isBlocker = true;
                 cardDropArea.DropHandler = this;
+
+                var stackDropArea = gameObject.GetOrAddComponent<StackDropArea>();
+                stackDropArea.DropHandler = this;
             }
 
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -322,6 +322,12 @@ namespace Cgs.CardGameView.Multiplayer
 
             Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
             cardModel.Discard();
+            Discard();
+        }
+
+        public void OnDrop(CardStack cardStack)
+        {
+            cardStack.RequestInsert(0, Id);
             Discard();
         }
 

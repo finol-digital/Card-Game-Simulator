@@ -12,6 +12,6 @@ namespace Cgs
 
         public const string CgsWebsite = "https://www.cardgamesimulator.com/";
         public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@www.cardgamesimulator.com";
-        public const string CgsGamesListUrl = "https://cgs.games/link";
+        public const string CgsGamesListUrl = "https://cgs.games/list";
     }
 }

@@ -54,7 +54,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkObject _networkObject;
 
-        protected bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 || CurrentPointerEventData is
+        protected virtual bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 || CurrentPointerEventData is
             {button: PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right};
 
         public Vector2 Position
@@ -100,6 +100,9 @@ namespace Cgs.CardGameView.Multiplayer
         public bool ToDiscard { get; protected set; }
 
         public virtual string ViewValue => "<Playable:Value>";
+
+        protected CanvasGroup Visibility => _visibility ??= gameObject.GetOrAddComponent<CanvasGroup>();
+        private CanvasGroup _visibility;
 
         public HighlightMode HighlightMode
         {
@@ -173,7 +176,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
-            if (PointerPositions.Count > 0 && !DidDrag)
+            if (PointerPositions.Count > 0 && !DidDrag && !Input.GetMouseButton(1))
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
@@ -340,6 +343,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (!LacksOwnership)
                 ActOnDrag();
+            Visibility.blocksRaycasts = true;
         }
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
@@ -362,6 +366,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void ActOnDrag()
         {
+            Visibility.blocksRaycasts = false;
             UpdatePosition();
             if (IsProcessingSecondaryDragAction)
                 Rotate();
@@ -369,13 +374,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void UpdatePosition()
         {
-
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             if (IsProcessingSecondaryDragAction)
                 return;
 #else
-            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) ||
-                Input.GetMouseButtonUp(2))
+            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1))
                 return;
 #endif
 
