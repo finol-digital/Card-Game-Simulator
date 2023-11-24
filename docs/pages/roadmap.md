@@ -8,29 +8,28 @@ permalink: roadmap.html
 - Game-Play: Drop Stack on top of Cards or other Stacks
 
 ## Active Sprint
-- Bug-Fix: Apply rotation when spawning players objects
-- Game-Play: Group dice onto cards (Dice drop target)
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click on playable for context menu
 
 ## Backlog - 2023 Q4
+- Game-Play: Apply rotation when spawning players objects
+- Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Name-Plates indicating player seats
-- Game-Play: Label which player is moving cards
+- Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Rename Stacks
 - Game-Play: Custom Tokens
-- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
-- Game-Play: Support multiple card selection
 
 ## Backlog - 2024 Q1
-- Game-Creation: Edit Button in Games Management Menu
-- Cards: Support multiple card backs
-- Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support mix of different card sizes in the same game
-- Game-Play: Counter system for players and cards
+- Cards: Support more than 1 card face (Dual-Faced Cards)
+- Cards: Support multiple card backs
+- Game-Play: Support multiple card selection
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
+- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
+- Game-Creation: Edit Button in Games Management Menu
 
 ## Backlog - 2024 Q2
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
