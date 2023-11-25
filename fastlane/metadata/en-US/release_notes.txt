@@ -1,1 +1,1 @@
-- Bug-Fix: Card Zone should move container in Deck Editor
+- Game-Play: Drop Stack on top of Cards or other Stacks

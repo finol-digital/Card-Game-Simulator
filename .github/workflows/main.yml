@@ -35,6 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       checks: write
+      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
