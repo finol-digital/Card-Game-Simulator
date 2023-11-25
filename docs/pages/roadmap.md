@@ -17,10 +17,9 @@ permalink: roadmap.html
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
-- Game-Play: Rename Stacks
-- Game-Play: Custom Tokens
 
 ## Backlog - 2024 Q1
+- Game-Play: Custom Tokens
 - Cards: Support mix of different card sizes in the same game
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
@@ -28,12 +27,13 @@ permalink: roadmap.html
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
-- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
-- Game-Creation: Edit Button in Games Management Menu
 
 ## Backlog - 2024 Q2
+- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
+- Game-Creation: Edit Button in Games Management Menu
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Move card to zone, stack, or drawer (E)
+- Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
   - Decouple games and decks, so you can use any deck from any game
@@ -49,6 +49,7 @@ permalink: roadmap.html
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
+- Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Platforms: Full controller support (Steam)
 - Integration: Private Lobbies & Deep links to join multiplayer rooms
 - Platforms: Add Multiplayer and Developer Mode to Web browser
@@ -78,14 +79,10 @@ The game dev should be able to put all of this down on the 'table' so that all f
   - Text-only
   - Small Image
   - Large Image
-- Card Search Results: Keep viewing the currently selected card when orientation changes
-- Deck Editor: Keep current page when orientation changes
-- Deck Editor: Focus buttons move cards
 - Deck Editor: Organize cards by category when saving
 - Game-Play: Support grouping of dice
 - Game-Play: Automatically roll dice on phone shake
-- Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
-- Integration: Support multiple languages (Spanish,Chinese)
+- Integration: Support multiple languages (Spanish, Chinese, etc)
 - Integration: NanDeck + Squib + Magic Set Editor
-- Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice/CardWarden
+- Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice
 - Only to be pursued if all other goals have been completed: Support game-specific rules enforcement
