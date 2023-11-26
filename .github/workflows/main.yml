@@ -507,7 +507,6 @@ jobs:
             Library-buildWindows-
       - name: Build Unity Project
         id: build
-        continue-on-error: true
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
         env:
@@ -540,11 +539,12 @@ jobs:
           overwrite: true
           body: ${{ github.event.release.body }}
 
-  deployToMicrosoftStore:
-    name: Deploy to the Microsoft Store
+  buildWSAPlayer:
+    name: Build for WSAPlayer
     runs-on: windows-2022
     needs: buildWithWindows
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
+    outputs:
+      buildVersion: ${{ steps.build.outputs.buildVersion }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -563,9 +563,14 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
+      - name: Cache Library
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-WSAPlayer-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-WSAPlayer
       - name: Build Unity Project
         id: build
-        continue-on-error: true
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
         env:
@@ -580,15 +585,25 @@ jobs:
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
+
+  deployToMicrosoftStore:
+    name: Deploy to the Microsoft Store
+    runs-on: windows-2022
+    container: unityci/editor:windows-2022.3.12f1-universal-windows-platform-3
+    needs: buildWSAPlayer
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
+    steps:
+      - name: Download WSAPlayer Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: cgs-WSAPlayer
+          path: build/WSAPlayer
       - name: Checkout Card-Game-Simulator
         run: |
           mkdir C:/Card-Game-Simulator.git
           git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --depth=1
           mkdir C:/Card-Game-Simulator.git/build
           mv build/WSAPlayer C:/Card-Game-Simulator.git/build
-          ls C:/Card-Game-Simulator.git/build
-          ls C:/Card-Game-Simulator.git/build/WSAPlayer
-          ls C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -611,11 +626,6 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Setup Unity UWP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: universal-windows-platform
-          project-path: C:/Card-Game-Simulator.git
       - name: Setup Developer Command Prompt for Microsoft Visual C++
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
@@ -714,8 +724,8 @@ jobs:
       - name: Upload .appxupload
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ format('CardGameSimulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', steps.build.outputs.buildVersion) }}
-          path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', steps.build.outputs.buildVersion) }}
+          name: ${{ format('CardGameSimulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+          path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -727,7 +737,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', 'C:\Card-Game-Simulator.git') }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', steps.build.outputs.buildVersion) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.zip', 'C:\Card-Game-Simulator.git') }}
