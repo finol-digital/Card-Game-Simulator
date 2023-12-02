@@ -1,1 +1,1 @@
-- Game-Play: Drop Stack on top of Cards or other Stacks
+- Minor bug fixes
