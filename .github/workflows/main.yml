@@ -209,11 +209,11 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
       - name: Zip Build
+        uses: vimtor/action-zip@v1.1
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
-        uses: thedoctor0/zip-release@0.7.6
         with:
-          path: build/${{ matrix.targetPlatform }}
-          filename: build/cgs-${{ matrix.targetPlatform }}.zip
+          files: build/${{ matrix.targetPlatform }}/
+          dest: build/cgs-${{ matrix.targetPlatform }}.zip
       - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
