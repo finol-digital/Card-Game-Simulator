@@ -51,17 +51,17 @@ namespace Cgs.UI.ScrollRects
             }
         }
 
-        private float _currentZoom = 1;
+        private float _currentZoom = MinZoom;
 
         public bool ZoomEnabled
         {
-            get => scrollSensitivity == 0;
+            get => scrollSensitivity == 0 || Input.touchCount > 1;
             set => scrollSensitivity = value ? 0 : _scrollSensitivity;
         }
 
         private float _scrollSensitivity;
 
-        private Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
+        private Dictionary<int, Vector2> PointerPositions { get; } = new();
         private bool _isPinching;
         private bool _blockPan;
         private float _startPinchDist;
@@ -71,8 +71,8 @@ namespace Cgs.UI.ScrollRects
         protected override void Awake()
         {
             Input.multiTouchEnabled = true;
+            scrollSensitivity = ScrollWheelSensitivity;
             _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
-            ZoomEnabled = true;
         }
 
         protected override void SetContentAnchoredPosition(Vector2 position)

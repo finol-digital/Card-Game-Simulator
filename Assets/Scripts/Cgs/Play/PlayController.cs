@@ -33,7 +33,6 @@ namespace Cgs.Play
         public const string RestartPrompt = "Restart?";
         public const string DefaultStackName = "Stack";
 
-        private const float DefaultZoom = 0.5f;
         private const float PlayAreaBuffer = 8;
         private const float DeckPositionBuffer = 50;
 
@@ -152,7 +151,6 @@ namespace Cgs.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
-            playArea.CurrentZoom = DefaultZoom;
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlay);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 

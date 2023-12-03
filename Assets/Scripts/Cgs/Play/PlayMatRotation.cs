@@ -24,7 +24,7 @@ namespace Cgs.Play
         private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;
 
-        private bool _rotationEnabled = true;
+        private bool _rotationEnabled;
 
         private void Start()
         {
