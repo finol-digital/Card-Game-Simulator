@@ -651,7 +651,7 @@ jobs:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer
         run: |
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\UnityCommon.props"
-          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\2021.3.16f1\Editor\Data\PlaybackEngines\MetroSupport\"
+          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\2022.3.12f1\Editor\Data\PlaybackEngines\MetroSupport\"
           $manifest.save(".\$env:UwpProjectDirectory\UnityCommon.props")
           echo ".\$env:UwpProjectDirectory\UnityCommon.props"
           cat ".\$env:UwpProjectDirectory\UnityCommon.props"
