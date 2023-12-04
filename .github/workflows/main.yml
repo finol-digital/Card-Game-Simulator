@@ -603,6 +603,15 @@ jobs:
           git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --depth=1
           mkdir C:/Card-Game-Simulator.git/build
           mv build/WSAPlayer C:/Card-Game-Simulator.git/build
+      - name: Setup Unity UWP
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: universal-windows-platform
+          project-path: C:/Card-Game-Simulator.git
+      - name: Setup Developer Command Prompt for Microsoft Visual C++
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -625,15 +634,6 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Setup Unity UWP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: universal-windows-platform
-          project-path: C:/Card-Game-Simulator.git
-      - name: Setup Developer Command Prompt for Microsoft Visual C++
-        uses: ilammy/msvc-dev-cmd@v1
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
       - name: Remove spaces from project name
         uses: davidmfinol/replace-action@master
         with:
@@ -644,17 +644,6 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
           replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-      - name: Fix Unity Editor Path
-        working-directory: C:/Card-Game-Simulator.git
-        shell: pwsh
-        env:
-          UwpProjectDirectory: build\WSAPlayer\WSAPlayer
-        run: |
-          [xml]$manifest = get-content ".\$env:UwpProjectDirectory\UnityCommon.props"
-          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\2022.3.12f1\Editor\Data\PlaybackEngines\MetroSupport\"
-          $manifest.save(".\$env:UwpProjectDirectory\UnityCommon.props")
-          echo ".\$env:UwpProjectDirectory\UnityCommon.props"
-          cat ".\$env:UwpProjectDirectory\UnityCommon.props"
       - name: Add Package.StoreAssociation.xml to .vcxproj
         uses: mingjun97/file-regex-replace@v1
         with:
@@ -668,33 +657,28 @@ jobs:
           replacement: '</ItemGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
           include: 'Card Game Simulator\.vcxproj\.filters'
-      - name: Copy the Package.StoreAssociation.xml and CardGameSimulator.vcxproj.user
+      - name: Prepare project
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
+          WsaPlayerDirectory: build\WSAPlayer\WSAPlayer
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
         run: |
+          [xml]$manifest = get-content ".\$env:WsaPlayerDirectory\UnityCommon.props"
+          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\2022.3.12f1\Editor\Data\PlaybackEngines\MetroSupport\"
+          $manifest.save(".\$env:WsaPlayerDirectory\UnityCommon.props")
+          echo ".\$env:WsaPlayerDirectory\UnityCommon.props"
+          cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
           Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
           Copy-Item "C:\Card-Game-Simulator.git\storebroker\CardGameSimulator.vcxproj.user" -Destination ".\$env:UwpProjectDirectory\"
-      - name: Read contents from file
-        working-directory: C:/Card-Game-Simulator.git
-        shell: pwsh
-        id: read-contents
-        run: |
-            $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\storebroker\to_remove.txt
-            Write-Output "::set-output name=content::$content_to_remove"
-      - name: Remove contents from another file
-        working-directory: C:/Card-Game-Simulator.git
-        shell: pwsh
-        env:
-          UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
-        run: |
-          $content_to_remove = $env:content
-          (Get-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems") | ForEach-Object {
-              $_ -replace $content_to_remove, ""
-          } | Set-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
+          $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\storebroker\to_remove.txt -Raw
+          echo "$content_to_remove"
+          $targetContent = Get-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems" -Raw
+          $updatedContent = $targetContent -replace [regex]::Escape($content_to_remove), ''
+          $updatedContent | Set-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
+          cat ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
       - name: Update the Package.appxmanifest
-        if: false
+#        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:

@@ -11,6 +11,7 @@ permalink: roadmap.html
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click on playable for context menu
+- show stats on card
 
 ## Backlog - 2023 Q4
 - Game-Play: Apply rotation when spawning players objects
