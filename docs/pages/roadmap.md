@@ -4,14 +4,13 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.97
+## What's New - v1.98
 - Minor Bug Fixes
 
 ## Active Sprint
-- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
-- Game-Play: Right-click on playable for context menu
-- show stats on card
+- Game-Play: Right-click for context menu
 
 ## Backlog - 2023 Q4
 - Game-Play: Apply rotation when spawning players objects
@@ -30,6 +29,7 @@ permalink: roadmap.html
 - Game-Play: Undo with Ctrl-Z
 
 ## Backlog - 2024 Q2
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Creation: Edit Button in Games Management Menu
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
