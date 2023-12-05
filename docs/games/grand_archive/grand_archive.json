@@ -235,20 +235,20 @@
 	"gamePlayDeckName": "Main Deck",
 	"gamePlayDeckPositions": [
 		{
-			"x": 14.5,
-			"y": -11
+			"x": 25,
+			"y": -5.5
 		},
 		{
-			"x": -14.5,
-			"y": -11
+			"x": -25,
+			"y": -5.5
 		},
 		{
-			"x": 14.5,
-			"y": 11
+			"x": 25,
+			"y": 5.5
 		},
 		{
-			"x": -14.5,
-			"y": 11
+			"x": -25,
+			"y": 5.5
 		}
 	],
 	"gamePlayZones": [
@@ -257,10 +257,10 @@
 			"face": "down",
 			"position": {
 				"x": 0,
-				"y": -16.5
+				"y": -10.5
 			},
 			"size": {
-				"x": 22,
+				"x": 42,
 				"y": 3.5
 			},
 			"type": "horizontal"
@@ -270,10 +270,10 @@
 			"face": "down",
 			"position": {
 				"x": 0,
-				"y": 16.5
+				"y": 10.5
 			},
 			"size": {
-				"x": 22,
+				"x": 42,
 				"y": 3.5
 			},
 			"type": "horizontal"
@@ -287,8 +287,8 @@
 		"y": 0
 	},
 	"playMatSize": {
-		"x": 36.75,
-		"y": 42.75
+		"x": 56,
+		"y": 30
 	},
 	"rulesUrl": "https://www.gatcg.com/article/rules",
 	"setCodeIdentifier": "set.prefix",

@@ -144,6 +144,8 @@ namespace Cgs.Play
             Instantiate(cardViewerPrefab);
             Instantiate(playableViewerPrefab);
             CardViewer.Instance.GetComponent<CardActions>().Show();
+            if (Cgs.Menu.Settings.PreviewOnMouseOver)
+                CardViewer.Instance.Mode = CardViewerMode.Expanded;
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
 
