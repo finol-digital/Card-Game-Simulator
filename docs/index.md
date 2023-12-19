@@ -12,6 +12,8 @@ playYoutubeId: PriDuaM6MEk
 
 ## How to Play
 
+{% include youtubePlayer.html id=page.playYoutubeId %}
+
 See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
 
 ## How to Create
