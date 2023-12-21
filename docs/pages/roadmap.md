@@ -8,6 +8,8 @@ permalink: roadmap.html
 - Minor Bug Fixes
 
 ## Active Sprint
+game creation menu copyright
+game play deck positions on android
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click for context menu
