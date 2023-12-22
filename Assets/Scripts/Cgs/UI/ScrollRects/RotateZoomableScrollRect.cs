@@ -84,6 +84,9 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
+            if (Input.GetMouseButton(0) && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
+                return;
+
             PointerPositions[eventData.pointerId] = eventData.position;
             switch (eventData.button)
             {

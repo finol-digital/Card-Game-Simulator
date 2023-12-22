@@ -374,11 +374,10 @@ namespace Cgs
         {
             Debug.Log("OnDeepLinkActivated!");
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
-            if (string.IsNullOrEmpty(autoUpdateUrl) ||
-                !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
+            if (string.IsNullOrEmpty(autoUpdateUrl))
             {
-                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
-                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
+                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMissing!");
+                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMissing!");
             }
             else
                 StartGetCardGame(autoUpdateUrl);
@@ -621,8 +620,10 @@ namespace Cgs
             while (Current is {IsDownloading: true})
                 yield return null;
 
-            Debug.Log("CardGameManager::Start:GameReady");
-            if (Current == null || Current == UnityCardGame.UnityInvalid || Current.Id.Equals(Tags.StandardPlayingCardsDirectoryName))
+            bool callGameReady = Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error)
+                || Current.Id.Equals(Tags.StandardPlayingCardsDirectoryName);
+            Debug.Log("CardGameManager::Start:callGameReady " + callGameReady);
+            if (callGameReady)
                 GameReady();
         }
 #endif

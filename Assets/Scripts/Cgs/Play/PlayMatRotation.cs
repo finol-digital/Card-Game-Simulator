@@ -18,6 +18,7 @@ namespace Cgs.Play
         public CanvasGroup sliderCanvasGroup;
 
         private const float PageHorizontalSensitivity = 45f;
+        private const float PageHorizontalSensitivity2 = 0.2f;
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 3f;
 
@@ -75,7 +76,7 @@ namespace Cgs.Play
                     Time.deltaTime * Inputs.FPageHorizontal * PageHorizontalSensitivity;
             else
                 _playController.playArea.horizontalNormalizedPosition -=
-                    Inputs.FPageHorizontal * PageHorizontalSensitivity * Time.deltaTime;
+                    Inputs.FPageHorizontal * PageHorizontalSensitivity2 * Time.deltaTime;
         }
 
         [UsedImplicitly]
