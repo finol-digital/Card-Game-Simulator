@@ -10,27 +10,27 @@ permalink: roadmap.html
 ## Active Sprint
 - Bug-fix: Game creation menu copyright on portrait
 - Bug-fix: Game play deck positions on android
+- Bug-Fix: Image quality management/LODs for card images
+- Bug-Fix: Game Boards
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click for context menu
 
-## Backlog - 2023 Q4
+## Backlog - 2024 Q1
 - Game-Play: Apply rotation when spawning players objects
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
-
-## Backlog - 2024 Q1
 - Game-Play: Custom Tokens
 - Cards: Support mix of different card sizes in the same game
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
+
+## Backlog - 2024 Q2
 - Game-Play: Support multiple card selection
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
-
-## Backlog - 2024 Q2
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Creation: Edit Button in Games Management Menu
@@ -47,15 +47,13 @@ permalink: roadmap.html
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
 
 ## Backlog - 2024 Q3
-- Cards: Image quality management/LODs for card images
-- Accessibility: Add audio and sounds throughout the app
-- Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Platforms: Full controller support (Steam)
-- Integration: Private Lobbies & Deep links to join multiplayer rooms
+- Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.gg)
 - Platforms: Add Multiplayer and Developer Mode to Web browser
+- Accessibility: Add audio and sounds throughout the app
 - Accessibility: Tutorial Video for How-To-Play
   - 0:00 Intro (Name/Website)
   - 0:00 Playing Solo (Single-player/Goldfishing)
@@ -67,11 +65,9 @@ permalink: roadmap.html
   - CGS Website: https://www.cardgamesimulator.com/
 - Accessibility: Tutorial Video for How-To-Create-And-Share
 - Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
-- Dev option (GUI): Create a default 'Setup' for more complicated card games. 
-For example games that use multiple decks, counters, tokens etc that are always placed on the table when a game begins. 
-The game dev should be able to put all of this down on the 'table' so that all future players will just be able to play when launching a game without manual setup.
 
 ## Icebox
+- Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit
 - Cards: Allow pre-fetching of card images
