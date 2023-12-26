@@ -394,7 +394,7 @@ namespace Cgs
 
             var deepLinkUriQuery = new Uri(deepLink).Query;
             Debug.Log("GetAutoUpdateUrl::deepLinkUriQuery: " + deepLinkUriQuery);
-            var autoUpdateUrl = HttpUtility.UrlDecode(HttpUtility.ParseQueryString(deepLinkUriQuery).Get("url"));
+            var autoUpdateUrl = HttpUtility.ParseQueryString(deepLinkUriQuery).Get("url");
             Debug.Log("GetAutoUpdateUrl::autoUpdateUrl: " + autoUpdateUrl);
 
             return autoUpdateUrl;
