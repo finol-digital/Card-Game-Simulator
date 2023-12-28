@@ -84,7 +84,8 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (Input.GetMouseButton(0) && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)))
+            if (Input.GetMouseButton(0) && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                && Input.touchCount <= 1)
                 return;
 
             PointerPositions[eventData.pointerId] = eventData.position;
@@ -106,7 +107,10 @@ namespace Cgs.UI.ScrollRects
 
                 case PointerEventData.InputButton.Left:
                 default:
-                    OnDragRotate(eventData);
+                    if (PointerPositions.Count >= 2)
+                        OnDragTouch(eventData);
+                    else
+                        base.OnDrag(eventData);
                     break;
             }
         }
@@ -118,13 +122,15 @@ namespace Cgs.UI.ScrollRects
                 Mathf.Clamp(normalizedPosition.y, 0.0f, 1.0f));
         }
 
-        private void OnDragRotate(PointerEventData touchEventData)
+        private void OnDragTouch(PointerEventData touchEventData)
         {
             if (PointerPositions.Count < 2)
             {
                 base.OnDrag(touchEventData);
                 return;
             }
+
+            OnDragPan(touchEventData);
 
             Vector2 referencePoint = content.position;
             foreach (var position in

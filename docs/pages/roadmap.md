@@ -9,7 +9,6 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Bug-fix: Game creation menu copyright on portrait
-- Bug-fix: Game play deck positions on android
 - Bug-Fix: Image quality management/LODs for card images
 - Bug-Fix: Game Boards
 - Game-Play: Display values on Card in Play Area
