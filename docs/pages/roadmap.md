@@ -10,6 +10,7 @@ permalink: roadmap.html
 ## Active Sprint
 - Bug-Fix: Game creation menu copyright on portrait
 - Bug-Fix: Game Boards, test with Saga, and message user
+- Bug-Fix: cgs.games/api/proxy POST
 - Bug-Fix: Image quality management/LODs for card images
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
