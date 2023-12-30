@@ -1,5 +1,5 @@
 {
-  "allCardsUrl": "https://cgs.games/api/proxy/aminduna.arcmage.org/api/CardSearch",
+  "allCardsUrl": "https://aminduna.arcmage.org/api/CardSearch",
   "allCardsUrlPageCountIdentifier": "totalItems",
   "allCardsUrlPageCountDivisor": 50,
   "allCardsUrlPageIdentifier": ",\"pageNumber\":",
@@ -15,7 +15,7 @@
   "cardDataIdentifier": "items",
   "cardIdIdentifier": "guid",
   "cardImageFileType": "jpg",
-  "cardImageUrl": "https://cgs.games/api/proxy/aminduna.arcmage.org{jpeg}",
+  "cardImageUrl": "https://aminduna.arcmage.org{jpeg}",
   "cardSetIdentifier": "serie",
   "cardSetIsObject": true,
   "cardPrimaryProperty": "ruleText",
