@@ -8,7 +8,7 @@ permalink: roadmap.html
 - Minor Bug Fixes
 
 ## Active Sprint
-- Bug-fix: Game creation menu copyright on portrait
+- Bug-Fix: Game creation menu copyright on portrait
 - Bug-Fix: Game Boards, test with Saga, and message user
 - Bug-Fix: Image quality management/LODs for card images
 - Game-Play: Display values on Card in Play Area
