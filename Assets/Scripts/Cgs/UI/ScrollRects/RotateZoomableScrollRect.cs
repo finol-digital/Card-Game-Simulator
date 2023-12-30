@@ -84,7 +84,8 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (Input.GetMouseButton(0) && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            if (eventData.button == PointerEventData.InputButton.Left
+                && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
                 && Input.touchCount <= 1)
                 return;
 
@@ -99,10 +100,7 @@ namespace Cgs.UI.ScrollRects
                     break;
 
                 case PointerEventData.InputButton.Middle:
-                    if (ZoomEnabled)
-                        OnDragPan(eventData);
-                    else
-                        base.OnDrag(eventData);
+                    OnDragPan(eventData);
                     break;
 
                 case PointerEventData.InputButton.Left:
