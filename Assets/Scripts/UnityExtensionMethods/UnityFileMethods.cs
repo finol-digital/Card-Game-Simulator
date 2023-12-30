@@ -229,8 +229,15 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
+            var uriBuilder = new UriBuilder(url)
+            {
+                Scheme = Uri.UriSchemeHttps,
+                Port = -1 // default port for scheme
+            };
+            var uri = uriBuilder.Uri;
+
             using var unityWebRequest =
-                (postJsonBody == null ? UnityWebRequest.Get(url) : new UnityWebRequest(url, "POST"));
+                (postJsonBody == null ? UnityWebRequest.Get(uri) : new UnityWebRequest(uri, "POST"));
             if (postJsonBody != null)
             {
                 var bytes = Encoding.UTF8.GetBytes(postJsonBody);

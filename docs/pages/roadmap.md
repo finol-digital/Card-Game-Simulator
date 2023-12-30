@@ -4,13 +4,15 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.99
+## What's New - v1.100
 - Minor Bug Fixes
 
 ## Active Sprint
+middle mouse button pan on rotatezoomablescrollrect
+- Bug-Fix: cgs.games/api/proxy POST
 - Bug-fix: Game creation menu copyright on portrait
+- Bug-Fix: Game Boards, test with Saga, and message user
 - Bug-Fix: Image quality management/LODs for card images
-- Bug-Fix: Game Boards
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click for context menu
