@@ -193,7 +193,7 @@ namespace Cgs
 
             ResetCurrentToDefault();
 
-#if !UNITY_WEBGL || UNITY_EDITOR
+#if !UNITY_WEBGL
             Debug.Log("CardGameManager::Awake:CheckDeepLinks");
             CheckDeepLinks();
 #endif
@@ -204,14 +204,8 @@ namespace Cgs
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#elif UNITY_WEBGL
-            UnityFileMethods.CopyDirectory(
-                Path.Join(Application.streamingAssetsPath, Tags.StandardPlayingCardsDirectoryName),
-                Path.Join(UnityCardGame.GamesDirectoryPath, Tags.StandardPlayingCardsDirectoryName));
-#else
-            UnityFileMethods.CopyDirectory(
-                Application.streamingAssetsPath,
-                UnityCardGame.GamesDirectoryPath);
+#elif !UNITY_WEBGL
+            UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
 
@@ -219,7 +213,11 @@ namespace Cgs
         {
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
                 Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
+#if UNITY_WEBGL
+                return;
+#else
                 CreateDefaultCardGames();
+#endif
 
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
@@ -348,7 +346,18 @@ namespace Cgs
             OnSceneActions.Clear();
         }
 
-#if !UNITY_WEBGL || UNITY_EDITOR
+        // Note: Does NOT Reset Game Scene
+        internal void ResetCurrentToDefault()
+        {
+            var preferredGameId =
+                PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            Current = AllCardGames.TryGetValue(preferredGameId, out var currentGame) &&
+                      string.IsNullOrEmpty(currentGame.Error)
+                ? currentGame
+                : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
+        }
+
+#if !UNITY_WEBGL
         private void CheckDeepLinks()
         {
             Application.deepLinkActivated += OnDeepLinkActivated;
@@ -402,16 +411,23 @@ namespace Cgs
         }
 #endif
 
-        // Note: Does NOT Reset Game Scene
-        internal void ResetCurrentToDefault()
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private IEnumerator Start()
         {
-            var preferredGameId =
-                PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
-            Current = AllCardGames.TryGetValue(preferredGameId, out var currentGame) &&
-                      string.IsNullOrEmpty(currentGame.Error)
-                ? currentGame
-                : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
+            Debug.Log("CardGameManager::Start:WaitForCurrentIsDownloading");
+
+            yield return null;
+            while (Current is {IsDownloading: true})
+                yield return null;
+
+            bool callGameReady =
+ Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error)
+                || Current.Id.Equals(Tags.StandardPlayingCardsDirectoryName);
+            Debug.Log("CardGameManager::Start:callGameReady " + callGameReady);
+            if (callGameReady)
+                GameReady();
         }
+#endif
 
         [PublicAPI]
         public void StartGetCardGame(string autoUpdateUrl)
@@ -593,6 +609,8 @@ namespace Cgs
 
             if (!string.IsNullOrEmpty(Current.Error))
             {
+                if (UnityCardGame.UnityInvalid == Current || Current == CardGame.Invalid)
+                    return;
                 Debug.LogError(LoadErrorMessage + Current.Error);
                 Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
                 return;
@@ -611,24 +629,6 @@ namespace Cgs
             foreach (var action in OnSceneActions)
                 action();
         }
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        private IEnumerator Start()
-        {
-            Debug.Log("CardGameManager::Start:WaitForCurrentIsDownloading");
-
-            yield return null;
-            while (Current is {IsDownloading: true})
-                yield return null;
-
-            bool callGameReady =
- Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error)
-                || Current.Id.Equals(Tags.StandardPlayingCardsDirectoryName);
-            Debug.Log("CardGameManager::Start:callGameReady " + callGameReady);
-            if (callGameReady)
-                GameReady();
-        }
-#endif
 
         private void IgnoreCurrentErroredGame()
         {

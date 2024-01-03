@@ -8,10 +8,6 @@ permalink: roadmap.html
 - Minor Bug Fixes
 
 ## Active Sprint
-- cgs.games web view
-- cgs.games/api/proxy POST
-- cgs.games/api/list
-- CGS Games List Menu
 - Bug-Fix: Game creation menu copyright on portrait
 - Bug-Fix: Card Creation description
 - Bug-Fix: Game Boards, test with Saga, and message user
