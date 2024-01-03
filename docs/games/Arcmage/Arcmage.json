@@ -4,7 +4,7 @@
   "allCardsUrlPageCountDivisor": 50,
   "allCardsUrlPageIdentifier": ",\"pageNumber\":",
   "allCardsUrlPostBodyContent": "\"status\":{\"guid\":\"7dedc883-5dd2-5f17-b2a4-eaf04f7ad464\"},\"pageSize\":50",
-  "allDecksUrl": "https://cgs.games/api/proxy/aminduna.arcmage.org/api/DeckSearch",
+  "allDecksUrl": "https://aminduna.arcmage.org/api/DeckSearch",
   "allDecksUrlDataIdentifier": "items",
   "allDecksUrlPostBodyContent": "\"status\":{\"guid\":\"7dedc883-5dd2-5f17-b2a4-eaf04f7ad464\"},\"pageSize\":50,\"pageNumber\":1",
   "allDecksUrlTxtRoot": "https://aminduna.arcmage.org",
