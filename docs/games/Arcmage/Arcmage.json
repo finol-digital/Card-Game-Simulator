@@ -1,10 +1,10 @@
 {
-  "allCardsUrl": "https://aminduna.arcmage.org/api/CardSearch",
+  "allCardsUrl": "https://cgs.games/api/proxy/aminduna.arcmage.org/api/CardSearch",
   "allCardsUrlPageCountIdentifier": "totalItems",
   "allCardsUrlPageCountDivisor": 50,
   "allCardsUrlPageIdentifier": ",\"pageNumber\":",
   "allCardsUrlPostBodyContent": "\"ruleSet\":{\"guid\":\"208cbc77-4110-51b7-9afd-1c0c4e96f4ad\"},\"pageSize\":50",
-  "allDecksUrl": "https://aminduna.arcmage.org/api/DeckSearch",
+  "allDecksUrl": "https://cgs.games/api/proxy/aminduna.arcmage.org/api/DeckSearch",
   "allDecksUrlDataIdentifier": "items",
   "allDecksUrlPostBodyContent": "\"ruleSet\":{\"guid\":\"208cbc77-4110-51b7-9afd-1c0c4e96f4ad\"},\"pageSize\":50,\"pageNumber\":1",
   "allDecksUrlTxtRoot": "https://aminduna.arcmage.org",

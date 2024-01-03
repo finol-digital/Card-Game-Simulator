@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Minor Bug Fixes
 
 ## Active Sprint
+- Games Management Menu: CGS Games List Menu
 - Bug-Fix: Game creation menu copyright on portrait
 - Bug-Fix: Card Creation description
 - Bug-Fix: Game Boards, test with Saga, and message user
