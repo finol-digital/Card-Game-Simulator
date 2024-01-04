@@ -4,17 +4,16 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.101
-- Minor Bug Fixes
-
-## Active Sprint
+## What's New - v1.102
 - Games Management Menu: Import from CGS Games
 
-## Backlog - 2024 Q1
+## Active Sprint
 - Bug-Fix: Game creation menu copyright on portrait
 - Bug-Fix: Card Creation description
 - Bug-Fix: Game Boards, test with Saga, and message user
 - Bug-Fix: Image quality management/LODs for card images
+
+## Backlog - 2024 Q1
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click for context menu
