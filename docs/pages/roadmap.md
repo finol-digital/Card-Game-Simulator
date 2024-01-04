@@ -8,7 +8,9 @@ permalink: roadmap.html
 - Minor Bug Fixes
 
 ## Active Sprint
-- Games Management Menu: CGS Games List Menu
+- Games Management Menu: Import from CGS Games
+
+## Backlog - 2024 Q1
 - Bug-Fix: Game creation menu copyright on portrait
 - Bug-Fix: Card Creation description
 - Bug-Fix: Game Boards, test with Saga, and message user
@@ -16,8 +18,6 @@ permalink: roadmap.html
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click for context menu
-
-## Backlog - 2024 Q1
 - Game-Play: Apply rotation when spawning players objects
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Name-Plates indicating player seats
