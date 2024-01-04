@@ -140,7 +140,6 @@ MonoBehaviour:
     type: 3}
   downloadMenuPrefab: {fileID: 2330282487462195437, guid: 2d4784779890ecb41954d3181de7ad9e,
     type: 3}
-  newButton: {fileID: 3706000448155509143}
 --- !u!1 &1157992469845490830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1837,18 +1836,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30c175fe170c9e0459ee166821450a03, type: 3}
---- !u!114 &3706000448155509143 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7269854554250268640, guid: 30c175fe170c9e0459ee166821450a03,
-    type: 3}
-  m_PrefabInstance: {fileID: 6308960296440999543}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &8073464704216129576 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2848342772243254879, guid: 30c175fe170c9e0459ee166821450a03,

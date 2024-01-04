@@ -10,8 +10,10 @@ namespace Cgs
         public const string CardViewer = "CardViewer";
         public const string PlayableViewer = "PlayableViewer";
 
-        public const string CgsWebsite = "https://www.cardgamesimulator.com/";
         public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@www.cardgamesimulator.com";
-        public const string CgsGamesListUrl = "https://cgs.games/list";
+        public const string CgsWebsite = "https://www.cardgamesimulator.com/";
+        public const string CgsGamesUrl = "https://cgs.games/";
+        public const string CgsGamesBrowseUrl = "https://cgs.games/browse";
+        public const string CgsGamesBrowseApiUrl = "https://cgs.games/api/browse";
     }
 }
