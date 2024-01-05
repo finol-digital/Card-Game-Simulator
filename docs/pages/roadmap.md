@@ -31,6 +31,7 @@ permalink: roadmap.html
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
+- Game-Play: Arrow from card with middle mouse button or alt
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Creation: Edit Button in Games Management Menu
@@ -39,7 +40,7 @@ permalink: roadmap.html
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
-  - Decouple games and decks, so you can use any deck from any game
+  - Decouple games and decks, so you can use any deck from any game and deleting a game won't delete your decks
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
 - Decks: Group cards in Deck Editor
