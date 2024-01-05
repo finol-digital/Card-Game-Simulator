@@ -1,0 +1,77 @@
+{
+  "allCardsUrl": "https://www.cardgamesimulator.com/games/Standard/AllCards.json",
+  "allSetsUrl": "https://www.cardgamesimulator.com/games/Standard/AllSets.json",
+  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Standard/Standard.json",
+  "bannerImageUrl": "https://www.cardgamesimulator.com/games/Standard/Banner.png",
+  "cardBackImageUrl": "https://www.cardgamesimulator.com/games/Standard/CardBack.png",
+  "cardImageUrl": "https://www.cardgamesimulator.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
+  "cardProperties": [
+    {
+      "name": "rank",
+      "display": "Rank",
+      "type": "stringEnum"
+    },
+    {
+      "name": "suit",
+      "display": "Suit",
+      "type": "stringEnum"
+    },
+    {
+      "name": "color",
+      "display": "Color",
+      "type": "stringEnum"
+    }
+  ],
+  "cgsGamesLink": "https://cgs.games/link/standard",
+  "deckUrls": [
+    {
+      "name": "Standard 52-card Deck",
+      "url": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%2052-card%20Deck.txt"
+    },
+    {
+      "name": "Standard Deck with Jokers",
+      "url": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%20Deck%20with%20Jokers.txt"
+    }
+  ],
+  "enums": [
+    {
+      "property": "rank",
+      "values": {
+        "1": "Ace",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10",
+        "11": "Jack",
+        "12": "Queen",
+        "13": "King",
+        "0": "Joker"
+      }
+    },
+    {
+      "property": "suit",
+      "values": {
+        "clubs": "Clubs",
+        "diamonds": "Diamonds",
+        "hearts": "Hearts",
+        "spades": "Spades"
+      }
+    },
+    {
+      "property": "color",
+      "values": {
+        "black": "Black",
+        "red": "Red"
+      }
+    }
+  ],
+  "gamePlayDeckName": "Deck",
+  "gameStartHandCount": 2,
+  "name": "Standard Playing Cards",
+  "rulesUrl": "https://www.bicyclecards.com/rules/"
+}

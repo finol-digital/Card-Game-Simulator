@@ -1,0 +1,425 @@
+[
+  {
+    "set": "STD_FR",
+    "name": "Ace of Clubs",
+    "id": "ace_of_clubs",
+    "rank": "1",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Ace of Diamonds",
+    "id": "ace_of_diamonds",
+    "rank": "1",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Ace of Hearts",
+    "id": "ace_of_hearts",
+    "rank": "1",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Ace of Spades",
+    "id": "ace_of_spades",
+    "rank": "1",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "2 of Clubs",
+    "id": "2_of_clubs",
+    "rank": "2",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "2 of Diamonds",
+    "id": "2_of_diamonds",
+    "rank": "2",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "2 of Hearts",
+    "id": "2_of_hearts",
+    "rank": "2",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "2 of Spades",
+    "id": "2_of_spades",
+    "rank": "2",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "3 of Clubs",
+    "id": "3_of_clubs",
+    "rank": "3",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "3 of Diamonds",
+    "id": "3_of_diamonds",
+    "rank": "3",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "3 of Hearts",
+    "id": "3_of_hearts",
+    "rank": "3",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "3 of Spades",
+    "id": "3_of_spades",
+    "rank": "3",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "4 of Clubs",
+    "id": "4_of_clubs",
+    "rank": "4",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "4 of Diamonds",
+    "id": "4_of_diamonds",
+    "rank": "4",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "4 of Hearts",
+    "id": "4_of_hearts",
+    "rank": "4",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "4 of Spades",
+    "id": "4_of_spades",
+    "rank": "4",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "5 of Clubs",
+    "id": "5_of_clubs",
+    "rank": "5",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "5 of Diamonds",
+    "id": "5_of_diamonds",
+    "rank": "5",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "5 of Hearts",
+    "id": "5_of_hearts",
+    "rank": "5",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "5 of Spades",
+    "id": "5_of_spades",
+    "rank": "5",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "6 of Clubs",
+    "id": "6_of_clubs",
+    "rank": "6",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "6 of Diamonds",
+    "id": "6_of_diamonds",
+    "rank": "6",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "6 of Hearts",
+    "id": "6_of_hearts",
+    "rank": "6",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "6 of Spades",
+    "id": "6_of_spades",
+    "rank": "6",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "7 of Clubs",
+    "id": "7_of_clubs",
+    "rank": "7",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "7 of Diamonds",
+    "id": "7_of_diamonds",
+    "rank": "7",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "7 of Hearts",
+    "id": "7_of_hearts",
+    "rank": "7",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "7 of Spades",
+    "id": "7_of_spades",
+    "rank": "7",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "8 of Clubs",
+    "id": "8_of_clubs",
+    "rank": "8",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "8 of Diamonds",
+    "id": "8_of_diamonds",
+    "rank": "8",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "8 of Hearts",
+    "id": "8_of_hearts",
+    "rank": "8",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "8 of Spades",
+    "id": "8_of_spades",
+    "rank": "8",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "9 of Clubs",
+    "id": "9_of_clubs",
+    "rank": "9",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "9 of Diamonds",
+    "id": "9_of_diamonds",
+    "rank": "9",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "9 of Hearts",
+    "id": "9_of_hearts",
+    "rank": "9",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "9 of Spades",
+    "id": "9_of_spades",
+    "rank": "9",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "10 of Clubs",
+    "id": "10_of_clubs",
+    "rank": "10",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "10 of Diamonds",
+    "id": "10_of_diamonds",
+    "rank": "10",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "10 of Hearts",
+    "id": "10_of_hearts",
+    "rank": "10",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "10 of Spades",
+    "id": "10_of_spades",
+    "rank": "10",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Jack of Clubs",
+    "id": "jack_of_clubs",
+    "rank": "11",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Jack of Diamonds",
+    "id": "jack_of_diamonds",
+    "rank": "11",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Jack of Hearts",
+    "id": "jack_of_hearts",
+    "rank": "11",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Jack of Spades",
+    "id": "jack_of_spades",
+    "rank": "11",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Queen of Clubs",
+    "id": "queen_of_clubs",
+    "rank": "12",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Queen of Diamonds",
+    "id": "queen_of_diamonds",
+    "rank": "12",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Queen of Hearts",
+    "id": "queen_of_hearts",
+    "rank": "12",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Queen of Spades",
+    "id": "queen_of_spades",
+    "rank": "12",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "King of Clubs",
+    "id": "king_of_clubs",
+    "rank": "13",
+    "suit": "clubs",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "King of Diamonds",
+    "id": "king_of_diamonds",
+    "rank": "13",
+    "suit": "diamonds",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "King of Hearts",
+    "id": "king_of_hearts",
+    "rank": "13",
+    "suit": "hearts",
+    "color": "red"
+  },
+  {
+    "set": "STD_FR",
+    "name": "King of Spades",
+    "id": "king_of_spades",
+    "rank": "13",
+    "suit": "spades",
+    "color": "black"
+  },
+  {
+    "set": "STD_FR",
+    "name": "Black Joker",
+    "id": "black_joker",
+    "color": "Black"
+  },
+  { "set": "STD_FR", "name": "Red Joker", "id": "red_joker", "color": "Red" }
+]
