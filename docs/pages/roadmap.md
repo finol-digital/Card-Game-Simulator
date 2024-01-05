@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.102
-- Games Management Menu: Import from CGS Games
+- Games Management Menu: CGS Games Browser
 
 ## Active Sprint
 - Bug-Fix: Game creation menu copyright on portrait
