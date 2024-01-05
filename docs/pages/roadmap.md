@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## What's New - v1.102
 - Games Management Menu: CGS Games Browser
+- Game-Creation: Edit Button in Games Management Menu
 
 ## Active Sprint
 - Bug-Fix: Game creation menu copyright on portrait
@@ -34,7 +35,6 @@ permalink: roadmap.html
 - Game-Play: Arrow from card with middle mouse button or alt
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
-- Game-Creation: Edit Button in Games Management Menu
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Rename Stacks
