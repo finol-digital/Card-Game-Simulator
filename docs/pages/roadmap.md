@@ -9,12 +9,14 @@ permalink: roadmap.html
 - Game-Creation: Edit Button in Games Management Menu
 
 ## Active Sprint
-- Bug-Fix: Game creation menu copyright on portrait
+- Bug-Fix: Game Creation Menu copyright on portrait
+- Bug-Fix: Card Creation
 - Bug-Fix: Card Creation description
 - Bug-Fix: Game Boards, test with Saga, and message user
-- Bug-Fix: Image quality management/LODs for card images
 
 ## Backlog - 2024 Q1
+- Bug-Fix: Sync button does not update Game
+- Bug-Fix: Card image blurriness/image quality management
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
 - Game-Play: Right-click for context menu
