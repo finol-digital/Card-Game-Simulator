@@ -5,29 +5,26 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.102
-- Games Management Menu: CGS Games Browser
-- Games Management Menu: Edit Button
-
-## Active Sprint
 - Bug-Fix: Game Creation Menu copyright on portrait
 - Bug-Fix: Card Creation description
 - Bug-Fix: Card Creation import image
 
-## Backlog - 2024 Q1
+## Active Sprint
 - Bug-Fix: Sync button does not update Game
 - Bug-Fix: Game Boards, test with Saga, and message user
 - Bug-Fix: Card image blurriness/image quality management
+- Games Management Menu: CGS Games Browser
+- Games Management Menu: Edit Button
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
+
+## Backlog - 2024 Q1
 - Game-Play: Right-click for context menu
 - Game-Play: Apply rotation when spawning players objects
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Custom Tokens
-- Cards: Support mix of different card sizes in the same game
-- Cards: Support more than 1 card face (Dual-Faced Cards)
-- Cards: Support multiple card backs
 
 ## Backlog - 2024 Q2
 - Game-Play: Support multiple card selection
@@ -48,6 +45,9 @@ permalink: roadmap.html
 - Decks: Group cards in Deck Editor
   - Option for card count limits, i.e. 3 copies per deck
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
+- Cards: Support mix of different card sizes in the same game
+- Cards: Support more than 1 card face (Dual-Faced Cards)
+- Cards: Support multiple card backs
 
 ## Backlog - 2024 Q3
 - Game-Play: Support multiple playmats

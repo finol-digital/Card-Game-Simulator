@@ -34,6 +34,11 @@ namespace Cgs.Menu
         public GameObject gameImportModalPrefab;
         public GameObject downloadMenuPrefab;
 
+        public RectTransform browseButton;
+        public RectTransform newButton;
+        public RectTransform shareButton;
+        public RectTransform editButton;
+
         protected override bool AllowSwitchOff => false;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
@@ -90,11 +95,21 @@ namespace Cgs.Menu
             else if (Inputs.IsSubmit)
                 Sync();
             else if (Inputs.IsNew)
-                CreateNew();
+            {
+                if (Settings.DeveloperMode)
+                    CreateNew();
+                else
+                    ShowCgsGamesBrowser();
+            }
             else if (Inputs.IsLoad)
                 Import();
             else if (Inputs.IsSave)
-                Share();
+            {
+                if (Settings.DeveloperMode)
+                    EditCurrent();
+                else
+                    Share();
+            }
             else if (Inputs.IsOption)
                 Delete();
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
@@ -106,6 +121,10 @@ namespace Cgs.Menu
         public void Show()
         {
             Menu.Show();
+            browseButton.gameObject.SetActive(!Settings.DeveloperMode);
+            newButton.gameObject.SetActive(Settings.DeveloperMode);
+            shareButton.gameObject.SetActive(!Settings.DeveloperMode);
+            editButton.gameObject.SetActive(Settings.DeveloperMode);
             BuildGameSelectionOptions();
         }
 
@@ -122,12 +141,21 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
+        public void ShowCgsGamesBrowser()
+        {
+            Application.OpenURL(Tags.CgsGamesUrl);
+        }
+
+        [UsedImplicitly]
         public void CreateNew()
         {
-            if (Settings.DeveloperMode)
-                CardGameEditor.Show();
-            else
-                Application.OpenURL(Tags.CgsGamesUrl);
+            CardGameEditor.Show();
+        }
+
+        [UsedImplicitly]
+        public void EditCurrent()
+        {
+            CardGameManager.Instance.Messenger.Show("Edit functionality is still in development!");
         }
 
         [UsedImplicitly]
