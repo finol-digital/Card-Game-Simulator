@@ -6,16 +6,16 @@ permalink: roadmap.html
 
 ## What's New - v1.102
 - Games Management Menu: CGS Games Browser
-- Game-Creation: Edit Button in Games Management Menu
+- Games Management Menu: Edit Button
 
 ## Active Sprint
 - Bug-Fix: Game Creation Menu copyright on portrait
-- Bug-Fix: Card Creation
 - Bug-Fix: Card Creation description
-- Bug-Fix: Game Boards, test with Saga, and message user
+- Bug-Fix: Card Creation import image
 
 ## Backlog - 2024 Q1
 - Bug-Fix: Sync button does not update Game
+- Bug-Fix: Game Boards, test with Saga, and message user
 - Bug-Fix: Card image blurriness/image quality management
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
