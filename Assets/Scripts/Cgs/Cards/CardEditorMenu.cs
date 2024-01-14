@@ -12,6 +12,7 @@ using FinolDigital.Cgs.CardGameDef;
 using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using SFB;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -32,6 +33,8 @@ namespace Cgs.Cards
         public const string ImageImportFailedWarningMessage = "Failed to get the image! Unable to import the card.";
 
         public GameObject downloadMenuPrefab;
+        public RectTransform scrollRectContent;
+        public RectTransform cardPropertyTemplate;
         public List<InputField> inputFields;
         public InputField cardIdInputField;
         public InputField setCodeInputField;
@@ -46,7 +49,9 @@ namespace Cgs.Cards
             get => _cardId;
             set
             {
-                _cardId = UnityFileMethods.GetSafeFileName(value)[..64];
+                _cardId = UnityFileMethods.GetSafeFileName(value);
+                if (_cardId.Length >= 64)
+                    _cardId = _cardId[..64];
                 if (!_cardId.Equals(cardIdInputField.text))
                     cardIdInputField.text = _cardId;
             }
@@ -61,6 +66,8 @@ namespace Cgs.Cards
             set
             {
                 _setCode = UnityFileMethods.GetSafeFilePath(value);
+                if (_cardId.Length >= 64)
+                    _cardId = _cardId[..64];
                 if (!_setCode.Equals(setCodeInputField.text))
                     setCodeInputField.text = _setCode;
             }
@@ -100,9 +107,12 @@ namespace Cgs.Cards
 
         private UnityAction _onCreationCallback;
 
+        private readonly List<TMP_InputField> _inputFields = new();
+
         private void Update()
         {
-            if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
+            if (!IsFocused || inputFields.Any(inputField => inputField.isFocused) ||
+                _inputFields.Any(field => field.isFocused))
                 return;
 
             if ((Inputs.IsSubmit || Inputs.IsNew) && saveButton.interactable)
@@ -120,7 +130,21 @@ namespace Cgs.Cards
             Show();
             SetCode = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
             cardImage.sprite = CardImageSprite != null ? CardImageSprite : CardGameManager.Current.CardBackImageSprite;
+
             _onCreationCallback = onCreationCallback;
+
+            for (var i = _inputFields.Count - 1; i >= 0; i--)
+                Destroy(_inputFields[i].transform.parent.gameObject);
+            _inputFields.Clear();
+            foreach (var propertyDef in CardGameManager.Current.CardProperties.Where(def =>
+                         PropertyType.String.Equals(def.Type)))
+            {
+                var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
+                    .transform;
+                newTransform.gameObject.SetActive(true);
+                newTransform.GetComponentInChildren<Text>().text = propertyDef.Display;
+                _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
+            }
         }
 
         [UsedImplicitly]
@@ -213,11 +237,25 @@ namespace Cgs.Cards
 
             saveButton.interactable = false;
 
+            var propertyDefValuePairs = new Dictionary<string, PropertyDefValuePair>();
+            var stringProperties =
+                CardGameManager.Current.CardProperties.Where(def => PropertyType.String.Equals(def.Type)).ToList();
+            for (var i = 0; i < stringProperties.Count && i < _inputFields.Count; i++)
+            {
+                var propertyName = stringProperties[i].Name;
+                var propertyDefValuePair = new PropertyDefValuePair
+                {
+                    Def = stringProperties[i],
+                    Value = _inputFields[i].text
+                };
+                propertyDefValuePairs[propertyName] = propertyDefValuePair;
+            }
+
             var card = new UnityCard(CardGameManager.Current,
                     string.IsNullOrEmpty(CardId)
                         ? Guid.NewGuid().ToString().ToUpper()
                         : CardId, CardName,
-                    string.IsNullOrEmpty(SetCode) ? Set.DefaultCode : SetCode, null,
+                    string.IsNullOrEmpty(SetCode) ? Set.DefaultCode : SetCode, propertyDefValuePairs,
                     false)
                 {ImageWebUrl = CardImageUri.AbsoluteUri};
             yield return UnityFileMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);

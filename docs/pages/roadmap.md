@@ -5,9 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.102
-- Bug-Fix: Game Creation Menu copyright on portrait
-- Bug-Fix: Card Creation description
-- Bug-Fix: Card Creation import image
+- Bug-Fix: Card Creation
 
 ## Active Sprint
 - Bug-Fix: Sync button does not update Game
@@ -36,6 +34,8 @@ permalink: roadmap.html
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Move card to zone, stack, or drawer (E)
+
+## Backlog - 2024 Q3
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
@@ -49,7 +49,7 @@ permalink: roadmap.html
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 
-## Backlog - 2024 Q3
+## Backlog - 2024 Q4
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app

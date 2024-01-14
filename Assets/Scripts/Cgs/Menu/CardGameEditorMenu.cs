@@ -109,6 +109,8 @@ namespace Cgs.Menu
 
         [UsedImplicitly] public string RulesUrl { get; set; }
 
+        [UsedImplicitly] public string CardProperty { get; set; } = "description";
+
         private void Update()
         {
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
@@ -350,6 +352,16 @@ namespace Cgs.Menu
             StartCoroutine(CreateGame());
         }
 
+        private static List<PropertyDef> Of(string property)
+        {
+            var propertyDefs = new List<PropertyDef>();
+            var textInfo = CultureInfo.CurrentCulture.TextInfo;
+            var display = textInfo.ToTitleCase(property);
+            var propertyDef = new PropertyDef(property, PropertyType.String, display);
+            propertyDefs.Add(propertyDef);
+            return propertyDefs;
+        }
+
         private IEnumerator CreateGame()
         {
             ValidateCreateButton();
@@ -374,14 +386,15 @@ namespace Cgs.Menu
                 PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg",
                 PlayMatImageUrl = _game.PlayMatImageUrl,
                 Copyright = string.IsNullOrWhiteSpace(Copyright) ? "" : Copyright,
-                RulesUrl = Uri.IsWellFormedUriString(RulesUrl, UriKind.Absolute) ? new Uri(RulesUrl) : null
+                RulesUrl = Uri.IsWellFormedUriString(RulesUrl, UriKind.Absolute) ? new Uri(RulesUrl) : null,
+                CardPrimaryProperty = string.IsNullOrWhiteSpace(CardProperty) ? "" : CardProperty,
+                CardProperties = string.IsNullOrWhiteSpace(CardProperty) ? new List<PropertyDef>() : Of(CardProperty)
             };
 
             if (!Directory.Exists(newCardGame.GameDirectoryPath))
                 Directory.CreateDirectory(newCardGame.GameDirectoryPath);
-            var defaultContractResolver = new DefaultContractResolver()
-                {NamingStrategy = new CamelCaseNamingStrategy()};
-            var jsonSerializerSettings = new JsonSerializerSettings()
+            var defaultContractResolver = new DefaultContractResolver {NamingStrategy = new CamelCaseNamingStrategy()};
+            var jsonSerializerSettings = new JsonSerializerSettings
             {
                 ContractResolver = defaultContractResolver,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
