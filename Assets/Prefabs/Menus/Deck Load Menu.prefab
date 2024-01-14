@@ -234,7 +234,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00022420888}
+  m_AnchoredPosition: {x: 0, y: 0.00084649137}
   m_SizeDelta: {x: 0, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &114562436159873448
@@ -406,6 +406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00c0bd42fad5434c9fab94089ec3c58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toggleGroup: {fileID: 0}
   selectionContent: {fileID: 224937724690924458}
   selectionTemplate: {fileID: 6081254067959915976}
   emptyText: {fileID: 5123299679087527343}
@@ -2515,7 +2516,7 @@ PrefabInstance:
     - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.99999756
       objectReference: {fileID: 0}
     - target: {fileID: 1829473601405758889, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
@@ -2635,7 +2636,7 @@ PrefabInstance:
     - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
       propertyPath: m_Size
-      value: 1
+      value: 0.9999977
       objectReference: {fileID: 0}
     - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}

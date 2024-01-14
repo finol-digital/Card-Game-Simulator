@@ -229,11 +229,13 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
-            var uriBuilder = new UriBuilder(url)
-            {
-                Scheme = Uri.UriSchemeHttps,
-                Port = -1 // default port for scheme
-            };
+            var uriBuilder = url.StartsWith("http")
+                ? new UriBuilder(url)
+                {
+                    Scheme = Uri.UriSchemeHttps, // enforce https over http
+                    Port = -1 // default port for scheme
+                }
+                : new UriBuilder(url);
             var uri = uriBuilder.Uri;
 
             using var unityWebRequest =

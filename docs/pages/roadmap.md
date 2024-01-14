@@ -4,50 +4,52 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.101
-- Minor Bug Fixes
+## What's New - v1.102
+- Bug-Fix: Card Creation
 
 ## Active Sprint
-- Games Management Menu: Import from CGS Games
-
-## Backlog - 2024 Q1
-- Bug-Fix: Game creation menu copyright on portrait
-- Bug-Fix: Card Creation description
+- Bug-Fix: Sync button does not update Game
 - Bug-Fix: Game Boards, test with Saga, and message user
-- Bug-Fix: Image quality management/LODs for card images
+- Bug-Fix: Card image blurriness/image quality management
+- Games Management Menu: CGS Games Browser
+- Games Management Menu: Edit Button
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
+
+## Backlog - 2024 Q1
 - Game-Play: Right-click for context menu
 - Game-Play: Apply rotation when spawning players objects
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Custom Tokens
-- Cards: Support mix of different card sizes in the same game
-- Cards: Support more than 1 card face (Dual-Faced Cards)
-- Cards: Support multiple card backs
 
 ## Backlog - 2024 Q2
 - Game-Play: Support multiple card selection
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
+- Game-Play: Arrow from card with middle mouse button or alt
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
-- Game-Creation: Edit Button in Games Management Menu
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Move card to zone, stack, or drawer (E)
+
+## Backlog - 2024 Q3
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
-  - Decouple games and decks, so you can use any deck from any game
+  - Decouple games and decks, so you can use any deck from any game and deleting a game won't delete your decks
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
 - Decks: Show error(s) when a card is not found
 - Decks: Group cards in Deck Editor
   - Option for card count limits, i.e. 3 copies per deck
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
+- Cards: Support mix of different card sizes in the same game
+- Cards: Support more than 1 card face (Dual-Faced Cards)
+- Cards: Support multiple card backs
 
-## Backlog - 2024 Q3
+## Backlog - 2024 Q4
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app

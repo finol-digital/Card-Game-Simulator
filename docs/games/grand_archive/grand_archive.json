@@ -149,7 +149,9 @@
 				"ALLY": "Ally",
 				"ATTACK": "Attack",
 				"CHAMPION": "Champion",
+				"DOMAIN": "Domain",
 				"ITEM": "Item",
+				"PHANTASIA": "Phantasia",
 				"REGALIA": "Regalia",
 				"UNIQUE": "Unique",
 				"WEAPON": "Weapon"
@@ -210,12 +212,10 @@
 				"LUXEM": "Luxem",
 				"NORM": "Normal",
 				"NEOS": "Neos",
-				"TECHA": "Techa",
 				"TERA": "Tera",
 				"UMBRA": "Umbra",
 				"WATER": "Water",
-				"WIND": "Wind",
-				"WRATH": "Wrath"
+				"WIND": "Wind"
 			}
 		}
 	],
