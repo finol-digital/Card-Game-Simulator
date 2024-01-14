@@ -82,11 +82,11 @@ namespace Tests.PlayMode
                 Set.DefaultCode, null,
                 false);
 
-            yield return UnityFileMethods.SaveUrlToFile(new Uri(UnityFileMethods.CacheFile(
+            yield return UnityFileMethods.SaveUrlToFile(new Uri(
                     Application.streamingAssetsPath
                     + "/" +
                     Tags.StandardPlayingCardsDirectoryName + "/" +
-                    "CardBack.png")).AbsoluteUri,
+                    "CardBack.png").AbsoluteUri,
                 card.ImageFilePath);
 
             CardGameManager.Current.Add(card);
