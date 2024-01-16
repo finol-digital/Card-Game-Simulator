@@ -26,6 +26,9 @@
         document.body.style.textAlign = "left";
       }
 
+      function dispatchReactUnityEvent(eventName) {};
+      window.dispatchReactUnityEvent = dispatchReactUnityEvent;
+
       createUnityInstance(document.querySelector("#unity-canvas"), {
         dataUrl: "Build/WebGL.data",
         frameworkUrl: "Build/WebGL.framework.js",
