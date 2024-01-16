@@ -437,6 +437,7 @@ jobs:
         env:
           UNITY_BUILD_WEBGL_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL', github.workspace) }}
           FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/Card-Game-Simulator/firebase/public/Unity', github.workspace) }}
+        run: find $UNITY_BUILD_WEBGL_PATH -type f -name "**WebGL.*" -exec cp {} $FIREBASE_PUBLIC_BUILD_PATH \;
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
