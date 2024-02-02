@@ -44,7 +44,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -55,7 +55,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -94,7 +94,7 @@ jobs:
         with:
           lfs: true
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-lint-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -164,7 +164,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -175,7 +175,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -241,7 +241,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -252,7 +252,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -426,7 +426,7 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
       - name: Raise PR to CGS games
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.CGS_PAT }}
           path: cgs-games
@@ -498,7 +498,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -509,7 +509,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -606,7 +606,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -617,7 +617,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-WSAPlayer-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -664,7 +664,7 @@ jobs:
       - name: Setup Developer Command Prompt for Microsoft Visual C++
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v2
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
