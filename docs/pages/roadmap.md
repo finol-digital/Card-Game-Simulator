@@ -6,12 +6,12 @@ permalink: roadmap.html
 
 ## What's New - v1.103
 - Bug-Fix: Game Boards
-- Games Management Menu: CGS Games Browser
-- Games Management Menu: Edit Button
 
 ## Active Sprint
 - Bug-Fix: Sync button does not update Game
 - Bug-Fix: Card image blurriness/image quality management
+- Games Management Menu: CGS Games Browser
+- Games Management Menu: Edit Button
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Contextual green button for default action based on card location
 
