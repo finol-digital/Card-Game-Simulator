@@ -426,7 +426,7 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
       - name: Raise PR to CGS games
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.CGS_PAT }}
           path: cgs-games
