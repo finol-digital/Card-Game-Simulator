@@ -13,7 +13,6 @@
 1x Fire Resonance Bauble
 1x Life Essence Amulet
 ## Main Deck
-Allies x24
 3x Banner Knight
 4x Crusader of Aesa
 4x Esteemed Knight

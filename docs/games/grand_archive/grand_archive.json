@@ -121,24 +121,28 @@
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{
-			"name": "Lorraine Starter Deck",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20Deck.txt"
+			"name": "Arisanna Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Arisanna%20Starter%20Deck.txt"
 		},
 		{
-			"name": "Lorraine Starter Prelude PnP",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20Prelude%20PnP.txt"
+			"name": "Diana Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Diana%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Lorraine Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20Deck.txt"
 		},
 		{
 			"name": "Rai Starter Deck",
 			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20Deck.txt"
 		},
 		{
-			"name": "Rai Starter Prelude PnP",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20Prelude%20PnP.txt"
-		},
-		{
 			"name": "Silvie Starter Deck",
 			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Silvie%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Tonoris Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Tonoris%20Starter%20Deck.txt"
 		}
 	],
 	"enums": [
@@ -153,6 +157,7 @@
 				"ITEM": "Item",
 				"PHANTASIA": "Phantasia",
 				"REGALIA": "Regalia",
+				"TOKEN": "Token",
 				"UNIQUE": "Unique",
 				"WEAPON": "Weapon"
 			}

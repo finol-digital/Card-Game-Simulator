@@ -317,7 +317,9 @@ namespace Cgs.Play
         {
             var newBoardGameObject = new GameObject(board.Id, typeof(RectTransform));
             var boardRectTransform = (RectTransform) newBoardGameObject.transform;
-            boardRectTransform.SetParent(playAreaCardZone.transform);
+            boardRectTransform.SetParent(playMatImage.transform);
+            boardRectTransform.localScale = Vector3.one;
+
             boardRectTransform.anchorMin = Vector2.zero;
             boardRectTransform.anchorMax = Vector2.zero;
             boardRectTransform.offsetMin =
@@ -328,11 +330,16 @@ namespace Cgs.Play
 
             var boardFilepath = CardGameManager.Current.GameBoardsDirectoryPath + "/" + board.Id + "." +
                                 CardGameManager.Current.GameBoardImageFileType;
+            Debug.Log("board: " + boardFilepath);
             var boardImageSprite = File.Exists(boardFilepath)
                 ? UnityFileMethods.CreateSprite(boardFilepath)
                 : null;
             if (boardImageSprite != null)
-                newBoardGameObject.AddComponent<Image>().sprite = boardImageSprite;
+            {
+                Debug.Log("board create: " + boardFilepath);
+                var image = newBoardGameObject.AddComponent<Image>();
+                image.sprite = boardImageSprite;
+            }
 
             boardRectTransform.localScale = Vector3.one;
         }
