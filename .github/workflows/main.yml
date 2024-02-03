@@ -444,6 +444,7 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}'
           channelId: live
           projectId: card-game-simulator
+          entryPoint: firebase
 
   deployToMacAppStore:
     name: Deploy to the Mac App Store
