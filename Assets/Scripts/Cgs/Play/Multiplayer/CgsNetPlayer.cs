@@ -266,6 +266,22 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
+        #region Boards
+
+        public void RequestNewBoard(string gameBoardId, Vector2 size, Vector2 position)
+        {
+            CreateBoardServerRpc(gameBoardId, size, position);
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CreateBoardServerRpc(string gameBoardId, Vector2 size, Vector2 position)
+        {
+            PlayController.Instance.CreateBoard(gameBoardId, size, position);
+        }
+
+        #endregion
+
         #region CardStacks
 
         public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards, bool isFaceup)

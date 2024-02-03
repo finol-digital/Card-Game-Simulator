@@ -623,6 +623,8 @@ MonoBehaviour:
     type: 3}
   handDealerPrefab: {fileID: 7945912001630269733, guid: 743c496c97559c94c87f8e6ae3360c32,
     type: 3}
+  boardPrefab: {fileID: 4883056628646692844, guid: 5011619a7020e764cabbac7ce50df498,
+    type: 3}
   cardStackPrefab: {fileID: 4087591186767669376, guid: 5fdc698f4f037cc44921305d641fd80b,
     type: 3}
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
@@ -3004,6 +3006,21 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 866348971}
+    - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_AnchoredPosition.x

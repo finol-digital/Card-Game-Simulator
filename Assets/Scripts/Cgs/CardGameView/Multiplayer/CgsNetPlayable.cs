@@ -54,8 +54,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkObject _networkObject;
 
-        protected virtual bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 || CurrentPointerEventData is
-            {button: PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right};
+        protected virtual bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 ||
+                                                                  CurrentPointerEventData is
+                                                                  {
+                                                                      button: PointerEventData.InputButton.Middle
+                                                                      or PointerEventData.InputButton.Right
+                                                                  };
 
         public Vector2 Position
         {
