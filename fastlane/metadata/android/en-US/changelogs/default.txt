@@ -1,1 +1,1 @@
-- Bug-Fix: Card Creation
+- Bug-Fix: Game Boards
