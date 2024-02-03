@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
@@ -46,6 +45,7 @@ namespace Cgs.Play
         public GameObject searchMenuPrefab;
         public GameObject handDealerPrefab;
 
+        public GameObject boardPrefab;
         public GameObject cardStackPrefab;
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
@@ -144,7 +144,7 @@ namespace Cgs.Play
             Instantiate(cardViewerPrefab);
             Instantiate(playableViewerPrefab);
             CardViewer.Instance.GetComponent<CardActions>().Show();
-            if (Cgs.Menu.Settings.PreviewOnMouseOver)
+            if (Menu.Settings.PreviewOnMouseOver)
                 CardViewer.Instance.Mode = CardViewerMode.Expanded;
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
@@ -310,34 +310,32 @@ namespace Cgs.Play
         private void CreateGameBoards(IEnumerable<GameBoard> gameBoards)
         {
             foreach (var gameBoard in gameBoards)
-                CreateGameBoard(gameBoard);
+            {
+                var size = new Vector2(gameBoard.Size.X, gameBoard.Size.Y);
+                var position = new Vector2(gameBoard.OffsetMin.X, gameBoard.OffsetMin.Y);
+                if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
+                    CgsNetManager.Instance.LocalPlayer.RequestNewBoard(gameBoard.Id, size, position);
+                else
+                    CreateBoard(gameBoard.Id, size, position);
+            }
         }
 
-        private void CreateGameBoard(GameBoard board)
+        public Board CreateBoard(string gameBoardId, Vector2 size, Vector2 position)
         {
-            var newBoardGameObject = new GameObject(board.Id, typeof(RectTransform));
-            var boardRectTransform = (RectTransform) newBoardGameObject.transform;
-            boardRectTransform.SetParent(playAreaCardZone.transform);
-            boardRectTransform.anchorMin = Vector2.zero;
-            boardRectTransform.anchorMax = Vector2.zero;
-            boardRectTransform.offsetMin =
-                new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch;
-            boardRectTransform.offsetMax =
-                new Vector2(board.OffsetMin.X, board.OffsetMin.Y) * CardGameManager.PixelsPerInch +
-                boardRectTransform.offsetMin;
-
-            var boardFilepath = CardGameManager.Current.GameBoardsDirectoryPath + "/" + board.Id + "." +
-                                CardGameManager.Current.GameBoardImageFileType;
-            var boardImageSprite = File.Exists(boardFilepath)
-                ? UnityFileMethods.CreateSprite(boardFilepath)
-                : null;
-            if (boardImageSprite != null)
-                newBoardGameObject.AddComponent<Image>().sprite = boardImageSprite;
-
-            boardRectTransform.localScale = Vector3.one;
+            var board = Instantiate(boardPrefab, playAreaCardZone.transform).GetComponent<Board>();
+            if (!string.IsNullOrEmpty(gameBoardId))
+                board.GameBoardId = gameBoardId;
+            if (!Vector2.zero.Equals(size))
+                board.Size = size;
+            var rectTransform = (RectTransform) board.transform;
+            if (!Vector2.zero.Equals(position))
+                rectTransform.localPosition = position;
+            board.Position = rectTransform.localPosition;
+            return board;
         }
 
-        public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position, bool isFaceup)
+        public CardStack CreateCardStack(string stackName, IReadOnlyList<UnityCard> cards, Vector2 position,
+            bool isFaceup)
         {
             var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
@@ -497,12 +495,15 @@ namespace Cgs.Play
             }
         }
 
-        private void CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference, CardAction cardAction)
+        private void CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference,
+            CardAction cardAction)
         {
-            Debug.Log($"CreateAreaZone position: {position}, size: {size}, face: {facePreference}, cardAction: {cardAction}");
+            Debug.Log(
+                $"CreateAreaZone position: {position}, size: {size}, face: {facePreference}, cardAction: {cardAction}");
         }
 
-        private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference, CardAction cardAction)
+        private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference,
+            CardAction cardAction)
         {
             var cardZone = Instantiate(horizontalCardZonePrefab, playAreaCardZone.transform)
                 .GetOrAddComponent<CardZone>();
@@ -547,7 +548,8 @@ namespace Cgs.Play
             cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = cardAction);
         }
 
-        private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference, CardAction cardAction)
+        private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference,
+            CardAction cardAction)
         {
             var cardZone = Instantiate(verticalCardZonePrefab, playAreaCardZone.transform).GetComponent<CardZone>();
             var cardZoneRectTransform = (RectTransform) cardZone.transform;

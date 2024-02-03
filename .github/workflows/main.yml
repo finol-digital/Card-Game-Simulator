@@ -44,7 +44,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -55,7 +55,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -94,7 +94,7 @@ jobs:
         with:
           lfs: true
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-lint-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -164,7 +164,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -175,7 +175,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -241,7 +241,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -252,7 +252,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -426,13 +426,24 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
       - name: Raise PR to CGS games
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.CGS_PAT }}
           path: cgs-games
           branch: ${{ needs.buildWithLinux.outputs.buildVersion }}
           title: ${{ needs.buildWithLinux.outputs.buildVersion }}
           body-path: Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
+      - name: Copy the WebGL build artifacts to the Firebase public directory
+        env:
+          UNITY_BUILD_WEBGL_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL', github.workspace) }}
+          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/Card-Game-Simulator/firebase/public/Unity', github.workspace) }}
+        run: find $UNITY_BUILD_WEBGL_PATH -type f -name "**WebGL.*" -exec cp {} $FIREBASE_PUBLIC_BUILD_PATH \;
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}'
+          channelId: live
+          projectId: card-game-simulator
 
   deployToMacAppStore:
     name: Deploy to the Mac App Store
@@ -487,7 +498,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -498,7 +509,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -595,7 +606,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: lfs-cache
         with:
           path: .git/lfs
@@ -606,7 +617,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: Library
           key: Library-WSAPlayer-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -632,8 +643,7 @@ jobs:
     name: Deploy to the Microsoft Store
     runs-on: windows-2022
     needs: buildWSAPlayer
-    if: false
-#    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
       - name: Download WSAPlayer Artifact
         uses: actions/download-artifact@v4
@@ -654,7 +664,7 @@ jobs:
       - name: Setup Developer Command Prompt for Microsoft Visual C++
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v2
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -677,30 +687,9 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Remove spaces from project name
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator.sln"
-          replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
-      - name: Remove spaces from project name 2
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
-          replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-      - name: Add Package.StoreAssociation.xml to .vcxproj
-        uses: mingjun97/file-regex-replace@v1
-        with:
-          regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
-          replacement: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
-          path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
-      - name: Add Package.StoreAssociation.xml to .vcxproj.filters
-        uses: mingjun97/file-regex-replace@v1
-        with:
-          regex: '</ItemGroup>'
-          replacement: '</ItemGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
-          path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
-          include: 'Card Game Simulator\.vcxproj\.filters'
       - name: Prepare project
+# Fix UnityWSAPlayerDir
+# Remove to_remove.txt
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -712,32 +701,61 @@ jobs:
           $manifest.save(".\$env:WsaPlayerDirectory\UnityCommon.props")
           echo ".\$env:WsaPlayerDirectory\UnityCommon.props"
           cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
-          Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
-          Copy-Item "C:\Card-Game-Simulator.git\storebroker\CardGameSimulator.vcxproj.user" -Destination ".\$env:UwpProjectDirectory\"
           $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\storebroker\to_remove.txt -Raw
           echo "$content_to_remove"
           $targetContent = Get-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems" -Raw
           $updatedContent = $targetContent -replace [regex]::Escape($content_to_remove), ''
           $updatedContent | Set-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
           cat ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
+      - name: Upload Build2
+        uses: actions/upload-artifact@v4
+        with:
+          name: cgs-WSAPlayer2
+          path: ${{ format('{0}\build\WSAPlayer', 'C:\Card-Game-Simulator.git') }}
+      - name: Remove spaces from project name
+# Remove Spaces
+        if: false
+        uses: davidmfinol/replace-action@master
+        with:
+          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator.sln"
+          replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
+      - name: Remove spaces from project name 2
+# Remove Spaces
+        if: false
+        uses: davidmfinol/replace-action@master
+        with:
+          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
+          replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
+      - name: Add Package.StoreAssociation.xml to .vcxproj
+# Associate with App Store
+        uses: mingjun97/file-regex-replace@v1
+        with:
+          regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
+          replacement: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
+          path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
+      - name: Add Package.StoreAssociation.xml to .vcxproj.filters
+# Associate with App Store
+        uses: mingjun97/file-regex-replace@v1
+        with:
+          regex: '</ItemGroup>'
+          replacement: '</ItemGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
+          path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
+          include: 'Card Game Simulator\.vcxproj\.filters'
       - name: Update the Package.appxmanifest
-#        if: false
+# Associate with App Store
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
         run: |
+          Copy-Item "C:\Card-Game-Simulator.git\storebroker\Package.StoreAssociation.xml" -Destination ".\$env:UwpProjectDirectory\"
+          Copy-Item "C:\Card-Game-Simulator.git\storebroker\CardGameSimulator.vcxproj.user" -Destination ".\$env:UwpProjectDirectory\"
           [xml]$manifest = get-content ".\$env:UwpProjectDirectory\Package.appxmanifest"
           $manifest.Package.Identity.Name = "FinolDigitalLLC.CardGameSimulator"
           $manifest.Package.Identity.Publisher = "CN=BBF9912B-079E-4CCE-A441-0D6EA6798115"
           $manifest.save(".\$env:UwpProjectDirectory\Package.appxmanifest")
           echo ".\$env:UwpProjectDirectory\Package.appxmanifest"
           cat ".\$env:UwpProjectDirectory\Package.appxmanifest"
-      - name: Upload Build2
-        uses: actions/upload-artifact@v4
-        with:
-          name: cgs-WSAPlayer2
-          path: ${{ format('{0}\build\WSAPlayer', 'C:\Card-Game-Simulator.git') }}
       - name: Decode the Pfx
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -794,7 +812,7 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [buildWithWindows, deployToAppStore, deployToGooglePlay, deployToFirebase, deployToMacAppStore, deployToSteam] #, deployToMicrosoftStore]
+    needs: [buildWithWindows, deployToAppStore, deployToGooglePlay, deployToFirebase, deployToMacAppStore, deployToSteam, deployToMicrosoftStore]
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository

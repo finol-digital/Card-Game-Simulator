@@ -4,12 +4,11 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.102
-- Bug-Fix: Card Creation
+## What's New - v1.103
+- Bug-Fix: Game Boards
 
 ## Active Sprint
 - Bug-Fix: Sync button does not update Game
-- Bug-Fix: Game Boards, test with Saga, and message user
 - Bug-Fix: Card image blurriness/image quality management
 - Games Management Menu: CGS Games Browser
 - Games Management Menu: Edit Button
@@ -87,4 +86,5 @@ permalink: roadmap.html
 - Integration: Support multiple languages (Spanish, Chinese, etc)
 - Integration: NanDeck + Squib + Magic Set Editor
 - Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice
+- Integration: https://www.schemastore.org/json/
 - Only to be pursued if all other goals have been completed: Support game-specific rules enforcement
