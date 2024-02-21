@@ -1,1 +1,1 @@
-- Bug-Fix: Game Boards
+- Minor Bug Fixes
