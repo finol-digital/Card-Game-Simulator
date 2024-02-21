@@ -209,7 +209,7 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: vimtor/action-zip@v1.1
+        uses: vimtor/action-zip@v1.2
         if: github.event.action == 'published' && matrix.targetPlatform == 'StandaloneLinux64'
         with:
           files: build/${{ matrix.targetPlatform }}/
@@ -298,7 +298,7 @@ jobs:
           path: build/StandaloneOSX/Card Game Simulator.app
           name: Card Game Simulator.app
       - name: Zip App
-        uses: vimtor/action-zip@v1.1
+        uses: vimtor/action-zip@v1.2
         if: github.event.action == 'published'
         with:
           files: build/StandaloneOSX/
@@ -535,7 +535,7 @@ jobs:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
       - name: Zip Build
-        uses: vimtor/action-zip@v1.1
+        uses: vimtor/action-zip@v1.2
         if: github.event.action == 'published' && matrix.targetPlatform != 'WSAPlayer'
         with:
           files: build/${{ matrix.targetPlatform }}/
