@@ -49,8 +49,10 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             if (string.IsNullOrEmpty(deckText))
                 return deck;
 
-            foreach (var line in deckText.Split('\n').Select(x => x.Trim()))
+            var lines = deckText.Split('\n').Select(x => x.Trim()).ToList();
+            for (var i = 0; i < lines.Count; i++)
             {
+                var line = lines[i];
                 switch (deckFileType)
                 {
                     case DeckFileType.Dec:
@@ -69,9 +71,15 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         break;
                     case DeckFileType.Txt:
                     default:
-                        if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:"))
-                            return deck;
-                        deck.LoadTxt(line);
+                        if (line.Equals("Sideboard") || line.Equals("sideboard") || line.Equals("Sideboard:") ||
+                            line.Equals("# Sideboard"))
+                        {
+                            while (i < lines.Count && !string.IsNullOrWhiteSpace(lines[i]))
+                                i++;
+                        }
+                        else
+                            deck.LoadTxt(line);
+
                         break;
                 }
             }

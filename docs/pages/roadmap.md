@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.103
-- Bug-Fix: Game Boards
+## What's New - v1.104
+- Minor Bug Fixes
 
 ## Active Sprint
 - Bug-Fix: Sync button does not update Game
