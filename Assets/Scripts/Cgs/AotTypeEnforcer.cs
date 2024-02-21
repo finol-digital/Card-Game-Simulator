@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Utilities;
 using UnityEngine;
@@ -8,6 +10,7 @@ using UnityExtensionMethods;
 
 namespace Cgs
 {
+    [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
     public class AotTypeEnforcer : MonoBehaviour
     {
         public void Awake()
@@ -15,8 +18,7 @@ namespace Cgs
             AotHelper.EnsureType<StringEnumConverter>();
             AotHelper.Ensure(() =>
             {
-                // ReSharper disable once UseObjectOrCollectionInitializer
-                var cardGame = new CardGame();
+                var cardGame = new UnityCardGame(null);
                 cardGame.AllCardsUrl = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.AllCardsUrlPageCount = 1;
                 cardGame.AllCardsUrlPageCountDivisor = 1;
@@ -49,8 +51,19 @@ namespace Cgs
                 cardGame.CardNameIsUnique = false;
                 cardGame.CardPrimaryProperty = string.Empty;
                 var propertyDef = new PropertyDef(string.Empty, PropertyType.String);
-                cardGame.CardProperties = new List<PropertyDef> {propertyDef};
-                cardGame.CardPropertyIdentifier = string.Empty;
+                propertyDef.Properties = new List<PropertyDef>();
+                propertyDef.Delimiter = string.Empty;
+                propertyDef.DisplayEmpty = string.Empty;
+                propertyDef.Display = string.Empty;
+                propertyDef.DisplayEmptyFirst = false;
+                propertyDef.Name = string.Empty;
+                propertyDef.Type = PropertyType.String;
+                var propertyDefValuePair = new PropertyDefValuePair();
+                propertyDefValuePair.Def = propertyDef;
+                propertyDefValuePair.Value = string.Empty;
+                cardGame.CardProperties = new List<PropertyDef>();
+                cardGame.CardProperties.Add(propertyDef);
+                cardGame.CardPropertyIdentifier = propertyDefValuePair.ToString();
                 cardGame.CardRotationDefault = 0;
                 cardGame.CardRotationIdentifier = string.Empty;
                 cardGame.CardSetIdentifier = string.Empty;

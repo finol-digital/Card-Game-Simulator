@@ -588,6 +588,25 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             var cardProperties = new Dictionary<string, PropertyDefValuePair>();
             PopulateCardProperties(cardProperties, cardJToken, CardProperties);
 
+            // Populate primary property if it was set in the CGS UI
+            if (cardJToken["properties"] is JObject {HasValues: true} jObject)
+            {
+                if (jObject[CardPrimaryProperty] is JObject {HasValues: true} jObject2)
+                {
+                    var propertyDef = CardProperties.Find(def => def.Name.Equals(CardPrimaryProperty));
+                    var propertyValue = jObject2.Value<string>("value");
+                    if (propertyDef != null && propertyValue != null)
+                    {
+                        var propertyDefValuePair = new PropertyDefValuePair
+                        {
+                            Def = propertyDef,
+                            Value = propertyValue
+                        };
+                        cardProperties[CardPrimaryProperty] = propertyDefValuePair;
+                    }
+                }
+            }
+
             var cardSets = new Dictionary<string, string>();
             PopulateCardSets(cardSets, cardJToken, defaultSetCode);
 
@@ -969,7 +988,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             var allCardsJson = JsonConvert.SerializeObject(Cards.Values.ToList(), new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
             });
             File.WriteAllText(CardsFilePath, allCardsJson);
         }
