@@ -38,7 +38,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -158,7 +158,7 @@ jobs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -235,7 +235,7 @@ jobs:
     timeout-minutes: 90
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -321,7 +321,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download iOS Artifact
         uses: actions/download-artifact@v4
         with:
@@ -364,7 +364,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download Android Artifact
         uses: actions/download-artifact@v4
         with:
@@ -401,7 +401,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: Card-Game-Simulator
       - name: Download WebGL Artifact
@@ -410,7 +410,7 @@ jobs:
           name: cgs-WebGL
           path: Card-Game-Simulator/build/WebGL
       - name: Checkout Firebase project
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: finol-digital/cgs-games
           token: ${{ secrets.CGS_PAT }}
@@ -453,7 +453,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download StandaloneOSX Artifact
         uses: actions/download-artifact@v4
         with:
@@ -493,7 +493,7 @@ jobs:
           - StandaloneWindows64
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -558,7 +558,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Download StandaloneWindows Artifact
         uses: actions/download-artifact@v4
         with:
@@ -601,7 +601,7 @@ jobs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -785,8 +785,8 @@ jobs:
       - name: Upload .appxupload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ format('CardGameSimulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-          path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+          name: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+          path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -798,7 +798,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', 'C:\Card-Game-Simulator.git') }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\CardGameSimulator\CardGameSimulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.zip', 'C:\Card-Game-Simulator.git') }}
@@ -807,7 +807,7 @@ jobs:
           $pass = ConvertTo-SecureString $env:MICROSOFT_KEY -AsPlainText -Force
           $cred = New-Object System.Management.Automation.PSCredential ($env:MICROSOFT_CLIENT_ID, $pass)
           Set-StoreBrokerAuthentication -TenantId $env:MICROSOFT_TENANT_ID -Credential $cred
-          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath $env:APPX_PATH -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
+          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath "$env:APPX_PATH" -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
   announceReleaseToSocialMedia:
@@ -817,7 +817,7 @@ jobs:
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
