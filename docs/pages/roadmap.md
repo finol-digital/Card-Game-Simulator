@@ -4,26 +4,25 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.104
-- Minor Bug Fixes
+## What's New - v1.105
+- Games Management Menu: CGS Games Browser
+- Games Management Menu: Edit Button
 
 ## Active Sprint
 - Bug-Fix: Sync button does not update Game
 - Bug-Fix: Card image blurriness/image quality management
-- Games Management Menu: CGS Games Browser
-- Games Management Menu: Edit Button
-- Game-Play: Display values on Card in Play Area
+- Bug-Fix: Apply rotation when spawning players objects
 - Game-Play: Contextual green button for default action based on card location
+- Game-Play: Right-click for context menu
 
 ## Backlog - 2024 Q1
-- Game-Play: Right-click for context menu
-- Game-Play: Apply rotation when spawning players objects
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Custom Tokens
 
 ## Backlog - 2024 Q2
+- Game-Play: Display values on Card in Play Area
 - Game-Play: Support multiple card selection
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
@@ -86,5 +85,4 @@ permalink: roadmap.html
 - Integration: Support multiple languages (Spanish, Chinese, etc)
 - Integration: NanDeck + Squib + Magic Set Editor
 - Integration: Create tool to automatically convert games/decks to/from OCTGN/LackeyCCG/Cockatrice
-- Integration: https://www.schemastore.org/json/
 - Only to be pursued if all other goals have been completed: Support game-specific rules enforcement
