@@ -5,23 +5,21 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.105
-- Games Management Menu: CGS Games Browser
-- Games Management Menu: Edit Button
+- Bug-Fix: Apply rotation when spawning players objects
+- Bug-Fix: Memory in GA
 
 ## Active Sprint
 - Bug-Fix: Sync button does not update Game
 - Bug-Fix: Card image blurriness/image quality management
-- Bug-Fix: Apply rotation when spawning players objects
-- Game-Play: Contextual green button for default action based on card location
-- Game-Play: Right-click for context menu
-
-## Backlog - 2024 Q1
-- Game-Play: Counter system for players and cards (Dice grouping/parenting)
+- Games Management Menu: CGS Games Browser
+- Games Management Menu: Edit Button
+- Game-Play: Right-click for context menu - includes draw many and contextual green button for default action based on card location
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
-- Game-Play: Custom Tokens
+- Game-Play: Counter system for players and cards (Dice grouping/parenting)
 
-## Backlog - 2024 Q2
+## Backlog - Priority 1
+- Game-Play: Custom Tokens
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Support multiple card selection
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
@@ -33,7 +31,7 @@ permalink: roadmap.html
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Move card to zone, stack, or drawer (E)
 
-## Backlog - 2024 Q3
+## Backlog - Priority 2
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
@@ -47,7 +45,7 @@ permalink: roadmap.html
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 
-## Backlog - 2024 Q4
+## Backlog - Priority 3
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
@@ -80,7 +78,6 @@ permalink: roadmap.html
   - Small Image
   - Large Image
 - Deck Editor: Organize cards by category when saving
-- Game-Play: Support grouping of dice
 - Game-Play: Automatically roll dice on phone shake
 - Integration: Support multiple languages (Spanish, Chinese, etc)
 - Integration: NanDeck + Squib + Magic Set Editor
