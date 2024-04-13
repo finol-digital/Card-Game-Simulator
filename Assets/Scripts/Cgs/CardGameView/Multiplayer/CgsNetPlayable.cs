@@ -72,7 +72,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private Vector2 _position;
+        private Vector2 _position = Vector2.zero;
         private readonly NetworkVariable<Vector2> _positionNetworkVariable = new();
 
         public Quaternion Rotation
@@ -86,7 +86,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private Quaternion _rotation;
+        private Quaternion _rotation = Quaternion.identity;
         private readonly NetworkVariable<Quaternion> _rotationNetworkVariable = new();
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
@@ -511,6 +511,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeRotation(Quaternion oldValue, Quaternion newValue)
         {
+            _rotation = newValue;
             if (!IsOwner)
                 transform.rotation = newValue;
         }

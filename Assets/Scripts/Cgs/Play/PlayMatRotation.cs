@@ -91,7 +91,7 @@ namespace Cgs.Play
         {
             _timeSinceChange = 0;
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
-                _playController.playArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultRotation;
+                _playController.playArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultZRotation;
             else
                 _playController.playArea.CurrentRotation = 0;
         }

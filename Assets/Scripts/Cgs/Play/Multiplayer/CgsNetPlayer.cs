@@ -68,7 +68,9 @@ namespace Cgs.Play.Multiplayer
 
         private readonly NetworkVariable<int> _currentHand = new();
 
-        public int DefaultRotation { get; private set; }
+        public int DefaultZRotation { get; private set; }
+
+        public Quaternion DefaultRotation => Quaternion.Euler(new Vector3(0, 0, DefaultZRotation));
 
         public string GetHandCount()
         {
@@ -179,15 +181,15 @@ namespace Cgs.Play.Multiplayer
         private void ApplyPlayerRotationOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
         {
             if (playerCount % 4 == 0)
-                DefaultRotation = 270;
+                DefaultZRotation = 270;
             else if (playerCount % 3 == 0)
-                DefaultRotation = 90;
+                DefaultZRotation = 90;
             else if (playerCount % 2 == 0)
-                DefaultRotation = 180;
+                DefaultZRotation = 180;
             else
-                DefaultRotation = 0;
-            Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultRotation);
-            PlayController.Instance.playArea.CurrentRotation = DefaultRotation;
+                DefaultZRotation = 0;
+            Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultZRotation);
+            PlayController.Instance.playArea.CurrentRotation = DefaultZRotation;
 
             ApplyPlayerTranslationServerRpc();
         }
@@ -288,24 +290,25 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
-                PlayController.Instance.NewDeckPosition, isFaceup);
+                PlayController.Instance.NewDeckPosition, DefaultRotation, isFaceup);
         }
 
-        public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position, bool isFaceup)
+        public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position,
+            Quaternion rotation, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Requesting new card stack {stackName}...");
             CreateCardStackServerRpc(stackName, cards.Select(card => (CgsNetString) card.Id).ToArray(), false,
-                position, isFaceup);
+                position, rotation, isFaceup);
         }
 
         [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
-            bool isFaceup)
+            Quaternion rotation, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
-                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, isFaceup);
+                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             Debug.Log($"[CgsNet Player] Created new card stack {stackName}!");
