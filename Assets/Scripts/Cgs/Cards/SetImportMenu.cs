@@ -14,6 +14,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.Cards
 {
@@ -159,7 +160,8 @@ namespace Cgs.Cards
                     var end = fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
                         StringComparison.Ordinal);
                     var cardName = fileName.Substring(0, end - 1);
-                    var card = new UnityCard(CardGameManager.Current, cardName, cardName, SetName, null, false);
+                    var cardId = UnityFileMethods.GetSafeFileName(cardName).Replace(" ","_");
+                    var card = new UnityCard(CardGameManager.Current, cardId, cardName, SetName, null, false);
                     FileBrowserHelpers.CopyFile(cardPathsToImport[i].Path, card.ImageFilePath);
 
                     if (!File.Exists(card.ImageFilePath))
