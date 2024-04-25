@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using CardGameDef.Unity;
+using System.Linq;
 using Cgs;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.TestTools;
+using UnityExtensionMethods;
+using Object = UnityEngine.Object;
 
 namespace Tests.PlayMode
 {
@@ -28,9 +34,70 @@ namespace Tests.PlayMode
         [SetUp]
         public void Setup()
         {
-            var manager = new GameObject {tag = Tags.CardGameManager};
-            manager.AddComponent<EventSystem>();
-            manager.AddComponent<CardGameManager>();
+            Object.Instantiate(Resources.Load<GameObject>("CardGameManager"));
+        }
+
+        [UnityTest]
+        public IEnumerator CanCreateNewGameAndCard()
+        {
+            var newCardGame = new UnityCardGame(CardGameManager.Instance, "gameName")
+            {
+                AutoUpdate = -1, CardSize = new Float2(250, 350),
+                BannerImageFileType = "png",
+                BannerImageUrl = null,
+                CardBackImageFileType = "png",
+                CardBackImageUrl = null,
+                CardSetIdentifier = "setCode",
+                PlayMatImageFileType = "png",
+                PlayMatImageUrl = null,
+                Copyright = "",
+                RulesUrl = null,
+                CardPrimaryProperty = "",
+                CardProperties = new List<PropertyDef>()
+            };
+            if (Directory.Exists(newCardGame.GameDirectoryPath))
+                Directory.Delete(newCardGame.GameDirectoryPath, true);
+
+            var previousDeveloperMode = PlayerPrefs.GetInt("DeveloperMode", 0);
+            PlayerPrefs.SetInt("DeveloperMode", 1);
+
+            Directory.CreateDirectory(newCardGame.GameDirectoryPath);
+            var defaultContractResolver = new DefaultContractResolver {NamingStrategy = new CamelCaseNamingStrategy()};
+            var jsonSerializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = defaultContractResolver,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            File.WriteAllText(newCardGame.GameFilePath,
+                JsonConvert.SerializeObject(newCardGame, jsonSerializerSettings));
+
+            yield return CardGameManager.Instance.UpdateCardGame(newCardGame);
+
+            CardGameManager.Instance.AllCardGames[newCardGame.Id] = newCardGame;
+            CardGameManager.Instance.Select(newCardGame.Id);
+
+            var card = new UnityCard(CardGameManager.Current,
+                Guid.NewGuid().ToString().ToUpper()
+                , "Test",
+                Set.DefaultCode, null,
+                false);
+
+            yield return UnityFileMethods.SaveUrlToFile(new Uri(
+                    Application.streamingAssetsPath
+                    + "/" +
+                    Tags.StandardPlayingCardsDirectoryName + "/" +
+                    "CardBack.png").AbsoluteUri,
+                card.ImageFilePath);
+
+            CardGameManager.Current.Add(card);
+
+            Assert.IsTrue(CardGameManager.Current.HasLoaded);
+            Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
+            Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
+            Assert.IsTrue(File.Exists(CardGameManager.Current.Cards.First().Value.ImageFilePath));
+            Assert.AreEqual("gameName", CardGameManager.Current.Name);
+
+            PlayerPrefs.SetInt("DeveloperMode", previousDeveloperMode);
         }
 
         [UnityTest]
@@ -86,6 +153,7 @@ namespace Tests.PlayMode
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
             Assert.AreEqual("Standard Playing Cards", CardGameManager.Current.Name);
 
+#if !UNITY_WEBGL
             // Mahjong
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
             yield return new WaitUntil(() => !CardGameManager.Current.IsDownloading);
@@ -101,14 +169,7 @@ namespace Tests.PlayMode
             Assert.IsTrue(CardGameManager.Current.HasLoaded);
             Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
             Assert.AreEqual("Dominoes", CardGameManager.Current.Name);
-        }
-
-        [Test]
-        [Ignore("TODO")]
-        public void CanRecoverFromFailure()
-        {
-            // TODO:
-            Assert.Fail();
+#endif
         }
     }
 }

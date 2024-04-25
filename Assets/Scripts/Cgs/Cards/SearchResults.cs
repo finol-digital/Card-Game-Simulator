@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using CardGameDef.Unity;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +25,7 @@ namespace Cgs.Cards
         public InputField inputField;
         public Text countText;
         public ScrollRect scrollRect;
+        public bool isInteractable;
 
         public int CardsPerRow
         {
@@ -59,7 +60,10 @@ namespace Cgs.Cards
         {
             get
             {
-                if (!(layoutGroup is GridLayoutGroup gridLayoutGroup))
+                if (layoutArea.rect.height < CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y * 2)
+                    return CardsPerRow;
+
+                if (layoutGroup is not GridLayoutGroup gridLayoutGroup)
                     return CardsPerRow;
 
                 var gridPadding = gridLayoutGroup.padding;
@@ -173,8 +177,8 @@ namespace Cgs.Cards
                 var cardToShow = CardGameManager.Current.Cards[cardId];
                 var cardModel = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
                 cardModel.Value = cardToShow;
-                cardModel.IsStatic = layoutGroup is GridLayoutGroup;
-                cardModel.DoesCloneOnDrag = layoutGroup is HorizontalLayoutGroup;
+                cardModel.IsStatic = !isInteractable;
+                cardModel.DoesCloneOnDrag = isInteractable;
                 if (HorizontalDoubleClickAction != null
                     && ((RectTransform) transform).rect.width > ((RectTransform) transform).rect.height)
                     cardModel.DefaultAction = HorizontalDoubleClickAction;

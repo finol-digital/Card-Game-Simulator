@@ -11,6 +11,8 @@ namespace Cgs.Play
 {
     public class PlaySettingsMenu : Modal
     {
+        public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
+
         public Toggle autoStackCardsToggle;
         public Toggle doubleClickToViewStacksToggle;
         public Dropdown stackViewerOverlapDropdown;
@@ -45,7 +47,7 @@ namespace Cgs.Play
                 CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
                 Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
             else
-                CardGameManager.Instance.Messenger.Show("NoRulesErrorMessage");
+                CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
         }
 
         [UsedImplicitly]

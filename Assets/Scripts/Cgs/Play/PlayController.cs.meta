@@ -18,17 +18,25 @@ MonoImporter:
       type: 3}
   - handDealerPrefab: {fileID: 7945912001630269733, guid: 743c496c97559c94c87f8e6ae3360c32,
       type: 3}
+  - boardPrefab: {fileID: 4883056628646692844, guid: 5011619a7020e764cabbac7ce50df498,
+      type: 3}
   - cardStackPrefab: {fileID: 4087591186767669376, guid: 5fdc698f4f037cc44921305d641fd80b,
       type: 3}
   - cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
       type: 3}
   - diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e,
       type: 3}
-  - decisionModalPrefab: {fileID: 5810182567772607080, guid: 864bd2a9f44369e488e6d6f6edc1582e,
+  - tokenPrefab: {fileID: 5127053305123712531, guid: c6a1cf8ae8ec3d647b7d1abc3b0a4b7b,
       type: 3}
+  - horizontalCardZonePrefab: {fileID: 3075554628274637118, guid: 21036df1d45067b4387821a32693828f,
+      type: 3}
+  - verticalCardZonePrefab: {fileID: 1907640108394560, guid: a98e6f63635e6f046938f07c822f0370,
+      type: 3}
+  - playMatPrefab: {instanceID: 0}
   - stackViewers: {instanceID: 0}
   - playArea: {instanceID: 0}
-  - playMat: {instanceID: 0}
+  - playAreaCardZone: {instanceID: 0}
+  - playMatImage: {instanceID: 0}
   - drawer: {instanceID: 0}
   - menu: {instanceID: 0}
   - scoreboard: {instanceID: 0}

@@ -7,10 +7,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CardGameDef;
-using CardGameDef.Unity;
 using Cgs.Menu;
 using Cgs.UI;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
@@ -55,7 +55,7 @@ namespace Cgs.Decks
 
         private string _selectedFilePath;
 
-        private readonly SortedList<string, string> _deckFiles = new SortedList<string, string>();
+        private readonly SortedList<string, string> _deckFiles = new();
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
 
@@ -195,7 +195,7 @@ namespace Cgs.Decks
         private static DeckFileType GetFileTypeFromPath(string filePath)
         {
             var deckFileType = DeckFileType.Txt;
-            var extension = filePath.Substring(filePath.LastIndexOf('.') + 1);
+            var extension = filePath[(filePath.LastIndexOf('.') + 1)..];
             if (extension.ToLower().Equals(DeckFileType.Dec.ToString().ToLower()))
                 deckFileType = DeckFileType.Dec;
             else if (extension.ToLower().Equals(DeckFileType.Hsd.ToString().ToLower()))

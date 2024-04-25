@@ -19,12 +19,17 @@ namespace Cgs.Cards
         public SearchResults results;
         public ScrollRect scrollRect;
 
+        private bool _wasAvailable;
+
         private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
+            {
+                _wasAvailable = false;
                 return;
+            }
 
-            if (SwipeManager.DetectSwipe())
+            if (_wasAvailable && SwipeManager.DetectSwipe())
             {
                 if ((CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
                     || CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f)
@@ -84,6 +89,8 @@ namespace Cgs.Cards
                 else if (Inputs.IsPageRight && !Inputs.WasPageRight)
                     PageRight();
             }
+
+            _wasAvailable = true;
         }
 
         [UsedImplicitly]

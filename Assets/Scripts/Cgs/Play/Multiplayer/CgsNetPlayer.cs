@@ -6,11 +6,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
-using CardGameDef.Unity;
-using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Drawer;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -69,7 +68,9 @@ namespace Cgs.Play.Multiplayer
 
         private readonly NetworkVariable<int> _currentHand = new();
 
-        public int DefaultRotation { get; private set; }
+        public int DefaultZRotation { get; private set; }
+
+        public Quaternion DefaultRotation => Quaternion.Euler(new Vector3(0, 0, DefaultZRotation));
 
         public string GetHandCount()
         {
@@ -100,8 +101,6 @@ namespace Cgs.Play.Multiplayer
 
         private NetworkList<CgsNetString> _handNames;
 
-        public CardModel RemovedCard { get; set; }
-
         private void Awake()
         {
             _handCards = new NetworkList<CgsNetStringList>();
@@ -120,7 +119,10 @@ namespace Cgs.Play.Multiplayer
             RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
             RequestNewHand(CardDrawer.DefaultHandName);
             if (IsServer)
+            {
                 PlayController.Instance.ShowDeckMenu();
+                ApplyPlayerTranslationServerRpc();
+            }
             else
                 RequestCardGameSelection();
 
@@ -179,15 +181,31 @@ namespace Cgs.Play.Multiplayer
         private void ApplyPlayerRotationOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
         {
             if (playerCount % 4 == 0)
-                DefaultRotation = 270;
+                DefaultZRotation = 270;
             else if (playerCount % 3 == 0)
-                DefaultRotation = 90;
+                DefaultZRotation = 90;
             else if (playerCount % 2 == 0)
-                DefaultRotation = 180;
+                DefaultZRotation = 180;
             else
-                DefaultRotation = 0;
-            Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultRotation);
-            PlayController.Instance.playArea.CurrentRotation = DefaultRotation;
+                DefaultZRotation = 0;
+            Debug.Log("[CgsNet Player] Set PlayMat rotation based off player count: " + DefaultZRotation);
+            PlayController.Instance.playArea.CurrentRotation = DefaultZRotation;
+
+            ApplyPlayerTranslationServerRpc();
+        }
+
+        [ServerRpc]
+        private void ApplyPlayerTranslationServerRpc()
+        {
+            ApplyPlayerTranslationOwnerClientRpc(OwnerClientRpcParams);
+        }
+
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void ApplyPlayerTranslationOwnerClientRpc(ClientRpcParams clientRpcParams = default)
+        {
+            PlayController.Instance.playArea.verticalNormalizedPosition = 0;
         }
 
         private IEnumerator DownloadGame(string url)
@@ -250,29 +268,47 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
+        #region Boards
+
+        public void RequestNewBoard(string gameBoardId, Vector2 size, Vector2 position)
+        {
+            CreateBoardServerRpc(gameBoardId, size, position);
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CreateBoardServerRpc(string gameBoardId, Vector2 size, Vector2 position)
+        {
+            PlayController.Instance.CreateBoard(gameBoardId, size, position);
+        }
+
+        #endregion
+
         #region CardStacks
 
-        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards)
+        public void RequestNewDeck(string deckName, IEnumerable<UnityCard> cards, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
-                PlayController.Instance.NewDeckPosition);
+                PlayController.Instance.NewDeckPosition, DefaultRotation, isFaceup);
         }
 
-        public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position)
+        public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position,
+            Quaternion rotation, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Requesting new card stack {stackName}...");
             CreateCardStackServerRpc(stackName, cards.Select(card => (CgsNetString) card.Id).ToArray(), false,
-                position);
+                position, rotation, isFaceup);
         }
 
         [ServerRpc]
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position)
+        private void CreateCardStackServerRpc(string stackName, CgsNetString[] cardIds, bool isDeck, Vector2 position,
+            Quaternion rotation, bool isFaceup)
         {
             Debug.Log($"[CgsNet Player] Creating new card stack {stackName}...");
             var cardStack = PlayController.Instance.CreateCardStack(stackName,
-                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position);
+                cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
             Debug.Log($"[CgsNet Player] Created new card stack {stackName}!");
@@ -329,7 +365,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Insert {cardId} at {index}!");
             var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
-            cardStack.Insert(index, cardId);
+            cardStack.OwnerInsert(index, cardId);
         }
 
         public void RequestRemoveAt(GameObject stack, int index)
@@ -344,17 +380,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Remove at {index}!");
             var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
-            var removedCardId = cardStack.RemoveAt(index);
-            SyncRemovedCardOwnerClientRpc(removedCardId, OwnerClientRpcParams);
-        }
-
-        [ClientRpc]
-        // ReSharper disable once UnusedParameter.Local
-        private void SyncRemovedCardOwnerClientRpc(string removedCardId, ClientRpcParams clientRpcParams = default)
-        {
-            if (RemovedCard != null)
-                RemovedCard.Value = CardGameManager.Current.Cards[removedCardId];
-            RemovedCard = null;
+            cardStack.RemoveAt(index);
         }
 
         public void RequestDeal(NetworkObject stack, int count)
@@ -457,6 +483,28 @@ namespace Cgs.Play.Multiplayer
             PlayController.Instance.drawer.SyncHand(handIndex, cardIds);
         }
 
+        public void RequestRemoveHand(int handIndex)
+        {
+            Debug.Log($"[CgsNet Player] Requesting remove hand {handIndex}...");
+            RemoveHandServerRpc(handIndex);
+        }
+
+        [ServerRpc]
+        private void RemoveHandServerRpc(int handIndex)
+        {
+            Debug.Log($"[CgsNet Player] Remove hand {handIndex}!");
+            if (handIndex < 1 || handIndex >= _handCards.Count)
+            {
+                Debug.LogError($"[CgsNet Player] {handIndex} is out of bounds of {_handCards.Count}");
+                return;
+            }
+
+            _handCards.RemoveAt(handIndex);
+
+            CurrentHand = 0;
+            UseHandClientRpc(CurrentHand, OwnerClientRpcParams);
+        }
+
         #endregion
 
         #region Cards
@@ -509,6 +557,22 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
+        #region Tokens
+
+        public void RequestNewToken()
+        {
+            CreateTokenServerRpc();
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CreateTokenServerRpc()
+        {
+            PlayController.Instance.CreateToken();
+        }
+
+        #endregion
+
         #region RestartGame
 
         public void RequestRestart()
@@ -522,12 +586,14 @@ namespace Cgs.Play.Multiplayer
         private void RestartServerRpc()
         {
             Debug.Log("[CgsNet Player] Game server to restart!...");
-            foreach (var cardStack in PlayController.Instance.playMat.GetComponentsInChildren<CardStack>())
+            foreach (var cardStack in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<CardStack>())
                 cardStack.MyNetworkObject.Despawn();
-            foreach (var cardModel in PlayController.Instance.playMat.GetComponentsInChildren<CardModel>())
+            foreach (var cardModel in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<CardModel>())
                 cardModel.MyNetworkObject.Despawn();
-            foreach (var die in PlayController.Instance.playMat.GetComponentsInChildren<Die>())
+            foreach (var die in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Die>())
                 die.MyNetworkObject.Despawn();
+            foreach (var token in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Token>())
+                token.MyNetworkObject.Despawn();
             foreach (var player in FindObjectsOfType<CgsNetPlayer>())
                 player.RestartClientRpc(player.OwnerClientRpcParams);
         }
@@ -539,7 +605,9 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Player] Game is restarting!...");
             PlayController.Instance.ResetPlayArea();
             PlayController.Instance.drawer.Clear();
+            Points = CardGameManager.Current.GameStartPointsCount;
             CurrentDeck = null;
+            CurrentHand = 0;
             StartCoroutine(WaitToRestartGame());
         }
 

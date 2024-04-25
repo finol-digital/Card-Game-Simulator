@@ -14,6 +14,8 @@ namespace Cgs.Menu
 {
     public class Dialog : Modal
     {
+        public GameObject copyButton;
+        public GameObject shareButton;
         public Text messageText;
         public Button noButton;
         public Button yesButton;
@@ -32,9 +34,24 @@ namespace Cgs.Menu
             }
         }
 
-        protected Queue<Message> MessageQueue { get; } = new Queue<Message>();
+        protected Queue<Message> MessageQueue { get; } = new();
 
         private bool _isNewMessage;
+
+        protected override void Start()
+        {
+            base.Start();
+#if UNITY_IOS || UNITY_ANDROID
+            copyButton.SetActive(false);
+            shareButton.SetActive(true);
+#elif UNITY_STANDALONE_OSX
+            copyButton.SetActive(false);
+            shareButton.SetActive(false);
+#else
+            copyButton.SetActive(true);
+            shareButton.SetActive(false);
+#endif
+        }
 
         // Popup needs to update last to consume the input over what it covers
         private void LateUpdate()
@@ -43,6 +60,12 @@ namespace Cgs.Menu
             {
                 _isNewMessage = false;
                 return;
+            }
+
+            if ((Inputs.IsVertical || Inputs.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null &&
+                yesButton.gameObject.activeInHierarchy)
+            {
+                EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
             }
 
             if (Inputs.IsSubmit)
@@ -55,7 +78,7 @@ namespace Cgs.Menu
             else if (Inputs.IsOption && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
             else if (Inputs.IsSave)
-                Share();
+                CopyShare();
             else if (Inputs.IsCancel)
                 OkClose();
         }
@@ -82,7 +105,7 @@ namespace Cgs.Menu
             }
 
             gameObject.SetActive(true);
-            if (!EventSystem.current.alreadySelecting)
+            if (EventSystem.current != null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
             transform.SetAsLastSibling();
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
@@ -112,7 +135,7 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Share()
+        public void CopyShare()
         {
             var shareText = messageText.text;
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -137,7 +160,8 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void OkClose()
         {
-            if (!EventSystem.current.alreadySelecting && EventSystem.current.currentSelectedGameObject == gameObject)
+            if (EventSystem.current != null && !EventSystem.current.alreadySelecting &&
+                EventSystem.current.currentSelectedGameObject == gameObject)
                 EventSystem.current.SetSelectedGameObject(null);
 
             if (MessageQueue.Count > 0)

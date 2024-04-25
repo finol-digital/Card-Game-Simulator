@@ -14,16 +14,22 @@ namespace Cgs.UI
 
     public class SelectionPanel : MonoBehaviour
     {
+        public ToggleGroup toggleGroup;
         public RectTransform selectionContent;
         public RectTransform selectionTemplate;
         public Text emptyText;
         public ScrollRect scrollRect;
 
-        protected List<Toggle> Toggles { get; } = new List<Toggle>();
+        protected virtual bool AllowSwitchOff => true;
+
+        protected List<Toggle> Toggles { get; } = new();
 
         protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
             TKey current)
         {
+            if (toggleGroup != null)
+                toggleGroup.allowSwitchOff = true;
+
             Toggles.Clear();
             selectionContent.DestroyAllChildren();
             selectionContent.sizeDelta =
@@ -39,12 +45,18 @@ namespace Cgs.UI
                 toggle.GetComponentInChildren<Text>().text = option.Value.ToString();
                 toggle.interactable = true;
                 toggle.isOn = option.Key.Equals(current);
-                toggle.onValueChanged.AddListener(isOn => select(toggle, option.Key));
+                toggle.onValueChanged.AddListener(_ => select(toggle, option.Key));
                 Toggles.Add(toggle);
-                if (toggle.isOn)
+                if (option.Key.Equals(current))
                     currentSelectionIndex = i;
                 i++;
             }
+
+            if (toggleGroup != null)
+                toggleGroup.allowSwitchOff = AllowSwitchOff;
+
+            if (!AllowSwitchOff && currentSelectionIndex >= 0)
+                Toggles[currentSelectionIndex].isOn = true;
 
             if (emptyText == null)
             {

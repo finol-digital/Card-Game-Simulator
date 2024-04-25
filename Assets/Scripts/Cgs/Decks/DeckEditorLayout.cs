@@ -8,18 +8,20 @@ namespace Cgs.Decks
 {
     public class DeckEditorLayout : MonoBehaviour
     {
-        public bool IsPortrait => searchResultsLayout.IsPortrait;
+        private const float Buffer = 20f;
+        private const float SearchAreaPortraitHeight = 550f;
+        private const float SearchAreaLandscapeWidth = 500f;
 
-        public static readonly Vector2 DeckButtonsPortraitAnchor = new Vector2(0, 0.43f);
-        private static readonly Vector2 DeckButtonsLandscapePosition = new Vector2(-650, 0);
+        public bool IsPortrait => ((RectTransform) transform).rect.width < 1200f;
 
-        private static readonly Vector2 SelectButtonsPortraitPosition = new Vector2(0, 10);
-        private static readonly Vector2 SelectButtonsLandscapePosition = new Vector2(-350, 10);
+        public RectTransform deckLabel;
+        public RectTransform deckButtonsContainer;
+        public RectTransform deckEditorButtonsGroup;
+        public RectTransform deckEditorLayoutArea;
 
-        public RectTransform deckButtons;
-        public RectTransform selectButtons;
-        public DeckEditor deckEditor;
-        public SearchResultsLayout searchResultsLayout;
+        public RectTransform searchArea;
+
+        public RectTransform cardCountLabel;
 
         private void OnRectTransformDimensionsChange()
         {
@@ -28,20 +30,35 @@ namespace Cgs.Decks
 
             if (IsPortrait) // Portrait
             {
-                deckButtons.anchorMin = deckEditor.IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
-                deckButtons.anchorMax = deckEditor.IsZoomed ? Vector2.zero : DeckButtonsPortraitAnchor;
-                deckButtons.pivot = Vector2.up;
-                deckButtons.anchoredPosition =
-                    deckEditor.IsZoomed ? Vector2.up * deckButtons.rect.height : Vector2.zero;
-                selectButtons.anchoredPosition = SelectButtonsPortraitPosition;
+                deckEditorButtonsGroup.SetParent(deckButtonsContainer);
+                deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
+                deckEditorButtonsGroup.localScale = Vector3.one;
+                deckEditorLayoutArea.offsetMin =
+                    new Vector2(deckEditorLayoutArea.offsetMin.x, SearchAreaPortraitHeight + 100);
+                deckEditorLayoutArea.offsetMax = new Vector2(-Buffer, deckEditorLayoutArea.offsetMax.y);
+                searchArea.anchorMin = Vector2.zero;
+                searchArea.anchorMax = Vector2.right;
+                searchArea.pivot = Vector2.one;
+                searchArea.offsetMin = Vector2.down * SearchAreaPortraitHeight;
+                searchArea.offsetMax = Vector2.zero;
+                searchArea.anchoredPosition = Vector2.up * SearchAreaPortraitHeight;
+                cardCountLabel.anchoredPosition = Vector2.zero;
             }
             else // Landscape
             {
-                deckButtons.anchorMin = Vector2.one;
-                deckButtons.anchorMax = Vector2.one;
-                deckButtons.pivot = Vector2.one;
-                deckButtons.anchoredPosition = DeckButtonsLandscapePosition;
-                selectButtons.anchoredPosition = SelectButtonsLandscapePosition;
+                deckEditorButtonsGroup.SetParent(deckLabel);
+                deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
+                deckEditorButtonsGroup.localScale = Vector3.one;
+                deckEditorLayoutArea.offsetMin = new Vector2(deckEditorLayoutArea.offsetMin.x, Buffer);
+                deckEditorLayoutArea.offsetMax =
+                    new Vector2(-SearchAreaLandscapeWidth, deckEditorLayoutArea.offsetMax.y);
+                searchArea.anchorMin = Vector2.right;
+                searchArea.anchorMax = Vector2.one;
+                searchArea.pivot = Vector2.one;
+                searchArea.offsetMin = Vector2.left * SearchAreaLandscapeWidth;
+                searchArea.offsetMax = Vector2.zero;
+                searchArea.anchoredPosition = Vector2.zero;
+                cardCountLabel.anchoredPosition = Vector2.zero;
             }
         }
     }

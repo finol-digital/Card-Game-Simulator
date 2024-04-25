@@ -12,19 +12,21 @@ namespace Cgs.Menu
     {
         public const string TouchlessStartMessage = "Press Any Key";
 
+        public static string VersionMessage => $"VERSION {Application.version}";
+
         private const float MinWidth = 1080;
         private const int CenterTextFontSizePortrait = 30;
         private const int CenterTextFontSizeLandscape = 40;
         private const int MetaTextFontSizePortrait = 25;
         private const int MetaTextFontSizeLandscape = 30;
 
-        private static readonly Vector2 CompanyTextPortraitDimensions = new Vector2(250, 75);
-        private static readonly Vector2 CompanyTextLandscapeDimensions = new Vector2(-400, 75);
-        private static readonly Vector2 CompanyTextLandscapePosition = new Vector2(-700, 0);
-        private static readonly Vector2 VersionTextPortraitOffsetMin = new Vector2(-250, 0);
-        private static readonly Vector2 VersionTextPortraitOffsetMax = new Vector2(0, 75);
-        private static readonly Vector2 VersionTextLandscapeOffsetMin = new Vector2(400, 0);
-        private static readonly Vector2 VersionTextLandscapeOffsetMax = new Vector2(700, 75);
+        private static readonly Vector2 CompanyTextPortraitDimensions = new(250, 75);
+        private static readonly Vector2 CompanyTextLandscapeDimensions = new(-400, 75);
+        private static readonly Vector2 CompanyTextLandscapePosition = new(-700, 0);
+        private static readonly Vector2 VersionTextPortraitOffsetMin = new(-250, 0);
+        private static readonly Vector2 VersionTextPortraitOffsetMax = new(0, 75);
+        private static readonly Vector2 VersionTextLandscapeOffsetMin = new(400, 0);
+        private static readonly Vector2 VersionTextLandscapeOffsetMax = new(700, 75);
 
         public Image backgroundImage;
         public Sprite backgroundSpritePortrait;
@@ -87,10 +89,10 @@ namespace Cgs.Menu
 
         private void Start()
         {
-            versionText.text = MainMenu.VersionMessage;
 #if !UNITY_ANDROID && !UNITY_IOS
             centerText.text = TouchlessStartMessage;
 #endif
+            versionText.text = VersionMessage;
         }
 
         private void Update()

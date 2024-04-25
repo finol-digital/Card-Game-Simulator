@@ -4,9 +4,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef;
-using CardGameDef.Unity;
 using Cgs.Menu;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +37,7 @@ namespace Cgs.Cards
             set => _inputFields = value;
         }
 
-        private List<InputField> _inputFields = new List<InputField>();
+        private List<InputField> _inputFields = new();
 
         protected override List<Toggle> Toggles
         {
@@ -45,11 +45,11 @@ namespace Cgs.Cards
             set => _toggles = value;
         }
 
-        private List<Toggle> _toggles = new List<Toggle>();
+        private List<Toggle> _toggles = new();
 
-        private readonly List<GameObject> _filterPanels = new List<GameObject>();
-        private readonly CardSearchFilters _filters = new CardSearchFilters();
-        private readonly List<UnityCard> _results = new List<UnityCard>();
+        private readonly List<GameObject> _filterPanels = new();
+        private readonly CardSearchFilters _filters = new();
+        private readonly List<UnityCard> _results = new();
 
         private void Update()
         {
@@ -107,16 +107,15 @@ namespace Cgs.Cards
             _toggles.Clear();
 
             nameInputField.text = _filters.Name;
-            nameInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            nameInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
             _inputFields.Add(nameInputField);
 
             idInputField.text = _filters.Id;
-            idInputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            idInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
             _inputFields.Add(idInputField);
 
             setCodeInputField.text = _filters.SetCode;
-            setCodeInputField.onValidateInput +=
-                (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+            setCodeInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
             _inputFields.Add(setCodeInputField);
 
             foreach (var property in CardGameManager.Current.CardProperties)
@@ -170,7 +169,7 @@ namespace Cgs.Cards
 
             foreach (var inputField in newPanel.GetComponentsInChildren<InputField>())
             {
-                inputField.onValidateInput += (input, charIndex, addedChar) => Inputs.FilterFocusInput(addedChar);
+                inputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
                 _inputFields.Add(inputField);
             }
 

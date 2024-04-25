@@ -18,13 +18,14 @@ namespace Cgs.Play
         public CanvasGroup sliderCanvasGroup;
 
         private const float PageHorizontalSensitivity = 45f;
+        private const float PageHorizontalSensitivity2 = 0.2f;
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 3f;
 
         private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;
 
-        private bool _rotationEnabled = true;
+        private bool _rotationEnabled;
 
         private void Start()
         {
@@ -56,7 +57,7 @@ namespace Cgs.Play
             }
 
             // Handle Input
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || _playController.menu.panels.activeSelf ||
                 CardGameManager.Instance.ModalCanvas != null || _playController.scoreboard.nameInputField.isFocused)
                 return;
 
@@ -75,7 +76,7 @@ namespace Cgs.Play
                     Time.deltaTime * Inputs.FPageHorizontal * PageHorizontalSensitivity;
             else
                 _playController.playArea.horizontalNormalizedPosition -=
-                    Inputs.FPageHorizontal * PageHorizontalSensitivity * Time.deltaTime;
+                    Inputs.FPageHorizontal * PageHorizontalSensitivity2 * Time.deltaTime;
         }
 
         [UsedImplicitly]
@@ -90,7 +91,7 @@ namespace Cgs.Play
         {
             _timeSinceChange = 0;
             if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
-                _playController.playArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultRotation;
+                _playController.playArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultZRotation;
             else
                 _playController.playArea.CurrentRotation = 0;
         }

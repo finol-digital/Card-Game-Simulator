@@ -7,12 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using CardGameDef.Unity;
 using Cgs.CardGameView.Viewer;
 using Cgs.Decks;
-using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -44,7 +43,7 @@ namespace Cgs.CardGameView.Multiplayer
     }
 
     [RequireComponent(typeof(CardDropArea))]
-    public class CardStack : CgsNetPlayable, ICardDropHandler
+    public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         private const float DragHoldTime = 0.5f;
         public const string ShuffleText = "Shuffled!";
@@ -54,13 +53,19 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string ShufflePrompt => $"Shuffle {deckLabel.text}?";
         public string SavePrompt => $"Save {deckLabel.text}?";
-        public string DeletePrompt => $"Delete {deckLabel.text}?";
+        public override string DeletePrompt => $"Delete {deckLabel.text}?";
 
         private bool IsDraggingCard => HoldTime < DragHoldTime && PointerPositions.Count == 1 &&
                                        CurrentPointerEventData != null &&
                                        CurrentPointerEventData.button != PointerEventData.InputButton.Middle &&
                                        CurrentPointerEventData.button != PointerEventData.InputButton.Right
                                        || PointerPositions.Count > 1;
+
+        private bool IsDraggingStack => HoldTime >= DragHoldTime || CurrentPointerEventData is
+            {button: PointerEventData.InputButton.Middle};
+
+        protected override bool IsProcessingSecondaryDragAction =>
+            !IsDraggingStack && base.IsProcessingSecondaryDragAction;
 
         public GameObject stackViewerPrefab;
         public GameObject cardModelPrefab;
@@ -109,18 +114,51 @@ namespace Cgs.CardGameView.Multiplayer
         private readonly NetworkVariable<CgsNetString> _actionText = new();
         private readonly NetworkVariable<float> _actionTime = new();
 
+        private UnityCard TopCard
+        {
+            get
+            {
+                var cards = Cards;
+                return cards.Count > 0 ? cards[^1] : null;
+            }
+        }
+
+        public bool IsTopFaceup
+        {
+            get => _isTopFaceup;
+            set
+            {
+                var oldValue = _isTopFaceup;
+                _isTopFaceup = value;
+                if (IsOnline)
+                    SetIsTopFaceupServerRpc(_isTopFaceup);
+                else if (oldValue != _isTopFaceup)
+                    OnChangeIsTopFaceup(oldValue, _isTopFaceup);
+            }
+        }
+
+        private bool _isTopFaceup;
+        private readonly NetworkVariable<bool> _isTopFaceupNetworkVariable = new();
+
         public StackViewer Viewer { get; private set; }
+
+        public override void OnNetworkSpawn()
+        {
+            _isTopFaceup = _isTopFaceupNetworkVariable.Value;
+        }
 
         protected override void OnAwakePlayable()
         {
             _cardIds = new NetworkList<CgsNetString>();
             _name.OnValueChanged += OnChangeName;
+            _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
         }
 
         protected override void OnStartPlayable()
         {
-            ParentToPlayMat();
+            ParentToPlayAreaContent();
             GetComponent<CardDropArea>().DropHandler = this;
+            GetComponent<StackDropArea>().DropHandler = this;
 
             var rectTransform = (RectTransform) transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -129,13 +167,28 @@ namespace Cgs.CardGameView.Multiplayer
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
             if (!IsOwner)
-            {
                 deckLabel.text = Name;
-                countLabel.text = _cardIds.Count.ToString();
-            }
-
+            countLabel.text = _cardIds.Count.ToString();
             _cardIds.OnListChanged += OnCardsUpdated;
 
+            topCard.sprite = CardGameManager.Current.CardBackImageSprite;
+            if (IsTopFaceup)
+                TopCard?.RegisterDisplay(this);
+        }
+
+        public void SetImageSprite(Sprite imageSprite)
+        {
+            if (imageSprite == null)
+            {
+                RemoveImageSprite();
+                return;
+            }
+
+            topCard.sprite = imageSprite;
+        }
+
+        private void RemoveImageSprite()
+        {
             topCard.sprite = CardGameManager.Current.CardBackImageSprite;
         }
 
@@ -169,31 +222,6 @@ namespace Cgs.CardGameView.Multiplayer
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
-        protected override void OnPointerEnterPlayable(PointerEventData eventData)
-        {
-            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
-                && PlayableViewer.Instance != null && !PlayableViewer.Instance.IsVisible)
-                PlayableViewer.Instance.Preview(this);
-        }
-
-        protected override void OnPointerExitPlayable(PointerEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.HidePreview();
-        }
-
-        protected override void OnSelectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.SelectedPlayable = this;
-        }
-
-        protected override void OnDeselectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.IsVisible = false;
-        }
-
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
             if (IsDraggingCard)
@@ -201,7 +229,7 @@ namespace Cgs.CardGameView.Multiplayer
             else if (LacksOwnership)
                 RequestChangeOwnership();
             else
-                UpdatePosition();
+                ActOnDrag();
         }
 
         protected override void OnDragPlayable(PointerEventData eventData)
@@ -212,13 +240,19 @@ namespace Cgs.CardGameView.Multiplayer
             if (LacksOwnership)
                 RequestChangeOwnership();
             else
-                UpdatePosition();
+                ActOnDrag();
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
             if (!IsDraggingCard && !LacksOwnership)
-                UpdatePosition();
+                ActOnDrag();
+            Visibility.blocksRaycasts = true;
+        }
+
+        public static CardStack GetPointerDrag(PointerEventData eventData)
+        {
+            return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardStack>();
         }
 
         private void DragCard(PointerEventData eventData)
@@ -236,9 +270,8 @@ namespace Cgs.CardGameView.Multiplayer
             else
                 PopCard();
 
-            var cardModel = CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, true,
-                PlayController.Instance.playMat);
-            CgsNetManager.Instance.LocalPlayer.RemovedCard = cardModel;
+            CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, !IsTopFaceup,
+                PlayController.Instance.playAreaCardZone);
 
             RemovePointer(eventData);
 
@@ -263,6 +296,27 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void OnCardsUpdated(NetworkListEvent<CgsNetString> changeEvent)
         {
+            if (IsTopFaceup)
+            {
+                if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.RemoveAt) &&
+                    changeEvent.Index == _cardIds.Count)
+                {
+                    if (CardGameManager.Current.Cards.TryGetValue(changeEvent.PreviousValue, out var previous))
+                        previous.UnregisterDisplay(this);
+                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^1], out var current))
+                        current.RegisterDisplay(this);
+                }
+
+                if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.Insert) &&
+                    changeEvent.Index == _cardIds.Count - 1)
+                {
+                    if (CardGameManager.Current.Cards.TryGetValue(_cardIds[^2], out var previous))
+                        previous.UnregisterDisplay(this);
+                    if (CardGameManager.Current.Cards.TryGetValue(changeEvent.Value, out var current))
+                        current.RegisterDisplay(this);
+                }
+            }
+
             countLabel.text = _cardIds.Count.ToString();
             if (Viewer != null)
                 Viewer.Sync(this);
@@ -271,13 +325,25 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnDrop(CardModel cardModel)
         {
             cardModel.PlaceHolderCardZone = null;
-            if (LacksOwnership)
-                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, Cards.Count, cardModel.Id);
-            else
-                Insert(Cards.Count, cardModel.Id);
+            RequestInsert(Cards.Count, cardModel.Id);
         }
 
-        public void Insert(int index, string cardId)
+        public void OnDrop(CardStack cardStack)
+        {
+            for (var i = _cardIds.Count - 1; i >= 0; i--)
+                cardStack.RequestInsert(0, _cardIds[i]);
+            RequestDelete();
+        }
+
+        public void RequestInsert(int index, string cardId)
+        {
+            if (LacksOwnership)
+                CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, index, cardId);
+            else
+                OwnerInsert(index, cardId);
+        }
+
+        public void OwnerInsert(int index, string cardId)
         {
             Debug.Log($"CardStack: {name} insert {cardId} at {index} of {_cardIds.Count}");
             _cardIds.Insert(index, cardId);
@@ -295,6 +361,22 @@ namespace Cgs.CardGameView.Multiplayer
         public string PopCard()
         {
             return RemoveAt(_cardIds.Count - 1);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetIsTopFaceupServerRpc(bool isFacedown)
+        {
+            _isTopFaceupNetworkVariable.Value = isFacedown;
+        }
+
+        [PublicAPI]
+        public void OnChangeIsTopFaceup(bool oldValue, bool newValue)
+        {
+            _isTopFaceup = newValue;
+            if (IsTopFaceup)
+                TopCard?.RegisterDisplay(this);
+            else
+                TopCard?.UnregisterDisplay(this);
         }
 
         [UsedImplicitly]
@@ -366,9 +448,16 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [UsedImplicitly]
-        public void PromptDelete()
+        public void FlipTopFace()
         {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
+            IsTopFaceup = !IsTopFaceup;
+        }
+
+        public override void OnDestroy()
+        {
+            TopCard?.UnregisterDisplay(this);
+
+            base.OnDestroy();
         }
     }
 }

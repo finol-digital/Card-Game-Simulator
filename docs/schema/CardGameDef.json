@@ -1,9 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "id": "https://cardgamesim.finoldigital.com/schema/CardGameDef.json",
-  "title": "CGS Custom Game",
+  "title": "CGS Custom Card Game",
   "type": "object",
-  "description": "A custom card game definition to be used within Card Game Simulator",
+  "description": "Card Game Simulator (CGS) custom card game specification",
   "additionalProperties": false,
   "required": [
     "name"
@@ -14,7 +14,10 @@
       "description": "The name of the custom card game as it appears to the user. This name is required for the *Game:Id*."
     },
     "allCardsUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "From allCardsUrl, CGS downloads the json that contains the Card data for the game. If CGS is able to successfully download this file, it will save it as AllCards.json.",
       "format": "uri"
     },
@@ -67,7 +70,10 @@
       "description": "If allCardsUrl points to zipped file(s), set allCardsUrlZipped to true, and CGS will unzip the file(s)."
     },
     "allDecksUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "From allDecksUrl, CGS downloads the json that contains the Deck data for the game. If CGS is able to successfully download this file, it will save it as AllDecks.json.",
       "format": "uri"
     },
@@ -84,7 +90,10 @@
       "description": "If allDecksUrlTxtRoot is set, CGS will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*"
     },
     "allSetsUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "From allSetsUrl, CGS downloads the json that contains the Set data for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
       "format": "uri"
     },
@@ -103,7 +112,10 @@
       "default": 30
     },
     "autoUpdateUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "autoUpdateUrl indicates the url from which users download *Game:Name*.json, and CGS will automatically re-download the custom game from this url every <autoUpdate> days. This url is used in the *Game:Id*. You should host *Game:Name*.json at this url, but if you do not, you can set autoUpdate to -1, and there should be no issues.",
       "format": "uri"
     },
@@ -113,7 +125,10 @@
       "default": "png"
     },
     "bannerImageUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "If bannerImageUrl is a valid url, CGS will download the image at that url and save it as Banner.<bannerImageFileType>. CGS will attempt to display the Banner.<bannerImageFileType> as an identifier to the user. If it is unable to read Banner.<bannerImageFileType>, CGS will simply display the CGS logo.",
       "format": "uri"
     },
@@ -123,7 +138,10 @@
       "default": "png"
     },
     "cardBackImageUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "If cardBackImageUrl is a valid url, CGS will download the image at that url and save it as CardBack.<cardBackImageFileType>. CGS will display the CardBack.<cardBackImageFileType> when the user turns a card facedown or if CGS is unable to find the appropriate card image. If CGS is unable to get a custom card back, CGS will use the default CGS card back.",
       "format": "uri"
     },
@@ -221,10 +239,17 @@
         }
       ]
     },
-    "cgsDeepLink": {
-      "type": "string",
-      "description": "cgsDeepLink is a clickable url that will take the user directly to this game in CGS, which can be shared between users. This functionality must be configured through Firebase Dynamic Links.",
+    "cgsGamesLink": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "cgsGamesLink is a clickable url that will take the user directly to this game on the CGS Games website, which can be shared between users.",
       "format": "uri"
+    },
+    "copyright": {
+      "type": "string",
+      "description": "copyright indicates the legal owner of this Card Game. CGS will display this value in the bottom-left corner of the Main Menu."
     },
     "deckFileAltId": {
       "type": "string",
@@ -316,6 +341,20 @@
       "type": "string",
       "description": "gamePlayDeckName is the name of the card stack shown when a player loads a deck. If <gamePlayDeckName> is empty, the *Deck:Name* is used."
     },
+    "gamePlayDeckPositions": {
+      "type": "array",
+      "description": "Each deck loaded during a game will be loaded to its corresponding position in gamePlayDeckPositions. The first deck loaded will go to the first position, second to second, etc.",
+      "items": {
+        "$ref": "#/definitions/Float2"
+      }
+    },
+    "gamePlayZones": {
+      "type": "array",
+      "description": "gamePlayZones will appear in the Play Area in Play Mode.",
+      "items": {
+        "$ref": "#/definitions/GamePlayZone"
+      }
+    },
     "gameStartHandCount": {
       "type": "integer",
       "description": "gameStartHandCount indicates how many cards are automatically dealt from the deck to the hand, when a user loads a deck in Play Mode.",
@@ -332,7 +371,10 @@
       "default": "png"
     },
     "playMatImageUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "If playMatImageUrl is a valid url, CGS will download the image at that url and save it as PlayMat.<playMatImageFileType>. CGS will use the PlayMat.<playMatImageFileType> as the background image while in Play Mode. If CGS is unable to get this image, CGS will use the default table image.",
       "format": "uri"
     },
@@ -355,7 +397,10 @@
       ]
     },
     "rulesUrl": {
-      "type": "string",
+      "type": [
+        "null",
+        "string"
+      ],
       "description": "rulesUrl should link to this game's online rulebook.",
       "format": "uri"
     },
@@ -428,15 +473,15 @@
           "type": "boolean",
           "description": "List <displayEmpty> as the first option if this property is an enum?"
         },
+        "delimiter": {
+          "type": "string",
+          "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter"
+        },
         "properties": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/PropertyDef"
           }
-        },
-        "delimiter": {
-          "type": "string",
-          "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter"
         }
       }
     },
@@ -476,11 +521,11 @@
       "properties": {
         "x": {
           "type": "number",
-          "format": "double"
+          "format": "float"
         },
         "y": {
           "type": "number",
-          "format": "double"
+          "format": "float"
         }
       }
     },
@@ -661,6 +706,85 @@
         "rotate",
         "tap",
         "zoom"
+      ]
+    },
+    "GamePlayZone": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "face": {
+          "description": "When a Card enters the Game Play Zone, the Card will display this face",
+          "default": "any",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/FacePreference"
+            }
+          ]
+        },
+        "defaultCardAction": {
+          "description": "If possible, CGS will take the defaultCardAction when a Card is double-clicked in the Game Play Zone. If null, defaults to <gameDefaulCardAction>",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CardAction"
+            }
+          ]
+        },
+        "position": {
+          "description": "Indicates the Game Play Zone's position in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "size": {
+          "description": "Indicates the Game Play Zone's width and height in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "type": {
+          "description": "The Game Play Zone type from area, horizontal, or vertical",
+          "default": "area",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GamePlayZoneType"
+            }
+          ]
+        }
+      }
+    },
+    "FacePreference": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Any",
+        "Down",
+        "Up"
+      ],
+      "enum": [
+        "any",
+        "down",
+        "up"
+      ]
+    },
+    "GamePlayZoneType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Area",
+        "Horizontal",
+        "Vertical"
+      ],
+      "enum": [
+        "area",
+        "horizontal",
+        "vertical"
       ]
     }
   }

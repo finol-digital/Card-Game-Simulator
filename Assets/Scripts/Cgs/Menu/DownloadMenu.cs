@@ -35,7 +35,7 @@ namespace Cgs.Menu
             else if (Inputs.IsFocus && urlInputField.interactable)
                 urlInputField.ActivateInputField();
             else if (Inputs.IsOption && gamesButton.gameObject.activeSelf)
-                GoToGamesList();
+                GoToCgsGamesBrowser();
             else if (Inputs.IsCancel)
                 Hide();
         }
@@ -94,9 +94,9 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void GoToGamesList()
+        public void GoToCgsGamesBrowser()
         {
-            Application.OpenURL(Tags.GameListUrl);
+            Application.OpenURL(Tags.CgsGamesBrowseUrl);
         }
     }
 }

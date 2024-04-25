@@ -11,6 +11,8 @@ The CGS website is available through GitHub Pages in the `docs/` folder: https:/
 
 For user documentation, see the wiki: https://github.com/finol-digital/Card-Game-Simulator/wiki
 
+Additional games are available from the CGS Games website: https://cgs.games
+
 Lastly, some additional resources are on Google Drive: https://drive.google.com/open?id=1kVms-_CXRw1e4Ob18fRkS84MN_cxQGF5
 
 ## Building and Running
@@ -21,7 +23,7 @@ To build and run the project, you just need to clone the repo and run it in Unit
 
 ## Contributing
 
-If you'd like to help out with the project, either join our [Discord](https://discord.gg/MdUHEUJCU4) or email <david@finoldigital.com>
+If you'd like to help out with the project, either join our [Discord](http://discord.cardgamesimulator.com/) or email <david@finoldigital.com>
 
 ## License
 

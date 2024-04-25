@@ -15,8 +15,8 @@ namespace Cgs.UI.ScrollRects
     {
         private const float MinRotation = -180; // Also in PlayMatRotation slider
         private const float MaxRotation = 180; // Also in PlayMatRotation slider
-        public const float MinZoom = 0.66f; // Also in PlayMatZoom slider
-        private const float MaxZoom = 1.33f; // Also in PlayMatZoom slider
+        private const float MinZoom = 0.5f; // Also in PlayMatZoom slider
+        private const float MaxZoom = 1.5f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;
         private const float ZoomLerpSpeed = 7.5f;
         private const float ZoomWheelSensitivity = 0.2f;
@@ -51,17 +51,17 @@ namespace Cgs.UI.ScrollRects
             }
         }
 
-        private float _currentZoom = 1;
+        private float _currentZoom = MinZoom;
 
         public bool ZoomEnabled
         {
-            get => scrollSensitivity == 0;
+            get => scrollSensitivity == 0 || Input.touchCount > 1;
             set => scrollSensitivity = value ? 0 : _scrollSensitivity;
         }
 
         private float _scrollSensitivity;
 
-        private Dictionary<int, Vector2> PointerPositions { get; } = new Dictionary<int, Vector2>();
+        private Dictionary<int, Vector2> PointerPositions { get; } = new();
         private bool _isPinching;
         private bool _blockPan;
         private float _startPinchDist;
@@ -71,8 +71,8 @@ namespace Cgs.UI.ScrollRects
         protected override void Awake()
         {
             Input.multiTouchEnabled = true;
+            scrollSensitivity = ScrollWheelSensitivity;
             _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
-            ZoomEnabled = true;
         }
 
         protected override void SetContentAnchoredPosition(Vector2 position)
@@ -84,6 +84,11 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
+            if (eventData.button == PointerEventData.InputButton.Left
+                && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                && Input.touchCount <= 1)
+                return;
+
             PointerPositions[eventData.pointerId] = eventData.position;
             switch (eventData.button)
             {
@@ -95,15 +100,15 @@ namespace Cgs.UI.ScrollRects
                     break;
 
                 case PointerEventData.InputButton.Middle:
-                    if (ZoomEnabled)
-                        OnDragPan(eventData);
-                    else
-                        base.OnDrag(eventData);
+                    OnDragPan(eventData);
                     break;
 
                 case PointerEventData.InputButton.Left:
                 default:
-                    OnDragRotate(eventData);
+                    if (PointerPositions.Count >= 2)
+                        OnDragTouch(eventData);
+                    else
+                        base.OnDrag(eventData);
                     break;
             }
         }
@@ -115,13 +120,15 @@ namespace Cgs.UI.ScrollRects
                 Mathf.Clamp(normalizedPosition.y, 0.0f, 1.0f));
         }
 
-        private void OnDragRotate(PointerEventData touchEventData)
+        private void OnDragTouch(PointerEventData touchEventData)
         {
             if (PointerPositions.Count < 2)
             {
                 base.OnDrag(touchEventData);
                 return;
             }
+
+            OnDragPan(touchEventData);
 
             Vector2 referencePoint = content.position;
             foreach (var position in

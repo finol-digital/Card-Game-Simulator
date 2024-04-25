@@ -4,11 +4,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef.Unity;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +20,7 @@ namespace Cgs.Play.Drawer
     {
         public const string DefaultHandName = "Hand";
         public const string DefaultDrawerName = "Drawer";
+        public static string RemoveDrawerPrompt(int n) => $"Remove Drawer {n}?";
 
         private const float HandleHeight = 100.0f;
 
@@ -133,24 +134,27 @@ namespace Cgs.Play.Drawer
             var tabTemplate = Instantiate(tabPrefab, tabsRectTransform).GetComponent<TabTemplate>();
             var tabIndex = tabsRectTransform.childCount - 2;
             tabTemplate.transform.SetSiblingIndex(tabIndex);
+            tabTemplate.TabIndex = tabIndex;
 
             _toggles.Add(tabTemplate.toggle);
             _toggles[tabIndex].group = _toggles[0].group;
             _toggles[tabIndex].onValueChanged.AddListener(isOn =>
             {
                 if (isOn)
-                    SelectTab(tabIndex);
+                    SelectTab(tabTemplate.TabIndex);
             });
 
             _nameTexts.Add(tabTemplate.nameText);
             _countTexts.Add(tabTemplate.countText);
 
+            tabTemplate.removeButton.onClick.AddListener(() => PromptRemoveTab(tabTemplate.TabIndex));
             tabTemplate.drawerHandle.cardDrawer = this;
 
             var tabCardDropArea = _toggles[tabIndex].GetComponent<CardDropArea>();
             tabCardDropArea.DropHandler = viewer;
             tabCardDropArea.Index = tabIndex;
             viewer.drops.Add(tabCardDropArea);
+            tabTemplate.TabCardDropArea = tabCardDropArea;
 
             var cardZoneRectTransform = (RectTransform) Instantiate(cardZonePrefab, cardZonesRectTransform).transform;
             var cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
@@ -160,6 +164,7 @@ namespace Cgs.Play.Drawer
             var cardZoneCardDropArea = cardZoneRectTransform.GetComponent<CardDropArea>();
             cardZoneCardDropArea.DropHandler = viewer;
             viewer.drops.Add(cardZoneCardDropArea);
+            tabTemplate.CardZoneCardDropArea = cardZoneCardDropArea;
 
             CgsNetManager.Instance.LocalPlayer.RequestNewHand(DefaultDrawerName);
         }
@@ -217,6 +222,58 @@ namespace Cgs.Play.Drawer
         public void SyncHand(int handIndex, CgsNetString[] cardIds)
         {
             _countTexts[handIndex].text = cardIds.Length.ToString();
+        }
+
+        private void PromptRemoveTab(int tabIndex)
+        {
+            CardGameManager.Instance.Messenger.Prompt(RemoveDrawerPrompt(tabIndex), () => RemoveTab(tabIndex));
+        }
+
+        private void RemoveTab(int tabIndex)
+        {
+            if (tabIndex < 1)
+            {
+                Debug.LogWarning($"RemoveTab {tabIndex}!");
+                return;
+            }
+
+            if (tabIndex >= cardZoneRectTransforms.Count)
+            {
+                Debug.LogWarning($"RemoveTab {tabIndex} but not created yet.");
+                return;
+            }
+
+            SelectTab(0);
+
+            var tabRectTransform = tabsRectTransform.GetChild(tabIndex);
+            var tabTemplate = tabRectTransform.GetComponent<TabTemplate>();
+
+            _toggles.Remove(tabTemplate.toggle);
+            _countTexts.Remove(tabTemplate.countText);
+            _nameTexts.Remove(tabTemplate.nameText);
+
+            viewer.drops.Remove(tabTemplate.CardZoneCardDropArea);
+            viewer.drops.Remove(tabTemplate.TabCardDropArea);
+
+            var cardZoneRectTransform = cardZoneRectTransforms[tabIndex - 1];
+            cardZoneRectTransforms.Remove(cardZoneRectTransform);
+            Destroy(cardZoneRectTransform.gameObject);
+
+            foreach (var tabTemplateToEdit in tabsRectTransform.GetComponentsInChildren<TabTemplate>())
+            {
+                if (tabTemplateToEdit.TabIndex >= tabIndex)
+                {
+                    tabTemplateToEdit.TabIndex -= 1;
+                }
+            }
+
+            Destroy(tabRectTransform.gameObject);
+
+            var sizeDelta = tabsRectTransform.sizeDelta;
+            sizeDelta = new Vector2(sizeDelta.x - ((RectTransform) tabPrefab.transform).sizeDelta.x, sizeDelta.y);
+            tabsRectTransform.sizeDelta = sizeDelta;
+
+            CgsNetManager.Instance.LocalPlayer.RequestRemoveHand(tabIndex);
         }
 
         public void Clear()

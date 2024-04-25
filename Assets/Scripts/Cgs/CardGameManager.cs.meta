@@ -4,7 +4,9 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - PopupPrefab: {fileID: 1841404771972492, guid: 159c1b942b201514d9d36c985ef3c58b,
+  - dialogPrefab: {fileID: 5160799671764584669, guid: c99b406c42e378f45b33a243427bd060,
+      type: 3}
+  - progressBarPrefab: {fileID: 4748678306131802333, guid: 3d6e3a494e413eb4fbe7271639692623,
       type: 3}
   executionOrder: -50
   icon: {instanceID: 0}

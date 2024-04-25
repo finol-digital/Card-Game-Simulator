@@ -14,17 +14,17 @@ namespace Cgs.CardGameView.Viewer
 
     public class CardActions : MonoBehaviour
     {
-        public static IReadOnlyDictionary<CardGameDef.CardAction, CardAction> ActionsDictionary =>
-            _actionsDictionary ??= new Dictionary<CardGameDef.CardAction, CardAction>
+        public static IReadOnlyDictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> ActionsDictionary =>
+            _actionsDictionary ??= new Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction>
             {
-                [CardGameDef.CardAction.Move] = Move,
-                [CardGameDef.CardAction.Flip] = Flip,
-                [CardGameDef.CardAction.Rotate] = Rotate,
-                [CardGameDef.CardAction.Tap] = Tap,
-                [CardGameDef.CardAction.Zoom] = Zoom
+                [FinolDigital.Cgs.CardGameDef.CardAction.Move] = Move,
+                [FinolDigital.Cgs.CardGameDef.CardAction.Flip] = Flip,
+                [FinolDigital.Cgs.CardGameDef.CardAction.Rotate] = Rotate,
+                [FinolDigital.Cgs.CardGameDef.CardAction.Tap] = Tap,
+                [FinolDigital.Cgs.CardGameDef.CardAction.Zoom] = Zoom
             };
 
-        private static Dictionary<CardGameDef.CardAction, CardAction> _actionsDictionary;
+        private static Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> _actionsDictionary;
 
         public static void Move(CardModel cardModel)
         {
@@ -101,7 +101,8 @@ namespace Cgs.CardGameView.Viewer
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
                 flipButton.transform.GetChild(0).GetComponent<Image>().color =
-                    isCardSelected && CardGameManager.Current.GameDefaultCardAction == CardGameDef.CardAction.Flip
+                    isCardSelected && CardGameManager.Current.GameDefaultCardAction ==
+                    FinolDigital.Cgs.CardGameDef.CardAction.Flip
                         ? Color.green
                         : Color.white;
             }
@@ -112,7 +113,8 @@ namespace Cgs.CardGameView.Viewer
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
                 rotateButton.transform.GetChild(0).GetComponent<Image>().color =
-                    isCardSelected && CardGameManager.Current.GameDefaultCardAction == CardGameDef.CardAction.Rotate
+                    isCardSelected && CardGameManager.Current.GameDefaultCardAction ==
+                    FinolDigital.Cgs.CardGameDef.CardAction.Rotate
                         ? Color.green
                         : Color.white;
             }
@@ -123,7 +125,8 @@ namespace Cgs.CardGameView.Viewer
                     isCardSelected && CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                     CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
                 tapButton.transform.GetChild(0).GetComponent<Image>().color =
-                    isCardSelected && CardGameManager.Current.GameDefaultCardAction == CardGameDef.CardAction.Tap
+                    isCardSelected && CardGameManager.Current.GameDefaultCardAction ==
+                    FinolDigital.Cgs.CardGameDef.CardAction.Tap
                         ? Color.green
                         : Color.white;
             }

@@ -11,7 +11,7 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public struct CgsNetString : INetworkSerializeByMemcpy, IEquatable<CgsNetString>
     {
-        private ForceNetworkSerializeByMemcpy<FixedString32Bytes> _info;
+        private ForceNetworkSerializeByMemcpy<FixedString64Bytes> _info;
 
         [UsedImplicitly]
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -32,6 +32,6 @@ namespace Cgs.CardGameView.Multiplayer
         public static implicit operator string(CgsNetString s) => s.ToString();
 
         public static implicit operator CgsNetString(string s) =>
-            new() {_info = new FixedString32Bytes(s)};
+            new() {_info = new FixedString64Bytes(s)};
     }
 }

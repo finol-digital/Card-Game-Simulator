@@ -4,9 +4,9 @@
 
 using System;
 using System.IO;
-using CardGameDef;
-using CardGameDef.Unity;
 using Cgs.Menu;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;

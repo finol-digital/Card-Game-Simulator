@@ -2,8 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using Cgs.CardGameView.Viewer;
-using Cgs.Menu;
 using Cgs.Play;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -15,7 +13,7 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public class Die : CgsNetPlayable
     {
-        public const string DeletePrompt = "Delete die?";
+        public override string DeletePrompt => "Delete die?";
 
         public const int DefaultMin = 1;
         public const int DefaultMax = 6;
@@ -36,7 +34,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private int _min;
+        private int _min = DefaultMin;
         private readonly NetworkVariable<int> _minNetworkVariable = new();
 
         public int Max
@@ -50,15 +48,15 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private int _max;
+        private int _max = DefaultMax;
         private readonly NetworkVariable<int> _maxNetworkVariable = new();
 
         public override string ViewValue => $"Value: {Value}";
 
-        private int Value
+        public int Value
         {
             get => IsOnline ? _valueNetworkVariable.Value : _value;
-            set
+            private set
             {
                 var oldValue = _value;
                 var newValue = value;
@@ -75,6 +73,17 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
+        public void SetValue(int value)
+        {
+            var oldValue = _value;
+            _value = value;
+            if (IsOnline)
+                UpdateValueServerRpc(value);
+            else
+                OnChangeValue(oldValue, value);
+
+        }
+
         private int _value;
         private readonly NetworkVariable<int> _valueNetworkVariable = new();
 
@@ -88,10 +97,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            Min = DefaultMin;
-            Max = DefaultMax;
-
-            ParentToPlayMat();
+            ParentToPlayAreaContent();
             transform.localPosition = Position;
 
             if (!NetworkManager.Singleton.IsConnectedClient || IsServer)
@@ -124,51 +130,6 @@ namespace Cgs.CardGameView.Multiplayer
             else if (!EventSystem.current.alreadySelecting &&
                      EventSystem.current.currentSelectedGameObject != gameObject)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-        }
-
-        protected override void OnPointerEnterPlayable(PointerEventData eventData)
-        {
-            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
-                && PlayableViewer.Instance != null && !PlayableViewer.Instance.IsVisible)
-                PlayableViewer.Instance.Preview(this);
-        }
-
-        protected override void OnPointerExitPlayable(PointerEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.HidePreview();
-        }
-
-        protected override void OnSelectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.SelectedPlayable = this;
-        }
-
-        protected override void OnDeselectPlayable(BaseEventData eventData)
-        {
-            if (PlayableViewer.Instance != null)
-                PlayableViewer.Instance.IsVisible = false;
-        }
-
-        protected override void OnBeginDragPlayable(PointerEventData eventData)
-        {
-            if (IsOnline)
-                RequestChangeOwnership();
-        }
-
-        protected override void OnDragPlayable(PointerEventData eventData)
-        {
-            if (LacksOwnership)
-                RequestChangeOwnership();
-            else
-                UpdatePosition();
-        }
-
-        protected override void OnEndDragPlayable(PointerEventData eventData)
-        {
-            if (!LacksOwnership)
-                UpdatePosition();
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -209,12 +170,6 @@ namespace Cgs.CardGameView.Multiplayer
         private void RollServerRpc()
         {
             _rollRemainingTime = RollTotalTime;
-        }
-
-        [UsedImplicitly]
-        public void PromptDelete()
-        {
-            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
     }
 }

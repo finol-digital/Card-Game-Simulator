@@ -57,6 +57,7 @@ namespace Cgs.CardGameView.Viewer
         public CanvasGroup preview;
         public CanvasGroup view;
         public List<Text> valueTexts;
+        public InputField dieValueInputField;
         public GameObject dieActions;
         public GameObject stackActions;
 
@@ -102,7 +103,7 @@ namespace Cgs.CardGameView.Viewer
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
             // ReSharper disable once ConvertIfStatementToSwitchStatement
-            if (SelectedPlayable is Die)
+            else if (SelectedPlayable is Die)
             {
                 if (Inputs.IsNew)
                     DecrementDie();
@@ -110,8 +111,6 @@ namespace Cgs.CardGameView.Viewer
                     RollDie();
                 else if (Inputs.IsSave)
                     IncrementDie();
-                else if (Inputs.IsOption)
-                    DeleteDie();
             }
             else if (SelectedPlayable is CardStack)
             {
@@ -121,12 +120,15 @@ namespace Cgs.CardGameView.Viewer
                     ShuffleStack();
                 else if (Inputs.IsSave)
                     SaveStack();
-                else if (Inputs.IsOption)
-                    DeleteStack();
+                else if (Inputs.IsFilter)
+                    FlipStackTopFace();
             }
 
             if (Inputs.IsCancel)
                 SelectedPlayable = null;
+
+            if (Inputs.IsOption)
+                DeletePlayable();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -155,6 +157,7 @@ namespace Cgs.CardGameView.Viewer
             view.alpha = IsVisible ? 1 : 0;
             view.interactable = IsVisible;
             view.blocksRaycasts = IsVisible;
+            dieValueInputField.text = string.Empty;
         }
 
         public void Preview(CgsNetPlayable playable)
@@ -207,15 +210,16 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
-        public void DeleteDie()
+        public void ChangeDieValue(string value)
         {
             if (Dice == null)
             {
-                Debug.LogWarning("Ignoring delete request since there is no die selected.");
+                Debug.LogWarning("Ignoring change value request since there is no die selected.");
                 return;
             }
 
-            Dice.PromptDelete();
+            if (int.TryParse(value, out var valueInt) && valueInt != Dice.Value)
+                Dice.SetValue(valueInt);
         }
 
         [UsedImplicitly]
@@ -255,15 +259,27 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
-        public void DeleteStack()
+        public void FlipStackTopFace()
         {
             if (Stack == null)
             {
-                Debug.LogWarning("Ignoring save request since there is no stack selected.");
+                Debug.LogWarning("Ignoring flip top face request since there is no stack selected.");
                 return;
             }
 
-            Stack.PromptDelete();
+            Stack.FlipTopFace();
+        }
+
+        [UsedImplicitly]
+        public void DeletePlayable()
+        {
+            if (SelectedPlayable == null)
+            {
+                Debug.LogWarning("Ignoring delete request since there is no playable selected.");
+                return;
+            }
+
+            SelectedPlayable.PromptDelete();
         }
     }
 }

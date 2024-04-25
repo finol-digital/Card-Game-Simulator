@@ -1,6 +1,6 @@
 {
-	"name": "Grand Archive",
-	"allCardsUrl": "https://api.gatcg.com/cards/search",
+	"name": "Grand Archive TCG",
+	"allCardsUrl": "https://cgs.games/api/proxy/api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
@@ -8,7 +8,7 @@
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageUrl": "https://api.gatcg.com/images/cards/{editions[0].slug}.jpg",
+	"cardImageUrl": "https://cgs.games/api/proxy/ga-index-public.s3.us-west-2.amazonaws.com/cards/{editions[0].slug}.jpg",
 	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
@@ -116,16 +116,33 @@
 	"cardSetIsObject": true,
 	"cardSetsInList": true,
 	"cardSetIdentifier": "editions",
-	"cgsDeepLink": "https://cgs.link/grand_archive",
+	"cgsGamesLink": "https://cgs.games/link/grand_archive",
+	"copyright": "Weebs of the Shore LLC",
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{
-			"name": "Lorraine Starter PnP",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20PnP.txt"
+			"name": "Arisanna Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Arisanna%20Starter%20Deck.txt"
 		},
 		{
-			"name": "Rai Starter PnP",
-			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20PnP.txt"
+			"name": "Diana Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Diana%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Lorraine Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Rai Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Silvie Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Silvie%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Tonoris Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Tonoris%20Starter%20Deck.txt"
 		}
 	],
 	"enums": [
@@ -136,8 +153,11 @@
 				"ALLY": "Ally",
 				"ATTACK": "Attack",
 				"CHAMPION": "Champion",
+				"DOMAIN": "Domain",
 				"ITEM": "Item",
+				"PHANTASIA": "Phantasia",
 				"REGALIA": "Regalia",
+				"TOKEN": "Token",
 				"UNIQUE": "Unique",
 				"WEAPON": "Weapon"
 			}
@@ -191,18 +211,16 @@
 			"property": "element",
 			"values": {
 				"ARCANE": "Arcane",
-				"ASTRA": "Astra", 
+				"ASTRA": "Astra",
 				"CRUX": "Crux",
 				"FIRE": "Fire",
 				"LUXEM": "Luxem",
 				"NORM": "Normal",
 				"NEOS": "Neos",
-				"TECHA": "Techa",
-				"TERA": "Tera", 
+				"TERA": "Tera",
 				"UMBRA": "Umbra",
 				"WATER": "Water",
-				"WIND": "Wind",
-				"WRATH": "Wrath"
+				"WIND": "Wind"
 			}
 		}
 	],
@@ -220,13 +238,64 @@
 	],
 	"gameDefaultCardAction": "tap",
 	"gamePlayDeckName": "Main Deck",
+	"gamePlayDeckPositions": [
+		{
+			"x": 25,
+			"y": -5.5
+		},
+		{
+			"x": -25,
+			"y": -5.5
+		},
+		{
+			"x": 25,
+			"y": 5.5
+		},
+		{
+			"x": -25,
+			"y": 5.5
+		}
+	],
+	"gamePlayZones": [
+		{
+			"defaultCardAction": "flip",
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": -10.5
+			},
+			"size": {
+				"x": 42,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		},
+		{
+			"defaultCardAction": "flip",
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": 10.5
+			},
+			"size": {
+				"x": 42,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		}
+	],
 	"gameStartHandCount": 7,
-	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.png",
-	"playMatSize": {
-		"x": 36.0,
-		"y": 41.0
+	"playMatImageFileType": "jpg",
+	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.jpg",
+	"playMatGridCellSize": {
+		"x": 0,
+		"y": 0
 	},
-	"rulesUrl": "https://grandarchivetcg.com/comp-rules.pdf",
+	"playMatSize": {
+		"x": 56,
+		"y": 30
+	},
+	"rulesUrl": "https://www.gatcg.com/article/rules",
 	"setCodeIdentifier": "set.prefix",
 	"setNameIdentifier": "set.name"
 }

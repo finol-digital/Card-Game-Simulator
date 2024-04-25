@@ -2,7 +2,6 @@
     "name": "Cgs",
     "rootNamespace": "",
     "references": [
-        "GUID:de5fde282a2c8e0489b04b065584c338",
         "GUID:a145925718f93ac4380e53283d16d5a9",
         "GUID:ab425aab4b86fce43a60190dfdddb1ad",
         "GUID:1491147abca9d7d4bb7105af628b223e",
@@ -14,6 +13,7 @@
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:e0cd26848372d4e5c891c569017e11f1",
         "GUID:7414b02949352454b9c0e1f8683812b3",
+        "GUID:250e096504da3aa4f851a4df12262950",
         "GUID:6e5063adab271564ba0098a06a8cebda",
         "GUID:2ace7ebb826df10459d12b4f3c4a9407",
         "GUID:c685d05731421f64287ad6d13be5af0e",
@@ -24,20 +24,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "Newtonsoft.Json.dll",
-        "Unity.Tasks.dll",
-        "Firebase.App.dll",
-        "Firebase.DynamicLinks.dll",
-        "Firebase.Editor.dll",
-        "Firebase.Platform.dll",
-        "Firebase.TaskExtension.dll",
-        "Google.IOSResolver.dll",
-        "Google.JarResolver.dll",
-        "Google.MiniJson.dll",
-        "Google.PackageManagerResolver.dll",
-        "Google.VersionHandler.dll",
-        "Google.VersionHandlerImpl.dll",
-        "Unity.Compat.dll"
+        "FinolDigital.Cgs.CardGameDef.dll",
+        "Newtonsoft.Json.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [],

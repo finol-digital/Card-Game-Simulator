@@ -5,11 +5,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CardGameDef.Unity;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
+using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -20,7 +20,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler
+    public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
 
@@ -148,9 +148,6 @@ namespace Cgs.CardGameView.Multiplayer
         private Image View => _view ??= GetComponent<Image>();
         private Image _view;
 
-        private CanvasGroup Visibility => _visibility ??= GetComponent<CanvasGroup>();
-        private CanvasGroup _visibility;
-
         public override void OnNetworkSpawn()
         {
             PlayController.SetPlayActions(this);
@@ -167,13 +164,17 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnStartPlayable()
         {
             if (IsSpawned)
-                ParentToPlayMat();
+                ParentToPlayAreaContent();
 
-            if (PlayController.Instance != null && PlayController.Instance.playMat.transform == transform.parent)
+            if (PlayController.Instance != null &&
+                PlayController.Instance.playAreaCardZone.transform == transform.parent)
             {
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
                 cardDropArea.isBlocker = true;
                 cardDropArea.DropHandler = this;
+
+                var stackDropArea = gameObject.GetOrAddComponent<StackDropArea>();
+                stackDropArea.DropHandler = this;
             }
 
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -264,11 +265,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance == null)
                 return;
 
-            CardViewer.Instance.PreviewCardModel = this;
             if (Settings.PreviewOnMouseOver && !CardViewer.Instance.IsVisible
                                             && !(PlayableViewer.Instance != null && PlayableViewer.Instance.IsVisible)
                                             && CurrentDragPhase != DragPhase.Drag && !IsFacedown)
-                CardViewer.Instance.Preview(this);
+                CardViewer.Instance.PreviewCardModel = this;
         }
 
         protected override void OnPointerExitPlayable(PointerEventData eventData)
@@ -316,12 +316,18 @@ namespace Cgs.CardGameView.Multiplayer
             var cards = new List<UnityCard> {Value, cardModel.Value};
             if (IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
-                    Position);
+                    Position, Rotation, !IsFacedown);
             else
-                PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position);
+                PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position, Rotation, !IsFacedown);
 
             Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
             cardModel.Discard();
+            Discard();
+        }
+
+        public void OnDrop(CardStack cardStack)
+        {
+            cardStack.RequestInsert(0, Id);
             Discard();
         }
 
@@ -348,7 +354,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override bool PreBeginDrag(PointerEventData eventData)
         {
             DidDrag = true;
-            if (DoesCloneOnDrag)
+            if (DoesCloneOnDrag && !IsProcessingSecondaryDragAction)
             {
                 if (!IsOnline && IsSpawned)
                     MyNetworkObject.Despawn(false);
@@ -427,7 +433,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (DropTarget == null && ParentCardZone == null && PlaceHolderCardZone == null &&
                 CgsNetManager.Instance != null && PlayController.Instance != null)
             {
-                PlaceHolderCardZone = PlayController.Instance.playMat;
+                PlaceHolderCardZone = PlayController.Instance.playAreaCardZone;
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
             }
 
@@ -446,7 +452,7 @@ namespace Cgs.CardGameView.Multiplayer
             return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<CardModel>();
         }
 
-        private void ActOnDrag()
+        protected override void ActOnDrag()
         {
             UpdatePosition();
             if (SecondaryDragAction != null && IsProcessingSecondaryDragAction)
@@ -462,10 +468,10 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (PlaySettings.AutoStackCards && PlayController.Instance != null)
             {
-                var playMatTransform = PlayController.Instance.playMat.transform;
-                for (var i = 0; i < playMatTransform.childCount; i++)
+                var playAreaCardZoneTransform = PlayController.Instance.playAreaCardZone.transform;
+                for (var i = 0; i < playAreaCardZoneTransform.childCount; i++)
                 {
-                    var siblingTransform = playMatTransform.GetChild(i);
+                    var siblingTransform = playAreaCardZoneTransform.GetChild(i);
                     if (siblingTransform == transform)
                         continue;
 
@@ -479,10 +485,10 @@ namespace Cgs.CardGameView.Multiplayer
                         var cards = new List<UnityCard> {siblingCardModel.Value, Value};
                         if (IsOnline)
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.Position);
+                                cards, siblingCardModel.Position, siblingCardModel.Rotation, !siblingCardModel.IsFacedown);
                         else
                             PlayController.Instance.CreateCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.Position);
+                                cards, siblingCardModel.Position, siblingCardModel.Rotation, !siblingCardModel.IsFacedown);
                         siblingCardModel.Discard();
                         Discard();
                         return;

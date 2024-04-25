@@ -4,6 +4,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Cgs.CardGameView.Viewer;
+using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
@@ -34,6 +36,8 @@ namespace Cgs.CardGameView.Multiplayer
     public class CgsNetPlayable : NetworkBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
         IPointerUpHandler, ISelectHandler, IDeselectHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        public virtual string DeletePrompt => "Delete?";
+
         private static readonly Vector2 OutlineHighlightDistance = new(15, 15);
         private static readonly Color SelectedHighlightColor = new(0.02f, 0.5f, 0.4f);
 
@@ -41,17 +45,21 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playMat != null &&
-                                PlayController.Instance.playMat.transform == transform.parent && IsSpawned;
+        public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playAreaCardZone != null &&
+                                PlayController.Instance.playAreaCardZone.transform == transform.parent && IsSpawned;
 
-        public bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
+        protected bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
         private NetworkObject _networkObject;
 
-        protected bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 || CurrentPointerEventData is
-            {button: PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right};
+        protected virtual bool IsProcessingSecondaryDragAction => PointerDragOffsets.Count > 1 ||
+                                                                  CurrentPointerEventData is
+                                                                  {
+                                                                      button: PointerEventData.InputButton.Middle
+                                                                      or PointerEventData.InputButton.Right
+                                                                  };
 
         public Vector2 Position
         {
@@ -64,7 +72,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private Vector2 _position;
+        private Vector2 _position = Vector2.zero;
         private readonly NetworkVariable<Vector2> _positionNetworkVariable = new();
 
         public Quaternion Rotation
@@ -78,7 +86,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private Quaternion _rotation;
+        private Quaternion _rotation = Quaternion.identity;
         private readonly NetworkVariable<Quaternion> _rotationNetworkVariable = new();
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
@@ -96,6 +104,9 @@ namespace Cgs.CardGameView.Multiplayer
         public bool ToDiscard { get; protected set; }
 
         public virtual string ViewValue => "<Playable:Value>";
+
+        protected CanvasGroup Visibility => _visibility ??= gameObject.GetOrAddComponent<CanvasGroup>();
+        private CanvasGroup _visibility;
 
         public HighlightMode HighlightMode
         {
@@ -169,7 +180,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
-            if (PointerPositions.Count > 0 && !DidDrag)
+            if (PointerPositions.Count > 0 && !DidDrag && !Input.GetMouseButton(1))
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
@@ -202,7 +213,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnPointerEnterPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (Settings.PreviewOnMouseOver && CardViewer.Instance != null && !CardViewer.Instance.IsVisible
+                && PlayableViewer.Instance != null && !PlayableViewer.Instance.IsVisible)
+                PlayableViewer.Instance.Preview(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -212,7 +225,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnPointerExitPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.HidePreview();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -257,7 +271,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnSelectPlayable(BaseEventData eventData)
         {
-            // Child classes may override
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.SelectedPlayable = this;
         }
 
         public void OnDeselect(BaseEventData eventData)
@@ -267,7 +282,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnDeselectPlayable(BaseEventData eventData)
         {
-            // Child classes may override
+            if (PlayableViewer.Instance != null)
+                PlayableViewer.Instance.IsVisible = false;
         }
 
         protected virtual bool PreBeginDrag(PointerEventData eventData)
@@ -289,7 +305,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnBeginDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (IsOnline)
+                RequestChangeOwnership();
+            else
+                ActOnDrag();
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -303,7 +322,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (LacksOwnership)
+                RequestChangeOwnership();
+            else
+                ActOnDrag();
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -323,7 +345,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnEndDragPlayable(PointerEventData eventData)
         {
-            // Child classes may override
+            if (!LacksOwnership)
+                ActOnDrag();
+            Visibility.blocksRaycasts = true;
         }
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
@@ -344,8 +368,24 @@ namespace Cgs.CardGameView.Multiplayer
                     PointerDragOffsets[offsetKey] = otherOffset - removedOffset;
         }
 
+        protected virtual void ActOnDrag()
+        {
+            Visibility.blocksRaycasts = false;
+            UpdatePosition();
+            if (IsProcessingSecondaryDragAction)
+                Rotate();
+        }
+
         protected virtual void UpdatePosition()
         {
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            if (IsProcessingSecondaryDragAction)
+                return;
+#else
+            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1))
+                return;
+#endif
+
             if (ParentCardZone == null)
                 HighlightMode = HighlightMode.Warn;
             else if (CurrentDragPhase != DragPhase.End)
@@ -366,16 +406,16 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
-        protected void ParentToPlayMat()
+        protected void ParentToPlayAreaContent()
         {
-            if (PlayController.Instance == null || PlayController.Instance.playMat == null)
+            if (PlayController.Instance == null || PlayController.Instance.playAreaCardZone == null)
             {
-                Debug.LogError($"ERROR: Attempted to parent {gameObject.name} to non-existent play mat!");
+                Debug.LogError($"ERROR: Attempted to parent {gameObject.name} to non-existent play area!");
                 return;
             }
 
             var rectTransform = (RectTransform) transform;
-            rectTransform.SetParent(PlayController.Instance.playMat.transform);
+            rectTransform.SetParent(PlayController.Instance.playAreaCardZone.transform);
             rectTransform.localScale = Vector3.one;
         }
 
@@ -393,8 +433,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             var rectTransform = (RectTransform) transform;
             var currentPosition = rectTransform.position;
-            if (CardGameManager.Current.PlayMatGridCellSize == null ||
-                CardGameManager.Current.PlayMatGridCellSize.X <= 0 ||
+            if (CardGameManager.Current.PlayMatGridCellSize.X <= 0 ||
                 CardGameManager.Current.PlayMatGridCellSize.Y <= 0)
                 return currentPosition;
 
@@ -472,6 +511,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeRotation(Quaternion oldValue, Quaternion newValue)
         {
+            _rotation = newValue;
             if (!IsOwner)
                 transform.rotation = newValue;
         }
@@ -486,6 +526,11 @@ namespace Cgs.CardGameView.Multiplayer
         public void HideHighlightClientRpc()
         {
             HighlightMode = HighlightMode.Off;
+        }
+
+        public void PromptDelete()
+        {
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
 
         protected void RequestDelete()

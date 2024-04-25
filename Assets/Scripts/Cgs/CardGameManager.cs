@@ -2,10 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#if UNITY_IOS
-using Firebase;
-using Firebase.Extensions;
-#endif
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,16 +10,18 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Web;
-using CardGameDef;
-using CardGameDef.Unity;
 using Cgs.Menu;
+using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.CardGameDef.Unity;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
-#if UNITY_ANDROID || UNITY_IOS
-using Firebase.DynamicLinks;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using System.Runtime.InteropServices;
 #endif
+
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine.Networking;
 #endif
@@ -34,6 +32,10 @@ namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        [DllImport("__Internal")]
+        private static extern void GameReady();
+#endif
         // Show all Debug.Log() to help with debugging?
         private const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
@@ -160,31 +162,13 @@ namespace Cgs
             }
         }
 
-        public Dialog Messenger
-        {
-            get
-            {
-                if (_messenger != null) return _messenger;
-                _messenger = Instantiate(Resources.Load<GameObject>("Dialog")).GetOrAddComponent<Dialog>();
-                _messenger.transform.SetParent(transform);
-                return _messenger;
-            }
-        }
+        public Dialog Messenger => messenger;
 
-        private Dialog _messenger;
+        public Dialog messenger;
 
-        public ProgressBar Progress
-        {
-            get
-            {
-                if (_progress != null) return _progress;
-                _progress = Instantiate(Resources.Load<GameObject>("ProgressBar")).GetOrAddComponent<ProgressBar>();
-                _progress.transform.SetParent(transform);
-                return _progress;
-            }
-        }
+        public ProgressBar Progress => progress;
 
-        private ProgressBar _progress;
+        public ProgressBar progress;
 
         private void Awake()
         {
@@ -209,13 +193,8 @@ namespace Cgs
 
             ResetCurrentToDefault();
 
-            Debug.Log("CardGameManager is Awake!");
-        }
-
-        private void Start()
-        {
 #if !UNITY_WEBGL
-            Debug.Log("CardGameManager::Start:CheckDeepLinks");
+            Debug.Log("CardGameManager::Awake:CheckDeepLinks");
             CheckDeepLinks();
 #endif
         }
@@ -225,27 +204,7 @@ namespace Cgs
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#elif UNITY_WEBGL
-            if (!Directory.Exists(UnityCardGame.GamesDirectoryPath))
-                Directory.CreateDirectory(UnityCardGame.GamesDirectoryPath);
-            string standardPlayingCardsDirectory =
-                UnityCardGame.GamesDirectoryPath + "/" + Tags.StandardPlayingCardsDirectoryName;
-            if (!Directory.Exists(standardPlayingCardsDirectory))
-                Directory.CreateDirectory(standardPlayingCardsDirectory);
-            File.WriteAllText(standardPlayingCardsDirectory + "/" + Tags.StandardPlayingCardsJsonFileName,
-                Tags.StandPlayingCardsJsonFileContent);
-            string dominoesDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.DominoesDirectoryName;
-            if (!Directory.Exists(dominoesDirectory))
-                Directory.CreateDirectory(dominoesDirectory);
-            File.WriteAllText(dominoesDirectory + "/" + Tags.DominoesJsonFileName, Tags.DominoesJsonFileContent);
-            StartCoroutine(
-                UnityFileMethods.SaveUrlToFile(Tags.DominoesCardBackUrl, dominoesDirectory + "/CardBack.png"));
-            string mahjongDirectory = UnityCardGame.GamesDirectoryPath + "/" + Tags.MahjongDirectoryName;
-            if (!Directory.Exists(mahjongDirectory))
-                Directory.CreateDirectory(mahjongDirectory);
-            File.WriteAllText(mahjongDirectory + "/" + Tags.MahjongJsonFileName, Tags.MahjongJsonFileContent);
-            StartCoroutine(UnityFileMethods.SaveUrlToFile(Tags.MahjongCardBackUrl, mahjongDirectory + "/CardBack.png"));
-#else
+#elif !UNITY_WEBGL
             UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
@@ -254,7 +213,11 @@ namespace Cgs
         {
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
                 Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
+#if UNITY_WEBGL
+                return;
+#else
                 CreateDefaultCardGames();
+#endif
 
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
@@ -324,10 +287,15 @@ namespace Cgs
                 var importGameDirectory = Path.Combine(UnityCardGame.GamesImportPath, gameId);
                 if (!Directory.Exists(importGameDirectory))
                 {
-                    var errorMessage = string.Format(FileNotFoundErrorMessage, importGameDirectory);
-                    Debug.LogError(errorMessage);
-                    Messenger.Show(errorMessage);
-                    return;
+                    gameId = Path.GetFileName(Directory.GetDirectories(UnityCardGame.GamesImportPath)[0]);
+                    importGameDirectory = Path.Combine(UnityCardGame.GamesImportPath, gameId);
+                    if (!Directory.Exists(importGameDirectory))
+                    {
+                        var errorMessage = string.Format(FileNotFoundErrorMessage, importGameDirectory);
+                        Debug.LogError(errorMessage);
+                        Messenger.Show(errorMessage);
+                        return;
+                    }
                 }
 
                 var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
@@ -378,36 +346,23 @@ namespace Cgs
             OnSceneActions.Clear();
         }
 
+        // Note: Does NOT Reset Game Scene
+        internal void ResetCurrentToDefault()
+        {
+            var preferredGameId =
+                PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
+            Current = AllCardGames.TryGetValue(preferredGameId, out var currentGame) &&
+                      string.IsNullOrEmpty(currentGame.Error)
+                ? currentGame
+                : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
+        }
+
+#if !UNITY_WEBGL
         private void CheckDeepLinks()
         {
-            Debug.Log("Checking Deep Links...");
-#if UNITY_IOS
-            Debug.Log("Should use Firebase Dynamic Links for iOS...");
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
-            {
-                var dependencyStatus = task.Result;
-                if (dependencyStatus != DependencyStatus.Available)
-                {
-                    Debug.LogError("Error with Links! Could not resolve all Firebase dependencies: " + dependencyStatus);
-                    Messenger.Show("Error with Links! Could not resolve all Firebase dependencies: " + dependencyStatus);
-                    return;
-                }
-
-                DynamicLinks.DynamicLinkReceived += OnDynamicLinkReceived;
-                Debug.Log("Using Firebase Dynamic Links for iOS!");
-            });
-            return;
-#elif UNITY_ANDROID
-            if (string.IsNullOrEmpty(Application.absoluteURL))
-            {
-                DynamicLinks.DynamicLinkReceived += OnDynamicLinkReceived;
-                Debug.Log("Using Firebase Dynamic Links for Android!");
-            }
-#else
             Application.deepLinkActivated += OnDeepLinkActivated;
-            Debug.Log("Using Native Deep Links!");
-#endif
 
+            Debug.Log("Checking Deep Links...");
             if (string.IsNullOrEmpty(Application.absoluteURL))
             {
                 Debug.Log("No Start Deep Link");
@@ -424,22 +379,6 @@ namespace Cgs
             OnDeepLinkActivated(Application.absoluteURL);
         }
 
-#if UNITY_ANDROID || UNITY_IOS
-        private void OnDynamicLinkReceived(object sender, EventArgs args)
-        {
-            Debug.Log("OnDynamicLinkReceived!");
-            var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
-            var deepLink = dynamicLinkEventArgs?.ReceivedDynamicLink.Url.OriginalString;
-            if (string.IsNullOrEmpty(deepLink))
-            {
-                Debug.LogError("OnDynamicLinkReceived::deepLinkEmpty");
-                Messenger.Show("OnDynamicLinkReceived::deepLinkEmpty");
-            }
-            else
-                OnDeepLinkActivated(deepLink);
-        }
-#endif
-
         private void OnDeepLinkActivated(string deepLink)
         {
             Debug.Log("OnDeepLinkActivated!");
@@ -447,11 +386,11 @@ namespace Cgs
             if (string.IsNullOrEmpty(autoUpdateUrl) ||
                 !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
             {
-                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
-                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMalformed: " + deepLink);
+                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
+                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
             }
             else
-                StartCoroutine(GetCardGame(autoUpdateUrl));
+                StartGetCardGame(autoUpdateUrl);
         }
 
         private static string GetAutoUpdateUrl(string deepLink)
@@ -463,46 +402,61 @@ namespace Cgs
                 return null;
             }
 
-            if (deepLink.StartsWith(Tags.DynamicLinkUriDomain))
-            {
-                var dynamicLinkUri = new Uri(deepLink);
-                deepLink = HttpUtility.UrlDecode(HttpUtility.ParseQueryString(dynamicLinkUri.Query).Get("link"));
-                Debug.Log("GetAutoUpdateUrl::dynamicLink: " + deepLink);
-                if (string.IsNullOrEmpty(deepLink) || !Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
-                {
-                    Debug.LogWarning("GetAutoUpdateUrl::dynamicLinkMalformed: " + deepLink);
-                    return null;
-                }
-            }
-
-            var deepLinkDecoded = HttpUtility.UrlDecode(deepLink);
-            Debug.Log("GetAutoUpdateUrl::deepLinkDecoded: " + deepLinkDecoded);
-            var deepLinkUriQuery = new Uri(deepLinkDecoded).Query;
+            var deepLinkUriQuery = new Uri(deepLink).Query;
             Debug.Log("GetAutoUpdateUrl::deepLinkUriQuery: " + deepLinkUriQuery);
             var autoUpdateUrl = HttpUtility.ParseQueryString(deepLinkUriQuery).Get("url");
             Debug.Log("GetAutoUpdateUrl::autoUpdateUrl: " + autoUpdateUrl);
 
             return autoUpdateUrl;
         }
+#endif
 
-        // Note: Does NOT Reset Game Scene
-        internal void ResetCurrentToDefault()
+#if UNITY_WEBGL && !UNITY_EDITOR
+        private IEnumerator Start()
         {
-            var preferredGameId =
-                PlayerPrefs.GetString(PlayerPrefsDefaultGame, Tags.StandardPlayingCardsDirectoryName);
-            Current = AllCardGames.TryGetValue(preferredGameId, out var currentGame) &&
-                      string.IsNullOrEmpty(currentGame.Error)
-                ? currentGame
-                : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
+            Debug.Log("CardGameManager::Start:WaitForCurrentIsDownloading");
+
+            yield return null;
+            while (Current is {IsDownloading: true})
+                yield return null;
+
+            bool callGameReady =
+ Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error)
+                || Current.Id.Equals(Tags.StandardPlayingCardsDirectoryName);
+            Debug.Log("CardGameManager::Start:callGameReady " + callGameReady);
+            if (callGameReady)
+                GameReady();
+        }
+#endif
+
+        [PublicAPI]
+        public void StartGetCardGame(string autoUpdateUrl)
+        {
+            if (Current is {IsDownloading: true})
+            {
+                Debug.LogError("ERROR: StartGetCardGame while already downloading");
+                return;
+            }
+
+            StartCoroutine(GetCardGame(autoUpdateUrl));
         }
 
         public IEnumerator GetCardGame(string gameUrl)
         {
+            if (string.IsNullOrEmpty(gameUrl))
+            {
+                Debug.LogError("ERROR: GetCardGame has gameUrl missing!");
+                Messenger.Show("ERROR: GetCardGame has gameUrl missing!");
+                yield break;
+            }
+
             Debug.Log("GetCardGame: Starting...");
             // If user attempts to download a game they already have, we should just update that game
             UnityCardGame existingGame = null;
-            foreach (var cardGame in AllCardGames.Values.Where(cardGame =>
-                         cardGame.AutoUpdateUrl.Equals(new Uri(gameUrl))))
+            foreach (var cardGame in AllCardGames.Values.Where(cardGame => cardGame != null &&
+                                                                           cardGame.AutoUpdateUrl != null &&
+                                                                           cardGame.AutoUpdateUrl.Equals(
+                                                                               new Uri(gameUrl))))
                 existingGame = cardGame;
             Debug.Log("GetCardGame: Existing game search complete...");
             if (existingGame != null)
@@ -655,6 +609,8 @@ namespace Cgs
 
             if (!string.IsNullOrEmpty(Current.Error))
             {
+                if (UnityCardGame.UnityInvalid == Current || Current == CardGame.Invalid)
+                    return;
                 Debug.LogError(LoadErrorMessage + Current.Error);
                 Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
                 return;
@@ -681,41 +637,12 @@ namespace Cgs
             ResetGameScene();
         }
 
-        public void PromptDelete()
-        {
-            if (AllCardGames.Count > 1)
-                Messenger.Prompt(DeletePrompt, Delete);
-            else
-                Messenger.Show(DeleteWarningMessage);
-        }
-
-        private void Delete()
-        {
-            if (AllCardGames.Count < 1)
-            {
-                Debug.LogError(DeleteErrorMessage + DeleteWarningMessage);
-                return;
-            }
-
-            try
-            {
-                Directory.Delete(Current.GameDirectoryPath, true);
-                AllCardGames.Remove(Current.Id);
-                ResetCurrentToDefault();
-                ResetGameScene();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(DeleteErrorMessage + ex.Message);
-            }
-        }
-
         public void Share()
         {
-            Debug.Log("CGS Share:: Deep:" + Current.CgsDeepLink + " Auto:" + Current.AutoUpdateUrl);
+            Debug.Log("CGS Share:: Deep:" + Current.CgsGamesLink + " Auto:" + Current.AutoUpdateUrl);
             if (Current.AutoUpdateUrl != null && Current.AutoUpdateUrl.IsWellFormedOriginalString())
             {
-                var deepLink = Current.CgsDeepLink?.OriginalString ?? BuildDeepLink();
+                var deepLink = Current.CgsGamesLink?.OriginalString ?? BuildDeepLink();
                 var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, deepLink);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 var nativeShare = new NativeShare();
@@ -733,7 +660,7 @@ namespace Cgs
         {
             var deepLink = "https://cgs.link/?link=";
             deepLink += "https://www.cardgamesimulator.com/link?url%3D" +
-                        HttpUtility.UrlEncode(HttpUtility.UrlEncode(Current.AutoUpdateUrl.OriginalString));
+                        HttpUtility.UrlEncode(HttpUtility.UrlEncode(Current.AutoUpdateUrl?.OriginalString));
             deepLink += "&apn=com.finoldigital.cardgamesim&isi=1392877362&ibi=com.finoldigital.CardGameSim";
             var regex = new Regex("[^a-zA-Z0-9 -]");
             var encodedName = regex.Replace(Current.Name, "+");
@@ -752,7 +679,7 @@ namespace Cgs
             var subContainer = Path.Combine(container, UnityFileMethods.GetSafeFileName(Current.Id));
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
-            var zipFileName = Current.Id + ".zip";
+            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".zip");
             UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
             Directory.Delete(container, true);
 
@@ -806,6 +733,35 @@ namespace Cgs
             new NativeShare().AddFile(path, "application/zip").Share();
         }
 #endif
+
+        public void PromptDelete()
+        {
+            if (AllCardGames.Count > 1)
+                Messenger.Prompt(DeletePrompt, Delete);
+            else
+                Messenger.Show(DeleteWarningMessage);
+        }
+
+        private void Delete()
+        {
+            if (AllCardGames.Count < 1)
+            {
+                Debug.LogError(DeleteErrorMessage + DeleteWarningMessage);
+                return;
+            }
+
+            try
+            {
+                Directory.Delete(Current.GameDirectoryPath, true);
+                AllCardGames.Remove(Current.Id);
+                ResetCurrentToDefault();
+                ResetGameScene();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(DeleteErrorMessage + ex.Message);
+            }
+        }
 
         private void LateUpdate()
         {

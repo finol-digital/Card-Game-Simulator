@@ -6,14 +6,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Get Version
         id: versioning
-        uses: paulhatch/semantic-version@v5.0.3
+        uses: paulhatch/semantic-version@v5.4.0
         with:
           version_format: "${major}.${minor}"
+          bump_each_commit: true
       - name: Prepare Announcement
         id: prepare
         shell: bash
@@ -27,16 +28,9 @@ jobs:
           echo "$ANNOUNCEMENT" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
       - name: Discord Announcement
+        if: github.ref == 'refs/heads/main'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
-      - name: Twitter Announcement
-        uses: ethomson/send-tweet-action@v1
-        with:
-          status: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
-          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
-          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
-          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}

@@ -17,30 +17,33 @@ namespace Cgs.Cards
 {
     public class CardsExplorer : MonoBehaviour
     {
-        public const string CannotImportMessage =
+        public const string CannotEditCardsMessage =
             "This game has already been uploaded, and it is currently not possible to edit uploaded games.";
 
-        public const string CardSetDecisionPrompt = "Import Single Card or Set of Cards?";
+        public const string NewCardSetDecisionPrompt = "New Single Card or Set of Cards?";
         public const string SingleCard = "Single Card";
         public const string SetOfCards = "Set of Cards";
 
         public GameObject cardSetImportModalPrefab;
-        public GameObject cardImportMenuPrefab;
+        public GameObject cardEditorMenuPrefab;
         public GameObject setImportMenuPrefab;
         public GameObject cardViewerPrefab;
         public Image bannerImage;
         public List<GameObject> editButtons;
         public SearchResults searchResults;
 
-        private DecisionModal ImportModal => _importModal ??= Instantiate(cardSetImportModalPrefab).GetOrAddComponent<DecisionModal>();
+        private DecisionModal NewCardSetModal =>
+            _newCardSetModal ??= Instantiate(cardSetImportModalPrefab).GetOrAddComponent<DecisionModal>();
 
-        private DecisionModal _importModal;
+        private DecisionModal _newCardSetModal;
 
-        private CardImportMenu CardImporter => _cardImporter ??= Instantiate(cardImportMenuPrefab).GetOrAddComponent<CardImportMenu>();
+        private CardEditorMenu CardEditor =>
+            _cardEditor ??= Instantiate(cardEditorMenuPrefab).GetOrAddComponent<CardEditorMenu>();
 
-        private CardImportMenu _cardImporter;
+        private CardEditorMenu _cardEditor;
 
-        private SetImportMenu SetImporter => _setImporter ??= Instantiate(setImportMenuPrefab).GetOrAddComponent<SetImportMenu>();
+        private SetImportMenu SetImporter =>
+            _setImporter ??= Instantiate(setImportMenuPrefab).GetOrAddComponent<SetImportMenu>();
 
         private SetImportMenu _setImporter;
 
@@ -62,7 +65,7 @@ namespace Cgs.Cards
             else if (Inputs.IsFilter)
                 searchResults.ShowSearchMenu();
             else if (Inputs.IsNew)
-                ShowImportModal();
+                ShowNewCardSetModal();
             else if (Inputs.IsCancel)
                 BackToMainMenu();
         }
@@ -77,24 +80,24 @@ namespace Cgs.Cards
         }
 
         [UsedImplicitly]
-        public void ShowImportModal()
+        public void ShowNewCardSetModal()
         {
-            if (CardGameManager.Current.CgsDeepLink != null &&
-                CardGameManager.Current.CgsDeepLink.IsWellFormedOriginalString()
+            if (CardGameManager.Current.CgsGamesLink != null &&
+                CardGameManager.Current.CgsGamesLink.IsWellFormedOriginalString()
                 || CardGameManager.Current.AutoUpdateUrl != null &&
                 CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
             {
-                CardGameManager.Instance.Messenger.Show(CannotImportMessage);
+                CardGameManager.Instance.Messenger.Show(CannotEditCardsMessage);
                 return;
             }
 
-            ImportModal.Show(CardSetDecisionPrompt, new Tuple<string, UnityAction>(SingleCard, ShowCardImportMenu),
+            NewCardSetModal.Show(NewCardSetDecisionPrompt, new Tuple<string, UnityAction>(SingleCard, ShowCardEditorMenu),
                 new Tuple<string, UnityAction>(SetOfCards, ShowSetImportMenu));
         }
 
-        private void ShowCardImportMenu()
+        private void ShowCardEditorMenu()
         {
-            CardImporter.Show(searchResults.Search);
+            CardEditor.Show(searchResults.Search);
         }
 
         private void ShowSetImportMenu()
