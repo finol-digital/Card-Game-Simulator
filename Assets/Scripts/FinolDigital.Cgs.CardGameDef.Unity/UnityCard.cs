@@ -13,9 +13,9 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
     public class UnityCard : Card
     {
         public const string SizeWarningMessage = "WARNING: Card image for {0} ({1}) is too large! \n" +
-                                                  "Recommended Action: Delete the Card, compress the image file using a tool like " +
-                                                  "https://www.iloveimg.com/compress-image " +
-                                                  ", then re-import.";
+                                                 "Recommended Action: Delete the Card, compress the image file using a tool like " +
+                                                 "https://www.iloveimg.com/compress-image " +
+                                                 ", then re-import.";
 
         public static readonly UnityCard Blank = new(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
@@ -84,7 +84,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 , output => newSprite = output);
 #else
             yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
-                UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl)
+                UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl.Replace(" ", "%20"))
                 , output => newSprite = output);
             var fileInfo = new FileInfo(ImageFilePath);
             if (fileInfo.Exists && fileInfo.Length > 1_000_000)

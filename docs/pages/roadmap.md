@@ -6,9 +6,18 @@ permalink: roadmap.html
 
 ## What's New - v1.105
 - Bug-Fix: Apply rotation when spawning players objects
-- Bug-Fix: Memory in GA
+- Bug-Fix: Card image loading when id has spaces
 
 ## Active Sprint
+- Bug-Fix: Grand Archive TCG multi-player
+  - Memory Zones aren't displayed on the joining client.
+  - Host's Decks aren't shown on the Joining Client.
+  - Memory zone face done cards aren't shown on the joining client.
+  - Loaded Decks on the joining client don't go to their respective zones
+- Bug-Fix: Deleting drawers
+  - https://github.com/finol-digital/Card-Game-Simulator/issues/131
+  - https://github.com/finol-digital/Card-Game-Simulator/issues/132
+- Bug-Fix: LAN
 - Bug-Fix: Sync button does not update Game
 - Bug-Fix: Card image blurriness/image quality management
 - Games Management Menu: CGS Games Browser
@@ -16,9 +25,9 @@ permalink: roadmap.html
 - Game-Play: Right-click for context menu - includes draw many and contextual green button for default action based on card location
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
-- Game-Play: Counter system for players and cards (Dice grouping/parenting)
 
 ## Backlog - Priority 1
+- Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Custom Tokens
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Support multiple card selection
