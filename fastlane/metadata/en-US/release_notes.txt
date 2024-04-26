@@ -1,1 +1,2 @@
-- Minor Bug Fixes
+- Bug-Fix: Apply rotation when spawning players objects
+- Bug-Fix: Card image loading when id has spaces
