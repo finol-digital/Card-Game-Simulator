@@ -888,6 +888,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sync Button
       objectReference: {fileID: 0}
+    - target: {fileID: 633149931556260070, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 633149931556260071, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1328,6 +1333,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 536e57b1da365924cba730f3e2a07572,
         type: 3}
+    - target: {fileID: 5606556387005000519, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5606556387005000519, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: tooltip
@@ -1337,6 +1352,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: Edit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

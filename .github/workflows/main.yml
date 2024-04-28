@@ -232,7 +232,7 @@ jobs:
     if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
     outputs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
-    timeout-minutes: 90
+    timeout-minutes: 180
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4

@@ -4,9 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.105
-- Bug-Fix: Apply rotation when spawning players objects
-- Bug-Fix: Card image loading when id has spaces
+## What's New - v1.106
+- Bug-Fix: Multiplayer syncing of tapping card
+- Games Management Menu: CGS Games Browser
+- Games Management Menu: Edit Button
 
 ## Active Sprint
 - Bug-Fix: Grand Archive TCG multi-player
@@ -20,13 +21,12 @@ permalink: roadmap.html
 - Bug-Fix: LAN
 - Bug-Fix: Sync button does not update Game
 - Bug-Fix: Card image blurriness/image quality management
-- Games Management Menu: CGS Games Browser
-- Games Management Menu: Edit Button
+- Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
+
+## Backlog - Priority 1
 - Game-Play: Right-click for context menu - includes draw many and contextual green button for default action based on card location
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
-
-## Backlog - Priority 1
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Custom Tokens
 - Game-Play: Display values on Card in Play Area

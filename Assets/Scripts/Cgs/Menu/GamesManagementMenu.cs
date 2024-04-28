@@ -36,8 +36,8 @@ namespace Cgs.Menu
 
         public RectTransform browseButton;
         public RectTransform newButton;
-        public RectTransform shareButton;
         public RectTransform editButton;
+        public RectTransform syncButton;
 
         protected override bool AllowSwitchOff => false;
 
@@ -93,7 +93,12 @@ namespace Cgs.Menu
                     .Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Inputs.IsSubmit)
-                Sync();
+            {
+                if (Settings.DeveloperMode)
+                    EditCurrent();
+                else
+                    Sync();
+            }
             else if (Inputs.IsNew)
             {
                 if (Settings.DeveloperMode)
@@ -104,12 +109,7 @@ namespace Cgs.Menu
             else if (Inputs.IsLoad)
                 Import();
             else if (Inputs.IsSave)
-            {
-                if (Settings.DeveloperMode)
-                    EditCurrent();
-                else
-                    Share();
-            }
+                Share();
             else if (Inputs.IsOption)
                 Delete();
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
@@ -123,8 +123,8 @@ namespace Cgs.Menu
             Menu.Show();
             browseButton.gameObject.SetActive(!Settings.DeveloperMode);
             newButton.gameObject.SetActive(Settings.DeveloperMode);
-            shareButton.gameObject.SetActive(!Settings.DeveloperMode);
             editButton.gameObject.SetActive(Settings.DeveloperMode);
+            syncButton.gameObject.SetActive(!Settings.DeveloperMode);
             BuildGameSelectionOptions();
         }
 
