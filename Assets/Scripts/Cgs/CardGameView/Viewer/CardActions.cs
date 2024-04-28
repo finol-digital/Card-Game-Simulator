@@ -50,9 +50,7 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            cardModel.transform.rotation *= Quaternion.Euler(0, 0, -CardGameManager.Current.GameCardRotationDegrees);
-            if (cardModel.IsOnline)
-                cardModel.UpdateRotationServerRpc(cardModel.transform.rotation);
+            cardModel.Rotation *= Quaternion.Euler(0, 0, -CardGameManager.Current.GameCardRotationDegrees);
         }
 
         public static void Tap(CardModel cardModel)
@@ -64,11 +62,9 @@ namespace Cgs.CardGameView.Viewer
             }
 
             var isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
-            cardModel.transform.rotation = isVertical
+            cardModel.Rotation = isVertical
                 ? Quaternion.AngleAxis(CardGameManager.Current.GameCardRotationDegrees, Vector3.back)
                 : Quaternion.identity;
-            if (cardModel.IsOnline)
-                cardModel.UpdateRotationServerRpc(cardModel.transform.rotation);
         }
 
         public static void Zoom(CardModel cardModel)
