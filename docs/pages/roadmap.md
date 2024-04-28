@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.106
-- Bug-Fix: Multiplayer syncing of tapping card
+- Bug-Fix: Multiplayer syncing of rotating card
 - Games Management Menu: CGS Games Browser
 - Games Management Menu: Edit Button
 
