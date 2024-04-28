@@ -63,9 +63,9 @@ jobs:
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@main
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           testMode: playmode
           githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -101,9 +101,9 @@ jobs:
           restore-keys: Library-lint-
       - name: Activate Unity
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         run: unity-editor -nographics -logFile /dev/stdout -quit -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
       - name: Generate Solution
         run: unity-editor -nographics -logFile /dev/stdout -customBuildName Card-Game-Simulator -projectPath . -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution -quit
@@ -189,9 +189,9 @@ jobs:
         id: build
         uses: game-ci/unity-builder@main
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
@@ -261,9 +261,9 @@ jobs:
         id: build
         uses: game-ci/unity-builder@main
         env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: StandaloneOSX
           buildMethod: Cgs.Editor.BuildCgs.BuildOptions
