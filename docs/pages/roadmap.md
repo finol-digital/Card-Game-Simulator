@@ -6,7 +6,6 @@ permalink: roadmap.html
 
 ## What's New - v1.106
 - Bug-Fix: Multiplayer syncing of rotating card
-- Games Management Menu: CGS Games Browser
 - Games Management Menu: Edit Button
 
 ## Active Sprint
@@ -24,6 +23,7 @@ permalink: roadmap.html
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 
 ## Backlog - Priority 1
+- Games Management Menu: CGS Games Browser
 - Game-Play: Right-click for context menu - includes draw many and contextual green button for default action based on card location
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables

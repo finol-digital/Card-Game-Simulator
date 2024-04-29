@@ -142,8 +142,8 @@ MonoBehaviour:
     type: 3}
   browseButton: {fileID: 8073464704216129576}
   newButton: {fileID: 5415527586037167891}
-  shareButton: {fileID: 8202997973238591162}
   editButton: {fileID: 3230080269742705660}
+  syncButton: {fileID: 2049986293988591451}
 --- !u!1 &1157992469845490830
 GameObject:
   m_ObjectHideFlags: 0
