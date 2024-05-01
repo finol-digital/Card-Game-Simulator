@@ -431,9 +431,10 @@ namespace Cgs.Menu
                 yield break;
             }
 
-            var unityCardGame = _isEdit
-                ? _game
-                : new UnityCardGame(CardGameManager.Instance, gameName)
+            var unityCardGame = _game;
+            if (!_isEdit)
+            {
+                unityCardGame = new UnityCardGame(CardGameManager.Instance, gameName)
                 {
                     AutoUpdate = -1, CardSize = new Float2(_width, _height),
                     BannerImageFileType = BannerImageFileType == 0 ? "png" : "jpg",
@@ -450,6 +451,7 @@ namespace Cgs.Menu
                         ? new List<PropertyDef>()
                         : Of(CardProperty)
                 };
+            }
 
             if (!Directory.Exists(unityCardGame.GameDirectoryPath))
                 Directory.CreateDirectory(unityCardGame.GameDirectoryPath);
