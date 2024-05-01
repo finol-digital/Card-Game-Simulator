@@ -149,13 +149,13 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void CreateNew()
         {
-            CardGameEditor.Show();
+            CardGameEditor.ShowNew();
         }
 
         [UsedImplicitly]
         public void EditCurrent()
         {
-            CardGameManager.Instance.Messenger.Show("Edit functionality is still in development!");
+            CardGameEditor.ShowCurrent();
         }
 
         [UsedImplicitly]

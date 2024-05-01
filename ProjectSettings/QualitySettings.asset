@@ -303,7 +303,7 @@ QualitySettings:
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
     Android: 0
-    Server: 0
+    Server: 5
     Standalone: 5
     WebGL: 0
     Windows Store Apps: 5

@@ -111,6 +111,18 @@ namespace Cgs.Menu
 
         [UsedImplicitly] public string CardProperty { get; set; } = "description";
 
+        public void ShowNew()
+        {
+            Show();
+
+        }
+
+        public void ShowCurrent()
+        {
+            Show();
+
+        }
+
         private void Update()
         {
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
