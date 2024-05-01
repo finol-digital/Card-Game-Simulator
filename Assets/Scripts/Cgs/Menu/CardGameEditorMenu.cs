@@ -67,7 +67,7 @@ namespace Cgs.Menu
 
         private string _gameName = string.Empty;
 
-        private readonly CardGame _game = new();
+        private UnityCardGame _game = new(null);
 
         [UsedImplicitly]
         public string Width
@@ -111,16 +111,60 @@ namespace Cgs.Menu
 
         [UsedImplicitly] public string CardProperty { get; set; } = "description";
 
+        private bool _isEdit;
+
         public void ShowNew()
         {
             Show();
-
+            GameName = string.Empty;
+            Width = "2.5";
+            Height = "3.5";
+            bannerImage.sprite = Resources.Load<Sprite>("Banner");
+            BannerImageFileType = 0;
+            cardBackImage.sprite = Resources.Load<Sprite>("CardBack");
+            CardBackImageFileType = 0;
+            playMatImage.sprite = Resources.Load<Sprite>("PlayMat");
+            PlayMatImageFileType = 0;
+            Copyright = string.Empty;
+            RulesUrl = string.Empty;
+            CardProperty = "description";
+            _game = new UnityCardGame(CardGameManager.Instance);
+            _isEdit = false;
         }
 
         public void ShowCurrent()
         {
             Show();
-
+            GameName = CardGameManager.Current.Name;
+            Width = CardGameManager.Current.CardSize.X.ToString(CultureInfo.InvariantCulture);
+            Height = CardGameManager.Current.CardSize.Y.ToString(CultureInfo.InvariantCulture);
+            bannerImage.sprite = CardGameManager.Current.BannerImageSprite;
+            BannerImageFileType = CardGameManager.Current.BannerImageFileType.EndsWith("png") ? 0 : 1;
+            cardBackImage.sprite = CardGameManager.Current.CardBackImageSprite;
+            CardBackImageFileType = CardGameManager.Current.CardBackImageFileType.EndsWith("png") ? 0 : 1;
+            playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
+            PlayMatImageFileType = CardGameManager.Current.PlayMatImageFilePath.EndsWith("png") ? 0 : 1;
+            Copyright = CardGameManager.Current.Copyright;
+            RulesUrl = CardGameManager.Current.RulesUrl?.ToString();
+            CardProperty = "description";
+            _game = new UnityCardGame(CardGameManager.Instance, GameName)
+            {
+                AutoUpdate = CardGameManager.Current.AutoUpdate,
+                AutoUpdateUrl = CardGameManager.Current.AutoUpdateUrl,
+                CardSize = CardGameManager.Current.CardSize,
+                BannerImageFileType = CardGameManager.Current.BannerImageFileType,
+                BannerImageUrl = CardGameManager.Current.BannerImageUrl,
+                CardBackImageFileType = CardGameManager.Current.CardBackImageFileType,
+                CardBackImageUrl = CardGameManager.Current.CardBackImageUrl,
+                CardSetIdentifier = CardGameManager.Current.CardSetIdentifier,
+                PlayMatImageFileType = CardGameManager.Current.PlayMatImageFileType,
+                PlayMatImageUrl = CardGameManager.Current.PlayMatImageUrl,
+                Copyright = CardGameManager.Current.Copyright,
+                RulesUrl = CardGameManager.Current.RulesUrl,
+                CardPrimaryProperty = CardGameManager.Current.CardPrimaryProperty,
+                CardProperties = CardGameManager.Current.CardProperties
+            };
+            _isEdit = true;
         }
 
         private void Update()
@@ -387,41 +431,45 @@ namespace Cgs.Menu
                 yield break;
             }
 
-            var newCardGame = new UnityCardGame(CardGameManager.Instance, gameName)
-            {
-                AutoUpdate = -1, CardSize = new Float2(_width, _height),
-                BannerImageFileType = BannerImageFileType == 0 ? "png" : "jpg",
-                BannerImageUrl = _game.BannerImageUrl,
-                CardBackImageFileType = CardBackImageFileType == 0 ? "png" : "jpg",
-                CardBackImageUrl = _game.CardBackImageUrl,
-                CardSetIdentifier = "setCode",
-                PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg",
-                PlayMatImageUrl = _game.PlayMatImageUrl,
-                Copyright = string.IsNullOrWhiteSpace(Copyright) ? "" : Copyright,
-                RulesUrl = Uri.IsWellFormedUriString(RulesUrl, UriKind.Absolute) ? new Uri(RulesUrl) : null,
-                CardPrimaryProperty = string.IsNullOrWhiteSpace(CardProperty) ? "" : CardProperty,
-                CardProperties = string.IsNullOrWhiteSpace(CardProperty) ? new List<PropertyDef>() : Of(CardProperty)
-            };
+            var unityCardGame = _isEdit
+                ? _game
+                : new UnityCardGame(CardGameManager.Instance, gameName)
+                {
+                    AutoUpdate = -1, CardSize = new Float2(_width, _height),
+                    BannerImageFileType = BannerImageFileType == 0 ? "png" : "jpg",
+                    BannerImageUrl = _game.BannerImageUrl,
+                    CardBackImageFileType = CardBackImageFileType == 0 ? "png" : "jpg",
+                    CardBackImageUrl = _game.CardBackImageUrl,
+                    CardSetIdentifier = "setCode",
+                    PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg",
+                    PlayMatImageUrl = _game.PlayMatImageUrl,
+                    Copyright = string.IsNullOrWhiteSpace(Copyright) ? "" : Copyright,
+                    RulesUrl = Uri.IsWellFormedUriString(RulesUrl, UriKind.Absolute) ? new Uri(RulesUrl) : null,
+                    CardPrimaryProperty = string.IsNullOrWhiteSpace(CardProperty) ? "" : CardProperty,
+                    CardProperties = string.IsNullOrWhiteSpace(CardProperty)
+                        ? new List<PropertyDef>()
+                        : Of(CardProperty)
+                };
 
-            if (!Directory.Exists(newCardGame.GameDirectoryPath))
-                Directory.CreateDirectory(newCardGame.GameDirectoryPath);
+            if (!Directory.Exists(unityCardGame.GameDirectoryPath))
+                Directory.CreateDirectory(unityCardGame.GameDirectoryPath);
             var defaultContractResolver = new DefaultContractResolver {NamingStrategy = new CamelCaseNamingStrategy()};
             var jsonSerializerSettings = new JsonSerializerSettings
             {
                 ContractResolver = defaultContractResolver,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
-            File.WriteAllText(newCardGame.GameFilePath,
-                JsonConvert.SerializeObject(newCardGame, jsonSerializerSettings));
+            File.WriteAllText(unityCardGame.GameFilePath,
+                JsonConvert.SerializeObject(unityCardGame, jsonSerializerSettings));
 
-            yield return CardGameManager.Instance.UpdateCardGame(newCardGame);
+            yield return CardGameManager.Instance.UpdateCardGame(unityCardGame);
 
-            if (!string.IsNullOrEmpty(newCardGame.Error))
+            if (!string.IsNullOrEmpty(unityCardGame.Error))
             {
-                Debug.LogWarning(CreationWarningMessage + newCardGame.Error);
+                Debug.LogWarning(CreationWarningMessage + unityCardGame.Error);
                 try
                 {
-                    Directory.Delete(newCardGame.GameDirectoryPath, true);
+                    Directory.Delete(unityCardGame.GameDirectoryPath, true);
                 }
                 catch (Exception ex)
                 {
@@ -430,8 +478,8 @@ namespace Cgs.Menu
             }
             else
             {
-                CardGameManager.Instance.AllCardGames[newCardGame.Id] = newCardGame;
-                CardGameManager.Instance.Select(newCardGame.Id);
+                CardGameManager.Instance.AllCardGames[unityCardGame.Id] = unityCardGame;
+                CardGameManager.Instance.Select(unityCardGame.Id);
                 Hide();
             }
         }
