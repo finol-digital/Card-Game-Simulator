@@ -1,2 +1,2 @@
-- Bug-Fix: Apply rotation when spawning players objects
-- Bug-Fix: Card image loading when id has spaces
+- Bug-Fix: Multiplayer syncing of rotating card
+- Games Management Menu: Edit Button
