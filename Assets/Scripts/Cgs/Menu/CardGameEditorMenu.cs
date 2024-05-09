@@ -36,7 +36,6 @@ namespace Cgs.Menu
         public const string SelectPlayMatImageFilePrompt = "Select PlayMat Image File";
 #endif
         public const string ImportImageWarningMessage = "No image file selected for import!";
-        public const string CreateWarningMessage = "A game with that name already exists!";
         public const string CreationWarningMessage = "Failed to create the custom card game! ";
         public const string CreationCleanupErrorMessage = "Failed to both create and cleanup during creation! ";
 
@@ -425,14 +424,24 @@ namespace Cgs.Menu
                 yield break;
 
             var gameName = GameName.Trim().Replace("@", "");
-            if (CardGameManager.Instance.AllCardGames.ContainsKey(gameName))
-            {
-                CardGameManager.Instance.Messenger.Show(CreateWarningMessage);
-                yield break;
-            }
 
             var unityCardGame = _game;
-            if (!_isEdit)
+            if (_isEdit)
+            {
+                unityCardGame.Name = gameName;
+                unityCardGame.CardSize = new Float2(_width, _height);
+                unityCardGame.BannerImageFileType = BannerImageFileType == 0 ? "png" : "jpg";
+                unityCardGame.CardBackImageFileType = CardBackImageFileType == 0 ? "png" : "jpg";
+                unityCardGame.PlayMatImageFileType = PlayMatImageFileType == 0 ? "png" : "jpg";
+                unityCardGame.Copyright = string.IsNullOrWhiteSpace(Copyright) ? "" : Copyright;
+                unityCardGame.RulesUrl =
+                    Uri.IsWellFormedUriString(RulesUrl, UriKind.Absolute) ? new Uri(RulesUrl) : null;
+                unityCardGame.CardPrimaryProperty = string.IsNullOrWhiteSpace(CardProperty) ? "" : CardProperty;
+                unityCardGame.CardProperties = string.IsNullOrWhiteSpace(CardProperty)
+                    ? new List<PropertyDef>()
+                    : Of(CardProperty);
+            }
+            else
             {
                 unityCardGame = new UnityCardGame(CardGameManager.Instance, gameName)
                 {
