@@ -12,18 +12,16 @@ permalink: roadmap.html
   - Loaded Decks on the joining client don't go to their respective zones
 - Bug-Fix: Deleting drawers
 
-## Known Bugs
+## Active Sprint
 - Bug-Fix: LAN
 - Bug-Fix: Card image blurriness/image quality management
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
-
-## Active Sprint
 - Cards: Support more than 1 card face (Dual-Faced Cards)
-- Game-Play: Right-click for context menu - includes draw many and contextual green button for default action based on card location
-- Game-Play: Name-Plates indicating player seats
-- Game-Play: Label which player is interacting with cards/playables
+- Game-Play: Cards Action modal - includes draw many and contextual green button for default action based on card location
 
 ## Backlog - Priority 1
+- Game-Play: Name-Plates indicating player seats
+- Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Custom Tokens
 - Game-Play: Display values on Card in Play Area

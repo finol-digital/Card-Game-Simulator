@@ -227,7 +227,7 @@ jobs:
 
   buildWithMac:
     name: Build for StandaloneOSX
-    runs-on: macos-latest
+    runs-on: macos-14
     needs: [tests, lint]
     if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
     outputs:
@@ -316,7 +316,7 @@ jobs:
 
   deployToAppStore:
     name: Deploy to the App Store
-    runs-on: macos-latest
+    runs-on: macos-14
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
     steps:
@@ -448,7 +448,7 @@ jobs:
 
   deployToMacAppStore:
     name: Deploy to the Mac App Store
-    runs-on: macos-latest
+    runs-on: macos-14
     needs: buildWithMac
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
     steps:
