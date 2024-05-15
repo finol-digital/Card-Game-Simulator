@@ -14,7 +14,6 @@ permalink: roadmap.html
 
 ## Active Sprint
 - Bug-Fix: LAN
-- Bug-Fix: Card image blurriness/image quality management
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Game-Play: Cards Action modal - includes draw many and contextual green button for default action based on card location
