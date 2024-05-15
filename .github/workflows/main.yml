@@ -155,7 +155,7 @@ jobs:
           - StandaloneLinux64
           - WebGL
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -186,7 +186,7 @@ jobs:
         with:
           large-packages: false
       - name: Build Unity Project
-        id: build
+        id: buildStep
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -231,7 +231,7 @@ jobs:
     needs: [tests, lint]
     if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     timeout-minutes: 180
     steps:
       - name: Checkout Repository
@@ -258,7 +258,7 @@ jobs:
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildMac-
       - name: Build Unity Project
-        id: build
+        id: buildStep
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -484,7 +484,7 @@ jobs:
     runs-on: windows-2022
     needs: [buildWithLinux, buildWithMac]
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     strategy:
       fail-fast: false
       matrix:
@@ -518,7 +518,7 @@ jobs:
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
       - name: Build Unity Project
-        id: build
+        id: buildStep
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
         env:
