@@ -4,29 +4,26 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.106
-- Bug-Fix: Multiplayer syncing of rotating card
-- Games Management Menu: Edit Button
-
-## Active Sprint
-- Bug-Fix: Grand Archive TCG multi-player
+## What's New - v1.107
+- Bug-Fix: Grand Archive TCG multi-player`
   - Memory Zones aren't displayed on the joining client.
   - Host's Decks aren't shown on the Joining Client.
   - Memory zone face done cards aren't shown on the joining client.
   - Loaded Decks on the joining client don't go to their respective zones
 - Bug-Fix: Deleting drawers
-  - https://github.com/finol-digital/Card-Game-Simulator/issues/131
-  - https://github.com/finol-digital/Card-Game-Simulator/issues/132
+
+## Known Bugs
 - Bug-Fix: LAN
-- Bug-Fix: Sync button does not update Game
 - Bug-Fix: Card image blurriness/image quality management
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 
-## Backlog - Priority 1
-- Games Management Menu: CGS Games Browser
+## Active Sprint
+- Cards: Support more than 1 card face (Dual-Faced Cards)
 - Game-Play: Right-click for context menu - includes draw many and contextual green button for default action based on card location
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
+
+## Backlog - Priority 1
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Custom Tokens
 - Game-Play: Display values on Card in Play Area
@@ -51,10 +48,10 @@ permalink: roadmap.html
   - Option for card count limits, i.e. 3 copies per deck
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
 - Cards: Support mix of different card sizes in the same game
-- Cards: Support more than 1 card face (Dual-Faced Cards)
 - Cards: Support multiple card backs
 
 ## Backlog - Priority 3
+- Games Management Menu: CGS Games Browser
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
