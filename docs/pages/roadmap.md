@@ -5,7 +5,12 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.107
-- Bug-Fix: Deleting drawers
+Minor Bug Fixes
+
+## Known Bugs
+- Game-Play: LAN connectivity
+- Game-Play: Deleting drawers in Web Browser
+- Game-Play: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 
 ## Active Sprint
 - Bug-Fix: Grand Archive TCG multi-player`
@@ -13,8 +18,6 @@ permalink: roadmap.html
   - Host's Decks aren't shown on the Joining Client.
   - Memory zone face done cards aren't shown on the joining client.
   - Loaded Decks on the joining client don't go to their respective zones
-- Bug-Fix: LAN
-- Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Game-Play: Cards Action modal - includes draw many and contextual green button for default action based on card location
 
