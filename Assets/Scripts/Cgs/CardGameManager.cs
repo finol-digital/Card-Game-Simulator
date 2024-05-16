@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Web;
 using Cgs.Menu;
 using FinolDigital.Cgs.CardGameDef;
@@ -639,11 +638,10 @@ namespace Cgs
 
         public void Share()
         {
-            Debug.Log("CGS Share:: Deep:" + Current.CgsGamesLink + " Auto:" + Current.AutoUpdateUrl);
-            if (Current.AutoUpdateUrl != null && Current.AutoUpdateUrl.IsWellFormedOriginalString())
+            Debug.Log("CGS Share:: CgsGamesLink:" + Current.CgsGamesLink);
+            if (Current.CgsGamesLink != null && Current.CgsGamesLink.IsWellFormedOriginalString())
             {
-                var deepLink = Current.CgsGamesLink?.OriginalString ?? BuildDeepLink();
-                var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, deepLink);
+                var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, Current.CgsGamesLink);
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
                 var nativeShare = new NativeShare();
                 nativeShare.SetText(shareMessage).Share();
@@ -654,20 +652,6 @@ namespace Cgs
             }
             else
                 ExportGame();
-        }
-
-        private static string BuildDeepLink()
-        {
-            var deepLink = "https://cgs.link/?link=";
-            deepLink += "https://www.cardgamesimulator.com/link?url%3D" +
-                        HttpUtility.UrlEncode(HttpUtility.UrlEncode(Current.AutoUpdateUrl?.OriginalString));
-            deepLink += "&apn=com.finoldigital.cardgamesim&isi=1392877362&ibi=com.finoldigital.CardGameSim";
-            var regex = new Regex("[^a-zA-Z0-9 -]");
-            var encodedName = regex.Replace(Current.Name, "+");
-            deepLink += "&st=Card+Game+Simulator+-+" + encodedName + "&sd=Play+" + encodedName + "+on+CGS!";
-            if (Current.BannerImageUrl != null && Current.BannerImageUrl.IsWellFormedOriginalString())
-                deepLink += "&si=" + Current.BannerImageUrl.OriginalString;
-            return deepLink;
         }
 
         private static void ExportGame()

@@ -155,7 +155,7 @@ jobs:
           - StandaloneLinux64
           - WebGL
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -186,7 +186,7 @@ jobs:
         with:
           large-packages: false
       - name: Build Unity Project
-        id: build
+        id: buildStep
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -227,11 +227,11 @@ jobs:
 
   buildWithMac:
     name: Build for StandaloneOSX
-    runs-on: macos-latest
+    runs-on: macos-14
     needs: [tests, lint]
     if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'release') || contains(github.event.inputs.workflow_mode, 'Steam') || contains(github.event.inputs.workflow_mode, 'Standalone')
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     timeout-minutes: 180
     steps:
       - name: Checkout Repository
@@ -258,7 +258,7 @@ jobs:
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildMac-
       - name: Build Unity Project
-        id: build
+        id: buildStep
         uses: game-ci/unity-builder@main
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
@@ -316,7 +316,7 @@ jobs:
 
   deployToAppStore:
     name: Deploy to the App Store
-    runs-on: macos-latest
+    runs-on: macos-14
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
     steps:
@@ -448,7 +448,7 @@ jobs:
 
   deployToMacAppStore:
     name: Deploy to the Mac App Store
-    runs-on: macos-latest
+    runs-on: macos-14
     needs: buildWithMac
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
     steps:
@@ -484,7 +484,7 @@ jobs:
     runs-on: windows-2022
     needs: [buildWithLinux, buildWithMac]
     outputs:
-      buildVersion: ${{ steps.build.outputs.buildVersion }}
+      buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     strategy:
       fail-fast: false
       matrix:
@@ -518,7 +518,7 @@ jobs:
             Library-buildWindows-${{ matrix.targetPlatform }}-
             Library-buildWindows-
       - name: Build Unity Project
-        id: build
+        id: buildStep
         timeout-minutes: 45
         uses: game-ci/unity-builder@main
         env:
@@ -782,11 +782,18 @@ jobs:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
+      - name: Copy .appxupload
+        working-directory: C:/Card-Game-Simulator.git
+        shell: pwsh
+        env:
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+          path: ${{ format('{0}\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+        run: Copy-Item ".\$env:APPX_PATH\" -Destination ".\$env:path\"
       - name: Upload .appxupload
         uses: actions/upload-artifact@v4
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-          path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+          path: ${{ format('{0}\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh

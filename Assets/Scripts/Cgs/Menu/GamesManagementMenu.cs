@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.IO;
 using System.Linq;
 using Cgs.UI;
 using JetBrains.Annotations;
@@ -204,10 +205,21 @@ namespace Cgs.Menu
         public void Sync()
         {
             if (CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false)
+            {
+                if (File.Exists(CardGameManager.Current.BannerImageFilePath))
+                    File.Delete(CardGameManager.Current.BannerImageFilePath);
+                if (File.Exists(CardGameManager.Current.CardBackImageFilePath))
+                    File.Delete(CardGameManager.Current.CardBackImageFilePath);
+                if (File.Exists(CardGameManager.Current.PlayMatImageFilePath))
+                    File.Delete(CardGameManager.Current.PlayMatImageFilePath);
+                if (Directory.Exists(CardGameManager.Current.SetsDirectoryPath))
+                    Directory.Delete(CardGameManager.Current.SetsDirectoryPath, true);
                 CardGameManager.Instance.StartCoroutine(
                     CardGameManager.Instance.UpdateCardGame(CardGameManager.Current));
+            }
             else
                 CardGameManager.Instance.Messenger.Show(NoSyncMessage);
+
             Hide();
         }
 
