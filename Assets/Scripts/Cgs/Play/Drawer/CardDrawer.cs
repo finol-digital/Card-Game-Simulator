@@ -166,7 +166,8 @@ namespace Cgs.Play.Drawer
             viewer.drops.Add(cardZoneCardDropArea);
             tabTemplate.CardZoneCardDropArea = cardZoneCardDropArea;
 
-            CgsNetManager.Instance.LocalPlayer.RequestNewHand(DefaultDrawerName);
+            if (CgsNetManager.Instance.IsOnline)
+                CgsNetManager.Instance.LocalPlayer.RequestNewHand(DefaultDrawerName);
         }
 
         [UsedImplicitly]
@@ -174,7 +175,7 @@ namespace Cgs.Play.Drawer
         {
             if (tabIndex >= cardZoneRectTransforms.Count)
             {
-                Debug.Log($"SelectTab {tabIndex} but not created yet.");
+                Debug.LogWarning($"SelectTab {tabIndex} but not created yet.");
                 return;
             }
 
@@ -183,7 +184,8 @@ namespace Cgs.Play.Drawer
 
             var cardZone = cardZoneRectTransforms[tabIndex].GetComponentInChildren<CardZone>();
             var localCardIds = cardZone.GetComponentsInChildren<CardModel>().Select(cardModel => cardModel.Id).ToList();
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline &&
+                CgsNetManager.Instance.LocalPlayer != null)
             {
                 CgsNetManager.Instance.LocalPlayer.RequestUseHand(tabIndex);
                 var handCards = CgsNetManager.Instance.LocalPlayer.HandCards;
@@ -255,7 +257,7 @@ namespace Cgs.Play.Drawer
             viewer.drops.Remove(tabTemplate.CardZoneCardDropArea);
             viewer.drops.Remove(tabTemplate.TabCardDropArea);
 
-            var cardZoneRectTransform = cardZoneRectTransforms[tabIndex - 1];
+            var cardZoneRectTransform = cardZoneRectTransforms[tabIndex];
             cardZoneRectTransforms.Remove(cardZoneRectTransform);
             Destroy(cardZoneRectTransform.gameObject);
 
@@ -273,7 +275,8 @@ namespace Cgs.Play.Drawer
             sizeDelta = new Vector2(sizeDelta.x - ((RectTransform) tabPrefab.transform).sizeDelta.x, sizeDelta.y);
             tabsRectTransform.sizeDelta = sizeDelta;
 
-            CgsNetManager.Instance.LocalPlayer.RequestRemoveHand(tabIndex);
+            if (CgsNetManager.Instance.IsOnline)
+                CgsNetManager.Instance.LocalPlayer.RequestRemoveHand(tabIndex);
         }
 
         public void Clear()

@@ -146,7 +146,7 @@ namespace Cgs.CardGameView.Viewer
             var cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
             countLabel.text = cardModels.Length.ToString();
 
-            if (_handIndex != null)
+            if (CgsNetManager.Instance.IsOnline && _handIndex != null)
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
                     cardModels.Select(card => (CgsNetString) card.Id).ToArray());
 
@@ -166,7 +166,7 @@ namespace Cgs.CardGameView.Viewer
             var cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
             countLabel.text = cardModels.Length.ToString();
 
-            if (_handIndex != null)
+            if (CgsNetManager.Instance.IsOnline && _handIndex != null)
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
                     cardModels.Select(card => (CgsNetString) card.Id).ToArray());
 

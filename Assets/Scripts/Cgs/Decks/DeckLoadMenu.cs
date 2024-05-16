@@ -222,7 +222,7 @@ namespace Cgs.Decks
             }
             catch (Exception e)
             {
-                Debug.LogError(DeckDeleteErrorMessage + e.Message);
+                Debug.LogError(DeckDeleteErrorMessage + e);
             }
 
             _selectedFilePath = string.Empty;
@@ -244,7 +244,7 @@ namespace Cgs.Decks
             }
             catch (Exception e)
             {
-                Debug.LogError(DeckLoadErrorMessage + e.Message);
+                Debug.LogError(DeckLoadErrorMessage + e);
                 CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
             }
         }
@@ -262,7 +262,7 @@ namespace Cgs.Decks
             }
             catch (Exception e)
             {
-                Debug.LogError(DeckLoadErrorMessage + e.Message);
+                Debug.LogError(DeckLoadErrorMessage + e);
                 CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
             }
         }
@@ -348,7 +348,7 @@ namespace Cgs.Decks
             }
             catch (Exception e)
             {
-                Debug.LogError(DeckSaveErrorMessage + e.Message);
+                Debug.LogError(DeckSaveErrorMessage + e);
             }
         }
 

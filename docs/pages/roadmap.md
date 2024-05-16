@@ -7,12 +7,9 @@ permalink: roadmap.html
 ## What's New - v1.107
 Minor Bug Fixes
 
-## Known Bugs
-- Game-Play: LAN connectivity
-- Game-Play: Deleting drawers in Web Browser
-- Game-Play: When the Stack becomes 3, it clones the last 2 cards as a separate stack
-
 ## Active Sprint
+- Bug-Fix: LAN connectivity
+- Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 - Bug-Fix: Grand Archive TCG multi-player`
   - Memory Zones aren't displayed on the joining client.
   - Host's Decks aren't shown on the Joining Client.

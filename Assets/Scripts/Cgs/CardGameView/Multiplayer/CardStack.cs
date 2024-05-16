@@ -88,16 +88,25 @@ namespace Cgs.CardGameView.Multiplayer
         [NotNull]
         public IReadOnlyList<UnityCard> Cards
         {
-            // This getter is slow, so it should be cached when appropriate
             get
             {
-                List<UnityCard> cards = new();
+                if (!CgsNetManager.Instance.IsOnline)
+                    return _cards;
+
+                _cards = new List<UnityCard>();
                 foreach (var cardId in _cardIds)
-                    cards.Add(CardGameManager.Current.Cards[cardId]);
-                return cards;
+                    _cards.Add(CardGameManager.Current.Cards[cardId]);
+                return _cards;
             }
             set
             {
+                _cards = new List<UnityCard>();
+                foreach (var unityCard in value)
+                    _cards.Add(unityCard);
+
+                if (!CgsNetManager.Instance.IsOnline)
+                    return;
+
                 if (!CgsNetManager.Instance.IsConnectedClient || IsOwner)
                 {
                     _cardIds.Clear();
@@ -109,7 +118,8 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private NetworkList<CgsNetString> _cardIds;
+        private List<UnityCard> _cards = new();
+        private readonly NetworkList<CgsNetString> _cardIds = new();
 
         private readonly NetworkVariable<CgsNetString> _actionText = new();
         private readonly NetworkVariable<float> _actionTime = new();
@@ -144,13 +154,16 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void OnNetworkSpawn()
         {
+            _cards = new List<UnityCard>();
+            foreach (var cardId in _cardIds)
+                _cards.Add(CardGameManager.Current.Cards[cardId]);
             _isTopFaceup = _isTopFaceupNetworkVariable.Value;
         }
 
         protected override void OnAwakePlayable()
         {
-            _cardIds = new NetworkList<CgsNetString>();
             _name.OnValueChanged += OnChangeName;
+            _cardIds.OnListChanged += OnCardsUpdated;
             _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
         }
 
@@ -168,8 +181,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (!IsOwner)
                 deckLabel.text = Name;
-            countLabel.text = _cardIds.Count.ToString();
-            _cardIds.OnListChanged += OnCardsUpdated;
+            countLabel.text = Cards.Count.ToString();
 
             topCard.sprite = CardGameManager.Current.CardBackImageSprite;
             if (IsTopFaceup)
@@ -257,16 +269,16 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void DragCard(PointerEventData eventData)
         {
-            if (_cardIds.Count < 1)
+            if (Cards.Count < 1)
             {
                 Debug.LogWarning("Attempted to remove from an empty card stack");
                 return;
             }
 
-            var unityCard = CardGameManager.Current.Cards[_cardIds[^1]];
+            var unityCard = Cards[^1];
 
             if (CgsNetManager.Instance.IsOnline)
-                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, _cardIds.Count - 1);
+                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, Cards.Count - 1);
             else
                 PopCard();
 
@@ -275,7 +287,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             RemovePointer(eventData);
 
-            if (PlaySettings.AutoStackCards && _cardIds.Count < 1)
+            if (PlaySettings.AutoStackCards && Cards.Count < 1)
                 RequestDelete();
         }
 
@@ -289,15 +301,24 @@ namespace Cgs.CardGameView.Multiplayer
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private void UpdateCardsServerRpc(CgsNetString[] cardIds)
         {
+            _cards = new List<UnityCard>();
             _cardIds.Clear();
             foreach (var cardId in cardIds)
+            {
+                _cards.Add(CardGameManager.Current.Cards[cardId]);
                 _cardIds.Add(cardId);
+            }
         }
 
         private void OnCardsUpdated(NetworkListEvent<CgsNetString> changeEvent)
         {
+            _cards = new List<UnityCard>();
+            foreach (var cardId in _cardIds)
+                _cards.Add(CardGameManager.Current.Cards[cardId]);
+
             if (IsTopFaceup)
             {
+                // Should this be part of SyncView()?
                 if (changeEvent.Type.Equals(NetworkListEvent<CgsNetString>.EventType.RemoveAt) &&
                     changeEvent.Index == _cardIds.Count)
                 {
@@ -317,7 +338,12 @@ namespace Cgs.CardGameView.Multiplayer
                 }
             }
 
-            countLabel.text = _cardIds.Count.ToString();
+            SyncView();
+        }
+
+        private void SyncView()
+        {
+            countLabel.text = Cards.Count.ToString();
             if (Viewer != null)
                 Viewer.Sync(this);
         }
@@ -330,8 +356,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardStack cardStack)
         {
-            for (var i = _cardIds.Count - 1; i >= 0; i--)
-                cardStack.RequestInsert(0, _cardIds[i]);
+            for (var i = _cards.Count - 1; i >= 0; i--)
+                cardStack.RequestInsert(0, _cards[i].Id);
             RequestDelete();
         }
 
@@ -345,22 +371,30 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OwnerInsert(int index, string cardId)
         {
-            Debug.Log($"CardStack: {name} insert {cardId} at {index} of {_cardIds.Count}");
-            _cardIds.Insert(index, cardId);
+            Debug.Log($"CardStack: {name} insert {cardId} at {index} of {Cards.Count}");
+            _cards.Insert(index, CardGameManager.Current.Cards[cardId]);
+            if (CgsNetManager.Instance.IsOnline)
+                _cardIds.Insert(index, cardId);
+            else
+                SyncView();
         }
 
         public string RemoveAt(int index)
         {
-            if (index < 0 || index >= _cardIds.Count)
+            if (index < 0 || index >= Cards.Count)
                 return UnityCard.Blank.Id;
-            var cardId = _cardIds[index];
-            _cardIds.RemoveAt(index);
+            var cardId = _cards[index].Id;
+            _cards.RemoveAt(index);
+            if (CgsNetManager.Instance.IsOnline)
+                _cardIds.RemoveAt(index);
+            else
+                SyncView();
             return cardId;
         }
 
         public string PopCard()
         {
-            return RemoveAt(_cardIds.Count - 1);
+            return RemoveAt(Cards.Count - 1);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -396,7 +430,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Shuffle()
         {
-            if (CgsNetManager.Instance != null && CgsNetManager.Instance.IsOnline)
+            if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.RequestShuffle(gameObject);
             else
                 DoShuffle();
@@ -404,19 +438,23 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void DoShuffle()
         {
+            var cards = Cards.Select(card => card.Id).ToList();
+            cards.Shuffle();
+
+            _cards = cards.Select(card => CardGameManager.Current.Cards[card]).ToList();
+
+            if (!CgsNetManager.Instance.IsOnline)
+                return;
+
             if (CgsNetManager.Instance.IsConnectedClient && !IsServer)
             {
                 Debug.LogError("Attempted to shuffle on client!");
                 return;
             }
 
-            var cards = new List<string>();
-            foreach (var card in _cardIds)
-                cards.Add(card);
-            cards.Shuffle();
             _cardIds.Clear();
-            foreach (var card in cards)
-                _cardIds.Add(card);
+            foreach (var card in _cards)
+                _cardIds.Add(card.Id);
 
             _actionText.Value = ShuffleText;
             _actionTime.Value = 1;
