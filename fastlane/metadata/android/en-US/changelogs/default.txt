@@ -1,2 +1,1 @@
-- Bug-Fix: Multiplayer syncing of rotating card
-- Games Management Menu: Edit Button
+Minor Bug Fixes
