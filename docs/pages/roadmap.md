@@ -10,7 +10,7 @@ Minor Bug Fixes
 ## Active Sprint
 - Bug-Fix: LAN connectivity
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
-- Bug-Fix: Grand Archive TCG multi-player`
+- Bug-Fix: Grand Archive TCG multi-player
   - Memory Zones aren't displayed on the joining client.
   - Host's Decks aren't shown on the Joining Client.
   - Memory zone face done cards aren't shown on the joining client.
