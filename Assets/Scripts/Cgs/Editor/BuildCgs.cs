@@ -70,7 +70,8 @@ namespace Cgs.Editor
                         }
                         catch
                         {
-                            Debug.Log("Failed to parse androidTargetSdkVersion! Fallback to AndroidApiLevelAuto");
+                            Debug.LogWarning(
+                                "Failed to parse androidTargetSdkVersion! Fallback to AndroidApiLevelAuto");
                         }
 
                         PlayerSettings.Android.targetSdkVersion = targetSdkVersion;

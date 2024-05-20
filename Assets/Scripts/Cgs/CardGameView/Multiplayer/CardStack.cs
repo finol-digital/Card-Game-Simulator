@@ -453,8 +453,8 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             _cardIds.Clear();
-            foreach (var card in _cards)
-                _cardIds.Add(card.Id);
+            foreach (var card in cards)
+                _cardIds.Add(card);
 
             _actionText.Value = ShuffleText;
             _actionTime.Value = 1;

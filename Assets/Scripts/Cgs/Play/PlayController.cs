@@ -83,8 +83,8 @@ namespace Cgs.Play
                 var cardSize = CardGameManager.PixelsPerInch * playArea.CurrentZoom *
                                new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
 
-                var up = Vector2.up * (Screen.height - cardSize.y - cardStackLabelHeight);
-                var right = Vector2.right * (cardSize.x / 2f);
+                var up = Vector2.up * (Screen.height - cardSize.y - cardStackLabelHeight * 2f);
+                var right = Vector2.right * (cardSize.x * 2f);
                 RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) playAreaCardZone.transform,
                     (up + right),
                     null, out var nextDeckPosition);
