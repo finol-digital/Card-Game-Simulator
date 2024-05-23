@@ -651,12 +651,14 @@ jobs:
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
-      - name: Checkout Card-Game-Simulator
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Move Card-Game-Simulator.git
         run: |
           mkdir C:/Card-Game-Simulator.git
-          git clone https://github.com/finol-digital/Card-Game-Simulator.git C:/Card-Game-Simulator.git --depth=1
           mkdir C:/Card-Game-Simulator.git/build
-          mv build/WSAPlayer C:/Card-Game-Simulator.git/build
+          mv * C:/Card-Game-Simulator.git
+#          mv build/WSAPlayer C:/Card-Game-Simulator.git/build
       - name: Setup Unity UWP
         uses: kuler90/setup-unity@v1
         with:
