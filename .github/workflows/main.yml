@@ -646,13 +646,13 @@ jobs:
     needs: buildWSAPlayer
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       - name: Download WSAPlayer Artifact
         uses: actions/download-artifact@v4
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
-      - name: Checkout Repository
-        uses: actions/checkout@v4
       - name: Move Card-Game-Simulator.git
         run: |
           mkdir C:/Card-Game-Simulator.git
