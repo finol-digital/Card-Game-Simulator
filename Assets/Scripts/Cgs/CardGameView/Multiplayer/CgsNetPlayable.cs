@@ -67,6 +67,8 @@ namespace Cgs.CardGameView.Multiplayer
             set
             {
                 _position = value;
+                if (!transform.localPosition.Equals(_position))
+                    transform.localPosition = _position;
                 if (IsOnline)
                     _positionNetworkVariable.Value = value;
             }
@@ -81,6 +83,8 @@ namespace Cgs.CardGameView.Multiplayer
             set
             {
                 _rotation = value;
+                if (!transform.rotation.Equals(_rotation))
+                    transform.rotation = _rotation;
                 if (IsOnline)
                     _rotationNetworkVariable.Value = value;
             }
