@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.108
-Minor Bug Fixes
+## What's New - v1.109
+Fix rotation/tap
 
 ## Active Sprint
 - Bug-Fix: LAN connectivity
