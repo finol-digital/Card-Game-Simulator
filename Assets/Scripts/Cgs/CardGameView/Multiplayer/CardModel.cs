@@ -185,11 +185,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (targetRotation == 0)
                 targetRotation = CardGameManager.Current.CardRotationDefault;
             if (targetRotation != 0)
-            {
-                transform.Rotate(0, 0, targetRotation);
-                if (IsOnline)
-                    RequestUpdateRotation(transform.rotation);
-            }
+                Rotation = Quaternion.Euler(0, 0, targetRotation);
 
             SetIsNameVisible(!IsFacedown);
             if (!IsFacedown)

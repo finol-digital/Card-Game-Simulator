@@ -83,8 +83,8 @@ namespace Cgs.CardGameView.Multiplayer
             set
             {
                 _rotation = value;
-                if (!transform.rotation.Equals(_rotation))
-                    transform.rotation = _rotation;
+                if (!transform.localRotation.Equals(_rotation))
+                    transform.localRotation = _rotation;
                 if (IsOnline)
                     _rotationNetworkVariable.Value = value;
             }
@@ -177,9 +177,9 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
 
             if (Vector2.zero != Position)
-                ((RectTransform) transform).localPosition = Position;
+                transform.localPosition = Position;
             if (Quaternion.identity != Rotation)
-                transform.rotation = Rotation;
+                transform.localRotation = Rotation;
         }
 
         private void Update()
@@ -460,7 +460,7 @@ namespace Cgs.CardGameView.Multiplayer
             transform.Rotate(0, 0, Vector2.SignedAngle(previousDirection, currentDirection));
 
             if (IsOnline)
-                RequestUpdateRotation(transform.rotation);
+                RequestUpdateRotation(transform.localRotation);
         }
 
         protected void RequestChangeOwnership()
@@ -501,13 +501,13 @@ namespace Cgs.CardGameView.Multiplayer
                 transform.localPosition = newValue;
         }
 
-        protected void RequestUpdateRotation(Quaternion rotation)
+        private void RequestUpdateRotation(Quaternion rotation)
         {
             UpdateRotationServerRpc(rotation);
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void UpdateRotationServerRpc(Quaternion rotation)
+        private void UpdateRotationServerRpc(Quaternion rotation)
         {
             Rotation = rotation;
         }
@@ -517,7 +517,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             _rotation = newValue;
             if (!IsOwner)
-                transform.rotation = newValue;
+                transform.localRotation = newValue;
         }
 
         [ServerRpc]

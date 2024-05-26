@@ -350,8 +350,8 @@ namespace Cgs.Play
                 rectTransform.localPosition = position;
             cardStack.Position = rectTransform.localPosition;
             if (!Quaternion.identity.Equals(rotation))
-                rectTransform.rotation = rotation;
-            cardStack.Rotation = rectTransform.rotation;
+                rectTransform.localRotation = rotation;
+            cardStack.Rotation = rectTransform.localRotation;
             if (isFaceup)
                 cardStack.IsTopFaceup = true;
             return cardStack;
