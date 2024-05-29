@@ -9,6 +9,7 @@ Fix rotation/tap
 
 ## Active Sprint
 - Bug-Fix: LAN connectivity
+- Bug-Fix: After a few taps it only untaps after rotating the card
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 - Bug-Fix: Grand Archive TCG multi-player
   - Memory Zones aren't displayed on the joining client.
