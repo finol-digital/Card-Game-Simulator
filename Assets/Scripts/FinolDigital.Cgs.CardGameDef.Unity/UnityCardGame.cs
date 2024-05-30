@@ -330,6 +330,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                      page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount;
                      page++)
                 {
+                    Debug.Log($"Downloading page {page} / {AllCardsUrlPageCount} total pages ");
                     DownloadProgress = (7f + DeckUrls.Count + page - AllCardsUrlPageCountStartIndex) /
                                        (8f + DeckUrls.Count + AllCardsUrlPageCount - AllCardsUrlPageCountStartIndex);
                     DownloadStatus =
