@@ -17,6 +17,10 @@ namespace Cgs.Menu
 {
     public class MainMenu : MonoBehaviour
     {
+        private const float MinWidth = 1200f;
+        private const float FooterPortraitWidth = 260f;
+        private const float FooterLandscapeWidth = 500f;
+
         public static string WelcomeMessage => "Welcome to CGS!\n" + WelcomeMessageExt;
 
 #if UNITY_ANDROID || UNITY_IOS
@@ -80,8 +84,41 @@ namespace Cgs.Menu
             copyrightText.text = string.IsNullOrWhiteSpace(copyright) ? FinolDigitalLlc : copyright;
         }
 
+
+        private void OnRectTransformDimensionsChange()
+        {
+            if (!gameObject.activeInHierarchy)
+                return;
+
+            ResizeFooter();
+        }
+
+        private void ResizeFooter()
+        {
+            var screenWidth = ((RectTransform) transform).rect.width;
+
+            var sizeDelta = copyrightText.rectTransform.sizeDelta;
+            sizeDelta = screenWidth < MinWidth
+                ? new Vector2(FooterPortraitWidth, sizeDelta.y)
+                : new Vector2(FooterLandscapeWidth, sizeDelta.y);
+            copyrightText.rectTransform.sizeDelta = sizeDelta;
+
+            sizeDelta = versionText.rectTransform.sizeDelta;
+            sizeDelta = screenWidth < MinWidth
+                ? new Vector2(FooterPortraitWidth, sizeDelta.y)
+                : new Vector2(FooterLandscapeWidth, sizeDelta.y);
+            versionText.rectTransform.sizeDelta = sizeDelta;
+
+            sizeDelta = currentGameNameText.rectTransform.sizeDelta;
+            sizeDelta = screenWidth < MinWidth
+                ? new Vector2(-2f * FooterPortraitWidth, sizeDelta.y)
+                : new Vector2(-2f * FooterLandscapeWidth, sizeDelta.y);
+            currentGameNameText.rectTransform.sizeDelta = sizeDelta;
+        }
+
         private void Start()
         {
+            ResizeFooter();
             versionText.text = TitleScreen.VersionMessage;
 
 #if UNITY_WEBGL
