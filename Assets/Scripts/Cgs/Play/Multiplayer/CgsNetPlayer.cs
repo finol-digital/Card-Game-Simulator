@@ -118,7 +118,8 @@ namespace Cgs.Play.Multiplayer
             CgsNetManager.Instance.LocalPlayer = this;
             if (IsServer)
             {
-                RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
+                RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs,
+                    Scoreboard.DefaultPlayerName));
                 RequestNewHand(CardDrawer.DefaultHandName);
                 PlayController.Instance.ShowDeckMenu();
                 ApplyPlayerTranslationServerRpc();
@@ -576,16 +577,16 @@ namespace Cgs.Play.Multiplayer
 
         #region Zones
 
-        public void RequestNewZone(string type, Vector2 position, Vector2 size, string facePreference, string cardAction)
+        public void RequestNewZone(string type, Vector2 position, Vector2 size, string face, string action)
         {
-            CreateZoneServerRpc(type, position, size, facePreference, cardAction);
+            CreateZoneServerRpc(type, position, size, face, action);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateZoneServerRpc(string type, Vector2 position, Vector2 size, string facePreference, string cardAction)
+        private void CreateZoneServerRpc(string type, Vector2 position, Vector2 size, string face, string action)
         {
-            PlayController.Instance.CreateZone( type, position, size, facePreference, cardAction);
+            PlayController.Instance.CreateZone(type, position, size, face, action);
         }
 
         #endregion

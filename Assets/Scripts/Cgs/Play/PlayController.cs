@@ -22,7 +22,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
-using CardAction = Cgs.CardGameView.Viewer.CardAction;
+using CardAction = FinolDigital.Cgs.CardGameDef.CardAction;
 
 namespace Cgs.Play
 {
@@ -84,7 +84,7 @@ namespace Cgs.Play
                 var cardSize = CardGameManager.PixelsPerInch * playArea.CurrentZoom *
                                new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
 
-                var up = Vector2.up * (Screen.height - cardSize.y  * 2f - cardStackLabelHeight);
+                var up = Vector2.up * (Screen.height - cardSize.y * 2f - cardStackLabelHeight);
                 var right = Vector2.right * (cardSize.x * 2f);
                 RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) playAreaCardZone.transform,
                     (up + right),
@@ -220,7 +220,8 @@ namespace Cgs.Play
 
             if (!NetworkManager.Singleton.IsConnectedClient)
             {
-                playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform).GetOrAddComponent<Image>();
+                playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform)
+                    .GetOrAddComponent<Image>();
                 var playMatRectTransform = (RectTransform) playMatImage.transform;
                 playMatRectTransform.anchoredPosition = Vector2.zero;
                 playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
@@ -494,27 +495,30 @@ namespace Cgs.Play
             var size = CardGameManager.PixelsPerInch *
                        new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
             var cardAction = gamePlayZone.DefaultCardAction ?? CardGameManager.Current.GameDefaultCardAction;
-            CreateZone(gamePlayZone.Type.ToString(), size, position, gamePlayZone.Face.ToString(), cardAction.ToString());
+
+            if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
+                CgsNetManager.Instance.LocalPlayer.RequestNewZone(gamePlayZone.Type.ToString(), position, size,
+                    gamePlayZone.Face.ToString(), cardAction.ToString());
+            else
+                CreateZone(gamePlayZone.Type.ToString(), position, size, gamePlayZone.Face.ToString(),
+                    cardAction.ToString());
         }
 
-        public CardZone CreateZone(string type, Vector2 size, Vector2 position, string face, string action)
+        public CardZone CreateZone(string type, Vector2 position, Vector2 size, string face, string action)
         {
-            if (!Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType)
-                || !Enum.TryParse(face, true, out FacePreference facePreference)
-                || !Enum.TryParse(action, true, out FinolDigital.Cgs.CardGameDef.CardAction cgsCardAction))
-            {
-                Debug.LogError($"CreateZone failed to parse type: {type}, face: {face}, action: {action}");
-                return null;
-            }
+            if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType)
+                && Enum.TryParse(face, true, out FacePreference facePreference)
+                && Enum.TryParse(action, true, out CardAction cardAction))
+                return gamePlayZoneType switch
+                {
+                    GamePlayZoneType.Area => CreateAreaZone(position, size, facePreference, cardAction),
+                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position, size, facePreference, cardAction),
+                    GamePlayZoneType.Vertical => CreateVerticalZone(position, size, facePreference, cardAction),
+                    _ => CreateAreaZone(position, size, facePreference, cardAction)
+                };
 
-            var cardAction = CardActions.ActionsDictionary[cgsCardAction];
-            return gamePlayZoneType switch
-            {
-                GamePlayZoneType.Area => CreateAreaZone(position, size, facePreference, cardAction),
-                GamePlayZoneType.Horizontal => CreateHorizontalZone(position, size, facePreference, cardAction),
-                GamePlayZoneType.Vertical => CreateVerticalZone(position, size, facePreference, cardAction),
-                _ => CreateAreaZone(position, size, facePreference, cardAction)
-            };
+            Debug.LogError($"CreateZone failed to parse type: {type}, face: {face}, action: {action}");
+            return null;
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
@@ -531,45 +535,14 @@ namespace Cgs.Play
         {
             var cardZone = Instantiate(horizontalCardZonePrefab, playAreaCardZone.transform)
                 .GetOrAddComponent<CardZone>();
-            var cardZoneRectTransform = (RectTransform) cardZone.transform;
-            cardZoneRectTransform.anchorMin = 0.5f * Vector2.one;
-            cardZoneRectTransform.anchorMax = 0.5f * Vector2.one;
-            cardZoneRectTransform.anchoredPosition = Vector2.zero;
-            cardZoneRectTransform.localPosition = position;
-            cardZoneRectTransform.sizeDelta = size;
+            if (CgsNetManager.Instance.IsOnline)
+                cardZone.MyNetworkObject.Spawn();
 
-            cardZone.type = CardZoneType.Horizontal;
-            cardZone.allowsFlip = true;
-            cardZone.allowsRotation = true;
-            cardZone.scrollRectContainer = playArea;
-            cardZone.DoesImmediatelyRelease = true;
-
-            var spacing = PlaySettings.StackViewerOverlap switch
-            {
-                2 => StackViewer.HighOverlapSpacing,
-                1 => StackViewer.LowOverlapSpacing,
-                _ => StackViewer.NoOverlapSpacing
-            };
-
-            cardZone.GetComponent<HorizontalLayoutGroup>().spacing = spacing;
-
-            switch (facePreference)
-            {
-                case FacePreference.Any:
-                    cardZone.OnAddCardActions.Add(OnAddCardModel);
-                    break;
-                case FacePreference.Down:
-                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceDown);
-                    break;
-                case FacePreference.Up:
-                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceUp);
-                    break;
-                default:
-                    cardZone.OnAddCardActions.Add(OnAddCardModel);
-                    break;
-            }
-
-            cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = cardAction);
+            cardZone.Type = CardZoneType.Horizontal;
+            cardZone.Position = position;
+            cardZone.Size = size;
+            cardZone.DefaultFace = facePreference;
+            cardZone.DefaultAction = cardAction;
 
             return cardZone;
         }
@@ -578,50 +551,19 @@ namespace Cgs.Play
             CardAction cardAction)
         {
             var cardZone = Instantiate(verticalCardZonePrefab, playAreaCardZone.transform).GetComponent<CardZone>();
-            var cardZoneRectTransform = (RectTransform) cardZone.transform;
-            cardZoneRectTransform.anchorMin = 0.5f * Vector2.one;
-            cardZoneRectTransform.anchorMax = 0.5f * Vector2.one;
-            cardZoneRectTransform.anchoredPosition = Vector2.zero;
-            cardZoneRectTransform.localPosition = position;
-            cardZoneRectTransform.sizeDelta = size;
+            if (CgsNetManager.Instance.IsOnline)
+                cardZone.MyNetworkObject.Spawn();
 
-            cardZone.type = CardZoneType.Vertical;
-            cardZone.allowsFlip = true;
-            cardZone.allowsRotation = true;
-            cardZone.scrollRectContainer = playArea;
-            cardZone.DoesImmediatelyRelease = true;
-
-            var spacing = PlaySettings.StackViewerOverlap switch
-            {
-                2 => StackViewer.HighOverlapSpacing,
-                1 => StackViewer.LowOverlapSpacing,
-                _ => StackViewer.NoOverlapSpacing
-            };
-
-            cardZone.GetComponent<VerticalLayoutGroup>().spacing = spacing;
-
-            switch (facePreference)
-            {
-                case FacePreference.Any:
-                    cardZone.OnAddCardActions.Add(OnAddCardModel);
-                    break;
-                case FacePreference.Down:
-                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceDown);
-                    break;
-                case FacePreference.Up:
-                    cardZone.OnAddCardActions.Add(OnAddCardModelFaceUp);
-                    break;
-                default:
-                    cardZone.OnAddCardActions.Add(OnAddCardModel);
-                    break;
-            }
-
-            cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = cardAction);
+            cardZone.Type = CardZoneType.Vertical;
+            cardZone.Position = position;
+            cardZone.Size = size;
+            cardZone.DefaultFace = facePreference;
+            cardZone.DefaultAction = cardAction;
 
             return cardZone;
         }
 
-        private static void OnAddCardModel(CardZone cardZone, CardModel cardModel)
+        public static void OnAddCardModel(CardZone cardZone, CardModel cardModel)
         {
             if (cardZone == null || cardModel == null)
                 return;
@@ -630,7 +572,7 @@ namespace Cgs.Play
             cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
         }
 
-        private static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
+        public static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
         {
             if (cardZone == null || cardModel == null)
                 return;
@@ -640,7 +582,7 @@ namespace Cgs.Play
             cardModel.IsFacedown = true;
         }
 
-        private static void OnAddCardModelFaceUp(CardZone cardZone, CardModel cardModel)
+        public static void OnAddCardModelFaceUp(CardZone cardZone, CardModel cardModel)
         {
             if (cardZone == null || cardModel == null)
                 return;

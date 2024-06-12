@@ -3,12 +3,17 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using Cgs.CardGameView.Viewer;
+using Cgs.Play;
 using Cgs.UI.ScrollRects;
+using FinolDigital.Cgs.CardGameDef;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
+using CardAction = FinolDigital.Cgs.CardGameDef.CardAction;
 
 namespace Cgs.CardGameView.Multiplayer
 {
@@ -18,9 +23,9 @@ namespace Cgs.CardGameView.Multiplayer
 
     public enum CardZoneType
     {
-        Vertical,
-        Horizontal,
-        Area
+        Area = 0,
+        Horizontal = 1,
+        Vertical = 2
     }
 
     public class CardZone : CgsNetPlayable
@@ -30,12 +35,118 @@ namespace Cgs.CardGameView.Multiplayer
         public bool allowsRotation;
         public ScrollRect scrollRectContainer;
 
+        public CardZoneType Type
+        {
+            get => IsOnline ? (CardZoneType) _typeNetworkVariable.Value : type;
+            set
+            {
+                type = value;
+                if (IsOnline)
+                    _typeNetworkVariable.Value = (int) value;
+            }
+        }
+
+        private readonly NetworkVariable<int> _typeNetworkVariable = new();
+
+        public Vector2 Size
+        {
+            get => IsOnline ? _sizeNetworkVariable.Value : ((RectTransform) transform).sizeDelta;
+            set
+            {
+                ((RectTransform) transform).sizeDelta = value;
+                if (IsOnline)
+                    _sizeNetworkVariable.Value = value;
+            }
+        }
+
+        private readonly NetworkVariable<Vector2> _sizeNetworkVariable = new();
+
+        public FacePreference DefaultFace
+        {
+            get => IsOnline ? (FacePreference) _faceNetworkVariable.Value : _facePreference;
+            set
+            {
+                _facePreference = value;
+                if (IsOnline)
+                    _faceNetworkVariable.Value = (int) value;
+            }
+        }
+
+        private FacePreference _facePreference;
+        private readonly NetworkVariable<int> _faceNetworkVariable = new();
+
+        public CardAction DefaultAction
+        {
+            get => IsOnline ? (CardAction) _actionNetworkVariable.Value : _cardAction;
+            set
+            {
+                _cardAction = value;
+                if (IsOnline)
+                    _actionNetworkVariable.Value = (int) value;
+            }
+        }
+
+        private CardAction _cardAction;
+        private readonly NetworkVariable<int> _actionNetworkVariable = new();
+
         public bool DoesImmediatelyRelease { get; set; }
 
         public UnityAction OnLayout { get; set; }
 
         public List<OnAddCardDelegate> OnAddCardActions { get; } = new();
         public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new();
+
+        protected override void OnStartPlayable()
+        {
+            if (!IsOnline)
+                return;
+
+            var rectTransform = (RectTransform) transform;
+            rectTransform.anchorMin = 0.5f * Vector2.one;
+            rectTransform.anchorMax = 0.5f * Vector2.one;
+            rectTransform.anchoredPosition = Vector2.zero;
+            rectTransform.localPosition = Position;
+            if (Vector2.zero.Equals(Size))
+                rectTransform.sizeDelta = Size;
+
+            var spacing = PlaySettings.StackViewerOverlap switch
+            {
+                2 => StackViewer.HighOverlapSpacing,
+                1 => StackViewer.LowOverlapSpacing,
+                _ => StackViewer.NoOverlapSpacing
+            };
+
+            HorizontalOrVerticalLayoutGroup layoutGroup = GetComponent<HorizontalLayoutGroup>();
+            if (layoutGroup == null)
+                layoutGroup = GetComponent<VerticalLayoutGroup>();
+            if (layoutGroup != null)
+                layoutGroup.spacing = spacing;
+
+            type = Type;
+            allowsFlip = true;
+            allowsRotation = true;
+            scrollRectContainer = PlayController.Instance.playArea;
+            DoesImmediatelyRelease = true;
+
+            switch (DefaultFace)
+            {
+                case FacePreference.Any:
+                    OnAddCardActions.Add(PlayController.OnAddCardModel);
+                    break;
+                case FacePreference.Down:
+                    OnAddCardActions.Add(PlayController.OnAddCardModelFaceDown);
+                    break;
+                case FacePreference.Up:
+                    OnAddCardActions.Add(PlayController.OnAddCardModelFaceUp);
+                    break;
+                default:
+                    OnAddCardActions.Add(PlayController.OnAddCardModel);
+                    break;
+            }
+
+            OnAddCardActions.Add((_, cardModel) =>
+                cardModel.DefaultAction = CardActions.ActionsDictionary[DefaultAction]);
+        }
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
