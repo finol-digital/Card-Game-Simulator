@@ -46,7 +46,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private readonly NetworkVariable<int> _typeNetworkVariable = new();
+        private NetworkVariable<int> _typeNetworkVariable;
 
         public Vector2 Size
         {
@@ -59,7 +59,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private readonly NetworkVariable<Vector2> _sizeNetworkVariable = new();
+        private NetworkVariable<Vector2> _sizeNetworkVariable;
 
         public FacePreference DefaultFace
         {
@@ -73,7 +73,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private FacePreference _facePreference;
-        private readonly NetworkVariable<int> _faceNetworkVariable = new();
+        private NetworkVariable<int> _faceNetworkVariable;
 
         public CardAction DefaultAction
         {
@@ -87,7 +87,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private CardAction _cardAction;
-        private readonly NetworkVariable<int> _actionNetworkVariable = new();
+        private NetworkVariable<int> _actionNetworkVariable;
 
         public bool DoesImmediatelyRelease { get; set; }
 
@@ -96,11 +96,16 @@ namespace Cgs.CardGameView.Multiplayer
         public List<OnAddCardDelegate> OnAddCardActions { get; } = new();
         public List<OnRemoveCardDelegate> OnRemoveCardActions { get; } = new();
 
-        protected override void OnStartPlayable()
+        protected override void OnAwakePlayable()
         {
-            if (!IsOnline)
-                return;
+            _typeNetworkVariable = new NetworkVariable<int>();
+            _sizeNetworkVariable = new NetworkVariable<Vector2>();
+            _faceNetworkVariable = new NetworkVariable<int>();
+            _actionNetworkVariable = new NetworkVariable<int>();
+        }
 
+        public override void OnNetworkSpawn()
+        {
             var rectTransform = (RectTransform) transform;
             rectTransform.anchorMin = 0.5f * Vector2.one;
             rectTransform.anchorMax = 0.5f * Vector2.one;

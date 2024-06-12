@@ -47,7 +47,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private string _id = UnityCard.Blank.Id;
-        private readonly NetworkVariable<CgsNetString> _idNetworkVariable = new();
+        private NetworkVariable<CgsNetString> _idNetworkVariable;
 
         public override string ViewValue => Value.Name;
 
@@ -85,7 +85,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private bool _isFacedown;
-        private readonly NetworkVariable<bool> _isFacedownNetworkVariable = new();
+        private NetworkVariable<bool> _isFacedownNetworkVariable;
 
         public RectTransform PlaceHolder
         {
@@ -148,17 +148,19 @@ namespace Cgs.CardGameView.Multiplayer
         private Image View => _view ??= GetComponent<Image>();
         private Image _view;
 
+        protected override void OnAwakePlayable()
+        {
+            _idNetworkVariable = new NetworkVariable<CgsNetString>();
+            _idNetworkVariable.OnValueChanged += OnChangeId;
+            _isFacedownNetworkVariable = new NetworkVariable<bool>();
+            _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
+        }
+
         public override void OnNetworkSpawn()
         {
             PlayController.SetPlayActions(this);
             _id = _idNetworkVariable.Value;
             _isFacedown = _isFacedownNetworkVariable.Value;
-        }
-
-        protected override void OnAwakePlayable()
-        {
-            _idNetworkVariable.OnValueChanged += OnChangeId;
-            _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
         }
 
         protected override void OnStartPlayable()

@@ -25,7 +25,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private string _gameBoardId = string.Empty;
-        private readonly NetworkVariable<CgsNetString> _idNetworkVariable = new();
+        private NetworkVariable<CgsNetString> _idNetworkVariable;
 
         public Vector2 Size
         {
@@ -39,7 +39,13 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private Vector2 _size;
-        private readonly NetworkVariable<Vector2> _sizeNetworkVariable = new();
+        private NetworkVariable<Vector2> _sizeNetworkVariable;
+
+        protected override void OnAwakePlayable()
+        {
+            _idNetworkVariable = new NetworkVariable<CgsNetString>();
+            _sizeNetworkVariable = new NetworkVariable<Vector2>();
+        }
 
         protected override void OnStartPlayable()
         {

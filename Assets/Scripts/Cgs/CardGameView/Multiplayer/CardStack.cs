@@ -81,7 +81,7 @@ namespace Cgs.CardGameView.Multiplayer
             set => _name.Value = value;
         }
 
-        private readonly NetworkVariable<CgsNetString> _name = new();
+        private NetworkVariable<CgsNetString> _name;
 
         public override string ViewValue => Name;
 
@@ -119,10 +119,10 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private List<UnityCard> _cards = new();
-        private readonly NetworkList<CgsNetString> _cardIds = new();
+        private NetworkList<CgsNetString> _cardIds;
 
-        private readonly NetworkVariable<CgsNetString> _actionText = new();
-        private readonly NetworkVariable<float> _actionTime = new();
+        private NetworkVariable<CgsNetString> _actionText;
+        private NetworkVariable<float> _actionTime;
 
         private UnityCard TopCard
         {
@@ -148,9 +148,24 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private bool _isTopFaceup;
-        private readonly NetworkVariable<bool> _isTopFaceupNetworkVariable = new();
+        private NetworkVariable<bool> _isTopFaceupNetworkVariable;
 
         public StackViewer Viewer { get; private set; }
+
+        protected override void OnAwakePlayable()
+        {
+            _name = new NetworkVariable<CgsNetString>();
+            _name.OnValueChanged += OnChangeName;
+
+            _cardIds = new NetworkList<CgsNetString>();
+            _cardIds.OnListChanged += OnCardsUpdated;
+
+            _actionText = new NetworkVariable<CgsNetString>();
+            _actionTime = new NetworkVariable<float>();
+
+            _isTopFaceupNetworkVariable = new NetworkVariable<bool>();
+            _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -158,13 +173,6 @@ namespace Cgs.CardGameView.Multiplayer
             foreach (var cardId in _cardIds)
                 _cards.Add(CardGameManager.Current.Cards[cardId]);
             _isTopFaceup = _isTopFaceupNetworkVariable.Value;
-        }
-
-        protected override void OnAwakePlayable()
-        {
-            _name.OnValueChanged += OnChangeName;
-            _cardIds.OnListChanged += OnCardsUpdated;
-            _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
         }
 
         protected override void OnStartPlayable()

@@ -35,7 +35,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private int _min = DefaultMin;
-        private readonly NetworkVariable<int> _minNetworkVariable = new();
+        private NetworkVariable<int> _minNetworkVariable;
 
         public int Max
         {
@@ -49,7 +49,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private int _max = DefaultMax;
-        private readonly NetworkVariable<int> _maxNetworkVariable = new();
+        private NetworkVariable<int> _maxNetworkVariable;
 
         public override string ViewValue => $"Value: {Value}";
 
@@ -81,17 +81,19 @@ namespace Cgs.CardGameView.Multiplayer
                 UpdateValueServerRpc(value);
             else
                 OnChangeValue(oldValue, value);
-
         }
 
         private int _value;
-        private readonly NetworkVariable<int> _valueNetworkVariable = new();
+        private NetworkVariable<int> _valueNetworkVariable;
 
         private float _rollRemainingTime;
         private float _rollPeriodTime;
 
         protected override void OnAwakePlayable()
         {
+            _minNetworkVariable = new NetworkVariable<int>();
+            _maxNetworkVariable = new NetworkVariable<int>();
+            _valueNetworkVariable = new NetworkVariable<int>();
             _valueNetworkVariable.OnValueChanged += OnChangeValue;
         }
 

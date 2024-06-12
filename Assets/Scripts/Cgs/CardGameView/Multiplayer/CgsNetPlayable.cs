@@ -75,7 +75,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private Vector2 _position = Vector2.zero;
-        private readonly NetworkVariable<Vector2> _positionNetworkVariable = new();
+        private NetworkVariable<Vector2> _positionNetworkVariable;
 
         public Quaternion Rotation
         {
@@ -91,7 +91,7 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private Quaternion _rotation = Quaternion.identity;
-        private readonly NetworkVariable<Quaternion> _rotationNetworkVariable = new();
+        private NetworkVariable<Quaternion> _rotationNetworkVariable;
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
@@ -153,7 +153,10 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Awake()
         {
+            _positionNetworkVariable = new NetworkVariable<Vector2>();
             _positionNetworkVariable.OnValueChanged += OnChangePosition;
+
+            _rotationNetworkVariable = new NetworkVariable<Quaternion>();
             _rotationNetworkVariable.OnValueChanged += OnChangeRotation;
 
             OnAwakePlayable();

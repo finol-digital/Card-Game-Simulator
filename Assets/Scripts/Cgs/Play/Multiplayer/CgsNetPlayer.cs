@@ -34,7 +34,7 @@ namespace Cgs.Play.Multiplayer
             private set => _name.Value = value;
         }
 
-        private readonly NetworkVariable<CgsNetString> _name = new();
+        private NetworkVariable<CgsNetString> _name;
 
         public int Points
         {
@@ -42,7 +42,7 @@ namespace Cgs.Play.Multiplayer
             private set => _points.Value = value;
         }
 
-        private readonly NetworkVariable<int> _points = new();
+        private NetworkVariable<int> _points;
 
         public NetworkObject CurrentDeck
         {
@@ -50,7 +50,7 @@ namespace Cgs.Play.Multiplayer
             private set => _currentDeck.Value = value;
         }
 
-        private readonly NetworkVariable<NetworkObjectReference> _currentDeck = new();
+        private NetworkVariable<NetworkObjectReference> _currentDeck;
 
         public bool IsDeckShared
         {
@@ -58,7 +58,7 @@ namespace Cgs.Play.Multiplayer
             private set => _isDeckShared.Value = value;
         }
 
-        private readonly NetworkVariable<bool> _isDeckShared = new();
+        private NetworkVariable<bool> _isDeckShared;
 
         public int CurrentHand
         {
@@ -66,7 +66,7 @@ namespace Cgs.Play.Multiplayer
             private set => _currentHand.Value = value;
         }
 
-        private readonly NetworkVariable<int> _currentHand = new();
+        private NetworkVariable<int> _currentHand;
 
         public int DefaultZRotation { get; private set; }
 
@@ -103,6 +103,11 @@ namespace Cgs.Play.Multiplayer
 
         private void Awake()
         {
+            _name = new NetworkVariable<CgsNetString>();
+            _points = new NetworkVariable<int>();
+            _currentDeck = new NetworkVariable<NetworkObjectReference>();
+            _isDeckShared = new NetworkVariable<bool>();
+            _currentHand = new NetworkVariable<int>();
             _handCards = new NetworkList<CgsNetStringList>();
             _handNames = new NetworkList<CgsNetString>();
         }
