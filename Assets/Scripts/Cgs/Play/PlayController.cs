@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView;
@@ -156,8 +157,6 @@ namespace Cgs.Play
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlay);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
-            CardGameManager.Current.GamePlayZones.ForEach(CreateZone);
-
             if (CardGameManager.Instance.IsSearchingForServer)
                 Lobby.Show();
             else
@@ -211,6 +210,8 @@ namespace Cgs.Play
                     cardModel.MyNetworkObject.Despawn();
                 foreach (var die in playAreaCardZone.GetComponentsInChildren<Die>())
                     die.MyNetworkObject.Despawn();
+                foreach (var zone in playAreaCardZone.GetComponentsInChildren<CardZone>())
+                    zone.MyNetworkObject.Despawn();
                 rectTransform.DestroyAllChildren();
             }
 
@@ -226,6 +227,8 @@ namespace Cgs.Play
                     CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
                 playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
                 playMatImage.transform.SetAsFirstSibling();
+
+                CreateZones();
             }
 
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
@@ -266,6 +269,7 @@ namespace Cgs.Play
             var newDeckPosition = NewDeckPosition;
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
             {
+                var startingDeckCount = AllCardStacks.ToList().Count;
                 CgsNetManager.Instance.LocalPlayer.RequestNewDeck(deckName, deckCards, false);
                 var i = 1;
                 foreach (var (stackName, cards) in extraGroups)
@@ -275,7 +279,7 @@ namespace Cgs.Play
                                    (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X +
                                     DeckPositionBuffer);
 
-                    var deckCount = AllCardStacks.ToList().Count + i;
+                    var deckCount = startingDeckCount + i;
                     if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
                     {
                         var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];
@@ -478,40 +482,51 @@ namespace Cgs.Play
             return token;
         }
 
+        private void CreateZones()
+        {
+            CardGameManager.Current.GamePlayZones.ForEach(CreateZone);
+        }
+
         private void CreateZone(GamePlayZone gamePlayZone)
         {
             var position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
             var size = CardGameManager.PixelsPerInch *
                        new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
-            var cardAction = gamePlayZone.DefaultCardAction != null
-                ? CardActions.ActionsDictionary[gamePlayZone.DefaultCardAction.Value]
-                : CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
-            switch (gamePlayZone.Type)
-            {
-                case GamePlayZoneType.Area:
-                    CreateAreaZone(position, size, gamePlayZone.Face, cardAction);
-                    break;
-                case GamePlayZoneType.Horizontal:
-                    CreateHorizontalZone(position, size, gamePlayZone.Face, cardAction);
-                    break;
-                case GamePlayZoneType.Vertical:
-                    CreateVerticalZone(position, size, gamePlayZone.Face, cardAction);
-                    break;
-                default:
-                    CreateAreaZone(position, size, gamePlayZone.Face, cardAction);
-                    break;
-            }
+            var cardAction = gamePlayZone.DefaultCardAction ?? CardGameManager.Current.GameDefaultCardAction;
+            CreateZone(gamePlayZone.Type.ToString(), size, position, gamePlayZone.Face.ToString(), cardAction.ToString());
         }
 
-        private void CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference,
+        public CardZone CreateZone(string type, Vector2 size, Vector2 position, string face, string action)
+        {
+            if (!Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType)
+                || !Enum.TryParse(face, true, out FacePreference facePreference)
+                || !Enum.TryParse(action, true, out FinolDigital.Cgs.CardGameDef.CardAction cgsCardAction))
+            {
+                Debug.LogError($"CreateZone failed to parse type: {type}, face: {face}, action: {action}");
+                return null;
+            }
+
+            var cardAction = CardActions.ActionsDictionary[cgsCardAction];
+            return gamePlayZoneType switch
+            {
+                GamePlayZoneType.Area => CreateAreaZone(position, size, facePreference, cardAction),
+                GamePlayZoneType.Horizontal => CreateHorizontalZone(position, size, facePreference, cardAction),
+                GamePlayZoneType.Vertical => CreateVerticalZone(position, size, facePreference, cardAction),
+                _ => CreateAreaZone(position, size, facePreference, cardAction)
+            };
+        }
+
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private CardZone CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference,
             CardAction cardAction)
         {
-            Debug.Log(
+            Debug.LogWarning(
                 $"CreateAreaZone position: {position}, size: {size}, face: {facePreference}, cardAction: {cardAction}");
+            return null;
         }
 
-        private void CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference,
+        private CardZone CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference,
             CardAction cardAction)
         {
             var cardZone = Instantiate(horizontalCardZonePrefab, playAreaCardZone.transform)
@@ -555,9 +570,11 @@ namespace Cgs.Play
             }
 
             cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = cardAction);
+
+            return cardZone;
         }
 
-        private void CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference,
+        private CardZone CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference,
             CardAction cardAction)
         {
             var cardZone = Instantiate(verticalCardZonePrefab, playAreaCardZone.transform).GetComponent<CardZone>();
@@ -600,6 +617,8 @@ namespace Cgs.Play
             }
 
             cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = cardAction);
+
+            return cardZone;
         }
 
         private static void OnAddCardModel(CardZone cardZone, CardModel cardModel)

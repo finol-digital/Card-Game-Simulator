@@ -11,9 +11,6 @@ Fix Grand Archive Multi-player Bugs
 - Bug-Fix: LAN connectivity
 - Bug-Fix: After a few taps it only untaps after rotating the card
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
-- Bug-Fix: Grand Archive TCG multi-player
-  - Memory Zones aren't displayed on the joining client.
-  - Memory zone face done cards aren't shown on the joining client.
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Game-Play: Cards Action modal - includes draw many and contextual green button for default action based on card location
 

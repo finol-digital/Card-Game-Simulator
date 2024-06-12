@@ -574,6 +574,22 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
+        #region Zones
+
+        public void RequestNewZone(string type, Vector2 position, Vector2 size, string facePreference, string cardAction)
+        {
+            CreateZoneServerRpc(type, position, size, facePreference, cardAction);
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void CreateZoneServerRpc(string type, Vector2 position, Vector2 size, string facePreference, string cardAction)
+        {
+            PlayController.Instance.CreateZone( type, position, size, facePreference, cardAction);
+        }
+
+        #endregion
+
         #region RestartGame
 
         public void RequestRestart()
