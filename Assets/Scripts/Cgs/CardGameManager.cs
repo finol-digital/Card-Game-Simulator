@@ -586,14 +586,14 @@ namespace Cgs
 
         public void Select(string gameId)
         {
-            if (string.IsNullOrEmpty(gameId) || !AllCardGames.ContainsKey(gameId))
+            if (string.IsNullOrEmpty(gameId) || !AllCardGames.TryGetValue(gameId, out var game))
             {
                 Debug.LogError(SelectionErrorMessage + gameId);
                 Messenger.Show(SelectionErrorMessage + gameId);
                 return;
             }
 
-            Current = AllCardGames[gameId];
+            Current = game;
             ResetGameScene();
         }
 

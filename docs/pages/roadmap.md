@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.109
-Fix rotation/tap
+## What's New - v1.110
+Fix Grand Archive Multi-player Bugs
 
 ## Active Sprint
 - Bug-Fix: LAN connectivity
@@ -13,9 +13,7 @@ Fix rotation/tap
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 - Bug-Fix: Grand Archive TCG multi-player
   - Memory Zones aren't displayed on the joining client.
-  - Host's Decks aren't shown on the Joining Client.
   - Memory zone face done cards aren't shown on the joining client.
-  - Loaded Decks on the joining client don't go to their respective zones
 - Cards: Support more than 1 card face (Dual-Faced Cards)
 - Game-Play: Cards Action modal - includes draw many and contextual green button for default action based on card location
 

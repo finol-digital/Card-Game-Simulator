@@ -217,12 +217,16 @@ namespace Cgs.Play
             rectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X + PlayAreaBuffer,
                 CardGameManager.Current.PlayMatSize.Y + PlayAreaBuffer) * CardGameManager.PixelsPerInch;
 
-            playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform).GetOrAddComponent<Image>();
-            var playMatRectTransform = (RectTransform) playMatImage.transform;
-            playMatRectTransform.anchoredPosition = Vector2.zero;
-            playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
-                CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
-            playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
+            if (!NetworkManager.Singleton.IsConnectedClient)
+            {
+                playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform).GetOrAddComponent<Image>();
+                var playMatRectTransform = (RectTransform) playMatImage.transform;
+                playMatRectTransform.anchoredPosition = Vector2.zero;
+                playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
+                    CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
+                playMatImage.sprite = CardGameManager.Current.PlayMatImageSprite;
+                playMatImage.transform.SetAsFirstSibling();
+            }
 
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
         }
@@ -271,7 +275,7 @@ namespace Cgs.Play
                                    (CardGameManager.PixelsPerInch * i * CardGameManager.Current.CardSize.X +
                                     DeckPositionBuffer);
 
-                    var deckCount = AllCardStacks.ToList().Count;
+                    var deckCount = AllCardStacks.ToList().Count + i;
                     if (deckCount < CardGameManager.Current.GamePlayDeckPositions.Count)
                     {
                         var targetPosition = CardGameManager.Current.GamePlayDeckPositions[deckCount];

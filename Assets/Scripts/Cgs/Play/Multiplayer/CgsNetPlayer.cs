@@ -116,10 +116,10 @@ namespace Cgs.Play.Multiplayer
 
             Debug.Log("[CgsNet Player] Starting local player...");
             CgsNetManager.Instance.LocalPlayer = this;
-            RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
-            RequestNewHand(CardDrawer.DefaultHandName);
             if (IsServer)
             {
+                RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
+                RequestNewHand(CardDrawer.DefaultHandName);
                 PlayController.Instance.ShowDeckMenu();
                 ApplyPlayerTranslationServerRpc();
             }
@@ -167,6 +167,7 @@ namespace Cgs.Play.Multiplayer
                 StartCoroutine(WaitToStartGame());
             }
 
+            RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs, Scoreboard.DefaultPlayerName));
             ApplyPlayerRotationServerRpc();
         }
 
