@@ -509,57 +509,61 @@ namespace Cgs.Play
             if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType)
                 && Enum.TryParse(face, true, out FacePreference facePreference)
                 && Enum.TryParse(action, true, out CardAction cardAction))
-                return gamePlayZoneType switch
+            {
+                var cardZone = gamePlayZoneType switch
                 {
-                    GamePlayZoneType.Area => CreateAreaZone(position, size, facePreference, cardAction),
-                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position, size, facePreference, cardAction),
-                    GamePlayZoneType.Vertical => CreateVerticalZone(position, size, facePreference, cardAction),
-                    _ => CreateAreaZone(position, size, facePreference, cardAction)
+                    GamePlayZoneType.Area => CreateAreaZone(position),
+                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position),
+                    GamePlayZoneType.Vertical => CreateVerticalZone(position),
+                    _ => CreateAreaZone(position)
                 };
+
+                var rectTransform = (RectTransform) cardZone.transform;
+                rectTransform.anchorMin = 0.5f * Vector2.one;
+                rectTransform.anchorMax = 0.5f * Vector2.one;
+                rectTransform.anchoredPosition = Vector2.zero;
+                rectTransform.localPosition = position;
+                rectTransform.sizeDelta = size;
+
+                cardZone.Position = position;
+                cardZone.Size = size;
+                cardZone.DefaultFace = facePreference;
+                cardZone.DefaultAction = cardAction;
+
+                return cardZone;
+            }
 
             Debug.LogError($"CreateZone failed to parse type: {type}, face: {face}, action: {action}");
             return null;
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private CardZone CreateAreaZone(Vector2 position, Vector2 size, FacePreference facePreference,
-            CardAction cardAction)
+        private CardZone CreateAreaZone(Vector2 position)
         {
-            Debug.LogWarning(
-                $"CreateAreaZone position: {position}, size: {size}, face: {facePreference}, cardAction: {cardAction}");
+            Debug.LogWarning($"CreateAreaZone position: {position}");
             return null;
         }
 
-        private CardZone CreateHorizontalZone(Vector2 position, Vector2 size, FacePreference facePreference,
-            CardAction cardAction)
+        private CardZone CreateHorizontalZone(Vector2 position)
         {
-            var cardZone = Instantiate(horizontalCardZonePrefab, playAreaCardZone.transform)
+            var cardZone = Instantiate(horizontalCardZonePrefab, position, Quaternion.identity, playAreaCardZone.transform)
                 .GetOrAddComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
 
             cardZone.Type = CardZoneType.Horizontal;
             cardZone.Position = position;
-            cardZone.Size = size;
-            cardZone.DefaultFace = facePreference;
-            cardZone.DefaultAction = cardAction;
-
             return cardZone;
         }
 
-        private CardZone CreateVerticalZone(Vector2 position, Vector2 size, FacePreference facePreference,
-            CardAction cardAction)
+        private CardZone CreateVerticalZone(Vector2 position)
         {
-            var cardZone = Instantiate(verticalCardZonePrefab, playAreaCardZone.transform).GetComponent<CardZone>();
+            var cardZone = Instantiate(verticalCardZonePrefab, position, Quaternion.identity, playAreaCardZone.transform).GetComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
 
             cardZone.Type = CardZoneType.Vertical;
             cardZone.Position = position;
-            cardZone.Size = size;
-            cardZone.DefaultFace = facePreference;
-            cardZone.DefaultAction = cardAction;
-
             return cardZone;
         }
 

@@ -167,7 +167,7 @@ namespace Cgs.CardGameView.Multiplayer
             _isTopFaceupNetworkVariable.OnValueChanged += OnChangeIsTopFaceup;
         }
 
-        public override void OnNetworkSpawn()
+        protected override void OnNetworkSpawnPlayable()
         {
             _cards = new List<UnityCard>();
             foreach (var cardId in _cardIds)

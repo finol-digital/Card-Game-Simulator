@@ -156,7 +156,7 @@ namespace Cgs.CardGameView.Multiplayer
             _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
         }
 
-        public override void OnNetworkSpawn()
+        protected override void OnNetworkSpawnPlayable()
         {
             PlayController.SetPlayActions(this);
             _id = _idNetworkVariable.Value;
@@ -316,7 +316,8 @@ namespace Cgs.CardGameView.Multiplayer
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
                     Position, Rotation, !IsFacedown);
             else
-                PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position, Rotation, !IsFacedown);
+                PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position, Rotation,
+                    !IsFacedown);
 
             Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
             cardModel.Discard();
@@ -483,10 +484,12 @@ namespace Cgs.CardGameView.Multiplayer
                         var cards = new List<UnityCard> {siblingCardModel.Value, Value};
                         if (IsOnline)
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.Position, siblingCardModel.Rotation, !siblingCardModel.IsFacedown);
+                                cards, siblingCardModel.Position, siblingCardModel.Rotation,
+                                !siblingCardModel.IsFacedown);
                         else
                             PlayController.Instance.CreateCardStack(PlayController.DefaultStackName,
-                                cards, siblingCardModel.Position, siblingCardModel.Rotation, !siblingCardModel.IsFacedown);
+                                cards, siblingCardModel.Position, siblingCardModel.Rotation,
+                                !siblingCardModel.IsFacedown);
                         siblingCardModel.Discard();
                         Discard();
                         return;

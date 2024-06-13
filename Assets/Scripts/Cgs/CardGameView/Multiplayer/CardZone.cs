@@ -50,15 +50,17 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Vector2 Size
         {
-            get => IsOnline ? _sizeNetworkVariable.Value : ((RectTransform) transform).sizeDelta;
+            get => IsOnline ? _sizeNetworkVariable.Value : _size;
             set
             {
-                ((RectTransform) transform).sizeDelta = value;
+                _size = value;
+                ((RectTransform) transform).sizeDelta = _size;
                 if (IsOnline)
-                    _sizeNetworkVariable.Value = value;
+                    _sizeNetworkVariable.Value = _size;
             }
         }
 
+        private Vector2 _size = Vector2.zero;
         private NetworkVariable<Vector2> _sizeNetworkVariable;
 
         public FacePreference DefaultFace
@@ -104,14 +106,19 @@ namespace Cgs.CardGameView.Multiplayer
             _actionNetworkVariable = new NetworkVariable<int>();
         }
 
-        public override void OnNetworkSpawn()
+        protected override void OnNetworkSpawnPlayable()
         {
             var rectTransform = (RectTransform) transform;
             rectTransform.anchorMin = 0.5f * Vector2.one;
             rectTransform.anchorMax = 0.5f * Vector2.one;
             rectTransform.anchoredPosition = Vector2.zero;
-            rectTransform.localPosition = Position;
-            if (Vector2.zero.Equals(Size))
+            if (!Vector2.zero.Equals(Position))
+                rectTransform.localPosition = Position;
+
+            if (_sizeNetworkVariable.Value != _size && !Vector2.zero.Equals(_size))
+                _sizeNetworkVariable.Value = _size;
+
+            if (!Vector2.zero.Equals(Size))
                 rectTransform.sizeDelta = Size;
 
             var spacing = PlaySettings.StackViewerOverlap switch
@@ -133,6 +140,9 @@ namespace Cgs.CardGameView.Multiplayer
             scrollRectContainer = PlayController.Instance.playArea;
             DoesImmediatelyRelease = true;
 
+            if (_faceNetworkVariable.Value != (int)_facePreference && (int)_facePreference != 0)
+                _faceNetworkVariable.Value = (int)_facePreference;
+
             switch (DefaultFace)
             {
                 case FacePreference.Any:
@@ -148,6 +158,9 @@ namespace Cgs.CardGameView.Multiplayer
                     OnAddCardActions.Add(PlayController.OnAddCardModel);
                     break;
             }
+
+            if (_actionNetworkVariable.Value != (int)_cardAction && (int)_cardAction != 0)
+                _actionNetworkVariable.Value = (int)_cardAction;
 
             OnAddCardActions.Add((_, cardModel) =>
                 cardModel.DefaultAction = CardActions.ActionsDictionary[DefaultAction]);

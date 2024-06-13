@@ -167,7 +167,24 @@ namespace Cgs.CardGameView.Multiplayer
             // Child classes may override
         }
 
-        protected virtual void OnStartPlayable()
+        public override void OnNetworkSpawn()
+        {
+            if (_positionNetworkVariable.Value != _position && !Vector2.zero.Equals(_position))
+                _positionNetworkVariable.Value = _position;
+
+            if (Vector2.zero != Position)
+                transform.localPosition = Position;
+
+            if (_rotationNetworkVariable.Value != _rotation && !Quaternion.identity.Equals(_rotation))
+                _rotationNetworkVariable.Value = _rotation;
+
+            if (Quaternion.identity != Rotation)
+                transform.localRotation = Rotation;
+
+            OnNetworkSpawnPlayable();
+        }
+
+        protected virtual void OnNetworkSpawnPlayable()
         {
             // Child classes may override
         }
@@ -175,14 +192,11 @@ namespace Cgs.CardGameView.Multiplayer
         private void Start()
         {
             OnStartPlayable();
+        }
 
-            if (!IsOnline)
-                return;
-
-            if (Vector2.zero != Position)
-                transform.localPosition = Position;
-            if (Quaternion.identity != Rotation)
-                transform.localRotation = Rotation;
+        protected virtual void OnStartPlayable()
+        {
+            // Child classes may override
         }
 
         private void Update()
