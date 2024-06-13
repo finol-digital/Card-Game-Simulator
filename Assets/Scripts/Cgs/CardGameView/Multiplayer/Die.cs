@@ -99,9 +99,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            ParentToPlayAreaContent();
-            transform.localPosition = Position;
-
             if (!NetworkManager.Singleton.IsConnectedClient || IsServer)
                 _rollRemainingTime = RollTotalTime;
         }

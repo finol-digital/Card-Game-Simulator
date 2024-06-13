@@ -169,6 +169,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void OnNetworkSpawn()
         {
+            ParentToPlayAreaContent();
+
             if (_positionNetworkVariable.Value != _position && !Vector2.zero.Equals(_position))
                 _positionNetworkVariable.Value = _position;
 
@@ -427,7 +429,7 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
-        protected void ParentToPlayAreaContent()
+        private void ParentToPlayAreaContent()
         {
             if (PlayController.Instance == null || PlayController.Instance.playAreaCardZone == null)
             {

@@ -165,9 +165,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            if (IsSpawned)
-                ParentToPlayAreaContent();
-
             if (PlayController.Instance != null &&
                 PlayController.Instance.playAreaCardZone.transform == transform.parent)
             {

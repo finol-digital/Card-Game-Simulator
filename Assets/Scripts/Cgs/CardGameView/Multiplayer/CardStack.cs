@@ -177,7 +177,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            ParentToPlayAreaContent();
             GetComponent<CardDropArea>().DropHandler = this;
             GetComponent<StackDropArea>().DropHandler = this;
 
