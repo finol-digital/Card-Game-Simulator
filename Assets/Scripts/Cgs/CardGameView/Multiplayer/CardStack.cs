@@ -140,7 +140,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 var oldValue = _isTopFaceup;
                 _isTopFaceup = value;
-                if (IsOnline)
+                if (IsSpawned)
                     SetIsTopFaceupServerRpc(_isTopFaceup);
                 else if (oldValue != _isTopFaceup)
                     OnChangeIsTopFaceup(oldValue, _isTopFaceup);

@@ -15,11 +15,11 @@ namespace Cgs.CardGameView.Multiplayer
     {
         public string GameBoardId
         {
-            get => IsOnline ? _idNetworkVariable.Value : _gameBoardId;
+            get => IsSpawned ? _idNetworkVariable.Value : _gameBoardId;
             set
             {
                 _gameBoardId = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _idNetworkVariable.Value = value;
             }
         }
@@ -29,11 +29,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Vector2 Size
         {
-            get => IsOnline ? _sizeNetworkVariable.Value : _size;
+            get => IsSpawned ? _sizeNetworkVariable.Value : _size;
             set
             {
                 _size = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _sizeNetworkVariable.Value = value;
             }
         }

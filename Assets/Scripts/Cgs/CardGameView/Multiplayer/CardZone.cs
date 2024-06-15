@@ -2,9 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections;
 using System.Collections.Generic;
 using Cgs.CardGameView.Viewer;
 using Cgs.Play;
+using Cgs.Play.Multiplayer;
 using Cgs.UI.ScrollRects;
 using FinolDigital.Cgs.CardGameDef;
 using Unity.Netcode;
@@ -37,11 +39,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZoneType Type
         {
-            get => IsOnline ? (CardZoneType) _typeNetworkVariable.Value : type;
+            get => IsSpawned ? (CardZoneType) _typeNetworkVariable.Value : type;
             set
             {
                 type = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _typeNetworkVariable.Value = (int) value;
             }
         }
@@ -50,12 +52,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Vector2 Size
         {
-            get => IsOnline ? _sizeNetworkVariable.Value : _size;
+            get => IsSpawned ? _sizeNetworkVariable.Value : _size;
             set
             {
                 _size = value;
                 ((RectTransform) transform).sizeDelta = _size;
-                if (IsOnline)
+                if (IsSpawned)
                     _sizeNetworkVariable.Value = _size;
             }
         }
@@ -65,11 +67,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public FacePreference DefaultFace
         {
-            get => IsOnline ? (FacePreference) _faceNetworkVariable.Value : _facePreference;
+            get => IsSpawned ? (FacePreference) _faceNetworkVariable.Value : _facePreference;
             set
             {
                 _facePreference = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _faceNetworkVariable.Value = (int) value;
             }
         }
@@ -79,11 +81,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardAction DefaultAction
         {
-            get => IsOnline ? (CardAction) _actionNetworkVariable.Value : _cardAction;
+            get => IsSpawned ? (CardAction) _actionNetworkVariable.Value : _cardAction;
             set
             {
                 _cardAction = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _actionNetworkVariable.Value = (int) value;
             }
         }
@@ -108,6 +110,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnNetworkSpawnPlayable()
         {
+            if (CardZoneType.Area.Equals(type))
+                return;
+
             var rectTransform = (RectTransform) transform;
             rectTransform.anchorMin = 0.5f * Vector2.one;
             rectTransform.anchorMax = 0.5f * Vector2.one;
@@ -140,8 +145,8 @@ namespace Cgs.CardGameView.Multiplayer
             scrollRectContainer = PlayController.Instance.playArea;
             DoesImmediatelyRelease = true;
 
-            if (_faceNetworkVariable.Value != (int)_facePreference && (int)_facePreference != 0)
-                _faceNetworkVariable.Value = (int)_facePreference;
+            if (_faceNetworkVariable.Value != (int) _facePreference && (int) _facePreference != 0)
+                _faceNetworkVariable.Value = (int) _facePreference;
 
             switch (DefaultFace)
             {
@@ -159,11 +164,20 @@ namespace Cgs.CardGameView.Multiplayer
                     break;
             }
 
-            if (_actionNetworkVariable.Value != (int)_cardAction && (int)_cardAction != 0)
-                _actionNetworkVariable.Value = (int)_cardAction;
+            if (_actionNetworkVariable.Value != (int) _cardAction && (int) _cardAction != 0)
+                _actionNetworkVariable.Value = (int) _cardAction;
 
-            OnAddCardActions.Add((_, cardModel) =>
-                cardModel.DefaultAction = CardActions.ActionsDictionary[DefaultAction]);
+            var defaultAction = CardActions.ActionsDictionary[DefaultAction];
+            OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = defaultAction);
+
+            StartCoroutine(WaitToAddMoveCardToServer());
+        }
+
+        private IEnumerator WaitToAddMoveCardToServer()
+        {
+            while (CgsNetManager.Instance.LocalPlayer == null)
+                yield return null;
+            OnAddCardActions.Add(CgsNetManager.Instance.LocalPlayer.MoveCardToServer);
         }
 
         protected override void OnPointerEnterPlayable(PointerEventData eventData)

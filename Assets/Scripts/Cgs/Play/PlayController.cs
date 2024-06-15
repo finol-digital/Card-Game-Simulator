@@ -350,19 +350,18 @@ namespace Cgs.Play
             var cardStack = Instantiate(cardStackPrefab, playAreaCardZone.transform).GetComponent<CardStack>();
             if (CgsNetManager.Instance.IsOnline)
                 cardStack.MyNetworkObject.Spawn();
+
             if (!string.IsNullOrEmpty(stackName))
                 cardStack.Name = stackName;
             if (cards != null)
                 cardStack.Cards = cards;
-            var rectTransform = (RectTransform) cardStack.transform;
-            if (!Vector2.zero.Equals(position))
-                rectTransform.localPosition = position;
-            cardStack.Position = rectTransform.localPosition;
-            if (!Quaternion.identity.Equals(rotation))
-                rectTransform.localRotation = rotation;
-            cardStack.Rotation = rectTransform.localRotation;
+
+            cardStack.Position = position;
+            cardStack.Rotation = rotation;
+
             if (isFaceup)
                 cardStack.IsTopFaceup = true;
+
             return cardStack;
         }
 
@@ -430,15 +429,21 @@ namespace Cgs.Play
                 CreateCardStack(filters, cards, position, Quaternion.identity, false);
         }
 
-        public void CreateCardModel(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
+        public void CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
+            bool isFacedown)
         {
-            var cardModel = Instantiate(cardModelPrefab, playAreaCardZone.transform).GetComponent<CardModel>();
+            if (container == null)
+                container = playAreaCardZone.gameObject;
+            var cardModel = Instantiate(cardModelPrefab, container.transform).GetComponent<CardModel>();
             if (CgsNetManager.Instance.IsOnline)
                 cardModel.MyNetworkObject.Spawn();
+
             cardModel.Value = CardGameManager.Current.Cards[cardId];
+            cardModel.Container = container;
             cardModel.Position = position;
             cardModel.Rotation = rotation;
             cardModel.IsFacedown = isFacedown;
+
             SetPlayActions(cardModel);
             cardModel.HideHighlightClientRpc();
         }
@@ -446,49 +451,55 @@ namespace Cgs.Play
         public void CreateDefaultDie()
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewDie(Die.DefaultMin, PlaySettings.DieFaceCount);
+                CgsNetManager.Instance.LocalPlayer.RequestNewDie(Vector2.zero,
+                    CgsNetManager.Instance.LocalPlayer.DefaultRotation, Die.DefaultMin,
+                    PlaySettings.DieFaceCount);
             else
-                CreateDie(Die.DefaultMin, PlaySettings.DieFaceCount);
+                CreateDie(Vector2.zero, Quaternion.identity, Die.DefaultMin, PlaySettings.DieFaceCount);
         }
 
-        public Die CreateDie(int min, int max)
+        public Die CreateDie(Vector2 position, Quaternion rotation, int min, int max)
         {
             var die = Instantiate(diePrefab, playAreaCardZone.transform).GetOrAddComponent<Die>();
             if (CgsNetManager.Instance.IsOnline)
                 die.MyNetworkObject.Spawn();
+
             die.Min = min;
             die.Max = max;
-            var rectTransform = (RectTransform) die.transform;
-            rectTransform.localPosition = Vector2.zero;
-            die.Position = rectTransform.localPosition;
+            die.Position = position;
+            die.Rotation = rotation;
+
             return die;
         }
 
         public void CreateDefaultToken()
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewToken();
+                CgsNetManager.Instance.LocalPlayer.RequestNewToken(Vector2.zero,
+                    CgsNetManager.Instance.LocalPlayer.DefaultRotation);
             else
-                CreateToken();
+                CreateToken(Vector2.zero, Quaternion.identity);
         }
 
-        public Token CreateToken()
+        public Token CreateToken(Vector2 position, Quaternion rotation)
         {
             var token = Instantiate(tokenPrefab, playAreaCardZone.transform).GetOrAddComponent<Token>();
             if (CgsNetManager.Instance.IsOnline)
                 token.MyNetworkObject.Spawn();
-            var rectTransform = (RectTransform) token.transform;
-            rectTransform.localPosition = Vector2.zero;
-            token.Position = rectTransform.localPosition;
+
+            token.Position = position;
+            token.Rotation = rotation;
+
             return token;
         }
 
         private void CreateZones()
         {
-            CardGameManager.Current.GamePlayZones.ForEach(CreateZone);
+            for(var i = 0; i < CardGameManager.Current.GamePlayZones.Count; i++)
+                CreateZone(CardGameManager.Current.GamePlayZones[i], i > 0 ? Quaternion.Euler(0, 0, 180) : Quaternion.identity);
         }
 
-        private void CreateZone(GamePlayZone gamePlayZone)
+        private void CreateZone(GamePlayZone gamePlayZone, Quaternion rotation)
         {
             var position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
@@ -497,14 +508,15 @@ namespace Cgs.Play
             var cardAction = gamePlayZone.DefaultCardAction ?? CardGameManager.Current.GameDefaultCardAction;
 
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewZone(gamePlayZone.Type.ToString(), position, size,
-                    gamePlayZone.Face.ToString(), cardAction.ToString());
+                CgsNetManager.Instance.LocalPlayer.RequestNewZone(gamePlayZone.Type.ToString(), position,
+                    rotation, size, gamePlayZone.Face.ToString(), cardAction.ToString());
             else
-                CreateZone(gamePlayZone.Type.ToString(), position, size, gamePlayZone.Face.ToString(),
-                    cardAction.ToString());
+                CreateZone(gamePlayZone.Type.ToString(), position, rotation, size,
+                    gamePlayZone.Face.ToString(), cardAction.ToString());
         }
 
-        public CardZone CreateZone(string type, Vector2 position, Vector2 size, string face, string action)
+        public CardZone CreateZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
+            string action)
         {
             if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType)
                 && Enum.TryParse(face, true, out FacePreference facePreference)
@@ -512,10 +524,10 @@ namespace Cgs.Play
             {
                 var cardZone = gamePlayZoneType switch
                 {
-                    GamePlayZoneType.Area => CreateAreaZone(position),
-                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position),
-                    GamePlayZoneType.Vertical => CreateVerticalZone(position),
-                    _ => CreateAreaZone(position)
+                    GamePlayZoneType.Area => CreateAreaZone(position, rotation),
+                    GamePlayZoneType.Horizontal => CreateHorizontalZone(position, rotation),
+                    GamePlayZoneType.Vertical => CreateVerticalZone(position, rotation),
+                    _ => CreateAreaZone(position, rotation)
                 };
 
                 var rectTransform = (RectTransform) cardZone.transform;
@@ -526,6 +538,7 @@ namespace Cgs.Play
                 rectTransform.sizeDelta = size;
 
                 cardZone.Position = position;
+                cardZone.Rotation = rotation;
                 cardZone.Size = size;
                 cardZone.DefaultFace = facePreference;
                 cardZone.DefaultAction = cardAction;
@@ -538,32 +551,37 @@ namespace Cgs.Play
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private CardZone CreateAreaZone(Vector2 position)
+        private CardZone CreateAreaZone(Vector2 position, Quaternion rotation)
         {
-            Debug.LogWarning($"CreateAreaZone position: {position}");
+            Debug.LogWarning($"CreateAreaZone position: {position}, rotation: {rotation}");
             return null;
         }
 
-        private CardZone CreateHorizontalZone(Vector2 position)
+        private CardZone CreateHorizontalZone(Vector2 position, Quaternion rotation)
         {
-            var cardZone = Instantiate(horizontalCardZonePrefab, position, Quaternion.identity, playAreaCardZone.transform)
+            var cardZone = Instantiate(horizontalCardZonePrefab, position, rotation, playAreaCardZone.transform)
                 .GetOrAddComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
 
             cardZone.Type = CardZoneType.Horizontal;
             cardZone.Position = position;
+            cardZone.Rotation = rotation;
+
             return cardZone;
         }
 
-        private CardZone CreateVerticalZone(Vector2 position)
+        private CardZone CreateVerticalZone(Vector2 position, Quaternion rotation)
         {
-            var cardZone = Instantiate(verticalCardZonePrefab, position, Quaternion.identity, playAreaCardZone.transform).GetComponent<CardZone>();
+            var cardZone = Instantiate(verticalCardZonePrefab, position, rotation, playAreaCardZone.transform)
+                .GetComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
 
             cardZone.Type = CardZoneType.Vertical;
             cardZone.Position = position;
+            cardZone.Rotation = rotation;
+
             return cardZone;
         }
 

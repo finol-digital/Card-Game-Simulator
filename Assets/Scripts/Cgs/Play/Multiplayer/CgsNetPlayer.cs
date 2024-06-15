@@ -522,8 +522,13 @@ namespace Cgs.Play.Multiplayer
             cardModelTransform.SetParent(cardZone.transform);
             cardModel.SnapToGrid();
             var position = ((RectTransform) cardModelTransform).localPosition;
-            var rotation = cardModelTransform.rotation;
-            SpawnCardServerRpc(cardModel.Id, position, rotation, cardModel.IsFacedown);
+            var rotation = DefaultRotation;
+
+            if (cardZone.IsSpawned)
+                SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, cardModel.IsFacedown);
+            else
+                SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, cardModel.IsFacedown);
+
             if (cardModel.IsSpawned)
                 DespawnCardServerRpc(cardModel.gameObject);
             else
@@ -532,9 +537,17 @@ namespace Cgs.Play.Multiplayer
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void SpawnCardServerRpc(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
+        private void SpawnCardInZoneServerRpc(NetworkObjectReference container, string cardId, Vector3 position,
+            Quaternion rotation, bool isFacedown)
         {
-            PlayController.Instance.CreateCardModel(cardId, position, rotation, isFacedown);
+            PlayController.Instance.CreateCardModel(container, cardId, position, rotation, isFacedown);
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void SpawnCardInPlayAreaServerRpc(string cardId, Vector3 position, Quaternion rotation, bool isFacedown)
+        {
+            PlayController.Instance.CreateCardModel(null, cardId, position, rotation, isFacedown);
         }
 
         [ServerRpc]
@@ -550,48 +563,50 @@ namespace Cgs.Play.Multiplayer
 
         #region Dice
 
-        public void RequestNewDie(int min, int max)
+        public void RequestNewDie(Vector2 position, Quaternion rotation, int min, int max)
         {
-            CreateDieServerRpc(min, max);
+            CreateDieServerRpc(position, rotation, min, max);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateDieServerRpc(int min, int max)
+        private void CreateDieServerRpc(Vector2 position, Quaternion rotation, int min, int max)
         {
-            PlayController.Instance.CreateDie(min, max);
+            PlayController.Instance.CreateDie(position, rotation, min, max);
         }
 
         #endregion
 
         #region Tokens
 
-        public void RequestNewToken()
+        public void RequestNewToken(Vector2 position, Quaternion rotation)
         {
-            CreateTokenServerRpc();
+            CreateTokenServerRpc(position, rotation);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateTokenServerRpc()
+        private void CreateTokenServerRpc(Vector2 position, Quaternion rotation)
         {
-            PlayController.Instance.CreateToken();
+            PlayController.Instance.CreateToken(position, rotation);
         }
 
         #endregion
 
         #region Zones
 
-        public void RequestNewZone(string type, Vector2 position, Vector2 size, string face, string action)
+        public void RequestNewZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
+            string action)
         {
-            CreateZoneServerRpc(type, position, size, face, action);
+            CreateZoneServerRpc(type, position, rotation, size, face, action);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateZoneServerRpc(string type, Vector2 position, Vector2 size, string face, string action)
+        private void CreateZoneServerRpc(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
+            string action)
         {
-            PlayController.Instance.CreateZone(type, position, size, face, action);
+            PlayController.Instance.CreateZone(type, position, rotation, size, face, action);
         }
 
         #endregion

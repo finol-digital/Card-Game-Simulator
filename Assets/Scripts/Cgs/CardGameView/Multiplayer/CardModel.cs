@@ -37,11 +37,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string Id
         {
-            get => IsOnline ? _idNetworkVariable.Value : _id;
+            get => IsSpawned ? _idNetworkVariable.Value : _id;
             private set
             {
                 _id = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _idNetworkVariable.Value = value;
             }
         }
@@ -77,7 +77,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 var oldValue = _isFacedown;
                 _isFacedown = value;
-                if (IsOnline)
+                if (IsSpawned)
                     SetIsFacedownServerRpc(_isFacedown);
                 else if (oldValue != _isFacedown)
                     OnChangeIsFacedown(oldValue, _isFacedown);
@@ -158,9 +158,14 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnNetworkSpawnPlayable()
         {
-            PlayController.SetPlayActions(this);
-            _id = _idNetworkVariable.Value;
             _isFacedown = _isFacedownNetworkVariable.Value;
+
+            if (string.IsNullOrEmpty(_idNetworkVariable.Value))
+                return;
+
+            var oldId = _id;
+            _id = _idNetworkVariable.Value;
+            OnChangeId(oldId, _id);
         }
 
         protected override void OnStartPlayable()
@@ -168,6 +173,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (PlayController.Instance != null &&
                 PlayController.Instance.playAreaCardZone.transform == transform.parent)
             {
+                PlayController.SetPlayActions(this);
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
                 cardDropArea.isBlocker = true;
                 cardDropArea.DropHandler = this;
@@ -180,14 +186,18 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            var targetRotation = Value.GetPropertyValueInt(CardGameManager.Current.CardRotationIdentifier);
-            if (targetRotation == 0)
-                targetRotation = CardGameManager.Current.CardRotationDefault;
-            if (targetRotation != 0)
-                Rotation = Quaternion.Euler(0, 0, targetRotation);
+            /*
+            if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline || (CgsNetManager.Instance.IsServer && !IsSpawned))
+            {
+                var targetRotation = Value.GetPropertyValueInt(CardGameManager.Current.CardRotationIdentifier);
+                if (targetRotation == 0)
+                    targetRotation = CardGameManager.Current.CardRotationDefault;
+                if (targetRotation != 0)
+                    Rotation = Quaternion.Euler(0, 0, targetRotation);
+            }*/
 
-            SetIsNameVisible(!IsFacedown);
-            if (!IsFacedown)
+            SetIsNameVisible(!IsFacedown && !IsSpawned);
+            if (!IsFacedown && !IsSpawned)
                 Value.RegisterDisplay(this);
         }
 
@@ -309,7 +319,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             var cards = new List<UnityCard> {Value, cardModel.Value};
-            if (IsOnline)
+            if (IsSpawned)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
                     Position, Rotation, !IsFacedown);
             else
@@ -352,7 +362,7 @@ namespace Cgs.CardGameView.Multiplayer
             DidDrag = true;
             if (DoesCloneOnDrag && !IsProcessingSecondaryDragAction)
             {
-                if (!IsOnline && IsSpawned)
+                if (!(Container != null && Container.transform == transform.parent) && IsSpawned)
                     MyNetworkObject.Despawn(false);
                 CreateDrag(eventData, gameObject, transform, Value, IsFacedown);
                 return true;
@@ -367,7 +377,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance != null)
                 CardViewer.Instance.HidePreview();
 
-            if (!IsOnline)
+            if (!IsSpawned)
                 ActOnDrag();
             else
                 RequestChangeOwnership();
@@ -375,7 +385,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnDragPlayable(PointerEventData eventData)
         {
-            if (!IsOnline || IsOwner)
+            if (!IsSpawned || IsOwner)
                 ActOnDrag();
             else
                 RequestChangeOwnership();
@@ -383,7 +393,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (!IsOnline || IsOwner)
+            if (!IsSpawned || IsOwner)
                 ActOnDrag();
         }
 
@@ -479,7 +489,7 @@ namespace Cgs.CardGameView.Multiplayer
                     if (siblingCardModel != null)
                     {
                         var cards = new List<UnityCard> {siblingCardModel.Value, Value};
-                        if (IsOnline)
+                        if (IsSpawned)
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
                                 cards, siblingCardModel.Position, siblingCardModel.Rotation,
                                 !siblingCardModel.IsFacedown);
@@ -505,7 +515,7 @@ namespace Cgs.CardGameView.Multiplayer
             var rectTransform = (RectTransform) transform;
             rectTransform.position = gridPosition;
 
-            if (IsOnline && IsOwner)
+            if (IsSpawned && IsOwner)
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
@@ -519,7 +529,7 @@ namespace Cgs.CardGameView.Multiplayer
                 Input.GetMouseButtonUp(2))
                 return;
 #endif
-            if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsOnline && !IsOwner))
+            if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsSpawned && !IsOwner))
                 return;
 
             if (DropTarget == null && PlaceHolder == null && ParentCardZone == null)
@@ -547,14 +557,14 @@ namespace Cgs.CardGameView.Multiplayer
             if (PlaceHolderCardZone != null)
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, targetPosition);
 
-            if (IsOnline)
+            if (IsSpawned)
                 RequestUpdatePosition(((RectTransform) transform).localPosition);
         }
 
         private void UpdateCardZonePosition(Vector2 targetPosition)
         {
             var cardZone = ParentCardZone;
-            if (cardZone == null || (IsOnline && !IsOwner))
+            if (cardZone == null || (IsSpawned && !IsOwner))
                 return;
 
             if (!cardZone.DoesImmediatelyRelease && cardZone.type is CardZoneType.Vertical or CardZoneType.Horizontal)
@@ -582,7 +592,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void ParentToCanvas(Vector3 targetPosition)
         {
-            if (IsOnline && IsOwner)
+            if (IsSpawned && IsOwner)
                 MoveToClientServerRpc();
 
             var cardDropArea = GetComponent<CardDropArea>();

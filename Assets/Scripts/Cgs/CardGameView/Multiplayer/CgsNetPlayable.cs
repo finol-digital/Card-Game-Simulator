@@ -45,9 +45,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        public bool IsOnline => PlayController.Instance != null && PlayController.Instance.playAreaCardZone != null &&
-                                PlayController.Instance.playAreaCardZone.transform == transform.parent && IsSpawned;
-
         protected bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
@@ -61,16 +58,30 @@ namespace Cgs.CardGameView.Multiplayer
                                                                       or PointerEventData.InputButton.Right
                                                                   };
 
+        public GameObject Container
+        {
+            get => IsSpawned ? _containerNetworkVariable.Value : _container;
+            set
+            {
+                _container = value;
+                if (IsSpawned && (_container.GetComponent<NetworkObject>()?.IsSpawned ?? false))
+                    _containerNetworkVariable.Value = _container;
+            }
+        }
+
+        private GameObject _container;
+        private NetworkVariable<NetworkObjectReference> _containerNetworkVariable;
+
         public Vector2 Position
         {
-            get => IsOnline ? _positionNetworkVariable.Value : _position;
+            get => IsSpawned ? _positionNetworkVariable.Value : _position;
             set
             {
                 _position = value;
                 if (!transform.localPosition.Equals(_position))
                     transform.localPosition = _position;
-                if (IsOnline)
-                    _positionNetworkVariable.Value = value;
+                if (IsSpawned)
+                    _positionNetworkVariable.Value = _position;
             }
         }
 
@@ -79,14 +90,14 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Quaternion Rotation
         {
-            get => IsOnline ? _rotationNetworkVariable.Value : _rotation;
+            get => IsSpawned ? _rotationNetworkVariable.Value : _rotation;
             set
             {
                 _rotation = value;
                 if (!transform.localRotation.Equals(_rotation))
                     transform.localRotation = _rotation;
-                if (IsOnline)
-                    _rotationNetworkVariable.Value = value;
+                if (IsSpawned)
+                    _rotationNetworkVariable.Value = _rotation;
             }
         }
 
@@ -138,7 +149,7 @@ namespace Cgs.CardGameView.Multiplayer
                         break;
                     default:
                     case HighlightMode.Off:
-                        var isOthers = IsOnline && !IsOwner;
+                        var isOthers = IsSpawned && !IsOwner;
                         Highlight.effectColor = isOthers ? Color.yellow : Color.black;
                         Highlight.effectDistance = isOthers ? OutlineHighlightDistance : Vector2.zero;
                         break;
@@ -153,6 +164,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Awake()
         {
+            _containerNetworkVariable = new NetworkVariable<NetworkObjectReference>();
+            _containerNetworkVariable.OnValueChanged += OnChangeContainer;
+
             _positionNetworkVariable = new NetworkVariable<Vector2>();
             _positionNetworkVariable.OnValueChanged += OnChangePosition;
 
@@ -169,21 +183,36 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void OnNetworkSpawn()
         {
-            ParentToPlayAreaContent();
+            if (transform.parent == null)
+                ParentTo(Container == null ? PlayController.Instance.playAreaCardZone.transform : Container.transform);
 
             if (_positionNetworkVariable.Value != _position && !Vector2.zero.Equals(_position))
                 _positionNetworkVariable.Value = _position;
 
-            if (Vector2.zero != Position)
+            if (!Vector2.zero.Equals(Position))
                 transform.localPosition = Position;
 
             if (_rotationNetworkVariable.Value != _rotation && !Quaternion.identity.Equals(_rotation))
                 _rotationNetworkVariable.Value = _rotation;
 
-            if (Quaternion.identity != Rotation)
+            if (!Quaternion.identity.Equals(Rotation))
                 transform.localRotation = Rotation;
 
             OnNetworkSpawnPlayable();
+        }
+
+        [PublicAPI]
+        public void OnChangeContainer(NetworkObjectReference oldValue, NetworkObjectReference newValue)
+        {
+            _container = newValue;
+            ParentTo(Container == null ? PlayController.Instance.playAreaCardZone.transform : Container.transform);
+        }
+
+        private void ParentTo(Transform containerTransform)
+        {
+            var rectTransform = (RectTransform) transform;
+            rectTransform.SetParent(containerTransform);
+            rectTransform.localScale = Vector3.one;
         }
 
         protected virtual void OnNetworkSpawnPlayable()
@@ -208,7 +237,7 @@ namespace Cgs.CardGameView.Multiplayer
             else
                 HoldTime = 0;
 
-            if (IsOnline && IsServer && !IsOwner)
+            if (IsSpawned && IsServer && !IsOwner)
             {
                 if (_previousPosition == Position)
                     _disownedTime += Time.deltaTime;
@@ -328,7 +357,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnBeginDragPlayable(PointerEventData eventData)
         {
-            if (IsOnline)
+            if (IsSpawned)
                 RequestChangeOwnership();
             else
                 ActOnDrag();
@@ -362,7 +391,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             PostDragPlayable(eventData);
 
-            if (IsOnline && IsOwner && !ToDiscard)
+            if (IsSpawned && IsOwner && !ToDiscard)
                 RemoveOwnershipServerRpc();
         }
 
@@ -429,19 +458,6 @@ namespace Cgs.CardGameView.Multiplayer
                 RequestUpdatePosition(rectTransform.localPosition);
         }
 
-        private void ParentToPlayAreaContent()
-        {
-            if (PlayController.Instance == null || PlayController.Instance.playAreaCardZone == null)
-            {
-                Debug.LogError($"ERROR: Attempted to parent {gameObject.name} to non-existent play area!");
-                return;
-            }
-
-            var rectTransform = (RectTransform) transform;
-            rectTransform.SetParent(PlayController.Instance.playAreaCardZone.transform);
-            rectTransform.localScale = Vector3.one;
-        }
-
         public virtual void SnapToGrid()
         {
             var rectTransform = (RectTransform) transform;
@@ -478,7 +494,7 @@ namespace Cgs.CardGameView.Multiplayer
             var currentDirection = CurrentPointerEventData.position - referencePoint;
             transform.Rotate(0, 0, Vector2.SignedAngle(previousDirection, currentDirection));
 
-            if (IsOnline)
+            if (IsSpawned)
                 RequestUpdateRotation(transform.localRotation);
         }
 

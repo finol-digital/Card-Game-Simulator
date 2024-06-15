@@ -25,11 +25,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public int Min
         {
-            get => IsOnline ? _minNetworkVariable.Value : _min;
+            get => IsSpawned ? _minNetworkVariable.Value : _min;
             set
             {
                 _min = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _minNetworkVariable.Value = value;
             }
         }
@@ -39,11 +39,11 @@ namespace Cgs.CardGameView.Multiplayer
 
         public int Max
         {
-            get => IsOnline ? _maxNetworkVariable.Value : _max;
+            get => IsSpawned ? _maxNetworkVariable.Value : _max;
             set
             {
                 _max = value;
-                if (IsOnline)
+                if (IsSpawned)
                     _maxNetworkVariable.Value = value;
             }
         }
@@ -55,7 +55,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public int Value
         {
-            get => IsOnline ? _valueNetworkVariable.Value : _value;
+            get => IsSpawned ? _valueNetworkVariable.Value : _value;
             private set
             {
                 var oldValue = _value;
@@ -66,7 +66,7 @@ namespace Cgs.CardGameView.Multiplayer
                     newValue = Max;
 
                 _value = newValue;
-                if (IsOnline)
+                if (IsSpawned)
                     UpdateValueServerRpc(newValue);
                 else
                     OnChangeValue(oldValue, newValue);
@@ -77,7 +77,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             var oldValue = _value;
             _value = value;
-            if (IsOnline)
+            if (IsSpawned)
                 UpdateValueServerRpc(value);
             else
                 OnChangeValue(oldValue, value);
@@ -159,7 +159,7 @@ namespace Cgs.CardGameView.Multiplayer
         [UsedImplicitly]
         public void Roll()
         {
-            if (IsOnline)
+            if (IsSpawned)
                 RollServerRpc();
             else
                 _rollRemainingTime = RollTotalTime;
