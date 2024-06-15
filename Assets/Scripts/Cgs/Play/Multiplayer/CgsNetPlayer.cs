@@ -522,7 +522,7 @@ namespace Cgs.Play.Multiplayer
             cardModelTransform.SetParent(cardZone.transform);
             cardModel.SnapToGrid();
             var position = ((RectTransform) cardModelTransform).localPosition;
-            var rotation = DefaultRotation;
+            var rotation = cardModelTransform.localRotation;
 
             if (cardZone.IsSpawned)
                 SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, cardModel.IsFacedown);

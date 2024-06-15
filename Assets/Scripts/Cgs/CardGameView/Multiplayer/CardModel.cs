@@ -186,7 +186,6 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            /*
             if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline || (CgsNetManager.Instance.IsServer && !IsSpawned))
             {
                 var targetRotation = Value.GetPropertyValueInt(CardGameManager.Current.CardRotationIdentifier);
@@ -194,7 +193,7 @@ namespace Cgs.CardGameView.Multiplayer
                     targetRotation = CardGameManager.Current.CardRotationDefault;
                 if (targetRotation != 0)
                     Rotation = Quaternion.Euler(0, 0, targetRotation);
-            }*/
+            }
 
             SetIsNameVisible(!IsFacedown && !IsSpawned);
             if (!IsFacedown && !IsSpawned)
@@ -216,7 +215,7 @@ namespace Cgs.CardGameView.Multiplayer
         private void RemoveImageSprite()
         {
             View.sprite = CardGameManager.Current.CardBackImageSprite;
-            if (!IsFacedown)
+            if (!IsFacedown && !IsSpawned)
                 SetIsNameVisible(true);
         }
 
