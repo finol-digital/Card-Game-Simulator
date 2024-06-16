@@ -789,8 +789,8 @@ jobs:
         shell: pwsh
         env:
           APPX_PATH: ${{ format('build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-          path: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-        run: Copy-Item ".\$env:APPX_PATH\" -Destination ".\$env:path\"
+          upload_path: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+        run: Copy-Item ".\$env:APPX_PATH" -Destination ".\$env:upload_path"
       - name: Upload .appxupload
         uses: actions/upload-artifact@v4
         with:

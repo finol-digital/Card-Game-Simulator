@@ -12,6 +12,7 @@ Fix Grand Archive Multi-player Bugs
 - Bug-Fix: After a few taps it only untaps after rotating the card
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
 - Cards: Support more than 1 card face (Dual-Faced Cards)
+- Cards: Support multiple card backs
 - Game-Play: Cards Action modal - includes draw many and contextual green button for default action based on card location
 
 ## Backlog - Priority 1
@@ -19,6 +20,7 @@ Fix Grand Archive Multi-player Bugs
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Custom Tokens
+- Game-Play: Flip Random for tokens
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Support multiple card selection
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
@@ -41,7 +43,6 @@ Fix Grand Archive Multi-player Bugs
   - Option for card count limits, i.e. 3 copies per deck
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
 - Cards: Support mix of different card sizes in the same game
-- Cards: Support multiple card backs
 
 ## Backlog - Priority 3
 - Games Management Menu: CGS Games Browser
