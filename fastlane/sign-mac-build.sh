@@ -5,12 +5,14 @@ sleep 10
 
 KEYCHAIN_FILE=macos.keychain
 KEYCHAIN_PASSWORD=$(openssl rand -base64 12)
-DEVELOPER_APPLICATION_CERTIFICATE_P12=developer_id_application.p12
-DEVELOPER_INSTALLER_CERTIFICATE_P12=third_party_mac_developer_installer.p12
+APPLE_APPLICATION_CERTIFICATE_P12=developer_id_application.p12
+APPLE_DISTRIBUTION_CERTIFICATE_P12=apple_distribution.p12
+APPLE_INSTALLER_CERTIFICATE_P12=third_party_mac_developer_installer.p12
 
 # Recreate the certificates from the secure environment variable
-echo $DEVELOPER_APPLICATION_CERTIFICATE | base64 --decode > $DEVELOPER_APPLICATION_CERTIFICATE_P12
-echo $DEVELOPER_INSTALLER_CERTIFICATE | base64 --decode > $DEVELOPER_INSTALLER_CERTIFICATE_P12
+echo $APPLE_APPLICATION_CERTIFICATE | base64 --decode > $APPLE_APPLICATION_CERTIFICATE_P12
+echo $APPLE_DISTRIBUTION_CERTIFICATE | base64 --decode > $APPLE_DISTRIBUTION_CERTIFICATE_P12
+echo $APPLE_INSTALLER_CERTIFICATE | base64 --decode > $APPLE_INSTALLER_CERTIFICATE_P12
 
 # Create a keychain
 security create-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_FILE
@@ -22,8 +24,9 @@ security default-keychain -s $KEYCHAIN_FILE
 security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_FILE
 
 # Import the certificates
-security import $DEVELOPER_APPLICATION_CERTIFICATE -k $KEYCHAIN_FILE -P $DEVELOPER_APPLICATION_PASSWORD -A
-security import $DEVELOPER_INSTALLER_CERTIFICATE -k $KEYCHAIN_FILE -P $DEVELOPER_INSTALLER_PASSWORD -A
+security import $APPLE_APPLICATION_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $APPLE_APPLICATION_PASSWORD -A
+security import $APPLE_DISTRIBUTION_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $APPLE_DISTRIBUTION_PASSWORD -A
+security import $APPLE_INSTALLER_CERTIFICATE_P12 -k $KEYCHAIN_FILE -P $APPLE_INSTALLER_PASSWORD -A
 
 # Fix for hanging in the codesign step
 security set-key-partition-list -S apple-tool:,apple: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_FILE > /dev/null
@@ -42,9 +45,9 @@ chmod -R a+xr "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
 bundlepaths=$(echo $MAC_APP_BUNDLE_PATHS | tr ";" "\n")
 for bundlepath in $bundlepaths
 do
-    codesign --deep --force --verbose --sign "Developer ID Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app/$bundlepath"
+    codesign --deep --force --verbose --sign "Apple Distribution: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app/$bundlepath"
 done
-codesign --deep --force --verbose --sign "Developer ID Application: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" --entitlements "fastlane/${PROJECT_NAME}.entitlements" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
+codesign --deep --force --verbose --sign "Apple Distribution: ${APPLE_TEAM_NAME} (${APPLE_TEAM_ID})" --entitlements "fastlane/${PROJECT_NAME}.entitlements" "${MAC_BUILD_PATH}/${PROJECT_NAME}.app"
 
 sleep 10
 echo "Packaging app..."
