@@ -18,21 +18,21 @@ Fix Grand Archive Multi-player Bugs
 ## Backlog - Priority 1
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
-- Game-Play: Counter system for players and cards (Dice grouping/parenting)
-- Game-Play: Custom Tokens
-- Game-Play: Flip Random for tokens
 - Game-Play: Display values on Card in Play Area
+- Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Support multiple card selection
-- Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
-- Game-Play: Arrow from card with middle mouse button or alt
+- Game-Play: Save/Load Sessions + Log of all (Player) actions
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Move card to zone, stack, or drawer (E)
 
 ## Backlog - Priority 2
+- Game-Play: Custom Tokens
+- Game-Play: Flip Random for tokens
+- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
+- Game-Play: Arrow from card with middle mouse button or alt
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
