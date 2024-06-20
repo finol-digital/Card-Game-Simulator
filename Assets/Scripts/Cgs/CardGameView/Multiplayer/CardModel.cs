@@ -376,23 +376,15 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance != null)
                 CardViewer.Instance.HidePreview();
 
-            if (!IsSpawned)
-                ActOnDrag();
-            else
+            if (LacksOwnership)
                 RequestChangeOwnership();
-        }
-
-        protected override void OnDragPlayable(PointerEventData eventData)
-        {
-            if (!IsSpawned || IsOwner)
-                ActOnDrag();
             else
-                RequestChangeOwnership();
+                ActOnDrag();
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (!IsSpawned || IsOwner)
+            if (!LacksOwnership)
                 ActOnDrag();
         }
 
@@ -511,11 +503,7 @@ namespace Cgs.CardGameView.Multiplayer
                 }
             }
 
-            var rectTransform = (RectTransform) transform;
-            rectTransform.position = gridPosition;
-
-            if (IsSpawned && IsOwner)
-                RequestUpdatePosition(rectTransform.localPosition);
+            base.SnapToGrid();
         }
 
         protected override void UpdatePosition()
@@ -617,6 +605,7 @@ namespace Cgs.CardGameView.Multiplayer
         [ServerRpc]
         private void MoveToClientServerRpc(ServerRpcParams serverRpcParams = default)
         {
+            Debug.Log("MoveToClientServerRpc");
             foreach (var clientId in NetworkManager.ConnectedClientsIds)
                 if (clientId != 0 && clientId != serverRpcParams.Receive.SenderClientId)
                     MyNetworkObject.NetworkHide(clientId);
@@ -716,6 +705,7 @@ namespace Cgs.CardGameView.Multiplayer
         [ServerRpc(RequireOwnership = false)]
         private void DespawnAndDestroyServerRpc()
         {
+            Debug.Log($"DespawnAndDestroyServerRpc {gameObject.name}");
             MyNetworkObject.Despawn();
             Destroy(gameObject);
         }

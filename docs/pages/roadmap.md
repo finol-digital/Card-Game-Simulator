@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.111
-Fix client moving cards bug
+Fix Multiplayer Bug: Client move card to server desync
 
 ## Active Sprint
 - Bug-Fix: LAN connectivity
