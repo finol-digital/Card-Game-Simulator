@@ -740,6 +740,11 @@
             }
           ]
         },
+        "rotation": {
+          "type": "integer",
+          "description": "Indicates the Game Play Zone's rotation in degrees",
+          "format": "int32"
+        },
         "size": {
           "description": "Indicates the Game Play Zone's width and height in inches",
           "oneOf": [
