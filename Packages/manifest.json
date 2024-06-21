@@ -15,6 +15,7 @@
     "com.unity.textmeshpro": "3.0.9",
     "com.unity.toolchain.linux-x86_64": "2.0.9",
     "com.unity.ugui": "1.0.0",
+    "com.unitynative.sharing": "https://github.com/NicholasSheehan/Unity-Native-Sharing.git#v1.0.7",
     "com.yasirkula.nativefilepicker": "https://github.com/yasirkula/UnityNativeFilePicker.git",
     "com.yasirkula.nativegallery": "https://github.com/yasirkula/UnityNativeGallery.git",
     "com.yasirkula.nativeshare": "https://github.com/yasirkula/UnityNativeShare.git",

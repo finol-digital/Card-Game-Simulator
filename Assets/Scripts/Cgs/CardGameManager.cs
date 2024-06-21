@@ -638,7 +638,7 @@ namespace Cgs
 
         public void Share()
         {
-            Debug.Log("CGS Share:: CgsGamesLink:" + Current.CgsGamesLink);
+            Debug.Log("CGS Share::CgsGamesLink: " + Current.CgsGamesLink);
             if (Current.CgsGamesLink != null && Current.CgsGamesLink.IsWellFormedOriginalString())
             {
                 var shareMessage = string.Format(ShareDeepLinkMessage, Current.Name, Current.CgsGamesLink);
@@ -657,18 +657,23 @@ namespace Cgs
         private static void ExportGame()
         {
             var container = Path.Combine(UnityCardGame.GamesExportPath, UnityFileMethods.GetSafeFileName(Current.Id));
+            Debug.Log("CGS Share::container: " + container);
             if (Directory.Exists(container))
                 Directory.Delete(container, true);
 
             var subContainer = Path.Combine(container, UnityFileMethods.GetSafeFileName(Current.Id));
+            Debug.Log("CGS Share::subContainer: " + subContainer);
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
             var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".zip");
+            Debug.Log("CGS Share::zipFileName: " + zipFileName);
             UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
             Directory.Delete(container, true);
 
             var targetZipFilePath = Path.Combine(UnityCardGame.GamesExportPath, zipFileName);
+            Debug.Log("CGS Share::targetZipFilePath: " + targetZipFilePath);
             var exportGameZipUri = new Uri(targetZipFilePath);
+            Debug.Log("CGS Share::size: " + (new System.IO.FileInfo(targetZipFilePath).Length));
 
 #if ENABLE_WINMD_SUPPORT
             var ExportGameErrorMessage = "ERROR: Failed to Export! ";
@@ -701,7 +706,7 @@ namespace Cgs
 #elif UNITY_ANDROID && !UNITY_EDITOR
             Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, CardGameManager.Current.Id));
 #elif UNITY_IOS && !UNITY_EDITOR
-            new NativeShare().AddFile(exportGameZipUri.AbsoluteUri).Share();
+            UnityNative.Sharing.UnityNativeSharing.Create().ShareScreenshotAndText("", targetZipFilePath, false, "", "");
 #else
             Application.OpenURL(exportGameZipUri.AbsoluteUri);
 #endif
