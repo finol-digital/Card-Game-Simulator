@@ -45,7 +45,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        protected bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && IsSpawned && !IsOwner;
+        protected bool LacksOwnership => IsSpawned && !IsOwner;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
@@ -237,7 +237,7 @@ namespace Cgs.CardGameView.Multiplayer
             else
                 HoldTime = 0;
 
-            if (IsSpawned && IsServer && !IsOwner)
+            if (IsServer && LacksOwnership)
             {
                 if (_previousPosition == Position)
                     _disownedTime += Time.deltaTime;
