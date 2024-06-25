@@ -1,1 +1,1 @@
-Fix Grand Archive Multi-player Bugs
+Fix Multiplayer Bug: Client move card to server desync
