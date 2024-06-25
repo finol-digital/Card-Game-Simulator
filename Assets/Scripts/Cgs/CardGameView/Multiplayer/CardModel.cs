@@ -186,7 +186,8 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline || (CgsNetManager.Instance.IsServer && !IsSpawned))
+            if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline ||
+                (CgsNetManager.Instance.IsServer && !IsSpawned))
             {
                 var targetRotation = Value.GetPropertyValueInt(CardGameManager.Current.CardRotationIdentifier);
                 if (targetRotation == 0)
@@ -341,7 +342,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             var position = transform.position;
             var newGameObject = Instantiate(gameObject, position, transform.rotation,
-                transform.gameObject.FindInParents<Canvas>().transform);
+                CardGameManager.Instance.CardCanvas.transform);
             eventData.pointerPress = newGameObject;
             eventData.pointerDrag = newGameObject;
             var cardModel = newGameObject.GetOrAddComponent<CardModel>();
@@ -539,7 +540,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
 
             if (DropTarget != null && DropTarget.isBlocker && ParentCardZone != null)
-                ParentToCanvas(targetPosition);
+                ParentToCanvas();
 
             if (PlaceHolderCardZone != null)
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, targetPosition);
@@ -574,7 +575,7 @@ namespace Cgs.CardGameView.Multiplayer
                 || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
                 || (cardZone.type == CardZoneType.Area && PlaceHolder != null &&
                     PlaceHolder.parent != transform.parent))
-                ParentToCanvas(targetPosition);
+                ParentToCanvas();
         }
 
         public void UpdateParentCardZoneScrollRect()
@@ -584,51 +585,23 @@ namespace Cgs.CardGameView.Multiplayer
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
-        private void ParentToCanvas(Vector3 targetPosition)
+        private void ParentToCanvas()
         {
             Debug.Log($"ParentToCanvas {gameObject.name}");
-
-            var cardDropArea = GetComponent<CardDropArea>();
-            if (cardDropArea != null)
-                Destroy(cardDropArea);
 
             var previousParentCardZone = ParentCardZone;
             if (CurrentDragPhase == DragPhase.Drag)
                 previousParentCardZone.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
-            transform.SetParent(CardGameManager.Instance.CardCanvas.transform);
-            transform.SetAsLastSibling();
             if (previousParentCardZone != null)
                 previousParentCardZone.OnRemove(this);
-            Visibility.blocksRaycasts = false;
-            var rectTransform = (RectTransform) transform;
-            rectTransform.anchorMax = 0.5f * Vector2.one;
-            rectTransform.anchorMin = 0.5f * Vector2.one;
-            rectTransform.pivot = 0.5f * Vector2.one;
-            rectTransform.position = targetPosition;
-            rectTransform.localScale = Vector3.one;
 
-            if (IsSpawned && IsOwner)
-                DespawnWithoutDestroyServerRpc();
+            CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, PlaceHolderCardZone);
+
+            if (IsSpawned)
+                DespawnAndDestroyServerRpc();
+            else
+                Destroy(gameObject);
         }
-
-        [Rpc(SendTo.Server)]
-        private void DespawnWithoutDestroyServerRpc(RpcParams rpcParams = default)
-        {
-            Debug.Log($"DespawnWithoutDestroyServerRpc {gameObject.name}");
-
-            SendDestroyNonOwnerRpc(RpcTarget.Not(rpcParams.Receive.SenderClientId, RpcTargetUse.Temp));
-
-            MyNetworkObject.Despawn(false);
-        }
-
-        [Rpc(SendTo.SpecifiedInParams)]
-        // ReSharper disable once UnusedParameter.Local
-        private void SendDestroyNonOwnerRpc(RpcParams rpcParams)
-        {
-            Debug.Log($"SendDestroyRpc {gameObject.name}");
-            Destroy(gameObject);
-        }
-
 
         private IEnumerator MoveToPlaceHolder()
         {
