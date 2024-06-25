@@ -540,7 +540,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
 
             if (DropTarget != null && DropTarget.isBlocker && ParentCardZone != null)
-                ParentToCanvas();
+                ParentToCanvas(targetPosition);
 
             if (PlaceHolderCardZone != null)
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, targetPosition);
@@ -575,7 +575,7 @@ namespace Cgs.CardGameView.Multiplayer
                 || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
                 || (cardZone.type == CardZoneType.Area && PlaceHolder != null &&
                     PlaceHolder.parent != transform.parent))
-                ParentToCanvas();
+                ParentToCanvas(targetPosition);
         }
 
         public void UpdateParentCardZoneScrollRect()
@@ -585,15 +585,28 @@ namespace Cgs.CardGameView.Multiplayer
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
-        private void ParentToCanvas()
+        private void ParentToCanvas(Vector3 targetPosition)
         {
             Debug.Log($"ParentToCanvas {gameObject.name}");
+
+            var cardDropArea = GetComponent<CardDropArea>();
+            if (cardDropArea != null)
+                Destroy(cardDropArea);
 
             var previousParentCardZone = ParentCardZone;
             if (CurrentDragPhase == DragPhase.Drag)
                 previousParentCardZone.UpdateScrollRect(DragPhase.End, CurrentPointerEventData);
+            transform.SetParent(CardGameManager.Instance.CardCanvas.transform);
+            transform.SetAsLastSibling();
             if (previousParentCardZone != null)
                 previousParentCardZone.OnRemove(this);
+            Visibility.blocksRaycasts = false;
+            var rectTransform = (RectTransform) transform;
+            rectTransform.anchorMax = 0.5f * Vector2.one;
+            rectTransform.anchorMin = 0.5f * Vector2.one;
+            rectTransform.pivot = 0.5f * Vector2.one;
+            rectTransform.position = targetPosition;
+            rectTransform.localScale = Vector3.one;
 
             CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, PlaceHolderCardZone);
 
