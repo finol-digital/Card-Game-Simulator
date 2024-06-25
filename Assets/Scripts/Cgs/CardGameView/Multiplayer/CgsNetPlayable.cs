@@ -500,7 +500,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected void RequestChangeOwnership()
         {
-            Debug.Log($"CgsNetPlayable: RequestChangeOwnership for {gameObject.name}");
             ChangeOwnershipServerRpc();
         }
 
@@ -515,7 +514,6 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            Debug.Log($"CgsNetPlayable: Changing ownership for {gameObject.name} to {clientId}");
             MyNetworkObject.ChangeOwnership(clientId);
         }
 

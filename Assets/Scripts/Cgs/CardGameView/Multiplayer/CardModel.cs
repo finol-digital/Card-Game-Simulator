@@ -587,8 +587,6 @@ namespace Cgs.CardGameView.Multiplayer
         private void ParentToCanvas(Vector3 targetPosition)
         {
             Debug.Log($"ParentToCanvas {gameObject.name}");
-            if (IsSpawned && IsOwner)
-                MoveToClientServerRpc();
 
             var cardDropArea = GetComponent<CardDropArea>();
             if (cardDropArea != null)
@@ -608,28 +606,29 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.pivot = 0.5f * Vector2.one;
             rectTransform.position = targetPosition;
             rectTransform.localScale = Vector3.one;
+
+            if (IsSpawned && IsOwner)
+                DespawnWithoutDestroyServerRpc();
         }
 
-        [ServerRpc]
-        private void MoveToClientServerRpc(ServerRpcParams serverRpcParams = default)
+        [Rpc(SendTo.Server)]
+        private void DespawnWithoutDestroyServerRpc(RpcParams rpcParams = default)
         {
-            Debug.Log($"MoveToClientServerRpc {gameObject.name}");
-            foreach (var clientId in NetworkManager.ConnectedClientsIds)
-                if (clientId != 0 && clientId != serverRpcParams.Receive.SenderClientId)
-                    MyNetworkObject.NetworkHide(clientId);
-            MyNetworkObject.CheckObjectVisibility = _ => false;
+            Debug.Log($"DespawnWithoutDestroyServerRpc {gameObject.name}");
 
-            if (serverRpcParams.Receive.SenderClientId != 0)
-                HideInvisible();
+            SendDestroyNonOwnerRpc(RpcTarget.Not(rpcParams.Receive.SenderClientId, RpcTargetUse.Temp));
+
+            MyNetworkObject.Despawn(false);
         }
 
-        private void HideInvisible()
+        [Rpc(SendTo.SpecifiedInParams)]
+        // ReSharper disable once UnusedParameter.Local
+        private void SendDestroyNonOwnerRpc(RpcParams rpcParams)
         {
-            Debug.Log($"HideInvisible {gameObject.name}");
-            Visibility.blocksRaycasts = false;
-            Visibility.interactable = false;
-            Visibility.alpha = 0;
+            Debug.Log($"SendDestroyRpc {gameObject.name}");
+            Destroy(gameObject);
         }
+
 
         private IEnumerator MoveToPlaceHolder()
         {
