@@ -186,7 +186,8 @@ namespace Cgs.CardGameView.Multiplayer
             ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
-            if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline || (CgsNetManager.Instance.IsServer && !IsSpawned))
+            if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline ||
+                (CgsNetManager.Instance.IsServer && !IsSpawned))
             {
                 var targetRotation = Value.GetPropertyValueInt(CardGameManager.Current.CardRotationIdentifier);
                 if (targetRotation == 0)
@@ -341,7 +342,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             var position = transform.position;
             var newGameObject = Instantiate(gameObject, position, transform.rotation,
-                transform.gameObject.FindInParents<Canvas>().transform);
+                CardGameManager.Instance.CardCanvas.transform);
             eventData.pointerPress = newGameObject;
             eventData.pointerDrag = newGameObject;
             var cardModel = newGameObject.GetOrAddComponent<CardModel>();
@@ -376,23 +377,15 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardViewer.Instance != null)
                 CardViewer.Instance.HidePreview();
 
-            if (!IsSpawned)
-                ActOnDrag();
-            else
+            if (LacksOwnership)
                 RequestChangeOwnership();
-        }
-
-        protected override void OnDragPlayable(PointerEventData eventData)
-        {
-            if (!IsSpawned || IsOwner)
-                ActOnDrag();
             else
-                RequestChangeOwnership();
+                ActOnDrag();
         }
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (!IsSpawned || IsOwner)
+            if (!LacksOwnership)
                 ActOnDrag();
         }
 
@@ -511,11 +504,7 @@ namespace Cgs.CardGameView.Multiplayer
                 }
             }
 
-            var rectTransform = (RectTransform) transform;
-            rectTransform.position = gridPosition;
-
-            if (IsSpawned && IsOwner)
-                RequestUpdatePosition(rectTransform.localPosition);
+            base.SnapToGrid();
         }
 
         protected override void UpdatePosition()
@@ -528,8 +517,6 @@ namespace Cgs.CardGameView.Multiplayer
                 Input.GetMouseButtonUp(2))
                 return;
 #endif
-            if (PointerPositions.Count < 1 || PointerDragOffsets.Count < 1 || (IsSpawned && !IsOwner))
-                return;
 
             if (DropTarget == null && PlaceHolder == null && ParentCardZone == null)
                 HighlightMode = HighlightMode.Warn;
@@ -542,10 +529,12 @@ namespace Cgs.CardGameView.Multiplayer
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerPositions.Values.ToList());
             targetPosition +=
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
+
+            var rectTransform = (RectTransform) transform;
             if (ParentCardZone != null)
                 UpdateCardZonePosition(targetPosition);
             else if (!IsStatic)
-                transform.position = targetPosition;
+                rectTransform.position = targetPosition;
 
             if (IsStatic)
                 return;
@@ -556,14 +545,14 @@ namespace Cgs.CardGameView.Multiplayer
             if (PlaceHolderCardZone != null)
                 PlaceHolderCardZone.UpdateLayout(PlaceHolder, targetPosition);
 
-            if (IsSpawned)
-                RequestUpdatePosition(((RectTransform) transform).localPosition);
+            if (IsSpawned && IsOwner)
+                RequestUpdatePosition(rectTransform.localPosition);
         }
 
         private void UpdateCardZonePosition(Vector2 targetPosition)
         {
             var cardZone = ParentCardZone;
-            if (cardZone == null || (IsSpawned && !IsOwner))
+            if (cardZone == null || LacksOwnership)
                 return;
 
             if (!cardZone.DoesImmediatelyRelease && cardZone.type is CardZoneType.Vertical or CardZoneType.Horizontal)
@@ -589,10 +578,16 @@ namespace Cgs.CardGameView.Multiplayer
                 ParentToCanvas(targetPosition);
         }
 
+        public void UpdateParentCardZoneScrollRect()
+        {
+            var cardZone = ParentCardZone;
+            if (cardZone != null)
+                cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
+        }
+
         private void ParentToCanvas(Vector3 targetPosition)
         {
-            if (IsSpawned && IsOwner)
-                MoveToClientServerRpc();
+            Debug.Log($"ParentToCanvas {gameObject.name}");
 
             var cardDropArea = GetComponent<CardDropArea>();
             if (cardDropArea != null)
@@ -612,25 +607,13 @@ namespace Cgs.CardGameView.Multiplayer
             rectTransform.pivot = 0.5f * Vector2.one;
             rectTransform.position = targetPosition;
             rectTransform.localScale = Vector3.one;
-        }
 
-        [ServerRpc]
-        private void MoveToClientServerRpc(ServerRpcParams serverRpcParams = default)
-        {
-            foreach (var clientId in NetworkManager.ConnectedClientsIds)
-                if (clientId != 0 && clientId != serverRpcParams.Receive.SenderClientId)
-                    MyNetworkObject.NetworkHide(clientId);
-            MyNetworkObject.CheckObjectVisibility = _ => false;
+            CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, PlaceHolderCardZone);
 
-            if (serverRpcParams.Receive.SenderClientId != 0)
-                HideInvisible();
-        }
-
-        private void HideInvisible()
-        {
-            Visibility.blocksRaycasts = false;
-            Visibility.interactable = false;
-            Visibility.alpha = 0;
+            if (IsSpawned)
+                DespawnAndDestroyServerRpc();
+            else
+                Destroy(gameObject);
         }
 
         private IEnumerator MoveToPlaceHolder()
@@ -661,13 +644,6 @@ namespace Cgs.CardGameView.Multiplayer
 
             PlaceHolder = null;
             Visibility.blocksRaycasts = true;
-        }
-
-        public void UpdateParentCardZoneScrollRect()
-        {
-            var cardZone = ParentCardZone;
-            if (cardZone != null)
-                cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
         [PublicAPI]
@@ -716,6 +692,7 @@ namespace Cgs.CardGameView.Multiplayer
         [ServerRpc(RequireOwnership = false)]
         private void DespawnAndDestroyServerRpc()
         {
+            Debug.Log($"DespawnAndDestroyServerRpc {gameObject.name}");
             MyNetworkObject.Despawn();
             Destroy(gameObject);
         }
@@ -725,6 +702,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardGameManager.IsQuitting)
                 return;
 
+            Debug.Log($"Destroying {gameObject.name}");
             Value.UnregisterDisplay(this);
             if (PlaceHolder != null)
                 Destroy(PlaceHolder.gameObject);

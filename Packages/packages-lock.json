@@ -50,7 +50,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.28",
+      "version": "3.0.31",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -269,6 +269,16 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.unitynative.sharing": {
+      "version": "https://github.com/NicholasSheehan/Unity-Native-Sharing.git#v1.0.7",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.screencapture": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0"
+      },
+      "hash": "f8d2bcd1483073cd493e6def38a4994ac68c618b"
     },
     "com.yasirkula.nativefilepicker": {
       "version": "https://github.com/yasirkula/UnityNativeFilePicker.git",

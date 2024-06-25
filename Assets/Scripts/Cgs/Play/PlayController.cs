@@ -495,14 +495,15 @@ namespace Cgs.Play
 
         private void CreateZones()
         {
-            for(var i = 0; i < CardGameManager.Current.GamePlayZones.Count; i++)
-                CreateZone(CardGameManager.Current.GamePlayZones[i], i > 0 ? Quaternion.Euler(0, 0, 180) : Quaternion.identity);
+            foreach (var gamePlayZone in CardGameManager.Current.GamePlayZones)
+                CreateZone(gamePlayZone);
         }
 
-        private void CreateZone(GamePlayZone gamePlayZone, Quaternion rotation)
+        private void CreateZone(GamePlayZone gamePlayZone)
         {
             var position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
+            var rotation = Quaternion.Euler(0, 0, gamePlayZone.Rotation);
             var size = CardGameManager.PixelsPerInch *
                        new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
             var cardAction = gamePlayZone.DefaultCardAction ?? CardGameManager.Current.GameDefaultCardAction;

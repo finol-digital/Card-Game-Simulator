@@ -45,7 +45,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZone ParentCardZone => transform.parent != null ? transform.parent.GetComponent<CardZone>() : null;
 
-        protected bool LacksOwnership => NetworkManager.Singleton.IsConnectedClient && !IsOwner;
+        protected bool LacksOwnership => IsSpawned && !IsOwner;
 
         public NetworkObject MyNetworkObject => _networkObject ??= GetComponent<NetworkObject>();
 
@@ -237,7 +237,7 @@ namespace Cgs.CardGameView.Multiplayer
             else
                 HoldTime = 0;
 
-            if (IsSpawned && IsServer && !IsOwner)
+            if (IsServer && LacksOwnership)
             {
                 if (_previousPosition == Position)
                     _disownedTime += Time.deltaTime;
@@ -357,7 +357,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void OnBeginDragPlayable(PointerEventData eventData)
         {
-            if (IsSpawned)
+            if (LacksOwnership)
                 RequestChangeOwnership();
             else
                 ActOnDrag();
@@ -510,7 +510,7 @@ namespace Cgs.CardGameView.Multiplayer
             var clientId = serverRpcParams.Receive.SenderClientId;
             if (!NetworkManager.ConnectedClients.ContainsKey(clientId))
             {
-                Debug.Log($"CgsNetPlayable: Ignoring request to transfer authority for {gameObject.name}");
+                Debug.LogWarning($"CgsNetPlayable: Ignoring request to transfer authority for {gameObject.name}");
                 return;
             }
 
