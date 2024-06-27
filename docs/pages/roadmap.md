@@ -11,7 +11,7 @@ Fix Multiplayer Bug: Client move card to server desync
 - Bug-Fix: LAN connectivity
 - Bug-Fix: After a few taps it only untaps after rotating the card
 - Bug-Fix: When the Stack becomes 3, it clones the last 2 cards as a separate stack
-- Bug-Fix: iOS/iPhone/iPad crashes
+- Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Support for card back faces
 - Game-Play: Cards Action Panel, including draw many and green button for contextual default action
 
