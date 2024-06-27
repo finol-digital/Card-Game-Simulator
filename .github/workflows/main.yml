@@ -359,8 +359,8 @@ jobs:
           bundle install
           bundle exec fastlane ios release
 
-  deployToGooglePlay:
-    name: Deploy to the Google Play Store Testing
+  deployToGooglePlayTest:
+    name: Deploy to the Google Play Store Test Track
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action != 'published' && !(contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
