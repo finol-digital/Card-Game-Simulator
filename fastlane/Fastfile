@@ -4,8 +4,13 @@
 platform :android do
 
   desc "Upload a new Android version to the Google Play Store"
+  lane :playtest do
+    upload_to_play_store(track: 'open', release_status: 'completed', aab: "#{ENV['ANDROID_BUILD_FILE_PATH']}")
+  end
+
+  desc "Upload a new Android version to the Google Play Store"
   lane :playprod do
-    upload_to_play_store(aab: "#{ENV['ANDROID_BUILD_FILE_PATH']}")
+    upload_to_play_store(track: 'production', release_status: 'completed', aab: "#{ENV['ANDROID_BUILD_FILE_PATH']}")
   end
 
 end

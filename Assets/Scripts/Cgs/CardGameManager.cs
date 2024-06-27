@@ -673,7 +673,7 @@ namespace Cgs
             var targetZipFilePath = Path.Combine(UnityCardGame.GamesExportPath, zipFileName);
             Debug.Log("CGS Share::targetZipFilePath: " + targetZipFilePath);
             var exportGameZipUri = new Uri(targetZipFilePath);
-            Debug.Log("CGS Share::size: " + (new System.IO.FileInfo(targetZipFilePath).Length));
+            Debug.Log("CGS Share::size: " + new FileInfo(targetZipFilePath).Length);
 
 #if ENABLE_WINMD_SUPPORT
             var ExportGameErrorMessage = "ERROR: Failed to Export! ";

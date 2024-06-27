@@ -360,6 +360,38 @@ jobs:
           bundle exec fastlane ios release
 
   deployToGooglePlay:
+    name: Deploy to the Google Play Store Testing
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    if: github.event.action != 'published' && !(contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Download Android Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cgs-Android
+          path: build/Android
+      - name: Add Authentication
+        env:
+          GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
+          GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
+        run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+      - name: Upload to Google Play
+        env:
+          GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
+          ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
+          ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
+        uses: maierj/fastlane-action@v3.1.0
+        with:
+          lane: 'android playtest'
+
+  deployToGooglePlay:
     name: Deploy to the Google Play Store
     runs-on: ubuntu-latest
     needs: buildWithLinux
