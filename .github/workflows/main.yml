@@ -839,7 +839,7 @@ jobs:
           path: ${{ format('{0}\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Publish to the Microsoft Store
         if: false
-        uses: isaacrlevin/windows-store-action
+        uses: isaacrlevin/windows-store-action@1.0
         with:
           tenant-id: ${{ secrets.MICROSOFT_TENANT_ID }}
           client-id: ${{ secrets.MICROSOFT_CLIENT_ID }}
