@@ -278,7 +278,7 @@
         "com.unity.modules.screencapture": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0"
       },
-      "hash": "0b510575c013fc36326bdfb161c86f1076734591"
+      "hash": "13d913b0bdde3fd61f4286b02c10755ce3896752"
     },
     "com.yasirkula.nativefilepicker": {
       "version": "https://github.com/yasirkula/UnityNativeFilePicker.git",
