@@ -204,7 +204,7 @@ jobs:
           androidTargetSdkVersion: AndroidApiLevel33
       - name: Upload Build
         uses: actions/upload-artifact@v4
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
+        if: github.event_name == 'pull_request' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
         with:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
@@ -359,8 +359,44 @@ jobs:
           bundle install
           bundle exec fastlane ios release
 
-  deployToGooglePlay:
-    name: Deploy to the Google Play Store
+  deployToGooglePlayTest:
+    name: Deploy to the Google Play Store Test
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Download Android Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cgs-Android
+          path: build/Android
+      - name: Update Release Notes
+        env:
+          RELEASE_NOTES: ${{ github.event.pull_request.body }}
+        run: echo "$RELEASE_NOTES" > fastlane/metadata/android/en-US/changelogs/default.txt
+      - name: Add Authentication
+        env:
+          GOOGLE_PLAY_KEY_FILE: ${{ secrets.GOOGLE_PLAY_KEY_FILE }}
+          GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
+        run: echo "$GOOGLE_PLAY_KEY_FILE" > $GOOGLE_PLAY_KEY_FILE_PATH
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+          bundler-cache: true
+      - name: Upload to Google Play
+        env:
+          GOOGLE_PLAY_KEY_FILE_PATH: ${{ format('{0}/fastlane/api-finoldigital.json', github.workspace) }}
+          ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
+          ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
+        uses: maierj/fastlane-action@v3.1.0
+        with:
+          lane: 'android playtest'
+
+  deployToGooglePlayProduction:
+    name: Deploy to the Google Play Store Production
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
@@ -733,6 +769,7 @@ jobs:
           replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
       - name: Add Package.StoreAssociation.xml to .vcxproj
 # Associate with App Store
+        if: false
         uses: mingjun97/file-regex-replace@v1
         with:
           regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
@@ -740,6 +777,7 @@ jobs:
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
       - name: Add Package.StoreAssociation.xml to .vcxproj.filters
 # Associate with App Store
+        if: false
         uses: mingjun97/file-regex-replace@v1
         with:
           regex: '</ItemGroup>'
@@ -748,6 +786,7 @@ jobs:
           include: 'Card Game Simulator\.vcxproj\.filters'
       - name: Update the Package.appxmanifest
 # Associate with App Store
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -798,7 +837,17 @@ jobs:
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
           path: ${{ format('{0}\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+      - name: Publish to the Microsoft Store
+        if: false
+        uses: isaacrlevin/windows-store-action@1.0
+        with:
+          tenant-id: ${{ secrets.MICROSOFT_TENANT_ID }}
+          client-id: ${{ secrets.MICROSOFT_CLIENT_ID }}
+          client-secret: ${{ secrets.MICROSOFT_KEY }}
+          app-id: 9N96N5S4W3J0
+          package-path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -824,7 +873,7 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [buildWithWindows, deployToAppStore, deployToGooglePlay, deployToFirebase, deployToMacAppStore, deployToSteam, deployToMicrosoftStore]
+    needs: [buildWithWindows, deployToAppStore, deployToGooglePlayProduction, deployToFirebase, deployToMacAppStore, deployToSteam, deployToMicrosoftStore]
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository

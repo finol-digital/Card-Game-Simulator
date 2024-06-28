@@ -271,14 +271,14 @@
       }
     },
     "com.unitynative.sharing": {
-      "version": "https://github.com/NicholasSheehan/Unity-Native-Sharing.git#v1.0.7",
+      "version": "https://github.com/davidmfinol/Unity-Native-Sharing.git",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.unity.modules.screencapture": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0"
       },
-      "hash": "f8d2bcd1483073cd493e6def38a4994ac68c618b"
+      "hash": "0b510575c013fc36326bdfb161c86f1076734591"
     },
     "com.yasirkula.nativefilepicker": {
       "version": "https://github.com/yasirkula/UnityNativeFilePicker.git",

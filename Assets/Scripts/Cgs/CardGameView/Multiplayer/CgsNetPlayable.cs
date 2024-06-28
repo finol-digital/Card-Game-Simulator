@@ -593,4 +593,5 @@ namespace Cgs.CardGameView.Multiplayer
             Destroy(gameObject);
         }
     }
+
 }
