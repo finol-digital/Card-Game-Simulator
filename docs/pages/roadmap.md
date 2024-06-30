@@ -11,10 +11,10 @@ Fix Multiplayer Bug: Client move card to server desync
 - Bug-Fix: Android/iOS/iPad crashes
 - Bug-Fix: LAN connectivity
 - Bug-Fix: After a few taps it only untaps after rotating the card
-- Game-Play: Support for card back faces
-- Game-Play: Cards Action Panel, including draw many and green button for contextual default action
 
 ## Backlog - Priority 1
+- Game-Play: Support for card back faces
+- Game-Play: Cards Action Panel, including draw many and green button for contextual default action
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Display values on Card in Play Area
