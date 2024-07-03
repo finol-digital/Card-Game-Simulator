@@ -255,6 +255,7 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                CgsNetManager.Instance.Transport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
                 NetworkManager.Singleton.StartHost();
                 discovery.StartServer();
             }
@@ -305,9 +306,18 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
-                    CgsNetManager.Instance.StartJoin(_selectedServer, discoveryResponse.Port);
+                {
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, discoveryResponse.Port,
+                        "0.0.0.0");
+                    NetworkManager.Singleton.StartClient();
+                }
                 else if (Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute))
-                    CgsNetManager.Instance.StartJoin(_selectedServer);
+                {
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, 7777, "0.0.0.0");
+                    NetworkManager.Singleton.StartClient();
+                }
                 else
                 {
                     Debug.LogError(InvalidServerErrorMessage);

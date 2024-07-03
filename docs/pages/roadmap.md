@@ -4,13 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.111
-Fix Multiplayer Bug: Client move card to server desync
-
-## Active Sprint
+## What's New - v1.112
 - Bug-Fix: Android/iOS/iPad crashes
+- Bug-Fix: Rotation/tap on client
 - Bug-Fix: LAN connectivity
-- Bug-Fix: After a few taps it only untaps after rotating the card
 
 ## Backlog - Priority 1
 - Game-Play: Support for card back faces
