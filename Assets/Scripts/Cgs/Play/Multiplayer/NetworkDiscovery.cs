@@ -1,12 +1,7 @@
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -25,12 +20,13 @@ namespace Cgs.Play.Multiplayer
             Response = 1,
         }
 
-        private UdpClient _client;
+        UdpClient m_Client;
 
-        [SerializeField] private ushort port = 47777;
+        [SerializeField] ushort m_Port = 47777;
 
         // This is long because unity inspector does not like ulong.
-        [SerializeField] private long uniqueApplicationId;
+        [SerializeField]
+        long m_UniqueApplicationId;
 
         /// <summary>
         /// Gets a value indicating whether the discovery is running.
@@ -40,13 +36,11 @@ namespace Cgs.Play.Multiplayer
         /// <summary>
         /// Gets whether the discovery is in server mode.
         /// </summary>
-        [PublicAPI]
         public bool IsServer { get; private set; }
 
         /// <summary>
         /// Gets whether the discovery is in client mode.
         /// </summary>
-        [PublicAPI]
         public bool IsClient { get; private set; }
 
         public void OnApplicationQuit()
@@ -54,38 +48,42 @@ namespace Cgs.Play.Multiplayer
             StopDiscovery();
         }
 
-        private void OnValidate()
+        void OnValidate()
         {
-            if (uniqueApplicationId != 0) return;
-            var value1 = (long) Random.Range(int.MinValue, int.MaxValue);
-            var value2 = (long) Random.Range(int.MinValue, int.MaxValue);
-            uniqueApplicationId = value1 + (value2 << 32);
+            if (m_UniqueApplicationId == 0)
+            {
+                var value1 = (long) Random.Range(int.MinValue, int.MaxValue);
+                var value2 = (long) Random.Range(int.MinValue, int.MaxValue);
+                m_UniqueApplicationId = value1 + (value2 << 32);
+            }
         }
 
         public void ClientBroadcast(TBroadCast broadCast)
         {
             if (!IsClient)
             {
-                throw new InvalidOperationException(
-                    "Cannot send client broadcast while not running in client mode. Call StartClient first.");
+                throw new InvalidOperationException("Cannot send client broadcast while not running in client mode. Call StartClient first.");
             }
 
-            var endPoint = new IPEndPoint(IPAddress.Broadcast, port);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Broadcast, m_Port);
 
-            using var writer = new FastBufferWriter(1024, Allocator.Temp, 1024 * 64);
-            WriteHeader(writer, MessageType.BroadCast);
-
-            writer.WriteNetworkSerializable(broadCast);
-            var data = writer.ToArray();
-
-            try
+            using (FastBufferWriter writer = new FastBufferWriter(1024, Allocator.Temp, 1024 * 64))
             {
-                // This works because PooledBitStream.Get resets the position to 0 so the array segment will always start from 0.
-                _client.SendAsync(data, data.Length, endPoint);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
+
+                WriteHeader(writer, MessageType.BroadCast);
+
+                writer.WriteNetworkSerializable(broadCast);
+                var data = writer.ToArray();
+
+                try
+                {
+                    // This works because PooledBitStream.Get resets the position to 0 so the array segment will always start from 0.
+                    m_Client.SendAsync(data, data.Length, endPoint);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
             }
         }
 
@@ -111,19 +109,19 @@ namespace Cgs.Play.Multiplayer
             IsServer = false;
             IsRunning = false;
 
-            if (_client == null)
-                return;
-
-            try
+            if (m_Client != null)
             {
-                _client.Close();
-            }
-            catch (Exception)
-            {
-                // We don't care about socket exception here. Socket will always be closed after this.
-            }
+                try
+                {
+                    m_Client.Close();
+                }
+                catch (Exception)
+                {
+                    // We don't care about socket exception here. Socket will always be closed after this.
+                }
 
-            _client = null;
+                m_Client = null;
+            }
         }
 
         /// <summary>
@@ -142,7 +140,7 @@ namespace Cgs.Play.Multiplayer
         /// <param name="response">The value of the response</param>
         protected abstract void ResponseReceived(IPEndPoint sender, TResponse response);
 
-        private void StartDiscovery(bool isServer)
+        void StartDiscovery(bool isServer)
         {
             StopDiscovery();
 
@@ -150,16 +148,16 @@ namespace Cgs.Play.Multiplayer
             IsClient = !isServer;
 
             // If we are not a server we use the 0 port (let udp client assign a free port to us)
-            var localPort = isServer ? this.port : 0;
+            var port = isServer ? m_Port : 0;
 
-            _client = new UdpClient(localPort) {EnableBroadcast = true, MulticastLoopback = false};
+            m_Client = new UdpClient(port) {EnableBroadcast = true, MulticastLoopback = false};
 
             _ = ListenAsync(isServer ? ReceiveBroadcastAsync : new Func<Task>(ReceiveResponseAsync));
 
             IsRunning = true;
         }
 
-        private static async Task ListenAsync(Func<Task> onReceiveTask)
+        async Task ListenAsync(Func<Task> onReceiveTask)
         {
             while (true)
             {
@@ -172,24 +170,22 @@ namespace Cgs.Play.Multiplayer
                     // socket has been closed
                     break;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Debug.Log(e);
-                    // will try again later
                 }
             }
         }
 
-        private async Task ReceiveResponseAsync()
+        async Task ReceiveResponseAsync()
         {
-            var udpReceiveResult = await _client.ReceiveAsync();
+            UdpReceiveResult udpReceiveResult = await m_Client.ReceiveAsync();
 
             var segment = new ArraySegment<byte>(udpReceiveResult.Buffer, 0, udpReceiveResult.Buffer.Length);
-            using var reader = new FastBufferReader(segment, Allocator.Temp);
+            using var reader = new FastBufferReader(segment, Allocator.Persistent);
 
             try
             {
-                if (!ReadAndCheckHeader(reader, MessageType.Response))
+                if (ReadAndCheckHeader(reader, MessageType.Response) == false)
                 {
                     return;
                 }
@@ -203,17 +199,16 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private async Task ReceiveBroadcastAsync()
+        async Task ReceiveBroadcastAsync()
         {
-            Debug.LogWarning("ReceiveBroadcastAsync");
-            var udpReceiveResult = await _client.ReceiveAsync();
+            UdpReceiveResult udpReceiveResult = await m_Client.ReceiveAsync();
 
             var segment = new ArraySegment<byte>(udpReceiveResult.Buffer, 0, udpReceiveResult.Buffer.Length);
-            using var reader = new FastBufferReader(segment, Allocator.Temp);
+            using var reader = new FastBufferReader(segment, Allocator.Persistent);
 
             try
             {
-                if (!ReadAndCheckHeader(reader, MessageType.BroadCast))
+                if (ReadAndCheckHeader(reader, MessageType.BroadCast) == false)
                 {
                     return;
                 }
@@ -222,13 +217,13 @@ namespace Cgs.Play.Multiplayer
 
                 if (ProcessBroadcast(udpReceiveResult.RemoteEndPoint, receivedBroadcast, out TResponse response))
                 {
-                    using var writer = new FastBufferWriter(1024, Allocator.Temp, 1024 * 64);
+                    using var writer = new FastBufferWriter(1024, Allocator.Persistent, 1024 * 64);
                     WriteHeader(writer, MessageType.Response);
 
                     writer.WriteNetworkSerializable(response);
                     var data = writer.ToArray();
 
-                    await _client.SendAsync(data, data.Length, udpReceiveResult.RemoteEndPoint);
+                    await m_Client.SendAsync(data, data.Length, udpReceiveResult.RemoteEndPoint);
                 }
             }
             catch (Exception e)
@@ -240,7 +235,7 @@ namespace Cgs.Play.Multiplayer
         private void WriteHeader(FastBufferWriter writer, MessageType messageType)
         {
             // Serialize unique application id to make sure packet received is from same application.
-            writer.WriteValueSafe(uniqueApplicationId);
+            writer.WriteValueSafe(m_UniqueApplicationId);
 
             // Write a flag indicating whether this is a broadcast
             writer.WriteByteSafe((byte) messageType);
@@ -249,13 +244,18 @@ namespace Cgs.Play.Multiplayer
         private bool ReadAndCheckHeader(FastBufferReader reader, MessageType expectedType)
         {
             reader.ReadValueSafe(out long receivedApplicationId);
-            if (receivedApplicationId != uniqueApplicationId)
+            if (receivedApplicationId != m_UniqueApplicationId)
             {
                 return false;
             }
 
-            reader.ReadByteSafe(out var messageType);
-            return messageType == (byte) expectedType;
+            reader.ReadByteSafe(out byte messageType);
+            if (messageType != (byte) expectedType)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Cgs.Play.Multiplayer
         public string RoomIdIpLabel => "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
         public string RoomIdIpPlaceholder => "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
 
-        private const float SecondsPerRefresh = 15;
+        private const float SecondsPerRefresh = 5;
 
         public ToggleGroup lanToggleGroup;
         public Toggle lanToggle;
@@ -85,7 +85,7 @@ namespace Cgs.Play.Multiplayer
             StartCoroutine(SignInAnonymouslyCoroutine());
         }
 
-        private static IEnumerator SignInAnonymouslyCoroutine()
+        private IEnumerator SignInAnonymouslyCoroutine()
         {
             yield return null;
 
@@ -96,12 +96,14 @@ namespace Cgs.Play.Multiplayer
             while (!signInTask.IsCompleted)
                 yield return null;
 
-            if (!signInTask.IsFaulted)
-                yield break;
+            if (signInTask.IsFaulted)
+            {
+                Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
+                                                        signInTask.Exception?.Message);
+            }
 
-            Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-            CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
-                                                    signInTask.Exception?.Message);
+            _secondsSinceRefresh = SecondsPerRefresh;
         }
 
         private void Update()
@@ -114,6 +116,8 @@ namespace Cgs.Play.Multiplayer
 #pragma warning disable CS4014
                     RefreshLobbies();
 #pragma warning restore CS4014
+                else if (IsLanConnectionSource)
+                    CgsNetManager.Instance.Discovery.ClientBroadcast(new DiscoveryBroadcastData());
             }
 
             if (_shouldRedisplay)
