@@ -21,7 +21,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {
-    [RequireComponent(typeof(Modal), typeof(CgsNetDiscovery))]
+    [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
         public const string ShareWarningMessage =
@@ -37,7 +37,6 @@ namespace Cgs.Play.Multiplayer
 
         private const float SecondsPerRefresh = 15;
 
-        public CgsNetDiscovery discovery;
         public ToggleGroup lanToggleGroup;
         public Toggle lanToggle;
         public Toggle internetToggle;
@@ -151,11 +150,11 @@ namespace Cgs.Play.Multiplayer
             transform.SetAsLastSibling();
 
             _selectedServer = string.Empty;
-            if (discovery.IsRunning)
-                discovery.StopDiscovery();
+            if (CgsNetManager.Instance.Discovery.IsRunning)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
             DiscoveredServers.Clear();
-            discovery.StartClient();
-            discovery.OnServerFound = OnServerFound;
+            CgsNetManager.Instance.Discovery.StartClient();
+            CgsNetManager.Instance.Discovery.OnServerFound = OnServerFound;
 
             Redisplay();
         }
@@ -253,8 +252,9 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
                 CgsNetManager.Instance.Transport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
                 NetworkManager.Singleton.StartHost();
-                discovery.StopDiscovery();
-                discovery.StartServer();
+                if (CgsNetManager.Instance.Discovery.IsRunning)
+                    CgsNetManager.Instance.Discovery.StopDiscovery();
+                CgsNetManager.Instance.Discovery.StartServer();
             }
         }
 
@@ -328,8 +328,8 @@ namespace Cgs.Play.Multiplayer
 
         public void Hide()
         {
-            if (discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                discovery.StopDiscovery();
+            if (CgsNetManager.Instance.Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
 
             Menu.Hide();
         }
@@ -337,8 +337,8 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Close()
         {
-            if (discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                discovery.StopDiscovery();
+            if (CgsNetManager.Instance.Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
 
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }

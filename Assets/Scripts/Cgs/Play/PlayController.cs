@@ -645,12 +645,14 @@ namespace Cgs.Play
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }
 
-        private void StopNetworking()
+        private static void StopNetworking()
         {
-            if (Lobby != null && Lobby.discovery != null)
-                Lobby.discovery.StopDiscovery();
-            if (CgsNetManager.Instance != null)
-                CgsNetManager.Instance.Stop();
+            if (CgsNetManager.Instance == null)
+                return;
+
+            if (CgsNetManager.Instance.Discovery != null)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
+            CgsNetManager.Instance.Stop();
         }
 
         private void OnDisable()

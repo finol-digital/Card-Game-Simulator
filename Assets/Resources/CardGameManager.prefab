@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3697196322200913119}
   - component: {fileID: 4526732702672025491}
   - component: {fileID: 4788133414692729551}
+  - component: {fileID: 6596118142642138921}
   m_Layer: 0
   m_Name: CardGameManager
   m_TagString: CardGameManager
@@ -186,6 +187,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unityTransport: {fileID: 4526732702672025491}
   relayUnityTransport: {fileID: 4511551359358340090}
+--- !u!114 &6596118142642138921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565440365293990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e520ffee43e728a48b91256d2d702235, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  port: 47777
+  uniqueApplicationId: -8762320876133685614
 --- !u!1 &8839072711635395849
 GameObject:
   m_ObjectHideFlags: 0
