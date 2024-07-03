@@ -4,6 +4,7 @@
 
 using System.Net;
 using Unity.Netcode;
+using UnityEngine;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -41,11 +42,12 @@ namespace Cgs.Play.Multiplayer
         protected override bool ProcessBroadcast(IPEndPoint sender, DiscoveryBroadcastData broadCast,
             out DiscoveryResponseData response)
         {
-            response = new DiscoveryResponseData()
+            response = new DiscoveryResponseData
             {
                 ServerName = CardGameManager.Current.Name,
                 Port = CgsNetManager.Instance.Transport.ConnectionData.Port
             };
+            Debug.Log($"Broadcast: {response}");
             return true;
         }
 

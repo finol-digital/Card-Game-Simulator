@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
@@ -149,13 +150,12 @@ namespace Cgs.Play.Multiplayer
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
 
-            DiscoveredServers.Clear();
             _selectedServer = string.Empty;
-
+            if (discovery.IsRunning)
+                discovery.StopDiscovery();
+            DiscoveredServers.Clear();
             discovery.StartClient();
             discovery.OnServerFound = OnServerFound;
-
-            RefreshLobbies();
 
             Redisplay();
         }
@@ -174,7 +174,7 @@ namespace Cgs.Play.Multiplayer
             _shouldRedisplay = false;
         }
 
-        private async void RefreshLobbies()
+        private async Task RefreshLobbies()
         {
             var queryLobbiesOptions = new QueryLobbiesOptions
             {
@@ -227,6 +227,7 @@ namespace Cgs.Play.Multiplayer
 
         private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
         {
+            Debug.Log($"OnServerFound {sender} {response}");
             DiscoveredServers[sender.Address.ToString()] = response;
             _shouldRedisplay = true;
         }
