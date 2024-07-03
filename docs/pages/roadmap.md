@@ -5,11 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.112
-- Bug-Fix: Android/iOS/iPad crashes
 - Bug-Fix: Rotation/tap on client
 - Bug-Fix: LAN connectivity
 
 ## Backlog - Priority 1
+- Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Support for card back faces
 - Game-Play: Cards Action Panel, including draw many and green button for contextual default action
 - Game-Play: Name-Plates indicating player seats

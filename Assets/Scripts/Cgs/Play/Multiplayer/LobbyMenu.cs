@@ -109,10 +109,10 @@ namespace Cgs.Play.Multiplayer
         private void Update()
         {
             _secondsSinceRefresh += Time.deltaTime;
-            if (IsInternetConnectionSource && _secondsSinceRefresh > SecondsPerRefresh)
+            if (_secondsSinceRefresh > SecondsPerRefresh)
             {
                 _secondsSinceRefresh = 0;
-                if (AuthenticationService.Instance.IsSignedIn)
+                if (IsInternetConnectionSource && AuthenticationService.Instance.IsSignedIn)
 #pragma warning disable CS4014
                     RefreshLobbies();
 #pragma warning restore CS4014
