@@ -647,12 +647,8 @@ namespace Cgs.Play
 
         private static void StopNetworking()
         {
-            if (CgsNetManager.Instance == null)
-                return;
-
-            if (CgsNetManager.Instance.Discovery != null)
-                CgsNetManager.Instance.Discovery.StopDiscovery();
-            CgsNetManager.Instance.Stop();
+            if (CgsNetManager.Instance != null)
+                CgsNetManager.Instance.Stop();
         }
 
         private void OnDisable()

@@ -205,6 +205,7 @@ namespace Cgs.Play.Multiplayer
 
         private async Task ReceiveBroadcastAsync()
         {
+            Debug.LogWarning("ReceiveBroadcastAsync");
             var udpReceiveResult = await _client.ReceiveAsync();
 
             var segment = new ArraySegment<byte>(udpReceiveResult.Buffer, 0, udpReceiveResult.Buffer.Length);

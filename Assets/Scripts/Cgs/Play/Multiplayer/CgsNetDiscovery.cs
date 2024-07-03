@@ -47,7 +47,7 @@ namespace Cgs.Play.Multiplayer
                 ServerName = CardGameManager.Current.Name,
                 Port = CgsNetManager.Instance.Transport.ConnectionData.Port
             };
-            Debug.Log($"Broadcast: {response}");
+            Debug.LogWarning($"Broadcast: {response}");
             return true;
         }
 

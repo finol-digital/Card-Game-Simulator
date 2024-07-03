@@ -433,6 +433,8 @@ namespace Cgs.Play.Multiplayer
 
         public void Stop()
         {
+            if (Discovery.IsRunning)
+                Discovery.StopDiscovery();
             Shutdown();
             CurrentLobby = null;
             StopAllCoroutines();
