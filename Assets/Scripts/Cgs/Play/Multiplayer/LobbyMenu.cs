@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using Cgs.Menu;
 using Cgs.UI;
 using JetBrains.Annotations;
@@ -80,35 +79,29 @@ namespace Cgs.Play.Multiplayer
 
         private bool _shouldRedisplay;
 
-        private IEnumerator Start()
+        private void Start()
         {
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            StartCoroutine(SignInAnonymouslyCoroutine());
+        }
 
+        private static IEnumerator SignInAnonymouslyCoroutine()
+        {
             yield return null;
 
-            if (!AuthenticationService.Instance.IsSignedIn)
-            {
-                var signInTask = CgsNetManager.SignInAnonymouslyAsync();
-                while (!signInTask.IsCompleted)
-                    yield return null;
-
-                if (signInTask.IsFaulted)
-                {
-                    Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                    CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
-                                                            signInTask.Exception?.Message);
-                    yield break;
-                }
-            }
-
-            if (!IsInternetConnectionSource)
+            if (AuthenticationService.Instance.IsSignedIn)
                 yield break;
 
-            var refreshLobbiesTask = RefreshLobbies();
-            while (!refreshLobbiesTask.IsCompleted)
+            var signInTask = CgsNetManager.SignInAnonymouslyAsync();
+            while (!signInTask.IsCompleted)
                 yield return null;
 
-            Debug.Log($"[CgsNet LobbyMenu] Start Lobbies: {Lobbies.Count}");
+            if (!signInTask.IsFaulted)
+                yield break;
+
+            Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
+            CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
+                                                    signInTask.Exception?.Message);
         }
 
         private void Update()
@@ -162,6 +155,8 @@ namespace Cgs.Play.Multiplayer
             discovery.StartClient();
             discovery.OnServerFound = OnServerFound;
 
+            RefreshLobbies();
+
             Redisplay();
         }
 
@@ -179,7 +174,7 @@ namespace Cgs.Play.Multiplayer
             _shouldRedisplay = false;
         }
 
-        private async Task RefreshLobbies()
+        private async void RefreshLobbies()
         {
             var queryLobbiesOptions = new QueryLobbiesOptions
             {
@@ -257,6 +252,7 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
                 CgsNetManager.Instance.Transport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
                 NetworkManager.Singleton.StartHost();
+                discovery.StopDiscovery();
                 discovery.StartServer();
             }
         }
