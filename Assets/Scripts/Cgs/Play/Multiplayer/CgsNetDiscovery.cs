@@ -47,13 +47,11 @@ namespace Cgs.Play.Multiplayer
                 ServerName = CardGameManager.Current.Name,
                 Port = CgsNetManager.Instance.Transport.ConnectionData.Port
             };
-            Debug.LogWarning($"Broadcast: {response}");
             return true;
         }
 
         protected override void ResponseReceived(IPEndPoint sender, DiscoveryResponseData response)
         {
-            Debug.LogWarning($"ResponseReceived: {response}");
             OnServerFound(sender, response);
         }
     }

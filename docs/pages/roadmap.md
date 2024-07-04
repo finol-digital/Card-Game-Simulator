@@ -11,6 +11,7 @@ permalink: roadmap.html
 ## Backlog - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Support for card back faces
+- Game-Play: Animation for card actions
 - Game-Play: Cards Action Panel, including draw many and green button for contextual default action
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
