@@ -103,22 +103,14 @@ namespace Cgs.Play.Multiplayer
                                                         signInTask.Exception?.Message);
             }
 
-            _secondsSinceRefresh = SecondsPerRefresh;
+            Refresh();
         }
 
         private void Update()
         {
             _secondsSinceRefresh += Time.deltaTime;
             if (_secondsSinceRefresh > SecondsPerRefresh)
-            {
-                _secondsSinceRefresh = 0;
-                if (IsInternetConnectionSource && AuthenticationService.Instance.IsSignedIn)
-#pragma warning disable CS4014
-                    RefreshLobbies();
-#pragma warning restore CS4014
-                else if (IsLanConnectionSource)
-                    CgsNetManager.Instance.Discovery.ClientBroadcast(new DiscoveryBroadcastData());
-            }
+                Refresh();
 
             if (_shouldRedisplay)
                 Redisplay();
@@ -163,18 +155,24 @@ namespace Cgs.Play.Multiplayer
             Redisplay();
         }
 
-        private void Redisplay()
+        private void Refresh()
         {
-            if (IsLanConnectionSource)
-                Rebuild(DiscoveredServers, SelectServer, _selectedServer);
+            if (IsInternetConnectionSource && AuthenticationService.Instance.IsSignedIn)
+            {
+#pragma warning disable CS4014
+                RefreshLobbies();
+#pragma warning restore CS4014
+                Debug.Log("LobbyMenu Refreshed Lobbies");
+            }
+            else if (IsLanConnectionSource)
+            {
+                CgsNetManager.Instance.Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+                Debug.Log("LobbyMenu Refreshed Discovery");
+            }
             else
-                Rebuild(Lobbies, SelectServer, _selectedServer);
+                Debug.Log("LobbyMenu Refreshed None");
 
-            joinButton.interactable =
-                !string.IsNullOrEmpty(_selectedServer) &&
-                Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
-
-            _shouldRedisplay = false;
+            _secondsSinceRefresh = 0;
         }
 
         private async Task RefreshLobbies()
@@ -233,6 +231,20 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"OnServerFound {sender} {response}");
             DiscoveredServers[sender.Address.ToString()] = response;
             _shouldRedisplay = true;
+        }
+
+        private void Redisplay()
+        {
+            if (IsLanConnectionSource)
+                Rebuild(DiscoveredServers, SelectServer, _selectedServer);
+            else
+                Rebuild(Lobbies, SelectServer, _selectedServer);
+
+            joinButton.interactable =
+                !string.IsNullOrEmpty(_selectedServer) &&
+                Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
+
+            _shouldRedisplay = false;
         }
 
         [UsedImplicitly]

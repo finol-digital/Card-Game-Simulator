@@ -53,6 +53,7 @@ namespace Cgs.Play.Multiplayer
 
         protected override void ResponseReceived(IPEndPoint sender, DiscoveryResponseData response)
         {
+            Debug.LogWarning($"ResponseReceived: {response}");
             OnServerFound(sender, response);
         }
     }
