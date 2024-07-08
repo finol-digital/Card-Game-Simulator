@@ -74,34 +74,36 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Vector2 Position
         {
-            get => IsSpawned ? _positionNetworkVariable.Value : _position;
+            get => IsSpawned ? _positionNetworkVariable.Value : transform.localPosition;
             set
             {
-                _position = value;
-                if (!transform.localPosition.Equals(_position))
-                    transform.localPosition = _position;
-                if (IsSpawned)
-                    _positionNetworkVariable.Value = _position;
+                transform.localPosition = value;
+                if (!IsSpawned)
+                    return;
+                if (IsServer)
+                    _positionNetworkVariable.Value = transform.localPosition;
+                else
+                    RequestUpdatePosition(transform.localPosition);
             }
         }
 
-        private Vector2 _position = Vector2.zero;
         private NetworkVariable<Vector2> _positionNetworkVariable;
 
         public Quaternion Rotation
         {
-            get => IsSpawned ? _rotationNetworkVariable.Value : _rotation;
+            get => IsSpawned ? _rotationNetworkVariable.Value : transform.localRotation;
             set
             {
-                _rotation = value;
-                if (!transform.localRotation.Equals(_rotation))
-                    transform.localRotation = _rotation;
-                if (IsSpawned)
-                    _rotationNetworkVariable.Value = _rotation;
+                transform.localRotation = value;
+                if (!IsSpawned)
+                    return;
+                if (IsServer)
+                    _rotationNetworkVariable.Value = transform.localRotation;
+                else
+                    RequestUpdateRotation(transform.localRotation);
             }
         }
 
-        private Quaternion _rotation = Quaternion.identity;
         private NetworkVariable<Quaternion> _rotationNetworkVariable;
 
         public PointerEventData CurrentPointerEventData { get; protected set; }
@@ -186,14 +188,14 @@ namespace Cgs.CardGameView.Multiplayer
             if (transform.parent == null)
                 ParentTo(Container == null ? PlayController.Instance.playAreaCardZone.transform : Container.transform);
 
-            if (_positionNetworkVariable.Value != _position && !Vector2.zero.Equals(_position))
-                _positionNetworkVariable.Value = _position;
+            if (IsServer && !Vector2.zero.Equals(transform.localPosition))
+                _positionNetworkVariable.Value = transform.localPosition;
 
             if (!Vector2.zero.Equals(Position))
                 transform.localPosition = Position;
 
-            if (_rotationNetworkVariable.Value != _rotation && !Quaternion.identity.Equals(_rotation))
-                _rotationNetworkVariable.Value = _rotation;
+            if (IsServer && !Quaternion.identity.Equals(transform.localRotation))
+                _rotationNetworkVariable.Value = transform.localRotation;
 
             if (!Quaternion.identity.Equals(Rotation))
                 transform.localRotation = Rotation;
@@ -531,9 +533,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
-            _position = newValue;
-            if (!IsOwner)
-                transform.localPosition = newValue;
+            transform.localPosition = newValue;
         }
 
         private void RequestUpdateRotation(Quaternion rotation)
@@ -550,9 +550,7 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeRotation(Quaternion oldValue, Quaternion newValue)
         {
-            _rotation = newValue;
-            if (!IsOwner)
-                transform.localRotation = newValue;
+            transform.localRotation = newValue;
         }
 
         [ServerRpc]
