@@ -216,10 +216,10 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     tokens.RemoveAt(0);
                 }
 
-                if (tokens.Count > 0 && line.Contains("(") && line.EndsWith(")"))
+                if (tokens.Count > 0 && line.Contains(" (") && line.EndsWith(")"))
                 {
-                    var indexOfParens = line.LastIndexOf("(", StringComparison.Ordinal);
-                    var inParens = line.Substring(indexOfParens + 1, line.Length - (indexOfParens + 2));
+                    var indexOfParens = line.LastIndexOf(" (", StringComparison.Ordinal);
+                    var inParens = line.Substring(indexOfParens + 2, line.Length - (indexOfParens + 3));
                     if (((UnityCardGame) SourceGame).Sets.ContainsKey(inParens))
                     {
                         cardSet = inParens;
