@@ -216,14 +216,16 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     tokens.RemoveAt(0);
                 }
 
-                if (tokens.Count > 0 && tokens[^1].StartsWith("(") &&
-                    tokens[^1].EndsWith(")"))
+                if (tokens.Count > 0 && line.Contains("(") && line.EndsWith(")"))
                 {
-                    var inParens = tokens[^1].Substring(1, tokens[^1].Length - 2);
+                    var indexOfParens = line.LastIndexOf("(", StringComparison.Ordinal);
+                    var inParens = line.Substring(indexOfParens + 1, line.Length - (indexOfParens + 2));
                     if (((UnityCardGame) SourceGame).Sets.ContainsKey(inParens))
                     {
                         cardSet = inParens;
-                        tokens.RemoveAt(tokens.Count - 1);
+                        var cardSetTokenCount = cardSet.Count(f => f == ' ') + 1;
+                        for (var i = 0; i < cardSetTokenCount; i++)
+                            tokens.RemoveAt(tokens.Count - 1);
                     }
                 }
 
