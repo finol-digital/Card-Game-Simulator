@@ -24,7 +24,7 @@ jobs:
           VERSION: v${{ steps.versioning.outputs.version }}
         run: |
           RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
-          export ANNOUNCEMENT="Released CGS $VERSION! \
+          export ANNOUNCEMENT="Released CGS $VERSION! \n\
           $RELEASE_NOTES"
           echo "$ANNOUNCEMENT"
           echo 'ANNOUNCEMENT<<EOF' >> $GITHUB_OUTPUT
