@@ -21,7 +21,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {
-    [RequireComponent(typeof(Modal), typeof(CgsNetDiscovery))]
+    [RequireComponent(typeof(Modal))]
     public class LobbyMenu : SelectionPanel
     {
         public const string ShareWarningMessage =
@@ -35,9 +35,8 @@ namespace Cgs.Play.Multiplayer
         public string RoomIdIpLabel => "Room " + (_isLanConnectionSource ? "IP" : "Id") + ":";
         public string RoomIdIpPlaceholder => "Enter Room " + (_isLanConnectionSource ? "IP" : "Id") + "...";
 
-        private const float SecondsPerRefresh = 15;
+        private const float SecondsPerRefresh = 5;
 
-        public CgsNetDiscovery discovery;
         public ToggleGroup lanToggleGroup;
         public Toggle lanToggle;
         public Toggle internetToggle;
@@ -80,48 +79,38 @@ namespace Cgs.Play.Multiplayer
 
         private bool _shouldRedisplay;
 
-        private IEnumerator Start()
+        private void Start()
         {
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            StartCoroutine(SignInAnonymouslyCoroutine());
+        }
 
+        private IEnumerator SignInAnonymouslyCoroutine()
+        {
             yield return null;
 
-            if (!AuthenticationService.Instance.IsSignedIn)
-            {
-                var signInTask = CgsNetManager.SignInAnonymouslyAsync();
-                while (!signInTask.IsCompleted)
-                    yield return null;
-
-                if (signInTask.IsFaulted)
-                {
-                    Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
-                    CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
-                                                            signInTask.Exception?.Message);
-                    yield break;
-                }
-            }
-
-            if (!IsInternetConnectionSource)
+            if (AuthenticationService.Instance.IsSignedIn)
                 yield break;
 
-            var refreshLobbiesTask = RefreshLobbies();
-            while (!refreshLobbiesTask.IsCompleted)
+            var signInTask = CgsNetManager.SignInAnonymouslyAsync();
+            while (!signInTask.IsCompleted)
                 yield return null;
 
-            Debug.Log($"[CgsNet LobbyMenu] Start Lobbies: {Lobbies.Count}");
+            if (signInTask.IsFaulted)
+            {
+                Debug.LogError(CgsNetManager.GenericConnectionErrorMessage + signInTask.Exception?.Message);
+                CardGameManager.Instance.Messenger.Show(CgsNetManager.GenericConnectionErrorMessage +
+                                                        signInTask.Exception?.Message);
+            }
+
+            Refresh();
         }
 
         private void Update()
         {
             _secondsSinceRefresh += Time.deltaTime;
-            if (IsInternetConnectionSource && _secondsSinceRefresh > SecondsPerRefresh)
-            {
-                _secondsSinceRefresh = 0;
-                if (AuthenticationService.Instance.IsSignedIn)
-#pragma warning disable CS4014
-                    RefreshLobbies();
-#pragma warning restore CS4014
-            }
+            if (_secondsSinceRefresh > SecondsPerRefresh)
+                Refresh();
 
             if (_shouldRedisplay)
                 Redisplay();
@@ -156,27 +145,34 @@ namespace Cgs.Play.Multiplayer
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
 
-            DiscoveredServers.Clear();
             _selectedServer = string.Empty;
-
-            discovery.StartClient();
-            discovery.OnServerFound = OnServerFound;
+            if (CgsNetManager.Instance.Discovery.IsRunning)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
+            DiscoveredServers.Clear();
+            CgsNetManager.Instance.Discovery.StartClient();
+            CgsNetManager.Instance.Discovery.OnServerFound = OnServerFound;
 
             Redisplay();
         }
 
-        private void Redisplay()
+        private void Refresh()
         {
-            if (IsLanConnectionSource)
-                Rebuild(DiscoveredServers, SelectServer, _selectedServer);
+            if (IsInternetConnectionSource && AuthenticationService.Instance.IsSignedIn)
+            {
+#pragma warning disable CS4014
+                RefreshLobbies();
+#pragma warning restore CS4014
+                Debug.Log("LobbyMenu Refreshed Lobbies");
+            }
+            else if (IsLanConnectionSource)
+            {
+                CgsNetManager.Instance.Discovery.ClientBroadcast(new DiscoveryBroadcastData());
+                Debug.Log("LobbyMenu Refreshed Discovery");
+            }
             else
-                Rebuild(Lobbies, SelectServer, _selectedServer);
+                Debug.Log("LobbyMenu Refreshed None");
 
-            joinButton.interactable =
-                !string.IsNullOrEmpty(_selectedServer) &&
-                Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
-
-            _shouldRedisplay = false;
+            _secondsSinceRefresh = 0;
         }
 
         private async Task RefreshLobbies()
@@ -232,8 +228,23 @@ namespace Cgs.Play.Multiplayer
 
         private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
         {
+            Debug.Log($"OnServerFound {sender} {response}");
             DiscoveredServers[sender.Address.ToString()] = response;
             _shouldRedisplay = true;
+        }
+
+        private void Redisplay()
+        {
+            if (IsLanConnectionSource)
+                Rebuild(DiscoveredServers, SelectServer, _selectedServer);
+            else
+                Rebuild(Lobbies, SelectServer, _selectedServer);
+
+            joinButton.interactable =
+                !string.IsNullOrEmpty(_selectedServer) &&
+                Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
+
+            _shouldRedisplay = false;
         }
 
         [UsedImplicitly]
@@ -255,8 +266,11 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                CgsNetManager.Instance.Transport.SetConnectionData("127.0.0.1", 7777, "0.0.0.0");
                 NetworkManager.Singleton.StartHost();
-                discovery.StartServer();
+                if (CgsNetManager.Instance.Discovery.IsRunning)
+                    CgsNetManager.Instance.Discovery.StopDiscovery();
+                CgsNetManager.Instance.Discovery.StartServer();
             }
         }
 
@@ -305,9 +319,18 @@ namespace Cgs.Play.Multiplayer
             else
             {
                 if (DiscoveredServers.TryGetValue(_selectedServer, out var discoveryResponse))
-                    CgsNetManager.Instance.StartJoin(_selectedServer, discoveryResponse.Port);
+                {
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, discoveryResponse.Port,
+                        "0.0.0.0");
+                    NetworkManager.Singleton.StartClient();
+                }
                 else if (Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute))
-                    CgsNetManager.Instance.StartJoin(_selectedServer);
+                {
+                    CgsNetManager.Instance.Transport = CgsNetManager.Instance.Transports.unityTransport;
+                    CgsNetManager.Instance.Transport.SetConnectionData(_selectedServer, 7777, "0.0.0.0");
+                    NetworkManager.Singleton.StartClient();
+                }
                 else
                 {
                     Debug.LogError(InvalidServerErrorMessage);
@@ -321,8 +344,8 @@ namespace Cgs.Play.Multiplayer
 
         public void Hide()
         {
-            if (discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                discovery.StopDiscovery();
+            if (CgsNetManager.Instance.Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
 
             Menu.Hide();
         }
@@ -330,8 +353,8 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void Close()
         {
-            if (discovery.IsRunning && !CgsNetManager.Instance.IsServer)
-                discovery.StopDiscovery();
+            if (CgsNetManager.Instance.Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
+                CgsNetManager.Instance.Discovery.StopDiscovery();
 
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }

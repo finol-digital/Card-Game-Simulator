@@ -645,10 +645,8 @@ namespace Cgs.Play
             SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
         }
 
-        private void StopNetworking()
+        private static void StopNetworking()
         {
-            if (Lobby != null && Lobby.discovery != null)
-                Lobby.discovery.StopDiscovery();
             if (CgsNetManager.Instance != null)
                 CgsNetManager.Instance.Stop();
         }

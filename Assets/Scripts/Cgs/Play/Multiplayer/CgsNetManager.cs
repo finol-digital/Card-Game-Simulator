@@ -19,6 +19,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
+using UnityExtensionMethods;
 
 namespace Cgs.Play.Multiplayer
 {
@@ -43,6 +44,18 @@ namespace Cgs.Play.Multiplayer
         }
 
         public Transports Transports { get; private set; }
+
+        public CgsNetDiscovery Discovery
+        {
+            get
+            {
+                if (_cgsNetDiscovery == null)
+                    _cgsNetDiscovery = gameObject.GetOrAddComponent<CgsNetDiscovery>();
+                return _cgsNetDiscovery;
+            }
+        }
+
+        private CgsNetDiscovery _cgsNetDiscovery;
 
         public string RoomIdIp => "127.0.0.1".Equals(Transport.ConnectionData.Address,
             StringComparison.Ordinal)
@@ -420,6 +433,8 @@ namespace Cgs.Play.Multiplayer
 
         public void Stop()
         {
+            if (Discovery.IsRunning)
+                Discovery.StopDiscovery();
             Shutdown();
             CurrentLobby = null;
             StopAllCoroutines();

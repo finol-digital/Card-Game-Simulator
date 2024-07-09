@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,10 +62,13 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            var isVertical = cardModel.transform.rotation.Equals(Quaternion.identity);
-            cardModel.Rotation = isVertical
-                ? Quaternion.AngleAxis(CardGameManager.Current.GameCardRotationDegrees, Vector3.back)
-                : Quaternion.identity;
+            var unTappedRotation = Quaternion.identity;
+            if (CgsNetManager.Instance != null && CgsNetManager.Instance.LocalPlayer != null)
+                unTappedRotation = CgsNetManager.Instance.LocalPlayer.DefaultRotation;
+            var isTapped = !unTappedRotation.Equals(cardModel.Rotation);
+            var tappedRotation = unTappedRotation *
+                                 Quaternion.Euler(0, 0, -CardGameManager.Current.GameCardRotationDegrees);
+            cardModel.Rotation = isTapped ? unTappedRotation : tappedRotation;
         }
 
         public static void Zoom(CardModel cardModel)
