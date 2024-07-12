@@ -695,17 +695,17 @@
       "description": "",
       "x-enumNames": [
         "Move",
-        "Flip",
         "Rotate",
         "Tap",
-        "Zoom"
+        "Flip",
+        "Discard"
       ],
       "enum": [
         "move",
-        "flip",
         "rotate",
         "tap",
-        "zoom"
+        "flip",
+        "discard"
       ]
     },
     "GamePlayZone": {
