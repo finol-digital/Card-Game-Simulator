@@ -679,7 +679,7 @@ namespace Cgs.CardGameView.Multiplayer
                 Value.UnregisterDisplay(this);
         }
 
-        private void Discard()
+        public void Discard()
         {
             Debug.Log($"Discarding {gameObject.name}");
             ToDiscard = true;

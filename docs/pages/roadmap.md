@@ -4,15 +4,13 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.112
-- Bug-Fix: Rotation/tap on client
-- Bug-Fix: LAN connectivity
+## What's New - v1.113
+- Game-Play: Card Action Panel
 
 ## Backlog - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Support for card back faces
 - Game-Play: Animation for card actions
-- Game-Play: Cards Action Panel, including draw many and green button for contextual default action
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Display values on Card in Play Area

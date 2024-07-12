@@ -210,7 +210,7 @@ namespace Cgs.Play.Drawer
                         cardTransform.SetAsFirstSibling();
                         cardTransform.rotation = Quaternion.identity;
                         cardModel.IsFacedown = false;
-                        cardModel.DefaultAction = CardActions.Flip;
+                        cardModel.DefaultAction = CardActionPanel.Flip;
                     }
                 }
             }
