@@ -167,7 +167,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (_actionNetworkVariable.Value != (int) _cardAction && (int) _cardAction != 0)
                 _actionNetworkVariable.Value = (int) _cardAction;
 
-            var defaultAction = CardActionPanel.ActionsDictionary[DefaultAction];
+            var defaultAction = CardActionPanel.CardActionDictionary[DefaultAction];
             OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = defaultAction);
 
             StartCoroutine(WaitToAddMoveCardToServer());

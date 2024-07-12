@@ -8,6 +8,7 @@ using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Viewer
 {
@@ -15,8 +16,10 @@ namespace Cgs.CardGameView.Viewer
 
     public class CardActionPanel : MonoBehaviour
     {
-        public static IReadOnlyDictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> ActionsDictionary =>
-            _actionsDictionary ??= new Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction>
+        public const float PositionOffsetAmount = 250f;
+
+        public static IReadOnlyDictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> CardActionDictionary =>
+            _cardActionDictionary ??= new Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction>
             {
                 [FinolDigital.Cgs.CardGameDef.CardAction.Move] = Move,
                 [FinolDigital.Cgs.CardGameDef.CardAction.Rotate] = Rotate,
@@ -25,7 +28,7 @@ namespace Cgs.CardGameView.Viewer
                 [FinolDigital.Cgs.CardGameDef.CardAction.Discard] = Discard
             };
 
-        private static Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> _actionsDictionary;
+        private static Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> _cardActionDictionary;
 
         public Button moveButton;
         public Button rotateButton;
@@ -33,33 +36,42 @@ namespace Cgs.CardGameView.Viewer
         public Button flipButton;
         public Button discardButton;
 
+        private CanvasGroup _canvasGroup;
+
+        private void Awake()
+        {
+            _canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
+        }
+
         public void Show(Vector2 position)
         {
-            gameObject.SetActive(true);
+            _canvasGroup.alpha = 1;
+            _canvasGroup.interactable = true;
+            _canvasGroup.blocksRaycasts = true;
 
             transform.position = position;
 
             rotateButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                 CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
-            rotateButton.transform.GetChild(0).GetComponent<Image>().color =
-                CardGameManager.Current.GameDefaultCardAction == FinolDigital.Cgs.CardGameDef.CardAction.Rotate
+            rotateButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color =
+                CardViewer.Instance.SelectedCardModel.DefaultAction == Rotate
                     ? Color.green
                     : Color.white;
 
             tapButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                 CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;
-            tapButton.transform.GetChild(0).GetComponent<Image>().color =
-                CardGameManager.Current.GameDefaultCardAction == FinolDigital.Cgs.CardGameDef.CardAction.Tap
+            tapButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color =
+                CardViewer.Instance.SelectedCardModel.DefaultAction == Tap
                     ? Color.green
                     : Color.white;
 
             flipButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                 CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsFlip;
-            flipButton.transform.GetChild(0).GetComponent<Image>().color =
-                CardGameManager.Current.GameDefaultCardAction == FinolDigital.Cgs.CardGameDef.CardAction.Flip
+            flipButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color =
+                CardViewer.Instance.SelectedCardModel.DefaultAction == Flip
                     ? Color.green
                     : Color.white;
         }
@@ -154,12 +166,14 @@ namespace Cgs.CardGameView.Viewer
 
         public static void Discard(CardModel cardModel)
         {
-            cardModel.Discard();
+            cardModel.PromptDiscard();
         }
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            _canvasGroup.alpha = 0;
+            _canvasGroup.interactable = false;
+            _canvasGroup.blocksRaycasts = false;
         }
     }
 }
