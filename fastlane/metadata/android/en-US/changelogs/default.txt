@@ -1,2 +1,1 @@
-- Bug-Fix: Rotation/tap on client
-- Bug-Fix: LAN connectivity
+- Game-play: Action Panels
