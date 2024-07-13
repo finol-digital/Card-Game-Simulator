@@ -51,7 +51,7 @@ namespace Cgs.CardGameView.Multiplayer
         private int _max = DefaultMax;
         private NetworkVariable<int> _maxNetworkVariable;
 
-        public override string ViewValue => $"Value: {Value}";
+        public override string ViewValue => $"Value: {Value} / Max: {Max}";
 
         public int Value
         {

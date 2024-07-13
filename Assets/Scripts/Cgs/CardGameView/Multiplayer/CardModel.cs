@@ -23,6 +23,7 @@ namespace Cgs.CardGameView.Multiplayer
     public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
+        public string DiscardPrompt => $"Discard {gameObject.name}?";
 
         private const float ZoomHoldTime = 1.5f;
         private const float MovementSpeed = 600f;
@@ -249,8 +250,7 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerUpSelectPlayable(PointerEventData eventData)
         {
             if (CurrentPointerEventData == null || CurrentPointerEventData.pointerId != eventData.pointerId ||
-                eventData.dragging ||
-                eventData.button is PointerEventData.InputButton.Middle or PointerEventData.InputButton.Right)
+                eventData.dragging || eventData.button is PointerEventData.InputButton.Middle)
                 return;
 
             if (!DidSelectOnDown && EventSystem.current.currentSelectedGameObject == gameObject &&
@@ -677,6 +677,11 @@ namespace Cgs.CardGameView.Multiplayer
                 Value.RegisterDisplay(this);
             else
                 Value.UnregisterDisplay(this);
+        }
+
+        public void PromptDiscard()
+        {
+            CardGameManager.Instance.Messenger.Prompt(DiscardPrompt, Discard);
         }
 
         private void Discard()

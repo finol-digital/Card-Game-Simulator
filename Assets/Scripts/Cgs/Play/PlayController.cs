@@ -144,9 +144,9 @@ namespace Cgs.Play
         {
             Instantiate(cardViewerPrefab);
             Instantiate(playableViewerPrefab);
-            CardViewer.Instance.GetComponent<CardActions>().Show();
             if (Menu.Settings.PreviewOnMouseOver)
                 CardViewer.Instance.Mode = CardViewerMode.Expanded;
+            CardViewer.Instance.IsActionable = true;
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
 
@@ -415,7 +415,7 @@ namespace Cgs.Play
 
         public static void SetPlayActions(CardModel cardModel)
         {
-            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
@@ -592,7 +592,7 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
         }
 
         public static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
@@ -601,7 +601,7 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.IsFacedown = true;
         }
 
@@ -611,7 +611,7 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActions.ActionsDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.IsFacedown = false;
         }
 

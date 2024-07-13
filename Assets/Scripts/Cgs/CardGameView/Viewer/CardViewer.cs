@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using FinolDigital.Cgs.CardGameDef;
 using FinolDigital.Cgs.CardGameDef.Unity;
@@ -60,6 +61,7 @@ namespace Cgs.CardGameView.Viewer
         public CanvasGroup preview;
         public CanvasGroup minimal;
         public CanvasGroup expanded;
+        public CardActionPanel cardActionPanel;
         public CanvasGroup maximal;
 
         public ScrollRect maximalScrollRect;
@@ -215,6 +217,8 @@ namespace Cgs.CardGameView.Viewer
 
         public float ZoomTime { get; private set; }
 
+        public bool IsActionable { get; set; }
+
         public bool IsVisible
         {
             get => _isVisible;
@@ -231,6 +235,8 @@ namespace Cgs.CardGameView.Viewer
 
         private bool _isVisible;
         public bool WasVisible { get; private set; }
+
+        private Vector2 _cardActionPanelPosition;
 
         private static bool IsNameVisible
         {
@@ -297,6 +303,8 @@ namespace Cgs.CardGameView.Viewer
                 DecrementProperty();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
                 IncrementProperty();
+            else if (Inputs.IsSort && SelectedCardModel != null)
+                Zoom = !Zoom;
             else if (Inputs.IsCancel)
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)
@@ -414,12 +422,32 @@ namespace Cgs.CardGameView.Viewer
         private void Redisplay()
         {
             HidePreview();
+
             minimal.alpha = IsVisible && Mode == CardViewerMode.Minimal ? 1 : 0;
             minimal.interactable = IsVisible && Mode == CardViewerMode.Minimal;
             minimal.blocksRaycasts = IsVisible && Mode == CardViewerMode.Minimal;
+
             expanded.alpha = IsVisible && Mode == CardViewerMode.Expanded ? 1 : 0;
             expanded.interactable = IsVisible && Mode == CardViewerMode.Expanded;
             expanded.blocksRaycasts = IsVisible && Mode == CardViewerMode.Expanded;
+
+            if (IsVisible && IsActionable)
+            {
+                if (SelectedCardModel != null && SelectedCardModel.PointerPositions.Count > 0)
+                {
+                    var position = SelectedCardModel.PointerPositions.Values.First();
+                    var isCardInBottomHalf = position.y + CardActionPanel.PositionOffsetAmount <
+                                             ((RectTransform) transform).rect.height / 2.0f;
+                    var cardActionPanelOffset = CardActionPanel.PositionOffsetAmount *
+                                                (isCardInBottomHalf ? Vector2.up : Vector2.down);
+                    _cardActionPanelPosition = cardActionPanelOffset + position;
+                }
+
+                cardActionPanel.Show(_cardActionPanelPosition);
+            }
+            else
+                cardActionPanel.Hide();
+
             maximal.alpha = IsVisible && Mode == CardViewerMode.Maximal ? 1 : 0;
             maximal.interactable = IsVisible && Mode == CardViewerMode.Maximal;
             maximal.blocksRaycasts = IsVisible && Mode == CardViewerMode.Maximal;

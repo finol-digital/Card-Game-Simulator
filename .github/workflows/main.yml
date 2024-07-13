@@ -891,8 +891,10 @@ jobs:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: |
           RELEASE_NOTES="$(cat fastlane/metadata/en-US/release_notes.txt)"
-          export ANNOUNCEMENT="Released CGS $VERSION! $RELEASE_NOTES"
-          echo "$ANNOUNCEMENT"
+          ANNOUNCEMENT="Released CGS $VERSION! 
+          $RELEASE_NOTES"
+          printf "$ANNOUNCEMENT"
+          export ANNOUNCEMENT
           echo 'ANNOUNCEMENT<<EOF' >> $GITHUB_OUTPUT
           echo "$ANNOUNCEMENT" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT

@@ -141,7 +141,7 @@ namespace Cgs.CardGameView.Viewer
         {
             cardModel.transform.rotation = Quaternion.identity;
             cardModel.IsFacedown = false;
-            cardModel.DefaultAction = CardActions.Flip;
+            cardModel.DefaultAction = CardActionPanel.Flip;
 
             var cardModels = contentCardZone.GetComponentsInChildren<CardModel>();
             countLabel.text = cardModels.Length.ToString();
