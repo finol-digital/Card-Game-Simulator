@@ -433,8 +433,7 @@ namespace Cgs.CardGameView.Viewer
 
             if (IsVisible && IsActionable)
             {
-                if (SelectedCardModel != null &&
-                    SelectedCardModel.PointerPositions.Count > 0)
+                if (SelectedCardModel != null && SelectedCardModel.PointerPositions.Count > 0)
                 {
                     var position = SelectedCardModel.PointerPositions.Values.First();
                     var isCardInBottomHalf = position.y + CardActionPanel.PositionOffsetAmount <

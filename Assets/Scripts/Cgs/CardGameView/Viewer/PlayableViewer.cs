@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -44,8 +45,6 @@ namespace Cgs.CardGameView.Viewer
                     EventSystem.current.SetSelectedGameObject(null);
 
                 IsVisible = _selectedPlayable != null;
-                dieActions.SetActive(_selectedPlayable is Die);
-                stackActions.SetActive(_selectedPlayable is CardStack);
             }
         }
 
@@ -56,10 +55,11 @@ namespace Cgs.CardGameView.Viewer
 
         public CanvasGroup preview;
         public CanvasGroup view;
+        public CanvasGroup dieActionPanel;
+        public CanvasGroup stackActionPanel;
+
         public List<Text> valueTexts;
         public InputField dieValueInputField;
-        public GameObject dieActions;
-        public GameObject stackActions;
 
         public bool IsVisible
         {
@@ -154,9 +154,30 @@ namespace Cgs.CardGameView.Viewer
         public void Redisplay()
         {
             HidePreview();
+
             view.alpha = IsVisible ? 1 : 0;
             view.interactable = IsVisible;
             view.blocksRaycasts = IsVisible;
+
+            if (_selectedPlayable != null && _selectedPlayable.PointerPositions.Count > 0)
+            {
+                var position = _selectedPlayable.PointerPositions.Values.First();
+                var isPlayableInBottomHalf = position.y + CardActionPanel.PositionOffsetAmount <
+                                             ((RectTransform) transform).rect.height / 2.0f;
+                var actionPanelOffset = CardActionPanel.PositionOffsetAmount *
+                                        (isPlayableInBottomHalf ? Vector2.up : Vector2.down);
+                dieActionPanel.transform.position = actionPanelOffset + position;
+                stackActionPanel.transform.position = actionPanelOffset + position;
+            }
+
+            dieActionPanel.alpha = IsVisible && _selectedPlayable is Die ? 1 : 0;
+            dieActionPanel.interactable = IsVisible && _selectedPlayable is Die;
+            dieActionPanel.blocksRaycasts = IsVisible && _selectedPlayable is Die;
+
+            stackActionPanel.alpha = IsVisible && _selectedPlayable is CardStack ? 1 : 0;
+            stackActionPanel.interactable = IsVisible && _selectedPlayable is CardStack;
+            stackActionPanel.blocksRaycasts = IsVisible && _selectedPlayable is CardStack;
+
             dieValueInputField.text = string.Empty;
         }
 

@@ -78,6 +78,9 @@ namespace Cgs.CardGameView.Viewer
 
         public void Update()
         {
+            if (!_canvasGroup.interactable)
+                return;
+
             if (Inputs.IsNew && moveButton.interactable)
                 Move(CardViewer.Instance.SelectedCardModel);
             else if (Inputs.IsLoad && rotateButton.interactable)
