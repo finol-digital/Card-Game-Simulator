@@ -27,7 +27,6 @@ permalink: roadmap.html
 - Game-Play: Custom Tokens
 - Game-Play: Flip Random for tokens
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
-- Game-Play: Arrow from card with middle mouse button or alt
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
