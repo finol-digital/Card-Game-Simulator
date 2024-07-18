@@ -9,6 +9,7 @@ playYoutubeId: PriDuaM6MEk
 - iOS via [the App Store](https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1)
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
 - Linux via [Steam](https://store.steampowered.com/app/1742850/Card_Game_Simulator/)
+- Web via [PWA](https://cgs.gg/)
 
 ## How to Play
 
@@ -34,9 +35,12 @@ Also consider joining our social media:
 
 [![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com) 
 [![alt text][2.1]][2] [Reddit](http://reddit.cardgamesimulator.com) 
+[![alt text][3.1]][3] [GitHub](http://github.cardgamesimulator.com) 
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
 [2.1]: https://i.imgur.com/RyNV7tK.png (reddit icon with padding)
+[3.1]: https://www.cardgamesimulator.com/img/github-mark.png (github icon with padding)
 
 [1]: http://discord.cardgamesimulator.com
 [2]: http://reddit.cardgamesimulator.com
+[3]: http://github.cardgamesimulator.com
