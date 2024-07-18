@@ -9,7 +9,6 @@ playYoutubeId: PriDuaM6MEk
 - iOS via [the App Store](https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1)
 - Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
 - Linux via [Steam](https://store.steampowered.com/app/1742850/Card_Game_Simulator/)
-- Web via [PWA](https://cgs.gg/)
 
 ## How to Play
 
