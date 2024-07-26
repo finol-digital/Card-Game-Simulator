@@ -132,6 +132,13 @@
       "description": "If bannerImageUrl is a valid url, CGS will download the image at that url and save it as Banner.<bannerImageFileType>. CGS will attempt to display the Banner.<bannerImageFileType> as an identifier to the user. If it is unable to read Banner.<bannerImageFileType>, CGS will simply display the CGS logo.",
       "format": "uri"
     },
+    "cardBackFaceImageUrls": {
+      "type": "array",
+      "description": "CGS will go through each CardBackFaceImageUrl and save the data from *CardBackFaceImageUrl:Url* to 'backs/*CardBackFaceImageUrl:Id*.<cardBackImageFileType>'",
+      "items": {
+        "$ref": "#/definitions/CardBackFaceImageUrl"
+      }
+    },
     "cardBackImageFileType": {
       "type": "string",
       "description": "cardBackImageFileType is the file type extension for the image file that CGS downloads from cardBackImageUrl.",
@@ -440,6 +447,21 @@
     }
   },
   "definitions": {
+    "CardBackFaceImageUrl": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id of the card back"
+        },
+        "url": {
+          "type": "string",
+          "description": "The url from which to download the card back",
+          "format": "uri"
+        }
+      }
+    },
     "PropertyDef": {
       "type": "object",
       "additionalProperties": false,

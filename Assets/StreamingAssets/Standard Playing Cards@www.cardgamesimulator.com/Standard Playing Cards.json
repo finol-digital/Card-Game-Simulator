@@ -3,6 +3,12 @@
   "allSetsUrl": "https://www.cardgamesimulator.com/games/Standard/AllSets.json",
   "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Standard/Standard.json",
   "bannerImageUrl": "https://www.cardgamesimulator.com/games/Standard/Banner.png",
+  "cardBackFaceImageUrls": [
+    {
+      "id": "DARK_BACK",
+      "url": "https://www.cardgamesimulator.com/games/Standard/backs/DARK_BACK.png"
+    }
+  ],
   "cardBackImageUrl": "https://www.cardgamesimulator.com/games/Standard/CardBack.png",
   "cardImageUrl": "https://www.cardgamesimulator.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
   "cardProperties": [
@@ -31,6 +37,14 @@
     {
       "name": "Standard Deck with Jokers",
       "url": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%20Deck%20with%20Jokers.txt"
+    },
+    {
+      "name": "Standard with Dark Back 52-card Deck",
+      "url": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%20with%20Dark%20Back%2052-card%20Deck.txt"
+    },
+    {
+      "name": "Standard with Dark Back Deck with Jokers",
+      "url": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%%20with%20Dark%20Back%20Deck%20with%20Jokers.txt"
     }
   ],
   "enums": [

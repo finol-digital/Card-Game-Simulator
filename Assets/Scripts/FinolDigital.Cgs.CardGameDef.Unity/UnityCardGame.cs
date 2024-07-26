@@ -48,6 +48,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         public string PlayMatImageFilePath => GameDirectoryPath + "/PlayMat." +
                                               UnityFileMethods.GetSafeFileName(PlayMatImageFileType);
 
+        public string BacksDirectoryPath => GameDirectoryPath + "/backs";
         public string DecksDirectoryPath => GameDirectoryPath + "/decks";
         public string GameBoardsDirectoryPath => GameDirectoryPath + "/boards";
         public string SetsDirectoryPath => GameDirectoryPath + "/sets";
@@ -129,6 +130,8 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             }
         }
 
+        public Dictionary<string, Sprite> CardBackFaceImageSprites { get; } = new();
+
         private Sprite _cardBackImageSprite;
 
         public Sprite PlayMatImageSprite
@@ -168,7 +171,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         {
             try
             {
-                // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name/Id* to change, so account for that
+                // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name/ID* to change, so account for that
                 var gameFilePath = GameFilePath;
                 var gameDirectoryPath = GameDirectoryPath;
                 ClearDefinitionLists();
@@ -242,12 +245,36 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             if (CardBackImageUrl != null && CardBackImageUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(CardBackImageUrl.AbsoluteUri, CardBackImageFilePath);
 
-            DownloadProgress = 3f / (8f + DeckUrls.Count + AllCardsUrlPageCount);
+            var cardBack = 0;
+            foreach (var cardBackFaceImageUrl in CardBackFaceImageUrls)
+            {
+                cardBack++;
+                DownloadProgress = (2f + cardBack) /
+                                   (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
+                DownloadStatus = $"Downloading: CardBacks: {cardBack,5} / {CardBackFaceImageUrls.Count}";
+
+                if (string.IsNullOrEmpty(cardBackFaceImageUrl.Id))
+                {
+                    Debug.Log($"Ignoring cardBack {cardBack}");
+                    continue;
+                }
+
+                var backFilePath = Path.Combine(BacksDirectoryPath,
+                    cardBackFaceImageUrl.Id + "." + CardBackImageFileType.ToLower());
+                if (cardBackFaceImageUrl.Url.IsAbsoluteUri)
+                    yield return UnityFileMethods.SaveUrlToFile(cardBackFaceImageUrl.Url.AbsoluteUri, backFilePath);
+                else
+                    Debug.Log($"Empty url for deckUrl {cardBackFaceImageUrl}");
+            }
+
+            DownloadProgress = (3f + CardBackFaceImageUrls.Count) /
+                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: PlayMat";
             if (PlayMatImageUrl != null && PlayMatImageUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(PlayMatImageUrl.AbsoluteUri, PlayMatImageFilePath);
 
-            DownloadProgress = 4f / (8f + DeckUrls.Count + AllCardsUrlPageCount);
+            DownloadProgress = (4f + CardBackFaceImageUrls.Count) /
+                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Boards";
             foreach (var gameBoardUrl in GameBoardUrls.Where(gameBoardUrl =>
                          !string.IsNullOrEmpty(gameBoardUrl.Id) &&
@@ -255,7 +282,8 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 yield return UnityFileMethods.SaveUrlToFile(gameBoardUrl.Url.AbsoluteUri,
                     GameBoardsDirectoryPath + "/" + gameBoardUrl.Id + "." + GameBoardImageFileType);
 
-            DownloadProgress = 5f / (8f + DeckUrls.Count + AllCardsUrlPageCount);
+            DownloadProgress = (5f + CardBackFaceImageUrls.Count) /
+                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Decks";
             string deckRequestBody = null;
             if (!string.IsNullOrEmpty(AllDecksUrlPostBodyContent))
@@ -295,7 +323,8 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             foreach (var deckUrl in DeckUrls)
             {
                 deck++;
-                DownloadProgress = (5f + deck) / (8f + DeckUrls.Count + AllCardsUrlPageCount);
+                DownloadProgress = (5f + CardBackFaceImageUrls.Count + deck) /
+                    (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
                 DownloadStatus = $"Downloading: Decks: {deck,5} / {DeckUrls.Count}";
 
                 if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
@@ -314,7 +343,8 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     Debug.Log($"Empty url for deckUrl {deckUrl}");
             }
 
-            DownloadProgress = (6f + DeckUrls.Count) / (8f + DeckUrls.Count + AllCardsUrlPageCount);
+            DownloadProgress = (6f + CardBackFaceImageUrls.Count + DeckUrls.Count) /
+                               (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: AllSets.json";
             var setsFilePath = SetsFilePath + (AllSetsUrlZipped ? UnityFileMethods.ZipExtension : string.Empty);
             if (AllSetsUrl != null && AllSetsUrl.IsAbsoluteUri)
@@ -331,8 +361,10 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                      page++)
                 {
                     Debug.Log($"Downloading page {page} / {AllCardsUrlPageCount} total pages ");
-                    DownloadProgress = (7f + DeckUrls.Count + page - AllCardsUrlPageCountStartIndex) /
-                                       (8f + DeckUrls.Count + AllCardsUrlPageCount - AllCardsUrlPageCountStartIndex);
+                    DownloadProgress = (7f + CardBackFaceImageUrls.Count + DeckUrls.Count + page -
+                                        AllCardsUrlPageCountStartIndex) /
+                                       (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount -
+                                        AllCardsUrlPageCountStartIndex);
                     DownloadStatus =
                         $"Downloading: Cards: {page,5} / {AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount}";
                     var cardsUrl = AllCardsUrl.OriginalString;
@@ -412,7 +444,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 Debug.Log($"Unable to determine last update date for {Name}. Assuming today.");
             }
 
-            var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && CoroutineRunner != null;
+            var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate;
 #endif
             if (shouldUpdate)
             {
@@ -442,6 +474,20 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
             if (File.Exists(CardBackImageFilePath))
                 CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
+
+            if (Directory.Exists(BacksDirectoryPath))
+            {
+                foreach (var backFilePath in Directory.EnumerateFiles(BacksDirectoryPath))
+                {
+                    var id = Path.GetFileNameWithoutExtension(backFilePath);
+                    if (CardBackFaceImageSprites.TryGetValue(id, out var sprite))
+                    {
+                        Object.Destroy(sprite.texture);
+                        Object.Destroy(sprite);
+                    }
+                    CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
+                }
+            }
 
             // The play mat can be loaded last
             if (File.Exists(PlayMatImageFilePath))
@@ -611,6 +657,10 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             var cardSets = new Dictionary<string, string>();
             PopulateCardSets(cardSets, cardJToken, defaultSetCode);
 
+            var backs = new List<string>();
+            if (cardJToken["backs"] is JArray jArray)
+                backs = jArray.ToObject<List<string>>();
+
             var cardImageWebUrl = string.Empty;
             if (!string.IsNullOrEmpty(CardImageProperty))
             {
@@ -661,6 +711,8 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             {
                 foreach (var set in cardSets)
                 {
+                    if (!Sets.ContainsKey(set.Key))
+                        LoadedSets[set.Key] = new Set(set.Key, set.Value);
                     var isReprint = CardNameIsUnique && CardNames.Contains(cardName);
                     if (!isReprint)
                         CardNames.Add(cardName);
@@ -672,13 +724,27 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         {
                             ImageWebUrl = cardImageWebUrl
                         };
-                    LoadedCards[unityCard.Id] = unityCard;
-                    if (!Sets.ContainsKey(set.Key))
-                        LoadedSets[set.Key] = new Set(set.Key, set.Value);
+                    if (backs.Count < 1 || backs.Contains(string.Empty))
+                    {
+                        LoadedCards[unityCard.Id] = unityCard;
+                        isReprint = true;
+                    }
+                    foreach (var backId in backs)
+                    {
+                        if (string.Empty.Equals(backId))
+                            continue;
+                        var backCardId = cardDuplicateId + PropertyDef.ObjectDelimiter + backId;
+                        var backUnityCard =
+                            new UnityCard(this, backCardId, cardName, set.Key, cardProperties, isReprint, false, backId)
+                            {
+                                ImageWebUrl = cardImageWebUrl
+                            };
+                        LoadedCards[backUnityCard.Id] = backUnityCard;
+                    }
                 }
             }
             else
-                Debug.Log("LoadCardFromJToken::MissingCardImage");
+                Debug.LogWarning($"LoadCardFromJToken::MissingCardImage {cardId}");
         }
 
         private void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,

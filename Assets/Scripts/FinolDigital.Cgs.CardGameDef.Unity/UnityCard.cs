@@ -2,11 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityExtensionMethods;
+using Object = UnityEngine.Object;
 
 namespace FinolDigital.Cgs.CardGameDef.Unity
 {
@@ -20,7 +22,17 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         public static readonly UnityCard Blank = new(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
-        public string ImageFileName => UnityFileMethods.GetSafeFileName(Id + "." + SourceGame.CardImageFileType);
+        public string ImageFileName
+        {
+            get
+            {
+                var id = Id;
+                var backFaceIdExtension = "." + BackFaceId;
+                if (!IsBackFaceCard && !string.IsNullOrEmpty(BackFaceId) && id.Contains(backFaceIdExtension))
+                    id = id[..id.IndexOf(backFaceIdExtension, StringComparison.Ordinal)];
+                return UnityFileMethods.GetSafeFileName(id + "." + SourceGame.CardImageFileType);
+            }
+        }
 
         public string ImageFilePath =>
             UnityFileMethods.GetSafeFilePath(((UnityCardGame) SourceGame).SetsDirectoryPath) + "/" +
@@ -50,8 +62,9 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         protected HashSet<ICardDisplay> DisplaysUsingImage { get; private set; }
 
         public UnityCard(UnityCardGame sourceGame, string id, string name, string setCode,
-            Dictionary<string, PropertyDefValuePair> properties, bool isReprint) : base(sourceGame, id, name, setCode,
-            properties, isReprint)
+            Dictionary<string, PropertyDefValuePair> properties, bool isReprint, bool isBackFaceCard = false,
+            string backFaceId = "") : base(sourceGame, id, name, setCode,
+            properties, isReprint, isBackFaceCard, backFaceId)
         {
             SourceGame = sourceGame;
             DisplaysUsingImage = new HashSet<ICardDisplay>();

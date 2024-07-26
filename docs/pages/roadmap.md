@@ -4,12 +4,11 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.113
-- Game-Play: Action Panels
+## What's New - v1.114
+- Game-Play: Support for card back faces
 
 ## Backlog - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
-- Game-Play: Support for card back faces
 - Game-Play: Animation for card and stack actions
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
