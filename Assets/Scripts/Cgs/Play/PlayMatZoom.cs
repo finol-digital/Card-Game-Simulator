@@ -4,6 +4,7 @@
 
 using System;
 using Cgs.CardGameView.Viewer;
+using Cgs.UI.ScrollRects;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
@@ -81,7 +82,7 @@ namespace Cgs.Play
         public void ResetZoom()
         {
             _timeSinceChange = 0;
-            _playController.playArea.CurrentZoom = 1;
+            _playController.playArea.CurrentZoom = RotateZoomableScrollRect.DefaultZoom;
         }
     }
 }

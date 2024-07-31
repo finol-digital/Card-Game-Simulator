@@ -5,10 +5,11 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.114
-- Game-Play: Support for card back faces
+- Game-Play: Increased max zoom out
 
-## Backlog - Priority 1
+## Sprint - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
+- Game-Play: Support for card back faces
 - Game-Play: Animation for card and stack actions
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
