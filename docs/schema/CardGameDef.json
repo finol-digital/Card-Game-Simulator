@@ -179,6 +179,10 @@
       "description": "cardImageUrl is a parameterized template url from which CGS downloads card image files if <cardImageProperty> is empty. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {cardImageFileType}=<cardImageFileType>, {<property>}=*Card:<property>*. Example: https://www.cardgamesimulator.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
       "format": "uri-template"
     },
+    "cardNameBackIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Name* of the back face mapped to the field defined by cardNameBackIdentifier. Most custom games will likely want to keep the default cardNameBackIdentifier."
+    },
     "cardNameIdentifier": {
       "type": "string",
       "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Name* mapped to the field defined by cardNameIdentifier. Most custom games will likely want to keep the default cardNameIdentifier.",
@@ -498,6 +502,14 @@
         "delimiter": {
           "type": "string",
           "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter"
+        },
+        "backName": {
+          "type": "string",
+          "description": "If the Card is a back Face: This name can be referenced to lookup a Card's property"
+        },
+        "frontName": {
+          "type": "string",
+          "description": "If the Card is a front Face: This name can be referenced to lookup a Card's property"
         },
         "properties": {
           "type": "array",

@@ -690,7 +690,8 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     _ => isImagePropertyList ? PropertyType.StringList : PropertyType.String
                 };
 
-                var imageDef = new PropertyDef(imageDefName, imagePropertyType, "", "", false, "", childProperties);
+                var imageDef = new PropertyDef(imageDefName, imagePropertyType, "", "", false, "", "", "",
+                    childProperties);
                 PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDefName);
                 if (isImagePropertyObject && metaProperties.TryGetValue(
                         imageDefName + PropertyDef.ObjectDelimiter + childName,
@@ -744,7 +745,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 }
             }
             else
-                Debug.LogWarning($"LoadCardFromJToken::MissingCardImage {cardId}");
+                Debug.Log($"LoadCardFromJToken::MissingCardImage {cardId}");
         }
 
         private void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,
@@ -775,11 +776,14 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 StringBuilder listValueBuilder;
                 JToken listTokens;
                 JObject jObject;
+                var identifier = property.Name;
+                if (!string.IsNullOrEmpty(property.FrontName))
+                    identifier = property.FrontName;
                 switch (property.Type)
                 {
                     case PropertyType.ObjectEnumList:
                         listValueBuilder = new StringBuilder();
-                        listTokens = cardJToken[property.Name];
+                        listTokens = cardJToken[identifier];
                         if (listTokens != null)
                             foreach (var jToken in listTokens)
                             {
@@ -799,7 +803,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                             listValueBuilder = new StringBuilder();
                             var values = new Dictionary<string, PropertyDefValuePair>();
                             var i = 0;
-                            listTokens = cardJToken[property.Name];
+                            listTokens = cardJToken[identifier];
                             if (listTokens != null)
                                 foreach (var jToken in listTokens)
                                 {
@@ -820,14 +824,14 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 
                         break;
                     case PropertyType.ObjectEnum:
-                        jObject = cardJToken[property.Name] as JObject;
+                        jObject = cardJToken[identifier] as JObject;
                         newProperty.Value = jObject?.Value<string>(CardPropertyIdentifier) ?? string.Empty;
                         cardProperties[key] = newProperty;
                         break;
                     case PropertyType.Object:
-                        jObject = cardJToken[property.Name] as JObject;
+                        jObject = cardJToken[identifier] as JObject;
                         if (jObject is {HasValues: true})
-                            PopulateCardProperties(cardProperties, cardJToken[property.Name], property.Properties,
+                            PopulateCardProperties(cardProperties, cardJToken[identifier], property.Properties,
                                 key + PropertyDef.ObjectDelimiter);
                         else
                             PopulateEmptyCardProperty(cardProperties, property, key);
@@ -837,7 +841,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         listValueBuilder = new StringBuilder();
                         if (string.IsNullOrEmpty(property.Delimiter))
                         {
-                            listTokens = cardJToken[property.Name];
+                            listTokens = cardJToken[identifier];
                             if (listTokens != null)
                                 foreach (var jToken in listTokens)
                                 {
@@ -848,7 +852,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         }
                         else
                         {
-                            foreach (var token in (cardJToken.Value<string>(property.Name) ?? string.Empty).Split(
+                            foreach (var token in (cardJToken.Value<string>(identifier) ?? string.Empty).Split(
                                          new[] {property.Delimiter}, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 if (listValueBuilder.Length > 0)
@@ -861,7 +865,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         cardProperties[key] = newProperty;
                         break;
                     case PropertyType.EscapedString:
-                        newProperty.Value = (cardJToken.Value<string>(property.Name) ?? string.Empty)
+                        newProperty.Value = (cardJToken.Value<string>(identifier) ?? string.Empty)
                             .Replace(PropertyDef.EscapeCharacter, string.Empty);
                         cardProperties[key] = newProperty;
                         break;
@@ -870,7 +874,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     case PropertyType.Integer:
                     case PropertyType.String:
                     default:
-                        newProperty.Value = cardJToken.Value<string>(property.Name) ?? string.Empty;
+                        newProperty.Value = cardJToken.Value<string>(identifier) ?? string.Empty;
                         cardProperties[key] = newProperty;
                         break;
                 }
