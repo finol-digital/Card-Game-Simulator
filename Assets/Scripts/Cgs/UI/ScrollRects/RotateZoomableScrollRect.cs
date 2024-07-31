@@ -45,7 +45,7 @@ namespace Cgs.UI.ScrollRects
         public float CurrentZoom
         {
             get => _currentZoom;
-            set => _currentZoom = Mathf.Clamp(value, MinZoom, MaxZoom);
+            set => _currentZoom = ZoomEnabled ? Mathf.Clamp(value, MinZoom, MaxZoom) : _currentZoom;
         }
 
         private float _currentZoom = DefaultZoom;
