@@ -88,6 +88,19 @@ namespace Cgs.CardGameView.Multiplayer
         private bool _isFacedown;
         private NetworkVariable<bool> _isFacedownNetworkVariable;
 
+        private Sprite CardBackImageSprite
+        {
+            get
+            {
+                var backFaceId = Value.BackFaceId;
+                if (!string.IsNullOrEmpty(backFaceId) &&
+                    CardGameManager.Current.CardBackFaceImageSprites.TryGetValue(backFaceId,
+                        out var backFaceImageSprite))
+                    return backFaceImageSprite;
+                return CardGameManager.Current.CardBackImageSprite;
+            }
+        }
+
         public RectTransform PlaceHolder
         {
             get => _placeHolder;
@@ -216,7 +229,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void RemoveImageSprite()
         {
-            View.sprite = CardGameManager.Current.CardBackImageSprite;
+            View.sprite = CardBackImageSprite;
             if (!IsFacedown && !IsSpawned)
                 SetIsNameVisible(true);
         }

@@ -4,10 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.113
-- Game-Play: Action Panels
+## What's New - v1.114
+- Game-Play: Increased max zoom out
 
-## Backlog - Priority 1
+## Sprint - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Support for card back faces
 - Game-Play: Animation for card and stack actions
@@ -27,7 +27,6 @@ permalink: roadmap.html
 - Game-Play: Custom Tokens
 - Game-Play: Flip Random for tokens
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
-- Game-Play: Arrow from card with middle mouse button or alt
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders

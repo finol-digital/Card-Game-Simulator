@@ -132,6 +132,13 @@
       "description": "If bannerImageUrl is a valid url, CGS will download the image at that url and save it as Banner.<bannerImageFileType>. CGS will attempt to display the Banner.<bannerImageFileType> as an identifier to the user. If it is unable to read Banner.<bannerImageFileType>, CGS will simply display the CGS logo.",
       "format": "uri"
     },
+    "cardBackFaceImageUrls": {
+      "type": "array",
+      "description": "CGS will go through each CardBackFaceImageUrl and save the data from *CardBackFaceImageUrl:Url* to 'backs/*CardBackFaceImageUrl:Id*.<cardBackImageFileType>'",
+      "items": {
+        "$ref": "#/definitions/CardBackFaceImageUrl"
+      }
+    },
     "cardBackImageFileType": {
       "type": "string",
       "description": "cardBackImageFileType is the file type extension for the image file that CGS downloads from cardBackImageUrl.",
@@ -171,6 +178,10 @@
       "type": "string",
       "description": "cardImageUrl is a parameterized template url from which CGS downloads card image files if <cardImageProperty> is empty. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {cardImageFileType}=<cardImageFileType>, {<property>}=*Card:<property>*. Example: https://www.cardgamesimulator.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
       "format": "uri-template"
+    },
+    "cardNameBackIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Name* of the back face mapped to the field defined by cardNameBackIdentifier. Most custom games will likely want to keep the default cardNameBackIdentifier."
     },
     "cardNameIdentifier": {
       "type": "string",
@@ -440,6 +451,21 @@
     }
   },
   "definitions": {
+    "CardBackFaceImageUrl": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id of the card back"
+        },
+        "url": {
+          "type": "string",
+          "description": "The url from which to download the card back",
+          "format": "uri"
+        }
+      }
+    },
     "PropertyDef": {
       "type": "object",
       "additionalProperties": false,
@@ -476,6 +502,14 @@
         "delimiter": {
           "type": "string",
           "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter"
+        },
+        "backName": {
+          "type": "string",
+          "description": "If the Card is a back Face: This name can be referenced to lookup a Card's property"
+        },
+        "frontName": {
+          "type": "string",
+          "description": "If the Card is a front Face: This name can be referenced to lookup a Card's property"
         },
         "properties": {
           "type": "array",

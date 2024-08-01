@@ -1,6 +1,6 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
-  "$id": "https://cardgamesim.finoldigital.com/schema/AllSets.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://cardgamesim.finoldigital.com/schema/AllSets.json",
   "title": "CGS Custom Game - Sets",
   "description": "Lists out Set information. You should have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.",
   "items": {

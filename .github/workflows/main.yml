@@ -811,6 +811,10 @@ jobs:
           $currentDirectory = Get-Location
           $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:UwpProjectDirectory -AdditionalChildPath $env:SigningCertificate
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+      - name: Setup Microsoft Store Developer CLI
+        uses: microsoft/setup-msstore-cli@v1
+      - name: Configure Microsoft Store Developer CLI
+        run: msstore reconfigure --tenantId ${{ secrets.MICROSOFT_TENANT_ID }} --sellerId 9N96N5S4W3J0 --clientId ${{ secrets.MICROSOFT_CLIENT_ID }} --clientSecret ${{ secrets.MICROSOFT_KEY }}
       - name: Build the .appxupload
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh

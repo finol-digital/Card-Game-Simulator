@@ -201,6 +201,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             var cardName = line;
             var cardId = string.Empty;
             var cardSet = string.Empty;
+            var cardBack = string.Empty;
             if (line.Contains(" "))
             {
                 var tokens = line.Split(' ').ToList();
@@ -226,6 +227,20 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         var cardSetTokenCount = cardSet.Count(f => f == ' ') + 1;
                         for (var i = 0; i < cardSetTokenCount; i++)
                             tokens.RemoveAt(tokens.Count - 1);
+                        line = line[..indexOfParens].Trim();
+                    }
+                }
+
+                if (tokens.Count > 0 && line.Contains(" <") && line.EndsWith(">"))
+                {
+                    var indexOfParens = line.LastIndexOf(" <", StringComparison.Ordinal);
+                    var inParens = line.Substring(indexOfParens + 2, line.Length - (indexOfParens + 3));
+                    if (((UnityCardGame) SourceGame).CardBackFaceImageSprites.ContainsKey(inParens))
+                    {
+                        cardBack = inParens;
+                        var cardBackTokenCount = cardBack.Count(f => f == ' ') + 1;
+                        for (var i = 0; i < cardBackTokenCount; i++)
+                            tokens.RemoveAt(tokens.Count - 1);
                     }
                 }
 
@@ -233,13 +248,15 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             }
 
             var cards = ((UnityCardGame) SourceGame).FilterCards(new CardSearchFilters()
-                {Id = cardId, Name = cardName, SetCode = cardSet});
+                {Id = cardId, Name = cardName, SetCode = cardSet, BackFaceId = cardBack});
             foreach (var card in cards)
             {
                 if (!card.Id.Equals(cardId) &&
                     (!string.Equals(card.Name.Trim(), cardName, StringComparison.OrdinalIgnoreCase) ||
                      (!string.IsNullOrEmpty(cardSet) &&
-                      !cardSet.Equals(card.SetCode, StringComparison.OrdinalIgnoreCase))))
+                      !cardSet.Equals(card.SetCode, StringComparison.OrdinalIgnoreCase))) ||
+                    (!string.IsNullOrEmpty(cardBack) &&
+                     !cardBack.Equals(card.BackFaceId, StringComparison.OrdinalIgnoreCase)))
                     continue;
                 for (var i = 0; i < cardCount; i++)
                     _cards.Add(card);

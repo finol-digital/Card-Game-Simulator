@@ -150,6 +150,19 @@ namespace Cgs.CardGameView.Multiplayer
         private bool _isTopFaceup;
         private NetworkVariable<bool> _isTopFaceupNetworkVariable;
 
+        private Sprite CardBackImageSprite
+        {
+            get
+            {
+                var backFaceId = Cards.LastOrDefault()?.BackFaceId;
+                if (!string.IsNullOrEmpty(backFaceId) &&
+                    CardGameManager.Current.CardBackFaceImageSprites.TryGetValue(backFaceId,
+                        out var backFaceImageSprite))
+                    return backFaceImageSprite;
+                return CardGameManager.Current.CardBackImageSprite;
+            }
+        }
+
         public StackViewer Viewer { get; private set; }
 
         protected override void OnAwakePlayable()
@@ -190,7 +203,7 @@ namespace Cgs.CardGameView.Multiplayer
                 deckLabel.text = Name;
             countLabel.text = Cards.Count.ToString();
 
-            topCard.sprite = CardGameManager.Current.CardBackImageSprite;
+            topCard.sprite = CardBackImageSprite;
             if (IsTopFaceup)
                 TopCard?.RegisterDisplay(this);
         }
@@ -208,7 +221,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void RemoveImageSprite()
         {
-            topCard.sprite = CardGameManager.Current.CardBackImageSprite;
+            topCard.sprite = CardBackImageSprite;
         }
 
         protected override void OnUpdatePlayable()

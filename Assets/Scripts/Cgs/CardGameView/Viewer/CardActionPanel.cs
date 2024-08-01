@@ -158,7 +158,12 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            cardModel.IsFacedown = !cardModel.IsFacedown;
+            if (cardModel.Value.IsBackFaceCard && !string.IsNullOrEmpty(cardModel.Value.BackFaceId)
+                                               && CardGameManager.Current.Cards.TryGetValue(cardModel.Value.BackFaceId,
+                                                   out var backFaceCard))
+                cardModel.Value = backFaceCard;
+            else
+                cardModel.IsFacedown = !cardModel.IsFacedown;
         }
 
         [UsedImplicitly]

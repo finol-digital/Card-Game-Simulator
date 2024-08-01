@@ -15,7 +15,8 @@ namespace Cgs.UI.ScrollRects
     {
         private const float MinRotation = -180; // Also in PlayMatRotation slider
         private const float MaxRotation = 180; // Also in PlayMatRotation slider
-        private const float MinZoom = 0.5f; // Also in PlayMatZoom slider
+        private const float MinZoom = 0.33f; // Also in PlayMatZoom slider
+        public const float DefaultZoom = 0.5f;
         private const float MaxZoom = 1.5f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;
         private const float ZoomLerpSpeed = 7.5f;
@@ -44,18 +45,15 @@ namespace Cgs.UI.ScrollRects
         public float CurrentZoom
         {
             get => _currentZoom;
-            set
-            {
-                if (ZoomEnabled)
-                    _currentZoom = Mathf.Clamp(value, MinZoom, MaxZoom);
-            }
+            set => _currentZoom = ZoomEnabled ? Mathf.Clamp(value, MinZoom, MaxZoom) : _currentZoom;
         }
 
-        private float _currentZoom = MinZoom;
+        private float _currentZoom = DefaultZoom;
 
         public bool ZoomEnabled
         {
-            get => scrollSensitivity == 0 || Input.touchCount > 1;
+            get => Input.touchCount > 1 || Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)
+                   || scrollSensitivity == 0;
             set => scrollSensitivity = value ? 0 : _scrollSensitivity;
         }
 
