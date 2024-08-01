@@ -6,14 +6,14 @@ permalink: roadmap.html
 
 ## What's New - v1.115
 - Game-Play: Custom Dice
+
+## Sprint - Priority 1
+- Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
 - Game-Play: Animation for card and stack actions
-
-## Sprint - Priority 1
-- Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Display values on Card in Play Area

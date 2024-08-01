@@ -677,7 +677,8 @@ namespace Cgs.CardGameView.Multiplayer
             gameObject.name = $"[{_id}] {unityCard.Name}";
             if (!IsFacedown)
                 unityCard.RegisterDisplay(this);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel == this)
+            if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
+                CardViewer.Instance.SelectedCardModel == this)
                 CardViewer.Instance.SelectedCardModel = this;
         }
 

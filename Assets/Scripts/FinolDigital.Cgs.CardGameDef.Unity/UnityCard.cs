@@ -100,7 +100,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl.Replace(" ", "%20"))
                 , output => newSprite = output);
             var fileInfo = new FileInfo(ImageFilePath);
-            if (fileInfo.Exists && fileInfo.Length > 1_000_000)
+            if (fileInfo.Exists && fileInfo.Length > 2_000_000)
             {
                 var sizeWarningMessage = string.Format(SizeWarningMessage, Name, Id);
                 Debug.LogError(sizeWarningMessage);
