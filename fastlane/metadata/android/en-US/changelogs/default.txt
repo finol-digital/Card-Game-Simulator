@@ -1,1 +1,1 @@
-- Game-play: Action Panels
+- Game-Play: Increased max zoom out
