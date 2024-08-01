@@ -5,6 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.115
+- Game-Play: Custom Dice
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
