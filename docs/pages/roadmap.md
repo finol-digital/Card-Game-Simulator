@@ -4,13 +4,15 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.114
-- Game-Play: Increased max zoom out
+## What's New - v1.115
+- Game-Play: Support for card back faces
+  - Select backs folder in Game Editor Menu
+  - Select back from dropdown in Card Creator Menu
+  - Search backs in Card Search/Filter Menu
+- Game-Play: Animation for card and stack actions
 
 ## Sprint - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
-- Game-Play: Support for card back faces
-- Game-Play: Animation for card and stack actions
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Display values on Card in Play Area
@@ -60,6 +62,7 @@ permalink: roadmap.html
 - Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
 
 ## Icebox
+- Integration: Json Schema Generation via https://github.com/json-everything/json-everything
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit
