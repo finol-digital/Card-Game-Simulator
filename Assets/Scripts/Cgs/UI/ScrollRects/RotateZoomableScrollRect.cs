@@ -15,7 +15,7 @@ namespace Cgs.UI.ScrollRects
     {
         private const float MinRotation = -180; // Also in PlayMatRotation slider
         private const float MaxRotation = 180; // Also in PlayMatRotation slider
-        private const float MinZoom = 0.33f; // Also in PlayMatZoom slider
+        private const float MinZoom = 0.25f; // Also in PlayMatZoom slider
         public const float DefaultZoom = 0.5f;
         private const float MaxZoom = 1.5f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;

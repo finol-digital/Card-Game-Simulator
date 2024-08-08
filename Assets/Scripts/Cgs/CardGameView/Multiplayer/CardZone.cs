@@ -110,7 +110,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnNetworkSpawnPlayable()
         {
-            if (CardZoneType.Area.Equals(type))
+            if (CardZoneType.Area.Equals(Type))
                 return;
 
             var rectTransform = (RectTransform) transform;
@@ -134,10 +134,12 @@ namespace Cgs.CardGameView.Multiplayer
             };
 
             HorizontalOrVerticalLayoutGroup layoutGroup = GetComponent<HorizontalLayoutGroup>();
-            if (layoutGroup == null)
-                layoutGroup = GetComponent<VerticalLayoutGroup>();
             if (layoutGroup != null)
                 layoutGroup.spacing = spacing;
+            else
+                layoutGroup = GetComponent<VerticalLayoutGroup>();
+            if (layoutGroup != null)
+                layoutGroup.spacing = -225f;
 
             type = Type;
             allowsFlip = true;

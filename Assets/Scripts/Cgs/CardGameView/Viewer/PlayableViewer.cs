@@ -60,6 +60,7 @@ namespace Cgs.CardGameView.Viewer
 
         public List<Text> valueTexts;
         public InputField dieValueInputField;
+        public InputField dieMaxInputField;
 
         public bool IsVisible
         {
@@ -111,6 +112,12 @@ namespace Cgs.CardGameView.Viewer
                     RollDie();
                 else if (Inputs.IsSave)
                     IncrementDie();
+
+                if (IsVisible)
+                {
+                    dieValueInputField.text = Dice.Value.ToString();
+                    dieMaxInputField.text = Dice.Max.ToString();
+                }
             }
             else if (SelectedPlayable is CardStack)
             {
@@ -178,7 +185,10 @@ namespace Cgs.CardGameView.Viewer
             stackActionPanel.interactable = IsVisible && _selectedPlayable is CardStack;
             stackActionPanel.blocksRaycasts = IsVisible && _selectedPlayable is CardStack;
 
-            dieValueInputField.text = string.Empty;
+            if (Dice == null)
+                return;
+            dieValueInputField.text = Dice.Value.ToString();
+            dieMaxInputField.text = Dice.Max.ToString();
         }
 
         public void Preview(CgsNetPlayable playable)
@@ -203,7 +213,19 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            Dice.Increment();
+            Dice.Value += 1;
+        }
+
+        [UsedImplicitly]
+        public void IncrementDieMax()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring increment max request since there is no die selected.");
+                return;
+            }
+
+            Dice.Max += 1;
         }
 
         [UsedImplicitly]
@@ -215,7 +237,19 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            Dice.Decrement();
+            Dice.Value -= 1;
+        }
+
+        [UsedImplicitly]
+        public void DecrementDieMax()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring decrement max request since there is no die selected.");
+                return;
+            }
+
+            Dice.Max -= 1;
         }
 
         [UsedImplicitly]
@@ -240,7 +274,40 @@ namespace Cgs.CardGameView.Viewer
             }
 
             if (int.TryParse(value, out var valueInt) && valueInt != Dice.Value)
-                Dice.SetValue(valueInt);
+                Dice.Value = valueInt;
+        }
+
+        [UsedImplicitly]
+        public void ChangeDieMax(string max)
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring change max request since there is no die selected.");
+                return;
+            }
+
+            if (int.TryParse(max, out var maxInt) && maxInt != Dice.Max)
+                Dice.Max = maxInt;
+        }
+
+        [UsedImplicitly]
+        public void ChangeDieColor(int option)
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring change color since there is no die selected.");
+                return;
+            }
+
+            Dice.DieColor = option switch
+            {
+                0 => Color.white,
+                1 => Color.red,
+                2 => Color.green,
+                3 => Color.blue,
+                4 => Color.gray,
+                _ => Color.white
+            };
         }
 
         [UsedImplicitly]

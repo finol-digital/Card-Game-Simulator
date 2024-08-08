@@ -181,7 +181,6 @@ jobs:
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
       - name: Free Disk Space
-        if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneLinux64'
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           large-packages: false
@@ -814,7 +813,7 @@ jobs:
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
       - name: Configure Microsoft Store Developer CLI
-        run: msstore reconfigure --tenantId ${{ secrets.MICROSOFT_TENANT_ID }} --sellerId 9N96N5S4W3J0 --clientId ${{ secrets.MICROSOFT_CLIENT_ID }} --clientSecret ${{ secrets.MICROSOFT_KEY }}
+        run: msstore reconfigure --tenantId ${{ secrets.MICROSOFT_TENANT_ID }} --sellerId ${{ secrets.MICROSOFT_SELLER_ID }} --clientId ${{ secrets.MICROSOFT_CLIENT_ID }} --clientSecret ${{ secrets.MICROSOFT_KEY }}
       - name: Build the .appxupload
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh

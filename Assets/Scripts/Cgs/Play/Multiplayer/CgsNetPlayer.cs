@@ -523,11 +523,12 @@ namespace Cgs.Play.Multiplayer
             cardModel.SnapToGrid();
             var position = ((RectTransform) cardModelTransform).localPosition;
             var rotation = cardModelTransform.localRotation;
+            var isFacedown = cardModel.IsFacedown && !cardModel.Value.IsBackFaceCard;
 
             if (cardZone.IsSpawned)
-                SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, cardModel.IsFacedown);
+                SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown);
             else
-                SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, cardModel.IsFacedown);
+                SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, isFacedown);
 
             if (cardModel.IsSpawned)
                 DespawnCardServerRpc(cardModel.gameObject);
@@ -563,16 +564,16 @@ namespace Cgs.Play.Multiplayer
 
         #region Dice
 
-        public void RequestNewDie(Vector2 position, Quaternion rotation, int min, int max)
+        public void RequestNewDie(Vector2 position, Quaternion rotation, int min, int max, Vector3 color)
         {
-            CreateDieServerRpc(position, rotation, min, max);
+            CreateDieServerRpc(position, rotation, min, max, color);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateDieServerRpc(Vector2 position, Quaternion rotation, int min, int max)
+        private void CreateDieServerRpc(Vector2 position, Quaternion rotation, int min, int max, Vector3 color)
         {
-            PlayController.Instance.CreateDie(position, rotation, min, max);
+            PlayController.Instance.CreateDie(position, rotation, min, max, new Color(color.x, color.y, color.z));
         }
 
         #endregion

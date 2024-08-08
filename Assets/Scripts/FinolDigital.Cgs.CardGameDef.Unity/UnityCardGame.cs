@@ -632,8 +632,23 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             else
                 Debug.LogWarning("LoadCardFromJToken::ParseNameError");
 
+            var cardBackName = string.Empty;
+            if (!string.IsNullOrEmpty(CardNameBackIdentifier))
+            {
+                var nameBackDef = new PropertyDef(CardNameBackIdentifier, PropertyType.String);
+                PopulateCardProperty(metaProperties, cardJToken, nameBackDef, nameBackDef.Name);
+                if (metaProperties.TryGetValue(CardNameBackIdentifier, out var cardNameBackEntry))
+                    cardBackName = cardNameBackEntry.Value;
+                else
+                    Debug.Log("LoadCardFromJToken::ParseNameBackError");
+            }
+
             var cardProperties = new Dictionary<string, PropertyDefValuePair>();
             PopulateCardProperties(cardProperties, cardJToken, CardProperties);
+
+            var cardBackProperties = new Dictionary<string, PropertyDefValuePair>();
+            if (!string.IsNullOrEmpty(cardBackName))
+                PopulateCardProperties(cardBackProperties, cardJToken, CardProperties, "", true);
 
             // Populate primary property if it was set in the CGS UI
             if (cardJToken["properties"] is JObject {HasValues: true} jObject)
@@ -725,6 +740,24 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         {
                             ImageWebUrl = cardImageWebUrl
                         };
+                    if (!string.IsNullOrEmpty(cardBackName))
+                    {
+                        var backCardId = cardDuplicateId + "_b";
+                        unityCard =
+                            new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint, true,
+                                backCardId)
+                            {
+                                ImageWebUrl = cardImageWebUrl
+                            };
+                        var backUnityCard =
+                            new UnityCard(this, backCardId, cardName, set.Key, cardBackProperties, isReprint, true,
+                                cardDuplicateId)
+                            {
+                                ImageWebUrl = cardImageWebUrl
+                            };
+                        LoadedCards[backUnityCard.Id] = backUnityCard;
+                    }
+
                     if (backs.Count < 1 || backs.Contains(string.Empty))
                     {
                         LoadedCards[unityCard.Id] = unityCard;
@@ -749,7 +782,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         }
 
         private void PopulateCardProperties(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,
-            List<PropertyDef> propertyDefs, string keyPrefix = "")
+            List<PropertyDef> propertyDefs, string keyPrefix = "", bool isBack = false)
         {
             if (cardProperties == null || cardJToken == null || propertyDefs == null)
             {
@@ -758,11 +791,11 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             }
 
             foreach (var property in propertyDefs)
-                PopulateCardProperty(cardProperties, cardJToken, property, keyPrefix + property.Name);
+                PopulateCardProperty(cardProperties, cardJToken, property, keyPrefix + property.Name, isBack);
         }
 
         private void PopulateCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties, JToken cardJToken,
-            PropertyDef property, string key)
+            PropertyDef property, string key, bool isBack = false)
         {
             if (cardProperties == null || cardJToken == null || property == null)
             {
@@ -777,7 +810,9 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 JToken listTokens;
                 JObject jObject;
                 var identifier = property.Name;
-                if (!string.IsNullOrEmpty(property.FrontName))
+                if (isBack && !string.IsNullOrEmpty(property.BackName))
+                    identifier = property.BackName;
+                else if (!string.IsNullOrEmpty(property.FrontName))
                     identifier = property.FrontName;
                 switch (property.Type)
                 {

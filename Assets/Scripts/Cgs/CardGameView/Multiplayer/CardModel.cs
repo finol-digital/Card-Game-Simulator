@@ -41,9 +41,12 @@ namespace Cgs.CardGameView.Multiplayer
             get => IsSpawned ? _idNetworkVariable.Value : _id;
             private set
             {
+                var oldValue = _id;
                 _id = value;
                 if (IsSpawned)
                     _idNetworkVariable.Value = value;
+                else if (oldValue != _id)
+                    OnChangeId(oldValue, _id);
             }
         }
 
@@ -674,6 +677,9 @@ namespace Cgs.CardGameView.Multiplayer
             gameObject.name = $"[{_id}] {unityCard.Name}";
             if (!IsFacedown)
                 unityCard.RegisterDisplay(this);
+            if (CardViewer.Instance != null && CardViewer.Instance.IsVisible &&
+                CardViewer.Instance.SelectedCardModel == this)
+                CardViewer.Instance.SelectedCardModel = this;
         }
 
         [ServerRpc(RequireOwnership = false)]

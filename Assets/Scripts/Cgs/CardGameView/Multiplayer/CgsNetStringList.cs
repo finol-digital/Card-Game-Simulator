@@ -13,7 +13,7 @@ namespace Cgs.CardGameView.Multiplayer
 {
     public struct CgsNetStringList : INetworkSerializeByMemcpy, IEquatable<CgsNetStringList>
     {
-        private const string Delimiter = "/";
+        private const string Delimiter = "|";
 
         private ForceNetworkSerializeByMemcpy<FixedString4096Bytes> _info;
 

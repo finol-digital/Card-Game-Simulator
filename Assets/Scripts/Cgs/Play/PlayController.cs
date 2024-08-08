@@ -407,6 +407,9 @@ namespace Cgs.Play
 
         private static void AddCardToPlay(CardZone cardZone, CardModel cardModel)
         {
+            if (cardModel.IsFacedown && cardModel.Value.IsBackFaceCard)
+                cardModel.IsFacedown = false;
+
             if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
@@ -415,7 +418,8 @@ namespace Cgs.Play
 
         public static void SetPlayActions(CardModel cardModel)
         {
-            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction =
+                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.SecondaryDragAction = cardModel.Rotate;
         }
 
@@ -453,21 +457,22 @@ namespace Cgs.Play
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewDie(Vector2.zero,
                     CgsNetManager.Instance.LocalPlayer.DefaultRotation, Die.DefaultMin,
-                    PlaySettings.DieFaceCount);
+                    PlaySettings.DieFaceCount, new Vector3(Color.white.r, Color.white.g, Color.white.b));
             else
-                CreateDie(Vector2.zero, Quaternion.identity, Die.DefaultMin, PlaySettings.DieFaceCount);
+                CreateDie(Vector2.zero, Quaternion.identity, Die.DefaultMin, PlaySettings.DieFaceCount, Color.white);
         }
 
-        public Die CreateDie(Vector2 position, Quaternion rotation, int min, int max)
+        public Die CreateDie(Vector2 position, Quaternion rotation, int min, int max, Color color)
         {
             var die = Instantiate(diePrefab, playAreaCardZone.transform).GetOrAddComponent<Die>();
             if (CgsNetManager.Instance.IsOnline)
                 die.MyNetworkObject.Spawn();
 
-            die.Min = min;
-            die.Max = max;
             die.Position = position;
             die.Rotation = rotation;
+            die.Min = min;
+            die.Max = max;
+            die.DieColor = color;
 
             return die;
         }
@@ -543,6 +548,8 @@ namespace Cgs.Play
                 cardZone.Size = size;
                 cardZone.DefaultFace = facePreference;
                 cardZone.DefaultAction = cardAction;
+                var defaultAction = CardActionPanel.CardActionDictionary[cardZone.DefaultAction];
+                cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = defaultAction);
 
                 return cardZone;
             }
@@ -568,6 +575,8 @@ namespace Cgs.Play
             cardZone.Type = CardZoneType.Horizontal;
             cardZone.Position = position;
             cardZone.Rotation = rotation;
+            cardZone.allowsRotation = true;
+            cardZone.allowsFlip = true;
 
             return cardZone;
         }
@@ -582,6 +591,8 @@ namespace Cgs.Play
             cardZone.Type = CardZoneType.Vertical;
             cardZone.Position = position;
             cardZone.Rotation = rotation;
+            cardZone.allowsRotation = true;
+            cardZone.allowsFlip = true;
 
             return cardZone;
         }
@@ -592,7 +603,8 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction =
+                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
         }
 
         public static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
@@ -601,7 +613,8 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction =
+                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.IsFacedown = true;
         }
 
@@ -611,7 +624,8 @@ namespace Cgs.Play
                 return;
 
             cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction = CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
+            cardModel.DefaultAction =
+                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
             cardModel.IsFacedown = false;
         }
 
