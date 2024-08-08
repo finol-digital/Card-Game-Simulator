@@ -1,1 +1,1 @@
-- Game-Play: Increased max zoom out
+- Game-Play: Customize Dice
