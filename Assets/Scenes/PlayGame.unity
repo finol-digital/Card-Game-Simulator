@@ -2351,6 +2351,11 @@ PrefabInstance:
       propertyPath: avoidOverlap
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1704842163565253029, guid: 6c8f698bdb10af641a0fdff4f6f16781,
+        type: 3}
+      propertyPath: m_Name
+      value: Counter Widget
+      objectReference: {fileID: 0}
     - target: {fileID: 1948188218925334483, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: m_AnchorMax.y

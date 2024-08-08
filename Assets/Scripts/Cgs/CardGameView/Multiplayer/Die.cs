@@ -22,15 +22,23 @@ namespace Cgs.CardGameView.Multiplayer
         private const float RollPeriodTime = 0.05f;
 
         public Text valueText;
+        public Image dieImage;
 
         public int Min
         {
             get => IsSpawned ? _minNetworkVariable.Value : _min;
             set
             {
+                var oldMin = _min;
                 _min = value;
+                if (_min > Max)
+                    _min = Max;
+                if (Value < _min)
+                    Value = _min;
                 if (IsSpawned)
-                    _minNetworkVariable.Value = value;
+                    UpdateMinServerRpc(_min);
+                else
+                    OnChangeMin(oldMin, _min);
             }
         }
 
@@ -42,9 +50,16 @@ namespace Cgs.CardGameView.Multiplayer
             get => IsSpawned ? _maxNetworkVariable.Value : _max;
             set
             {
+                var oldMax = _max;
                 _max = value;
+                if (_max < Min)
+                    _max = _min;
+                if (Value > _max)
+                    Value = _max;
                 if (IsSpawned)
-                    _maxNetworkVariable.Value = value;
+                    UpdateMaxServerRpc(_max);
+                else
+                    OnChangeMax(oldMax, _max);
             }
         }
 
@@ -56,7 +71,7 @@ namespace Cgs.CardGameView.Multiplayer
         public int Value
         {
             get => IsSpawned ? _valueNetworkVariable.Value : _value;
-            private set
+            set
             {
                 var oldValue = _value;
                 var newValue = value;
@@ -73,18 +88,27 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        public void SetValue(int value)
+        private int _value = DefaultMin;
+        private NetworkVariable<int> _valueNetworkVariable;
+
+        public Color DieColor
         {
-            var oldValue = _value;
-            _value = value;
-            if (IsSpawned)
-                UpdateValueServerRpc(value);
-            else
-                OnChangeValue(oldValue, value);
+            get => !IsSpawned
+                ? dieImage.color
+                : new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
+                    _colorNetworkVariable.Value.z);
+            set
+            {
+                var oldValue = new Vector3(dieImage.color.r, dieImage.color.g, dieImage.color.b);
+                var newValue = new Vector3(value.r, value.g, value.b);
+                if (IsSpawned)
+                    UpdateColorServerRpc(newValue);
+                else
+                    OnChangeColor(oldValue, newValue);
+            }
         }
 
-        private int _value;
-        private NetworkVariable<int> _valueNetworkVariable;
+        private NetworkVariable<Vector3> _colorNetworkVariable;
 
         private float _rollRemainingTime;
         private float _rollPeriodTime;
@@ -92,9 +116,20 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnAwakePlayable()
         {
             _minNetworkVariable = new NetworkVariable<int>();
+            _minNetworkVariable.OnValueChanged += OnChangeMin;
             _maxNetworkVariable = new NetworkVariable<int>();
+            _maxNetworkVariable.OnValueChanged += OnChangeMax;
             _valueNetworkVariable = new NetworkVariable<int>();
             _valueNetworkVariable.OnValueChanged += OnChangeValue;
+            _colorNetworkVariable = new NetworkVariable<Vector3>();
+            _colorNetworkVariable.OnValueChanged += OnChangeColor;
+        }
+
+        protected override void OnNetworkSpawnPlayable()
+        {
+            if (!Vector3.zero.Equals(_colorNetworkVariable.Value))
+                dieImage.color = new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
+                    _colorNetworkVariable.Value.z);
         }
 
         protected override void OnStartPlayable()
@@ -132,6 +167,30 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [ServerRpc(RequireOwnership = false)]
+        private void UpdateMinServerRpc(int value)
+        {
+            _minNetworkVariable.Value = value;
+        }
+
+        [PublicAPI]
+        public void OnChangeMin(int oldValue, int newValue)
+        {
+            _min = newValue;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void UpdateMaxServerRpc(int value)
+        {
+            _maxNetworkVariable.Value = value;
+        }
+
+        [PublicAPI]
+        public void OnChangeMax(int oldValue, int newValue)
+        {
+            _max = newValue;
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         private void UpdateValueServerRpc(int value)
         {
             _valueNetworkVariable.Value = value;
@@ -144,16 +203,16 @@ namespace Cgs.CardGameView.Multiplayer
             valueText.text = newValue.ToString();
         }
 
-        [UsedImplicitly]
-        public void Decrement()
+        [ServerRpc(RequireOwnership = false)]
+        private void UpdateColorServerRpc(Vector3 value)
         {
-            Value -= 1;
+            _colorNetworkVariable.Value = value;
         }
 
-        [UsedImplicitly]
-        public void Increment()
+        [PublicAPI]
+        public void OnChangeColor(Vector3 oldValue, Vector3 newValue)
         {
-            Value += 1;
+            dieImage.color = new Color(newValue.x, newValue.y, newValue.z);
         }
 
         [UsedImplicitly]
