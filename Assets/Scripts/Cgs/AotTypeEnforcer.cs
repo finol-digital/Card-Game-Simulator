@@ -39,6 +39,9 @@ namespace Cgs
                 cardGame.AutoUpdateUrl = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.BannerImageFileType = string.Empty;
                 cardGame.BannerImageUrl = new Uri(UnityFileMethods.FilePrefix);
+                cardGame.CardBackFaceImageUrls = new List<CardBackFaceImageUrl>();
+                var cardBackFaceImageUrl = new CardBackFaceImageUrl(string.Empty, new Uri(UnityFileMethods.FilePrefix));
+                cardGame.CardBackFaceImageUrls.Add(cardBackFaceImageUrl);
                 cardGame.CardBackImageFileType = string.Empty;
                 cardGame.CardBackImageUrl = new Uri(UnityFileMethods.FilePrefix);
                 cardGame.CardDataIdentifier = string.Empty;
