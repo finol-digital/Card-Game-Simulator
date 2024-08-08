@@ -181,7 +181,6 @@ jobs:
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
       - name: Free Disk Space
-        if: matrix.targetPlatform == 'Android' || matrix.targetPlatform == 'StandaloneLinux64'
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
           large-packages: false
