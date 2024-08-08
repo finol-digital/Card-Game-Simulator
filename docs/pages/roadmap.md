@@ -11,6 +11,7 @@ permalink: roadmap.html
 - Bug-Fix: Android/iOS/iPad crashes
 - Game-Play: Animation for card and stack actions
 - Game-Play: Support for card back faces
+  - Initial card image load when reprints not hidden error
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
