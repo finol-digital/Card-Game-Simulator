@@ -61,6 +61,7 @@ namespace Cgs.CardGameView.Viewer
         public List<Text> valueTexts;
         public InputField dieValueInputField;
         public InputField dieMaxInputField;
+        public Dropdown dieDropdown;
 
         public bool IsVisible
         {
@@ -114,10 +115,7 @@ namespace Cgs.CardGameView.Viewer
                     IncrementDie();
 
                 if (IsVisible)
-                {
-                    dieValueInputField.text = Dice.Value.ToString();
-                    dieMaxInputField.text = Dice.Max.ToString();
-                }
+                    RedisplayDie();
             }
             else if (SelectedPlayable is CardStack)
             {
@@ -185,10 +183,34 @@ namespace Cgs.CardGameView.Viewer
             stackActionPanel.interactable = IsVisible && _selectedPlayable is CardStack;
             stackActionPanel.blocksRaycasts = IsVisible && _selectedPlayable is CardStack;
 
+            if (Dice != null)
+                RedisplayDie();
+        }
+
+        private void RedisplayDie()
+        {
             if (Dice == null)
+            {
+                Debug.LogWarning("Attempted to redisplay die without Dice!");
                 return;
+            }
+
             dieValueInputField.text = Dice.Value.ToString();
             dieMaxInputField.text = Dice.Max.ToString();
+            if (Mathf.Approximately(Dice.DieColor.r, 1) && Mathf.Approximately(Dice.DieColor.g, 1) &&
+                Mathf.Approximately(Dice.DieColor.b, 1) && dieDropdown.value != 0)
+                dieDropdown.value = 0;
+            else if (Mathf.Approximately(Dice.DieColor.r, 1) && Mathf.Approximately(Dice.DieColor.g, 0) &&
+                     Mathf.Approximately(Dice.DieColor.b, 0) && dieDropdown.value != 1)
+                dieDropdown.value = 1;
+            else if (Mathf.Approximately(Dice.DieColor.r, 0) && Mathf.Approximately(Dice.DieColor.g, 1) &&
+                     Mathf.Approximately(Dice.DieColor.b, 0) && dieDropdown.value != 2)
+                dieDropdown.value = 2;
+            else if (Mathf.Approximately(Dice.DieColor.r, 0) && Mathf.Approximately(Dice.DieColor.g, 0) &&
+                     Mathf.Approximately(Dice.DieColor.b, 1) && dieDropdown.value != 3)
+                dieDropdown.value = 3;
+            else if (Dice.DieColor is {r: < 1, g: < 1, b: < 1} && dieDropdown.value != 4)
+                dieDropdown.value = 4;
         }
 
         public void Preview(CgsNetPlayable playable)

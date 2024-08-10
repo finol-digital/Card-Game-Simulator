@@ -127,6 +127,7 @@ MonoBehaviour:
   - {fileID: 4159148351361970319}
   dieValueInputField: {fileID: 4819420345818905078}
   dieMaxInputField: {fileID: 4182352698561528279}
+  dieDropdown: {fileID: 698995707495592207}
 --- !u!1 &3229226146847586547
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,6 +692,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d611347712873941990408a695ae759, type: 3}
+--- !u!114 &698995707495592207 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 917083975517249680, guid: 8d611347712873941990408a695ae759,
+    type: 3}
+  m_PrefabInstance: {fileID: 362953049760895391}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d0b652f32a2cc243917e4028fa0f046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &809152361887806933 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1023399211122107466, guid: 8d611347712873941990408a695ae759,

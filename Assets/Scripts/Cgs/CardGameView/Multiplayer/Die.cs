@@ -15,8 +15,8 @@ namespace Cgs.CardGameView.Multiplayer
     {
         public override string DeletePrompt => "Delete die?";
 
-        public const int DefaultMin = 1;
         public const int DefaultMax = 6;
+        public const int DefaultValue = 6;
 
         private const float RollTotalTime = 1.0f;
         private const float RollPeriodTime = 0.05f;
@@ -24,26 +24,7 @@ namespace Cgs.CardGameView.Multiplayer
         public Text valueText;
         public Image dieImage;
 
-        public int Min
-        {
-            get => IsSpawned ? _minNetworkVariable.Value : _min;
-            set
-            {
-                var oldMin = _min;
-                _min = value;
-                if (_min > Max)
-                    _min = Max;
-                if (Value < _min)
-                    Value = _min;
-                if (IsSpawned)
-                    UpdateMinServerRpc(_min);
-                else
-                    OnChangeMin(oldMin, _min);
-            }
-        }
-
-        private int _min = DefaultMin;
-        private NetworkVariable<int> _minNetworkVariable;
+        private static int Min => 1;
 
         public int Max
         {
@@ -53,7 +34,7 @@ namespace Cgs.CardGameView.Multiplayer
                 var oldMax = _max;
                 _max = value;
                 if (_max < Min)
-                    _max = _min;
+                    _max = Min;
                 if (Value > _max)
                     Value = _max;
                 if (IsSpawned)
@@ -88,7 +69,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private int _value = DefaultMin;
+        private int _value = DefaultValue;
         private NetworkVariable<int> _valueNetworkVariable;
 
         public Color DieColor
@@ -115,8 +96,6 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnAwakePlayable()
         {
-            _minNetworkVariable = new NetworkVariable<int>();
-            _minNetworkVariable.OnValueChanged += OnChangeMin;
             _maxNetworkVariable = new NetworkVariable<int>();
             _maxNetworkVariable.OnValueChanged += OnChangeMax;
             _valueNetworkVariable = new NetworkVariable<int>();
@@ -164,18 +143,6 @@ namespace Cgs.CardGameView.Multiplayer
             else if (!EventSystem.current.alreadySelecting &&
                      EventSystem.current.currentSelectedGameObject != gameObject)
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void UpdateMinServerRpc(int value)
-        {
-            _minNetworkVariable.Value = value;
-        }
-
-        [PublicAPI]
-        public void OnChangeMin(int oldValue, int newValue)
-        {
-            _min = newValue;
         }
 
         [ServerRpc(RequireOwnership = false)]
