@@ -4,16 +4,18 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.115
-- Game-Play: Customize Dice
+## What's New - v1.116
+- Bug-Fixes
 
 ## Sprint - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
-- Game-Play: Animation for card and stack actions
+- Bug-Fix: macOS Mission Control freezes
 - Game-Play: Support for card back faces
+  - Initial card image load when reprints not hidden error
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
+- Game-Play: Animation for card and stack actions
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Display values on Card in Play Area

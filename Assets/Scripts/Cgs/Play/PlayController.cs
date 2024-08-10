@@ -456,13 +456,13 @@ namespace Cgs.Play
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewDie(Vector2.zero,
-                    CgsNetManager.Instance.LocalPlayer.DefaultRotation, Die.DefaultMin,
-                    PlaySettings.DieFaceCount, new Vector3(Color.white.r, Color.white.g, Color.white.b));
+                    CgsNetManager.Instance.LocalPlayer.DefaultRotation, PlaySettings.DieFaceCount, Die.DefaultValue,
+                    new Vector3(Color.white.r, Color.white.g, Color.white.b));
             else
-                CreateDie(Vector2.zero, Quaternion.identity, Die.DefaultMin, PlaySettings.DieFaceCount, Color.white);
+                CreateDie(Vector2.zero, Quaternion.identity, PlaySettings.DieFaceCount, Die.DefaultValue, Color.white);
         }
 
-        public Die CreateDie(Vector2 position, Quaternion rotation, int min, int max, Color color)
+        public Die CreateDie(Vector2 position, Quaternion rotation, int max, int value, Color color)
         {
             var die = Instantiate(diePrefab, playAreaCardZone.transform).GetOrAddComponent<Die>();
             if (CgsNetManager.Instance.IsOnline)
@@ -470,8 +470,8 @@ namespace Cgs.Play
 
             die.Position = position;
             die.Rotation = rotation;
-            die.Min = min;
             die.Max = max;
+            die.Value = value;
             die.DieColor = color;
 
             return die;

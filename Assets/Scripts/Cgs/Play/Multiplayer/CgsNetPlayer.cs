@@ -564,16 +564,16 @@ namespace Cgs.Play.Multiplayer
 
         #region Dice
 
-        public void RequestNewDie(Vector2 position, Quaternion rotation, int min, int max, Vector3 color)
+        public void RequestNewDie(Vector2 position, Quaternion rotation, int max, int value, Vector3 color)
         {
-            CreateDieServerRpc(position, rotation, min, max, color);
+            CreateDieServerRpc(position, rotation, max, value, color);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateDieServerRpc(Vector2 position, Quaternion rotation, int min, int max, Vector3 color)
+        private void CreateDieServerRpc(Vector2 position, Quaternion rotation, int max, int value, Vector3 color)
         {
-            PlayController.Instance.CreateDie(position, rotation, min, max, new Color(color.x, color.y, color.z));
+            PlayController.Instance.CreateDie(position, rotation, max, value, new Color(color.x, color.y, color.z));
         }
 
         #endregion
