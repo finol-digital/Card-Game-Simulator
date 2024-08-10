@@ -71,10 +71,11 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public string Width
         {
-            get => _width.ToString(CultureInfo.InvariantCulture);
+            get => _width.ToString(CultureInfo.CurrentCulture);
             set
             {
-                if (float.TryParse(value, out var width) && width > 0)
+                if (float.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, out var width)
+                    && width is > 0 and < 10)
                     _width = width;
                 else
                     Debug.LogWarning("Attempted to set invalid card width: " + value);
@@ -86,10 +87,11 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public string Height
         {
-            get => _height.ToString(CultureInfo.InvariantCulture);
+            get => _height.ToString(CultureInfo.CurrentCulture);
             set
             {
-                if (float.TryParse(value, out var height) && height > 0)
+                if (float.TryParse(value, NumberStyles.Float, CultureInfo.CurrentCulture, out var height)
+                    && height is > 0 and < 10)
                     _height = height;
                 else
                     Debug.LogWarning("Attempted to set invalid card height: " + value);

@@ -5,7 +5,7 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.116
-- Bug-Fix: Cards stuck on screen
+- Bug-Fixes
 
 ## Sprint - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes

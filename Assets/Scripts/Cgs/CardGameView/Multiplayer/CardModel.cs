@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Viewer;
@@ -152,6 +151,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         private CardZone _placeHolderCardZone;
 
+        private bool IsMovingToPlaceHolder { get; set; }
+
         private void SetIsNameVisible(bool value)
         {
             nameLabel.SetActive(value);
@@ -241,6 +242,11 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == this || HoldTime > ZoomHoldTime)
                 RequestZoomOnThis();
+
+            if (CurrentDragPhase == DragPhase.End && !IsProcessingSecondaryDragAction && PlaceHolder != null)
+                IsMovingToPlaceHolder = true;
+
+            UpdateForMovingToPlaceHolder();
         }
 
         private void RequestZoomOnThis()
@@ -408,7 +414,10 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void PostDragPlayable(PointerEventData eventData)
         {
             if (IsProcessingSecondaryDragAction)
+            {
+                Debug.Log("PostDragPlayable::IsProcessingSecondaryDragAction");
                 return;
+            }
 
             if (DropTarget != null)
             {
@@ -454,7 +463,7 @@ namespace Cgs.CardGameView.Multiplayer
             DropTarget = null;
 
             if (PlaceHolder != null)
-                StartCoroutine(MoveToPlaceHolder());
+                IsMovingToPlaceHolder = true;
             else if (ParentCardZone == null)
                 Discard();
             else if (ParentCardZone.type == CardZoneType.Area)
@@ -601,6 +610,44 @@ namespace Cgs.CardGameView.Multiplayer
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
+        private void UpdateForMovingToPlaceHolder()
+        {
+            if (!IsMovingToPlaceHolder)
+                return;
+
+            if (PlaceHolder != null && Vector3.Distance(transform.position, PlaceHolder.position) > 1)
+            {
+                var distance = MovementSpeed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, PlaceHolder.position, distance);
+            }
+            else
+                FinishMovingToPlaceHolder();
+        }
+
+        private void FinishMovingToPlaceHolder()
+        {
+            if (PlaceHolder == null)
+            {
+                Debug.Log($"Discarding {gameObject.name} MoveToPlaceHolder");
+                Discard();
+                return;
+            }
+
+            var previousParentCardZone = ParentCardZone;
+            var cachedTransform = transform;
+            cachedTransform.SetParent(PlaceHolder.parent);
+            cachedTransform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
+            cachedTransform.localScale = Vector3.one;
+            if (previousParentCardZone != null)
+                previousParentCardZone.OnRemove(this);
+            if (ParentCardZone != null)
+                ParentCardZone.OnAdd(this);
+
+            PlaceHolder = null;
+            Visibility.blocksRaycasts = true;
+            IsMovingToPlaceHolder = false;
+        }
+
         private void ParentToCanvas(Vector3 targetPosition)
         {
             Debug.Log($"ParentToCanvas {gameObject.name}");
@@ -630,36 +677,6 @@ namespace Cgs.CardGameView.Multiplayer
                 DespawnAndDestroyServerRpc();
             else
                 Destroy(gameObject);
-        }
-
-        private IEnumerator MoveToPlaceHolder()
-        {
-            while (PlaceHolder != null && Vector3.Distance(transform.position, PlaceHolder.position) > 1)
-            {
-                var distance = MovementSpeed * Time.deltaTime;
-                transform.position = Vector3.MoveTowards(transform.position, PlaceHolder.position, distance);
-                yield return null;
-            }
-
-            if (PlaceHolder == null)
-            {
-                Debug.Log($"Discarding {gameObject.name} MoveToPlaceHolder");
-                Discard();
-                yield break;
-            }
-
-            var previousParentCardZone = ParentCardZone;
-            var cachedTransform = transform;
-            cachedTransform.SetParent(PlaceHolder.parent);
-            cachedTransform.SetSiblingIndex(PlaceHolder.GetSiblingIndex());
-            cachedTransform.localScale = Vector3.one;
-            if (previousParentCardZone != null)
-                previousParentCardZone.OnRemove(this);
-            if (ParentCardZone != null)
-                ParentCardZone.OnAdd(this);
-
-            PlaceHolder = null;
-            Visibility.blocksRaycasts = true;
         }
 
         [PublicAPI]
