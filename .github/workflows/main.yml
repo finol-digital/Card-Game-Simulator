@@ -850,7 +850,6 @@ jobs:
           app-id: 9N96N5S4W3J0
           package-path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
-        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
