@@ -1,1 +1,1 @@
-- Bug Fixes
+- Cards Explorer: Add Games Management Menu button
