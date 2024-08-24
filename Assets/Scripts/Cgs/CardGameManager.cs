@@ -752,6 +752,11 @@ namespace Cgs
             }
         }
 
+        private void Update()
+        {
+            ImageQueueService.Instance.ProcessQueue(this);
+        }
+
         private void LateUpdate()
         {
             Inputs.WasFocusBack = Inputs.IsFocusBack;

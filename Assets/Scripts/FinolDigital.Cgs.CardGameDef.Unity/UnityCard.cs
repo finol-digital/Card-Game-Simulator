@@ -2,10 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityExtensionMethods;
 using Object = UnityEngine.Object;
@@ -14,11 +11,6 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 {
     public class UnityCard : Card
     {
-        public const string SizeWarningMessage = "WARNING: Card image for {0} ({1}) is too large! \n" +
-                                                 "Recommended Action: Delete the Card, compress the image file using a tool like " +
-                                                 "https://www.iloveimg.com/compress-image " +
-                                                 ", then re-import.";
-
         public static readonly UnityCard Blank = new(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
@@ -27,9 +19,8 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             get
             {
                 var id = Id;
-                var backFaceIdExtension = "." + BackFaceId;
-                if (!IsBackFaceCard && !string.IsNullOrEmpty(BackFaceId) && id.Contains(backFaceIdExtension))
-                    id = id[..id.IndexOf(backFaceIdExtension, StringComparison.Ordinal)];
+                if (!IsBackFaceCard && !string.IsNullOrEmpty(BackFaceId) && id.EndsWith("." + BackFaceId))
+                    id = id[..id.LastIndexOf('.')];
                 return UnityFileMethods.GetSafeFileName(id + "." + SourceGame.CardImageFileType);
             }
         }
@@ -76,38 +67,19 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             if (ImageSprite != null)
                 cardDisplay.SetImageSprite(ImageSprite);
             else if (!IsLoadingImage)
-            {
-                if (((UnityCardGame) SourceGame).CoroutineRunner != null)
-                    ((UnityCardGame) SourceGame).CoroutineRunner.StartCoroutine(GetAndSetImageSprite());
-                else
-                    Debug.LogWarning("RegisterDisplay::NoImageOrImageLoader");
-            }
+                EnqueueImageLoad();
         }
 
-        public IEnumerator GetAndSetImageSprite()
+        private void EnqueueImageLoad()
         {
-            if (IsLoadingImage)
-                yield break;
-
             IsLoadingImage = true;
-            Sprite newSprite = null;
-#if UNITY_WEBGL
-            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
-                UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageWebUrl)
-                , output => newSprite = output);
-#else
-            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
-                UnityFileMethods.CreateAndOutputSpriteFromImageFile(ImageFilePath, ImageWebUrl.Replace(" ", "%20"))
-                , output => newSprite = output);
-            var fileInfo = new FileInfo(ImageFilePath);
-            if (fileInfo.Exists && fileInfo.Length > 2_000_000)
-            {
-                var sizeWarningMessage = string.Format(SizeWarningMessage, Name, Id);
-                Debug.LogError(sizeWarningMessage);
-            }
-#endif
-            if (newSprite != null)
-                ImageSprite = newSprite;
+            ImageQueueService.Instance.Enqueue(this);
+        }
+
+        public void OnLoadImage(Sprite imageSprite)
+        {
+            if (imageSprite != null)
+                ImageSprite = imageSprite;
             IsLoadingImage = false;
         }
 

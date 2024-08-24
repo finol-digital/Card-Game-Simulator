@@ -24,6 +24,8 @@ namespace Cgs.Cards
         public const string SingleCard = "Single Card";
         public const string SetOfCards = "Set of Cards";
 
+        public GameObject gamesManagementMenuPrefab;
+
         public GameObject cardSetImportModalPrefab;
         public GameObject cardEditorMenuPrefab;
         public GameObject setImportMenuPrefab;
@@ -31,6 +33,13 @@ namespace Cgs.Cards
         public Image bannerImage;
         public List<GameObject> editButtons;
         public SearchResults searchResults;
+
+#if !UNITY_WEBGL
+        private GamesManagementMenu GamesManagement =>
+            _gamesManagement ??= Instantiate(gamesManagementMenuPrefab).GetOrAddComponent<GamesManagementMenu>();
+
+        private GamesManagementMenu _gamesManagement;
+#endif
 
         private DecisionModal NewCardSetModal =>
             _newCardSetModal ??= Instantiate(cardSetImportModalPrefab).GetOrAddComponent<DecisionModal>();
@@ -60,8 +69,10 @@ namespace Cgs.Cards
                 CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
-            if (Inputs.IsFocus)
+            if (Inputs.IsFocusNext)
                 searchResults.inputField.ActivateInputField();
+            else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
+                ShowGamesManagementMenu();
             else if (Inputs.IsFilter)
                 searchResults.ShowSearchMenu();
             else if (Inputs.IsNew)
@@ -80,6 +91,14 @@ namespace Cgs.Cards
         }
 
         [UsedImplicitly]
+        public void ShowGamesManagementMenu()
+        {
+#if !UNITY_WEBGL
+            GamesManagement.Show();
+#endif
+        }
+
+        [UsedImplicitly]
         public void ShowNewCardSetModal()
         {
             if (CardGameManager.Current.CgsGamesLink != null &&
@@ -91,7 +110,8 @@ namespace Cgs.Cards
                 return;
             }
 
-            NewCardSetModal.Show(NewCardSetDecisionPrompt, new Tuple<string, UnityAction>(SingleCard, ShowCardEditorMenu),
+            NewCardSetModal.Show(NewCardSetDecisionPrompt,
+                new Tuple<string, UnityAction>(SingleCard, ShowCardEditorMenu),
                 new Tuple<string, UnityAction>(SetOfCards, ShowSetImportMenu));
         }
 
