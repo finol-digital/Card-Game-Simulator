@@ -4,14 +4,13 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.116
-- Bug-Fixes
+## What's New - v1.117
+- Cards Explorer: Add Games Management Menu button
 
 ## Sprint - Priority 1
 - Bug-Fix: Android/iOS/iPad crashes
 - Bug-Fix: macOS Mission Control freezes
 - Game-Play: Support for card back faces
-  - Initial card image load when reprints not hidden error
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
