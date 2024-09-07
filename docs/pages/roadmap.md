@@ -4,19 +4,19 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.117
-- Cards Explorer: Add Games Management Menu button
+## What's New - v1.118
+- Bug-Fix: Crashes
+- Bug-Fix: Visibility of facedown cards
 
 ## Sprint - Priority 1
-- Bug-Fix: Android/iOS/iPad crashes
 - Bug-Fix: macOS Mission Control freezes
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
 - Game-Play: Animation for card and stack actions
-- Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
+- Game-Play: Name-Plates indicating player seats
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Support multiple card selection
