@@ -50,6 +50,7 @@ permalink: roadmap.html
 - Platforms: Full controller support (Steam)
 - Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.gg)
 - Platforms: Add Multiplayer and Developer Mode to Web browser
+- Platforms: Android widgets
 - Accessibility: Add audio and sounds throughout the app
 - Accessibility: Tutorial Video for How-To-Play
   - 0:00 Intro (Name/Website)
