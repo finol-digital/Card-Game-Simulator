@@ -72,8 +72,10 @@ namespace Cgs.Menu
             if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
                     .Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
+            else if (Inputs.IsOption)
+                GoToCgsGamesBrowser();
             else if (Inputs.IsSubmit)
-                Download();
+                Import();
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
                 ScrollPage(Inputs.IsPageDown);
             else if (Inputs.IsCancel)
@@ -99,9 +101,16 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void Download()
+        public void GoToCgsGamesBrowser()
+        {
+            Application.OpenURL(Tags.CgsGamesBrowseUrl);
+        }
+
+        [UsedImplicitly]
+        public void Import()
         {
             CardGameManager.Instance.StartGetCardGame(_gameOptions[_selectedGameId].AutoUpdateUrl);
+            Hide();
         }
 
         [UsedImplicitly]

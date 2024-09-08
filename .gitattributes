@@ -1,7 +1,7 @@
 #
 # Git attributes for Unity projects
 #
-# Compiled by the GameCI community - https://game.ci
+# Compiled by the GameCI community under the MIT license - https://game.ci
 #
 # Latest version at https://gist.github.com/webbertakken/ff250a0d5e59a8aae961c2e509c07fbc
 #
@@ -15,7 +15,7 @@
 
 # Macro attribute: Files with Unity's yaml format
 # linguist-generated means the file is ignored for the repository's language statistics and diffs are hidden by default.
-[attr]unity-yaml-file -text -merge=unityyamlmerge linguist-generated
+[attr]unity-yaml-file -text merge=unityyamlmerge linguist-generated
 
 # Macro attribute: Files intended for LFS
 [attr]lfs-file filter=lfs diff=lfs merge=lfs -text
@@ -111,6 +111,8 @@
 *.dfx lfs-file
 *.FBX lfs-file
 *.fbx lfs-file
+*.glb lfs-file
+*.gltf lfs-file
 *.lwo lfs-file
 *.lwo2 lfs-file
 *.lxo lfs-file
