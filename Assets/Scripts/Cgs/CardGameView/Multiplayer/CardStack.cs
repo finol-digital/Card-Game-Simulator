@@ -289,25 +289,24 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void DragCard(PointerEventData eventData)
         {
-            if (Cards.Count < 1)
+            var cards = Cards;
+            if (cards.Count < 1)
             {
                 Debug.LogWarning("Attempted to remove from an empty card stack");
                 return;
             }
 
-            var unityCard = Cards[^1];
-
-            if (CgsNetManager.Instance.IsOnline)
-                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, Cards.Count - 1);
-            else
-                PopCard();
-
+            var unityCard = cards[^1];
             CardModel.CreateDrag(eventData, cardModelPrefab, transform, unityCard, !IsTopFaceup,
                 PlayController.Instance.playAreaCardZone);
-
             RemovePointer(eventData);
 
-            if (PlaySettings.AutoStackCards && Cards.Count < 1)
+            if (CgsNetManager.Instance.IsOnline && cards.Count > 1)
+                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, cards.Count - 1);
+            else if (!CgsNetManager.Instance.IsOnline)
+                PopCard();
+
+            if (PlaySettings.AutoStackCards && cards.Count == 1)
                 RequestDelete();
         }
 
