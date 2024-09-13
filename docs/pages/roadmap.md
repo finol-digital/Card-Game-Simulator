@@ -6,11 +6,11 @@ permalink: roadmap.html
 
 ## What's New - v1.118
 - Bug-Fix: Crashes
-- Bug-Fix: Loading more than 200 cards
 - Bug-Fix: Visibility of facedown cards
 - Game-Play: Context Menu Positioning
 
 ## Sprint - Priority 1
+- Bug-Fix: Loading more than 200 cards
 - Bug-Fix: macOS Mission Control freezes
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
