@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.Play;
 using FinolDigital.Cgs.CardGameDef;
 using FinolDigital.Cgs.CardGameDef.Unity;
 using JetBrains.Annotations;
@@ -431,20 +432,8 @@ namespace Cgs.CardGameView.Viewer
             expanded.interactable = IsVisible && Mode == CardViewerMode.Expanded;
             expanded.blocksRaycasts = IsVisible && Mode == CardViewerMode.Expanded;
 
-            if (IsVisible && IsActionable)
-            {
-                if (SelectedCardModel != null && SelectedCardModel.PointerPositions.Count > 0)
-                {
-                    var position = SelectedCardModel.PointerPositions.Values.First();
-                    var isCardInBottomHalf = position.y + CardActionPanel.PositionOffsetAmount <
-                                             ((RectTransform) transform).rect.height / 2.0f;
-                    var cardActionPanelOffset = CardActionPanel.PositionOffsetAmount *
-                                                (isCardInBottomHalf ? Vector2.up : Vector2.down);
-                    _cardActionPanelPosition = cardActionPanelOffset + position;
-                }
-
-                cardActionPanel.Show(_cardActionPanelPosition);
-            }
+            if (IsVisible && IsActionable && PlaySettings.ShowActionsMenu)
+                cardActionPanel.Show();
             else
                 cardActionPanel.Hide();
 

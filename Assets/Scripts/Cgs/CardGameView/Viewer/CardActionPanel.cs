@@ -43,13 +43,11 @@ namespace Cgs.CardGameView.Viewer
             _canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
         }
 
-        public void Show(Vector2 position)
+        public void Show()
         {
             _canvasGroup.alpha = 1;
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
-
-            transform.position = position;
 
             rotateButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&

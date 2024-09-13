@@ -3,8 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
-using System.Linq;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.Play;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -164,24 +164,13 @@ namespace Cgs.CardGameView.Viewer
             view.interactable = IsVisible;
             view.blocksRaycasts = IsVisible;
 
-            if (_selectedPlayable != null && _selectedPlayable.PointerPositions.Count > 0)
-            {
-                var position = _selectedPlayable.PointerPositions.Values.First();
-                var isPlayableInBottomHalf = position.y + CardActionPanel.PositionOffsetAmount <
-                                             ((RectTransform) transform).rect.height / 2.0f;
-                var actionPanelOffset = CardActionPanel.PositionOffsetAmount *
-                                        (isPlayableInBottomHalf ? Vector2.up : Vector2.down);
-                dieActionPanel.transform.position = actionPanelOffset + position;
-                stackActionPanel.transform.position = actionPanelOffset + position;
-            }
+            dieActionPanel.alpha = PlaySettings.ShowActionsMenu &&IsVisible && _selectedPlayable is Die ? 1 : 0;
+            dieActionPanel.interactable = PlaySettings.ShowActionsMenu &&IsVisible && _selectedPlayable is Die;
+            dieActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu &&IsVisible && _selectedPlayable is Die;
 
-            dieActionPanel.alpha = IsVisible && _selectedPlayable is Die ? 1 : 0;
-            dieActionPanel.interactable = IsVisible && _selectedPlayable is Die;
-            dieActionPanel.blocksRaycasts = IsVisible && _selectedPlayable is Die;
-
-            stackActionPanel.alpha = IsVisible && _selectedPlayable is CardStack ? 1 : 0;
-            stackActionPanel.interactable = IsVisible && _selectedPlayable is CardStack;
-            stackActionPanel.blocksRaycasts = IsVisible && _selectedPlayable is CardStack;
+            stackActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack ? 1 : 0;
+            stackActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
+            stackActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
 
             if (Dice != null)
                 RedisplayDie();

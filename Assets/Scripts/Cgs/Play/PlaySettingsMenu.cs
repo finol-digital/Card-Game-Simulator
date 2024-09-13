@@ -18,6 +18,7 @@ namespace Cgs.Play
         public Dropdown stackViewerOverlapDropdown;
         public Toggle doubleClickToRollDiceToggle;
         public InputField dieFaceCountInputField;
+        public Toggle showActionsMenuToggle;
 
         public override void Show()
         {
@@ -27,6 +28,7 @@ namespace Cgs.Play
             stackViewerOverlapDropdown.value = PlaySettings.StackViewerOverlap;
             doubleClickToRollDiceToggle.isOn = PlaySettings.DoubleClickToRollDice;
             dieFaceCountInputField.text = PlaySettings.DieFaceCount.ToString();
+            showActionsMenuToggle.isOn = PlaySettings.ShowActionsMenu;
         }
 
         private void Update()
@@ -79,6 +81,12 @@ namespace Cgs.Play
         {
             if (int.TryParse(dieFaceCount, out var intValue))
                 PlaySettings.DieFaceCount = intValue;
+        }
+
+        [UsedImplicitly]
+        public void SetShowActionsMenu(bool showActionsMenu)
+        {
+            PlaySettings.ShowActionsMenu = showActionsMenu;
         }
     }
 }
