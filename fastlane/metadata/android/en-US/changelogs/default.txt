@@ -1,1 +1,3 @@
-- Cards Explorer: Add Games Management Menu button
+- Bug-Fix: Crashes
+- Bug-Fix: Visibility of facedown cards
+- Game-Play: Context Menu Positioning
