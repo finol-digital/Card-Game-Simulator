@@ -24,8 +24,6 @@ namespace Cgs.CardGameView.Viewer
 
     public class CardViewer : MonoBehaviour, ICardDisplay, IPointerDownHandler, ISelectHandler, IDeselectHandler
     {
-        private const string PlayerPrefsIsNameVisible = "IsNameVisible";
-
         private const string SetLabel = "Set";
         private const string IdLabel = "Id";
         private const string Delimiter = ": ";
@@ -70,13 +68,12 @@ namespace Cgs.CardGameView.Viewer
 
         public Text previewNameText;
         public Text previewIdText;
+        public Button expandButton;
+        public Button imageButton;
         public List<AspectRatioFitter> cardAspectRatioFitters;
         public List<Image> cardImages;
         public List<Text> nameTexts;
         public List<Text> uniqueIdTexts;
-        public Transform nameVisibleButton;
-        public Image nameVisibleButtonImage;
-        public Image nameInvisibleButtonImage;
         public Text idText;
         public Text setText;
         public Text propertyTextTemplate;
@@ -238,12 +235,6 @@ namespace Cgs.CardGameView.Viewer
 
         private Vector2 _cardActionPanelPosition;
 
-        private static bool IsNameVisible
-        {
-            get => PlayerPrefs.GetInt(PlayerPrefsIsNameVisible, 0) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsIsNameVisible, value ? 1 : 0);
-        }
-
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
@@ -268,16 +259,12 @@ namespace Cgs.CardGameView.Viewer
             if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.IsFacedown)
-                nameVisibleButton.gameObject.SetActive(SelectedCardModel.IsFacedown);
-            if (nameVisibleButton.gameObject.activeSelf != SelectedCardModel.IsFacedown)
-                nameVisibleButton.gameObject.SetActive(SelectedCardModel.IsFacedown);
-            var isNameVisible = IsNameVisible;
-            if (nameVisibleButtonImage.gameObject.activeSelf != isNameVisible)
-                nameVisibleButtonImage.gameObject.SetActive(isNameVisible);
-            if (nameInvisibleButtonImage.gameObject.activeSelf == isNameVisible)
-                nameInvisibleButtonImage.gameObject.SetActive(!isNameVisible);
-            nameTexts[0].color = isNameVisible || !SelectedCardModel.IsFacedown ? Color.white : Color.clear;
+            if (Mode != CardViewerMode.Minimal && SelectedCardModel.IsFacedown)
+                Mode = CardViewerMode.Minimal;
+            expandButton.interactable = !SelectedCardModel.IsFacedown;
+            if (imageButton.gameObject.activeSelf == SelectedCardModel.IsFacedown)
+                imageButton.gameObject.SetActive(!SelectedCardModel.IsFacedown);
+            nameTexts[0].color = SelectedCardModel.IsFacedown ? Color.clear : Color.white;
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
@@ -303,7 +290,7 @@ namespace Cgs.CardGameView.Viewer
                 DecrementProperty();
             else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
                 IncrementProperty();
-            else if (Inputs.IsSort && SelectedCardModel != null)
+            else if (Inputs.IsSort && SelectedCardModel != null && imageButton.gameObject.activeSelf)
                 Zoom = !Zoom;
             else if (Inputs.IsCancel)
             {
@@ -411,12 +398,6 @@ namespace Cgs.CardGameView.Viewer
         public void SetMode(int mode)
         {
             Mode = (CardViewerMode) mode;
-        }
-
-        [UsedImplicitly]
-        public void ToggleIsNameVisible()
-        {
-            IsNameVisible = !IsNameVisible;
         }
 
         private void Redisplay()
