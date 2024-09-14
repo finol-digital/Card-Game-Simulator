@@ -134,6 +134,8 @@ MonoBehaviour:
   selectionTemplate: {fileID: 6417834699738146390}
   emptyText: {fileID: 0}
   scrollRect: {fileID: 8401261588600083526}
+  cgsGamesBrowserPrefab: {fileID: 8069674180739615263, guid: fa45183b67fee27488df0bd07d3b60b5,
+    type: 3}
   cardGameEditorMenuPrefab: {fileID: 7821632309527891152, guid: 5e7b999d6a486c7479e9f4d1cb76d27c,
     type: 3}
   gameImportModalPrefab: {fileID: 5810182567772607080, guid: 864bd2a9f44369e488e6d6f6edc1582e,
@@ -457,7 +459,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0007663933}
+  m_AnchoredPosition: {x: 0, y: 0.00020508088}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8222419885346354308

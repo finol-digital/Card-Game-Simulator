@@ -31,6 +31,7 @@ namespace Cgs.Menu
 
         public static string NoSyncMessage => $"{CardGameManager.Current.Name} does not have a CGS AutoUpdate URL!";
 
+        public GameObject cgsGamesBrowserPrefab;
         public GameObject cardGameEditorMenuPrefab;
         public GameObject gameImportModalPrefab;
         public GameObject downloadMenuPrefab;
@@ -45,6 +46,11 @@ namespace Cgs.Menu
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
 
         private Modal _menu;
+
+        private CgsGamesBrowser CgsGamesBrowserMenu =>
+            _cgsGamesBrowser ??= Instantiate(cgsGamesBrowserPrefab).GetOrAddComponent<CgsGamesBrowser>();
+
+        private CgsGamesBrowser _cgsGamesBrowser;
 
         private CardGameEditorMenu CardGameEditor =>
             _cardGameEditor ??= Instantiate(cardGameEditorMenuPrefab).GetOrAddComponent<CardGameEditorMenu>();
@@ -144,7 +150,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ShowCgsGamesBrowser()
         {
-            Application.OpenURL(Tags.CgsGamesUrl);
+            CgsGamesBrowserMenu.Show();
         }
 
         [UsedImplicitly]

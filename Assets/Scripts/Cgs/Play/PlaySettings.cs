@@ -14,6 +14,7 @@ namespace Cgs.Play
         private const string PlayerPrefsDoubleClickToRollDice = "DoubleClickToRollDice";
         private const string PlayerPrefsDoubleClickToViewStacks = "DoubleClickToViewStacks";
         private const string PlayerPrefsStackViewerOverlap = "StackViewerOverlap";
+        private const string PlayerPrefsShowActionsMenu = "ShowActionsMenu";
 
         public static bool AutoStackCards
         {
@@ -43,6 +44,12 @@ namespace Cgs.Play
         {
             get => PlayerPrefs.GetInt(PlayerPrefsStackViewerOverlap, 1);
             set => PlayerPrefs.SetInt(PlayerPrefsStackViewerOverlap, value);
+        }
+
+        public static bool ShowActionsMenu
+        {
+            get => PlayerPrefs.GetInt(PlayerPrefsShowActionsMenu, 1) == 1;
+            set => PlayerPrefs.SetInt(PlayerPrefsShowActionsMenu, value ? 1 : 0);
         }
     }
 }

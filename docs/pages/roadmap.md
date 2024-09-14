@@ -4,19 +4,21 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.117
-- Cards Explorer: Add Games Management Menu button
+## What's New - v1.118
+- Bug-Fix: Crashes
+- Bug-Fix: Visibility of facedown cards
+- Game-Play: Context Menu Positioning
 
 ## Sprint - Priority 1
-- Bug-Fix: Android/iOS/iPad crashes
+- Bug-Fix: Loading more than 200 cards
 - Bug-Fix: macOS Mission Control freezes
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
 - Game-Play: Animation for card and stack actions
-- Game-Play: Name-Plates indicating player seats
 - Game-Play: Label which player is interacting with cards/playables
+- Game-Play: Name-Plates indicating player seats
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Support multiple card selection
@@ -50,6 +52,7 @@ permalink: roadmap.html
 - Platforms: Full controller support (Steam)
 - Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.gg)
 - Platforms: Add Multiplayer and Developer Mode to Web browser
+- Platforms: Android widgets
 - Accessibility: Add audio and sounds throughout the app
 - Accessibility: Tutorial Video for How-To-Play
   - 0:00 Intro (Name/Website)
