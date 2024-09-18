@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using Cgs.CardGameView.Multiplayer;
+using Cgs.UI.ScrollRects;
 using UnityEngine;
 
 namespace Cgs.Play
@@ -15,6 +16,7 @@ namespace Cgs.Play
         private const string PlayerPrefsDoubleClickToViewStacks = "DoubleClickToViewStacks";
         private const string PlayerPrefsStackViewerOverlap = "StackViewerOverlap";
         private const string PlayerPrefsShowActionsMenu = "ShowActionsMenu";
+        private const string PlayerPrefsDefaultZoom = "DefaultZoom";
 
         public static bool AutoStackCards
         {
@@ -50,6 +52,12 @@ namespace Cgs.Play
         {
             get => PlayerPrefs.GetInt(PlayerPrefsShowActionsMenu, 1) == 1;
             set => PlayerPrefs.SetInt(PlayerPrefsShowActionsMenu, value ? 1 : 0);
+        }
+
+        public static float DefaultZoom
+        {
+            get => PlayerPrefs.GetFloat(PlayerPrefsDefaultZoom, RotateZoomableScrollRect.DefaultZoom);
+            set => PlayerPrefs.SetFloat(PlayerPrefsDefaultZoom, value);
         }
     }
 }

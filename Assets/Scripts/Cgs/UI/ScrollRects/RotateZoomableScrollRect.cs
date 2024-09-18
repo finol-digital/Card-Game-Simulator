@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.Play;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -45,7 +46,13 @@ namespace Cgs.UI.ScrollRects
         public float CurrentZoom
         {
             get => _currentZoom;
-            set => _currentZoom = ZoomEnabled ? Mathf.Clamp(value, MinZoom, MaxZoom) : _currentZoom;
+            set
+            {
+                if (!ZoomEnabled)
+                    return;
+                _currentZoom = Mathf.Clamp(value, MinZoom, MaxZoom);
+                PlaySettings.DefaultZoom = _currentZoom;
+            }
         }
 
         private float _currentZoom = DefaultZoom;
@@ -71,6 +78,7 @@ namespace Cgs.UI.ScrollRects
             Input.multiTouchEnabled = true;
             scrollSensitivity = ScrollWheelSensitivity;
             _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
+            _currentZoom = PlaySettings.DefaultZoom;
         }
 
         protected override void SetContentAnchoredPosition(Vector2 position)

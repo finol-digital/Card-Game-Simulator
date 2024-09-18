@@ -85,13 +85,19 @@ namespace Cgs.Play.Drawer
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (!Inputs.IsFocusNext || Inputs.WasFocusNext)
-                return;
+            if (Inputs.IsVertical)
+            {
+                if (Inputs.IsUp && !Inputs.WasUp)
+                    Show();
+                else if (Inputs.IsDown && !Inputs.WasDown)
+                    Hide();
+            }
 
-            if (upButton.interactable)
-                Show();
-            else
-                Hide();
+            if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
+                Deal();
+
+            if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
+                Draw();
         }
 
         private void Resize()
@@ -122,6 +128,18 @@ namespace Cgs.Play.Drawer
         public void AddCard(UnityCard card)
         {
             viewer.AddCard(card);
+        }
+
+        [UsedImplicitly]
+        public void Deal()
+        {
+            PlayController.Instance.ShowDealer();
+        }
+
+        [UsedImplicitly]
+        public void Draw()
+        {
+            PlayController.Instance.DealHand(1);
         }
 
         [UsedImplicitly]

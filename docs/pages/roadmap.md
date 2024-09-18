@@ -4,14 +4,13 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.118
-- Bug-Fix: Crashes
-- Bug-Fix: Visibility of facedown cards
-- Game-Play: Context Menu Positioning
+## What's New - v1.119
+- Game-Play: Drawer Buttons
+- Game-Play: Persistent Zoom Setting
 
 ## Sprint - Priority 1
-- Bug-Fix: Loading more than 200 cards
 - Bug-Fix: macOS Mission Control freezes
+- Bug-Fix: Importing more than 200 cards & Pagination for Deck Editor
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
