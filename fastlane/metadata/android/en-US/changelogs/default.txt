@@ -1,3 +1,2 @@
-- Bug-Fix: Crashes
-- Bug-Fix: Visibility of facedown cards
-- Game-Play: Context Menu Positioning
+- Game-Play: Drawer Buttons
+- Game-Play: Persistent Zoom Setting
