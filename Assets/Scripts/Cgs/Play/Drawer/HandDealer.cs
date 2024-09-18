@@ -45,7 +45,7 @@ namespace Cgs.Play.Drawer
         public int Count
         {
             get => _count;
-            private set
+            set
             {
                 _count = value;
                 RefreshText();

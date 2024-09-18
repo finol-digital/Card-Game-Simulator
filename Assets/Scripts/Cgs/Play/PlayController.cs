@@ -176,9 +176,7 @@ namespace Cgs.Play
                 scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
-                Deal(1);
-            else if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == null)
+            if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == null)
                 menu.ToggleMenu();
             else if (Inputs.IsCancel)
                 PromptBackToMainMenu();
@@ -368,16 +366,21 @@ namespace Cgs.Play
         public void PromptForHand()
         {
             if (CardGameManager.Current.GameStartHandCount > 0)
-                Dealer.Show(DealStartingHand);
+                ShowDealer();
         }
 
-        private void DealStartingHand()
+        public void ShowDealer()
+        {
+            Dealer.Show(DealHand);
+        }
+
+        private void DealHand()
         {
             drawer.SemiShow();
-            Deal(Dealer.Count);
+            DealHand(Dealer.Count);
         }
 
-        private void Deal(int cardCount)
+        public void DealHand(int cardCount)
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                 CgsNetManager.Instance.LocalPlayer.CurrentDeck != null)
