@@ -10,7 +10,8 @@ permalink: roadmap.html
 
 ## Sprint - Priority 1
 - Bug-Fix: macOS Mission Control freezes
-- Bug-Fix: Importing more than 200 cards & Pagination for Deck Editor
+- Bug-Fix: Importing more than 200 cards fails
+- Bug-Fix: Deck Editor slows when loading too many cards
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
