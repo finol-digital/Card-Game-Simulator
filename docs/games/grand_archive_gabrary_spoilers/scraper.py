@@ -43,7 +43,11 @@ for card in cards:
     card_data["data"].append({
         'uuid': uuid.uuid4().hex,
         'name': name,
-        'image_url': image_url
+        'image_url': image_url,
+        'set': {
+          'name': 'Spoilers from https://gabrary.net',
+          'prefix': 'gabrary_spoilers'
+        }
     })
 
 # Output the card data to a JSON file

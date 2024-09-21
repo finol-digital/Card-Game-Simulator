@@ -1,494 +1,886 @@
 {
     "data": [
         {
-            "uuid": "698ed8bc519542b19dc3184a544d9c5a",
+            "uuid": "98961df96d7e45d8a4571bce7aa77b5b",
             "name": "Vengeful Gust",
-            "image_url": "https://gabrary.net/Spoilers_Images/196.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/196.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "4e9ef60b6e914552a5393ff4c0e27552",
+            "uuid": "46953fea80a4459ebc1aa74cc74dfaa2",
             "name": "Dilu, Auspicious Charger",
-            "image_url": "https://gabrary.net/Spoilers_Images/173.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/173.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "585355f0f59c4114ac1cc8c45916b37b",
+            "uuid": "62d7f3883cc4460fbe8cb659ce8c07dc",
             "name": "Zhao Yun, Dragonsblood",
-            "image_url": "https://gabrary.net/Spoilers_Images/214.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/214.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "f11ea46542ad4932a866d33390ee3035",
+            "uuid": "3386f8e5c65c4203a2f7592479a007c1",
             "name": "War Marshal",
-            "image_url": "https://gabrary.net/Spoilers_Images/90.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/90.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "8d3c5495d115482182d09a408d2d075f",
+            "uuid": "da98ce130db14743ae28d30d891b7c04",
             "name": "Jin, Fate Defiant",
-            "image_url": "https://gabrary.net/Spoilers_Images/4.1.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4.1.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "0d4d0480ab5247f6b4943d1d215e1c08",
+            "uuid": "7581a8e704fe4d22a4a36d77311f7dd3",
             "name": "Jin, Zealous Maverick",
-            "image_url": "https://gabrary.net/Spoilers_Images/5.1.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5.1.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "576056caa95146c5b45f1872d2076d8c",
+            "uuid": "f7f305f91c9b4999add88b79fe170e44",
             "name": "Kongming, Wayward Maven",
-            "image_url": "https://gabrary.net/Spoilers_Images/7.1.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/7.1.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "5c157567de2948f1af1fcab55c0b442f",
+            "uuid": "609e292b244a40deaf40ece0e6b4ced2",
             "name": "Kongming, Ascetic Vice",
-            "image_url": "https://gabrary.net/Spoilers_Images/8.1.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/8.1.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d969d5959b4f4f3c84cfade35a420296",
+            "uuid": "ff39dc9078ff4cffaf921bd2ea122d21",
             "name": "Kongming, Fel Eidolon",
-            "image_url": "https://gabrary.net/Spoilers_Images/9.1.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/9.1.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "67de3c8361354f0ab0cbecaff9a08d02",
+            "uuid": "be0378fd1b2f405383666890c749329a",
             "name": "Imperial Seal",
-            "image_url": "https://gabrary.net/Spoilers_Images/15.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/15.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "41e0b75e67d142409e6c0c7cfea417dc",
+            "uuid": "a19911b0719e4fd89b2698278f119de4",
             "name": "Mandate of Honor",
-            "image_url": "https://gabrary.net/Spoilers_Images/17.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/17.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "c893286ee56540c9b4ede2da4d4e2dd5",
+            "uuid": "b87b6ffc127b41cfb9e2e14cce9a40e6",
             "name": "Dragon's Dawn",
-            "image_url": "https://gabrary.net/Spoilers_Images/22.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/22.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "170bb10d36724532bbeb3b474c83bd1b",
+            "uuid": "e9f20152f9cf41d8bb51a0d88f3e5da0",
             "name": "Sundering Moon",
-            "image_url": "https://gabrary.net/Spoilers_Images/28.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/28.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "024a3021ab784fec93728bd3d61386e6",
+            "uuid": "41529b08679c49d7a46aa5cc54baf544",
             "name": "bring Down the Mighty",
-            "image_url": "https://gabrary.net/Spoilers_Images/33.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/33.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "bb057b545a08448b989d8d19c3e64aa4",
+            "uuid": "f82e7ddaae864c0b9cfaa8515ba2fefc",
             "name": "Cure the Flesh",
-            "image_url": "https://gabrary.net/Spoilers_Images/37.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/37.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "5621940491a345cbae38ce1e4e6d6382",
+            "uuid": "b202cc24bdaa4d8a87ccece05485bb27",
             "name": "Extraction Incision",
-            "image_url": "https://gabrary.net/Spoilers_Images/40.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/40.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "ee7db17b3d1842fd995f6adfea80ce14",
+            "uuid": "52f59f6743a74a0db1e865d4e6c49686",
             "name": "Idle Thoughts",
-            "image_url": "https://gabrary.net/Spoilers_Images/49.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/49.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "555beea475f94b06bdd3fec1d5324ab3",
+            "uuid": "0b87b02a78f74ec6a79a52fe58395ec2",
             "name": "Indolent Leisure",
-            "image_url": "https://gabrary.net/Spoilers_Images/51.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/51.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "9d029e5561d84920bcd9686873b9527b",
+            "uuid": "3e52c3ac2bd84e56b670c2d86db3b4f9",
             "name": "Invective Instruction",
-            "image_url": "https://gabrary.net/Spoilers_Images/54.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/54.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "9bb2fe89082a4a5e8fc67b33ff48ad55",
+            "uuid": "ce147954ec37496aa364f78bcfc20e47",
             "name": "Lead with Force",
-            "image_url": "https://gabrary.net/Spoilers_Images/57.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/57.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "1e86a3d9854447169d12a04791ef2465",
+            "uuid": "f405a795b6034a4585aa229b3db4c852",
             "name": "Lost Wisdom",
-            "image_url": "https://gabrary.net/Spoilers_Images/58.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/58.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "aea2323763d1419cbb1d6cd9ed9d6063",
+            "uuid": "c8cf35a61b2443d5947cf9f2a29ad533",
             "name": "Lumbering Steed",
-            "image_url": "https://gabrary.net/Spoilers_Images/59.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/59.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "080334e1d46641ce9130274afdc83f7d",
+            "uuid": "83a721917aa448ceb2fe0c57841aa57c",
             "name": "Mnemonic Charm",
-            "image_url": "https://gabrary.net/Spoilers_Images/61.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/61.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "cc7545dff7e0471c90503988afa5e1a0",
+            "uuid": "fd68dbe1462a404f9c901dfe4d7338d4",
             "name": "Mortal Ambition",
-            "image_url": "https://gabrary.net/Spoilers_Images/62.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/62.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d8ca8a06705f45cc81cd7366acf9cb5a",
+            "uuid": "24557a68748e46b79a9e28c5817dda29",
             "name": "Bascent Barrier",
-            "image_url": "https://gabrary.net/Spoilers_Images/64.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/64.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "7fb64c4d07e2433dad2af6a730f4db46",
+            "uuid": "345dcf3b5c3445988b31b17ead0478ad",
             "name": "Paired Minds, Kindred Souls",
-            "image_url": "https://gabrary.net/Spoilers_Images/67.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/67.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "cdbf94087dd4463b8c8263d9e42b858c",
+            "uuid": "09823046498f4bc6a17291739dfcb4be",
             "name": "Slice and Dice",
-            "image_url": "https://gabrary.net/Spoilers_Images/81.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/81.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "9eba2439f76a4ab2a82dcfa8e4fbd9c0",
+            "uuid": "f3a40c03792143c08fff2001428913f4",
             "name": "Stolid Vanguard",
-            "image_url": "https://gabrary.net/Spoilers_Images/83.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/83.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "84455f6b555041df9ea3aeab0e2a4340",
+            "uuid": "341aecf3cfef48c6ba99c2867a9f7bc5",
             "name": "Unbroken Mustang",
-            "image_url": "https://gabrary.net/Spoilers_Images/88.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/88.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "8349efc5844146dfb914e32f99a7abad",
+            "uuid": "aa1dcb265fd549cf98b2c378c788ee97",
             "name": "War Marshal",
-            "image_url": "https://gabrary.net/Spoilers_Images/90.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/90.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "11d5fdc962e94df3a13fbe368953bc78",
+            "uuid": "c08a4bb1ef0e4dd2aff44cc5785cbe79",
             "name": "Weaken Resistance",
-            "image_url": "https://gabrary.net/Spoilers_Images/91.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/91.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "e1ec463ea86142c7b380fd1528b8d49c",
+            "uuid": "655e5131f8eb470cbbde69ad698f8f82",
             "name": "Creative Shock",
-            "image_url": "https://gabrary.net/Spoilers_Images/98.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/98.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "476c12290fac44579a41b18fe08af1ad",
+            "uuid": "cd34f44068514f5194bdd9ff8a1a41d9",
             "name": "Fang of Dragon's Breath",
-            "image_url": "https://gabrary.net/Spoilers_Images/99.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/99.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "3f1bc67de1b44a00a06bb69b40557b15",
+            "uuid": "e92d2b7adcdc41e0a8a30875516e9dc4",
             "name": "Fiery Swing",
-            "image_url": "https://gabrary.net/Spoilers_Images/100.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/100.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "9acfedb75582493b81e6a7bb42d688a3",
+            "uuid": "38bb5c35364d4b029a94a90069498251",
             "name": "Fireball",
-            "image_url": "https://gabrary.net/Spoilers_Images/101.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/101.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "59462a3612614639b8b91bb4fac271a1",
+            "uuid": "5354da234f0e4d6782f1c8fcec8748cc",
             "name": "Flame-Rune Swordsman",
-            "image_url": "https://gabrary.net/Spoilers_Images/102.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/102.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d45e7ca0823a4172979edc0d91a318db",
+            "uuid": "e403114784214f9c855fbd3e967344cc",
             "name": "Heated Vengeance",
-            "image_url": "https://gabrary.net/Spoilers_Images/107.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/107.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "92a467ee37d54eef993705174c44a73f",
+            "uuid": "23118238ae3e436f8bc78327741d7017",
             "name": "Ignited Fate",
-            "image_url": "https://gabrary.net/Spoilers_Images/109.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/109.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "1bbfc45b23e843ee9ae8b824b812e029",
+            "uuid": "d17249a3d84f4e96b4a39dd345d19e8e",
             "name": "Lavasoul Tiger",
-            "image_url": "https://gabrary.net/Spoilers_Images/111.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/111.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "72fa5efd661047c3a54fb7125335a0f2",
+            "uuid": "68f3e479f8fc470c81f450149a826078",
             "name": "Oppressive Presence",
-            "image_url": "https://gabrary.net/Spoilers_Images/113.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/113.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "9e67f1e3f538436cac17312a7c1b0146",
+            "uuid": "3bbcd7acc3524b528e99cf799a6fd734",
             "name": "Ritai Guard",
-            "image_url": "https://gabrary.net/Spoilers_Images/117.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/117.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "5cd5cc31f1004966b6f4d71022db6b06",
+            "uuid": "8ef75f411f7f436ba7b27ff6c51b8b1e",
             "name": "Scorchfire Assassin",
-            "image_url": "https://gabrary.net/Spoilers_Images/118.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/118.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d6bd0ed20a6d406486c95e3c3cc718f0",
+            "uuid": "f13bada5b38a4c3fa764baa61313ceb3",
             "name": "Solar Pinnacle",
-            "image_url": "https://gabrary.net/Spoilers_Images/121.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/121.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "fa7144d740684526b5fec712dbe5868e",
+            "uuid": "db364d5c2c7d458180088ee35e58eada",
             "name": "Sword Saint of Everflame",
-            "image_url": "https://gabrary.net/Spoilers_Images/122.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/122.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "05fd942cacb6498bb8d88fb4306349ad",
+            "uuid": "fbea5d6d9e764747a01a2f15a22aae1d",
             "name": "Xiao Qiao, Cinderkeeper",
-            "image_url": "https://gabrary.net/Spoilers_Images/126.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/126.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "95ad383204b84b61aea9fb24f1ed29d5",
+            "uuid": "867b0658eae541e49f005c727d56f8e0",
             "name": "Burst Asunder",
-            "image_url": "https://gabrary.net/Spoilers_Images/128.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/128.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "b24c9144515e46e8b345baacb4c6511e",
+            "uuid": "8fd7b08d30564d769096bdb164cfc1d5",
             "name": "Cao Cao, Aspirant of Chaos",
-            "image_url": "https://gabrary.net/Spoilers_Images/129.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/129.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "0a838301eeb84234a1173b43bb0b1777",
+            "uuid": "b0a5763a4a3f4c63b6833272e71b561b",
             "name": "Hoarfrost Spine",
-            "image_url": "https://gabrary.net/Spoilers_Images/137.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/137.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "3c0a5273e02943e19b764e004bcbf2d8",
+            "uuid": "4f8d1af2d6d041c4a179f6fbc9f73059",
             "name": "Rainweaver Mage",
-            "image_url": "https://gabrary.net/Spoilers_Images/145.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/145.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "f95af60c840b4640a21b2bd582a05f16",
+            "uuid": "e7acb5379fb7456d803105a044451ed5",
             "name": "Refracting Missle",
-            "image_url": "https://gabrary.net/Spoilers_Images/146.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/146.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d2d62267a94a4d2e80baf7c0f39c0120",
+            "uuid": "930c5c424ece4c0f87c622b65fd8b300",
             "name": "Seafletched Serpent",
-            "image_url": "https://gabrary.net/Spoilers_Images/150.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/150.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "ffaa46ef72a54f1096a45558dbc6a445",
+            "uuid": "00457568449e49a883184093a7f270da",
             "name": "Slipstream Vault",
-            "image_url": "https://gabrary.net/Spoilers_Images/152.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/152.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "52e8ddd72ab041fb88ff0144bb7d0ed2",
+            "uuid": "9d8e695154b54e0c8da41173293ca3da",
             "name": "Sudden Snow",
-            "image_url": "https://gabrary.net/Spoilers_Images/155.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/155.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "8e764193894248b593d1a0e0d7c53369",
+            "uuid": "298a9e26fca94f90aa544f3a36f283eb",
             "name": "Sword Saint of Eventide",
-            "image_url": "https://gabrary.net/Spoilers_Images/156.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/156.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "7fdeb0e43b4e41e2a1433794d6cd9331",
+            "uuid": "ea88ae5c77d84bfc961cf4580f89d45f",
             "name": "Tidal Lock",
-            "image_url": "https://gabrary.net/Spoilers_Images/157.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/157.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "43ee3c539cd94e1b98e2136b4e3b97a7",
+            "uuid": "f8da4874042842e58ced9a9e1923f934",
             "name": "Wuji of Lingering Fate",
-            "image_url": "https://gabrary.net/Spoilers_Images/163.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/163.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "0a940422c3d841a98a8756f52c2985bc",
+            "uuid": "6e6974b9918a49c4828c98d07ee5d9b8",
             "name": "Bagua of Cardinal Fate",
-            "image_url": "https://gabrary.net/Spoilers_Images/169.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/169.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "49439d500ee441e798604b2a2c00f8d5",
+            "uuid": "d8d6fec2f2dc4156b941fbb3aeb4a1fb",
             "name": "Dilu, Auspicious Charger",
-            "image_url": "https://gabrary.net/Spoilers_Images/173.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/173.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "5b59ad5f519349d2adf32bcda8a9d2bd",
+            "uuid": "16239f21ed90438884384be51f80c3b6",
             "name": "Fairy Whispers",
-            "image_url": "https://gabrary.net/Spoilers_Images/175.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/175.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "9a9f7d372a8a44bcb08dd08a0f99be9b",
+            "uuid": "3e9c900270dc46119f83f8eaa8b8ba45",
             "name": "Favorable Winds",
-            "image_url": "https://gabrary.net/Spoilers_Images/176.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/176.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "7155b3769cfb4121a3f854f9f83c5da5",
+            "uuid": "b04f92e50573404889780b3746e02e13",
             "name": "Poised Rearguard",
-            "image_url": "https://gabrary.net/Spoilers_Images/187.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/187.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "898720def0f54cf49075811835bfedfd",
+            "uuid": "07229074ea2344459366f74ee5f7803e",
             "name": "Razorgale Calling",
-            "image_url": "https://gabrary.net/Spoilers_Images/188.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/188.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "673fa65b82db4938b341b3ab18e2c219",
+            "uuid": "4adf39c0ea9a455789de8ed4083b3624",
             "name": "Vengeful Gust",
-            "image_url": "https://gabrary.net/Spoilers_Images/196.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/196.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "e3e7150e9fe94f20bd1e35af39827ebf",
+            "uuid": "492560985cd84fb9bcbd7b15d93aab6e",
             "name": "Wildgrwoth Feline",
-            "image_url": "https://gabrary.net/Spoilers_Images/197.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/197.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "af5e5aa5d6304485a04fb5075b2c46ec",
+            "uuid": "9bad8ea4c66e4e7892464e63092db65f",
             "name": "Yunzhou Cavalry",
-            "image_url": "https://gabrary.net/Spoilers_Images/199.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/199.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "5b6e2c1d767049428f0da223f549c193",
+            "uuid": "d4cc5ce004a04ae5b870a44bae63f50c",
             "name": "Zhao Yun, Dragonsblood",
-            "image_url": "https://gabrary.net/Spoilers_Images/214.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/214.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "879296617630445a9b8a50dea80aca05",
+            "uuid": "815e2d9604894aebb3ae7df0ab0ac3ec",
             "name": "Jin, Fate Defiant",
-            "image_url": "https://gabrary.net/Spoilers_Images/4003.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4003.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "312a5f66c12548dea90399c689c0fc45",
+            "uuid": "6bd974cc66e740a796735912577c16f0",
             "name": "Jin, Zealous Maverick",
-            "image_url": "https://gabrary.net/Spoilers_Images/4004.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4004.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "2acc7a7264fa4ea092703f82dc57cbd6",
+            "uuid": "ab72008bbea04aec888d54cb78a44a54",
             "name": "Jin, Undying Resolve",
-            "image_url": "https://gabrary.net/Spoilers_Images/4005.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4005.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "97ae93305d314acd8bd2de953753b151",
+            "uuid": "f98dc35eeeda491b9c2d27b3c720987f",
             "name": "Jin, Undying Resolve",
-            "image_url": "https://gabrary.net/Spoilers_Images/4005.1.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4005.1.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "8e69d94182bf432fbb9d6bb9f15d73e8",
+            "uuid": "5576445abd554e1282441eff4b138430",
             "name": "Executioner's Spear",
-            "image_url": "https://gabrary.net/Spoilers_Images/4010.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4010.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "61577cb11f5840348017a066e3f59f9f",
+            "uuid": "6ad02f31b7ba4f89988f170d2c4e9366",
             "name": "Berserker Plate",
-            "image_url": "https://gabrary.net/Spoilers_Images/4019.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4019.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "c472095697f241cf9588f989888b7a35",
+            "uuid": "ce0258b809994fb18b23fe82897583b2",
             "name": "Shuang Ji of Sacrifice",
-            "image_url": "https://gabrary.net/Spoilers_Images/4020.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4020.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "ac69113a40544d42bf0d234c8a3a9ad5",
+            "uuid": "a4feef9064aa4261b7c6784de9083da1",
             "name": "Pierce the Heavens",
-            "image_url": "https://gabrary.net/Spoilers_Images/4029.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4029.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "652d30f000f1402a85ee8c29aa802840",
+            "uuid": "2cac0514eb7e4e309afb1b94e7c3cbea",
             "name": "Eminent Commander",
-            "image_url": "https://gabrary.net/Spoilers_Images/4045.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4045.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "3741d8c8b6cf487fabf929196849b7af",
+            "uuid": "23a580009b6a4a15aa980dbcb2416197",
             "name": "Materialize Polearm",
-            "image_url": "https://gabrary.net/Spoilers_Images/4047.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4047.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "46063bd19d634e8784c72eaf8303a08d",
+            "uuid": "7f4a4edeb87c41598ad0a386bc21307a",
             "name": "Enrage",
-            "image_url": "https://gabrary.net/Spoilers_Images/4052.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4052.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d0a68e18b27a4d69a0501112b5c42c50",
+            "uuid": "02eb4cdf24d1446ab96371ea5ca99e12",
             "name": "Exia Sight",
-            "image_url": "https://gabrary.net/Spoilers_Images/4053.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4053.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "747edb5456f8475e842c3382b52cf1b0",
+            "uuid": "e774af48c7ac4353901b34e8b219980b",
             "name": "Mend Flesh",
-            "image_url": "https://gabrary.net/Spoilers_Images/4055.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4055.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "33f9ca716c774f0daa3f530e6f723f1d",
+            "uuid": "4b7dffaecc784b05bb377ff85b1eb1fb",
             "name": "Relentless Outburst",
-            "image_url": "https://gabrary.net/Spoilers_Images/4056.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/4056.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "09fc0375679b4ff78fe3996dc2c6db41",
+            "uuid": "5c0e4a48a97d4da5acb7289ad34c237e",
             "name": "Kongming, Wayward Maven",
-            "image_url": "https://gabrary.net/Spoilers_Images/5006.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5006.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "70d0204659404461a26ca5d674bb7c91",
+            "uuid": "e5b3a4fa85ea4fbb96903c1bc79bb7f1",
             "name": "Kongming, Ascetic Vice",
-            "image_url": "https://gabrary.net/Spoilers_Images/5007.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5007.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "ff8033025de046d8ae2e4e6e5f2a403d",
+            "uuid": "a953097e5ece4599ba4479679dca2389",
             "name": "Kongming, Fel Eidolon",
-            "image_url": "https://gabrary.net/Spoilers_Images/5008.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5008.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "b47c6df1ca304de9be82d10b06b7b07b",
+            "uuid": "6764c82e0bf141b1a60124f89ed64c2d",
             "name": "Kongming, Fel Eidolon",
-            "image_url": "https://gabrary.net/Spoilers_Images/5008.1.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5008.1.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d38946eec4cf4e88a31ca8ddf95292d7",
+            "uuid": "b59be64048af40ca821e617f1a843c1e",
             "name": "Fan of Seven Debts",
-            "image_url": "https://gabrary.net/Spoilers_Images/5011.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5011.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "7e000e6c83cf4de0bddfb8b7b008dd94",
+            "uuid": "a21924d2050e4a53825b9a4e1598f56d",
             "name": "Shard of Empowerment",
-            "image_url": "https://gabrary.net/Spoilers_Images/5014.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5014.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "3d1673dea4bf40f688c97f9d45dcdf18",
+            "uuid": "ad304ebee5d74ce89a59492c9712ed13",
             "name": "Ardent Cloudstriker",
-            "image_url": "https://gabrary.net/Spoilers_Images/5023.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5023.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "22283bb785f64bf08e2eb05c54577369",
+            "uuid": "ffb0be376e084f9e82ea539f9e4983d5",
             "name": "Shifting Currents",
-            "image_url": "https://gabrary.net/Spoilers_Images/5033.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5033.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "97e3f47a4ef54eb2848839db0f2adb6c",
+            "uuid": "69b8a81b036f450e8de3aa84549d5089",
             "name": "Coriolis Ward",
-            "image_url": "https://gabrary.net/Spoilers_Images/5039.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5039.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "40aaa12482e34ce392a2708cdc7022af",
+            "uuid": "0f1e2c482353472094e9b6312a50ca8f",
             "name": "Hydroguard Retainer",
-            "image_url": "https://gabrary.net/Spoilers_Images/5040.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5040.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "9b63ccee860e4febb2e813fb827ec30e",
+            "uuid": "39afac4f6bb34c4b93e9cbe31e288304",
             "name": "Tsunami of Nanyue",
-            "image_url": "https://gabrary.net/Spoilers_Images/5043.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5043.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "d6bd6b4d47424699a07fa37e0eaeb564",
+            "uuid": "1e10147fa3c84689b42ca57ce0d6ab6c",
             "name": "Leeching Bolt",
-            "image_url": "https://gabrary.net/Spoilers_Images/5058.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5058.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "87290000830f48159802ff314674394e",
+            "uuid": "bee46d1043084a89b52a677fda673103",
             "name": "Planar Abyss",
-            "image_url": "https://gabrary.net/Spoilers_Images/5059.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/5059.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "204a9135d580494ea53b43484af045f2",
+            "uuid": "955da844444c479f8ab104cb17cf496f",
             "name": "Savage Swing",
-            "image_url": "https://gabrary.net/Spoilers_Images/6001.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/6001.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "21f8a0ce5b084d8191a889c3a5114acc",
+            "uuid": "0f5f7bae80f24224b8b868f0a6234120",
             "name": "Tariff Ring",
-            "image_url": "https://gabrary.net/Spoilers_Images/8015.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/8015.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "77b41ed52ffb4e918a9406ba590cc037",
+            "uuid": "4423c3ec1a974822a6052ba64e4d4797",
             "name": "Blazing Throw",
-            "image_url": "https://gabrary.net/Spoilers_Images/8018.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/8018.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "111e442b10bd41da8f6fddb2d30dbeba",
+            "uuid": "8b00d1f8727641c0ac8d45e6325b270d",
             "name": "Backup Charger",
-            "image_url": "https://gabrary.net/Spoilers_Images/8019.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/8019.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         },
         {
-            "uuid": "6bf9cee070f347038dc4209069d2143a",
+            "uuid": "eb2f416190e74a2b8d85dfe540f3a8ce",
             "name": "Minthe, Spirit of Water",
-            "image_url": "https://gabrary.net/Spoilers_Images/8155.jpg"
+            "image_url": "https://gabrary.net/Spoilers_Images/8155.jpg",
+            "set": {
+                "name": "Spoilers from https://gabrary.net",
+                "prefix": "gabrary_spoilers"
+            }
         }
     ]
 }

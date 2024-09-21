@@ -3,6 +3,7 @@
 	"allCardsUrl": "https://cgs.games/api/proxy/api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
 	"allSetsUrl": "https://www.cardgamesimulator.com/games/grand_archive_gabrary_spoilers/AllSets.json",
+	"autoUpdate": 1,
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive_gabrary_spoilers/grand_archive_gabrary_spoilers.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
