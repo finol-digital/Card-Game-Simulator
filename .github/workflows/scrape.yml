@@ -1,12 +1,16 @@
 name: scrape
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 21 * * *'
 jobs:
   scrape:
     runs-on: ubuntu-latest
     steps:
       - name: Check out this repo
         uses: actions/checkout@v4
+        with:
+          ref: main
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -22,5 +26,10 @@ jobs:
       - name: Install all necessary packages
         run: pip install requests beautifulsoup4 pandas webdriver-manager selenium
       - name: Run the scraping script
-        run: cd docs/games/grand_archive_gabrary_spoilers;python scraper.py
-
+        run: cd docs/games/grand_archive_gabrary_spoilers;python scraper.py;cd ../../..
+      - name: Auto-Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: main
+          file_pattern: fastlane/metadata
+          commit_message: Update Release Notes (MINOR)
