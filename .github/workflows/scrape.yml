@@ -6,6 +6,8 @@ on:
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out this repo
         uses: actions/checkout@v4
