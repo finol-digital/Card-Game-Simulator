@@ -31,5 +31,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
-          file_pattern: fastlane/metadata
+          file_pattern: docs/games/grand_archive_gabrary_spoilers/sets/
           commit_message: Update docs/games/grand_archive_gabrary_spoilers/sets/gabrary_spoilers.json
