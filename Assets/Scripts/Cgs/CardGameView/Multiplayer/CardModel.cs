@@ -743,7 +743,6 @@ namespace Cgs.CardGameView.Multiplayer
             if (CardGameManager.IsQuitting)
                 return;
 
-            Debug.Log($"Destroying {gameObject.name}");
             Value.UnregisterDisplay(this);
             if (PlaceHolder != null)
                 Destroy(PlaceHolder.gameObject);
