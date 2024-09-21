@@ -29,7 +29,8 @@ soup = BeautifulSoup(content, 'html.parser')
 cards = soup.find_all('div', class_="text-row")
 
 # List to store card data
-card_data = []
+card_data = {}
+card_data["data"] = []
 
 # Loop through each card element
 for card in cards:
@@ -39,7 +40,7 @@ for card in cards:
     image_url = 'https://gabrary.net' + card.find('img')['src']
 
     # Append to card_data list
-    card_data.append({
+    card_data["data"].append({
         'uuid': uuid.uuid4().hex,
         'name': name,
         'image_url': image_url
