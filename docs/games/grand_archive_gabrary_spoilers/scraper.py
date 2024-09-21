@@ -75,4 +75,6 @@ for card in cards:
 with open('sets/gabrary_spoilers.json', 'w') as json_file:
     json.dump(card_data, json_file, indent=4)
 
-print("Data successfully scraped and saved to cards.json.")
+print("Data successfully scraped and saved to sets/gabrary_spoilers.json:")
+with open('sets/gabrary_spoilers.json', 'r') as f:
+    print(f.read())
