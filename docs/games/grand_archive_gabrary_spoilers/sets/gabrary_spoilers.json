@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "uuid": "8084dc2f8fee40398988e73137d27511",
+            "uuid": "fed90193b02b40aa9f1291ea713da118",
             "name": "Vengeful Gust",
             "image_url": "https://gabrary.net/Spoilers_Images/196.jpg",
             "editions": [
@@ -14,7 +14,7 @@
             ]
         },
         {
-            "uuid": "191ac1c370764898850b6e65d482cd0a",
+            "uuid": "604d1235a408425ca290877cad72d550",
             "name": "Dilu, Auspicious Charger",
             "image_url": "https://gabrary.net/Spoilers_Images/173.jpg",
             "editions": [
@@ -27,7 +27,7 @@
             ]
         },
         {
-            "uuid": "11c3b14287b74b348bc85b9f51217e17",
+            "uuid": "db05b2cfb6494a38926715053c6a0ec2",
             "name": "Zhao Yun, Dragonsblood",
             "image_url": "https://gabrary.net/Spoilers_Images/214.jpg",
             "editions": [
@@ -40,7 +40,7 @@
             ]
         },
         {
-            "uuid": "80bf97193d3e4e4698eb68b90dfbb0c5",
+            "uuid": "9b885d59999e4440ae90bcb7d02ebc66",
             "name": "War Marshal",
             "image_url": "https://gabrary.net/Spoilers_Images/90.jpg",
             "editions": [
@@ -53,7 +53,7 @@
             ]
         },
         {
-            "uuid": "a04f258fde5b46dcb4e421738a422438",
+            "uuid": "cfc5d2d8574e4873a288ca1cf6e6b4d9",
             "name": "Jin, Fate Defiant",
             "image_url": "https://gabrary.net/Spoilers_Images/4.1.jpg",
             "editions": [
@@ -66,7 +66,7 @@
             ]
         },
         {
-            "uuid": "95f26bf1d90842b8982d2ea8ccaf591b",
+            "uuid": "7a5ecda64a3a46bab9a83092309a5196",
             "name": "Jin, Zealous Maverick",
             "image_url": "https://gabrary.net/Spoilers_Images/5.1.jpg",
             "editions": [
@@ -79,7 +79,7 @@
             ]
         },
         {
-            "uuid": "f4a5250ec4994fa5837797aabe65bafc",
+            "uuid": "1fd9d914e05042e59255476f7f2dcebf",
             "name": "Kongming, Wayward Maven",
             "image_url": "https://gabrary.net/Spoilers_Images/7.1.jpg",
             "editions": [
@@ -92,7 +92,7 @@
             ]
         },
         {
-            "uuid": "c8f7344b08de4259a7484b83efcf9497",
+            "uuid": "ce99b19d5d88418da317cf5544dea87a",
             "name": "Kongming, Ascetic Vice",
             "image_url": "https://gabrary.net/Spoilers_Images/8.1.jpg",
             "editions": [
@@ -105,7 +105,7 @@
             ]
         },
         {
-            "uuid": "b951f62a13744eca9ebc0c3b4cfbf72c",
+            "uuid": "a5112f6c83044ddfb1163de94a99a9f1",
             "name": "Kongming, Fel Eidolon",
             "image_url": "https://gabrary.net/Spoilers_Images/9.1.jpg",
             "editions": [
@@ -118,7 +118,7 @@
             ]
         },
         {
-            "uuid": "c91d35e9f2a940d6a9e8546d3fa8a269",
+            "uuid": "0767678d0b5042b8bc70138931ceb939",
             "name": "Imperial Seal",
             "image_url": "https://gabrary.net/Spoilers_Images/15.jpg",
             "editions": [
@@ -131,7 +131,7 @@
             ]
         },
         {
-            "uuid": "90ff3189ccc947d1adee679497b8eeb9",
+            "uuid": "53374c22d7ac431b8f5ac37644e75828",
             "name": "Mandate of Honor",
             "image_url": "https://gabrary.net/Spoilers_Images/17.jpg",
             "editions": [
@@ -144,7 +144,7 @@
             ]
         },
         {
-            "uuid": "b4aa098cdc60417aab3c34f4f549f4e9",
+            "uuid": "ef6918e53f344099b15cca1e8a6aa8eb",
             "name": "Dragon's Dawn",
             "image_url": "https://gabrary.net/Spoilers_Images/22.jpg",
             "editions": [
@@ -157,7 +157,7 @@
             ]
         },
         {
-            "uuid": "c76a86200d8443bdaf04833b4f6a8db0",
+            "uuid": "b72b9df506c84c7f8efe5710f72b1081",
             "name": "Sundering Moon",
             "image_url": "https://gabrary.net/Spoilers_Images/28.jpg",
             "editions": [
@@ -170,7 +170,7 @@
             ]
         },
         {
-            "uuid": "bd1f78a662ea4c3c8ca6fb4a2be62543",
+            "uuid": "be888d72b79649b298829ad937652b14",
             "name": "bring Down the Mighty",
             "image_url": "https://gabrary.net/Spoilers_Images/33.jpg",
             "editions": [
@@ -183,7 +183,7 @@
             ]
         },
         {
-            "uuid": "e8e3addda86c4211b4fe98f94a84b35b",
+            "uuid": "469a4292e17a4c67bcca3a3aa3a0c20b",
             "name": "Cure the Flesh",
             "image_url": "https://gabrary.net/Spoilers_Images/37.jpg",
             "editions": [
@@ -196,7 +196,7 @@
             ]
         },
         {
-            "uuid": "b97eae36f6cb4a5b970fba7cd3dcb583",
+            "uuid": "a90381ee92b84de184564669d73216f6",
             "name": "Extraction Incision",
             "image_url": "https://gabrary.net/Spoilers_Images/40.jpg",
             "editions": [
@@ -209,7 +209,7 @@
             ]
         },
         {
-            "uuid": "db0f070739374221929147ef2c22b5ea",
+            "uuid": "bdd0148b883d4ee7995d5b527d58e6f4",
             "name": "Idle Thoughts",
             "image_url": "https://gabrary.net/Spoilers_Images/49.jpg",
             "editions": [
@@ -222,7 +222,7 @@
             ]
         },
         {
-            "uuid": "90051457e1d7489a9ce5b557fb988347",
+            "uuid": "40d8c9d323c540b69f6cdf1c412241b6",
             "name": "Indolent Leisure",
             "image_url": "https://gabrary.net/Spoilers_Images/51.jpg",
             "editions": [
@@ -235,7 +235,7 @@
             ]
         },
         {
-            "uuid": "c6d6e1e744ab4453b2ed4288a2de6bb3",
+            "uuid": "9bc80de2046c4fdd926b4111bd3d206a",
             "name": "Invective Instruction",
             "image_url": "https://gabrary.net/Spoilers_Images/54.jpg",
             "editions": [
@@ -248,7 +248,7 @@
             ]
         },
         {
-            "uuid": "cd5b9bdc81d14f87851418671a612ca0",
+            "uuid": "b32ca50a3b5a47acafcb4f74d12f907a",
             "name": "Lead with Force",
             "image_url": "https://gabrary.net/Spoilers_Images/57.jpg",
             "editions": [
@@ -261,7 +261,7 @@
             ]
         },
         {
-            "uuid": "d1aaf5293f83483f82e9139fd980fd60",
+            "uuid": "4fda9f5f25334c2581706aaa49ee8baa",
             "name": "Lost Wisdom",
             "image_url": "https://gabrary.net/Spoilers_Images/58.jpg",
             "editions": [
@@ -274,7 +274,7 @@
             ]
         },
         {
-            "uuid": "6dcbfec92eea49fb8058278d3737e5b6",
+            "uuid": "e432b50c72b94f99aa7fb0bfa7f2ae6d",
             "name": "Lumbering Steed",
             "image_url": "https://gabrary.net/Spoilers_Images/59.jpg",
             "editions": [
@@ -287,7 +287,7 @@
             ]
         },
         {
-            "uuid": "2e851e8c50114f16ab436b464a800f6d",
+            "uuid": "d50fcac424164a58a5a4214851b3ea40",
             "name": "Mnemonic Charm",
             "image_url": "https://gabrary.net/Spoilers_Images/61.jpg",
             "editions": [
@@ -300,7 +300,7 @@
             ]
         },
         {
-            "uuid": "f02bd1c25fdd4b159664ee507650ba9d",
+            "uuid": "4d45f8b5e298484687c6b57ead80e2b8",
             "name": "Mortal Ambition",
             "image_url": "https://gabrary.net/Spoilers_Images/62.jpg",
             "editions": [
@@ -313,7 +313,7 @@
             ]
         },
         {
-            "uuid": "1b106255c64c4c41b6cb672898884d81",
+            "uuid": "aa09fc701ae64631b4c3ae4f9ffb023a",
             "name": "Bascent Barrier",
             "image_url": "https://gabrary.net/Spoilers_Images/64.jpg",
             "editions": [
@@ -326,7 +326,7 @@
             ]
         },
         {
-            "uuid": "1cede2d10d724a309bbc512646b35dca",
+            "uuid": "04d8310ece364c26ad06a5fd22bb898e",
             "name": "Paired Minds, Kindred Souls",
             "image_url": "https://gabrary.net/Spoilers_Images/67.jpg",
             "editions": [
@@ -339,7 +339,7 @@
             ]
         },
         {
-            "uuid": "55a01049805c48989c79e41c47d72f67",
+            "uuid": "2d018a574cc348d5a782ed580739d1f9",
             "name": "Slice and Dice",
             "image_url": "https://gabrary.net/Spoilers_Images/81.jpg",
             "editions": [
@@ -352,7 +352,7 @@
             ]
         },
         {
-            "uuid": "e0a86ac727e34f00886cfef5f75df99e",
+            "uuid": "7c4fdb8dbbb64f13bd2745aa2d0ab41b",
             "name": "Stolid Vanguard",
             "image_url": "https://gabrary.net/Spoilers_Images/83.jpg",
             "editions": [
@@ -365,7 +365,7 @@
             ]
         },
         {
-            "uuid": "2546adb6df2e45d4bdcdfcb79e5ed699",
+            "uuid": "8e3066242fdc44b88c5ac34458b86998",
             "name": "Unbroken Mustang",
             "image_url": "https://gabrary.net/Spoilers_Images/88.jpg",
             "editions": [
@@ -378,7 +378,7 @@
             ]
         },
         {
-            "uuid": "ed2fafde39fb48459d873775124542df",
+            "uuid": "2d4deff1f8914e95b481a2b99e8b3735",
             "name": "War Marshal",
             "image_url": "https://gabrary.net/Spoilers_Images/90.jpg",
             "editions": [
@@ -391,7 +391,7 @@
             ]
         },
         {
-            "uuid": "971dd466858f42e6991fc3577ed4f282",
+            "uuid": "266ca83c2b354e328d59a8fa987a84e6",
             "name": "Weaken Resistance",
             "image_url": "https://gabrary.net/Spoilers_Images/91.jpg",
             "editions": [
@@ -404,7 +404,7 @@
             ]
         },
         {
-            "uuid": "faea9e87bf6447fd9b59301482620398",
+            "uuid": "6b61d425827345db8631c7b683b299ad",
             "name": "Creative Shock",
             "image_url": "https://gabrary.net/Spoilers_Images/98.jpg",
             "editions": [
@@ -417,7 +417,7 @@
             ]
         },
         {
-            "uuid": "97c85048c5f941c6ad54e909970163ac",
+            "uuid": "c91a709fa9294992a5fd9c2a2e365fb2",
             "name": "Fang of Dragon's Breath",
             "image_url": "https://gabrary.net/Spoilers_Images/99.jpg",
             "editions": [
@@ -430,7 +430,7 @@
             ]
         },
         {
-            "uuid": "ed2d1f44889c4efcbfbde306803822b4",
+            "uuid": "e8b0d559ab284517a9681944f86dafec",
             "name": "Fiery Swing",
             "image_url": "https://gabrary.net/Spoilers_Images/100.jpg",
             "editions": [
@@ -443,7 +443,7 @@
             ]
         },
         {
-            "uuid": "f8b5d24861ee49d5a98f9963b25e86f4",
+            "uuid": "77909a6aba8e4446958eaef872b6f37f",
             "name": "Fireball",
             "image_url": "https://gabrary.net/Spoilers_Images/101.jpg",
             "editions": [
@@ -456,7 +456,7 @@
             ]
         },
         {
-            "uuid": "c464a939e299468aa11c94bd8a8a50e2",
+            "uuid": "eaa078a2eaa04b04a18ba300a9288b90",
             "name": "Flame-Rune Swordsman",
             "image_url": "https://gabrary.net/Spoilers_Images/102.jpg",
             "editions": [
@@ -469,7 +469,7 @@
             ]
         },
         {
-            "uuid": "0313d05e7d4f46f8bc4f4f72c87684cb",
+            "uuid": "ca29b5e6935a41d79bf31234efa32eb2",
             "name": "Heated Vengeance",
             "image_url": "https://gabrary.net/Spoilers_Images/107.jpg",
             "editions": [
@@ -482,7 +482,7 @@
             ]
         },
         {
-            "uuid": "68f8dca1de704d358802333669acc715",
+            "uuid": "7480340684cd4934b2227a4a59f7ed9d",
             "name": "Ignited Fate",
             "image_url": "https://gabrary.net/Spoilers_Images/109.jpg",
             "editions": [
@@ -495,7 +495,7 @@
             ]
         },
         {
-            "uuid": "a46dd4fbc5e643b9bf46a27c686e87d2",
+            "uuid": "0f5318d8dd594b97903f530055a3e745",
             "name": "Lavasoul Tiger",
             "image_url": "https://gabrary.net/Spoilers_Images/111.jpg",
             "editions": [
@@ -508,7 +508,7 @@
             ]
         },
         {
-            "uuid": "0ce80521411b4c26816c3baea2fa6c33",
+            "uuid": "4b6ca9c34ba74fa5923b2729e473768e",
             "name": "Oppressive Presence",
             "image_url": "https://gabrary.net/Spoilers_Images/113.jpg",
             "editions": [
@@ -521,7 +521,7 @@
             ]
         },
         {
-            "uuid": "b9dde07d13cb45fe9ea82b2bb56afde9",
+            "uuid": "0787cbbc8072468fa49eda9fb7a877de",
             "name": "Ritai Guard",
             "image_url": "https://gabrary.net/Spoilers_Images/117.jpg",
             "editions": [
@@ -534,7 +534,7 @@
             ]
         },
         {
-            "uuid": "25b1d00ce5df49c18be7ccd5479eee36",
+            "uuid": "c81365199c874d5f966bfec656e9941f",
             "name": "Scorchfire Assassin",
             "image_url": "https://gabrary.net/Spoilers_Images/118.jpg",
             "editions": [
@@ -547,7 +547,7 @@
             ]
         },
         {
-            "uuid": "9bf3fa56c9ae4869b5727cff8bf47ca5",
+            "uuid": "15c23f44a3724d9cabee49d40b5c6240",
             "name": "Solar Pinnacle",
             "image_url": "https://gabrary.net/Spoilers_Images/121.jpg",
             "editions": [
@@ -560,7 +560,7 @@
             ]
         },
         {
-            "uuid": "d0d071bbbc13482b9226cce4da44eb47",
+            "uuid": "9c31b64e197e453aaa3273ca229a04bc",
             "name": "Sword Saint of Everflame",
             "image_url": "https://gabrary.net/Spoilers_Images/122.jpg",
             "editions": [
@@ -573,7 +573,7 @@
             ]
         },
         {
-            "uuid": "3a5f6a64b3d14c8a896ba80c6d072138",
+            "uuid": "c9fd997dc2e1498ab71a770a681da6e7",
             "name": "Xiao Qiao, Cinderkeeper",
             "image_url": "https://gabrary.net/Spoilers_Images/126.jpg",
             "editions": [
@@ -586,7 +586,7 @@
             ]
         },
         {
-            "uuid": "659b9984028e48bd89e5a895b5f3a13d",
+            "uuid": "8870ed19492847f795b4d161ab910f51",
             "name": "Burst Asunder",
             "image_url": "https://gabrary.net/Spoilers_Images/128.jpg",
             "editions": [
@@ -599,7 +599,7 @@
             ]
         },
         {
-            "uuid": "0f8cc5f330da4e7ab0dea5ef4ff1dcc1",
+            "uuid": "2d616b3e8558424495b4027f066e83ad",
             "name": "Cao Cao, Aspirant of Chaos",
             "image_url": "https://gabrary.net/Spoilers_Images/129.jpg",
             "editions": [
@@ -612,7 +612,7 @@
             ]
         },
         {
-            "uuid": "4172808cd37e4bc7b5192db8474c956e",
+            "uuid": "5974e91479e24daba6a9b484cde9118a",
             "name": "Hoarfrost Spine",
             "image_url": "https://gabrary.net/Spoilers_Images/137.jpg",
             "editions": [
@@ -625,7 +625,7 @@
             ]
         },
         {
-            "uuid": "eb1e75a64648435794e56d8fa279e968",
+            "uuid": "84188750dda949a0bb5e8bb9965ab9f4",
             "name": "Rainweaver Mage",
             "image_url": "https://gabrary.net/Spoilers_Images/145.jpg",
             "editions": [
@@ -638,7 +638,7 @@
             ]
         },
         {
-            "uuid": "10b0e63255a2444dbc0f41503e63c4da",
+            "uuid": "b940538b50bb40db95093a21442cbfe3",
             "name": "Refracting Missle",
             "image_url": "https://gabrary.net/Spoilers_Images/146.jpg",
             "editions": [
@@ -651,7 +651,7 @@
             ]
         },
         {
-            "uuid": "0c8e479bccb54812bf1528a42d267e6d",
+            "uuid": "5c3f4c26654842a48466bad97c05e4b3",
             "name": "Seafletched Serpent",
             "image_url": "https://gabrary.net/Spoilers_Images/150.jpg",
             "editions": [
@@ -664,7 +664,7 @@
             ]
         },
         {
-            "uuid": "b734819f88834696bbf92389f03c50ba",
+            "uuid": "d6e7b8b474624d299a1771ca611d1a95",
             "name": "Slipstream Vault",
             "image_url": "https://gabrary.net/Spoilers_Images/152.jpg",
             "editions": [
@@ -677,7 +677,7 @@
             ]
         },
         {
-            "uuid": "ae8d769926b74bdca8317fa36d0a6d5a",
+            "uuid": "3e94bc42106943089401680c01be244a",
             "name": "Sudden Snow",
             "image_url": "https://gabrary.net/Spoilers_Images/155.jpg",
             "editions": [
@@ -690,7 +690,7 @@
             ]
         },
         {
-            "uuid": "5e126b1741a94c50802a95f81f166c59",
+            "uuid": "57118c85e398441c84ebb0fc63cc00d8",
             "name": "Sword Saint of Eventide",
             "image_url": "https://gabrary.net/Spoilers_Images/156.jpg",
             "editions": [
@@ -703,7 +703,7 @@
             ]
         },
         {
-            "uuid": "3541804a3de34242845a566bdd99d648",
+            "uuid": "e02d2867260243c6862da055611f9d3e",
             "name": "Tidal Lock",
             "image_url": "https://gabrary.net/Spoilers_Images/157.jpg",
             "editions": [
@@ -716,7 +716,7 @@
             ]
         },
         {
-            "uuid": "95ae0f0efc64493db05d46d350145439",
+            "uuid": "0d7457d37c884eb6984e8225066bad4b",
             "name": "Wuji of Lingering Fate",
             "image_url": "https://gabrary.net/Spoilers_Images/163.jpg",
             "editions": [
@@ -729,7 +729,7 @@
             ]
         },
         {
-            "uuid": "17e1b5fbd8a94615a5b02c73702c5461",
+            "uuid": "28be30b0fa5044f486991c89243fb678",
             "name": "Bagua of Cardinal Fate",
             "image_url": "https://gabrary.net/Spoilers_Images/169.jpg",
             "editions": [
@@ -742,7 +742,7 @@
             ]
         },
         {
-            "uuid": "77963fbabc08423fa69291232b2fb4e7",
+            "uuid": "4a8cd8b673f64be5af5b74caf1c53395",
             "name": "Dilu, Auspicious Charger",
             "image_url": "https://gabrary.net/Spoilers_Images/173.jpg",
             "editions": [
@@ -755,7 +755,7 @@
             ]
         },
         {
-            "uuid": "ed4305a288e248e889881c4d63d09536",
+            "uuid": "4fc74f5e4bf94d348a0f0147991953bc",
             "name": "Fairy Whispers",
             "image_url": "https://gabrary.net/Spoilers_Images/175.jpg",
             "editions": [
@@ -768,7 +768,7 @@
             ]
         },
         {
-            "uuid": "fc492799d45f4474a808abd635bd677c",
+            "uuid": "b9fa175fb0d3435b9bab9ec5fc8048b9",
             "name": "Favorable Winds",
             "image_url": "https://gabrary.net/Spoilers_Images/176.jpg",
             "editions": [
@@ -781,7 +781,7 @@
             ]
         },
         {
-            "uuid": "eb09096030f2479eb173b9bfe5e69b49",
+            "uuid": "4c7c25321b594b55ab666b0cdceb3b7c",
             "name": "Poised Rearguard",
             "image_url": "https://gabrary.net/Spoilers_Images/187.jpg",
             "editions": [
@@ -794,7 +794,7 @@
             ]
         },
         {
-            "uuid": "047f7112a65d42aa9b59ec12062395da",
+            "uuid": "dbab0f433db74016816efacb17a6af30",
             "name": "Razorgale Calling",
             "image_url": "https://gabrary.net/Spoilers_Images/188.jpg",
             "editions": [
@@ -807,7 +807,7 @@
             ]
         },
         {
-            "uuid": "42905749a70343a780623c29ddf4147f",
+            "uuid": "6a248e4dff3f47399ee48ffff824f14a",
             "name": "Vengeful Gust",
             "image_url": "https://gabrary.net/Spoilers_Images/196.jpg",
             "editions": [
@@ -820,7 +820,7 @@
             ]
         },
         {
-            "uuid": "e4553a713abf441a9d2349e02c5302b6",
+            "uuid": "034c7b2b048742a1ad366eb9f069e63f",
             "name": "Wildgrwoth Feline",
             "image_url": "https://gabrary.net/Spoilers_Images/197.jpg",
             "editions": [
@@ -833,7 +833,7 @@
             ]
         },
         {
-            "uuid": "3558d7d460454ac28ad9492e79193ab8",
+            "uuid": "b7b99d82be0743919ab97a98199b40cd",
             "name": "Yunzhou Cavalry",
             "image_url": "https://gabrary.net/Spoilers_Images/199.jpg",
             "editions": [
@@ -846,7 +846,7 @@
             ]
         },
         {
-            "uuid": "82bff6f97dca476e81d69a5cc9c46a55",
+            "uuid": "09b493c7a211437c9879b0282e5575cd",
             "name": "Zhao Yun, Dragonsblood",
             "image_url": "https://gabrary.net/Spoilers_Images/214.jpg",
             "editions": [
@@ -859,7 +859,7 @@
             ]
         },
         {
-            "uuid": "225693f212514f1ea1a34c2b0b73627a",
+            "uuid": "0c933f22846248daabe54717f041bba5",
             "name": "Jin, Fate Defiant",
             "image_url": "https://gabrary.net/Spoilers_Images/4003.jpg",
             "editions": [
@@ -872,7 +872,7 @@
             ]
         },
         {
-            "uuid": "e77063ab87eb4e0fabe1c6c09fcb19b6",
+            "uuid": "929f2def353549c7985736425d285525",
             "name": "Jin, Zealous Maverick",
             "image_url": "https://gabrary.net/Spoilers_Images/4004.jpg",
             "editions": [
@@ -885,7 +885,7 @@
             ]
         },
         {
-            "uuid": "92c5b5a2e8224ecfadf9fa36d811001f",
+            "uuid": "b0c067a55c9b420d87d3ceb2c122a39a",
             "name": "Jin, Undying Resolve",
             "image_url": "https://gabrary.net/Spoilers_Images/4005.jpg",
             "editions": [
@@ -898,7 +898,7 @@
             ]
         },
         {
-            "uuid": "ee4a856fe06345a084e11d0e46841a49",
+            "uuid": "b819d925910748b1b55184518e31d1af",
             "name": "Jin, Undying Resolve",
             "image_url": "https://gabrary.net/Spoilers_Images/4005.1.jpg",
             "editions": [
@@ -911,7 +911,7 @@
             ]
         },
         {
-            "uuid": "6dfbe8dd2a624f47b6a4f4e363326f00",
+            "uuid": "1139f809ae544a44a94ab2755d1b37a4",
             "name": "Executioner's Spear",
             "image_url": "https://gabrary.net/Spoilers_Images/4010.jpg",
             "editions": [
@@ -924,7 +924,7 @@
             ]
         },
         {
-            "uuid": "e5313133f3b94c4a88c0fac4d6fc2a21",
+            "uuid": "e0de5cd7891f4ee3b47fcc11c8044c00",
             "name": "Berserker Plate",
             "image_url": "https://gabrary.net/Spoilers_Images/4019.jpg",
             "editions": [
@@ -937,7 +937,7 @@
             ]
         },
         {
-            "uuid": "cc543978749a488798961fbe4e9674fc",
+            "uuid": "10f48e70c13a404ebb6bd0a0172c6480",
             "name": "Shuang Ji of Sacrifice",
             "image_url": "https://gabrary.net/Spoilers_Images/4020.jpg",
             "editions": [
@@ -950,7 +950,7 @@
             ]
         },
         {
-            "uuid": "c5d059ab07af42138ae20ce93c73644a",
+            "uuid": "86fd5c99af8c44819c5bb5f5eb889190",
             "name": "Pierce the Heavens",
             "image_url": "https://gabrary.net/Spoilers_Images/4029.jpg",
             "editions": [
@@ -963,7 +963,7 @@
             ]
         },
         {
-            "uuid": "35e8b8ebc9b440b994ef179379746602",
+            "uuid": "a8179e5b357d4cb29ffca7ec58e670c7",
             "name": "Eminent Commander",
             "image_url": "https://gabrary.net/Spoilers_Images/4045.jpg",
             "editions": [
@@ -976,7 +976,7 @@
             ]
         },
         {
-            "uuid": "ba08160310484c698d8c6a28439bbe94",
+            "uuid": "943fc71e2a404a98899d8c3a6c48db16",
             "name": "Materialize Polearm",
             "image_url": "https://gabrary.net/Spoilers_Images/4047.jpg",
             "editions": [
@@ -989,7 +989,7 @@
             ]
         },
         {
-            "uuid": "21a0cfdf680548569ae39dd0380e1359",
+            "uuid": "174677de8ed24e969d928936f8a72cef",
             "name": "Enrage",
             "image_url": "https://gabrary.net/Spoilers_Images/4052.jpg",
             "editions": [
@@ -1002,7 +1002,7 @@
             ]
         },
         {
-            "uuid": "9b1f5bdbc1954dba9c033b4f1a6a784f",
+            "uuid": "9e7e438a34374388bcb157746f51db57",
             "name": "Exia Sight",
             "image_url": "https://gabrary.net/Spoilers_Images/4053.jpg",
             "editions": [
@@ -1015,7 +1015,7 @@
             ]
         },
         {
-            "uuid": "1193cb0d0dea409091c274ace501447a",
+            "uuid": "b3501afdb5aa42cbb95bbf7281fc1608",
             "name": "Mend Flesh",
             "image_url": "https://gabrary.net/Spoilers_Images/4055.jpg",
             "editions": [
@@ -1028,7 +1028,7 @@
             ]
         },
         {
-            "uuid": "98ae15bf6cb84528a64d8424d7543e8d",
+            "uuid": "dda83be82458458294815d685c578206",
             "name": "Relentless Outburst",
             "image_url": "https://gabrary.net/Spoilers_Images/4056.jpg",
             "editions": [
@@ -1041,7 +1041,7 @@
             ]
         },
         {
-            "uuid": "9953f27b6ca3479197c7d543faf94ade",
+            "uuid": "b84c345eb8954eb3b3f631a5e4809019",
             "name": "Kongming, Wayward Maven",
             "image_url": "https://gabrary.net/Spoilers_Images/5006.jpg",
             "editions": [
@@ -1054,7 +1054,7 @@
             ]
         },
         {
-            "uuid": "6acfbb09e41646e6a91ad1e91d3f6996",
+            "uuid": "86157c27085e4d8faad505c9167d3f5b",
             "name": "Kongming, Ascetic Vice",
             "image_url": "https://gabrary.net/Spoilers_Images/5007.jpg",
             "editions": [
@@ -1067,7 +1067,7 @@
             ]
         },
         {
-            "uuid": "d3d3175f6dd3499b826089b93d56ec82",
+            "uuid": "d2771b37d3cb490e8c574b7918320cac",
             "name": "Kongming, Fel Eidolon",
             "image_url": "https://gabrary.net/Spoilers_Images/5008.jpg",
             "editions": [
@@ -1080,7 +1080,7 @@
             ]
         },
         {
-            "uuid": "b6994e2e2dd344cea00bcac65626be08",
+            "uuid": "4a625207e3fb42f6849522c7fbb0d56b",
             "name": "Kongming, Fel Eidolon",
             "image_url": "https://gabrary.net/Spoilers_Images/5008.1.jpg",
             "editions": [
@@ -1093,7 +1093,7 @@
             ]
         },
         {
-            "uuid": "d5ff84a6d77643fba22c0cb0f6f29c9c",
+            "uuid": "c704ca6d300c437e8945322f4a05831f",
             "name": "Fan of Seven Debts",
             "image_url": "https://gabrary.net/Spoilers_Images/5011.jpg",
             "editions": [
@@ -1106,7 +1106,7 @@
             ]
         },
         {
-            "uuid": "f5d252449ea242f3b6c338472047696b",
+            "uuid": "e5437a91091942b3b3de3937aa8f72e9",
             "name": "Shard of Empowerment",
             "image_url": "https://gabrary.net/Spoilers_Images/5014.jpg",
             "editions": [
@@ -1119,7 +1119,7 @@
             ]
         },
         {
-            "uuid": "b46a50c6512742ef89479f01454e9c9a",
+            "uuid": "d51acee8d9e3497a9cdbd405b9a805b1",
             "name": "Ardent Cloudstriker",
             "image_url": "https://gabrary.net/Spoilers_Images/5023.jpg",
             "editions": [
@@ -1132,7 +1132,7 @@
             ]
         },
         {
-            "uuid": "16e13d68897f483d85cc94f44161dd42",
+            "uuid": "80ecb48f9c234dacb635352898beed21",
             "name": "Shifting Currents",
             "image_url": "https://gabrary.net/Spoilers_Images/5033.jpg",
             "editions": [
@@ -1145,7 +1145,7 @@
             ]
         },
         {
-            "uuid": "66ea513485fc438f9b67ae06d69575de",
+            "uuid": "84e277c073d64302af1c85246605d3ae",
             "name": "Coriolis Ward",
             "image_url": "https://gabrary.net/Spoilers_Images/5039.jpg",
             "editions": [
@@ -1158,7 +1158,7 @@
             ]
         },
         {
-            "uuid": "4a1ec6129db84775b1d6b8474a882de5",
+            "uuid": "275935fa7828495a8928a58bf464d432",
             "name": "Hydroguard Retainer",
             "image_url": "https://gabrary.net/Spoilers_Images/5040.jpg",
             "editions": [
@@ -1171,7 +1171,7 @@
             ]
         },
         {
-            "uuid": "5b16bd41eb5c4077bb34cccc8a25cc40",
+            "uuid": "3be3ccb985d24d5a86aedd5759a91ec9",
             "name": "Tsunami of Nanyue",
             "image_url": "https://gabrary.net/Spoilers_Images/5043.jpg",
             "editions": [
@@ -1184,7 +1184,7 @@
             ]
         },
         {
-            "uuid": "90476384b0b64a9ba1772f8eb081a0c2",
+            "uuid": "11e0ae0df9ab44d1b79c95994ab42a54",
             "name": "Leeching Bolt",
             "image_url": "https://gabrary.net/Spoilers_Images/5058.jpg",
             "editions": [
@@ -1197,7 +1197,7 @@
             ]
         },
         {
-            "uuid": "ab769202513741d68b0a95ae95c02995",
+            "uuid": "85bb60d5347a4c02a2eb359dd9584f73",
             "name": "Planar Abyss",
             "image_url": "https://gabrary.net/Spoilers_Images/5059.jpg",
             "editions": [
@@ -1210,7 +1210,7 @@
             ]
         },
         {
-            "uuid": "86c006ac3fa2469198658031b7954498",
+            "uuid": "6d7e03d4a7184b60898d6c5793ef2848",
             "name": "Savage Swing",
             "image_url": "https://gabrary.net/Spoilers_Images/6001.jpg",
             "editions": [
@@ -1223,7 +1223,7 @@
             ]
         },
         {
-            "uuid": "9dab9cf16cfc48ca85e12dc7a14c7753",
+            "uuid": "324255afea1d4a21a9bf0c950125f6ba",
             "name": "Tariff Ring",
             "image_url": "https://gabrary.net/Spoilers_Images/8015.jpg",
             "editions": [
@@ -1236,7 +1236,7 @@
             ]
         },
         {
-            "uuid": "019ea6eed2734ebdb01a68f4917b9869",
+            "uuid": "628a9e4c8ba84e96967052c54ce19df4",
             "name": "Blazing Throw",
             "image_url": "https://gabrary.net/Spoilers_Images/8018.jpg",
             "editions": [
@@ -1249,7 +1249,7 @@
             ]
         },
         {
-            "uuid": "04e0750ce3ae492eadd58417d344ee2f",
+            "uuid": "b98778a11f364dc29e4b9f61d1172ffc",
             "name": "Backup Charger",
             "image_url": "https://gabrary.net/Spoilers_Images/8019.jpg",
             "editions": [
@@ -1262,7 +1262,7 @@
             ]
         },
         {
-            "uuid": "36f141276008469e997b40abfe2550a2",
+            "uuid": "9e75324613cd4946a499e0f92a548bbc",
             "name": "Minthe, Spirit of Water",
             "image_url": "https://gabrary.net/Spoilers_Images/8155.jpg",
             "editions": [

@@ -34,7 +34,7 @@ driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 driver.get(url)
 
 # Optionally, wait for elements to load
-driver.implicitly_wait(10)
+driver.implicitly_wait(100)
 
 # Extract content
 content = driver.page_source

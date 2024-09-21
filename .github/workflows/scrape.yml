@@ -32,4 +32,4 @@ jobs:
         with:
           branch: main
           file_pattern: fastlane/metadata
-          commit_message: Update Release Notes (MINOR)
+          commit_message: Update docs/games/grand_archive_gabrary_spoilers/sets/gabrary_spoilers.json
