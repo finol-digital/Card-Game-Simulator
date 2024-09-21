@@ -38,16 +38,16 @@ for card in cards:
     # Extract card name and image URL
     name = card.find('p', class_="centerText").text.strip()
     image_url = 'https://gabrary.net' + card.find('img')['src']
+    
+    editions = []
+    editions.append({'set': { 'name': 'Spoilers from https://gabrary.net', 'prefix': 'gabrary_spoilers'}})
 
     # Append to card_data list
     card_data["data"].append({
         'uuid': uuid.uuid4().hex,
         'name': name,
         'image_url': image_url,
-        'set': {
-          'name': 'Spoilers from https://gabrary.net',
-          'prefix': 'gabrary_spoilers'
-        }
+        'editions': editions
     })
 
 # Output the card data to a JSON file
