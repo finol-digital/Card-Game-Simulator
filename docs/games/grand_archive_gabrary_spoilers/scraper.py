@@ -1,4 +1,8 @@
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.os_manager import ChromeType
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 import uuid
 import json
@@ -7,7 +11,24 @@ import json
 url = 'https://gabrary.net/sets/Spoilers/All'
 
 # Set up the WebDriver (make sure to download the appropriate driver)
-driver = webdriver.Firefox()
+#driver = webdriver.Firefox()
+#driver = webdriver.Chrome()
+
+# Driver from https://github.com/jsoma/selenium-github-actions
+chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+chrome_options = Options()
+options = [
+    "--headless",
+    "--disable-gpu",
+    "--window-size=1920,1200",
+    "--ignore-certificate-errors",
+    "--disable-extensions",
+    "--no-sandbox",
+    "--disable-dev-shm-usage"
+]
+for option in options:
+    chrome_options.add_argument(option)
+driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
 # Open the target URL
 driver.get(url)
