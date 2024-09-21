@@ -4,9 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.119
-- Game-Play: Drawer Buttons
-- Game-Play: Persistent Zoom Setting
+## What's New - v1.120
+- Add Grand Archive Gabrary Spoilers
 
 ## Sprint - Priority 1
 - Bug-Fix: macOS Mission Control freezes
