@@ -578,6 +578,11 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     allCardsUrlPageCountIdentifier = allCardsUrlPageCountIdentifier[(delimiterIndex + 1)..];
                 }
 
+                var hasAllCardsUrlPageCount =
+                    (currentJToken as JObject)?.ContainsKey(allCardsUrlPageCountIdentifier) ?? false;
+                if (!hasAllCardsUrlPageCount)
+                    return;
+
                 var allCardsUrlPageCount = currentJToken.Value<int>(allCardsUrlPageCountIdentifier);
                 if (allCardsUrlPageCount < 1 || AllCardsUrlPageCount > 1)
                     return;
