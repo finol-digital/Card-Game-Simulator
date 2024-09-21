@@ -1,0 +1,305 @@
+{
+	"name": "Grand Archive (Gabrary Spoilers)",
+	"allCardsUrl": "https://cgs.games/api/proxy/api.gatcg.com/cards/search",
+	"allCardsUrlPageCountIdentifier": "total_pages",
+	"allSetsUrl": "https://www.cardgamesimulator.com/games/grand_archive_gabrary_spoilers/AllSets.json",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive_gabrary_spoilers/grand_archive_gabrary_spoilers.json",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
+	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
+	"cardDataIdentifier": "data",
+	"cardIdIdentifier": "uuid",
+	"cardImageFileType": "jpg",
+	"cardImageProperty": "image_url",
+	"cardImageUrl": "https://cgs.games/api/proxy/ga-index-public.s3.us-west-2.amazonaws.com/cards/{editions[0].slug}.jpg",
+	"cardPrimaryProperty": "effect_raw",
+	"cardProperties": [
+		{
+			"name": "types",
+			"display": "Type",
+			"type": "stringEnumList"
+		},
+		{
+			"name": "classes",
+			"display": "Class",
+			"type": "stringEnumList"
+		},
+		{
+			"name": "subtypes",
+			"display": "Subtype",
+			"type": "stringEnumList"
+		},
+		{
+			"name": "element",
+			"display": "Element",
+			"type": "stringEnum"
+		},
+		{
+			"name": "effect_raw",
+			"display": "Effect",
+			"displayEmpty": "-",
+			"type": "string"
+		},
+		{
+			"name": "flavor",
+			"display": "Flavor",
+			"displayEmpty": "-",
+			"type": "string"
+		},
+		{
+			"name": "cost_memory",
+			"display": "Memory Cost",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "cost_reserve",
+			"display": "Reserve Cost",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "level",
+			"display": "Level",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "attack",
+			"display": "Attack",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "life",
+			"display": "Life",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "durability",
+			"display": "Durability",
+			"displayEmpty": "-",
+			"type": "integer"
+		},
+		{
+			"name": "speed",
+			"display": "Speed: Fast?",
+			"displayEmpty": "-",
+			"type": "boolean"
+		},
+		{
+			"name": "editions",
+			"display": "Edition(s)",
+			"type": "objectList",
+			"properties": [
+				{
+					"name": "card_id",
+					"display": "Card Id",
+					"type": "string"
+				},
+				{
+					"name": "slug",
+					"display": "Slug",
+					"type": "string"
+				},
+				{
+					"name": "illustrator",
+					"display": "Illustrator",
+					"type": "string"
+				},
+				{
+					"name": "rarity",
+					"display": "Rarity",
+					"type": "integer"
+				}
+			]
+		}
+	],
+	"cardSetIsObject": true,
+	"cardSetsInList": true,
+	"cardSetIdentifier": "editions",
+	"cgsGamesLink": "https://cgs.games/link/grand_archive_gabrary_spoilers",
+	"copyright": "Weebs of the Shore LLC",
+	"deckSharePreference": "individual",
+	"deckUrls": [
+		{
+			"name": "Arisanna Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Arisanna%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Diana Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Diana%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Lorraine Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Lorraine%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Rai Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Rai%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Silvie Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Silvie%20Starter%20Deck.txt"
+		},
+		{
+			"name": "Tonoris Starter Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Tonoris%20Starter%20Deck.txt"
+		}
+	],
+	"enums": [
+		{
+			"property": "types",
+			"values": {
+				"ACTION": "Action",
+				"ALLY": "Ally",
+				"ATTACK": "Attack",
+				"CHAMPION": "Champion",
+				"DOMAIN": "Domain",
+				"ITEM": "Item",
+				"PHANTASIA": "Phantasia",
+				"REGALIA": "Regalia",
+				"TOKEN": "Token",
+				"UNIQUE": "Unique",
+				"WEAPON": "Weapon"
+			}
+		},
+		{
+			"property": "classes",
+			"values": {
+				"ASSASSIN": "Assassin",
+				"CLERIC": "Cleric",
+				"GUARDIAN": "Guardian",
+				"MAGE": "Mage",
+				"RANGER": "Ranger",
+				"TAMER": "Tamer",
+				"WARRIOR": "Warrior"
+			}
+		},
+		{
+			"property": "subtypes",
+			"values": {
+				"ACCESSORY": "Accessory",
+				"ANIMAL": "Animal",
+				"ARTIFACT": "Artifact",
+				"ASSASSIN": "Assassin",
+				"BAUBLE": "Bauble",
+				"BEAST": "Beast",
+				"BIRD": "Bird",
+				"BOAR": "Boar",
+				"BOOK": "Book",
+				"CLERIC": "Cleric",
+				"CRAFT": "Craft",
+				"CRYSTAL": "Crystal",
+				"FAIRY": "Fairy",
+				"GUARDIAN": "Guardian",
+				"HORSE": "Horse",
+				"HUMAN": "Human",
+				"MAGE": "Mage",
+				"RANGER": "Ranger",
+				"REACTION": "Reaction",
+				"SCEPTER": "Scepter",
+				"SKILL": "Skill",
+				"SPELL": "Spell",
+				"SPIRIT": "Spirit",
+				"SQUIRREL": "Squirrel",
+				"SWORD": "Sword",
+				"TAMER": "Tamer",
+				"WARRIOR": "Warrior",
+				"WOLF": "Wolf"
+			}
+		},
+		{
+			"property": "element",
+			"values": {
+				"ARCANE": "Arcane",
+				"ASTRA": "Astra",
+				"CRUX": "Crux",
+				"FIRE": "Fire",
+				"LUXEM": "Luxem",
+				"NORM": "Normal",
+				"NEOS": "Neos",
+				"TERA": "Tera",
+				"UMBRA": "Umbra",
+				"WATER": "Water",
+				"WIND": "Wind"
+			}
+		}
+	],
+	"extras": [
+		{
+			"group": "Material Deck",
+			"property": "types",
+			"value": "Champion"
+		},
+		{
+			"group": "Material Deck",
+			"property": "types",
+			"value": "Regalia"
+		}
+	],
+	"gameDefaultCardAction": "tap",
+	"gamePlayDeckName": "Main Deck",
+	"gamePlayDeckPositions": [
+		{
+			"x": 25,
+			"y": -5.5
+		},
+		{
+			"x": -25,
+			"y": -5.5
+		},
+		{
+			"x": -25,
+			"y": 5.5
+		},
+		{
+			"x": 25,
+			"y": 5.5
+		}
+	],
+	"gamePlayZones": [
+		{
+			"defaultCardAction": "flip",
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": -10.5
+			},
+			"rotation": 0,
+			"size": {
+				"x": 42,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		},
+		{
+			"defaultCardAction": "flip",
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": 10.5
+			},
+			"rotation": 180,
+			"size": {
+				"x": 42,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		}
+	],
+	"gameStartHandCount": 7,
+	"playMatImageFileType": "jpg",
+	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.jpg",
+	"playMatGridCellSize": {
+		"x": 0,
+		"y": 0
+	},
+	"playMatSize": {
+		"x": 56,
+		"y": 30
+	},
+	"rulesUrl": "https://www.gatcg.com/article/rules",
+	"setCodeIdentifier": "set.prefix",
+	"setNameIdentifier": "set.name"
+}
