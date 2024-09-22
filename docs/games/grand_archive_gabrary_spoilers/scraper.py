@@ -4,7 +4,7 @@ from webdriver_manager.core.os_manager import ChromeType
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
-import uuid
+import re
 import json
 
 # URL to scrape
@@ -65,7 +65,7 @@ for card in cards:
 
     # Append to card_data list
     card_data["data"].append({
-        'uuid': uuid.uuid4().hex,
+        'uuid': re.sub(r'\W+', '', name),
         'name': name,
         'image_url': image_url,
         'editions': editions
