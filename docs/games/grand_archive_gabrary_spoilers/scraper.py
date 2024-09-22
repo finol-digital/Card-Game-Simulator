@@ -52,21 +52,31 @@ cards = soup.find_all('div', class_="text-row")
 # List to store card data
 card_data = {}
 card_data["data"] = []
+name_counter = {}
 
 # Loop through each card element
 for card in cards:
     print(card)
     # Extract card name and image URL
     name = card.find('p', class_="centerText").text.strip()
-    image_url = 'https://gabrary.net' + card.find('img')['src']
-    
+    image_url = 'https://cgs.games/api/proxy/gabrary.net' + card.find('img')['src']
+
+    # Massaging for CGS
+    name_count = 0
+    if (name in name_counter):
+        name_count = name_counter[name]
+    name_count = name_count + 1
+    name_counter[name] = name_count
+    name_counted = name
+    if (name_count > 1):
+        name_counted = name + str(name_count)
     editions = []
     editions.append({'set': { 'name': 'Spoilers from https://gabrary.net', 'prefix': 'gabrary_spoilers'}})
 
     # Append to card_data list
     card_data["data"].append({
-        'uuid': re.sub(r'\W+', '', name),
-        'name': name,
+        'uuid': re.sub(r'\W+', '', name_counted),
+        'name': name_counted,
         'image_url': image_url,
         'editions': editions
     })
