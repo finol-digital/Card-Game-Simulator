@@ -1,9 +1,9 @@
 {
     "data": [
         {
-            "uuid": "VengefulGust",
-            "name": "Vengeful Gust",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/196.jpg",
+            "uuid": "CyclicalBreeze",
+            "name": "Cyclical Breeze",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/172.jpg",
             "editions": [
                 {
                     "set": {
@@ -14,9 +14,9 @@
             ]
         },
         {
-            "uuid": "DiluAuspiciousCharger",
-            "name": "Dilu, Auspicious Charger",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/173.jpg",
+            "uuid": "Thunderclap",
+            "name": "Thunderclap",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/124.jpg",
             "editions": [
                 {
                     "set": {
@@ -27,9 +27,9 @@
             ]
         },
         {
-            "uuid": "ZhaoYunDragonsblood",
-            "name": "Zhao Yun, Dragonsblood",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/214.jpg",
+            "uuid": "ThreeVisits",
+            "name": "Three Visits",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/194.jpg",
             "editions": [
                 {
                     "set": {
@@ -40,9 +40,74 @@
             ]
         },
         {
-            "uuid": "WarMarshal",
-            "name": "War Marshal",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/90.jpg",
+            "uuid": "HireMercenaries",
+            "name": "Hire Mercenaries",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/47.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MysticPurifier",
+            "name": "Mystic Purifier",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/63.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "SunQuanSealbearer",
+            "name": "Sun Quan, Sealbearer",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/84.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "AcolyteofCultivation",
+            "name": "Acolyte of Cultivation",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/29.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "RelicofDancingEmbers",
+            "name": "Relic of Dancing Embers",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/116.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "HeavenlyGuide",
+            "name": "Heavenly Guide",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/46.jpg",
             "editions": [
                 {
                     "set": {
@@ -170,6 +235,19 @@
             ]
         },
         {
+            "uuid": "AcolyteofCultivation2",
+            "name": "Acolyte of Cultivation2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/29.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
             "uuid": "bringDowntheMighty",
             "name": "bring Down the Mighty",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/33.jpg",
@@ -199,6 +277,32 @@
             "uuid": "ExtractionIncision",
             "name": "Extraction Incision",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/40.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "HeavenlyGuide2",
+            "name": "Heavenly Guide2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/46.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "HireMercenaries2",
+            "name": "Hire Mercenaries2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/47.jpg",
             "editions": [
                 {
                     "set": {
@@ -313,6 +417,19 @@
             ]
         },
         {
+            "uuid": "MysticPurifier2",
+            "name": "Mystic Purifier2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/63.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
             "uuid": "BascentBarrier",
             "name": "Bascent Barrier",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/64.jpg",
@@ -339,9 +456,35 @@
             ]
         },
         {
+            "uuid": "SkilledPlainsman",
+            "name": "Skilled Plainsman",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/80.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
             "uuid": "SliceandDice",
             "name": "Slice and Dice",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/81.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "StaggeringStrike",
+            "name": "Staggering Strike",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/82.jpg",
             "editions": [
                 {
                     "set": {
@@ -365,6 +508,19 @@
             ]
         },
         {
+            "uuid": "SunQuanSealbearer2",
+            "name": "Sun Quan, Sealbearer2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/84.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
             "uuid": "UnbrokenMustang",
             "name": "Unbroken Mustang",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/88.jpg",
@@ -378,8 +534,8 @@
             ]
         },
         {
-            "uuid": "WarMarshal2",
-            "name": "War Marshal2",
+            "uuid": "WarMarshal",
+            "name": "War Marshal",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/90.jpg",
             "editions": [
                 {
@@ -482,6 +638,19 @@
             ]
         },
         {
+            "uuid": "HulaoGateSunsAscent",
+            "name": "Hulao Gate, Sun's Ascent",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/108.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
             "uuid": "IgnitedFate",
             "name": "Ignited Fate",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/109.jpg",
@@ -511,6 +680,19 @@
             "uuid": "OppressivePresence",
             "name": "Oppressive Presence",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/113.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "RelicofDancingEmbers2",
+            "name": "Relic of Dancing Embers2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/116.jpg",
             "editions": [
                 {
                     "set": {
@@ -563,6 +745,19 @@
             "uuid": "SwordSaintofEverflame",
             "name": "Sword Saint of Everflame",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/122.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "Thunderclap2",
+            "name": "Thunderclap2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/124.jpg",
             "editions": [
                 {
                     "set": {
@@ -742,8 +937,21 @@
             ]
         },
         {
-            "uuid": "DiluAuspiciousCharger2",
-            "name": "Dilu, Auspicious Charger2",
+            "uuid": "CyclicalBreeze2",
+            "name": "Cyclical Breeze2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/172.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "DiluAuspiciousCharger",
+            "name": "Dilu, Auspicious Charger",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/173.jpg",
             "editions": [
                 {
@@ -807,8 +1015,21 @@
             ]
         },
         {
-            "uuid": "VengefulGust2",
-            "name": "Vengeful Gust2",
+            "uuid": "ThreeVISTIS",
+            "name": "Three VISTIS",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/194.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "VengefulGust",
+            "name": "Vengeful Gust",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/196.jpg",
             "editions": [
                 {
@@ -846,8 +1067,8 @@
             ]
         },
         {
-            "uuid": "ZhaoYunDragonsblood2",
-            "name": "Zhao Yun, Dragonsblood2",
+            "uuid": "ZhaoYunDragonsblood",
+            "name": "Zhao Yun, Dragonsblood",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/214.jpg",
             "editions": [
                 {
