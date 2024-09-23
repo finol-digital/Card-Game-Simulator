@@ -42,9 +42,6 @@ permalink: roadmap.html
   - Option for card count limits, i.e. 3 copies per deck
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
 - Cards: Support mix of different card sizes in the same game
-
-## Backlog - Priority 3
-- Games Management Menu: CGS Games Browser
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
@@ -65,7 +62,7 @@ permalink: roadmap.html
 - Accessibility: Tutorial Video for How-To-Create-And-Share
 - Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
 
-## Icebox
+## Icebox - Priority 3
 - Integration: Json Schema Generation via https://github.com/json-everything/json-everything
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Cards: Apply autoUpdate to cached images
