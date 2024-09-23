@@ -27,7 +27,7 @@
 		{
 			"name": "subtypes",
 			"display": "Subtype(s)",
-			"type": "string"
+			"type": "stringList"
 		},
 		{
 			"name": "element",
