@@ -23,8 +23,8 @@
 		},
 		{
 			"name": "subtypes",
-			"display": "Subtype",
-			"type": "stringEnumList"
+			"display": "Subtype(s)",
+			"type": "string"
 		},
 		{
 			"name": "element",
@@ -82,7 +82,7 @@
 		{
 			"name": "speed",
 			"display": "Speed: Fast?",
-			"displayEmpty": "-",
+			"displayEmpty": "N / A",
 			"type": "boolean"
 		},
 		{
@@ -175,44 +175,12 @@
 			}
 		},
 		{
-			"property": "subtypes",
-			"values": {
-				"ACCESSORY": "Accessory",
-				"ANIMAL": "Animal",
-				"ARTIFACT": "Artifact",
-				"ASSASSIN": "Assassin",
-				"BAUBLE": "Bauble",
-				"BEAST": "Beast",
-				"BIRD": "Bird",
-				"BOAR": "Boar",
-				"BOOK": "Book",
-				"CLERIC": "Cleric",
-				"CRAFT": "Craft",
-				"CRYSTAL": "Crystal",
-				"FAIRY": "Fairy",
-				"GUARDIAN": "Guardian",
-				"HORSE": "Horse",
-				"HUMAN": "Human",
-				"MAGE": "Mage",
-				"RANGER": "Ranger",
-				"REACTION": "Reaction",
-				"SCEPTER": "Scepter",
-				"SKILL": "Skill",
-				"SPELL": "Spell",
-				"SPIRIT": "Spirit",
-				"SQUIRREL": "Squirrel",
-				"SWORD": "Sword",
-				"TAMER": "Tamer",
-				"WARRIOR": "Warrior",
-				"WOLF": "Wolf"
-			}
-		},
-		{
 			"property": "element",
 			"values": {
 				"ARCANE": "Arcane",
 				"ASTRA": "Astra",
 				"CRUX": "Crux",
+				"EXIA": "Exia",
 				"FIRE": "Fire",
 				"LUXEM": "Luxem",
 				"NORM": "Normal",
