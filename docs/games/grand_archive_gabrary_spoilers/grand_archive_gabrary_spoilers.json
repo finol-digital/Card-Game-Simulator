@@ -65,8 +65,8 @@
 			"type": "integer"
 		},
 		{
-			"name": "attack",
-			"display": "Attack",
+			"name": "power",
+			"display": "Power",
 			"displayEmpty": "-",
 			"type": "integer"
 		},
