@@ -817,13 +817,17 @@ jobs:
         shell: pwsh
         run: msstore reconfigure --tenantId ${{ secrets.MICROSOFT_TENANT_ID }} --sellerId ${{ secrets.MICROSOFT_SELLER_ID }} --clientId ${{ secrets.MICROSOFT_CLIENT_ID }} --clientSecret ${{ secrets.MICROSOFT_KEY }}
       - name: Build the .appxupload with Microsoft Store Developer CLI
-        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         run: |
-          msstore init "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
-          msstore package "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
+          dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
+          msstore init "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Package.appxmanifest"
+          dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
+          dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
+          msstore package "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Package.appxmanifest"
+          dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
+          dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
       - name: Build the .appxupload
         if: false
         working-directory: C:/Card-Game-Simulator.git

@@ -16,6 +16,9 @@ permalink: roadmap.html
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
 - Game-Play: Animation for card and stack actions
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Game-Play: Move card to zone, stack, or drawer (E)
+- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Display values on Card in Play Area
@@ -24,14 +27,12 @@ permalink: roadmap.html
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
-- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
-- Game-Play: Move card to zone, stack, or drawer (E)
 
 ## Backlog - Priority 2
+- Cards: Support mix of different card sizes in the same game
 - Game-Play: Custom Tokens
 - Game-Play: Flip Random for tokens
-- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
 - Decks: Support organizing decks into folders
@@ -41,15 +42,16 @@ permalink: roadmap.html
 - Decks: Group cards in Deck Editor
   - Option for card count limits, i.e. 3 copies per deck
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
-- Cards: Support mix of different card sizes in the same game
 - Game-Play: Support multiple playmats
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Platforms: Full controller support (Steam)
+- Platforms: Web via PWA
 - Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.gg)
 - Platforms: Add Multiplayer and Developer Mode to Web browser
 - Platforms: Android widgets
 - Accessibility: Add audio and sounds throughout the app
+- Accessibility: Wiki-page for Playing a Game 
 - Accessibility: Tutorial Video for How-To-Play
   - 0:00 Intro (Name/Website)
   - 0:00 Playing Solo (Single-player/Goldfishing)
