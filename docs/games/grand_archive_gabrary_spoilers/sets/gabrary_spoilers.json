@@ -1,9 +1,9 @@
 {
     "data": [
         {
-            "uuid": "SoothingDisillusion",
-            "name": "Soothing Disillusion",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/190.jpg",
+            "uuid": "ConduitofSeasons",
+            "name": "Conduit of Seasons",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/219.jpg",
             "editions": [
                 {
                     "set": {
@@ -14,9 +14,9 @@
             ]
         },
         {
-            "uuid": "JueyingShadowmare",
-            "name": "Jueying, Shadowmare",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/141.jpg",
+            "uuid": "SempiternalSage",
+            "name": "Sempiternal Sage",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/226.jpg",
             "editions": [
                 {
                     "set": {
@@ -27,22 +27,9 @@
             ]
         },
         {
-            "uuid": "CavalierRescue",
-            "name": "Cavalier Rescue",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/34.jpg",
-            "editions": [
-                {
-                    "set": {
-                        "name": "Spoilers from https://gabrary.net",
-                        "prefix": "gabrary_spoilers"
-                    }
-                }
-            ]
-        },
-        {
-            "uuid": "NanyuePortsman",
-            "name": "Nanyue Portsman",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/142.jpg",
+            "uuid": "SpellshieldTera",
+            "name": "Spellshield: Tera",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/227.jpg",
             "editions": [
                 {
                     "set": {
@@ -196,8 +183,8 @@
             ]
         },
         {
-            "uuid": "CavalierRescue2",
-            "name": "Cavalier Rescue2",
+            "uuid": "CavalierRescue",
+            "name": "Cavalier Rescue",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/34.jpg",
             "editions": [
                 {
@@ -768,8 +755,8 @@
             ]
         },
         {
-            "uuid": "JueyingShadowmare2",
-            "name": "Jueying, Shadowmare2",
+            "uuid": "JueyingShadowmare",
+            "name": "Jueying, Shadowmare",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/141.jpg",
             "editions": [
                 {
@@ -781,8 +768,8 @@
             ]
         },
         {
-            "uuid": "NanyuePortsman2",
-            "name": "Nanyue Portsman2",
+            "uuid": "NanyuePortsman",
+            "name": "Nanyue Portsman",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/142.jpg",
             "editions": [
                 {
@@ -989,8 +976,8 @@
             ]
         },
         {
-            "uuid": "SoothingDisillusion2",
-            "name": "Soothing Disillusion2",
+            "uuid": "SoothingDisillusion",
+            "name": "Soothing Disillusion",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/190.jpg",
             "editions": [
                 {
@@ -1057,6 +1044,45 @@
             "uuid": "ZhaoYunDragonsblood",
             "name": "Zhao Yun, Dragonsblood",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/214.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "ConduitofSeasons2",
+            "name": "Conduit of Seasons2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/219.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "SempiternalSage2",
+            "name": "Sempiternal Sage2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/226.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "SpellshieldTera2",
+            "name": "Spellshield: Tera2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/227.jpg",
             "editions": [
                 {
                     "set": {
