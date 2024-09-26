@@ -16,9 +16,11 @@ permalink: roadmap.html
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
 - Game-Play: Animation for card and stack actions
+- Cards: Support mix of different card sizes in the same game
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
+- Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Name-Plates indicating player seats
 - Game-Play: Display values on Card in Play Area
@@ -27,10 +29,8 @@ permalink: roadmap.html
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
-- Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 
 ## Backlog - Priority 2
-- Cards: Support mix of different card sizes in the same game
 - Game-Play: Custom Tokens
 - Game-Play: Flip Random for tokens
 - Game-Play: Rename Stacks
