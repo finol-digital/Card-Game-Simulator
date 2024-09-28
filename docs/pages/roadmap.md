@@ -8,6 +8,7 @@ permalink: roadmap.html
 - Add Grand Archive Gabrary Spoilers
 
 ## Sprint - Priority 1
+- Bug-Fix: GA memory facedown
 - Bug-Fix: Merging Stacks on client
 - Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
 - Bug-Fix: macOS Mission Control freezes
