@@ -17,11 +17,11 @@ permalink: roadmap.html
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
-- Game-Play: Animation for card and stack actions
-- Cards: Support mix of different card sizes in the same game
-- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
+- Cards: Support mix of different card sizes in the same game
+- Game-Play: Move card to zone, stack, or drawer (E)
+- Game-Play: Animation for card and stack actions
+- Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Name-Plates indicating player seats
