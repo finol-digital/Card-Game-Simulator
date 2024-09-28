@@ -1,9 +1,9 @@
 {
     "data": [
         {
-            "uuid": "ConduitofSeasons",
-            "name": "Conduit of Seasons",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/219.jpg",
+            "uuid": "OathoftheSakura",
+            "name": "Oath of the Sakura",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/185.jpg",
             "editions": [
                 {
                     "set": {
@@ -14,9 +14,9 @@
             ]
         },
         {
-            "uuid": "SempiternalSage",
-            "name": "Sempiternal Sage",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/226.jpg",
+            "uuid": "LiuBeiOathkeeper",
+            "name": "Liu Bei, Oathkeeper",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/282.jpg",
             "editions": [
                 {
                     "set": {
@@ -27,9 +27,61 @@
             ]
         },
         {
-            "uuid": "SpellshieldTera",
-            "name": "Spellshield: Tera",
-            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/227.jpg",
+            "uuid": "SealthePast",
+            "name": "Seal the Past",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/76.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage",
+            "name": "MultiImage",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9001.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage2",
+            "name": "MultiImage2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9002.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage3",
+            "name": "MultiImage3",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9003.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage4",
+            "name": "MultiImage4",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9004.jpg",
             "editions": [
                 {
                     "set": {
@@ -381,6 +433,19 @@
             "uuid": "PairedMindsKindredSouls",
             "name": "Paired Minds, Kindred Souls",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/67.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "SealthePast2",
+            "name": "Seal the Past2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/76.jpg",
             "editions": [
                 {
                     "set": {
@@ -950,6 +1015,32 @@
             ]
         },
         {
+            "uuid": "LiuBeiOathkeeper2",
+            "name": "Liu Bei, Oathkeeper2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/182.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "OathoftheSakura2",
+            "name": "Oath of the Sakura2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/185.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
             "uuid": "PoisedRearguard",
             "name": "Poised Rearguard",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/187.jpg",
@@ -1054,8 +1145,8 @@
             ]
         },
         {
-            "uuid": "ConduitofSeasons2",
-            "name": "Conduit of Seasons2",
+            "uuid": "ConduitofSeasons",
+            "name": "Conduit of Seasons",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/219.jpg",
             "editions": [
                 {
@@ -1067,8 +1158,8 @@
             ]
         },
         {
-            "uuid": "SempiternalSage2",
-            "name": "Sempiternal Sage2",
+            "uuid": "SempiternalSage",
+            "name": "Sempiternal Sage",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/226.jpg",
             "editions": [
                 {
@@ -1080,8 +1171,8 @@
             ]
         },
         {
-            "uuid": "SpellshieldTera2",
-            "name": "Spellshield: Tera2",
+            "uuid": "SpellshieldTera",
+            "name": "Spellshield: Tera",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/227.jpg",
             "editions": [
                 {
@@ -1499,6 +1590,58 @@
             "uuid": "MintheSpiritofWater",
             "name": "Minthe, Spirit of Water",
             "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/8155.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage2",
+            "name": "MultiImage2",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9001.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage22",
+            "name": "MultiImage22",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9002.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage32",
+            "name": "MultiImage32",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9003.jpg",
+            "editions": [
+                {
+                    "set": {
+                        "name": "Spoilers from https://gabrary.net",
+                        "prefix": "gabrary_spoilers"
+                    }
+                }
+            ]
+        },
+        {
+            "uuid": "MultiImage42",
+            "name": "MultiImage42",
+            "image_url": "https://cgs.games/api/proxy/gabrary.net/Spoilers_Images/9004.jpg",
             "editions": [
                 {
                     "set": {
