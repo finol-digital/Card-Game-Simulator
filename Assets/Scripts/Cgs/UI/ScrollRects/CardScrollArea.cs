@@ -100,7 +100,7 @@ namespace Cgs.UI.ScrollRects
 
             var playable = eventData.pointerDrag.GetComponent<CgsNetPlayable>();
             if (playable != null &&
-                (playable.ParentCardZone == null || playable.ParentCardZone.type == CardZoneType.Area))
+                (playable.ParentCardZone == null || playable.ParentCardZone.Type == CardZoneType.Area))
                 _isScrolling = true;
         }
 

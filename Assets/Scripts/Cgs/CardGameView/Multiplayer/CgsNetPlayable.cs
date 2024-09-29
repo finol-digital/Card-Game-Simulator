@@ -406,7 +406,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
         {
-            if (ParentCardZone != null && ParentCardZone.type == CardZoneType.Area)
+            if (ParentCardZone != null && ParentCardZone.Type == CardZoneType.Area)
                 SnapToGrid();
         }
 

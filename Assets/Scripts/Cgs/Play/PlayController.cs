@@ -154,7 +154,7 @@ namespace Cgs.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
-            playAreaCardZone.OnAddCardActions.Add(AddCardToPlay);
+            playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             if (CardGameManager.Instance.IsSearchingForServer)
@@ -408,7 +408,7 @@ namespace Cgs.Play
             return cards;
         }
 
-        private static void AddCardToPlay(CardZone cardZone, CardModel cardModel)
+        private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
         {
             if (cardModel.IsFacedown && cardModel.Value.IsBackFaceCard)
                 cardModel.IsFacedown = false;
@@ -416,10 +416,10 @@ namespace Cgs.Play
             if (CgsNetManager.Instance.IsOnline)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
-                SetPlayActions(cardModel);
+                SetPlayAreaActions(cardModel);
         }
 
-        public static void SetPlayActions(CardModel cardModel)
+        public static void SetPlayAreaActions(CardModel cardModel)
         {
             cardModel.DefaultAction =
                 CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
@@ -437,7 +437,7 @@ namespace Cgs.Play
         }
 
         public void CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown)
+            bool isFacedown, string defaultAction = "")
         {
             if (container == null)
                 container = playAreaCardZone.gameObject;
@@ -450,8 +450,9 @@ namespace Cgs.Play
             cardModel.Position = position;
             cardModel.Rotation = rotation;
             cardModel.IsFacedown = isFacedown;
+            if (Enum.TryParse<CardAction>(defaultAction, out var cardAction))
+                cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
 
-            SetPlayActions(cardModel);
             cardModel.HideHighlightClientRpc();
         }
 
@@ -551,8 +552,6 @@ namespace Cgs.Play
                 cardZone.Size = size;
                 cardZone.DefaultFace = facePreference;
                 cardZone.DefaultAction = cardAction;
-                var defaultAction = CardActionPanel.CardActionDictionary[cardZone.DefaultAction];
-                cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = defaultAction);
 
                 return cardZone;
             }
@@ -574,13 +573,7 @@ namespace Cgs.Play
                 .GetOrAddComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
-
             cardZone.Type = CardZoneType.Horizontal;
-            cardZone.Position = position;
-            cardZone.Rotation = rotation;
-            cardZone.allowsRotation = true;
-            cardZone.allowsFlip = true;
-
             return cardZone;
         }
 
@@ -590,51 +583,13 @@ namespace Cgs.Play
                 .GetComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
-
             cardZone.Type = CardZoneType.Vertical;
-            cardZone.Position = position;
-            cardZone.Rotation = rotation;
-            cardZone.allowsRotation = true;
-            cardZone.allowsFlip = true;
-
             return cardZone;
-        }
-
-        public static void OnAddCardModel(CardZone cardZone, CardModel cardModel)
-        {
-            if (cardZone == null || cardModel == null)
-                return;
-
-            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction =
-                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
-        }
-
-        public static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
-        {
-            if (cardZone == null || cardModel == null)
-                return;
-
-            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction =
-                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
-            cardModel.IsFacedown = true;
-        }
-
-        public static void OnAddCardModelFaceUp(CardZone cardZone, CardModel cardModel)
-        {
-            if (cardZone == null || cardModel == null)
-                return;
-
-            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction =
-                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
-            cardModel.IsFacedown = false;
         }
 
         public void OnDrop(CardModel cardModel)
         {
-            AddCardToPlay(playAreaCardZone, cardModel);
+            AddCardToPlayArea(playAreaCardZone, cardModel);
         }
 
         [UsedImplicitly]

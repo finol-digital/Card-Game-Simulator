@@ -110,7 +110,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnNetworkSpawnPlayable()
         {
-            if (CardZoneType.Area.Equals(Type))
+            if (CardZoneType.Area.Equals(type))
+                type = (CardZoneType) _typeNetworkVariable.Value;
+            if (Vector2.zero.Equals(_size))
+                _size = _sizeNetworkVariable.Value;
+            if (FacePreference.Any.Equals(_facePreference))
+                _facePreference = (FacePreference) _faceNetworkVariable.Value;
+            if (CardAction.Move.Equals(_cardAction))
+                _cardAction = (CardAction) _actionNetworkVariable.Value;
+        }
+
+        protected override void OnStartPlayable()
+        {
+            if (PlayController.Instance == null ||
+                PlayController.Instance.playAreaCardZone.transform != transform.parent)
                 return;
 
             var rectTransform = (RectTransform) transform;
@@ -141,7 +154,6 @@ namespace Cgs.CardGameView.Multiplayer
             if (layoutGroup != null)
                 layoutGroup.spacing = -225f;
 
-            type = Type;
             allowsFlip = true;
             allowsRotation = true;
             scrollRectContainer = PlayController.Instance.playArea;
@@ -150,27 +162,20 @@ namespace Cgs.CardGameView.Multiplayer
             if (_faceNetworkVariable.Value != (int) _facePreference && (int) _facePreference != 0)
                 _faceNetworkVariable.Value = (int) _facePreference;
 
-            switch (DefaultFace)
-            {
-                case FacePreference.Any:
-                    OnAddCardActions.Add(PlayController.OnAddCardModel);
-                    break;
-                case FacePreference.Down:
-                    OnAddCardActions.Add(PlayController.OnAddCardModelFaceDown);
-                    break;
-                case FacePreference.Up:
-                    OnAddCardActions.Add(PlayController.OnAddCardModelFaceUp);
-                    break;
-                default:
-                    OnAddCardActions.Add(PlayController.OnAddCardModel);
-                    break;
-            }
-
             if (_actionNetworkVariable.Value != (int) _cardAction && (int) _cardAction != 0)
                 _actionNetworkVariable.Value = (int) _cardAction;
 
-            var defaultAction = CardActionPanel.CardActionDictionary[DefaultAction];
-            OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = defaultAction);
+            OnAddCardActions.Add((cardZone, cardModel) =>
+            {
+                cardModel.IsFacedown = cardZone.DefaultFace switch
+                {
+                    FacePreference.Down => true,
+                    FacePreference.Up => false,
+                    _ => cardModel.IsFacedown
+                };
+                cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardZone.DefaultAction];
+                cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
+            });
 
             StartCoroutine(WaitToAddMoveCardToServer());
         }
@@ -185,11 +190,11 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnPointerEnterPlayable(PointerEventData eventData)
         {
             var cardModel = CardModel.GetPointerDrag(eventData);
-            if (cardModel != null && (type != CardZoneType.Area || cardModel.transform.parent != transform) &&
+            if (cardModel != null && (Type != CardZoneType.Area || cardModel.transform.parent != transform) &&
                 !cardModel.IsStatic)
                 cardModel.PlaceHolderCardZone = this;
 
-            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+            if (Type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnPointerEnter(eventData);
         }
 
@@ -201,7 +206,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             OnLayout?.Invoke();
 
-            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+            if (Type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnPointerExit(eventData);
         }
 
@@ -227,7 +232,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnBeginDragPlayable(PointerEventData eventData)
         {
-            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+            if (Type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnBeginDrag(eventData);
             else if (scrollRectContainer != null)
                 scrollRectContainer.OnBeginDrag(eventData);
@@ -235,7 +240,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnDragPlayable(PointerEventData eventData)
         {
-            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+            if (Type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnDrag(eventData);
             else if (scrollRectContainer != null)
                 scrollRectContainer.OnDrag(eventData);
@@ -243,7 +248,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnEndDragPlayable(PointerEventData eventData)
         {
-            if (type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
+            if (Type == CardZoneType.Area && scrollRectContainer is RotateZoomableScrollRect scrollRect)
                 scrollRect.OnEndDrag(eventData);
             else if (scrollRectContainer != null)
                 scrollRectContainer.OnEndDrag(eventData);
@@ -264,7 +269,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardModel == null)
                 return;
 
-            if (type == CardZoneType.Area)
+            if (Type == CardZoneType.Area)
                 cardModel.SnapToGrid();
 
             if (cardModel.ToDiscard)
@@ -288,14 +293,14 @@ namespace Cgs.CardGameView.Multiplayer
             if (child == null)
                 return;
 
-            switch (type)
+            switch (Type)
             {
                 case CardZoneType.Vertical:
                 case CardZoneType.Horizontal:
                     var newSiblingIndex = transform.childCount;
                     for (var i = 0; i < transform.childCount; i++)
                     {
-                        if (type == CardZoneType.Vertical
+                        if (Type == CardZoneType.Vertical
                                 ? targetPosition.y < transform.GetChild(i).position.y
                                 : targetPosition.x > transform.GetChild(i).position.x)
                             continue;

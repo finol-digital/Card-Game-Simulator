@@ -16,8 +16,6 @@ namespace Cgs.CardGameView.Viewer
 
     public class CardActionPanel : MonoBehaviour
     {
-        public const float PositionOffsetAmount = 250f;
-
         public static IReadOnlyDictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> CardActionDictionary =>
             _cardActionDictionary ??= new Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction>
             {

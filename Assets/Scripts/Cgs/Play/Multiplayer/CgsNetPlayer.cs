@@ -526,7 +526,8 @@ namespace Cgs.Play.Multiplayer
             var isFacedown = cardModel.IsFacedown && !cardModel.Value.IsBackFaceCard;
 
             if (cardZone.IsSpawned)
-                SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown);
+                SpawnCardInZoneServerRpc(cardZone.gameObject, cardModel.Id, position, rotation, isFacedown,
+                    cardZone.DefaultAction.ToString());
             else
                 SpawnCardInPlayAreaServerRpc(cardModel.Id, position, rotation, isFacedown);
 
@@ -539,9 +540,9 @@ namespace Cgs.Play.Multiplayer
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private void SpawnCardInZoneServerRpc(NetworkObjectReference container, string cardId, Vector3 position,
-            Quaternion rotation, bool isFacedown)
+            Quaternion rotation, bool isFacedown, string defaultAction)
         {
-            PlayController.Instance.CreateCardModel(container, cardId, position, rotation, isFacedown);
+            PlayController.Instance.CreateCardModel(container, cardId, position, rotation, isFacedown, defaultAction);
         }
 
         [ServerRpc]

@@ -4,11 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.120
-- Add Grand Archive Gabrary Spoilers
+## What's New - v1.121
+- Bug-Fix: Card Zone faces
 
 ## Sprint - Priority 1
-- Bug-Fix: GA memory facedown
 - Bug-Fix: Merging Stacks on client
 - Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
 - Bug-Fix: macOS Mission Control freezes
