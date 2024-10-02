@@ -6,17 +6,17 @@ permalink: roadmap.html
 
 ## What's New - v1.121
 - Bug-Fix: Card Zone faces
-
-## Sprint - Priority 1
 - Bug-Fix: Merging Stacks on client
-- Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
-- Bug-Fix: macOS Mission Control freezes
-- Bug-Fix: Importing more than 200 cards fails
-- Bug-Fix: Deck Editor slows when loading too many cards
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
   - Select back from dropdown in Card Creator Menu
   - Search backs in Card Search/Filter Menu
+
+## Sprint - Priority 1
+- Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
+- Bug-Fix: macOS Mission Control freezes
+- Bug-Fix: Importing more than 200 cards fails
+- Bug-Fix: Deck Editor slows when loading too many cards
 - Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Cards: Support mix of different card sizes in the same game
 - Game-Play: Move card to zone, stack, or drawer (E)
