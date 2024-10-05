@@ -42,7 +42,6 @@ namespace Cgs.CardGameView.Multiplayer
         }
     }
 
-    [RequireComponent(typeof(CardDropArea))]
     public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         private const float DragHoldTime = 0.5f;
@@ -190,8 +189,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            GetComponent<CardDropArea>().DropHandler = this;
-            GetComponent<StackDropArea>().DropHandler = this;
+            gameObject.GetOrAddComponent<CardDropArea>().DropHandler = this;
+            gameObject.GetOrAddComponent<StackDropArea>().DropHandler = this;
 
             var rectTransform = (RectTransform) transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -375,8 +374,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardStack cardStack)
         {
-            for (var i = _cards.Count - 1; i >= 0; i--)
-                cardStack.RequestInsert(0, _cards[i].Id);
+            var cards = Cards;
+            for (var i = cards.Count - 1; i >= 0; i--)
+                cardStack.RequestInsert(0, cards[i].Id);
             RequestDelete();
         }
 
