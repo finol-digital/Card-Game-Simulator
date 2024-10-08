@@ -5,7 +5,7 @@
     "redirects": [
       {
         "source": "/gatcg",
-        "destination": "https://cgs.games/link/grand_archive_gabrary_spoilers",
+        "destination": "https://cgs.games/link/grand_archive",
         "type": 301
       }
     ],
