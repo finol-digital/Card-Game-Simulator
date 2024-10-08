@@ -285,6 +285,13 @@
         }
       ]
     },
+    "deckPlayCards": {
+      "type": "array",
+      "description": "deckPlayCards indicates cards that should automatically be played when a player loads a deck in Play Mode.",
+      "items": {
+        "$ref": "#/definitions/DeckPlayCard"
+      }
+    },
     "deckSharePreference": {
       "description": "For networked games, CGS will use deckSharePreference to: ask players if they want to share the same deck, force all players to share the same deck, or force an individual deck for each player.",
       "default": "share",
@@ -366,14 +373,21 @@
         "$ref": "#/definitions/GamePlayZone"
       }
     },
+    "gameStartDecks": {
+      "type": "array",
+      "description": "gameStartDecks indicates decks that should automatically be loaded when a player starts playing in Play Mode.",
+      "items": {
+        "$ref": "#/definitions/DeckUrl"
+      }
+    },
     "gameStartHandCount": {
       "type": "integer",
-      "description": "gameStartHandCount indicates how many cards are automatically dealt from the deck to the hand, when a user loads a deck in Play Mode.",
+      "description": "gameStartHandCount indicates how many cards are automatically dealt from a loaded deck to a player's hand.",
       "format": "int32"
     },
     "gameStartPointsCount": {
       "type": "integer",
-      "description": "gameStartPointsCount indicates how many points are assigned to each player, when that player loads a deck in Play Mode.",
+      "description": "gameStartPointsCount indicates how many points are automatically assigned to each player.",
       "format": "int32"
     },
     "playMatImageFileType": {
@@ -592,6 +606,33 @@
         "txt",
         "ydk"
       ]
+    },
+    "DeckPlayCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cardQuery": {
+          "type": "string",
+          "description": "CGS will automatically play the Card that matches cardQuery, when the player loads a Deck in Play Mode matching deckQuery"
+        },
+        "deckQuery": {
+          "type": "string",
+          "description": "CGS will automatically play the Card that matches cardQuery, when the player loads a Deck in Play Mode matching deckQuery"
+        },
+        "position": {
+          "description": "Indicates the played Card's position in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "rotation": {
+          "type": "integer",
+          "description": "Indicates the played Card's rotation in degrees",
+          "format": "int32"
+        }
+      }
     },
     "SharePreference": {
       "type": "string",
