@@ -3,7 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
@@ -35,6 +37,20 @@ namespace Cgs.Play
 
         private const float PlayAreaBuffer = 8;
         private const float DeckPositionBuffer = 50;
+
+        public static string LoadStartDecksAsk
+        {
+            get
+            {
+                var text = "Load ";
+                var deckUrls = CardGameManager.Current.GameStartDecks;
+                text += $"'{deckUrls[0].Name}'";
+                for (var i = 1; i < deckUrls.Count; i++)
+                    text += $", '{deckUrls[i].Name}'";
+                text += "?";
+                return text;
+            }
+        }
 
         public static PlayController Instance { get; private set; }
 
@@ -165,7 +181,7 @@ namespace Cgs.Play
 #if !UNITY_WEBGL
                 Lobby.Host();
 #endif
-                DeckLoader.Show(LoadDeck);
+                StartDecks();
             }
         }
 
@@ -190,8 +206,7 @@ namespace Cgs.Play
             {
                 ResetPlayArea();
                 drawer.Clear();
-                _soloDeckStack = null;
-                DeckLoader.Show(LoadDeck);
+                StartDecks();
             }
         }
 
@@ -231,6 +246,62 @@ namespace Cgs.Play
             }
 
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
+        }
+
+        private void StartDecks()
+        {
+            if (CardGameManager.Current.GameStartDecks.Count > 0)
+                CardGameManager.Instance.Messenger.Ask(LoadStartDecksAsk, ShowDeckMenu, StartLoadStartDecks);
+            else
+                ShowDeckMenu();
+        }
+
+        private void StartLoadStartDecks()
+        {
+            StartCoroutine(LoadStartDecks());
+        }
+
+        private IEnumerator LoadStartDecks()
+        {
+            foreach (var deckUrl in CardGameManager.Current.GameStartDecks)
+            {
+                if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
+                {
+                    Debug.Log($"Ignoring deckUrl {deckUrl}");
+                    continue;
+                }
+
+                var deckFilePath = Path.Combine(CardGameManager.Current.DecksDirectoryPath,
+                    deckUrl.Name + "." + CardGameManager.Current.DeckFileType.ToString().ToLower());
+
+                if (!File.Exists(deckFilePath))
+                {
+                    if (!string.IsNullOrEmpty(CardGameManager.Current.AllDecksUrlTxtRoot) &&
+                        !string.IsNullOrEmpty(deckUrl.Txt))
+                        yield return UnityFileMethods.SaveUrlToFile(
+                            CardGameManager.Current.AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
+                    else if (deckUrl.Url.IsAbsoluteUri)
+                        yield return UnityFileMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, deckFilePath);
+                    else
+                    {
+                        Debug.Log($"Empty url for deckUrl {deckUrl}");
+                        continue;
+                    }
+                }
+
+                try
+                {
+                    var deckText = File.ReadAllText(deckFilePath);
+                    var newDeck = UnityDeck.Parse(CardGameManager.Current, deckUrl.Name,
+                        CardGameManager.Current.DeckFileType, deckText);
+                    LoadDeck(newDeck);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(DeckLoadMenu.DeckLoadErrorMessage + e);
+                    CardGameManager.Instance.Messenger.Show(DeckLoadMenu.DeckLoadErrorMessage + e.Message);
+                }
+            }
         }
 
         public void ShowPlaySettingsMenu()
@@ -312,7 +383,15 @@ namespace Cgs.Play
                 }
             }
 
-            PromptForHand();
+            if (CardGameManager.Current.DeckPlayCards.Count > 0)
+                DeckPlayCards();
+            else
+                PromptForHand();
+        }
+
+        private void DeckPlayCards()
+        {
+            // TODO
         }
 
         private void CreateGameBoards(IEnumerable<GameBoard> gameBoards)

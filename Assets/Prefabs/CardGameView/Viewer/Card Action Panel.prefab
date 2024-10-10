@@ -300,7 +300,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: tooltip
-      value: Tap
+      value: Toggle rotation
       objectReference: {fileID: 0}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -735,7 +735,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: tooltip
-      value: Flip
+      value: Flip face
       objectReference: {fileID: 0}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -952,7 +952,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: tooltip
-      value: Rotate
+      value: Rotate clockwise
       objectReference: {fileID: 0}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1051,7 +1051,7 @@ PrefabInstance:
     - target: {fileID: 633149931556260070, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Name
-      value: Discard Button
+      value: Delete Button
       objectReference: {fileID: 0}
     - target: {fileID: 633149931556260071, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1177,14 +1177,12 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: tooltip
-      value: Discard
+      value: Destroy permanently
       objectReference: {fileID: 0}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
-      value: 'Discard
-
-'
+      value: Delete
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

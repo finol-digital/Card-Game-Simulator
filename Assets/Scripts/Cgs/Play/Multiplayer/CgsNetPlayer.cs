@@ -126,7 +126,6 @@ namespace Cgs.Play.Multiplayer
                 RequestNameUpdate(PlayerPrefs.GetString(Scoreboard.PlayerNamePlayerPrefs,
                     Scoreboard.DefaultPlayerName));
                 RequestNewHand(CardDrawer.DefaultHandName);
-                PlayController.Instance.ShowDeckMenu();
                 ApplyPlayerTranslationServerRpc();
             }
             else

@@ -22,7 +22,7 @@ namespace Cgs.CardGameView.Multiplayer
     public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
-        public string DiscardPrompt => $"Discard {gameObject.name}?";
+        public string DiscardPrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
         private const float ZoomHoldTime = 1.5f;
         private const float MovementSpeed = 600f;

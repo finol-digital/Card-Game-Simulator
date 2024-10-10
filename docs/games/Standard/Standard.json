@@ -85,6 +85,12 @@
     }
   ],
   "gamePlayDeckName": "Deck",
+  "gameStartDecks": [
+    {
+      "name": "Standard 52-card Deck",
+      "url": "https://www.cardgamesimulator.com/games/Standard/decks/Standard%2052-card%20Deck.txt"
+    }
+  ],
   "gameStartHandCount": 2,
   "name": "Standard Playing Cards",
   "rulesUrl": "https://www.bicyclecards.com/rules/"
