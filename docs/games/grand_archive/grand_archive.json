@@ -118,6 +118,26 @@
 	"cardSetIdentifier": "editions",
 	"cgsGamesLink": "https://cgs.games/link/grand_archive",
 	"copyright": "Weebs of the Shore LLC",
+	"deckPlayCards": [
+		{
+			"cardQuery": "classes:spirit",
+			"deckQuery": "playerCount=1",
+			"position": {
+				"x": -20,
+				"y": -5.5
+			},
+			"rotation": 0
+		},
+		{
+			"cardQuery": "classes:spirit",
+			"deckQuery": "playerCount=2",
+			"position": {
+				"x": 20,
+				"y": 5.5
+			},
+			"rotation": 180
+		}
+	],
 	"deckSharePreference": "individual",
 	"deckUrls": [
 		{

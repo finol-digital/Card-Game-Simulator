@@ -170,13 +170,8 @@ namespace Cgs.CardGameView.Viewer
                 CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
                     cardModels.Select(card => (CgsNetString) card.Id).ToArray());
 
-            if (_cardStack == null)
-                return;
-
-            if (CgsNetManager.Instance.IsOnline)
-                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(_cardStack.gameObject, cardModel.Index);
-            else
-                _cardStack.RemoveAt(cardModel.Index);
+            if (_cardStack != null)
+                _cardStack.RequestRemoveAt(cardModel.Index);
         }
 
         [UsedImplicitly]

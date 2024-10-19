@@ -303,7 +303,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (CgsNetManager.Instance.IsOnline && cards.Count > 1)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, cards.Count - 1);
             else if (!CgsNetManager.Instance.IsOnline)
-                PopCard();
+                OwnerPopCard();
 
             if (PlaySettings.AutoStackCards && cards.Count == 1)
                 RequestDelete();
@@ -398,7 +398,15 @@ namespace Cgs.CardGameView.Multiplayer
                 SyncView();
         }
 
-        public string RemoveAt(int index)
+        public void RequestRemoveAt(int index)
+        {
+            if (LacksOwnership)
+                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, index);
+            else
+                OwnerRemoveAt(index);
+        }
+
+        public string OwnerRemoveAt(int index)
         {
             if (index < 0 || index >= Cards.Count)
                 return UnityCard.Blank.Id;
@@ -411,9 +419,9 @@ namespace Cgs.CardGameView.Multiplayer
             return cardId;
         }
 
-        public string PopCard()
+        public string OwnerPopCard()
         {
-            return RemoveAt(Cards.Count - 1);
+            return OwnerRemoveAt(Cards.Count - 1);
         }
 
         [ServerRpc(RequireOwnership = false)]

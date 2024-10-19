@@ -60,6 +60,19 @@ namespace Cgs.Play.Multiplayer
 
         private NetworkVariable<bool> _isDeckShared;
 
+        private IReadOnlyList<CardStack> CardStacks
+        {
+            get
+            {
+                var cardStacks = new List<CardStack>();
+                foreach (var cardStack in _cardStacks)
+                    cardStacks.Add(((NetworkObject) cardStack).GetComponent<CardStack>());
+                return cardStacks;
+            }
+        }
+
+        private NetworkList<NetworkObjectReference> _cardStacks;
+
         public int CurrentHand
         {
             get => _currentHand.Value;
@@ -107,6 +120,7 @@ namespace Cgs.Play.Multiplayer
             _points = new NetworkVariable<int>();
             _currentDeck = new NetworkVariable<NetworkObjectReference>();
             _isDeckShared = new NetworkVariable<bool>();
+            _cardStacks = new NetworkList<NetworkObjectReference>();
             _currentHand = new NetworkVariable<int>();
             _handCards = new NetworkList<CgsNetStringList>();
             _handNames = new NetworkList<CgsNetString>();
@@ -317,6 +331,7 @@ namespace Cgs.Play.Multiplayer
                 cardIds.Select(cardId => CardGameManager.Current.Cards[cardId]).ToList(), position, rotation, isFaceup);
             if (isDeck)
                 CurrentDeck = cardStack.GetComponent<NetworkObject>();
+            _cardStacks.Add(cardStack.gameObject);
             Debug.Log($"[CgsNet Player] Created new card stack {stackName}!");
         }
 
@@ -332,16 +347,47 @@ namespace Cgs.Play.Multiplayer
             Debug.Log("[CgsNet Player] Sending shared deck...");
             CurrentDeck = CgsNetManager.Instance.LocalPlayer.CurrentDeck;
             IsDeckShared = true;
-            ShareDeckOwnerClientRpc(OwnerClientRpcParams);
+            _cardStacks.Add(CurrentDeck);
+            ShareDeckOwnerClientRpc(NetworkManager.Singleton.ConnectedClients.Count, OwnerClientRpcParams);
         }
 
         [ClientRpc]
         // ReSharper disable once UnusedParameter.Local
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void ShareDeckOwnerClientRpc(ClientRpcParams clientRpcParams = default)
+        private void ShareDeckOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
         {
-            Debug.Log("[CgsNet Player] Received shared deck!");
-            PlayController.Instance.PromptForHand();
+            Debug.Log($"[CgsNet Player] Received share deck callback for {playerCount}!");
+            PlayController.Instance.DecksCallback(CardStacks, playerCount);
+        }
+
+        public void RequestDecks(int deckCount)
+        {
+            Debug.Log($"[CgsNet Player] Requesting decks {deckCount}...");
+            StartDecksServerRpc(deckCount);
+        }
+
+        [ServerRpc]
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void StartDecksServerRpc(int deckCount)
+        {
+            Debug.Log($"[CgsNet Player] Waiting for decks {deckCount}...");
+            StartCoroutine(WaitForDecks(deckCount));
+        }
+
+        private IEnumerator WaitForDecks(int deckCount)
+        {
+            while (CardStacks.Count < deckCount)
+                yield return null;
+            DecksCallbackOwnerClientRpc(NetworkManager.Singleton.ConnectedClients.Count, OwnerClientRpcParams);
+        }
+
+        [ClientRpc]
+        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private void DecksCallbackOwnerClientRpc(int playerCount, ClientRpcParams clientRpcParams = default)
+        {
+            Debug.Log($"[CgsNet Player] Received decks callback for {playerCount}!");
+            PlayController.Instance.DecksCallback(CardStacks, playerCount);
         }
 
         public void RequestShuffle(GameObject toShuffle)
@@ -386,7 +432,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Remove at {index}!");
             var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
-            cardStack.RemoveAt(index);
+            cardStack.OwnerRemoveAt(index);
         }
 
         public void RequestDeal(NetworkObject stack, int count)
@@ -403,7 +449,7 @@ namespace Cgs.Play.Multiplayer
             var cardStack = ((NetworkObject) stack).GetComponent<CardStack>();
             var cardIds = new CgsNetString[count];
             for (var i = 0; i < count && cardStack.Cards.Count > 0; i++)
-                cardIds[i] = cardStack.PopCard();
+                cardIds[i] = cardStack.OwnerPopCard();
             DealClientRpc(cardIds, OwnerClientRpcParams);
         }
 
