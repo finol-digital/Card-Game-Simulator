@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
@@ -42,13 +43,13 @@ namespace Cgs.Play
         {
             get
             {
-                var text = "Load ";
+                var text = new StringBuilder("Load ");
                 var deckUrls = CardGameManager.Current.GameStartDecks;
-                text += $"'{deckUrls[0].Name}'";
+                text.Append($"'{deckUrls[0].Name}'");
                 for (var i = 1; i < deckUrls.Count; i++)
-                    text += $", '{deckUrls[i].Name}'";
-                text += "?";
-                return text;
+                    text.Append($", '{deckUrls[i].Name}'");
+                text.Append("?");
+                return text.ToString();
             }
         }
 
@@ -444,7 +445,7 @@ namespace Cgs.Play
         {
             var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerCount);
 
-            var deckPlayCardsAsk = GenerateAskForDeckPlayCards(decksToCardsToPlay);
+            var deckPlayCardsAsk = BuildAskForDeckPlayCards(decksToCardsToPlay);
             if (!string.IsNullOrEmpty(deckPlayCardsAsk))
                 CardGameManager.Instance.Messenger.Ask(deckPlayCardsAsk, PromptForHand,
                     () => MoveToPlay(decksToCardsToPlay));
@@ -488,10 +489,10 @@ namespace Cgs.Play
             return cardsToPlay;
         }
 
-        private static string GenerateAskForDeckPlayCards(
+        private static string BuildAskForDeckPlayCards(
             Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)
         {
-            var text = string.Empty;
+            StringBuilder text = null;
 
             foreach (var deckPlayCard in deckToCardsToPlay)
             {
@@ -500,17 +501,16 @@ namespace Cgs.Play
                     var cards = cardStackToPlay.Key.Cards;
                     foreach (var cardToPlay in cardStackToPlay.Value)
                     {
-                        if (string.IsNullOrEmpty(text))
-                            text = "Play '" + cards[cardToPlay].Name + "'";
+                        if (text == null)
+                            text = new StringBuilder("Play '" + cards[cardToPlay].Name + "'");
                         else
-                            text += " and '" + cards[cardToPlay].Name + "'";
+                            text.Append(" and '" + cards[cardToPlay].Name + "'");
                     }
                 }
             }
 
-            if (!string.IsNullOrEmpty(text))
-                text += "?";
-            return text;
+            text?.Append("?");
+            return text?.ToString();
         }
 
         private void MoveToPlay(Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)
