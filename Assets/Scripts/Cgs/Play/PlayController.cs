@@ -39,7 +39,7 @@ namespace Cgs.Play
         private const float PlayAreaBuffer = 8;
         private const float DeckPositionBuffer = 50;
 
-        private static string LoadStartDecksAsk
+        public static string LoadStartDecksAsk
         {
             get
             {
