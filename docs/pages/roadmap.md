@@ -10,8 +10,7 @@ permalink: roadmap.html
 - Game-Play: deckPlayCards and gameStartDecks
 - Game-Play: Support for card back faces
   - Select backs folder in Game Editor Menu
-  - Select back from dropdown in Card Creator Menu
-  - Search backs in Card Search/Filter Menu
+  - Select back from dropdown in Card Creator Menu and Set Import Menu
 
 ## Sprint - Priority 1
 - Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
@@ -37,6 +36,7 @@ permalink: roadmap.html
 - Game-Play: Flip Random for tokens
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
+- Cards: Search backs in Card Search/Filter Menu
 - Decks: Support organizing decks into folders
   - Decouple games and decks, so you can use any deck from any game and deleting a game won't delete your decks
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 
