@@ -38,6 +38,7 @@ namespace Cgs.Cards
         public List<InputField> inputFields;
         public InputField cardIdInputField;
         public InputField setCodeInputField;
+        public Dropdown backSelector;
         public Image cardImage;
         public Button saveButton;
 
@@ -74,6 +75,16 @@ namespace Cgs.Cards
         }
 
         private string _setCode = string.Empty;
+
+        [UsedImplicitly] public int Back { get; set; }
+
+        private string BackFace => Back < BackFaceOptions.Count ? BackFaceOptions[Back].text : string.Empty;
+
+        private List<Dropdown.OptionData> BackFaceOptions { get; } = new();
+
+        private string BackFaceId => CardGameManager.Current.CardBackFaceImageSprites.ContainsKey(BackFace)
+            ? BackFace
+            : string.Empty;
 
         private Uri CardImageUri
         {
@@ -129,6 +140,14 @@ namespace Cgs.Cards
         {
             Show();
             SetCode = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
+
+            BackFaceOptions.Clear();
+            BackFaceOptions.Add(new Dropdown.OptionData() {text = string.Empty});
+            foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
+                BackFaceOptions.Add(new Dropdown.OptionData() {text = backFaceKey});
+            backSelector.options = BackFaceOptions;
+            backSelector.value = 0;
+
             cardImage.sprite = CardImageSprite != null ? CardImageSprite : CardGameManager.Current.CardBackImageSprite;
 
             _onCreationCallback = onCreationCallback;
@@ -256,7 +275,7 @@ namespace Cgs.Cards
                         ? Guid.NewGuid().ToString().ToUpper()
                         : CardId, CardName,
                     string.IsNullOrEmpty(SetCode) ? Set.DefaultCode : SetCode, propertyDefValuePairs,
-                    false)
+                    false, false, BackFaceId)
                 {ImageWebUrl = CardImageUri.AbsoluteUri};
             yield return UnityFileMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);
 
