@@ -80,13 +80,15 @@ namespace Cgs
                 cardGame.DeckFileAltId = string.Empty;
                 cardGame.DeckFileTxtId = DeckFileTxtId.Id;
                 cardGame.DeckFileType = DeckFileType.Dec;
+                var float2 = new Float2(0f, 0f);
+                var deckPlayCard = new DeckPlayCard(string.Empty, string.Empty, float2, 0);
+                cardGame.DeckPlayCards = new List<DeckPlayCard>() {deckPlayCard};
                 var deckUrl = new DeckUrl(string.Empty, string.Empty, new Uri(UnityFileMethods.FilePrefix));
                 cardGame.DeckUrls = new List<DeckUrl> {deckUrl};
                 var enumDef = new EnumDef(string.Empty, new Dictionary<string, string>());
                 cardGame.Enums = new List<EnumDef> {enumDef};
                 var extraDef = new ExtraDef(string.Empty, string.Empty, string.Empty);
                 cardGame.Extras = new List<ExtraDef> {extraDef};
-                var float2 = new Float2(0f, 0f);
                 var gameBoard = new GameBoard(string.Empty, float2, float2);
                 var gameBoardCard = new GameBoardCard(string.Empty, new List<GameBoard> {gameBoard});
                 cardGame.GameBoardCards = new List<GameBoardCard> {gameBoardCard};
@@ -103,6 +105,7 @@ namespace Cgs
                 var gamePlayZone3 = new GamePlayZone(FacePreference.Down, CardAction.Rotate, float2, 0, float2,
                     GamePlayZoneType.Area);
                 cardGame.GamePlayZones = new List<GamePlayZone> {gamePlayZone, gamePlayZone2, gamePlayZone3};
+                cardGame.GameStartDecks = new List<DeckUrl>() {deckUrl};
                 cardGame.GameStartHandCount = 1;
                 cardGame.GameStartPointsCount = 1;
                 cardGame.Name = string.Empty;

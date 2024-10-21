@@ -26,7 +26,7 @@ namespace Cgs.CardGameView
         {
             var cardModel = other.GetComponent<CardModel>();
             if (cardModel == null || cardModel.ParentCardZone == null ||
-                cardModel.ParentCardZone.type != CardZoneType.Area)
+                cardModel.ParentCardZone.Type != CardZoneType.Area)
                 return;
 
             cardModel.DropTarget = this;
@@ -53,8 +53,8 @@ namespace Cgs.CardGameView
         {
             var cardModel = CardModel.GetPointerDrag(eventData);
             if (cardModel == null
-                || cardModel.ParentCardZone != null && cardModel.ParentCardZone.type != CardZoneType.Area
-                || cardModel.PlaceHolderCardZone != null && cardModel.PlaceHolderCardZone.type != CardZoneType.Area)
+                || cardModel.ParentCardZone != null && cardModel.ParentCardZone.Type != CardZoneType.Area
+                || cardModel.PlaceHolderCardZone != null && cardModel.PlaceHolderCardZone.Type != CardZoneType.Area)
                 return;
 
             var drawerViewer = DropHandler as DrawerViewer;

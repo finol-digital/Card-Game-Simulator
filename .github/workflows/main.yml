@@ -129,11 +129,11 @@ jobs:
           ./dotnet-sonarscanner begin \
             /o:"finol-digital" \
             /k:"finol-digital_Card-Game-Simulator" \
-            /d:sonar.login="$SONAR_TOKEN" \
+            /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io \
-            /d:sonar.exclusions=Assets/Plugins/**
+            /d:sonar.exclusions=**/Plugins/**
           dotnet build Card-Game-Simulator.sln
-          ./dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+          ./dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
           cd Card-Game-Simulator
       - name: SonarQube Quality Gate Check
         uses: SonarSource/sonarqube-quality-gate-action@v1.1.0

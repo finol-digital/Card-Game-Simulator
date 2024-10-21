@@ -42,7 +42,6 @@ namespace Cgs.CardGameView.Multiplayer
         }
     }
 
-    [RequireComponent(typeof(CardDropArea))]
     public class CardStack : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         private const float DragHoldTime = 0.5f;
@@ -190,8 +189,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnStartPlayable()
         {
-            GetComponent<CardDropArea>().DropHandler = this;
-            GetComponent<StackDropArea>().DropHandler = this;
+            gameObject.GetOrAddComponent<CardDropArea>().DropHandler = this;
+            gameObject.GetOrAddComponent<StackDropArea>().DropHandler = this;
 
             var rectTransform = (RectTransform) transform;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
@@ -304,7 +303,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (CgsNetManager.Instance.IsOnline && cards.Count > 1)
                 CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, cards.Count - 1);
             else if (!CgsNetManager.Instance.IsOnline)
-                PopCard();
+                OwnerPopCard();
 
             if (PlaySettings.AutoStackCards && cards.Count == 1)
                 RequestDelete();
@@ -375,8 +374,9 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void OnDrop(CardStack cardStack)
         {
-            for (var i = _cards.Count - 1; i >= 0; i--)
-                cardStack.RequestInsert(0, _cards[i].Id);
+            var cards = Cards;
+            for (var i = cards.Count - 1; i >= 0; i--)
+                cardStack.RequestInsert(0, cards[i].Id);
             RequestDelete();
         }
 
@@ -398,7 +398,15 @@ namespace Cgs.CardGameView.Multiplayer
                 SyncView();
         }
 
-        public string RemoveAt(int index)
+        public void RequestRemoveAt(int index)
+        {
+            if (LacksOwnership)
+                CgsNetManager.Instance.LocalPlayer.RequestRemoveAt(gameObject, index);
+            else
+                OwnerRemoveAt(index);
+        }
+
+        public string OwnerRemoveAt(int index)
         {
             if (index < 0 || index >= Cards.Count)
                 return UnityCard.Blank.Id;
@@ -411,9 +419,9 @@ namespace Cgs.CardGameView.Multiplayer
             return cardId;
         }
 
-        public string PopCard()
+        public string OwnerPopCard()
         {
-            return RemoveAt(Cards.Count - 1);
+            return OwnerRemoveAt(Cards.Count - 1);
         }
 
         [ServerRpc(RequireOwnership = false)]

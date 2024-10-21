@@ -211,7 +211,7 @@ namespace Cgs.Decks
         private void AddCardZone()
         {
             var cardZone = Instantiate(cardZonePrefab, layoutContent).GetOrAddComponent<CardZone>();
-            cardZone.type = CardZoneType.Vertical;
+            cardZone.Type = CardZoneType.Vertical;
             cardZone.scrollRectContainer = scrollRect;
             cardZone.DoesImmediatelyRelease = true;
             cardZone.OnLayout = Consolidate;

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cgs.Menu;
@@ -36,6 +37,7 @@ namespace Cgs.Cards
 
         public Text setNameText;
         public TMP_Text cardNamesText;
+        public Dropdown backSelector;
         public Button importButton;
 
         public float ProgressPercentage { get; private set; }
@@ -68,9 +70,8 @@ namespace Cgs.Cards
                     {
                         var fileName = file.Name;
                         if (fileName.EndsWith(CardGameManager.Current.CardImageFileType))
-                            fileName = fileName.Substring(0,
-                                fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
-                                    StringComparison.Ordinal) - 1);
+                            fileName = fileName[..(fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
+                                StringComparison.Ordinal) - 1)];
                         return current + fileName + "\n";
                     });
                 cardNamesText.text = !string.IsNullOrWhiteSpace(cardNames) ? cardNames : SetImportMissingWarningMessage;
@@ -80,11 +81,29 @@ namespace Cgs.Cards
 
         private string _setFolderPath;
 
+        [UsedImplicitly] public int Back { get; set; }
+
+        private string BackFace => Back < BackFaceOptions.Count ? BackFaceOptions[Back].text : string.Empty;
+
+        private List<Dropdown.OptionData> BackFaceOptions { get; } = new();
+
+        private string BackFaceId => CardGameManager.Current.CardBackFaceImageSprites.ContainsKey(BackFace)
+            ? BackFace
+            : string.Empty;
+
         private UnityAction _onCreationCallback;
 
         public void Show(UnityAction onCreationCallback)
         {
             Show();
+
+            BackFaceOptions.Clear();
+            BackFaceOptions.Add(new Dropdown.OptionData() {text = string.Empty});
+            foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
+                BackFaceOptions.Add(new Dropdown.OptionData() {text = backFaceKey});
+            backSelector.options = BackFaceOptions;
+            backSelector.value = 0;
+
             _onCreationCallback = onCreationCallback;
         }
 
@@ -159,9 +178,10 @@ namespace Cgs.Cards
                     var fileName = cardPathsToImport[i].Name;
                     var end = fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
                         StringComparison.Ordinal);
-                    var cardName = fileName.Substring(0, end - 1);
-                    var cardId = UnityFileMethods.GetSafeFileName(cardName).Replace(" ","_");
-                    var card = new UnityCard(CardGameManager.Current, cardId, cardName, SetName, null, false);
+                    var cardName = fileName[..(end - 1)];
+                    var cardId = UnityFileMethods.GetSafeFileName(cardName).Replace(" ", "_");
+                    var card = new UnityCard(CardGameManager.Current, cardId, cardName, SetName, null, false, false,
+                        BackFaceId);
                     FileBrowserHelpers.CopyFile(cardPathsToImport[i].Path, card.ImageFilePath);
 
                     if (!File.Exists(card.ImageFilePath))

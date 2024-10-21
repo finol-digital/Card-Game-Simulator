@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SFB;
+using SimpleFileBrowser;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -22,6 +23,10 @@ namespace Cgs.Menu
 {
     public class CardGameEditorMenu : Modal
     {
+#if ENABLE_WINMD_SUPPORT
+        public const string PlatformWarningMessage = "Sorry, Backs Folder is not supported from Windows Store!";
+#endif
+
         public const string DownloadBannerImage = "Download Banner Image";
         public const string DownloadBannerImagePrompt = "Enter banner image url...";
         public const string DownloadCardBackImage = "Download Card Back Image";
@@ -36,6 +41,9 @@ namespace Cgs.Menu
         public const string SelectPlayMatImageFilePrompt = "Select PlayMat Image File";
 #endif
         public const string ImportImageWarningMessage = "No image file selected for import!";
+        public const string SelectFolderPrompt = "Select Folder";
+        public const string ImportFolderWarningMessage = "No folder found for import! ";
+        public const string ImportBackFailedWarningMessage = "Failed to find back: ";
         public const string CreationWarningMessage = "Failed to create the custom card game! ";
         public const string CreationCleanupErrorMessage = "Failed to both create and cleanup during creation! ";
 
@@ -44,6 +52,7 @@ namespace Cgs.Menu
         public Image bannerImage;
         public Image cardBackImage;
         public Image playMatImage;
+        public Text backsFolderText;
         public Button saveButton;
 
         private DownloadMenu Downloader =>
@@ -111,6 +120,26 @@ namespace Cgs.Menu
         [UsedImplicitly] public string RulesUrl { get; set; }
 
         [UsedImplicitly] public string CardProperty { get; set; } = "description";
+
+        [UsedImplicitly]
+        public string BacksFolderPath
+        {
+            get => _backsFolderPath;
+            set
+            {
+                if (!FileBrowserHelpers.DirectoryExists(value))
+                {
+                    Debug.LogWarning(ImportFolderWarningMessage + value);
+                    CardGameManager.Instance.Messenger.Show(ImportFolderWarningMessage + value);
+                    return;
+                }
+
+                _backsFolderPath = value;
+                backsFolderText.text = _backsFolderPath;
+            }
+        }
+
+        private string _backsFolderPath = string.Empty;
 
         private bool _isEdit;
 
@@ -475,6 +504,9 @@ namespace Cgs.Menu
             File.WriteAllText(unityCardGame.GameFilePath,
                 JsonConvert.SerializeObject(unityCardGame, jsonSerializerSettings));
 
+            if (!string.IsNullOrEmpty(BacksFolderPath) && FileBrowserHelpers.DirectoryExists(BacksFolderPath))
+                CopyBacksFolder();
+
             yield return CardGameManager.Instance.UpdateCardGame(unityCardGame);
 
             if (!string.IsNullOrEmpty(unityCardGame.Error))
@@ -494,6 +526,43 @@ namespace Cgs.Menu
                 CardGameManager.Instance.AllCardGames[unityCardGame.Id] = unityCardGame;
                 CardGameManager.Instance.Select(unityCardGame.Id);
                 Hide();
+            }
+        }
+
+        [UsedImplicitly]
+        public void SelectBacksFolder()
+        {
+#if ENABLE_WINMD_SUPPORT
+            CardGameManager.Instance.Messenger.Show(PlatformWarningMessage);
+            Hide();
+#else
+            FileBrowser.ShowLoadDialog((paths) => { BacksFolderPath = paths[0]; }, () => { },
+                FileBrowser.PickMode.Folders, false, null, null, SelectFolderPrompt);
+#endif
+        }
+
+        private void CopyBacksFolder()
+        {
+            var backsToImport = FileBrowserHelpers.GetEntriesInDirectory(BacksFolderPath, true)
+                .Where(fileSystemEntry => !fileSystemEntry.IsDirectory &&
+                                          !string.IsNullOrEmpty(fileSystemEntry.Extension) &&
+                                          fileSystemEntry.Extension.EndsWith(CardGameManager.Current
+                                              .CardBackImageFileType))
+                .ToList();
+            for (var i = 0; i < backsToImport.Count; i++)
+            {
+                try
+                {
+                    if (!Directory.Exists(CardGameManager.Current.BacksDirectoryPath))
+                        Directory.CreateDirectory(CardGameManager.Current.BacksDirectoryPath);
+                    FileBrowserHelpers.CopyFile(backsToImport[i].Path,
+                        Path.Join(CardGameManager.Current.BacksDirectoryPath, backsToImport[i].Name));
+                }
+                catch
+                {
+                    Debug.LogWarning(ImportBackFailedWarningMessage + backsToImport[i].Name);
+                    CardGameManager.Instance.Messenger.Show(ImportBackFailedWarningMessage + backsToImport[i].Name);
+                }
             }
         }
     }

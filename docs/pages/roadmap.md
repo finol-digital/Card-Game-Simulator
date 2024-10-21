@@ -4,21 +4,19 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.120
-- Add Grand Archive Gabrary Spoilers
+## What's New - v1.121
+- Bug-Fix: Card Zone faces
+- Bug-Fix: Merging Stacks on client
+- Game-Play: deckPlayCards and gameStartDecks
+- Game-Play: Support for card back faces
+  - Select backs folder in Game Editor Menu
+  - Select back from dropdown in Card Creator Menu and Set Import Menu
 
 ## Sprint - Priority 1
-- Bug-Fix: GA memory facedown
-- Bug-Fix: Merging Stacks on client
 - Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
 - Bug-Fix: macOS Mission Control freezes
 - Bug-Fix: Importing more than 200 cards fails
 - Bug-Fix: Deck Editor slows when loading too many cards
-- Game-Play: Support for card back faces
-  - Select backs folder in Game Editor Menu
-  - Select back from dropdown in Card Creator Menu
-  - Search backs in Card Search/Filter Menu
-- Game-Play: gamePlayDefaultDecks and gamePlayDefaultCards
 - Cards: Support mix of different card sizes in the same game
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Animation for card and stack actions
@@ -38,6 +36,7 @@ permalink: roadmap.html
 - Game-Play: Flip Random for tokens
 - Game-Play: Rename Stacks
 - Game-Play: Add restart button in Play Settings Menu
+- Cards: Search backs in Card Search/Filter Menu
 - Decks: Support organizing decks into folders
   - Decouple games and decks, so you can use any deck from any game and deleting a game won't delete your decks
 - Decks: Add extra tags (\*CMDR\* for .txt; sideboards for .dec and .ydk) 

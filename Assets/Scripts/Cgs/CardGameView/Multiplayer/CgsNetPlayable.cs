@@ -7,7 +7,6 @@ using System.Linq;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
-using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
@@ -406,7 +405,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected virtual void PostDragPlayable(PointerEventData eventData)
         {
-            if (ParentCardZone != null && ParentCardZone.type == CardZoneType.Area)
+            if (ParentCardZone != null && ParentCardZone.Type == CardZoneType.Area)
                 SnapToGrid();
         }
 
@@ -572,7 +571,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected void RequestDelete()
         {
-            if (CgsNetManager.Instance.IsOnline)
+            if (IsSpawned)
                 DeleteServerRpc();
             else
                 Destroy(gameObject);
@@ -581,12 +580,6 @@ namespace Cgs.CardGameView.Multiplayer
         [ServerRpc(RequireOwnership = false)]
         private void DeleteServerRpc()
         {
-            if (!IsOwnedByServer)
-            {
-                Debug.LogWarning("Ignoring request to delete, since it is currently owned by a client!");
-                return;
-            }
-
             MyNetworkObject.Despawn();
             Destroy(gameObject);
         }

@@ -22,7 +22,7 @@ namespace Cgs.CardGameView.Multiplayer
     public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
-        public string DiscardPrompt => $"Discard {gameObject.name}?";
+        public string DiscardPrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
         private const float ZoomHoldTime = 1.5f;
         private const float MovementSpeed = 600f;
@@ -191,7 +191,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (PlayController.Instance != null &&
                 PlayController.Instance.playAreaCardZone.transform == transform.parent)
             {
-                PlayController.SetPlayActions(this);
+                PlayController.SetPlayAreaActions(this);
                 var cardDropArea = gameObject.GetOrAddComponent<CardDropArea>();
                 cardDropArea.isBlocker = true;
                 cardDropArea.DropHandler = this;
@@ -424,10 +424,10 @@ namespace Cgs.CardGameView.Multiplayer
                 var dropTargetCardModel = DropTarget.GetComponent<CardModel>();
 
                 var shouldDiscard = false;
-                if (Visibility.blocksRaycasts && ParentCardZone != null && ParentCardZone.type == CardZoneType.Area
-                    || PlaceHolderCardZone != null && PlaceHolderCardZone.type == CardZoneType.Area
+                if (Visibility.blocksRaycasts && ParentCardZone != null && ParentCardZone.Type == CardZoneType.Area
+                    || PlaceHolderCardZone != null && PlaceHolderCardZone.Type == CardZoneType.Area
                     || dropTargetCardModel != null && dropTargetCardModel.ParentCardZone != null &&
-                    dropTargetCardModel.ParentCardZone.type == CardZoneType.Area)
+                    dropTargetCardModel.ParentCardZone.Type == CardZoneType.Area)
                 {
                     var hits = new List<RaycastResult>();
                     EventSystem.current.RaycastAll(eventData, hits);
@@ -446,7 +446,7 @@ namespace Cgs.CardGameView.Multiplayer
                 }
 
                 if (dropTargetCardModel != null && dropTargetCardModel.ParentCardZone != null &&
-                    dropTargetCardModel.ParentCardZone.type == CardZoneType.Area)
+                    dropTargetCardModel.ParentCardZone.Type == CardZoneType.Area)
                 {
                     PlaceHolderCardZone = dropTargetCardModel.ParentCardZone;
                     PlaceHolderCardZone.UpdateLayout(PlaceHolder, transform.position);
@@ -466,7 +466,7 @@ namespace Cgs.CardGameView.Multiplayer
                 IsMovingToPlaceHolder = true;
             else if (ParentCardZone == null)
                 Discard();
-            else if (ParentCardZone.type == CardZoneType.Area)
+            else if (ParentCardZone.Type == CardZoneType.Area)
                 SnapToGrid();
         }
 
@@ -580,7 +580,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (cardZone == null || LacksOwnership)
                 return;
 
-            if (!cardZone.DoesImmediatelyRelease && cardZone.type is CardZoneType.Vertical or CardZoneType.Horizontal)
+            if (!cardZone.DoesImmediatelyRelease && cardZone.Type is CardZoneType.Vertical or CardZoneType.Horizontal)
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
             else if (!IsStatic)
                 cardZone.UpdateLayout(transform as RectTransform, targetPosition);
@@ -588,7 +588,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsStatic)
                 return;
 
-            if (cardZone.type == CardZoneType.Area)
+            if (cardZone.Type == CardZoneType.Area)
                 transform.SetAsLastSibling();
 
             var zoneCorners = new Vector3[4];
@@ -596,9 +596,9 @@ namespace Cgs.CardGameView.Multiplayer
             var isOutYBounds = targetPosition.y < zoneCorners[0].y || targetPosition.y > zoneCorners[1].y;
             var isOutXBounds = targetPosition.x < zoneCorners[0].x || targetPosition.y > zoneCorners[2].x;
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
-                || (cardZone.type == CardZoneType.Vertical && isOutXBounds)
-                || (cardZone.type == CardZoneType.Horizontal && isOutYBounds)
-                || (cardZone.type == CardZoneType.Area && PlaceHolder != null &&
+                || (cardZone.Type == CardZoneType.Vertical && isOutXBounds)
+                || (cardZone.Type == CardZoneType.Horizontal && isOutYBounds)
+                || (cardZone.Type == CardZoneType.Area && PlaceHolder != null &&
                     PlaceHolder.parent != transform.parent))
                 ParentToCanvas(targetPosition);
         }

@@ -53,6 +53,12 @@
     }
   ],
   "gamePlayDeckName": "Square Wall",
+  "gameStartDecks": [
+    {
+      "name": "Traditional Mahjong Deck",
+      "url": "https://www.cardgamesimulator.com/games/Mahjong/decks/Traditional%20Mahjong%20Deck.txt"
+    }
+  ],
   "gameStartHandCount": 13,
   "name": "Mahjong",
   "rulesUrl": "http://mahjong.wikidot.com/basic-rules"

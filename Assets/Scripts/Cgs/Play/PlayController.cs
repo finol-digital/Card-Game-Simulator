@@ -3,8 +3,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
@@ -35,6 +38,20 @@ namespace Cgs.Play
 
         private const float PlayAreaBuffer = 8;
         private const float DeckPositionBuffer = 50;
+
+        public static string LoadStartDecksAsk
+        {
+            get
+            {
+                var text = new StringBuilder("Load ");
+                var deckUrls = CardGameManager.Current.GameStartDecks;
+                text.Append($"'{deckUrls[0].Name}'");
+                for (var i = 1; i < deckUrls.Count; i++)
+                    text.Append($", '{deckUrls[i].Name}'");
+                text.Append("?");
+                return text.ToString();
+            }
+        }
 
         public static PlayController Instance { get; private set; }
 
@@ -154,7 +171,7 @@ namespace Cgs.Play
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
-            playAreaCardZone.OnAddCardActions.Add(AddCardToPlay);
+            playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
             if (CardGameManager.Instance.IsSearchingForServer)
@@ -165,7 +182,7 @@ namespace Cgs.Play
 #if !UNITY_WEBGL
                 Lobby.Host();
 #endif
-                DeckLoader.Show(LoadDeck);
+                StartDecks();
             }
         }
 
@@ -190,8 +207,7 @@ namespace Cgs.Play
             {
                 ResetPlayArea();
                 drawer.Clear();
-                _soloDeckStack = null;
-                DeckLoader.Show(LoadDeck);
+                StartDecks();
             }
         }
 
@@ -231,6 +247,62 @@ namespace Cgs.Play
             }
 
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
+        }
+
+        private void StartDecks()
+        {
+            if (CardGameManager.Current.GameStartDecks.Count > 0)
+                CardGameManager.Instance.Messenger.Ask(LoadStartDecksAsk, ShowDeckMenu, StartLoadStartDecks);
+            else
+                ShowDeckMenu();
+        }
+
+        private void StartLoadStartDecks()
+        {
+            StartCoroutine(LoadStartDecks());
+        }
+
+        private IEnumerator LoadStartDecks()
+        {
+            foreach (var deckUrl in CardGameManager.Current.GameStartDecks)
+            {
+                if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
+                {
+                    Debug.Log($"Ignoring deckUrl {deckUrl}");
+                    continue;
+                }
+
+                var deckFilePath = Path.Combine(CardGameManager.Current.DecksDirectoryPath,
+                    deckUrl.Name + "." + CardGameManager.Current.DeckFileType.ToString().ToLower());
+
+                if (!File.Exists(deckFilePath))
+                {
+                    if (!string.IsNullOrEmpty(CardGameManager.Current.AllDecksUrlTxtRoot) &&
+                        !string.IsNullOrEmpty(deckUrl.Txt))
+                        yield return UnityFileMethods.SaveUrlToFile(
+                            CardGameManager.Current.AllDecksUrlTxtRoot + deckUrl.Txt, deckFilePath);
+                    else if (deckUrl.Url.IsAbsoluteUri)
+                        yield return UnityFileMethods.SaveUrlToFile(deckUrl.Url.AbsoluteUri, deckFilePath);
+                    else
+                    {
+                        Debug.Log($"Empty url for deckUrl {deckUrl}");
+                        continue;
+                    }
+                }
+
+                try
+                {
+                    var deckText = File.ReadAllText(deckFilePath);
+                    var newDeck = UnityDeck.Parse(CardGameManager.Current, deckUrl.Name,
+                        CardGameManager.Current.DeckFileType, deckText);
+                    LoadDeck(newDeck);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(DeckLoadMenu.DeckLoadErrorMessage + e);
+                    CardGameManager.Instance.Messenger.Show(DeckLoadMenu.DeckLoadErrorMessage + e.Message);
+                }
+            }
         }
 
         public void ShowPlaySettingsMenu()
@@ -289,10 +361,14 @@ namespace Cgs.Play
                         position, CgsNetManager.Instance.LocalPlayer.DefaultRotation, false);
                     i++;
                 }
+
+                CgsNetManager.Instance.LocalPlayer.RequestDecks(i);
             }
             else
             {
+                List<CardStack> cardStacks = new();
                 _soloDeckStack = CreateCardStack(deckName, deckCards, newDeckPosition, Quaternion.identity, false);
+                cardStacks.Add(_soloDeckStack);
                 var i = 1;
                 foreach (var (groupName, cards) in extraGroups)
                 {
@@ -306,13 +382,14 @@ namespace Cgs.Play
                         position = CardGameManager.PixelsPerInch * new Vector2(targetPosition.X, targetPosition.Y);
                     }
 
-                    CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position,
+                    var cardStack = CreateCardStack(groupName, cards.Cast<UnityCard>().Reverse().ToList(), position,
                         Quaternion.identity, false);
+                    cardStacks.Add(cardStack);
                     i++;
                 }
-            }
 
-            PromptForHand();
+                DecksCallback(cardStacks, 1);
+            }
         }
 
         private void CreateGameBoards(IEnumerable<GameBoard> gameBoards)
@@ -320,7 +397,8 @@ namespace Cgs.Play
             foreach (var gameBoard in gameBoards)
             {
                 var size = new Vector2(gameBoard.Size.X, gameBoard.Size.Y);
-                var position = new Vector2(gameBoard.OffsetMin.X, gameBoard.OffsetMin.Y);
+                var position = new Vector2(gameBoard.OffsetMin.X, gameBoard.OffsetMin.Y) *
+                               CardGameManager.PixelsPerInch;
                 if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                     CgsNetManager.Instance.LocalPlayer.RequestNewBoard(gameBoard.Id, size, position);
                 else
@@ -363,7 +441,103 @@ namespace Cgs.Play
             return cardStack;
         }
 
-        public void PromptForHand()
+        public void DecksCallback(IReadOnlyList<CardStack> cardStacks, int playerCount)
+        {
+            var decksToCardsToPlay = FindDeckToCardsToPlay(cardStacks, playerCount);
+
+            var deckPlayCardsAsk = BuildAskForDeckPlayCards(decksToCardsToPlay);
+            if (!string.IsNullOrEmpty(deckPlayCardsAsk))
+                CardGameManager.Instance.Messenger.Ask(deckPlayCardsAsk, PromptForHand,
+                    () => MoveToPlay(decksToCardsToPlay));
+            else
+                PromptForHand();
+        }
+
+        private static Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> FindDeckToCardsToPlay(
+            IReadOnlyList<CardStack> cardStacks, int playerCount)
+        {
+            var deckToCardsToPlay = new Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>>();
+
+            var deckQuery = "playerCount=" + playerCount;
+            foreach (var deckPlayCard in CardGameManager.Current.DeckPlayCards.Where(deckPlayCard =>
+                         string.IsNullOrEmpty(deckPlayCard.DeckQuery) || deckPlayCard.DeckQuery.Equals(deckQuery)))
+                deckToCardsToPlay[deckPlayCard] = FindCardsToPlay(deckPlayCard, cardStacks);
+
+            return deckToCardsToPlay;
+        }
+
+        private static Dictionary<CardStack, List<int>> FindCardsToPlay(DeckPlayCard deckPlayCard,
+            IEnumerable<CardStack> cardStacks)
+        {
+            var cardsToPlay = new Dictionary<CardStack, List<int>>();
+
+            var cardSearchFilters = new CardSearchFilters();
+            cardSearchFilters.Parse(deckPlayCard.CardQuery);
+            var matchingCards = CardGameManager.Current.FilterCards(cardSearchFilters).ToList();
+
+            foreach (var cardStack in cardStacks)
+            {
+                var cardIndexes = new List<int>();
+                var cards = cardStack.Cards;
+                for (var i = 0; i < cards.Count; i++)
+                    if (matchingCards.Contains(cards[i]) && cardIndexes.Count == 0) // Only play the first match
+                        cardIndexes.Add(i);
+                if (cardIndexes.Any())
+                    cardsToPlay[cardStack] = cardIndexes;
+            }
+
+            return cardsToPlay;
+        }
+
+        private static string BuildAskForDeckPlayCards(
+            Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)
+        {
+            StringBuilder text = null;
+
+            foreach (var deckPlayCard in deckToCardsToPlay)
+            {
+                foreach (var cardStackToPlay in deckPlayCard.Value)
+                {
+                    var cards = cardStackToPlay.Key.Cards;
+                    foreach (var cardToPlay in cardStackToPlay.Value)
+                    {
+                        if (text == null)
+                            text = new StringBuilder("Play '" + cards[cardToPlay].Name + "'");
+                        else
+                            text.Append(" and '" + cards[cardToPlay].Name + "'");
+                    }
+                }
+            }
+
+            text?.Append("?");
+            return text?.ToString();
+        }
+
+        private void MoveToPlay(Dictionary<DeckPlayCard, Dictionary<CardStack, List<int>>> deckToCardsToPlay)
+        {
+            foreach (var deckPlayCard in deckToCardsToPlay)
+            {
+                foreach (var cardStackToPlay in deckPlayCard.Value)
+                {
+                    var cards = cardStackToPlay.Key.Cards;
+                    cardStackToPlay.Value.Reverse();
+                    foreach (var cardToPlay in cardStackToPlay.Value)
+                    {
+                        var position = new Vector2(deckPlayCard.Key.Position.X, deckPlayCard.Key.Position.Y) *
+                                       CardGameManager.PixelsPerInch;
+                        var rotation = Quaternion.Euler(0, 0, deckPlayCard.Key.Rotation);
+                        var cardModel = CreateCardModel(playAreaCardZone.gameObject, cards[cardToPlay].Id, position,
+                            rotation, false);
+                        cardStackToPlay.Key.RequestRemoveAt(cardToPlay);
+                        AddCardToPlayArea(playAreaCardZone, cardModel);
+                    }
+                }
+            }
+
+            PromptForHand();
+        }
+
+        private void PromptForHand()
         {
             if (CardGameManager.Current.GameStartHandCount > 0)
                 ShowDealer();
@@ -404,22 +578,22 @@ namespace Cgs.Play
                 return cards;
 
             for (var i = 0; i < count && _soloDeckStack.Cards.Count > 0; i++)
-                cards.Add(CardGameManager.Current.Cards[_soloDeckStack.PopCard()]);
+                cards.Add(CardGameManager.Current.Cards[_soloDeckStack.OwnerPopCard()]);
             return cards;
         }
 
-        private static void AddCardToPlay(CardZone cardZone, CardModel cardModel)
+        private static void AddCardToPlayArea(CardZone cardZone, CardModel cardModel)
         {
             if (cardModel.IsFacedown && cardModel.Value.IsBackFaceCard)
                 cardModel.IsFacedown = false;
 
-            if (CgsNetManager.Instance.IsOnline)
+            if (CgsNetManager.Instance.IsOnline && !cardModel.IsSpawned)
                 CgsNetManager.Instance.LocalPlayer.MoveCardToServer(cardZone, cardModel);
             else
-                SetPlayActions(cardModel);
+                SetPlayAreaActions(cardModel);
         }
 
-        public static void SetPlayActions(CardModel cardModel)
+        public static void SetPlayAreaActions(CardModel cardModel)
         {
             cardModel.DefaultAction =
                 CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
@@ -436,12 +610,13 @@ namespace Cgs.Play
                 CreateCardStack(filters, cards, position, Quaternion.identity, false);
         }
 
-        public void CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
-            bool isFacedown)
+        public CardModel CreateCardModel(GameObject container, string cardId, Vector3 position, Quaternion rotation,
+            bool isFacedown, string defaultAction = "")
         {
             if (container == null)
                 container = playAreaCardZone.gameObject;
-            var cardModel = Instantiate(cardModelPrefab, container.transform).GetComponent<CardModel>();
+            var cardModel = Instantiate(cardModelPrefab, position, rotation, container.transform)
+                .GetComponent<CardModel>();
             if (CgsNetManager.Instance.IsOnline)
                 cardModel.MyNetworkObject.Spawn();
 
@@ -450,9 +625,12 @@ namespace Cgs.Play
             cardModel.Position = position;
             cardModel.Rotation = rotation;
             cardModel.IsFacedown = isFacedown;
+            if (Enum.TryParse<CardAction>(defaultAction, out var cardAction))
+                cardModel.DefaultAction = CardActionPanel.CardActionDictionary[cardAction];
 
-            SetPlayActions(cardModel);
             cardModel.HideHighlightClientRpc();
+
+            return cardModel;
         }
 
         public void CreateDefaultDie()
@@ -551,8 +729,6 @@ namespace Cgs.Play
                 cardZone.Size = size;
                 cardZone.DefaultFace = facePreference;
                 cardZone.DefaultAction = cardAction;
-                var defaultAction = CardActionPanel.CardActionDictionary[cardZone.DefaultAction];
-                cardZone.OnAddCardActions.Add((_, cardModel) => cardModel.DefaultAction = defaultAction);
 
                 return cardZone;
             }
@@ -574,13 +750,7 @@ namespace Cgs.Play
                 .GetOrAddComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
-
             cardZone.Type = CardZoneType.Horizontal;
-            cardZone.Position = position;
-            cardZone.Rotation = rotation;
-            cardZone.allowsRotation = true;
-            cardZone.allowsFlip = true;
-
             return cardZone;
         }
 
@@ -590,51 +760,13 @@ namespace Cgs.Play
                 .GetComponent<CardZone>();
             if (CgsNetManager.Instance.IsOnline)
                 cardZone.MyNetworkObject.Spawn();
-
             cardZone.Type = CardZoneType.Vertical;
-            cardZone.Position = position;
-            cardZone.Rotation = rotation;
-            cardZone.allowsRotation = true;
-            cardZone.allowsFlip = true;
-
             return cardZone;
-        }
-
-        public static void OnAddCardModel(CardZone cardZone, CardModel cardModel)
-        {
-            if (cardZone == null || cardModel == null)
-                return;
-
-            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction =
-                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
-        }
-
-        public static void OnAddCardModelFaceDown(CardZone cardZone, CardModel cardModel)
-        {
-            if (cardZone == null || cardModel == null)
-                return;
-
-            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction =
-                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
-            cardModel.IsFacedown = true;
-        }
-
-        public static void OnAddCardModelFaceUp(CardZone cardZone, CardModel cardModel)
-        {
-            if (cardZone == null || cardModel == null)
-                return;
-
-            cardModel.SecondaryDragAction = cardModel.UpdateParentCardZoneScrollRect;
-            cardModel.DefaultAction =
-                CardActionPanel.CardActionDictionary[CardGameManager.Current.GameDefaultCardAction];
-            cardModel.IsFacedown = false;
         }
 
         public void OnDrop(CardModel cardModel)
         {
-            AddCardToPlay(playAreaCardZone, cardModel);
+            AddCardToPlayArea(playAreaCardZone, cardModel);
         }
 
         [UsedImplicitly]
