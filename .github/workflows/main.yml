@@ -110,7 +110,11 @@ jobs:
       - name: Return License
         if: always()
         continue-on-error: true
-        run: unity-editor -logFile /dev/stdout -quit -returnlicense
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        run: unity-editor -quit -batchmode -returnlicense -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
