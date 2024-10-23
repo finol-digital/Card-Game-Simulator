@@ -71,7 +71,7 @@ namespace Cgs
 
         public static void ScaleResolution()
         {
-            foreach (var canvasScaler in FindObjectsOfType<CanvasScaler>())
+            foreach (var canvasScaler in FindObjectsByType<CanvasScaler>(FindObjectsSortMode.None))
                 canvasScaler.referenceResolution = Resolution;
         }
     }

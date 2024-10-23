@@ -48,9 +48,7 @@ permalink: roadmap.html
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Platforms: Full controller support (Steam)
-- Platforms: Web via PWA
-- Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.gg)
-- Platforms: Add Multiplayer and Developer Mode to Web browser
+- Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.link)
 - Platforms: Android widgets
 - Accessibility: Add audio and sounds throughout the app
 - Accessibility: Wiki-page for Playing a Game 
