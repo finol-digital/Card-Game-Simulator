@@ -87,7 +87,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-2022.3.8f1-linux-il2cpp-2
+    container: unityci/editor:ubuntu-6000.0.23f1-linux-il2cpp-3
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
