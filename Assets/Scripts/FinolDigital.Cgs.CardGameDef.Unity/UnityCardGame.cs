@@ -431,9 +431,6 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             }
 
             // Don't waste time loading if we need to update first
-#if UNITY_WEBGL
-            var shouldUpdate = !HasDownloaded;
-#else
             var daysSinceUpdate = 0;
             try
             {
@@ -445,7 +442,6 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             }
 
             var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate;
-#endif
             if (shouldUpdate)
             {
                 if (CoroutineRunner != null)

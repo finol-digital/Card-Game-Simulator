@@ -192,10 +192,8 @@ namespace Cgs
 
             ResetCurrentToDefault();
 
-#if !UNITY_WEBGL
             Debug.Log("CardGameManager::Awake:CheckDeepLinks");
             CheckDeepLinks();
-#endif
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
@@ -203,7 +201,7 @@ namespace Cgs
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#elif !UNITY_WEBGL
+#else
             UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
@@ -212,11 +210,7 @@ namespace Cgs
         {
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
                 Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
-#if UNITY_WEBGL
-                return;
-#else
                 CreateDefaultCardGames();
-#endif
 
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
@@ -356,7 +350,6 @@ namespace Cgs
                 : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
         }
 
-#if !UNITY_WEBGL
         private void CheckDeepLinks()
         {
             Application.deepLinkActivated += OnDeepLinkActivated;
@@ -408,7 +401,6 @@ namespace Cgs
 
             return autoUpdateUrl;
         }
-#endif
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         private IEnumerator Start()
