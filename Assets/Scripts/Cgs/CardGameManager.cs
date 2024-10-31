@@ -373,10 +373,7 @@ namespace Cgs
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
             if (string.IsNullOrEmpty(autoUpdateUrl) ||
                 !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
-            {
-                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
-                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
-            }
+                Debug.LogWarning("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
             else
                 StartGetCardGame(autoUpdateUrl);
         }
