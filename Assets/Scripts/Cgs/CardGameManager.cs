@@ -17,10 +17,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
-#if UNITY_WEBGL && !UNITY_EDITOR
-using System.Runtime.InteropServices;
-#endif
-
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine.Networking;
 #endif
@@ -31,10 +27,6 @@ namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        [DllImport("__Internal")]
-        private static extern void GameReady();
-#endif
         // Show all Debug.Log() to help with debugging?
         private const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
@@ -201,7 +193,7 @@ namespace Cgs
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
-#else
+#elif !UNITY_WEBGL
             UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
 #endif
         }
@@ -210,7 +202,11 @@ namespace Cgs
         {
             if (!Directory.Exists(UnityCardGame.GamesDirectoryPath) ||
                 Directory.GetDirectories(UnityCardGame.GamesDirectoryPath).Length < 1)
+#if UNITY_WEBGL
+                return;
+#else
                 CreateDefaultCardGames();
+#endif
 
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
@@ -411,14 +407,20 @@ namespace Cgs
             while (Current is {IsDownloading: true})
                 yield return null;
 
-            bool callGameReady =
- Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error)
-                || Current.Id.Equals(Tags.StandardPlayingCardsDirectoryName);
-            Debug.Log("CardGameManager::Start:callGameReady " + callGameReady);
-            if (callGameReady)
-                GameReady();
+            bool isMissingGame =
+ Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error);
+            if (isMissingGame)
+                yield return StartGetDefaultCardGames();
         }
 #endif
+
+        // ReSharper disable once UnusedMember.Local
+        private IEnumerator StartGetDefaultCardGames()
+        {
+            yield return GetCardGame(Tags.DominoesUrl);
+            yield return GetCardGame(Tags.MahjongUrl);
+            yield return GetCardGame(Tags.StandardPlayingCardsUrl);
+        }
 
         [PublicAPI]
         public void StartGetCardGame(string autoUpdateUrl)
