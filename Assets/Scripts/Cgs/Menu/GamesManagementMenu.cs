@@ -2,13 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System;
 using System.IO;
 using System.Linq;
 using Cgs.UI;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -57,10 +55,11 @@ namespace Cgs.Menu
 
         private CardGameEditorMenu _cardGameEditor;
 
+#if !UNITY_WEBGL
         private DecisionModal ImportModal =>
             _importModal ??= Instantiate(gameImportModalPrefab).GetOrAddComponent<DecisionModal>();
-
         private DecisionModal _importModal;
+#endif
 
         private DownloadMenu Downloader => _downloader ??= Instantiate(downloadMenuPrefab)
             .GetOrAddComponent<DownloadMenu>();
@@ -168,8 +167,12 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Import()
         {
+#if UNITY_WEBGL
+            ShowDownloader();
+#else
             ImportModal.Show(ImportGamePrompt, new Tuple<string, UnityAction>(DownloadFromWeb, ShowDownloader),
                 new Tuple<string, UnityAction>(LoadFromFile, ShowFileLoader));
+#endif
         }
 
         private void ShowDownloader()
@@ -177,6 +180,7 @@ namespace Cgs.Menu
             Downloader.Show(DownloadLabel, DownloadPrompt, CardGameManager.Instance.GetCardGame, true);
         }
 
+        // ReSharper disable once UnusedMember.Local
         private static void ShowFileLoader()
         {
 #if UNITY_ANDROID || UNITY_IOS
