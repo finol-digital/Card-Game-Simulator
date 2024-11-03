@@ -10,6 +10,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
+#if !UNITY_WEBGL
+using System;
+using UnityEngine.Events;
+#endif
 #if !UNITY_ANDROID && !UNITY_IOS
 using SimpleFileBrowser;
 #endif
@@ -58,6 +62,7 @@ namespace Cgs.Menu
 #if !UNITY_WEBGL
         private DecisionModal ImportModal =>
             _importModal ??= Instantiate(gameImportModalPrefab).GetOrAddComponent<DecisionModal>();
+
         private DecisionModal _importModal;
 #endif
 
