@@ -449,11 +449,8 @@ jobs:
         with:
           name: cgs-WebGL
           path: build/WebGL
-      - name: Copy the WebGL Build files to the Firebase public directory
-        env:
-          UNITY_WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL/Build', github.workspace) }}
-          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/firebase/public/Build', github.workspace) }}
-        run: cp -r "$UNITY_WEBGL_BUILD_PATH/." "$FIREBASE_PUBLIC_BUILD_PATH"
+      - name: Copy the WebGL build files to the Firebase public directory
+        run: cp -r build/WebGL/Build/. firebase/public/Build
       - name: Firebase Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -461,7 +458,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}
           channelId: live
           projectId: card-game-simulator
-          entryPoint: ${{ format('{0}/firebase', github.workspace) }}
+          entryPoint: firebase
 
   deployToMacAppStore:
     name: Deploy to the Mac App Store
@@ -717,7 +714,7 @@ jobs:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
         run: |
           [xml]$manifest = get-content ".\$env:WsaPlayerDirectory\UnityCommon.props"
-          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\6000.0.23f1\Editor\Data\PlaybackEngines\MetroSupport\"
+          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\6000.0.23f1-x86_64\Editor\Data\PlaybackEngines\MetroSupport\"
           $manifest.save(".\$env:WsaPlayerDirectory\UnityCommon.props")
           echo ".\$env:WsaPlayerDirectory\UnityCommon.props"
           cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
