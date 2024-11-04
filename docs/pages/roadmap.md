@@ -4,13 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.121
-- Bug-Fix: Card Zone faces
-- Bug-Fix: Merging Stacks on client
-- Game-Play: deckPlayCards and gameStartDecks
-- Game-Play: Support for card back faces
-  - Select backs folder in Game Editor Menu
-  - Select back from dropdown in Card Creator Menu and Set Import Menu
+## What's New - v1.122
+- UI Fixes
 
 ## Sprint - Priority 1
 - Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
