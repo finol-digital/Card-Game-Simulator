@@ -1,6 +1,1 @@
-- Bug-Fix: Card Zone faces
-- Bug-Fix: Merging Stacks on client
-- Game-Play: deckPlayCards and gameStartDecks
-- Game-Play: Support for card back faces
-  - Select backs folder in Game Editor Menu
-  - Select back from dropdown in Card Creator Menu and Set Import Menu
+- UI Fixes
