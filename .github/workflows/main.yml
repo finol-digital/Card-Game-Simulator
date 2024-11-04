@@ -444,17 +444,15 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          path: Card-Game-Simulator
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v4
         with:
           name: cgs-WebGL
-          path: Card-Game-Simulator/build/WebGL
+          path: build/WebGL
       - name: Copy the WebGL Build files to the Firebase public directory
         env:
-          UNITY_WEBGL_BUILD_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL/Build', github.workspace) }}
-          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/Card-Game-Simulator/firebase/public/Build', github.workspace) }}
+          UNITY_WEBGL_BUILD_PATH: ${{ format('{0}/build/WebGL/Build', github.workspace) }}
+          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/firebase/public/Build', github.workspace) }}
         run: cp -r "$UNITY_WEBGL_BUILD_PATH/." "$FIREBASE_PUBLIC_BUILD_PATH"
       - name: Firebase Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -463,7 +461,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}
           channelId: live
           projectId: card-game-simulator
-          entryPoint: ${{ format('{0}/Card-Game-Simulator/firebase', github.workspace) }}
+          entryPoint: ${{ format('{0}/firebase', github.workspace) }}
 
   deployToMacAppStore:
     name: Deploy to the Mac App Store
