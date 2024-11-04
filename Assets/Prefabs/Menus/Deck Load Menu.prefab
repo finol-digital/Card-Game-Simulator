@@ -601,7 +601,7 @@ GameObject:
   - component: {fileID: 5890660694194714247}
   - component: {fileID: 6123461977141449559}
   m_Layer: 5
-  m_Name: TMP SubMeshUI [LiberationSans SDF Material + LiberationSans SDF Atlas]
+  m_Name: 'TMP SubMeshUI [LiberationSans SDF Material + LiberationSans SDF Atlas]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -905,7 +905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5322281757809038089, guid: bcaa2fdc3919e72498c468c4a902aec8,
         type: 3}
-      propertyPath: m_subTextObjects.Array.data[1]
+      propertyPath: 'm_subTextObjects.Array.data[1]'
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5322281758105614900, guid: bcaa2fdc3919e72498c468c4a902aec8,
@@ -1451,6 +1451,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: c15cb672ac47b3f4cb4f5b8d4c27e3f2,
         type: 3}
+    - target: {fileID: 5606556387005000519, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5606556387005000519, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: tooltip

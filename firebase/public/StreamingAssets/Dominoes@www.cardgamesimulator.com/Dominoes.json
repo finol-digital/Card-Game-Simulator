@@ -64,6 +64,12 @@
   ],
   "gameDefaultCardAction": "rotate",
   "gamePlayDeckName": "Stock",
+  "gameStartDecks": [
+    {
+      "name": "Double Six Dominoes",
+      "url": "https://www.cardgamesimulator.com/games/Dominoes/decks/Double%20Six%20Dominoes.txt"
+    }
+  ],
   "gameStartHandCount": 7,
   "name": "Dominoes",
   "rulesUrl": "http://www.dominorules.com/introduction"

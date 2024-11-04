@@ -17,10 +17,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
-#if UNITY_WEBGL && !UNITY_EDITOR
-using System.Runtime.InteropServices;
-#endif
-
 #if UNITY_ANDROID && !UNITY_EDITOR
 using UnityEngine.Networking;
 #endif
@@ -31,10 +27,6 @@ namespace Cgs
 {
     public class CardGameManager : MonoBehaviour
     {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        [DllImport("__Internal")]
-        private static extern void GameReady();
-#endif
         // Show all Debug.Log() to help with debugging?
         private const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
@@ -192,10 +184,8 @@ namespace Cgs
 
             ResetCurrentToDefault();
 
-#if !UNITY_WEBGL
             Debug.Log("CardGameManager::Awake:CheckDeepLinks");
             CheckDeepLinks();
-#endif
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
@@ -217,7 +207,6 @@ namespace Cgs
 #else
                 CreateDefaultCardGames();
 #endif
-
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
                 var gameDirectoryName = gameDirectory[(UnityCardGame.GamesDirectoryPath.Length + 1)..];
@@ -238,6 +227,7 @@ namespace Cgs
                 {
                     var newCardGame = new UnityCardGame(this, gameDirectoryName);
                     newCardGame.ReadProperties();
+                    Debug.LogWarning(newCardGame.ToString());
                     if (!string.IsNullOrEmpty(newCardGame.Error))
                         Debug.LogError(LoadErrorMessage + newCardGame.Error);
                     else
@@ -356,7 +346,6 @@ namespace Cgs
                 : (AllCardGames.FirstOrDefault().Value ?? UnityCardGame.UnityInvalid);
         }
 
-#if !UNITY_WEBGL
         private void CheckDeepLinks()
         {
             Application.deepLinkActivated += OnDeepLinkActivated;
@@ -384,10 +373,7 @@ namespace Cgs
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
             if (string.IsNullOrEmpty(autoUpdateUrl) ||
                 !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
-            {
-                Debug.LogError("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
-                Messenger.Show("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
-            }
+                Debug.LogWarning("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
             else
                 StartGetCardGame(autoUpdateUrl);
         }
@@ -408,7 +394,6 @@ namespace Cgs
 
             return autoUpdateUrl;
         }
-#endif
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         private IEnumerator Start()
@@ -419,14 +404,20 @@ namespace Cgs
             while (Current is {IsDownloading: true})
                 yield return null;
 
-            bool callGameReady =
- Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error)
-                || Current.Id.Equals(Tags.StandardPlayingCardsDirectoryName);
-            Debug.Log("CardGameManager::Start:callGameReady " + callGameReady);
-            if (callGameReady)
-                GameReady();
+            bool isMissingGame =
+ Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
+            if (isMissingGame)
+                yield return StartGetDefaultCardGames();
         }
 #endif
+
+        // ReSharper disable once UnusedMember.Local
+        private IEnumerator StartGetDefaultCardGames()
+        {
+            yield return GetCardGame(Tags.DominoesUrl);
+            yield return GetCardGame(Tags.MahjongUrl);
+            yield return GetCardGame(Tags.StandardPlayingCardsUrl);
+        }
 
         [PublicAPI]
         public void StartGetCardGame(string autoUpdateUrl)
@@ -614,11 +605,6 @@ namespace Cgs
                 Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
                 return;
             }
-
-#if UNITY_WEBGL
-            foreach (var game in AllCardGames.Values)
-                game.ReadProperties();
-#endif
 
             // Now is the safest time to set this game as the preferred default game for the player
             PlayerPrefs.SetString(PlayerPrefsDefaultGame, Current.Id);

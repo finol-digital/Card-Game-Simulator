@@ -9,9 +9,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-#if !UNITY_WEBGL
 using UnityExtensionMethods;
-#endif
 
 namespace Cgs.Menu
 {
@@ -61,14 +59,11 @@ namespace Cgs.Menu
         public Image nextCardImage;
         public List<GameObject> selectableButtons;
 
-        // ReSharper disable once NotAccessedField.Global
         public Button joinButton;
         public GameObject quitButton;
 
-#if !UNITY_WEBGL
         private GamesManagementMenu GamesManagement =>
             _gamesManagement ??= Instantiate(gamesManagementMenuPrefab).GetOrAddComponent<GamesManagementMenu>();
-#endif
 
         private GamesManagementMenu _gamesManagement;
 
@@ -122,8 +117,6 @@ namespace Cgs.Menu
             versionText.text = TitleScreen.VersionMessage;
 
 #if UNITY_WEBGL
-            previousCardImage.gameObject.SetActive(false);
-            nextCardImage.gameObject.SetActive(false);
             joinButton.interactable = false;
 #endif
 #if UNITY_STANDALONE || UNITY_WSA
@@ -228,31 +221,25 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void SelectPrevious()
         {
-#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
-#endif
         }
 
         [UsedImplicitly]
         public void SelectNext()
         {
-#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
-#endif
         }
 
         [UsedImplicitly]
         public void ShowGamesManagementMenu()
         {
-#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             GamesManagement.Show();
-#endif
         }
 
         [UsedImplicitly]

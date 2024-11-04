@@ -87,7 +87,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-2022.3.8f1-linux-il2cpp-2
+    container: unityci/editor:ubuntu-6000.0.23f1-linux-il2cpp-3
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -109,7 +109,12 @@ jobs:
         run: unity-editor -nographics -logFile /dev/stdout -customBuildName Card-Game-Simulator -projectPath . -executeMethod Packages.Rider.Editor.RiderScriptEditor.SyncSolution -quit
       - name: Return License
         if: always()
-        run: unity-editor -logFile /dev/stdout -quit -returnlicense
+        continue-on-error: true
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        run: unity-editor -quit -batchmode -returnlicense -username "$UNITY_EMAIL" -password "$UNITY_PASSWORD" -serial "$UNITY_SERIAL"
       - name: SonarQube Analysis
         env:
           FrameworkPathOverride: /opt/unity/Editor/Data/MonoBleedingEdge/
@@ -446,39 +451,16 @@ jobs:
         with:
           name: cgs-WebGL
           path: Card-Game-Simulator/build/WebGL
-      - name: Checkout Firebase project
-        uses: actions/checkout@v4
-        with:
-          repository: finol-digital/cgs-games
-          token: ${{ secrets.CGS_PAT }}
-          path: cgs-games
-      - name: Copy the WebGL build artifacts to the Firebase public directory
+      - name: Copy the WebGL Build files to the Firebase public directory
         env:
-          UNITY_BUILD_WEBGL_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL', github.workspace) }}
-          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/cgs-games/public/Unity', github.workspace) }}
-        run: find $UNITY_BUILD_WEBGL_PATH -type f -name "**WebGL.*" -exec cp {} $FIREBASE_PUBLIC_BUILD_PATH \;
-      - name: Update Release Notes
-        if: github.event.action == 'published'
-        env:
-          RELEASE_NOTES: ${{ github.event.release.body }}
-        run: echo "$RELEASE_NOTES" > Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
-      - name: Raise PR to CGS games
-        uses: peter-evans/create-pull-request@v7
+          UNITY_WEBGL_BUILD_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL/Build', github.workspace) }}
+          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/Card-Game-Simulator/firebase/public/Build', github.workspace) }}
+        run: cp -r "$UNITY_WEBGL_BUILD_PATH/." "$FIREBASE_PUBLIC_BUILD_PATH"
+      - name: Firebase Deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          token: ${{ secrets.CGS_PAT }}
-          path: cgs-games
-          branch: ${{ needs.buildWithLinux.outputs.buildVersion }}
-          title: ${{ needs.buildWithLinux.outputs.buildVersion }}
-          body-path: Card-Game-Simulator/fastlane/metadata/en-US/release_notes.txt
-      - name: Copy the WebGL build artifacts to the Firebase public directory
-        env:
-          UNITY_BUILD_WEBGL_PATH: ${{ format('{0}/Card-Game-Simulator/build/WebGL', github.workspace) }}
-          FIREBASE_PUBLIC_BUILD_PATH: ${{ format('{0}/Card-Game-Simulator/firebase/public/Unity', github.workspace) }}
-        run: find $UNITY_BUILD_WEBGL_PATH -type f -name "**WebGL.*" -exec cp {} $FIREBASE_PUBLIC_BUILD_PATH \;
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}'
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}
           channelId: live
           projectId: card-game-simulator
           entryPoint: ${{ format('{0}/Card-Game-Simulator/firebase', github.workspace) }}
@@ -817,6 +799,7 @@ jobs:
         shell: pwsh
         run: msstore reconfigure --tenantId ${{ secrets.MICROSOFT_TENANT_ID }} --sellerId ${{ secrets.MICROSOFT_SELLER_ID }} --clientId ${{ secrets.MICROSOFT_CLIENT_ID }} --clientSecret ${{ secrets.MICROSOFT_KEY }}
       - name: Build the .appxupload with Microsoft Store Developer CLI
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         run: |
@@ -829,7 +812,7 @@ jobs:
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
       - name: Build the .appxupload
-        if: false
+#        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -837,7 +820,7 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x86|x64|arm|arm64" /p:PackageCertificateKeyFile=$env:SigningCertificate
       - name: Remove the .pfx
-        if: false
+#        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -845,7 +828,7 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
       - name: Copy .appxupload
-        if: false
+#        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:

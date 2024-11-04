@@ -24,7 +24,7 @@ namespace Cgs.CardGameView.Multiplayer
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
         public string DiscardPrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
-        private const float ZoomHoldTime = 1.5f;
+        private const float ZoomHoldTime = 0.5f;
         private const float MovementSpeed = 600f;
 
         public int Index { get; set; }

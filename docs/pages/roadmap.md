@@ -4,19 +4,15 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.121
-- Bug-Fix: Card Zone faces
-- Bug-Fix: Merging Stacks on client
-- Game-Play: deckPlayCards and gameStartDecks
-- Game-Play: Support for card back faces
-  - Select backs folder in Game Editor Menu
-  - Select back from dropdown in Card Creator Menu and Set Import Menu
+## What's New - v1.122
+- UI Fixes
 
 ## Sprint - Priority 1
 - Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
 - Bug-Fix: macOS Mission Control freezes
 - Bug-Fix: Importing more than 200 cards fails
 - Bug-Fix: Deck Editor slows when loading too many cards
+- Cards: Select left and right on zoom in Cards Explorer
 - Cards: Support mix of different card sizes in the same game
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Animation for card and stack actions
@@ -48,9 +44,7 @@ permalink: roadmap.html
 - Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Platforms: Full controller support (Steam)
-- Platforms: Web via PWA
-- Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.gg)
-- Platforms: Add Multiplayer and Developer Mode to Web browser
+- Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.link)
 - Platforms: Android widgets
 - Accessibility: Add audio and sounds throughout the app
 - Accessibility: Wiki-page for Playing a Game 

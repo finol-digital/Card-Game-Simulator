@@ -1,0 +1,30 @@
+{
+    "name": "Card Game Simulator",
+    "short_name": "cgs.gg",
+    "start_url": "/",
+    "display": "fullscreen",
+    "background_color": "#FFFFFF",
+    "theme_color": "#000",
+    "description": "Create, Share, and Play with Card Game Simulator",
+    "icons": [{
+      "src": "TemplateData/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "TemplateData/icons/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "TemplateData/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "TemplateData/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }]
+  }
