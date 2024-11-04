@@ -717,7 +717,7 @@ jobs:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
         run: |
           [xml]$manifest = get-content ".\$env:WsaPlayerDirectory\UnityCommon.props"
-          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\2022.3.26f1\Editor\Data\PlaybackEngines\MetroSupport\"
+          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\6000.0.23f1\Editor\Data\PlaybackEngines\MetroSupport\"
           $manifest.save(".\$env:WsaPlayerDirectory\UnityCommon.props")
           echo ".\$env:WsaPlayerDirectory\UnityCommon.props"
           cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
