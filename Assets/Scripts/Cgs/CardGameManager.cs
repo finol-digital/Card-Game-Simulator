@@ -405,7 +405,7 @@ namespace Cgs
                 yield return null;
 
             bool isMissingGame =
- Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Curent.HasLoaded;
+ Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
             if (isMissingGame)
                 yield return StartGetDefaultCardGames();
         }
