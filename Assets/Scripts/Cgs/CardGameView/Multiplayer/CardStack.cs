@@ -76,11 +76,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         public string Name
         {
-            get => _name.Value;
-            set => _name.Value = value;
+            get => IsSpawned ? _nameNetworkVariable.Value : _name;
+            set
+            {
+                var oldValue = _name;
+                _name = value;
+                if (IsSpawned)
+                    _nameNetworkVariable.Value = value;
+                else if (oldValue != _name)
+                    OnChangeName(oldValue, _name);
+            }
         }
 
-        private NetworkVariable<CgsNetString> _name;
+        private string _name = string.Empty;
+        private NetworkVariable<CgsNetString> _nameNetworkVariable;
 
         public override string ViewValue => Name;
 
@@ -166,8 +175,8 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnAwakePlayable()
         {
-            _name = new NetworkVariable<CgsNetString>();
-            _name.OnValueChanged += OnChangeName;
+            _nameNetworkVariable = new NetworkVariable<CgsNetString>();
+            _nameNetworkVariable.OnValueChanged += OnChangeName;
 
             _cardIds = new NetworkList<CgsNetString>();
             _cardIds.OnListChanged += OnCardsUpdated;
@@ -181,6 +190,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnNetworkSpawnPlayable()
         {
+            _name = _nameNetworkVariable.Value;
             _cards = new List<UnityCard>();
             foreach (var cardId in _cardIds)
                 _cards.Add(CardGameManager.Current.Cards[cardId]);
