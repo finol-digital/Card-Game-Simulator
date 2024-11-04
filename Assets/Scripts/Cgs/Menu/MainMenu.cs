@@ -59,6 +59,7 @@ namespace Cgs.Menu
         public Image nextCardImage;
         public List<GameObject> selectableButtons;
 
+        public Button joinButton;
         public GameObject quitButton;
 
         private GamesManagementMenu GamesManagement =>
@@ -115,6 +116,9 @@ namespace Cgs.Menu
             ResizeFooter();
             versionText.text = TitleScreen.VersionMessage;
 
+#if UNITY_WEBGL
+            joinButton.interactable = false;
+#endif
 #if UNITY_STANDALONE || UNITY_WSA
             quitButton.SetActive(true);
 #else
@@ -250,10 +254,12 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void JoinGame()
         {
+#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.IsSearchingForServer = true;
             SceneManager.LoadScene(PlayModeSceneIndex);
+#endif
         }
 
         [UsedImplicitly]

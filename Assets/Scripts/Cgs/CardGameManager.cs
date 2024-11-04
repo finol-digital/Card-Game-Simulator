@@ -207,7 +207,6 @@ namespace Cgs
 #else
                 CreateDefaultCardGames();
 #endif
-
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
                 var gameDirectoryName = gameDirectory[(UnityCardGame.GamesDirectoryPath.Length + 1)..];
@@ -228,6 +227,7 @@ namespace Cgs
                 {
                     var newCardGame = new UnityCardGame(this, gameDirectoryName);
                     newCardGame.ReadProperties();
+                    Debug.LogWarning(newCardGame.ToString());
                     if (!string.IsNullOrEmpty(newCardGame.Error))
                         Debug.LogError(LoadErrorMessage + newCardGame.Error);
                     else
@@ -405,7 +405,7 @@ namespace Cgs
                 yield return null;
 
             bool isMissingGame =
- Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error);
+ Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Curent.HasLoaded;
             if (isMissingGame)
                 yield return StartGetDefaultCardGames();
         }
@@ -605,11 +605,6 @@ namespace Cgs
                 Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
                 return;
             }
-
-#if UNITY_WEBGL
-            foreach (var game in AllCardGames.Values)
-                game.ReadProperties();
-#endif
 
             // Now is the safest time to set this game as the preferred default game for the player
             PlayerPrefs.SetString(PlayerPrefsDefaultGame, Current.Id);
