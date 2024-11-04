@@ -12,6 +12,7 @@ permalink: roadmap.html
 - Bug-Fix: macOS Mission Control freezes
 - Bug-Fix: Importing more than 200 cards fails
 - Bug-Fix: Deck Editor slows when loading too many cards
+- Cards: Select left and right on zoom in Cards Explorer
 - Cards: Support mix of different card sizes in the same game
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Animation for card and stack actions
