@@ -13,6 +13,7 @@ permalink: roadmap.html
 - Bug-Fix: Importing more than 200 cards fails
 - Bug-Fix: Deck Editor slows when loading too many cards
 - Cards: Select left and right on zoom in Cards Explorer
+- Game-Play: Enhanced Drawer Buttons
 - Cards: Support mix of different card sizes in the same game
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Animation for card and stack actions
