@@ -450,7 +450,7 @@ jobs:
           name: cgs-WebGL
           path: build/WebGL
       - name: Copy the WebGL build files to the Firebase public directory
-        run: cp -r build/WebGL/Build/. firebase/public/Build
+        run: cp -r build/WebGL/WebGL/Build/. firebase/public/Build
       - name: Firebase Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
