@@ -32,8 +32,15 @@ namespace Cgs.Menu
 
         private int _selectedGameId;
 
-        private IEnumerator Start()
+        private void Start()
         {
+            StartCoroutine(RunRefreshCoroutine());
+        }
+
+        private IEnumerator RunRefreshCoroutine()
+        {
+            ClearPanel();
+
             using var request = UnityWebRequest.Get(CgsGamesBrowseApiUrl);
 
             yield return request.SendWebRequest();
@@ -74,6 +81,8 @@ namespace Cgs.Menu
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Inputs.IsOption)
                 GoToCgsGamesBrowser();
+            else if (Inputs.IsLoad)
+                Refresh();
             else if (Inputs.IsSubmit)
                 Import();
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
@@ -104,6 +113,13 @@ namespace Cgs.Menu
         public void GoToCgsGamesBrowser()
         {
             Application.OpenURL(Tags.CgsGamesBrowseUrl);
+        }
+
+        [UsedImplicitly]
+        public void Refresh()
+        {
+            StopAllCoroutines();
+            StartCoroutine(RunRefreshCoroutine());
         }
 
         [UsedImplicitly]

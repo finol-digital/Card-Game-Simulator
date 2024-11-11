@@ -227,7 +227,6 @@ namespace Cgs
                 {
                     var newCardGame = new UnityCardGame(this, gameDirectoryName);
                     newCardGame.ReadProperties();
-                    Debug.LogWarning(newCardGame.ToString());
                     if (!string.IsNullOrEmpty(newCardGame.Error))
                         Debug.LogError(LoadErrorMessage + newCardGame.Error);
                     else

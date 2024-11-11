@@ -14,11 +14,11 @@ permalink: roadmap.html
 - Bug-Fix: Deck Editor slows when loading too many cards
 - Cards: Select left and right on zoom in Cards Explorer
 - Game-Play: Enhanced Drawer Buttons
-- Cards: Support mix of different card sizes in the same game
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Animation for card and stack actions
 - Cards: Animated highlight
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Cards: Support mix of different card sizes in the same game
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Name-Plates indicating player seats
@@ -63,7 +63,7 @@ permalink: roadmap.html
 - Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
 
 ## Icebox - Priority 3
-- Integration: Json Schema Generation via https://github.com/json-everything/json-everything
+- Integration: Json Schema Generation via https://github.com/json-everything/json-everything and https://github.com/coveooss/json-schema-for-humans
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit
