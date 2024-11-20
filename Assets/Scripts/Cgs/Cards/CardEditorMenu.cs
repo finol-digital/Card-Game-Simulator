@@ -42,7 +42,18 @@ namespace Cgs.Cards
         public Image cardImage;
         public Button saveButton;
 
-        [UsedImplicitly] public string CardName { get; set; }
+        [UsedImplicitly]
+        public string CardName
+        {
+            get => _cardName;
+            set
+            {
+                _cardName = value;
+                ValidateSaveButton();
+            }
+        }
+
+        private string _cardName = string.Empty;
 
         [UsedImplicitly]
         public string CardId
@@ -231,11 +242,12 @@ namespace Cgs.Cards
                 Debug.LogWarning(ImageImportFailedWarningMessage);
         }
 
-        [UsedImplicitly]
         public void ValidateSaveButton()
         {
             saveButton.interactable =
                 !string.IsNullOrEmpty(CardName) && CardImageUri != null && CardImageUri.IsAbsoluteUri;
+            Debug.Log("ValidateSaveButton: " + CardName + " " + CardImageUri);
+            Debug.Log("ValidateSaveButton: " + saveButton.interactable);
         }
 
         [UsedImplicitly]

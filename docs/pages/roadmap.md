@@ -4,11 +4,10 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.122
-- UI Fixes
+## What's New - v1.123
+- Bug-Fix: Sometimes cards will disappear when moving them
 
 ## Sprint - Priority 1
-- Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
 - Bug-Fix: macOS Mission Control freezes
 - Bug-Fix: Importing more than 200 cards fails
 - Bug-Fix: Deck Editor slows when loading too many cards
