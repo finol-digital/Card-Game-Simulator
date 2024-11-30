@@ -6,6 +6,7 @@ permalink: roadmap.html
 
 ## What's New - v1.123
 - Bug-Fix: Sometimes cards will disappear when moving them
+- Bug-Fix: Deck Editor accommodates non-standard card sizes
 
 ## Sprint - Priority 1
 - Bug-Fix: macOS Mission Control freezes
