@@ -22,7 +22,7 @@ namespace Cgs.CardGameView.Multiplayer
     public class CardModel : CgsNetPlayable, ICardDisplay, ICardDropHandler, IStackDropHandler
     {
         public const string DropErrorMessage = "Error: Card dropped on Card outside of play area!";
-        public string DiscardPrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
+        public override string DeletePrompt => $"Delete cannot be undone. Delete {gameObject.name}?";
 
         private const float ZoomHoldTime = 0.5f;
         private const float MovementSpeed = 600f;
@@ -243,8 +243,18 @@ namespace Cgs.CardGameView.Multiplayer
             if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == this || HoldTime > ZoomHoldTime)
                 RequestZoomOnThis();
 
-            if (CurrentDragPhase == DragPhase.End && !IsProcessingSecondaryDragAction && PlaceHolder != null)
+            if (ParentCardZone == null && CurrentDragPhase == DragPhase.End && !IsMovingToPlaceHolder)
+            {
+                Debug.LogWarning(
+                    "OnUpdatePlayable: ParentCardZone == null && CurrentDragPhase == DragPhase.End && !IsMovingToPlaceHolder");
+                if (PlaceHolder == null)
+                {
+                    Debug.LogWarning("OnUpdatePlayable: PlaceHolder == null");
+                    RecoverLostPlaceholder();
+                }
+
                 IsMovingToPlaceHolder = true;
+            }
 
             UpdateForMovingToPlaceHolder();
         }
@@ -348,15 +358,15 @@ namespace Cgs.CardGameView.Multiplayer
                 PlayController.Instance.CreateCardStack(PlayController.DefaultStackName, cards, Position, Rotation,
                     !IsFacedown);
 
-            Debug.Log($"Discarding {cardModel.gameObject.name} and {gameObject.name} OnDrop");
-            cardModel.Discard();
-            Discard();
+            Debug.Log($"OnDrop {cardModel.gameObject.name} on {gameObject.name} delete");
+            cardModel.RequestDelete();
+            RequestDelete();
         }
 
         public void OnDrop(CardStack cardStack)
         {
             cardStack.RequestInsert(0, Id);
-            Discard();
+            RequestDelete();
         }
 
         public static CardModel CreateDrag(PointerEventData eventData, GameObject gameObject, Transform transform,
@@ -423,7 +433,7 @@ namespace Cgs.CardGameView.Multiplayer
             {
                 var dropTargetCardModel = DropTarget.GetComponent<CardModel>();
 
-                var shouldDiscard = false;
+                var shouldDeleteOnDropTarget = false;
                 if (Visibility.blocksRaycasts && ParentCardZone != null && ParentCardZone.Type == CardZoneType.Area
                     || PlaceHolderCardZone != null && PlaceHolderCardZone.Type == CardZoneType.Area
                     || dropTargetCardModel != null && dropTargetCardModel.ParentCardZone != null &&
@@ -435,13 +445,15 @@ namespace Cgs.CardGameView.Multiplayer
                     if (isPointerOverDropTarget)
                     {
                         DropTarget.OnDrop(eventData);
-                        shouldDiscard = PlaySettings.AutoStackCards || dropTargetCardModel == null;
+                        shouldDeleteOnDropTarget = PlaySettings.AutoStackCards || dropTargetCardModel == null;
+                        Debug.LogWarning("shouldDeleteOnDropTarget: " + shouldDeleteOnDropTarget);
                     }
                 }
 
-                if (shouldDiscard)
+                if (shouldDeleteOnDropTarget)
                 {
-                    Discard();
+                    Debug.Log("PostDragPlayable::shouldDeleteOnDropTarget");
+                    RequestDelete();
                     return;
                 }
 
@@ -465,7 +477,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (PlaceHolder != null)
                 IsMovingToPlaceHolder = true;
             else if (ParentCardZone == null)
-                Discard();
+            {
+                Debug.LogWarning($"PostDragPlayable Lost PlaceHolder and ParentCardZone for {gameObject.name}!");
+                RecoverLostPlaceholder();
+            }
             else if (ParentCardZone.Type == CardZoneType.Area)
                 SnapToGrid();
         }
@@ -484,7 +499,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public override void SnapToGrid()
         {
-            if (ToDiscard)
+            if (ToDelete)
                 return;
 
             var gridPosition = CalculateGridPosition();
@@ -514,8 +529,8 @@ namespace Cgs.CardGameView.Multiplayer
                             PlayController.Instance.CreateCardStack(PlayController.DefaultStackName,
                                 cards, siblingCardModel.Position, siblingCardModel.Rotation,
                                 !siblingCardModel.IsFacedown);
-                        siblingCardModel.Discard();
-                        Discard();
+                        siblingCardModel.RequestDelete();
+                        RequestDelete();
                         return;
                     }
 
@@ -524,7 +539,7 @@ namespace Cgs.CardGameView.Multiplayer
                         continue;
 
                     siblingCardStack.OnDrop(this);
-                    Discard();
+                    RequestDelete();
                     return;
                 }
             }
@@ -628,9 +643,8 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (PlaceHolder == null)
             {
-                Debug.Log($"Discarding {gameObject.name} MoveToPlaceHolder");
-                Discard();
-                return;
+                Debug.LogWarning($"FinishMovingToPlaceHolder Lost PlaceHolder for {gameObject.name}!");
+                RecoverLostPlaceholder();
             }
 
             var previousParentCardZone = ParentCardZone;
@@ -646,6 +660,19 @@ namespace Cgs.CardGameView.Multiplayer
             PlaceHolder = null;
             Visibility.blocksRaycasts = true;
             IsMovingToPlaceHolder = false;
+        }
+
+        private void RecoverLostPlaceholder()
+        {
+            if (PlayController.Instance == null)
+            {
+                RequestDelete();
+                return;
+            }
+
+            PlaceHolderCardZone = PlayController.Instance.playAreaCardZone;
+            if (!Vector2.zero.Equals(Position))
+                PlaceHolder.localPosition = Position;
         }
 
         private void ParentToCanvas(Vector3 targetPosition)
@@ -674,7 +701,7 @@ namespace Cgs.CardGameView.Multiplayer
             CreateDrag(CurrentPointerEventData, gameObject, transform, Value, IsFacedown, PlaceHolderCardZone);
 
             if (IsSpawned)
-                DespawnAndDestroyServerRpc();
+                DeleteServerRpc();
             else
                 Destroy(gameObject);
         }
@@ -715,27 +742,9 @@ namespace Cgs.CardGameView.Multiplayer
                 Value.UnregisterDisplay(this);
         }
 
-        public void PromptDiscard()
+        public override void PromptDelete()
         {
-            CardGameManager.Instance.Messenger.Prompt(DiscardPrompt, Discard);
-        }
-
-        private void Discard()
-        {
-            Debug.Log($"Discarding {gameObject.name}");
-            ToDiscard = true;
-            if (IsSpawned)
-                DespawnAndDestroyServerRpc();
-            else
-                Destroy(gameObject);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void DespawnAndDestroyServerRpc()
-        {
-            Debug.Log($"DespawnAndDestroyServerRpc {gameObject.name}");
-            MyNetworkObject.Despawn();
-            Destroy(gameObject);
+            CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
 
         public override void OnDestroy()

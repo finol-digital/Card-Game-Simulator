@@ -126,6 +126,7 @@ namespace Cgs.CardGameView.Viewer
         public void OnDrop(CardModel cardModel)
         {
             AddCard(cardModel.Value);
+            cardModel.RequestDelete();
         }
 
         public void AddCard(UnityCard card)

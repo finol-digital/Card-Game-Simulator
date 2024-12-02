@@ -73,19 +73,21 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Vector2 Position
         {
-            get => IsSpawned ? _positionNetworkVariable.Value : transform.localPosition;
+            get => IsSpawned ? _positionNetworkVariable.Value : _position;
             set
             {
-                transform.localPosition = value;
+                _position = value;
+                transform.localPosition = _position;
                 if (!IsSpawned)
                     return;
                 if (IsServer)
-                    _positionNetworkVariable.Value = transform.localPosition;
+                    _positionNetworkVariable.Value = _position;
                 else
-                    RequestUpdatePosition(transform.localPosition);
+                    RequestUpdatePosition(_position);
             }
         }
 
+        private Vector2 _position = Vector2.zero;
         private NetworkVariable<Vector2> _positionNetworkVariable;
 
         public Quaternion Rotation
@@ -117,7 +119,7 @@ namespace Cgs.CardGameView.Multiplayer
         private float _disownedTime;
         private Vector2 _previousPosition;
 
-        public bool ToDiscard { get; protected set; }
+        public bool ToDelete { get; protected set; }
 
         public virtual string ViewValue => "<Playable:Value>";
 
@@ -188,10 +190,16 @@ namespace Cgs.CardGameView.Multiplayer
                 ParentTo(Container == null ? PlayController.Instance.playAreaCardZone.transform : Container.transform);
 
             if (IsServer && !Vector2.zero.Equals(transform.localPosition))
-                _positionNetworkVariable.Value = transform.localPosition;
+            {
+                _position = transform.localPosition;
+                _positionNetworkVariable.Value = _position;
+            }
 
             if (!Vector2.zero.Equals(Position))
-                transform.localPosition = Position;
+            {
+                _position = Position;
+                transform.localPosition = _position;
+            }
 
             if (IsServer && !Quaternion.identity.Equals(transform.localRotation))
                 _rotationNetworkVariable.Value = transform.localRotation;
@@ -392,7 +400,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             PostDragPlayable(eventData);
 
-            if (IsSpawned && IsOwner && !ToDiscard)
+            if (IsSpawned && IsOwner && !ToDelete)
                 RemoveOwnershipServerRpc();
         }
 
@@ -454,9 +462,10 @@ namespace Cgs.CardGameView.Multiplayer
             var rectTransform = (RectTransform) transform;
             rectTransform.position = targetPosition;
             rectTransform.SetAsLastSibling();
+            _position = rectTransform.localPosition;
 
             if (IsOwner)
-                RequestUpdatePosition(rectTransform.localPosition);
+                RequestUpdatePosition(_position);
         }
 
         public virtual void SnapToGrid()
@@ -464,9 +473,10 @@ namespace Cgs.CardGameView.Multiplayer
             var rectTransform = (RectTransform) transform;
             var gridPosition = CalculateGridPosition();
             rectTransform.position = gridPosition;
+            _position = rectTransform.localPosition;
 
             if (IsOwner)
-                RequestUpdatePosition(rectTransform.localPosition);
+                RequestUpdatePosition(_position);
         }
 
         protected Vector2 CalculateGridPosition()
@@ -532,7 +542,8 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangePosition(Vector2 oldValue, Vector2 newValue)
         {
-            transform.localPosition = newValue;
+            _position = newValue;
+            transform.localPosition = _position;
         }
 
         private void RequestUpdateRotation(Quaternion rotation)
@@ -564,13 +575,15 @@ namespace Cgs.CardGameView.Multiplayer
             HighlightMode = HighlightMode.Off;
         }
 
-        public void PromptDelete()
+        public virtual void PromptDelete()
         {
             CardGameManager.Instance.Messenger.Prompt(DeletePrompt, RequestDelete);
         }
 
-        protected void RequestDelete()
+        public void RequestDelete()
         {
+            Debug.Log($"RequestDelete {gameObject.name}");
+            ToDelete = true;
             if (IsSpawned)
                 DeleteServerRpc();
             else
@@ -578,8 +591,9 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void DeleteServerRpc()
+        protected void DeleteServerRpc()
         {
+            Debug.Log($"DeleteServerRpc {gameObject.name}");
             MyNetworkObject.Despawn();
             Destroy(gameObject);
         }
