@@ -24,6 +24,16 @@ namespace Cgs.UI
 
         protected List<Toggle> Toggles { get; } = new();
 
+        protected void ClearPanel()
+        {
+            if (toggleGroup != null)
+                toggleGroup.allowSwitchOff = true;
+
+            Toggles.Clear();
+            selectionContent.DestroyAllChildren();
+            selectionContent.sizeDelta = new Vector2(selectionContent.sizeDelta.x, 0);
+        }
+
         protected void Rebuild<TKey, TValue>(IDictionary<TKey, TValue> options, OnSelectDelegate<TKey> select,
             TKey current)
         {

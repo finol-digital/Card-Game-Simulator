@@ -4,19 +4,21 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.122
-- UI Fixes
+## What's New - v1.123
+- Bug-Fix: Sometimes cards disappear when moving them
+- Bug-Fix: Deck Editor accommodates non-standard card sizes
 
 ## Sprint - Priority 1
-- Bug-Fix: When adding a card to hand, it duplicates the card at the edge of the board
 - Bug-Fix: macOS Mission Control freezes
 - Bug-Fix: Importing more than 200 cards fails
 - Bug-Fix: Deck Editor slows when loading too many cards
 - Cards: Select left and right on zoom in Cards Explorer
-- Cards: Support mix of different card sizes in the same game
+- Game-Play: Enhanced Drawer Buttons
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Animation for card and stack actions
+- Cards: Animated highlight
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
+- Cards: Support mix of different card sizes in the same game
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Name-Plates indicating player seats
@@ -26,6 +28,7 @@ permalink: roadmap.html
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
+- CardGameDef: Set increments for Game-Play Points-Counter
 
 ## Backlog - Priority 2
 - Game-Play: Custom Tokens
@@ -61,7 +64,7 @@ permalink: roadmap.html
 - Games: Ability to re-skin CGS per game, changing the look of the buttons, background, scroll bar, etc
 
 ## Icebox - Priority 3
-- Integration: Json Schema Generation via https://github.com/json-everything/json-everything
+- Integration: Json Schema Generation via https://github.com/json-everything/json-everything and https://github.com/coveooss/json-schema-for-humans
 - Cards Explorer & Deck Editor: Add sorting + Sort Menu
 - Cards: Apply autoUpdate to cached images
 - Cards: Set card image cache limit

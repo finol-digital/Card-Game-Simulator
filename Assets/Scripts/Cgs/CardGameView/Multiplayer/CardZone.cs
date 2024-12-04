@@ -272,7 +272,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (Type == CardZoneType.Area)
                 cardModel.SnapToGrid();
 
-            if (cardModel.ToDiscard)
+            if (cardModel.ToDelete)
                 return;
 
             foreach (var onAddCardDelegate in OnAddCardActions)

@@ -170,7 +170,7 @@ namespace Cgs.CardGameView.Viewer
 
         public static void Discard(CardModel cardModel)
         {
-            cardModel.PromptDiscard();
+            cardModel.PromptDelete();
         }
 
         public void Hide()

@@ -51,8 +51,10 @@ namespace Cgs.Decks
         };
 
         private static int CardsPerZone =>
-            Mathf.FloorToInt(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y / CardPrefabHeight *
+            Mathf.FloorToInt(CardPrefabHeight / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) *
                              ResolutionIndexToCardsPerColumn[ResolutionManager.ResolutionIndex]);
+
+        private static float CardZoneWidth => CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X + 30;
 
         public List<CardModel> CardModels
         {
@@ -66,10 +68,6 @@ namespace Cgs.Decks
         }
 
         private List<CardZone> CardZones { get; } = new();
-
-        private float CardZoneWidth => _cardZoneWidth ??= cardZonePrefab.GetComponent<RectTransform>().rect.width;
-
-        private float? _cardZoneWidth;
 
         private DeckLoadMenu DeckLoader =>
             _deckLoader ??= Instantiate(deckLoadMenuPrefab).GetOrAddComponent<DeckLoadMenu>();
@@ -211,6 +209,8 @@ namespace Cgs.Decks
         private void AddCardZone()
         {
             var cardZone = Instantiate(cardZonePrefab, layoutContent).GetOrAddComponent<CardZone>();
+            var rectTransform = (RectTransform) cardZone.transform;
+            rectTransform.sizeDelta = new Vector2(CardZoneWidth, rectTransform.sizeDelta.y);
             cardZone.Type = CardZoneType.Vertical;
             cardZone.scrollRectContainer = scrollRect;
             cardZone.DoesImmediatelyRelease = true;
