@@ -28,6 +28,7 @@ permalink: roadmap.html
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
+- CardGameDef: Set increments for Game-Play Points-Counter
 
 ## Backlog - Priority 2
 - Game-Play: Custom Tokens
