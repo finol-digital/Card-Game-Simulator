@@ -243,18 +243,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == this || HoldTime > ZoomHoldTime)
                 RequestZoomOnThis();
 
-            if (ParentCardZone == null && CurrentDragPhase == DragPhase.End && !IsMovingToPlaceHolder)
-            {
-                Debug.LogWarning(
-                    "OnUpdatePlayable: ParentCardZone == null && CurrentDragPhase == DragPhase.End && !IsMovingToPlaceHolder");
-                if (PlaceHolder == null)
-                {
-                    Debug.LogWarning("OnUpdatePlayable: PlaceHolder == null");
-                    RecoverLostPlaceholder();
-                }
-
-                IsMovingToPlaceHolder = true;
-            }
+            UpdateCheckForPlaceHolder();
 
             UpdateForMovingToPlaceHolder();
         }
@@ -429,11 +418,10 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            if (DropTarget != null)
+            if (DropTarget != null && DropTarget.gameObject != gameObject)
             {
                 var dropTargetCardModel = DropTarget.GetComponent<CardModel>();
 
-                var shouldDeleteOnDropTarget = false;
                 if (Visibility.blocksRaycasts && ParentCardZone != null && ParentCardZone.Type == CardZoneType.Area
                     || PlaceHolderCardZone != null && PlaceHolderCardZone.Type == CardZoneType.Area
                     || dropTargetCardModel != null && dropTargetCardModel.ParentCardZone != null &&
@@ -445,16 +433,15 @@ namespace Cgs.CardGameView.Multiplayer
                     if (isPointerOverDropTarget)
                     {
                         DropTarget.OnDrop(eventData);
-                        shouldDeleteOnDropTarget = PlaySettings.AutoStackCards || dropTargetCardModel == null;
-                        Debug.LogWarning("shouldDeleteOnDropTarget: " + shouldDeleteOnDropTarget);
-                    }
-                }
+                        var shouldDeleteOnDropTarget = PlaySettings.AutoStackCards || dropTargetCardModel == null;
 
-                if (shouldDeleteOnDropTarget)
-                {
-                    Debug.Log("PostDragPlayable::shouldDeleteOnDropTarget");
-                    RequestDelete();
-                    return;
+                        if (shouldDeleteOnDropTarget)
+                        {
+                            Debug.Log("PostDragPlayable::shouldDeleteOnDropTarget");
+                            RequestDelete();
+                            return;
+                        }
+                    }
                 }
 
                 if (dropTargetCardModel != null && dropTargetCardModel.ParentCardZone != null &&
@@ -579,7 +566,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsStatic)
                 return;
 
-            if (DropTarget != null && DropTarget.isBlocker && ParentCardZone != null)
+            if (DropTarget != null && DropTarget.isBlocker && DropTarget.gameObject != gameObject
+                && ParentCardZone != null)
                 ParentToCanvas(targetPosition);
 
             if (PlaceHolderCardZone != null)
@@ -625,6 +613,20 @@ namespace Cgs.CardGameView.Multiplayer
                 cardZone.UpdateScrollRect(CurrentDragPhase, CurrentPointerEventData);
         }
 
+        private void UpdateCheckForPlaceHolder()
+        {
+            if (ParentCardZone != null || CurrentDragPhase != DragPhase.End)
+                return;
+
+            if (PlaceHolder == null)
+            {
+                Debug.LogWarning("UpdateCheckForPlaceHolder: PlaceHolder == null");
+                RecoverLostPlaceholder();
+            }
+
+            IsMovingToPlaceHolder = true;
+        }
+
         private void UpdateForMovingToPlaceHolder()
         {
             if (!IsMovingToPlaceHolder)
@@ -637,6 +639,20 @@ namespace Cgs.CardGameView.Multiplayer
             }
             else
                 FinishMovingToPlaceHolder();
+        }
+
+        private void RecoverLostPlaceholder()
+        {
+            if (PlayController.Instance == null)
+            {
+                Debug.LogWarning("RecoverLostPlaceholder: PlayController.Instance == null");
+                RequestDelete();
+                return;
+            }
+
+            PlaceHolderCardZone = PlayController.Instance.playAreaCardZone;
+            if (!Vector2.zero.Equals(Position))
+                PlaceHolder.localPosition = Position;
         }
 
         private void FinishMovingToPlaceHolder()
@@ -657,22 +673,9 @@ namespace Cgs.CardGameView.Multiplayer
             if (ParentCardZone != null)
                 ParentCardZone.OnAdd(this);
 
-            PlaceHolder = null;
+            PlaceHolderCardZone = null;
             Visibility.blocksRaycasts = true;
             IsMovingToPlaceHolder = false;
-        }
-
-        private void RecoverLostPlaceholder()
-        {
-            if (PlayController.Instance == null)
-            {
-                RequestDelete();
-                return;
-            }
-
-            PlaceHolderCardZone = PlayController.Instance.playAreaCardZone;
-            if (!Vector2.zero.Equals(Position))
-                PlaceHolder.localPosition = Position;
         }
 
         private void ParentToCanvas(Vector3 targetPosition)

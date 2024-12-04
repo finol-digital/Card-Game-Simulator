@@ -110,16 +110,15 @@ namespace Cgs.CardGameView.Multiplayer
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
         protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
-
-        protected bool DidSelectOnDown { get; set; }
-        protected bool DidDrag { get; set; }
         protected DragPhase CurrentDragPhase { get; private set; }
+        protected bool DidDrag { get; set; }
+        protected bool DidSelectOnDown { get; set; }
         protected float HoldTime { get; private set; }
 
         private float _disownedTime;
         private Vector2 _previousPosition;
 
-        public bool ToDelete { get; protected set; }
+        public bool ToDelete { get; private set; }
 
         public virtual string ViewValue => "<Playable:Value>";
 
