@@ -143,7 +143,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.0.0
+  bundleVersion: 1.123.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -931,12 +931,12 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
-  metroPackageVersion: 0.0.0.0
-  metroCertificatePath: Card Game Simulator_StoreKey.pfx
+  metroPackageVersion: 1.123.0.0
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 80d5f508fdf5d901
+  metroCertificateNotAfter: 006d661e3c67dc01
   metroApplicationDescription: Create, Share, and Play
   wsaImages:
     65636: Assets/Sprites and Textures/UWP/StoreLogo.scale-100.png

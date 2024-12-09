@@ -1,5 +1,7 @@
 name: Test, Build, and Deploy with GameCI
 concurrency: unity
+env:
+  UNITY_VERSION: 6000.0.30f1
 on:
   push:
     branches:
@@ -37,6 +39,9 @@ jobs:
       checks: write
       contents: write
     steps:
+      - name: Pre-pull Unity Docker image
+        run: |
+          docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-il2cpp-3 &
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -87,7 +92,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-6000.0.23f1-linux-il2cpp-3
+    container: unityci/editor:ubuntu-${{ env.UNITY_VERSION }}-linux-il2cpp-3
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -162,6 +167,9 @@ jobs:
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     steps:
+      - name: Pre-pull Unity Docker image
+        run: |
+          docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-${{ matrix.targetPlatform }}-3 &
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -710,11 +718,12 @@ jobs:
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
+          UnityWsaPlayerDir: ${{ format('C:\Program Files\Unity\Hub\Editor\{0}\Editor\Data\PlaybackEngines\MetroSupport\', env.UNITY_VERSION) }}
           WsaPlayerDirectory: build\WSAPlayer\WSAPlayer
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
         run: |
           [xml]$manifest = get-content ".\$env:WsaPlayerDirectory\UnityCommon.props"
-          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "C:\Program Files\Unity\Hub\Editor\6000.0.23f1-x86_64\Editor\Data\PlaybackEngines\MetroSupport\"
+          $manifest.Project.PropertyGroup.UnityWSAPlayerDir = "$env:UnityWsaPlayerDir"
           $manifest.save(".\$env:WsaPlayerDirectory\UnityCommon.props")
           echo ".\$env:WsaPlayerDirectory\UnityCommon.props"
           cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
@@ -807,7 +816,7 @@ jobs:
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
       - name: Build the .appxupload
-#        if: false
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -815,7 +824,7 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x86|x64|arm|arm64" /p:PackageCertificateKeyFile=$env:SigningCertificate
       - name: Remove the .pfx
-#        if: false
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -823,7 +832,7 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
       - name: Copy .appxupload
-#        if: false
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -831,6 +840,7 @@ jobs:
           upload_path: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
         run: Copy-Item ".\$env:APPX_PATH" -Destination ".\$env:upload_path"
       - name: Upload .appxupload
+        if: false
         uses: actions/upload-artifact@v4
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
