@@ -380,6 +380,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             cardModel.PlaceHolderCardZone = null;
             RequestInsert(Cards.Count, cardModel.Id);
+            cardModel.RequestDelete();
         }
 
         public void OnDrop(CardStack cardStack)

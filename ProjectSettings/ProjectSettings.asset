@@ -932,11 +932,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: CardGameSimulator
   metroPackageVersion: 0.0.0.0
-  metroCertificatePath: Card Game Simulator_StoreKey.pfx
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Finol Digital LLC
   metroCertificateIssuer: Finol Digital LLC
-  metroCertificateNotAfter: 80d5f508fdf5d901
+  metroCertificateNotAfter: 006d661e3c67dc01
   metroApplicationDescription: Create, Share, and Play
   wsaImages:
     65636: Assets/Sprites and Textures/UWP/StoreLogo.scale-100.png

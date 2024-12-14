@@ -13,7 +13,7 @@ jobs:
         id: versioning
         uses: paulhatch/semantic-version@v5.4.0
         with:
-          version_format: "${major}.${minor}"
+          version_format: "${major}.${minor}.${patch}"
           minor_pattern: "(MINOR)"
           bump_each_commit: true
           debug: true
