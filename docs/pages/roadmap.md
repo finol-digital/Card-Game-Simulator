@@ -4,32 +4,41 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.124
-- Bug-Fix: Cards stacking in center of Play Area
-
-## Sprint - Priority 1
-- Bug-Fix: macOS Mission Control freezes
-- Bug-Fix: Importing more than 200 cards fails
-- Bug-Fix: Deck Editor slows when loading too many cards
+## What's New - v1.125
+- Build Windows
+- Fix GA Spoilers (update rate + error on load)
+- Fix playing of default cards after game sync
+- Cards: Animated highlight
+https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
+https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020
+https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/HOWTO-ShaderGraph.html
 - Cards: Select left and right on zoom in Cards Explorer
 - Game-Play: Enhanced Drawer Buttons
+
+## Sprint - Priority 1
+- Bugs: https://github.com/finol-digital/Card-Game-Simulator/issues
 - Game-Play: Move card to zone, stack, or drawer (E)
 - Game-Play: Animation for card and stack actions
-- Cards: Animated highlight
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
-- Cards: Support mix of different card sizes in the same game
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Name-Plates indicating player seats
+- CardGameDef: Support mix of different card sizes in the same game
+- CardGameDef: Set increments for Game-Play Points-Counter (gamePlayPointsIncrement)
+- Platforms: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
+- Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
+- Platforms: Full controller support (Steam)
+- Platforms: Multi-player and Developer Mode on Web
+
+## Backlog - Priority 2
+- Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.link)
 - Game-Play: Display values on Card in Play Area
 - Game-Play: Counter system for players and cards (Dice grouping/parenting)
 - Game-Play: Support multiple card selection
 - Game-Play: Cut/Copy/Paste Cards
 - Game-Play: Undo with Ctrl-Z
 - Game-Play: Save/Load Sessions + Log of all (Player) actions
-- CardGameDef: Set increments for Game-Play Points-Counter
-
-## Backlog - Priority 2
+- Deck-Editor: Save with Ctrl-S
 - Game-Play: Custom Tokens
 - Game-Play: Flip Random for tokens
 - Game-Play: Rename Stacks
@@ -43,10 +52,6 @@ permalink: roadmap.html
   - Option for card count limits, i.e. 3 copies per deck
   - Option to have a hard deck size limit applied, as well as for extras, I.e. 50 card main deck, 5 card extra deck
 - Game-Play: Support multiple playmats
-- Game-Play: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
-- Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
-- Platforms: Full controller support (Steam)
-- Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.link)
 - Platforms: Android widgets
 - Accessibility: Add audio and sounds throughout the app
 - Accessibility: Wiki-page for Playing a Game 
