@@ -6,7 +6,7 @@ permalink: roadmap.html
 
 ## What's New - v1.125
 - Build Windows
-- Fix GA Spoilers (update rate + error on load)
+- Fix GA Spoilers (update rate + error on load, switch between spoilers and non?)
 - Fix playing of default cards after game sync
 - Cards: Animated highlight
 https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file

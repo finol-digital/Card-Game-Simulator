@@ -66,7 +66,14 @@ namespace Cgs.Play.Multiplayer
             {
                 var cardStacks = new List<CardStack>();
                 foreach (var cardStack in _cardStacks)
-                    cardStacks.Add(((NetworkObject) cardStack).GetComponent<CardStack>());
+                {
+                    var networkObject = (NetworkObject) cardStack;
+                    if (networkObject == null)
+                        continue;
+                    var cardStackObject = networkObject.GetComponent<CardStack>();
+                    if (cardStackObject != null)
+                        cardStacks.Add(cardStackObject);
+                }
                 return cardStacks;
             }
         }
