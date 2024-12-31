@@ -6,6 +6,9 @@ permalink: roadmap.html
 
 ## What's New - v1.125
 - Build Windows
+- Edit cgs.gg icon(s) to have logo color
+- file loads for games management menu
+- bugs report from user
 - Fix GA Spoilers (update rate + error on load, switch between spoilers and non?)
 - Fix playing of default cards after game sync
 - Cards: Animated highlight
