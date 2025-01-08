@@ -25,6 +25,8 @@ namespace Cgs.Decks
     [RequireComponent(typeof(Modal))]
     public class DeckLoadMenu : SelectionPanel
     {
+        public const string Untitled = "Untitled";
+
         public const string DecInstructions =
             "//On each line, enter:\n//<Quantity> <Card Name>\n//For example:\n4 Super Awesome Card\n3 Less Awesome Card I Still Like\n1 Card That Is Situational";
 
@@ -43,6 +45,7 @@ namespace Cgs.Decks
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
 
         public Button deleteFileButton;
+        public Button editFileButton;
         public Button shareFileButton;
         public Button loadFromFileButton;
 
@@ -100,6 +103,8 @@ namespace Cgs.Decks
                     EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
                 else if (Inputs.IsSort && shareFileButton.interactable)
                     Share();
+                else if (Inputs.IsLoad && editFileButton.interactable)
+                    Edit();
                 else if (Inputs.IsNew)
                     ShowNewDeckPanel();
                 else if (Inputs.IsOption && deleteFileButton.interactable)
@@ -157,6 +162,7 @@ namespace Cgs.Decks
 
             Rebuild(_deckFiles, SelectFile, _selectedFilePath);
 
+            editFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
             shareFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
             deleteFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
             loadFromFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
@@ -168,6 +174,7 @@ namespace Cgs.Decks
             if (string.IsNullOrEmpty(deckFilePath))
             {
                 _selectedFilePath = string.Empty;
+                editFileButton.interactable = false;
                 shareFileButton.interactable = false;
                 deleteFileButton.interactable = false;
                 loadFromFileButton.interactable = false;
@@ -177,6 +184,7 @@ namespace Cgs.Decks
             if (toggle != null && toggle.isOn)
             {
                 _selectedFilePath = deckFilePath;
+                editFileButton.interactable = true;
                 shareFileButton.interactable = true;
                 deleteFileButton.interactable = true;
                 loadFromFileButton.interactable = true;
@@ -230,6 +238,28 @@ namespace Cgs.Decks
         }
 
         [UsedImplicitly]
+        public void Edit()
+        {
+            if (string.IsNullOrEmpty(_selectedFilePath) || !File.Exists(_selectedFilePath))
+            {
+                Debug.LogError("Edit missing _selectedFilePath!");
+                return;
+            }
+
+            newDeckPanel.gameObject.SetActive(true);
+
+            try
+            {
+                nameInputField.text = GetNameFromPath(_selectedFilePath);
+                textInputField.text = File.ReadAllText(_selectedFilePath);
+            }
+            catch
+            {
+                Debug.LogWarning("Edit had _selectedFilePath but failed to load it");
+            }
+        }
+
+        [UsedImplicitly]
         public void Share()
         {
             try
@@ -271,19 +301,8 @@ namespace Cgs.Decks
         public void ShowNewDeckPanel()
         {
             newDeckPanel.gameObject.SetActive(true);
-
-            if (string.IsNullOrEmpty(_selectedFilePath) || !File.Exists(_selectedFilePath))
-                return;
-
-            try
-            {
-                nameInputField.text = GetNameFromPath(_selectedFilePath);
-                textInputField.text = File.ReadAllText(_selectedFilePath);
-            }
-            catch
-            {
-                Debug.LogWarning("ShowNewDeckPanel had _selectedFilePath but failed to load it");
-            }
+            nameInputField.text = Untitled;
+            textInputField.text = string.Empty;
         }
 
         [UsedImplicitly]
