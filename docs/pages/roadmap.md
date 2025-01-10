@@ -8,12 +8,11 @@ permalink: roadmap.html
 autoupdate = 0
 move card to zone from field
 allow rotation in deckPositions
-- Edit cgs.gg icon(s) to have logo color
 - file loads for games management menu
-- bugs report from user
+if a player that isnt host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
 - Fix GA Spoilers (update rate + error on load, switch between spoilers and non?)
 - Fix playing of default cards after game sync
-show hands to each other
+- Edit cgs.gg icon(s) to have logo color
 - Cards: Animated highlight
 https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
 https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020
@@ -27,6 +26,7 @@ https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/HOWTO-ShaderGraph.ht
 - Game-Play: Animation for card and stack actions
 - Game-Play: Special action buttons (i.e. button to reset rotation for all cards, button to turn all cards faceup, etc.)
 - Game-Play: Apply permissions for each other's decks/stacks/cards, shuffling, moving, deleting, viewing facedown, etc
+- Game-Play: Allow players to reveal/show hands to each other
 - Game-Play: Label which player is interacting with cards/playables
 - Game-Play: Name-Plates indicating player seats
 - CardGameDef: Support mix of different card sizes in the same game
