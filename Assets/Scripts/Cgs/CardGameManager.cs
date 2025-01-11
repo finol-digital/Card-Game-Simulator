@@ -543,18 +543,15 @@ namespace Cgs
                 Messenger.Show(string.Format(CardsLoadedMessage, cardGame.Name));
         }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private IEnumerator LoadSetCards(UnityCardGame cardGame)
         {
             cardGame ??= Current;
 
-            var setCardsLoaded = false;
-            foreach (var set in cardGame.Sets.Values)
+            foreach (var set in cardGame.Sets.Values.ToList())
             {
                 if (string.IsNullOrEmpty(set.CardsUrl))
                     continue;
-                if (!setCardsLoaded)
-                    Messenger.Show(string.Format(SetCardsLoadingMessage, cardGame.Name));
-                setCardsLoaded = true;
                 var setCardsFilePath = Path.Combine(cardGame.SetsDirectoryPath,
                     UnityFileMethods.GetSafeFileName(set.Code + UnityFileMethods.JsonExtension));
                 if (!File.Exists(setCardsFilePath))
@@ -570,8 +567,6 @@ namespace Cgs
 
             if (!string.IsNullOrEmpty(cardGame.Error))
                 Debug.LogError(LoadErrorMessage + cardGame.Error);
-            else if (setCardsLoaded)
-                Messenger.Show(string.Format(SetCardsLoadedMessage, cardGame.Name));
         }
 
         public void Select(string gameId)
