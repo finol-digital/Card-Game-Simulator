@@ -517,7 +517,7 @@ namespace Cgs
                 cardGame.ClearError();
             }
 
-            cardGame.Load(UpdateCardGame, LoadCards, LoadSetCards);
+            cardGame.Load(null, LoadCards, LoadSetCards);
             if (cardGame == Current)
                 ResetGameScene();
         }

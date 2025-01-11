@@ -5,7 +5,8 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.125
-autoupdate = 0
+- Fix setting autoUpdate = 0 in CardGameDef.json
+
 move card to zone from field
 allow rotation in deckPositions
 - file loads for games management menu
