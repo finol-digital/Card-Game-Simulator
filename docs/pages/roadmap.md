@@ -6,18 +6,17 @@ permalink: roadmap.html
 
 ## What's New - v1.125
 - Fix setting autoUpdate = 0 in CardGameDef.json
-- Fix moving card to zone from field
+- Fix moving card to zone from play area
 - Fix playing of default cards after game sync
 - Fix file loads for games management menu
-
 
 ## Sprint - Priority 1
 - Bugs: https://github.com/finol-digital/Card-Game-Simulator/issues
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
 - Cards: Animated highlight
-https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
-https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020
-https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/HOWTO-ShaderGraph.html
+  - https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
+  - https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020
+  - https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/HOWTO-ShaderGraph.html
 - Cards: Select left and right on zoom in Cards Explorer
 - Game-Play: Enhanced Drawer Buttons (Drop-down target for Deal and current for Hand)
 - Game-Play: Move card to zone, stack, or drawer (E)
