@@ -216,6 +216,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             if (isRedo)
             {
                 DeckUrls.Clear();
+                GameStartDecks.Clear();
                 LoadedSets.Clear();
                 LoadedCards.Clear();
                 CardNames.Clear();
