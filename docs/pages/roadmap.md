@@ -8,7 +8,6 @@ permalink: roadmap.html
 - Fix setting autoUpdate = 0 in CardGameDef.json
 - Fix moving card to zone from play area
 - Fix playing of default cards after game sync
-- Fix file loads for games management menu
 
 ## Sprint - Priority 1
 - Bugs: https://github.com/finol-digital/Card-Game-Simulator/issues
