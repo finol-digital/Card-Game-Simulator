@@ -47,6 +47,9 @@ namespace Cgs.CardGameView.Viewer
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
 
+            if (CardViewer.Instance.SelectedCardModel == null)
+                return;
+
             rotateButton.interactable =
                 CardViewer.Instance.SelectedCardModel.ParentCardZone != null &&
                 CardViewer.Instance.SelectedCardModel.ParentCardZone.allowsRotation;

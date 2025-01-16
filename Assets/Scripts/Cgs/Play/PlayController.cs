@@ -127,6 +127,8 @@ namespace Cgs.Play
 
         private IEnumerable<CardStack> AllCardStacks => playAreaCardZone.GetComponentsInChildren<CardStack>();
 
+        public IEnumerable<CardZone> AllCardZones => playAreaCardZone.GetComponentsInChildren<CardZone>();
+
         public LobbyMenu Lobby => _lobby ??= Instantiate(lobbyMenuPrefab).GetOrAddComponent<LobbyMenu>();
 
         private LobbyMenu _lobby;

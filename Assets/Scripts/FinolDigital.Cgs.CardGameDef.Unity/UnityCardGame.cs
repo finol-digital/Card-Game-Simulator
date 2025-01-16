@@ -216,6 +216,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             if (isRedo)
             {
                 DeckUrls.Clear();
+                GameStartDecks.Clear();
                 LoadedSets.Clear();
                 LoadedCards.Clear();
                 CardNames.Clear();
@@ -441,7 +442,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                 Debug.Log($"Unable to determine last update date for {Name}. Assuming today.");
             }
 
-            var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate;
+            var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && updateCoroutine != null;
             if (shouldUpdate)
             {
                 if (CoroutineRunner != null)

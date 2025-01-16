@@ -204,7 +204,7 @@ namespace Cgs.Play.Multiplayer
                 throw;
             }
 
-            return Tuple.Create(new RelayServerData(allocation, "dtls"), relayJoinCode);
+            return Tuple.Create(allocation.ToRelayServerData("dtls"), relayJoinCode);
         }
 
         private static async Task<Lobby> CreateLobby(RelayServerData relayServerData, string relayJoinCode)
@@ -414,7 +414,7 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet] host: {allocation.HostConnectionData[0]} {allocation.HostConnectionData[1]}");
             Debug.Log($"[CgsNet] client: {allocation.AllocationId}");
 
-            return new RelayServerData(allocation, "dtls");
+            return allocation.ToRelayServerData("dtls");
         }
 
         private async Task UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)

@@ -98,7 +98,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             get
             {
-                if (!CgsNetManager.Instance.IsOnline)
+                if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline)
                     return _cards;
 
                 _cards = new List<UnityCard>();
