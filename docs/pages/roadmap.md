@@ -4,13 +4,11 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.125
-- Fix setting autoUpdate = 0 in CardGameDef.json
-- Fix moving card to zone from play area
-- Fix playing of default cards after game sync
+## What's New - v1.126
+
 
 ## Sprint - Priority 1
-- Bugs: https://github.com/finol-digital/Card-Game-Simulator/issues
+- Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
 - Cards: Animated highlight
   - https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
