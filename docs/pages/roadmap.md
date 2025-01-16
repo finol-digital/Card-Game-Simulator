@@ -14,6 +14,7 @@ permalink: roadmap.html
   - https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
   - https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020
   - https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/HOWTO-ShaderGraph.html
+  - https://codesandbox.io/p/sandbox/css-animated-borders-lndvrx?file=%2Fsrc%2Fstyles.css&from-embed
 - Cards: Select left and right on zoom in Cards Explorer
 - Game-Play: Enhanced Drawer Buttons (Drop-down target for Deal and current for Hand)
 - Game-Play: Move card to zone, stack, or drawer (E)
