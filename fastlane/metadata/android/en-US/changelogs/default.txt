@@ -1,1 +1,3 @@
-Bug-Fix: Cards stacking in center of Play Area
+- Fix setting autoUpdate = 0 in CardGameDef.json
+- Fix moving card to zone from play area
+- Fix playing of default cards after game sync
