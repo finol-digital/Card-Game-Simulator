@@ -15,6 +15,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
+### android playtest
+
+```sh
+[bundle exec] fastlane android playtest
+```
+
+Upload a new Android version to the Google Play Store
+
 ### android playprod
 
 ```sh
@@ -27,6 +35,22 @@ Upload a new Android version to the Google Play Store
 
 
 ## iOS
+
+### ios init_ci
+
+```sh
+[bundle exec] fastlane ios init_ci
+```
+
+Initialize for GitHub Actions
+
+### ios sync_certificates
+
+```sh
+[bundle exec] fastlane ios sync_certificates
+```
+
+Sync codesigning certificates
 
 ### ios release
 
