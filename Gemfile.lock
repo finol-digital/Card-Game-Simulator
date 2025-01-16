@@ -5,6 +5,7 @@ GEM
       base64
       nkf
       rexml
+    abbrev (0.1.2)
     activesupport (7.2.2.1)
       base64
       benchmark (>= 0.3)
@@ -230,6 +231,7 @@ GEM
     molinillo (0.8.0)
     multi_json (1.15.0)
     multipart-post (2.4.1)
+    mutex_m (0.3.0)
     nanaimo (0.4.0)
     nap (1.1.0)
     naturally (2.2.1)
@@ -293,8 +295,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  abbrev
   cocoapods
   fastlane
+  mutex_m
 
 BUNDLED WITH
    2.6.2
