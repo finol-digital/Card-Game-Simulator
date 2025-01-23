@@ -1,1 +1,1 @@
-- Standardized the CGS Card Game Specification with FinolDigital.Cgs.Json and cgs.json
+Game-Deleting Bug-Fix!
