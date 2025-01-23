@@ -7,7 +7,6 @@ permalink: roadmap.html
 ## What's New - v1.129
 test flight & unit tests/coverage
 
-
 ## Sprint - Priority 1
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
 - Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
