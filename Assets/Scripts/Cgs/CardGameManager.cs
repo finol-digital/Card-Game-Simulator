@@ -211,7 +211,7 @@ namespace Cgs
                 var newCardGame = new UnityCardGame(this, gameDirectoryName);
                 newCardGame.ReadProperties();
                 if (!string.IsNullOrEmpty(newCardGame.Error))
-                    Messenger.Ask(LoadErrorDeletePrompt + newCardGame.Id, () => { },
+                    Messenger.Ask(LoadErrorDeletePrompt + gameDirectoryName, () => { },
                         () => { Directory.Delete(gameDirectory, true); });
                 else
                     AllCardGames[newCardGame.Id] = newCardGame;

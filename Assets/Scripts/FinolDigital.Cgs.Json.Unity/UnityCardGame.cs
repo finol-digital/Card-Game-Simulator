@@ -184,7 +184,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 JsonConvert.PopulateObject(File.ReadAllText(gameFilePath), this);
                 RefreshId();
 
-                if (!gameDirectoryPath.Equals(GameDirectoryPath))
+                if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath) && !Directory.Exists(GameDirectoryPath))
                     Directory.Move(gameDirectoryPath, GameDirectoryPath);
 
                 if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath) && !File.Exists(GameFilePath))

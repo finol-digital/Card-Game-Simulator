@@ -10,6 +10,10 @@ Bug Fix
 ## Sprint - Priority 1
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
 - Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
+- Have a set starting hand consisting of specific cards
+- Be able to change what Deck the "Draw" button is bound to (player specific)
+- Load specific decks when the game is created in multiplayer mode, right now it only works for singleplayer
+- Allow mobile users to either lock rotation or move around the playmat with 1 finger 
 - Deck Editor: Options for Deck File Format
 - Integration: Associate native app with cgs.gg
 - Platforms: Multi-player and Developer Mode on Web
