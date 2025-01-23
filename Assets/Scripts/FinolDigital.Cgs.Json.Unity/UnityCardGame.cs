@@ -174,25 +174,21 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             try
             {
-                // We need to read the cgs.json file, but reading it can cause *Game:Name/ID* to change, so account for that
+                // We need to read the cgs.json file, but reading it can cause *Game:ID* to change, so account for that
+                var gameDirectoryPath = GameDirectoryPath;
                 var gameFilePath = GameFilePath;
                 if (!File.Exists(gameFilePath))
                     gameFilePath = GameBackupFilePath;
-                var gameDirectoryPath = GameDirectoryPath;
 
                 ClearDefinitionLists();
                 JsonConvert.PopulateObject(File.ReadAllText(gameFilePath), this);
                 RefreshId();
-                if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath))
-                {
-                    var newGameFilePath =
-                        Path.Combine(gameDirectoryPath,
-                            UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
-                    File.Copy(gameFilePath, newGameFilePath, true);
-                }
 
-                if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath))
+                if (!gameDirectoryPath.Equals(GameDirectoryPath))
                     Directory.Move(gameDirectoryPath, GameDirectoryPath);
+
+                if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath) && !File.Exists(GameFilePath))
+                    File.Copy(gameFilePath, GameFilePath, true);
 
                 // We're being greedy about loading these now, since these could be shown before the game is selected
                 if (File.Exists(BannerImageFilePath))
