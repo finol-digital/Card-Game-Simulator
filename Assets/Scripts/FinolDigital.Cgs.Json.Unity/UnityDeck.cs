@@ -15,7 +15,7 @@ using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 #endif
 
-namespace FinolDigital.Cgs.CardGameDef.Unity
+namespace FinolDigital.Cgs.Json.Unity
 {
     public class UnityDeck : Deck
     {

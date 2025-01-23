@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cgs.UI;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;

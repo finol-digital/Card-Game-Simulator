@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using FinolDigital.Cgs.CardGameDef;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json;
+using FinolDigital.Cgs.Json.Unity;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Utilities;
 using UnityEngine;

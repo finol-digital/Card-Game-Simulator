@@ -8,7 +8,7 @@ using System.IO;
 using UnityEngine;
 using UnityExtensionMethods;
 
-namespace FinolDigital.Cgs.CardGameDef.Unity
+namespace FinolDigital.Cgs.Json.Unity
 {
     public class ImageQueueService
     {

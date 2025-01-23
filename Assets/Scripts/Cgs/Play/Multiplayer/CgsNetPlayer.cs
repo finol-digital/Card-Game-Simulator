@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Drawer;
-using FinolDigital.Cgs.CardGameDef;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json;
+using FinolDigital.Cgs.Json.Unity;
 using Unity.Netcode;
 using UnityEngine;
 

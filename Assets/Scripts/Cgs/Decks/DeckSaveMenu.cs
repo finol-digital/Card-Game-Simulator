@@ -5,8 +5,8 @@
 using System;
 using System.IO;
 using Cgs.Menu;
-using FinolDigital.Cgs.CardGameDef;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;

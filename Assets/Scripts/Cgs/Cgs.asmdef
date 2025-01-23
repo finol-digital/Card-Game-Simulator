@@ -24,7 +24,7 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "FinolDigital.Cgs.CardGameDef.dll",
+        "FinolDigital.Cgs.Json.dll",
         "Newtonsoft.Json.dll"
     ],
     "autoReferenced": false,

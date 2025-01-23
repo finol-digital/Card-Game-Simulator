@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;

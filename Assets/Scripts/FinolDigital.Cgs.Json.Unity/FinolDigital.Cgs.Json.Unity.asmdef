@@ -1,5 +1,5 @@
 {
-    "name": "FinolDigital.Cgs.CardGameDef.Unity",
+    "name": "FinolDigital.Cgs.Json.Unity",
     "rootNamespace": "",
     "references": [
         "GUID:d7528a878641bff40a1fd2651047d55f",

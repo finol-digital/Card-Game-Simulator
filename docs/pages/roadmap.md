@@ -5,11 +5,14 @@ permalink: roadmap.html
 # Roadmap
 
 ## What's New - v1.126
-
+- Standardized the CGS Card Game Specification with FinolDigital.Cgs.Json and cgs.json
 
 ## Sprint - Priority 1
-- Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
+- Decks: Deck Specific file format
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
+- Integration: Associate native app with cgs.gg
+- Platforms: Multi-player and Developer Mode on Web
+- Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Cards: Animated highlight
   - https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
   - https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020
@@ -30,7 +33,6 @@ permalink: roadmap.html
 - Platforms: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Platforms: Full controller support (Steam)
-- Platforms: Multi-player and Developer Mode on Web
 
 ## Backlog - Priority 2
 - Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.link)
