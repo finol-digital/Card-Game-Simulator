@@ -4,8 +4,8 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.127
-Game-Deleting Bug-Fix!
+## What's New - v1.128
+Bug Fix
 
 ## Sprint - Priority 1
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
