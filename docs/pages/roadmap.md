@@ -8,11 +8,11 @@ permalink: roadmap.html
 - Standardized the CGS Card Game Specification with FinolDigital.Cgs.Json and cgs.json
 
 ## Sprint - Priority 1
-- Decks: Deck Specific file format
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
+- Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
+- Deck Editor: Options for Deck File Format
 - Integration: Associate native app with cgs.gg
 - Platforms: Multi-player and Developer Mode on Web
-- Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
 - Cards: Animated highlight
   - https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
   - https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020

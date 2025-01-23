@@ -32,8 +32,10 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public string GameDirectoryPath => Path.Combine(GamesDirectoryPath, UnityFileMethods.GetSafeFileName(Id));
 
-        public string GameFilePath => Path.Combine(GameDirectoryPath,
+        public string GameBackupFilePath => Path.Combine(GameDirectoryPath,
             UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
+
+        public string GameFilePath => GameDirectoryPath + "/cgs.json";
 
         public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
         public string DecksFilePath => GameDirectoryPath + "/AllDecks.json";
@@ -160,6 +162,7 @@ namespace FinolDigital.Cgs.Json.Unity
         public void ClearDefinitionLists()
         {
             CardProperties.Clear();
+            DeckPlayCards.Clear();
             DeckUrls.Clear();
             Enums.Clear();
             Extras.Clear();
@@ -173,16 +176,18 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name/ID* to change, so account for that
                 var gameFilePath = GameFilePath;
+                if (!File.Exists(gameFilePath))
+                    gameFilePath = GameBackupFilePath;
                 var gameDirectoryPath = GameDirectoryPath;
                 ClearDefinitionLists();
-                JsonConvert.PopulateObject(File.ReadAllText(GameFilePath), this);
+                JsonConvert.PopulateObject(File.ReadAllText(gameFilePath), this);
                 RefreshId();
                 if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath))
                 {
-                    var tempGameFilePath =
+                    var newGameFilePath =
                         Path.Combine(gameDirectoryPath,
                             UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
-                    File.Move(gameFilePath, tempGameFilePath);
+                    File.Move(gameFilePath, newGameFilePath);
                 }
 
                 if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath))
@@ -224,7 +229,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
             // We should always first get the *Game:Name*.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: CardGameDef...";
+            DownloadStatus = "Downloading: Card Game Specification...";
             if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, GameFilePath);
             ReadProperties();
@@ -435,7 +440,10 @@ namespace FinolDigital.Cgs.Json.Unity
             var daysSinceUpdate = 0;
             try
             {
-                daysSinceUpdate = (int) DateTime.Today.Subtract(File.GetLastWriteTime(GameFilePath).Date).TotalDays;
+                var gameFilePath = GameFilePath;
+                if (!File.Exists(gameFilePath))
+                    gameFilePath = GameBackupFilePath;
+                daysSinceUpdate = (int) DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
             }
             catch
             {

@@ -1,7 +1,7 @@
 {
   "allCardsUrl": "https://www.cardgamesimulator.com/games/Dominoes/AllCards.json",
   "allSetsUrl": "https://www.cardgamesimulator.com/games/Dominoes/AllSets.json",
-  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Dominoes/Dominoes.json",
+  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Dominoes/cgs.json",
   "bannerImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/Banner.png",
   "cardBackImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/CardBack.png",
   "cardImageUrl": "https://www.cardgamesimulator.com/games/Dominoes/sets/{cardSet}/{cardId}.{cardImageFileType}",

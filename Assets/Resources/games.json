@@ -2,15 +2,15 @@
   "games": [
     {
       "name": "Arcmage",
-      "url": "https://www.cardgamesimulator.com/games/Arcmage/Arcmage.json"
+      "url": "https://www.cardgamesimulator.com/games/Arcmage/cgs.json"
     },
     {
       "name": "Grand Archive TCG",
-      "url": "https://www.cardgamesimulator.com/games/grand_archive/grand_archive.json"
+      "url": "https://www.cardgamesimulator.com/games/grand_archive/cgs.json"
     },
     {
       "name": "ZU Tiles",
-      "url": "https://www.cardgamesimulator.com/games/zu_tiles/zu_tiles.json"
+      "url": "https://www.cardgamesimulator.com/games/zu_tiles/cgs.json"
     }
   ]
 }
