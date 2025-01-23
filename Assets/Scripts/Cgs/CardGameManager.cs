@@ -30,10 +30,10 @@ namespace Cgs
         // Show all Debug.Log() to help with debugging?
         private const bool IsMessengerDebugLogVerbose = false;
         public const string PlayerPrefsDefaultGame = "DefaultGame";
-        public const string DefaultNameWarning = "Found game with default name. Deleting it.";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
         public const string DownloadErrorMessage = "Error downloading game!: ";
         public const string LoadErrorMessage = "Error loading game!: ";
+        public const string LoadErrorDeletePrompt = "Error loading game! Delete?: ";
 
         public const string FileNotFoundErrorMessage = "ERROR: File Not Found at {0}";
         public const string OverwriteGamePrompt = "Game already exists. Overwrite?";
@@ -208,28 +208,13 @@ namespace Cgs
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
                 var gameDirectoryName = gameDirectory[(UnityCardGame.GamesDirectoryPath.Length + 1)..];
-                var (gameName, _) = CardGame.GetNameAndHost(gameDirectoryName);
-                if (gameName.Equals(CardGame.DefaultName))
-                {
-                    Debug.LogWarning(DefaultNameWarning);
-                    try
-                    {
-                        Directory.Delete(gameDirectory, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogError(DeleteErrorMessage + ex.Message);
-                    }
-                }
+                var newCardGame = new UnityCardGame(this, gameDirectoryName);
+                newCardGame.ReadProperties();
+                if (!string.IsNullOrEmpty(newCardGame.Error))
+                    Messenger.Ask(LoadErrorDeletePrompt + gameDirectoryName, () => { },
+                        () => { Directory.Delete(gameDirectory, true); });
                 else
-                {
-                    var newCardGame = new UnityCardGame(this, gameDirectoryName);
-                    newCardGame.ReadProperties();
-                    if (!string.IsNullOrEmpty(newCardGame.Error))
-                        Debug.LogError(LoadErrorMessage + newCardGame.Error);
-                    else
-                        AllCardGames[newCardGame.Id] = newCardGame;
-                }
+                    AllCardGames[newCardGame.Id] = newCardGame;
             }
         }
 
