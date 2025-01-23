@@ -13,9 +13,9 @@ namespace Cgs
         public const string StandardPlayingCardsDirectoryName = "Standard Playing Cards@www.cardgamesimulator.com";
 
         public const string CgsWebsite = "https://www.cardgamesimulator.com/";
-        public const string DominoesUrl = "https://www.cardgamesimulator.com/games/Dominoes/Dominoes.json";
-        public const string MahjongUrl = "https://www.cardgamesimulator.com/games/Mahjong/Mahjong.json";
-        public const string StandardPlayingCardsUrl = "https://www.cardgamesimulator.com/games/Standard/Standard.json";
+        public const string DominoesUrl = "https://www.cardgamesimulator.com/games/Dominoes/cgs.json";
+        public const string MahjongUrl = "https://www.cardgamesimulator.com/games/Mahjong/cgs.json";
+        public const string StandardPlayingCardsUrl = "https://www.cardgamesimulator.com/games/Standard/cgs.json";
         public const string CgsGamesBrowseUrl = "https://cgs.games/browse";
     }
 }

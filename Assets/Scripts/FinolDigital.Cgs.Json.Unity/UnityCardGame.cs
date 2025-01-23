@@ -174,17 +174,11 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             try
             {
-                // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name/ID* to change, so account for that
+                // We need to read the cgs.json file, but reading it can cause *Game:Name/ID* to change, so account for that
                 var gameFilePath = GameFilePath;
                 if (!File.Exists(gameFilePath))
                     gameFilePath = GameBackupFilePath;
                 var gameDirectoryPath = GameDirectoryPath;
-                if (!File.Exists(gameFilePath))
-                {
-                    Error += "Game file not found.";
-                    HasReadProperties = false;
-                    return;
-                }
 
                 ClearDefinitionLists();
                 JsonConvert.PopulateObject(File.ReadAllText(gameFilePath), this);
@@ -194,9 +188,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     var newGameFilePath =
                         Path.Combine(gameDirectoryPath,
                             UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
-                    if (File.Exists(newGameFilePath))
-                        File.Delete(newGameFilePath);
-                    File.Move(gameFilePath, newGameFilePath);
+                    File.Copy(gameFilePath, newGameFilePath, true);
                 }
 
                 if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath))
