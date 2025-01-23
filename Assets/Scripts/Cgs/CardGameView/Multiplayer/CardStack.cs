@@ -11,7 +11,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Decks;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;

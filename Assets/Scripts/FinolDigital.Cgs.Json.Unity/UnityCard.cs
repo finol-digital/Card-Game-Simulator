@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityExtensionMethods;
 using Object = UnityEngine.Object;
 
-namespace FinolDigital.Cgs.CardGameDef.Unity
+namespace FinolDigital.Cgs.Json.Unity
 {
     public class UnityCard : Card
     {

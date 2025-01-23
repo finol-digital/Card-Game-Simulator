@@ -8,7 +8,7 @@ using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;

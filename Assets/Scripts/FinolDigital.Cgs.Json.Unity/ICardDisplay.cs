@@ -4,7 +4,7 @@
 
 using UnityEngine;
 
-namespace FinolDigital.Cgs.CardGameDef.Unity
+namespace FinolDigital.Cgs.Json.Unity
 {
     public interface ICardDisplay
     {

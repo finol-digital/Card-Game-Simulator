@@ -17,15 +17,15 @@ using Cgs.Menu;
 using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
 using Cgs.UI.ScrollRects;
-using FinolDigital.Cgs.CardGameDef;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
-using CardAction = FinolDigital.Cgs.CardGameDef.CardAction;
+using CardAction = FinolDigital.Cgs.Json.CardAction;
 
 namespace Cgs.Play
 {

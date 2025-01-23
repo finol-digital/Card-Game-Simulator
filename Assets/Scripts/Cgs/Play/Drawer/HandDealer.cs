@@ -4,7 +4,7 @@
 
 using Cgs.Menu;
 using Cgs.Play.Multiplayer;
-using FinolDigital.Cgs.CardGameDef;
+using FinolDigital.Cgs.Json;
 using JetBrains.Annotations;
 using UnityEngine.Events;
 using UnityEngine.UI;

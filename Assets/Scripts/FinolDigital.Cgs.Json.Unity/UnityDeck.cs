@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FinolDigital.Cgs.CardGameDef.Decks;
+using FinolDigital.Cgs.Json.Decks;
 using UnityExtensionMethods;
 #if !UNITY_WEBGL
 using Didstopia.PDFSharp;
@@ -15,7 +15,7 @@ using Didstopia.PDFSharp.Pdf;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 #endif
 
-namespace FinolDigital.Cgs.CardGameDef.Unity
+namespace FinolDigital.Cgs.Json.Unity
 {
     public class UnityDeck : Deck
     {

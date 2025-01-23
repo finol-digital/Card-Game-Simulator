@@ -1,21 +1,21 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "id": "https://cardgamesim.finoldigital.com/schema/AllCards.json",
-  "title": "CGS Custom Game - Cards",
+  "title": "CGS Card Game Specification - Cards",
   "description": "Lists out Card information. You should have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.",
   "items": {
     "title": "Card",
     "type": "object",
     "properties": {
-      "@CardGameDef.json#/properties/cardIdIdentifier": {
+      "$cgs.json#/properties/cardIdIdentifier": {
         "description": "The id of the Card",
         "type": "string"
       },
-      "@CardGameDef.json#/properties/cardNameIdentifier": {
+      "$cgs.json#/properties/cardNameIdentifier": {
         "description": "The name of the Card",
         "type": "string"
       },
-      "@CardGameDef.json#/properties/cardSetIdentifier": {
+      "$cgs.json/properties/cardSetIdentifier": {
         "description": "The code for the Card's Set",
         "type": "string"
       }
@@ -29,10 +29,10 @@
       }
     },
     "additionalProperties": {
-      "$ref": "@CardGameDef.json#/properties/cardProperties"
+      "$ref": "$cgs.json#/properties/cardProperties"
     },
     "required": [
-      "@CardGameDef.json#/properties/cardIdIdentifier"
+      "$cgs.json#/properties/cardIdIdentifier"
     ]
   },
   "type": "array",

@@ -10,8 +10,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Web;
 using Cgs.Menu;
-using FinolDigital.Cgs.CardGameDef;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
@@ -44,8 +44,6 @@ namespace Cgs
 
         public const string CardsLoadedMessage = "{0} cards loaded!";
         public const string CardsLoadingMessage = "{0} cards loading...";
-        public const string SetCardsLoadedMessage = "{0} set cards loaded!";
-        public const string SetCardsLoadingMessage = "{0} set cards loading...";
         public const string DeleteErrorMessage = "Error deleting game!: ";
         public const string DeleteWarningMessage = "Please download additional card games before deleting.";
 

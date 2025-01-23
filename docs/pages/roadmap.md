@@ -4,18 +4,20 @@ permalink: roadmap.html
 
 # Roadmap
 
-## What's New - v1.125
-- Fix setting autoUpdate = 0 in CardGameDef.json
-- Fix moving card to zone from play area
-- Fix playing of default cards after game sync
+## What's New - v1.126
+- Standardized the CGS Card Game Specification with FinolDigital.Cgs.Json and cgs.json
 
 ## Sprint - Priority 1
-- Bugs: https://github.com/finol-digital/Card-Game-Simulator/issues
 - Bug-Fix: If a player that isn't host in a multiplayer room draws cards too quickly it can bug out and some of the cards vanish without showing in hand
+- Bugs: [https://github.com/finol-digital/Card-Game-Simulator/issues](https://github.com/finol-digital/Card-Game-Simulator/issues)
+- Deck Editor: Options for Deck File Format
+- Integration: Associate native app with cgs.gg
+- Platforms: Multi-player and Developer Mode on Web
 - Cards: Animated highlight
   - https://github.com/PandaArcade/UIOutline/?tab=readme-ov-file
   - https://discussions.unity.com/t/pulsating-glow-effect-on-ui-button/148020
   - https://docs.unity3d.com/Packages/com.unity.ugui@2.0/manual/HOWTO-ShaderGraph.html
+  - https://codesandbox.io/p/sandbox/css-animated-borders-lndvrx?file=%2Fsrc%2Fstyles.css&from-embed
 - Cards: Select left and right on zoom in Cards Explorer
 - Game-Play: Enhanced Drawer Buttons (Drop-down target for Deal and current for Hand)
 - Game-Play: Move card to zone, stack, or drawer (E)
@@ -31,7 +33,6 @@ permalink: roadmap.html
 - Platforms: Setup gamepad and keyboard shortcuts/hotkeys for Game-Play and Settings
 - Platforms: Display gamepad and keyboard shortcuts/hotkeys in-app
 - Platforms: Full controller support (Steam)
-- Platforms: Multi-player and Developer Mode on Web
 
 ## Backlog - Priority 2
 - Integration: Private Lobbies & Deep links to join multiplayer rooms (cgs.link)

@@ -19,7 +19,7 @@ See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
 
 ## How to Create
 
-Refer to [the crash course on the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and [the Custom Card Game Docs](custom.html).
+Refer to [the crash course on the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and [the CGS custom card game specification](https://github.com/finol-digital/FinolDigital.Cgs.CardGameDef).
 
 ## How to Share
 

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cgs.Menu;
-using FinolDigital.Cgs.CardGameDef.Unity;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using SimpleFileBrowser;
 using TMPro;

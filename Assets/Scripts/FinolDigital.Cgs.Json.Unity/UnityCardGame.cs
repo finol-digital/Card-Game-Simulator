@@ -16,7 +16,7 @@ using UnityEngine;
 using UnityExtensionMethods;
 using Object = UnityEngine.Object;
 
-namespace FinolDigital.Cgs.CardGameDef.Unity
+namespace FinolDigital.Cgs.Json.Unity
 {
     public delegate void LoadJTokenDelegate(JToken jToken, string defaultValue);
 
@@ -32,8 +32,10 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 
         public string GameDirectoryPath => Path.Combine(GamesDirectoryPath, UnityFileMethods.GetSafeFileName(Id));
 
-        public string GameFilePath => Path.Combine(GameDirectoryPath,
+        public string GameBackupFilePath => Path.Combine(GameDirectoryPath,
             UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
+
+        public string GameFilePath => GameDirectoryPath + "/cgs.json";
 
         public string CardsFilePath => GameDirectoryPath + "/AllCards.json";
         public string DecksFilePath => GameDirectoryPath + "/AllDecks.json";
@@ -160,6 +162,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
         public void ClearDefinitionLists()
         {
             CardProperties.Clear();
+            DeckPlayCards.Clear();
             DeckUrls.Clear();
             Enums.Clear();
             Extras.Clear();
@@ -173,16 +176,27 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             {
                 // We need to read the *Game:Name*.json file, but reading it can cause *Game:Name/ID* to change, so account for that
                 var gameFilePath = GameFilePath;
+                if (!File.Exists(gameFilePath))
+                    gameFilePath = GameBackupFilePath;
                 var gameDirectoryPath = GameDirectoryPath;
+                if (!File.Exists(gameFilePath))
+                {
+                    Error += "Game file not found.";
+                    HasReadProperties = false;
+                    return;
+                }
+
                 ClearDefinitionLists();
-                JsonConvert.PopulateObject(File.ReadAllText(GameFilePath), this);
+                JsonConvert.PopulateObject(File.ReadAllText(gameFilePath), this);
                 RefreshId();
                 if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath))
                 {
-                    var tempGameFilePath =
+                    var newGameFilePath =
                         Path.Combine(gameDirectoryPath,
                             UnityFileMethods.GetSafeFileName(Name) + UnityFileMethods.JsonExtension);
-                    File.Move(gameFilePath, tempGameFilePath);
+                    if (File.Exists(newGameFilePath))
+                        File.Delete(newGameFilePath);
+                    File.Move(gameFilePath, newGameFilePath);
                 }
 
                 if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath))
@@ -224,7 +238,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
 
             // We should always first get the *Game:Name*.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
-            DownloadStatus = "Downloading: CardGameDef...";
+            DownloadStatus = "Downloading: Card Game Specification...";
             if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(AutoUpdateUrl.AbsoluteUri, GameFilePath);
             ReadProperties();
@@ -269,13 +283,13 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             }
 
             DownloadProgress = (3f + CardBackFaceImageUrls.Count) /
-                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
+                               (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: PlayMat";
             if (PlayMatImageUrl != null && PlayMatImageUrl.IsAbsoluteUri)
                 yield return UnityFileMethods.SaveUrlToFile(PlayMatImageUrl.AbsoluteUri, PlayMatImageFilePath);
 
             DownloadProgress = (4f + CardBackFaceImageUrls.Count) /
-                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
+                               (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Boards";
             foreach (var gameBoardUrl in GameBoardUrls.Where(gameBoardUrl =>
                          !string.IsNullOrEmpty(gameBoardUrl.Id) &&
@@ -284,7 +298,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                     GameBoardsDirectoryPath + "/" + gameBoardUrl.Id + "." + GameBoardImageFileType);
 
             DownloadProgress = (5f + CardBackFaceImageUrls.Count) /
-                (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
+                               (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Decks";
             string deckRequestBody = null;
             if (!string.IsNullOrEmpty(AllDecksUrlPostBodyContent))
@@ -325,7 +339,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             {
                 deck++;
                 DownloadProgress = (5f + CardBackFaceImageUrls.Count + deck) /
-                    (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
+                                   (8f + CardBackFaceImageUrls.Count + DeckUrls.Count + AllCardsUrlPageCount);
                 DownloadStatus = $"Downloading: Decks: {deck,5} / {DeckUrls.Count}";
 
                 if (string.IsNullOrEmpty(deckUrl.Name) || !deckUrl.IsAvailable)
@@ -435,7 +449,10 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
             var daysSinceUpdate = 0;
             try
             {
-                daysSinceUpdate = (int) DateTime.Today.Subtract(File.GetLastWriteTime(GameFilePath).Date).TotalDays;
+                var gameFilePath = GameFilePath;
+                if (!File.Exists(gameFilePath))
+                    gameFilePath = GameBackupFilePath;
+                daysSinceUpdate = (int) DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
             }
             catch
             {
@@ -482,6 +499,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         Object.Destroy(sprite.texture);
                         Object.Destroy(sprite);
                     }
+
                     CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
                 }
             }
@@ -765,6 +783,7 @@ namespace FinolDigital.Cgs.CardGameDef.Unity
                         LoadedCards[unityCard.Id] = unityCard;
                         isReprint = true;
                     }
+
                     foreach (var backId in backs)
                     {
                         if (string.Empty.Equals(backId))

@@ -16,17 +16,17 @@ namespace Cgs.CardGameView.Viewer
 
     public class CardActionPanel : MonoBehaviour
     {
-        public static IReadOnlyDictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> CardActionDictionary =>
-            _cardActionDictionary ??= new Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction>
+        public static IReadOnlyDictionary<FinolDigital.Cgs.Json.CardAction, CardAction> CardActionDictionary =>
+            _cardActionDictionary ??= new Dictionary<FinolDigital.Cgs.Json.CardAction, CardAction>
             {
-                [FinolDigital.Cgs.CardGameDef.CardAction.Move] = Move,
-                [FinolDigital.Cgs.CardGameDef.CardAction.Rotate] = Rotate,
-                [FinolDigital.Cgs.CardGameDef.CardAction.Tap] = Tap,
-                [FinolDigital.Cgs.CardGameDef.CardAction.Flip] = Flip,
-                [FinolDigital.Cgs.CardGameDef.CardAction.Discard] = Discard
+                [FinolDigital.Cgs.Json.CardAction.Move] = Move,
+                [FinolDigital.Cgs.Json.CardAction.Rotate] = Rotate,
+                [FinolDigital.Cgs.Json.CardAction.Tap] = Tap,
+                [FinolDigital.Cgs.Json.CardAction.Flip] = Flip,
+                [FinolDigital.Cgs.Json.CardAction.Discard] = Discard
             };
 
-        private static Dictionary<FinolDigital.Cgs.CardGameDef.CardAction, CardAction> _cardActionDictionary;
+        private static Dictionary<FinolDigital.Cgs.Json.CardAction, CardAction> _cardActionDictionary;
 
         public Button moveButton;
         public Button rotateButton;

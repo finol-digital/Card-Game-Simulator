@@ -1,7 +1,7 @@
 {
   "allCardsUrl": "https://www.cardgamesimulator.com/games/Standard/AllCards.json",
   "allSetsUrl": "https://www.cardgamesimulator.com/games/Standard/AllSets.json",
-  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Standard/Standard.json",
+  "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Standard/cgs.json",
   "bannerImageUrl": "https://www.cardgamesimulator.com/games/Standard/Banner.png",
   "cardBackFaceImageUrls": [
     {
