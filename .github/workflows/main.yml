@@ -450,8 +450,32 @@ jobs:
         with:
           lane: 'android playprod'
 
-  deployToFirebase:
-    name: Deploy to the Web via Firebase
+  deployToFirebaseTest:
+    name: Deploy to the Web via Firebase Test
+    runs-on: ubuntu-latest
+    needs: [tests, buildWithLinux]
+    if: needs.tests.outputs.isPr == 'true'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Download WebGL Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cgs-WebGL
+          path: build/WebGL
+      - name: Copy the WebGL build files to the Firebase public directory
+        run: cp -r build/WebGL/WebGL/Build/. firebase/public/Build
+      - name: Firebase Deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}
+          channelId: preview
+          projectId: card-game-simulator
+          entryPoint: firebase
+
+  deployToFirebaseProduction:
+    name: Deploy to the Web via Firebase Production
     runs-on: ubuntu-latest
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
@@ -887,7 +911,7 @@ jobs:
   announceReleaseToSocialMedia:
     name: Announce Release to Social Media
     runs-on: ubuntu-latest
-    needs: [buildWithWindows, deployToAppStore, deployToGooglePlayProduction, deployToFirebase, deployToMacAppStore, deployToSteam, deployToMicrosoftStore]
+    needs: [buildWithWindows, deployToAppStore, deployToGooglePlayProduction, deployToFirebaseProduction, deployToMacAppStore, deployToSteam, deployToMicrosoftStore]
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
