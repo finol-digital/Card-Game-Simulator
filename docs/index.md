@@ -35,9 +35,12 @@ Also consider joining our social media:
 
 [![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com) 
 [![alt text][2.1]][2] [GitHub](http://github.cardgamesimulator.com) 
+[![alt text][3.1]][3] [Bluesky](http://bluesky.cardgamesimulator.com) 
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
 [2.1]: https://i.imgur.com/AortmS7.png (github icon with padding)
+[3.1]: https://img.icons8.com/fluency/48/bluesky.png (bluesky)
 
 [1]: http://discord.cardgamesimulator.com
 [2]: http://github.cardgamesimulator.com
+[3]: http://bluesky.cardgamesimulator.com

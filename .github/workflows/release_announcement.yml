@@ -38,3 +38,10 @@ jobs:
         uses: Ilshidur/action-discord@0.3.2
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
+      - name: Bluesky Announcement
+        if: github.ref == 'refs/heads/main'
+        uses: myConsciousness/bluesky-post@v5
+        with:
+          text:  ${{ steps.prepare.outputs.ANNOUNCEMENT }}
+          identifier: ${{ secrets.BLUESKY_IDENTIFIER }}
+          password: ${{ secrets.BLUESKY_PASSWORD }}
