@@ -39,7 +39,7 @@ Also consider joining our social media:
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
 [2.1]: https://i.imgur.com/AortmS7.png (github icon with padding)
-[3.1]: https://img.icons8.com/fluency/48/bluesky.png (bluesky)
+[3.1]: https://i.imgur.com/be81cEw.png (bluesky icon with padding)
 
 [1]: http://discord.cardgamesimulator.com
 [2]: http://github.cardgamesimulator.com
