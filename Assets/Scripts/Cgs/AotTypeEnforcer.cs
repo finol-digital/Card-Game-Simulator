@@ -50,6 +50,7 @@ namespace Cgs
                 cardGame.CardImageFileType = string.Empty;
                 cardGame.CardImageProperty = string.Empty;
                 cardGame.CardImageUrl = string.Empty;
+                cardGame.CardNameBackIdentifier = string.Empty;
                 cardGame.CardNameIdentifier = string.Empty;
                 cardGame.CardNameIsUnique = false;
                 cardGame.CardPrimaryProperty = string.Empty;
@@ -61,6 +62,8 @@ namespace Cgs
                 propertyDef.DisplayEmptyFirst = false;
                 propertyDef.Name = string.Empty;
                 propertyDef.Type = PropertyType.String;
+                propertyDef.BackName = string.Empty;
+                propertyDef.FrontName = string.Empty;
                 var propertyDefValuePair = new PropertyDefValuePair();
                 propertyDefValuePair.Def = propertyDef;
                 propertyDefValuePair.Value = string.Empty;
