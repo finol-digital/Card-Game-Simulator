@@ -2,6 +2,6 @@
   {
     "set.name": "Spoilers from https://silvie.gg",
     "set.prefix": "Spoilers",
-    "cardsUrl": "https://cgs.games/api/proxy/silvie.gg/api/spoilers"
+    "cardsUrl": "https://cgs.games/api/proxy/silvie.gg/api/spoilers?page_size=300"
   }
 ]
