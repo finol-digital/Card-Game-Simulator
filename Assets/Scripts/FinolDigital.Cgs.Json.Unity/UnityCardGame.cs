@@ -758,7 +758,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                 ImageWebUrl = cardImageWebUrl
                             };
                         var backUnityCard =
-                            new UnityCard(this, backCardId, cardName, set.Key, cardBackProperties, isReprint, true,
+                            new UnityCard(this, backCardId, cardBackName, set.Key, cardBackProperties, isReprint, true,
                                 cardDuplicateId)
                             {
                                 ImageWebUrl = cardImageWebUrl
@@ -887,12 +887,28 @@ namespace FinolDigital.Cgs.Json.Unity
                         {
                             listTokens = cardJToken[identifier];
                             if (listTokens != null)
+                            {
                                 foreach (var jToken in listTokens)
                                 {
                                     if (listValueBuilder.Length > 0)
                                         listValueBuilder.Append(EnumDef.Delimiter);
                                     listValueBuilder.Append(jToken.Value<string>() ?? string.Empty);
                                 }
+
+                                if (listValueBuilder.Length == 0)
+                                {
+                                    var listTokensValueString  = listTokens.Value<string>();
+                                    if (!string.IsNullOrEmpty(listTokensValueString))
+                                    {
+                                        foreach (var valueChar in listTokensValueString.ToCharArray())
+                                        {
+                                            if (listValueBuilder.Length > 0)
+                                                listValueBuilder.Append(EnumDef.Delimiter);
+                                            listValueBuilder.Append(valueChar);
+                                        }
+                                    }
+                                }
+                            }
                         }
                         else
                         {
