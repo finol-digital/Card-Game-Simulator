@@ -758,7 +758,7 @@ namespace FinolDigital.Cgs.Json.Unity
                                 ImageWebUrl = cardImageWebUrl
                             };
                         var backUnityCard =
-                            new UnityCard(this, backCardId, cardName, set.Key, cardBackProperties, isReprint, true,
+                            new UnityCard(this, backCardId, cardBackName, set.Key, cardBackProperties, isReprint, true,
                                 cardDuplicateId)
                             {
                                 ImageWebUrl = cardImageWebUrl

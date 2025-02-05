@@ -160,7 +160,15 @@ namespace Cgs.CardGameView.Viewer
             if (cardModel.Value.IsBackFaceCard && !string.IsNullOrEmpty(cardModel.Value.BackFaceId)
                                                && CardGameManager.Current.Cards.TryGetValue(cardModel.Value.BackFaceId,
                                                    out var backFaceCard))
-                cardModel.Value = backFaceCard;
+            {
+                if (cardModel.Id.EndsWith("_b") && !cardModel.IsFacedown)
+                    cardModel.IsFacedown = true;
+                else
+                {
+                    cardModel.IsFacedown = false;
+                    cardModel.Value = backFaceCard;
+                }
+            }
             else
                 cardModel.IsFacedown = !cardModel.IsFacedown;
         }
