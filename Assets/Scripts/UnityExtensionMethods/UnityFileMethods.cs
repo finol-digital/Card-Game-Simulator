@@ -229,6 +229,11 @@ namespace UnityExtensionMethods
                 yield break;
             }
 
+#if UNITY_WEBGL
+            if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+                url = "https://cgs.games/api/proxy/" + url[8..];
+#endif
+
             var uriBuilder = url.StartsWith("http")
                 ? new UriBuilder(url)
                 {
