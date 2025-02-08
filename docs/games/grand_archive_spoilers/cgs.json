@@ -1,16 +1,16 @@
 {
 	"name": "Grand Archive (Spoilers)",
-	"allCardsUrl": "https://cgs.games/api/proxy/api.gatcg.com/cards/search",
+	"allCardsUrl": "https://api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
 	"allSetsUrl": "https://www.cardgamesimulator.com/games/grand_archive_spoilers/AllSets.json",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive_spoilers/cgs.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
 	"cardDataIdentifier": "data",
-	"cardIdIdentifier": "slug",
+	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
 	"cardImageProperty": "img_src",
-	"cardImageUrl": "https://cgs.games/api/proxy/ga-index-public.s3.us-west-2.amazonaws.com/cards/{editions[0].slug}.jpg",
+	"cardImageUrl": "https://api.gatcg.com{editions[0].image}",
 	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
@@ -93,13 +93,13 @@
 			"type": "objectList",
 			"properties": [
 				{
-					"name": "card_id",
-					"display": "Card Id",
+					"name": "slug",
+					"display": "Slug",
 					"type": "string"
 				},
 				{
-					"name": "slug",
-					"display": "Slug",
+					"name": "image",
+					"display": "Image",
 					"type": "string"
 				},
 				{

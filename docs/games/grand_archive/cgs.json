@@ -1,6 +1,6 @@
 {
 	"name": "Grand Archive TCG",
-	"allCardsUrl": "https://cgs.games/api/proxy/api.gatcg.com/cards/search",
+	"allCardsUrl": "https://api.gatcg.com/cards/search",
 	"allCardsUrlPageCountIdentifier": "total_pages",
 	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/cgs.json",
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
@@ -8,7 +8,7 @@
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageUrl": "https://cgs.games/api/proxy/ga-index-public.s3.us-west-2.amazonaws.com/cards/{editions[0].slug}.jpg",
+	"cardImageUrl": "https://api.gatcg.com{editions[0].image}",
 	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
@@ -91,13 +91,13 @@
 			"type": "objectList",
 			"properties": [
 				{
-					"name": "card_id",
-					"display": "Card Id",
+					"name": "slug",
+					"display": "Slug",
 					"type": "string"
 				},
 				{
-					"name": "slug",
-					"display": "Slug",
+					"name": "image",
+					"display": "Image",
 					"type": "string"
 				},
 				{
