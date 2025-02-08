@@ -27,20 +27,21 @@ Check out [the CGS games website](https://cgs.games).
 
 ## Feedback
 
-See [the CGS roadmap](https://github.com/orgs/finol-digital/projects/1/views/1). 
+If you'd like to see the development plans for CGS, see [the CGS roadmap](https://github.com/orgs/finol-digital/projects/1/views/1). 
+Please react to individual issues on the roadmap, as issues with more reactions will be prioritized!
 
-Please send any additional feature requests/bug reports/other feedback to <david@finoldigital.com>.
+You can also send any additional feature requests/bug reports/other feedback to <david@finoldigital.com>.
 
-Also consider joining our social media:
+And also consider joining our social media!
 
 [![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com) 
-[![alt text][2.1]][2] [GitHub](http://github.cardgamesimulator.com) 
-[![alt text][3.1]][3] [Bluesky](http://bluesky.cardgamesimulator.com) 
+[![alt text][2.1]][2] [Bluesky](http://bluesky.cardgamesimulator.com) 
+[![alt text][3.1]][3] [GitHub](http://github.cardgamesimulator.com) 
 
 [1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
-[2.1]: https://i.imgur.com/AortmS7.png (github icon with padding)
-[3.1]: https://i.imgur.com/be81cEw.png (bluesky icon with padding)
+[2.1]: https://i.imgur.com/be81cEw.png (bluesky icon with padding)
+[3.1]: https://i.imgur.com/AortmS7.png (github icon with padding)
 
 [1]: http://discord.cardgamesimulator.com
-[2]: http://github.cardgamesimulator.com
-[3]: http://bluesky.cardgamesimulator.com
+[2]: http://bluesky.cardgamesimulator.com
+[3]: http://github.cardgamesimulator.com
