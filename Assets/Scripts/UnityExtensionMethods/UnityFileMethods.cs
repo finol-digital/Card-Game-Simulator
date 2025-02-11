@@ -231,7 +231,10 @@ namespace UnityExtensionMethods
 
 #if UNITY_WEBGL
             if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+            {
                 url = "https://cgs.games/api/proxy/" + url[8..];
+                Debug.Log("CGS Games WebGL url : " + url);
+            }
 #endif
 
             var uriBuilder = url.StartsWith("http")

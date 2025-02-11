@@ -43,8 +43,14 @@ namespace FinolDigital.Cgs.Json.Unity
         {
             Sprite newSprite = null;
 #if UNITY_WEBGL
+            var url = unityCard.ImageWebUrl;
+            if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+            {
+                url = "https://cgs.games/api/proxy/" + url[8..];
+                Debug.Log("CGS Games WebGL url : " + url);
+            }
             yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
-                UnityFileMethods.CreateAndOutputSpriteFromImageFile(unityCard.ImageWebUrl)
+                UnityFileMethods.CreateAndOutputSpriteFromImageFile(url)
                 , output => newSprite = output);
 #else
             yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
