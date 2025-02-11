@@ -7,7 +7,7 @@
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
 	"cardDataIdentifier": "data",
-	"cardIdIdentifier": "uuid",
+	"cardIdIdentifier": "slug",
 	"cardImageFileType": "jpg",
 	"cardImageProperty": "img_src",
 	"cardImageUrl": "https://api.gatcg.com{editions[0].image}",
