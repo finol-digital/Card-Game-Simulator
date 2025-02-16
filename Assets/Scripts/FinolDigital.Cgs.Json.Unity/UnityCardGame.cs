@@ -514,6 +514,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public void LoadCards(string cardsFilePath, string defaultSetCode)
         {
+            Debug.Log("LoadCards::cardsFilePath: " + cardsFilePath);
             LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier, defaultSetCode);
         }
 
@@ -685,54 +686,79 @@ namespace FinolDigital.Cgs.Json.Unity
                 backs = jArray.ToObject<List<string>>();
 
             var cardImageWebUrl = string.Empty;
+            var backCardImageWebUrl = string.Empty;
             if (!string.IsNullOrEmpty(CardImageProperty))
             {
-                // CardImageProperty should resolve to a string, but it may be an object and/or a list
-                var isImagePropertyObject = false;
-                var childName = string.Empty;
-                var childProperties = new List<PropertyDef>();
-                var imageDefName = CardImageProperty;
-                if (imageDefName.Contains(PropertyDef.ObjectDelimiter))
+                // Use the front/back from cardProperties if available
+                if (cardProperties.TryGetValue(CardImageProperty, out var valuePair))
                 {
-                    isImagePropertyObject = true;
-                    var delimiterIndex =
-                        imageDefName.LastIndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal);
-                    childName = imageDefName[(delimiterIndex + 1)..];
-                    childProperties.Add(new PropertyDef(childName, PropertyType.String));
-                    imageDefName = imageDefName[..delimiterIndex];
+                    cardImageWebUrl = valuePair.Value;
+                    if (cardBackProperties.TryGetValue(CardImageProperty, out var backValuePair))
+                    {
+                        backCardImageWebUrl = backValuePair.Value;
+                    }
+                    else
+                    {
+                        var backImageDef = new PropertyDef(CardImageProperty, PropertyType.String, string.Empty,
+                            string.Empty, false, string.Empty,
+                            valuePair.Def?.BackName ?? CardImageProperty, string.Empty, new List<PropertyDef>());
+                        PopulateCardProperty(metaProperties, cardJToken, backImageDef, CardImageProperty, true);
+                        backCardImageWebUrl = metaProperties.TryGetValue(CardImageProperty, out var backValuePair2)
+                            ? backValuePair2.Value
+                            : cardImageWebUrl;
+                    }
                 }
-
-                var isImagePropertyList = imageDefName.Contains('[');
-                if (isImagePropertyList)
-                    imageDefName = imageDefName[..imageDefName.IndexOf('[')];
-
-                var imagePropertyType = isImagePropertyObject switch
-                {
-                    true when isImagePropertyList => PropertyType.ObjectList,
-                    true => PropertyType.Object,
-                    _ => isImagePropertyList ? PropertyType.StringList : PropertyType.String
-                };
-
-                var imageDef = new PropertyDef(imageDefName, imagePropertyType, "", "", false, "", "", "",
-                    childProperties);
-                PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDefName);
-                if (isImagePropertyObject && metaProperties.TryGetValue(
-                        imageDefName + PropertyDef.ObjectDelimiter + childName,
-                        out var cardObjectImageEntry))
-                    cardImageWebUrl = cardObjectImageEntry.Value;
-                else if (metaProperties.TryGetValue(CardImageProperty.Split(new[] {'['}, StringSplitOptions.None)[0],
-                             out var cardImageEntry))
-                    cardImageWebUrl =
-                        (cardImageEntry.Value).Split(new[] {EnumDef.Delimiter},
-                            StringSplitOptions.None)[0];
                 else
-                    Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
+                {
+                    // CardImageProperty should resolve to a string, but it may be an object and/or a list
+                    var isImagePropertyObject = false;
+                    var childName = string.Empty;
+                    var childProperties = new List<PropertyDef>();
+                    var imageDefName = CardImageProperty;
+                    if (imageDefName.Contains(PropertyDef.ObjectDelimiter))
+                    {
+                        isImagePropertyObject = true;
+                        var delimiterIndex =
+                            imageDefName.LastIndexOf(PropertyDef.ObjectDelimiter, StringComparison.Ordinal);
+                        childName = imageDefName[(delimiterIndex + 1)..];
+                        childProperties.Add(new PropertyDef(childName, PropertyType.String));
+                        imageDefName = imageDefName[..delimiterIndex];
+                    }
+
+                    var isImagePropertyList = imageDefName.Contains('[');
+                    if (isImagePropertyList)
+                        imageDefName = imageDefName[..imageDefName.IndexOf('[')];
+
+                    var imagePropertyType = isImagePropertyObject switch
+                    {
+                        true when isImagePropertyList => PropertyType.ObjectList,
+                        true => PropertyType.Object,
+                        _ => isImagePropertyList ? PropertyType.StringList : PropertyType.String
+                    };
+
+                    var imageDef = new PropertyDef(imageDefName, imagePropertyType, string.Empty, string.Empty,
+                        false, string.Empty, string.Empty, string.Empty, childProperties);
+                    PopulateCardProperty(metaProperties, cardJToken, imageDef, imageDefName);
+                    if (isImagePropertyObject && metaProperties.TryGetValue(
+                            imageDefName + PropertyDef.ObjectDelimiter + childName,
+                            out var cardObjectImageEntry))
+                        cardImageWebUrl = cardObjectImageEntry.Value;
+                    else if (metaProperties.TryGetValue(CardImageProperty.Split(new[] {'['}, StringSplitOptions.None)[0],
+                                 out var cardImageEntry))
+                        cardImageWebUrl =
+                            (cardImageEntry.Value).Split(new[] {EnumDef.Delimiter},
+                                StringSplitOptions.None)[0];
+                    else
+                        Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
+                }
             }
 
             var cardImageUrl = CardImageUrl;
             if (string.IsNullOrEmpty(CardImageProperty) || !string.IsNullOrEmpty(cardImageWebUrl) ||
                 !string.IsNullOrEmpty(cardImageUrl))
             {
+                if (cardSets.Count == 0)
+                    cardSets.Add(defaultSetCode, defaultSetCode);
                 foreach (var set in cardSets)
                 {
                     if (!Sets.ContainsKey(set.Key))
@@ -761,7 +787,7 @@ namespace FinolDigital.Cgs.Json.Unity
                             new UnityCard(this, backCardId, cardBackName, set.Key, cardBackProperties, isReprint, true,
                                 cardDuplicateId)
                             {
-                                ImageWebUrl = cardImageWebUrl
+                                ImageWebUrl = backCardImageWebUrl
                             };
                         LoadedCards[backUnityCard.Id] = backUnityCard;
                     }
