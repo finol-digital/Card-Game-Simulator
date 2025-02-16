@@ -7,10 +7,11 @@
 	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
 	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
 	"cardDataIdentifier": "data",
-	"cardIdIdentifier": "slug",
+	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
-	"cardImageProperty": "img_src",
+	"cardImageProperty": "spoilers_image_url",
 	"cardImageUrl": "https://api.gatcg.com{editions[0].image}",
+	"cardNameBackIdentifier": "back_card_name",
 	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
@@ -113,6 +114,14 @@
 					"type": "integer"
 				}
 			]
+		},
+		{
+			"name": "spoilers_image_url",
+			"display": "Spoilers image",
+			"displayEmpty": "-",
+			"type": "string",
+			"frontName": "card_image_url",
+			"backName": "back_card_image_url"
 		}
 	],
 	"cardSetIsObject": true,
