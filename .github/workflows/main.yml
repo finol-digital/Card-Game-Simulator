@@ -454,6 +454,8 @@ jobs:
   deployToFirebaseTest:
     name: Deploy to the Web via Firebase Test
     runs-on: ubuntu-latest
+    permissions:
+      checks: write
     needs: [tests, buildWithLinux]
     if: needs.tests.outputs.isPr == 'true'
     steps:
