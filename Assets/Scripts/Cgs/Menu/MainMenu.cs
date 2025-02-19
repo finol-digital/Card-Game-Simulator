@@ -9,7 +9,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+#if !CGS_SINGLEGAME
 using UnityExtensionMethods;
+#endif
 
 namespace Cgs.Menu
 {
@@ -62,8 +64,10 @@ namespace Cgs.Menu
         public Button joinButton;
         public GameObject quitButton;
 
+#if !CGS_SINGLEGAME
         private GamesManagementMenu GamesManagement =>
             _gamesManagement ??= Instantiate(gamesManagementMenuPrefab).GetOrAddComponent<GamesManagementMenu>();
+#endif
 
         private GamesManagementMenu _gamesManagement;
 
@@ -237,9 +241,11 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ShowGamesManagementMenu()
         {
+#if !CGS_SINGLEGAME
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             GamesManagement.Show();
+#endif
         }
 
         [UsedImplicitly]

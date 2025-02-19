@@ -4,9 +4,11 @@
 
 using System.Collections;
 using System.Collections.Concurrent;
-using System.IO;
 using UnityEngine;
 using UnityExtensionMethods;
+#if !UNITY_WEBGL
+using System.IO;
+#endif
 
 namespace FinolDigital.Cgs.Json.Unity
 {
@@ -42,17 +44,8 @@ namespace FinolDigital.Cgs.Json.Unity
         private IEnumerator LoadImageSprite(UnityCard unityCard)
         {
             Sprite newSprite = null;
-#if UNITY_WEBGL
-            var url = unityCard.ImageWebUrl;
-            if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
-            {
-                url = "https://cgs.games/api/proxy/" + url[8..];
-                Debug.Log("CGS Games WebGL url : " + url);
-            }
-            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
-                UnityFileMethods.CreateAndOutputSpriteFromImageFile(url)
-                , output => newSprite = output);
-#else
+
+#if !UNITY_WEBGL
             yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
                 UnityFileMethods.CreateAndOutputSpriteFromImageFile(unityCard.ImageFilePath,
                     unityCard.ImageWebUrl.Replace(" ", "%20"))
@@ -63,7 +56,19 @@ namespace FinolDigital.Cgs.Json.Unity
                 var sizeWarningMessage = string.Format(SizeWarningMessage, unityCard.Name, unityCard.Id);
                 Debug.LogError(sizeWarningMessage);
             }
+#else
+            var url = unityCard.ImageWebUrl;
+            if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
+            {
+                url = "https://cgs.games/api/proxy/" + url[8..];
+                Debug.Log("CGS Games WebGL url : " + url);
+            }
+
+            yield return UnityFileMethods.RunOutputCoroutine<Sprite>(
+                UnityFileMethods.CreateAndOutputSpriteFromImageFile(url)
+                , output => newSprite = output);
 #endif
+
             unityCard.OnLoadImage(newSprite);
             _concurrentQueueCount--;
         }
