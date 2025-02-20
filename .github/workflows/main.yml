@@ -245,7 +245,7 @@ jobs:
           body: ${{ github.event.release.body }}
 
   buildWebProfiles:
-    name: Build for Web-buildProfile
+    name: Build for buildProfile
     runs-on: ubuntu-latest
     needs: [tests, lint]
     strategy:
@@ -305,7 +305,7 @@ jobs:
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform)
         with:
           path: build/${{ matrix.targetPlatform }}
-          name: cgs-${{ matrix.targetPlatform }}
+          name: cgs-Web-buildProfile
       - name: Zip Build
         uses: vimtor/action-zip@v1.2
         if: github.event.action == 'published'
