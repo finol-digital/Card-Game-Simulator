@@ -245,7 +245,7 @@ jobs:
           body: ${{ github.event.release.body }}
 
   buildWebProfiles:
-    name: Build for Profile ${{ matrix.buildProfile }}
+    name: Build for Web-buildProfile
     runs-on: ubuntu-latest
     needs: [tests, lint]
     strategy:
