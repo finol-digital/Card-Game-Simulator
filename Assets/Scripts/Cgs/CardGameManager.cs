@@ -630,7 +630,7 @@ namespace Cgs
             Debug.Log("CGS Share::subContainer: " + subContainer);
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
-            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".zip");
+            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".cgszip");
             Debug.Log("CGS Share::zipFileName: " + zipFileName);
             UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
             Directory.Delete(container, true);

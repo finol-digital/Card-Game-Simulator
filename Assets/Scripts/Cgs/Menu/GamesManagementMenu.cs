@@ -23,10 +23,10 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Modal))]
     public class GamesManagementMenu : SelectionPanel
     {
-        public const string ImportGamePrompt = "Download from Web URL,\n or Load from ZIP File?";
-        public const string DownloadFromWeb = "Download from Web URL";
-        public const string LoadFromFile = "Load from ZIP File";
-        public const string SelectZipFilePrompt = "Select ZIP File";
+        public const string ImportGamePrompt = "Download from Web AutoUpdate URL,\n or Load from CGS ZIP File?";
+        public const string DownloadFromWeb = "Download from Web AutoUpdate URL";
+        public const string LoadFromFile = "Load from CGS ZIP File";
+        public const string SelectZipFilePrompt = "Select CGS ZIP File";
 
         public const string DownloadLabel = "Download Game";
         public const string DownloadPrompt = "Enter CGS AutoUpdate URL...";
@@ -83,7 +83,7 @@ namespace Cgs.Menu
         private void Start()
         {
 #if UNITY_ANDROID || UNITY_IOS
-            _zipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
+            _zipFileType = NativeFilePicker.ConvertExtensionToFileType(".cgszip");
 #endif
         }
 
