@@ -1,1 +1,1 @@
-Bug Fix
+- Improved support for double faced cards
