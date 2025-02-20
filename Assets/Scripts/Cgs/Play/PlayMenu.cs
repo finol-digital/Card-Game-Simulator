@@ -5,14 +5,25 @@
 using Cgs.CardGameView.Viewer;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Cgs.Play
 {
     public class PlayMenu : MonoBehaviour
     {
         public GameObject panels;
+        public Button fullscreenButton;
+        public Button backButton;
 
         public PlayController controller;
+
+#if CGS_SINGLEPLAYER
+        private void Start()
+        {
+            fullscreenButton.gameObject.SetActive(true);
+            backButton.gameObject.SetActive(false);
+        }
+#endif
 
         private void Update()
         {
@@ -74,6 +85,12 @@ namespace Cgs.Play
                 Hide();
             else
                 Show();
+        }
+
+        [UsedImplicitly]
+        public void ToggleFullscreen()
+        {
+            Screen.fullScreen = !Screen.fullScreen;
         }
 
         public void Hide()

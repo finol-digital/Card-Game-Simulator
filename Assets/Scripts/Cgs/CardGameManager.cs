@@ -377,21 +377,23 @@ namespace Cgs
             return autoUpdateUrl;
         }
 
-#if UNITY_WEBGL && !UNITY_EDITOR
         private IEnumerator Start()
         {
-            Debug.Log("CardGameManager::Start:WaitForCurrentIsDownloading");
-
             yield return null;
             while (Current is {IsDownloading: true})
                 yield return null;
 
-            bool isMissingGame =
+            Debug.Log("CardGameManager::Start");
+
+#if UNITY_WEBGL && CGS_SINGLEGAME
+            yield return GetCardGame("/cgs.json");
+#elif UNITY_WEBGL
+            var isMissingGame =
  Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
             if (isMissingGame)
                 yield return StartGetDefaultCardGames();
-        }
 #endif
+        }
 
         // ReSharper disable once UnusedMember.Local
         private IEnumerator StartGetDefaultCardGames()

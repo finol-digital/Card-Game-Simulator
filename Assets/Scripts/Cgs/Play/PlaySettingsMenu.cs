@@ -5,12 +5,14 @@
 using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace Cgs.Play
 {
     public class PlaySettingsMenu : Modal
     {
+        public const string NoAutoupdateErrorMessage = "This game has not configured a valid autoupdate url!";
         public const string NoRulesErrorMessage = "Rules Url does not exist for this game!";
 
         public Toggle autoStackCardsToggle;
@@ -19,6 +21,8 @@ namespace Cgs.Play
         public Toggle doubleClickToRollDiceToggle;
         public InputField dieFaceCountInputField;
         public Toggle showActionsMenuToggle;
+        public Transform launchNativeButton;
+        public Transform viewRulesButton;
 
         public override void Show()
         {
@@ -29,6 +33,13 @@ namespace Cgs.Play
             doubleClickToRollDiceToggle.isOn = PlaySettings.DoubleClickToRollDice;
             dieFaceCountInputField.text = PlaySettings.DieFaceCount.ToString();
             showActionsMenuToggle.isOn = PlaySettings.ShowActionsMenu;
+#if CGS_SINGLEGAME && CGS_SINGLEPLAYER
+            launchNativeButton.gameObject.SetActive(true);
+            viewRulesButton.gameObject.SetActive(false);
+#else
+            launchNativeButton.gameObject.SetActive(false);
+            viewRulesButton.gameObject.SetActive(true);
+#endif
         }
 
         private void Update()
@@ -37,9 +48,24 @@ namespace Cgs.Play
                 return;
 
             if (Inputs.IsOption)
+#if CGS_SINGLEGAME && CGS_SINGLEPLAYER
+                LaunchNative();
+#else
                 ViewRules();
+#endif
             else if (Inputs.IsCancel)
                 Hide();
+        }
+
+        [UsedImplicitly]
+        public void LaunchNative()
+        {
+            if (CardGameManager.Current.AutoUpdateUrl != null &&
+                CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
+                Application.OpenURL("cardgamesim://?url=" +
+                                    UnityWebRequest.EscapeURL(CardGameManager.Current.AutoUpdateUrl.OriginalString));
+            else
+                CardGameManager.Instance.Messenger.Show(NoAutoupdateErrorMessage);
         }
 
         [UsedImplicitly]

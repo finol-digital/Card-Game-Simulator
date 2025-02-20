@@ -9,6 +9,9 @@ using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+#if UNITY_6000_0_OR_NEWER
+using UnityEditor.Build.Profile;
+#endif
 
 namespace Cgs.Editor
 {
@@ -19,8 +22,44 @@ namespace Cgs.Editor
         private static readonly string[] Secrets =
             {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
 
+#if UNITY_6000_0_OR_NEWER
         [UsedImplicitly]
-        public static void BuildOptions()
+        public static void BuildWithProfile()
+        {
+            // Gather values from args
+            var options = GetValidatedOptions();
+
+            // Load build profile from Assets folder
+            var buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>(options["customBuildProfile"]);
+
+            // Set it as active
+            BuildProfile.SetActiveBuildProfile(buildProfile);
+
+            // Get all buildOptions from options
+            var buildOptions = BuildOptions.None;
+            foreach (var buildOptionString in Enum.GetNames(typeof(BuildOptions)))
+            {
+                if (!options.ContainsKey(buildOptionString)) continue;
+                var buildOptionEnum = (BuildOptions) Enum.Parse(typeof(BuildOptions), buildOptionString);
+                buildOptions |= buildOptionEnum;
+            }
+
+            // Define BuildPlayerWithProfileOptions
+            var buildPlayerWithProfileOptions = new BuildPlayerWithProfileOptions
+            {
+                buildProfile = buildProfile,
+                locationPathName = options["customBuildPath"],
+                options = buildOptions
+            };
+
+            var buildSummary = BuildPipeline.BuildPlayer(buildPlayerWithProfileOptions).summary;
+            ReportSummary(buildSummary);
+            ExitWithResult(buildSummary.result);
+        }
+#endif
+
+        [UsedImplicitly]
+        public static void BuildWithOptions()
         {
             // Gather values from args
             var options = GetValidatedOptions();
