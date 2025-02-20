@@ -198,7 +198,11 @@ namespace Cgs.Play
             if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == null)
                 menu.ToggleMenu();
             else if (Inputs.IsCancel)
+#if CGS_SINGLEPLAYER
+                menu.ToggleFullscreen();
+#else
                 PromptBackToMainMenu();
+#endif
         }
 
         private void Restart()

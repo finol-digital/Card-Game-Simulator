@@ -45,11 +45,15 @@ namespace Cgs.Play
         [UsedImplicitly]
         public void ViewRules()
         {
+#if CGS_SINGLEGAME && CGS_SINGLEPLAYER
+            Application.OpenURL("cardgamesim://?url=" + CardGameManager.Current.AutoUpdateUrl);
+#else
             if (CardGameManager.Current.RulesUrl != null &&
                 CardGameManager.Current.RulesUrl.IsWellFormedOriginalString())
                 Application.OpenURL(CardGameManager.Current.RulesUrl.OriginalString);
             else
                 CardGameManager.Instance.Messenger.Show(NoRulesErrorMessage);
+#endif
         }
 
         [UsedImplicitly]
