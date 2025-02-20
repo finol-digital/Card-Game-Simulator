@@ -5,6 +5,7 @@
 using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 namespace Cgs.Play
@@ -61,7 +62,8 @@ namespace Cgs.Play
         {
             if (CardGameManager.Current.AutoUpdateUrl != null &&
                 CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
-                Application.OpenURL("cardgamesim://?url=" + CardGameManager.Current.AutoUpdateUrl.OriginalString);
+                Application.OpenURL("cardgamesim://?url=" +
+                                    UnityWebRequest.EscapeURL(CardGameManager.Current.AutoUpdateUrl.OriginalString));
             else
                 CardGameManager.Instance.Messenger.Show(NoAutoupdateErrorMessage);
         }
