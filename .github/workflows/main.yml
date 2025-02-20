@@ -213,7 +213,7 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
           androidExportType: androidAppBundle
           androidKeystoreName: finoldigital.keystore
           androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
@@ -299,7 +299,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildProfile: ${{ matrix.buildProfile }}
-          buildMethod: Cgs.Editor.BuildCgs.BuildProfile
+          buildMethod: Cgs.Editor.BuildCgs.BuildWithProfile
       - name: Upload Build
         uses: actions/upload-artifact@v4
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform)
@@ -364,7 +364,7 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: StandaloneOSX
-          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
           cacheUnityInstallationOnMac: true
       - name: Fix File Permissions and Code-Sign
         env:
@@ -661,7 +661,7 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
-          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
       - name: Upload Build
         uses: actions/upload-artifact@v4
         if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
@@ -767,7 +767,7 @@ jobs:
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
           targetPlatform: WSAPlayer
-          buildMethod: Cgs.Editor.BuildCgs.BuildOptions
+          buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
       - name: Upload Build
         uses: actions/upload-artifact@v4
         with:
