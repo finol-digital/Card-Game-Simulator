@@ -19,6 +19,32 @@ namespace Cgs.Editor
         private static readonly string[] Secrets =
             {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
 
+#if UNITY_6000_0_OR_NEWER
+        [UsedImplicitly]
+        public static void BuildWithProfile()
+        {
+            // Gather values from args
+            Dictionary<string, string> options = GetValidatedOptions();
+
+            // Load build profile from Assets folder
+            BuildProfile buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>(options["customBuildProfile"]);
+
+            // Set it as active
+            BuildProfile.SetActiveBuildProfile(buildProfile);
+
+            // Define BuildPlayerWithProfileOptions
+            var buildPlayerWithProfileOptions = new BuildPlayerWithProfileOptions {
+                buildProfile = buildProfile,
+                locationPathName = options["customBuildPath"],
+                options = buildOptions,
+            };
+
+            BuildSummary buildSummary = BuildPipeline.BuildPlayer(buildPlayerWithProfileOptions).summary;
+            ReportSummary(buildSummary);
+            ExitWithResult(buildSummary.result);
+        }
+#endif
+
         [UsedImplicitly]
         public static void BuildOptions()
         {
