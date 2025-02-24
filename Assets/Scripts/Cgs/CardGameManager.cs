@@ -386,7 +386,7 @@ namespace Cgs
             Debug.Log("CardGameManager::Start");
 
 #if UNITY_WEBGL && CGS_SINGLEGAME
-            yield return GetCardGame("/cgs.json");
+            yield return GetCardGame("https://mse-cgs.github.io/cgs.json");
 #elif UNITY_WEBGL
             var isMissingGame =
  Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
