@@ -71,6 +71,7 @@ namespace Cgs
         private static CardGameManager _instance;
 
         public static UnityCardGame Current { get; private set; } = UnityCardGame.UnityInvalid;
+        public static bool IsCurrentReady { get; private set; }
         public static bool IsQuitting { get; private set; }
 
         public bool IsSearchingForServer { get; set; }
@@ -386,13 +387,16 @@ namespace Cgs
             Debug.Log("CardGameManager::Start");
 
 #if UNITY_WEBGL && CGS_SINGLEGAME
-            yield return GetCardGame("/cgs.json");
+            var uri = new Uri(Application.absoluteURL);
+            yield return GetCardGame("https://" + uri.Host + "/cgs.json");
 #elif UNITY_WEBGL
             var isMissingGame =
  Current == null || Current == UnityCardGame.UnityInvalid || !string.IsNullOrEmpty(Current.Error) || !Current.HasLoaded;
             if (isMissingGame)
                 yield return StartGetDefaultCardGames();
 #endif
+
+            IsCurrentReady = true;
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -630,7 +634,7 @@ namespace Cgs
             Debug.Log("CGS Share::subContainer: " + subContainer);
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
-            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".zip");
+            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".cgszip");
             Debug.Log("CGS Share::zipFileName: " + zipFileName);
             UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
             Directory.Delete(container, true);

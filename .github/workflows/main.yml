@@ -550,7 +550,7 @@ jobs:
       - name: Firebase Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: ${{ secrets.CGS_PAT }}
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARD_GAME_SIMULATOR }}
           channelId: preview
           projectId: card-game-simulator
@@ -1025,7 +1025,6 @@ jobs:
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
       - name: Bluesky Announcement
-        if: github.ref == 'refs/heads/main'
         uses: myConsciousness/bluesky-post@v5
         with:
           text:  ${{ steps.prepare.outputs.ANNOUNCEMENT }}

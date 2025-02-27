@@ -31,6 +31,12 @@ namespace WebGLSupport
     {
         static Dictionary<int, WebGLInputMobile> instances = new Dictionary<int, WebGLInputMobile>();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Init()
+        {
+            instances = new Dictionary<int, WebGLInputMobile>();
+        }
+
         int id = -1;
 
         private void Awake()

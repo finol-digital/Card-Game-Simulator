@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 222222405451049316}
   - component: {fileID: 114421254648281562}
   m_Layer: 5
-  m_Name: NewDeck Panel
+  m_Name: EditDeck Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -647,7 +647,7 @@ GameObject:
   - component: {fileID: 9000729557808179003}
   - component: {fileID: 5591295682789424838}
   m_Layer: 5
-  m_Name: Frame
+  m_Name: LoadDeck Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2540,7 +2540,7 @@ PrefabInstance:
     - target: {fileID: 633149931556260068, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 633149931556260068, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -2701,7 +2701,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 633149931556260070, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 923666856604962760}
   m_SourcePrefab: {fileID: 100100000, guid: 050b35c711bf97548b7054e54e7b44b4, type: 3}
 --- !u!224 &4056227878000967068 stripped
 RectTransform:
@@ -2709,6 +2713,41 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3495913995375867259}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4056227878000967069 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 633149931556260070, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 3495913995375867259}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &923666856604962760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4056227878000967069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114086429987633334}
+          m_TargetAssemblyTypeName: Cgs.Decks.DeckLoadMenu, Cgs
+          m_MethodName: PasteClipboardIntoText
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &3656632753516069820
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4092,12 +4131,12 @@ PrefabInstance:
     - target: {fileID: 66792000574508518, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}
       propertyPath: m_Name
-      value: NewDeck Label
+      value: EditDeck Label
       objectReference: {fileID: 0}
     - target: {fileID: 858674133167794374, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}
       propertyPath: m_Text
-      value: New Deck
+      value: Edit Deck
       objectReference: {fileID: 0}
     - target: {fileID: 9063206868995599585, guid: cb34354267e822c41877c9c04f71e643,
         type: 3}
