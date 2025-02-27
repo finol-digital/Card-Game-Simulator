@@ -9,6 +9,7 @@
     "com.unity.multiplayer.tools": "2.2.3",
     "com.unity.netcode.gameobjects": "2.2.0",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.project-auditor": "1.0.0",
     "com.unity.services.multiplayer": "1.0.2",
     "com.unity.test-framework": "1.4.6",
     "com.unity.testtools.codecoverage": "1.2.6",

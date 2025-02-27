@@ -169,23 +169,18 @@ namespace Cgs.Play
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
             CardGameManager.Instance.CardCanvases.Add(GetComponent<Canvas>());
 
             playAreaCardZone.OnAddCardActions.Add(AddCardToPlayArea);
             playDropZones.ForEach(dropZone => dropZone.DropHandler = this);
 
-            if (CardGameManager.Instance.IsSearchingForServer)
-                Lobby.Show();
-            else
-            {
-                Lobby.IsLanConnectionSource = true;
-#if !UNITY_WEBGL
-                Lobby.Host();
-#endif
-                StartDecks();
-            }
+            yield return null;
+            while (!CardGameManager.IsCurrentReady)
+                yield return null;
+
+            StartLobby();
         }
 
         private void Update()
@@ -253,6 +248,20 @@ namespace Cgs.Play
             }
 
             scoreboard.ChangePoints(CardGameManager.Current.GameStartPointsCount.ToString());
+        }
+
+        private void StartLobby()
+        {
+            if (CardGameManager.Instance.IsSearchingForServer)
+                Lobby.Show();
+            else
+            {
+                Lobby.IsLanConnectionSource = true;
+#if !UNITY_WEBGL
+                Lobby.Host();
+#endif
+                StartDecks();
+            }
         }
 
         private void StartDecks()
