@@ -685,7 +685,7 @@ namespace Cgs
         public IEnumerator OpenZip(Uri uri, string gameId)
         {
             var uwr = new UnityWebRequest( uri, UnityWebRequest.kHttpVerbGET );
-            var path = Path.Combine( Application.temporaryCachePath, gameId + ".zip" );
+            var path = Path.Combine( Application.temporaryCachePath, gameId + ".cgszip" );
             uwr.downloadHandler = new DownloadHandlerFile( path );
             yield return uwr.SendWebRequest();
             new NativeShare().AddFile(path, "application/zip").Share();
