@@ -38,7 +38,7 @@ namespace WebGLSupport
 
         [DllImport("__Internal")]
         public static extern void WebGLInputOnValueChange(int id, Action<int, string> cb);
-        
+
         [DllImport("__Internal")]
         public static extern void WebGLInputOnEditEnd(int id, Action<int, string> cb);
 
@@ -110,6 +110,13 @@ namespace WebGLSupport
         public static event KeyboardEventHandler OnKeyboardUp;
 
         static Dictionary<int, WebGLInput> instances = new Dictionary<int, WebGLInput>();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Init()
+        {
+            instances = new Dictionary<int, WebGLInput>();
+        }
+
         public static string CanvasId { get; set; }
 
 #if WEBGLINPUT_TAB
@@ -454,6 +461,12 @@ namespace WebGLSupport
         static class WebGLInputTabFocus
         {
             static List<WebGLInput> inputs = new List<WebGLInput>();
+
+            [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+            static void Init()
+            {
+                inputs = new List<WebGLInput>();
+            }
 
             public static void Add(WebGLInput input)
             {
