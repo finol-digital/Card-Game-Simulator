@@ -172,6 +172,11 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.4.0)
       xcpretty-travis-formatter (>= 0.0.3, < 2.0.0)
+    fastlane-plugin-github_action (1.0.0)
+      dotenv
+      fastlane (>= 2.148.1)
+      rbnacl
+      sshkey
     fastlane-sirp (1.0.0)
       sysrandom (~> 1.0)
     ffi (1.17.1-arm64-darwin)
@@ -245,6 +250,8 @@ GEM
     plist (3.7.2)
     public_suffix (4.0.7)
     rake (13.2.1)
+    rbnacl (7.1.2)
+      ffi (~> 1)
     representable (3.2.0)
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
@@ -265,6 +272,7 @@ GEM
     simctl (1.6.10)
       CFPropertyList
       naturally
+    sshkey (3.0.0)
     sysrandom (1.0.5)
     terminal-notifier (2.0.0)
     terminal-table (3.0.2)
@@ -302,6 +310,7 @@ DEPENDENCIES
   abbrev
   cocoapods
   fastlane
+  fastlane-plugin-github_action
   mutex_m
 
 BUNDLED WITH
