@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/joshdholtz/fastlane-plugin-github_action
+  revision: 5cfdcb334fdf603409e94b09b6b10ab472f2ea35
+  specs:
+    fastlane-plugin-github_action (1.1.0)
+      dotenv
+      fastlane (>= 2.148.1)
+      rbnacl
+      sshkey
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -172,11 +182,6 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.4.0)
       xcpretty-travis-formatter (>= 0.0.3, < 2.0.0)
-    fastlane-plugin-github_action (1.0.0)
-      dotenv
-      fastlane (>= 2.148.1)
-      rbnacl
-      sshkey
     fastlane-sirp (1.0.0)
       sysrandom (~> 1.0)
     ffi (1.17.1-arm64-darwin)
@@ -310,7 +315,7 @@ DEPENDENCIES
   abbrev
   cocoapods
   fastlane
-  fastlane-plugin-github_action
+  fastlane-plugin-github_action!
   mutex_m
 
 BUNDLED WITH
