@@ -28,7 +28,8 @@ platform :ios do
       org: org,
       repo: repo,
       match_org: match_org,
-      match_repo: match_repo
+      match_repo: match_repo,
+      writable_deploy_key: true
     )
   end
 
