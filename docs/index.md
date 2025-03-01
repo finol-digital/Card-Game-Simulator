@@ -34,13 +34,13 @@ You can also send any additional feature requests/bug reports/other feedback to 
 
 And also consider joining our social media!
 
-[![alt text][1.1]][1] [Discord](https://www.cardgamesimulator.com/discord) 
-[![alt text][2.1]][2] [Bluesky](https://www.cardgamesimulator.com/bluesky) 
-[![alt text][3.1]][3] [GitHub](https://www.cardgamesimulator.com/github) 
+[![Discord icon][1.1]][1] [Discord](https://www.cardgamesimulator.com/discord) 
+[![Bluesky icon][2.1]][2] [Bluesky](https://www.cardgamesimulator.com/bluesky) 
+[![GitHub icon][3.1]][3] [GitHub](https://www.cardgamesimulator.com/github) 
 
-[1.1]: https://www.cardgamesimulator.com/assets/img/Discord.png (discord icon with padding)
-[2.1]: https://www.cardgamesimulator.com/assets/img/Bluesky.png (bluesky icon with padding)
-[3.1]: https://www.cardgamesimulator.com/assets/img/GitHub.png (github icon with padding)
+[1.1]: /assets/img/Discord.png
+[2.1]: /assets/img/Bluesky.png
+[3.1]: /assets/img/GitHub.png
 
 [1]: https://www.cardgamesimulator.com/discord
 [2]: https://www.cardgamesimulator.com/bluesky
