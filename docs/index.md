@@ -38,9 +38,9 @@ And also consider joining our social media!
 [![alt text][2.1]][2] [Bluesky](https://www.cardgamesimulator.com/bluesky) 
 [![alt text][3.1]][3] [GitHub](https://www.cardgamesimulator.com/github) 
 
-[1.1]: https://wwww.cardgamesimulator.com/assets/img/Discord.png (discord icon with padding)
-[2.1]: https://wwww.cardgamesimulator.com/assets/img/Bluesky.png (bluesky icon with padding)
-[3.1]: https://wwww.cardgamesimulator.com/assets/img/GitHub.png (github icon with padding)
+[1.1]: https://www.cardgamesimulator.com/assets/img/Discord.png (discord icon with padding)
+[2.1]: https://www.cardgamesimulator.com/assets/img/Bluesky.png (bluesky icon with padding)
+[3.1]: https://www.cardgamesimulator.com/assets/img/GitHub.png (github icon with padding)
 
 [1]: https://www.cardgamesimulator.com/discord
 [2]: https://www.cardgamesimulator.com/bluesky
