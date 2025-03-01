@@ -19,7 +19,7 @@ See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
 
 ## How to Create
 
-Refer to [the crash course on the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and [the CGS card game specification](https://github.com/finol-digital/FinolDigital.Cgs.CardGameDef).
+Refer to [the crash course on the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and [the CGS card game specification](https://github.com/finol-digital/FinolDigital.Cgs.Json).
 
 ## How to Share
 
@@ -34,14 +34,14 @@ You can also send any additional feature requests/bug reports/other feedback to 
 
 And also consider joining our social media!
 
-[![alt text][1.1]][1] [Discord](http://discord.cardgamesimulator.com) 
-[![alt text][2.1]][2] [Bluesky](http://bluesky.cardgamesimulator.com) 
-[![alt text][3.1]][3] [GitHub](http://github.cardgamesimulator.com) 
+[![alt text][1.1]][1] [Discord](https://www.cardgamesimulator.com/discord) 
+[![alt text][2.1]][2] [Bluesky](https://www.cardgamesimulator.com/bluesky) 
+[![alt text][3.1]][3] [GitHub](https://www.cardgamesimulator.com/github) 
 
-[1.1]: https://i.imgur.com/oea5DvA.png (discord icon with padding)
-[2.1]: https://i.imgur.com/be81cEw.png (bluesky icon with padding)
-[3.1]: https://i.imgur.com/AortmS7.png (github icon with padding)
+[1.1]: https://www.cardgamesimulator.com/assets/img/Discord.png (discord icon with padding)
+[2.1]: https://www.cardgamesimulator.com/assets/img/Bluesky.png (bluesky icon with padding)
+[3.1]: https://www.cardgamesimulator.com/assets/img/GitHub.png (github icon with padding)
 
-[1]: http://discord.cardgamesimulator.com
-[2]: http://bluesky.cardgamesimulator.com
-[3]: http://github.cardgamesimulator.com
+[1]: https://www.cardgamesimulator.com/discord
+[2]: https://www.cardgamesimulator.com/bluesky
+[3]: https://www.cardgamesimulator.com/github

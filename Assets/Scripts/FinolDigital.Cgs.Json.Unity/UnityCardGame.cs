@@ -514,7 +514,6 @@ namespace FinolDigital.Cgs.Json.Unity
 
         public void LoadCards(string cardsFilePath, string defaultSetCode)
         {
-            Debug.Log("LoadCards::cardsFilePath: " + cardsFilePath);
             LoadJsonFromFile(cardsFilePath, LoadCardFromJToken, CardDataIdentifier, defaultSetCode);
         }
 
