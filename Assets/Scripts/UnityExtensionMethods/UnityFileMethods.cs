@@ -108,7 +108,7 @@ namespace UnityExtensionMethods
             string cacheFilePath = cacheStorageFile.Path;
             return cacheFilePath;
         }
-#elif UNITY_STANDALONE
+#else
         public static string CacheFile(string sourceFilePath)
         {
             var fileName = Path.GetFileName(sourceFilePath);

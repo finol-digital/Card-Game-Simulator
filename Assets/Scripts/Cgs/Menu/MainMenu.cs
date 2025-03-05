@@ -62,6 +62,7 @@ namespace Cgs.Menu
         public List<GameObject> selectableButtons;
 
         public Button joinButton;
+        public Button fullscreenButton;
         public GameObject quitButton;
 
 #if !CGS_SINGLEGAME
@@ -122,6 +123,8 @@ namespace Cgs.Menu
 
 #if UNITY_WEBGL
             joinButton.interactable = false;
+            fullscreenButton.gameObject.SetActive(true);
+            quitButton.gameObject.SetActive(false);
 #endif
 #if UNITY_STANDALONE || UNITY_WSA
             quitButton.SetActive(true);
@@ -302,6 +305,12 @@ namespace Cgs.Menu
 #else
             CardGameManager.Instance.Messenger.Prompt(QuitPrompt, Quit);
 #endif
+        }
+
+        [UsedImplicitly]
+        public void ToggleFullscreen()
+        {
+            Screen.fullScreen = !Screen.fullScreen;
         }
 
         // ReSharper disable once MemberCanBeMadeStatic.Local
