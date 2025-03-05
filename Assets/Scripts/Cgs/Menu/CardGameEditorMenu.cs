@@ -266,10 +266,8 @@ namespace Cgs.Menu
             }
 #if ENABLE_WINMD_SUPPORT
             _game.BannerImageUrl = new Uri(await UnityFileMethods.CacheFileAsync(uri));
-#elif UNITY_STANDALONE
-            _game.BannerImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #else
-            _game.BannerImageUrl = new Uri(uri);
+            _game.BannerImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #endif
             StartCoroutine(UpdateBannerImage());
         }
@@ -335,10 +333,8 @@ namespace Cgs.Menu
             }
 #if ENABLE_WINMD_SUPPORT
             _game.CardBackImageUrl = new Uri(await UnityFileMethods.CacheFileAsync(uri));
-#elif UNITY_STANDALONE
-            _game.CardBackImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #else
-            _game.CardBackImageUrl = new Uri(uri);
+            _game.CardBackImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #endif
             StartCoroutine(UpdateCardBackImage());
         }
@@ -404,10 +400,8 @@ namespace Cgs.Menu
             }
 #if ENABLE_WINMD_SUPPORT
             _game.PlayMatImageUrl = new Uri(await UnityFileMethods.CacheFileAsync(uri));
-#elif UNITY_STANDALONE
-            _game.PlayMatImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #else
-            _game.PlayMatImageUrl = new Uri(uri);
+            _game.PlayMatImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #endif
             StartCoroutine(UpdatePlayMatImage());
         }
