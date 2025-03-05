@@ -1,1 +1,1 @@
-Minor bug fixes
+Fixed bug in Card Game Editor
