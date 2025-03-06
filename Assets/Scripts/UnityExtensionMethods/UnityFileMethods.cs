@@ -108,6 +108,14 @@ namespace UnityExtensionMethods
             string cacheFilePath = cacheStorageFile.Path;
             return cacheFilePath;
         }
+#elif UNITY_ANDROID || UNITY_IOS
+        public static string CacheFile(string sourceFilePath, string fileName)
+        {
+            var cacheFilePath = Application.temporaryCachePath + "/" + GetSafeFileName(fileName);
+            var texture2D = NativeGallery.LoadImageAtPath(sourceFilePath, -1, false);
+            File.WriteAllBytes(cacheFilePath, texture2D.EncodeToPNG());
+            return cacheFilePath;
+        }
 #else
         public static string CacheFile(string sourceFilePath)
         {
