@@ -677,12 +677,12 @@ namespace Cgs.Play
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewToken(Vector2.zero,
-                    CgsNetManager.Instance.LocalPlayer.DefaultRotation);
+                    CgsNetManager.Instance.LocalPlayer.DefaultRotation, Vector3.one);
             else
-                CreateToken(Vector2.zero, Quaternion.identity);
+                CreateToken(Vector2.zero, Quaternion.identity, Color.white);
         }
 
-        public Token CreateToken(Vector2 position, Quaternion rotation)
+        public Token CreateToken(Vector2 position, Quaternion rotation, Color color)
         {
             var token = Instantiate(tokenPrefab, playAreaCardZone.transform).GetOrAddComponent<Token>();
             if (CgsNetManager.Instance.IsOnline)
@@ -690,6 +690,7 @@ namespace Cgs.Play
 
             token.Position = position;
             token.Rotation = rotation;
+            token.LogoColor = color;
 
             return token;
         }
