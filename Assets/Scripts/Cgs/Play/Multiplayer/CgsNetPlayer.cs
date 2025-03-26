@@ -633,16 +633,16 @@ namespace Cgs.Play.Multiplayer
 
         #region Tokens
 
-        public void RequestNewToken(Vector2 position, Quaternion rotation)
+        public void RequestNewToken(Vector2 position, Quaternion rotation, Vector3 color)
         {
-            CreateTokenServerRpc(position, rotation);
+            CreateTokenServerRpc(position, rotation, color);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateTokenServerRpc(Vector2 position, Quaternion rotation)
+        private void CreateTokenServerRpc(Vector2 position, Quaternion rotation, Vector3 color)
         {
-            PlayController.Instance.CreateToken(position, rotation);
+            PlayController.Instance.CreateToken(position, rotation, new Color(color.x, color.y, color.z));
         }
 
         #endregion

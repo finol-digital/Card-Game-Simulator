@@ -50,18 +50,21 @@ namespace Cgs.CardGameView.Viewer
 
         private CgsNetPlayable _selectedPlayable;
 
-        private CardStack Stack => SelectedPlayable as CardStack;
         private Die Dice => SelectedPlayable as Die;
+        private CardStack Stack => SelectedPlayable as CardStack;
+        private Token SelectedToken => SelectedPlayable as Token;
 
         public CanvasGroup preview;
         public CanvasGroup view;
         public CanvasGroup dieActionPanel;
         public CanvasGroup stackActionPanel;
+        public CanvasGroup tokenActionPanel;
 
         public List<Text> valueTexts;
         public InputField dieValueInputField;
         public InputField dieMaxInputField;
         public Dropdown dieDropdown;
+        public Dropdown tokenDropdown;
 
         public bool IsVisible
         {
@@ -128,6 +131,8 @@ namespace Cgs.CardGameView.Viewer
                 else if (Inputs.IsFilter)
                     FlipStackTopFace();
             }
+            else if (SelectedPlayable is Token && IsVisible)
+                RedisplayToken();
 
             if (Inputs.IsCancel)
                 SelectedPlayable = null;
@@ -164,16 +169,22 @@ namespace Cgs.CardGameView.Viewer
             view.interactable = IsVisible;
             view.blocksRaycasts = IsVisible;
 
-            dieActionPanel.alpha = PlaySettings.ShowActionsMenu &&IsVisible && _selectedPlayable is Die ? 1 : 0;
-            dieActionPanel.interactable = PlaySettings.ShowActionsMenu &&IsVisible && _selectedPlayable is Die;
-            dieActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu &&IsVisible && _selectedPlayable is Die;
+            dieActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Die ? 1 : 0;
+            dieActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Die;
+            dieActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Die;
 
             stackActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack ? 1 : 0;
             stackActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
             stackActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
 
+            tokenActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token ? 1 : 0;
+            tokenActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token;
+            tokenActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token;
+
             if (Dice != null)
                 RedisplayDie();
+            else if (SelectedToken != null)
+                RedisplayToken();
         }
 
         private void RedisplayDie()
@@ -200,6 +211,30 @@ namespace Cgs.CardGameView.Viewer
                 dieDropdown.value = 3;
             else if (Dice.DieColor is {r: < 1, g: < 1, b: < 1} && dieDropdown.value != 4)
                 dieDropdown.value = 4;
+        }
+
+        private void RedisplayToken()
+        {
+            if (SelectedToken == null)
+            {
+                Debug.LogWarning("Attempted to redisplay token without SelectedToken!");
+                return;
+            }
+
+            if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) && Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
+                Mathf.Approximately(SelectedToken.LogoColor.b, 1) && tokenDropdown.value != 0)
+                tokenDropdown.value = 0;
+            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) && Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
+                     Mathf.Approximately(SelectedToken.LogoColor.b, 0) && tokenDropdown.value != 1)
+                tokenDropdown.value = 1;
+            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) && Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
+                     Mathf.Approximately(SelectedToken.LogoColor.b, 0) && tokenDropdown.value != 2)
+                tokenDropdown.value = 2;
+            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) && Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
+                     Mathf.Approximately(SelectedToken.LogoColor.b, 1) && tokenDropdown.value != 3)
+                tokenDropdown.value = 3;
+            else if (SelectedToken.LogoColor is {r: < 1, g: < 1, b: < 1} && tokenDropdown.value != 4)
+                tokenDropdown.value = 4;
         }
 
         public void Preview(CgsNetPlayable playable)
@@ -367,6 +402,26 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Stack.FlipTopFace();
+        }
+
+        [UsedImplicitly]
+        public void ChangeTokenColor(int option)
+        {
+            if (SelectedToken == null)
+            {
+                Debug.LogWarning("Ignoring change color since there is no token selected.");
+                return;
+            }
+
+            SelectedToken.LogoColor = option switch
+            {
+                0 => Color.white,
+                1 => Color.red,
+                2 => Color.green,
+                3 => Color.blue,
+                4 => Color.gray,
+                _ => Color.white
+            };
         }
 
         [UsedImplicitly]

@@ -266,6 +266,8 @@ namespace Cgs.Menu
             }
 #if ENABLE_WINMD_SUPPORT
             _game.BannerImageUrl = new Uri(await UnityFileMethods.CacheFileAsync(uri));
+#elif UNITY_ANDROID || UNITY_IOS
+            _game.BannerImageUrl = new Uri(UnityFileMethods.CacheFile(uri, "Banner.png"));
 #else
             _game.BannerImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #endif
@@ -333,6 +335,8 @@ namespace Cgs.Menu
             }
 #if ENABLE_WINMD_SUPPORT
             _game.CardBackImageUrl = new Uri(await UnityFileMethods.CacheFileAsync(uri));
+#elif UNITY_ANDROID || UNITY_IOS
+            _game.CardBackImageUrl = new Uri(UnityFileMethods.CacheFile(uri, "CardBack.png"));
 #else
             _game.CardBackImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #endif
@@ -400,6 +404,8 @@ namespace Cgs.Menu
             }
 #if ENABLE_WINMD_SUPPORT
             _game.PlayMatImageUrl = new Uri(await UnityFileMethods.CacheFileAsync(uri));
+#elif UNITY_ANDROID || UNITY_IOS
+            _game.PlayMatImageUrl = new Uri(UnityFileMethods.CacheFile(uri, "PlayMat.png"));
 #else
             _game.PlayMatImageUrl = new Uri(UnityFileMethods.CacheFile(uri));
 #endif
