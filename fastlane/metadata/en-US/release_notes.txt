@@ -1,1 +1,1 @@
-Fixed bug in Card Game Editor
+- Tokens can now change color
