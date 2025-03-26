@@ -131,11 +131,8 @@ namespace Cgs.CardGameView.Viewer
                 else if (Inputs.IsFilter)
                     FlipStackTopFace();
             }
-            else if (SelectedPlayable is Token)
-            {
-                if (IsVisible)
-                    RedisplayToken();
-            }
+            else if (SelectedPlayable is Token && IsVisible)
+                RedisplayToken();
 
             if (Inputs.IsCancel)
                 SelectedPlayable = null;
