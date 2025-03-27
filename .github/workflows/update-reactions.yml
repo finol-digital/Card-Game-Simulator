@@ -1,0 +1,16 @@
+name: Update Reaction Counts
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+
+jobs:
+  update-reactions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Count Reactions
+        uses: finol-digital/reactions-counter@main
+        with:
+          project-url: 'https://github.com/finol-digital/Card-Game-Simulator/projects/1'
+          github-token: ${{ secrets.CGS_PAT }}
+          field-name: 'Reactions'
