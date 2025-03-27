@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CardMaterial
+  m_Name: PlayableMaterial
   m_Shader: {fileID: -6465566751694194690, guid: 630d6d9f77ec11447b9a07f166785739,
     type: 3}
   m_Parent: {fileID: 0}
