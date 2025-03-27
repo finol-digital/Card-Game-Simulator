@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Count Reactions
-        uses: finol-digital/reactions-counter@main
+        uses: finol-digital/reactions-counter@v1
         with:
           project-url: 'https://github.com/finol-digital/Card-Game-Simulator/projects/1'
           github-token: ${{ secrets.CGS_PAT }}
