@@ -685,10 +685,10 @@ namespace Cgs
 #if UNITY_ANDROID && !UNITY_EDITOR
         public IEnumerator OpenZip(Uri uri, string tempCgsZipFilePath)
         {
-            var uwr = new UnityWebRequest( uri, UnityWebRequest.kHttpVerbGET );
-            uwr.downloadHandler = new DownloadHandlerFile( tempCgsZipFilePath );
+            var uwr = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET);
+            uwr.downloadHandler = new DownloadHandlerFile(tempCgsZipFilePath);
             yield return uwr.SendWebRequest();
-            new NativeShare().AddFile(path, "application/zip").Share();
+            new NativeShare().AddFile(tempCgsZipFilePath, "application/zip").Share();
         }
 #endif
 
