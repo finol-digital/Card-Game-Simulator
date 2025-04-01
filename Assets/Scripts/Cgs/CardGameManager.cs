@@ -634,7 +634,7 @@ namespace Cgs
             Debug.Log("CGS Share::subContainer: " + subContainer);
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
-            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".cgszip");
+            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".cgs.zip");
             Debug.Log("CGS Share::zipFileName: " + zipFileName);
             UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
             Directory.Delete(container, true);
@@ -673,7 +673,8 @@ namespace Cgs
                 }
             }, false);
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, CardGameManager.Current.Id));
+            var tempCgsZipFilePath = Path.Combine( Application.temporaryCachePath, Current.Id + ".cgs.zip" );
+            Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, tempCgsZipFilePath));
 #elif UNITY_IOS && !UNITY_EDITOR
             UnityNative.Sharing.UnityNativeSharing.Create().ShareScreenshotAndText("", targetZipFilePath, false, "", "");
 #else
@@ -682,13 +683,12 @@ namespace Cgs
         }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-        public IEnumerator OpenZip(Uri uri, string gameId)
+        public IEnumerator OpenZip(Uri uri, string tempCgsZipFilePath)
         {
-            var uwr = new UnityWebRequest( uri, UnityWebRequest.kHttpVerbGET );
-            var path = Path.Combine( Application.temporaryCachePath, gameId + ".cgszip" );
-            uwr.downloadHandler = new DownloadHandlerFile( path );
+            var uwr = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET);
+            uwr.downloadHandler = new DownloadHandlerFile(tempCgsZipFilePath);
             yield return uwr.SendWebRequest();
-            new NativeShare().AddFile(path, "application/zip").Share();
+            new NativeShare().AddFile(tempCgsZipFilePath, "application/zip").Share();
         }
 #endif
 

@@ -83,7 +83,7 @@ namespace Cgs.Menu
         private void Start()
         {
 #if UNITY_ANDROID || UNITY_IOS
-            _zipFileType = NativeFilePicker.ConvertExtensionToFileType(".cgszip");
+            _zipFileType = NativeFilePicker.ConvertExtensionToFileType(UnityFileMethods.ZipExtension);
 #endif
         }
 
