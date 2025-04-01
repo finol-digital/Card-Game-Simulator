@@ -674,7 +674,7 @@ namespace Cgs
             }, false);
 #elif UNITY_ANDROID && !UNITY_EDITOR
             var tempCgsZipFilePath = Path.Combine( Application.temporaryCachePath, Current.Id + ".cgs.zip" );
-            Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, CardGameManager.Current.Id));
+            Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, tempCgsZipFilePath));
 #elif UNITY_IOS && !UNITY_EDITOR
             UnityNative.Sharing.UnityNativeSharing.Create().ShareScreenshotAndText("", targetZipFilePath, false, "", "");
 #else
