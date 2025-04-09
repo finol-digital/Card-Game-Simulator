@@ -18,7 +18,7 @@
       "$cgs.json/properties/cardSetIdentifier": {
         "description": "The code for the Card's Set",
         "type": "string"
-      }
+      },
       "backs": {
         "description": "List of backs for the Card. If blank, the default CardBackImage is used. If populated, each back must correspond to an id in <cardBackFaceImageUrls>. The empty string corresponds to the default CardBackImage.",
         "type": "array"
@@ -29,7 +29,7 @@
       }
     },
     "additionalProperties": {
-      "$ref": "$cgs.json#/properties/cardProperties"
+      "$ref": "cgs.json#/properties/cardProperties"
     },
     "required": [
       "$cgs.json#/properties/cardIdIdentifier"

@@ -60,6 +60,9 @@ Material:
     m_Floats:
     - _ColorMask: 15
     - _EnableExternalAlpha: 0
+    - _IsSelected: 0
+    - _SelectableState: 0
+    - _State: 0
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -71,6 +74,7 @@ Material:
     m_Colors:
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _RectTransformInfo: {r: 100, g: 100, b: 1, a: 100}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
