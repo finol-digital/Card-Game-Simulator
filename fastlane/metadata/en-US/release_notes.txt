@@ -1,1 +1,2 @@
-- Games export file changed from .cgszip to .cgs.zip
+- Selected card gets an animated sheen
+
