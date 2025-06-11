@@ -89,7 +89,7 @@ jobs:
           echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
       - name: Auto-Commit Release Notes
         if: github.event.action == 'published'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           branch: main
           file_pattern: fastlane/metadata
