@@ -1,2 +1,1 @@
-- Selected card gets an animated sheen
-
+Select left and right on zoom in Cards Explorer
