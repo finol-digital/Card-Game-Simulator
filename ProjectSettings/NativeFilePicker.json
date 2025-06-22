@@ -1,4 +1,4 @@
 {
-    "AutoSetupFrameworks": true,
-    "AutoSetupiCloud": true
+    "AutoSetupFrameworks": false,
+    "AutoSetupiCloud": false
 }
