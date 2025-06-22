@@ -16,7 +16,9 @@ namespace Unity.UI.Shaders.Sample
         [SerializeField] Slider _saturationSlider, _tintRedSlider, _tintGreenSlider, _tintBlueSlider,
             _hexagonDissolveSlider, _hexagonTilesSlider, _blurSlider, _blurCyclesSlider, _blurSamplesPerCycleSlider;
 
+#pragma warning disable UDR0001
         static int _saturationId, _tintId, _hexagonDissolveId, _hexagonTilesId, _blurId, _blurCyclesId, _blurSamplesPerCycleId;
+#pragma warning restore UDR0001
 
         private float _saturation, _hexagonDissolve, _hexagonTiles, _blur, _blurCycles, _blurSamplesPerCycle;
         private Color _tint = Color.gray;

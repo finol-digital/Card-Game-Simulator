@@ -72,21 +72,17 @@ namespace Cgs.Menu
         private DownloadMenu _downloader;
 
 #if UNITY_ANDROID || UNITY_IOS
-        private static string _zipFileType;
+        private static string ZipFileType { get; set; }
+
+        private void Start()
+        {
+            ZipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
+        }
 #endif
 
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(BuildGameSelectionOptions);
-        }
-
-        private void Start()
-        {
-#if UNITY_ANDROID
-            _zipFileType = "application/zip";
-#elif UNITY_IOS
-            _zipFileType = NativeFilePicker.ConvertExtensionToFileType(UnityFileMethods.ZipExtension);
-#endif
         }
 
         private void Update()
@@ -191,14 +187,13 @@ namespace Cgs.Menu
         private static void ShowFileLoader()
         {
 #if UNITY_ANDROID || UNITY_IOS
-            var permission = NativeFilePicker.PickFile(path =>
+            NativeFilePicker.PickFile(path =>
             {
                 if (path == null)
                     Debug.Log("Operation cancelled");
                 else
                     CardGameManager.Instance.ImportCardGame(path);
-            }, _zipFileType);
-            Debug.Log( "Permission result: " + permission );
+            }, ZipFileType);
 #else
             FileBrowser.ShowLoadDialog((paths) => CardGameManager.Instance.ImportCardGame(paths[0]),
                 () => { }, FileBrowser.PickMode.Files, false, null, null,
