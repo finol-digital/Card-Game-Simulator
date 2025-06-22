@@ -79,6 +79,9 @@ namespace Cgs.CardGameView.Viewer
         public Text propertyTextTemplate;
         public List<Dropdown> propertySelectors;
         public List<Text> propertyValueTexts;
+        public RectTransform buttonsPanel;
+        public Button previousButton;
+        public Button nextButton;
 
         private List<Text> PropertyTexts { get; } = new();
         private List<Dropdown.OptionData> PropertyOptions { get; } = new();

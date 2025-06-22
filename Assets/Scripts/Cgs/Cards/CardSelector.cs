@@ -21,6 +21,13 @@ namespace Cgs.Cards
 
         private bool _wasAvailable;
 
+        private void Start()
+        {
+            CardViewer.Instance.buttonsPanel.gameObject.SetActive(true);
+            CardViewer.Instance.previousButton.onClick.AddListener(SelectLeft);
+            CardViewer.Instance.nextButton.onClick.AddListener(SelectRight);
+        }
+
         private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
