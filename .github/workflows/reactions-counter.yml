@@ -1,4 +1,4 @@
-name: Update Reaction Counts
+name: Reactions Counter
 
 on:
   workflow_dispatch: 
