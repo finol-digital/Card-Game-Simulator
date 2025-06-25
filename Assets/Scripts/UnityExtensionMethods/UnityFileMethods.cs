@@ -88,13 +88,11 @@ namespace UnityExtensionMethods
             if (!Directory.Exists(targetDir))
                 Directory.CreateDirectory(targetDir);
 
-            foreach (var filePath in Directory.GetFiles(sourceDir))
-                if (!filePath.EndsWith(MetaExtension))
-                    File.Copy(filePath, Path.Combine(targetDir, Path.GetFileName(filePath)));
+            foreach (var filePath in Directory.GetFiles(sourceDir).Where(file => !file.EndsWith(MetaExtension)))
+                File.Copy(filePath, Path.Combine(targetDir, Path.GetFileName(filePath)));
 
-            foreach (var directory in Directory.GetDirectories(sourceDir))
-                if (!string.IsNullOrEmpty(directory))
-                    CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
+            foreach (var directory in Directory.GetDirectories(sourceDir).Where(dir => !string.IsNullOrEmpty(dir)))
+                CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
         }
 
 #if ENABLE_WINMD_SUPPORT
