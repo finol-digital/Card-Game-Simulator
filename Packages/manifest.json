@@ -13,7 +13,7 @@
     "com.unity.render-pipelines.universal": "17.0.4",
     "com.unity.services.multiplayer": "1.1.4",
     "com.unity.shadergraph": "17.0.4",
-    "com.unity.test-framework": "1.4.6",
+    "com.unity.test-framework": "1.5.1",
     "com.unity.testtools.codecoverage": "1.2.6",
     "com.unity.toolchain.linux-x86_64": "2.0.10",
     "com.unity.ugui": "2.0.0",
