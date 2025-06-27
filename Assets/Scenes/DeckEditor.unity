@@ -2113,6 +2113,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card Viewer
       objectReference: {fileID: 0}
+    - target: {fileID: 1205983077926924, guid: 04f1873b7f6a8324887109e8e76da3d7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224256216305895768, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2340,13 +2344,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4661119747046246160, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 4661119747046246160, guid: 04f1873b7f6a8324887109e8e76da3d7,
-        type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 4661119747046246160, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 3}
@@ -2393,9 +2392,34 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6210082154241728699, guid: 04f1873b7f6a8324887109e8e76da3d7,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7593600051059946139, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7593600051059946139, guid: 04f1873b7f6a8324887109e8e76da3d7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00006883715
+      objectReference: {fileID: 0}
+    - target: {fileID: 7902197462403428949, guid: 04f1873b7f6a8324887109e8e76da3d7,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7902197462403428949, guid: 04f1873b7f6a8324887109e8e76da3d7,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7902197462403428949, guid: 04f1873b7f6a8324887109e8e76da3d7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8473535394746148375, guid: 04f1873b7f6a8324887109e8e76da3d7,
@@ -3310,10 +3334,10 @@ RectTransform:
   - {fileID: 905574186}
   m_Father: {fileID: 62766702}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.25, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -250, y: -30.000122}
-  m_SizeDelta: {x: -500, y: -100}
+  m_AnchoredPosition: {x: 12.5, y: -30.000122}
+  m_SizeDelta: {x: -1025, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1956326057
 MonoBehaviour:

@@ -222,6 +222,7 @@ MonoBehaviour:
   - {fileID: 114093825176017184}
   - {fileID: 7024342717275817159}
   - {fileID: 114442512476595824}
+  - {fileID: 7257751666146137467}
   nameTexts:
   - {fileID: 4159148351361970319}
   - {fileID: 712121653340924921}
@@ -2763,7 +2764,7 @@ RectTransform:
   m_Father: {fileID: 224256216305895768}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.3, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
@@ -5381,7 +5382,7 @@ PrefabInstance:
     - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
       propertyPath: m_Size
-      value: 0.9159306
+      value: 0.84059143
       objectReference: {fileID: 0}
     - target: {fileID: 1829473602834048258, guid: 545336a218e4b2e43acf2260017946f3,
         type: 3}
