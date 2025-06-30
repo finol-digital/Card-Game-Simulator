@@ -23,12 +23,6 @@ namespace Tests.PlayMode
         public string autoUpdateUrl;
     }
 
-    [Serializable]
-    public class GamesJson
-    {
-        public Game[] games;
-    }
-
     public class CardGameManagerTests
     {
         [SetUp]
@@ -106,13 +100,13 @@ namespace Tests.PlayMode
         {
             var jsonFile = Resources.Load("games") as TextAsset;
             Assert.NotNull(jsonFile);
-            var gamesJson = JsonUtility.FromJson<GamesJson>(jsonFile.text);
-            Assert.IsTrue(gamesJson.games.Length > 0);
+            var games = JsonConvert.DeserializeObject<List<Game>>(jsonFile.text);
+            Assert.IsTrue(games.Count > 0);
 
-            foreach (var game in gamesJson.games)
+            foreach (var game in games)
             {
                 // Enable retry if there are a lot of tests to do
-                var maxAttempts = gamesJson.games.Length > 10 ? 5 : 1;
+                var maxAttempts = games.Count > 10 ? 5 : 1;
                 for (var attempt = 1; attempt <= maxAttempts; attempt++)
                 {
                     Debug.Log($"Testing download for: {game.name}, attempt {attempt} of {maxAttempts}");
