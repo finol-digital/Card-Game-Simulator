@@ -5,7 +5,7 @@
     "redirects": [
       {
         "source": "/gatcg",
-        "destination": "https://cgs.games/gatcg/grand_archive_distorted_reflections",
+        "destination": "https://cgs.games/gatcg/grand_archive",
         "type": 301
       }
     ],
