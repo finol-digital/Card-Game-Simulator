@@ -15,7 +15,7 @@
 ## Main Deck
 3x Coy Bouclier
 3x Sablier Guard
-4x Stalwart Shielmate
+4x Stalwart Shieldmate
 3x Vigil Rampart
 4x Whimsy's Warden
 4x Conflagrant Sentinel
