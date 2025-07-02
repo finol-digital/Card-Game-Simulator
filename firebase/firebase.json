@@ -5,7 +5,7 @@
     "redirects": [
       {
         "source": "/gatcg",
-        "destination": "https://cgs.games/gatcg/grand_archive",
+        "destination": "https://cgs.games/gatcg/grand_archive_tcg",
         "type": 301
       }
     ],
