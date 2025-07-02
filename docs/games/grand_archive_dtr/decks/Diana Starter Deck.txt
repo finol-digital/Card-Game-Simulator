@@ -13,21 +13,21 @@
 1x Aquamirage Whisper
 1x Pleiades, Celestial Genesis
 ## Main Deck
-4 Aetheric Calibration
-4 Backstep
-4 Charge the Soul
-3 Idle Thoughts
-4 Prudent Nock
-4 Reposition
-4 Stalwart Shieldmate
-3 Corsair Captain
-4 Dissuading Aether
-4 Drown in Aether
-3 Undercurrent Vantage
-3 Astra Sight
-4 Constellation's Blessing
-2 Guided Starlight
-2 Meteoric Volley
-3 Poised Occlusion
-3 Sidereal Spellshot
-2 Starbirth
+4x Aetheric Calibration
+4x Backstep
+4x Charge the Soul
+3x Idle Thoughts
+4x Prudent Nock
+4x Reposition
+4x Stalwart Shieldmate
+3x Corsair Captain
+4x Dissuading Aether
+4x Drown in Aether
+3x Undercurrent Vantage
+3x Astra Sight
+4x Constellation's Blessing
+2x Guided Starlight
+2x Meteoric Volley
+3x Poised Occlusion
+3x Sidereal Spellshot
+2x Starbirth
