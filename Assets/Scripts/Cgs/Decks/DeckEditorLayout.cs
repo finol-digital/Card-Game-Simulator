@@ -46,11 +46,9 @@ namespace Cgs.Decks
             }
             else // Landscape
             {
-                deckEditorButtonsGroup.SetParent(deckLabel);
-                deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
-                deckEditorButtonsGroup.localScale = Vector3.one;
+                
                 deckEditorLayoutArea.offsetMin = new Vector2(deckEditorLayoutArea.offsetMin.x, Buffer);
-                deckEditorLayoutArea.offsetMax =
+                deckEditorLayoutArea.offsetMax = 
                     new Vector2(-SearchAreaLandscapeWidth, deckEditorLayoutArea.offsetMax.y);
                 searchArea.anchorMin = Vector2.right;
                 searchArea.anchorMax = Vector2.one;
