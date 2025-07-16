@@ -1,16 +1,14 @@
-{
-  "games": [
-    {
-      "name": "Arcmage",
-      "url": "https://www.cardgamesimulator.com/games/Arcmage/cgs.json"
-    },
-    {
-      "name": "Grand Archive TCG",
-      "url": "https://www.cardgamesimulator.com/games/grand_archive/cgs.json"
-    },
-    {
-      "name": "ZU Tiles",
-      "url": "https://www.cardgamesimulator.com/games/zu_tiles/cgs.json"
-    }
-  ]
-}
+[
+  {
+    "name": "Arcmage",
+    "autoUpdateUrl": "https://www.cardgamesimulator.com/games/Arcmage/cgs.json"
+  },
+  {
+    "name": "Grand Archive TCG",
+    "autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/cgs.json"
+  },
+  {
+    "name": "ZU Tiles",
+    "autoUpdateUrl": "https://www.cardgamesimulator.com/games/zu_tiles/cgs.json"
+  }
+]

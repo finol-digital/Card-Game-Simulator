@@ -17,16 +17,10 @@ using Object = UnityEngine.Object;
 namespace Tests.PlayMode
 {
     [Serializable]
-    public class CardGameRef
+    public class Game
     {
         public string name;
-        public string url;
-    }
-
-    [Serializable]
-    public class CardGameRefList
-    {
-        public CardGameRef[] games;
+        public string autoUpdateUrl;
     }
 
     public class CardGameManagerTests
@@ -106,17 +100,17 @@ namespace Tests.PlayMode
         {
             var jsonFile = Resources.Load("games") as TextAsset;
             Assert.NotNull(jsonFile);
-            var cardGameRefList = JsonUtility.FromJson<CardGameRefList>(jsonFile.text);
-            Assert.IsTrue(cardGameRefList.games.Length > 0);
+            var games = JsonConvert.DeserializeObject<List<Game>>(jsonFile.text);
+            Assert.IsTrue(games.Count > 0);
 
-            foreach (var cardGameRef in cardGameRefList.games)
+            foreach (var game in games)
             {
                 // Enable retry if there are a lot of tests to do
-                var maxAttempts = cardGameRefList.games.Length > 10 ? 5 : 1;
+                var maxAttempts = games.Count > 10 ? 5 : 1;
                 for (var attempt = 1; attempt <= maxAttempts; attempt++)
                 {
-                    Debug.Log($"Testing download for: {cardGameRef.name}, attempt {attempt} of {maxAttempts}");
-                    yield return CardGameManager.Instance.GetCardGame(cardGameRef.url);
+                    Debug.Log($"Testing download for: {game.name}, attempt {attempt} of {maxAttempts}");
+                    yield return CardGameManager.Instance.GetCardGame(game.autoUpdateUrl);
                     yield return new WaitForSeconds(1); // Wait to load set cards
                     if (CardGameManager.Current.HasLoaded && string.IsNullOrEmpty(CardGameManager.Current.Error) &&
                         CardGameManager.Current.Cards.Count > 0)
@@ -127,7 +121,7 @@ namespace Tests.PlayMode
                 Assert.IsTrue(CardGameManager.Current.HasLoaded);
                 Assert.IsTrue(string.IsNullOrEmpty(CardGameManager.Current.Error));
                 Assert.IsTrue(CardGameManager.Current.Cards.Count > 0);
-                Assert.AreEqual(cardGameRef.name, CardGameManager.Current.Name);
+                Assert.AreEqual(game.name, CardGameManager.Current.Name);
             }
 
             // No need to wait for slow card loads
