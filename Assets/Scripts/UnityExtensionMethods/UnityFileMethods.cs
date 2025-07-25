@@ -266,12 +266,31 @@ namespace UnityExtensionMethods
                 foreach (var header in headers)
                     unityWebRequest.SetRequestHeader(header.Key, header.Value);
 
-            yield return unityWebRequest.SendWebRequest();
+            int maxRetries = 3;
+            int retryCount = 0;
+            bool success = false;
 
-            if (unityWebRequest.result != UnityWebRequest.Result.Success ||
-                !string.IsNullOrEmpty(unityWebRequest.error))
+            while (retryCount < maxRetries && !success)
             {
-                Debug.LogWarning("SaveUrlToFile::www.error:" + unityWebRequest.responseCode + " " +
+                yield return unityWebRequest.SendWebRequest();
+
+                if (unityWebRequest.result == UnityWebRequest.Result.Success &&
+                    string.IsNullOrEmpty(unityWebRequest.error))
+                {
+                    success = true;
+                }
+                else
+                {
+                    retryCount++;
+                    Debug.LogWarning($"SaveUrlToFile::Attempt {retryCount} failed: {unityWebRequest.responseCode} {unityWebRequest.error} {unityWebRequest.url}");
+                    if (retryCount < maxRetries)
+                        yield return new WaitForSeconds(1f); // wait before retry
+                }
+            }
+
+            if (!success)
+            {
+                Debug.LogWarning("SaveUrlToFile::All retries failed:" + unityWebRequest.responseCode + " " +
                                  unityWebRequest.error + " " + unityWebRequest.url);
                 yield break;
             }

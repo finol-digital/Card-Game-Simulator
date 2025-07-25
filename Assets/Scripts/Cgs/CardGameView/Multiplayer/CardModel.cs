@@ -585,7 +585,7 @@ namespace Cgs.CardGameView.Multiplayer
                 ParentToCanvas(targetPosition);
 
             // Check for card zones
-            if (ParentCardZone == PlayController.Instance.playAreaCardZone && PlaceHolderCardZone == null)
+            if (PlayController.Instance != null && ParentCardZone == PlayController.Instance.playAreaCardZone && PlaceHolderCardZone == null)
             {
                 foreach (var cardZone in PlayController.Instance.AllCardZones)
                 {
@@ -597,7 +597,7 @@ namespace Cgs.CardGameView.Multiplayer
                 }
             }
             else if (PlaceHolderCardZone != null
-                     && PlaceHolderCardZone.transform.parent == PlayController.Instance.playAreaCardZone.transform
+                     && PlaceHolderCardZone.transform.parent == PlayController.Instance?.playAreaCardZone.transform
                      && !RectTransformUtility.RectangleContainsScreenPoint(
                          (RectTransform) PlaceHolderCardZone.transform,
                          CurrentPointerEventData.position))

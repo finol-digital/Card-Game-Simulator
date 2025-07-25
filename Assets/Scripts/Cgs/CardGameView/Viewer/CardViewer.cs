@@ -66,8 +66,8 @@ namespace Cgs.CardGameView.Viewer
 
         public RectTransform zoomPanel;
 
-        public Text previewNameText;
-        public Text previewIdText;
+        public List<Text> previewNameText;
+        public List<Text> previewIdText;
         public Button expandButton;
         public Button imageButton;
         public List<AspectRatioFitter> cardAspectRatioFitters;
@@ -168,8 +168,10 @@ namespace Cgs.CardGameView.Viewer
                 var card = _previewCardModel.Value;
                 card.RegisterDisplay(this);
                 preview.alpha = 1;
-                previewNameText.text = card.Name;
-                previewIdText.text = card.Id;
+                foreach(var previewName in previewNameText)
+                    previewName.text = card.Name;
+                foreach(var previewId in previewIdText)
+                    previewId.text = card.Id;
             }
         }
 
@@ -191,15 +193,14 @@ namespace Cgs.CardGameView.Viewer
                 _selectedCardModel = value;
 
                 if (_selectedCardModel != null)
-                {
                     _selectedCardModel.Value.RegisterDisplay(this);
-                    ResetTexts();
-                }
                 else if (!EventSystem.current.alreadySelecting)
                     EventSystem.current.SetSelectedGameObject(null);
 
                 IsVisible = _selectedCardModel != null;
                 ZoomTime = 0;
+
+                ResetTexts();
             }
         }
 
@@ -362,6 +363,7 @@ namespace Cgs.CardGameView.Viewer
         {
             foreach (var cardImage in cardImages)
                 cardImage.sprite = imageSprite ? imageSprite : CardGameManager.Current.CardBackImageSprite;
+            ResetTexts();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -415,10 +417,13 @@ namespace Cgs.CardGameView.Viewer
             expanded.interactable = IsVisible && Mode == CardViewerMode.Expanded;
             expanded.blocksRaycasts = IsVisible && Mode == CardViewerMode.Expanded;
 
-            if (IsVisible && IsActionable && PlaySettings.ShowActionsMenu)
-                cardActionPanel.Show();
-            else
-                cardActionPanel.Hide();
+            if (cardActionPanel.gameObject.activeSelf)
+            {
+                if (IsVisible && IsActionable && PlaySettings.ShowActionsMenu)
+                    cardActionPanel.Show();
+                else
+                    cardActionPanel.Hide();
+            }
 
             maximal.alpha = IsVisible && Mode == CardViewerMode.Maximal ? 1 : 0;
             maximal.interactable = IsVisible && Mode == CardViewerMode.Maximal;
@@ -427,6 +432,18 @@ namespace Cgs.CardGameView.Viewer
 
         private void ResetTexts()
         {
+            if (SelectedCardModel == null || !IsVisible)
+            {
+                foreach (var nameText in nameTexts)
+                    nameText.text = string.Empty;
+                foreach (var uniqueIdText in uniqueIdTexts)
+                    uniqueIdText.text = string.Empty;
+                idText.text = string.Empty;
+                setText.text = string.Empty;
+                ResetPropertyValueText();
+                return;
+            }
+
             foreach (var nameText in nameTexts)
                 nameText.text = SelectedCardModel.Value.Name;
             foreach (var uniqueIdText in uniqueIdTexts)
@@ -460,7 +477,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void ResetPropertyValueText()
         {
-            if (SelectedCardModel == null)
+            if (SelectedCardModel == null || !IsVisible)
             {
                 foreach (var propertyValueText in propertyValueTexts)
                     propertyValueText.text = string.Empty;

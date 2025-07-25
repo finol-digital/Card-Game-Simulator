@@ -12,9 +12,9 @@ namespace Cgs.Decks
         private const float SearchAreaPortraitHeight = 550f;
         private const float SearchAreaLandscapeWidth = 500f;
 
-        public bool IsPortrait => ((RectTransform) transform).rect.width < 1200f;
+        public bool IsPortrait => ((RectTransform)transform).rect.width < 1200f;
 
-        public RectTransform deckLabel;
+        public RectTransform deckLabelContainer;
         public RectTransform deckButtonsContainer;
         public RectTransform deckEditorButtonsGroup;
         public RectTransform deckEditorLayoutArea;
@@ -46,7 +46,7 @@ namespace Cgs.Decks
             }
             else // Landscape
             {
-                deckEditorButtonsGroup.SetParent(deckLabel);
+                deckEditorButtonsGroup.SetParent(deckLabelContainer);
                 deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
                 deckEditorButtonsGroup.localScale = Vector3.one;
                 deckEditorLayoutArea.offsetMin = new Vector2(deckEditorLayoutArea.offsetMin.x, Buffer);
