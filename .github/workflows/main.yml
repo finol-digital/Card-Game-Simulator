@@ -620,7 +620,7 @@ jobs:
   buildWithWindows:
     name: Build for ${{ matrix.targetPlatform }}
     runs-on: windows-2022
-    needs: [buildWithLinux, buildWithMac]
+    needs: [tests, buildWithLinux, buildWithMac]
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     strategy:
@@ -668,7 +668,7 @@ jobs:
           buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
       - name: Upload Build
         uses: actions/upload-artifact@v4
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
+        if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
         with:
           path: build/${{ matrix.targetPlatform }}
           name: cgs-${{ matrix.targetPlatform }}
