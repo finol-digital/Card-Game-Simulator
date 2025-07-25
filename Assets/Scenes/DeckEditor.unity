@@ -360,11 +360,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deckLabelContainer: {fileID: 774793845}
+  deckLabel: {fileID: 248285009}
   deckButtonsContainer: {fileID: 905574186}
   deckEditorButtonsGroup: {fileID: 1700522239}
   deckEditorLayoutArea: {fileID: 1956326055}
   searchArea: {fileID: 1337402731}
+  searchAreaGridLayoutGroup: {fileID: 1955078424}
   cardCountLabel: {fileID: 1726050726}
+  dockedCardViewer: {fileID: 1262517219}
 --- !u!1001 &66669952
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2132,6 +2135,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1262517219 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4661119747046246160, guid: 04f1873b7f6a8324887109e8e76da3d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1543769667}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1275550899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2738,6 +2747,11 @@ PrefabInstance:
     - target: {fileID: 6210082154241728699, guid: 04f1873b7f6a8324887109e8e76da3d7,
         type: 3}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6210082154241728699, guid: 04f1873b7f6a8324887109e8e76da3d7,
+        type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6741518953216345288, guid: 04f1873b7f6a8324887109e8e76da3d7,
