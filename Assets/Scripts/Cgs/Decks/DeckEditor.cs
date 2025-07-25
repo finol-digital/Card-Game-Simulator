@@ -106,7 +106,7 @@ namespace Cgs.Decks
 
         private void OnEnable()
         {
-            Instantiate(cardViewerPrefab);
+            // CardViewer is already in the scene
             searchResults.HorizontalDoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(Reset);
         }
