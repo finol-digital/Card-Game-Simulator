@@ -693,8 +693,8 @@ jobs:
   deployToSteam:
     name: Deploy to the Steam Marketplace
     runs-on: ubuntu-latest
-    needs: buildWithWindows
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
+    needs: [tests, buildWithWindows]
+    if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
