@@ -1025,7 +1025,7 @@ jobs:
       - name: Discord Announcement
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.2
+        uses: Ilshidur/action-discord@0.4.0
         with:
           args: ${{ steps.prepare.outputs.ANNOUNCEMENT }}
       - name: Bluesky Announcement
