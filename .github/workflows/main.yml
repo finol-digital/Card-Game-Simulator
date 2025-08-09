@@ -390,14 +390,14 @@ jobs:
           chmod +x fastlane/sign-mac-build.sh
           ./fastlane/sign-mac-build.sh
       - name: Upload Build
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')
+        if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')
         uses: actions/upload-artifact@v4
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
       - name: Upload App
         uses: actions/upload-artifact@v4
-        if: github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')
+        if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')
         with:
           path: build/StandaloneOSX/Card Game Simulator.app
           name: Card Game Simulator.app
@@ -693,7 +693,7 @@ jobs:
   deployToSteam:
     name: Deploy to the Steam Marketplace
     runs-on: ubuntu-latest
-    needs: [tests, buildWithWindows]
+    needs: [tests, buildWithLinux, buildWithMac, buildWithWindows]
     if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
