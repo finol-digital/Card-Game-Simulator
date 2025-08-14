@@ -24,6 +24,7 @@ namespace UnityExtensionMethods
         public const string MetaExtension = ".meta";
         public const string ZipExtension = ".zip";
         public const string JsonExtension = ".json";
+        private const int MaxRetries = 3;
 
         public static string GetSafeFilePath(string filePath)
         {
@@ -252,46 +253,30 @@ namespace UnityExtensionMethods
                 : new UriBuilder(url);
             var uri = uriBuilder.Uri;
 
-            using var unityWebRequest =
-                (postJsonBody == null ? UnityWebRequest.Get(uri) : new UnityWebRequest(uri, "POST"));
-            if (postJsonBody != null)
-            {
-                var bytes = Encoding.UTF8.GetBytes(postJsonBody);
-                unityWebRequest.uploadHandler = new UploadHandlerRaw(bytes);
-                unityWebRequest.downloadHandler = new DownloadHandlerBuffer();
-                unityWebRequest.SetRequestHeader("Content-Type", "application/json");
-            }
+            var unityWebRequest = CreateUnityWebRequest(uri, postJsonBody, headers);
 
-            if (headers != null)
-                foreach (var header in headers)
-                    unityWebRequest.SetRequestHeader(header.Key, header.Value);
-
-            int maxRetries = 3;
-            int retryCount = 0;
-            bool success = false;
-
-            while (retryCount < maxRetries && !success)
+            var success = false;
+            for (var retryCount = 0; retryCount < MaxRetries && !success; retryCount++)
             {
                 yield return unityWebRequest.SendWebRequest();
 
-                if (unityWebRequest.result == UnityWebRequest.Result.Success &&
-                    string.IsNullOrEmpty(unityWebRequest.error))
+                if (unityWebRequest.result != UnityWebRequest.Result.Success
+                    || !string.IsNullOrEmpty(unityWebRequest.error))
                 {
-                    success = true;
+                    Debug.LogWarning(
+                        $"SaveUrlToFile::Failure {retryCount} got {unityWebRequest.responseCode} for {unityWebRequest.uri} with error: {unityWebRequest.error}");
+                    yield return new WaitForSeconds(1 + retryCount); // wait before retry
+                    unityWebRequest.Dispose();
+                    unityWebRequest = CreateUnityWebRequest(uri, postJsonBody, headers);
                 }
                 else
-                {
-                    retryCount++;
-                    Debug.LogWarning($"SaveUrlToFile::Attempt {retryCount} failed: {unityWebRequest.responseCode} {unityWebRequest.error} {unityWebRequest.url}");
-                    if (retryCount < maxRetries)
-                        yield return new WaitForSeconds(1f); // wait before retry
-                }
+                    success = true;
             }
 
             if (!success)
             {
-                Debug.LogWarning("SaveUrlToFile::All retries failed:" + unityWebRequest.responseCode + " " +
-                                 unityWebRequest.error + " " + unityWebRequest.url);
+                Debug.LogWarning("SaveUrlToFile::All retries failed for: " + url);
+                unityWebRequest.Dispose();
                 yield break;
             }
 
@@ -302,6 +287,28 @@ namespace UnityExtensionMethods
             if (!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
             File.WriteAllBytes(directory + DirectorySeparator + fileName, unityWebRequest.downloadHandler.data);
+            unityWebRequest.Dispose();
+        }
+
+        private static UnityWebRequest CreateUnityWebRequest(Uri uri, string postJsonBody = null,
+            Dictionary<string, string> headers = null)
+        {
+            var unityWebRequest =
+                (postJsonBody == null ? UnityWebRequest.Get(uri) : new UnityWebRequest(uri, "POST"));
+            if (postJsonBody != null)
+            {
+                var bytes = Encoding.UTF8.GetBytes(postJsonBody);
+                unityWebRequest.uploadHandler = new UploadHandlerRaw(bytes);
+                unityWebRequest.downloadHandler = new DownloadHandlerBuffer();
+                unityWebRequest.SetRequestHeader("Content-Type", "application/json");
+            }
+
+            if (headers == null)
+                return unityWebRequest;
+
+            foreach (var header in headers)
+                unityWebRequest.SetRequestHeader(header.Key, header.Value);
+            return unityWebRequest;
         }
 
         public static IEnumerator RunOutputCoroutine<T>(IEnumerator coroutine, Action<T> output) where T : class
@@ -339,7 +346,7 @@ namespace UnityExtensionMethods
             }
             else
             {
-                var texture = ((DownloadHandlerTexture) unityWebRequest.downloadHandler).texture;
+                var texture = ((DownloadHandlerTexture)unityWebRequest.downloadHandler).texture;
                 yield return CreateSprite(texture);
             }
         }
@@ -358,7 +365,7 @@ namespace UnityExtensionMethods
             }
             else
             {
-                var texture = ((DownloadHandlerTexture) unityWebRequest.downloadHandler).texture;
+                var texture = ((DownloadHandlerTexture)unityWebRequest.downloadHandler).texture;
                 yield return CreateSprite(texture);
             }
         }
