@@ -45,7 +45,7 @@ jobs:
         run: |
           docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-il2cpp-3 &
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -106,7 +106,7 @@ jobs:
     container: unityci/editor:ubuntu-6000.0.51f1-linux-il2cpp-3
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v5
         with:
           lfs: true
       - name: Cache Library
@@ -182,7 +182,7 @@ jobs:
         run: |
           docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-${{ matrix.targetPlatform }}-3 &
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -267,7 +267,7 @@ jobs:
         run: |
           docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-${{ matrix.targetPlatform }}-3 &
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -337,7 +337,7 @@ jobs:
     timeout-minutes: 180
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -425,7 +425,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'iOS'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download iOS Artifact
         uses: actions/download-artifact@v5
         with:
@@ -468,7 +468,7 @@ jobs:
     if: needs.tests.outputs.isPr == 'true'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Android Artifact
         uses: actions/download-artifact@v5
         with:
@@ -504,7 +504,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download Android Artifact
         uses: actions/download-artifact@v5
         with:
@@ -544,7 +544,7 @@ jobs:
     if: needs.tests.outputs.isPr == 'true'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v5
         with:
@@ -568,7 +568,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WebGL'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download WebGL Artifact
         uses: actions/download-artifact@v5
         with:
@@ -592,7 +592,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'StandaloneOSX'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download StandaloneOSX Artifact
         uses: actions/download-artifact@v5
         with:
@@ -632,7 +632,7 @@ jobs:
           - StandaloneWindows64
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -697,7 +697,7 @@ jobs:
     if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Steam'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download StandaloneWindows Artifact
         uses: actions/download-artifact@v5
         with:
@@ -740,7 +740,7 @@ jobs:
       buildVersion: ${{ steps.build.outputs.buildVersion }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Create LFS file list
@@ -786,7 +786,7 @@ jobs:
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Download WSAPlayer Artifact
         uses: actions/download-artifact@v5
         with:
@@ -1002,7 +1002,7 @@ jobs:
     if: github.event.action == 'published'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
