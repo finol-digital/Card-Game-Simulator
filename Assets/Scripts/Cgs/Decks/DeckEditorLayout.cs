@@ -12,6 +12,7 @@ namespace Cgs.Decks
         private const float Buffer = 20f;
         private const float SearchAreaPortraitHeight = 550f;
         private const float SearchAreaLandscapeWidth = 500f;
+        private const float DeckLabelXOffset = -525;
 
         public bool IsPortrait => ((RectTransform)transform).rect.width < 1200f;
 
@@ -54,7 +55,7 @@ namespace Cgs.Decks
             }
             else // Landscape
             {
-                deckLabel.offsetMax = new Vector2(525, 0);
+                deckLabel.offsetMax = new Vector2(DeckLabelXOffset, 0);
                 deckEditorButtonsGroup.SetParent(deckLabelContainer);
                 deckEditorButtonsGroup.anchoredPosition = Vector2.zero;
                 deckEditorButtonsGroup.localScale = Vector3.one;
