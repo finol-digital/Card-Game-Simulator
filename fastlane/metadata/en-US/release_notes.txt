@@ -1,1 +1,4 @@
-Redesigned Deck Editor
+## What's Changed
+- Deck Editor updated to use horizontal rows
+- Support for webp images
+- Fixed play area grid alignment
