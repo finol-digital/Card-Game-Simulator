@@ -7,6 +7,15 @@
       "dependencies": {},
       "hash": "65aa6b13a629ff91b45e20bfb1543f8839aad75b"
     },
+    "com.netpyoung.webp": {
+      "version": "0.3.18",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
@@ -435,6 +444,13 @@
       "source": "git",
       "dependencies": {},
       "hash": "bce53b258059a5e6563e0be233f804a4f189649e"
+    },
+    "org.nuget.system.runtime.compilerservices.unsafe": {
+      "version": "6.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

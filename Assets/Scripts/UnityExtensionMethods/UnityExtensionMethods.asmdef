@@ -2,7 +2,8 @@
     "name": "UnityExtensionMethods",
     "rootNamespace": "",
     "references": [
-        "GUID:6e5063adab271564ba0098a06a8cebda"
+        "GUID:6e5063adab271564ba0098a06a8cebda",
+        "GUID:9e04c6f1d83f64c85a18cbf2fcccc31c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
