@@ -65,37 +65,7 @@ namespace Cgs.Decks
             }
         }
 
-        private void SelectEditorDown()
-        {
-            if (EventSystem.current.alreadySelecting)
-                return;
-
-            var editorCardModels = editor.CardModels;
-            if (editorCardModels.Count < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            for (var i = 0; i < editorCardModels.Count; i++)
-            {
-                if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
-                    continue;
-                i++;
-                if (i == editorCardModels.Count)
-                    i = 0;
-                EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
-                editor.FocusScrollRectOn(editorCardModels[i]);
-                return;
-            }
-
-            EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
-            editor.FocusScrollRectOn(editorCardModels[0]);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
-        }
-
-        private void SelectEditorUp()
+        private void SelectEditorLeft()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -125,7 +95,68 @@ namespace Cgs.Decks
                 CardViewer.Instance.IsVisible = true;
         }
 
-        private void SelectEditorLeft()
+        private void SelectEditorRight()
+        {
+            if (EventSystem.current.alreadySelecting)
+                return;
+
+            var editorCardModels = editor.CardModels;
+            if (editorCardModels.Count < 1)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                return;
+            }
+
+            for (var i = 0; i < editorCardModels.Count; i++)
+            {
+                if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
+                    continue;
+                i++;
+                if (i == editorCardModels.Count)
+                    i = 0;
+                EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
+                editor.FocusScrollRectOn(editorCardModels[i]);
+                return;
+            }
+
+            EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
+            editor.FocusScrollRectOn(editorCardModels[0]);
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
+        }
+
+        private void SelectEditorDown()
+        {
+            if (EventSystem.current.alreadySelecting)
+                return;
+
+            var editorCardModels = editor.CardModels;
+            if (editorCardModels.Count < 1)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                return;
+            }
+
+            Transform startParent = null;
+            foreach (var cardModel in editorCardModels.Where(t =>
+                         startParent != null || t == CardViewer.Instance.SelectedCardModel))
+            {
+                if (cardModel == CardViewer.Instance.SelectedCardModel)
+                    startParent = cardModel.transform.parent;
+                if (startParent == cardModel.transform.parent)
+                    continue;
+                EventSystem.current.SetSelectedGameObject(cardModel.gameObject);
+                editor.FocusScrollRectOn(cardModel);
+                return;
+            }
+
+            editor.scrollRect.verticalNormalizedPosition = 1;
+            EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
+            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
+                CardViewer.Instance.IsVisible = true;
+        }
+
+        private void SelectEditorUp()
         {
             if (EventSystem.current.alreadySelecting)
                 return;
@@ -151,39 +182,8 @@ namespace Cgs.Decks
                 return;
             }
 
-            editor.scrollRect.horizontalNormalizedPosition = 1;
+            editor.scrollRect.verticalNormalizedPosition = 0;
             EventSystem.current.SetSelectedGameObject(editorCardModels[^1].gameObject);
-            if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
-                CardViewer.Instance.IsVisible = true;
-        }
-
-        private void SelectEditorRight()
-        {
-            if (EventSystem.current.alreadySelecting)
-                return;
-
-            var editorCardModels = editor.CardModels;
-            if (editorCardModels.Count < 1)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
-                return;
-            }
-
-            Transform startParent = null;
-            foreach (var cardModel in editorCardModels.Where(t =>
-                         startParent != null || t == CardViewer.Instance.SelectedCardModel))
-            {
-                if (cardModel == CardViewer.Instance.SelectedCardModel)
-                    startParent = cardModel.transform.parent;
-                if (startParent == cardModel.transform.parent)
-                    continue;
-                EventSystem.current.SetSelectedGameObject(cardModel.gameObject);
-                editor.FocusScrollRectOn(cardModel);
-                return;
-            }
-
-            editor.scrollRect.horizontalNormalizedPosition = 0;
-            EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
         }

@@ -469,29 +469,21 @@ namespace Cgs.CardGameView.Multiplayer
 
         public virtual void SnapToGrid()
         {
-            var rectTransform = (RectTransform) transform;
-            var gridPosition = CalculateGridPosition();
-            rectTransform.position = gridPosition;
-            _position = rectTransform.localPosition;
-
-            if (IsOwner)
-                RequestUpdatePosition(_position);
+            Position = CalculateGridPosition();
         }
 
         protected Vector2 CalculateGridPosition()
         {
-            var rectTransform = (RectTransform) transform;
-            var currentPosition = rectTransform.position;
+            var currentPosition = transform.localPosition;
             if (CardGameManager.Current.PlayMatGridCellSize.X <= 0 ||
                 CardGameManager.Current.PlayMatGridCellSize.Y <= 0)
                 return currentPosition;
 
             var gridCellSize = new Vector2(CardGameManager.Current.PlayMatGridCellSize.X,
                 CardGameManager.Current.PlayMatGridCellSize.Y) * CardGameManager.PixelsPerInch;
-
-            var x = Mathf.Round(currentPosition.x / gridCellSize.x) * gridCellSize.x;
-            var y = Mathf.Round(currentPosition.y / gridCellSize.y) * gridCellSize.y;
-            return new Vector2(x, y);
+            var gridPositionX = Mathf.Round(currentPosition.x / gridCellSize.x) * gridCellSize.x;
+            var gridPositionY = Mathf.Round(currentPosition.y / gridCellSize.y) * gridCellSize.y;
+            return new Vector2(gridPositionX, gridPositionY);
         }
 
         public void Rotate()
