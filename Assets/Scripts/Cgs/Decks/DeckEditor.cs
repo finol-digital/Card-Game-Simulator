@@ -244,7 +244,7 @@ namespace Cgs.Decks
             {
                 var cardTransform = cardTransforms[i];
                 if (i / CardsPerZoneHorizontal >= CardZones.Count)
-                    AddCardZoneVertical();
+                    AddCardZoneHorizontal();
                 var cardZoneTransform = CardZones[i / CardsPerZoneHorizontal].transform;
                 if (cardTransform.parent != cardZoneTransform)
                     cardTransform.SetParent(cardZoneTransform);

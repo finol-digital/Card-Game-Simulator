@@ -150,7 +150,7 @@ namespace Cgs.Decks
                 return;
             }
 
-            editor.scrollRect.horizontalNormalizedPosition = 0;
+            editor.scrollRect.verticalNormalizedPosition = 1;
             EventSystem.current.SetSelectedGameObject(editorCardModels[0].gameObject);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
@@ -182,7 +182,7 @@ namespace Cgs.Decks
                 return;
             }
 
-            editor.scrollRect.horizontalNormalizedPosition = 1;
+            editor.scrollRect.verticalNormalizedPosition = 0;
             EventSystem.current.SetSelectedGameObject(editorCardModels[^1].gameObject);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
