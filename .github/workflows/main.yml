@@ -454,6 +454,8 @@ jobs:
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
           PROJECT_NAME: Card Game Simulator
         run: |
+          sudo xcode-select --switch /Applications/Xcode_16.4.app
+          xcodebuild -downloadPlatform iOS
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
