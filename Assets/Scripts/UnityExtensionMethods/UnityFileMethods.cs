@@ -339,22 +339,25 @@ namespace UnityExtensionMethods
 
             var imageUrl = FilePrefix + imageFilePath;
 
-            using var unityWebRequest = imageUrl.EndsWith(WebpExtension)
-                ? CreateUnityWebRequest(new Uri(imageUrl))
-                : UnityWebRequestTexture.GetTexture(imageUrl);
+            using var unityWebRequest = CreateUnityWebRequest(new Uri(imageUrl));
             yield return unityWebRequest.SendWebRequest();
             if (unityWebRequest.result != UnityWebRequest.Result.Success ||
                 !string.IsNullOrEmpty(unityWebRequest.error))
             {
-                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:"
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::unityWebRequest.Error:"
                                  + unityWebRequest.error + " " + unityWebRequest.url);
                 yield return null;
             }
             else
             {
-                var texture = imageUrl.EndsWith(WebpExtension)
-                    ? DecodeWebp(unityWebRequest.downloadHandler.data)
-                    : ((DownloadHandlerTexture)unityWebRequest.downloadHandler).texture;
+                var bytes = unityWebRequest.downloadHandler.data;
+                if (bytes is not { Length: > 0 })
+                {
+                    Debug.LogWarning("CreateAndOutputSpriteFromImageFile::TextureFileEmpty:" + unityWebRequest.url);
+                    yield return null;
+                }
+
+                var texture = imageUrl.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
                 yield return CreateSprite(texture);
             }
         }
@@ -362,22 +365,25 @@ namespace UnityExtensionMethods
         // Note: Memory Leak Potential
         public static IEnumerator CreateAndOutputSpriteFromImageFile(string imageUrl)
         {
-            using var unityWebRequest = imageUrl.EndsWith(WebpExtension)
-                ? CreateUnityWebRequest(new Uri(imageUrl))
-                : UnityWebRequestTexture.GetTexture(imageUrl);
+            using var unityWebRequest = CreateUnityWebRequest(new Uri(imageUrl));
             yield return unityWebRequest.SendWebRequest();
             if (unityWebRequest.result != UnityWebRequest.Result.Success ||
                 !string.IsNullOrEmpty(unityWebRequest.error))
             {
-                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::www.Error:"
+                Debug.LogWarning("CreateAndOutputSpriteFromImageFile::unityWebRequest.Error:"
                                  + unityWebRequest.error + " " + unityWebRequest.url);
                 yield return null;
             }
             else
             {
-                var texture = imageUrl.EndsWith(WebpExtension)
-                    ? DecodeWebp(unityWebRequest.downloadHandler.data)
-                    : ((DownloadHandlerTexture)unityWebRequest.downloadHandler).texture;
+                var bytes = unityWebRequest.downloadHandler.data;
+                if (bytes is not { Length: > 0 })
+                {
+                    Debug.LogWarning("CreateAndOutputSpriteFromImageFile::TextureFileEmpty:" + unityWebRequest.url);
+                    yield return null;
+                }
+
+                var texture = imageUrl.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
                 yield return CreateSprite(texture);
             }
         }
@@ -398,18 +404,7 @@ namespace UnityExtensionMethods
                 return null;
             }
 
-            Texture2D texture2D;
-            if (textureFilePath.EndsWith(WebpExtension))
-            {
-                Debug.Log("CreateSprite::WebPFileDetected:" + textureFilePath);
-                texture2D = DecodeWebp(bytes);
-            }
-            else
-            {
-                texture2D = new Texture2D(2, 2);
-                texture2D.LoadImage(bytes);
-            }
-
+            var texture2D = textureFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
             return CreateSprite(texture2D);
         }
 
@@ -417,6 +412,18 @@ namespace UnityExtensionMethods
         {
             var textures = WebPDecoderWrapper.Decode(bytes).Result;
             return textures?.FirstOrDefault().Item1;
+        }
+
+        private static Texture2D CreateTexture2D(byte[] bytes)
+        {
+            var texture2D = new Texture2D(2, 2);
+            var didLoad = texture2D.LoadImage(bytes);
+            if (didLoad)
+                return texture2D;
+            // Retry with linear color space
+            texture2D = new Texture2D(2, 2, TextureFormat.RGBA32, -1, true);
+            didLoad = texture2D.LoadImage(bytes);
+            return didLoad ? texture2D : null;
         }
 
         // Note: Memory Leak Potential

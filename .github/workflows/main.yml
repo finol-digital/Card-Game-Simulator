@@ -1,7 +1,7 @@
 name: Test, Build, and Deploy with GameCI
 concurrency: unity
 env:
-  UNITY_VERSION: 6000.0.51f1
+  UNITY_VERSION: 6000.2.1f1
 on:
   push:
     branches:
@@ -103,7 +103,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-6000.0.51f1-linux-il2cpp-3
+    container: unityci/editor:ubuntu-6000.2.1f1-linux-il2cpp-3
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -436,6 +436,10 @@ jobs:
         env:
           RELEASE_NOTES: ${{ github.event.release.body }}
         run: echo "$RELEASE_NOTES" > fastlane/metadata/en-US/release_notes.txt
+      - name: Setup xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.4'
       - name: Fix File Permissions and Run Fastlane
         env:
           APPLE_CONNECT_EMAIL: ${{ secrets.APPLE_CONNECT_EMAIL }}
@@ -454,7 +458,6 @@ jobs:
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
           PROJECT_NAME: Card Game Simulator
         run: |
-          sudo xcode-select --switch /Applications/Xcode_16.4.app
           xcodebuild -downloadPlatform iOS
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
@@ -910,8 +913,9 @@ jobs:
         env:
           UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
           SigningCertificate: Card Game Simulator_StoreKey.pfx
+          MICROSOFT_STORE_PFX_FILE: ${{ secrets.MICROSOFT_STORE_PFX_FILE }}
         run: |
-          $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.MICROSOFT_STORE_PFX_FILE }}")
+          $pfx_cert_byte = [System.Convert]::FromBase64String("$MICROSOFT_STORE_PFX_FILE")
           $currentDirectory = Get-Location
           $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:UwpProjectDirectory -AdditionalChildPath $env:SigningCertificate
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
@@ -920,7 +924,12 @@ jobs:
       - name: Configure Microsoft Store Developer CLI
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
-        run: msstore reconfigure --tenantId ${{ secrets.MICROSOFT_TENANT_ID }} --sellerId ${{ secrets.MICROSOFT_SELLER_ID }} --clientId ${{ secrets.MICROSOFT_CLIENT_ID }} --clientSecret ${{ secrets.MICROSOFT_KEY }}
+        env:
+          MICROSOFT_TENANT_ID: ${{ secrets.MICROSOFT_TENANT_ID }}
+          MICROSOFT_SELLER_ID: ${{ secrets.MICROSOFT_SELLER_ID }}
+          MICROSOFT_CLIENT_ID: ${{ secrets.MICROSOFT_CLIENT_ID }}
+          MICROSOFT_KEY: ${{ secrets.MICROSOFT_KEY }}
+        run: msstore reconfigure --tenantId "$MICROSOFT_TENANT_ID" --sellerId "$MICROSOFT_SELLER_ID" --clientId "$MICROSOFT_CLIENT_ID" --clientSecret "$MICROSOFT_KEY"
       - name: Build the .appxupload with Microsoft Store Developer CLI
         if: false
         working-directory: C:/Card-Game-Simulator.git
