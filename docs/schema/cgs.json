@@ -170,6 +170,10 @@
       "description": "cardImageFileType is the file type extension for the image files that CGS downloads for each individual Card.",
       "default": "png"
     },
+    "cardImageFileTypeIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, cardImageFileTypeIdentifier is the *Card:Property* that overrides the cardImageFileType for this Card. If <cardImageFileTypeIdentifier> is empty, this Card's image file will still be saved as <cardImageFileType>."
+    },
     "cardImageProperty": {
       "type": "string",
       "description": "cardImageProperty is the *Card:Property* which points to the image for this Card. If <cardImageProperty> is empty, <cardImageUrl> will be used instead."
