@@ -6,7 +6,9 @@
         "UnityEditor.TestRunner",
         "UnityExtensionMethods",
         "Cgs",
-        "FinolDigital.Cgs.Json.Unity"
+        "FinolDigital.Cgs.Json.Unity",
+        "unity.webp",
+        "WebP.Editor"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -15,7 +17,8 @@
     "precompiledReferences": [
         "nunit.framework.dll",
         "FinolDigital.Cgs.Json.dll",
-        "Newtonsoft.Json.dll"
+        "Newtonsoft.Json.dll",
+        "System.Runtime.CompilerServices.Unsafe.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
