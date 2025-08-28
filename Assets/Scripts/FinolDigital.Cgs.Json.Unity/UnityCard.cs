@@ -14,6 +14,14 @@ namespace FinolDigital.Cgs.Json.Unity
         public static readonly UnityCard Blank = new(UnityCardGame.UnityInvalid,
             string.Empty, string.Empty, string.Empty, new Dictionary<string, PropertyDefValuePair>(), false);
 
+        public string ImageFileType
+        {
+            get => !string.IsNullOrEmpty(_imageFileType) ? _imageFileType : SourceGame.CardImageFileType;
+            set => _imageFileType = value;
+        }
+
+        private string _imageFileType;
+
         public string ImageFileName
         {
             get
@@ -21,12 +29,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 var id = Id;
                 if (!IsBackFaceCard && !string.IsNullOrEmpty(BackFaceId) && id.EndsWith("." + BackFaceId))
                     id = id[..id.LastIndexOf('.')];
-                return UnityFileMethods.GetSafeFileName(id + "." + SourceGame.CardImageFileType);
+                return UnityFileMethods.GetSafeFileName(id + "." + ImageFileType);
             }
         }
 
         public string ImageFilePath =>
-            UnityFileMethods.GetSafeFilePath(((UnityCardGame) SourceGame).SetsDirectoryPath) + "/" +
+            UnityFileMethods.GetSafeFilePath(((UnityCardGame)SourceGame).SetsDirectoryPath) + "/" +
             UnityFileMethods.GetSafeFilePath(SetCode.Replace(':', '_').Replace('#', '_')) + "/" + ImageFileName;
 
         public Sprite ImageSprite
