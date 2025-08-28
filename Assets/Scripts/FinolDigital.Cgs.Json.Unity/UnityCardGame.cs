@@ -184,7 +184,8 @@ namespace FinolDigital.Cgs.Json.Unity
                 JsonConvert.PopulateObject(File.ReadAllText(gameFilePath), this);
                 RefreshId();
 
-                if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath) && !Directory.Exists(GameDirectoryPath))
+                if (!gameDirectoryPath.Equals(GameDirectoryPath) && Directory.Exists(gameDirectoryPath) &&
+                    !Directory.Exists(GameDirectoryPath))
                     Directory.Move(gameDirectoryPath, GameDirectoryPath);
 
                 if (!gameFilePath.Equals(GameFilePath) && File.Exists(gameFilePath) && !File.Exists(GameFilePath))
@@ -303,7 +304,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     if (!string.IsNullOrEmpty(AllDecksUrlDataIdentifier))
                     {
                         var childProcessor = root;
-                        foreach (var childName in AllDecksUrlDataIdentifier.Split(new[] {'.'},
+                        foreach (var childName in AllDecksUrlDataIdentifier.Split(new[] { '.' },
                                      StringSplitOptions.RemoveEmptyEntries))
                             (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
                         dataContainer = childProcessor as JArray;
@@ -406,7 +407,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     // Get it from the response header if we can
                     if (headers.TryGetValue(AllCardsUrlPageCountIdentifier, out var pageCountString) &&
                         int.TryParse(pageCountString, out var pageCountInt) && pageCountInt > 0)
-                        AllCardsUrlPageCount = Mathf.CeilToInt(pageCountInt / (float) AllCardsUrlPageCountDivisor);
+                        AllCardsUrlPageCount = Mathf.CeilToInt(pageCountInt / (float)AllCardsUrlPageCountDivisor);
                     else // Or load it from the json if we have to
                         LoadCards(page);
                 }
@@ -440,7 +441,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 var gameFilePath = GameFilePath;
                 if (!File.Exists(gameFilePath))
                     gameFilePath = GameBackupFilePath;
-                daysSinceUpdate = (int) DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
+                daysSinceUpdate = (int)DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
             }
             catch
             {
@@ -544,12 +545,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (!string.IsNullOrEmpty(dataId))
                 {
                     var childProcessor = root;
-                    foreach (var childName in dataId.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var childName in dataId.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries))
                         (childProcessor as JObject)?.TryGetValue(childName, out childProcessor);
                     dataContainer = childProcessor;
                 }
                 else
-                    dataContainer = root as JArray ?? (IJEnumerable<JToken>) ((JObject) root).PropertyValues();
+                    dataContainer = root as JArray ?? (IJEnumerable<JToken>)((JObject)root).PropertyValues();
 
                 if (dataContainer != null)
                     foreach (var jToken in dataContainer)
@@ -593,7 +594,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 AllCardsUrlPageCount = allCardsUrlPageCount;
                 if (AllCardsUrlPageCountDivisor > 0)
                     AllCardsUrlPageCount =
-                        Mathf.CeilToInt(AllCardsUrlPageCount / (float) AllCardsUrlPageCountDivisor);
+                        Mathf.CeilToInt(AllCardsUrlPageCount / (float)AllCardsUrlPageCountDivisor);
             }
             catch (Exception e)
             {
@@ -651,6 +652,14 @@ namespace FinolDigital.Cgs.Json.Unity
                     Debug.Log("LoadCardFromJToken::ParseNameBackError");
             }
 
+            var imageFileTypeDef = new PropertyDef(CardImageFileTypeIdentifier, PropertyType.String);
+            PopulateCardProperty(metaProperties, cardJToken, imageFileTypeDef, imageFileTypeDef.Name);
+            var cardImageFileType = CardImageFileType;
+            if (!string.IsNullOrEmpty(CardImageFileTypeIdentifier)
+                && metaProperties.TryGetValue(CardImageFileTypeIdentifier, out var cardImageFileTypeEntry)
+                && !string.IsNullOrEmpty(cardImageFileTypeEntry.Value))
+                cardImageFileType = cardImageFileTypeEntry.Value;
+
             var cardProperties = new Dictionary<string, PropertyDefValuePair>();
             PopulateCardProperties(cardProperties, cardJToken, CardProperties);
 
@@ -659,9 +668,9 @@ namespace FinolDigital.Cgs.Json.Unity
                 PopulateCardProperties(cardBackProperties, cardJToken, CardProperties, "", true);
 
             // Populate primary property if it was set in the CGS UI
-            if (cardJToken["properties"] is JObject {HasValues: true} jObject)
+            if (cardJToken["properties"] is JObject { HasValues: true } jObject)
             {
-                if (jObject[CardPrimaryProperty] is JObject {HasValues: true} jObject2)
+                if (jObject[CardPrimaryProperty] is JObject { HasValues: true } jObject2)
                 {
                     var propertyDef = CardProperties.Find(def => def.Name.Equals(CardPrimaryProperty));
                     var propertyValue = jObject2.Value<string>("value");
@@ -742,10 +751,11 @@ namespace FinolDigital.Cgs.Json.Unity
                             imageDefName + PropertyDef.ObjectDelimiter + childName,
                             out var cardObjectImageEntry))
                         cardImageWebUrl = cardObjectImageEntry.Value;
-                    else if (metaProperties.TryGetValue(CardImageProperty.Split(new[] {'['}, StringSplitOptions.None)[0],
+                    else if (metaProperties.TryGetValue(
+                                 CardImageProperty.Split(new[] { '[' }, StringSplitOptions.None)[0],
                                  out var cardImageEntry))
                         cardImageWebUrl =
-                            (cardImageEntry.Value).Split(new[] {EnumDef.Delimiter},
+                            (cardImageEntry.Value).Split(new[] { EnumDef.Delimiter },
                                 StringSplitOptions.None)[0];
                     else
                         Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
@@ -771,6 +781,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     var unityCard =
                         new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint)
                         {
+                            ImageFileType = cardImageFileType,
                             ImageWebUrl = cardImageWebUrl
                         };
                     if (!string.IsNullOrEmpty(cardBackName))
@@ -780,12 +791,14 @@ namespace FinolDigital.Cgs.Json.Unity
                             new UnityCard(this, cardDuplicateId, cardName, set.Key, cardProperties, isReprint, true,
                                 backCardId)
                             {
+                                ImageFileType = cardImageFileType,
                                 ImageWebUrl = cardImageWebUrl
                             };
                         var backUnityCard =
                             new UnityCard(this, backCardId, cardBackName, set.Key, cardBackProperties, isReprint, true,
                                 cardDuplicateId)
                             {
+                                ImageFileType = cardImageFileType,
                                 ImageWebUrl = backCardImageWebUrl
                             };
                         LoadedCards[backUnityCard.Id] = backUnityCard;
@@ -805,6 +818,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         var backUnityCard =
                             new UnityCard(this, backCardId, cardName, set.Key, cardProperties, isReprint, false, backId)
                             {
+                                ImageFileType = cardImageFileType,
                                 ImageWebUrl = cardImageWebUrl
                             };
                         LoadedCards[backUnityCard.Id] = backUnityCard;
@@ -839,7 +853,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
             try
             {
-                var newProperty = new PropertyDefValuePair {Def = property};
+                var newProperty = new PropertyDefValuePair { Def = property };
                 StringBuilder listValueBuilder;
                 JToken listTokens;
                 JObject jObject;
@@ -868,7 +882,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     case PropertyType.ObjectList:
                         foreach (var childProperty in property.Properties)
                         {
-                            newProperty = new PropertyDefValuePair {Def = childProperty};
+                            newProperty = new PropertyDefValuePair { Def = childProperty };
                             listValueBuilder = new StringBuilder();
                             var values = new Dictionary<string, PropertyDefValuePair>();
                             var i = 0;
@@ -899,7 +913,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         break;
                     case PropertyType.Object:
                         jObject = cardJToken[identifier] as JObject;
-                        if (jObject is {HasValues: true})
+                        if (jObject is { HasValues: true })
                             PopulateCardProperties(cardProperties, cardJToken[identifier], property.Properties,
                                 key + PropertyDef.ObjectDelimiter);
                         else
@@ -922,7 +936,7 @@ namespace FinolDigital.Cgs.Json.Unity
 
                                 if (listValueBuilder.Length == 0)
                                 {
-                                    var listTokensValueString  = listTokens.Value<string>();
+                                    var listTokensValueString = listTokens.Value<string>();
                                     if (!string.IsNullOrEmpty(listTokensValueString))
                                     {
                                         foreach (var valueChar in listTokensValueString.ToCharArray())
@@ -938,7 +952,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         else
                         {
                             foreach (var token in (cardJToken.Value<string>(identifier) ?? string.Empty).Split(
-                                         new[] {property.Delimiter}, StringSplitOptions.RemoveEmptyEntries))
+                                         new[] { property.Delimiter }, StringSplitOptions.RemoveEmptyEntries))
                             {
                                 if (listValueBuilder.Length > 0)
                                     listValueBuilder.Append(EnumDef.Delimiter);
@@ -973,7 +987,7 @@ namespace FinolDigital.Cgs.Json.Unity
         private void PopulateEmptyCardProperty(Dictionary<string, PropertyDefValuePair> cardProperties,
             PropertyDef property, string key)
         {
-            cardProperties[key] = new PropertyDefValuePair {Def = property, Value = string.Empty};
+            cardProperties[key] = new PropertyDefValuePair { Def = property, Value = string.Empty };
             foreach (var childProperty in property.Properties)
                 PopulateEmptyCardProperty(cardProperties, childProperty,
                     key + PropertyDef.ObjectDelimiter + childProperty.Name);
@@ -991,7 +1005,7 @@ namespace FinolDigital.Cgs.Json.Unity
             if (dataIdentifier.Contains('.'))
             {
                 var childProcessorJToken = cardJToken;
-                var parentNames = CardSetIdentifier.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries);
+                var parentNames = CardSetIdentifier.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 for (var i = 0; i < parentNames.Length - 1; i++)
                     (childProcessorJToken as JObject)?.TryGetValue(parentNames[i], out childProcessorJToken);
                 cardJToken = childProcessorJToken;
@@ -1064,8 +1078,8 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 var codesCsv = cardJToken?.Value<string>(dataIdentifier) ?? defaultSetCode;
                 var namesCsv = cardJToken?.Value<string>(CardSetNameIdentifier) ?? codesCsv;
-                var codes = codesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-                var names = namesCsv.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+                var codes = codesCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var names = namesCsv.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 for (var i = 0; i < codes.Length; i++)
                 {
                     var code = codes[i];
@@ -1174,7 +1188,7 @@ namespace FinolDigital.Cgs.Json.Unity
             foreach (var card in Cards.Values)
             {
                 if (!string.IsNullOrEmpty(filters.Name) && !filters.Name.ToLower().Split(
-                        new[] {CardSearchFilters.Delimiter},
+                        new[] { CardSearchFilters.Delimiter },
                         StringSplitOptions.RemoveEmptyEntries).All(card.Name.ToLower().Contains))
                     continue;
                 if (!string.IsNullOrEmpty(filters.Id) && !card.Id.ToLower().Contains(filters.Id.ToLower()))
