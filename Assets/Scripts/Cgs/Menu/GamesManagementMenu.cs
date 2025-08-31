@@ -218,6 +218,12 @@ namespace Cgs.Menu
         {
             if (CardGameManager.Current.AutoUpdateUrl?.IsWellFormedOriginalString() ?? false)
             {
+                if (File.Exists(CardGameManager.Current.CardsFilePath))
+                    File.Delete(CardGameManager.Current.CardsFilePath);
+                if (File.Exists(CardGameManager.Current.DecksFilePath))
+                    File.Delete(CardGameManager.Current.DecksFilePath);
+                if (File.Exists(CardGameManager.Current.SetsFilePath))
+                    File.Delete(CardGameManager.Current.SetsFilePath);
                 if (File.Exists(CardGameManager.Current.BannerImageFilePath))
                     File.Delete(CardGameManager.Current.BannerImageFilePath);
                 if (File.Exists(CardGameManager.Current.CardBackImageFilePath))
