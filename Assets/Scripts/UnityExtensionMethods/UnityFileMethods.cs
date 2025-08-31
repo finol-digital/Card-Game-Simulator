@@ -404,25 +404,22 @@ namespace UnityExtensionMethods
                 return null;
             }
 
-            var texture2D = textureFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
-            return CreateSprite(texture2D);
+            var texture = textureFilePath.EndsWith(WebpExtension) ? DecodeWebp(bytes) : CreateTexture2D(bytes);
+            return CreateSprite(texture);
         }
 
+        // Can return null
         private static Texture2D DecodeWebp(byte[] bytes)
         {
             var textures = WebPDecoderWrapper.Decode(bytes).Result;
             return textures?.FirstOrDefault().Item1;
         }
 
+        // Can return null
         private static Texture2D CreateTexture2D(byte[] bytes)
         {
             var texture2D = new Texture2D(2, 2);
             var didLoad = texture2D.LoadImage(bytes);
-            if (didLoad)
-                return texture2D;
-            // Retry with linear color space
-            texture2D = new Texture2D(2, 2, TextureFormat.RGBA32, -1, true);
-            didLoad = texture2D.LoadImage(bytes);
             return didLoad ? texture2D : null;
         }
 

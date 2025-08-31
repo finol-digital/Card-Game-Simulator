@@ -190,7 +190,16 @@ namespace Cgs.Cards
                         CardGameManager.Instance.Messenger.Show(ImportCardFailedWarningMessage + card.Name);
                     }
                     else
+                    {
+                        var fileInfo = new FileInfo(card.ImageFilePath);
+                        if (fileInfo.Exists && fileInfo.Length > ImageQueueService.MaxImageFileSizeBytes)
+                        {
+                            var sizeWarningMessage = string.Format(ImageQueueService.SizeWarningMessage, card.Name, card.Id);
+                            Debug.LogWarning(sizeWarningMessage);
+                            CardGameManager.Instance.Messenger.Show(sizeWarningMessage, true);
+                        }
                         CardGameManager.Current.Add(card, false);
+                    }
                 }
                 catch
                 {
