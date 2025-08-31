@@ -19,6 +19,8 @@ namespace FinolDigital.Cgs.Json.Unity
                                                  "https://www.iloveimg.com/compress-image " +
                                                  ", then re-import.";
 
+        public const int MaxImageFileSizeBytes = 2_000_000; // 2 MB
+
         private static int ConcurrentQueueSize => 5;
 
         public static ImageQueueService Instance { get; } = new();
@@ -50,12 +52,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 UnityFileMethods.CreateAndOutputSpriteFromImageFile(unityCard.ImageFilePath,
                     unityCard.ImageWebUrl.Replace(" ", "%20"))
                 , output => newSprite = output);
+            if (newSprite == null)
+                Debug.LogWarning(
+                    $"Failed to load image for card: {unityCard.Name} ({unityCard.Id}) at {unityCard.ImageFilePath}");
             var fileInfo = new FileInfo(unityCard.ImageFilePath);
-            if (fileInfo.Exists && fileInfo.Length > 2_000_000)
-            {
-                var sizeWarningMessage = string.Format(SizeWarningMessage, unityCard.Name, unityCard.Id);
-                Debug.LogError(sizeWarningMessage);
-            }
+            if (fileInfo.Exists && fileInfo.Length > MaxImageFileSizeBytes)
+                Debug.LogWarning(string.Format(SizeWarningMessage, unityCard.Name, unityCard.Id));
 #else
             var url = unityCard.ImageWebUrl;
             if (url.StartsWith("https://") && !url.StartsWith("https://cgs.games/api/proxy/"))
