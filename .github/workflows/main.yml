@@ -94,7 +94,7 @@ jobs:
           branch: main
           file_pattern: fastlane/metadata
           commit_message: Update Release Notes (MINOR)
-      - uses: 8BitJonny/gh-get-current-pr@3.0.0
+      - uses: 8BitJonny/gh-get-current-pr@4.0.0
         id: PR
         with:
           sha: ${{ github.event.pull_request.head.sha }}
