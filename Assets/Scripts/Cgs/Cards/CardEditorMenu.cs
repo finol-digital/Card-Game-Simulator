@@ -177,6 +177,12 @@ namespace Cgs.Cards
             }
         }
 
+        public void ShowFor(UnityAction onCreationCallback, UnityCard unityCard)
+        {
+            Show();
+
+        }
+
         [UsedImplicitly]
         public void DownloadCardImageFromWeb()
         {

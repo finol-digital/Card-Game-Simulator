@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
+using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
@@ -113,6 +114,29 @@ namespace Cgs.Cards
             NewCardSetModal.Show(NewCardSetDecisionPrompt,
                 new Tuple<string, UnityAction>(SingleCard, ShowCardEditorMenu),
                 new Tuple<string, UnityAction>(SetOfCards, ShowSetImportMenu));
+        }
+
+        public void ShowEditCard()
+        {
+            if (CardViewer.Instance == null || CardViewer.Instance.SelectedCardModel == null)
+            {
+                Debug.LogWarning("CardsExplorer::ShowEditCard:No card selected to edit.");
+                return;
+            }
+
+            var unityCard = CardViewer.Instance.SelectedCardModel.Value;
+            if (unityCard == null)
+            {
+                Debug.LogWarning("CardsExplorer::ShowEditCard:No card selected to edit.");
+                return;
+            }
+
+            ShowCardEditorMenuFor(unityCard);
+        }
+
+        private void ShowCardEditorMenuFor(UnityCard unityCard)
+        {
+            CardEditor.ShowFor(searchResults.Search, unityCard);
         }
 
         private void ShowCardEditorMenu()
