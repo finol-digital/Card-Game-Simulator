@@ -661,6 +661,7 @@ MonoBehaviour:
   - {fileID: 2599742076912616912}
   - {fileID: 3934238613493567587}
   - {fileID: 4949916991088919623}
+  cardNameInputField: {fileID: 2599742076912616912}
   cardIdInputField: {fileID: 3934238613493567587}
   setCodeInputField: {fileID: 4949916991088919623}
   backSelector: {fileID: 9162998249089658734}

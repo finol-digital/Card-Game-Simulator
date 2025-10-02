@@ -36,6 +36,7 @@ namespace Cgs.Cards
         public RectTransform scrollRectContent;
         public RectTransform cardPropertyTemplate;
         public List<InputField> inputFields;
+        public InputField cardNameInputField;
         public InputField cardIdInputField;
         public InputField setCodeInputField;
         public Dropdown backSelector;
@@ -49,6 +50,8 @@ namespace Cgs.Cards
             set
             {
                 _cardName = value;
+                if (!_cardName.Equals(cardNameInputField.text))
+                    cardNameInputField.text = _cardName;
                 ValidateSaveButton();
             }
         }
@@ -153,15 +156,13 @@ namespace Cgs.Cards
             SetCode = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
 
             BackFaceOptions.Clear();
-            BackFaceOptions.Add(new Dropdown.OptionData() {text = string.Empty});
+            BackFaceOptions.Add(new Dropdown.OptionData() { text = string.Empty });
             foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
-                BackFaceOptions.Add(new Dropdown.OptionData() {text = backFaceKey});
+                BackFaceOptions.Add(new Dropdown.OptionData() { text = backFaceKey });
             backSelector.options = BackFaceOptions;
             backSelector.value = 0;
 
             cardImage.sprite = CardImageSprite != null ? CardImageSprite : CardGameManager.Current.CardBackImageSprite;
-
-            _onCreationCallback = onCreationCallback;
 
             for (var i = _inputFields.Count - 1; i >= 0; i--)
                 Destroy(_inputFields[i].transform.parent.gameObject);
@@ -175,6 +176,64 @@ namespace Cgs.Cards
                 newTransform.GetComponentInChildren<Text>().text = propertyDef.Display;
                 _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
             }
+
+            _onCreationCallback = onCreationCallback;
+        }
+
+        public void ShowFor(UnityCard unityCard, UnityAction onCreationCallback)
+        {
+            Show();
+            CardName = unityCard.Name;
+            CardId = unityCard.Id;
+            SetCode = unityCard.SetCode;
+
+            BackFaceOptions.Clear();
+            BackFaceOptions.Add(new Dropdown.OptionData() { text = string.Empty });
+            var backIndex = 0;
+            var index = 1;
+            foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
+            {
+                BackFaceOptions.Add(new Dropdown.OptionData() { text = backFaceKey });
+                if (string.Equals(unityCard.BackFaceId, backFaceKey))
+                    backIndex = index;
+                index++;
+            }
+
+            backSelector.options = BackFaceOptions;
+            backSelector.value = backIndex;
+
+            if (Uri.IsWellFormedUriString(unityCard.ImageWebUrl, UriKind.Absolute))
+                CardImageUri = new Uri(unityCard.ImageWebUrl);
+            else if (File.Exists(unityCard.ImageFilePath))
+                CardImageUri = new Uri(unityCard.ImageFilePath);
+
+            if (unityCard.ImageSprite != null)
+            {
+                // Clone the sprite for CardImageSprite to avoid destroying the original asset
+                CardImageSprite = Instantiate(unityCard.ImageSprite);
+                cardImage.sprite = CardImageSprite;
+            }
+            else
+            {
+                CardImageSprite = null;
+                cardImage.sprite = CardGameManager.Current.CardBackImageSprite;
+            }
+
+            for (var i = _inputFields.Count - 1; i >= 0; i--)
+                Destroy(_inputFields[i].transform.parent.gameObject);
+            _inputFields.Clear();
+            foreach (var propertyDef in CardGameManager.Current.CardProperties.Where(def =>
+                         PropertyType.String.Equals(def.Type)))
+            {
+                var newTransform = Instantiate(cardPropertyTemplate.gameObject, scrollRectContent)
+                    .transform;
+                newTransform.gameObject.SetActive(true);
+                newTransform.GetComponentInChildren<Text>().text = propertyDef.Display;
+                _inputFields.Add(newTransform.GetComponentInChildren<TMP_InputField>());
+                _inputFields.Last().text = unityCard.GetPropertyValueString(propertyDef.Name);
+            }
+
+            _onCreationCallback = onCreationCallback;
         }
 
         [UsedImplicitly]
@@ -288,7 +347,7 @@ namespace Cgs.Cards
                         : CardId, CardName,
                     string.IsNullOrEmpty(SetCode) ? Set.DefaultCode : SetCode, propertyDefValuePairs,
                     false, false, BackFaceId)
-                {ImageWebUrl = CardImageUri.AbsoluteUri};
+                { ImageWebUrl = CardImageUri.AbsoluteUri };
             yield return UnityFileMethods.SaveUrlToFile(CardImageUri.AbsoluteUri, card.ImageFilePath);
 
             if (!File.Exists(card.ImageFilePath))

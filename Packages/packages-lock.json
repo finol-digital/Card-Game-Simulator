@@ -39,7 +39,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ai.navigation": {
-      "version": "2.0.8",
+      "version": "2.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -77,7 +77,7 @@
       "dependencies": {}
     },
     "com.unity.ide.rider": {
-      "version": "3.0.36",
+      "version": "3.0.38",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -95,7 +95,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.localization": {
-      "version": "1.5.7",
+      "version": "1.5.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -135,7 +135,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.netcode.gameobjects": {
-      "version": "2.5.0",
+      "version": "2.5.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -276,7 +276,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.multiplayer": {
-      "version": "1.1.6",
+      "version": "1.1.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -369,7 +369,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.testtools.codecoverage": {
-      "version": "1.2.6",
+      "version": "1.2.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {

@@ -59,6 +59,8 @@ namespace FinolDigital.Cgs.Json.Unity
         public IReadOnlyDictionary<string, UnityCard> Cards => LoadedCards;
         public IReadOnlyDictionary<string, Set> Sets => LoadedSets;
 
+        public bool IsUploaded => CgsGamesLink != null && CgsGamesLink.IsWellFormedOriginalString()
+                                  || AutoUpdateUrl != null && AutoUpdateUrl.IsWellFormedOriginalString();
 
         public MonoBehaviour CoroutineRunner { get; set; }
 
