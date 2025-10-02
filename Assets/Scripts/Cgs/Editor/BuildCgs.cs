@@ -144,18 +144,14 @@ namespace Cgs.Editor
             {
                 if (!Enum.IsDefined(typeof(BuildTarget), buildTarget ?? string.Empty))
                 {
-                    Console.WriteLine("Invalid argument for -buildTarget");
+                    Console.WriteLine($"{buildTarget} is not a defined {nameof(BuildTarget)}");
                     EditorApplication.Exit(121);
                 }
             }
-            else if (!validatedOptions.TryGetValue("activeBuildProfile", out var activeBuildProfile))
+            else if (!validatedOptions.TryGetValue("activeBuildProfile", out _))
             {
                 Console.WriteLine("Missing argument -buildTarget or -activeBuildProfile");
                 EditorApplication.Exit(120);
-            }
-            else
-            {
-                validatedOptions["activeBuildProfile"] = activeBuildProfile;
             }
 
 

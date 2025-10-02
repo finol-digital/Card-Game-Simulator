@@ -206,12 +206,18 @@ namespace Cgs.Cards
                 CardImageUri = new Uri(unityCard.ImageWebUrl);
             else if (File.Exists(unityCard.ImageFilePath))
                 CardImageUri = new Uri(unityCard.ImageFilePath);
-            CardImageSprite = unityCard.ImageSprite != null
-                ? unityCard.ImageSprite
-                : CardGameManager.Current.CardBackImageSprite;
-            cardImage.sprite = unityCard.ImageSprite != null
-                ? unityCard.ImageSprite
-                : CardGameManager.Current.CardBackImageSprite;
+
+            if (unityCard.ImageSprite != null)
+            {
+                // Clone the sprite for CardImageSprite to avoid destroying the original asset
+                CardImageSprite = Instantiate(unityCard.ImageSprite);
+                cardImage.sprite = CardImageSprite;
+            }
+            else
+            {
+                CardImageSprite = null;
+                cardImage.sprite = CardGameManager.Current.CardBackImageSprite;
+            }
 
             for (var i = _inputFields.Count - 1; i >= 0; i--)
                 Destroy(_inputFields[i].transform.parent.gameObject);
