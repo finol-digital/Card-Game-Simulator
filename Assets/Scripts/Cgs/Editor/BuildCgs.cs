@@ -20,7 +20,7 @@ namespace Cgs.Editor
         private static readonly string Eol = Environment.NewLine;
 
         private static readonly string[] Secrets =
-            {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
+            { "androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass" };
 
 #if UNITY_6000_0_OR_NEWER
         [UsedImplicitly]
@@ -30,19 +30,17 @@ namespace Cgs.Editor
             var options = GetValidatedOptions();
 
             // Load build profile from Assets folder
-            var buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>(options["customBuildProfile"]);
+            var buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>(options["activeBuildProfile"]);
 
             // Set it as active
             BuildProfile.SetActiveBuildProfile(buildProfile);
 
             // Get all buildOptions from options
-            var buildOptions = BuildOptions.None;
-            foreach (var buildOptionString in Enum.GetNames(typeof(BuildOptions)))
-            {
-                if (!options.ContainsKey(buildOptionString)) continue;
-                var buildOptionEnum = (BuildOptions) Enum.Parse(typeof(BuildOptions), buildOptionString);
-                buildOptions |= buildOptionEnum;
-            }
+            var buildOptions = (from buildOptionString in Enum.GetNames(typeof(BuildOptions))
+                    where options.ContainsKey(buildOptionString)
+                    select (BuildOptions)Enum.Parse(typeof(BuildOptions), buildOptionString))
+                .Aggregate(BuildOptions.None,
+                    (current, buildOptionEnum) => current | buildOptionEnum);
 
             // Define BuildPlayerWithProfileOptions
             var buildPlayerWithProfileOptions = new BuildPlayerWithProfileOptions
@@ -68,7 +66,7 @@ namespace Cgs.Editor
             var version = options["buildVersion"];
             PlayerSettings.bundleVersion = version;
             PlayerSettings.macOS.buildNumber = version;
-            while (version.Split(new[] {'.'}, StringSplitOptions.RemoveEmptyEntries).Length < 4)
+            while (version.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Length < 4)
                 version += ".0";
             PlayerSettings.WSA.packageVersion = new Version(version);
 
@@ -105,7 +103,7 @@ namespace Cgs.Editor
                         try
                         {
                             targetSdkVersion =
-                                (AndroidSdkVersions) Enum.Parse(typeof(AndroidSdkVersions), androidTargetSdkVersion);
+                                (AndroidSdkVersions)Enum.Parse(typeof(AndroidSdkVersions), androidTargetSdkVersion);
                         }
                         catch
                         {
@@ -142,14 +140,24 @@ namespace Cgs.Editor
                 EditorApplication.Exit(110);
             }
 
-            if (!validatedOptions.TryGetValue("buildTarget", out var buildTarget))
+            if (validatedOptions.TryGetValue("buildTarget", out var buildTarget))
             {
-                Console.WriteLine("Missing argument -buildTarget");
+                if (!Enum.IsDefined(typeof(BuildTarget), buildTarget ?? string.Empty))
+                {
+                    Console.WriteLine("Invalid argument for -buildTarget");
+                    EditorApplication.Exit(121);
+                }
+            }
+            else if (!validatedOptions.TryGetValue("activeBuildProfile", out var activeBuildProfile))
+            {
+                Console.WriteLine("Missing argument -buildTarget or -activeBuildProfile");
                 EditorApplication.Exit(120);
             }
+            else
+            {
+                validatedOptions["activeBuildProfile"] = activeBuildProfile;
+            }
 
-            if (!Enum.IsDefined(typeof(BuildTarget), buildTarget ?? string.Empty))
-                EditorApplication.Exit(121);
 
             if (validatedOptions.TryGetValue("buildPath", out var buildPath))
                 validatedOptions["customBuildPath"] = buildPath;
