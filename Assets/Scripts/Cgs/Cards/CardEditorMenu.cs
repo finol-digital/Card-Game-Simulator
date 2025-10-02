@@ -190,7 +190,7 @@ namespace Cgs.Cards
             BackFaceOptions.Clear();
             BackFaceOptions.Add(new Dropdown.OptionData() { text = string.Empty });
             var backIndex = 0;
-            var index = 0;
+            var index = 1;
             foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
             {
                 BackFaceOptions.Add(new Dropdown.OptionData() { text = backFaceKey });
