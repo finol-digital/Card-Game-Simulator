@@ -88,7 +88,7 @@ namespace Cgs.Cards
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
             ((GridLayoutGroup) searchResults.layoutGroup).cellSize = cardSize * CardGameManager.PixelsPerInch;
             foreach (var button in editButtons)
-                button.SetActive(Settings.DeveloperMode);
+                button.SetActive(Settings.DeveloperMode && !CardGameManager.Current.IsUploaded);
         }
 
         [UsedImplicitly]
@@ -102,10 +102,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void ShowNewCardSetModal()
         {
-            if (CardGameManager.Current.CgsGamesLink != null &&
-                CardGameManager.Current.CgsGamesLink.IsWellFormedOriginalString()
-                || CardGameManager.Current.AutoUpdateUrl != null &&
-                CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
+            if (CardGameManager.Current.IsUploaded)
             {
                 CardGameManager.Instance.Messenger.Show(CannotEditCardsMessage);
                 return;
@@ -136,7 +133,7 @@ namespace Cgs.Cards
 
         private void ShowCardEditorMenuFor(UnityCard unityCard)
         {
-            CardEditor.ShowFor(searchResults.Search, unityCard);
+            CardEditor.ShowFor(unityCard, searchResults.Search);
         }
 
         private void ShowCardEditorMenu()

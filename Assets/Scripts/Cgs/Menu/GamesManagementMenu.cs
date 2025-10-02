@@ -103,7 +103,7 @@ namespace Cgs.Menu
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
             else if (Inputs.IsSubmit)
             {
-                if (Settings.DeveloperMode)
+                if (Settings.DeveloperMode && !CardGameManager.Current.IsUploaded)
                     EditCurrent();
                 else
                     Sync();
@@ -132,8 +132,8 @@ namespace Cgs.Menu
             Menu.Show();
             browseButton.gameObject.SetActive(!Settings.DeveloperMode);
             newButton.gameObject.SetActive(Settings.DeveloperMode);
-            editButton.gameObject.SetActive(Settings.DeveloperMode);
-            syncButton.gameObject.SetActive(!Settings.DeveloperMode);
+            editButton.gameObject.SetActive(Settings.DeveloperMode && !CardGameManager.Current.IsUploaded);
+            syncButton.gameObject.SetActive(!Settings.DeveloperMode || CardGameManager.Current.IsUploaded);
             BuildGameSelectionOptions();
         }
 
