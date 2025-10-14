@@ -1,7 +1,7 @@
 name: Test, Build, and Deploy with GameCI
 concurrency: unity
 env:
-  UNITY_VERSION: 6000.2.1f1
+  UNITY_VERSION: 6000.2.6f2
 on:
   push:
     branches:
@@ -103,7 +103,7 @@ jobs:
   lint:
     name: Quality Check
     runs-on: ubuntu-latest
-    container: unityci/editor:ubuntu-6000.2.1f1-linux-il2cpp-3
+    container: unityci/editor:ubuntu-6000.2.6f2-linux-il2cpp-3
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
