@@ -89,6 +89,7 @@ PlayerSettings:
   muteOtherAudioSources: 0
   Prepare IOS For Recording: 0
   Force IOS Speakers When Recording: 0
+  audioSpatialExperience: 0
   deferSystemGesturesMode: 0
   hideHomeButton: 0
   submitAnalytics: 1
@@ -145,7 +146,8 @@ PlayerSettings:
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
   bundleVersion: 0.0.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 11400000, guid: 488333c7d54871d488f436b5bcc4f1b2, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -538,7 +540,10 @@ PlayerSettings:
       m_Height: 76
       m_Kind: 0
       m_SubKind: iPad
-  m_BuildTargetBatching: []
+  m_BuildTargetBatching:
+  - m_BuildTarget: Android
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs:
   - m_BuildTarget: MacStandaloneSupport
@@ -997,7 +1002,7 @@ PlayerSettings:
   syncCapabilities: 0
   platformCapabilities:
     WindowsStoreApps:
-      CodeGeneration: False
+      EnterpriseAuthentication: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -1031,10 +1036,10 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
-      Proximity: False
       InternetClient: True
+      CodeGeneration: False
       BackgroundMediaPlayback: False
-      EnterpriseAuthentication: False
+      Proximity: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
