@@ -153,6 +153,9 @@ namespace Cgs.Cards
         public void Show(UnityAction onCreationCallback)
         {
             Show();
+
+            CardName = string.Empty;
+            CardId = string.Empty;
             SetCode = string.Concat(CardGameManager.Current.Name.Where(char.IsLetterOrDigit));
 
             BackFaceOptions.Clear();
@@ -183,6 +186,7 @@ namespace Cgs.Cards
         public void ShowFor(UnityCard unityCard, UnityAction onCreationCallback)
         {
             Show();
+
             CardName = unityCard.Name;
             CardId = unityCard.Id;
             SetCode = unityCard.SetCode;
