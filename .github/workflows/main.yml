@@ -787,10 +787,9 @@ jobs:
   deployToMicrosoftStore:
     name: Deploy to the Microsoft Store
     runs-on: windows-2022
-#    container: unityci/editor:windows-6000.2.6f2-universal-windows-platform-3
+#    container: unityci/editor:windows-6000.2.6f2-universal-windows-platform-3 # only works on ubuntu
     needs: buildWSAPlayer
-    if: false
-#    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
+    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -805,10 +804,6 @@ jobs:
           mkdir C:/Card-Game-Simulator.git/build
           mv * C:/Card-Game-Simulator.git
 #          mv build/WSAPlayer C:/Card-Game-Simulator.git/build
-      - name: Setup Developer Command Prompt for Microsoft Visual C++
-        uses: ilammy/msvc-dev-cmd@v1
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -857,30 +852,16 @@ jobs:
         with:
           name: cgs-WSAPlayer2
           path: ${{ format('{0}\build\WSAPlayer', 'C:\Card-Game-Simulator.git') }}
-      - name: Remove spaces from project name
-# Remove Spaces
-        if: false
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator.sln"
-          replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
-      - name: Remove spaces from project name 2
-# Remove Spaces
-        if: false
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
-          replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-      - name: Add Package.StoreAssociation.xml to .vcxproj
 # Associate with App Store
+      - name: Add Package.StoreAssociation.xml to .vcxproj
         if: false
         uses: mingjun97/file-regex-replace@v1
         with:
           regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
           replacement: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
-      - name: Add Package.StoreAssociation.xml to .vcxproj.filters
 # Associate with App Store
+      - name: Add Package.StoreAssociation.xml to .vcxproj.filters
         if: false
         uses: mingjun97/file-regex-replace@v1
         with:
@@ -888,8 +869,8 @@ jobs:
           replacement: '</ItemGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
           include: 'Card Game Simulator\.vcxproj\.filters'
-      - name: Update the Package.appxmanifest
 # Associate with App Store
+      - name: Update the Package.appxmanifest
         if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -916,6 +897,10 @@ jobs:
           $currentDirectory = Get-Location
           $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:UwpProjectDirectory -AdditionalChildPath $env:SigningCertificate
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+      - name: Setup Developer Command Prompt for Microsoft Visual C++
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
       - name: Configure Microsoft Store Developer CLI
@@ -949,7 +934,6 @@ jobs:
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x86|x64|arm|arm64" /p:PackageCertificateKeyFile=$env:SigningCertificate
       - name: Remove the .pfx
-        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
