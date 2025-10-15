@@ -462,7 +462,7 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
-          find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
+          find $IOS_BUILD_PATH -type f -iname "usymtool*" -exec chmod +x {} \;
           bundle install
           bundle exec fastlane ios release
 
@@ -787,6 +787,7 @@ jobs:
   deployToMicrosoftStore:
     name: Deploy to the Microsoft Store
     runs-on: windows-2022
+    container: unityci/editor:windows-6000.2.6f2-universal-windows-platform-3
     needs: buildWSAPlayer
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
@@ -803,11 +804,6 @@ jobs:
           mkdir C:/Card-Game-Simulator.git/build
           mv * C:/Card-Game-Simulator.git
 #          mv build/WSAPlayer C:/Card-Game-Simulator.git/build
-      - name: Setup Unity UWP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: universal-windows-platform
-          project-path: C:/Card-Game-Simulator.git
       - name: Setup Developer Command Prompt for Microsoft Visual C++
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
