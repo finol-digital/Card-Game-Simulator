@@ -787,9 +787,10 @@ jobs:
   deployToMicrosoftStore:
     name: Deploy to the Microsoft Store
     runs-on: windows-2022
-    container: unityci/editor:windows-6000.2.6f2-universal-windows-platform-3
+#    container: unityci/editor:windows-6000.2.6f2-universal-windows-platform-3
     needs: buildWSAPlayer
-    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
+    if: false
+#    if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
