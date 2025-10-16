@@ -843,10 +843,10 @@ jobs:
           cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
           $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\storebroker\to_remove.txt -Raw
           echo "$content_to_remove"
-          $targetContent = Get-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems" -Raw
+          $targetContent = Get-Content -Path ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj" -Raw
           $updatedContent = $targetContent -replace [regex]::Escape($content_to_remove), ''
-          $updatedContent | Set-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
-          cat ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
+          $updatedContent | Set-Content -Path ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj"
+          cat ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj"
       - name: Upload Build2
         uses: actions/upload-artifact@v4
         with:
