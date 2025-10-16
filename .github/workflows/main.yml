@@ -38,6 +38,7 @@ jobs:
     permissions:
       checks: write
       contents: write
+    timeout-minutes: 45
     outputs:
       isPr: ${{ steps.PR.outputs.pr_found }}
     steps:
@@ -61,16 +62,16 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          large-packages: false
       - name: Cache Library
         uses: actions/cache@v4
         with:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-test-
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          large-packages: false
       - name: Run Unit Tests
         uses: game-ci/unity-test-runner@main
         env:
@@ -104,6 +105,7 @@ jobs:
     name: Quality Check
     runs-on: ubuntu-latest
     container: unityci/editor:ubuntu-6000.2.6f2-linux-il2cpp-3
+    timeout-minutes: 45
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -175,6 +177,7 @@ jobs:
           - iOS
           - StandaloneLinux64
           - WebGL
+    timeout-minutes: 45
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
     steps:
@@ -198,16 +201,16 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          large-packages: false
       - name: Cache Library
         uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          large-packages: false
       - name: Build Unity Project
         id: buildStep
         uses: game-ci/unity-builder@main
@@ -283,16 +286,16 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
-      - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          large-packages: false
       - name: Cache Library
         uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildProfiles-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildProfiles-
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          large-packages: false
       - name: Build Unity Project
         id: buildStep
         uses: game-ci/unity-builder@main
