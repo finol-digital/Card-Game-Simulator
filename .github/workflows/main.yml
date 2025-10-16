@@ -901,6 +901,10 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+      - name: Setup Unity
+        uses: kuler90/setup-unity@v1
+        with:
+          unity-modules: universal-windows-platform
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
       - name: Configure Microsoft Store Developer CLI
