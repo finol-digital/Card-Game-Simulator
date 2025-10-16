@@ -201,16 +201,16 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          large-packages: false
       - name: Cache Library
         uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
-      - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          large-packages: false
       - name: Build Unity Project
         id: buildStep
         uses: game-ci/unity-builder@main
