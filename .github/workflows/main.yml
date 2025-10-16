@@ -902,8 +902,9 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
       - name: Setup Unity
-        uses: kuler90/setup-unity@v1
+        uses: davidmfinol/setup-unity@master
         with:
+          project-path: C:/Card-Game-Simulator.git
           unity-modules: universal-windows-platform
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
