@@ -904,6 +904,7 @@ jobs:
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
       - name: Configure Microsoft Store Developer CLI
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
