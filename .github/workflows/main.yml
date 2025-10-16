@@ -38,9 +38,9 @@ jobs:
     permissions:
       checks: write
       contents: write
-    timeout-minutes: 45
     outputs:
       isPr: ${{ steps.PR.outputs.pr_found }}
+    timeout-minutes: 30
     steps:
       - name: Pre-pull Unity Docker image
         run: |
@@ -105,7 +105,7 @@ jobs:
     name: Quality Check
     runs-on: ubuntu-latest
     container: unityci/editor:ubuntu-6000.2.6f2-linux-il2cpp-3
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -177,9 +177,9 @@ jobs:
           - iOS
           - StandaloneLinux64
           - WebGL
-    timeout-minutes: 45
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+    timeout-minutes: 60
     steps:
       - name: Pre-pull Unity Docker image
         run: |
@@ -265,6 +265,7 @@ jobs:
           - 'Assets/Settings/Build Profiles/Web_SinglePlayer.asset'
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+    timeout-minutes: 60
     steps:
       - name: Pre-pull Unity Docker image
         run: |
