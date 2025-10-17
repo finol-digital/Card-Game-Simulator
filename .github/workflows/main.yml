@@ -899,7 +899,9 @@ jobs:
         run: |
           $pfx_cert_byte = [System.Convert]::FromBase64String("$MICROSOFT_STORE_PFX_FILE")
           $certificatePath = Join-Path -Path $env:UwpProjectDirectory -ChildPath $env:SigningCertificate
+          echo "certificatePath: $certificatePath"
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+          dir $env:UwpProjectDirectory
       - name: Setup Developer Command Prompt for Microsoft Visual C++
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup MSBuild
