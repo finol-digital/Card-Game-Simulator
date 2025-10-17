@@ -179,7 +179,7 @@ jobs:
           - WebGL
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - name: Pre-pull Unity Docker image
         run: |
