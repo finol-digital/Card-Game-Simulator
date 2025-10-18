@@ -959,7 +959,6 @@ jobs:
           upload_path: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
         run: Copy-Item ".\$env:APPX_PATH" -Destination ".\$env:upload_path"
       - name: Upload .msixupload
-        if: false
         uses: actions/upload-artifact@v4
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
