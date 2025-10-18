@@ -3,6 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -43,7 +45,7 @@ namespace Cgs.Menu
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform) transform).rect.width < MinWidth) // Portrait
+            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
             {
                 backgroundImage.sprite = backgroundSpritePortrait;
                 footerImage.preserveAspect = false;
@@ -93,15 +95,8 @@ namespace Cgs.Menu
             centerText.text = TouchlessStartMessage;
 #endif
             versionText.text = VersionMessage;
-        }
 
-        private void Update()
-        {
-            if (CardGameManager.Instance.ModalCanvas != null)
-                return;
-
-            if (Input.anyKeyDown)
-                SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            InputSystem.onAnyButtonPress.CallOnce(_ => SceneManager.LoadScene(MainMenu.MainMenuSceneIndex));
         }
     }
 }
