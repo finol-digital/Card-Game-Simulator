@@ -9,6 +9,28 @@
         "type": 301
       }
     ],
+    "rewrites": [
+      {
+        "source": "/main",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/play",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/decks",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/cards",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/settings",
+        "destination": "/index.html"
+      }
+    ],
     "ignore": [
       "firebase.json",
       "**/.*",
