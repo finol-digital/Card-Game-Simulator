@@ -86,7 +86,7 @@ namespace Cgs.Cards
         {
             bannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
-            ((GridLayoutGroup) searchResults.layoutGroup).cellSize = cardSize * CardGameManager.PixelsPerInch;
+            ((GridLayoutGroup)searchResults.layoutGroup).cellSize = cardSize * CardGameManager.PixelsPerInch;
             foreach (var button in editButtons)
                 button.SetActive(Settings.DeveloperMode && !CardGameManager.Current.IsUploaded);
         }
@@ -149,7 +149,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void BackToMainMenu()
         {
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
     }
 }

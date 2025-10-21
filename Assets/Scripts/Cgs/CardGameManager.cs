@@ -353,10 +353,60 @@ namespace Cgs
         private void OnDeepLinkActivated(string deepLink)
         {
             Debug.Log("OnDeepLinkActivated!");
+            DeepLinkLoadScene(deepLink);
+            DeepLinkGetAutoUpdateUrl(deepLink);
+        }
+
+        private static void DeepLinkLoadScene(string deepLink)
+        {
+            var scene = GetScene(deepLink);
+            if ("main".Equals(scene, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log("DeepLinkLoadScene::main");
+                SceneManager.LoadScene(Tags.MainMenuSceneIndex);
+            }
+            else if ("play".Equals(scene, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log("DeepLinkLoadScene::play");
+                SceneManager.LoadScene(Tags.PlayModeSceneIndex);
+            }
+            else if ("decks".Equals(scene, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log("DeepLinkLoadScene::decks");
+                SceneManager.LoadScene(Tags.DeckEditorSceneIndex);
+            }
+            else if ("cards".Equals(scene, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log("DeepLinkLoadScene::cards");
+                SceneManager.LoadScene(Tags.CardsExplorerSceneIndex);
+            }
+            else if ("settings".Equals(scene, StringComparison.OrdinalIgnoreCase))
+            {
+                Debug.Log("DeepLinkLoadScene::settings");
+                SceneManager.LoadScene(Tags.SettingsSceneIndex);
+            }
+        }
+
+        private static string GetScene(string deepLink)
+        {
+            Debug.Log("GetScene::deepLink: " + deepLink);
+            if (string.IsNullOrEmpty(deepLink) || !Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
+            {
+                Debug.LogWarning("GetScene::deepLinkMalformed: " + deepLink);
+                return null;
+            }
+
+            var deepLinkUriLast = new Uri(deepLink).Segments.LastOrDefault();
+            Debug.Log("GetScene::deepLinkUriLast: " + deepLinkUriLast);
+            return deepLinkUriLast;
+        }
+
+        private void DeepLinkGetAutoUpdateUrl(string deepLink)
+        {
             var autoUpdateUrl = GetAutoUpdateUrl(deepLink);
             if (string.IsNullOrEmpty(autoUpdateUrl) ||
                 !Uri.IsWellFormedUriString(autoUpdateUrl, UriKind.RelativeOrAbsolute))
-                Debug.LogWarning("OnDeepLinkActivated::autoUpdateUrlMissingOrMalformed: " + deepLink);
+                Debug.LogWarning("DeepLinkGetAutoUpdateUrl::autoUpdateUrlMissingOrMalformed: " + deepLink);
             else
                 StartGetCardGame(autoUpdateUrl);
         }
@@ -381,7 +431,7 @@ namespace Cgs
         private IEnumerator Start()
         {
             yield return null;
-            while (Current is {IsDownloading: true})
+            while (Current is { IsDownloading: true })
                 yield return null;
 
             Debug.Log("CardGameManager::Start");
@@ -410,7 +460,7 @@ namespace Cgs
         [PublicAPI]
         public void StartGetCardGame(string autoUpdateUrl)
         {
-            if (Current is {IsDownloading: true})
+            if (Current is { IsDownloading: true })
             {
                 Debug.LogError("ERROR: StartGetCardGame while already downloading");
                 return;

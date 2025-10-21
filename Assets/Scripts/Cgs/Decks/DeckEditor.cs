@@ -10,7 +10,6 @@ using Cgs.CardGameView;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Cards;
-using Cgs.Menu;
 using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
@@ -478,7 +477,7 @@ namespace Cgs.Decks
 
         private static void BackToMainMenu()
         {
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
     }
 }

@@ -96,7 +96,7 @@ namespace Cgs.Menu
 #endif
             versionText.text = VersionMessage;
 
-            InputSystem.onAnyButtonPress.CallOnce(_ => SceneManager.LoadScene(MainMenu.MainMenuSceneIndex));
+            InputSystem.onAnyButtonPress.CallOnce(_ => SceneManager.LoadScene(Tags.MainMenuSceneIndex));
         }
     }
 }

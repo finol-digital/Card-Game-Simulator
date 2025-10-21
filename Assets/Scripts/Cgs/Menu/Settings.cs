@@ -211,7 +211,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void BackToMainMenu()
         {
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Cgs.Play.Multiplayer
             {
                 _isLanConnectionSource = value;
                 roomIdIpLabel.text = RoomIdIpLabel;
-                ((Text) roomIdIpInputField.placeholder).text = RoomIdIpPlaceholder;
+                ((Text)roomIdIpInputField.placeholder).text = RoomIdIpPlaceholder;
             }
         }
 
@@ -356,7 +356,7 @@ namespace Cgs.Play.Multiplayer
             if (CgsNetManager.Instance.Discovery.IsRunning && !CgsNetManager.Instance.IsServer)
                 CgsNetManager.Instance.Discovery.StopDiscovery();
 
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
     }
 }
