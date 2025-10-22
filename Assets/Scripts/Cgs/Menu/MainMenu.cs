@@ -42,12 +42,6 @@ namespace Cgs.Menu
 
         public const string QuitPrompt = "Quit?";
 
-        public const int MainMenuSceneIndex = 1;
-        private const int PlayModeSceneIndex = 2;
-        private const int DeckEditorSceneIndex = 3;
-        private const int CardsExplorerSceneIndex = 4;
-        private const int SettingsSceneIndex = 5;
-
         private const float StartBufferTime = 0.1f;
 
         public GameObject gamesManagementMenuPrefab;
@@ -95,7 +89,7 @@ namespace Cgs.Menu
 
         private void ResizeFooter()
         {
-            var screenWidth = ((RectTransform) transform).rect.width;
+            var screenWidth = ((RectTransform)transform).rect.width;
 
             var sizeDelta = copyrightText.rectTransform.sizeDelta;
             sizeDelta = screenWidth < MinWidth
@@ -257,7 +251,7 @@ namespace Cgs.Menu
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.IsSearchingForServer = false;
-            SceneManager.LoadScene(PlayModeSceneIndex);
+            SceneManager.LoadScene(Tags.PlayModeSceneIndex);
         }
 
         [UsedImplicitly]
@@ -267,7 +261,7 @@ namespace Cgs.Menu
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.IsSearchingForServer = true;
-            SceneManager.LoadScene(PlayModeSceneIndex);
+            SceneManager.LoadScene(Tags.PlayModeSceneIndex);
 #endif
         }
 
@@ -276,7 +270,7 @@ namespace Cgs.Menu
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            SceneManager.LoadScene(DeckEditorSceneIndex);
+            SceneManager.LoadScene(Tags.DeckEditorSceneIndex);
         }
 
         [UsedImplicitly]
@@ -284,7 +278,7 @@ namespace Cgs.Menu
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            SceneManager.LoadScene(CardsExplorerSceneIndex);
+            SceneManager.LoadScene(Tags.CardsExplorerSceneIndex);
         }
 
         [UsedImplicitly]
@@ -292,7 +286,7 @@ namespace Cgs.Menu
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
-            SceneManager.LoadScene(SettingsSceneIndex);
+            SceneManager.LoadScene(Tags.SettingsSceneIndex);
         }
 
         [UsedImplicitly]

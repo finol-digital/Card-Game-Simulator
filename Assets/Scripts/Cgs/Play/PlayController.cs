@@ -13,7 +13,6 @@ using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Cards;
 using Cgs.Decks;
-using Cgs.Menu;
 using Cgs.Play.Drawer;
 using Cgs.Play.Multiplayer;
 using Cgs.UI.ScrollRects;
@@ -97,13 +96,13 @@ namespace Cgs.Play
 
                 var cardStack = cardStackPrefab.GetComponent<CardStack>();
                 var cardStackLabelHeight =
-                    ((RectTransform) cardStack.deckLabel.transform.parent).rect.height * playArea.CurrentZoom;
+                    ((RectTransform)cardStack.deckLabel.transform.parent).rect.height * playArea.CurrentZoom;
                 var cardSize = CardGameManager.PixelsPerInch * playArea.CurrentZoom *
                                new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
 
                 var up = Vector2.up * (Screen.height - cardSize.y * 2f - cardStackLabelHeight);
                 var right = Vector2.right * (cardSize.x * 2f);
-                RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform) playAreaCardZone.transform,
+                RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)playAreaCardZone.transform,
                     (up + right),
                     null, out var nextDeckPosition);
 
@@ -214,7 +213,7 @@ namespace Cgs.Play
 
         public void ResetPlayArea()
         {
-            var rectTransform = (RectTransform) playAreaCardZone.transform;
+            var rectTransform = (RectTransform)playAreaCardZone.transform;
             if (!NetworkManager.Singleton.IsConnectedClient)
                 rectTransform.DestroyAllChildren();
             else if (CgsNetManager.Instance.IsHost)
@@ -237,7 +236,7 @@ namespace Cgs.Play
             {
                 playMatImage = Instantiate(playMatPrefab.gameObject, playAreaCardZone.transform)
                     .GetOrAddComponent<Image>();
-                var playMatRectTransform = (RectTransform) playMatImage.transform;
+                var playMatRectTransform = (RectTransform)playMatImage.transform;
                 playMatRectTransform.anchoredPosition = Vector2.zero;
                 playMatRectTransform.sizeDelta = new Vector2(CardGameManager.Current.PlayMatSize.X,
                     CardGameManager.Current.PlayMatSize.Y) * CardGameManager.PixelsPerInch;
@@ -428,7 +427,7 @@ namespace Cgs.Play
                 board.GameBoardId = gameBoardId;
             if (!Vector2.zero.Equals(size))
                 board.Size = size;
-            var rectTransform = (RectTransform) board.transform;
+            var rectTransform = (RectTransform)board.transform;
             if (!Vector2.zero.Equals(position))
                 rectTransform.localPosition = position;
             board.Position = rectTransform.localPosition;
@@ -733,7 +732,7 @@ namespace Cgs.Play
                     _ => CreateAreaZone(position, rotation)
                 };
 
-                var rectTransform = (RectTransform) cardZone.transform;
+                var rectTransform = (RectTransform)cardZone.transform;
                 rectTransform.anchorMin = 0.5f * Vector2.one;
                 rectTransform.anchorMax = 0.5f * Vector2.one;
                 rectTransform.anchoredPosition = Vector2.zero;
@@ -807,7 +806,7 @@ namespace Cgs.Play
         public void BackToMainMenu()
         {
             StopNetworking();
-            SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
 
         private static void StopNetworking()

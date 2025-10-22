@@ -7,6 +7,63 @@
         "source": "/gatcg",
         "destination": "https://cgs.games/gatcg/grand_archive_tcg",
         "type": 301
+      },
+      {
+        "source": "/bluesky",
+        "destination": "https://bsky.app/profile/cardgamesim.bsky.social",
+        "type": 301
+      },
+      {
+        "source": "/discord",
+        "destination": "https://discord.gg/RkCCAXb5sz",
+        "type": 301
+      },
+      {
+        "source": "/facebook",
+        "destination": "https://www.facebook.com/cardgamesimulator/",
+        "type": 301
+      },
+      {
+        "source": "/github",
+        "destination": "https://github.com/finol-digital/Card-Game-Simulator",
+        "type": 301
+      },
+      {
+        "source": "/reddit",
+        "destination": "https://www.reddit.com/r/CardGameSimulator/",
+        "type": 301
+      },
+      {
+        "source": "/twitter",
+        "destination": "https://twitter.com/cardgamesim",
+        "type": 301
+      },
+      {
+        "source": "/x",
+        "destination": "https://x.com/cardgamesim",
+        "type": 301
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/main",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/play",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/decks",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/cards",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/settings",
+        "destination": "/index.html"
       }
     ],
     "ignore": [

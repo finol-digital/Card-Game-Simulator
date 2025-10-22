@@ -40,6 +40,7 @@ jobs:
       contents: write
     outputs:
       isPr: ${{ steps.PR.outputs.pr_found }}
+    timeout-minutes: 30
     steps:
       - name: Pre-pull Unity Docker image
         run: |
@@ -104,6 +105,7 @@ jobs:
     name: Quality Check
     runs-on: ubuntu-latest
     container: unityci/editor:ubuntu-6000.2.6f2-linux-il2cpp-3
+    timeout-minutes: 30
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -177,6 +179,7 @@ jobs:
           - WebGL
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+    timeout-minutes: 90
     steps:
       - name: Pre-pull Unity Docker image
         run: |
@@ -198,16 +201,16 @@ jobs:
           git lfs pull
           git add .
           git reset --hard
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          large-packages: false
       - name: Cache Library
         uses: actions/cache@v4
         with:
           path: Library
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: Library-buildLinux-${{ matrix.targetPlatform }}-
-      - name: Free Disk Space
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          large-packages: false
       - name: Build Unity Project
         id: buildStep
         uses: game-ci/unity-builder@main
@@ -262,6 +265,7 @@ jobs:
           - 'Assets/Settings/Build Profiles/Web_SinglePlayer.asset'
     outputs:
       buildVersion: ${{ steps.buildStep.outputs.buildVersion }}
+    timeout-minutes: 60
     steps:
       - name: Pre-pull Unity Docker image
         run: |
@@ -462,7 +466,7 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
           find $IOS_BUILD_PATH -type f -name "**.sh" -exec chmod +x {} \;
-          find $IOS_BUILD_PATH -type f -iname "usymtool" -exec chmod +x {} \;
+          find $IOS_BUILD_PATH -type f -iname "usymtool*" -exec chmod +x {} \;
           bundle install
           bundle exec fastlane ios release
 
@@ -787,6 +791,7 @@ jobs:
   deployToMicrosoftStore:
     name: Deploy to the Microsoft Store
     runs-on: windows-2022
+#    container: unityci/editor:windows-6000.2.6f2-universal-windows-platform-3 # only works on ubuntu
     needs: buildWSAPlayer
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'WSAPlayer'))
     steps:
@@ -803,15 +808,6 @@ jobs:
           mkdir C:/Card-Game-Simulator.git/build
           mv * C:/Card-Game-Simulator.git
 #          mv build/WSAPlayer C:/Card-Game-Simulator.git/build
-      - name: Setup Unity UWP
-        uses: kuler90/setup-unity@v1
-        with:
-          unity-modules: universal-windows-platform
-          project-path: C:/Card-Game-Simulator.git
-      - name: Setup Developer Command Prompt for Microsoft Visual C++
-        uses: ilammy/msvc-dev-cmd@v1
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -851,39 +847,25 @@ jobs:
           cat ".\$env:WsaPlayerDirectory\UnityCommon.props"
           $content_to_remove = Get-Content -Path C:\Card-Game-Simulator.git\storebroker\to_remove.txt -Raw
           echo "$content_to_remove"
-          $targetContent = Get-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems" -Raw
+          $targetContent = Get-Content -Path ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj" -Raw
           $updatedContent = $targetContent -replace [regex]::Escape($content_to_remove), ''
-          $updatedContent | Set-Content -Path ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
-          cat ".\$env:UwpProjectDirectory\Unity Data.vcxitems"
+          $updatedContent | Set-Content -Path ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj"
+          cat ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj"
       - name: Upload Build2
         uses: actions/upload-artifact@v4
         with:
           name: cgs-WSAPlayer2
           path: ${{ format('{0}\build\WSAPlayer', 'C:\Card-Game-Simulator.git') }}
-      - name: Remove spaces from project name
-# Remove Spaces
-        if: false
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator.sln"
-          replacements: "\"Card Game Simulator\"=\"CardGameSimulator\""
-      - name: Remove spaces from project name 2
-# Remove Spaces
-        if: false
-        uses: davidmfinol/replace-action@master
-        with:
-          files: "C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator/Card Game Simulator.vcxproj"
-          replacements: "</PropertyGroup>=<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>"
-      - name: Add Package.StoreAssociation.xml to .vcxproj
 # Associate with App Store
+      - name: Add Package.StoreAssociation.xml to .vcxproj
         if: false
         uses: mingjun97/file-regex-replace@v1
         with:
           regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
           replacement: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
-      - name: Add Package.StoreAssociation.xml to .vcxproj.filters
 # Associate with App Store
+      - name: Add Package.StoreAssociation.xml to .vcxproj.filters
         if: false
         uses: mingjun97/file-regex-replace@v1
         with:
@@ -891,8 +873,8 @@ jobs:
           replacement: '</ItemGroup><ItemGroup><None Include="Package.StoreAssociation.xml" /></ItemGroup>'
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
           include: 'Card Game Simulator\.vcxproj\.filters'
-      - name: Update the Package.appxmanifest
 # Associate with App Store
+      - name: Update the Package.appxmanifest
         if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -911,17 +893,28 @@ jobs:
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
-          UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
+          UwpProjectDirectory: C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator
           SigningCertificate: Card Game Simulator_StoreKey.pfx
           MICROSOFT_STORE_PFX_FILE: ${{ secrets.MICROSOFT_STORE_PFX_FILE }}
         run: |
           $pfx_cert_byte = [System.Convert]::FromBase64String("$MICROSOFT_STORE_PFX_FILE")
-          $currentDirectory = Get-Location
-          $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:UwpProjectDirectory -AdditionalChildPath $env:SigningCertificate
+          $certificatePath = Join-Path -Path $env:UwpProjectDirectory -ChildPath $env:SigningCertificate
+          echo "certificatePath: $certificatePath"
           [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+          dir $env:UwpProjectDirectory
+      - name: Setup Developer Command Prompt for Microsoft Visual C++
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+      - name: Setup Unity
+        uses: davidmfinol/setup-unity@master
+        with:
+          project-path: C:/Card-Game-Simulator.git
+          unity-modules: universal-windows-platform
       - name: Setup Microsoft Store Developer CLI
         uses: microsoft/setup-msstore-cli@v1
       - name: Configure Microsoft Store Developer CLI
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -930,7 +923,7 @@ jobs:
           MICROSOFT_CLIENT_ID: ${{ secrets.MICROSOFT_CLIENT_ID }}
           MICROSOFT_KEY: ${{ secrets.MICROSOFT_KEY }}
         run: msstore reconfigure --tenantId "$MICROSOFT_TENANT_ID" --sellerId "$MICROSOFT_SELLER_ID" --clientId "$MICROSOFT_CLIENT_ID" --clientSecret "$MICROSOFT_KEY"
-      - name: Build the .appxupload with Microsoft Store Developer CLI
+      - name: Build the .msixupload with Microsoft Store Developer CLI
         if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
@@ -943,36 +936,33 @@ jobs:
           msstore package "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Package.appxmanifest"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer"
           dir "C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator"
-      - name: Build the .appxupload
-        if: false
+      - name: Build the .msixupload with MSBuild
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
           SolutionPath: build\WSAPlayer\WSAPlayer\Card Game Simulator.sln
-          SigningCertificate: Card Game Simulator_StoreKey.pfx
-        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x86|x64|arm|arm64" /p:PackageCertificateKeyFile=$env:SigningCertificate
+          SigningCertificate:  C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator\Card Game Simulator_StoreKey.pfx
+        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=false
+#        run: msbuild $env:SolutionPath /p:Configuration="Master" /p:Platform="x64" /p:UapAppxPackageBuildMode="StoreUpload" /p:AppxBundle="Always" /p:AppxBundlePlatforms="x64" /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="" /p:PackageCertificateKeyFile=$env:SigningCertificate
       - name: Remove the .pfx
-        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
-          UwpProjectDirectory: build\WSAPlayer\WSAPlayer\Card Game Simulator
+          UwpProjectDirectory: C:\Card-Game-Simulator.git\build\WSAPlayer\WSAPlayer\Card Game Simulator
           SigningCertificate: Card Game Simulator_StoreKey.pfx
         run: Remove-Item -path $env:UwpProjectDirectory\$env:SigningCertificate
-      - name: Copy .appxupload
-        if: false
+      - name: Copy .msixupload
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
-          APPX_PATH: ${{ format('build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-          upload_path: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+          APPX_PATH: ${{ format('build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+          upload_path: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
         run: Copy-Item ".\$env:APPX_PATH" -Destination ".\$env:upload_path"
-      - name: Upload .appxupload
-        if: false
+      - name: Upload .msixupload
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ format('Card Game Simulator_{0}.0_x86_x64_arm_arm64_bundle_Master.appxupload', needs.buildWSAPlayer.outputs.buildVersion) }}
-          path: ${{ format('{0}\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+          name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
+          path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Publish to the Microsoft Store
         if: false
         uses: isaacrlevin/windows-store-action@1.0
@@ -981,7 +971,7 @@ jobs:
           client-id: ${{ secrets.MICROSOFT_CLIENT_ID }}
           client-secret: ${{ secrets.MICROSOFT_KEY }}
           app-id: 9N96N5S4W3J0
-          package-path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+          package-path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store
         if: false
         working-directory: C:/Card-Game-Simulator.git
@@ -994,7 +984,7 @@ jobs:
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
           IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', 'C:\Card-Game-Simulator.git') }}
-          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x86_x64_arm_arm64_bundle_Master.appxupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
+          APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
           PACKAGE_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.zip', 'C:\Card-Game-Simulator.git') }}

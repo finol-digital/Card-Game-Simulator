@@ -2,7 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -38,12 +41,14 @@ namespace Cgs.Menu
         public Text centerText;
         public Text versionText;
 
+        private IDisposable _anyButtonPressListener;
+
         private void OnRectTransformDimensionsChange()
         {
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform) transform).rect.width < MinWidth) // Portrait
+            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
             {
                 backgroundImage.sprite = backgroundSpritePortrait;
                 footerImage.preserveAspect = false;
@@ -93,15 +98,14 @@ namespace Cgs.Menu
             centerText.text = TouchlessStartMessage;
 #endif
             versionText.text = VersionMessage;
+
+            _anyButtonPressListener = InputSystem.onAnyButtonPress
+                .CallOnce(_ => SceneManager.LoadScene(Tags.MainMenuSceneIndex));
         }
 
-        private void Update()
+        private void OnDisable()
         {
-            if (CardGameManager.Instance.ModalCanvas != null)
-                return;
-
-            if (Input.anyKeyDown)
-                SceneManager.LoadScene(MainMenu.MainMenuSceneIndex);
+            _anyButtonPressListener.Dispose();
         }
     }
 }

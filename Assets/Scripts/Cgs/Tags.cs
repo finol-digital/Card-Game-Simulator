@@ -17,5 +17,11 @@ namespace Cgs
         public const string MahjongUrl = "https://www.cardgamesimulator.com/games/Mahjong/cgs.json";
         public const string StandardPlayingCardsUrl = "https://www.cardgamesimulator.com/games/Standard/cgs.json";
         public const string CgsGamesBrowseUrl = "https://cgs.games/browse";
+
+        public const int MainMenuSceneIndex = 1;
+        public const int PlayModeSceneIndex = 2;
+        public const int DeckEditorSceneIndex = 3;
+        public const int CardsExplorerSceneIndex = 4;
+        public const int SettingsSceneIndex = 5;
     }
 }
