@@ -40,7 +40,7 @@
       },
       {
         "source": "/x",
-        "destination": "https://x.com/cardgamesim,",
+        "destination": "https://x.com/cardgamesim",
         "type": 301
       }
     ],
