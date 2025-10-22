@@ -396,7 +396,7 @@ namespace Cgs
                 return null;
             }
 
-            var deepLinkUriLast = new Uri(deepLink).Segments.LastOrDefault();
+            var deepLinkUriLast = new Uri(deepLink).Segments.LastOrDefault()?.TrimEnd('/');
             Debug.Log("GetScene::deepLinkUriLast: " + deepLinkUriLast);
             return deepLinkUriLast;
         }
