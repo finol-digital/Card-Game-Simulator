@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
@@ -39,6 +40,8 @@ namespace Cgs.Menu
         public Text companyText;
         public Text centerText;
         public Text versionText;
+
+        private IDisposable _anyButtonPressListener;
 
         private void OnRectTransformDimensionsChange()
         {
@@ -96,7 +99,13 @@ namespace Cgs.Menu
 #endif
             versionText.text = VersionMessage;
 
-            InputSystem.onAnyButtonPress.CallOnce(_ => SceneManager.LoadScene(Tags.MainMenuSceneIndex));
+            _anyButtonPressListener = InputSystem.onAnyButtonPress
+                .CallOnce(_ => SceneManager.LoadScene(Tags.MainMenuSceneIndex));
+        }
+
+        private void OnDisable()
+        {
+            _anyButtonPressListener.Dispose();
         }
     }
 }

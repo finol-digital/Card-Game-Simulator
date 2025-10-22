@@ -390,7 +390,7 @@ namespace Cgs
         private static string GetScene(string deepLink)
         {
             Debug.Log("GetScene::deepLink: " + deepLink);
-            if (string.IsNullOrEmpty(deepLink) || !Uri.IsWellFormedUriString(deepLink, UriKind.RelativeOrAbsolute))
+            if (string.IsNullOrEmpty(deepLink) || !Uri.IsWellFormedUriString(deepLink, UriKind.Absolute))
             {
                 Debug.LogWarning("GetScene::deepLinkMalformed: " + deepLink);
                 return null;
