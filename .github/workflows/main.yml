@@ -406,11 +406,11 @@ jobs:
           path: build/StandaloneOSX/Card Game Simulator.app
           name: Card Game Simulator.app
       - name: Zip App
-        uses: vimtor/action-zip@v1.2
+        uses: thedoctor0/zip-release@0.7.6
         if: github.event.action == 'published'
         with:
-          files: build/StandaloneOSX/
-          dest: build/cgs-StandaloneOSX.zip
+          directory: build/StandaloneOSX/
+          filename: cgs-StandaloneOSX.zip
       - name: Upload Zip to GitHub Release
         uses: svenstaro/upload-release-action@v2
         if: github.event.action == 'published'
