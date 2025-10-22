@@ -37,7 +37,7 @@
         "source": "/twitter",
         "destination": "https://twitter.com/cardgamesim",
         "type": 301
-      }
+      },
       {
         "source": "/x",
         "destination": "https://x.com/cardgamesim,",
