@@ -807,7 +807,6 @@ jobs:
           mkdir C:/Card-Game-Simulator.git
           mkdir C:/Card-Game-Simulator.git/build
           mv * C:/Card-Game-Simulator.git
-#          mv build/WSAPlayer C:/Card-Game-Simulator.git/build
       - name: Update Release Notes
         working-directory: C:/Card-Game-Simulator.git
         if: github.event.action == 'published'
@@ -830,9 +829,7 @@ jobs:
         with:
           files: "C:/Card-Game-Simulator.git/storebroker/en-us/PDP.xml"
           replacements: "OUTPUT_RELEASE_NOTES=${{ steps.changelog.outputs.RELEASE_NOTES }}"
-      - name: Prepare project
-# Fix UnityWSAPlayerDir
-# Remove to_remove.txt
+      - name: Prepare project by fixing UnityWSAPlayerDir and removing to_remove.txt
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
@@ -858,7 +855,6 @@ jobs:
           path: ${{ format('{0}\build\WSAPlayer', 'C:\Card-Game-Simulator.git') }}
 # Associate with App Store
       - name: Add Package.StoreAssociation.xml to .vcxproj
-        if: false
         uses: mingjun97/file-regex-replace@v1
         with:
           regex: '<ProjectName>CardGameSimulator</ProjectName></PropertyGroup>'
@@ -866,7 +862,6 @@ jobs:
           path: 'C:/Card-Game-Simulator.git/build/WSAPlayer/WSAPlayer/Card Game Simulator'
 # Associate with App Store
       - name: Add Package.StoreAssociation.xml to .vcxproj.filters
-        if: false
         uses: mingjun97/file-regex-replace@v1
         with:
           regex: '</ItemGroup>'
@@ -875,7 +870,6 @@ jobs:
           include: 'Card Game Simulator\.vcxproj\.filters'
 # Associate with App Store
       - name: Update the Package.appxmanifest
-        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
