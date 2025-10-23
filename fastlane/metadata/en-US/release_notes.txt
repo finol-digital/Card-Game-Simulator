@@ -1,2 +1,3 @@
 ## What's Changed
-- Minor bug fixes
+- Bug Fixes
+
