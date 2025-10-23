@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using PrimeTween;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -20,6 +21,7 @@ namespace Cgs.Menu
         private const float MinWidth = 1200f;
         private const float FooterPortraitWidth = 260f;
         private const float FooterLandscapeWidth = 500f;
+        private const float AnimationDuration = 0.5f;
 
         public static string WelcomeMessage => "Welcome to CGS!\n" + WelcomeMessageExt;
 
@@ -53,6 +55,8 @@ namespace Cgs.Menu
         public Image currentBannerImage;
         public Image previousCardImage;
         public Image nextCardImage;
+        public Image offLeftImage;
+        public Image offRightImage;
         public List<GameObject> selectableButtons;
 
         public Button joinButton;
@@ -65,6 +69,8 @@ namespace Cgs.Menu
 #endif
 
         private GamesManagementMenu _gamesManagement;
+
+        private bool _isAnimating;
 
         private void OnEnable()
         {
@@ -222,17 +228,109 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void SelectPrevious()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
+            if (Time.timeSinceLevelLoad < StartBufferTime || _isAnimating)
                 return;
+
+            // Create duplicate cards to animate
+            var offLeft = Instantiate(offLeftImage.gameObject, offLeftImage.transform.parent);
+            offLeft.GetOrAddComponent<Image>().sprite = CardGameManager.Instance.Previous2.CardBackImageSprite;
+            var left = Instantiate(previousCardImage.gameObject, previousCardImage.transform.parent);
+            Destroy(left.GetComponent<Button>());
+            var middle = Instantiate(currentCardImage.gameObject, currentCardImage.transform.parent);
+            Destroy(middle.GetComponent<Button>());
+            var right = Instantiate(nextCardImage.gameObject, nextCardImage.transform.parent);
+            Destroy(right.GetComponent<Button>());
+
+            // Do selection and hide originals
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
+            ((RectTransform)left.transform).anchorMin = ((RectTransform)currentCardImage.transform).anchorMin;
+            ((RectTransform)left.transform).anchorMax = ((RectTransform)currentCardImage.transform).anchorMax;
+            ((RectTransform)left.transform).pivot = ((RectTransform)currentCardImage.transform).pivot;
+            left.transform.position = previousCardImage.transform.position;
+            ((RectTransform)middle.transform).anchorMin = ((RectTransform)nextCardImage.transform).anchorMin;
+            ((RectTransform)middle.transform).anchorMax = ((RectTransform)nextCardImage.transform).anchorMax;
+            ((RectTransform)middle.transform).pivot = ((RectTransform)nextCardImage.transform).pivot;
+            middle.transform.position = currentCardImage.transform.position;
+            previousCardImage.gameObject.SetActive(false);
+            currentCardImage.gameObject.SetActive(false);
+            nextCardImage.gameObject.SetActive(false);
+
+            // Do Animation
+            _isAnimating = true;
+            Tween.UIAnchoredPosition((RectTransform)offLeft.transform,
+                ((RectTransform)previousCardImage.transform).anchoredPosition, AnimationDuration);
+            Tween.UIAnchoredPosition((RectTransform)left.transform,
+                ((RectTransform)currentCardImage.transform).anchoredPosition, AnimationDuration);
+            Tween.UIAnchoredPosition((RectTransform)middle.transform,
+                ((RectTransform)nextCardImage.transform).anchoredPosition, AnimationDuration);
+            Tween.UIAnchoredPosition((RectTransform)right.transform,
+                ((RectTransform)offRightImage.transform).anchoredPosition, AnimationDuration)
+                .OnComplete(() =>
+                {
+                    // Remove duplicates and show originals
+                    Destroy(offLeft);
+                    Destroy(left);
+                    Destroy(middle);
+                    Destroy(right);
+                    previousCardImage.gameObject.SetActive(true);
+                    currentCardImage.gameObject.SetActive(true);
+                    nextCardImage.gameObject.SetActive(true);
+                    _isAnimating = false;
+                });
         }
 
         [UsedImplicitly]
         public void SelectNext()
         {
-            if (Time.timeSinceLevelLoad < StartBufferTime)
+            if (Time.timeSinceLevelLoad < StartBufferTime || _isAnimating)
                 return;
+
+            // Create duplicate cards to animate
+            var offRight = Instantiate(offRightImage.gameObject, nextCardImage.transform.parent);
+            offRight.GetOrAddComponent<Image>().sprite = CardGameManager.Instance.Next2.CardBackImageSprite;
+            var right = Instantiate(nextCardImage.gameObject, nextCardImage.transform.parent);
+            Destroy(right.GetComponent<Button>());
+            var middle = Instantiate(currentCardImage.gameObject, currentCardImage.transform.parent);
+            Destroy(middle.GetComponent<Button>());
+            var left = Instantiate(previousCardImage.gameObject, previousCardImage.transform.parent);
+            Destroy(left.GetComponent<Button>());
+
+            // Do selection and hide originals
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
+            ((RectTransform)right.transform).anchorMin = ((RectTransform)currentCardImage.transform).anchorMin;
+            ((RectTransform)right.transform).anchorMax = ((RectTransform)currentCardImage.transform).anchorMax;
+            ((RectTransform)right.transform).pivot = ((RectTransform)currentCardImage.transform).pivot;
+            right.transform.position = nextCardImage.transform.position;
+            ((RectTransform)middle.transform).anchorMin = ((RectTransform)previousCardImage.transform).anchorMin;
+            ((RectTransform)middle.transform).anchorMax = ((RectTransform)previousCardImage.transform).anchorMax;
+            ((RectTransform)middle.transform).pivot = ((RectTransform)previousCardImage.transform).pivot;
+            middle.transform.position = currentCardImage.transform.position;
+            nextCardImage.gameObject.SetActive(false);
+            currentCardImage.gameObject.SetActive(false);
+            previousCardImage.gameObject.SetActive(false);
+
+            // Do Animation
+            _isAnimating = true;
+            Tween.UIAnchoredPosition((RectTransform)offRight.transform,
+                ((RectTransform)nextCardImage.transform).anchoredPosition, AnimationDuration);
+            Tween.UIAnchoredPosition((RectTransform)right.transform,
+                ((RectTransform)currentCardImage.transform).anchoredPosition, AnimationDuration);
+            Tween.UIAnchoredPosition((RectTransform)middle.transform,
+                ((RectTransform)previousCardImage.transform).anchoredPosition, AnimationDuration);
+            Tween.UIAnchoredPosition((RectTransform)left.transform,
+                    ((RectTransform)offLeftImage.transform).anchoredPosition, AnimationDuration)
+                .OnComplete(() =>
+                {
+                    // Remove duplicates and show originals
+                    Destroy(offRight);
+                    Destroy(right);
+                    Destroy(middle);
+                    Destroy(left);
+                    nextCardImage.gameObject.SetActive(true);
+                    currentCardImage.gameObject.SetActive(true);
+                    previousCardImage.gameObject.SetActive(true);
+                    _isAnimating = false;
+                });
         }
 
         [UsedImplicitly]

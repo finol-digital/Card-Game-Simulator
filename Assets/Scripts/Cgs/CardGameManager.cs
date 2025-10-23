@@ -98,6 +98,19 @@ namespace Cgs
             }
         }
 
+        public UnityCardGame Previous2
+        {
+            get
+            {
+                var games = AllCardGames.Values.ToList();
+                var count = games.Count;
+                if (count == 0) return UnityCardGame.UnityInvalid;
+                var currentIndex = games.IndexOf(Current);
+                var prev2Index = (currentIndex - 2 + count) % count;
+                return games[prev2Index];
+            }
+        }
+
         public UnityCardGame Next
         {
             get
@@ -113,6 +126,19 @@ namespace Cgs
                     nextCardGame = allCardGamesEnumerator.Current.Value;
 
                 return nextCardGame;
+            }
+        }
+
+        public UnityCardGame Next2
+        {
+            get
+            {
+                var games = AllCardGames.Values.ToList();
+                var count = games.Count;
+                if (count == 0) return UnityCardGame.UnityInvalid;
+                var currentIndex = games.IndexOf(Current);
+                var next2Index = (currentIndex + 2) % count;
+                return games[next2Index];
             }
         }
 
