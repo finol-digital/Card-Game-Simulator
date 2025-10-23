@@ -10,9 +10,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-#if !CGS_SINGLEGAME
 using UnityExtensionMethods;
-#endif
 
 namespace Cgs.Menu
 {
@@ -21,7 +19,6 @@ namespace Cgs.Menu
         private const float MinWidth = 1200f;
         private const float FooterPortraitWidth = 260f;
         private const float FooterLandscapeWidth = 500f;
-        private const float AnimationDuration = 0.5f;
 
         public static string WelcomeMessage => "Welcome to CGS!\n" + WelcomeMessageExt;
 
@@ -45,6 +42,7 @@ namespace Cgs.Menu
         public const string QuitPrompt = "Quit?";
 
         private const float StartBufferTime = 0.1f;
+        private const float AnimationDuration = 0.3f;
 
         public GameObject gamesManagementMenuPrefab;
 
@@ -243,14 +241,18 @@ namespace Cgs.Menu
 
             // Do selection and hide originals
             CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
-            ((RectTransform)left.transform).anchorMin = ((RectTransform)currentCardImage.transform).anchorMin;
-            ((RectTransform)left.transform).anchorMax = ((RectTransform)currentCardImage.transform).anchorMax;
-            ((RectTransform)left.transform).pivot = ((RectTransform)currentCardImage.transform).pivot;
-            left.transform.position = previousCardImage.transform.position;
-            ((RectTransform)middle.transform).anchorMin = ((RectTransform)nextCardImage.transform).anchorMin;
-            ((RectTransform)middle.transform).anchorMax = ((RectTransform)nextCardImage.transform).anchorMax;
-            ((RectTransform)middle.transform).pivot = ((RectTransform)nextCardImage.transform).pivot;
-            middle.transform.position = currentCardImage.transform.position;
+            var leftRectTransform = (RectTransform)left.transform;
+            var currentRectTransform = (RectTransform)currentCardImage.transform;
+            leftRectTransform.anchorMin = currentRectTransform.anchorMin;
+            leftRectTransform.anchorMax = currentRectTransform.anchorMax;
+            leftRectTransform.pivot = currentRectTransform.pivot;
+            leftRectTransform.position = previousCardImage.transform.position;
+            var middleRectTransform = (RectTransform)middle.transform;
+            var nextRectTransform = (RectTransform)nextCardImage.transform;
+            middleRectTransform.anchorMin = nextRectTransform.anchorMin;
+            middleRectTransform.anchorMax = nextRectTransform.anchorMax;
+            middleRectTransform.pivot = nextRectTransform.pivot;
+            middleRectTransform.position = currentCardImage.transform.position;
             previousCardImage.gameObject.SetActive(false);
             currentCardImage.gameObject.SetActive(false);
             nextCardImage.gameObject.SetActive(false);
@@ -297,14 +299,18 @@ namespace Cgs.Menu
 
             // Do selection and hide originals
             CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
-            ((RectTransform)right.transform).anchorMin = ((RectTransform)currentCardImage.transform).anchorMin;
-            ((RectTransform)right.transform).anchorMax = ((RectTransform)currentCardImage.transform).anchorMax;
-            ((RectTransform)right.transform).pivot = ((RectTransform)currentCardImage.transform).pivot;
-            right.transform.position = nextCardImage.transform.position;
-            ((RectTransform)middle.transform).anchorMin = ((RectTransform)previousCardImage.transform).anchorMin;
-            ((RectTransform)middle.transform).anchorMax = ((RectTransform)previousCardImage.transform).anchorMax;
-            ((RectTransform)middle.transform).pivot = ((RectTransform)previousCardImage.transform).pivot;
-            middle.transform.position = currentCardImage.transform.position;
+            var rightRectTransform = (RectTransform)right.transform;
+            var currentRectTransform = (RectTransform)currentCardImage.transform;
+            rightRectTransform.anchorMin = currentRectTransform.anchorMin;
+            rightRectTransform.anchorMax = currentRectTransform.anchorMax;
+            rightRectTransform.pivot = currentRectTransform.pivot;
+            rightRectTransform.position = nextCardImage.transform.position;
+            var middleRectTransform = (RectTransform)middle.transform;
+            var previousRectTransform = (RectTransform)previousCardImage.transform;
+            middleRectTransform.anchorMin = previousRectTransform.anchorMin;
+            middleRectTransform.anchorMax = previousRectTransform.anchorMax;
+            middleRectTransform.pivot = previousRectTransform.pivot;
+            middleRectTransform.position = currentCardImage.transform.position;
             nextCardImage.gameObject.SetActive(false);
             currentCardImage.gameObject.SetActive(false);
             previousCardImage.gameObject.SetActive(false);

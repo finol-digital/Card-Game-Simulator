@@ -417,7 +417,7 @@ jobs:
         with:
           repo_token: ${{ secrets.CGS_PAT }}
           asset_name: cgs-StandaloneOSX.zip
-          file: build/cgs-StandaloneOSX.zip
+          file: build/StandaloneOSX/cgs-StandaloneOSX.zip
           tag: ${{ github.ref }}
           overwrite: true
           body: ${{ github.event.release.body }}
