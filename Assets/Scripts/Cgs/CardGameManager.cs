@@ -137,6 +137,7 @@ namespace Cgs
                 var count = games.Count;
                 if (count == 0) return UnityCardGame.UnityInvalid;
                 var currentIndex = games.IndexOf(Current);
+                if (currentIndex == -1) return UnityCardGame.UnityInvalid;
                 var next2Index = (currentIndex + 2) % count;
                 return games[next2Index];
             }
