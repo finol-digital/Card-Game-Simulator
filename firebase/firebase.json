@@ -9,6 +9,21 @@
         "type": 301
       },
       {
+        "source": "/dominoes",
+        "destination": "https://cgs.games/link/dominoes",
+        "type": 301
+      },
+      {
+        "source": "/mahjong",
+        "destination": "https://cgs.games/link/mahjong",
+        "type": 301
+      },
+      {
+        "source": "/standard",
+        "destination": "https://cgs.games/link/standard",
+        "type": 301
+      },
+      {
         "source": "/bluesky",
         "destination": "https://bsky.app/profile/cardgamesim.bsky.social",
         "type": 301
