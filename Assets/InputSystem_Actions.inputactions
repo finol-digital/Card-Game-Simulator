@@ -179,7 +179,7 @@
                     "path": "<Keyboard>/rightBracket",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "FocusNext",
                     "isComposite": false,
                     "isPartOfComposite": false
