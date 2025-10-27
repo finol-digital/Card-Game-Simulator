@@ -10,7 +10,17 @@ namespace Cgs
     public static class Inputs
     {
         public const KeyCode BluetoothReturn = (KeyCode) 10;
-        private const float Tolerance = 0.1f;
+
+        public const string PlayerCancel = "Player/Cancel";
+        public const string PlayerFilter = "Player/Filter";
+        public const string PlayerFocusBack = "Player/FocusBack";
+        public const string PlayerFocusNext = "Player/FocusNext";
+        public const string PlayerLoad = "Player/Load";
+        public const string PlayerNew = "Player/New";
+        public const string PlayerOption = "Player/Option";
+        public const string PlayerSave = "Player/Save";
+        public const string PlayerSort = "Player/Sort";
+
         private const string Cancel = "Cancel";
         private const string Filter = "Filter";
         private const string FocusBack = "FocusBack";
@@ -25,6 +35,8 @@ namespace Cgs
         private const string Sort = "Sort";
         private const string Submit = "Submit";
         private const string Vertical = "Vertical";
+
+        private const float Tolerance = 0.1f;
 
         public static bool IsCancel => Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Cancel);
 
