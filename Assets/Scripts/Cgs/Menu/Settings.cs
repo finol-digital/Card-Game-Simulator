@@ -214,6 +214,8 @@ namespace Cgs.Menu
 
         private void InputCancel(InputAction.CallbackContext context)
         {
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
             if (EventSystem.current.currentSelectedGameObject == null)
                 BackToMainMenu();
             else if (!EventSystem.current.alreadySelecting)
