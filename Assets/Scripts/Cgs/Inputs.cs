@@ -4,12 +4,13 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cgs
 {
     public static class Inputs
     {
-        public const KeyCode BluetoothReturn = (KeyCode) 10;
+        public const KeyCode BluetoothReturn = (KeyCode)10;
 
         public const string PlayerCancel = "Player/Cancel";
         public const string PlayerFilter = "Player/Filter";
@@ -20,71 +21,57 @@ namespace Cgs
         public const string PlayerOption = "Player/Option";
         public const string PlayerSave = "Player/Save";
         public const string PlayerSort = "Player/Sort";
+        private const string PlayerSubmit = "Player/Submit";
 
-        private const string Cancel = "Cancel";
-        private const string Filter = "Filter";
-        private const string FocusBack = "FocusBack";
-        private const string FocusNext = "FocusNext";
-        private const string Horizontal = "Horizontal";
-        private const string Load = "Load";
-        private const string New = "New";
-        private const string Option = "Option";
-        private const string PageHorizontal = "PageHorizontal";
-        private const string PageVertical = "PageVertical";
-        private const string Save = "Save";
-        private const string Sort = "Sort";
-        private const string Submit = "Submit";
-        private const string Vertical = "Vertical";
+        private const string PlayerMove = "Player/Move";
+        private const string PlayerPage = "Player/Page";
 
         private const float Tolerance = 0.1f;
 
-        public static bool IsCancel => Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(Cancel);
+        public static bool IsCancel => InputSystem.actions.FindAction(PlayerCancel).WasPressedThisFrame();
 
-        public static bool IsFilter => Input.GetButtonDown(Filter);
+        public static bool IsFilter => InputSystem.actions.FindAction(PlayerFilter).WasPressedThisFrame();
 
-        public static bool IsFocus => Input.GetButtonDown(FocusBack) || Math.Abs(Input.GetAxis(FocusBack)) > Tolerance
-                                                                     || Input.GetButtonDown(FocusNext) ||
-                                                                     Math.Abs(Input.GetAxis(FocusNext)) > Tolerance;
+        public static bool IsFocus => InputSystem.actions.FindAction(PlayerFocusBack).WasPressedThisFrame()
+                                      || InputSystem.actions.FindAction(PlayerFocusNext).WasPressedThisFrame();
 
-        public static bool IsFocusBack =>
-            Input.GetButtonDown(FocusBack) || Math.Abs(Input.GetAxis(FocusBack)) > Tolerance;
+        public static bool IsFocusBack => InputSystem.actions.FindAction(PlayerFocusBack).WasPressedThisFrame();
 
-        public static bool IsFocusNext =>
-            Input.GetButtonDown(FocusNext) || Math.Abs(Input.GetAxis(FocusNext)) > Tolerance;
+        public static bool IsFocusNext => InputSystem.actions.FindAction(PlayerFocusNext).WasPressedThisFrame();
 
         public static bool IsHorizontal =>
-            Input.GetButton(Horizontal) || Math.Abs(Input.GetAxis(Horizontal)) > Tolerance;
+            Math.Abs(InputSystem.actions.FindAction(PlayerMove).ReadValue<Vector2>().x) > Tolerance;
 
-        public static bool IsLeft => Input.GetAxis(Horizontal) < 0;
-        public static bool IsRight => Input.GetAxis(Horizontal) > 0;
+        public static bool IsLeft => InputSystem.actions.FindAction(PlayerMove).ReadValue<Vector2>().x < 0;
+        public static bool IsRight => InputSystem.actions.FindAction(PlayerMove).ReadValue<Vector2>().x > 0;
 
-        public static bool IsLoad => Input.GetButtonDown(Load);
+        public static bool IsLoad => InputSystem.actions.FindAction(PlayerLoad).WasPressedThisFrame();
 
-        public static bool IsNew => Input.GetButtonDown(New);
+        public static bool IsNew => InputSystem.actions.FindAction(PlayerNew).WasPressedThisFrame();
 
-        public static bool IsOption => Input.GetButtonDown(Option);
+        public static bool IsOption => InputSystem.actions.FindAction(PlayerOption).WasPressedThisFrame();
 
-        public static float FPageVertical => Input.GetAxis(PageVertical);
-        public static bool IsPageVertical => Math.Abs(Input.GetAxis(PageVertical)) > Tolerance;
-        public static bool IsPageDown => Input.GetAxis(PageVertical) < 0;
-        public static bool IsPageUp => Input.GetAxis(PageVertical) > 0;
+        public static float FPageVertical => InputSystem.actions.FindAction(PlayerPage).ReadValue<Vector2>().y;
+        public static bool IsPageVertical => Math.Abs(FPageVertical) > Tolerance;
+        public static bool IsPageDown => FPageVertical < 0;
+        public static bool IsPageUp => FPageVertical > 0;
 
-        public static float FPageHorizontal => Input.GetAxis(PageHorizontal);
-        public static bool IsPageHorizontal => Math.Abs(Input.GetAxis(PageHorizontal)) > Tolerance;
-        public static bool IsPageLeft => Input.GetAxis(PageHorizontal) < 0;
-        public static bool IsPageRight => Input.GetAxis(PageHorizontal) > 0;
+        public static float FPageHorizontal => InputSystem.actions.FindAction(PlayerPage).ReadValue<Vector2>().x;
+        public static bool IsPageHorizontal => Math.Abs(FPageHorizontal) > Tolerance;
+        public static bool IsPageLeft => FPageHorizontal < 0;
+        public static bool IsPageRight => FPageHorizontal > 0;
 
-        public static bool IsSave => Input.GetButtonDown(Save);
+        public static bool IsSave => InputSystem.actions.FindAction(PlayerSave).WasPressedThisFrame();
 
-        public static bool IsSort => Input.GetButtonDown(Sort);
+        public static bool IsSort => InputSystem.actions.FindAction(PlayerSort).WasPressedThisFrame();
 
-        public static bool IsSubmit => Input.GetKeyDown(BluetoothReturn) || Input.GetButtonDown(Submit);
+        public static bool IsSubmit => InputSystem.actions.FindAction(PlayerSubmit).WasPressedThisFrame();
 
-        public static bool IsVertical => Input.GetButtonDown(Vertical) ||
-                                         Math.Abs(Input.GetAxis(Vertical)) > Tolerance;
+        public static bool IsVertical =>
+            Math.Abs(InputSystem.actions.FindAction(PlayerMove).ReadValue<Vector2>().y) > Tolerance;
 
-        public static bool IsDown => Input.GetAxis(Vertical) < 0;
-        public static bool IsUp => Input.GetAxis(Vertical) > 0;
+        public static bool IsDown => InputSystem.actions.FindAction(PlayerMove).ReadValue<Vector2>().y < 0;
+        public static bool IsUp => InputSystem.actions.FindAction(PlayerMove).ReadValue<Vector2>().y > 0;
 
 
         // WasDirection set in CardGameManager.LateUpdate()

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -68,6 +69,12 @@ namespace Cgs.Menu
         public Toggle developerModeToggle;
         public List<Transform> orientationOptions;
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Inputs.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Inputs.PlayerOption).performed += InputOption;
+        }
+
         private void Start()
         {
             framerateDropdown.value = FrameRateManager.FrameRateIndex;
@@ -115,15 +122,6 @@ namespace Cgs.Menu
                 EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
             else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
                 ScrollPage(Inputs.IsPageDown);
-            else if (Inputs.IsOption)
-                GoToWebsite();
-            else if (Inputs.IsCancel)
-            {
-                if (EventSystem.current.currentSelectedGameObject == null)
-                    BackToMainMenu();
-                else if (!EventSystem.current.alreadySelecting)
-                    EventSystem.current.SetSelectedGameObject(null);
-            }
         }
 
         private void ScrollPage(bool scrollDown)
@@ -202,16 +200,36 @@ namespace Cgs.Menu
             DeveloperMode = developerMode;
         }
 
+        private void InputOption(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                GoToWebsite();
+        }
+
         [UsedImplicitly]
         public void GoToWebsite()
         {
             Application.OpenURL(Tags.CgsWebsite);
         }
 
+        private void InputCancel(InputAction.CallbackContext context)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+                BackToMainMenu();
+            else if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(null);
+        }
+
         [UsedImplicitly]
         public void BackToMainMenu()
         {
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Inputs.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Inputs.PlayerOption).performed -= InputOption;
         }
     }
 }
