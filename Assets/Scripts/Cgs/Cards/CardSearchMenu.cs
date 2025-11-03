@@ -56,7 +56,7 @@ namespace Cgs.Cards
             if (!IsFocused)
                 return;
 
-            if (Inputs.IsFocus)
+            if (InputManager.IsFocus)
             {
                 FocusInputField();
                 return;
@@ -65,27 +65,27 @@ namespace Cgs.Cards
             if (ActiveInputField != null && ActiveInputField.isFocused)
                 return;
 
-            if (Inputs.IsVertical || Inputs.IsHorizontal)
+            if (InputManager.IsVertical || InputManager.IsHorizontal)
                 FocusToggle();
-            else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
+            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
                 Scroll();
 
-            if (Inputs.IsSubmit)
+            if (InputManager.IsSubmit)
             {
                 Search();
                 Hide();
             }
-            else if (Inputs.IsNew && ActiveToggle != null)
+            else if (InputManager.IsNew && ActiveToggle != null)
                 ToggleEnum();
-            else if (Inputs.IsOption && ActiveInputField == null)
+            else if (InputManager.IsOption && ActiveInputField == null)
                 ClearFilters();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 Hide();
         }
 
         private void Scroll()
         {
-            scrollbar.value = Mathf.Clamp01(scrollbar.value + (Inputs.IsPageDown ? 0.1f : -0.1f));
+            scrollbar.value = Mathf.Clamp01(scrollbar.value + (InputManager.IsPageDown ? 0.1f : -0.1f));
         }
 
         public void Show(OnSearchDelegate searchCallback)
@@ -107,15 +107,15 @@ namespace Cgs.Cards
             _toggles.Clear();
 
             nameInputField.text = _filters.Name;
-            nameInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            nameInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
             _inputFields.Add(nameInputField);
 
             idInputField.text = _filters.Id;
-            idInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            idInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
             _inputFields.Add(idInputField);
 
             setCodeInputField.text = _filters.SetCode;
-            setCodeInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            setCodeInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
             _inputFields.Add(setCodeInputField);
 
             foreach (var property in CardGameManager.Current.CardProperties)
@@ -169,7 +169,7 @@ namespace Cgs.Cards
 
             foreach (var inputField in newPanel.GetComponentsInChildren<InputField>())
             {
-                inputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+                inputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
                 _inputFields.Add(inputField);
             }
 
@@ -387,7 +387,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SetBoolPropertyFilter(string propertyName, bool filterValue, bool isOn)
         {
-            if (Inputs.IsSubmit)
+            if (InputManager.IsSubmit)
                 return;
 
             if (isOn)
@@ -399,7 +399,7 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SetEnumPropertyFilter(string propertyName, int filterValue, bool isOn)
         {
-            if (Inputs.IsSubmit)
+            if (InputManager.IsSubmit)
                 return;
 
             var isStored = _filters.EnumProperties.ContainsKey(propertyName);

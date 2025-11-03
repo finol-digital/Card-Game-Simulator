@@ -202,21 +202,21 @@ namespace Cgs.Menu
             if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
                 return;
 
-            if ((Inputs.IsSubmit || Inputs.IsNew) && saveButton.interactable)
+            if ((InputManager.IsSubmit || InputManager.IsNew) && saveButton.interactable)
                 StartCreation();
-            else if (Inputs.IsSort)
+            else if (InputManager.IsSort)
                 DownloadBannerImageFromWeb();
-            else if (Inputs.IsFilter)
+            else if (InputManager.IsFilter)
                 ImportBannerImageFromFile();
-            else if (Inputs.IsLoad)
+            else if (InputManager.IsLoad)
                 DownloadCardBackImageFromWeb();
-            else if (Inputs.IsSave)
+            else if (InputManager.IsSave)
                 ImportCardBackImageFromFile();
-            else if (Inputs.IsFocusNext)
+            else if (InputManager.IsFocusNext)
                 DownloadPlayMatImageFromWeb();
-            else if (Inputs.IsFocusBack)
+            else if (InputManager.IsFocusBack)
                 ImportPlayMatImageFromFile();
-            else if (Inputs.IsCancel || Inputs.IsOption)
+            else if (InputManager.IsCancel || InputManager.IsOption)
                 Hide();
         }
 

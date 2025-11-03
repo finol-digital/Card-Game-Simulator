@@ -71,47 +71,47 @@ namespace Cgs.Decks
 
             if (newDeckPanel.gameObject.activeSelf)
             {
-                if (Inputs.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
+                if (InputManager.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
                     DoSaveDontOverwrite();
-                else if (Inputs.IsNew && EventSystem.current.currentSelectedGameObject == null)
+                else if (InputManager.IsNew && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.text = string.Empty;
-                else if (Inputs.IsFocusBack && EventSystem.current.currentSelectedGameObject == null)
+                else if (InputManager.IsFocusBack && EventSystem.current.currentSelectedGameObject == null)
                     nameInputField.ActivateInputField();
-                else if (Inputs.IsFocusNext && EventSystem.current.currentSelectedGameObject == null)
+                else if (InputManager.IsFocusNext && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.ActivateInputField();
-                else if (Inputs.IsSave && EventSystem.current.currentSelectedGameObject == null)
+                else if (InputManager.IsSave && EventSystem.current.currentSelectedGameObject == null)
                     PasteClipboardIntoText();
-                else if (Inputs.IsOption && EventSystem.current.currentSelectedGameObject == null)
+                else if (InputManager.IsOption && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.text = string.Empty;
-                else if (Inputs.IsCancel)
+                else if (InputManager.IsCancel)
                     HideNewDeckPanel();
             }
             else
             {
-                if (Inputs.IsVertical)
+                if (InputManager.IsVertical)
                 {
-                    if (Inputs.IsUp && !Inputs.WasUp)
+                    if (InputManager.IsUp && !InputManager.WasUp)
                         SelectPrevious();
-                    else if (Inputs.IsDown && !Inputs.WasDown)
+                    else if (InputManager.IsDown && !InputManager.WasDown)
                         SelectNext();
                 }
 
-                if (Inputs.IsSubmit && loadFromFileButton.interactable)
+                if (InputManager.IsSubmit && loadFromFileButton.interactable)
                     LoadFromFileAndHide();
-                else if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
+                else if (Input.GetKeyDown(InputManager.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
                              .Contains(EventSystem.current.currentSelectedGameObject))
                     EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
-                else if (Inputs.IsSort && shareFileButton.interactable)
+                else if (InputManager.IsSort && shareFileButton.interactable)
                     Share();
-                else if (Inputs.IsLoad && editFileButton.interactable)
+                else if (InputManager.IsLoad && editFileButton.interactable)
                     Edit();
-                else if (Inputs.IsNew)
+                else if (InputManager.IsNew)
                     ShowNewDeckPanel();
-                else if (Inputs.IsOption && deleteFileButton.interactable)
+                else if (InputManager.IsOption && deleteFileButton.interactable)
                     PromptForDeleteFile();
-                else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
-                    ScrollPage(Inputs.IsPageDown);
-                else if (Inputs.IsCancel)
+                else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
+                    ScrollPage(InputManager.IsPageDown);
+                else if (InputManager.IsCancel)
                     Hide();
             }
         }

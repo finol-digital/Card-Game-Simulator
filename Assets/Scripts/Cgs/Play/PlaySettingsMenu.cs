@@ -47,13 +47,13 @@ namespace Cgs.Play
             if (!IsFocused || dieFaceCountInputField.isFocused)
                 return;
 
-            if (Inputs.IsOption)
+            if (InputManager.IsOption)
 #if CGS_SINGLEGAME && CGS_SINGLEPLAYER
                 LaunchNative();
 #else
                 ViewRules();
 #endif
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 Hide();
         }
 

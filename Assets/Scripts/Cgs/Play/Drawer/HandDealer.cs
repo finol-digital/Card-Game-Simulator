@@ -67,16 +67,16 @@ namespace Cgs.Play.Drawer
             if (!IsFocused)
                 return;
 
-            if (Inputs.IsSubmit)
+            if (InputManager.IsSubmit)
                 Confirm();
-            else if (Inputs.IsHorizontal || Inputs.IsVertical)
+            else if (InputManager.IsHorizontal || InputManager.IsVertical)
             {
-                if (Inputs.IsLeft && !Inputs.WasLeft || Inputs.IsDown && !Inputs.WasDown)
+                if (InputManager.IsLeft && !InputManager.WasLeft || InputManager.IsDown && !InputManager.WasDown)
                     Decrement();
-                else if (Inputs.IsRight && !Inputs.WasRight || Inputs.IsUp && !Inputs.WasUp)
+                else if (InputManager.IsRight && !InputManager.WasRight || InputManager.IsUp && !InputManager.WasUp)
                     Increment();
             }
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 Hide();
         }
 

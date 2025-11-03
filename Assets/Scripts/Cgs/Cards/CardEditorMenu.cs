@@ -140,13 +140,13 @@ namespace Cgs.Cards
                 _inputFields.Any(field => field.isFocused))
                 return;
 
-            if ((Inputs.IsSubmit || Inputs.IsNew) && saveButton.interactable)
+            if ((InputManager.IsSubmit || InputManager.IsNew) && saveButton.interactable)
                 StartSaveCard();
-            if (Inputs.IsLoad && saveButton.interactable)
+            if (InputManager.IsLoad && saveButton.interactable)
                 DownloadCardImageFromWeb();
-            if (Inputs.IsSave && saveButton.interactable)
+            if (InputManager.IsSave && saveButton.interactable)
                 ImportCardImageFromFile();
-            else if (Inputs.IsCancel || Inputs.IsOption)
+            else if (InputManager.IsCancel || InputManager.IsOption)
                 Hide();
         }
 

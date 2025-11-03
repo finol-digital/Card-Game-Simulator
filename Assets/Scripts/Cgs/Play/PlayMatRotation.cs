@@ -61,22 +61,22 @@ namespace Cgs.Play
                 CardGameManager.Instance.ModalCanvas != null || _playController.scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsLeft && !Inputs.WasLeft)
+            if (InputManager.IsLeft && !InputManager.WasLeft)
                 _playController.playArea.CurrentRotation -= 90;
-            else if (Inputs.IsRight && !Inputs.WasRight)
+            else if (InputManager.IsRight && !InputManager.WasRight)
                 _playController.playArea.CurrentRotation += 90;
 
-            if (Inputs.IsSort)
+            if (InputManager.IsSort)
                 _rotationEnabled = !_rotationEnabled;
 
-            if (!Inputs.IsPageHorizontal)
+            if (!InputManager.IsPageHorizontal)
                 return;
             if (_rotationEnabled)
                 _playController.playArea.CurrentRotation +=
-                    Time.deltaTime * Inputs.FPageHorizontal * PageHorizontalSensitivity;
+                    Time.deltaTime * InputManager.FPageHorizontal * PageHorizontalSensitivity;
             else
                 _playController.playArea.horizontalNormalizedPosition -=
-                    Inputs.FPageHorizontal * PageHorizontalSensitivity2 * Time.deltaTime;
+                    InputManager.FPageHorizontal * PageHorizontalSensitivity2 * Time.deltaTime;
         }
 
         [UsedImplicitly]

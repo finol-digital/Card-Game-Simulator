@@ -273,30 +273,30 @@ namespace Cgs.CardGameView.Viewer
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            if (Inputs.IsPageVertical && Instance.Mode == CardViewerMode.Maximal)
+            if (InputManager.IsPageVertical && Instance.Mode == CardViewerMode.Maximal)
             {
-                if (Inputs.IsPageDown && !Inputs.WasPageDown)
+                if (InputManager.IsPageDown && !InputManager.WasPageDown)
                     maximalScrollRect.verticalNormalizedPosition =
                         Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
-                else if (Inputs.IsPageUp && !Inputs.WasPageDown)
+                else if (InputManager.IsPageUp && !InputManager.WasPageDown)
                     maximalScrollRect.verticalNormalizedPosition =
                         Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
             }
 
-            if (Inputs.IsSubmit)
+            if (InputManager.IsSubmit)
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)
                     Mode = CardViewerMode.Expanded;
                 else
                     SelectedCardModel.DefaultAction?.Invoke(SelectedCardModel);
             }
-            else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
+            else if (InputManager.IsFocusBack && !InputManager.WasFocusBack)
                 DecrementProperty();
-            else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
+            else if (InputManager.IsFocusNext && !InputManager.WasFocusNext)
                 IncrementProperty();
-            else if (Inputs.IsSort && SelectedCardModel != null && imageButton.gameObject.activeSelf)
+            else if (InputManager.IsSort && SelectedCardModel != null && imageButton.gameObject.activeSelf)
                 Zoom = !Zoom;
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
             {
                 if (!Zoom && Mode == CardViewerMode.Maximal)
                     Mode = CardViewerMode.Expanded;

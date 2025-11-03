@@ -31,15 +31,15 @@ namespace Cgs.Play
                 CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsSort)
+            if (InputManager.IsSort)
                 ShowPlaySettingsMenu();
-            if (Inputs.IsNew)
+            if (InputManager.IsNew)
                 ShowDeckMenu();
-            else if (Inputs.IsLoad)
+            else if (InputManager.IsLoad)
                 CreateDie();
-            else if (Inputs.IsFilter)
+            else if (InputManager.IsFilter)
                 ShowCardsMenu();
-            else if (Inputs.IsSave)
+            else if (InputManager.IsSave)
                 CreateToken();
         }
 

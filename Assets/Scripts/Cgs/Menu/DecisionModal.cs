@@ -42,11 +42,11 @@ namespace Cgs.Menu
             if (!IsFocused)
                 return;
 
-            if (Inputs.IsSubmit || Inputs.IsNew)
+            if (InputManager.IsSubmit || InputManager.IsNew)
                 button1.onClick.Invoke();
-            if (Inputs.IsLoad || Inputs.IsSave)
+            if (InputManager.IsLoad || InputManager.IsSave)
                 button2.onClick.Invoke();
-            else if (Inputs.IsCancel || Inputs.IsOption)
+            else if (InputManager.IsCancel || InputManager.IsOption)
                 Hide();
         }
     }

@@ -110,11 +110,11 @@ namespace Cgs.CardGameView.Viewer
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             else if (SelectedPlayable is Die)
             {
-                if (Inputs.IsNew)
+                if (InputManager.IsNew)
                     DecrementDie();
-                else if (Inputs.IsLoad || Inputs.IsSubmit)
+                else if (InputManager.IsLoad || InputManager.IsSubmit)
                     RollDie();
-                else if (Inputs.IsSave)
+                else if (InputManager.IsSave)
                     IncrementDie();
 
                 if (IsVisible)
@@ -122,22 +122,22 @@ namespace Cgs.CardGameView.Viewer
             }
             else if (SelectedPlayable is CardStack)
             {
-                if (Inputs.IsNew || Inputs.IsSubmit)
+                if (InputManager.IsNew || InputManager.IsSubmit)
                     ViewStack();
-                else if (Inputs.IsLoad)
+                else if (InputManager.IsLoad)
                     ShuffleStack();
-                else if (Inputs.IsSave)
+                else if (InputManager.IsSave)
                     SaveStack();
-                else if (Inputs.IsFilter)
+                else if (InputManager.IsFilter)
                     FlipStackTopFace();
             }
             else if (SelectedPlayable is Token && IsVisible)
                 RedisplayToken();
 
-            if (Inputs.IsCancel)
+            if (InputManager.IsCancel)
                 SelectedPlayable = null;
 
-            if (Inputs.IsOption)
+            if (InputManager.IsOption)
                 DeletePlayable();
         }
 

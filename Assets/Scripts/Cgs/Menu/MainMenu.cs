@@ -76,15 +76,15 @@ namespace Cgs.Menu
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
             CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
 
-            InputSystem.actions.FindAction(Inputs.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(Inputs.PlayerFilter).performed += InputFilter;
-            InputSystem.actions.FindAction(Inputs.PlayerFocusBack).performed += InputFocusBack;
-            InputSystem.actions.FindAction(Inputs.PlayerFocusNext).performed += InputFocusNext;
-            InputSystem.actions.FindAction(Inputs.PlayerLoad).performed += InputLoad;
-            InputSystem.actions.FindAction(Inputs.PlayerNew).performed += InputNew;
-            InputSystem.actions.FindAction(Inputs.PlayerOption).performed += InputOption;
-            InputSystem.actions.FindAction(Inputs.PlayerSave).performed += InputSave;
-            InputSystem.actions.FindAction(Inputs.PlayerSort).performed += InputSort;
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(InputManager.PlayerFilter).performed += InputFilter;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusBack).performed += InputFocusBack;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusNext).performed += InputFocusNext;
+            InputSystem.actions.FindAction(InputManager.PlayerLoad).performed += InputLoad;
+            InputSystem.actions.FindAction(InputManager.PlayerNew).performed += InputNew;
+            InputSystem.actions.FindAction(InputManager.PlayerOption).performed += InputOption;
+            InputSystem.actions.FindAction(InputManager.PlayerSave).performed += InputSave;
+            InputSystem.actions.FindAction(InputManager.PlayerSort).performed += InputSort;
         }
 
         private void SetCopyright()
@@ -159,32 +159,32 @@ namespace Cgs.Menu
                     SelectNext();
             }
 
-            if (Inputs.IsPageVertical)
+            if (InputManager.IsPageVertical)
             {
-                if (Inputs.IsPageDown && !Inputs.WasPageDown)
+                if (InputManager.IsPageDown && !InputManager.WasPageDown)
                     SelectNext();
-                else if (Inputs.IsPageUp && !Inputs.WasPageUp)
+                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
                     SelectPrevious();
             }
-            else if (Inputs.IsPageHorizontal)
+            else if (InputManager.IsPageHorizontal)
             {
-                if (Inputs.IsPageLeft && !Inputs.WasPageLeft)
+                if (InputManager.IsPageLeft && !InputManager.WasPageLeft)
                     SelectPrevious();
-                else if (Inputs.IsPageRight && !Inputs.WasPageRight)
+                else if (InputManager.IsPageRight && !InputManager.WasPageRight)
                     SelectNext();
             }
-            else if (Inputs.IsHorizontal && EventSystem.current.currentSelectedGameObject == null ||
+            else if (InputManager.IsHorizontal && EventSystem.current.currentSelectedGameObject == null ||
                      EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject)
             {
-                if (Inputs.IsLeft && !Inputs.WasLeft)
+                if (InputManager.IsLeft && !InputManager.WasLeft)
                     SelectPrevious();
-                else if (Inputs.IsRight && !Inputs.WasRight)
+                else if (InputManager.IsRight && !InputManager.WasRight)
                     SelectNext();
             }
-            else if (Inputs.IsVertical && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
+            else if (InputManager.IsVertical && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
-            if (Input.GetKeyDown(Inputs.BluetoothReturn) && EventSystem.current.currentSelectedGameObject != null)
+            if (Input.GetKeyDown(InputManager.BluetoothReturn) && EventSystem.current.currentSelectedGameObject != null)
                 EventSystem.current.currentSelectedGameObject.GetComponent<Button>()?.onClick?.Invoke();
         }
 
@@ -464,15 +464,15 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Inputs.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(Inputs.PlayerFilter).performed -= InputFilter;
-            InputSystem.actions.FindAction(Inputs.PlayerFocusBack).performed -= InputFocusBack;
-            InputSystem.actions.FindAction(Inputs.PlayerFocusNext).performed -= InputFocusNext;
-            InputSystem.actions.FindAction(Inputs.PlayerLoad).performed -= InputLoad;
-            InputSystem.actions.FindAction(Inputs.PlayerNew).performed -= InputNew;
-            InputSystem.actions.FindAction(Inputs.PlayerOption).performed -= InputOption;
-            InputSystem.actions.FindAction(Inputs.PlayerSave).performed -= InputSave;
-            InputSystem.actions.FindAction(Inputs.PlayerSort).performed -= InputSort;
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(InputManager.PlayerFilter).performed -= InputFilter;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusBack).performed -= InputFocusBack;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusNext).performed -= InputFocusNext;
+            InputSystem.actions.FindAction(InputManager.PlayerLoad).performed -= InputLoad;
+            InputSystem.actions.FindAction(InputManager.PlayerNew).performed -= InputNew;
+            InputSystem.actions.FindAction(InputManager.PlayerOption).performed -= InputOption;
+            InputSystem.actions.FindAction(InputManager.PlayerSave).performed -= InputSave;
+            InputSystem.actions.FindAction(InputManager.PlayerSort).performed -= InputSort;
         }
     }
 }

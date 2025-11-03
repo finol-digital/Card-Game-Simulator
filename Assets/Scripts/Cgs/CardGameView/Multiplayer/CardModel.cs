@@ -250,7 +250,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnUpdatePlayable()
         {
-            if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == this || HoldTime > ZoomHoldTime)
+            if (InputManager.IsOption && CardViewer.Instance.PreviewCardModel == this || HoldTime > ZoomHoldTime)
                 RequestZoomOnThis();
 
             UpdateCheckForPlaceHolder();

@@ -44,15 +44,15 @@ namespace Cgs.Decks
             if (!IsFocused || nameInputField.isFocused || !Input.anyKeyDown)
                 return;
 
-            if (Inputs.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
+            if (InputManager.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
                 AttemptSaveAndHide();
-            else if (Inputs.IsFocus)
+            else if (InputManager.IsFocus)
                 nameInputField.ActivateInputField();
-            else if (Inputs.IsLoad && EventSystem.current.currentSelectedGameObject == null)
+            else if (InputManager.IsLoad && EventSystem.current.currentSelectedGameObject == null)
                 Share();
-            else if (Inputs.IsSave && EventSystem.current.currentSelectedGameObject == null)
+            else if (InputManager.IsSave && EventSystem.current.currentSelectedGameObject == null)
                 PrintPdf();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 CancelAndHide();
         }
 

@@ -140,19 +140,19 @@ namespace Cgs.Decks
                 CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
-            if (Inputs.IsSort)
+            if (InputManager.IsSort)
                 Sort();
-            else if (Inputs.IsNew)
+            else if (InputManager.IsNew)
                 PromptForClear();
-            else if (Inputs.IsLoad)
+            else if (InputManager.IsLoad)
                 ShowDeckLoadMenu();
-            else if (Inputs.IsSave)
+            else if (InputManager.IsSave)
                 ShowDeckSaveMenu();
-            else if (Inputs.IsFocus && !deckEditorLayout.IsPortrait)
+            else if (InputManager.IsFocus && !deckEditorLayout.IsPortrait)
                 searchResults.inputField.ActivateInputField();
-            else if (Inputs.IsFilter && !deckEditorLayout.IsPortrait)
+            else if (InputManager.IsFilter && !deckEditorLayout.IsPortrait)
                 searchResults.ShowSearchMenu();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 CheckBackToMainMenu();
         }
 

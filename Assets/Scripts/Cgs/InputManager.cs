@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace Cgs
 {
-    public static class Inputs
+    public class InputManager : MonoBehaviour
     {
         public const KeyCode BluetoothReturn = (KeyCode)10;
 

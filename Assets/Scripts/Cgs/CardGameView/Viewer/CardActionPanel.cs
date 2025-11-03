@@ -80,15 +80,15 @@ namespace Cgs.CardGameView.Viewer
             if (!_canvasGroup.interactable)
                 return;
 
-            if (Inputs.IsNew && moveButton.interactable)
+            if (InputManager.IsNew && moveButton.interactable)
                 Move(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsLoad && rotateButton.interactable)
+            else if (InputManager.IsLoad && rotateButton.interactable)
                 Rotate(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsSave && tapButton.interactable)
+            else if (InputManager.IsSave && tapButton.interactable)
                 Tap(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsFilter && flipButton.interactable)
+            else if (InputManager.IsFilter && flipButton.interactable)
                 Flip(CardViewer.Instance.SelectedCardModel);
-            else if (Inputs.IsOption && discardButton.interactable)
+            else if (InputManager.IsOption && discardButton.interactable)
                 Discard(CardViewer.Instance.SelectedCardModel);
         }
 

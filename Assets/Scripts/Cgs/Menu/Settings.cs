@@ -71,8 +71,8 @@ namespace Cgs.Menu
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Inputs.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(Inputs.PlayerOption).performed += InputOption;
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(InputManager.PlayerOption).performed += InputOption;
         }
 
         private void Start()
@@ -118,10 +118,10 @@ namespace Cgs.Menu
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if ((Inputs.IsVertical || Inputs.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null)
+            if ((InputManager.IsVertical || InputManager.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
-            else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
-                ScrollPage(Inputs.IsPageDown);
+            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
+                ScrollPage(InputManager.IsPageDown);
         }
 
         private void ScrollPage(bool scrollDown)
@@ -230,8 +230,8 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Inputs.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(Inputs.PlayerOption).performed -= InputOption;
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(InputManager.PlayerOption).performed -= InputOption;
         }
     }
 }

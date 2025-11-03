@@ -26,17 +26,17 @@ namespace Cgs.Menu
             if (!IsFocused || urlInputField.isFocused)
                 return;
 
-            if ((Inputs.IsSubmit || Inputs.IsNew) && downloadButton.interactable)
+            if ((InputManager.IsSubmit || InputManager.IsNew) && downloadButton.interactable)
                 StartDownload();
-            else if ((Inputs.IsSort || Inputs.IsLoad) && urlInputField.interactable)
+            else if ((InputManager.IsSort || InputManager.IsLoad) && urlInputField.interactable)
                 Clear();
-            else if ((Inputs.IsFilter || Inputs.IsSave) && urlInputField.interactable)
+            else if ((InputManager.IsFilter || InputManager.IsSave) && urlInputField.interactable)
                 Paste();
-            else if (Inputs.IsFocus && urlInputField.interactable)
+            else if (InputManager.IsFocus && urlInputField.interactable)
                 urlInputField.ActivateInputField();
-            else if (Inputs.IsOption && gamesButton.gameObject.activeSelf)
+            else if (InputManager.IsOption && gamesButton.gameObject.activeSelf)
                 GoToCgsGamesBrowser();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 Hide();
         }
 
