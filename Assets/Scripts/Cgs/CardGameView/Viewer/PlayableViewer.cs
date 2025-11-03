@@ -98,7 +98,9 @@ namespace Cgs.CardGameView.Viewer
             if (Input.anyKeyDown && _selectedPlayable == null)
                 IsVisible = false;
 
-            if (!IsVisible || SelectedPlayable == null || CardGameManager.Instance.ModalCanvas != null)
+            if (!IsVisible || SelectedPlayable == null || CardGameManager.Instance.ModalCanvas != null
+                || dieValueInputField.isFocused || EventSystem.current.currentSelectedGameObject == dieValueInputField.gameObject
+                || dieMaxInputField.isFocused || EventSystem.current.currentSelectedGameObject == dieMaxInputField.gameObject)
                 return;
 
             foreach (var valueText in valueTexts)
