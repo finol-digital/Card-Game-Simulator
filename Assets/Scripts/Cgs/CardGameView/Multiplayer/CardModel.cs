@@ -8,6 +8,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
+using Cgs.UI.ScrollRects;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
@@ -142,9 +143,9 @@ namespace Cgs.CardGameView.Multiplayer
                 }
 
                 var placeholder = new GameObject(gameObject.name + "(PlaceHolder)", typeof(RectTransform));
-                PlaceHolder = (RectTransform) placeholder.transform;
+                PlaceHolder = (RectTransform)placeholder.transform;
                 PlaceHolder.SetParent(_placeHolderCardZone.transform);
-                PlaceHolder.sizeDelta = ((RectTransform) transform).sizeDelta;
+                PlaceHolder.sizeDelta = ((RectTransform)transform).sizeDelta;
                 PlaceHolder.localPosition = Vector2.zero;
             }
         }
@@ -172,7 +173,8 @@ namespace Cgs.CardGameView.Multiplayer
         public Material GetModifiedMaterial(Material baseMaterial)
         {
             var material = new Material(baseMaterial);
-            material.SetFloat(IsSelectedPropertyId, EventSystem.current.currentSelectedGameObject == gameObject ? 1 : 0);
+            material.SetFloat(IsSelectedPropertyId,
+                EventSystem.current.currentSelectedGameObject == gameObject ? 1 : 0);
             return material;
         }
 
@@ -211,7 +213,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
 
             var cardSize = new Vector2(CardGameManager.Current.CardSize.X, CardGameManager.Current.CardSize.Y);
-            ((RectTransform) transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
+            ((RectTransform)transform).sizeDelta = CardGameManager.PixelsPerInch * cardSize;
             gameObject.GetOrAddComponent<BoxCollider2D>().size = CardGameManager.PixelsPerInch * cardSize;
 
             if (CgsNetManager.Instance == null || !CgsNetManager.Instance.IsOnline ||
@@ -353,7 +355,7 @@ namespace Cgs.CardGameView.Multiplayer
                 return;
             }
 
-            var cards = new List<UnityCard> {Value, cardModel.Value};
+            var cards = new List<UnityCard> { Value, cardModel.Value };
             if (IsSpawned)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName, cards,
                     Position, Rotation, !IsFacedown);
@@ -387,7 +389,7 @@ namespace Cgs.CardGameView.Multiplayer
             cardModel.IsFacedown = isFacedown;
             cardModel.PlaceHolderCardZone = placeHolderCardZone;
             cardModel.DoesCloneOnDrag = false;
-            cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2) position - eventData.position;
+            cardModel.PointerDragOffsets[eventData.pointerId] = (Vector2)position - eventData.position;
             cardModel.OnBeginDrag(eventData);
             return cardModel;
         }
@@ -447,9 +449,15 @@ namespace Cgs.CardGameView.Multiplayer
                     if (isPointerOverDropTarget)
                     {
                         DropTarget.OnDrop(eventData);
+
+                        var cardScrollArea = DropTarget.GetComponent<CardScrollArea>();
                         var shouldDeleteOnDropTarget = PlaySettings.AutoStackCards || dropTargetCardModel == null;
 
-                        if (shouldDeleteOnDropTarget)
+                        if (cardScrollArea != null)
+                        {
+                            Debug.Log("PostDragPlayable::cardScrollArea");
+                        }
+                        else if (shouldDeleteOnDropTarget)
                         {
                             Debug.Log("PostDragPlayable::shouldDeleteOnDropTarget");
                             RequestDelete();
@@ -521,7 +529,7 @@ namespace Cgs.CardGameView.Multiplayer
                     var siblingCardModel = siblingTransform.GetComponent<CardModel>();
                     if (siblingCardModel != null)
                     {
-                        var cards = new List<UnityCard> {siblingCardModel.Value, Value};
+                        var cards = new List<UnityCard> { siblingCardModel.Value, Value };
                         if (IsSpawned)
                             CgsNetManager.Instance.LocalPlayer.RequestNewCardStack(PlayController.DefaultStackName,
                                 cards, siblingCardModel.Position, siblingCardModel.Rotation,
@@ -571,7 +579,7 @@ namespace Cgs.CardGameView.Multiplayer
             targetPosition +=
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
 
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             if (ParentCardZone != null)
                 UpdateCardZonePosition(targetPosition);
             else if (!IsStatic)
@@ -585,13 +593,14 @@ namespace Cgs.CardGameView.Multiplayer
                 ParentToCanvas(targetPosition);
 
             // Check for card zones
-            if (PlayController.Instance != null && ParentCardZone == PlayController.Instance.playAreaCardZone && PlaceHolderCardZone == null)
+            if (PlayController.Instance != null && ParentCardZone == PlayController.Instance.playAreaCardZone &&
+                PlaceHolderCardZone == null)
             {
                 foreach (var cardZone in PlayController.Instance.AllCardZones)
                 {
                     if (cardZone == PlayController.Instance.playAreaCardZone)
                         continue;
-                    if (RectTransformUtility.RectangleContainsScreenPoint((RectTransform) cardZone.transform,
+                    if (RectTransformUtility.RectangleContainsScreenPoint((RectTransform)cardZone.transform,
                             CurrentPointerEventData.position))
                         PlaceHolderCardZone = cardZone;
                 }
@@ -599,7 +608,7 @@ namespace Cgs.CardGameView.Multiplayer
             else if (PlaceHolderCardZone != null
                      && PlaceHolderCardZone.transform.parent == PlayController.Instance?.playAreaCardZone.transform
                      && !RectTransformUtility.RectangleContainsScreenPoint(
-                         (RectTransform) PlaceHolderCardZone.transform,
+                         (RectTransform)PlaceHolderCardZone.transform,
                          CurrentPointerEventData.position))
                 PlaceHolderCardZone = null;
             // end check
@@ -629,7 +638,7 @@ namespace Cgs.CardGameView.Multiplayer
                 transform.SetAsLastSibling();
 
             var zoneCorners = new Vector3[4];
-            ((RectTransform) cardZone.transform).GetWorldCorners(zoneCorners);
+            ((RectTransform)cardZone.transform).GetWorldCorners(zoneCorners);
             var isOutYBounds = targetPosition.y < zoneCorners[0].y || targetPosition.y > zoneCorners[1].y;
             var isOutXBounds = targetPosition.x < zoneCorners[0].x || targetPosition.y > zoneCorners[2].x;
             if ((cardZone.DoesImmediatelyRelease && !IsProcessingSecondaryDragAction)
@@ -730,7 +739,7 @@ namespace Cgs.CardGameView.Multiplayer
             if (previousParentCardZone != null)
                 previousParentCardZone.OnRemove(this);
             Visibility.blocksRaycasts = false;
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             rectTransform.anchorMax = 0.5f * Vector2.one;
             rectTransform.anchorMin = 0.5f * Vector2.one;
             rectTransform.pivot = 0.5f * Vector2.one;
