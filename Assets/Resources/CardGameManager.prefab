@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4566502268858140}
   - component: {fileID: 114614180611090904}
   - component: {fileID: 6097987813815254947}
+  - component: {fileID: 6768893713488297373}
   - component: {fileID: 4629569046948741417}
   - component: {fileID: 114208327254760074}
   - component: {fileID: 114356562771634316}
@@ -69,6 +70,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5a10d4cc19b0a4ca0e432ba61efab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6768893713488297373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565440365293990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21863e5ac11a72742876fbfc12da3353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.InputManager
 --- !u!114 &4629569046948741417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,6 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0811e85c2a95a448a549d2ed1176ac0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkManagerExpanded: 0
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 4526732702672025491}
@@ -141,8 +155,13 @@ MonoBehaviour:
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
     LoadSceneTimeOut: 120
-    SpawnTimeout: 1
+    SpawnTimeout: 10
     EnableNetworkLogs: 1
+    NetworkTopology: 0
+    UseCMBService: 0
+    AutoSpawnPlayerPrefabClientSide: 1
+    NetworkMessageMetrics: 1
+    NetworkProfilingMetrics: 1
     OldPrefabList: []
   RunInBackground: 1
   LogLevel: 1
@@ -159,6 +178,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ProtocolType: 0
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
@@ -199,8 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e520ffee43e728a48b91256d2d702235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  port: 47777
-  uniqueApplicationId: -8762320876133685614
+  mPort: 47777
+  mUniqueApplicationId: 3669091806144196816
 --- !u!1 &8839072711635395849
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,6 +267,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ProtocolType: 1
+  m_UseWebSockets: 0
+  m_UseEncryption: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500

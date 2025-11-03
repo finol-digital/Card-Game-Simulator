@@ -804,22 +804,6 @@ namespace Cgs
             ImageQueueService.Instance.ProcessQueue(this);
         }
 
-        private void LateUpdate()
-        {
-            InputManager.WasFocusBack = InputManager.IsFocusBack;
-            InputManager.WasFocusNext = InputManager.IsFocusNext;
-            InputManager.WasDown = InputManager.IsDown;
-            InputManager.WasUp = InputManager.IsUp;
-            InputManager.WasLeft = InputManager.IsLeft;
-            InputManager.WasRight = InputManager.IsRight;
-            InputManager.WasPageVertical = InputManager.IsPageVertical;
-            InputManager.WasPageDown = InputManager.IsPageDown;
-            InputManager.WasPageUp = InputManager.IsPageUp;
-            InputManager.WasPageHorizontal = InputManager.IsPageHorizontal;
-            InputManager.WasPageLeft = InputManager.IsPageLeft;
-            InputManager.WasPageRight = InputManager.IsPageRight;
-        }
-
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
