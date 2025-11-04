@@ -278,7 +278,7 @@ namespace Cgs.CardGameView.Viewer
                 if (InputManager.IsPageDown && !InputManager.WasPageDown)
                     maximalScrollRect.verticalNormalizedPosition =
                         Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
-                else if (InputManager.IsPageUp && !InputManager.WasPageDown)
+                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
                     maximalScrollRect.verticalNormalizedPosition =
                         Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
             }

@@ -33,7 +33,7 @@ namespace Cgs.Play
 
             if (InputManager.IsSort)
                 ShowPlaySettingsMenu();
-            if (InputManager.IsNew)
+            else if (InputManager.IsNew)
                 ShowDeckMenu();
             else if (InputManager.IsLoad)
                 CreateDie();
