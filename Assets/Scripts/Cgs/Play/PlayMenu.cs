@@ -27,8 +27,8 @@ namespace Cgs.Play
 
         private void Update()
         {
-            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
-                CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
                 return;
 
             if (InputManager.IsSort)

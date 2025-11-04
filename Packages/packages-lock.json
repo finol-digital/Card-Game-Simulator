@@ -15,12 +15,10 @@
       "url": "https://registry.npmjs.org"
     },
     "com.netpyoung.webp": {
-      "version": "0.3.19",
+      "version": "0.3.21",
       "depth": 0,
       "source": "registry",
-      "dependencies": {
-        "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0"
-      },
+      "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "com.unity.2d.sprite": {
@@ -151,11 +149,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.netcode.gameobjects": {
-      "version": "2.6.0",
+      "version": "2.7.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.transport": "2.4.0",
+        "com.unity.transport": "2.6.0",
         "com.unity.nuget.mono-cecil": "1.11.4"
       },
       "url": "https://packages.unity.com"
@@ -168,7 +166,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.2.1",
+      "version": "3.2.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -395,7 +393,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toolchain.linux-x86_64": {
-      "version": "2.0.10",
+      "version": "2.0.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -461,13 +459,6 @@
       "source": "git",
       "dependencies": {},
       "hash": "bce53b258059a5e6563e0be233f804a4f189649e"
-    },
-    "org.nuget.system.runtime.compilerservices.unsafe": {
-      "version": "6.0.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
