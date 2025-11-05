@@ -435,7 +435,7 @@ namespace Cgs.CardGameView.Multiplayer
             return OwnerRemoveAt(Cards.Count - 1);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void SetIsTopFaceupServerRpc(bool isFacedown)
         {
             _isTopFaceupNetworkVariable.Value = isFacedown;

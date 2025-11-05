@@ -505,11 +505,11 @@ namespace Cgs.CardGameView.Multiplayer
             ChangeOwnershipServerRpc();
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         // ReSharper disable once SuggestBaseTypeForParameter
-        private void ChangeOwnershipServerRpc(ServerRpcParams serverRpcParams = default)
+        private void ChangeOwnershipServerRpc(RpcParams rpcParams = default)
         {
-            var clientId = serverRpcParams.Receive.SenderClientId;
+            var clientId = rpcParams.Receive.SenderClientId;
             if (!NetworkManager.ConnectedClients.ContainsKey(clientId))
             {
                 Debug.LogWarning($"CgsNetPlayable: Ignoring request to transfer authority for {gameObject.name}");
@@ -524,7 +524,7 @@ namespace Cgs.CardGameView.Multiplayer
             UpdatePositionServerRpc(position);
         }
 
-        [ServerRpc]
+        [Rpc(SendTo.Server)]
         private void UpdatePositionServerRpc(Vector2 position)
         {
             Position = position;
@@ -542,7 +542,7 @@ namespace Cgs.CardGameView.Multiplayer
             UpdateRotationServerRpc(rotation);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdateRotationServerRpc(Quaternion rotation)
         {
             Rotation = rotation;
@@ -554,7 +554,7 @@ namespace Cgs.CardGameView.Multiplayer
             transform.localRotation = newValue;
         }
 
-        [ServerRpc]
+        [Rpc(SendTo.Server)]
         private void RemoveOwnershipServerRpc()
         {
             MyNetworkObject.RemoveOwnership();
@@ -581,7 +581,7 @@ namespace Cgs.CardGameView.Multiplayer
                 Destroy(gameObject);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         protected void DeleteServerRpc()
         {
             Debug.Log($"DeleteServerRpc {gameObject.name}");

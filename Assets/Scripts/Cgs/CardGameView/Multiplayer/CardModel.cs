@@ -774,7 +774,7 @@ namespace Cgs.CardGameView.Multiplayer
                 CardViewer.Instance.SelectedCardModel = this;
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void SetIsFacedownServerRpc(bool isFacedown)
         {
             _isFacedownNetworkVariable.Value = isFacedown;
