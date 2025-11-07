@@ -24,7 +24,7 @@ namespace Cgs.Cards
         private void Update()
         {
             _editButton.interactable = CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null;
-            if (Inputs.IsLoad && CardGameManager.Instance.ModalCanvas == null && !searchResults.inputField.isFocused)
+            if (InputManager.IsLoad && CardGameManager.Instance.ModalCanvas == null && !searchResults.inputField.isFocused)
                 ShowCardEditorMenu();
         }
 

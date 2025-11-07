@@ -145,7 +145,7 @@ namespace Cgs.CardGameView.Multiplayer
                 EventSystem.current.SetSelectedGameObject(gameObject, eventData);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdateMaxServerRpc(int value)
         {
             _maxNetworkVariable.Value = value;
@@ -157,7 +157,7 @@ namespace Cgs.CardGameView.Multiplayer
             _max = newValue;
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdateValueServerRpc(int value)
         {
             _valueNetworkVariable.Value = value;
@@ -170,7 +170,7 @@ namespace Cgs.CardGameView.Multiplayer
             valueText.text = newValue.ToString();
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdateColorServerRpc(Vector3 value)
         {
             _colorNetworkVariable.Value = value;
@@ -191,7 +191,7 @@ namespace Cgs.CardGameView.Multiplayer
                 _rollRemainingTime = RollTotalTime;
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void RollServerRpc()
         {
             _rollRemainingTime = RollTotalTime;

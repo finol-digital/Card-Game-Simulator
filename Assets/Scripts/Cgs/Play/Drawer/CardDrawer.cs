@@ -85,18 +85,18 @@ namespace Cgs.Play.Drawer
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (Inputs.IsVertical)
+            if (InputManager.IsVertical)
             {
-                if (Inputs.IsUp && !Inputs.WasUp)
+                if (InputManager.IsUp && !InputManager.WasUp)
                     Show();
-                else if (Inputs.IsDown && !Inputs.WasDown)
+                else if (InputManager.IsDown && !InputManager.WasDown)
                     Hide();
             }
 
-            if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
+            if (InputManager.IsFocusBack && !InputManager.WasFocusBack)
                 Deal();
 
-            if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
+            if (InputManager.IsFocusNext && !InputManager.WasFocusNext)
                 Draw();
         }
 

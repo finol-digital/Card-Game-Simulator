@@ -189,9 +189,9 @@ namespace Cgs.Play
                 scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsOption && CardViewer.Instance.PreviewCardModel == null)
+            if (InputManager.IsOption && CardViewer.Instance.PreviewCardModel == null)
                 menu.ToggleMenu();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
 #if CGS_SINGLEPLAYER
                 menu.ToggleFullscreen();
 #else

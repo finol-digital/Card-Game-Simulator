@@ -81,7 +81,7 @@ namespace Cgs.Play.Multiplayer
 
         private void Start()
         {
-            roomIdIpInputField.onValidateInput += (_, _, addedChar) => Inputs.FilterFocusInput(addedChar);
+            roomIdIpInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
             StartCoroutine(SignInAnonymouslyCoroutine());
         }
 
@@ -118,25 +118,25 @@ namespace Cgs.Play.Multiplayer
             if (!Menu.IsFocused || roomIdIpInputField.isFocused)
                 return;
 
-            if (Inputs.IsVertical)
+            if (InputManager.IsVertical)
             {
-                if (Inputs.IsUp && !Inputs.WasUp)
+                if (InputManager.IsUp && !InputManager.WasUp)
                     SelectPrevious();
-                else if (Inputs.IsDown && !Inputs.WasDown)
+                else if (InputManager.IsDown && !InputManager.WasDown)
                     SelectNext();
             }
 
-            if (Inputs.IsSubmit && joinButton.interactable)
+            if (InputManager.IsSubmit && joinButton.interactable)
                 Join();
-            else if (Inputs.IsNew)
+            else if (InputManager.IsNew)
                 Host();
-            else if (Inputs.IsFocusNext)
+            else if (InputManager.IsFocusNext)
                 roomIdIpInputField.ActivateInputField();
-            else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
-                ScrollPage(Inputs.IsPageDown);
-            else if (Inputs.IsPageHorizontal && !Inputs.WasPageHorizontal)
+            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
+                ScrollPage(InputManager.IsPageDown);
+            else if (InputManager.IsPageHorizontal && !InputManager.WasPageHorizontal)
                 ToggleConnectionSource();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 Close();
         }
 

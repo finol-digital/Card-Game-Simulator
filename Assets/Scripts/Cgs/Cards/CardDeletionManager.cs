@@ -26,7 +26,7 @@ namespace Cgs.Cards
         private void Update()
         {
             _deleteButton.interactable = CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null;
-            if (Inputs.IsOption && CardGameManager.Instance.ModalCanvas == null && !searchResults.inputField.isFocused)
+            if (InputManager.IsOption && CardGameManager.Instance.ModalCanvas == null && !searchResults.inputField.isFocused)
                 PromptDelete();
         }
 

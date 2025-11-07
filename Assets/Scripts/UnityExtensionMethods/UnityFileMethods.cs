@@ -7,7 +7,9 @@ using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using UnityEngine;
 using UnityEngine.Networking;
+#if !UNITY_WEBGL
 using WebP.Experiment.Animation;
+#endif
 #if UNITY_ANDROID && !UNITY_EDITOR
 using ICSharpCode.SharpZipLib.Core;
 #endif
@@ -409,10 +411,16 @@ namespace UnityExtensionMethods
         }
 
         // Can return null
+        // ReSharper disable once UnusedParameter.Local
         private static Texture2D DecodeWebp(byte[] bytes)
         {
+#if !UNITY_WEBGL
             var textures = WebPDecoderWrapper.Decode(bytes).Result;
             return textures?.FirstOrDefault().Item1;
+#else
+            Debug.LogWarning("DecodeWebp: WebP decoding is not supported on WebGL platform");
+            return null;
+#endif
         }
 
         // Can return null

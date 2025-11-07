@@ -5,7 +5,6 @@
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Cgs.CardGameView.Multiplayer
@@ -14,7 +13,7 @@ namespace Cgs.CardGameView.Multiplayer
     {
         public override string ViewValue => "Token";
         public override string DeletePrompt => "Delete token?";
-        
+
         public Image logoImage;
 
         public Color LogoColor
@@ -51,7 +50,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
         private void UpdateColorServerRpc(Vector3 value)
         {
             _colorNetworkVariable.Value = value;

@@ -62,24 +62,24 @@ namespace Cgs.Menu
                 return;
             }
 
-            if ((Inputs.IsVertical || Inputs.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null &&
+            if ((InputManager.IsVertical || InputManager.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null &&
                 yesButton.gameObject.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
             }
 
-            if (Inputs.IsSubmit)
+            if (InputManager.IsSubmit)
             {
                 if (yesButton.gameObject.activeInHierarchy)
                     yesButton.onClick?.Invoke();
                 else
                     OkClose();
             }
-            else if (Inputs.IsOption && noButton.gameObject.activeInHierarchy)
+            else if (InputManager.IsOption && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
-            else if (Inputs.IsSave)
+            else if (InputManager.IsSave)
                 CopyShare();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 OkClose();
         }
 

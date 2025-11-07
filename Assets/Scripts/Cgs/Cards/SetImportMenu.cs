@@ -112,11 +112,11 @@ namespace Cgs.Cards
             if (!IsFocused)
                 return;
 
-            if ((Inputs.IsSubmit || Inputs.IsSave) && importButton.interactable)
+            if ((InputManager.IsSubmit || InputManager.IsSave) && importButton.interactable)
                 StartImport();
-            if ((Inputs.IsNew || Inputs.IsLoad) && importButton.interactable)
+            if ((InputManager.IsNew || InputManager.IsLoad) && importButton.interactable)
                 SelectFolder();
-            else if (Inputs.IsCancel || Inputs.IsOption)
+            else if (InputManager.IsCancel || InputManager.IsOption)
                 Hide();
         }
 

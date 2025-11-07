@@ -3,7 +3,14 @@ guid: 545411f362f95ae408326da557746d1b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - downloadMenuPrefab: {fileID: 2330282487462195437, guid: 2d4784779890ecb41954d3181de7ad9e,
+      type: 3}
+  - bannerImage: {instanceID: 0}
+  - cardBackImage: {instanceID: 0}
+  - playMatImage: {instanceID: 0}
+  - backsFolderText: {instanceID: 0}
+  - saveButton: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

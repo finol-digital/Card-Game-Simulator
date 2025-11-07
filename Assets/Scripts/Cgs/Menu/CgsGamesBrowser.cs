@@ -68,26 +68,26 @@ namespace Cgs.Menu
             if (!Menu.IsFocused || _gameOptions.Count < 1)
                 return;
 
-            if (Inputs.IsVertical)
+            if (InputManager.IsVertical)
             {
-                if (Inputs.IsUp && !Inputs.WasUp)
+                if (InputManager.IsUp && !InputManager.WasUp)
                     SelectPrevious();
-                else if (Inputs.IsDown && !Inputs.WasDown)
+                else if (InputManager.IsDown && !InputManager.WasDown)
                     SelectNext();
             }
 
-            if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
+            if (Input.GetKeyDown(InputManager.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
                     .Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
-            else if (Inputs.IsOption)
+            else if (InputManager.IsOption)
                 GoToCgsGamesBrowser();
-            else if (Inputs.IsLoad)
+            else if (InputManager.IsLoad)
                 Refresh();
-            else if (Inputs.IsSubmit)
+            else if (InputManager.IsSubmit)
                 Import();
-            else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
-                ScrollPage(Inputs.IsPageDown);
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
+                ScrollPage(InputManager.IsPageDown);
+            else if (InputManager.IsCancel)
                 Hide();
         }
 

@@ -8,6 +8,7 @@ using PrimeTween;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -74,6 +75,16 @@ namespace Cgs.Menu
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
             CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
+
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(InputManager.PlayerFilter).performed += InputFilter;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusBack).performed += InputFocusBack;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusNext).performed += InputFocusNext;
+            InputSystem.actions.FindAction(InputManager.PlayerLoad).performed += InputLoad;
+            InputSystem.actions.FindAction(InputManager.PlayerNew).performed += InputNew;
+            InputSystem.actions.FindAction(InputManager.PlayerOption).performed += InputOption;
+            InputSystem.actions.FindAction(InputManager.PlayerSave).performed += InputSave;
+            InputSystem.actions.FindAction(InputManager.PlayerSort).performed += InputSort;
         }
 
         private void SetCopyright()
@@ -135,17 +146,6 @@ namespace Cgs.Menu
                     true);
         }
 
-        private static void DeclineWelcomeMessage()
-        {
-            HasSeenWelcome = true;
-        }
-
-        private static void AcceptWelcomeMessage()
-        {
-            HasSeenWelcome = true;
-            Application.OpenURL(Tags.CgsWebsite);
-        }
-
         private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
@@ -159,59 +159,44 @@ namespace Cgs.Menu
                     SelectNext();
             }
 
-            if (Inputs.IsPageVertical)
+            if (InputManager.IsPageVertical)
             {
-                if (Inputs.IsPageDown && !Inputs.WasPageDown)
+                if (InputManager.IsPageDown && !InputManager.WasPageDown)
                     SelectNext();
-                else if (Inputs.IsPageUp && !Inputs.WasPageUp)
+                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
                     SelectPrevious();
             }
-            else if (Inputs.IsPageHorizontal)
+            else if (InputManager.IsPageHorizontal)
             {
-                if (Inputs.IsPageLeft && !Inputs.WasPageLeft)
+                if (InputManager.IsPageLeft && !InputManager.WasPageLeft)
                     SelectPrevious();
-                else if (Inputs.IsPageRight && !Inputs.WasPageRight)
+                else if (InputManager.IsPageRight && !InputManager.WasPageRight)
                     SelectNext();
             }
-            else if (Inputs.IsHorizontal && EventSystem.current.currentSelectedGameObject == null ||
+            else if (InputManager.IsHorizontal && EventSystem.current.currentSelectedGameObject == null ||
                      EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject)
             {
-                if (Inputs.IsLeft && !Inputs.WasLeft)
+                if (InputManager.IsLeft && !InputManager.WasLeft)
                     SelectPrevious();
-                else if (Inputs.IsRight && !Inputs.WasRight)
+                else if (InputManager.IsRight && !InputManager.WasRight)
                     SelectNext();
             }
-            else if (Inputs.IsVertical && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
+            else if (InputManager.IsVertical && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
 
-            if (Input.GetKeyDown(Inputs.BluetoothReturn))
-            {
-                if (EventSystem.current.currentSelectedGameObject != null)
-                    EventSystem.current.currentSelectedGameObject.GetComponent<Button>()?.onClick?.Invoke();
-            }
-            else if (Inputs.IsSort)
-                SelectPrevious();
-            else if (Inputs.IsFilter)
-                SelectNext();
-            else if (Inputs.IsNew)
-                StartGame();
-            else if (Inputs.IsLoad)
-                JoinGame();
-            else if (Inputs.IsSave)
-                EditDeck();
-            else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
-                ShowGamesManagementMenu();
-            else if (Inputs.IsFocusNext && !Inputs.WasFocusNext)
-                ExploreCards();
-            else if (Inputs.IsOption)
-                ShowSettings();
-            else if (Inputs.IsCancel)
-            {
-                if (EventSystem.current.currentSelectedGameObject == null)
-                    PromptQuit();
-                else if (!EventSystem.current.alreadySelecting)
-                    EventSystem.current.SetSelectedGameObject(null);
-            }
+            if (Input.GetKeyDown(InputManager.BluetoothReturn) && EventSystem.current.currentSelectedGameObject != null)
+                EventSystem.current.currentSelectedGameObject.GetComponent<Button>()?.onClick?.Invoke();
+        }
+
+        private static void DeclineWelcomeMessage()
+        {
+            HasSeenWelcome = true;
+        }
+
+        private static void AcceptWelcomeMessage()
+        {
+            HasSeenWelcome = true;
+            Application.OpenURL(Tags.CgsWebsite);
         }
 
         private void ResetGameSelectionCarousel()
@@ -221,6 +206,12 @@ namespace Cgs.Menu
             currentBannerImage.sprite = CardGameManager.Current.BannerImageSprite;
             previousCardImage.sprite = CardGameManager.Instance.Previous.CardBackImageSprite;
             nextCardImage.sprite = CardGameManager.Instance.Next.CardBackImageSprite;
+        }
+
+        private void InputSort(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                SelectPrevious();
         }
 
         [UsedImplicitly]
@@ -266,7 +257,7 @@ namespace Cgs.Menu
             Tween.UIAnchoredPosition((RectTransform)middle.transform,
                 ((RectTransform)nextCardImage.transform).anchoredPosition, AnimationDuration);
             Tween.UIAnchoredPosition((RectTransform)right.transform,
-                ((RectTransform)offRightImage.transform).anchoredPosition, AnimationDuration)
+                    ((RectTransform)offRightImage.transform).anchoredPosition, AnimationDuration)
                 .OnComplete(() =>
                 {
                     // Remove duplicates and show originals
@@ -279,6 +270,12 @@ namespace Cgs.Menu
                     nextCardImage.gameObject.SetActive(true);
                     _isAnimating = false;
                 });
+        }
+
+        private void InputFilter(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                SelectNext();
         }
 
         [UsedImplicitly]
@@ -339,6 +336,12 @@ namespace Cgs.Menu
                 });
         }
 
+        private void InputFocusNext(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                ShowGamesManagementMenu();
+        }
+
         [UsedImplicitly]
         public void ShowGamesManagementMenu()
         {
@@ -349,6 +352,12 @@ namespace Cgs.Menu
 #endif
         }
 
+        private void InputNew(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                StartGame();
+        }
+
         [UsedImplicitly]
         public void StartGame()
         {
@@ -356,6 +365,12 @@ namespace Cgs.Menu
                 return;
             CardGameManager.Instance.IsSearchingForServer = false;
             SceneManager.LoadScene(Tags.PlayModeSceneIndex);
+        }
+
+        private void InputLoad(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                JoinGame();
         }
 
         [UsedImplicitly]
@@ -369,12 +384,24 @@ namespace Cgs.Menu
 #endif
         }
 
+        private void InputSave(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                EditDeck();
+        }
+
         [UsedImplicitly]
         public void EditDeck()
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             SceneManager.LoadScene(Tags.DeckEditorSceneIndex);
+        }
+
+        private void InputFocusBack(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                ExploreCards();
         }
 
         [UsedImplicitly]
@@ -385,12 +412,28 @@ namespace Cgs.Menu
             SceneManager.LoadScene(Tags.CardsExplorerSceneIndex);
         }
 
+        private void InputOption(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas == null)
+                ShowSettings();
+        }
+
         [UsedImplicitly]
         public void ShowSettings()
         {
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             SceneManager.LoadScene(Tags.SettingsSceneIndex);
+        }
+
+        private void InputCancel(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
+            if (EventSystem.current.currentSelectedGameObject == null)
+                PromptQuit();
+            else if (!EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(null);
         }
 
         [UsedImplicitly]
@@ -418,5 +461,18 @@ namespace Cgs.Menu
 #else
             Application.Quit();
 #endif
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(InputManager.PlayerFilter).performed -= InputFilter;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusBack).performed -= InputFocusBack;
+            InputSystem.actions.FindAction(InputManager.PlayerFocusNext).performed -= InputFocusNext;
+            InputSystem.actions.FindAction(InputManager.PlayerLoad).performed -= InputLoad;
+            InputSystem.actions.FindAction(InputManager.PlayerNew).performed -= InputNew;
+            InputSystem.actions.FindAction(InputManager.PlayerOption).performed -= InputOption;
+            InputSystem.actions.FindAction(InputManager.PlayerSave).performed -= InputSave;
+            InputSystem.actions.FindAction(InputManager.PlayerSort).performed -= InputSort;
+        }
     }
 }

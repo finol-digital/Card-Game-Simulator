@@ -34,33 +34,33 @@ namespace Cgs.Decks
                     SelectEditorRight();
             }
 
-            if (Inputs.IsVertical)
+            if (InputManager.IsVertical)
             {
-                if (Inputs.IsDown && !Inputs.WasDown)
+                if (InputManager.IsDown && !InputManager.WasDown)
                     SelectEditorDown();
-                else if (Inputs.IsUp && !Inputs.WasUp)
+                else if (InputManager.IsUp && !InputManager.WasUp)
                     SelectEditorUp();
             }
-            else if (Inputs.IsHorizontal)
+            else if (InputManager.IsHorizontal)
             {
-                if (Inputs.IsLeft && !Inputs.WasLeft)
+                if (InputManager.IsLeft && !InputManager.WasLeft)
                     SelectEditorLeft();
-                else if (Inputs.IsRight && !Inputs.WasRight)
+                else if (InputManager.IsRight && !InputManager.WasRight)
                     SelectEditorRight();
             }
 
-            if (Inputs.IsPageVertical)
+            if (InputManager.IsPageVertical)
             {
-                if (Inputs.IsPageDown && !Inputs.WasPageDown)
+                if (InputManager.IsPageDown && !InputManager.WasPageDown)
                     SelectResultsDown();
-                else if (Inputs.IsPageUp && !Inputs.WasPageUp)
+                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
                     SelectResultsUp();
             }
-            else if (Inputs.IsPageHorizontal)
+            else if (InputManager.IsPageHorizontal)
             {
-                if (Inputs.IsPageLeft && !Inputs.WasPageLeft)
+                if (InputManager.IsPageLeft && !InputManager.WasPageLeft)
                     SelectResultsLeft();
-                else if (Inputs.IsPageRight && !Inputs.WasPageRight)
+                else if (InputManager.IsPageRight && !InputManager.WasPageRight)
                     SelectResultsRight();
             }
         }

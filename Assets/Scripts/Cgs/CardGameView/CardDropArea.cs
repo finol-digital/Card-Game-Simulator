@@ -65,7 +65,7 @@ namespace Cgs.CardGameView
             {
                 if (GetComponent<CardStack>() != null)
                     cardModel.DropTarget = this;
-                DropHandler.OnDrop(cardModel);
+                DropHandler?.OnDrop(cardModel);
             }
         }
     }

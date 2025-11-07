@@ -90,40 +90,40 @@ namespace Cgs.Menu
             if (!Menu.IsFocused)
                 return;
 
-            if (Inputs.IsVertical)
+            if (InputManager.IsVertical)
             {
-                if (Inputs.IsUp && !Inputs.WasUp)
+                if (InputManager.IsUp && !InputManager.WasUp)
                     SelectPrevious();
-                else if (Inputs.IsDown && !Inputs.WasDown)
+                else if (InputManager.IsDown && !InputManager.WasDown)
                     SelectNext();
             }
 
-            if (Input.GetKeyDown(Inputs.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
+            if (Input.GetKeyDown(InputManager.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
                     .Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
-            else if (Inputs.IsSubmit)
+            else if (InputManager.IsSubmit)
             {
                 if (Settings.DeveloperMode && !CardGameManager.Current.IsUploaded)
                     EditCurrent();
                 else
                     Sync();
             }
-            else if (Inputs.IsNew)
+            else if (InputManager.IsNew)
             {
                 if (Settings.DeveloperMode)
                     CreateNew();
                 else
                     ShowCgsGamesBrowser();
             }
-            else if (Inputs.IsLoad)
+            else if (InputManager.IsLoad)
                 Import();
-            else if (Inputs.IsSave)
+            else if (InputManager.IsSave)
                 Share();
-            else if (Inputs.IsOption)
+            else if (InputManager.IsOption)
                 Delete();
-            else if (Inputs.IsPageVertical && !Inputs.WasPageVertical)
-                ScrollPage(Inputs.IsPageDown);
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
+                ScrollPage(InputManager.IsPageDown);
+            else if (InputManager.IsCancel)
                 Hide();
         }
 

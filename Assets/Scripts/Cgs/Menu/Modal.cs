@@ -56,7 +56,7 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (Inputs.IsFocusBack)
+            if (InputManager.IsFocusBack)
             {
                 // up
                 var previous = InputFields.Last();
@@ -72,7 +72,7 @@ namespace Cgs.Menu
                     previous = inputField;
                 }
             }
-            else if (Inputs.IsFocusNext)
+            else if (InputManager.IsFocusNext)
             {
                 // down
                 var next = InputFields.First();
@@ -98,9 +98,9 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (Inputs.IsVertical)
+            if (InputManager.IsVertical)
             {
-                if (Inputs.IsUp && !Inputs.WasUp)
+                if (InputManager.IsUp && !InputManager.WasUp)
                 {
                     // up
                     var previous = Toggles.Last();
@@ -116,7 +116,7 @@ namespace Cgs.Menu
                             previous = toggle;
                     }
                 }
-                else if (Inputs.IsDown && !Inputs.WasDown)
+                else if (InputManager.IsDown && !InputManager.WasDown)
                 {
                     // down
                     var next = Toggles.First();
@@ -133,9 +133,9 @@ namespace Cgs.Menu
                     }
                 }
             }
-            else if (Inputs.IsHorizontal)
+            else if (InputManager.IsHorizontal)
             {
-                if (Inputs.IsRight && !Inputs.WasRight)
+                if (InputManager.IsRight && !InputManager.WasRight)
                 {
                     // right
                     var next = Toggles.First();
@@ -150,7 +150,7 @@ namespace Cgs.Menu
                         next = Toggles[i];
                     }
                 }
-                else if (Inputs.IsLeft && !Inputs.WasLeft)
+                else if (InputManager.IsLeft && !InputManager.WasLeft)
                 {
                     // left
                     var previous = Toggles.Last();

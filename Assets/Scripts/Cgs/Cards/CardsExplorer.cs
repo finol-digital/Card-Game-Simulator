@@ -70,15 +70,15 @@ namespace Cgs.Cards
                 CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
                 return;
 
-            if (Inputs.IsFocusNext)
+            if (InputManager.IsFocusNext)
                 searchResults.inputField.ActivateInputField();
-            else if (Inputs.IsFocusBack && !Inputs.WasFocusBack)
+            else if (InputManager.IsFocusBack && !InputManager.WasFocusBack)
                 ShowGamesManagementMenu();
-            else if (Inputs.IsFilter)
+            else if (InputManager.IsFilter)
                 searchResults.ShowSearchMenu();
-            else if (Inputs.IsNew)
+            else if (InputManager.IsNew)
                 ShowNewCardSetModal();
-            else if (Inputs.IsCancel)
+            else if (InputManager.IsCancel)
                 BackToMainMenu();
         }
 

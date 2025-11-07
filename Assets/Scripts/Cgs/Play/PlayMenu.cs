@@ -27,19 +27,19 @@ namespace Cgs.Play
 
         private void Update()
         {
-            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || !Input.anyKeyDown ||
-                CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
                 return;
 
-            if (Inputs.IsSort)
+            if (InputManager.IsSort)
                 ShowPlaySettingsMenu();
-            if (Inputs.IsNew)
+            else if (InputManager.IsNew)
                 ShowDeckMenu();
-            else if (Inputs.IsLoad)
+            else if (InputManager.IsLoad)
                 CreateDie();
-            else if (Inputs.IsFilter)
+            else if (InputManager.IsFilter)
                 ShowCardsMenu();
-            else if (Inputs.IsSave)
+            else if (InputManager.IsSave)
                 CreateToken();
         }
 
