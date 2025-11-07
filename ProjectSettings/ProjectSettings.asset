@@ -73,6 +73,7 @@ PlayerSettings:
   androidStartInFullscreen: 1
   androidRenderOutsideSafeArea: 0
   androidUseSwappy: 0
+  androidDisplayOptions: 1
   androidBlitType: 2
   androidResizeableActivity: 0
   androidDefaultWindowWidth: 1920
@@ -148,6 +149,7 @@ PlayerSettings:
   bundleVersion: 0.0.0
   preloadedAssets:
   - {fileID: 11400000, guid: 488333c7d54871d488f436b5bcc4f1b2, type: 2}
+  - {fileID: -944628639613478452, guid: 05aadddcd5d2360478d81adae954f8dc, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -546,6 +548,9 @@ PlayerSettings:
     m_DynamicBatching: 0
   - m_BuildTarget: Windows Store Apps
     m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: WebGL
+    m_StaticBatching: 0
     m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs:
@@ -1121,3 +1126,4 @@ PlayerSettings:
   androidVulkanDenyFilterList: []
   androidVulkanAllowFilterList: []
   androidVulkanDeviceFilterListAsset: {fileID: 0}
+  d3d12DeviceFilterListAsset: {fileID: 0}
