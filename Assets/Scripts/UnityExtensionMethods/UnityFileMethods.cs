@@ -418,6 +418,7 @@ namespace UnityExtensionMethods
             var textures = WebPDecoderWrapper.Decode(bytes).Result;
             return textures?.FirstOrDefault().Item1;
 #else
+            Debug.LogWarning("DecodeWebp: WebP decoding is not supported on WebGL platform");
             return null;
 #endif
         }

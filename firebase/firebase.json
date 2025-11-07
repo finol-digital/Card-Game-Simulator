@@ -9,6 +9,11 @@
         "type": 301
       },
       {
+        "source": "/gatcg_spoilers",
+        "destination": "https://cgs.games/gatcg/grand_archive_spoilers",
+        "type": 301
+      },
+      {
         "source": "/dominoes",
         "destination": "https://cgs.games/link/dominoes",
         "type": 301
