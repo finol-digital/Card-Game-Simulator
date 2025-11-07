@@ -1,3 +1,2 @@
 ## What's Changed
-- Bug Fixes
-
+- Fixed Input bugs
