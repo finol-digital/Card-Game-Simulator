@@ -119,7 +119,7 @@ namespace Cgs.Editor
             intentFilter.AppendChild(data);
             XmlAttribute dataAttribute = CreateAndroidAttribute("scheme", "cardgamesim");
             data.Attributes.Append(dataAttribute);
-            XmlAttribute dataAttribute2 = CreateAndroidAttribute("host", "link");
+            XmlAttribute dataAttribute2 = CreateAndroidAttribute("host", "main");
             data.Attributes.Append(dataAttribute2);
         }
     }
