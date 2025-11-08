@@ -4,13 +4,11 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Cgs.UI;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -76,10 +74,7 @@ namespace Cgs.Menu
                     SelectNext();
             }
 
-            if (Input.GetKeyDown(InputManager.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
-                    .Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
-            else if (InputManager.IsOption)
+            if (InputManager.IsOption)
                 GoToCgsGamesBrowser();
             else if (InputManager.IsLoad)
                 Refresh();

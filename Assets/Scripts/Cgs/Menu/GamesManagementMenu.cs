@@ -3,11 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.IO;
-using System.Linq;
 using Cgs.UI;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 #if !UNITY_WEBGL
@@ -98,10 +96,7 @@ namespace Cgs.Menu
                     SelectNext();
             }
 
-            if (Input.GetKeyDown(InputManager.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
-                    .Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
-            else if (InputManager.IsSubmit)
+            if (InputManager.IsSubmit)
             {
                 if (Settings.DeveloperMode && !CardGameManager.Current.IsUploaded)
                     EditCurrent();

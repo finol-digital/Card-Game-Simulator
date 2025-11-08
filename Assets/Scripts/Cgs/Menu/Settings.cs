@@ -72,7 +72,7 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(InputManager.PlayerOption).performed += InputOption;
+            InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed += InputWebsite;
         }
 
         private void Start()
@@ -118,7 +118,8 @@ namespace Cgs.Menu
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if ((InputManager.IsVertical || InputManager.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null)
+            if ((InputManager.IsVertical || InputManager.IsHorizontal) &&
+                EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
             else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
                 ScrollPage(InputManager.IsPageDown);
@@ -200,7 +201,7 @@ namespace Cgs.Menu
             DeveloperMode = developerMode;
         }
 
-        private void InputOption(InputAction.CallbackContext context)
+        private void InputWebsite(InputAction.CallbackContext context)
         {
             if (CardGameManager.Instance.ModalCanvas == null)
                 GoToWebsite();
@@ -231,7 +232,7 @@ namespace Cgs.Menu
         private void OnDisable()
         {
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(InputManager.PlayerOption).performed -= InputOption;
+            InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed -= InputWebsite;
         }
     }
 }

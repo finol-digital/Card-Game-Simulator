@@ -9,21 +9,31 @@ namespace Cgs
 {
     public class InputManager : MonoBehaviour
     {
-        public const KeyCode BluetoothReturn = (KeyCode)10;
-
         public const string PlayerCancel = "Player/Cancel";
-        public const string PlayerFilter = "Player/Filter";
-        public const string PlayerFocusBack = "Player/FocusBack";
-        public const string PlayerFocusNext = "Player/FocusNext";
-        public const string PlayerLoad = "Player/Load";
-        public const string PlayerNew = "Player/New";
-        public const string PlayerOption = "Player/Option";
-        public const string PlayerSave = "Player/Save";
-        public const string PlayerSort = "Player/Sort";
         private const string PlayerSubmit = "Player/Submit";
 
         private const string PlayerMove = "Player/Move";
         private const string PlayerPage = "Player/Page";
+
+        private const string PlayerFilter = "Player/Filter";
+        private const string PlayerFocusBack = "Player/FocusBack";
+        private const string PlayerFocusNext = "Player/FocusNext";
+        private const string PlayerLoad = "Player/Load";
+        private const string PlayerNew = "Player/New";
+        private const string PlayerOption = "Player/Option";
+        private const string PlayerSave = "Player/Save";
+        private const string PlayerSort = "Player/Sort";
+
+        public const string MainMenuSelectPrevious = "MainMenu/SelectPrevious";
+        public const string MainMenuSelectNext = "MainMenu/SelectNext";
+        public const string MainMenuShowGamesManagementMenu = "MainMenu/ShowGamesManagementMenu";
+        public const string MainMenuStartGame = "MainMenu/StartGame";
+        public const string MainMenuJoinGame = "MainMenu/JoinGame";
+        public const string MainMenuEditDeck = "MainMenu/EditDeck";
+        public const string MainMenuExploreCards = "MainMenu/ExploreCards";
+        public const string MainMenuShowSettings = "MainMenu/ShowSettings";
+
+        public const string SettingsWebsite = "Settings/Website";
 
         private static InputManager _instance;
 
