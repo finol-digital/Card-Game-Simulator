@@ -175,7 +175,6 @@ GameObject:
   - component: {fileID: 62766699}
   - component: {fileID: 62766704}
   - component: {fileID: 62766703}
-  - component: {fileID: 62766705}
   - component: {fileID: 62766706}
   m_Layer: 5
   m_Name: DeckEditor Canvas
@@ -325,20 +324,6 @@ MonoBehaviour:
   nameText: {fileID: 1211921541}
   countText: {fileID: 604367886}
   searchResults: {fileID: 62766703}
---- !u!114 &62766705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 62766698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5de303b3a0e1fc8478dba7c76724b2a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  editor: {fileID: 62766704}
-  results: {fileID: 62766703}
 --- !u!114 &62766706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2839,7 +2824,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62766705}
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -3235,7 +3220,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62766705}
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -3689,6 +3674,7 @@ GameObject:
   - component: {fileID: 114830016053378607}
   - component: {fileID: 114155425131889057}
   - component: {fileID: 114896128118158155}
+  - component: {fileID: 224256217446483740}
   m_Layer: 5
   m_Name: Card Viewer
   m_TagString: CardViewer
@@ -3952,6 +3938,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!114 &114093824571774819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4961,6 +4948,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &224256217446483740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205981936813647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de303b3a0e1fc8478dba7c76724b2a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  editor: {fileID: 62766704}
+  results: {fileID: 62766703}
 --- !u!224 &224463543965373615
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5972,6 +5973,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!1001 &1649566983880379648
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6317,6 +6319,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!222 &2182639415092071546
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8151,6 +8154,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
+  inputActionId: 
 --- !u!114 &3672755591164922130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8198,6 +8202,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
+  inputActionId: 
 --- !u!224 &3780887782482101513
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8247,6 +8252,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
+  inputActionId: 
 --- !u!114 &3901188249246991866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8372,6 +8378,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!114 &4195147244760369757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8758,6 +8765,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!114 &5160683046573473317
 MonoBehaviour:
   m_ObjectHideFlags: 0

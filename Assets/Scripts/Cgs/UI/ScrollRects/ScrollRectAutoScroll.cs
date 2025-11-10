@@ -60,8 +60,7 @@ namespace Cgs.UI.ScrollRects
             if (_selectables.Count <= 0)
                 return;
 
-            if (Input.GetButtonDown("Horizontal") || Input.GetButtonDown("Vertical") ||
-                Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+            if (InputManager.IsHorizontal || InputManager.IsVertical)
             {
                 ScrollToSelected(false);
             }

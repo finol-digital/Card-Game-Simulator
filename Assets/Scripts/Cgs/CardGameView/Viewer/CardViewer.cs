@@ -10,6 +10,7 @@ using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -257,7 +258,7 @@ namespace Cgs.CardGameView.Viewer
                 ZoomTime = 0;
             WasVisible = IsVisible;
 
-            if (Input.anyKeyDown && _selectedCardModel == null)
+            if (_selectedCardModel == null)
                 IsVisible = false;
 
             if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)

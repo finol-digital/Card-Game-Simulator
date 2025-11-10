@@ -95,7 +95,7 @@ namespace Cgs.CardGameView.Viewer
         {
             WasVisible = IsVisible;
 
-            if (Input.anyKeyDown && _selectedPlayable == null)
+            if (_selectedPlayable == null)
                 IsVisible = false;
 
             if (!IsVisible || SelectedPlayable == null || CardGameManager.Instance.ModalCanvas != null

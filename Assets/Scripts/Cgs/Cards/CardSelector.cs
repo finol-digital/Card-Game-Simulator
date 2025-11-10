@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using JetBrains.Annotations;
@@ -12,14 +11,10 @@ using UnityEngine.UI;
 
 namespace Cgs.Cards
 {
-    public class CardSelector : MonoBehaviour
+    public class CardSelector : MonoBehaviour, IDragHandler, IEndDragHandler
     {
-        private const float GameSelectorHeight = 160;
-
         public SearchResults results;
         public ScrollRect scrollRect;
-
-        private bool _wasAvailable;
 
         private void Start()
         {
@@ -28,42 +23,40 @@ namespace Cgs.Cards
             CardViewer.Instance.nextButton.onClick.AddListener(SelectRight);
         }
 
+        public void OnDrag(PointerEventData eventData)
+        {
+            // Just required by the interface to get OnEndDrag called
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
+                return;
+
+            var dragVector2 = (eventData.position - eventData.pressPosition).normalized;
+            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragVector2);
+
+            if ((CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                || CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f)
+            {
+                if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Right)
+                    SelectLeft();
+                else if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Left)
+                    SelectRight();
+            }
+            else if (!CardViewer.Instance.Zoom)
+            {
+                if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Right)
+                    PageLeft();
+                else if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Left)
+                    PageRight();
+            }
+        }
+
         private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
-            {
-                _wasAvailable = false;
                 return;
-            }
-
-            if (_wasAvailable && SwipeManager.DetectSwipe())
-            {
-                if ((CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
-                    || CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f)
-                {
-                    if (SwipeManager.IsSwipingRight())
-                        SelectLeft();
-                    else if (SwipeManager.IsSwipingLeft())
-                        SelectRight();
-                }
-                else if (!CardViewer.Instance.Zoom)
-                {
-                    if (Input.touches.All(touch => touch.position.y > Screen.height - GameSelectorHeight))
-                    {
-                        if (SwipeManager.IsSwipingRight())
-                            CardGameManager.Instance.Select(CardGameManager.Instance.Previous.Id);
-                        else if (SwipeManager.IsSwipingLeft())
-                            CardGameManager.Instance.Select(CardGameManager.Instance.Next.Id);
-                    }
-                    else
-                    {
-                        if (SwipeManager.IsSwipingRight())
-                            PageLeft();
-                        else if (SwipeManager.IsSwipingLeft())
-                            PageRight();
-                    }
-                }
-            }
 
             if (InputManager.IsVertical)
             {
@@ -96,8 +89,6 @@ namespace Cgs.Cards
                 else if (InputManager.IsPageRight && !InputManager.WasPageRight)
                     PageRight();
             }
-
-            _wasAvailable = true;
         }
 
         [UsedImplicitly]
@@ -124,7 +115,7 @@ namespace Cgs.Cards
                 }
 
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / results.layoutArea.childCount);
                 return;
             }
 
@@ -158,7 +149,7 @@ namespace Cgs.Cards
                 }
 
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / results.layoutArea.childCount);
                 return;
             }
 
@@ -192,7 +183,7 @@ namespace Cgs.Cards
                 }
 
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / results.layoutArea.childCount);
                 return;
             }
 
@@ -226,7 +217,7 @@ namespace Cgs.Cards
                 }
 
                 EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(i).gameObject);
-                scrollRect.verticalNormalizedPosition = 1.0f - ((float) i / results.layoutArea.childCount);
+                scrollRect.verticalNormalizedPosition = 1.0f - ((float)i / results.layoutArea.childCount);
                 return;
             }
 

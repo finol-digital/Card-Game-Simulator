@@ -17,6 +17,7 @@ namespace Cgs.UI
         public string tooltip = "";
         public bool avoidOverlap;
         public bool isBelow;
+        public string inputActionId;
 
         private GameObject ToolTipGameObject => _toolTipGameObject ??= Instantiate(tooltipPrefab, transform);
 

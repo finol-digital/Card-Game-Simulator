@@ -15,7 +15,7 @@ using UnityExtensionMethods;
 
 namespace Cgs.Menu
 {
-    public class MainMenu : MonoBehaviour
+    public class MainMenu : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         private const float MinWidth = 1200f;
         private const float FooterPortraitWidth = 260f;
@@ -79,7 +79,8 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(InputManager.MainMenuSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(InputManager.MainMenuSelectNext).performed += InputSelectNext;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed += InputShowGamesManagementMenu;
+            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed +=
+                InputShowGamesManagementMenu;
             InputSystem.actions.FindAction(InputManager.MainMenuStartGame).performed += InputStartGame;
             InputSystem.actions.FindAction(InputManager.MainMenuJoinGame).performed += InputJoinGame;
             InputSystem.actions.FindAction(InputManager.MainMenuEditDeck).performed += InputEditDeck;
@@ -146,18 +147,28 @@ namespace Cgs.Menu
                     true);
         }
 
-        private void Update()
+        public void OnDrag(PointerEventData eventData)
+        {
+            // Just required by the interface to get OnEndDrag called
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (SwipeManager.DetectSwipe())
-            {
-                if (SwipeManager.IsSwipingRight())
-                    SelectPrevious();
-                else if (SwipeManager.IsSwipingLeft())
-                    SelectNext();
-            }
+            var dragVector2 = (eventData.position - eventData.pressPosition).normalized;
+            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragVector2);
+            if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Left)
+                SelectNext();
+            else if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Right)
+                SelectPrevious();
+        }
+
+        private void Update()
+        {
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
 
             if (InputManager.IsPageVertical)
             {
@@ -181,7 +192,8 @@ namespace Cgs.Menu
                 else if (InputManager.IsRight && !InputManager.WasRight)
                     SelectNext();
             }
-            else if (InputManager.IsVertical && !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
+            else if (InputManager.IsVertical &&
+                     !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
         }
 
@@ -464,7 +476,8 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(InputManager.MainMenuSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(InputManager.MainMenuSelectNext).performed -= InputSelectNext;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed -= InputShowGamesManagementMenu;
+            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed -=
+                InputShowGamesManagementMenu;
             InputSystem.actions.FindAction(InputManager.MainMenuStartGame).performed -= InputStartGame;
             InputSystem.actions.FindAction(InputManager.MainMenuJoinGame).performed -= InputJoinGame;
             InputSystem.actions.FindAction(InputManager.MainMenuEditDeck).performed -= InputEditDeck;

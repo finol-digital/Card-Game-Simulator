@@ -15,6 +15,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -562,8 +563,9 @@ namespace Cgs.CardGameView.Multiplayer
             if (SecondaryDragAction != Rotate && IsProcessingSecondaryDragAction)
                 return;
 #else
-            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1) || Input.GetMouseButton(2) ||
-                Input.GetMouseButtonUp(2))
+            if (Mouse.current.rightButton.isPressed || Mouse.current.rightButton.wasReleasedThisFrame
+                                                    || Mouse.current.middleButton.isPressed
+                                                    || Mouse.current.middleButton.wasReleasedThisFrame)
                 return;
 #endif
 

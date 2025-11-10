@@ -10,20 +10,13 @@ namespace UnityExtensionMethods
 {
     public static class UnityExtensionMethods
     {
-        public static T FindInParents<T>(this GameObject go) where T : Component
+        public enum SwipeDirection
         {
-            var component = go.GetComponent<T>();
-            if (component != null)
-                return component;
-
-            Transform transform = go.transform.parent;
-            while (transform != null && component == null)
-            {
-                component = transform.gameObject.GetComponent<T>();
-                transform = transform.parent;
-            }
-
-            return component;
+            None,
+            Left,
+            Right,
+            Down,
+            Up
         }
 
         public static T GetOrAddComponent<T>(this GameObject go) where T : Component
@@ -33,9 +26,9 @@ namespace UnityExtensionMethods
 
         public static void DestroyAllChildren(this Transform parent)
         {
-            for (int i = parent.transform.childCount - 1; i >= 0; i--)
+            for (var i = parent.transform.childCount - 1; i >= 0; i--)
             {
-                Transform child = parent.GetChild(i);
+                var child = parent.GetChild(i);
                 child.SetParent(null);
                 Object.Destroy(child.gameObject);
             }
@@ -46,6 +39,18 @@ namespace UnityExtensionMethods
             if (list == null || list.Count == 0)
                 return Vector2.zero;
             return list.Aggregate(Vector2.zero, (current, vector) => current + vector) / list.Count;
+        }
+
+        public static SwipeDirection GetSwipeDirection(Vector2 dragVector2)
+        {
+            var positiveX = Mathf.Abs(dragVector2.x);
+            var positiveY = Mathf.Abs(dragVector2.y);
+            SwipeDirection swipeDir;
+            if (positiveX > positiveY)
+                swipeDir = (dragVector2.x > 0) ? SwipeDirection.Right : SwipeDirection.Left;
+            else
+                swipeDir = (dragVector2.y > 0) ? SwipeDirection.Up : SwipeDirection.Down;
+            return swipeDir;
         }
     }
 }
