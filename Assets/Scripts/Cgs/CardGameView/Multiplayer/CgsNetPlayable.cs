@@ -443,7 +443,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsProcessingSecondaryDragAction)
                 return;
 #else
-            if (Mouse.current.rightButton.isPressed || Mouse.current.rightButton.wasReleasedThisFrame)
+            if (Mouse.current != null && (Mouse.current.rightButton.isPressed
+                                          || Mouse.current.rightButton.wasReleasedThisFrame))
                 return;
 #endif
 

@@ -37,6 +37,14 @@ namespace Cgs
 
         private static InputManager _instance;
 
+        public static bool IsShift => Keyboard.current != null
+                                      && (Keyboard.current.leftShiftKey.isPressed
+                                          || Keyboard.current.rightShiftKey.isPressed);
+
+        public static bool IsCtrl => Keyboard.current != null
+                                     && (Keyboard.current.leftCtrlKey.isPressed
+                                         || Keyboard.current.rightCtrlKey.isPressed);
+
         public static bool IsCancel => _instance?._cancelAction?.WasPressedThisFrame() ?? false;
         private InputAction _cancelAction;
 

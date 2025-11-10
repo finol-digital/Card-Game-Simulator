@@ -563,9 +563,10 @@ namespace Cgs.CardGameView.Multiplayer
             if (SecondaryDragAction != Rotate && IsProcessingSecondaryDragAction)
                 return;
 #else
-            if (Mouse.current.rightButton.isPressed || Mouse.current.rightButton.wasReleasedThisFrame
-                                                    || Mouse.current.middleButton.isPressed
-                                                    || Mouse.current.middleButton.wasReleasedThisFrame)
+            if (Mouse.current != null && (Mouse.current.rightButton.isPressed
+                                          || Mouse.current.rightButton.wasReleasedThisFrame
+                                          || Mouse.current.middleButton.isPressed
+                                          || Mouse.current.middleButton.wasReleasedThisFrame))
                 return;
 #endif
 

@@ -315,6 +315,7 @@ MonoBehaviour:
     name and hide duplicates.
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!1001 &216619222
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -712,6 +713,7 @@ MonoBehaviour:
     displays may prefer higher.
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!1001 &440945639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2106,6 +2108,7 @@ MonoBehaviour:
   tooltip: Create and Share. See the CGS website for a tutorial.
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!1001 &1154342669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3194,6 +3197,7 @@ MonoBehaviour:
   tooltip: View card names whenever you hover/mouse-over cards.
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!1 &1491327226
 GameObject:
   m_ObjectHideFlags: 0
@@ -3464,6 +3468,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Main Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Cancel
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3681,6 +3690,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: View Website
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Settings/Website
       objectReference: {fileID: 0}
     - target: {fileID: 2848342772243254878, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -4543,6 +4557,7 @@ MonoBehaviour:
   tooltip: Tooltips like this one are visible because of this "Button Tooltips" setting.
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
 --- !u!1001 &4619015875546048479
 PrefabInstance:
   m_ObjectHideFlags: 0

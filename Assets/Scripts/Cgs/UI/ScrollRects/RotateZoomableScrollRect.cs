@@ -8,7 +8,10 @@ using Cgs.CardGameView.Multiplayer;
 using Cgs.Play;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace Cgs.UI.ScrollRects
 {
@@ -59,8 +62,7 @@ namespace Cgs.UI.ScrollRects
 
         public bool ZoomEnabled
         {
-            get => Input.touchCount > 1 || Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)
-                   || scrollSensitivity == 0;
+            get => Touch.activeTouches.Count > 1 || InputManager.IsCtrl || scrollSensitivity == 0;
             set => scrollSensitivity = value ? 0 : _scrollSensitivity;
         }
 
@@ -75,7 +77,7 @@ namespace Cgs.UI.ScrollRects
 
         protected override void Awake()
         {
-            Input.multiTouchEnabled = true;
+            EnhancedTouchSupport.Enable();
             scrollSensitivity = ScrollWheelSensitivity;
             _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
             _currentZoom = PlaySettings.DefaultZoom;
@@ -90,9 +92,7 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left
-                && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                && Input.touchCount <= 1)
+            if (eventData.button == PointerEventData.InputButton.Left && !InputManager.IsShift && Touch.activeTouches.Count <= 1)
                 return;
 
             PointerPositions[eventData.pointerId] = eventData.position;
@@ -154,7 +154,7 @@ namespace Cgs.UI.ScrollRects
         private void Update()
         {
             // Touch zoom
-            var touches = new List<Vector2>(Input.touches.Select(touch => touch.position));
+            var touches = new List<Vector2>(Touch.activeTouches.Select(touch => touch.screenPosition));
             for (var i = touches.Count - 1; i >= 0; i--)
                 if (IsTouchingCard(touches[i]))
                     touches.RemoveAt(i);
@@ -179,7 +179,7 @@ namespace Cgs.UI.ScrollRects
             }
 
             // Mouse ScrollWheel zoom
-            var scrollWheelInput = Input.GetAxis("Mouse ScrollWheel");
+            var scrollWheelInput = Mouse.current?.scroll?.ReadValue().y ?? 0;
             if (Mathf.Abs(scrollWheelInput) > float.Epsilon && EventSystem.current.IsPointerOverGameObject() && _isOver)
                 CurrentZoom *= 1 + scrollWheelInput * ZoomWheelSensitivity;
 
