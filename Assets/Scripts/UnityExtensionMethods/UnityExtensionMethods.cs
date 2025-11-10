@@ -49,10 +49,9 @@ namespace UnityExtensionMethods
             var positiveX = Mathf.Abs(dragVector2.x);
             var positiveY = Mathf.Abs(dragVector2.y);
             SwipeDirection swipeDir;
-            if (positiveX > positiveY)
-                swipeDir = (dragVector2.x > 0) ? SwipeDirection.Right : SwipeDirection.Left;
-            else
-                swipeDir = (dragVector2.y > 0) ? SwipeDirection.Up : SwipeDirection.Down;
+            swipeDir = (positiveX > positiveY)
+                ? ((dragVector2.x > 0) ? SwipeDirection.Right : SwipeDirection.Left)
+                : ((dragVector2.y > 0) ? SwipeDirection.Up : SwipeDirection.Down);
             return swipeDir;
         }
     }
