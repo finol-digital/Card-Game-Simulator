@@ -241,7 +241,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
-            if (PointerPositions.Count > 0 && !DidDrag && !Mouse.current.rightButton.isPressed)
+            if (PointerPositions.Count > 0 && !DidDrag && !(Mouse.current?.rightButton?.isPressed ?? false))
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
