@@ -24,10 +24,8 @@ namespace Cgs.Decks
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused)
-                return;
-
-            if (!CardViewer.Instance.Zoom || !(CardViewer.Instance.ZoomTime > 0.5f))
+            if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused
+                    || !CardViewer.Instance.Zoom || CardViewer.Instance.ZoomTime <= 0.5f)
                 return;
 
             var dragVector2 = (eventData.position - eventData.pressPosition).normalized;
