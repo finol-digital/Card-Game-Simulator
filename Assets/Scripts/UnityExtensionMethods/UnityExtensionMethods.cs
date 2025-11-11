@@ -43,16 +43,15 @@ namespace UnityExtensionMethods
 
         public static SwipeDirection GetSwipeDirection(Vector2 dragVector2)
         {
-            if (dragVector2.sqrMagnitude <= 0.0001f)
+            if (dragVector2.sqrMagnitude == 0)
                 return SwipeDirection.None;
 
             var positiveX = Mathf.Abs(dragVector2.x);
             var positiveY = Mathf.Abs(dragVector2.y);
-            SwipeDirection swipeDir;
-            swipeDir = (positiveX > positiveY)
-                ? ((dragVector2.x > 0) ? SwipeDirection.Right : SwipeDirection.Left)
-                : ((dragVector2.y > 0) ? SwipeDirection.Up : SwipeDirection.Down);
-            return swipeDir;
+            var swipeDirection = (dragVector2.x > 0) ? SwipeDirection.Right : SwipeDirection.Left;
+            if (positiveX < positiveY)
+                swipeDirection = (dragVector2.y > 0) ? SwipeDirection.Up : SwipeDirection.Down;
+            return swipeDirection;
         }
     }
 }

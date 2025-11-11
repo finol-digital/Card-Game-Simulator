@@ -23,8 +23,9 @@ namespace Cgs.UI.ScrollRects
         public const float DefaultZoom = 0.5f;
         private const float MaxZoom = 1.5f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;
+        private const float ZoomWheelSensitivity = 0.5f;
         private const float ZoomLerpSpeed = 7.5f;
-        private const float ZoomWheelSensitivity = 0.2f;
+        private const float ZoomThreshold = 0.001f;
         private const float ScrollWheelSensitivity = 20; // Can be overridden by scrollSensitivity
 
         public float CurrentRotation
@@ -175,16 +176,20 @@ namespace Cgs.UI.ScrollRects
             {
                 _isPinching = false;
                 if (touches.Count == 0)
+                {
                     _blockPan = false;
+                    // Mouse ScrollWheel zoom
+                    if (Mouse.current != null)
+                    {
+                        var scrollWheelInput = Mouse.current.scroll.ReadValue().normalized.y;
+                        _blockPan = Mathf.Abs(scrollWheelInput) > 0 && EventSystem.current.IsPointerOverGameObject() && _isOver;
+                        CurrentZoom *= 1 + scrollWheelInput * ZoomWheelSensitivity * Time.deltaTime;
+                    }
+                }
             }
 
-            // Mouse ScrollWheel zoom
-            var scrollWheelInput = Mouse.current?.scroll?.ReadValue().y ?? 0;
-            if (Mathf.Abs(scrollWheelInput) > float.Epsilon && EventSystem.current.IsPointerOverGameObject() && _isOver)
-                CurrentZoom *= 1 + scrollWheelInput * ZoomWheelSensitivity;
-
             // Scale to zoom
-            if (Mathf.Abs(content.localScale.x - CurrentZoom) > 0.001f)
+            if (Mathf.Abs(content.localScale.x - CurrentZoom) > ZoomThreshold)
                 content.localScale = Vector3.Lerp(content.localScale, Vector3.one * CurrentZoom,
                     ZoomLerpSpeed * Time.deltaTime);
         }
