@@ -181,9 +181,9 @@ namespace Cgs.UI.ScrollRects
                     // Mouse ScrollWheel zoom
                     if (Mouse.current != null)
                     {
-                        var scrollWheelInput = Mouse.current.scroll.ReadValue().normalized.y;
-                        _blockPan = Mathf.Abs(scrollWheelInput) > 0 && EventSystem.current.IsPointerOverGameObject() && _isOver;
-                        CurrentZoom *= 1 + scrollWheelInput * ZoomWheelSensitivity * Time.deltaTime;
+                        var scrollDelta = Mouse.current.scroll.ReadValue().y;
+                        _blockPan = Mathf.Abs(scrollDelta) > 0 && EventSystem.current.IsPointerOverGameObject() && _isOver;
+                        CurrentZoom *= 1 + (scrollDelta / 120f) * ZoomWheelSensitivity;
                     }
                 }
             }
