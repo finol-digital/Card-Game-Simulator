@@ -157,8 +157,8 @@ namespace Cgs.Menu
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            var dragVector2 = (eventData.position - eventData.pressPosition).normalized;
-            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragVector2);
+            var dragDelta = eventData.position - eventData.pressPosition;
+            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragDelta);
             if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Left)
                 SelectNext();
             else if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Right)

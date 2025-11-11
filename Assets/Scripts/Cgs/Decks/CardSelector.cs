@@ -28,8 +28,8 @@ namespace Cgs.Decks
                     || !CardViewer.Instance.Zoom || CardViewer.Instance.ZoomTime <= 0.5f)
                 return;
 
-            var dragVector2 = (eventData.position - eventData.pressPosition).normalized;
-            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragVector2);
+            var dragDelta = eventData.position - eventData.pressPosition;
+            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragDelta);
             switch (swipeDirection)
             {
                 case UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Up:

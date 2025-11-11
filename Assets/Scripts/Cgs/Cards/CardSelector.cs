@@ -33,8 +33,8 @@ namespace Cgs.Cards
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
                 return;
 
-            var dragVector2 = (eventData.position - eventData.pressPosition).normalized;
-            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragVector2);
+            var dragDelta = eventData.position - eventData.pressPosition;
+            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragDelta);
 
             if ((CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
                 || CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f)

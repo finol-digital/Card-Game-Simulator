@@ -41,16 +41,22 @@ namespace UnityExtensionMethods
             return list.Aggregate(Vector2.zero, (current, vector) => current + vector) / list.Count;
         }
 
-        public static SwipeDirection GetSwipeDirection(Vector2 dragVector2)
+        public static SwipeDirection GetSwipeDirection(Vector2 dragDelta)
         {
-            if (dragVector2.sqrMagnitude == 0)
+            // Default threshold for ~50px swipe
+            return GetSwipeDirection(dragDelta, 2500f);
+        }
+
+        private static SwipeDirection GetSwipeDirection(Vector2 dragDelta, float minSqrDistance)
+        {
+            if (dragDelta.sqrMagnitude < minSqrDistance)
                 return SwipeDirection.None;
 
-            var positiveX = Mathf.Abs(dragVector2.x);
-            var positiveY = Mathf.Abs(dragVector2.y);
-            var swipeDirection = (dragVector2.x > 0) ? SwipeDirection.Right : SwipeDirection.Left;
+            var positiveX = Mathf.Abs(dragDelta.x);
+            var positiveY = Mathf.Abs(dragDelta.y);
+            var swipeDirection = (dragDelta.x > 0) ? SwipeDirection.Right : SwipeDirection.Left;
             if (positiveX < positiveY)
-                swipeDirection = (dragVector2.y > 0) ? SwipeDirection.Up : SwipeDirection.Down;
+                swipeDirection = (dragDelta.y > 0) ? SwipeDirection.Up : SwipeDirection.Down;
             return swipeDirection;
         }
     }
