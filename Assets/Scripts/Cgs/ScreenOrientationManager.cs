@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cgs
 {
@@ -64,8 +65,7 @@ namespace Cgs
             }
         }
 
-        private static bool IsControllerConnected =>
-            Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length > 0;
+        private static bool IsControllerConnected => Gamepad.all.Count > 0;
 
         private static bool WasControllerConnected { get; set; }
 

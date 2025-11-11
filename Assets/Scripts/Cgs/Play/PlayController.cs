@@ -184,9 +184,8 @@ namespace Cgs.Play
 
         private void Update()
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible ||
-                !Input.anyKeyDown || CardGameManager.Instance.ModalCanvas != null ||
-                scoreboard.nameInputField.isFocused)
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible
+                || CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
                 return;
 
             if (InputManager.IsOption && CardViewer.Instance.PreviewCardModel == null)

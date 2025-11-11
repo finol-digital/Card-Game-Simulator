@@ -6,6 +6,7 @@ using System.Collections;
 using Cgs.Menu;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -17,6 +18,7 @@ namespace Cgs.UI
         public string tooltip = "";
         public bool avoidOverlap;
         public bool isBelow;
+        public string inputActionId;
 
         private GameObject ToolTipGameObject => _toolTipGameObject ??= Instantiate(tooltipPrefab, transform);
 
@@ -36,7 +38,10 @@ namespace Cgs.UI
             ToolTipCanvasGroup.interactable = false;
             ToolTipCanvasGroup.blocksRaycasts = false;
             ToolTipCanvasGroup.alpha = 0;
-            ToolTipText.text = tooltip;
+            ToolTipText.text = tooltip +
+                               (string.IsNullOrEmpty(inputActionId)
+                                   ? ""
+                                   : $"\n{InputSystem.actions.FindAction(inputActionId)?.GetBindingDisplayString()}");
         }
 
         private void OnEnable()
@@ -48,7 +53,7 @@ namespace Cgs.UI
         {
             yield return null;
 
-            var rectTransform = (RectTransform) ToolTipGameObject.transform;
+            var rectTransform = (RectTransform)ToolTipGameObject.transform;
 
             if (isBelow)
             {

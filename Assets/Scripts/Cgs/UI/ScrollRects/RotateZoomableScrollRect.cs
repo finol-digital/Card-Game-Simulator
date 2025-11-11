@@ -8,7 +8,10 @@ using Cgs.CardGameView.Multiplayer;
 using Cgs.Play;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace Cgs.UI.ScrollRects
 {
@@ -20,8 +23,9 @@ namespace Cgs.UI.ScrollRects
         public const float DefaultZoom = 0.5f;
         private const float MaxZoom = 1.5f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;
+        private const float ZoomWheelSensitivity = 0.5f;
         private const float ZoomLerpSpeed = 7.5f;
-        private const float ZoomWheelSensitivity = 0.2f;
+        private const float ZoomThreshold = 0.001f;
         private const float ScrollWheelSensitivity = 20; // Can be overridden by scrollSensitivity
 
         public float CurrentRotation
@@ -59,8 +63,7 @@ namespace Cgs.UI.ScrollRects
 
         public bool ZoomEnabled
         {
-            get => Input.touchCount > 1 || Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)
-                   || scrollSensitivity == 0;
+            get => Touch.activeTouches.Count > 1 || InputManager.IsCtrl || scrollSensitivity == 0;
             set => scrollSensitivity = value ? 0 : _scrollSensitivity;
         }
 
@@ -75,7 +78,7 @@ namespace Cgs.UI.ScrollRects
 
         protected override void Awake()
         {
-            Input.multiTouchEnabled = true;
+            EnhancedTouchSupport.Enable();
             scrollSensitivity = ScrollWheelSensitivity;
             _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
             _currentZoom = PlaySettings.DefaultZoom;
@@ -90,9 +93,7 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left
-                && !(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                && Input.touchCount <= 1)
+            if (eventData.button == PointerEventData.InputButton.Left && !InputManager.IsShift && Touch.activeTouches.Count <= 1)
                 return;
 
             PointerPositions[eventData.pointerId] = eventData.position;
@@ -154,7 +155,7 @@ namespace Cgs.UI.ScrollRects
         private void Update()
         {
             // Touch zoom
-            var touches = new List<Vector2>(Input.touches.Select(touch => touch.position));
+            var touches = new List<Vector2>(Touch.activeTouches.Select(touch => touch.screenPosition));
             for (var i = touches.Count - 1; i >= 0; i--)
                 if (IsTouchingCard(touches[i]))
                     touches.RemoveAt(i);
@@ -175,16 +176,20 @@ namespace Cgs.UI.ScrollRects
             {
                 _isPinching = false;
                 if (touches.Count == 0)
+                {
                     _blockPan = false;
+                    // Mouse ScrollWheel zoom
+                    if (Mouse.current != null)
+                    {
+                        var scrollDelta = Mouse.current.scroll.ReadValue().y;
+                        _blockPan = Mathf.Abs(scrollDelta) > 0 && EventSystem.current.IsPointerOverGameObject() && _isOver;
+                        CurrentZoom *= 1 + (scrollDelta / 120f) * ZoomWheelSensitivity;
+                    }
+                }
             }
 
-            // Mouse ScrollWheel zoom
-            var scrollWheelInput = Input.GetAxis("Mouse ScrollWheel");
-            if (Mathf.Abs(scrollWheelInput) > float.Epsilon && EventSystem.current.IsPointerOverGameObject() && _isOver)
-                CurrentZoom *= 1 + scrollWheelInput * ZoomWheelSensitivity;
-
             // Scale to zoom
-            if (Mathf.Abs(content.localScale.x - CurrentZoom) > 0.001f)
+            if (Mathf.Abs(content.localScale.x - CurrentZoom) > ZoomThreshold)
                 content.localScale = Vector3.Lerp(content.localScale, Vector3.one * CurrentZoom,
                     ZoomLerpSpeed * Time.deltaTime);
         }

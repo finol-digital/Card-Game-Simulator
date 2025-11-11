@@ -12,27 +12,49 @@ using UnityEngine.EventSystems;
 
 namespace Cgs.Decks
 {
-    public class CardSelector : MonoBehaviour
+    public class CardSelector : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         public DeckEditor editor;
         public SearchResults results;
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            // Just required by the interface to get OnEndDrag called
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused
+                    || !CardViewer.Instance.Zoom || CardViewer.Instance.ZoomTime <= 0.5f)
+                return;
+
+            var dragDelta = eventData.position - eventData.pressPosition;
+            var swipeDirection = UnityExtensionMethods.UnityExtensionMethods.GetSwipeDirection(dragDelta);
+            switch (swipeDirection)
+            {
+                case UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Up:
+                    SelectEditorDown();
+                    break;
+                case UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Down:
+                    SelectEditorUp();
+                    break;
+                case UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Right:
+                    SelectEditorLeft();
+                    break;
+                case UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Left:
+                    SelectEditorRight();
+                    break;
+                case UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.None:
+                default:
+                    Debug.Log("Swipe direction none or unrecognized.");
+                    break;
+            }
+        }
 
         private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused)
                 return;
-
-            if (CardViewer.Instance.Zoom && CardViewer.Instance.ZoomTime > 0.5f && SwipeManager.DetectSwipe())
-            {
-                if (SwipeManager.IsSwipingUp())
-                    SelectEditorDown();
-                else if (SwipeManager.IsSwipingDown())
-                    SelectEditorUp();
-                else if (SwipeManager.IsSwipingRight())
-                    SelectEditorLeft();
-                else if (SwipeManager.IsSwipingLeft())
-                    SelectEditorRight();
-            }
 
             if (InputManager.IsVertical)
             {

@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Cgs.Menu;
 using Cgs.UI;
 using FinolDigital.Cgs.Json;
@@ -98,9 +97,6 @@ namespace Cgs.Decks
 
                 if (InputManager.IsSubmit && loadFromFileButton.interactable)
                     LoadFromFileAndHide();
-                else if (Input.GetKeyDown(InputManager.BluetoothReturn) && Toggles.Select(toggle => toggle.gameObject)
-                             .Contains(EventSystem.current.currentSelectedGameObject))
-                    EventSystem.current.currentSelectedGameObject.GetComponent<Toggle>().isOn = true;
                 else if (InputManager.IsSort && shareFileButton.interactable)
                     Share();
                 else if (InputManager.IsLoad && editFileButton.interactable)

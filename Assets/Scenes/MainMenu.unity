@@ -717,6 +717,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Start a Single-player game.
       objectReference: {fileID: 0}
+    - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: MainMenu/StartGame
+      objectReference: {fileID: 0}
     - target: {fileID: 2629111982971497285, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: m_Sprite
@@ -799,6 +804,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Join or Host a Multi-player game.
+      objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: MainMenu/JoinGame
       objectReference: {fileID: 0}
     - target: {fileID: 8540162699874054776, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
@@ -1937,6 +1947,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Quit
       objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Cancel
+      objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: m_Sprite
@@ -2273,6 +2288,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: General Settings
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: MainMenu/ShowSettings
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -3300,6 +3320,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Edit Decks.
       objectReference: {fileID: 0}
+    - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: MainMenu/EditDeck
+      objectReference: {fileID: 0}
     - target: {fileID: 2629111982971497285, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: m_Sprite
@@ -3387,6 +3412,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Explore Cards.
+      objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: MainMenu/ExploreCards
       objectReference: {fileID: 0}
     - target: {fileID: 8540162699874054776, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}

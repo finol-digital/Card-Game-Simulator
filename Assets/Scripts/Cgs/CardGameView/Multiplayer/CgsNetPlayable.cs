@@ -11,6 +11,7 @@ using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -218,7 +219,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void ParentTo(Transform containerTransform)
         {
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             rectTransform.SetParent(containerTransform);
             rectTransform.localScale = Vector3.one;
         }
@@ -240,7 +241,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void Update()
         {
-            if (PointerPositions.Count > 0 && !DidDrag && !Input.GetMouseButton(1))
+            if (PointerPositions.Count > 0 && !DidDrag && !(Mouse.current?.rightButton?.isPressed ?? false))
                 HoldTime += Time.deltaTime;
             else
                 HoldTime = 0;
@@ -293,7 +294,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             CurrentPointerEventData = eventData;
             PointerPositions[eventData.pointerId] = eventData.position;
-            PointerDragOffsets[eventData.pointerId] = (Vector2) transform.position - eventData.position;
+            PointerDragOffsets[eventData.pointerId] = (Vector2)transform.position - eventData.position;
 
             OnPointerDownPlayable(eventData);
         }
@@ -420,7 +421,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             var removedOffset = Vector2.zero;
             if (PointerDragOffsets.TryGetValue(eventData.pointerId, out var pointerDragOffset))
-                removedOffset = (Vector2) transform.position - eventData.position - pointerDragOffset;
+                removedOffset = (Vector2)transform.position - eventData.position - pointerDragOffset;
             PointerPositions.Remove(eventData.pointerId);
             PointerDragOffsets.Remove(eventData.pointerId);
             foreach (var offsetKey in PointerDragOffsets.Keys.ToList())
@@ -442,7 +443,8 @@ namespace Cgs.CardGameView.Multiplayer
             if (IsProcessingSecondaryDragAction)
                 return;
 #else
-            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(1))
+            if (Mouse.current != null && (Mouse.current.rightButton.isPressed
+                                          || Mouse.current.rightButton.wasReleasedThisFrame))
                 return;
 #endif
 
@@ -458,7 +460,7 @@ namespace Cgs.CardGameView.Multiplayer
             targetPosition +=
                 UnityExtensionMethods.UnityExtensionMethods.CalculateMean(PointerDragOffsets.Values.ToList());
 
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             rectTransform.position = targetPosition;
             rectTransform.SetAsLastSibling();
             _position = rectTransform.localPosition;
@@ -589,5 +591,4 @@ namespace Cgs.CardGameView.Multiplayer
             Destroy(gameObject);
         }
     }
-
 }

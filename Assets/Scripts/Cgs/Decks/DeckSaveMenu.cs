@@ -41,7 +41,7 @@ namespace Cgs.Decks
 
         private void Update()
         {
-            if (!IsFocused || nameInputField.isFocused || !Input.anyKeyDown)
+            if (!IsFocused || nameInputField.isFocused)
                 return;
 
             if (InputManager.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
