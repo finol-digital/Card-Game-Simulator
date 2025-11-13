@@ -2,12 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -34,25 +36,25 @@ namespace Cgs.Menu
         public static bool ButtonTooltipsEnabled
         {
             get => PlayerPrefs.GetInt(PlayerPrefsButtonTooltipsEnabled, DefaultButtonTooltipsEnabled) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsButtonTooltipsEnabled, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsButtonTooltipsEnabled, value ? 1 : 0);
         }
 
         public static bool PreviewOnMouseOver
         {
             get => PlayerPrefs.GetInt(PlayerPrefsPreviewOnMouseOver, DefaultPreviewOnMouseOver) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsPreviewOnMouseOver, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsPreviewOnMouseOver, value ? 1 : 0);
         }
 
         public static bool HideReprints
         {
             get => PlayerPrefs.GetInt(PlayerPrefsHideReprints, 1) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
         }
 
         public static bool DeveloperMode
         {
             get => PlayerPrefs.GetInt(PlayerPrefsDeveloperMode, 0) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 
         public ScrollRect scrollRect;
@@ -62,7 +64,10 @@ namespace Cgs.Menu
         public Toggle screenAutoRotateToggle;
         public Toggle screenPortraitToggle;
         public Toggle screenLandscapeToggle;
-        public Toggle controllerLockToLandscapeToggle;
+
+        [FormerlySerializedAs("controllerLockToLandscapeToggle")]
+        public Toggle gamepadLockToLandscapeToggle;
+
         public Toggle buttonTooltipsEnabledToggle;
         public Toggle previewOnMouseOverToggle;
         public Toggle hideReprintsToggle;
@@ -73,9 +78,41 @@ namespace Cgs.Menu
         {
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed += InputWebsite;
+            InputSystem.actions.FindAction(InputManager.SettingsTooltips).performed += InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed += InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed += InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed += InputRedisplay;
         }
 
         private void Start()
+        {
+            Redisplay();
+        }
+
+        private void Update()
+        {
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
+
+            if ((InputManager.IsVertical || InputManager.IsHorizontal) &&
+                EventSystem.current.currentSelectedGameObject == null)
+                EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
+            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
+                ScrollPage(InputManager.IsPageDown);
+        }
+
+        private void InputRedisplay(InputAction.CallbackContext callbackContext)
+        {
+            StartCoroutine(RedisplayCoroutine());
+        }
+
+        private IEnumerator RedisplayCoroutine()
+        {
+            yield return null; // Wait for one frame to ensure UI updates
+            Redisplay();
+        }
+
+        private void Redisplay()
         {
             framerateDropdown.value = FrameRateManager.FrameRateIndex;
             resolutionDropdown.value = ResolutionManager.ResolutionIndex;
@@ -99,7 +136,7 @@ namespace Cgs.Menu
                     break;
             }
 
-            controllerLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesControllerLockToLandscape;
+            gamepadLockToLandscapeToggle.isOn = ScreenOrientationManager.DoesGamepadLockToLandscape;
             previewOnMouseOverToggle.isOn = PreviewOnMouseOver;
             buttonTooltipsEnabledToggle.isOn = ButtonTooltipsEnabled;
             hideReprintsToggle.isOn = HideReprints;
@@ -111,18 +148,6 @@ namespace Cgs.Menu
 #if UNITY_WEBGL
             developerModeToggle.interactable = false;
 #endif
-        }
-
-        private void Update()
-        {
-            if (CardGameManager.Instance.ModalCanvas != null)
-                return;
-
-            if ((InputManager.IsVertical || InputManager.IsHorizontal) &&
-                EventSystem.current.currentSelectedGameObject == null)
-                EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
-            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                ScrollPage(InputManager.IsPageDown);
         }
 
         private void ScrollPage(bool scrollDown)
@@ -172,9 +197,9 @@ namespace Cgs.Menu
         }
 
         [UsedImplicitly]
-        public void SetControllerLockToLandscape(bool controllerLockToLandscape)
+        public void SetGamepadLockToLandscape(bool gamepadLockToLandscape)
         {
-            ScreenOrientationManager.DoesControllerLockToLandscape = controllerLockToLandscape;
+            ScreenOrientationManager.DoesGamepadLockToLandscape = gamepadLockToLandscape;
         }
 
         [UsedImplicitly]
@@ -233,6 +258,10 @@ namespace Cgs.Menu
         {
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed -= InputWebsite;
+            InputSystem.actions.FindAction(InputManager.SettingsTooltips).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed -= InputRedisplay;
         }
     }
 }

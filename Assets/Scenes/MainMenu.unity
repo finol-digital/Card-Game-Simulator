@@ -875,6 +875,7 @@ GameObject:
   - component: {fileID: 735687765}
   - component: {fileID: 735687768}
   - component: {fileID: 735687769}
+  - component: {fileID: 735687770}
   m_Layer: 5
   m_Name: Current Card
   m_TagString: Untagged
@@ -1022,6 +1023,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35199c418c8f9546b6899c6f4e3f6b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &735687770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735687763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ToolTip
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Games Management
+  avoidOverlap: 1
+  isBelow: 0
+  inputActionId: MainMenu/ShowGamesManagementMenu
 --- !u!1 &783217847
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,6 +1325,7 @@ GameObject:
   - component: {fileID: 885528642}
   - component: {fileID: 885528641}
   - component: {fileID: 885528640}
+  - component: {fileID: 885528643}
   m_Layer: 5
   m_Name: Next Card
   m_TagString: Untagged
@@ -1426,6 +1446,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 885528638}
   m_CullTransparentMesh: 0
+--- !u!114 &885528643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 885528638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ToolTip
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Next
+  avoidOverlap: 1
+  isBelow: 0
+  inputActionId: MainMenu/SelectNext
 --- !u!1001 &959689720
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1506,6 +1544,7 @@ GameObject:
   - component: {fileID: 1089944957}
   - component: {fileID: 1089944956}
   - component: {fileID: 1089944955}
+  - component: {fileID: 1089944958}
   m_Layer: 5
   m_Name: Previous Card
   m_TagString: Untagged
@@ -1626,6 +1665,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1089944953}
   m_CullTransparentMesh: 0
+--- !u!114 &1089944958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1089944953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ToolTip
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Previous
+  avoidOverlap: 1
+  isBelow: 0
+  inputActionId: MainMenu/SelectPrevious
 --- !u!1 &1163228931 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7024314410439346404, guid: 1ab22cc3401977e43821548819f8b3ef,
@@ -1939,13 +1996,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
-      propertyPath: isBelow
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
       propertyPath: tooltip
-      value: Quit
+      value: Exit CGS
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -2278,11 +2330,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Text
       value: Settings
-      objectReference: {fileID: 0}
-    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
-        type: 3}
-      propertyPath: isBelow
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}

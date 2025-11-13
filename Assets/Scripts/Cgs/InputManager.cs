@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+using Cgs.Menu;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,6 +35,10 @@ namespace Cgs
         public const string MainMenuShowSettings = "MainMenu/ShowSettings";
 
         public const string SettingsWebsite = "Settings/Website";
+        public const string SettingsTooltips = "Settings/Tooltips";
+        public const string SettingsPreviewMouseOver = "Settings/PreviewMouseOver";
+        public const string SettingsHideReprints = "Settings/HideReprints";
+        public const string SettingsDeveloperMode = "Settings/DeveloperMode";
 
         private static InputManager _instance;
 
@@ -105,6 +110,9 @@ namespace Cgs
         public static bool IsPageDown => FPageVertical < 0;
         public static bool IsPageUp => FPageVertical > 0;
 
+        public static bool IsGamepadConnected => Gamepad.all.Count > 0;
+        public static bool WasGamepadConnected { get; private set; }
+
         public static bool WasFocusBack { get; private set; }
         public static bool WasFocusNext { get; private set; }
         public static bool WasDown { get; private set; }
@@ -128,6 +136,7 @@ namespace Cgs
         private void Start()
         {
             _instance = this;
+
             _cancelAction = InputSystem.actions.FindAction(PlayerCancel);
             _filterAction = InputSystem.actions.FindAction(PlayerFilter);
             _focusBackAction = InputSystem.actions.FindAction(PlayerFocusBack);
@@ -140,10 +149,23 @@ namespace Cgs
             _submitAction = InputSystem.actions.FindAction(PlayerSubmit);
             _moveAction = InputSystem.actions.FindAction(PlayerMove);
             _pageAction = InputSystem.actions.FindAction(PlayerPage);
+
+            InputSystem.actions.FindAction(SettingsTooltips).performed +=
+                _ => Settings.ButtonTooltipsEnabled = !Settings.ButtonTooltipsEnabled;
+            InputSystem.actions.FindAction(SettingsPreviewMouseOver).performed +=
+                _ => Settings.PreviewOnMouseOver = !Settings.PreviewOnMouseOver;
+            InputSystem.actions.FindAction(SettingsHideReprints).performed +=
+                _ => Settings.HideReprints = !Settings.HideReprints;
+            InputSystem.actions.FindAction(SettingsDeveloperMode).performed +=
+                _ => Settings.DeveloperMode = !Settings.DeveloperMode;
+
+            WasGamepadConnected = IsGamepadConnected;
         }
 
         private void LateUpdate()
         {
+            WasGamepadConnected = IsGamepadConnected;
+
             WasFocusBack = IsFocusBack;
             WasFocusNext = IsFocusNext;
             WasDown = IsDown;
