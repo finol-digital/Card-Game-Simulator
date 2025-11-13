@@ -120,7 +120,7 @@ namespace Cgs.Decks
         private void OnEnable()
         {
             // CardViewer is already in the scene
-            searchResults.HorizontalDoubleClickAction = AddCardModel;
+            searchResults.DoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(Reset);
         }
 

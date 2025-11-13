@@ -99,7 +99,7 @@ namespace Cgs.Cards
 
         public int CurrentPageIndex { get; set; }
 
-        public CardAction HorizontalDoubleClickAction { get; set; }
+        public CardAction DoubleClickAction { get; set; }
 
         private void OnEnable()
         {
@@ -170,18 +170,13 @@ namespace Cgs.Cards
                  i++)
             {
                 var cardId = AllResults[CurrentPageIndex * CardsPerPage + i].Id;
-                if (!CardGameManager.Current.Cards.ContainsKey(cardId))
+                if (!CardGameManager.Current.Cards.TryGetValue(cardId, out var cardToShow))
                     continue;
-                var cardToShow = CardGameManager.Current.Cards[cardId];
                 var cardModel = Instantiate(cardModelPrefab, layoutArea).GetComponent<CardModel>();
                 cardModel.Value = cardToShow;
                 cardModel.IsStatic = !isInteractable;
                 cardModel.DoesCloneOnDrag = isInteractable;
-                if (HorizontalDoubleClickAction != null
-                    && ((RectTransform) transform).rect.width > ((RectTransform) transform).rect.height)
-                    cardModel.DefaultAction = HorizontalDoubleClickAction;
-                else
-                    cardModel.DefaultAction = CardViewer.Instance.MaximizeOn;
+                cardModel.DefaultAction = DoubleClickAction ?? CardViewer.Instance.MaximizeOn;
             }
 
             countText.text = (CurrentPageIndex + 1) + CountSeparator + (TotalPageCount + 1);
