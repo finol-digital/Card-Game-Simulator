@@ -85,7 +85,7 @@ namespace Cgs.Menu
 
         private void Update()
         {
-            if (!Menu.IsFocused)
+            if (!Menu.IsFocused || !Menu.WasFocused)
                 return;
 
             if (InputManager.IsVertical)
