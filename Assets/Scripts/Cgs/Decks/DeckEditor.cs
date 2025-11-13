@@ -40,7 +40,6 @@ namespace Cgs.Decks
         public GameObject cardModelPrefab;
         public GameObject deckLoadMenuPrefab;
         public GameObject deckSaveMenuPrefab;
-        public DeckEditorLayout deckEditorLayout;
         public RectTransform layoutContent;
         public List<CardDropArea> dropZones;
         public ScrollRect scrollRect;
@@ -62,7 +61,7 @@ namespace Cgs.Decks
             Mathf.FloorToInt(CardPrefabHeight / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) *
                              ResolutionIndexToCardsPerColumn[ResolutionManager.ResolutionIndex]);
 
-        private static int CardsPerZoneHorizontal =>
+        public static int CardsPerZoneHorizontal =>
             Mathf.FloorToInt(CardPrefabWidth / (CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.X) *
                              ResolutionIndexToCardsPerRow[ResolutionManager.ResolutionIndex]);
 
@@ -148,9 +147,9 @@ namespace Cgs.Decks
                 ShowDeckLoadMenu();
             else if (InputManager.IsSave)
                 ShowDeckSaveMenu();
-            else if (InputManager.IsFocus && !deckEditorLayout.IsPortrait)
+            else if (InputManager.IsFocus)
                 searchResults.inputField.ActivateInputField();
-            else if (InputManager.IsFilter && !deckEditorLayout.IsPortrait)
+            else if (InputManager.IsFilter)
                 searchResults.ShowSearchMenu();
             else if (InputManager.IsCancel)
                 CheckBackToMainMenu();

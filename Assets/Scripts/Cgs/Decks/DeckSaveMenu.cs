@@ -48,10 +48,10 @@ namespace Cgs.Decks
                 AttemptSaveAndHide();
             else if (InputManager.IsFocus)
                 nameInputField.ActivateInputField();
+            else if (InputManager.IsNew && EventSystem.current.currentSelectedGameObject == null)
+                PrintPdf();
             else if (InputManager.IsLoad && EventSystem.current.currentSelectedGameObject == null)
                 Share();
-            else if (InputManager.IsSave && EventSystem.current.currentSelectedGameObject == null)
-                PrintPdf();
             else if (InputManager.IsCancel)
                 CancelAndHide();
         }
@@ -82,18 +82,6 @@ namespace Cgs.Decks
             foreach (var card in _currentDeck.Cards)
                 deck.Add((UnityCard) card);
             textOutputArea.text = deck.ToString();
-        }
-
-        [UsedImplicitly]
-        public void Share()
-        {
-            var shareText = textOutputArea.text;
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
-            (new NativeShare()).SetText(shareText).Share();
-#else
-            UniClipboard.SetText(shareText);
-            CardGameManager.Instance.Messenger.Show(DeckCopiedMessage);
-#endif
         }
 
         [UsedImplicitly]
@@ -165,6 +153,18 @@ namespace Cgs.Decks
             new NativeShare().AddFile(path, "application/pdf").Share();
         }
 #endif
+
+        [UsedImplicitly]
+        public void Share()
+        {
+            var shareText = textOutputArea.text;
+#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+            (new NativeShare()).SetText(shareText).Share();
+#else
+            UniClipboard.SetText(shareText);
+            CardGameManager.Instance.Messenger.Show(DeckCopiedMessage);
+#endif
+        }
 
         [UsedImplicitly]
         public void EnableSubmit()

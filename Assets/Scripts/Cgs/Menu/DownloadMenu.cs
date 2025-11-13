@@ -26,11 +26,11 @@ namespace Cgs.Menu
             if (!IsFocused || urlInputField.isFocused)
                 return;
 
-            if ((InputManager.IsSubmit || InputManager.IsNew) && downloadButton.interactable)
+            if (InputManager.IsSubmit && downloadButton.interactable)
                 StartDownload();
-            else if ((InputManager.IsSort || InputManager.IsLoad) && urlInputField.interactable)
+            else if (InputManager.IsSort && urlInputField.interactable)
                 Clear();
-            else if ((InputManager.IsFilter || InputManager.IsSave) && urlInputField.interactable)
+            else if (InputManager.IsFilter && urlInputField.interactable)
                 Paste();
             else if (InputManager.IsFocus && urlInputField.interactable)
                 urlInputField.ActivateInputField();

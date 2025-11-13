@@ -73,15 +73,13 @@ namespace Cgs.Decks
                 if (InputManager.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
                     DoSaveDontOverwrite();
                 else if (InputManager.IsNew && EventSystem.current.currentSelectedGameObject == null)
-                    textInputField.text = string.Empty;
+                    Clear();
                 else if (InputManager.IsFocusBack && EventSystem.current.currentSelectedGameObject == null)
                     nameInputField.ActivateInputField();
                 else if (InputManager.IsFocusNext && EventSystem.current.currentSelectedGameObject == null)
                     textInputField.ActivateInputField();
-                else if (InputManager.IsSave && EventSystem.current.currentSelectedGameObject == null)
+                else if (InputManager.IsLoad && EventSystem.current.currentSelectedGameObject == null)
                     PasteClipboardIntoText();
-                else if (InputManager.IsOption && EventSystem.current.currentSelectedGameObject == null)
-                    textInputField.text = string.Empty;
                 else if (InputManager.IsCancel)
                     HideNewDeckPanel();
             }
@@ -97,7 +95,7 @@ namespace Cgs.Decks
 
                 if (InputManager.IsSubmit && loadFromFileButton.interactable)
                     LoadFromFileAndHide();
-                else if (InputManager.IsSort && shareFileButton.interactable)
+                else if (InputManager.IsSave && shareFileButton.interactable)
                     Share();
                 else if (InputManager.IsLoad && editFileButton.interactable)
                     Edit();

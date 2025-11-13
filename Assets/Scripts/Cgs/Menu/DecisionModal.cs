@@ -4,6 +4,7 @@
 
 using System;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -42,11 +43,15 @@ namespace Cgs.Menu
             if (!IsFocused)
                 return;
 
-            if (InputManager.IsSubmit || InputManager.IsNew)
+            if (InputManager.IsVertical && EventSystem.current.currentSelectedGameObject != button1.gameObject
+                                        && EventSystem.current.currentSelectedGameObject != button2.gameObject &&
+                                        !EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(button1.gameObject);
+            else if (InputManager.IsNew)
                 button1.onClick.Invoke();
-            if (InputManager.IsLoad || InputManager.IsSave)
+            else if (InputManager.IsLoad)
                 button2.onClick.Invoke();
-            else if (InputManager.IsCancel || InputManager.IsOption)
+            else if (InputManager.IsCancel)
                 Hide();
         }
     }

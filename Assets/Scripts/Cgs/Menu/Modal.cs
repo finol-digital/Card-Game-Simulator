@@ -17,6 +17,8 @@ namespace Cgs.Menu
         public bool IsFocused => CardGameManager.Instance.ModalCanvas != null &&
                                  CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
 
+        public bool WasFocused { get; private set; }
+
         protected virtual List<InputField> InputFields { get; set; } = new List<InputField>();
         protected virtual List<Toggle> Toggles { get; set; } = new List<Toggle>();
 
@@ -182,6 +184,11 @@ namespace Cgs.Menu
             Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
                 canvasScaler.referenceResolution = ResolutionManager.Resolution;
+        }
+
+        private void LateUpdate()
+        {
+            WasFocused = IsFocused;
         }
 
         [UsedImplicitly]

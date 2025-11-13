@@ -50,6 +50,6 @@
 ,{"set": "STD_FR", "backs":["","DARK_BACK"], "name":"King of Diamonds", "id":"king_of_diamonds", "rank":"13", "suit":"diamonds", "color":"red"}
 ,{"set": "STD_FR", "backs":["","DARK_BACK"], "name":"King of Hearts", "id":"king_of_hearts", "rank":"13", "suit":"hearts", "color":"red"}
 ,{"set": "STD_FR", "backs":["","DARK_BACK"], "name":"King of Spades", "id":"king_of_spades", "rank":"13", "suit":"spades", "color":"black"}
-,{"set": "STD_FR", "backs":["","DARK_BACK"], "name":"Black Joker", "id":"black_joker", "color":"Black"}
-,{"set": "STD_FR", "backs":["","DARK_BACK"], "name":"Red Joker", "id":"red_joker", "color":"Red"}
+,{"set": "STD_FR", "backs":["","DARK_BACK"], "name":"Black Joker", "id":"black_joker", "rank":"0", "color":"black"}
+,{"set": "STD_FR", "backs":["","DARK_BACK"], "name":"Red Joker", "id":"red_joker", "rank":"0", "color":"red"}
 ]

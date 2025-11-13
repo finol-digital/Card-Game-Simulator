@@ -62,7 +62,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 85
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &2432690209820453589
 MonoBehaviour:
@@ -879,6 +879,11 @@ PrefabInstance:
       propertyPath: avoidOverlap
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Option
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1048,6 +1053,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Download
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Submit
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -1436,6 +1446,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Paste
       objectReference: {fileID: 0}
+    - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Filter
+      objectReference: {fileID: 0}
     - target: {fileID: 2629111982971497285, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: m_Sprite
@@ -1497,6 +1512,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Clear
+      objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Sort
       objectReference: {fileID: 0}
     - target: {fileID: 9057614825002507373, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}

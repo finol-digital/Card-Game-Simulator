@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-using System.Linq;
 using Cgs.CardGameView.Multiplayer;
 using Cgs.CardGameView.Viewer;
 using Cgs.Cards;
@@ -25,7 +24,8 @@ namespace Cgs.Decks
         public void OnEndDrag(PointerEventData eventData)
         {
             if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused
-                    || !CardViewer.Instance.Zoom || CardViewer.Instance.ZoomTime <= 0.5f)
+                                                             || !CardViewer.Instance.Zoom ||
+                                                             CardViewer.Instance.ZoomTime <= 0.5f)
                 return;
 
             var dragDelta = eventData.position - eventData.pressPosition;
@@ -159,16 +159,15 @@ namespace Cgs.Decks
                 return;
             }
 
-            Transform startParent = null;
-            foreach (var cardModel in editorCardModels.Where(t =>
-                         startParent != null || t == CardViewer.Instance.SelectedCardModel))
+            for (var i = 0; i < editorCardModels.Count; i++)
             {
-                if (cardModel == CardViewer.Instance.SelectedCardModel)
-                    startParent = cardModel.transform.parent;
-                if (startParent == cardModel.transform.parent)
+                if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
                     continue;
-                EventSystem.current.SetSelectedGameObject(cardModel.gameObject);
-                editor.FocusScrollRectOn(cardModel);
+                i += DeckEditor.CardsPerZoneHorizontal;
+                if (i >= editorCardModels.Count)
+                    i = 0;
+                EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
+                editor.FocusScrollRectOn(editorCardModels[i]);
                 return;
             }
 
@@ -190,15 +189,13 @@ namespace Cgs.Decks
                 return;
             }
 
-            Transform startParent = null;
             for (var i = editorCardModels.Count - 1; i >= 0; i--)
             {
-                if (startParent == null && editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
+                if (editorCardModels[i] != CardViewer.Instance.SelectedCardModel)
                     continue;
-                if (editorCardModels[i] == CardViewer.Instance.SelectedCardModel)
-                    startParent = editorCardModels[i].transform.parent;
-                if (startParent == editorCardModels[i].transform.parent)
-                    continue;
+                i -= DeckEditor.CardsPerZoneHorizontal;
+                if (i < 0)
+                    i = editorCardModels.Count - 1;
                 EventSystem.current.SetSelectedGameObject(editorCardModels[i].gameObject);
                 editor.FocusScrollRectOn(editorCardModels[i]);
                 return;

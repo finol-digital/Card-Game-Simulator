@@ -62,7 +62,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 85
+  m_SortingOrder: 90
   m_TargetDisplay: 0
 --- !u!114 &2368133909525134647
 MonoBehaviour:
@@ -418,9 +418,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
+      propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
       propertyPath: tooltip
       value: Import
       objectReference: {fileID: 0}
+    - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Submit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 7355862056097795992}
     - target: {fileID: 2629111982971497285, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: m_Sprite
@@ -495,9 +510,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
+      propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
       propertyPath: tooltip
       value: Cancel
       objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Cancel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 1723464835833887149}
     - target: {fileID: 9057614825002507373, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: tooltip
@@ -514,6 +544,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 81042687977513570}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &1723464835833887149 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1654247981274864591, guid: 1ab22cc3401977e43821548819f8b3ef,
+    type: 3}
+  m_PrefabInstance: {fileID: 81042687977513570}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6945829736936368772 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7024314410439346406, guid: 1ab22cc3401977e43821548819f8b3ef,
@@ -526,6 +562,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &7355862056097795992 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7424938749230919162, guid: 1ab22cc3401977e43821548819f8b3ef,
+    type: 3}
+  m_PrefabInstance: {fileID: 81042687977513570}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1092834437929815630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1292,9 +1334,24 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: tooltip
       value: Select a Folder
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: inputActionId
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 6858956730333150424}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1308,6 +1365,12 @@ PrefabInstance:
 --- !u!224 &6439626329420470727 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 633149931556260071, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 5879238779547767072}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6858956730333150424 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
     type: 3}
   m_PrefabInstance: {fileID: 5879238779547767072}
   m_PrefabAsset: {fileID: 0}

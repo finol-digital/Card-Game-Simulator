@@ -78,6 +78,8 @@ namespace Cgs.Cards
                 searchResults.ShowSearchMenu();
             else if (InputManager.IsNew)
                 ShowNewCardSetModal();
+            else if (InputManager.IsLoad)
+                ShowEditCard();
             else if (InputManager.IsCancel)
                 BackToMainMenu();
         }
