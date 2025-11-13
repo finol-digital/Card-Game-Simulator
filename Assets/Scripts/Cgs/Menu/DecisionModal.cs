@@ -49,7 +49,7 @@ namespace Cgs.Menu
                 EventSystem.current.SetSelectedGameObject(button1.gameObject);
             else if (InputManager.IsNew)
                 button1.onClick.Invoke();
-            if (InputManager.IsLoad)
+            else if (InputManager.IsLoad)
                 button2.onClick.Invoke();
             else if (InputManager.IsCancel)
                 Hide();
