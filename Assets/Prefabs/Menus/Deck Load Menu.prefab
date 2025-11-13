@@ -1468,6 +1468,16 @@ PrefabInstance:
       propertyPath: tooltip
       value: Delete
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Option
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 1827367125054002300}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1478,6 +1488,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 050b35c711bf97548b7054e54e7b44b4, type: 3}
+--- !u!224 &1827367125054002300 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1721699954252020100}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2246683230168559968 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 633149931556260068, guid: 050b35c711bf97548b7054e54e7b44b4,
@@ -1665,6 +1681,16 @@ PrefabInstance:
       propertyPath: tooltip
       value: Share
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Save
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 1641294161302387255}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1693,6 +1719,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1641294161302387255 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1765309982304409551}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1775996311286943651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1849,6 +1881,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Save & Load
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Submit
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -2034,6 +2071,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Edit
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Load
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -2693,6 +2735,16 @@ PrefabInstance:
       propertyPath: tooltip
       value: Paste
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Load
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 4484269160122849411}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -2748,6 +2800,12 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!224 &4484269160122849411 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 3495913995375867259}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3656632753516069820
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3078,6 +3136,16 @@ PrefabInstance:
       propertyPath: tooltip
       value: Clear
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/New
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 3532497594735172587}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -3088,6 +3156,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 050b35c711bf97548b7054e54e7b44b4, type: 3}
+--- !u!224 &3532497594735172587 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 4592927885629715987}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3995885915997781748 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 633149931556260071, guid: 050b35c711bf97548b7054e54e7b44b4,
@@ -3111,6 +3185,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: List Decks
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Cancel
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -3453,6 +3532,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Load
       objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Submit
+      objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: m_Sprite
@@ -3659,6 +3743,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: New
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/New
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
