@@ -136,17 +136,17 @@ namespace Cgs.Cards
 
         private void Update()
         {
-            if (!IsFocused || inputFields.Any(inputField => inputField.isFocused) ||
+            if (!IsFocused || !WasFocused || inputFields.Any(inputField => inputField.isFocused) ||
                 _inputFields.Any(field => field.isFocused))
                 return;
 
-            if ((InputManager.IsSubmit || InputManager.IsNew) && saveButton.interactable)
+            if (InputManager.IsSubmit && saveButton.interactable)
                 StartSaveCard();
-            if (InputManager.IsLoad && saveButton.interactable)
+            if (InputManager.IsNew)
                 DownloadCardImageFromWeb();
-            if (InputManager.IsSave && saveButton.interactable)
+            if (InputManager.IsLoad)
                 ImportCardImageFromFile();
-            else if (InputManager.IsCancel || InputManager.IsOption)
+            else if (InputManager.IsCancel)
                 Hide();
         }
 

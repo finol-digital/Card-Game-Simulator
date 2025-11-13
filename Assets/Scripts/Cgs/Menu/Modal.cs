@@ -186,9 +186,9 @@ namespace Cgs.Menu
                 canvasScaler.referenceResolution = ResolutionManager.Resolution;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            WasFocused =  IsFocused;
+            WasFocused = IsFocused;
         }
 
         [UsedImplicitly]

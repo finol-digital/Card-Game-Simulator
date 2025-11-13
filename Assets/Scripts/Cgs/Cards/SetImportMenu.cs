@@ -109,14 +109,14 @@ namespace Cgs.Cards
 
         private void Update()
         {
-            if (!IsFocused)
+            if (!IsFocused || !WasFocused)
                 return;
 
-            if ((InputManager.IsSubmit || InputManager.IsSave) && importButton.interactable)
+            if (InputManager.IsSubmit && importButton.interactable)
                 StartImport();
-            if ((InputManager.IsNew || InputManager.IsLoad) && importButton.interactable)
+            if (InputManager.IsLoad && importButton.interactable)
                 SelectFolder();
-            else if (InputManager.IsCancel || InputManager.IsOption)
+            else if (InputManager.IsCancel)
                 Hide();
         }
 
