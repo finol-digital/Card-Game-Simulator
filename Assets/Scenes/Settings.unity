@@ -177,19 +177,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: c0c8191c95e1fed44ac9f08b5901d39e, type: 3}
-    m_FontSize: 40
-    m_FontStyle: 1
+    m_Font: {fileID: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 4
-    m_MaxSize: 48
-    m_Alignment: 4
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Screen Orientation
+  m_Text: 
 --- !u!222 &74464416
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -315,7 +315,8 @@ MonoBehaviour:
     name and hide duplicates.
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: 
+  inputActionId: Settings/HideReprints
+  parentTransform: {fileID: 792213680}
 --- !u!1001 &216619222
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -714,6 +715,7 @@ MonoBehaviour:
   avoidOverlap: 0
   isBelow: 0
   inputActionId: 
+  parentTransform: {fileID: 0}
 --- !u!1001 &440945639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2108,7 +2110,8 @@ MonoBehaviour:
   tooltip: Create and Share. See the CGS website for a tutorial.
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: 
+  inputActionId: Settings/DeveloperMode
+  parentTransform: {fileID: 1154342670}
 --- !u!1001 &1154342669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2998,7 +3001,7 @@ MonoBehaviour:
   screenAutoRotateToggle: {fileID: 811276926}
   screenPortraitToggle: {fileID: 633972502}
   screenLandscapeToggle: {fileID: 1877749623}
-  controllerLockToLandscapeToggle: {fileID: 1617632012}
+  gamepadLockToLandscapeToggle: {fileID: 1617632012}
   buttonTooltipsEnabledToggle: {fileID: 2145185693}
   previewOnMouseOverToggle: {fileID: 1461293145}
   hideReprintsToggle: {fileID: 103203313}
@@ -3197,7 +3200,8 @@ MonoBehaviour:
   tooltip: View card names whenever you hover/mouse-over cards.
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: 
+  inputActionId: Settings/PreviewMouseOver
+  parentTransform: {fileID: 1893226347}
 --- !u!1 &1491327226
 GameObject:
   m_ObjectHideFlags: 0
@@ -3467,6 +3471,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Main Menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
@@ -4557,7 +4566,8 @@ MonoBehaviour:
   tooltip: Tooltips like this one are visible because of this "Button Tooltips" setting.
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: 
+  inputActionId: Settings/ToolTips
+  parentTransform: {fileID: 926462579}
 --- !u!1001 &4619015875546048479
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4915,13 +4925,18 @@ PrefabInstance:
     - target: {fileID: 212072498232861229, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
       propertyPath: m_Text
-      value: Controller Lock to Landscape
+      value: Gamepad Lock to Landscape
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1331247145}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetGamepadLockToLandscape
+      objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
       propertyPath: tooltip
@@ -4931,7 +4946,7 @@ PrefabInstance:
     - target: {fileID: 7091444216440413316, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
       propertyPath: m_Name
-      value: ControllerLock Toggle
+      value: GamepadLock Toggle
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}

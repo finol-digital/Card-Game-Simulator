@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Cgs
 {
@@ -18,28 +17,28 @@ namespace Cgs
     public class ScreenOrientationManager : MonoBehaviour
     {
         private const string PlayerPrefScreenOrientation = "ScreenOrientation";
-        private const string PlayerPrefControllerLockToLandscape = "ControllerLockToLandscape";
+        private const string PlayerPrefGamepadLockToLandscape = "GamepadLockToLandscape";
 
         public static ScreenOrientationPref PreferredScreenOrientation
         {
-            get => (ScreenOrientationPref) PlayerPrefs.GetInt(PlayerPrefScreenOrientation);
+            get => (ScreenOrientationPref)PlayerPrefs.GetInt(PlayerPrefScreenOrientation);
             set
             {
                 if (value == PreferredScreenOrientation)
                     return;
-                PlayerPrefs.SetInt(PlayerPrefScreenOrientation, (int) value);
+                PlayerPrefs.SetInt(PlayerPrefScreenOrientation, (int)value);
                 ResetOrientation();
             }
         }
 
-        public static bool DoesControllerLockToLandscape
+        public static bool DoesGamepadLockToLandscape
         {
-            get => PlayerPrefs.GetInt(PlayerPrefControllerLockToLandscape, 0) == 1;
+            get => PlayerPrefs.GetInt(PlayerPrefGamepadLockToLandscape, 0) == 1;
             set
             {
-                if (value == DoesControllerLockToLandscape)
+                if (value == DoesGamepadLockToLandscape)
                     return;
-                PlayerPrefs.SetInt(PlayerPrefControllerLockToLandscape, value ? 1 : 0);
+                PlayerPrefs.SetInt(PlayerPrefGamepadLockToLandscape, value ? 1 : 0);
                 ResetOrientation();
             }
         }
@@ -65,13 +64,9 @@ namespace Cgs
             }
         }
 
-        private static bool IsControllerConnected => Gamepad.all.Count > 0;
-
-        private static bool WasControllerConnected { get; set; }
-
         private static void ResetOrientation()
         {
-            if (DoesControllerLockToLandscape && IsControllerConnected)
+            if (DoesGamepadLockToLandscape && InputManager.IsGamepadConnected)
             {
                 Screen.autorotateToPortrait = false;
                 Screen.autorotateToPortraitUpsideDown = false;
@@ -108,11 +103,6 @@ namespace Cgs
             }
         }
 
-        private void Awake()
-        {
-            WasControllerConnected = IsControllerConnected;
-        }
-
         private void OnApplicationFocus(bool haveFocus)
         {
             if (haveFocus)
@@ -121,9 +111,8 @@ namespace Cgs
 
         private void Update()
         {
-            if (DoesControllerLockToLandscape && (IsControllerConnected != WasControllerConnected))
+            if (DoesGamepadLockToLandscape && InputManager.IsGamepadConnected != InputManager.WasGamepadConnected)
                 ResetOrientation();
-            WasControllerConnected = IsControllerConnected;
         }
     }
 }

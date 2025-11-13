@@ -129,7 +129,7 @@
                 },
                 {
                     "name": "",
-                    "id": "957f0fa0-6577-4f76-9927-caca4a5afb3f",
+                    "id": "4de98681-5b2a-45df-8209-d58f3429d9f9",
                     "path": "<Gamepad>/select",
                     "interactions": "",
                     "processors": "",
@@ -406,17 +406,6 @@
                     "name": "",
                     "id": "74ead357-4d74-4a15-91cc-93aa357e1c12",
                     "path": "<Keyboard>/enter",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Submit",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2adf1fe7-282a-4e62-b0de-88f337ff06e3",
-                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -935,7 +924,7 @@
                 },
                 {
                     "name": "",
-                    "id": "67264330-ecc4-4fe6-8fe0-0939a95fb809",
+                    "id": "5976cb3f-2bca-48a7-b1db-21817354633b",
                     "path": "<Keyboard>/backspace",
                     "interactions": "",
                     "processors": "",
@@ -969,7 +958,7 @@
                 {
                     "name": "",
                     "id": "ea59e98a-36b4-40ff-a7e0-8632125faeba",
-                    "path": "<Keyboard>/equals",
+                    "path": "<Keyboard>/backslash",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1104,7 +1093,7 @@
                     "path": "<Keyboard>/k",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "EditDeck",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1134,21 +1123,10 @@
                 {
                     "name": "",
                     "id": "3096fc4f-e0ec-4eba-9660-302e76002bf3",
-                    "path": "<Keyboard>/rightBracket",
+                    "path": "<Keyboard>/leftBracket",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "SelectPrevious",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "35166247-05da-4b5f-aa39-2d49f7ae98b4",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
                     "action": "SelectPrevious",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -1178,7 +1156,7 @@
                 {
                     "name": "",
                     "id": "fbb62071-02d1-4e38-9c36-44fa285c4119",
-                    "path": "<Keyboard>/backslash",
+                    "path": "<Keyboard>/rightBracket",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1196,6 +1174,42 @@
                     "name": "Website",
                     "type": "Button",
                     "id": "99d7d739-e9b6-47b1-aaa5-4cdbec1e4a38",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToolTips",
+                    "type": "Button",
+                    "id": "3bca0d66-13cd-4874-a89a-7630f5a2bd54",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PreviewMouseOver",
+                    "type": "Button",
+                    "id": "7c0b9dd7-76c4-4cbe-aaa8-f9d2ff08978c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HideReprints",
+                    "type": "Button",
+                    "id": "33927fc4-a603-432c-ab18-a51ddefe57fb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DeveloperMode",
+                    "type": "Button",
+                    "id": "8905cd0e-fde2-4d5a-84ee-e487e3270d0a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1227,12 +1241,56 @@
                 },
                 {
                     "name": "",
-                    "id": "f7038c30-aecf-4d2a-a6d9-b5a6bb49a068",
+                    "id": "1377ef9b-2417-4ee6-812b-e4bdab2f8806",
                     "path": "<Keyboard>/backspace",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Website",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0483ceae-8634-4187-bb9a-0baf014f4c3c",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ToolTips",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eeec5835-c236-4557-aded-584688177480",
+                    "path": "<Keyboard>/f2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "PreviewMouseOver",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1af9f1ff-1fde-4962-af4d-600367132518",
+                    "path": "<Keyboard>/f3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "HideReprints",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "992e0abe-230d-49f5-a3b0-33c2264f7c4f",
+                    "path": "<Keyboard>/f4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "DeveloperMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
