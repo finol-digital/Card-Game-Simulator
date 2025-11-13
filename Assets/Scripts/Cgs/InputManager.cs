@@ -35,7 +35,7 @@ namespace Cgs
         public const string MainMenuShowSettings = "MainMenu/ShowSettings";
 
         public const string SettingsWebsite = "Settings/Website";
-        public const string SettingsTooltips = "Settings/Tooltips";
+        public const string SettingsToolTips = "Settings/ToolTips";
         public const string SettingsPreviewMouseOver = "Settings/PreviewMouseOver";
         public const string SettingsHideReprints = "Settings/HideReprints";
         public const string SettingsDeveloperMode = "Settings/DeveloperMode";
@@ -150,7 +150,7 @@ namespace Cgs
             _moveAction = InputSystem.actions.FindAction(PlayerMove);
             _pageAction = InputSystem.actions.FindAction(PlayerPage);
 
-            InputSystem.actions.FindAction(SettingsTooltips).performed +=
+            InputSystem.actions.FindAction(SettingsToolTips).performed +=
                 _ => Settings.ButtonTooltipsEnabled = !Settings.ButtonTooltipsEnabled;
             InputSystem.actions.FindAction(SettingsPreviewMouseOver).performed +=
                 _ => Settings.PreviewOnMouseOver = !Settings.PreviewOnMouseOver;

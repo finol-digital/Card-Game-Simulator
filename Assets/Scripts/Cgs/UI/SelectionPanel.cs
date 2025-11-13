@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -52,7 +53,7 @@ namespace Cgs.UI
                 var toggle = Instantiate(selectionTemplate.gameObject, selectionContent).GetOrAddComponent<Toggle>();
                 toggle.gameObject.SetActive(true);
                 toggle.transform.localScale = Vector3.one;
-                toggle.GetComponentInChildren<Text>().text = option.Value.ToString();
+                toggle.GetComponentsInChildren<Text>().Last().text = option.Value.ToString();
                 toggle.interactable = true;
                 toggle.isOn = option.Key.Equals(current);
                 toggle.onValueChanged.AddListener(_ => select(toggle, option.Key));

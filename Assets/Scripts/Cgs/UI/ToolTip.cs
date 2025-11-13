@@ -45,7 +45,7 @@ namespace Cgs.UI
                     return inputActionBinding;
                 var hasBinding = !string.IsNullOrEmpty(inputActionBinding);
                 if (hasBinding)
-                    return isBelow ? $"{inputActionBinding}\n{tooltip}" : $"{tooltip}\n{InputActionBinding}";
+                    return isBelow ? $"{inputActionBinding}\n{tooltip}" : $"{tooltip}\n{inputActionBinding}";
                 return tooltip;
             }
         }

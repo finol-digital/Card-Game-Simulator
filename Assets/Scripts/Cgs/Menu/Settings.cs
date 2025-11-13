@@ -78,7 +78,7 @@ namespace Cgs.Menu
         {
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed += InputWebsite;
-            InputSystem.actions.FindAction(InputManager.SettingsTooltips).performed += InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsToolTips).performed += InputRedisplay;
             InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed += InputRedisplay;
             InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed += InputRedisplay;
             InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed += InputRedisplay;
@@ -258,7 +258,7 @@ namespace Cgs.Menu
         {
             InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed -= InputWebsite;
-            InputSystem.actions.FindAction(InputManager.SettingsTooltips).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(InputManager.SettingsToolTips).performed -= InputRedisplay;
             InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed -= InputRedisplay;
             InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed -= InputRedisplay;
             InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed -= InputRedisplay;
