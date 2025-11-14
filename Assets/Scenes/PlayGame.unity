@@ -289,6 +289,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Main Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Cancel
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2409,6 +2414,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Play Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 4938760452889457074, guid: 6c8f698bdb10af641a0fdff4f6f16781,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Option
+      objectReference: {fileID: 0}
     - target: {fileID: 5260860553476784145, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: isBelow
@@ -3159,17 +3169,17 @@ PrefabInstance:
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.62262946
+      value: 0.6544983
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.62262946
+      value: 0.6544983
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.62262946
+      value: 0.6544983
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
