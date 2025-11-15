@@ -78,10 +78,21 @@ namespace Cgs.UI.ScrollRects
 
         protected override void Awake()
         {
-            EnhancedTouchSupport.Enable();
             scrollSensitivity = ScrollWheelSensitivity;
             _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
             _currentZoom = PlaySettings.DefaultZoom;
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            EnhancedTouchSupport.Enable();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            EnhancedTouchSupport.Disable();
         }
 
         protected override void SetContentAnchoredPosition(Vector2 position)
@@ -93,7 +104,8 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && !InputManager.IsShift && Touch.activeTouches.Count <= 1)
+            if (eventData.button == PointerEventData.InputButton.Left && !InputManager.IsShift &&
+                Touch.activeTouches.Count <= 1)
                 return;
 
             PointerPositions[eventData.pointerId] = eventData.position;
@@ -182,7 +194,8 @@ namespace Cgs.UI.ScrollRects
                     if (Mouse.current != null)
                     {
                         var scrollDelta = Mouse.current.scroll.ReadValue().y;
-                        _blockPan = Mathf.Abs(scrollDelta) > 0 && EventSystem.current.IsPointerOverGameObject() && _isOver;
+                        _blockPan = Mathf.Abs(scrollDelta) > 0 &&
+                                    (EventSystem.current?.IsPointerOverGameObject() ?? false) && _isOver;
                         CurrentZoom *= 1 + (scrollDelta / 120f) * ZoomWheelSensitivity;
                     }
                 }
