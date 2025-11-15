@@ -13,9 +13,6 @@ namespace Cgs
         public const string PlayerCancel = "Player/Cancel";
         private const string PlayerSubmit = "Player/Submit";
 
-        private const string PlayerMove = "Player/Move";
-        private const string PlayerPage = "Player/Page";
-
         private const string PlayerFilter = "Player/Filter";
         private const string PlayerFocusBack = "Player/FocusBack";
         private const string PlayerFocusNext = "Player/FocusNext";
@@ -24,6 +21,9 @@ namespace Cgs
         private const string PlayerOption = "Player/Option";
         private const string PlayerSave = "Player/Save";
         private const string PlayerSort = "Player/Sort";
+
+        private const string PlayerMove = "Player/Move";
+        private const string PlayerPage = "Player/Page";
 
         public const string MainMenuSelectPrevious = "MainMenu/SelectPrevious";
         public const string MainMenuSelectNext = "MainMenu/SelectNext";
@@ -53,6 +53,9 @@ namespace Cgs
         public static bool IsCancel => _instance?._cancelAction?.WasPressedThisFrame() ?? false;
         private InputAction _cancelAction;
 
+        public static bool IsSubmit => _instance?._submitAction?.WasPressedThisFrame() ?? false;
+        private InputAction _submitAction;
+
         public static bool IsFilter => _instance?._filterAction?.WasPressedThisFrame() ?? false;
         private InputAction _filterAction;
 
@@ -78,9 +81,6 @@ namespace Cgs
 
         public static bool IsSort => _instance?._sortAction?.WasPressedThisFrame() ?? false;
         private InputAction _sortAction;
-
-        public static bool IsSubmit => _instance?._submitAction?.WasPressedThisFrame() ?? false;
-        private InputAction _submitAction;
 
         private InputAction _moveAction;
 
@@ -138,6 +138,7 @@ namespace Cgs
             _instance = this;
 
             _cancelAction = InputSystem.actions.FindAction(PlayerCancel);
+            _submitAction = InputSystem.actions.FindAction(PlayerSubmit);
             _filterAction = InputSystem.actions.FindAction(PlayerFilter);
             _focusBackAction = InputSystem.actions.FindAction(PlayerFocusBack);
             _focusNextAction = InputSystem.actions.FindAction(PlayerFocusNext);
@@ -146,7 +147,6 @@ namespace Cgs
             _optionAction = InputSystem.actions.FindAction(PlayerOption);
             _saveAction = InputSystem.actions.FindAction(PlayerSave);
             _sortAction = InputSystem.actions.FindAction(PlayerSort);
-            _submitAction = InputSystem.actions.FindAction(PlayerSubmit);
             _moveAction = InputSystem.actions.FindAction(PlayerMove);
             _pageAction = InputSystem.actions.FindAction(PlayerPage);
 

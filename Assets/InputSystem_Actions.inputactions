@@ -79,6 +79,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Page",
+                    "type": "PassThrough",
+                    "id": "aff322f5-79e5-4e45-9d5e-d8154a02c5f4",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Save",
                     "type": "Button",
                     "id": "037c00f8-d8d2-4560-bf3b-8140e3168840",
@@ -104,15 +113,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Page",
-                    "type": "PassThrough",
-                    "id": "aff322f5-79e5-4e45-9d5e-d8154a02c5f4",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
