@@ -78,10 +78,21 @@ namespace Cgs.UI.ScrollRects
 
         protected override void Awake()
         {
-            EnhancedTouchSupport.Enable();
             scrollSensitivity = ScrollWheelSensitivity;
             _scrollSensitivity = scrollSensitivity > 0 ? scrollSensitivity : ScrollWheelSensitivity;
             _currentZoom = PlaySettings.DefaultZoom;
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            EnhancedTouchSupport.Enable();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            EnhancedTouchSupport.Disable();
         }
 
         protected override void SetContentAnchoredPosition(Vector2 position)
