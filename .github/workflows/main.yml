@@ -965,8 +965,7 @@ jobs:
           client-secret: ${{ secrets.MICROSOFT_KEY }}
           app-id: 9N96N5S4W3J0
           package-path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
-      - name: Upload to the Microsoft Store
-        if: false
+      - name: Upload to the Microsoft Store via StoreBroker
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:
