@@ -31,9 +31,6 @@ namespace Cgs.Menu
         private static readonly Vector2 VersionTextLandscapeOffsetMin = new(400, 0);
         private static readonly Vector2 VersionTextLandscapeOffsetMax = new(700, 75);
 
-        public Image backgroundImage;
-        public Sprite backgroundSpritePortrait;
-        public Sprite backgroundSpriteLandscape;
         public Image footerImage;
         public Sprite footerSpritePortrait;
         public Sprite footerSpriteLandscape;
@@ -50,7 +47,6 @@ namespace Cgs.Menu
 
             if (((RectTransform)transform).rect.width < MinWidth) // Portrait
             {
-                backgroundImage.sprite = backgroundSpritePortrait;
                 footerImage.preserveAspect = false;
                 footerImage.sprite = footerSpritePortrait;
                 centerText.fontSize = CenterTextFontSizePortrait;
@@ -71,7 +67,6 @@ namespace Cgs.Menu
             }
             else // Landscape
             {
-                backgroundImage.sprite = backgroundSpriteLandscape;
                 footerImage.preserveAspect = true;
                 footerImage.sprite = footerSpriteLandscape;
                 centerText.fontSize = CenterTextFontSizeLandscape;
