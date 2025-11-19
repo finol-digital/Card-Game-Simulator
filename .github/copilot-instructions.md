@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-- **Purpose:** Card Game Simulator is a digital platform for playing and simulating card games.
+- **Purpose:** Card Game Simulator is a digital platform for playing card games on a virtual tabletop.
 - **Tech Stack:** Unity Game Engine
 - **Structure:** 
   - Core game logic in C#
