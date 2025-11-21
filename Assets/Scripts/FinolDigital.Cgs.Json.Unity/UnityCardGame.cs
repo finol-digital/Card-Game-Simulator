@@ -270,7 +270,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (cardBackFaceImageUrl.Url.IsAbsoluteUri)
                     yield return UnityFileMethods.SaveUrlToFile(cardBackFaceImageUrl.Url.AbsoluteUri, backFilePath);
                 else
-                    Debug.Log($"Empty url for deckUrl {cardBackFaceImageUrl}");
+                    Debug.Log($"Empty url for cardBackFaceImageUrl {cardBackFaceImageUrl}");
             }
 
             DownloadProgress = (3f + CardBackFaceImageUrls.Count) /
