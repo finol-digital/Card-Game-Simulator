@@ -41,7 +41,8 @@ namespace Cgs.UI
             get
             {
                 var inputActionBinding = InputActionBinding;
-                if (EventSystem.current.currentSelectedGameObject != gameObject && !_isOver)
+                if (EventSystem.current == null
+                    || (EventSystem.current.currentSelectedGameObject != gameObject && !_isOver))
                     return inputActionBinding;
                 var hasBinding = !string.IsNullOrEmpty(inputActionBinding);
                 if (hasBinding)
