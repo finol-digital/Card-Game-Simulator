@@ -8441,7 +8441,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: 
+  inputActionId: Player/FocusBack
   parentTransform: {fileID: 0}
 --- !u!114 &4195147244760369757
 MonoBehaviour:
@@ -8829,7 +8829,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: 
+  inputActionId: Player/FocusNext
   parentTransform: {fileID: 0}
 --- !u!114 &5160683046573473317
 MonoBehaviour:
@@ -10872,6 +10872,7 @@ GameObject:
   - component: {fileID: 7665413540168057708}
   - component: {fileID: 7506966076322229629}
   - component: {fileID: 5636090799299861159}
+  - component: {fileID: 7665413540168057709}
   m_Layer: 5
   m_Name: Zoom Image
   m_TagString: Untagged
@@ -10938,6 +10939,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7665413540168057709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509274334876100582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ToolTip
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Zoom
+  avoidOverlap: 0
+  isBelow: 0
+  inputActionId: Player/Sort
+  parentTransform: {fileID: 0}
 --- !u!1001 &7675857876673247938
 PrefabInstance:
   m_ObjectHideFlags: 0

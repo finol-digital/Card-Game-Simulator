@@ -167,7 +167,7 @@ jobs:
 
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-larger
     needs: [tests, lint]
     strategy:
       fail-fast: false

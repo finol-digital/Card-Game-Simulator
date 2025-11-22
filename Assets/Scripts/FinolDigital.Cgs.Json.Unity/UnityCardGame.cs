@@ -227,7 +227,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 CardNames.Clear();
             }
 
-            // We should always first get the *Game:Name*.json file and read it before doing anything else
+            // We should always first get the cgs.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Card Game Specification...";
             if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
@@ -424,7 +424,7 @@ namespace FinolDigital.Cgs.Json.Unity
         public void Load(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
-            // We should have already read the *Game:Name*.json, but we need to be sure
+            // We should have already read the cgs.json, but we need to be sure
             if (!HasReadProperties)
             {
                 ReadProperties();
@@ -652,6 +652,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     cardBackName = cardNameBackEntry.Value;
                 else
                     Debug.Log("LoadCardFromJToken::ParseNameBackError");
+                Debug.Log(cardBackName);
             }
 
             var imageFileTypeDef = new PropertyDef(CardImageFileTypeIdentifier, PropertyType.String);
