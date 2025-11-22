@@ -648,11 +648,10 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 var nameBackDef = new PropertyDef(CardNameBackIdentifier, PropertyType.String);
                 PopulateCardProperty(metaProperties, cardJToken, nameBackDef, nameBackDef.Name);
-                if (metaProperties.TryGetValue(CardNameBackIdentifier, out var cardNameBackEntry))
+                if (metaProperties.TryGetValue(CardNameBackIdentifier.Replace("[].", "[]0."), out var cardNameBackEntry))
                     cardBackName = cardNameBackEntry.Value;
                 else
                     Debug.Log("LoadCardFromJToken::ParseNameBackError");
-                Debug.Log(cardBackName);
             }
 
             var imageFileTypeDef = new PropertyDef(CardImageFileTypeIdentifier, PropertyType.String);
@@ -856,6 +855,10 @@ namespace FinolDigital.Cgs.Json.Unity
 
             try
             {
+                if (property.Name.Contains("."))
+                    Debug.Log($"PopulateCardProperty::NestedProperty:{property.Name}");
+                if (key.Contains('.'))
+                    Debug.Log($"PopulateCardProperty::NestedKey:{key}");
                 var newProperty = new PropertyDefValuePair { Def = property };
                 StringBuilder listValueBuilder;
                 JToken listTokens;
@@ -983,6 +986,7 @@ namespace FinolDigital.Cgs.Json.Unity
             }
             catch
             {
+                Debug.LogWarning("PopulateCardProperty::ParsePropertyError:" + property.Name);
                 PopulateEmptyCardProperty(cardProperties, property, key);
             }
         }
