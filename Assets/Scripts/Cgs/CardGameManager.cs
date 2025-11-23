@@ -240,8 +240,11 @@ namespace Cgs
                 var newCardGame = new UnityCardGame(this, gameDirectoryName);
                 newCardGame.ReadProperties();
                 if (!string.IsNullOrEmpty(newCardGame.Error))
+                {
+                    Debug.LogError(newCardGame.Error);
                     Messenger.Ask(LoadErrorDeletePrompt + gameDirectoryName, () => { },
                         () => { Directory.Delete(gameDirectory, true); });
+                }
                 else
                     AllCardGames[newCardGame.Id] = newCardGame;
             }

@@ -227,7 +227,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 CardNames.Clear();
             }
 
-            // We should always first get the *Game:Name*.json file and read it before doing anything else
+            // We should always first get the cgs.json file and read it before doing anything else
             DownloadProgress = 0f / (7f + AllCardsUrlPageCount);
             DownloadStatus = "Downloading: Card Game Specification...";
             if (AutoUpdateUrl != null && AutoUpdateUrl.IsAbsoluteUri)
@@ -270,7 +270,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 if (cardBackFaceImageUrl.Url.IsAbsoluteUri)
                     yield return UnityFileMethods.SaveUrlToFile(cardBackFaceImageUrl.Url.AbsoluteUri, backFilePath);
                 else
-                    Debug.Log($"Empty url for deckUrl {cardBackFaceImageUrl}");
+                    Debug.Log($"Empty url for cardBackFaceImageUrl {cardBackFaceImageUrl}");
             }
 
             DownloadProgress = (3f + CardBackFaceImageUrls.Count) /
@@ -424,7 +424,7 @@ namespace FinolDigital.Cgs.Json.Unity
         public void Load(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
-            // We should have already read the *Game:Name*.json, but we need to be sure
+            // We should have already read the cgs.json, but we need to be sure
             if (!HasReadProperties)
             {
                 ReadProperties();
@@ -648,10 +648,8 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 var nameBackDef = new PropertyDef(CardNameBackIdentifier, PropertyType.String);
                 PopulateCardProperty(metaProperties, cardJToken, nameBackDef, nameBackDef.Name);
-                if (metaProperties.TryGetValue(CardNameBackIdentifier, out var cardNameBackEntry))
+                if (metaProperties.TryGetValue(CardNameBackIdentifier.Replace("[].", "[]0."), out var cardNameBackEntry))
                     cardBackName = cardNameBackEntry.Value;
-                else
-                    Debug.Log("LoadCardFromJToken::ParseNameBackError");
             }
 
             var imageFileTypeDef = new PropertyDef(CardImageFileTypeIdentifier, PropertyType.String);
@@ -759,8 +757,6 @@ namespace FinolDigital.Cgs.Json.Unity
                         cardImageWebUrl =
                             (cardImageEntry.Value).Split(new[] { EnumDef.Delimiter },
                                 StringSplitOptions.None)[0];
-                    else
-                        Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
                 }
             }
 
@@ -888,11 +884,12 @@ namespace FinolDigital.Cgs.Json.Unity
                             listValueBuilder = new StringBuilder();
                             var values = new Dictionary<string, PropertyDefValuePair>();
                             var i = 0;
-                            listTokens = cardJToken[identifier];
+                            listTokens = cardJToken[identifier.Replace("[]", string.Empty)];
                             if (listTokens != null)
                                 foreach (var jToken in listTokens)
                                 {
-                                    PopulateCardProperty(values, jToken, childProperty, key + childProperty.Name + i);
+                                    var childKey = key + i + PropertyDef.ObjectDelimiter + childProperty.Name;
+                                    PopulateCardProperty(values, jToken, childProperty, childKey, isBack);
                                     i++;
                                 }
 
@@ -905,6 +902,8 @@ namespace FinolDigital.Cgs.Json.Unity
 
                             newProperty.Value = listValueBuilder.ToString();
                             cardProperties[key + PropertyDef.ObjectDelimiter + childProperty.Name] = newProperty;
+                            foreach (var newValue in values)
+                                cardProperties.Add(newValue.Key, newValue.Value);
                         }
 
                         break;
@@ -917,7 +916,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         jObject = cardJToken[identifier] as JObject;
                         if (jObject is { HasValues: true })
                             PopulateCardProperties(cardProperties, cardJToken[identifier], property.Properties,
-                                key + PropertyDef.ObjectDelimiter);
+                                key + PropertyDef.ObjectDelimiter, isBack);
                         else
                             PopulateEmptyCardProperty(cardProperties, property, key);
                         break;
@@ -975,13 +974,30 @@ namespace FinolDigital.Cgs.Json.Unity
                     case PropertyType.Integer:
                     case PropertyType.String:
                     default:
-                        newProperty.Value = cardJToken.Value<string>(identifier) ?? string.Empty;
+                        if (identifier.Contains('.'))
+                        {
+                            var segments = identifier.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                            var childProcessorJToken = cardJToken;
+                            for (var i = 0; i < segments.Length - 1; i++)
+                            {
+                                var currentSegment = segments[i];
+                                if (currentSegment.EndsWith("[]")
+                                    && childProcessorJToken?[currentSegment[..^2]] is JArray { Count: > 0 } arrayToken)
+                                    childProcessorJToken = arrayToken[0];
+                                else
+                                    (childProcessorJToken as JObject)?.TryGetValue(currentSegment, out childProcessorJToken);
+                            }
+                            cardJToken = childProcessorJToken;
+                            identifier = segments[^1];
+                        }
+                        newProperty.Value = cardJToken?.Value<string>(identifier) ?? string.Empty;
                         cardProperties[key] = newProperty;
                         break;
                 }
             }
             catch
             {
+                Debug.LogWarning("PopulateCardProperty::ParsePropertyError:" + property.Name);
                 PopulateEmptyCardProperty(cardProperties, property, key);
             }
         }

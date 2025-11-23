@@ -108,7 +108,7 @@ RectTransform:
   m_GameObject: {fileID: 1205983077926924}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3333334, y: 1.3333334, z: 1.3333334}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8619593738758247335}
@@ -376,6 +376,7 @@ GameObject:
   - component: {fileID: 224123902487432820}
   - component: {fileID: 222225054578654372}
   - component: {fileID: 114536886446495756}
+  - component: {fileID: 256414612821093246}
   m_Layer: 5
   m_Name: Zoom Image
   m_TagString: Untagged
@@ -440,6 +441,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &256414612821093246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352257159930466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ToolTip
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Zoom
+  avoidOverlap: 0
+  isBelow: 0
+  inputActionId: Player/Sort
+  parentTransform: {fileID: 0}
 --- !u!1 &1374545582827330
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,6 +625,8 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: Player/FocusNext
+  parentTransform: {fileID: 0}
 --- !u!1 &1391088035837496
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,6 +807,8 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
+  inputActionId: 
+  parentTransform: {fileID: 0}
 --- !u!1 &1489887222482700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1423,6 +1447,8 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: Player/FocusBack
+  parentTransform: {fileID: 0}
 --- !u!1 &278163115200097408
 GameObject:
   m_ObjectHideFlags: 0
@@ -1623,6 +1649,8 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: 
+  parentTransform: {fileID: 0}
 --- !u!1 &780418392263964738
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,6 +1944,8 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: Player/FocusNext
+  parentTransform: {fileID: 0}
 --- !u!1 &1158087559228869626
 GameObject:
   m_ObjectHideFlags: 0
@@ -2600,6 +2630,8 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
+  inputActionId: 
+  parentTransform: {fileID: 0}
 --- !u!1 &5520510946224163991
 GameObject:
   m_ObjectHideFlags: 0
@@ -3071,6 +3103,7 @@ GameObject:
   - component: {fileID: 8492561554335607769}
   - component: {fileID: 7776623975205196684}
   - component: {fileID: 3569882598944681540}
+  - component: {fileID: 8180615064422784014}
   m_Layer: 5
   m_Name: Zoom Image
   m_TagString: Untagged
@@ -3135,6 +3168,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8180615064422784014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7331618253668522646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ToolTip
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Zoom
+  avoidOverlap: 0
+  isBelow: 0
+  inputActionId: Player/Sort
+  parentTransform: {fileID: 0}
 --- !u!1 &7509274334271859109
 GameObject:
   m_ObjectHideFlags: 0
@@ -3146,6 +3198,7 @@ GameObject:
   - component: {fileID: 7665413539161165103}
   - component: {fileID: 7506966075181638462}
   - component: {fileID: 5636090797756093668}
+  - component: {fileID: 2648757166511286695}
   m_Layer: 5
   m_Name: Zoom Image
   m_TagString: Untagged
@@ -3210,6 +3263,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2648757166511286695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509274334271859109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 408cb2d37149c09469b9cc1f7c271a96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.ToolTip
+  tooltipPrefab: {fileID: 5711249801059285468, guid: 999d15bd5422d474b88843fffc8879ed,
+    type: 3}
+  tooltip: Zoom
+  avoidOverlap: 0
+  isBelow: 0
+  inputActionId: Player/Sort
+  parentTransform: {fileID: 0}
 --- !u!1 &7601199571884906900
 GameObject:
   m_ObjectHideFlags: 0
@@ -3440,6 +3512,8 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
+  inputActionId: 
+  parentTransform: {fileID: 0}
 --- !u!1 &7845637863157837290
 GameObject:
   m_ObjectHideFlags: 0
@@ -3992,6 +4066,8 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: Player/FocusBack
+  parentTransform: {fileID: 0}
 --- !u!1001 &950190529897883528
 PrefabInstance:
   m_ObjectHideFlags: 0
