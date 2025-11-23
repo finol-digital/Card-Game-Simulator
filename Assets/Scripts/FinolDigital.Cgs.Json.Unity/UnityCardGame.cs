@@ -650,8 +650,6 @@ namespace FinolDigital.Cgs.Json.Unity
                 PopulateCardProperty(metaProperties, cardJToken, nameBackDef, nameBackDef.Name);
                 if (metaProperties.TryGetValue(CardNameBackIdentifier.Replace("[].", "[]0."), out var cardNameBackEntry))
                     cardBackName = cardNameBackEntry.Value;
-                else
-                    Debug.Log("LoadCardFromJToken::ParseNameBackError");
             }
 
             var imageFileTypeDef = new PropertyDef(CardImageFileTypeIdentifier, PropertyType.String);
@@ -759,8 +757,6 @@ namespace FinolDigital.Cgs.Json.Unity
                         cardImageWebUrl =
                             (cardImageEntry.Value).Split(new[] { EnumDef.Delimiter },
                                 StringSplitOptions.None)[0];
-                    else
-                        Debug.LogWarning("LoadCardFromJToken::CardImagePropertyNotFound");
                 }
             }
 
@@ -855,10 +851,6 @@ namespace FinolDigital.Cgs.Json.Unity
 
             try
             {
-                if (property.Name.Contains("."))
-                    Debug.Log($"PopulateCardProperty::NestedProperty:{property.Name}");
-                if (key.Contains('.'))
-                    Debug.Log($"PopulateCardProperty::NestedKey:{key}");
                 var newProperty = new PropertyDefValuePair { Def = property };
                 StringBuilder listValueBuilder;
                 JToken listTokens;
@@ -892,11 +884,12 @@ namespace FinolDigital.Cgs.Json.Unity
                             listValueBuilder = new StringBuilder();
                             var values = new Dictionary<string, PropertyDefValuePair>();
                             var i = 0;
-                            listTokens = cardJToken[identifier];
+                            listTokens = cardJToken[identifier.Replace("[]", string.Empty)];
                             if (listTokens != null)
                                 foreach (var jToken in listTokens)
                                 {
-                                    PopulateCardProperty(values, jToken, childProperty, key + childProperty.Name + i);
+                                    var childKey = key + i + PropertyDef.ObjectDelimiter + childProperty.Name;
+                                    PopulateCardProperty(values, jToken, childProperty, childKey, isBack);
                                     i++;
                                 }
 
@@ -909,6 +902,8 @@ namespace FinolDigital.Cgs.Json.Unity
 
                             newProperty.Value = listValueBuilder.ToString();
                             cardProperties[key + PropertyDef.ObjectDelimiter + childProperty.Name] = newProperty;
+                            foreach (var newValue in values)
+                                cardProperties.Add(newValue.Key, newValue.Value);
                         }
 
                         break;
@@ -921,7 +916,7 @@ namespace FinolDigital.Cgs.Json.Unity
                         jObject = cardJToken[identifier] as JObject;
                         if (jObject is { HasValues: true })
                             PopulateCardProperties(cardProperties, cardJToken[identifier], property.Properties,
-                                key + PropertyDef.ObjectDelimiter);
+                                key + PropertyDef.ObjectDelimiter, isBack);
                         else
                             PopulateEmptyCardProperty(cardProperties, property, key);
                         break;
@@ -979,7 +974,23 @@ namespace FinolDigital.Cgs.Json.Unity
                     case PropertyType.Integer:
                     case PropertyType.String:
                     default:
-                        newProperty.Value = cardJToken.Value<string>(identifier) ?? string.Empty;
+                        if (identifier.Contains('.'))
+                        {
+                            var segments = identifier.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                            var childProcessorJToken = cardJToken;
+                            for (var i = 0; i < segments.Length - 1; i++)
+                            {
+                                var currentSegment = segments[i];
+                                if (currentSegment.EndsWith("[]")
+                                    && childProcessorJToken?[currentSegment[..^2]] is JArray { Count: > 0 } arrayToken)
+                                    childProcessorJToken = arrayToken[0];
+                                else
+                                    (childProcessorJToken as JObject)?.TryGetValue(currentSegment, out childProcessorJToken);
+                            }
+                            cardJToken = childProcessorJToken;
+                            identifier = segments[^1];
+                        }
+                        newProperty.Value = cardJToken?.Value<string>(identifier) ?? string.Empty;
                         cardProperties[key] = newProperty;
                         break;
                 }

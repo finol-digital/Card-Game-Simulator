@@ -8,82 +8,97 @@
 	"cardDataIdentifier": "data",
 	"cardIdIdentifier": "uuid",
 	"cardImageFileType": "jpg",
+	"cardImageProperty": "editions0.other_orientations0.edition.image",
 	"cardImageUrl": "https://api.gatcg.com{editions[0].image}",
+	"cardNameBackIdentifier": "editions[].other_orientations[].name",
 	"cardPrimaryProperty": "effect_raw",
 	"cardProperties": [
 		{
 			"name": "types",
 			"display": "Type",
-			"type": "stringEnumList"
+			"type": "stringEnumList",
+			"backName": "editions[].other_orientations[].types"
 		},
 		{
 			"name": "classes",
 			"display": "Class",
-			"type": "stringEnumList"
+			"type": "stringEnumList",
+			"backName": "editions[].other_orientations[].classes"
 		},
 		{
 			"name": "subtypes",
 			"display": "Subtype(s)",
-			"type": "stringList"
+			"type": "stringList",
+			"backName": "editions[].other_orientations[].subtypes"
 		},
 		{
 			"name": "element",
 			"display": "Element",
-			"type": "stringEnum"
+			"type": "stringEnum",
+			"backName": "editions[].other_orientations[].element"
 		},
 		{
 			"name": "effect_raw",
 			"display": "Effect",
 			"displayEmpty": "-",
-			"type": "string"
+			"type": "string",
+			"backName": "editions[].other_orientations[].effect_raw"
 		},
 		{
 			"name": "flavor",
 			"display": "Flavor",
 			"displayEmpty": "-",
-			"type": "string"
+			"type": "string",
+			"backName": "editions[].other_orientations[].flavor"
 		},
 		{
 			"name": "cost_memory",
 			"display": "Memory Cost",
 			"displayEmpty": "-",
-			"type": "integer"
+			"type": "integer",
+			"backName": "editions[].other_orientations[].cost_memory"
 		},
 		{
 			"name": "cost_reserve",
 			"display": "Reserve Cost",
 			"displayEmpty": "-",
-			"type": "integer"
+			"type": "integer",
+			"backName": "editions[].other_orientations[].cost_reserve"
 		},
 		{
 			"name": "level",
 			"display": "Level",
 			"displayEmpty": "-",
-			"type": "integer"
+			"type": "integer",
+			"backName": "editions[].other_orientations[].level"
 		},
 		{
 			"name": "power",
 			"display": "Power",
 			"displayEmpty": "-",
-			"type": "integer"
+			"type": "integer",
+			"backName": "editions[].other_orientations[].power"
 		},
 		{
 			"name": "life",
 			"display": "Life",
 			"displayEmpty": "-",
-			"type": "integer"
+			"type": "integer",
+			"backName": "editions[].other_orientations[].life"
 		},
 		{
 			"name": "durability",
 			"display": "Durability",
 			"displayEmpty": "-",
-			"type": "integer"
+			"type": "integer",
+			"backName": "editions[].other_orientations[].durability"
 		},
 		{
 			"name": "speed",
 			"display": "Speed: Fast?",
 			"displayEmpty": "N / A",
-			"type": "boolean"
+			"type": "boolean",
+			"backName": "editions[].other_orientations[].speed"
 		},
 		{
 			"name": "editions",
@@ -93,22 +108,26 @@
 				{
 					"name": "slug",
 					"display": "Slug",
-					"type": "string"
+					"type": "string",
+					"backName": "other_orientations[].edition.slug"
 				},
 				{
 					"name": "image",
 					"display": "Image",
-					"type": "string"
+					"type": "string",
+					"backName": "other_orientations[].edition.image"
 				},
 				{
 					"name": "illustrator",
 					"display": "Illustrator",
-					"type": "string"
+					"type": "string",
+					"backName": "other_orientations[].edition.illustrator"
 				},
 				{
 					"name": "rarity",
 					"display": "Rarity",
-					"type": "integer"
+					"type": "integer",
+					"backName": "other_orientations[].edition.rarity"
 				}
 			]
 		}
