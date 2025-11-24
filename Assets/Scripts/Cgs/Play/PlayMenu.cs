@@ -5,6 +5,7 @@
 using Cgs.CardGameView.Viewer;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Play
@@ -16,6 +17,11 @@ namespace Cgs.Play
         public Button backButton;
 
         public PlayController controller;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(InputManager.PlayGameToken).performed += InputToken;
+        }
 
 #if CGS_SINGLEPLAYER
         private void Start()
@@ -39,8 +45,6 @@ namespace Cgs.Play
                 CreateDie();
             else if (InputManager.IsFilter)
                 ShowCardsMenu();
-            else if (InputManager.IsSave)
-                CreateToken();
         }
 
         public void Show()
@@ -72,6 +76,15 @@ namespace Cgs.Play
             controller.CreateDefaultDie();
         }
 
+        private void InputToken(InputAction.CallbackContext callbackContext)
+        {
+            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                return;
+
+            CreateToken();
+        }
+
         [UsedImplicitly]
         public void CreateToken()
         {
@@ -96,6 +109,11 @@ namespace Cgs.Play
         public void Hide()
         {
             panels.SetActive(false);
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(InputManager.PlayGameToken).performed -= InputToken;
         }
     }
 }

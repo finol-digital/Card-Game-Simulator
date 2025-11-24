@@ -21,6 +21,7 @@ using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -166,6 +167,9 @@ namespace Cgs.Play
                 CardViewer.Instance.Mode = CardViewerMode.Expanded;
             CardViewer.Instance.IsActionable = true;
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
+
+            InputSystem.actions.FindAction(InputManager.PlayGameMenu).performed += InputPlayGameMenu;
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
         }
 
         private IEnumerator Start()
@@ -180,22 +184,6 @@ namespace Cgs.Play
                 yield return null;
 
             StartLobby();
-        }
-
-        private void Update()
-        {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible
-                || CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
-                return;
-
-            if (InputManager.IsOption && CardViewer.Instance.PreviewCardModel == null)
-                menu.ToggleMenu();
-            else if (InputManager.IsCancel)
-#if CGS_SINGLEPLAYER
-                menu.ToggleFullscreen();
-#else
-                PromptBackToMainMenu();
-#endif
         }
 
         private void Restart()
@@ -316,6 +304,15 @@ namespace Cgs.Play
                     CardGameManager.Instance.Messenger.Show(DeckLoadMenu.DeckLoadErrorMessage + e.Message);
                 }
             }
+        }
+
+        private void InputPlayGameMenu(InputAction.CallbackContext context)
+        {
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible
+                || CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
+                return;
+            if (CardViewer.Instance.PreviewCardModel == null)
+                menu.ToggleMenu();
         }
 
         public void ShowPlaySettingsMenu()
@@ -790,6 +787,19 @@ namespace Cgs.Play
                 stackViewer.Close();
         }
 
+        private void InputCancel(InputAction.CallbackContext context)
+        {
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible
+                || CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
+                return;
+
+#if CGS_SINGLEPLAYER
+            menu.ToggleFullscreen();
+#else
+            PromptBackToMainMenu();
+#endif
+        }
+
         [UsedImplicitly]
         public void PromptBackToMainMenu()
         {
@@ -817,6 +827,9 @@ namespace Cgs.Play
         private void OnDisable()
         {
             StopNetworking();
+
+            InputSystem.actions.FindAction(InputManager.PlayGameMenu).performed -= InputPlayGameMenu;
+            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
         }
     }
 }

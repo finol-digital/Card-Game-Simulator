@@ -114,7 +114,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 850, y: -900}
+  m_AnchoredPosition: {x: 850, y: -1100}
   m_SizeDelta: {x: 850, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &9064384807446097588
@@ -241,6 +241,7 @@ MonoBehaviour:
   showActionsMenuToggle: {fileID: 3752212551069594467}
   launchNativeButton: {fileID: 5482379275272839251}
   viewRulesButton: {fileID: 7190487691602351902}
+  scrollRect: {fileID: 3655811990248489395}
 --- !u!1001 &688690294193921176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -556,15 +557,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 707491489704095531, guid: bcd6c8c8d8b4b004ab05978ff2d32058,
         type: 3}
       insertIndex: -1
+      addedObject: {fileID: 3752212551069594468}
+    - targetCorrespondingSourceObject: {fileID: 707491489704095531, guid: bcd6c8c8d8b4b004ab05978ff2d32058,
+        type: 3}
+      insertIndex: -1
       addedObject: {fileID: 2137331466185853902}
     - targetCorrespondingSourceObject: {fileID: 707491489704095531, guid: bcd6c8c8d8b4b004ab05978ff2d32058,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 321186455380123748}
-    - targetCorrespondingSourceObject: {fileID: 707491489704095531, guid: bcd6c8c8d8b4b004ab05978ff2d32058,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3752212551069594468}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 593864689913038249, guid: bcd6c8c8d8b4b004ab05978ff2d32058,
         type: 3}
@@ -609,6 +610,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3655811990248489395 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4443289985684882882, guid: bcd6c8c8d8b4b004ab05978ff2d32058,
+    type: 3}
+  m_PrefabInstance: {fileID: 1086969573978948721}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5941948247323452839 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6729428304007553494, guid: bcd6c8c8d8b4b004ab05978ff2d32058,
@@ -741,12 +754,27 @@ PrefabInstance:
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_KeyboardType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_CharacterValidation
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 2137331466185853897}
+    - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
@@ -846,7 +874,9 @@ MonoBehaviour:
     type: 3}
   tooltip: Number of faces on each dice when they are created.
   avoidOverlap: 1
-  isBelow: 0
+  isBelow: 1
+  inputActionId: 
+  parentTransform: {fileID: 0}
 --- !u!224 &6804951194838514161 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4658356562677211595, guid: f4698c1a75d36a640afc1bea8b676ff4,
@@ -873,6 +903,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 5371924504633163873}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8737743237939570206}
@@ -885,6 +925,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.Play.PlaySettingsMenu, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: isBelow
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -1044,6 +1089,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 5180863685511622026}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 381794008858941962}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8737743237939570206}
@@ -1056,6 +1116,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.Play.PlaySettingsMenu, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: isBelow
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -1212,6 +1277,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: View Rulebook
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Option
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -1500,9 +1570,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4619015876120339027, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
         type: 3}
+      propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4619015876120339027, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
+        type: 3}
       propertyPath: tooltip
       value: When viewing stacks, how much do the cards overlap?
       objectReference: {fileID: 0}
+    - target: {fileID: 5521458717891117766, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5521458717891117766, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 5371924504633163873}
+    - target: {fileID: 5521458717891117766, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 3752212551069594467}
     - target: {fileID: 5521458717891117766, guid: 21fc8463a1fb6dd4da2e8833b8d50172,
         type: 3}
       propertyPath: m_Options.m_Options.Array.size
@@ -1586,6 +1676,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 381794008858941962}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 2137331466185853897}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 0
       objectReference: {fileID: 0}
@@ -1603,6 +1708,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.Play.PlaySettingsMenu, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: isBelow
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -1702,7 +1812,7 @@ PrefabInstance:
     - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1100
+      value: -700
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -2022,6 +2132,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Launch Native CGS App
+      objectReference: {fileID: 0}
+    - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Option
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -2349,6 +2464,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnUp
+      value: 
+      objectReference: {fileID: 3752212551069594467}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 6699655156933817983}
+    - target: {fileID: 7091444216440413314, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 8737743237939570206}
@@ -2361,6 +2491,11 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.Play.PlaySettingsMenu, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
+        type: 3}
+      propertyPath: isBelow
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413315, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
@@ -2460,7 +2595,7 @@ PrefabInstance:
     - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -700
+      value: -900
       objectReference: {fileID: 0}
     - target: {fileID: 7091444216440413317, guid: 941097a8539264a49b1d8dce6757b667,
         type: 3}
