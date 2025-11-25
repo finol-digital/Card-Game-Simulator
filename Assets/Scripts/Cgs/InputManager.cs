@@ -25,6 +25,9 @@ namespace Cgs
         private const string PlayerMove = "Player/Move";
         private const string PlayerPage = "Player/Page";
 
+        public const string PlayGameMenu = "PlayGame/Menu";
+        public const string PlayGameToken = "PlayGame/Token";
+
         public const string MainMenuSelectPrevious = "MainMenu/SelectPrevious";
         public const string MainMenuSelectNext = "MainMenu/SelectNext";
         public const string MainMenuShowGamesManagementMenu = "MainMenu/ShowGamesManagementMenu";

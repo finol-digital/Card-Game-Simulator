@@ -74,14 +74,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Color DieColor
         {
-            get => !IsSpawned
-                ? dieImage.color
-                : new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
-                    _colorNetworkVariable.Value.z);
+            get => _dieColor;
             set
             {
-                var oldValue = new Vector3(dieImage.color.r, dieImage.color.g, dieImage.color.b);
-                var newValue = new Vector3(value.r, value.g, value.b);
+                var oldValue = new Vector3(_dieColor.r, _dieColor.g, _dieColor.b);
+                _dieColor = value;
+                var newValue = new Vector3(_dieColor.r, _dieColor.g, _dieColor.b);
                 if (IsSpawned)
                     UpdateColorServerRpc(newValue);
                 else
@@ -89,6 +87,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
+        private Color _dieColor = Color.white;
         private NetworkVariable<Vector3> _colorNetworkVariable;
 
         private float _rollRemainingTime;
@@ -179,7 +178,8 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeColor(Vector3 oldValue, Vector3 newValue)
         {
-            dieImage.color = new Color(newValue.x, newValue.y, newValue.z);
+            _dieColor = new Color(newValue.x, newValue.y, newValue.z);
+            dieImage.color = _dieColor;
         }
 
         [UsedImplicitly]

@@ -1157,6 +1157,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Flip Top Card Face
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 540338502651049489}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1196,6 +1201,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreDeselect: 0
+--- !u!224 &540338502651049489 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 704535483892767721}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1961705764480268539
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1360,6 +1371,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Shuffle Stack
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 1549740424900629763}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1399,6 +1415,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreDeselect: 0
+--- !u!224 &1549740424900629763 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1961705764480268539}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2410227006813351432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1563,6 +1585,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Save as Deck
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 3443689085007610864}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1599,6 +1626,12 @@ MonoBehaviour:
 --- !u!224 &3007206303774861039 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 633149931556260071, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2410227006813351432}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &3443689085007610864 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
     type: 3}
   m_PrefabInstance: {fileID: 2410227006813351432}
   m_PrefabAsset: {fileID: 0}
@@ -1932,6 +1965,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: View Stack
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 3008916364598713518}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1946,6 +1984,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5159497104673475387}
   m_SourcePrefab: {fileID: 100100000, guid: 050b35c711bf97548b7054e54e7b44b4, type: 3}
+--- !u!224 &3008916364598713518 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2844437915502211414}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3436281376403372464 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 633149931556260070, guid: 050b35c711bf97548b7054e54e7b44b4,
@@ -2363,6 +2407,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Roll die
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 4556392918851206913}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -2402,6 +2451,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreDeselect: 0
+--- !u!224 &4556392918851206913 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 3567738706374054649}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4124133682763763456
 PrefabInstance:
   m_ObjectHideFlags: 0

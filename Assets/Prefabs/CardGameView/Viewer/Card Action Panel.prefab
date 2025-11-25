@@ -302,6 +302,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Toggle rotation
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 1308277958781213712}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -316,6 +321,12 @@ PrefabInstance:
       insertIndex: 4
       addedObject: {fileID: 887406612682125420}
   m_SourcePrefab: {fileID: 100100000, guid: 050b35c711bf97548b7054e54e7b44b4, type: 3}
+--- !u!224 &1308277958781213712 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2062445856770879976}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1465395108247812364 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 633149931556260068, guid: 050b35c711bf97548b7054e54e7b44b4,
@@ -522,6 +533,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Move to...
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 3041362615928923476}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -536,6 +552,12 @@ PrefabInstance:
       insertIndex: 4
       addedObject: {fileID: 6144388904854879908}
   m_SourcePrefab: {fileID: 100100000, guid: 050b35c711bf97548b7054e54e7b44b4, type: 3}
+--- !u!224 &3041362615928923476 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 2633971793810278572}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3189914018111062088 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 633149931556260068, guid: 050b35c711bf97548b7054e54e7b44b4,
@@ -737,6 +759,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Flip face
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 2421546932562184265}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -753,6 +780,12 @@ PrefabInstance:
       insertIndex: 4
       addedObject: {fileID: 5668546836955364931}
   m_SourcePrefab: {fileID: 100100000, guid: 050b35c711bf97548b7054e54e7b44b4, type: 3}
+--- !u!224 &2421546932562184265 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 3396761204677617073}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2876356312136576341 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 633149931556260068, guid: 050b35c711bf97548b7054e54e7b44b4,
@@ -954,6 +987,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Rotate clockwise
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 5115553700288761526}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1005,6 +1043,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &5115553700288761526 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 5208044322394006350}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7154813383909072233
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1179,6 +1223,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Destroy permanently
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 7922861531873751185}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -1230,3 +1279,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ignoreDeselect: 1
+--- !u!224 &7922861531873751185 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
+    type: 3}
+  m_PrefabInstance: {fileID: 7154813383909072233}
+  m_PrefabAsset: {fileID: 0}

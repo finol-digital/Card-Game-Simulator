@@ -18,20 +18,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         public Color LogoColor
         {
-            get => !IsSpawned
-                ? logoImage.color
-                : new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
-                    _colorNetworkVariable.Value.z);
+            get => _logoColor;
             set
             {
-                var oldValue = new Vector3(logoImage.color.r, logoImage.color.g, logoImage.color.b);
-                var newValue = new Vector3(value.r, value.g, value.b);
+                var oldValue = new Vector3(_logoColor.r, _logoColor.g, _logoColor.b);
+                _logoColor = value;
+                var newValue = new Vector3(_logoColor.r, _logoColor.g, _logoColor.b);
                 if (IsSpawned)
                     UpdateColorServerRpc(newValue);
                 else
                     OnChangeColor(oldValue, newValue);
             }
         }
+
+        private Color _logoColor = Color.white;
 
         private NetworkVariable<Vector3> _colorNetworkVariable;
 
@@ -59,7 +59,8 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeColor(Vector3 oldValue, Vector3 newValue)
         {
-            logoImage.color = new Color(newValue.x, newValue.y, newValue.z);
+            _logoColor = new Color(newValue.x, newValue.y, newValue.z);
+            logoImage.color = _logoColor;
         }
     }
 }

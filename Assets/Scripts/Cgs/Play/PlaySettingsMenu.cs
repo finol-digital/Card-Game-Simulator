@@ -5,6 +5,7 @@
 using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -23,6 +24,7 @@ namespace Cgs.Play
         public Toggle showActionsMenuToggle;
         public Transform launchNativeButton;
         public Transform viewRulesButton;
+        public ScrollRect scrollRect;
 
         public override void Show()
         {
@@ -44,8 +46,15 @@ namespace Cgs.Play
 
         private void Update()
         {
-            if (!IsFocused || dieFaceCountInputField.isFocused)
+            if (!IsFocused || dieFaceCountInputField.isFocused
+                           || EventSystem.current.currentSelectedGameObject == dieFaceCountInputField.gameObject)
                 return;
+
+            if ((InputManager.IsVertical || InputManager.IsHorizontal) &&
+                EventSystem.current.currentSelectedGameObject == null)
+                EventSystem.current.SetSelectedGameObject(autoStackCardsToggle.gameObject);
+            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
+                ScrollPage(InputManager.IsPageDown);
 
             if (InputManager.IsOption)
 #if CGS_SINGLEGAME && CGS_SINGLEPLAYER
@@ -62,7 +71,7 @@ namespace Cgs.Play
         {
             if (CardGameManager.Current.AutoUpdateUrl != null &&
                 CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
-                Application.OpenURL("cardgamesim://?url=" +
+                Application.OpenURL(Tags.NativeUri +
                                     UnityWebRequest.EscapeURL(CardGameManager.Current.AutoUpdateUrl.OriginalString));
             else
                 CardGameManager.Instance.Messenger.Show(NoAutoupdateErrorMessage);
@@ -97,6 +106,12 @@ namespace Cgs.Play
         }
 
         [UsedImplicitly]
+        public void SetShowActionsMenu(bool showActionsMenu)
+        {
+            PlaySettings.ShowActionsMenu = showActionsMenu;
+        }
+
+        [UsedImplicitly]
         public void SetDoubleClickToRollDice(bool doubleClickToRollDice)
         {
             PlaySettings.DoubleClickToRollDice = doubleClickToRollDice;
@@ -109,10 +124,10 @@ namespace Cgs.Play
                 PlaySettings.DieFaceCount = intValue;
         }
 
-        [UsedImplicitly]
-        public void SetShowActionsMenu(bool showActionsMenu)
+        private void ScrollPage(bool scrollDown)
         {
-            PlaySettings.ShowActionsMenu = showActionsMenu;
+            scrollRect.verticalNormalizedPosition =
+                Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDown ? -0.1f : 0.1f));
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Cgs
         public const string MahjongUrl = "https://www.cardgamesimulator.com/games/Mahjong/cgs.json";
         public const string StandardPlayingCardsUrl = "https://www.cardgamesimulator.com/games/Standard/cgs.json";
         public const string CgsGamesBrowseUrl = "https://cgs.games/browse";
+        public const string NativeUri = "cardgamesim://main?url=";
 
         public const int MainMenuSceneIndex = 1;
         public const int PlayModeSceneIndex = 2;
