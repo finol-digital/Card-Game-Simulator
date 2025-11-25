@@ -975,7 +975,7 @@ jobs:
           MICROSOFT_APP_ID: 9N96N5S4W3J0
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
-          IMAGES_ROOT_PATH: ${{ format('{0}\storebroker\img\', 'C:\Card-Game-Simulator.git') }}
+          IMAGES_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
           APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
