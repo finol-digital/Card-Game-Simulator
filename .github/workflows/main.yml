@@ -975,7 +975,7 @@ jobs:
           MICROSOFT_APP_ID: 9N96N5S4W3J0
           STOREBROKER_CONFIG_PATH: ${{ format('{0}\storebroker\SBConfig.json', 'C:\Card-Game-Simulator.git') }}
           PDP_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
-          IMAGES_ROOT_PATH: ${{ format('{0}\docs\assets\img\', 'C:\Card-Game-Simulator.git') }}
+          IMAGES_ROOT_PATH: ${{ format('{0}\storebroker\', 'C:\Card-Game-Simulator.git') }}
           APPX_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
           OUT_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\', 'C:\Card-Game-Simulator.git') }}
           SUBMISSION_DATA_PATH: ${{ format('{0}\build\WSAPlayer\WSAPlayer\upload.json', 'C:\Card-Game-Simulator.git') }}
@@ -985,7 +985,7 @@ jobs:
           $pass = ConvertTo-SecureString $env:MICROSOFT_KEY -AsPlainText -Force
           $cred = New-Object System.Management.Automation.PSCredential ($env:MICROSOFT_CLIENT_ID, $pass)
           Set-StoreBrokerAuthentication -TenantId $env:MICROSOFT_TENANT_ID -Credential $cred
-          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath "$env:APPX_PATH" -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
+          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppPackageUploadPath "$env:APPX_PATH" -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
   announceReleaseToSocialMedia:
