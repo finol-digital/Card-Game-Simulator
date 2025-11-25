@@ -1,2 +1,3 @@
 ## What's Changed
-- Fixed Input bugs
+- Multi-player Fix: Change color of dice and tokens on client
+- Display keyboard shortcuts/hotkeys as button tooltips
