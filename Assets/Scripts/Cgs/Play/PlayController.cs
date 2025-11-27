@@ -83,7 +83,7 @@ namespace Cgs.Play
         public PlayMenu menu;
         public Scoreboard scoreboard;
 
-        public Vector2 NewDeckPosition
+        public Vector2 NewPlayablePosition
         {
             get
             {
@@ -168,8 +168,8 @@ namespace Cgs.Play
             CardViewer.Instance.IsActionable = true;
             CardGameManager.Instance.OnSceneActions.Add(ResetPlayArea);
 
-            InputSystem.actions.FindAction(InputManager.PlayGameMenu).performed += InputPlayGameMenu;
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.PlayGameMenu).performed += InputPlayGameMenu;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
         private IEnumerator Start()
@@ -347,7 +347,7 @@ namespace Cgs.Play
             var deckName = !string.IsNullOrEmpty(CardGameManager.Current.GamePlayDeckName)
                 ? CardGameManager.Current.GamePlayDeckName
                 : deck.Name;
-            var newDeckPosition = NewDeckPosition;
+            var newDeckPosition = NewPlayablePosition;
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
             {
                 var startingDeckCount = AllCardStacks.ToList().Count;
@@ -828,8 +828,8 @@ namespace Cgs.Play
         {
             StopNetworking();
 
-            InputSystem.actions.FindAction(InputManager.PlayGameMenu).performed -= InputPlayGameMenu;
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.PlayGameMenu).performed -= InputPlayGameMenu;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

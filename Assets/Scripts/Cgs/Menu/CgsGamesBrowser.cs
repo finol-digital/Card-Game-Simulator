@@ -18,8 +18,6 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Modal))]
     public class CgsGamesBrowser : SelectionPanel
     {
-        public const string CgsGamesBrowseApiUrl = "https://cgs.games/api/browse";
-
         protected override bool AllowSwitchOff => false;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
@@ -39,7 +37,7 @@ namespace Cgs.Menu
         {
             ClearPanel();
 
-            using var request = UnityWebRequest.Get(CgsGamesBrowseApiUrl);
+            using var request = UnityWebRequest.Get(Tags.CgsGamesBrowseApiUrl);
 
             yield return request.SendWebRequest();
 

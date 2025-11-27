@@ -19,8 +19,8 @@ namespace Cgs.Menu
 
         public bool WasFocused { get; private set; }
 
-        protected virtual List<InputField> InputFields { get; set; } = new List<InputField>();
-        protected virtual List<Toggle> Toggles { get; set; } = new List<Toggle>();
+        protected virtual List<InputField> InputFields { get; set; } = new();
+        protected virtual List<Toggle> Toggles { get; set; } = new();
 
         protected static InputField ActiveInputField
         {

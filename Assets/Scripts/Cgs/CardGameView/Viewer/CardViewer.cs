@@ -169,9 +169,9 @@ namespace Cgs.CardGameView.Viewer
                 var card = _previewCardModel.Value;
                 card.RegisterDisplay(this);
                 preview.alpha = 1;
-                foreach(var previewName in previewNameText)
+                foreach (var previewName in previewNameText)
                     previewName.text = card.Name;
-                foreach(var previewId in previewIdText)
+                foreach (var previewId in previewIdText)
                     previewId.text = card.Id;
             }
         }
@@ -238,15 +238,27 @@ namespace Cgs.CardGameView.Viewer
         private bool _isVisible;
         public bool WasVisible { get; private set; }
 
+        private bool IsBlocked => !(IsVisible || Zoom) || SelectedCardModel == null ||
+                                  CardGameManager.Instance.ModalCanvas != null;
+
+        private InputAction _page;
+
         private Vector2 _cardActionPanelPosition;
 
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetInfo);
+
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.CardZoom).performed += InputZoom;
+            InputSystem.actions.FindAction(Tags.CardSelectPrevious).performed += InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.CardSelectNext).performed += InputSelectNext;
         }
 
         private void Start()
         {
+            _page = InputSystem.actions.FindAction(Tags.PlayerPage);
             ResetInfo();
         }
 
@@ -261,7 +273,7 @@ namespace Cgs.CardGameView.Viewer
             if (_selectedCardModel == null)
                 IsVisible = false;
 
-            if (!(IsVisible || Zoom) || SelectedCardModel == null || CardGameManager.Instance.ModalCanvas != null)
+            if (IsBlocked)
                 return;
 
             if (Mode != CardViewerMode.Minimal && SelectedCardModel.IsFacedown)
@@ -274,35 +286,33 @@ namespace Cgs.CardGameView.Viewer
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            if (InputManager.IsPageVertical && Instance.Mode == CardViewerMode.Maximal)
+            if (_page != null && _page.WasPressedThisFrame() && Mathf.Abs(_page.ReadValue<Vector2>().y) > 0)
             {
-                if (InputManager.IsPageDown && !InputManager.WasPageDown)
-                    maximalScrollRect.verticalNormalizedPosition =
-                        Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
-                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
-                    maximalScrollRect.verticalNormalizedPosition =
-                        Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
+                maximalScrollRect.verticalNormalizedPosition = _page.ReadValue<Vector2>().y < 0
+                    ? Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f)
+                    : Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
             }
+        }
 
-            if (InputManager.IsSubmit)
-            {
-                if (!Zoom && Mode == CardViewerMode.Maximal)
-                    Mode = CardViewerMode.Expanded;
-                else
-                    SelectedCardModel.DefaultAction?.Invoke(SelectedCardModel);
-            }
-            else if (InputManager.IsFocusBack && !InputManager.WasFocusBack)
-                DecrementProperty();
-            else if (InputManager.IsFocusNext && !InputManager.WasFocusNext)
-                IncrementProperty();
-            else if (InputManager.IsSort && SelectedCardModel != null && imageButton.gameObject.activeSelf)
-                Zoom = !Zoom;
-            else if (InputManager.IsCancel)
-            {
-                if (!Zoom && Mode == CardViewerMode.Maximal)
-                    Mode = CardViewerMode.Expanded;
-                SelectedCardModel = null;
-            }
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (!Zoom && Mode == CardViewerMode.Maximal)
+                Mode = CardViewerMode.Expanded;
+            else
+                SelectedCardModel.DefaultAction?.Invoke(SelectedCardModel);
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (!Zoom && Mode == CardViewerMode.Maximal)
+                Mode = CardViewerMode.Expanded;
+            SelectedCardModel = null;
         }
 
         private void ResetInfo()
@@ -313,8 +323,8 @@ namespace Cgs.CardGameView.Viewer
                 text.transform.parent.parent.gameObject.SetActive(!CardGameManager.Current.CardNameIsUnique);
 
             PropertyOptions.Clear();
-            PropertyOptions.Add(new Dropdown.OptionData() {text = SetLabel});
-            PropertyOptions.Add(new Dropdown.OptionData() {text = IdLabel});
+            PropertyOptions.Add(new Dropdown.OptionData() { text = SetLabel });
+            PropertyOptions.Add(new Dropdown.OptionData() { text = IdLabel });
             DisplayNameLookup.Clear();
             foreach (var propertyDef in CardGameManager.Current.CardProperties)
                 AddProperty(propertyDef);
@@ -343,15 +353,31 @@ namespace Cgs.CardGameView.Viewer
             else
             {
                 var displayName = !string.IsNullOrEmpty(propertyDef.Display) ? propertyDef.Display : propertyDef.Name;
-                PropertyOptions.Add(new Dropdown.OptionData() {text = displayName});
+                PropertyOptions.Add(new Dropdown.OptionData() { text = displayName });
                 DisplayNameLookup[displayName] = parentPrefix + propertyDef.Name;
             }
+        }
+
+        private void InputSelectPrevious(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            DecrementProperty();
         }
 
         [UsedImplicitly]
         public void DecrementProperty()
         {
             SelectedPropertyIndex--;
+        }
+
+        private void InputSelectNext(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            IncrementProperty();
         }
 
         [UsedImplicitly]
@@ -390,6 +416,15 @@ namespace Cgs.CardGameView.Viewer
             Mode = CardViewerMode.Maximal;
         }
 
+        private void InputZoom(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedCardModel != null && imageButton.gameObject.activeSelf)
+                Zoom = !Zoom;
+        }
+
         public void ZoomOn(CardModel cardModel)
         {
             var isVisible = IsVisible;
@@ -403,7 +438,7 @@ namespace Cgs.CardGameView.Viewer
         [UsedImplicitly]
         public void SetMode(int mode)
         {
-            Mode = (CardViewerMode) mode;
+            Mode = (CardViewerMode)mode;
         }
 
         private void Redisplay()
@@ -500,6 +535,15 @@ namespace Cgs.CardGameView.Viewer
         public void HidePreview()
         {
             preview.alpha = 0;
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.CardZoom).performed -= InputZoom;
+            InputSystem.actions.FindAction(Tags.CardSelectPrevious).performed -= InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.CardSelectNext).performed -= InputSelectNext;
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Cgs.UI
                     return string.Empty;
 
                 var inputAction = InputSystem.actions.FindAction(inputActionId);
-                var inputBinding = InputManager.IsGamepadConnected
+                var inputBinding = Gamepad.all.Count > 0
                     ? InputBinding.MaskByGroup("Gamepad")
                     : InputBinding.MaskByGroup("Keyboard&Mouse");
                 return inputAction.GetBindingDisplayString(inputBinding).Replace("| Backspace", "");

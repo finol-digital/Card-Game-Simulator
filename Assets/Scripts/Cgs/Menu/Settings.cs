@@ -76,12 +76,12 @@ namespace Cgs.Menu
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed += InputWebsite;
-            InputSystem.actions.FindAction(InputManager.SettingsToolTips).performed += InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed += InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed += InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.SettingsWebsite).performed += InputWebsite;
+            InputSystem.actions.FindAction(Tags.SettingsToolTips).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsPreviewMouseOver).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsHideReprints).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsDeveloperMode).performed += InputRedisplay;
         }
 
         private void Start()
@@ -256,12 +256,12 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed -= InputWebsite;
-            InputSystem.actions.FindAction(InputManager.SettingsToolTips).performed -= InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed -= InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed -= InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.SettingsWebsite).performed -= InputWebsite;
+            InputSystem.actions.FindAction(Tags.SettingsToolTips).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsPreviewMouseOver).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsHideReprints).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsDeveloperMode).performed -= InputRedisplay;
         }
     }
 }

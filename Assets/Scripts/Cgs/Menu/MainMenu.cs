@@ -76,16 +76,16 @@ namespace Cgs.Menu
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
             CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
 
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectPrevious).performed += InputSelectPrevious;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectNext).performed += InputSelectNext;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed +=
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectPrevious).performed += InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectNext).performed += InputSelectNext;
+            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed +=
                 InputShowGamesManagementMenu;
-            InputSystem.actions.FindAction(InputManager.MainMenuStartGame).performed += InputStartGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuJoinGame).performed += InputJoinGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuEditDeck).performed += InputEditDeck;
-            InputSystem.actions.FindAction(InputManager.MainMenuExploreCards).performed += InputExploreCards;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowSettings).performed += InputShowSettings;
+            InputSystem.actions.FindAction(Tags.MainMenuStartGame).performed += InputStartGame;
+            InputSystem.actions.FindAction(Tags.MainMenuJoinGame).performed += InputJoinGame;
+            InputSystem.actions.FindAction(Tags.MainMenuEditDeck).performed += InputEditDeck;
+            InputSystem.actions.FindAction(Tags.MainMenuExploreCards).performed += InputExploreCards;
+            InputSystem.actions.FindAction(Tags.MainMenuSettings).performed += InputShowSettings;
         }
 
         private void SetCopyright()
@@ -473,16 +473,16 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectPrevious).performed -= InputSelectPrevious;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectNext).performed -= InputSelectNext;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed -=
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectPrevious).performed -= InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectNext).performed -= InputSelectNext;
+            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed -=
                 InputShowGamesManagementMenu;
-            InputSystem.actions.FindAction(InputManager.MainMenuStartGame).performed -= InputStartGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuJoinGame).performed -= InputJoinGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuEditDeck).performed -= InputEditDeck;
-            InputSystem.actions.FindAction(InputManager.MainMenuExploreCards).performed -= InputExploreCards;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowSettings).performed -= InputShowSettings;
+            InputSystem.actions.FindAction(Tags.MainMenuStartGame).performed -= InputStartGame;
+            InputSystem.actions.FindAction(Tags.MainMenuJoinGame).performed -= InputJoinGame;
+            InputSystem.actions.FindAction(Tags.MainMenuEditDeck).performed -= InputEditDeck;
+            InputSystem.actions.FindAction(Tags.MainMenuExploreCards).performed -= InputExploreCards;
+            InputSystem.actions.FindAction(Tags.MainMenuSettings).performed -= InputShowSettings;
         }
     }
 }
