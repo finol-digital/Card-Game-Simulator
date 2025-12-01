@@ -15,6 +15,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -79,9 +80,14 @@ namespace Cgs.Play.Multiplayer
 
         private bool _shouldRedisplay;
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputClose;
+        }
+
         private void Start()
         {
-            roomIdIpInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
+            roomIdIpInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             StartCoroutine(SignInAnonymouslyCoroutine());
         }
 
@@ -136,8 +142,6 @@ namespace Cgs.Play.Multiplayer
                 ScrollPage(InputManager.IsPageDown);
             else if (InputManager.IsPageHorizontal && !InputManager.WasPageHorizontal)
                 ToggleConnectionSource();
-            else if (InputManager.IsCancel)
-                Close();
         }
 
         public void Show()
@@ -350,6 +354,14 @@ namespace Cgs.Play.Multiplayer
             Menu.Hide();
         }
 
+        private void InputClose(InputAction.CallbackContext callbackContext)
+        {
+            if (!Menu.IsFocused || roomIdIpInputField.isFocused)
+                return;
+
+            Close();
+        }
+
         [UsedImplicitly]
         public void Close()
         {
@@ -357,6 +369,11 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.Discovery.StopDiscovery();
 
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputClose;
         }
     }
 }

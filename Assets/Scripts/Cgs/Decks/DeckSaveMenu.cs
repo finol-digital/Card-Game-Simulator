@@ -11,6 +11,7 @@ using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 #if UNITY_ANDROID && !UNITY_EDITOR
 using System.Collections;
@@ -39,21 +40,16 @@ namespace Cgs.Decks
         private OnDeckSavedDelegate _deckSaveCallback;
         private bool _doesAutoOverwrite;
 
-        private void Update()
-        {
-            if (!IsFocused || nameInputField.isFocused)
-                return;
+        public override bool IsBlocked => base.IsBlocked || nameInputField.isFocused;
 
-            if (InputManager.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
-                AttemptSaveAndHide();
-            else if (InputManager.IsFocus)
-                nameInputField.ActivateInputField();
-            else if (InputManager.IsNew && EventSystem.current.currentSelectedGameObject == null)
-                PrintPdf();
-            else if (InputManager.IsLoad && EventSystem.current.currentSelectedGameObject == null)
-                Share();
-            else if (InputManager.IsCancel)
-                CancelAndHide();
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuPrint).performed += InputPrint;
+            InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
         public void Show(UnityDeck deckToShow, OnNameChangeDelegate nameChangeCallback = null,
@@ -71,6 +67,14 @@ namespace Cgs.Decks
 #endif
         }
 
+        private void InputFocus(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            nameInputField.ActivateInputField();
+        }
+
         [UsedImplicitly]
         public void ChangeName(string newName)
         {
@@ -80,8 +84,17 @@ namespace Cgs.Decks
                 nameInputField.text = newName;
             var deck = new UnityDeck(CardGameManager.Current, newName, CardGameManager.Current.DeckFileType);
             foreach (var card in _currentDeck.Cards)
-                deck.Add((UnityCard) card);
+                deck.Add((UnityCard)card);
             textOutputArea.text = deck.ToString();
+        }
+
+        private void InputPrint(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (EventSystem.current.currentSelectedGameObject == null)
+                PrintPdf();
         }
 
         [UsedImplicitly]
@@ -154,6 +167,15 @@ namespace Cgs.Decks
         }
 #endif
 
+        private void InputShare(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (EventSystem.current.currentSelectedGameObject == null)
+                Share();
+        }
+
         [UsedImplicitly]
         public void Share()
         {
@@ -171,6 +193,15 @@ namespace Cgs.Decks
         {
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (EventSystem.current.currentSelectedGameObject == null)
+                AttemptSaveAndHide();
         }
 
         [UsedImplicitly]
@@ -209,11 +240,29 @@ namespace Cgs.Decks
             deckSaveCallback?.Invoke(deck);
         }
 
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            CancelAndHide();
+        }
+
         [UsedImplicitly]
         public void CancelAndHide()
         {
             _nameChangeCallback?.Invoke(_currentDeck.Name);
             Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuPrint).performed -= InputPrint;
+            InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

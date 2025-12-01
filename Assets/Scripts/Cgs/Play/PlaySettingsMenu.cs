@@ -6,6 +6,7 @@ using Cgs.Menu;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
@@ -26,6 +27,18 @@ namespace Cgs.Play
         public Transform viewRulesButton;
         public ScrollRect scrollRect;
 
+        public override bool IsBlocked => !IsFocused || dieFaceCountInputField.isFocused
+                                                     || EventSystem.current.currentSelectedGameObject ==
+                                                     dieFaceCountInputField.gameObject;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
         public override void Show()
         {
             base.Show();
@@ -44,26 +57,33 @@ namespace Cgs.Play
 #endif
         }
 
-        private void Update()
+        private void InputMove(InputAction.CallbackContext callbackContext)
         {
-            if (!IsFocused || dieFaceCountInputField.isFocused
-                           || EventSystem.current.currentSelectedGameObject == dieFaceCountInputField.gameObject)
+            if (IsBlocked)
                 return;
 
-            if ((InputManager.IsVertical || InputManager.IsHorizontal) &&
-                EventSystem.current.currentSelectedGameObject == null)
+            if (EventSystem.current.currentSelectedGameObject == null)
                 EventSystem.current.SetSelectedGameObject(autoStackCardsToggle.gameObject);
-            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                ScrollPage(InputManager.IsPageDown);
+        }
 
-            if (InputManager.IsOption)
+        private void InputPage(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ScrollPage(InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y < 0);
+        }
+
+        private void InputMenu(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
 #if CGS_SINGLEGAME && CGS_SINGLEPLAYER
-                LaunchNative();
+            LaunchNative();
 #else
-                ViewRules();
+            ViewRules();
 #endif
-            else if (InputManager.IsCancel)
-                Hide();
         }
 
         [UsedImplicitly]
@@ -128,6 +148,22 @@ namespace Cgs.Play
         {
             scrollRect.verticalNormalizedPosition =
                 Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDown ? -0.1f : 0.1f));
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

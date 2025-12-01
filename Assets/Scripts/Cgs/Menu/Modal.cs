@@ -7,6 +7,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -19,8 +20,15 @@ namespace Cgs.Menu
 
         public bool WasFocused { get; private set; }
 
+        public virtual bool IsBlocked =>
+            !IsFocused || !WasFocused || InputFields.Any(inputField => inputField.isFocused);
+
         protected virtual List<InputField> InputFields { get; set; } = new();
         protected virtual List<Toggle> Toggles { get; set; } = new();
+
+        private InputAction _focusPreviousAction;
+        private InputAction _focusNextAction;
+        private InputAction _moveAction;
 
         protected static InputField ActiveInputField
         {
@@ -58,7 +66,7 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (InputManager.IsFocusBack)
+            if (_focusPreviousAction != null && _focusPreviousAction.WasPressedThisFrame())
             {
                 // up
                 var previous = InputFields.Last();
@@ -74,7 +82,7 @@ namespace Cgs.Menu
                     previous = inputField;
                 }
             }
-            else if (InputManager.IsFocusNext)
+            else if (_focusNextAction != null && _focusNextAction.WasPressedThisFrame())
             {
                 // down
                 var next = InputFields.First();
@@ -100,72 +108,72 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (InputManager.IsVertical)
+            if (_moveAction == null || !_moveAction.WasPressedThisFrame())
+                return;
+
+            var moveVector2 = _moveAction.ReadValue<Vector2>();
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            if (moveVector2.y > 0)
             {
-                if (InputManager.IsUp && !InputManager.WasUp)
+                // up
+                var previous = Toggles.Last();
+                foreach (var toggle in Toggles)
                 {
-                    // up
-                    var previous = Toggles.Last();
-                    foreach (var toggle in Toggles)
+                    if (ActiveToggle == toggle)
                     {
-                        if (ActiveToggle == toggle)
-                        {
-                            ActiveToggle = previous;
-                            break;
-                        }
-
-                        if (toggle.transform.parent != ActiveToggle.transform.parent)
-                            previous = toggle;
+                        ActiveToggle = previous;
+                        break;
                     }
-                }
-                else if (InputManager.IsDown && !InputManager.WasDown)
-                {
-                    // down
-                    var next = Toggles.First();
-                    for (var i = Toggles.Count - 1; i >= 0; i--)
-                    {
-                        if (ActiveToggle == Toggles[i])
-                        {
-                            ActiveToggle = next;
-                            break;
-                        }
 
-                        if (Toggles[i].transform.parent != ActiveToggle.transform.parent)
-                            next = Toggles[i];
-                    }
+                    if (toggle.transform.parent != ActiveToggle.transform.parent)
+                        previous = toggle;
                 }
             }
-            else if (InputManager.IsHorizontal)
+            else if (moveVector2.y < 0)
             {
-                if (InputManager.IsRight && !InputManager.WasRight)
+                // down
+                var next = Toggles.First();
+                for (var i = Toggles.Count - 1; i >= 0; i--)
                 {
-                    // right
-                    var next = Toggles.First();
-                    for (var i = Toggles.Count - 1; i >= 0; i--)
+                    if (ActiveToggle == Toggles[i])
                     {
-                        if (ActiveToggle == Toggles[i])
-                        {
-                            ActiveToggle = next;
-                            break;
-                        }
+                        ActiveToggle = next;
+                        break;
+                    }
 
+                    if (Toggles[i].transform.parent != ActiveToggle.transform.parent)
                         next = Toggles[i];
-                    }
                 }
-                else if (InputManager.IsLeft && !InputManager.WasLeft)
+            }
+            // ReSharper disable once ConvertIfStatementToSwitchStatement
+            else if (moveVector2.x > 0)
+            {
+                // right
+                var next = Toggles.First();
+                for (var i = Toggles.Count - 1; i >= 0; i--)
                 {
-                    // left
-                    var previous = Toggles.Last();
-                    foreach (var toggle in Toggles)
+                    if (ActiveToggle == Toggles[i])
                     {
-                        if (ActiveToggle == toggle)
-                        {
-                            ActiveToggle = previous;
-                            break;
-                        }
-
-                        previous = toggle;
+                        ActiveToggle = next;
+                        break;
                     }
+
+                    next = Toggles[i];
+                }
+            }
+            else if (moveVector2.x < 0)
+            {
+                // left
+                var previous = Toggles.Last();
+                foreach (var toggle in Toggles)
+                {
+                    if (ActiveToggle == toggle)
+                    {
+                        ActiveToggle = previous;
+                        break;
+                    }
+
+                    previous = toggle;
                 }
             }
         }
@@ -184,6 +192,9 @@ namespace Cgs.Menu
             Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
                 canvasScaler.referenceResolution = ResolutionManager.Resolution;
+            _focusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
+            _focusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
         }
 
         private void LateUpdate()

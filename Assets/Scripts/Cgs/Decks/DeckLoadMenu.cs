@@ -63,9 +63,11 @@ namespace Cgs.Decks
 
         private Modal _menu;
 
+        private bool IsBlocked => Menu.IsBlocked || nameInputField.isFocused || textInputField.isFocused;
+
         private void Update()
         {
-            if (!Menu.IsFocused || nameInputField.isFocused || textInputField.isFocused)
+            if (IsBlocked)
                 return;
 
             if (newDeckPanel.gameObject.activeSelf)

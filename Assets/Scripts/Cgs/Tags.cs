@@ -27,6 +27,7 @@ namespace Cgs
         public const string PlayGameSettings = "PlayGame/Settings";
         public const string PlayGameDie = "PlayGame/Die";
         public const string PlayGameToken = "PlayGame/Token";
+        public const string PlayGameToggleZoomRotation = "PlayGame/ToggleZoomRotation";
 
         public const string CardZoom = "Card/Zoom";
         public const string CardSelectPrevious = "Card/SelectPrevious";
@@ -54,7 +55,12 @@ namespace Cgs
         public const string MainMenuEditDeck = "MainMenu/EditDeck";
         public const string MainMenuExploreCards = "MainMenu/ExploreCards";
 
-        public const string SettingsWebsite = "Settings/Website";
+        public const string SubMenuMenu = "SubMenu/Menu";
+        public const string SubMenuFocusPrevious = "SubMenu/FocusPrevious";
+        public const string SubMenuFocusNext = "SubMenu/FocusNext";
+        public const string SubMenuPrint = "SubMenu/Print";
+        public const string SubMenuShare = "SubMenu/Share";
+
         public const string SettingsToolTips = "Settings/ToolTips";
         public const string SettingsPreviewMouseOver = "Settings/PreviewMouseOver";
         public const string SettingsHideReprints = "Settings/HideReprints";
@@ -69,5 +75,12 @@ namespace Cgs
         public const string CgsGamesBrowseUrl = "https://cgs.games/browse";
         public const string CgsGamesBrowseApiUrl = "https://cgs.games/api/browse";
         public const string NativeUri = "cardgamesim://main?url=";
+
+        public static char FilterFocusInput(char charToValidate)
+        {
+            if (charToValidate == '`')
+                charToValidate = '\0';
+            return charToValidate;
+        }
     }
 }

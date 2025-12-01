@@ -7,6 +7,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Play
@@ -17,8 +18,7 @@ namespace Cgs.Play
         public Slider slider;
         public CanvasGroup sliderCanvasGroup;
 
-        private const float PageHorizontalSensitivity = 45f;
-        private const float PageHorizontalSensitivity2 = 0.2f;
+        private const float PageHorizontalSensitivity = 0.2f;
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 3f;
 
@@ -27,6 +27,16 @@ namespace Cgs.Play
 
         private bool _rotationEnabled;
 
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
+                                  _playController.menu.panels.activeSelf ||
+                                  CardGameManager.Instance.ModalCanvas != null ||
+                                  _playController.scoreboard.nameInputField.isFocused;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleRotation;
+        }
+
         private void Start()
         {
             _playController = GetComponent<PlayController>();
@@ -34,7 +44,6 @@ namespace Cgs.Play
 
         private void Update()
         {
-            // Update Visuals
             if (Math.Abs(slider.value - _playController.playArea.CurrentRotation) > Tolerance)
             {
                 slider.value = _playController.playArea.CurrentRotation;
@@ -56,27 +65,30 @@ namespace Cgs.Play
                 sliderCanvasGroup.blocksRaycasts = false;
             }
 
-            // Handle Input
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || _playController.menu.panels.activeSelf ||
-                CardGameManager.Instance.ModalCanvas != null || _playController.scoreboard.nameInputField.isFocused)
+            if (IsBlocked)
                 return;
 
-            if (InputManager.IsLeft && !InputManager.WasLeft)
-                _playController.playArea.CurrentRotation -= 90;
-            else if (InputManager.IsRight && !InputManager.WasRight)
-                _playController.playArea.CurrentRotation += 90;
-
-            if (InputManager.IsSort)
-                _rotationEnabled = !_rotationEnabled;
-
-            if (!InputManager.IsPageHorizontal)
+            var pageHorizontal = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().x;
+            if (Mathf.Abs(pageHorizontal) < PageHorizontalSensitivity)
                 return;
-            if (_rotationEnabled)
-                _playController.playArea.CurrentRotation +=
-                    Time.deltaTime * InputManager.FPageHorizontal * PageHorizontalSensitivity;
+
+            if (_rotationEnabled && InputSystem.actions.FindAction(Tags.PlayerPage).WasPressedThisFrame())
+            {
+                if (pageHorizontal < 0)
+                    _playController.playArea.CurrentRotation -= 90;
+                else
+                    _playController.playArea.CurrentRotation += 90;
+            }
             else
-                _playController.playArea.horizontalNormalizedPosition -=
-                    InputManager.FPageHorizontal * PageHorizontalSensitivity2 * Time.deltaTime;
+                _playController.playArea.horizontalNormalizedPosition -= pageHorizontal * PageHorizontalSensitivity * 10;
+        }
+
+        private void InputToggleRotation(InputAction.CallbackContext obj)
+        {
+            if (IsBlocked)
+                return;
+
+            _rotationEnabled = !_rotationEnabled;
         }
 
         [UsedImplicitly]
@@ -94,6 +106,11 @@ namespace Cgs.Play
                 _playController.playArea.CurrentRotation = CgsNetManager.Instance.LocalPlayer.DefaultZRotation;
             else
                 _playController.playArea.CurrentRotation = 0;
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleRotation;
         }
     }
 }
