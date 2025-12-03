@@ -61,7 +61,7 @@ namespace Cgs.Play.Drawer
             base.Start();
             Count = CardGameManager.Current.GameStartHandCount;
         }
-
+/*TODO:
         private void Update()
         {
             if (!IsFocused)
@@ -79,7 +79,7 @@ namespace Cgs.Play.Drawer
             else if (InputManager.IsCancel)
                 Hide();
         }
-
+*/
         private void RefreshText()
         {
             promptText.text = PromptMessage;

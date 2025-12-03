@@ -46,8 +46,8 @@ namespace Cgs.Decks
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuPrint).performed += InputPrint;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPrint;
+            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed += InputShare;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -259,8 +259,8 @@ namespace Cgs.Decks
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuPrint).performed -= InputPrint;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPrint;
+            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed -= InputShare;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

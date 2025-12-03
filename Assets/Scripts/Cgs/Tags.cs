@@ -45,6 +45,7 @@ namespace Cgs
         public const string DecksSave = "Decks/Save";
         public const string DecksLoad = "Decks/Load";
         public const string DecksNew = "Decks/New";
+        public const string DecksShare = "Decks/Share";
 
         public const string MainMenuSettings = "MainMenu/Settings";
         public const string MainMenuGamesManagementMenu = "MainMenu/GamesManagementMenu";
@@ -58,8 +59,8 @@ namespace Cgs
         public const string SubMenuMenu = "SubMenu/Menu";
         public const string SubMenuFocusPrevious = "SubMenu/FocusPrevious";
         public const string SubMenuFocusNext = "SubMenu/FocusNext";
-        public const string SubMenuPrint = "SubMenu/Print";
-        public const string SubMenuShare = "SubMenu/Share";
+        public const string SubMenuPaste = "SubMenu/Paste";
+        public const string SubMenuCopy = "SubMenu/Copy";
 
         public const string SettingsToolTips = "Settings/ToolTips";
         public const string SettingsPreviewMouseOver = "Settings/PreviewMouseOver";

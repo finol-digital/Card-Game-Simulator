@@ -6,6 +6,7 @@ using System.IO;
 using Cgs.UI;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 #if !UNITY_WEBGL
@@ -69,6 +70,20 @@ namespace Cgs.Menu
 
         private DownloadMenu _downloader;
 
+        private void OnEnable()
+        {
+            CardGameManager.Instance.OnSceneActions.Add(BuildGameSelectionOptions);
+
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
+            InputSystem.actions.FindAction(Tags.DecksShare).performed += InputShare;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
 #if UNITY_ANDROID || UNITY_IOS
         private static string ZipFileType { get; set; }
 
@@ -77,50 +92,6 @@ namespace Cgs.Menu
             ZipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
         }
 #endif
-
-        private void OnEnable()
-        {
-            CardGameManager.Instance.OnSceneActions.Add(BuildGameSelectionOptions);
-        }
-
-        private void Update()
-        {
-            if (!Menu.IsFocused || !Menu.WasFocused)
-                return;
-
-            if (InputManager.IsVertical)
-            {
-                if (InputManager.IsUp && !InputManager.WasUp)
-                    SelectPrevious();
-                else if (InputManager.IsDown && !InputManager.WasDown)
-                    SelectNext();
-            }
-
-            if (InputManager.IsSubmit)
-            {
-                if (Settings.DeveloperMode && !CardGameManager.Current.IsUploaded)
-                    EditCurrent();
-                else
-                    Sync();
-            }
-            else if (InputManager.IsNew)
-            {
-                if (Settings.DeveloperMode)
-                    CreateNew();
-                else
-                    ShowCgsGamesBrowser();
-            }
-            else if (InputManager.IsLoad)
-                Import();
-            else if (InputManager.IsSave)
-                Share();
-            else if (InputManager.IsOption)
-                Delete();
-            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                ScrollPage(InputManager.IsPageDown);
-            else if (InputManager.IsCancel)
-                Hide();
-        }
 
         public void Show()
         {
@@ -137,11 +108,44 @@ namespace Cgs.Menu
             Rebuild(CardGameManager.Instance.AllCardGames, SelectGame, CardGameManager.Current.Id);
         }
 
+        private void InputMove(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            var moveVertical = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>().y;
+            if (moveVertical > 0f)
+                SelectPrevious();
+            else if (moveVertical < 0f)
+                SelectNext();
+        }
+
+        private void InputPage(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
+            if (Mathf.Abs(pageVertical) > 0)
+                ScrollPage(pageVertical < 0);
+        }
+
         [UsedImplicitly]
         public void SelectGame(Toggle toggle, string gameId)
         {
             if (toggle != null && toggle.isOn && gameId != CardGameManager.Current.Id)
                 CardGameManager.Instance.Select(gameId);
+        }
+
+        private void InputNew(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            if (Settings.DeveloperMode)
+                CreateNew();
+            else
+                ShowCgsGamesBrowser();
         }
 
         [UsedImplicitly]
@@ -156,10 +160,29 @@ namespace Cgs.Menu
             CardGameEditor.ShowNew();
         }
 
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            if (Settings.DeveloperMode && !CardGameManager.Current.IsUploaded)
+                EditCurrent();
+            else
+                Sync();
+        }
+
         [UsedImplicitly]
         public void EditCurrent()
         {
             CardGameEditor.ShowCurrent();
+        }
+
+        private void InputLoad(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            Import();
         }
 
         [UsedImplicitly]
@@ -196,10 +219,26 @@ namespace Cgs.Menu
 #endif
         }
 
+        private void InputShare(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+            // SAVE
+            Share();
+        }
+
         [UsedImplicitly]
         public void Share()
         {
             CardGameManager.Instance.Share();
+        }
+
+        private void InputDelete(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            Delete();
         }
 
         [UsedImplicitly]
@@ -236,10 +275,30 @@ namespace Cgs.Menu
             Hide();
         }
 
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            Hide();
+        }
+
         [UsedImplicitly]
         public void Hide()
         {
             Menu.Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
+            InputSystem.actions.FindAction(Tags.DecksShare).performed -= InputShare;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

@@ -82,9 +82,9 @@ namespace Cgs.Play.Drawer
                 viewer.ApplyOverlapSpacing();
             _previousOverlapSpacing = PlaySettings.StackViewerOverlap;
 
+/*TODO:
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
-
             if (InputManager.IsVertical)
             {
                 if (InputManager.IsUp && !InputManager.WasUp)
@@ -97,7 +97,7 @@ namespace Cgs.Play.Drawer
                 Deal();
 
             if (InputManager.IsFocusNext && !InputManager.WasFocusNext)
-                Draw();
+                Draw();*/
         }
 
         private void Resize()

@@ -63,8 +63,8 @@ namespace Cgs.Decks
 
         private Modal _menu;
 
+/* TODO:
         private bool IsBlocked => Menu.IsBlocked || nameInputField.isFocused || textInputField.isFocused;
-
         private void Update()
         {
             if (IsBlocked)
@@ -111,7 +111,7 @@ namespace Cgs.Decks
                     Hide();
             }
         }
-
+*/
         public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null,
             string originalText = null)
         {

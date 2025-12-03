@@ -120,7 +120,7 @@ namespace Cgs.Play.Multiplayer
 
             if (_shouldRedisplay)
                 Redisplay();
-
+/*
             if (!Menu.IsFocused || roomIdIpInputField.isFocused)
                 return;
 
@@ -141,7 +141,7 @@ namespace Cgs.Play.Multiplayer
             else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
                 ScrollPage(InputManager.IsPageDown);
             else if (InputManager.IsPageHorizontal && !InputManager.WasPageHorizontal)
-                ToggleConnectionSource();
+                ToggleConnectionSource();*/
         }
 
         public void Show()

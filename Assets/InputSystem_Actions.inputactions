@@ -1254,6 +1254,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Share",
+                    "type": "Button",
+                    "id": "fbfa4ab0-7859-4cdb-8c27-9892d412fbe2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1353,6 +1362,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Load",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "647a3874-43e1-410e-b5fc-5058e5754d07",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Share",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "022c4d62-44c7-4832-9cc0-0b061c970bdc",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Share",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e43091c1-6270-442e-ad6c-e3010a512b66",
+                    "path": "<Keyboard>/semicolon",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Share",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1734,7 +1776,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Print",
+                    "name": "Paste",
                     "type": "Button",
                     "id": "f06e37bb-d2d0-4cf4-bc61-86bef1e6d3ac",
                     "expectedControlType": "",
@@ -1743,7 +1785,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Share",
+                    "name": "Copy",
                     "type": "Button",
                     "id": "0d853427-ccf9-441d-a794-baf37287c939",
                     "expectedControlType": "",
@@ -1793,29 +1835,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Share",
+                    "action": "Copy",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "06c59023-e9e7-4a5f-a7ae-287d48d00ce5",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Share",
+                    "action": "Copy",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "a84a9fa5-f125-47ca-9c53-69569ed32ec7",
-                    "path": "<Keyboard>/k",
+                    "path": "<Keyboard>/l",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Share",
+                    "action": "Copy",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1826,18 +1868,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Print",
+                    "action": "Paste",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "3bc40c42-3a2a-4a59-af6a-4c20c4e1bbc1",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/v",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Print",
+                    "action": "Paste",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1848,7 +1890,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Print",
+                    "action": "Paste",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
