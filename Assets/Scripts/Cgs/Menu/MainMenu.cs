@@ -165,6 +165,7 @@ namespace Cgs.Menu
                 SelectPrevious();
         }
 
+/* TODO:
         private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
@@ -196,7 +197,7 @@ namespace Cgs.Menu
                      !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
                 EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
         }
-
+*/
         private static void DeclineWelcomeMessage()
         {
             HasSeenWelcome = true;

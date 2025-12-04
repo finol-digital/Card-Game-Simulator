@@ -58,7 +58,7 @@ namespace Cgs.Menu
 
             BuildGameSelectionOptions();
         }
-
+/* TODO:
         private void Update()
         {
             if (!Menu.IsFocused || _gameOptions.Count < 1)
@@ -83,7 +83,7 @@ namespace Cgs.Menu
             else if (InputManager.IsCancel)
                 Hide();
         }
-
+*/
         public void Show()
         {
             Menu.Show();
