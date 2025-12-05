@@ -39,9 +39,7 @@ namespace Cgs.Menu
 
         private bool _isNewMessage;
 
-        private InputAction _moveAction;
         private InputAction _submitAction;
-        private InputAction _noAction;
         private InputAction _shareAction;
         private InputAction _cancelAction;
 
@@ -60,9 +58,7 @@ namespace Cgs.Menu
             shareButton.SetActive(false);
 #endif
 
-            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
-            _noAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
             _shareAction = InputSystem.actions.FindAction(Tags.SubMenuMenu);
             _cancelAction = InputSystem.actions.FindAction(Tags.PlayerCancel);
         }
@@ -76,7 +72,7 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (_moveAction.WasPressedThisFrame() && EventSystem.current.currentSelectedGameObject == null &&
+            if (MoveAction.WasPressedThisFrame() && EventSystem.current.currentSelectedGameObject == null &&
                 yesButton.gameObject.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
@@ -89,7 +85,7 @@ namespace Cgs.Menu
                 else
                     OkClose();
             }
-            else if (_noAction.WasPressedThisFrame() && noButton.gameObject.activeInHierarchy)
+            else if (FocusNextAction.WasPressedThisFrame() && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
             else if (_shareAction.WasPressedThisFrame())
                 CopyShare();

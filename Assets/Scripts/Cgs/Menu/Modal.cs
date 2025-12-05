@@ -26,9 +26,9 @@ namespace Cgs.Menu
         protected virtual List<InputField> InputFields { get; set; } = new();
         protected virtual List<Toggle> Toggles { get; set; } = new();
 
-        private InputAction _focusPreviousAction;
-        private InputAction _focusNextAction;
-        private InputAction _moveAction;
+        private InputAction FocusPreviousAction { get; set; }
+        protected InputAction FocusNextAction { get; private set; }
+        protected InputAction MoveAction { get; private set; }
 
         protected static InputField ActiveInputField
         {
@@ -66,7 +66,7 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (_focusPreviousAction != null && _focusPreviousAction.WasPressedThisFrame())
+            if (FocusPreviousAction != null && FocusPreviousAction.WasPressedThisFrame())
             {
                 // up
                 var previous = InputFields.Last();
@@ -82,7 +82,7 @@ namespace Cgs.Menu
                     previous = inputField;
                 }
             }
-            else if (_focusNextAction != null && _focusNextAction.WasPressedThisFrame())
+            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame())
             {
                 // down
                 var next = InputFields.First();
@@ -108,10 +108,10 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (_moveAction == null || !_moveAction.WasPressedThisFrame())
+            if (MoveAction == null || !MoveAction.WasPressedThisFrame())
                 return;
 
-            var moveVector2 = _moveAction.ReadValue<Vector2>();
+            var moveVector2 = MoveAction.ReadValue<Vector2>();
             // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (moveVector2.y > 0)
             {
@@ -192,9 +192,9 @@ namespace Cgs.Menu
             Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
                 canvasScaler.referenceResolution = ResolutionManager.Resolution;
-            _focusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
-            _focusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
-            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            FocusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
+            FocusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
+            MoveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
         }
 
         private void LateUpdate()
