@@ -63,55 +63,6 @@ namespace Cgs.Decks
 
         private Modal _menu;
 
-/* TODO:
-        private bool IsBlocked => Menu.IsBlocked || nameInputField.isFocused || textInputField.isFocused;
-        private void Update()
-        {
-            if (IsBlocked)
-                return;
-
-            if (newDeckPanel.gameObject.activeSelf)
-            {
-                if (InputManager.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
-                    DoSaveDontOverwrite();
-                else if (InputManager.IsNew && EventSystem.current.currentSelectedGameObject == null)
-                    Clear();
-                else if (InputManager.IsFocusBack && EventSystem.current.currentSelectedGameObject == null)
-                    nameInputField.ActivateInputField();
-                else if (InputManager.IsFocusNext && EventSystem.current.currentSelectedGameObject == null)
-                    textInputField.ActivateInputField();
-                else if (InputManager.IsLoad && EventSystem.current.currentSelectedGameObject == null)
-                    PasteClipboardIntoText();
-                else if (InputManager.IsCancel)
-                    HideNewDeckPanel();
-            }
-            else
-            {
-                if (InputManager.IsVertical)
-                {
-                    if (InputManager.IsUp && !InputManager.WasUp)
-                        SelectPrevious();
-                    else if (InputManager.IsDown && !InputManager.WasDown)
-                        SelectNext();
-                }
-
-                if (InputManager.IsSubmit && loadFromFileButton.interactable)
-                    LoadFromFileAndHide();
-                else if (InputManager.IsSave && shareFileButton.interactable)
-                    Share();
-                else if (InputManager.IsLoad && editFileButton.interactable)
-                    Edit();
-                else if (InputManager.IsNew)
-                    ShowNewDeckPanel();
-                else if (InputManager.IsOption && deleteFileButton.interactable)
-                    PromptForDeleteFile();
-                else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                    ScrollPage(InputManager.IsPageDown);
-                else if (InputManager.IsCancel)
-                    Hide();
-            }
-        }
-*/
         public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null,
             string originalText = null)
         {

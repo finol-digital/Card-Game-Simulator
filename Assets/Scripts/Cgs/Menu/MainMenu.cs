@@ -165,39 +165,6 @@ namespace Cgs.Menu
                 SelectPrevious();
         }
 
-/* TODO:
-        private void Update()
-        {
-            if (CardGameManager.Instance.ModalCanvas != null)
-                return;
-
-            if (InputManager.IsPageVertical)
-            {
-                if (InputManager.IsPageDown && !InputManager.WasPageDown)
-                    SelectNext();
-                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
-                    SelectPrevious();
-            }
-            else if (InputManager.IsPageHorizontal)
-            {
-                if (InputManager.IsPageLeft && !InputManager.WasPageLeft)
-                    SelectPrevious();
-                else if (InputManager.IsPageRight && !InputManager.WasPageRight)
-                    SelectNext();
-            }
-            else if (InputManager.IsHorizontal && EventSystem.current.currentSelectedGameObject == null ||
-                     EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject)
-            {
-                if (InputManager.IsLeft && !InputManager.WasLeft)
-                    SelectPrevious();
-                else if (InputManager.IsRight && !InputManager.WasRight)
-                    SelectNext();
-            }
-            else if (InputManager.IsVertical &&
-                     !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
-        }
-*/
         private static void DeclineWelcomeMessage()
         {
             HasSeenWelcome = true;
