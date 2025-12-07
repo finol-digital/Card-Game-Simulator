@@ -568,7 +568,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Option
+      value: Player/Cancel
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1037,12 +1037,12 @@ PrefabInstance:
     - target: {fileID: 5052349548109549564, guid: 4b3e8d05c729f2e4295e970fa6c02c5d,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 151
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 5052349548109549564, guid: 4b3e8d05c729f2e4295e970fa6c02c5d,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 47
+      value: 46.5
       objectReference: {fileID: 0}
     - target: {fileID: 5487533077849419841, guid: 4b3e8d05c729f2e4295e970fa6c02c5d,
         type: 3}

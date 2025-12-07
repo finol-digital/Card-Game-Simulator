@@ -317,7 +317,7 @@ namespace Cgs.Play.Multiplayer
         {
             Debug.Log($"[CgsNet Player] Requesting new deck {deckName}...");
             CreateCardStackServerRpc(deckName, cards.Select(card => (CgsNetString) card.Id).ToArray(), true,
-                PlayController.Instance.NewDeckPosition, DefaultRotation, isFaceup);
+                PlayController.Instance.NewPlayablePosition, DefaultRotation, isFaceup);
         }
 
         public void RequestNewCardStack(string stackName, IEnumerable<UnityCard> cards, Vector2 position,

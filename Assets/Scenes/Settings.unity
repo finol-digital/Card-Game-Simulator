@@ -3573,7 +3573,7 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: inputActionId
-      value: Settings/Website
+      value: SubMenu/Menu
       objectReference: {fileID: 0}
     - target: {fileID: 2848342772243254878, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}

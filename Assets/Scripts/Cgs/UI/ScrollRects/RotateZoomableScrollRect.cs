@@ -28,6 +28,14 @@ namespace Cgs.UI.ScrollRects
         private const float ZoomThreshold = 0.001f;
         private const float ScrollWheelSensitivity = 20; // Can be overridden by scrollSensitivity
 
+        private static bool IsCtrl => Keyboard.current != null
+                                      && (Keyboard.current.leftCtrlKey.isPressed
+                                          || Keyboard.current.rightCtrlKey.isPressed);
+
+        private static bool IsShift => Keyboard.current != null
+                                       && (Keyboard.current.leftShiftKey.isPressed
+                                           || Keyboard.current.rightShiftKey.isPressed);
+
         public float CurrentRotation
         {
             get => _currentEulerAngles.z;
@@ -63,7 +71,7 @@ namespace Cgs.UI.ScrollRects
 
         public bool ZoomEnabled
         {
-            get => Touch.activeTouches.Count > 1 || InputManager.IsCtrl || scrollSensitivity == 0;
+            get => Touch.activeTouches.Count > 1 || IsCtrl || scrollSensitivity == 0;
             set => scrollSensitivity = value ? 0 : _scrollSensitivity;
         }
 
@@ -104,8 +112,7 @@ namespace Cgs.UI.ScrollRects
 
         public override void OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && !InputManager.IsShift &&
-                Touch.activeTouches.Count <= 1)
+            if (eventData.button == PointerEventData.InputButton.Left && !IsShift && Touch.activeTouches.Count <= 1)
                 return;
 
             PointerPositions[eventData.pointerId] = eventData.position;

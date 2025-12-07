@@ -23,7 +23,7 @@ namespace Cgs.UI
 
         protected virtual bool AllowSwitchOff => true;
 
-        protected List<Toggle> Toggles { get; } = new();
+        private List<Toggle> Toggles { get; } = new();
 
         protected void ClearPanel()
         {

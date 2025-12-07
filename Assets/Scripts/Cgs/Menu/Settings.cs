@@ -36,25 +36,25 @@ namespace Cgs.Menu
         public static bool ButtonTooltipsEnabled
         {
             get => PlayerPrefs.GetInt(PlayerPrefsButtonTooltipsEnabled, DefaultButtonTooltipsEnabled) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsButtonTooltipsEnabled, value ? 1 : 0);
+            private set => PlayerPrefs.SetInt(PlayerPrefsButtonTooltipsEnabled, value ? 1 : 0);
         }
 
         public static bool PreviewOnMouseOver
         {
             get => PlayerPrefs.GetInt(PlayerPrefsPreviewOnMouseOver, DefaultPreviewOnMouseOver) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsPreviewOnMouseOver, value ? 1 : 0);
+            private set => PlayerPrefs.SetInt(PlayerPrefsPreviewOnMouseOver, value ? 1 : 0);
         }
 
         public static bool HideReprints
         {
             get => PlayerPrefs.GetInt(PlayerPrefsHideReprints, 1) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
+            private set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
         }
 
         public static bool DeveloperMode
         {
             get => PlayerPrefs.GetInt(PlayerPrefsDeveloperMode, 0) == 1;
-            set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
+            private set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 
         public ScrollRect scrollRect;
@@ -76,12 +76,14 @@ namespace Cgs.Menu
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed += InputWebsite;
-            InputSystem.actions.FindAction(InputManager.SettingsToolTips).performed += InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed += InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed += InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputWebsite;
+            InputSystem.actions.FindAction(Tags.SettingsToolTips).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsPreviewMouseOver).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsHideReprints).performed += InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsDeveloperMode).performed += InputRedisplay;
         }
 
         private void Start()
@@ -89,16 +91,24 @@ namespace Cgs.Menu
             Redisplay();
         }
 
-        private void Update()
+        private void InputMove(InputAction.CallbackContext context)
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if ((InputManager.IsVertical || InputManager.IsHorizontal) &&
-                EventSystem.current.currentSelectedGameObject == null)
+            if (EventSystem.current.currentSelectedGameObject == null
+                && !Vector2.zero.Equals(InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>()))
                 EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
-            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                ScrollPage(InputManager.IsPageDown);
+        }
+
+        private void InputPage(InputAction.CallbackContext context)
+        {
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
+
+            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
+            if (Mathf.Abs(pageVertical) > 0)
+                ScrollPage(pageVertical < 0);
         }
 
         private void InputRedisplay(InputAction.CallbackContext callbackContext)
@@ -256,12 +266,14 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(InputManager.SettingsWebsite).performed -= InputWebsite;
-            InputSystem.actions.FindAction(InputManager.SettingsToolTips).performed -= InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsPreviewMouseOver).performed -= InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsHideReprints).performed -= InputRedisplay;
-            InputSystem.actions.FindAction(InputManager.SettingsDeveloperMode).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputWebsite;
+            InputSystem.actions.FindAction(Tags.SettingsToolTips).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsPreviewMouseOver).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsHideReprints).performed -= InputRedisplay;
+            InputSystem.actions.FindAction(Tags.SettingsDeveloperMode).performed -= InputRedisplay;
         }
     }
 }

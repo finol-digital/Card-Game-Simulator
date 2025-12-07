@@ -1159,6 +1159,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: inputActionId
+      value: Card/Flip
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: parentTransform
       value: 
       objectReference: {fileID: 540338502651049489}
@@ -1373,6 +1378,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: inputActionId
+      value: Card/SelectPrevious
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: parentTransform
       value: 
       objectReference: {fileID: 1549740424900629763}
@@ -1584,6 +1594,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Save as Deck
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: inputActionId
+      value: Card/SelectNext
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1967,6 +1982,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: inputActionId
+      value: Player/Submit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: parentTransform
       value: 
       objectReference: {fileID: 3008916364598713518}
@@ -2194,6 +2214,11 @@ PrefabInstance:
       propertyPath: tooltip
       value: Delete
       objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: inputActionId
+      value: Player/Delete
+      objectReference: {fileID: 0}
     - target: {fileID: 8688795498816596447, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: m_Text
@@ -2409,6 +2434,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: inputActionId
+      value: Player/Submit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: parentTransform
       value: 
       objectReference: {fileID: 4556392918851206913}
@@ -2494,6 +2524,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: '-'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: inputActionId
+      value: Card/SelectPrevious
       objectReference: {fileID: 0}
     - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
@@ -2619,6 +2654,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: +
+      objectReference: {fileID: 0}
+    - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: inputActionId
+      value: Card/SelectNext
       objectReference: {fileID: 0}
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}

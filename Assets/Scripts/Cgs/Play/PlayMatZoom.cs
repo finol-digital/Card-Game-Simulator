@@ -7,6 +7,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.UI.ScrollRects;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Play
@@ -24,6 +25,15 @@ namespace Cgs.Play
         private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;
 
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
+                                  CardGameManager.Instance.ModalCanvas != null ||
+                                  _playController.scoreboard.nameInputField.isFocused;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleZoomPan;
+        }
+
         private void Start()
         {
             _playController = GetComponent<PlayController>();
@@ -31,7 +41,6 @@ namespace Cgs.Play
 
         private void Update()
         {
-            // Update Visuals
             if (Math.Abs(slider.value - _playController.playArea.CurrentZoom) > Tolerance)
             {
                 slider.value = _playController.playArea.CurrentZoom;
@@ -53,22 +62,25 @@ namespace Cgs.Play
                 sliderCanvasGroup.blocksRaycasts = false;
             }
 
-            // Handle Input
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
-                CardGameManager.Instance.ModalCanvas != null || _playController.scoreboard.nameInputField.isFocused)
+            if (IsBlocked)
                 return;
 
-            if (InputManager.IsSort)
-                _playController.playArea.ZoomEnabled = !_playController.playArea.ZoomEnabled;
-
-            if (!InputManager.IsPageVertical)
+            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
+            if (Mathf.Abs(pageVertical) < PageVerticalSensitivity)
                 return;
+
             if (_playController.playArea.ZoomEnabled)
-                _playController.playArea.CurrentZoom *=
-                    1 - InputManager.FPageVertical * PageVerticalSensitivity * Time.deltaTime;
+                _playController.playArea.CurrentZoom *= 1 - pageVertical * PageVerticalSensitivity * 10;
             else
-                _playController.playArea.verticalNormalizedPosition -=
-                    InputManager.FPageVertical * PageVerticalSensitivity * Time.deltaTime;
+                _playController.playArea.verticalNormalizedPosition -= pageVertical * PageVerticalSensitivity * 10;
+        }
+
+        private void InputToggleZoomPan(InputAction.CallbackContext obj)
+        {
+            if (IsBlocked)
+                return;
+
+            _playController.playArea.ZoomEnabled = !_playController.playArea.ZoomEnabled;
         }
 
         [UsedImplicitly]
@@ -83,6 +95,11 @@ namespace Cgs.Play
         {
             _timeSinceChange = 0;
             _playController.playArea.CurrentZoom = RotateZoomableScrollRect.DefaultZoom;
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleZoomPan;
         }
     }
 }

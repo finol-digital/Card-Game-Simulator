@@ -374,7 +374,7 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Load
+      value: Decks/Load
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -706,11 +706,6 @@ PrefabInstance:
       propertyPath: isBelow
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9078174218668134193, guid: f21d26d7d58ad754090ee1fa5ed1746c,
-        type: 3}
-      propertyPath: inputActionId
-      value: Player/Filter
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -802,7 +797,7 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: inputActionId
-      value: Player/New
+      value: Decks/New
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -1002,7 +997,7 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Save
+      value: Decks/Save
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
@@ -8262,8 +8257,8 @@ MonoBehaviour:
     type: 3}
   tooltip: Zoom
   avoidOverlap: 0
-  isBelow: 1
-  inputActionId: 
+  isBelow: 0
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!224 &3780887782482101513
 RectTransform:
@@ -8441,7 +8436,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/FocusBack
+  inputActionId: Card/SelectPrevious
   parentTransform: {fileID: 0}
 --- !u!114 &4195147244760369757
 MonoBehaviour:
@@ -8829,7 +8824,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/FocusNext
+  inputActionId: Card/SelectNext
   parentTransform: {fileID: 0}
 --- !u!114 &5160683046573473317
 MonoBehaviour:

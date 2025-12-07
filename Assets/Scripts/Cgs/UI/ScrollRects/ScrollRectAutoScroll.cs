@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.UI.ScrollRects
@@ -41,7 +42,8 @@ namespace Cgs.UI.ScrollRects
         private void Update()
         {
             // Scroll via input
-            InputScroll();
+            if (_selectables.Count > 0 && InputSystem.actions.FindAction(Tags.PlayerMove).WasPressedThisFrame())
+                ScrollToSelected(false);
 
             // Scroll via hovering
             if (!_active)
@@ -52,17 +54,6 @@ namespace Cgs.UI.ScrollRects
             else
             {
                 _nextScrollPosition = _scrollRect.normalizedPosition;
-            }
-        }
-
-        private void InputScroll()
-        {
-            if (_selectables.Count <= 0)
-                return;
-
-            if (InputManager.IsHorizontal || InputManager.IsVertical)
-            {
-                ScrollToSelected(false);
             }
         }
 
@@ -82,12 +73,12 @@ namespace Cgs.UI.ScrollRects
             if (quickScroll)
             {
                 _scrollRect.normalizedPosition =
-                    new Vector2(0, 1 - (selectedIndex / ((float) _selectables.Count - 1)));
+                    new Vector2(0, 1 - (selectedIndex / ((float)_selectables.Count - 1)));
                 _nextScrollPosition = _scrollRect.normalizedPosition;
             }
             else
             {
-                _nextScrollPosition = new Vector2(0, 1 - (selectedIndex / ((float) _selectables.Count - 1)));
+                _nextScrollPosition = new Vector2(0, 1 - (selectedIndex / ((float)_selectables.Count - 1)));
             }
         }
 

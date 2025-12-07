@@ -7,6 +7,7 @@ using Cgs.CardGameView.Viewer;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Cards
@@ -15,6 +16,12 @@ namespace Cgs.Cards
     {
         public SearchResults results;
         public ScrollRect scrollRect;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+        }
 
         private void Start()
         {
@@ -53,40 +60,42 @@ namespace Cgs.Cards
             }
         }
 
-        private void Update()
+        private void InputMove(InputAction.CallbackContext callbackContext)
         {
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
                 return;
 
-            if (InputManager.IsVertical)
-            {
-                if (InputManager.IsDown && !InputManager.WasDown)
-                    SelectDown();
-                else if (InputManager.IsUp && !InputManager.WasUp)
-                    SelectUp();
-            }
-            else if (InputManager.IsHorizontal)
-            {
-                if (InputManager.IsLeft && !InputManager.WasLeft)
-                    SelectLeft();
-                else if (InputManager.IsRight && !InputManager.WasRight)
-                    SelectRight();
-            }
+            var moveVector2 = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
+            if (moveVector2.y > 0)
+                SelectDown();
+            else if (moveVector2.y < 0)
+                SelectUp();
+            else if (moveVector2.x < 0)
+                SelectLeft();
+            else if (moveVector2.x > 0)
+                SelectRight();
+        }
 
-            if (InputManager.IsPageVertical)
+        private void InputPage(InputAction.CallbackContext callbackContext)
+        {
+            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
+                return;
+
+            var pageVector2 = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>();
+            if (Mathf.Abs(pageVector2.y) > 0)
             {
                 if (CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
                     return;
-                if (InputManager.IsPageDown && !InputManager.WasPageDown)
+                if (pageVector2.y < 0)
                     PageDown();
-                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
+                else if (pageVector2.y > 0)
                     PageUp();
             }
-            else if (InputManager.IsPageHorizontal)
+            else
             {
-                if (InputManager.IsPageLeft && !InputManager.WasPageLeft)
+                if (pageVector2.x < 0)
                     PageLeft();
-                else if (InputManager.IsPageRight && !InputManager.WasPageRight)
+                else if (pageVector2.x > 0)
                     PageRight();
             }
         }
@@ -249,6 +258,12 @@ namespace Cgs.Cards
         public void PageRight()
         {
             results.IncrementPage();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
         }
     }
 }

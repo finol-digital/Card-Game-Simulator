@@ -20,7 +20,11 @@ namespace Cgs.Play
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayGameToken).performed += InputToken;
+            InputSystem.actions.FindAction(Tags.PlayGameSettings).performed += InputPlaySettings;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputCardsFilter;
+            InputSystem.actions.FindAction(Tags.PlayGameDie).performed += InputDie;
+            InputSystem.actions.FindAction(Tags.PlayGameToken).performed += InputToken;
         }
 
 #if CGS_SINGLEPLAYER
@@ -31,25 +35,18 @@ namespace Cgs.Play
         }
 #endif
 
-        private void Update()
+        public void Show()
+        {
+            panels.SetActive(true);
+        }
+
+        private void InputPlaySettings(InputAction.CallbackContext callbackContext)
         {
             if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
                 || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
                 return;
 
-            if (InputManager.IsSort)
-                ShowPlaySettingsMenu();
-            else if (InputManager.IsNew)
-                ShowDeckMenu();
-            else if (InputManager.IsLoad)
-                CreateDie();
-            else if (InputManager.IsFilter)
-                ShowCardsMenu();
-        }
-
-        public void Show()
-        {
-            panels.SetActive(true);
+            ShowPlaySettingsMenu();
         }
 
         [UsedImplicitly]
@@ -58,16 +55,43 @@ namespace Cgs.Play
             controller.ShowPlaySettingsMenu();
         }
 
+        private void InputDecksLoad(InputAction.CallbackContext callbackContext)
+        {
+            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                return;
+
+            ShowDeckMenu();
+        }
+
         [UsedImplicitly]
         public void ShowDeckMenu()
         {
             controller.ShowDeckMenu();
         }
 
+        private void InputCardsFilter(InputAction.CallbackContext callbackContext)
+        {
+            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                return;
+
+            ShowCardsMenu();
+        }
+
         [UsedImplicitly]
         public void ShowCardsMenu()
         {
             controller.ShowCardsMenu();
+        }
+
+        private void InputDie(InputAction.CallbackContext callbackContext)
+        {
+            if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
+                || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
+                return;
+
+            CreateDie();
         }
 
         [UsedImplicitly]
@@ -113,7 +137,11 @@ namespace Cgs.Play
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayGameToken).performed -= InputToken;
+            InputSystem.actions.FindAction(Tags.PlayGameSettings).performed -= InputPlaySettings;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputCardsFilter;
+            InputSystem.actions.FindAction(Tags.PlayGameDie).performed -= InputDie;
+            InputSystem.actions.FindAction(Tags.PlayGameToken).performed -= InputToken;
         }
     }
 }

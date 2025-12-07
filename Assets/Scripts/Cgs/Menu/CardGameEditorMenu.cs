@@ -16,6 +16,7 @@ using Newtonsoft.Json.Serialization;
 using SFB;
 using SimpleFileBrowser;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -54,6 +55,8 @@ namespace Cgs.Menu
         public Image playMatImage;
         public Text backsFolderText;
         public Button saveButton;
+
+        public override bool IsBlocked => base.IsBlocked || inputFields.Any(inputField => inputField.isFocused);
 
         private DownloadMenu Downloader =>
             _downloader ??= Instantiate(downloadMenuPrefab).GetOrAddComponent<DownloadMenu>();
@@ -143,6 +146,18 @@ namespace Cgs.Menu
 
         private bool _isEdit;
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputImportFile;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputDownloadWebBack;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputImportFileBack;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputDownloadWebPlayMat;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputImportFilePlayMat;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+        }
+
         public void ShowNew()
         {
             Show();
@@ -197,28 +212,74 @@ namespace Cgs.Menu
             _isEdit = true;
         }
 
-        private void Update()
+        #region Input
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
         {
-            if (!IsFocused || inputFields.Any(inputField => inputField.isFocused))
+            if (IsBlocked)
                 return;
 
-            if ((InputManager.IsSubmit || InputManager.IsNew) && saveButton.interactable)
-                StartCreation();
-            else if (InputManager.IsSort)
-                DownloadBannerImageFromWeb();
-            else if (InputManager.IsFilter)
-                ImportBannerImageFromFile();
-            else if (InputManager.IsLoad)
-                DownloadCardBackImageFromWeb();
-            else if (InputManager.IsSave)
-                ImportCardBackImageFromFile();
-            else if (InputManager.IsFocusNext)
-                DownloadPlayMatImageFromWeb();
-            else if (InputManager.IsFocusBack)
-                ImportPlayMatImageFromFile();
-            else if (InputManager.IsCancel || InputManager.IsOption)
-                Hide();
+            Hide();
         }
+
+        private void InputDownloadWeb(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            DownloadBannerImageFromWeb();
+        }
+
+        private void InputImportFile(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ImportBannerImageFromFile();
+        }
+
+        private void InputDownloadWebBack(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            DownloadCardBackImageFromWeb();
+        }
+
+        private void InputImportFileBack(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ImportCardBackImageFromFile();
+        }
+
+        private void InputDownloadWebPlayMat(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            DownloadPlayMatImageFromWeb();
+        }
+
+        private void InputImportFilePlayMat(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ImportPlayMatImageFromFile();
+        }
+
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (saveButton.interactable)
+                StartCreation();
+        }
+
+        #endregion
 
         #region Banner
 
@@ -495,7 +556,8 @@ namespace Cgs.Menu
 
             if (!Directory.Exists(unityCardGame.GameDirectoryPath))
                 Directory.CreateDirectory(unityCardGame.GameDirectoryPath);
-            var defaultContractResolver = new DefaultContractResolver {NamingStrategy = new CamelCaseNamingStrategy()};
+            var defaultContractResolver = new DefaultContractResolver
+                { NamingStrategy = new CamelCaseNamingStrategy() };
             var jsonSerializerSettings = new JsonSerializerSettings
             {
                 ContractResolver = defaultContractResolver,
@@ -564,6 +626,18 @@ namespace Cgs.Menu
                     CardGameManager.Instance.Messenger.Show(ImportBackFailedWarningMessage + backsToImport[i].Name);
                 }
             }
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputImportFile;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputDownloadWebBack;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputImportFileBack;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputDownloadWebPlayMat;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputImportFilePlayMat;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
         }
     }
 }

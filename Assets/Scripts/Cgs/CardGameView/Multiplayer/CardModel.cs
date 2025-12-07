@@ -187,6 +187,11 @@ namespace Cgs.CardGameView.Multiplayer
             _isFacedownNetworkVariable.OnValueChanged += OnChangeIsFacedown;
         }
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.CardZoom).performed += InputZoom;
+        }
+
         protected override void OnNetworkSpawnPlayable()
         {
             _isFacedown = _isFacedownNetworkVariable.Value;
@@ -253,12 +258,20 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnUpdatePlayable()
         {
-            if (InputManager.IsOption && CardViewer.Instance.PreviewCardModel == this || HoldTime > ZoomHoldTime)
+            if (HoldTime > ZoomHoldTime)
                 RequestZoomOnThis();
 
             UpdateCheckForPlaceHolder();
 
             UpdateForMovingToPlaceHolder();
+        }
+
+        private void InputZoom(InputAction.CallbackContext context)
+        {
+            if (EventSystem.current.currentSelectedGameObject != gameObject)
+                return;
+
+            RequestZoomOnThis();
         }
 
         private void RequestZoomOnThis()
@@ -808,6 +821,11 @@ namespace Cgs.CardGameView.Multiplayer
                 Destroy(PlaceHolder.gameObject);
 
             base.OnDestroy();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.CardZoom).performed -= InputZoom;
         }
     }
 }

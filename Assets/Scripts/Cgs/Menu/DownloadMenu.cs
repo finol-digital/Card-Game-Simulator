@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -21,41 +22,62 @@ namespace Cgs.Menu
 
         private DownloadCoroutineDelegate _downloadCoroutine;
 
-        private void Update()
-        {
-            if (!IsFocused || urlInputField.isFocused)
-                return;
+        public override bool IsBlocked => base.IsBlocked || urlInputField.isFocused;
 
-            if (InputManager.IsSubmit && downloadButton.interactable)
-                StartDownload();
-            else if (InputManager.IsSort && urlInputField.interactable)
-                Clear();
-            else if (InputManager.IsFilter && urlInputField.interactable)
-                Paste();
-            else if (InputManager.IsFocus && urlInputField.interactable)
-                urlInputField.ActivateInputField();
-            else if (InputManager.IsOption && gamesButton.gameObject.activeSelf)
-                GoToCgsGamesBrowser();
-            else if (InputManager.IsCancel)
-                Hide();
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed += InputCopy;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine, bool showGamesButton = false)
+        public void Show(string label, string prompt, DownloadCoroutineDelegate downloadCoroutine,
+            bool showGamesButton = false)
         {
             Show();
 
             labelText.text = label;
-            ((Text) urlInputField.placeholder).text = prompt;
+            ((Text)urlInputField.placeholder).text = prompt;
             _downloadCoroutine = downloadCoroutine;
 
             if (!showGamesButton)
                 gamesButton.gameObject.SetActive(false);
         }
 
+        private void InputFocus(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (urlInputField.interactable)
+                urlInputField.ActivateInputField();
+        }
+
+        private void InputCopy(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (urlInputField.interactable)
+                Clear();
+        }
+
         [UsedImplicitly]
         public void Clear()
         {
             urlInputField.text = string.Empty;
+        }
+
+        private void InputPaste(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (urlInputField.interactable)
+                Paste();
         }
 
         [UsedImplicitly]
@@ -69,6 +91,15 @@ namespace Cgs.Menu
         public void CheckDownloadUrl(string url)
         {
             downloadButton.interactable = Uri.IsWellFormedUriString(url.Trim(), UriKind.Absolute);
+        }
+
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (downloadButton.interactable)
+                StartDownload();
         }
 
         [UsedImplicitly]
@@ -88,15 +119,41 @@ namespace Cgs.Menu
             yield return _downloadCoroutine(url);
             Debug.Log("DownloadMenu: Download end");
 
-            // ReSharper disable once Unity.InefficientPropertyAccess
             urlInputField.interactable = true;
             Hide();
+        }
+
+        private void InputMenu(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (gamesButton.gameObject.activeSelf)
+                GoToCgsGamesBrowser();
         }
 
         [UsedImplicitly]
         public void GoToCgsGamesBrowser()
         {
             Application.OpenURL(Tags.CgsGamesBrowseUrl);
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed -= InputCopy;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

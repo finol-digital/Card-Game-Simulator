@@ -625,7 +625,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/FocusNext
+  inputActionId: Card/SelectNext
   parentTransform: {fileID: 0}
 --- !u!1 &1391088035837496
 GameObject:
@@ -807,7 +807,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
-  inputActionId: 
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &1489887222482700
 GameObject:
@@ -1447,7 +1447,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/FocusBack
+  inputActionId: Card/SelectPrevious
   parentTransform: {fileID: 0}
 --- !u!1 &278163115200097408
 GameObject:
@@ -1649,7 +1649,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: 
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &780418392263964738
 GameObject:
@@ -1944,7 +1944,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/FocusNext
+  inputActionId: Card/SelectNext
   parentTransform: {fileID: 0}
 --- !u!1 &1158087559228869626
 GameObject:
@@ -2630,7 +2630,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
-  inputActionId: 
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &5520510946224163991
 GameObject:
@@ -3512,7 +3512,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
-  inputActionId: 
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &7845637863157837290
 GameObject:
@@ -4066,7 +4066,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/FocusBack
+  inputActionId: Card/SelectPrevious
   parentTransform: {fileID: 0}
 --- !u!1001 &950190529897883528
 PrefabInstance:

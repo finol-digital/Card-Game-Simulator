@@ -5,6 +5,7 @@
 using System;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -18,6 +19,14 @@ namespace Cgs.Menu
 
         public Button button2;
         public Text text2;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
 
         public void Show(string prompt, Tuple<string, UnityAction> option1, Tuple<string, UnityAction> option2)
         {
@@ -38,21 +47,47 @@ namespace Cgs.Menu
             text2.text = button2Text;
         }
 
-        private void Update()
+        private void InputMove(InputAction.CallbackContext callbackContext)
         {
-            if (!IsFocused)
+            if (IsBlocked)
                 return;
 
-            if (InputManager.IsVertical && EventSystem.current.currentSelectedGameObject != button1.gameObject
-                                        && EventSystem.current.currentSelectedGameObject != button2.gameObject &&
-                                        !EventSystem.current.alreadySelecting)
+            if (EventSystem.current.currentSelectedGameObject != button1.gameObject
+                && EventSystem.current.currentSelectedGameObject != button2.gameObject
+                && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(button1.gameObject);
-            else if (InputManager.IsNew)
-                button1.onClick.Invoke();
-            else if (InputManager.IsLoad)
-                button2.onClick.Invoke();
-            else if (InputManager.IsCancel)
-                Hide();
+        }
+
+        private void InputFocusPrevious(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            button1.onClick.Invoke();
+        }
+
+        private void InputFocusNext(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            button2.onClick.Invoke();
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

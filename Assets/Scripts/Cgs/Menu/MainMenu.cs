@@ -76,16 +76,16 @@ namespace Cgs.Menu
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
             CardGameManager.Instance.OnSceneActions.Add(SetCopyright);
 
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectPrevious).performed += InputSelectPrevious;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectNext).performed += InputSelectNext;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed +=
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectPrevious).performed += InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectNext).performed += InputSelectNext;
+            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed +=
                 InputShowGamesManagementMenu;
-            InputSystem.actions.FindAction(InputManager.MainMenuStartGame).performed += InputStartGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuJoinGame).performed += InputJoinGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuEditDeck).performed += InputEditDeck;
-            InputSystem.actions.FindAction(InputManager.MainMenuExploreCards).performed += InputExploreCards;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowSettings).performed += InputShowSettings;
+            InputSystem.actions.FindAction(Tags.MainMenuStartGame).performed += InputStartGame;
+            InputSystem.actions.FindAction(Tags.MainMenuJoinGame).performed += InputJoinGame;
+            InputSystem.actions.FindAction(Tags.MainMenuEditDeck).performed += InputEditDeck;
+            InputSystem.actions.FindAction(Tags.MainMenuExploreCards).performed += InputExploreCards;
+            InputSystem.actions.FindAction(Tags.MainMenuSettings).performed += InputShowSettings;
         }
 
         private void SetCopyright()
@@ -163,38 +163,6 @@ namespace Cgs.Menu
                 SelectNext();
             else if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Right)
                 SelectPrevious();
-        }
-
-        private void Update()
-        {
-            if (CardGameManager.Instance.ModalCanvas != null)
-                return;
-
-            if (InputManager.IsPageVertical)
-            {
-                if (InputManager.IsPageDown && !InputManager.WasPageDown)
-                    SelectNext();
-                else if (InputManager.IsPageUp && !InputManager.WasPageUp)
-                    SelectPrevious();
-            }
-            else if (InputManager.IsPageHorizontal)
-            {
-                if (InputManager.IsPageLeft && !InputManager.WasPageLeft)
-                    SelectPrevious();
-                else if (InputManager.IsPageRight && !InputManager.WasPageRight)
-                    SelectNext();
-            }
-            else if (InputManager.IsHorizontal && EventSystem.current.currentSelectedGameObject == null ||
-                     EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject)
-            {
-                if (InputManager.IsLeft && !InputManager.WasLeft)
-                    SelectPrevious();
-                else if (InputManager.IsRight && !InputManager.WasRight)
-                    SelectNext();
-            }
-            else if (InputManager.IsVertical &&
-                     !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
-                EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
         }
 
         private static void DeclineWelcomeMessage()
@@ -473,16 +441,16 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(InputManager.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectPrevious).performed -= InputSelectPrevious;
-            InputSystem.actions.FindAction(InputManager.MainMenuSelectNext).performed -= InputSelectNext;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowGamesManagementMenu).performed -=
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectPrevious).performed -= InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.MainMenuSelectNext).performed -= InputSelectNext;
+            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed -=
                 InputShowGamesManagementMenu;
-            InputSystem.actions.FindAction(InputManager.MainMenuStartGame).performed -= InputStartGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuJoinGame).performed -= InputJoinGame;
-            InputSystem.actions.FindAction(InputManager.MainMenuEditDeck).performed -= InputEditDeck;
-            InputSystem.actions.FindAction(InputManager.MainMenuExploreCards).performed -= InputExploreCards;
-            InputSystem.actions.FindAction(InputManager.MainMenuShowSettings).performed -= InputShowSettings;
+            InputSystem.actions.FindAction(Tags.MainMenuStartGame).performed -= InputStartGame;
+            InputSystem.actions.FindAction(Tags.MainMenuJoinGame).performed -= InputJoinGame;
+            InputSystem.actions.FindAction(Tags.MainMenuEditDeck).performed -= InputEditDeck;
+            InputSystem.actions.FindAction(Tags.MainMenuExploreCards).performed -= InputExploreCards;
+            InputSystem.actions.FindAction(Tags.MainMenuSettings).performed -= InputShowSettings;
         }
     }
 }

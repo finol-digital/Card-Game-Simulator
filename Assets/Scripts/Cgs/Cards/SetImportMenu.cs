@@ -14,6 +14,7 @@ using SimpleFileBrowser;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -93,31 +94,34 @@ namespace Cgs.Cards
 
         private UnityAction _onCreationCallback;
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSelectFolder;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
         public void Show(UnityAction onCreationCallback)
         {
             Show();
 
             BackFaceOptions.Clear();
-            BackFaceOptions.Add(new Dropdown.OptionData() {text = string.Empty});
+            BackFaceOptions.Add(new Dropdown.OptionData() { text = string.Empty });
             foreach (var backFaceKey in CardGameManager.Current.CardBackFaceImageSprites.Keys)
-                BackFaceOptions.Add(new Dropdown.OptionData() {text = backFaceKey});
+                BackFaceOptions.Add(new Dropdown.OptionData() { text = backFaceKey });
             backSelector.options = BackFaceOptions;
             backSelector.value = 0;
 
             _onCreationCallback = onCreationCallback;
         }
 
-        private void Update()
+        private void InputSelectFolder(InputAction.CallbackContext callbackContext)
         {
-            if (!IsFocused || !WasFocused)
+            if (IsBlocked)
                 return;
 
-            if (InputManager.IsSubmit && importButton.interactable)
-                StartImport();
-            if (InputManager.IsLoad && importButton.interactable)
+            if (importButton.interactable)
                 SelectFolder();
-            else if (InputManager.IsCancel)
-                Hide();
         }
 
         [UsedImplicitly]
@@ -135,6 +139,15 @@ namespace Cgs.Cards
         private void ValidateImportButton()
         {
             importButton.interactable = FileBrowserHelpers.DirectoryExists(SetFolderPath);
+        }
+
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (importButton.interactable)
+                StartImport();
         }
 
         [UsedImplicitly]
@@ -174,7 +187,7 @@ namespace Cgs.Cards
             {
                 try
                 {
-                    ProgressPercentage = (float) i / cardCount;
+                    ProgressPercentage = (float)i / cardCount;
                     var fileName = cardPathsToImport[i].Name;
                     var end = fileName.LastIndexOf(CardGameManager.Current.CardImageFileType,
                         StringComparison.Ordinal);
@@ -194,10 +207,12 @@ namespace Cgs.Cards
                         var fileInfo = new FileInfo(card.ImageFilePath);
                         if (fileInfo.Exists && fileInfo.Length > ImageQueueService.MaxImageFileSizeBytes)
                         {
-                            var sizeWarningMessage = string.Format(ImageQueueService.SizeWarningMessage, card.Name, card.Id);
+                            var sizeWarningMessage =
+                                string.Format(ImageQueueService.SizeWarningMessage, card.Name, card.Id);
                             Debug.LogWarning(sizeWarningMessage);
                             CardGameManager.Instance.Messenger.Show(sizeWarningMessage, true);
                         }
+
                         CardGameManager.Current.Add(card, false);
                     }
                 }
@@ -225,6 +240,21 @@ namespace Cgs.Cards
 
             ValidateImportButton();
             Hide();
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSelectFolder;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

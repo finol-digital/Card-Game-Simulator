@@ -2440,11 +2440,16 @@ PrefabInstance:
     - target: {fileID: 6356871470250104893, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -20.25
       objectReference: {fileID: 0}
     - target: {fileID: 7620795604950235388, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: -25.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8055875901642318357, guid: 6c8f698bdb10af641a0fdff4f6f16781,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8661135368498000168, guid: 6c8f698bdb10af641a0fdff4f6f16781,

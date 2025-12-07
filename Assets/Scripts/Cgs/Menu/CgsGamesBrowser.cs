@@ -9,6 +9,7 @@ using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -18,8 +19,6 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Modal))]
     public class CgsGamesBrowser : SelectionPanel
     {
-        public const string CgsGamesBrowseApiUrl = "https://cgs.games/api/browse";
-
         protected override bool AllowSwitchOff => false;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
@@ -30,6 +29,16 @@ namespace Cgs.Menu
 
         private int _selectedGameId;
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
         private void Start()
         {
             StartCoroutine(RunRefreshCoroutine());
@@ -39,7 +48,7 @@ namespace Cgs.Menu
         {
             ClearPanel();
 
-            using var request = UnityWebRequest.Get(CgsGamesBrowseApiUrl);
+            using var request = UnityWebRequest.Get(Tags.CgsGamesBrowseApiUrl);
 
             yield return request.SendWebRequest();
 
@@ -61,31 +70,6 @@ namespace Cgs.Menu
             BuildGameSelectionOptions();
         }
 
-        private void Update()
-        {
-            if (!Menu.IsFocused || _gameOptions.Count < 1)
-                return;
-
-            if (InputManager.IsVertical)
-            {
-                if (InputManager.IsUp && !InputManager.WasUp)
-                    SelectPrevious();
-                else if (InputManager.IsDown && !InputManager.WasDown)
-                    SelectNext();
-            }
-
-            if (InputManager.IsOption)
-                GoToCgsGamesBrowser();
-            else if (InputManager.IsLoad)
-                Refresh();
-            else if (InputManager.IsSubmit)
-                Import();
-            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                ScrollPage(InputManager.IsPageDown);
-            else if (InputManager.IsCancel)
-                Hide();
-        }
-
         public void Show()
         {
             Menu.Show();
@@ -97,6 +81,28 @@ namespace Cgs.Menu
             Rebuild(_gameOptions, SelectGame, _selectedGameId);
         }
 
+        private void InputMove(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            var moveVertical = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>().y;
+            if (moveVertical > 0 && _gameOptions.Count > 0)
+                SelectPrevious();
+            else if (moveVertical < 0 && _gameOptions.Count > 0)
+                SelectNext();
+        }
+
+        private void InputPage(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
+            if (Mathf.Abs(pageVertical) > 0)
+                ScrollPage(pageVertical < 0);
+        }
+
         [UsedImplicitly]
         public void SelectGame(Toggle toggle, int gameId)
         {
@@ -104,10 +110,27 @@ namespace Cgs.Menu
                 _selectedGameId = gameId;
         }
 
+        private void InputMenu(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            GoToCgsGamesBrowser();
+        }
+
         [UsedImplicitly]
         public void GoToCgsGamesBrowser()
         {
             Application.OpenURL(Tags.CgsGamesBrowseUrl);
+        }
+
+        private void InputLoad(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            if (_gameOptions.Count > 0)
+                Refresh();
         }
 
         [UsedImplicitly]
@@ -117,6 +140,15 @@ namespace Cgs.Menu
             StartCoroutine(RunRefreshCoroutine());
         }
 
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            if (_gameOptions.Count > 0)
+                Import();
+        }
+
         [UsedImplicitly]
         public void Import()
         {
@@ -124,10 +156,28 @@ namespace Cgs.Menu
             Hide();
         }
 
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            Hide();
+        }
+
         [UsedImplicitly]
         public void Hide()
         {
             Menu.Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

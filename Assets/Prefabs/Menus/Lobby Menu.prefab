@@ -1755,7 +1755,7 @@ PrefabInstance:
     - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: inputActionId
-      value: Player/New
+      value: Decks/New
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
