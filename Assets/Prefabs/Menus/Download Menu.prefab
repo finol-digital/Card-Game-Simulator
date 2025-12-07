@@ -882,7 +882,7 @@ PrefabInstance:
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Option
+      value: SubMenu/Menu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1449,7 +1449,7 @@ PrefabInstance:
     - target: {fileID: 2150377159090348618, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Filter
+      value: SubMenu/Paste
       objectReference: {fileID: 0}
     - target: {fileID: 2629111982971497285, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
@@ -1516,7 +1516,7 @@ PrefabInstance:
     - target: {fileID: 7793500115142644863, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Sort
+      value: SubMenu/Copy
       objectReference: {fileID: 0}
     - target: {fileID: 9057614825002507373, guid: 1ab22cc3401977e43821548819f8b3ef,
         type: 3}

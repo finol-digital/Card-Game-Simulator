@@ -1601,7 +1601,7 @@ PrefabInstance:
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Option
+      value: Player/Delete
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1819,7 +1819,7 @@ PrefabInstance:
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Load
+      value: Cards/Edit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2596,7 +2596,7 @@ PrefabInstance:
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: inputActionId
-      value: Player/New
+      value: Cards/New
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2929,7 +2929,7 @@ PrefabInstance:
     - target: {fileID: 9078174218668134193, guid: f21d26d7d58ad754090ee1fa5ed1746c,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Filter
+      value: Cards/Filter
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -151,6 +151,8 @@ MonoBehaviour:
   tooltip: Filter
   avoidOverlap: 0
   isBelow: 0
+  inputActionId: Cards/Filter
+  parentTransform: {fileID: 0}
 --- !u!1 &7847617374993802598
 GameObject:
   m_ObjectHideFlags: 0

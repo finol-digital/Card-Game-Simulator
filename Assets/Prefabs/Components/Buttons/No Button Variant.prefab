@@ -147,7 +147,7 @@ PrefabInstance:
     - target: {fileID: 7535159269639633972, guid: 06f7fede5f8506f4aaaca01736a75a9b,
         type: 3}
       propertyPath: inputActionId
-      value: Player/Option
+      value: SubMenu/FocusNext
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
