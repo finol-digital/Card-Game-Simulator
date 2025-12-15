@@ -431,7 +431,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download iOS Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-iOS
           path: build/iOS
@@ -479,7 +479,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download Android Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-Android
           path: build/Android
@@ -515,7 +515,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download Android Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-Android
           path: build/Android
@@ -555,7 +555,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download WebGL Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-WebGL
           path: build/WebGL
@@ -579,7 +579,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download WebGL Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-WebGL
           path: build/WebGL
@@ -603,7 +603,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download StandaloneOSX Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
@@ -708,22 +708,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download StandaloneWindows Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneWindows
           path: build/StandaloneWindows
       - name: Download StandaloneLinux64 Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneLinux64
           path: build/StandaloneLinux64
       - name: Download StandaloneWindows64 Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneWindows64
           path: build/StandaloneWindows64
       - name: Download App
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
@@ -797,7 +797,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download WSAPlayer Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
