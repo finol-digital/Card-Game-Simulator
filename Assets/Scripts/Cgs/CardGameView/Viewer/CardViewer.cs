@@ -286,11 +286,12 @@ namespace Cgs.CardGameView.Viewer
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            if (_page != null && _page.WasPressedThisFrame() && Mathf.Abs(_page.ReadValue<Vector2>().y) > 0)
+            var pageVertical = _page?.ReadValue<Vector2>().y ?? 0;
+            if (_page != null && _page.WasPressedThisFrame() && Mathf.Abs(pageVertical) > 0)
             {
-                maximalScrollRect.verticalNormalizedPosition = _page.ReadValue<Vector2>().y < 0
-                    ? Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f)
-                    : Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f);
+                maximalScrollRect.verticalNormalizedPosition = pageVertical < 0
+                    ? Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f)
+                    : Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition + 0.1f);
             }
         }
 

@@ -27,6 +27,7 @@ namespace Cgs.Play
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                                   CardGameManager.Instance.ModalCanvas != null ||
+                                  _playController.menu.panels.activeSelf ||
                                   _playController.scoreboard.nameInputField.isFocused;
 
         private void OnEnable()
@@ -70,7 +71,7 @@ namespace Cgs.Play
                 return;
 
             if (_playController.playArea.ZoomEnabled)
-                _playController.playArea.CurrentZoom *= 1 - pageVertical * PageVerticalSensitivity * 10;
+                _playController.playArea.CurrentZoom *= Mathf.Clamp(1 - pageVertical * PageVerticalSensitivity, 0.5f, 1.5f);
             else
                 _playController.playArea.verticalNormalizedPosition -= pageVertical * PageVerticalSensitivity * 10;
         }

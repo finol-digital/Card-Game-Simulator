@@ -90,7 +90,7 @@ namespace Cgs.CardGameView.Viewer
             if (!_canvasGroup.interactable)
                 return;
 
-            if (moveButton.interactable)
+            if (moveButton.interactable && CardViewer.Instance.SelectedCardModel != null)
                 Move(CardViewer.Instance.SelectedCardModel);
         }
 
@@ -110,7 +110,7 @@ namespace Cgs.CardGameView.Viewer
             if (!_canvasGroup.interactable)
                 return;
 
-            if (rotateButton.interactable)
+            if (rotateButton.interactable && CardViewer.Instance.SelectedCardModel != null)
                 Rotate(CardViewer.Instance.SelectedCardModel);
         }
 
@@ -136,7 +136,7 @@ namespace Cgs.CardGameView.Viewer
             if (!_canvasGroup.interactable)
                 return;
 
-            if (tapButton.interactable)
+            if (tapButton.interactable && CardViewer.Instance.SelectedCardModel != null)
                 Tap(CardViewer.Instance.SelectedCardModel);
         }
 
@@ -168,7 +168,7 @@ namespace Cgs.CardGameView.Viewer
             if (!_canvasGroup.interactable)
                 return;
 
-            if (flipButton.interactable)
+            if (flipButton.interactable && CardViewer.Instance.SelectedCardModel != null)
                 Flip(CardViewer.Instance.SelectedCardModel);
         }
 
@@ -207,7 +207,7 @@ namespace Cgs.CardGameView.Viewer
             if (!_canvasGroup.interactable)
                 return;
 
-            if (discardButton.interactable)
+            if (discardButton.interactable && CardViewer.Instance.SelectedCardModel != null)
                 Discard(CardViewer.Instance.SelectedCardModel);
         }
 

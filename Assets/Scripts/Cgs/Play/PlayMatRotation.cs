@@ -28,8 +28,8 @@ namespace Cgs.Play
         private bool _rotationEnabled;
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
-                                  _playController.menu.panels.activeSelf ||
                                   CardGameManager.Instance.ModalCanvas != null ||
+                                  _playController.menu.panels.activeSelf ||
                                   _playController.scoreboard.nameInputField.isFocused;
 
         private void OnEnable()

@@ -78,7 +78,7 @@ namespace Cgs.Menu
                 EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
             }
 
-            if (_submitAction.WasPressedThisFrame())
+            if (_submitAction != null && _submitAction.WasPressedThisFrame())
             {
                 if (yesButton.gameObject.activeInHierarchy)
                     yesButton.onClick?.Invoke();
@@ -87,9 +87,9 @@ namespace Cgs.Menu
             }
             else if (FocusNextAction.WasPressedThisFrame() && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
-            else if (_shareAction.WasPressedThisFrame())
+            else if (_shareAction != null && _shareAction.WasPressedThisFrame())
                 CopyShare();
-            else if (_cancelAction.WasPressedThisFrame())
+            else if (_cancelAction != null && _cancelAction.WasPressedThisFrame())
                 OkClose();
         }
 
