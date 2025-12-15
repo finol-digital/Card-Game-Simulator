@@ -52,7 +52,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: lfs-cache
         with:
           path: .git/lfs
@@ -63,7 +63,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: Library
           key: Library-test-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -112,7 +112,7 @@ jobs:
         with:
           lfs: true
       - name: Cache Library
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: Library
           key: Library-lint-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -191,7 +191,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: lfs-cache
         with:
           path: .git/lfs
@@ -206,7 +206,7 @@ jobs:
         with:
           large-packages: false
       - name: Cache Library
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: Library
           key: Library-buildLinux-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -229,7 +229,7 @@ jobs:
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
           androidTargetSdkVersion: AndroidApiLevel36
       - name: Upload Build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && matrix.targetPlatform == 'StandaloneLinux64')
         with:
           path: build/${{ matrix.targetPlatform }}
@@ -277,7 +277,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: lfs-cache
         with:
           path: .git/lfs
@@ -288,7 +288,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: Library
           key: Library-buildProfiles-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -309,7 +309,7 @@ jobs:
           buildProfile: ${{ matrix.buildProfile }}
           buildMethod: Cgs.Editor.BuildCgs.BuildWithProfile
       - name: Upload Build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform)
         with:
           path: build/${{ matrix.targetPlatform }}
@@ -347,7 +347,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: lfs-cache
         with:
           path: .git/lfs
@@ -358,7 +358,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: Library
           key: Library-buildMac-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -395,12 +395,12 @@ jobs:
           ./fastlane/sign-mac-build.sh
       - name: Upload Build
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
       - name: Upload App
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, 'StandaloneOSX') || contains(github.event.inputs.workflow_mode, 'Steam')
         with:
           path: build/StandaloneOSX/Card Game Simulator.app
@@ -431,7 +431,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download iOS Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-iOS
           path: build/iOS
@@ -479,7 +479,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download Android Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-Android
           path: build/Android
@@ -515,7 +515,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download Android Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-Android
           path: build/Android
@@ -555,7 +555,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download WebGL Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-WebGL
           path: build/WebGL
@@ -579,7 +579,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download WebGL Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-WebGL
           path: build/WebGL
@@ -603,7 +603,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download StandaloneOSX Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneOSX
           path: build/StandaloneOSX
@@ -647,7 +647,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: lfs-cache
         with:
           path: .git/lfs
@@ -658,7 +658,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: Library
           key: Library-buildWindows-${{ matrix.targetPlatform }}-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -677,7 +677,7 @@ jobs:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
       - name: Upload Build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         if: needs.tests.outputs.isPr == 'true' || github.event.action == 'published' || contains(github.event.inputs.workflow_mode, matrix.targetPlatform) || (contains(github.event.inputs.workflow_mode, 'Steam') && contains(matrix.targetPlatform, 'StandaloneWindows'))
         with:
           path: build/${{ matrix.targetPlatform }}
@@ -708,22 +708,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download StandaloneWindows Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneWindows
           path: build/StandaloneWindows
       - name: Download StandaloneLinux64 Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneLinux64
           path: build/StandaloneLinux64
       - name: Download StandaloneWindows64 Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-StandaloneWindows64
           path: build/StandaloneWindows64
       - name: Download App
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: Card Game Simulator.app
           path: build/StandaloneOSX/Card Game Simulator.app
@@ -755,7 +755,7 @@ jobs:
       - name: Create LFS file list
         run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - name: Restore LFS cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: lfs-cache
         with:
           path: .git/lfs
@@ -766,7 +766,7 @@ jobs:
           git add .
           git reset --hard
       - name: Cache Library
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: Library
           key: Library-WSAPlayer-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -783,7 +783,7 @@ jobs:
           targetPlatform: WSAPlayer
           buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
       - name: Upload Build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
@@ -797,7 +797,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download WSAPlayer Artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: cgs-WSAPlayer
           path: build/WSAPlayer
@@ -848,7 +848,7 @@ jobs:
           $updatedContent | Set-Content -Path ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj"
           cat ".\$env:UwpProjectDirectory\Card Game Simulator.vcxproj"
       - name: Upload Build2
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: cgs-WSAPlayer2
           path: ${{ format('{0}\build\WSAPlayer', 'C:\Card-Game-Simulator.git') }}
@@ -952,7 +952,7 @@ jobs:
           upload_path: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
         run: Copy-Item ".\$env:APPX_PATH" -Destination ".\$env:upload_path"
       - name: Upload .msixupload
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ format('Card Game Simulator_{0}.0_x64_bundle_Master.msixupload', needs.buildWSAPlayer.outputs.buildVersion) }}
           path: ${{ format('{0}\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
