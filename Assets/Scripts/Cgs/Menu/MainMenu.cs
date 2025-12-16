@@ -173,8 +173,8 @@ namespace Cgs.Menu
                     SelectNext();
             }
             else if ((_moveAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(moveHorizontal) > 0 &&
-                     EventSystem.current.currentSelectedGameObject == null ||
-                     EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject)
+                     (EventSystem.current.currentSelectedGameObject == null ||
+                     EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
                 if (moveHorizontal < 0)
                     SelectPrevious();
