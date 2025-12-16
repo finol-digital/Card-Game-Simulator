@@ -71,6 +71,9 @@ namespace Cgs.Menu
 
         private bool _isAnimating;
 
+        private InputAction _moveAction;
+        private InputAction _pageAction;
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(ResetGameSelectionCarousel);
@@ -79,8 +82,7 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.MainMenuSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.MainMenuSelectNext).performed += InputSelectNext;
-            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed +=
-                InputShowGamesManagementMenu;
+            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed += InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.MainMenuStartGame).performed += InputStartGame;
             InputSystem.actions.FindAction(Tags.MainMenuJoinGame).performed += InputJoinGame;
             InputSystem.actions.FindAction(Tags.MainMenuEditDeck).performed += InputEditDeck;
@@ -145,6 +147,43 @@ namespace Cgs.Menu
             if (!HasSeenWelcome)
                 CardGameManager.Instance.Messenger.Ask(WelcomeMessage, DeclineWelcomeMessage, AcceptWelcomeMessage,
                     true);
+
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+        }
+
+        private void Update()
+        {
+            if (CardGameManager.Instance.ModalCanvas != null)
+                return;
+
+            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
+            var pageHorizontal = _pageAction?.ReadValue<Vector2>().x ?? 0;
+            var moveHorizontal = _moveAction?.ReadValue<Vector2>().x ?? 0;
+            var moveVertical = _moveAction?.ReadValue<Vector2>().y ?? 0;
+            if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                if (pageVertical < 0)
+                    SelectNext();
+                else if (pageVertical > 0)
+                    SelectPrevious();
+                else if (pageHorizontal < 0)
+                    SelectPrevious();
+                else if (pageHorizontal > 0)
+                    SelectNext();
+            }
+            else if ((_moveAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(moveHorizontal) > 0 &&
+                     EventSystem.current.currentSelectedGameObject == null ||
+                     EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject)
+            {
+                if (moveHorizontal < 0)
+                    SelectPrevious();
+                else if (moveHorizontal > 0)
+                    SelectNext();
+            }
+            else if ((_moveAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(moveVertical) > 0 &&
+                     !selectableButtons.Contains(EventSystem.current.currentSelectedGameObject))
+                EventSystem.current.SetSelectedGameObject(selectableButtons[0].gameObject);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -313,7 +352,7 @@ namespace Cgs.Menu
                 });
         }
 
-        private void InputShowGamesManagementMenu(InputAction.CallbackContext context)
+        private void InputGamesManagementMenu(InputAction.CallbackContext context)
         {
             if (CardGameManager.Instance.ModalCanvas == null)
                 ShowGamesManagementMenu();
@@ -444,8 +483,7 @@ namespace Cgs.Menu
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.MainMenuSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.MainMenuSelectNext).performed -= InputSelectNext;
-            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed -=
-                InputShowGamesManagementMenu;
+            InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed -= InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.MainMenuStartGame).performed -= InputStartGame;
             InputSystem.actions.FindAction(Tags.MainMenuJoinGame).performed -= InputJoinGame;
             InputSystem.actions.FindAction(Tags.MainMenuEditDeck).performed -= InputEditDeck;
