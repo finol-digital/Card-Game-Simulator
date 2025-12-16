@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cgs
 {
@@ -66,7 +67,7 @@ namespace Cgs
 
         private static void ResetOrientation()
         {
-            if (DoesGamepadLockToLandscape && InputManager.IsGamepadConnected)
+            if (DoesGamepadLockToLandscape && IsGamepadConnected)
             {
                 Screen.autorotateToPortrait = false;
                 Screen.autorotateToPortraitUpsideDown = false;
@@ -103,6 +104,10 @@ namespace Cgs
             }
         }
 
+        private static bool IsGamepadConnected => Gamepad.all.Count > 0;
+
+        private bool _wasGamepadConnected;
+
         private void OnApplicationFocus(bool haveFocus)
         {
             if (haveFocus)
@@ -111,8 +116,9 @@ namespace Cgs
 
         private void Update()
         {
-            if (DoesGamepadLockToLandscape && InputManager.IsGamepadConnected != InputManager.WasGamepadConnected)
+            if (DoesGamepadLockToLandscape && IsGamepadConnected != _wasGamepadConnected)
                 ResetOrientation();
+            _wasGamepadConnected = IsGamepadConnected;
         }
     }
 }

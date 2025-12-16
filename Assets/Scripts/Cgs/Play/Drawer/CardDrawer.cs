@@ -81,23 +81,6 @@ namespace Cgs.Play.Drawer
             if (PlaySettings.StackViewerOverlap != _previousOverlapSpacing)
                 viewer.ApplyOverlapSpacing();
             _previousOverlapSpacing = PlaySettings.StackViewerOverlap;
-
-            if (CardGameManager.Instance.ModalCanvas != null)
-                return;
-
-            if (InputManager.IsVertical)
-            {
-                if (InputManager.IsUp && !InputManager.WasUp)
-                    Show();
-                else if (InputManager.IsDown && !InputManager.WasDown)
-                    Hide();
-            }
-
-            if (InputManager.IsFocusBack && !InputManager.WasFocusBack)
-                Deal();
-
-            if (InputManager.IsFocusNext && !InputManager.WasFocusNext)
-                Draw();
         }
 
         private void Resize()
@@ -146,7 +129,7 @@ namespace Cgs.Play.Drawer
         public void AddTab()
         {
             var sizeDelta = tabsRectTransform.sizeDelta;
-            sizeDelta = new Vector2(sizeDelta.x + ((RectTransform) tabPrefab.transform).sizeDelta.x, sizeDelta.y);
+            sizeDelta = new Vector2(sizeDelta.x + ((RectTransform)tabPrefab.transform).sizeDelta.x, sizeDelta.y);
             tabsRectTransform.sizeDelta = sizeDelta;
 
             var tabTemplate = Instantiate(tabPrefab, tabsRectTransform).GetComponent<TabTemplate>();
@@ -174,7 +157,7 @@ namespace Cgs.Play.Drawer
             viewer.drops.Add(tabCardDropArea);
             tabTemplate.TabCardDropArea = tabCardDropArea;
 
-            var cardZoneRectTransform = (RectTransform) Instantiate(cardZonePrefab, cardZonesRectTransform).transform;
+            var cardZoneRectTransform = (RectTransform)Instantiate(cardZonePrefab, cardZonesRectTransform).transform;
             var cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
             cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
             cardZoneRectTransforms.Add(cardZoneRectTransform);
@@ -290,7 +273,7 @@ namespace Cgs.Play.Drawer
             Destroy(tabRectTransform.gameObject);
 
             var sizeDelta = tabsRectTransform.sizeDelta;
-            sizeDelta = new Vector2(sizeDelta.x - ((RectTransform) tabPrefab.transform).sizeDelta.x, sizeDelta.y);
+            sizeDelta = new Vector2(sizeDelta.x - ((RectTransform)tabPrefab.transform).sizeDelta.x, sizeDelta.y);
             tabsRectTransform.sizeDelta = sizeDelta;
 
             if (CgsNetManager.Instance.IsOnline)

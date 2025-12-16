@@ -6,6 +6,7 @@ using Cgs.CardGameView.Viewer;
 using FinolDigital.Cgs.Json;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -17,16 +18,20 @@ namespace Cgs.Cards
 
         public SearchResults searchResults;
         private Button _deleteButton;
+        private InputAction _deleteAction;
 
         private void Start()
         {
             _deleteButton = gameObject.GetOrAddComponent<Button>();
+            _deleteAction = InputSystem.actions.FindAction(Tags.PlayerDelete);
         }
 
         private void Update()
         {
             _deleteButton.interactable = CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null;
-            if (InputManager.IsOption && CardGameManager.Instance.ModalCanvas == null && !searchResults.inputField.isFocused)
+            if (_deleteButton.interactable && _deleteAction.WasPressedThisFrame()
+                                           && CardGameManager.Instance.ModalCanvas == null
+                                           && !searchResults.inputField.isFocused)
                 PromptDelete();
         }
 

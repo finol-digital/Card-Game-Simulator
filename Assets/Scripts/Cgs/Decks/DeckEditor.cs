@@ -15,6 +15,7 @@ using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -117,11 +118,22 @@ namespace Cgs.Decks
             }
         }
 
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
+                                  CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused;
+
         private void OnEnable()
         {
             // CardViewer is already in the scene
             searchResults.DoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(Reset);
+
+            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputSort;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
+            InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputFilter;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
         private void Start()
@@ -131,28 +143,6 @@ namespace Cgs.Decks
             if (Directory.Exists(CardGameManager.Current.DecksDirectoryPath) &&
                 Directory.GetFiles(CardGameManager.Current.DecksDirectoryPath).Length > 0)
                 ShowDeckLoadMenu();
-        }
-
-        private void Update()
-        {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
-                CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused)
-                return;
-
-            if (InputManager.IsSort)
-                Sort();
-            else if (InputManager.IsNew)
-                PromptForClear();
-            else if (InputManager.IsLoad)
-                ShowDeckLoadMenu();
-            else if (InputManager.IsSave)
-                ShowDeckSaveMenu();
-            else if (InputManager.IsFocus)
-                searchResults.inputField.ActivateInputField();
-            else if (InputManager.IsFilter)
-                searchResults.ShowSearchMenu();
-            else if (InputManager.IsCancel)
-                CheckBackToMainMenu();
         }
 
         public void Reset()
@@ -386,6 +376,14 @@ namespace Cgs.Decks
                     : 1f;
         }
 
+        private void InputSort(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Sort();
+        }
+
         [UsedImplicitly]
         public void Sort()
         {
@@ -395,6 +393,14 @@ namespace Cgs.Decks
                 cardZone.transform.DestroyAllChildren();
             foreach (var card in sortedDeck.Cards)
                 AddCard((UnityCard)card);
+        }
+
+        private void InputNew(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            PromptForClear();
         }
 
         [UsedImplicitly]
@@ -428,6 +434,14 @@ namespace Cgs.Decks
             countText.text = CurrentDeck.Cards.Count.ToString();
         }
 
+        private void InputLoad(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ShowDeckLoadMenu();
+        }
+
         [UsedImplicitly]
         public void ShowDeckLoadMenu()
         {
@@ -448,6 +462,14 @@ namespace Cgs.Decks
             scrollRect.verticalNormalizedPosition = 1;
         }
 
+        private void InputSave(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ShowDeckSaveMenu();
+        }
+
         [UsedImplicitly]
         public void ShowDeckSaveMenu()
         {
@@ -460,6 +482,30 @@ namespace Cgs.Decks
         {
             SavedDeck = savedDeck;
             UpdateDeckStats();
+        }
+
+        private void InputFocusNext(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            searchResults.inputField.ActivateInputField();
+        }
+
+        private void InputFilter(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            searchResults.ShowSearchMenu();
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            CheckBackToMainMenu();
         }
 
         [UsedImplicitly]
@@ -477,6 +523,17 @@ namespace Cgs.Decks
         private static void BackToMainMenu()
         {
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputSort;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
+            InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputFilter;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

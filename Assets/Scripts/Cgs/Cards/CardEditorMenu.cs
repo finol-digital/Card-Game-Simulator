@@ -15,6 +15,7 @@ using SFB;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -42,6 +43,9 @@ namespace Cgs.Cards
         public Dropdown backSelector;
         public Image cardImage;
         public Button saveButton;
+
+        public override bool IsBlocked => base.IsBlocked || inputFields.Any(inputField => inputField.isFocused) ||
+                                          _inputFields.Any(field => field.isFocused);
 
         [UsedImplicitly]
         public string CardName
@@ -134,20 +138,12 @@ namespace Cgs.Cards
 
         private readonly List<TMP_InputField> _inputFields = new();
 
-        private void Update()
+        private void OnEnable()
         {
-            if (!IsFocused || !WasFocused || inputFields.Any(inputField => inputField.isFocused) ||
-                _inputFields.Any(field => field.isFocused))
-                return;
-
-            if (InputManager.IsSubmit && saveButton.interactable)
-                StartSaveCard();
-            if (InputManager.IsNew)
-                DownloadCardImageFromWeb();
-            if (InputManager.IsLoad)
-                ImportCardImageFromFile();
-            else if (InputManager.IsCancel)
-                Hide();
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputImportFile;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
         public void Show(UnityAction onCreationCallback)
@@ -240,6 +236,14 @@ namespace Cgs.Cards
             _onCreationCallback = onCreationCallback;
         }
 
+        private void InputDownloadWeb(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            DownloadCardImageFromWeb();
+        }
+
         [UsedImplicitly]
         public void DownloadCardImageFromWeb()
         {
@@ -270,6 +274,14 @@ namespace Cgs.Cards
             StandaloneFileBrowser.OpenFilePanelAsync(SelectCardImageFilePrompt, string.Empty, string.Empty, false,
                 paths => { ImportCardImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
+        }
+
+        private void InputImportFile(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ImportCardImageFromFile();
         }
 
 #if ENABLE_WINMD_SUPPORT
@@ -311,6 +323,15 @@ namespace Cgs.Cards
                 !string.IsNullOrEmpty(CardName) && CardImageUri != null && CardImageUri.IsAbsoluteUri;
             Debug.Log("ValidateSaveButton: " + CardName + " " + CardImageUri);
             Debug.Log("ValidateSaveButton: " + saveButton.interactable);
+        }
+
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (saveButton.interactable)
+                StartSaveCard();
         }
 
         [UsedImplicitly]
@@ -373,6 +394,22 @@ namespace Cgs.Cards
 
             ValidateSaveButton();
             Hide();
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputImportFile;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

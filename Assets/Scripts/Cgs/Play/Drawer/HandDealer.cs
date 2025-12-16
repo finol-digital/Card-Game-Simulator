@@ -45,7 +45,7 @@ namespace Cgs.Play.Drawer
         public int Count
         {
             get => _count;
-            set
+            private set
             {
                 _count = value;
                 RefreshText();
@@ -60,24 +60,6 @@ namespace Cgs.Play.Drawer
         {
             base.Start();
             Count = CardGameManager.Current.GameStartHandCount;
-        }
-
-        private void Update()
-        {
-            if (!IsFocused)
-                return;
-
-            if (InputManager.IsSubmit)
-                Confirm();
-            else if (InputManager.IsHorizontal || InputManager.IsVertical)
-            {
-                if (InputManager.IsLeft && !InputManager.WasLeft || InputManager.IsDown && !InputManager.WasDown)
-                    Decrement();
-                else if (InputManager.IsRight && !InputManager.WasRight || InputManager.IsUp && !InputManager.WasUp)
-                    Increment();
-            }
-            else if (InputManager.IsCancel)
-                Hide();
         }
 
         private void RefreshText()

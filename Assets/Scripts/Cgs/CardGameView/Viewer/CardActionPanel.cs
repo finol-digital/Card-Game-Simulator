@@ -7,6 +7,7 @@ using Cgs.CardGameView.Multiplayer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -39,6 +40,15 @@ namespace Cgs.CardGameView.Viewer
         private void Awake()
         {
             _canvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
+        }
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.CardMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.CardRotate).performed += InputRotate;
+            InputSystem.actions.FindAction(Tags.CardTap).performed += InputTap;
+            InputSystem.actions.FindAction(Tags.CardFlip).performed += InputFlip;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDiscard;
         }
 
         public void Show()
@@ -75,21 +85,13 @@ namespace Cgs.CardGameView.Viewer
                     : Color.white;
         }
 
-        public void Update()
+        private void InputMove(InputAction.CallbackContext callbackContext)
         {
             if (!_canvasGroup.interactable)
                 return;
 
-            if (InputManager.IsNew && moveButton.interactable)
+            if (moveButton.interactable && CardViewer.Instance.SelectedCardModel != null)
                 Move(CardViewer.Instance.SelectedCardModel);
-            else if (InputManager.IsLoad && rotateButton.interactable)
-                Rotate(CardViewer.Instance.SelectedCardModel);
-            else if (InputManager.IsSave && tapButton.interactable)
-                Tap(CardViewer.Instance.SelectedCardModel);
-            else if (InputManager.IsFilter && flipButton.interactable)
-                Flip(CardViewer.Instance.SelectedCardModel);
-            else if (InputManager.IsOption && discardButton.interactable)
-                Discard(CardViewer.Instance.SelectedCardModel);
         }
 
         [UsedImplicitly]
@@ -101,6 +103,15 @@ namespace Cgs.CardGameView.Viewer
         public static void Move(CardModel cardModel)
         {
             CardGameManager.Instance.Messenger.Show("Move Feature is Coming Soon!");
+        }
+
+        private void InputRotate(InputAction.CallbackContext callbackContext)
+        {
+            if (!_canvasGroup.interactable)
+                return;
+
+            if (rotateButton.interactable && CardViewer.Instance.SelectedCardModel != null)
+                Rotate(CardViewer.Instance.SelectedCardModel);
         }
 
         [UsedImplicitly]
@@ -118,6 +129,15 @@ namespace Cgs.CardGameView.Viewer
             }
 
             cardModel.Rotation *= Quaternion.Euler(0, 0, -CardGameManager.Current.GameCardRotationDegrees);
+        }
+
+        private void InputTap(InputAction.CallbackContext callbackContext)
+        {
+            if (!_canvasGroup.interactable)
+                return;
+
+            if (tapButton.interactable && CardViewer.Instance.SelectedCardModel != null)
+                Tap(CardViewer.Instance.SelectedCardModel);
         }
 
         [UsedImplicitly]
@@ -141,6 +161,15 @@ namespace Cgs.CardGameView.Viewer
             var tappedRotation = unTappedRotation *
                                  Quaternion.Euler(0, 0, -CardGameManager.Current.GameCardRotationDegrees);
             cardModel.Rotation = isTapped ? unTappedRotation : tappedRotation;
+        }
+
+        private void InputFlip(InputAction.CallbackContext callbackContext)
+        {
+            if (!_canvasGroup.interactable)
+                return;
+
+            if (flipButton.interactable && CardViewer.Instance.SelectedCardModel != null)
+                Flip(CardViewer.Instance.SelectedCardModel);
         }
 
         [UsedImplicitly]
@@ -173,6 +202,15 @@ namespace Cgs.CardGameView.Viewer
                 cardModel.IsFacedown = !cardModel.IsFacedown;
         }
 
+        private void InputDiscard(InputAction.CallbackContext callbackContext)
+        {
+            if (!_canvasGroup.interactable)
+                return;
+
+            if (discardButton.interactable && CardViewer.Instance.SelectedCardModel != null)
+                Discard(CardViewer.Instance.SelectedCardModel);
+        }
+
         [UsedImplicitly]
         public void Discard()
         {
@@ -189,6 +227,15 @@ namespace Cgs.CardGameView.Viewer
             _canvasGroup.alpha = 0;
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.CardMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.CardRotate).performed -= InputRotate;
+            InputSystem.actions.FindAction(Tags.CardTap).performed -= InputTap;
+            InputSystem.actions.FindAction(Tags.CardFlip).performed -= InputFlip;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDiscard;
         }
     }
 }

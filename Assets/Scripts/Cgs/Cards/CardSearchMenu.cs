@@ -9,6 +9,7 @@ using FinolDigital.Cgs.Json;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -18,7 +19,7 @@ namespace Cgs.Cards
 
     public class CardSearchMenu : Modal
     {
-        private float PropertyPanelHeight => ((RectTransform) stringFilterPanel.transform).rect.height;
+        private float PropertyPanelHeight => ((RectTransform)stringFilterPanel.transform).rect.height;
 
         public Scrollbar scrollbar;
         public InputField nameInputField;
@@ -51,41 +52,64 @@ namespace Cgs.Cards
         private readonly CardSearchFilters _filters = new();
         private readonly List<UnityCard> _results = new();
 
-        private void Update()
+        private InputAction _submitAction;
+
+        private void OnEnable()
         {
-            if (!IsFocused)
-                return;
-
-            if (InputManager.IsFocus)
-            {
-                FocusInputField();
-                return;
-            }
-
-            if (ActiveInputField != null && ActiveInputField.isFocused)
-                return;
-
-            if (InputManager.IsVertical || InputManager.IsHorizontal)
-                FocusToggle();
-            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                Scroll();
-
-            if (InputManager.IsSubmit)
-            {
-                Search();
-                Hide();
-            }
-            else if (InputManager.IsNew && ActiveToggle != null)
-                ToggleEnum();
-            else if (InputManager.IsOption && ActiveInputField == null)
-                ClearFilters();
-            else if (InputManager.IsCancel)
-                Hide();
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputToggleEnum;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputClear;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
-        private void Scroll()
+        protected override void Start()
         {
-            scrollbar.value = Mathf.Clamp01(scrollbar.value + (InputManager.IsPageDown ? 0.1f : -0.1f));
+            base.Start();
+            _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
+        }
+
+        private void InputFocus(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            FocusInputField();
+        }
+
+        private void InputMove(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
+                return;
+
+            FocusToggle();
+        }
+
+        private void InputToggleEnum(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
+                return;
+
+            if (ActiveToggle != null)
+                ToggleEnum();
+        }
+
+        private void InputPage(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
+                return;
+
+            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
+            if (Mathf.Abs(pageVertical) > 0)
+                Scroll(pageVertical < 0);
+        }
+
+        private void Scroll(bool scrollDown)
+        {
+            scrollbar.value = Mathf.Clamp01(scrollbar.value + (scrollDown ? 0.1f : -0.1f));
         }
 
         public void Show(OnSearchDelegate searchCallback)
@@ -107,15 +131,15 @@ namespace Cgs.Cards
             _toggles.Clear();
 
             nameInputField.text = _filters.Name;
-            nameInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
+            nameInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             _inputFields.Add(nameInputField);
 
             idInputField.text = _filters.Id;
-            idInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
+            idInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             _inputFields.Add(idInputField);
 
             setCodeInputField.text = _filters.SetCode;
-            setCodeInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
+            setCodeInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             _inputFields.Add(setCodeInputField);
 
             foreach (var property in CardGameManager.Current.CardProperties)
@@ -169,7 +193,7 @@ namespace Cgs.Cards
 
             foreach (var inputField in newPanel.GetComponentsInChildren<InputField>())
             {
-                inputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
+                inputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
                 _inputFields.Add(inputField);
             }
 
@@ -230,7 +254,7 @@ namespace Cgs.Cards
             toggle.isOn = hasFilter && storedFilter;
             toggle.onValueChanged.AddListener(isOn => SetBoolPropertyFilter(propertyName, true, isOn));
             toggleTransform.localPosition = toggleLocalPosition;
-            var toggleImageTransform = (RectTransform) toggle.GetComponentInChildren<Image>().transform;
+            var toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
             toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
             toggleLocalPosition.x += toggleWidth;
             panelWidth += toggleWidth;
@@ -241,7 +265,7 @@ namespace Cgs.Cards
             toggle.isOn = hasFilter && !storedFilter;
             toggle.onValueChanged.AddListener(isOn => SetBoolPropertyFilter(propertyName, false, isOn));
             toggle.transform.localPosition = toggleLocalPosition;
-            toggleImageTransform = (RectTransform) toggle.GetComponentInChildren<Image>().transform;
+            toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
             toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
             toggleLocalPosition.x += toggleWidth;
             panelWidth += toggleWidth;
@@ -284,7 +308,7 @@ namespace Cgs.Cards
                 toggle.GetComponentInChildren<Text>().text = enumValue.Value;
                 toggle.transform.localPosition = toggleLocalPosition;
                 toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
-                var toggleImageTransform = (RectTransform) toggle.GetComponentInChildren<Image>().transform;
+                var toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
                 toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
                 toggleLocalPosition.x += toggleWidth;
                 panelWidth += toggleWidth;
@@ -316,7 +340,7 @@ namespace Cgs.Cards
             toggle.GetComponentInChildren<Text>().text = property.DisplayEmpty;
             toggle.transform.localPosition = toggleLocalPosition;
             var toggleWidth = toggle.GetComponentInChildren<Text>().preferredWidth + 25;
-            var toggleImageTransform = (RectTransform) toggle.GetComponentInChildren<Image>().transform;
+            var toggleImageTransform = (RectTransform)toggle.GetComponentInChildren<Image>().transform;
             toggleImageTransform.sizeDelta = new Vector2(toggleWidth, toggleImageTransform.sizeDelta.y);
             return toggleWidth;
         }
@@ -350,8 +374,7 @@ namespace Cgs.Cards
         {
             if (string.IsNullOrEmpty(filterValue))
             {
-                if (_filters.StringProperties.ContainsKey(propertyName))
-                    _filters.StringProperties.Remove(propertyName);
+                _filters.StringProperties.Remove(propertyName);
                 return;
             }
 
@@ -363,8 +386,7 @@ namespace Cgs.Cards
         {
             if (!int.TryParse(filterValue, out var intValue))
             {
-                if (_filters.IntMinProperties.ContainsKey(propertyName))
-                    _filters.IntMinProperties.Remove(propertyName);
+                _filters.IntMinProperties.Remove(propertyName);
                 return;
             }
 
@@ -376,8 +398,7 @@ namespace Cgs.Cards
         {
             if (!int.TryParse(filterValue, out var intValue))
             {
-                if (_filters.IntMaxProperties.ContainsKey(propertyName))
-                    _filters.IntMaxProperties.Remove(propertyName);
+                _filters.IntMaxProperties.Remove(propertyName);
                 return;
             }
 
@@ -387,19 +408,19 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SetBoolPropertyFilter(string propertyName, bool filterValue, bool isOn)
         {
-            if (InputManager.IsSubmit)
+            if (_submitAction.WasPressedThisFrame())
                 return;
 
             if (isOn)
                 _filters.BoolProperties[propertyName] = filterValue;
-            else if (_filters.BoolProperties.ContainsKey(propertyName))
+            else
                 _filters.BoolProperties.Remove(propertyName);
         }
 
         [UsedImplicitly]
         public void SetEnumPropertyFilter(string propertyName, int filterValue, bool isOn)
         {
-            if (InputManager.IsSubmit)
+            if (_submitAction.WasPressedThisFrame())
                 return;
 
             var isStored = _filters.EnumProperties.ContainsKey(propertyName);
@@ -415,6 +436,15 @@ namespace Cgs.Cards
             }
             else
                 _filters.EnumProperties[propertyName] = newFilter;
+        }
+
+        private void InputClear(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
+                return;
+
+            if (ActiveInputField == null)
+                ClearFilters();
         }
 
         [UsedImplicitly]
@@ -435,6 +465,15 @@ namespace Cgs.Cards
             Search();
         }
 
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
+                return;
+
+            Search();
+            Hide();
+        }
+
         [UsedImplicitly]
         public void Search()
         {
@@ -445,6 +484,26 @@ namespace Cgs.Cards
                 if (!shouldHideReprints || !card.IsReprint)
                     _results.Add(card);
             SearchCallback?.Invoke(_filters.ToString(), _results);
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
+                return;
+
+            Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputToggleEnum;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputClear;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

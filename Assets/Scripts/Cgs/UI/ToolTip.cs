@@ -59,7 +59,13 @@ namespace Cgs.UI
                     return string.Empty;
 
                 var inputAction = InputSystem.actions.FindAction(inputActionId);
-                var inputBinding = InputManager.IsGamepadConnected
+                if (inputAction == null)
+                {
+                    Debug.LogError($"ToolTip: {gameObject.name} has Input Action '{inputActionId}' not found.");
+                    return string.Empty;
+                }
+
+                var inputBinding = Gamepad.current != null
                     ? InputBinding.MaskByGroup("Gamepad")
                     : InputBinding.MaskByGroup("Keyboard&Mouse");
                 return inputAction.GetBindingDisplayString(inputBinding).Replace("| Backspace", "");

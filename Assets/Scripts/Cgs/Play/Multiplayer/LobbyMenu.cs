@@ -15,6 +15,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityExtensionMethods;
@@ -79,9 +80,19 @@ namespace Cgs.Play.Multiplayer
 
         private bool _shouldRedisplay;
 
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
         private void Start()
         {
-            roomIdIpInputField.onValidateInput += (_, _, addedChar) => InputManager.FilterFocusInput(addedChar);
+            roomIdIpInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             StartCoroutine(SignInAnonymouslyCoroutine());
         }
 
@@ -114,30 +125,6 @@ namespace Cgs.Play.Multiplayer
 
             if (_shouldRedisplay)
                 Redisplay();
-
-            if (!Menu.IsFocused || roomIdIpInputField.isFocused)
-                return;
-
-            if (InputManager.IsVertical)
-            {
-                if (InputManager.IsUp && !InputManager.WasUp)
-                    SelectPrevious();
-                else if (InputManager.IsDown && !InputManager.WasDown)
-                    SelectNext();
-            }
-
-            if (InputManager.IsSubmit && joinButton.interactable)
-                Join();
-            else if (InputManager.IsNew)
-                Host();
-            else if (InputManager.IsFocusNext)
-                roomIdIpInputField.ActivateInputField();
-            else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                ScrollPage(InputManager.IsPageDown);
-            else if (InputManager.IsPageHorizontal && !InputManager.WasPageHorizontal)
-                ToggleConnectionSource();
-            else if (InputManager.IsCancel)
-                Close();
         }
 
         public void Show()
@@ -219,11 +206,43 @@ namespace Cgs.Play.Multiplayer
             _shouldRedisplay = true;
         }
 
+        private void InputMove(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            var move = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
+            if (move.y > 0)
+                SelectPrevious();
+            else if (move.y < 0)
+                SelectNext();
+        }
+
+        private void InputPage(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            var page = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>();
+            if (Mathf.Abs(page.y) > 0)
+                ScrollPage(page.y < 0);
+            else if (Mathf.Abs(page.x) > 0)
+                ToggleConnectionSource();
+        }
+
         private void ToggleConnectionSource()
         {
             var isInternetConnectionSource = !IsInternetConnectionSource;
             lanToggle.isOn = !isInternetConnectionSource;
             internetToggle.isOn = isInternetConnectionSource;
+        }
+
+        private void InputFocus(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            roomIdIpInputField.ActivateInputField();
         }
 
         private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
@@ -245,6 +264,14 @@ namespace Cgs.Play.Multiplayer
                 Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
 
             _shouldRedisplay = false;
+        }
+
+        private void InputNew(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            Host();
         }
 
         [UsedImplicitly]
@@ -301,6 +328,15 @@ namespace Cgs.Play.Multiplayer
                                       && Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
         }
 
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            if (joinButton.interactable)
+                Join();
+        }
+
         [UsedImplicitly]
         public void Join()
         {
@@ -350,6 +386,14 @@ namespace Cgs.Play.Multiplayer
             Menu.Hide();
         }
 
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            Close();
+        }
+
         [UsedImplicitly]
         public void Close()
         {
@@ -357,6 +401,16 @@ namespace Cgs.Play.Multiplayer
                 CgsNetManager.Instance.Discovery.StopDiscovery();
 
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Cgs.Menu
@@ -38,9 +39,14 @@ namespace Cgs.Menu
 
         private bool _isNewMessage;
 
+        private InputAction _submitAction;
+        private InputAction _shareAction;
+        private InputAction _cancelAction;
+
         protected override void Start()
         {
             base.Start();
+
 #if UNITY_IOS || UNITY_ANDROID
             copyButton.SetActive(false);
             shareButton.SetActive(true);
@@ -51,6 +57,10 @@ namespace Cgs.Menu
             copyButton.SetActive(true);
             shareButton.SetActive(false);
 #endif
+
+            _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
+            _shareAction = InputSystem.actions.FindAction(Tags.SubMenuMenu);
+            _cancelAction = InputSystem.actions.FindAction(Tags.PlayerCancel);
         }
 
         // Popup needs to update last to consume the input over what it covers
@@ -62,24 +72,26 @@ namespace Cgs.Menu
                 return;
             }
 
-            if ((InputManager.IsVertical || InputManager.IsHorizontal) && EventSystem.current.currentSelectedGameObject == null &&
-                yesButton.gameObject.activeInHierarchy)
+            if (MoveAction != null && MoveAction.WasPressedThisFrame()
+                                   && EventSystem.current.currentSelectedGameObject == null
+                                   && yesButton.gameObject.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
             }
 
-            if (InputManager.IsSubmit)
+            if (_submitAction != null && _submitAction.WasPressedThisFrame())
             {
                 if (yesButton.gameObject.activeInHierarchy)
                     yesButton.onClick?.Invoke();
                 else
                     OkClose();
             }
-            else if (InputManager.IsOption && noButton.gameObject.activeInHierarchy)
+            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame() &&
+                     noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
-            else if (InputManager.IsSave)
+            else if (_shareAction != null && _shareAction.WasPressedThisFrame())
                 CopyShare();
-            else if (InputManager.IsCancel)
+            else if (_cancelAction != null && _cancelAction.WasPressedThisFrame())
                 OkClose();
         }
 
@@ -96,7 +108,7 @@ namespace Cgs.Menu
         public void Ask(string text, UnityAction noAction, UnityAction yesAction, bool unskippable = false)
         {
             var message = new Message()
-                {Text = text, NoAction = noAction, YesAction = yesAction, Unskippable = unskippable};
+                { Text = text, NoAction = noAction, YesAction = yesAction, Unskippable = unskippable };
             if (gameObject.activeSelf)
             {
                 if (!MessageQueue.Contains(message))

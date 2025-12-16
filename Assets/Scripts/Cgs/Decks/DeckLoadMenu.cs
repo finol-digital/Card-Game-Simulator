@@ -14,6 +14,7 @@ using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -63,51 +64,22 @@ namespace Cgs.Decks
 
         private Modal _menu;
 
-        private void Update()
+        private bool IsBlocked => Menu.IsBlocked || nameInputField.isFocused || textInputField.isFocused;
+
+        private void OnEnable()
         {
-            if (!Menu.IsFocused || nameInputField.isFocused || textInputField.isFocused)
-                return;
-
-            if (newDeckPanel.gameObject.activeSelf)
-            {
-                if (InputManager.IsSubmit && EventSystem.current.currentSelectedGameObject == null)
-                    DoSaveDontOverwrite();
-                else if (InputManager.IsNew && EventSystem.current.currentSelectedGameObject == null)
-                    Clear();
-                else if (InputManager.IsFocusBack && EventSystem.current.currentSelectedGameObject == null)
-                    nameInputField.ActivateInputField();
-                else if (InputManager.IsFocusNext && EventSystem.current.currentSelectedGameObject == null)
-                    textInputField.ActivateInputField();
-                else if (InputManager.IsLoad && EventSystem.current.currentSelectedGameObject == null)
-                    PasteClipboardIntoText();
-                else if (InputManager.IsCancel)
-                    HideNewDeckPanel();
-            }
-            else
-            {
-                if (InputManager.IsVertical)
-                {
-                    if (InputManager.IsUp && !InputManager.WasUp)
-                        SelectPrevious();
-                    else if (InputManager.IsDown && !InputManager.WasDown)
-                        SelectNext();
-                }
-
-                if (InputManager.IsSubmit && loadFromFileButton.interactable)
-                    LoadFromFileAndHide();
-                else if (InputManager.IsSave && shareFileButton.interactable)
-                    Share();
-                else if (InputManager.IsLoad && editFileButton.interactable)
-                    Edit();
-                else if (InputManager.IsNew)
-                    ShowNewDeckPanel();
-                else if (InputManager.IsOption && deleteFileButton.interactable)
-                    PromptForDeleteFile();
-                else if (InputManager.IsPageVertical && !InputManager.WasPageVertical)
-                    ScrollPage(InputManager.IsPageDown);
-                else if (InputManager.IsCancel)
-                    Hide();
-            }
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            InputSystem.actions.FindAction(Tags.DecksShare).performed += InputDecksShare;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDecksNew;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusName;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusText;
+            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed += InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
         public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null,
@@ -162,6 +134,33 @@ namespace Cgs.Decks
             loadFromFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
         }
 
+        private void InputMove(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || newDeckPanel.gameObject.activeSelf)
+                return;
+
+            var vertical = callbackContext.ReadValue<Vector2>().y;
+            switch (vertical)
+            {
+                case > 0:
+                    SelectPrevious();
+                    break;
+                case < 0:
+                    SelectNext();
+                    break;
+            }
+        }
+
+        private void InputPage(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked || newDeckPanel.gameObject.activeSelf)
+                return;
+
+            var vertical = callbackContext.ReadValue<Vector2>().y;
+            if (Mathf.Abs(vertical) > 0)
+                ScrollPage(vertical < 0);
+        }
+
         [UsedImplicitly]
         public void SelectFile(Toggle toggle, string deckFilePath)
         {
@@ -209,6 +208,15 @@ namespace Cgs.Decks
             return deckFileType;
         }
 
+        private void InputDelete(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (!newDeckPanel.gameObject.activeSelf && deleteFileButton.gameObject.activeSelf)
+                PromptForDeleteFile();
+        }
+
         [UsedImplicitly]
         public void PromptForDeleteFile()
         {
@@ -253,6 +261,15 @@ namespace Cgs.Decks
             }
         }
 
+        private void InputDecksShare(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (!newDeckPanel.gameObject.activeSelf && shareFileButton.gameObject.activeSelf)
+                Share();
+        }
+
         [UsedImplicitly]
         public void Share()
         {
@@ -273,6 +290,15 @@ namespace Cgs.Decks
             }
         }
 
+        private void InputDecksLoad(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (!newDeckPanel.gameObject.activeSelf && loadFromFileButton.gameObject.activeSelf)
+                LoadFromFileAndHide();
+        }
+
         [UsedImplicitly]
         public void LoadFromFileAndHide()
         {
@@ -291,6 +317,15 @@ namespace Cgs.Decks
             }
         }
 
+        private void InputDecksNew(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (!newDeckPanel.gameObject.activeSelf)
+                ShowNewDeckPanel();
+        }
+
         [UsedImplicitly]
         public void ShowNewDeckPanel()
         {
@@ -299,16 +334,52 @@ namespace Cgs.Decks
             textInputField.text = string.Empty;
         }
 
+        private void InputFocusName(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+                nameInputField.ActivateInputField();
+        }
+
         [UsedImplicitly]
         public void ValidateDeckName(string deckName)
         {
             nameInputField.text = UnityFileMethods.GetSafeFileName(deckName);
         }
 
+        private void InputFocusText(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+                textInputField.ActivateInputField();
+        }
+
+        private void InputClear(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+                Clear();
+        }
+
         [UsedImplicitly]
         public void Clear()
         {
             textInputField.text = string.Empty;
+        }
+
+        private void InputPaste(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+                PasteClipboardIntoText();
         }
 
         [UsedImplicitly]
@@ -322,6 +393,22 @@ namespace Cgs.Decks
         {
             if (!EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(null);
+        }
+
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            switch (newDeckPanel.gameObject.activeSelf)
+            {
+                case true when EventSystem.current.currentSelectedGameObject == null:
+                    DoSaveDontOverwrite();
+                    break;
+                case false when loadFromFileButton.interactable:
+                    LoadFromFileAndHide();
+                    break;
+            }
         }
 
         [UsedImplicitly]
@@ -365,6 +452,17 @@ namespace Cgs.Decks
             }
         }
 
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (newDeckPanel.gameObject.activeSelf)
+                HideNewDeckPanel();
+            else
+                Hide();
+        }
+
         [UsedImplicitly]
         public void HideNewDeckPanel()
         {
@@ -375,6 +473,22 @@ namespace Cgs.Decks
         public void Hide()
         {
             Menu.Hide();
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
+            InputSystem.actions.FindAction(Tags.DecksShare).performed -= InputDecksShare;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDecksNew;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusName;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusText;
+            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed -= InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }

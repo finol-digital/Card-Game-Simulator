@@ -8,6 +8,7 @@ using Cgs.Play;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -81,9 +82,24 @@ namespace Cgs.CardGameView.Viewer
         private bool _isVisible;
         public bool WasVisible { get; private set; }
 
+        private bool IsBlocked => !IsVisible || SelectedPlayable == null
+                                             || CardGameManager.Instance.ModalCanvas != null
+                                             || dieValueInputField.isFocused || dieMaxInputField.isFocused
+                                             || EventSystem.current.currentSelectedGameObject ==
+                                             dieValueInputField.gameObject
+                                             || EventSystem.current.currentSelectedGameObject ==
+                                             dieMaxInputField.gameObject;
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(Reset);
+
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.CardSelectPrevious).performed += InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.CardSelectNext).performed += InputSelectNext;
+            InputSystem.actions.FindAction(Tags.CardFlip).performed += InputFlip;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
         private void Start()
@@ -98,9 +114,7 @@ namespace Cgs.CardGameView.Viewer
             if (_selectedPlayable == null)
                 IsVisible = false;
 
-            if (!IsVisible || SelectedPlayable == null || CardGameManager.Instance.ModalCanvas != null
-                || dieValueInputField.isFocused || EventSystem.current.currentSelectedGameObject == dieValueInputField.gameObject
-                || dieMaxInputField.isFocused || EventSystem.current.currentSelectedGameObject == dieMaxInputField.gameObject)
+            if (IsBlocked)
                 return;
 
             foreach (var valueText in valueTexts)
@@ -108,39 +122,16 @@ namespace Cgs.CardGameView.Viewer
 
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
-
-            // ReSharper disable once ConvertIfStatementToSwitchStatement
-            else if (SelectedPlayable is Die)
-            {
-                if (InputManager.IsNew)
-                    DecrementDie();
-                else if (InputManager.IsLoad || InputManager.IsSubmit)
-                    RollDie();
-                else if (InputManager.IsSave)
-                    IncrementDie();
-
-                if (IsVisible)
-                    RedisplayDie();
-            }
-            else if (SelectedPlayable is CardStack)
-            {
-                if (InputManager.IsNew || InputManager.IsSubmit)
-                    ViewStack();
-                else if (InputManager.IsLoad)
-                    ShuffleStack();
-                else if (InputManager.IsSave)
-                    SaveStack();
-                else if (InputManager.IsFilter)
-                    FlipStackTopFace();
-            }
-            else if (SelectedPlayable is Token && IsVisible)
-                RedisplayToken();
-
-            if (InputManager.IsCancel)
-                SelectedPlayable = null;
-
-            if (InputManager.IsOption)
-                DeletePlayable();
+            else
+                switch (SelectedPlayable)
+                {
+                    case Die when IsVisible:
+                        RedisplayDie();
+                        break;
+                    case Token when IsVisible:
+                        RedisplayToken();
+                        break;
+                }
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -175,9 +166,11 @@ namespace Cgs.CardGameView.Viewer
             dieActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Die;
             dieActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Die;
 
-            stackActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack ? 1 : 0;
+            stackActionPanel.alpha =
+                PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack ? 1 : 0;
             stackActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
-            stackActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
+            stackActionPanel.blocksRaycasts =
+                PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
 
             tokenActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token ? 1 : 0;
             tokenActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token;
@@ -211,7 +204,7 @@ namespace Cgs.CardGameView.Viewer
             else if (Mathf.Approximately(Dice.DieColor.r, 0) && Mathf.Approximately(Dice.DieColor.g, 0) &&
                      Mathf.Approximately(Dice.DieColor.b, 1) && dieDropdown.value != 3)
                 dieDropdown.value = 3;
-            else if (Dice.DieColor is {r: < 1, g: < 1, b: < 1} && dieDropdown.value != 4)
+            else if (Dice.DieColor is { r: < 1, g: < 1, b: < 1 } && dieDropdown.value != 4)
                 dieDropdown.value = 4;
         }
 
@@ -223,19 +216,23 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
-            if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) && Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
+            if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) &&
+                Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
                 Mathf.Approximately(SelectedToken.LogoColor.b, 1) && tokenDropdown.value != 0)
                 tokenDropdown.value = 0;
-            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) && Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
+            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) &&
+                     Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
                      Mathf.Approximately(SelectedToken.LogoColor.b, 0) && tokenDropdown.value != 1)
                 tokenDropdown.value = 1;
-            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) && Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
+            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) &&
+                     Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
                      Mathf.Approximately(SelectedToken.LogoColor.b, 0) && tokenDropdown.value != 2)
                 tokenDropdown.value = 2;
-            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) && Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
+            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) &&
+                     Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
                      Mathf.Approximately(SelectedToken.LogoColor.b, 1) && tokenDropdown.value != 3)
                 tokenDropdown.value = 3;
-            else if (SelectedToken.LogoColor is {r: < 1, g: < 1, b: < 1} && tokenDropdown.value != 4)
+            else if (SelectedToken.LogoColor is { r: < 1, g: < 1, b: < 1 } && tokenDropdown.value != 4)
                 tokenDropdown.value = 4;
         }
 
@@ -250,6 +247,54 @@ namespace Cgs.CardGameView.Viewer
         public void HidePreview()
         {
             preview.alpha = 0;
+        }
+
+        private void InputSubmit(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            switch (SelectedPlayable)
+            {
+                case Die:
+                    RollDie();
+                    break;
+                case CardStack:
+                    ViewStack();
+                    break;
+            }
+        }
+
+        private void InputSelectPrevious(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            switch (SelectedPlayable)
+            {
+                case Die:
+                    DecrementDie();
+                    break;
+                case CardStack:
+                    ShuffleStack();
+                    break;
+            }
+        }
+
+        private void InputSelectNext(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            switch (SelectedPlayable)
+            {
+                case Die:
+                    IncrementDie();
+                    break;
+                case CardStack:
+                    SaveStack();
+                    break;
+            }
         }
 
         [UsedImplicitly]
@@ -394,6 +439,15 @@ namespace Cgs.CardGameView.Viewer
             Stack.PromptSave();
         }
 
+        private void InputFlip(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (SelectedPlayable is CardStack)
+                FlipStackTopFace();
+        }
+
         [UsedImplicitly]
         public void FlipStackTopFace()
         {
@@ -426,6 +480,14 @@ namespace Cgs.CardGameView.Viewer
             };
         }
 
+        private void InputDelete(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            DeletePlayable();
+        }
+
         [UsedImplicitly]
         public void DeletePlayable()
         {
@@ -436,6 +498,24 @@ namespace Cgs.CardGameView.Viewer
             }
 
             SelectedPlayable.PromptDelete();
+        }
+
+        private void InputCancel(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            SelectedPlayable = null;
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.CardSelectPrevious).performed -= InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.CardSelectNext).performed -= InputSelectNext;
+            InputSystem.actions.FindAction(Tags.CardFlip).performed -= InputFlip;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }
 }
