@@ -25,6 +25,9 @@ namespace Cgs.Play
         private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;
 
+        private InputAction _toggleZoomRotationAction;
+        private InputAction _playerPageAction;
+
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                                   CardGameManager.Instance.ModalCanvas != null ||
                                   _playController.menu.panels.activeSelf ||
@@ -32,7 +35,10 @@ namespace Cgs.Play
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleZoomPan;
+            _toggleZoomRotationAction = InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation);
+            if (_toggleZoomRotationAction != null)
+                _toggleZoomRotationAction.performed += InputToggleZoomPan;
+            _playerPageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
         private void Start()
@@ -66,12 +72,18 @@ namespace Cgs.Play
             if (IsBlocked)
                 return;
 
-            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
+            var pageVertical = _playerPageAction?.ReadValue<Vector2>().y ?? 0;
             if (Mathf.Abs(pageVertical) < PageVerticalSensitivity)
                 return;
 
             if (_playController.playArea.ZoomEnabled)
-                _playController.playArea.CurrentZoom *= Mathf.Clamp(1 - pageVertical * PageVerticalSensitivity, 0.5f, 1.5f);
+            {
+                var zoomFactor = Mathf.Clamp(1 - pageVertical * PageVerticalSensitivity, 0.5f, 1.5f);
+                _playController.playArea.CurrentZoom = Mathf.Clamp(
+                    _playController.playArea.CurrentZoom * zoomFactor,
+                    RotateZoomableScrollRect.MinZoom,
+                    RotateZoomableScrollRect.MaxZoom);
+            }
             else
                 _playController.playArea.verticalNormalizedPosition -= pageVertical * PageVerticalSensitivity * 10;
         }
@@ -100,7 +112,8 @@ namespace Cgs.Play
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleZoomPan;
+            if (_toggleZoomRotationAction != null)
+                _toggleZoomRotationAction.performed -= InputToggleZoomPan;
         }
     }
 }

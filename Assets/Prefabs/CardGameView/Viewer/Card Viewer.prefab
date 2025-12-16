@@ -458,7 +458,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/Sort
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &1374545582827330
 GameObject:
@@ -3185,7 +3185,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/Sort
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &7509274334271859109
 GameObject:
@@ -3280,7 +3280,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/Sort
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &7601199571884906900
 GameObject:

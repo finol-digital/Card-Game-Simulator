@@ -72,8 +72,9 @@ namespace Cgs.Menu
                 return;
             }
 
-            if (MoveAction.WasPressedThisFrame() && EventSystem.current.currentSelectedGameObject == null &&
-                yesButton.gameObject.activeInHierarchy)
+            if (MoveAction != null && MoveAction.WasPressedThisFrame()
+                                   && EventSystem.current.currentSelectedGameObject == null
+                                   && yesButton.gameObject.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(yesButton.gameObject);
             }
@@ -85,7 +86,8 @@ namespace Cgs.Menu
                 else
                     OkClose();
             }
-            else if (FocusNextAction.WasPressedThisFrame() && noButton.gameObject.activeInHierarchy)
+            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame() &&
+                     noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
             else if (_shareAction != null && _shareAction.WasPressedThisFrame())
                 CopyShare();
