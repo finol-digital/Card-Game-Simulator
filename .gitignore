@@ -84,3 +84,4 @@ fastlane/api-*.json
 # Custom for Rider and Code Coverage
 ProjectSettings/RiderScriptEditorPersistedState.asset
 CodeCoverage/
+.DS_Store
