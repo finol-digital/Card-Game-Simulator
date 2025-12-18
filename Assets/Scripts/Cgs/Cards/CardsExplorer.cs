@@ -58,7 +58,7 @@ namespace Cgs.Cards
 
         private SetImportMenu _setImporter;
 
-        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom ||
                                   CardGameManager.Instance.ModalCanvas != null || searchResults.inputField.isFocused;
 
         private void OnEnable()
