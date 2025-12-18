@@ -906,7 +906,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     : CT_FB;CT_FB_PRO
     Android: PORTABLE
-    Standalone: 
+    Standalone: PORTABLE
     WebGL: PORTABLE
     Windows Store Apps: PORTABLE
     iPhone: PORTABLE
@@ -1015,7 +1015,6 @@ PlayerSettings:
   syncCapabilities: 0
   platformCapabilities:
     WindowsStoreApps:
-      EnterpriseAuthentication: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -1027,6 +1026,7 @@ PlayerSettings:
       PrivateNetworkClientServer: False
       InternetClientServer: True
       VideosLibrary: False
+      BackgroundMediaPlayback: False
       Objects3D: False
       RemoteSystem: False
       BlockedChatMessages: False
@@ -1050,9 +1050,9 @@ PlayerSettings:
       RecordedCallsFolder: False
       Contacts: False
       InternetClient: True
-      CodeGeneration: False
-      BackgroundMediaPlayback: False
       Proximity: False
+      CodeGeneration: False
+      EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
