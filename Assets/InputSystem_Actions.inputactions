@@ -1071,18 +1071,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Filter",
+                    "name": "Sort",
                     "type": "Button",
-                    "id": "ee2c960f-1af0-4ce6-ab1d-b83ab49b1374",
+                    "id": "c75eebc9-8bd9-40da-85d8-50990061a015",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Sort",
+                    "name": "Filter",
                     "type": "Button",
-                    "id": "c75eebc9-8bd9-40da-85d8-50990061a015",
+                    "id": "ee2c960f-1af0-4ce6-ab1d-b83ab49b1374",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1126,7 +1126,7 @@
                 {
                     "name": "",
                     "id": "deea92f5-e340-41a7-97f9-d9389b8209be",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1137,7 +1137,7 @@
                 {
                     "name": "",
                     "id": "1414dbf1-6d94-4769-bcf2-bcf1391727a5",
-                    "path": "<Keyboard>/r",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1159,7 +1159,7 @@
                 {
                     "name": "",
                     "id": "b3c9c7fb-5d81-4d13-a80f-c13fdea6f92b",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1203,7 +1203,7 @@
                 {
                     "name": "",
                     "id": "4050b0b8-89ab-4011-9ac5-b5cc7df80e8d",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1214,7 +1214,7 @@
                 {
                     "name": "",
                     "id": "171e9597-1270-43f6-b8da-0a3c8b28eadb",
-                    "path": "<Keyboard>/p",
+                    "path": "<Keyboard>/backslash",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",

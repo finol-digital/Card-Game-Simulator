@@ -66,9 +66,9 @@ namespace Cgs.Cards
                 return;
 
             var moveVector2 = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
-            if (moveVector2.y > 0)
+            if (moveVector2.y < 0)
                 SelectDown();
-            else if (moveVector2.y < 0)
+            else if (moveVector2.y > 0)
                 SelectUp();
             else if (moveVector2.x < 0)
                 SelectLeft();
