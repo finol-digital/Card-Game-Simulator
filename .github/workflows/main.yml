@@ -204,7 +204,7 @@ jobs:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
-          large-packages: false
+          tool-cache: true
       - name: Cache Library
         uses: actions/cache@v5
         with:
@@ -296,7 +296,7 @@ jobs:
       - name: Free Disk Space
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
-          large-packages: false
+          tool-cache: true
       - name: Build Unity Project
         id: buildStep
         uses: game-ci/unity-builder@main
