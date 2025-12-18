@@ -7,7 +7,7 @@ KEYCHAIN_FILE=macos.keychain
 KEYCHAIN_PASSWORD=$(openssl rand -base64 12)
 APPLE_APPLICATION_CERTIFICATE_P12=developer_id_application.p12
 APPLE_DISTRIBUTION_CERTIFICATE_P12=apple_distribution.p12
-APPLE_INSTALLER_CERTIFICATE_P12=third_party_mac_developer_installer.p12
+APPLE_INSTALLER_CERTIFICATE_P12=third_party_mac_installer.p12
 
 # Recreate the certificates from the secure environment variable
 echo $APPLE_APPLICATION_CERTIFICATE | base64 --decode > $APPLE_APPLICATION_CERTIFICATE_P12

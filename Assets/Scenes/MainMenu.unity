@@ -1172,7 +1172,7 @@ MonoBehaviour:
   tooltip: Games Management
   avoidOverlap: 1
   isBelow: 0
-  inputActionId: MainMenu/ShowGamesManagementMenu
+  inputActionId: MainMenu/GamesManagementMenu
   parentTransform: {fileID: 0}
 --- !u!1 &783217847
 GameObject:
@@ -2474,7 +2474,7 @@ PrefabInstance:
     - target: {fileID: 1751753110650578252, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}
       propertyPath: inputActionId
-      value: MainMenu/ShowSettings
+      value: MainMenu/Settings
       objectReference: {fileID: 0}
     - target: {fileID: 2442268098906025027, guid: 30c175fe170c9e0459ee166821450a03,
         type: 3}

@@ -8258,7 +8258,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/Zoom
+  inputActionId: 
   parentTransform: {fileID: 0}
 --- !u!224 &3780887782482101513
 RectTransform:
@@ -10951,7 +10951,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Player/Sort
+  inputActionId: Card/Zoom
   parentTransform: {fileID: 0}
 --- !u!1001 &7675857876673247938
 PrefabInstance:
