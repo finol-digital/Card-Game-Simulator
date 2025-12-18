@@ -557,6 +557,9 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_StaticBatching: 1
     m_DynamicBatching: 0
+  - m_BuildTarget: iPhone
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs:
   - m_BuildTarget: MacStandaloneSupport
@@ -906,7 +909,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     : CT_FB;CT_FB_PRO
     Android: PORTABLE
-    Standalone: 
+    Standalone: PORTABLE
     WebGL: PORTABLE
     Windows Store Apps: PORTABLE
     iPhone: PORTABLE
