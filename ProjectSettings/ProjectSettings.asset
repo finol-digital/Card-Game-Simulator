@@ -557,6 +557,9 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_StaticBatching: 1
     m_DynamicBatching: 0
+  - m_BuildTarget: iPhone
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs:
   - m_BuildTarget: MacStandaloneSupport
@@ -1015,6 +1018,7 @@ PlayerSettings:
   syncCapabilities: 0
   platformCapabilities:
     WindowsStoreApps:
+      EnterpriseAuthentication: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -1026,7 +1030,6 @@ PlayerSettings:
       PrivateNetworkClientServer: False
       InternetClientServer: True
       VideosLibrary: False
-      BackgroundMediaPlayback: False
       Objects3D: False
       RemoteSystem: False
       BlockedChatMessages: False
@@ -1049,10 +1052,10 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
-      InternetClient: True
       Proximity: False
+      InternetClient: True
       CodeGeneration: False
-      EnterpriseAuthentication: False
+      BackgroundMediaPlayback: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
