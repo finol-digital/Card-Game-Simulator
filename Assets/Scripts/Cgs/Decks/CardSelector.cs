@@ -64,9 +64,9 @@ namespace Cgs.Decks
                 return;
 
             var moveVector2 = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
-            if (moveVector2.y > 0)
+            if (moveVector2.y < 0)
                 SelectEditorDown();
-            else if (moveVector2.y < 0)
+            else if (moveVector2.y > 0)
                 SelectEditorUp();
             else if (moveVector2.x < 0)
                 SelectEditorLeft();

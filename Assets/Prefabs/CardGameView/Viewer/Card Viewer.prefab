@@ -2630,7 +2630,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
-  inputActionId: Card/Zoom
+  inputActionId: 
   parentTransform: {fileID: 0}
 --- !u!1 &5520510946224163991
 GameObject:
