@@ -223,7 +223,7 @@ namespace Cgs.Menu
         {
             if (Menu.IsBlocked)
                 return;
-            // SAVE
+
             Share();
         }
 
