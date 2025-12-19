@@ -70,13 +70,13 @@ namespace Cgs.Decks
         {
             InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
-            InputSystem.actions.FindAction(Tags.DecksShare).performed += InputDecksShare;
-            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDecksNew;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
+            InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusName;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusText;
-            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed += InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed += InputClear;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -261,7 +261,7 @@ namespace Cgs.Decks
             }
         }
 
-        private void InputDecksShare(InputAction.CallbackContext callbackContext)
+        private void InputShare(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
@@ -479,13 +479,13 @@ namespace Cgs.Decks
         {
             InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
-            InputSystem.actions.FindAction(Tags.DecksShare).performed -= InputDecksShare;
-            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDecksNew;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;
+            InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusName;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusText;
-            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed -= InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed -= InputClear;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

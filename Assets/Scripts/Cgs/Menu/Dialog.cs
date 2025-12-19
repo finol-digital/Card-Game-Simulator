@@ -59,7 +59,7 @@ namespace Cgs.Menu
 #endif
 
             _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
-            _shareAction = InputSystem.actions.FindAction(Tags.SubMenuMenu);
+            _shareAction = InputSystem.actions.FindAction(Tags.SubMenuShare);
             _cancelAction = InputSystem.actions.FindAction(Tags.PlayerCancel);
         }
 
@@ -86,7 +86,7 @@ namespace Cgs.Menu
                 else
                     OkClose();
             }
-            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame() &&
+            else if (FocusPreviousAction != null && FocusPreviousAction.WasPressedThisFrame() &&
                      noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
             else if (_shareAction != null && _shareAction.WasPressedThisFrame())
