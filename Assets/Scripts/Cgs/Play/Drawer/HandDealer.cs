@@ -61,8 +61,10 @@ namespace Cgs.Play.Drawer
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputMove;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputCancel;
         }
 
         protected override void Start()
@@ -134,8 +136,10 @@ namespace Cgs.Play.Drawer
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
+            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputCancel;
         }
     }
 }

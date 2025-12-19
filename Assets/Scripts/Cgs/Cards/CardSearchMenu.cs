@@ -61,7 +61,7 @@ namespace Cgs.Cards
             InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputToggleEnum;
             InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
-            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed += InputClear;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -501,7 +501,7 @@ namespace Cgs.Cards
             InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputToggleEnum;
             InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
-            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed -= InputClear;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
