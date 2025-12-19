@@ -27,7 +27,7 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed += InputCopy;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed += InputClear;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
@@ -56,7 +56,7 @@ namespace Cgs.Menu
                 urlInputField.ActivateInputField();
         }
 
-        private void InputCopy(InputAction.CallbackContext callbackContext)
+        private void InputClear(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
@@ -149,7 +149,7 @@ namespace Cgs.Menu
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuCopy).performed -= InputCopy;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed -= InputClear;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;

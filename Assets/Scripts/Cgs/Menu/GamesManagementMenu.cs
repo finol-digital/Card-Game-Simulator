@@ -76,11 +76,11 @@ namespace Cgs.Menu
 
             InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
-            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
-            InputSystem.actions.FindAction(Tags.DecksShare).performed += InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -293,11 +293,11 @@ namespace Cgs.Menu
         {
             InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
-            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
-            InputSystem.actions.FindAction(Tags.DecksShare).performed -= InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }

@@ -42,10 +42,9 @@ namespace Cgs
         public const string CardsFilter = "Cards/Filter";
         public const string CardsSort = "Cards/Sort";
 
-        public const string DecksSave = "Decks/Save";
-        public const string DecksLoad = "Decks/Load";
         public const string DecksNew = "Decks/New";
-        public const string DecksShare = "Decks/Share";
+        public const string DecksLoad = "Decks/Load";
+        public const string DecksSave = "Decks/Save";
 
         public const string MainMenuSettings = "MainMenu/Settings";
         public const string MainMenuGamesManagementMenu = "MainMenu/GamesManagementMenu";
@@ -59,8 +58,9 @@ namespace Cgs
         public const string SubMenuMenu = "SubMenu/Menu";
         public const string SubMenuFocusPrevious = "SubMenu/FocusPrevious";
         public const string SubMenuFocusNext = "SubMenu/FocusNext";
+        public const string SubMenuClear = "SubMenu/Clear";
         public const string SubMenuPaste = "SubMenu/Paste";
-        public const string SubMenuCopy = "SubMenu/Copy";
+        public const string SubMenuShare = "SubMenu/Share";
 
         public const string SettingsToolTips = "Settings/ToolTips";
         public const string SettingsPreviewMouseOver = "Settings/PreviewMouseOver";

@@ -26,8 +26,8 @@ namespace Cgs.Menu
         protected virtual List<InputField> InputFields { get; set; } = new();
         protected virtual List<Toggle> Toggles { get; set; } = new();
 
-        private InputAction FocusPreviousAction { get; set; }
-        protected InputAction FocusNextAction { get; private set; }
+        protected InputAction FocusPreviousAction { get; private set; }
+        private InputAction FocusNextAction { get; set; }
         protected InputAction MoveAction { get; private set; }
 
         protected static InputField ActiveInputField
