@@ -484,8 +484,30 @@
                 },
                 {
                     "name": "up",
+                    "id": "55551859-cbf6-42fc-99aa-66b2468a97cc",
+                    "path": "<Keyboard>/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Page",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "up",
                     "id": "796ffada-b7fa-4951-b403-7f943a3530ae",
                     "path": "<Keyboard>/pageUp",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Page",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "6f7d3a81-7049-4ea3-b9e5-cca14553a3e8",
+                    "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -506,8 +528,30 @@
                 },
                 {
                     "name": "left",
+                    "id": "b931da73-f686-41ed-8507-40dcf05f47c8",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Page",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
                     "id": "2b9b56b7-2aa5-4a0e-a619-19fc12cd99b4",
                     "path": "<Keyboard>/home",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Page",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "3aa12c09-8a4d-4815-83a7-9176a121a548",
+                    "path": "<Keyboard>/h",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -1260,7 +1304,7 @@
                 {
                     "name": "",
                     "id": "b5932ef2-0d24-437a-8261-b650cf242bad",
-                    "path": "<Gamepad>/start",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
