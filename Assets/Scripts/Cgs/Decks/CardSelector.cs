@@ -17,10 +17,51 @@ namespace Cgs.Decks
         public DeckEditor editor;
         public SearchResults results;
 
-        private void OnEnable()
+        private InputAction _moveAction;
+        private InputAction _pageAction;
+
+        private void Start()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+        }
+
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused)
+                return;
+
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+            {
+                var moveVector2 = _moveAction.ReadValue<Vector2>();
+                if (moveVector2.y < 0)
+                    SelectEditorDown();
+                else if (moveVector2.y > 0)
+                    SelectEditorUp();
+                else if (moveVector2.x < 0)
+                    SelectEditorLeft();
+                else if (moveVector2.x > 0)
+                    SelectEditorRight();
+            }
+            else if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                var pageVector2 = _pageAction.ReadValue<Vector2>();
+                if (Mathf.Abs(pageVector2.y) > 0)
+                {
+                    if (pageVector2.y < 0)
+                        SelectResultsDown();
+                    else if (pageVector2.y > 0)
+                        SelectResultsUp();
+                }
+                else
+                {
+                    if (pageVector2.x < 0)
+                        SelectResultsLeft();
+                    else if (pageVector2.x > 0)
+                        SelectResultsRight();
+                }
+            }
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -55,44 +96,6 @@ namespace Cgs.Decks
                 default:
                     Debug.Log("Swipe direction none or unrecognized.");
                     break;
-            }
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused)
-                return;
-
-            var moveVector2 = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
-            if (moveVector2.y < 0)
-                SelectEditorDown();
-            else if (moveVector2.y > 0)
-                SelectEditorUp();
-            else if (moveVector2.x < 0)
-                SelectEditorLeft();
-            else if (moveVector2.x > 0)
-                SelectEditorRight();
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (CardGameManager.Instance.ModalCanvas != null || editor.searchResults.inputField.isFocused)
-                return;
-
-            var pageVector2 = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>();
-            if (Mathf.Abs(pageVector2.y) > 0)
-            {
-                if (pageVector2.y < 0)
-                    SelectResultsDown();
-                else if (pageVector2.y > 0)
-                    SelectResultsUp();
-            }
-            else
-            {
-                if (pageVector2.x < 0)
-                    SelectResultsLeft();
-                else if (pageVector2.x > 0)
-                    SelectResultsRight();
             }
         }
 
@@ -298,12 +301,6 @@ namespace Cgs.Decks
             EventSystem.current.SetSelectedGameObject(results.layoutArea.GetChild(0).gameObject);
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
-        }
-
-        private void OnDisable()
-        {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
         }
     }
 }

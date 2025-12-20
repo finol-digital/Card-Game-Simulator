@@ -241,7 +241,7 @@ namespace Cgs.CardGameView.Viewer
         private bool IsBlocked => !(IsVisible || Zoom) || SelectedCardModel == null ||
                                   CardGameManager.Instance.ModalCanvas != null;
 
-        private InputAction _page;
+        private InputAction _pageAction;
 
         private Vector2 _cardActionPanelPosition;
 
@@ -258,7 +258,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void Start()
         {
-            _page = InputSystem.actions.FindAction(Tags.PlayerPage);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
             ResetInfo();
         }
 
@@ -286,8 +286,8 @@ namespace Cgs.CardGameView.Viewer
             if (EventSystem.current.currentSelectedGameObject == null && !EventSystem.current.alreadySelecting)
                 EventSystem.current.SetSelectedGameObject(gameObject);
 
-            var pageVertical = _page?.ReadValue<Vector2>().y ?? 0;
-            if (_page != null && _page.WasPressedThisFrame() && Mathf.Abs(pageVertical) > 0)
+            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
+            if (_pageAction != null && _pageAction.WasPressedThisFrame() && Mathf.Abs(pageVertical) > 0)
             {
                 maximalScrollRect.verticalNormalizedPosition = pageVertical < 0
                     ? Mathf.Clamp01(maximalScrollRect.verticalNormalizedPosition - 0.1f)

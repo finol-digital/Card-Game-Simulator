@@ -152,6 +152,7 @@ namespace Cgs.Menu
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
+        // Poll for Vector2 inputs
         private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)

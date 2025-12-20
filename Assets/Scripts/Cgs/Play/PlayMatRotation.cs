@@ -22,10 +22,13 @@ namespace Cgs.Play
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 3f;
 
-        private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;
 
         private bool _rotationEnabled;
+
+        private PlayController _playController;
+
+        private InputAction _pageAction;
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                                   CardGameManager.Instance.ModalCanvas != null ||
@@ -39,6 +42,7 @@ namespace Cgs.Play
 
         private void Start()
         {
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
             _playController = GetComponent<PlayController>();
         }
 
@@ -65,10 +69,11 @@ namespace Cgs.Play
                 sliderCanvasGroup.blocksRaycasts = false;
             }
 
+            // Poll for Vector2 inputs
             if (IsBlocked)
                 return;
 
-            var pageHorizontal = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().x;
+            var pageHorizontal = _pageAction.ReadValue<Vector2>().x;
             if (Mathf.Abs(pageHorizontal) < PageHorizontalSensitivity)
                 return;
 
@@ -80,7 +85,8 @@ namespace Cgs.Play
                     _playController.playArea.CurrentRotation += 90;
             }
             else
-                _playController.playArea.horizontalNormalizedPosition -= pageHorizontal * PageHorizontalSensitivity * 10;
+                _playController.playArea.horizontalNormalizedPosition -=
+                    pageHorizontal * PageHorizontalSensitivity * 10;
         }
 
         private void InputToggleRotation(InputAction.CallbackContext obj)

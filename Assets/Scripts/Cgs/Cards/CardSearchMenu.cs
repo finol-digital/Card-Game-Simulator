@@ -58,10 +58,8 @@ namespace Cgs.Cards
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputToggleEnum;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
-            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed += InputClear;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -72,20 +70,28 @@ namespace Cgs.Cards
             _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
         }
 
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
+                return;
+
+            if (MoveAction?.WasPressedThisFrame() ?? false)
+                FocusToggle();
+            else if (PageAction?.WasPressedThisFrame() ?? false)
+            {
+                var pageVertical = PageAction.ReadValue<Vector2>().y;
+                if (Mathf.Abs(pageVertical) > 0)
+                    Scroll(pageVertical < 0);
+            }
+        }
+
         private void InputFocus(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
 
             FocusInputField();
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
-                return;
-
-            FocusToggle();
         }
 
         private void InputToggleEnum(InputAction.CallbackContext callbackContext)
@@ -95,16 +101,6 @@ namespace Cgs.Cards
 
             if (ActiveToggle != null)
                 ToggleEnum();
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
-                return;
-
-            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
-            if (Mathf.Abs(pageVertical) > 0)
-                Scroll(pageVertical < 0);
         }
 
         private void Scroll(bool scrollDown)
@@ -498,10 +494,8 @@ namespace Cgs.Cards
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputToggleEnum;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
-            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputClear;
+            InputSystem.actions.FindAction(Tags.SubMenuClear).performed -= InputClear;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

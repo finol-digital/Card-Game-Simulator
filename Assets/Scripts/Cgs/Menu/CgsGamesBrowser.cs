@@ -29,10 +29,11 @@ namespace Cgs.Menu
 
         private int _selectedGameId;
 
+        private InputAction _moveAction;
+        private InputAction _pageAction;
+
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
@@ -41,7 +42,31 @@ namespace Cgs.Menu
 
         private void Start()
         {
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
             StartCoroutine(RunRefreshCoroutine());
+        }
+
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+            {
+                var moveVertical = _moveAction.ReadValue<Vector2>().y;
+                if (moveVertical > 0 && _gameOptions.Count > 0)
+                    SelectPrevious();
+                else if (moveVertical < 0 && _gameOptions.Count > 0)
+                    SelectNext();
+            }
+            else if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                var pageVertical = _pageAction.ReadValue<Vector2>().y;
+                if (Mathf.Abs(pageVertical) > 0)
+                    ScrollPage(pageVertical < 0);
+            }
         }
 
         private IEnumerator RunRefreshCoroutine()
@@ -79,28 +104,6 @@ namespace Cgs.Menu
         private void BuildGameSelectionOptions()
         {
             Rebuild(_gameOptions, SelectGame, _selectedGameId);
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (Menu.IsBlocked)
-                return;
-
-            var moveVertical = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>().y;
-            if (moveVertical > 0 && _gameOptions.Count > 0)
-                SelectPrevious();
-            else if (moveVertical < 0 && _gameOptions.Count > 0)
-                SelectNext();
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (Menu.IsBlocked)
-                return;
-
-            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
-            if (Mathf.Abs(pageVertical) > 0)
-                ScrollPage(pageVertical < 0);
         }
 
         [UsedImplicitly]
@@ -172,8 +175,6 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;

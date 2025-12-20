@@ -60,9 +60,9 @@ namespace Cgs.Play.Drawer
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputCancel;
         }
 
         protected override void Start()
@@ -71,15 +71,17 @@ namespace Cgs.Play.Drawer
             Count = CardGameManager.Current.GameStartHandCount;
         }
 
-        private void InputMove(InputAction.CallbackContext callbackContext)
+        // Poll for Vector2 inputs
+        private void Update()
         {
-            if (IsBlocked)
+            if (IsBlocked || (!(MoveAction?.WasPressedThisFrame() ?? false) &&
+                              !(PageAction?.WasPressedThisFrame() ?? false)))
                 return;
 
-            var moveVector = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
-            if (moveVector.x < 0 || moveVector.y < 0)
+            var vector2 = MoveAction?.ReadValue<Vector2>() ?? PageAction.ReadValue<Vector2>();
+            if (vector2.x < 0 || vector2.y < 0)
                 Decrement();
-            else if (moveVector.x > 0 || moveVector.y > 0)
+            else if (vector2.x > 0 || vector2.y > 0)
                 Increment();
         }
 
@@ -133,9 +135,9 @@ namespace Cgs.Play.Drawer
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputCancel;
         }
     }
 }

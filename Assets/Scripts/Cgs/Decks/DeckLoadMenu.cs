@@ -66,10 +66,11 @@ namespace Cgs.Decks
 
         private bool IsBlocked => Menu.IsBlocked || nameInputField.isFocused || textInputField.isFocused;
 
+        private InputAction _moveAction;
+        private InputAction _pageAction;
+
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDecksNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
             InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
@@ -80,6 +81,39 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
+        private void Start()
+        {
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+        }
+
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (IsBlocked || newDeckPanel.gameObject.activeSelf)
+                return;
+
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+            {
+                var moveVertical = _moveAction.ReadValue<Vector2>().y;
+                switch (moveVertical)
+                {
+                    case > 0:
+                        SelectPrevious();
+                        break;
+                    case < 0:
+                        SelectNext();
+                        break;
+                }
+            }
+            else if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                var pageVertical = _pageAction.ReadValue<Vector2>().y;
+                if (Mathf.Abs(pageVertical) > 0)
+                    ScrollPage(pageVertical < 0);
+            }
         }
 
         public void Show(OnDeckLoadedDelegate loadCallback = null, string originalName = null,
@@ -132,33 +166,6 @@ namespace Cgs.Decks
             shareFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
             deleteFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
             loadFromFileButton.interactable = !string.IsNullOrEmpty(_selectedFilePath);
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked || newDeckPanel.gameObject.activeSelf)
-                return;
-
-            var vertical = callbackContext.ReadValue<Vector2>().y;
-            switch (vertical)
-            {
-                case > 0:
-                    SelectPrevious();
-                    break;
-                case < 0:
-                    SelectNext();
-                    break;
-            }
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked || newDeckPanel.gameObject.activeSelf)
-                return;
-
-            var vertical = callbackContext.ReadValue<Vector2>().y;
-            if (Mathf.Abs(vertical) > 0)
-                ScrollPage(vertical < 0);
         }
 
         [UsedImplicitly]
@@ -477,8 +484,6 @@ namespace Cgs.Decks
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDecksNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;
             InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;

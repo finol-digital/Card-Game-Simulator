@@ -17,17 +17,57 @@ namespace Cgs.Cards
         public SearchResults results;
         public ScrollRect scrollRect;
 
-        private void OnEnable()
-        {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
-        }
+        private InputAction _moveAction;
+        private InputAction _pageAction;
 
         private void Start()
         {
             CardViewer.Instance.buttonsPanel.gameObject.SetActive(true);
             CardViewer.Instance.previousButton.onClick.AddListener(SelectLeft);
             CardViewer.Instance.nextButton.onClick.AddListener(SelectRight);
+
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+        }
+
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
+                return;
+
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+            {
+                var moveVector2 = _moveAction.ReadValue<Vector2>();
+                if (moveVector2.y < 0)
+                    SelectDown();
+                else if (moveVector2.y > 0)
+                    SelectUp();
+                else if (moveVector2.x < 0)
+                    SelectLeft();
+                else if (moveVector2.x > 0)
+                    SelectRight();
+            }
+            else if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                var pageVector2 = _pageAction.ReadValue<Vector2>();
+                if (Mathf.Abs(pageVector2.y) > 0)
+                {
+                    if (CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
+                        return;
+                    if (pageVector2.y < 0)
+                        PageDown();
+                    else if (pageVector2.y > 0)
+                        PageUp();
+                }
+                else
+                {
+                    if (pageVector2.x < 0)
+                        PageLeft();
+                    else if (pageVector2.x > 0)
+                        PageRight();
+                }
+            }
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -56,46 +96,6 @@ namespace Cgs.Cards
                 if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Right)
                     PageLeft();
                 else if (swipeDirection == UnityExtensionMethods.UnityExtensionMethods.SwipeDirection.Left)
-                    PageRight();
-            }
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
-                return;
-
-            var moveVector2 = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
-            if (moveVector2.y < 0)
-                SelectDown();
-            else if (moveVector2.y > 0)
-                SelectUp();
-            else if (moveVector2.x < 0)
-                SelectLeft();
-            else if (moveVector2.x > 0)
-                SelectRight();
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
-                return;
-
-            var pageVector2 = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>();
-            if (Mathf.Abs(pageVector2.y) > 0)
-            {
-                if (CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
-                    return;
-                if (pageVector2.y < 0)
-                    PageDown();
-                else if (pageVector2.y > 0)
-                    PageUp();
-            }
-            else
-            {
-                if (pageVector2.x < 0)
-                    PageLeft();
-                else if (pageVector2.x > 0)
                     PageRight();
             }
         }
@@ -258,12 +258,6 @@ namespace Cgs.Cards
         public void PageRight()
         {
             results.IncrementPage();
-        }
-
-        private void OnDisable()
-        {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
         }
     }
 }

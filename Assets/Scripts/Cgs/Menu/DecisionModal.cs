@@ -22,10 +22,21 @@ namespace Cgs.Menu
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusPrevious;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (IsBlocked || !(MoveAction?.WasPressedThisFrame() ?? false))
+                return;
+
+            if (EventSystem.current.currentSelectedGameObject != button1.gameObject
+                && EventSystem.current.currentSelectedGameObject != button2.gameObject
+                && !EventSystem.current.alreadySelecting)
+                EventSystem.current.SetSelectedGameObject(button1.gameObject);
         }
 
         public void Show(string prompt, Tuple<string, UnityAction> option1, Tuple<string, UnityAction> option2)
@@ -45,17 +56,6 @@ namespace Cgs.Menu
             button2.onClick.AddListener(button2Action);
             button2.onClick.AddListener(Hide);
             text2.text = button2Text;
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            if (EventSystem.current.currentSelectedGameObject != button1.gameObject
-                && EventSystem.current.currentSelectedGameObject != button2.gameObject
-                && !EventSystem.current.alreadySelecting)
-                EventSystem.current.SetSelectedGameObject(button1.gameObject);
         }
 
         private void InputFocusPrevious(InputAction.CallbackContext callbackContext)
@@ -84,7 +84,6 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

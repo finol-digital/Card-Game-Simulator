@@ -80,10 +80,11 @@ namespace Cgs.Play.Multiplayer
 
         private bool _shouldRedisplay;
 
+        private InputAction _moveAction;
+        private InputAction _pageAction;
+
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
@@ -92,6 +93,9 @@ namespace Cgs.Play.Multiplayer
 
         private void Start()
         {
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             StartCoroutine(SignInAnonymouslyCoroutine());
         }
@@ -125,6 +129,27 @@ namespace Cgs.Play.Multiplayer
 
             if (_shouldRedisplay)
                 Redisplay();
+
+            // Poll for Vector2 inputs
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+            {
+                var move = _moveAction.ReadValue<Vector2>();
+                if (move.y > 0)
+                    SelectPrevious();
+                else if (move.y < 0)
+                    SelectNext();
+            }
+            else if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                var page = _pageAction.ReadValue<Vector2>();
+                if (Mathf.Abs(page.y) > 0)
+                    ScrollPage(page.y < 0);
+                else if (Mathf.Abs(page.x) > 0)
+                    ToggleConnectionSource();
+            }
         }
 
         public void Show()
@@ -204,30 +229,6 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet LobbyMenu] RefreshLobbies: {Lobbies.Count}");
 
             _shouldRedisplay = true;
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
-                return;
-
-            var move = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>();
-            if (move.y > 0)
-                SelectPrevious();
-            else if (move.y < 0)
-                SelectNext();
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
-                return;
-
-            var page = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>();
-            if (Mathf.Abs(page.y) > 0)
-                ScrollPage(page.y < 0);
-            else if (Mathf.Abs(page.x) > 0)
-                ToggleConnectionSource();
         }
 
         private void ToggleConnectionSource()
@@ -405,8 +406,6 @@ namespace Cgs.Play.Multiplayer
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;

@@ -15,10 +15,10 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Canvas))]
     public class Modal : MonoBehaviour
     {
-        public bool IsFocused => CardGameManager.Instance.ModalCanvas != null &&
-                                 CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
+        protected bool IsFocused => CardGameManager.Instance.ModalCanvas != null &&
+                                    CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
 
-        public bool WasFocused { get; private set; }
+        private bool WasFocused { get; set; }
 
         public virtual bool IsBlocked =>
             !IsFocused || !WasFocused || InputFields.Any(inputField => inputField.isFocused);
@@ -29,6 +29,7 @@ namespace Cgs.Menu
         protected InputAction FocusPreviousAction { get; private set; }
         private InputAction FocusNextAction { get; set; }
         protected InputAction MoveAction { get; private set; }
+        protected InputAction PageAction { get; private set; }
 
         protected static InputField ActiveInputField
         {
@@ -195,6 +196,7 @@ namespace Cgs.Menu
             FocusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
             FocusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
             MoveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            PageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
         }
 
         private void LateUpdate()
