@@ -74,10 +74,11 @@ namespace Cgs.Menu
         public Toggle developerModeToggle;
         public List<Transform> orientationOptions;
 
+        private InputAction _moveAction;
+        private InputAction _pageAction;
+
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputWebsite;
             InputSystem.actions.FindAction(Tags.SettingsToolTips).performed += InputRedisplay;
@@ -88,27 +89,30 @@ namespace Cgs.Menu
 
         private void Start()
         {
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+
             Redisplay();
         }
 
-        private void InputMove(InputAction.CallbackContext context)
+        // Poll for Vector2 inputs
+        private void Update()
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (EventSystem.current.currentSelectedGameObject == null
-                && !Vector2.zero.Equals(InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>()))
-                EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
-        }
-
-        private void InputPage(InputAction.CallbackContext context)
-        {
-            if (CardGameManager.Instance.ModalCanvas != null)
-                return;
-
-            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
-            if (Mathf.Abs(pageVertical) > 0)
-                ScrollPage(pageVertical < 0);
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+            {
+                if (EventSystem.current.currentSelectedGameObject == null
+                    && !Vector2.zero.Equals(_moveAction.ReadValue<Vector2>()))
+                    EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
+            }
+            else if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                var pageVertical = _pageAction.ReadValue<Vector2>().y;
+                if (Mathf.Abs(pageVertical) > 0)
+                    ScrollPage(pageVertical < 0);
+            }
         }
 
         private void InputRedisplay(InputAction.CallbackContext callbackContext)
@@ -266,8 +270,6 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputWebsite;
             InputSystem.actions.FindAction(Tags.SettingsToolTips).performed -= InputRedisplay;

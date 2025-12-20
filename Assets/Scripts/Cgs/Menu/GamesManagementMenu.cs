@@ -70,12 +70,13 @@ namespace Cgs.Menu
 
         private DownloadMenu _downloader;
 
+        private InputAction _moveAction;
+        private InputAction _pageAction;
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(BuildGameSelectionOptions);
 
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
             InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
@@ -86,12 +87,38 @@ namespace Cgs.Menu
 
 #if UNITY_ANDROID || UNITY_IOS
         private static string ZipFileType { get; set; }
+#endif
 
         private void Start()
         {
+#if UNITY_ANDROID || UNITY_IOS
             ZipFileType = NativeFilePicker.ConvertExtensionToFileType("zip");
-        }
 #endif
+            _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+        }
+
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (Menu.IsBlocked)
+                return;
+
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+            {
+                var moveVertical = _moveAction.ReadValue<Vector2>().y;
+                if (moveVertical > 0f)
+                    SelectPrevious();
+                else if (moveVertical < 0f)
+                    SelectNext();
+            }
+            else if (_pageAction?.WasPressedThisFrame() ?? false)
+            {
+                var pageVertical = _pageAction.ReadValue<Vector2>().y;
+                if (Mathf.Abs(pageVertical) > 0)
+                    ScrollPage(pageVertical < 0);
+            }
+        }
 
         public void Show()
         {
@@ -106,28 +133,6 @@ namespace Cgs.Menu
         private void BuildGameSelectionOptions()
         {
             Rebuild(CardGameManager.Instance.AllCardGames, SelectGame, CardGameManager.Current.Id);
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (Menu.IsBlocked)
-                return;
-
-            var moveVertical = InputSystem.actions.FindAction(Tags.PlayerMove).ReadValue<Vector2>().y;
-            if (moveVertical > 0f)
-                SelectPrevious();
-            else if (moveVertical < 0f)
-                SelectNext();
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (Menu.IsBlocked)
-                return;
-
-            var pageVertical = InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y;
-            if (Mathf.Abs(pageVertical) > 0)
-                ScrollPage(pageVertical < 0);
         }
 
         [UsedImplicitly]
@@ -291,8 +296,6 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;

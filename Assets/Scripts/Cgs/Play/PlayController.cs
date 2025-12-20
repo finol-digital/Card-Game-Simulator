@@ -789,8 +789,9 @@ namespace Cgs.Play
 
         private void InputCancel(InputAction.CallbackContext context)
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible
-                || CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
+                || PlayableViewer.Instance.IsVisible || CardGameManager.Instance.ModalCanvas != null
+                || scoreboard.nameInputField.isFocused)
                 return;
 
 #if CGS_SINGLEPLAYER

@@ -69,6 +69,7 @@ namespace Cgs.Play
                 sliderCanvasGroup.blocksRaycasts = false;
             }
 
+            // Poll for Vector2 inputs
             if (IsBlocked)
                 return;
 

@@ -33,10 +33,23 @@ namespace Cgs.Play
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed += InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed += InputPage;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
+        }
+
+        // Poll for Vector2 inputs
+        private void Update()
+        {
+            if (IsBlocked)
+                return;
+
+            if (MoveAction?.WasPressedThisFrame() ?? false)
+            {
+                if (EventSystem.current.currentSelectedGameObject == null)
+                    EventSystem.current.SetSelectedGameObject(autoStackCardsToggle.gameObject);
+            }
+            else if (PageAction?.WasPressedThisFrame() ?? false)
+                ScrollPage(PageAction.ReadValue<Vector2>().y < 0);
         }
 
         public override void Show()
@@ -55,23 +68,6 @@ namespace Cgs.Play
             launchNativeButton.gameObject.SetActive(false);
             viewRulesButton.gameObject.SetActive(true);
 #endif
-        }
-
-        private void InputMove(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            if (EventSystem.current.currentSelectedGameObject == null)
-                EventSystem.current.SetSelectedGameObject(autoStackCardsToggle.gameObject);
-        }
-
-        private void InputPage(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            ScrollPage(InputSystem.actions.FindAction(Tags.PlayerPage).ReadValue<Vector2>().y < 0);
         }
 
         private void InputMenu(InputAction.CallbackContext callbackContext)
@@ -160,8 +156,6 @@ namespace Cgs.Play
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.PlayerMove).performed -= InputMove;
-            InputSystem.actions.FindAction(Tags.PlayerPage).performed -= InputPage;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
