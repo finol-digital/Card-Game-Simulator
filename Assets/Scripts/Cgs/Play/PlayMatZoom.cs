@@ -22,11 +22,11 @@ namespace Cgs.Play
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 3f;
 
-        private PlayController _playController;
         private float _timeSinceChange = TimeToDisappear;
 
-        private InputAction _toggleZoomRotationAction;
-        private InputAction _playerPageAction;
+        private PlayController _playController;
+
+        private InputAction _pageAction;
 
         private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom ||
                                   CardGameManager.Instance.ModalCanvas != null ||
@@ -35,14 +35,12 @@ namespace Cgs.Play
 
         private void OnEnable()
         {
-            _toggleZoomRotationAction = InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation);
-            if (_toggleZoomRotationAction != null)
-                _toggleZoomRotationAction.performed += InputToggleZoomPan;
-            _playerPageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleZoomPan;
         }
 
         private void Start()
         {
+            _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
             _playController = GetComponent<PlayController>();
         }
 
@@ -73,7 +71,7 @@ namespace Cgs.Play
             if (IsBlocked)
                 return;
 
-            var pageVertical = _playerPageAction?.ReadValue<Vector2>().y ?? 0;
+            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
             if (Mathf.Abs(pageVertical) < PageVerticalSensitivity)
                 return;
 
@@ -113,8 +111,7 @@ namespace Cgs.Play
 
         private void OnDisable()
         {
-            if (_toggleZoomRotationAction != null)
-                _toggleZoomRotationAction.performed -= InputToggleZoomPan;
+            InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed -= InputToggleZoomPan;
         }
     }
 }

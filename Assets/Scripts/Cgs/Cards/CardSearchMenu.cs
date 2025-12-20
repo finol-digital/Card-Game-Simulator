@@ -52,7 +52,6 @@ namespace Cgs.Cards
         private readonly CardSearchFilters _filters = new();
         private readonly List<UnityCard> _results = new();
 
-        private InputAction _pageAction;
         private InputAction _submitAction;
 
         private void OnEnable()
