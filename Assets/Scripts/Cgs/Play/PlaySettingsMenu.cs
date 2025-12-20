@@ -34,6 +34,7 @@ namespace Cgs.Play
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
+            InputSystem.actions.FindAction(Tags.PlayGameSettings).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -157,6 +158,7 @@ namespace Cgs.Play
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
+            InputSystem.actions.FindAction(Tags.PlayGameSettings).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }

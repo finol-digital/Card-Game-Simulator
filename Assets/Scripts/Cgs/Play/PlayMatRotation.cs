@@ -73,11 +73,11 @@ namespace Cgs.Play
             if (IsBlocked)
                 return;
 
-            var pageHorizontal = _pageAction.ReadValue<Vector2>().x;
+            var pageHorizontal = _pageAction?.ReadValue<Vector2>().x ?? 0;
             if (Mathf.Abs(pageHorizontal) < PageHorizontalSensitivity)
                 return;
 
-            if (_rotationEnabled && InputSystem.actions.FindAction(Tags.PlayerPage).WasPressedThisFrame())
+            if (_rotationEnabled && (_pageAction?.WasPressedThisFrame() ?? false))
             {
                 if (pageHorizontal < 0)
                     _playController.playArea.CurrentRotation -= 90;

@@ -797,7 +797,10 @@ namespace Cgs.Play
 #if CGS_SINGLEPLAYER
             menu.ToggleFullscreen();
 #else
-            PromptBackToMainMenu();
+            if (menu.panels.activeSelf)
+                menu.ToggleMenu();
+            else
+                PromptBackToMainMenu();
 #endif
         }
 
