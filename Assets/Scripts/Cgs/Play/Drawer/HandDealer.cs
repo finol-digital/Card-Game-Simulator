@@ -78,7 +78,7 @@ namespace Cgs.Play.Drawer
                               !(PageAction?.WasPressedThisFrame() ?? false)))
                 return;
 
-            var vector2 = MoveAction?.ReadValue<Vector2>() ?? PageAction?.ReadValue<Vector2>() ?? Vector2.zero;
+            var vector2 = MoveAction?.ReadValue<Vector2>() ?? PageAction.ReadValue<Vector2>();
             if (vector2.x < 0 || vector2.y < 0)
                 Decrement();
             else if (vector2.x > 0 || vector2.y > 0)
