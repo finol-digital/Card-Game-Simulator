@@ -18,7 +18,7 @@ namespace Cgs.Play
         public Slider slider;
         public CanvasGroup sliderCanvasGroup;
 
-        private const float PageHorizontalSensitivity = 0.2f;
+        private const float PageHorizontalSensitivity = 0.1f;
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 3f;
 
@@ -74,6 +74,9 @@ namespace Cgs.Play
                 return;
 
             var pageHorizontal = _pageAction.ReadValue<Vector2>().x;
+            if (Mathf.Abs(pageHorizontal) < PageHorizontalSensitivity)
+                return;
+
             if (_rotationEnabled)
             {
                 if (pageHorizontal < 0)
@@ -82,7 +85,7 @@ namespace Cgs.Play
                     _playController.playArea.CurrentRotation += 90;
             }
             else
-                _playController.playArea.horizontalNormalizedPosition -=
+                _playController.playArea.horizontalNormalizedPosition +=
                     pageHorizontal * PageHorizontalSensitivity * 10;
         }
 

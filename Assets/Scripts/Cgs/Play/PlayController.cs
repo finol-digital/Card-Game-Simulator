@@ -794,12 +794,15 @@ namespace Cgs.Play
                 || scoreboard.nameInputField.isFocused)
                 return;
 
-#if CGS_SINGLEPLAYER
-            menu.ToggleFullscreen();
-#else
-            if (menu.panels.activeSelf)
+            var isAnyStackViewer = AllCardStacks.Select(stack => stack.Viewer).Any(v => v != null && !v.IsNew);
+            if (isAnyStackViewer)
+                FocusPlayArea();
+            else if (menu.panels.activeSelf)
                 menu.ToggleMenu();
             else
+#if CGS_SINGLEPLAYER
+                menu.ToggleFullscreen();
+#else
                 PromptBackToMainMenu();
 #endif
         }
