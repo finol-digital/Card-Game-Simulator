@@ -68,13 +68,10 @@ namespace Cgs.Play
             }
 
             // Poll for Vector2 inputs
-            if (IsBlocked)
+            if (_pageAction == null || !_pageAction.WasPressedThisFrame() || IsBlocked)
                 return;
 
-            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
-            if (Mathf.Abs(pageVertical) < PageVerticalSensitivity)
-                return;
-
+            var pageVertical = _pageAction.ReadValue<Vector2>().y;
             if (_playController.playArea.ZoomEnabled)
             {
                 var zoomFactor = Mathf.Clamp(1 - pageVertical * PageVerticalSensitivity, 0.5f, 1.5f);

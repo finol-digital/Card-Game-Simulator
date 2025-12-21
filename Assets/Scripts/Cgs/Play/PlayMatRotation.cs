@@ -70,14 +70,11 @@ namespace Cgs.Play
             }
 
             // Poll for Vector2 inputs
-            if (IsBlocked)
+            if (_pageAction == null || !_pageAction.WasPressedThisFrame() || IsBlocked)
                 return;
 
-            var pageHorizontal = _pageAction?.ReadValue<Vector2>().x ?? 0;
-            if (Mathf.Abs(pageHorizontal) < PageHorizontalSensitivity)
-                return;
-
-            if (_rotationEnabled && (_pageAction?.WasPressedThisFrame() ?? false))
+            var pageHorizontal = _pageAction.ReadValue<Vector2>().x;
+            if (_rotationEnabled)
             {
                 if (pageHorizontal < 0)
                     _playController.playArea.CurrentRotation -= 90;
