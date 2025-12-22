@@ -3578,7 +3578,7 @@ PrefabInstance:
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: m_Name
-      value: PointsCounter Widget
+      value: Counter Widget
       objectReference: {fileID: 0}
     - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}

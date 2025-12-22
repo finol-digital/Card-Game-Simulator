@@ -251,9 +251,9 @@ namespace Cgs.CardGameView.Viewer
 
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(Tags.CardZoom).performed += InputZoom;
-            InputSystem.actions.FindAction(Tags.CardSelectPrevious).performed += InputSelectPrevious;
-            InputSystem.actions.FindAction(Tags.CardSelectNext).performed += InputSelectNext;
+            InputSystem.actions.FindAction(Tags.ViewerZoom).performed += InputZoom;
+            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
         }
 
         private void Start()
@@ -542,9 +542,9 @@ namespace Cgs.CardGameView.Viewer
         {
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(Tags.CardZoom).performed -= InputZoom;
-            InputSystem.actions.FindAction(Tags.CardSelectPrevious).performed -= InputSelectPrevious;
-            InputSystem.actions.FindAction(Tags.CardSelectNext).performed -= InputSelectNext;
+            InputSystem.actions.FindAction(Tags.ViewerZoom).performed -= InputZoom;
+            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
+            InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;
         }
     }
 }

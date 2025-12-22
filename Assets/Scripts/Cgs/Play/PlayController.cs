@@ -790,8 +790,8 @@ namespace Cgs.Play
         private void InputCancel(InputAction.CallbackContext context)
         {
             if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
-                || PlayableViewer.Instance.IsVisible || CardGameManager.Instance.ModalCanvas != null
-                || scoreboard.nameInputField.isFocused)
+                || PlayableViewer.Instance.IsVisible|| PlayableViewer.Instance.WasVisible
+                || CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
                 return;
 
             var isAnyStackViewer = AllCardStacks.Select(stack => stack.Viewer).Any(v => v != null && !v.IsNew);

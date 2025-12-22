@@ -11,6 +11,7 @@ using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -38,6 +39,11 @@ namespace Cgs.CardGameView.Viewer
 
         private CardStack _cardStack;
         private int? _handIndex;
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputShuffle;
+        }
 
         private void Start()
         {
@@ -85,7 +91,7 @@ namespace Cgs.CardGameView.Viewer
 
         private void Resize()
         {
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             var cardHeight = CardGameManager.Current.CardSize.Y * CardGameManager.PixelsPerInch;
             rectTransform.sizeDelta =
                 new Vector2(rectTransform.sizeDelta.x, HandleHeight + cardHeight + ScrollbarHeight);
@@ -148,8 +154,8 @@ namespace Cgs.CardGameView.Viewer
             countLabel.text = cardModels.Length.ToString();
 
             if (CgsNetManager.Instance.IsOnline && _handIndex != null)
-                CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
-                    cardModels.Select(card => (CgsNetString) card.Id).ToArray());
+                CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int)_handIndex,
+                    cardModels.Select(card => (CgsNetString)card.Id).ToArray());
 
             if (_cardStack == null)
                 return;
@@ -168,23 +174,40 @@ namespace Cgs.CardGameView.Viewer
             countLabel.text = cardModels.Length.ToString();
 
             if (CgsNetManager.Instance.IsOnline && _handIndex != null)
-                CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int) _handIndex,
-                    cardModels.Select(card => (CgsNetString) card.Id).ToArray());
+                CgsNetManager.Instance.LocalPlayer.RequestSyncHand((int)_handIndex,
+                    cardModels.Select(card => (CgsNetString)card.Id).ToArray());
 
             if (_cardStack != null)
                 _cardStack.RequestRemoveAt(cardModel.Index);
         }
 
+        private void InputShuffle(InputAction.CallbackContext context)
+        {
+            if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
+                || PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible
+                || CardGameManager.Instance.ModalCanvas != null
+                || PlayController.Instance.scoreboard.nameInputField.isFocused)
+                return;
+
+            PromptShuffle();
+        }
+
         [UsedImplicitly]
         public void PromptShuffle()
         {
-            _cardStack.PromptShuffle();
+            if (_cardStack != null)
+                _cardStack.PromptShuffle();
         }
 
         [UsedImplicitly]
         public void Close()
         {
             Destroy(gameObject);
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputShuffle;
         }
     }
 }

@@ -188,7 +188,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.CardZoom).performed += InputZoom;
+            InputSystem.actions.FindAction(Tags.ViewerZoom).performed += InputZoom;
         }
 
         protected override void OnNetworkSpawnPlayable()
@@ -824,7 +824,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.CardZoom).performed -= InputZoom;
+            InputSystem.actions.FindAction(Tags.ViewerZoom).performed -= InputZoom;
         }
     }
 }

@@ -2397,16 +2397,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2987615211530630755, guid: 6c8f698bdb10af641a0fdff4f6f16781,
-        type: 3}
-      propertyPath: isBelow
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2987615211530630755, guid: 6c8f698bdb10af641a0fdff4f6f16781,
-        type: 3}
-      propertyPath: tooltip
-      value: +
-      objectReference: {fileID: 0}
     - target: {fileID: 3723564657771830477, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
       propertyPath: avoidOverlap
@@ -2426,16 +2416,6 @@ PrefabInstance:
         type: 3}
       propertyPath: inputActionId
       value: PlayGame/Menu
-      objectReference: {fileID: 0}
-    - target: {fileID: 5260860553476784145, guid: 6c8f698bdb10af641a0fdff4f6f16781,
-        type: 3}
-      propertyPath: isBelow
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5260860553476784145, guid: 6c8f698bdb10af641a0fdff4f6f16781,
-        type: 3}
-      propertyPath: tooltip
-      value: '-'
       objectReference: {fileID: 0}
     - target: {fileID: 6356871470250104893, guid: 6c8f698bdb10af641a0fdff4f6f16781,
         type: 3}
@@ -3182,17 +3162,17 @@ PrefabInstance:
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.54949707
+      value: 0.5755246
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.54949707
+      value: 0.5755246
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.54949707
+      value: 0.5755246
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}

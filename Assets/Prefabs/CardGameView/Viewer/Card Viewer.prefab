@@ -458,7 +458,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/Zoom
+  inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &1374545582827330
 GameObject:
@@ -625,7 +625,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/SelectNext
+  inputActionId: Viewer/SelectNext
   parentTransform: {fileID: 0}
 --- !u!1 &1391088035837496
 GameObject:
@@ -807,7 +807,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
-  inputActionId: Card/Zoom
+  inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &1489887222482700
 GameObject:
@@ -1447,7 +1447,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/SelectPrevious
+  inputActionId: Viewer/SelectPrevious
   parentTransform: {fileID: 0}
 --- !u!1 &278163115200097408
 GameObject:
@@ -1649,7 +1649,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/Zoom
+  inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &780418392263964738
 GameObject:
@@ -1944,7 +1944,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/SelectNext
+  inputActionId: Viewer/SelectNext
   parentTransform: {fileID: 0}
 --- !u!1 &1158087559228869626
 GameObject:
@@ -2326,11 +2326,11 @@ RectTransform:
   - {fileID: 8492561554335607769}
   m_Father: {fileID: 5731715192275145705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000045776367, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 80, y: 80}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 1, y: 0}
 --- !u!222 &5212605091505131395
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3185,7 +3185,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/Zoom
+  inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &7509274334271859109
 GameObject:
@@ -3280,7 +3280,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/Zoom
+  inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &7601199571884906900
 GameObject:
@@ -3512,7 +3512,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 1
-  inputActionId: Card/Zoom
+  inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
 --- !u!1 &7845637863157837290
 GameObject:
@@ -4066,7 +4066,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/SelectPrevious
+  inputActionId: Viewer/SelectPrevious
   parentTransform: {fileID: 0}
 --- !u!1001 &950190529897883528
 PrefabInstance:
@@ -5054,7 +5054,12 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Details
+      value: Max
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: inputActionId
+      value: Viewer/Max
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -6790,7 +6795,12 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Collapse
+      value: Min
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: inputActionId
+      value: Viewer/Min
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -7754,13 +7764,18 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Expand
+      value: Mid
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
-      propertyPath: avoidOverlap
-      value: 1
+      propertyPath: inputActionId
+      value: Viewer/Mid
       objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 1016929423823531852}
     - target: {fileID: 7317508625903915484, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -7929,6 +7944,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1016929423823531852 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
+    type: 3}
+  m_PrefabInstance: {fileID: 7751214748712770782}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7800768945016006827
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8091,8 +8112,23 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Back
+      value: Mid
       objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: inputActionId
+      value: Viewer/Mid
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 778449936741131493}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -8116,7 +8152,7 @@ PrefabInstance:
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 54
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -8279,6 +8315,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 849115afddf0d7d48b0bd0f145f7349d, type: 3}
+--- !u!224 &778449936741131493 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8016582453618448247}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &778449936882763432 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7317508625903915487, guid: 849115afddf0d7d48b0bd0f145f7349d,

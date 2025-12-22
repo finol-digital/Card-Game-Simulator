@@ -322,7 +322,7 @@ PrefabInstance:
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
       propertyPath: m_KeyboardType
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4768240308299460165, guid: f4698c1a75d36a640afc1bea8b676ff4,
         type: 3}
@@ -514,6 +514,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6077592990317271621}
     m_Modifications:
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: tooltip
+      value: sub
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: inputActionId
+      value: PlayGame/Sub
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834909, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_IsActive
@@ -682,6 +697,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6077592990317271621}
     m_Modifications:
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: isBelow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: tooltip
+      value: add
+      objectReference: {fileID: 0}
+    - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
+        type: 3}
+      propertyPath: inputActionId
+      value: PlayGame/Add
+      objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834909, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: m_IsActive
