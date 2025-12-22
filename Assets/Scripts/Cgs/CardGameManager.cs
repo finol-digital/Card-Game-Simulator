@@ -15,6 +15,7 @@ using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityExtensionMethods;
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -187,6 +188,11 @@ namespace Cgs
         public ProgressBar Progress => progress;
 
         public ProgressBar progress;
+
+        private InputAction _tooltipsAction;
+        private InputAction _previewAction;
+        private InputAction _reprintsAction;
+        private InputAction _developerAction;
 
         private void Awake()
         {
@@ -461,6 +467,11 @@ namespace Cgs
 
         private IEnumerator Start()
         {
+            _tooltipsAction = InputSystem.actions.FindAction(Tags.SettingsToolTips);
+            _previewAction = InputSystem.actions.FindAction(Tags.SettingsPreviewMouseOver);
+            _reprintsAction = InputSystem.actions.FindAction(Tags.SettingsHideReprints);
+            _developerAction = InputSystem.actions.FindAction(Tags.SettingsDeveloperMode);
+
             yield return null;
             while (Current is { IsDownloading: true })
                 yield return null;
@@ -804,6 +815,15 @@ namespace Cgs
 
         private void Update()
         {
+            if (_tooltipsAction?.WasPressedThisFrame() ?? false)
+                Settings.ButtonTooltipsEnabled = !Settings.ButtonTooltipsEnabled;
+            if (_previewAction?.WasPressedThisFrame() ?? false)
+                Settings.PreviewOnMouseOver = !Settings.PreviewOnMouseOver;
+            if (_reprintsAction?.WasPressedThisFrame() ?? false)
+                Settings.HideReprints = !Settings.HideReprints;
+            if (_developerAction?.WasPressedThisFrame() ?? false)
+                Settings.DeveloperMode = !Settings.DeveloperMode;
+
             ImageQueueService.Instance.ProcessQueue(this);
         }
 

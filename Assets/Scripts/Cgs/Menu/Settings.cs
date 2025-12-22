@@ -36,25 +36,25 @@ namespace Cgs.Menu
         public static bool ButtonTooltipsEnabled
         {
             get => PlayerPrefs.GetInt(PlayerPrefsButtonTooltipsEnabled, DefaultButtonTooltipsEnabled) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsButtonTooltipsEnabled, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsButtonTooltipsEnabled, value ? 1 : 0);
         }
 
         public static bool PreviewOnMouseOver
         {
             get => PlayerPrefs.GetInt(PlayerPrefsPreviewOnMouseOver, DefaultPreviewOnMouseOver) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsPreviewOnMouseOver, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsPreviewOnMouseOver, value ? 1 : 0);
         }
 
         public static bool HideReprints
         {
             get => PlayerPrefs.GetInt(PlayerPrefsHideReprints, 1) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsHideReprints, value ? 1 : 0);
         }
 
         public static bool DeveloperMode
         {
             get => PlayerPrefs.GetInt(PlayerPrefsDeveloperMode, 0) == 1;
-            private set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
+            set => PlayerPrefs.SetInt(PlayerPrefsDeveloperMode, value ? 1 : 0);
         }
 
         public ScrollRect scrollRect;
@@ -256,6 +256,7 @@ namespace Cgs.Menu
         {
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
+
             if (EventSystem.current.currentSelectedGameObject == null)
                 BackToMainMenu();
             else if (!EventSystem.current.alreadySelecting)

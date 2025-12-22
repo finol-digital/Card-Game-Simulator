@@ -1521,12 +1521,34 @@
                 },
                 {
                     "name": "",
+                    "id": "6f70328d-eead-490c-b76c-66c1cc23a6d7",
+                    "path": "<Keyboard>/numpadMinus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Sub",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "3bce3fd2-21dc-44c5-b303-76acd0bdab95",
                     "path": "<Keyboard>/minus",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Sub",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00c57c0c-32eb-4058-a84e-ed56e6673c35",
+                    "path": "<Keyboard>/numpadPlus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Add",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1994,7 +2016,7 @@
                 {
                     "name": "",
                     "id": "4507aead-1bf3-4104-a342-b943ccc77b61",
-                    "path": "<Keyboard>/t",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -2038,7 +2060,7 @@
                 {
                     "name": "",
                     "id": "a84a9fa5-f125-47ca-9c53-69569ed32ec7",
-                    "path": "<Keyboard>/l",
+                    "path": "<Keyboard>/semicolon",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",

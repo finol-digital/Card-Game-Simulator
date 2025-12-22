@@ -97,6 +97,8 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputSub;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
             InputSystem.actions.FindAction(Tags.CardFlip).performed += InputFlip;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -297,28 +299,12 @@ namespace Cgs.CardGameView.Viewer
             }
         }
 
-        [UsedImplicitly]
-        public void IncrementDie()
+        private void InputSub(InputAction.CallbackContext context)
         {
-            if (Dice == null)
-            {
-                Debug.LogWarning("Ignoring increment request since there is no die selected.");
+            if (IsBlocked)
                 return;
-            }
 
-            Dice.Value += 1;
-        }
-
-        [UsedImplicitly]
-        public void IncrementDieMax()
-        {
-            if (Dice == null)
-            {
-                Debug.LogWarning("Ignoring increment max request since there is no die selected.");
-                return;
-            }
-
-            Dice.Max += 1;
+            DecrementDie();
         }
 
         [UsedImplicitly]
@@ -343,6 +329,38 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Dice.Max -= 1;
+        }
+
+        private void InputAdd(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            IncrementDie();
+        }
+
+        [UsedImplicitly]
+        public void IncrementDie()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring increment request since there is no die selected.");
+                return;
+            }
+
+            Dice.Value += 1;
+        }
+
+        [UsedImplicitly]
+        public void IncrementDieMax()
+        {
+            if (Dice == null)
+            {
+                Debug.LogWarning("Ignoring increment max request since there is no die selected.");
+                return;
+            }
+
+            Dice.Max += 1;
         }
 
         [UsedImplicitly]
@@ -513,6 +531,8 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;
             InputSystem.actions.FindAction(Tags.CardFlip).performed -= InputFlip;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
