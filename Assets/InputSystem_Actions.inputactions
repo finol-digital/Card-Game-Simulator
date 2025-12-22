@@ -909,6 +909,17 @@
                 },
                 {
                     "name": "",
+                    "id": "217b6872-84a6-41de-bfcb-7a745e068264",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Min",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f7e20b79-8b1f-4a74-946b-8a9dee3e1d70",
                     "path": "<Keyboard>/x",
                     "interactions": "",
@@ -926,6 +937,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Min",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9a1644d6-bc48-46be-9481-49a59a81c0e0",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Mid",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1390,7 +1412,7 @@
                 {
                     "name": "",
                     "id": "7f3e1180-4a29-474c-b92a-21b4173e03b7",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1423,7 +1445,7 @@
                 {
                     "name": "",
                     "id": "b5932ef2-0d24-437a-8261-b650cf242bad",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1521,6 +1543,17 @@
                 },
                 {
                     "name": "",
+                    "id": "526441d0-2659-4e5e-b0c1-63b00ff46ac2",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Sub",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "6f70328d-eead-490c-b76c-66c1cc23a6d7",
                     "path": "<Keyboard>/numpadMinus",
                     "interactions": "",
@@ -1538,6 +1571,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Sub",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9de0afee-168d-4664-8979-2f075564203b",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Add",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
