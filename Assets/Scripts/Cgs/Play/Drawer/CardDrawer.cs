@@ -11,6 +11,7 @@ using Cgs.Play.Multiplayer;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -54,9 +55,18 @@ namespace Cgs.Play.Drawer
 
         private int _previousOverlapSpacing;
 
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
+                                  CardViewer.Instance.Zoom ||
+                                  PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
+                                  CardGameManager.Instance.ModalCanvas != null;
+
         private void OnEnable()
         {
             CardGameManager.Instance.OnSceneActions.Add(Resize);
+
+            InputSystem.actions.FindAction(Tags.ViewerMax).performed += InputMax;
+            InputSystem.actions.FindAction(Tags.ViewerMid).performed += InputMid;
+            InputSystem.actions.FindAction(Tags.ViewerMin).performed += InputMin;
         }
 
         private void Awake()
@@ -92,12 +102,28 @@ namespace Cgs.Play.Drawer
                 cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
         }
 
+        private void InputMax(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            Show();
+        }
+
         [UsedImplicitly]
         public void Show()
         {
             panelRectTransform.anchoredPosition = ShownPosition;
             downButton.interactable = true;
             upButton.interactable = false;
+        }
+
+        private void InputMid(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            SemiShow();
         }
 
         [UsedImplicitly]
@@ -286,11 +312,27 @@ namespace Cgs.Play.Drawer
                 cardZone.Clear();
         }
 
+        private void InputMin(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            Hide();
+        }
+
+        [UsedImplicitly]
         public void Hide()
         {
             panelRectTransform.anchoredPosition = HiddenPosition;
             downButton.interactable = false;
             upButton.interactable = true;
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.ViewerMax).performed -= InputMax;
+            InputSystem.actions.FindAction(Tags.ViewerMid).performed -= InputMid;
+            InputSystem.actions.FindAction(Tags.ViewerMin).performed -= InputMin;
         }
     }
 }

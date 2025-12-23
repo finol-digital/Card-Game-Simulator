@@ -68,23 +68,23 @@ namespace Cgs.Play
             }
 
             // Poll for Vector2 inputs
-            if (IsBlocked)
+            if (_pageAction == null || !_pageAction.WasPressedThisFrame() || IsBlocked)
                 return;
 
-            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
+            var pageVertical = _pageAction.ReadValue<Vector2>().y;
             if (Mathf.Abs(pageVertical) < PageVerticalSensitivity)
                 return;
 
             if (_playController.playArea.ZoomEnabled)
             {
-                var zoomFactor = Mathf.Clamp(1 - pageVertical * PageVerticalSensitivity, 0.5f, 1.5f);
+                var zoomFactor = Mathf.Clamp(1 + pageVertical * PageVerticalSensitivity, 0.5f, 1.5f);
                 _playController.playArea.CurrentZoom = Mathf.Clamp(
                     _playController.playArea.CurrentZoom * zoomFactor,
                     RotateZoomableScrollRect.MinZoom,
                     RotateZoomableScrollRect.MaxZoom);
             }
             else
-                _playController.playArea.verticalNormalizedPosition -= pageVertical * PageVerticalSensitivity * 10;
+                _playController.playArea.verticalNormalizedPosition += pageVertical * PageVerticalSensitivity * 10;
         }
 
         private void InputToggleZoomPan(InputAction.CallbackContext obj)

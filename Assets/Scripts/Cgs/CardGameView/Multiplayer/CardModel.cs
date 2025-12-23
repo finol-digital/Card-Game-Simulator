@@ -8,6 +8,7 @@ using Cgs.CardGameView.Viewer;
 using Cgs.Menu;
 using Cgs.Play;
 using Cgs.Play.Multiplayer;
+using Cgs.UI;
 using Cgs.UI.ScrollRects;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
@@ -168,13 +169,11 @@ namespace Cgs.CardGameView.Multiplayer
         private Image View => _view ??= GetComponent<Image>();
         private Image _view;
         private Material _material;
-        private int IsSelectedPropertyId => _isSelectedPropertyId ??= Shader.PropertyToID("_IsSelected");
-        private int? _isSelectedPropertyId;
 
         public Material GetModifiedMaterial(Material baseMaterial)
         {
             var material = new Material(baseMaterial);
-            material.SetFloat(IsSelectedPropertyId,
+            material.SetFloat(SelectableHighlight.IsSelectedPropertyId,
                 EventSystem.current.currentSelectedGameObject == gameObject ? 1 : 0);
             return material;
         }
@@ -189,7 +188,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.CardZoom).performed += InputZoom;
+            InputSystem.actions.FindAction(Tags.ViewerZoom).performed += InputZoom;
         }
 
         protected override void OnNetworkSpawnPlayable()
@@ -337,7 +336,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (CardViewer.Instance != null)
                 CardViewer.Instance.SelectedCardModel = this;
-            View.material.SetFloat(IsSelectedPropertyId, 1);
+            View.material.SetFloat(SelectableHighlight.IsSelectedPropertyId, 1);
             View.SetMaterialDirty();
         }
 
@@ -345,7 +344,7 @@ namespace Cgs.CardGameView.Multiplayer
         {
             if (CardViewer.Instance != null && !CardViewer.Instance.Zoom)
                 CardViewer.Instance.IsVisible = false;
-            View.material.SetFloat(IsSelectedPropertyId, 0);
+            View.material.SetFloat(SelectableHighlight.IsSelectedPropertyId, 0);
             View.SetMaterialDirty();
         }
 
@@ -825,7 +824,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.CardZoom).performed -= InputZoom;
+            InputSystem.actions.FindAction(Tags.ViewerZoom).performed -= InputZoom;
         }
     }
 }

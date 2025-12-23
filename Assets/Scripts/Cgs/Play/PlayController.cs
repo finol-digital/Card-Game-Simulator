@@ -154,6 +154,11 @@ namespace Cgs.Play
 
         private CardStack _soloDeckStack;
 
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
+                                  CardViewer.Instance.Zoom || scoreboard.nameInputField.isFocused ||
+                                  PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
+                                  CardGameManager.Instance.ModalCanvas != null;
+
         private void Awake()
         {
             Instance = this;
@@ -308,9 +313,9 @@ namespace Cgs.Play
 
         private void InputPlayGameMenu(InputAction.CallbackContext context)
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom || PlayableViewer.Instance.IsVisible
-                || CardGameManager.Instance.ModalCanvas != null || scoreboard.nameInputField.isFocused)
+            if (IsBlocked)
                 return;
+
             if (CardViewer.Instance.PreviewCardModel == null)
                 menu.ToggleMenu();
         }
@@ -789,15 +794,19 @@ namespace Cgs.Play
 
         private void InputCancel(InputAction.CallbackContext context)
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
-                || PlayableViewer.Instance.IsVisible || CardGameManager.Instance.ModalCanvas != null
-                || scoreboard.nameInputField.isFocused)
+            if (IsBlocked)
                 return;
 
+            var isAnyStackViewer = AllCardStacks.Select(stack => stack.Viewer).Any(v => v != null && !v.IsNew);
+            if (isAnyStackViewer)
+                FocusPlayArea();
+            else if (menu.panels.activeSelf)
+                menu.ToggleMenu();
+            else
 #if CGS_SINGLEPLAYER
-            menu.ToggleFullscreen();
+                menu.ToggleFullscreen();
 #else
-            PromptBackToMainMenu();
+                PromptBackToMainMenu();
 #endif
         }
 

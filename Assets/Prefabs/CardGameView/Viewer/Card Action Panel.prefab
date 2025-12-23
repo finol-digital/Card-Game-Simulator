@@ -304,6 +304,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: avoidOverlap
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: inputActionId
       value: Card/Tap
       objectReference: {fileID: 0}
@@ -540,6 +545,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: avoidOverlap
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: inputActionId
       value: Card/Move
       objectReference: {fileID: 0}
@@ -768,6 +778,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Flip face
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1001,6 +1016,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Rotate clockwise
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1242,6 +1262,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tooltip
       value: Destroy permanently
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
+      propertyPath: avoidOverlap
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}

@@ -23,19 +23,17 @@ namespace Cgs
         public const string PlayerDelete = "Player/Delete";
         public const string PlayerSubmit = "Player/Submit";
 
-        public const string PlayGameMenu = "PlayGame/Menu";
-        public const string PlayGameSettings = "PlayGame/Settings";
-        public const string PlayGameDie = "PlayGame/Die";
-        public const string PlayGameToken = "PlayGame/Token";
-        public const string PlayGameToggleZoomRotation = "PlayGame/ToggleZoomRotation";
-
-        public const string CardZoom = "Card/Zoom";
-        public const string CardSelectPrevious = "Card/SelectPrevious";
-        public const string CardSelectNext = "Card/SelectNext";
         public const string CardMove = "Card/Move";
         public const string CardRotate = "Card/Rotate";
         public const string CardTap = "Card/Tap";
         public const string CardFlip = "Card/Flip";
+
+        public const string ViewerZoom = "Viewer/Zoom";
+        public const string ViewerSelectPrevious = "Viewer/SelectPrevious";
+        public const string ViewerSelectNext = "Viewer/SelectNext";
+        public const string ViewerMin = "Viewer/Min";
+        public const string ViewerMid = "Viewer/Mid";
+        public const string ViewerMax = "Viewer/Max";
 
         public const string CardsNew = "Cards/New";
         public const string CardsEdit = "Cards/Edit";
@@ -45,6 +43,14 @@ namespace Cgs
         public const string DecksNew = "Decks/New";
         public const string DecksLoad = "Decks/Load";
         public const string DecksSave = "Decks/Save";
+
+        public const string PlayGameMenu = "PlayGame/Menu";
+        public const string PlayGameSettings = "PlayGame/Settings";
+        public const string PlayGameDie = "PlayGame/Die";
+        public const string PlayGameToken = "PlayGame/Token";
+        public const string PlayGameToggleZoomRotation = "PlayGame/ToggleZoomRotation";
+        public const string PlayGameSub = "PlayGame/Sub";
+        public const string PlayGameAdd = "PlayGame/Add";
 
         public const string MainMenuSettings = "MainMenu/Settings";
         public const string MainMenuGamesManagementMenu = "MainMenu/GamesManagementMenu";

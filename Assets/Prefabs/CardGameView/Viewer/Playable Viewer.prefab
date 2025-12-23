@@ -1379,7 +1379,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: inputActionId
-      value: Card/SelectPrevious
+      value: Viewer/SelectPrevious
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -1598,7 +1598,7 @@ PrefabInstance:
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
       propertyPath: inputActionId
-      value: Card/SelectNext
+      value: Viewer/SelectNext
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
@@ -2216,6 +2216,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: avoidOverlap
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: inputActionId
       value: Player/Delete
       objectReference: {fileID: 0}
@@ -2434,6 +2439,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
         type: 3}
+      propertyPath: avoidOverlap
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8387297474274779720, guid: 050b35c711bf97548b7054e54e7b44b4,
+        type: 3}
       propertyPath: inputActionId
       value: Player/Submit
       objectReference: {fileID: 0}
@@ -2519,16 +2529,6 @@ PrefabInstance:
         type: 3}
       propertyPath: isBelow
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: tooltip
-      value: '-'
-      objectReference: {fileID: 0}
-    - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: inputActionId
-      value: Card/SelectPrevious
       objectReference: {fileID: 0}
     - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
@@ -2649,16 +2649,6 @@ PrefabInstance:
         type: 3}
       propertyPath: isBelow
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: tooltip
-      value: +
-      objectReference: {fileID: 0}
-    - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: inputActionId
-      value: Card/SelectNext
       objectReference: {fileID: 0}
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
@@ -2796,8 +2786,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
-      propertyPath: tooltip
-      value: '-'
+      propertyPath: inputActionId
+      value: Viewer/SelectPrevious
       objectReference: {fileID: 0}
     - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
@@ -2921,8 +2911,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
-      propertyPath: tooltip
-      value: +
+      propertyPath: inputActionId
+      value: Viewer/SelectNext
       objectReference: {fileID: 0}
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}

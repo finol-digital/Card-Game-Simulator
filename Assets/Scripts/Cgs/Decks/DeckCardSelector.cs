@@ -12,7 +12,7 @@ using UnityEngine.InputSystem;
 
 namespace Cgs.Decks
 {
-    public class CardSelector : MonoBehaviour, IDragHandler, IEndDragHandler
+    public class DeckCardSelector : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         public DeckEditor editor;
         public SearchResults results;

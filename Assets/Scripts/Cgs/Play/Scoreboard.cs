@@ -5,9 +5,11 @@
 using System;
 using System.Linq;
 using Cgs.CardGameView.Multiplayer;
+using Cgs.CardGameView.Viewer;
 using Cgs.Play.Multiplayer;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -40,6 +42,11 @@ namespace Cgs.Play
         private bool IsPointsOutOfSync => IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                                           CgsNetManager.Instance.LocalPlayer.Points != Points;
 
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
+                                  CardViewer.Instance.Zoom || nameInputField.isFocused ||
+                                  PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
+                                  CardGameManager.Instance.ModalCanvas != null;
+
         private int Points
         {
             get => int.Parse(pointsInputField.text);
@@ -49,6 +56,12 @@ namespace Cgs.Play
                 if (IsPointsOutOfSync)
                     CgsNetManager.Instance.LocalPlayer.RequestPointsUpdate(Points);
             }
+        }
+
+        private void OnEnable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputSub;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
         }
 
         private void Start()
@@ -69,10 +82,26 @@ namespace Cgs.Play
                 Points = pointsInt;
         }
 
+        private void InputSub(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            Decrement();
+        }
+
         [UsedImplicitly]
         public void Decrement()
         {
             Points--;
+        }
+
+        private void InputAdd(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            Increment();
         }
 
         [UsedImplicitly]
@@ -127,7 +156,7 @@ namespace Cgs.Play
                 .ToList();
             scoreContent.DestroyAllChildren();
             scoreContent.sizeDelta = new Vector2(scoreContent.sizeDelta.x,
-                ((RectTransform) scoreTemplate.transform).rect.height * scores.Count);
+                ((RectTransform)scoreTemplate.transform).rect.height * scores.Count);
             foreach (var (playerName, points, handCount) in scores)
             {
                 var entry = Instantiate(scoreTemplate.gameObject, scoreContent).GetComponent<ScoreTemplate>();
@@ -140,6 +169,12 @@ namespace Cgs.Play
                         .GetComponentsInChildren<CardModel>().Length.ToString()
                     : handCount;
             }
+        }
+
+        private void OnDisable()
+        {
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;
         }
     }
 }

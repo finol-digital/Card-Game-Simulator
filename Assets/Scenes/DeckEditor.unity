@@ -8436,7 +8436,7 @@ MonoBehaviour:
   tooltip: <
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/SelectPrevious
+  inputActionId: Viewer/SelectPrevious
   parentTransform: {fileID: 0}
 --- !u!114 &4195147244760369757
 MonoBehaviour:
@@ -8824,7 +8824,7 @@ MonoBehaviour:
   tooltip: '>'
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/SelectNext
+  inputActionId: Viewer/SelectNext
   parentTransform: {fileID: 0}
 --- !u!114 &5160683046573473317
 MonoBehaviour:
@@ -10951,7 +10951,7 @@ MonoBehaviour:
   tooltip: Zoom
   avoidOverlap: 0
   isBelow: 0
-  inputActionId: Card/Zoom
+  inputActionId: Viewer/Zoom
   parentTransform: {fileID: 0}
 --- !u!1001 &7675857876673247938
 PrefabInstance:
