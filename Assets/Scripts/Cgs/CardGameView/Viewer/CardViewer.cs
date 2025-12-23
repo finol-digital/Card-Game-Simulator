@@ -252,6 +252,9 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed += InputZoom;
+            InputSystem.actions.FindAction(Tags.ViewerMin).performed += InputMin;
+            InputSystem.actions.FindAction(Tags.ViewerMid).performed += InputMid;
+            InputSystem.actions.FindAction(Tags.ViewerMax).performed += InputMax;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
         }
@@ -436,6 +439,30 @@ namespace Cgs.CardGameView.Viewer
             Zoom = true;
         }
 
+        private void InputMin(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Mode = CardViewerMode.Minimal;
+        }
+
+        private void InputMid(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Mode = CardViewerMode.Expanded;
+        }
+
+        private void InputMax(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Mode = CardViewerMode.Maximal;
+        }
+
         [UsedImplicitly]
         public void SetMode(int mode)
         {
@@ -545,6 +572,9 @@ namespace Cgs.CardGameView.Viewer
             InputSystem.actions.FindAction(Tags.ViewerZoom).performed -= InputZoom;
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;
+            InputSystem.actions.FindAction(Tags.ViewerMin).performed -= InputMin;
+            InputSystem.actions.FindAction(Tags.ViewerMid).performed -= InputMid;
+            InputSystem.actions.FindAction(Tags.ViewerMax).performed -= InputMax;
         }
     }
 }

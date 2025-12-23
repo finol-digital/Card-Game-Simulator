@@ -42,6 +42,11 @@ namespace Cgs.Play
         private bool IsPointsOutOfSync => IsOnline && CgsNetManager.Instance.LocalPlayer != null &&
                                           CgsNetManager.Instance.LocalPlayer.Points != Points;
 
+        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
+                                  CardViewer.Instance.Zoom || nameInputField.isFocused ||
+                                  PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
+                                  CardGameManager.Instance.ModalCanvas != null;
+
         private int Points
         {
             get => int.Parse(pointsInputField.text);
@@ -79,9 +84,7 @@ namespace Cgs.Play
 
         private void InputSub(InputAction.CallbackContext context)
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
-                || PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible
-                || CardGameManager.Instance.ModalCanvas != null || nameInputField.isFocused)
+            if (IsBlocked)
                 return;
 
             Decrement();
@@ -95,9 +98,7 @@ namespace Cgs.Play
 
         private void InputAdd(InputAction.CallbackContext context)
         {
-            if (CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible || CardViewer.Instance.Zoom
-                || PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible
-                || CardGameManager.Instance.ModalCanvas != null || nameInputField.isFocused)
+            if (IsBlocked)
                 return;
 
             Increment();
