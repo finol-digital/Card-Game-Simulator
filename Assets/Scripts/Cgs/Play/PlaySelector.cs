@@ -25,18 +25,45 @@ namespace Cgs.Play
         // Poll for Vector2 inputs
         private void Update()
         {
-            if (!(_moveAction?.WasPressedThisFrame() ?? false))
-                return;
+            if (_moveAction?.WasPressedThisFrame() ?? false)
+                InputMove();
+        }
 
+        private void InputMove()
+        {
             if (IsBlocked)
                 return;
 
-            if (CardViewer.Instance.IsVisible || PlayableViewer.Instance.IsVisible)
+            var selectedPlayable = PlayableViewer.Instance.SelectedPlayable;
+            if (selectedPlayable == null)
+                selectedPlayable = CardViewer.Instance.SelectedCardModel;
+            if (selectedPlayable == null || !PlayableViewer.Instance.IsVisible || !CardViewer.Instance.IsVisible)
+            {
+                var handCards = PlayController.Instance.drawer.cardZoneRectTransforms[0]
+                    .GetComponentsInChildren<CardModel>();
+                if (handCards.Length > 0)
+                    EventSystem.current.SetSelectedGameObject(handCards[0].gameObject);
+                else
+                    Debug.LogWarning("No cards in hand to select.");
+                PlayController.Instance.drawer.SemiShow();
                 return;
+            }
 
-            var handCards = PlayController.Instance.drawer.cardZoneRectTransforms[0]
-                .GetComponentsInChildren<CardModel>(true);
-            EventSystem.current.SetSelectedGameObject(handCards[0].gameObject);
+            // Expensive lookup that may be optimized later
+            var allPlayables = PlayController.Instance.transform.GetComponentsInChildren<CgsNetPlayable>();
+            var moveVector2 = _moveAction.ReadValue<Vector2>();
+            if (moveVector2.y < 0) // down
+            {
+            }
+            else if (moveVector2.y > 0) // up
+            {
+            }
+            else if (moveVector2.x < 0) // left
+            {
+            }
+            else if (moveVector2.x > 0) // right
+            {
+            }
         }
     }
 }
