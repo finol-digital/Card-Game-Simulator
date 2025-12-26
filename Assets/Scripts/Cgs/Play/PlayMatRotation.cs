@@ -86,7 +86,7 @@ namespace Cgs.Play
             }
             else
                 _playController.playArea.horizontalNormalizedPosition +=
-                    pageHorizontal * PageHorizontalSensitivity * 10;
+                    pageHorizontal * PageHorizontalSensitivity;
         }
 
         private void InputToggleRotation(InputAction.CallbackContext obj)

@@ -17,11 +17,20 @@ namespace Cgs.UI
         private Image _image;
         private Outline _outline;
 
-        private void Start()
+        private void Awake()
         {
             _image = GetComponent<Image>();
-            _image.material = new Material(Shader.Find("Shader Graphs/SelectableShader"));
             _outline = GetComponent<Outline>();
+        }
+
+        private void Start()
+        {
+            if (_image.material != null)
+                return;
+
+            var shader = Shader.Find("Shader Graphs/SelectableShader");
+            if (shader != null)
+                _image.material = new Material(shader);
         }
 
         public void OnSelect(BaseEventData eventData)

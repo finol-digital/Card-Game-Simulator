@@ -69,7 +69,7 @@ namespace Cgs.Cards
 
             InputSystem.actions.FindAction(Tags.CardsSort).performed += InputCardsSort;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputCardsFilter;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.CardsNew).performed += InputNewCard;
             InputSystem.actions.FindAction(Tags.CardsEdit).performed += InputEditCard;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -108,7 +108,7 @@ namespace Cgs.Cards
             searchResults.ShowSearchMenu();
         }
 
-        private void InputFocusNext(InputAction.CallbackContext context)
+        private void InputFocus(InputAction.CallbackContext context)
         {
             if (IsBlocked)
                 return;
@@ -197,7 +197,7 @@ namespace Cgs.Cards
         {
             InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputCardsSort;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputCardsFilter;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.CardsNew).performed -= InputNewCard;
             InputSystem.actions.FindAction(Tags.CardsEdit).performed -= InputEditCard;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
