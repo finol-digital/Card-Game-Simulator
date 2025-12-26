@@ -4,6 +4,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
@@ -11,7 +12,7 @@ using UnityEngine.UI;
 
 namespace Cgs.Menu
 {
-    public class TitleScreen : MonoBehaviour
+    public class TitleScreen : MonoBehaviour, IPointerDownHandler
     {
         public const string TouchlessStartMessage = "Press Any Key";
 
@@ -95,7 +96,17 @@ namespace Cgs.Menu
             versionText.text = VersionMessage;
 
             _anyButtonPressListener = InputSystem.onAnyButtonPress
-                .CallOnce(_ => SceneManager.LoadScene(Tags.MainMenuSceneIndex));
+                .CallOnce(_ => GoToMainMenu());
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            GoToMainMenu();
+        }
+
+        private static void GoToMainMenu()
+        {
+            SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
 
         private void OnDisable()

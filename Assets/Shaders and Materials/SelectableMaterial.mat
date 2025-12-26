@@ -60,7 +60,7 @@ Material:
     m_Floats:
     - _ColorMask: 15
     - _EnableExternalAlpha: 0
-    - _IsSelected: 1
+    - _IsSelected: 0
     - _SelectableState: 0
     - _State: 0
     - _Stencil: 0
