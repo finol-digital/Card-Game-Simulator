@@ -131,7 +131,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputFilter;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -484,7 +484,7 @@ namespace Cgs.Decks
             UpdateDeckStats();
         }
 
-        private void InputFocusNext(InputAction.CallbackContext callbackContext)
+        private void InputFocus(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
@@ -531,7 +531,7 @@ namespace Cgs.Decks
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputFilter;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

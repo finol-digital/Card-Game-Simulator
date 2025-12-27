@@ -505,6 +505,7 @@ GameObject:
   - component: {fileID: 709840748}
   - component: {fileID: 709840750}
   - component: {fileID: 709840749}
+  - component: {fileID: 709840751}
   m_Layer: 5
   m_Name: PlayGame Canvas
   m_TagString: Untagged
@@ -679,6 +680,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slider: {fileID: 315778612}
   sliderCanvasGroup: {fileID: 867063784}
+--- !u!114 &709840751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709840743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 600121dec9ea669448f49ca7c2816797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.Play.PlaySelector
 --- !u!1 &743650639
 GameObject:
   m_ObjectHideFlags: 0

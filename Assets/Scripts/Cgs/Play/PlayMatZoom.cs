@@ -84,7 +84,7 @@ namespace Cgs.Play
                     RotateZoomableScrollRect.MaxZoom);
             }
             else
-                _playController.playArea.verticalNormalizedPosition += pageVertical * PageVerticalSensitivity * 10;
+                _playController.playArea.verticalNormalizedPosition += pageVertical * PageVerticalSensitivity;
         }
 
         private void InputToggleZoomPan(InputAction.CallbackContext obj)

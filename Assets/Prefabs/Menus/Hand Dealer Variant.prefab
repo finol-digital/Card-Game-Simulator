@@ -498,7 +498,12 @@ PrefabInstance:
     - target: {fileID: 4382875112729848666, guid: 0a6d397d5e8fe8140924902ae81023bb,
         type: 3}
       propertyPath: tooltip
-      value: '-'
+      value: sub
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382875112729848666, guid: 0a6d397d5e8fe8140924902ae81023bb,
+        type: 3}
+      propertyPath: inputActionId
+      value: PlayGame/Sub
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1108,7 +1113,12 @@ PrefabInstance:
     - target: {fileID: 4382875112729848666, guid: 0a6d397d5e8fe8140924902ae81023bb,
         type: 3}
       propertyPath: tooltip
-      value: +
+      value: add
+      objectReference: {fileID: 0}
+    - target: {fileID: 4382875112729848666, guid: 0a6d397d5e8fe8140924902ae81023bb,
+        type: 3}
+      propertyPath: inputActionId
+      value: PlayGame/Add
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

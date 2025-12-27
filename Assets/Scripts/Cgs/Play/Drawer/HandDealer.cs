@@ -60,6 +60,8 @@ namespace Cgs.Play.Drawer
 
         private void OnEnable()
         {
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputSub;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputCancel;
@@ -98,10 +100,26 @@ namespace Cgs.Play.Drawer
             _callback = callback;
         }
 
+        private void InputSub(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Decrement();
+        }
+
         [UsedImplicitly]
         public void Decrement()
         {
             Count--;
+        }
+
+        private void InputAdd(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Increment();
         }
 
         [UsedImplicitly]
@@ -135,6 +153,8 @@ namespace Cgs.Play.Drawer
 
         private void OnDisable()
         {
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputCancel;
