@@ -239,13 +239,13 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void PageDown()
         {
-            scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + 0.1f);
+            scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition - 0.1f);
         }
 
         [UsedImplicitly]
         public void PageUp()
         {
-            scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition - 0.1f);
+            scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + 0.1f);
         }
 
         [UsedImplicitly]

@@ -33,6 +33,11 @@ namespace Cgs.Play.Drawer
         public static Vector2 HiddenPosition =>
             new(0, -(CardGameManager.PixelsPerInch * CardGameManager.Current.CardSize.Y) - 10);
 
+        private static bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
+                                         CardViewer.Instance.Zoom ||
+                                         PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
+                                         CardGameManager.Instance.ModalCanvas != null;
+
         public StackViewer viewer;
         public Button downButton;
         public Button upButton;
@@ -54,11 +59,6 @@ namespace Cgs.Play.Drawer
         private readonly List<Text> _countTexts = new();
 
         private int _previousOverlapSpacing;
-
-        private bool IsBlocked => CardViewer.Instance.IsVisible || CardViewer.Instance.WasVisible ||
-                                  CardViewer.Instance.Zoom ||
-                                  PlayableViewer.Instance.IsVisible || PlayableViewer.Instance.WasVisible ||
-                                  CardGameManager.Instance.ModalCanvas != null;
 
         private void OnEnable()
         {
