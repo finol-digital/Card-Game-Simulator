@@ -34,36 +34,50 @@ namespace Cgs.Play
             if (IsBlocked)
                 return;
 
-            var selectedPlayable = PlayableViewer.Instance.SelectedPlayable;
-            if (selectedPlayable == null)
+            CgsNetPlayable selectedPlayable = null;
+            if (CardViewer.Instance.IsVisible)
                 selectedPlayable = CardViewer.Instance.SelectedCardModel;
-            if (selectedPlayable == null || !PlayableViewer.Instance.IsVisible || !CardViewer.Instance.IsVisible)
+            else if (PlayableViewer.Instance.IsVisible)
+                selectedPlayable = PlayableViewer.Instance.SelectedPlayable;
+
+            var mainCamera = Camera.main;
+            if (mainCamera == null)
             {
-                var handCards = PlayController.Instance.drawer.cardZoneRectTransforms[0]
-                    .GetComponentsInChildren<CardModel>();
-                if (handCards.Length > 0)
-                    EventSystem.current.SetSelectedGameObject(handCards[0].gameObject);
-                else
-                    Debug.LogWarning("No cards in hand to select.");
-                PlayController.Instance.drawer.SemiShow();
+                Debug.LogWarning("No main camera found for navigation.");
                 return;
             }
 
+            var selectedPlayablePosition = selectedPlayable?.transform.position ?? Vector3.zero;
+            var startPosition = mainCamera.WorldToScreenPoint(selectedPlayablePosition);
+            var moveDirection = _moveAction.ReadValue<Vector2>().normalized;
+            CgsNetPlayable bestTarget = null;
+            var bestScore = float.NegativeInfinity;
+
             // Expensive lookup that may be optimized later
             var allPlayables = PlayController.Instance.transform.GetComponentsInChildren<CgsNetPlayable>();
-            var moveVector2 = _moveAction.ReadValue<Vector2>();
-            if (moveVector2.y < 0) // down
+            foreach (var targetPlayable in allPlayables)
             {
+                if (targetPlayable == selectedPlayable || targetPlayable is CardZone)
+                    continue;
+                var targetPosition = mainCamera.WorldToScreenPoint(targetPlayable.transform.position);
+                var targetDirection = ((Vector2)targetPosition - (Vector2)startPosition).normalized;
+                var dot = Vector2.Dot(moveDirection, targetDirection);
+                if (dot <= 0.5f) // Only consider playables roughly in the input direction
+                    continue;
+                var distance = ((Vector2)targetPosition - (Vector2)startPosition).magnitude;
+                // Score: prefer higher dot (closer to direction), then closer distance
+                var score = dot * 1000f - distance;
+                if (score <= bestScore)
+                    continue;
+                bestScore = score;
+                bestTarget = targetPlayable;
             }
-            else if (moveVector2.y > 0) // up
+
+            if (bestTarget != null)
             {
+                EventSystem.current.SetSelectedGameObject(bestTarget.gameObject);
             }
-            else if (moveVector2.x < 0) // left
-            {
-            }
-            else if (moveVector2.x > 0) // right
-            {
-            }
+            // else: no valid target in that direction, do nothing
         }
     }
 }
