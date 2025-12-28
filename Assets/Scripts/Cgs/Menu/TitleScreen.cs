@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -18,7 +19,6 @@ namespace Cgs.Menu
 
         public static string VersionMessage => $"VERSION {Application.version}";
 
-        private const float MinWidth = 1080;
         private const int CenterTextFontSizePortrait = 30;
         private const int CenterTextFontSizeLandscape = 40;
         private const int MetaTextFontSizePortrait = 25;
@@ -46,7 +46,8 @@ namespace Cgs.Menu
             if (!gameObject.activeInHierarchy)
                 return;
 
-            if (((RectTransform)transform).rect.width < MinWidth) // Portrait
+            var rectTransform = (RectTransform)transform;
+            if (rectTransform.rect.width < rectTransform.rect.height) // Portrait
             {
                 footerImage.preserveAspect = false;
                 footerImage.sprite = footerSpritePortrait;
@@ -104,7 +105,8 @@ namespace Cgs.Menu
             GoToMainMenu();
         }
 
-        private static void GoToMainMenu()
+        [UsedImplicitly]
+        public void GoToMainMenu()
         {
             SceneManager.LoadScene(Tags.MainMenuSceneIndex);
         }
