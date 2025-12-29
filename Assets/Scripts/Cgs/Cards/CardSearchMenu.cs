@@ -105,7 +105,7 @@ namespace Cgs.Cards
 
         private void Scroll(bool scrollDown)
         {
-            scrollbar.value = Mathf.Clamp01(scrollbar.value + (scrollDown ? 0.1f : -0.1f));
+            scrollbar.value = Mathf.Clamp01(scrollbar.value + (scrollDown ? -0.1f : 0.1f));
         }
 
         public void Show(OnSearchDelegate searchCallback)
