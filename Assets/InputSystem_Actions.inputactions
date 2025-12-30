@@ -1883,6 +1883,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Host",
+                    "type": "Button",
+                    "id": "9745a6f5-620e-4f94-8442-7b670775b5f6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CopyShare",
                     "type": "Button",
                     "id": "0d853427-ccf9-441d-a794-baf37287c939",
@@ -2038,6 +2047,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "FocusNext",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7bd2c099-0706-450e-b3fc-f0dcf52686b8",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Host",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c66785d2-ebde-4b85-aeda-fc3f4029a942",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Host",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "acaa1208-b3b6-4d87-94eb-8d781b373aee",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Host",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

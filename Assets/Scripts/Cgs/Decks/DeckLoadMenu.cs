@@ -223,7 +223,7 @@ namespace Cgs.Decks
             if (!newDeckPanel.gameObject.activeSelf && deleteFileButton.gameObject.activeSelf)
                 PromptForDeleteFile();
             else if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
-                Clear();
+                PromptForClear();
         }
 
         [UsedImplicitly]
