@@ -37,8 +37,8 @@ namespace Cgs
 
         public const string CardsNew = "Cards/New";
         public const string CardsEdit = "Cards/Edit";
-        public const string CardsFilter = "Cards/Filter";
         public const string CardsSort = "Cards/Sort";
+        public const string CardsFilter = "Cards/Filter";
 
         public const string DecksNew = "Decks/New";
         public const string DecksLoad = "Decks/Load";
@@ -52,21 +52,18 @@ namespace Cgs
         public const string PlayGameSub = "PlayGame/Sub";
         public const string PlayGameAdd = "PlayGame/Add";
 
-        public const string MainMenuSettings = "MainMenu/Settings";
         public const string MainMenuGamesManagementMenu = "MainMenu/GamesManagementMenu";
-        public const string MainMenuSelectPrevious = "MainMenu/SelectPrevious";
-        public const string MainMenuSelectNext = "MainMenu/SelectNext";
-        public const string MainMenuStartGame = "MainMenu/StartGame";
-        public const string MainMenuJoinGame = "MainMenu/JoinGame";
-        public const string MainMenuEditDeck = "MainMenu/EditDeck";
+        public const string MainMenuSettings = "MainMenu/Settings";
         public const string MainMenuExploreCards = "MainMenu/ExploreCards";
+        public const string MainMenuEditDeck = "MainMenu/EditDeck";
+        public const string MainMenuJoinGame = "MainMenu/JoinGame";
+        public const string MainMenuStartGame = "MainMenu/StartGame";
 
         public const string SubMenuMenu = "SubMenu/Menu";
+        public const string SubMenuCopyShare = "SubMenu/CopyShare";
+        public const string SubMenuPaste = "SubMenu/Paste";
         public const string SubMenuFocusPrevious = "SubMenu/FocusPrevious";
         public const string SubMenuFocusNext = "SubMenu/FocusNext";
-        public const string SubMenuClear = "SubMenu/Clear";
-        public const string SubMenuPaste = "SubMenu/Paste";
-        public const string SubMenuShare = "SubMenu/Share";
 
         public const string SettingsToolTips = "Settings/ToolTips";
         public const string SettingsPreviewMouseOver = "Settings/PreviewMouseOver";

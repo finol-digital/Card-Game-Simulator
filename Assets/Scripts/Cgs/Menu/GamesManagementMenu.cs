@@ -79,7 +79,7 @@ namespace Cgs.Menu
 
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed += InputCopyShare;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -224,7 +224,7 @@ namespace Cgs.Menu
 #endif
         }
 
-        private void InputShare(InputAction.CallbackContext callbackContext)
+        private void InputCopyShare(InputAction.CallbackContext callbackContext)
         {
             if (Menu.IsBlocked)
                 return;
@@ -298,7 +298,7 @@ namespace Cgs.Menu
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed -= InputCopyShare;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

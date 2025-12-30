@@ -1141,7 +1141,7 @@
                 {
                     "name": "",
                     "id": "123ada3d-56df-4526-88da-d1a44402eab5",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1478,7 +1478,7 @@
                 {
                     "name": "",
                     "id": "1a5b18a9-7266-4d24-9888-616a70ec9dc9",
-                    "path": "<Gamepad>/rightStickPress",
+                    "path": "<Gamepad>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -1614,15 +1614,6 @@
             "id": "00774a45-f30e-492c-bc7f-542ff66f419f",
             "actions": [
                 {
-                    "name": "Settings",
-                    "type": "Button",
-                    "id": "b0eab35c-1c43-4a1f-b016-fa1cfa5e9cca",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "GamesManagementMenu",
                     "type": "Button",
                     "id": "6435e40c-c8d5-45a3-8694-214a2e48a0d5",
@@ -1632,36 +1623,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectPrevious",
+                    "name": "Settings",
                     "type": "Button",
-                    "id": "e4fc5031-cedf-4b76-95a3-74e205e00917",
+                    "id": "b0eab35c-1c43-4a1f-b016-fa1cfa5e9cca",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "SelectNext",
+                    "name": "ExploreCards",
                     "type": "Button",
-                    "id": "b7c86c83-dff4-46db-83d1-2b3b8f3a1706",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "StartGame",
-                    "type": "Button",
-                    "id": "0eec87d4-e6c1-4069-8d97-bb8a707bae4f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "JoinGame",
-                    "type": "Button",
-                    "id": "1c58a8ae-9953-463a-8887-34b99472e86f",
+                    "id": "51fa00fe-5be4-41a6-b8a4-b21b65cb587c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1677,9 +1650,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ExploreCards",
+                    "name": "JoinGame",
                     "type": "Button",
-                    "id": "51fa00fe-5be4-41a6-b8a4-b21b65cb587c",
+                    "id": "1c58a8ae-9953-463a-8887-34b99472e86f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "StartGame",
+                    "type": "Button",
+                    "id": "0eec87d4-e6c1-4069-8d97-bb8a707bae4f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1884,72 +1866,6 @@
                     "action": "EditDeck",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a1941f97-af68-4a55-84ab-986f0ce35dee",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "SelectPrevious",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a5528ae1-b857-432a-9104-0ab3f968a68d",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "SelectPrevious",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3096fc4f-e0ec-4eba-9660-302e76002bf3",
-                    "path": "<Keyboard>/leftBracket",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "SelectPrevious",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "934ad439-cd45-4141-a625-15c6fe16fba2",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "SelectNext",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "00e18371-ddb6-4db2-88f0-61982d3fb087",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "SelectNext",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "fbb62071-02d1-4e38-9c36-44fa285c4119",
-                    "path": "<Keyboard>/rightBracket",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "SelectNext",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -1961,6 +1877,24 @@
                     "name": "Menu",
                     "type": "Button",
                     "id": "5e24297e-6f15-4e6f-bd43-5342fda73c43",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CopyShare",
+                    "type": "Button",
+                    "id": "0d853427-ccf9-441d-a794-baf37287c939",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Paste",
+                    "type": "Button",
+                    "id": "f06e37bb-d2d0-4cf4-bc61-86bef1e6d3ac",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -1979,33 +1913,6 @@
                     "name": "FocusNext",
                     "type": "Button",
                     "id": "aff1e168-42e1-4a2e-b9ff-a561422bf9dd",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Clear",
-                    "type": "Button",
-                    "id": "0d853427-ccf9-441d-a794-baf37287c939",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Paste",
-                    "type": "Button",
-                    "id": "f06e37bb-d2d0-4cf4-bc61-86bef1e6d3ac",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Share",
-                    "type": "Button",
-                    "id": "5c3625cc-c789-48f4-b5c3-6116ed866ad5",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -2048,45 +1955,12 @@
                 },
                 {
                     "name": "",
-                    "id": "bb3411b4-4aba-4f7e-8787-486bbe6d024a",
+                    "id": "82908cbc-684f-4cac-93db-9ebc2c1841fc",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Share",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4507aead-1bf3-4104-a342-b943ccc77b61",
-                    "path": "<Keyboard>/c",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Share",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "76d3bd54-012e-4ca1-bfdd-80a649fc73f3",
-                    "path": "<Keyboard>/semicolon",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Share",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "82908cbc-684f-4cac-93db-9ebc2c1841fc",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Clear",
+                    "action": "CopyShare",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -2097,7 +1971,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Clear",
+                    "action": "CopyShare",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -2108,14 +1982,14 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Clear",
+                    "action": "CopyShare",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "2704c57c-2792-4ffb-bc9b-5e04a2fc4057",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -2147,34 +2021,12 @@
                 },
                 {
                     "name": "",
-                    "id": "3c62c806-4a10-4797-a0ab-75faffa86a9c",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "FocusPrevious",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "0a0b8f31-f068-4257-8520-412e3a5d3361",
                     "path": "<Keyboard>/backquote",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "FocusPrevious",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f478e220-dc49-4ebe-9af1-c777dcaba8c0",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "FocusNext",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

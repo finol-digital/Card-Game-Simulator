@@ -19,6 +19,8 @@ namespace Cgs.Cards
 
     public class CardSearchMenu : Modal
     {
+        public const string ClearFiltersPrompt = "Clear all search filters?";
+
         private float PropertyPanelHeight => ((RectTransform)stringFilterPanel.transform).rect.height;
 
         public Scrollbar scrollbar;
@@ -59,7 +61,7 @@ namespace Cgs.Cards
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputToggleEnum;
-            InputSystem.actions.FindAction(Tags.SubMenuClear).performed += InputClear;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -105,7 +107,7 @@ namespace Cgs.Cards
 
         private void Scroll(bool scrollDown)
         {
-            scrollbar.value = Mathf.Clamp01(scrollbar.value + (scrollDown ? 0.1f : -0.1f));
+            scrollbar.value = Mathf.Clamp01(scrollbar.value + (scrollDown ? -0.1f : 0.1f));
         }
 
         public void Show(OnSearchDelegate searchCallback)
@@ -434,17 +436,22 @@ namespace Cgs.Cards
                 _filters.EnumProperties[propertyName] = newFilter;
         }
 
-        private void InputClear(InputAction.CallbackContext callbackContext)
+        private void InputDelete(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
                 return;
 
             if (ActiveInputField == null)
-                ClearFilters();
+                PromptForClearFilters();
         }
 
         [UsedImplicitly]
-        public void ClearFilters()
+        public void PromptForClearFilters()
+        {
+            CardGameManager.Instance.Messenger.Prompt(ClearFiltersPrompt, ClearFilters);
+        }
+
+        private void ClearFilters()
         {
             foreach (var inputField in GetComponentsInChildren<InputField>())
                 inputField.text = string.Empty;
@@ -454,7 +461,6 @@ namespace Cgs.Cards
             _filters.Clear();
         }
 
-        [UsedImplicitly]
         public void ClearSearch()
         {
             ClearFilters();
@@ -495,7 +501,7 @@ namespace Cgs.Cards
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputToggleEnum;
-            InputSystem.actions.FindAction(Tags.SubMenuClear).performed -= InputClear;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

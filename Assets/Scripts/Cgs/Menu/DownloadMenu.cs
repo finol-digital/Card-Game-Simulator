@@ -15,6 +15,8 @@ namespace Cgs.Menu
 
     public class DownloadMenu : Modal
     {
+        public const string ClearPrompt = "Clear the URL input field?";
+
         public Text labelText;
         public InputField urlInputField;
         public Button downloadButton;
@@ -26,11 +28,12 @@ namespace Cgs.Menu
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuClear).performed += InputClear;
-            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
-            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -47,6 +50,21 @@ namespace Cgs.Menu
                 gamesButton.gameObject.SetActive(false);
         }
 
+        private void InputMenu(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (gamesButton.gameObject.activeSelf)
+                GoToCgsGamesBrowser();
+        }
+
+        [UsedImplicitly]
+        public void GoToCgsGamesBrowser()
+        {
+            Application.OpenURL(Tags.CgsGamesBrowseUrl);
+        }
+
         private void InputFocus(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -54,21 +72,6 @@ namespace Cgs.Menu
 
             if (urlInputField.interactable)
                 urlInputField.ActivateInputField();
-        }
-
-        private void InputClear(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            if (urlInputField.interactable)
-                Clear();
-        }
-
-        [UsedImplicitly]
-        public void Clear()
-        {
-            urlInputField.text = string.Empty;
         }
 
         private void InputPaste(InputAction.CallbackContext callbackContext)
@@ -91,6 +94,26 @@ namespace Cgs.Menu
         public void CheckDownloadUrl(string url)
         {
             downloadButton.interactable = Uri.IsWellFormedUriString(url.Trim(), UriKind.Absolute);
+        }
+
+        private void InputDelete(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (urlInputField.interactable)
+                PromptForClear();
+        }
+
+        [UsedImplicitly]
+        public void PromptForClear()
+        {
+            CardGameManager.Instance.Messenger.Prompt(ClearPrompt, Clear);
+        }
+
+        private void Clear()
+        {
+            urlInputField.text = string.Empty;
         }
 
         private void InputSubmit(InputAction.CallbackContext callbackContext)
@@ -123,21 +146,6 @@ namespace Cgs.Menu
             Hide();
         }
 
-        private void InputMenu(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            if (gamesButton.gameObject.activeSelf)
-                GoToCgsGamesBrowser();
-        }
-
-        [UsedImplicitly]
-        public void GoToCgsGamesBrowser()
-        {
-            Application.OpenURL(Tags.CgsGamesBrowseUrl);
-        }
-
         private void InputCancel(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -148,11 +156,12 @@ namespace Cgs.Menu
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuClear).performed -= InputClear;
-            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
-            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }

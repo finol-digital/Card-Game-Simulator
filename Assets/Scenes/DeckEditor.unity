@@ -8584,7 +8584,7 @@ PrefabInstance:
     - target: {fileID: 1921475035861756271, guid: e885b7dcac6cff447a150d9f185e8af7,
         type: 3}
       propertyPath: m_Text
-      value: <Card:Name>
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6484234881016935926, guid: e885b7dcac6cff447a150d9f185e8af7,
         type: 3}
@@ -9999,7 +9999,7 @@ PrefabInstance:
     - target: {fileID: 1921475035861756271, guid: e885b7dcac6cff447a150d9f185e8af7,
         type: 3}
       propertyPath: m_Text
-      value: <Property:Value>
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6484234881016935926, guid: e885b7dcac6cff447a150d9f185e8af7,
         type: 3}

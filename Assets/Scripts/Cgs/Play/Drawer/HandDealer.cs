@@ -64,7 +64,6 @@ namespace Cgs.Play.Drawer
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputCancel;
         }
 
         protected override void Start()
@@ -76,8 +75,10 @@ namespace Cgs.Play.Drawer
         // Poll for Vector2 inputs
         private void Update()
         {
-            if (IsBlocked || (!(MoveAction?.WasPressedThisFrame() ?? false) &&
-                              !(PageAction?.WasPressedThisFrame() ?? false)))
+            if (!(MoveAction?.WasPressedThisFrame() ?? false) && !(PageAction?.WasPressedThisFrame() ?? false))
+                return;
+
+            if (IsBlocked)
                 return;
 
             var vector2 = MoveAction?.ReadValue<Vector2>() ?? PageAction.ReadValue<Vector2>();
@@ -157,7 +158,6 @@ namespace Cgs.Play.Drawer
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputCancel;
         }
     }
 }

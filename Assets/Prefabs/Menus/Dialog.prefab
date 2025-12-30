@@ -616,7 +616,7 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: inputActionId
-      value: SubMenu/Share
+      value: SubMenu/CopyShare
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -853,7 +853,7 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: inputActionId
-      value: SubMenu/Share
+      value: SubMenu/CopyShare
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -1085,7 +1085,7 @@ PrefabInstance:
     - target: {fileID: 1912139460416580352, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
         type: 3}
       propertyPath: inputActionId
-      value: SubMenu/FocusPrevious
+      value: SubMenu/Menu
       objectReference: {fileID: 0}
     - target: {fileID: 6042467856956256676, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
         type: 3}
