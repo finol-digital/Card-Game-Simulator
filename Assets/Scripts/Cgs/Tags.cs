@@ -60,6 +60,7 @@ namespace Cgs
         public const string MainMenuStartGame = "MainMenu/StartGame";
 
         public const string SubMenuMenu = "SubMenu/Menu";
+        public const string SubMenuHost = "SubMenu/Host";
         public const string SubMenuCopyShare = "SubMenu/CopyShare";
         public const string SubMenuPaste = "SubMenu/Paste";
         public const string SubMenuFocusPrevious = "SubMenu/FocusPrevious";

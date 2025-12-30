@@ -44,6 +44,7 @@ namespace Cgs.Play.Multiplayer
         public Button joinButton;
         public Text roomIdIpLabel;
         public InputField roomIdIpInputField;
+        public InputField passwordInputField;
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -72,9 +73,13 @@ namespace Cgs.Play.Multiplayer
 
         private string _selectedServer = string.Empty;
 
+        private string _password = string.Empty;
+
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
 
         private Modal _menu;
+
+        private bool IsBlocked => Menu.IsBlocked || roomIdIpInputField.isFocused || passwordInputField.isFocused;
 
         private float _secondsSinceRefresh;
 
@@ -87,9 +92,9 @@ namespace Cgs.Play.Multiplayer
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputToggleConnection;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputHostMenu;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusIp;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusPassword;
+            InputSystem.actions.FindAction(Tags.SubMenuHost).performed += InputHost;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -100,6 +105,8 @@ namespace Cgs.Play.Multiplayer
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
 
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
+            passwordInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
+
             StartCoroutine(SignInAnonymouslyCoroutine());
         }
 
@@ -134,27 +141,22 @@ namespace Cgs.Play.Multiplayer
                 Redisplay();
 
             // Poll for Vector2 inputs
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+            if (!(_moveAction?.WasPressedThisFrame() ?? false) && !(_pageAction?.WasPressedThisFrame() ?? false))
                 return;
 
-            if (_moveAction?.WasPressedThisFrame() ?? false)
-            {
-                var move = _moveAction.ReadValue<Vector2>();
-                if (move.y > 0)
-                    SelectPrevious();
-                else if (move.y < 0)
-                    SelectNext();
-                else if (Mathf.Abs(move.x) > 0)
-                    ToggleConnectionSource();
-            }
-            else if (_pageAction?.WasPressedThisFrame() ?? false)
-            {
-                var page = _pageAction.ReadValue<Vector2>();
-                if (Mathf.Abs(page.y) > 0)
-                    ScrollPage(page.y < 0);
-                else if (Mathf.Abs(page.x) > 0)
-                    ToggleConnectionSource();
-            }
+            if (IsBlocked)
+                return;
+
+            var move = _moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
+            var page = _pageAction.ReadValue<Vector2>();
+            if (move.y > 0)
+                SelectPrevious();
+            else if (move.y < 0)
+                SelectNext();
+            else if (Mathf.Abs(move.x) > 0 || Mathf.Abs(page.x) > 0)
+                ToggleConnectionSource();
+            else if (Mathf.Abs(page.y) > 0)
+                ScrollPage(page.y < 0);
         }
 
         public void Show()
@@ -238,7 +240,7 @@ namespace Cgs.Play.Multiplayer
 
         private void InputToggleConnection(InputAction.CallbackContext callbackContext)
         {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+            if (IsBlocked)
                 return;
 
             ToggleConnectionSource();
@@ -287,9 +289,9 @@ namespace Cgs.Play.Multiplayer
                 Join();
         }
 
-        private void InputFocus(InputAction.CallbackContext callbackContext)
+        private void InputFocusIp(InputAction.CallbackContext callbackContext)
         {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+            if (IsBlocked)
                 return;
 
             roomIdIpInputField.ActivateInputField();
@@ -307,9 +309,24 @@ namespace Cgs.Play.Multiplayer
                                       && Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
         }
 
-        private void InputHostMenu(InputAction.CallbackContext callbackContext)
+        private void InputFocusPassword(InputAction.CallbackContext callbackContext)
         {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+            if (IsBlocked)
+                return;
+
+            passwordInputField.ActivateInputField();
+        }
+
+        [UsedImplicitly]
+        public void SetPassword(string password)
+        {
+            if (password != null)
+                _password = password;
+        }
+
+        private void InputHost(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
                 return;
 
             Host();
@@ -329,7 +346,7 @@ namespace Cgs.Play.Multiplayer
                 if (CardGameManager.Current.AutoUpdateUrl == null ||
                     !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
                     CardGameManager.Instance.Messenger.Show(ShareWarningMessage);
-                CgsNetManager.Instance.StartBroadcastHost();
+                CgsNetManager.Instance.StartBroadcastHost(_password);
             }
             else
             {
@@ -344,7 +361,7 @@ namespace Cgs.Play.Multiplayer
 
         private void InputSubmit(InputAction.CallbackContext callbackContext)
         {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+            if (IsBlocked)
                 return;
 
             if (joinButton.interactable)
@@ -357,13 +374,13 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource)
             {
                 if (Lobbies.TryGetValue(_selectedServer, out var lobby))
-                    CgsNetManager.Instance.StartJoinLobby(lobby.Id);
+                    CgsNetManager.Instance.StartJoinLobby(lobby.Id, _password);
                 else
                 {
                     if (Uri.IsWellFormedUriString(_selectedServer, UriKind.Absolute))
                         CgsNetManager.Instance.StartJoin(_selectedServer);
                     else
-                        CgsNetManager.Instance.StartJoinLobbyCode(_selectedServer);
+                        CgsNetManager.Instance.StartJoinLobbyCode(_selectedServer, _password);
                 }
             }
             else
@@ -402,7 +419,7 @@ namespace Cgs.Play.Multiplayer
 
         private void InputCancel(InputAction.CallbackContext callbackContext)
         {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+            if (IsBlocked)
                 return;
 
             Close();
@@ -421,9 +438,9 @@ namespace Cgs.Play.Multiplayer
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputHostMenu;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusIp;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusPassword;
+            InputSystem.actions.FindAction(Tags.SubMenuHost).performed -= InputHost;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

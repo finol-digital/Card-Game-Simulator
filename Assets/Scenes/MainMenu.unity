@@ -1596,7 +1596,7 @@ MonoBehaviour:
   tooltip: Next
   avoidOverlap: 1
   isBelow: 0
-  inputActionId: MainMenu/SelectNext
+  inputActionId: Viewer/SelectNext
   parentTransform: {fileID: 0}
 --- !u!1001 &959689720
 PrefabInstance:
@@ -1816,7 +1816,7 @@ MonoBehaviour:
   tooltip: Previous
   avoidOverlap: 1
   isBelow: 0
-  inputActionId: MainMenu/SelectPrevious
+  inputActionId: Viewer/SelectPrevious
   parentTransform: {fileID: 0}
 --- !u!1 &1163228931 stripped
 GameObject:
