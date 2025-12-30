@@ -149,12 +149,12 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
-            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDownloadWeb;
-            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputImportFile;
-            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputDownloadWebBack;
-            InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputImportFileBack;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputDownloadWebPlayMat;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputImportFilePlayMat;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputImportFile;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDownloadWebBack;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputImportFileBack;
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputDownloadWebPlayMat;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputImportFilePlayMat;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
         }
 
@@ -631,12 +631,12 @@ namespace Cgs.Menu
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
-            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDownloadWeb;
-            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputImportFile;
-            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputDownloadWebBack;
-            InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputImportFileBack;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputDownloadWebPlayMat;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputImportFilePlayMat;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputImportFile;
+            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDownloadWebBack;
+            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputImportFileBack;
+            InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputDownloadWebPlayMat;
+            InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputImportFilePlayMat;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
         }
     }

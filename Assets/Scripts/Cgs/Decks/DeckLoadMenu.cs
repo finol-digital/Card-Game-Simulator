@@ -40,6 +40,7 @@ namespace Cgs.Decks
         public const string YdkInstructions = "#On each line, enter <Card Id>\n#Copy/Paste recommended";
 
         public const string DeletePrompt = "Are you sure you would like to delete this deck?";
+        public const string ClearPrompt = "Clear the deck text?";
         public const string DeckDeleteErrorMessage = "There was an error while attempting to delete the deck: ";
         public const string DeckLoadErrorMessage = "There was an error while loading the deck: ";
         public const string DeckSaveErrorMessage = "There was an error saving the deck to file: ";
@@ -73,12 +74,11 @@ namespace Cgs.Decks
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDecksNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
-            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
+            InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed += InputCopyShare;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusName;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusText;
-            InputSystem.actions.FindAction(Tags.SubMenuClear).performed += InputClear;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -222,6 +222,8 @@ namespace Cgs.Decks
 
             if (!newDeckPanel.gameObject.activeSelf && deleteFileButton.gameObject.activeSelf)
                 PromptForDeleteFile();
+            else if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+                Clear();
         }
 
         [UsedImplicitly]
@@ -268,7 +270,7 @@ namespace Cgs.Decks
             }
         }
 
-        private void InputShare(InputAction.CallbackContext callbackContext)
+        private void InputCopyShare(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
@@ -365,17 +367,13 @@ namespace Cgs.Decks
                 textInputField.ActivateInputField();
         }
 
-        private void InputClear(InputAction.CallbackContext callbackContext)
+        [UsedImplicitly]
+        public void PromptForClear()
         {
-            if (IsBlocked)
-                return;
-
-            if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
-                Clear();
+            CardGameManager.Instance.Messenger.Prompt(ClearPrompt, Clear);
         }
 
-        [UsedImplicitly]
-        public void Clear()
+        private void Clear()
         {
             textInputField.text = string.Empty;
         }
@@ -486,12 +484,11 @@ namespace Cgs.Decks
         {
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDecksNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;
-            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
+            InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed -= InputCopyShare;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusName;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusText;
-            InputSystem.actions.FindAction(Tags.SubMenuClear).performed -= InputClear;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
+            InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

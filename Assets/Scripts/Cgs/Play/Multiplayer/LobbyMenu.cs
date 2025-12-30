@@ -85,8 +85,11 @@ namespace Cgs.Play.Multiplayer
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
+            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputToggleConnection;
+            InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputToggleConnection;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputHostMenu;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -141,6 +144,8 @@ namespace Cgs.Play.Multiplayer
                     SelectPrevious();
                 else if (move.y < 0)
                     SelectNext();
+                else if (Mathf.Abs(move.x) > 0)
+                    ToggleConnectionSource();
             }
             else if (_pageAction?.WasPressedThisFrame() ?? false)
             {
@@ -231,19 +236,19 @@ namespace Cgs.Play.Multiplayer
             _shouldRedisplay = true;
         }
 
+        private void InputToggleConnection(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            ToggleConnectionSource();
+        }
+
         private void ToggleConnectionSource()
         {
             var isInternetConnectionSource = !IsInternetConnectionSource;
             lanToggle.isOn = !isInternetConnectionSource;
             internetToggle.isOn = isInternetConnectionSource;
-        }
-
-        private void InputFocus(InputAction.CallbackContext callbackContext)
-        {
-            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
-                return;
-
-            roomIdIpInputField.ActivateInputField();
         }
 
         private void OnServerFound(IPEndPoint sender, DiscoveryResponseData response)
@@ -267,7 +272,42 @@ namespace Cgs.Play.Multiplayer
             _shouldRedisplay = false;
         }
 
-        private void InputNew(InputAction.CallbackContext callbackContext)
+        [UsedImplicitly]
+        public void SelectServer(Toggle toggle, string server)
+        {
+            if (toggle.isOn)
+            {
+                _selectedServer = server;
+                if (!string.IsNullOrEmpty(roomIdIpInputField.text))
+                    roomIdIpInputField.text = string.Empty;
+                joinButton.interactable = true;
+            }
+            else if (!roomIdIpInputField.isFocused && !toggle.group.AnyTogglesOn() &&
+                     server.Equals(_selectedServer))
+                Join();
+        }
+
+        private void InputFocus(InputAction.CallbackContext callbackContext)
+        {
+            if (Menu.IsBlocked || roomIdIpInputField.isFocused)
+                return;
+
+            roomIdIpInputField.ActivateInputField();
+        }
+
+        [UsedImplicitly]
+        public void SetTargetIpAddress(string targetIpAddress)
+        {
+            if (string.IsNullOrEmpty(targetIpAddress))
+                return;
+
+            _selectedServer = targetIpAddress;
+            lanToggleGroup.SetAllTogglesOff();
+            joinButton.interactable = !string.IsNullOrWhiteSpace(_selectedServer)
+                                      && Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
+        }
+
+        private void InputHostMenu(InputAction.CallbackContext callbackContext)
         {
             if (Menu.IsBlocked || roomIdIpInputField.isFocused)
                 return;
@@ -300,33 +340,6 @@ namespace Cgs.Play.Multiplayer
                     CgsNetManager.Instance.Discovery.StopDiscovery();
                 CgsNetManager.Instance.Discovery.StartServer();
             }
-        }
-
-        [UsedImplicitly]
-        public void SelectServer(Toggle toggle, string server)
-        {
-            if (toggle.isOn)
-            {
-                _selectedServer = server;
-                if (!string.IsNullOrEmpty(roomIdIpInputField.text))
-                    roomIdIpInputField.text = string.Empty;
-                joinButton.interactable = true;
-            }
-            else if (!roomIdIpInputField.isFocused && !toggle.group.AnyTogglesOn() &&
-                     server.Equals(_selectedServer))
-                Join();
-        }
-
-        [UsedImplicitly]
-        public void SetTargetIpAddress(string targetIpAddress)
-        {
-            if (string.IsNullOrEmpty(targetIpAddress))
-                return;
-
-            _selectedServer = targetIpAddress;
-            lanToggleGroup.SetAllTogglesOff();
-            joinButton.interactable = !string.IsNullOrWhiteSpace(_selectedServer)
-                                      && Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
         }
 
         private void InputSubmit(InputAction.CallbackContext callbackContext)
@@ -406,8 +419,11 @@ namespace Cgs.Play.Multiplayer
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
+            InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
+            InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputHostMenu;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

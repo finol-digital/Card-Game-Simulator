@@ -45,8 +45,9 @@ namespace Cgs.Decks
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPrint;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed += InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
+            InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed += InputCopyShare;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -87,7 +88,7 @@ namespace Cgs.Decks
             textOutputArea.text = deck.ToString();
         }
 
-        private void InputPrint(InputAction.CallbackContext callbackContext)
+        private void InputPaste(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
@@ -166,7 +167,7 @@ namespace Cgs.Decks
         }
 #endif
 
-        private void InputShare(InputAction.CallbackContext callbackContext)
+        private void InputCopyShare(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
                 return;
@@ -257,8 +258,9 @@ namespace Cgs.Decks
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPrint;
-            InputSystem.actions.FindAction(Tags.SubMenuShare).performed -= InputShare;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
+            InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed -= InputCopyShare;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }

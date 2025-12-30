@@ -140,9 +140,9 @@ namespace Cgs.Cards
 
         private void OnEnable()
         {
+            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputImportFile;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
-            InputSystem.actions.FindAction(Tags.DecksNew).performed += InputDownloadWeb;
-            InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputImportFile;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -406,9 +406,9 @@ namespace Cgs.Cards
 
         private void OnDisable()
         {
+            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputDownloadWeb;
+            InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputImportFile;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
-            InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputDownloadWeb;
-            InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputImportFile;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }

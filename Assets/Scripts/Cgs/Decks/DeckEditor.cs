@@ -127,11 +127,12 @@ namespace Cgs.Decks
             searchResults.DoubleClickAction = AddCardModel;
             CardGameManager.Instance.OnSceneActions.Add(Reset);
 
-            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputSort;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed += InputSave;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed += InputSort;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputFilter;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
@@ -376,25 +377,6 @@ namespace Cgs.Decks
                     : 1f;
         }
 
-        private void InputSort(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            Sort();
-        }
-
-        [UsedImplicitly]
-        public void Sort()
-        {
-            var sortedDeck = CurrentDeck;
-            sortedDeck.Sort();
-            foreach (var cardZone in CardZones)
-                cardZone.transform.DestroyAllChildren();
-            foreach (var card in sortedDeck.Cards)
-                AddCard((UnityCard)card);
-        }
-
         private void InputNew(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -484,6 +466,25 @@ namespace Cgs.Decks
             UpdateDeckStats();
         }
 
+        private void InputSort(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            Sort();
+        }
+
+        [UsedImplicitly]
+        public void Sort()
+        {
+            var sortedDeck = CurrentDeck;
+            sortedDeck.Sort();
+            foreach (var cardZone in CardZones)
+                cardZone.transform.DestroyAllChildren();
+            foreach (var card in sortedDeck.Cards)
+                AddCard((UnityCard)card);
+        }
+
         private void InputFocus(InputAction.CallbackContext callbackContext)
         {
             if (IsBlocked)
@@ -527,11 +528,12 @@ namespace Cgs.Decks
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputSort;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputNew;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.DecksSave).performed -= InputSave;
+            InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputSort;
             InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputFilter;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
