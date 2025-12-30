@@ -1883,6 +1883,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "No",
+                    "type": "Button",
+                    "id": "598a3d4d-3293-426f-acce-09e067ec4ecc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Host",
                     "type": "Button",
                     "id": "9745a6f5-620e-4f94-8442-7b670775b5f6",
@@ -2080,6 +2089,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Host",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dca3d8cd-44f5-4e05-94da-5b16d8a863a2",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "No",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f6d04d2f-6629-4fda-bd68-8074c5aa2825",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "No",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

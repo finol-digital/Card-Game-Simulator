@@ -320,8 +320,7 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void SetPassword(string password)
         {
-            if (password != null)
-                _password = password;
+            _password = password;
         }
 
         private void InputHost(InputAction.CallbackContext callbackContext)
