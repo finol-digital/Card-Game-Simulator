@@ -38,7 +38,6 @@ namespace Cgs.Play.Multiplayer
 
         private const float SecondsPerRefresh = 5;
 
-        public GameObject publicPrivateModalPrefab;
         public ToggleGroup lanToggleGroup;
         public Toggle lanToggle;
         public Toggle internetToggle;
@@ -46,11 +45,6 @@ namespace Cgs.Play.Multiplayer
         public Text roomIdIpLabel;
         public InputField roomIdIpInputField;
         public InputField passwordInputField;
-
-        private DecisionModal PublicPrivateModal =>
-            _publicPrivateModal ??= Instantiate(publicPrivateModalPrefab).GetOrAddComponent<DecisionModal>();
-
-        private DecisionModal _publicPrivateModal;
 
         [UsedImplicitly]
         public bool IsLanConnectionSource
@@ -345,15 +339,14 @@ namespace Cgs.Play.Multiplayer
             Hide();
         }
 
-        private void StartHost(bool isPublic = true)
+        private void StartHost()
         {
             if (IsInternetConnectionSource)
             {
                 if (CardGameManager.Current.AutoUpdateUrl == null ||
                     !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
                     CardGameManager.Instance.Messenger.Show(ShareWarningMessage);
-                if (isPublic)
-                    CgsNetManager.Instance.StartBroadcastHost();
+                CgsNetManager.Instance.StartBroadcastHost(_password);
             }
             else
             {
@@ -362,8 +355,7 @@ namespace Cgs.Play.Multiplayer
                 NetworkManager.Singleton.StartHost();
                 if (CgsNetManager.Instance.Discovery.IsRunning)
                     CgsNetManager.Instance.Discovery.StopDiscovery();
-                if (isPublic)
-                    CgsNetManager.Instance.Discovery.StartServer();
+                CgsNetManager.Instance.Discovery.StartServer();
             }
         }
 
@@ -382,13 +374,13 @@ namespace Cgs.Play.Multiplayer
             if (IsInternetConnectionSource)
             {
                 if (Lobbies.TryGetValue(_selectedServer, out var lobby))
-                    CgsNetManager.Instance.StartJoinLobby(lobby.Id);
+                    CgsNetManager.Instance.StartJoinLobby(lobby.Id, _password);
                 else
                 {
                     if (Uri.IsWellFormedUriString(_selectedServer, UriKind.Absolute))
                         CgsNetManager.Instance.StartJoin(_selectedServer);
                     else
-                        CgsNetManager.Instance.StartJoinLobbyCode(_selectedServer);
+                        CgsNetManager.Instance.StartJoinLobbyCode(_selectedServer, _password);
                 }
             }
             else

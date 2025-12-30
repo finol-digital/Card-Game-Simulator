@@ -31,7 +31,7 @@ namespace Cgs.Play.Multiplayer
         private const int DefaultPort = 7777;
         private const int MaxPlayers = 10;
 
-        public static CgsNetManager Instance => (CgsNetManager) Singleton;
+        public static CgsNetManager Instance => (CgsNetManager)Singleton;
 
         public bool IsOnline => IsHost || IsConnectedClient;
 
@@ -39,7 +39,7 @@ namespace Cgs.Play.Multiplayer
 
         public UnityTransport Transport
         {
-            get => (UnityTransport) NetworkConfig.NetworkTransport;
+            get => (UnityTransport)NetworkConfig.NetworkTransport;
             set => NetworkConfig.NetworkTransport = value;
         }
 
@@ -108,12 +108,12 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        public void StartBroadcastHost()
+        public void StartBroadcastHost(string password = "")
         {
-            StartCoroutine(BroadcastHostCoroutine());
+            StartCoroutine(BroadcastHostCoroutine(password));
         }
 
-        private IEnumerator BroadcastHostCoroutine()
+        private IEnumerator BroadcastHostCoroutine(string password)
         {
             if (!AuthenticationService.Instance.IsSignedIn)
             {
@@ -150,7 +150,7 @@ namespace Cgs.Play.Multiplayer
 
             Debug.Log($"[CgsNet] Creating lobby with relay code {relayServerData.Item2}...");
 
-            var createLobbyUtilityTask = CreateLobby(relayServerData.Item1, relayServerData.Item2);
+            var createLobbyUtilityTask = CreateLobby(relayServerData.Item1, relayServerData.Item2, password);
             while (!createLobbyUtilityTask.IsCompleted)
                 yield return null;
 
@@ -207,7 +207,8 @@ namespace Cgs.Play.Multiplayer
             return Tuple.Create(allocation.ToRelayServerData("dtls"), relayJoinCode);
         }
 
-        private static async Task<Lobby> CreateLobby(RelayServerData relayServerData, string relayJoinCode)
+        private static async Task<Lobby> CreateLobby(RelayServerData relayServerData, string relayJoinCode,
+            string password)
         {
             Lobby lobby;
             var data = new Dictionary<string, DataObject>
@@ -223,6 +224,8 @@ namespace Cgs.Play.Multiplayer
                     allocationId: relayServerData.AllocationId.ToString()),
                 Data = data
             };
+            if (password is { Length: >= 8 and <= 64 })
+                createLobbyOptions.Password = password;
             try
             {
                 lobby = await LobbyService.Instance.CreateLobbyAsync(CardGameManager.Current.Name, MaxPlayers,
@@ -245,12 +248,12 @@ namespace Cgs.Play.Multiplayer
             StartClient();
         }
 
-        public void StartJoinLobby(string lobbyId)
+        public void StartJoinLobby(string lobbyId, string password = "")
         {
-            StartCoroutine(JoinLobbyCoroutine(lobbyId));
+            StartCoroutine(JoinLobbyByIdCoroutine(lobbyId, password));
         }
 
-        private IEnumerator JoinLobbyCoroutine(string lobbyId)
+        private IEnumerator JoinLobbyByIdCoroutine(string lobbyId, string password)
         {
             if (!AuthenticationService.Instance.IsSignedIn)
             {
@@ -266,7 +269,7 @@ namespace Cgs.Play.Multiplayer
                 }
             }
 
-            var joinLobbyTask = JoinLobby(lobbyId);
+            var joinLobbyTask = JoinLobbyById(lobbyId, password);
             while (!joinLobbyTask.IsCompleted)
                 yield return null;
 
@@ -279,7 +282,7 @@ namespace Cgs.Play.Multiplayer
             }
 
             CurrentLobby = joinLobbyTask.Result;
-            if (CurrentLobby is {Data: { }} &&
+            if (CurrentLobby is { Data: { } } &&
                 CurrentLobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var dataObject))
             {
                 yield return JoinRelayCoroutine(dataObject.Value);
@@ -291,12 +294,20 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private static async Task<Lobby> JoinLobby(string lobbyId)
+        private static async Task<Lobby> JoinLobbyById(string lobbyId, string password)
         {
             Lobby lobby;
             try
             {
-                lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+                if (password is { Length: >= 8 and <= 64 })
+                {
+                    var idOptions = new JoinLobbyByIdOptions { Password = password };
+                    lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, idOptions);
+                }
+                else
+                {
+                    lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+                }
             }
             catch
             {
@@ -307,12 +318,12 @@ namespace Cgs.Play.Multiplayer
             return lobby;
         }
 
-        public void StartJoinLobbyCode(string lobbyCode)
+        public void StartJoinLobbyCode(string lobbyCode, string password = "")
         {
-            StartCoroutine(JoinLobbyCodeCoroutine(lobbyCode));
+            StartCoroutine(JoinLobbyByCodeCoroutine(lobbyCode, password));
         }
 
-        private IEnumerator JoinLobbyCodeCoroutine(string lobbyCode)
+        private IEnumerator JoinLobbyByCodeCoroutine(string lobbyCode, string password)
         {
             if (!AuthenticationService.Instance.IsSignedIn)
             {
@@ -328,7 +339,7 @@ namespace Cgs.Play.Multiplayer
                 }
             }
 
-            var joinLobbyTask = JoinLobbyCode(lobbyCode);
+            var joinLobbyTask = JoinLobbyByCode(lobbyCode, password);
             while (!joinLobbyTask.IsCompleted)
                 yield return null;
 
@@ -341,7 +352,7 @@ namespace Cgs.Play.Multiplayer
             }
 
             CurrentLobby = joinLobbyTask.Result;
-            if (CurrentLobby is {Data: { }} &&
+            if (CurrentLobby is { Data: { } } &&
                 CurrentLobby.Data.TryGetValue(LobbyData.KeyRelayJoinCode, out var dataObject))
             {
                 yield return JoinRelayCoroutine(dataObject.Value);
@@ -353,12 +364,20 @@ namespace Cgs.Play.Multiplayer
             }
         }
 
-        private static async Task<Lobby> JoinLobbyCode(string lobbyCode)
+        private static async Task<Lobby> JoinLobbyByCode(string lobbyCode, string password)
         {
             Lobby lobby;
             try
             {
-                lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+                if (password is { Length: >= 8 and <= 64 })
+                {
+                    var codeOptions = new JoinLobbyByCodeOptions { Password = password };
+                    lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, codeOptions);
+                }
+                else
+                {
+                    lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+                }
             }
             catch
             {
