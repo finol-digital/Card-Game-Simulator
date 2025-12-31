@@ -66,6 +66,7 @@ namespace Cgs
         public const string SubMenuPaste = "SubMenu/Paste";
         public const string SubMenuFocusPrevious = "SubMenu/FocusPrevious";
         public const string SubMenuFocusNext = "SubMenu/FocusNext";
+        public const string SubMenuShift = "SubMenu/Shift";
 
         public const string SettingsToolTips = "Settings/ToolTips";
         public const string SettingsPreviewMouseOver = "Settings/PreviewMouseOver";

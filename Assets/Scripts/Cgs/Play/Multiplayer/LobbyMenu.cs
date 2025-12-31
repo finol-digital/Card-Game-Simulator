@@ -30,7 +30,8 @@ namespace Cgs.Play.Multiplayer
             "You may need to ensure that all connecting players have manually loaded the latest .zip for this game.\n" +
             "For assistance, contact david@finoldigital.com";
 
-        public const string InvalidPasswordWarningMessage = "Password NOT applied, as password length must be between 8 and 64 characters.";
+        public const string InvalidPasswordWarningMessage =
+            "Password NOT applied, as password length must be between 8 and 64 characters.";
 
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
@@ -89,6 +90,7 @@ namespace Cgs.Play.Multiplayer
 
         private InputAction _moveAction;
         private InputAction _pageAction;
+        private InputAction _shiftAction;
 
         private void OnEnable()
         {
@@ -105,6 +107,7 @@ namespace Cgs.Play.Multiplayer
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+            _shiftAction = InputSystem.actions.FindAction(Tags.SubMenuShift);
 
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             passwordInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
@@ -293,7 +296,7 @@ namespace Cgs.Play.Multiplayer
 
         private void InputFocusIp(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (Menu.IsBlocked)
                 return;
 
             roomIdIpInputField.ActivateInputField();
@@ -313,7 +316,7 @@ namespace Cgs.Play.Multiplayer
 
         private void InputFocusPassword(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (Menu.IsBlocked || _shiftAction?.ReadValue<float>() > 0.9f)
                 return;
 
             passwordInputField.ActivateInputField();
@@ -352,6 +355,7 @@ namespace Cgs.Play.Multiplayer
                     Debug.LogWarning(InvalidPasswordWarningMessage);
                     CardGameManager.Instance.Messenger.Show(InvalidPasswordWarningMessage);
                 }
+
                 CgsNetManager.Instance.StartBroadcastHost(_password);
             }
             else

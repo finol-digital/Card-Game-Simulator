@@ -69,6 +69,7 @@ namespace Cgs.Decks
 
         private InputAction _moveAction;
         private InputAction _pageAction;
+        private InputAction _shiftAction;
 
         private void OnEnable()
         {
@@ -87,6 +88,7 @@ namespace Cgs.Decks
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+            _shiftAction = InputSystem.actions.FindAction(Tags.SubMenuShift);
         }
 
         // Poll for Vector2 inputs
@@ -345,10 +347,10 @@ namespace Cgs.Decks
 
         private void InputFocusName(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (Menu.IsBlocked)
                 return;
 
-            if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+            if (newDeckPanel.gameObject.activeSelf)
                 nameInputField.ActivateInputField();
         }
 
@@ -360,10 +362,10 @@ namespace Cgs.Decks
 
         private void InputFocusText(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (Menu.IsBlocked || _shiftAction?.ReadValue<float>() > 0.9f)
                 return;
 
-            if (newDeckPanel.gameObject.activeSelf && EventSystem.current.currentSelectedGameObject == null)
+            if (newDeckPanel.gameObject.activeSelf)
                 textInputField.ActivateInputField();
         }
 
