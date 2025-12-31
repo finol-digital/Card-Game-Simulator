@@ -23,27 +23,14 @@ namespace Cgs.Menu
         public virtual bool IsBlocked =>
             !IsFocused || !WasFocused || InputFields.Any(inputField => inputField.isFocused);
 
-        protected virtual List<InputField> InputFields { get; set; } = new();
         protected virtual List<Toggle> Toggles { get; set; } = new();
+        protected virtual List<InputField> InputFields { get; set; } = new();
 
-        protected InputAction FocusPreviousAction { get; private set; }
-        private InputAction FocusNextAction { get; set; }
         protected InputAction MoveAction { get; private set; }
         protected InputAction PageAction { get; private set; }
 
-        protected static InputField ActiveInputField
-        {
-            get =>
-                EventSystem.current.currentSelectedGameObject != null
-                    ? EventSystem.current.currentSelectedGameObject.GetComponent<InputField>()
-                    : null;
-            private set
-            {
-                if (EventSystem.current.alreadySelecting)
-                    return;
-                EventSystem.current.SetSelectedGameObject(value == null ? null : value.gameObject);
-            }
-        }
+        private InputAction FocusPreviousAction { get; set; }
+        private InputAction FocusNextAction { get; set; }
 
         protected static Toggle ActiveToggle
         {
@@ -58,46 +45,17 @@ namespace Cgs.Menu
             }
         }
 
-        protected void FocusInputField()
+        protected static InputField ActiveInputField
         {
-            if (ActiveInputField == null || InputFields.Count < 1)
+            get =>
+                EventSystem.current.currentSelectedGameObject != null
+                    ? EventSystem.current.currentSelectedGameObject.GetComponent<InputField>()
+                    : null;
+            private set
             {
-                InputFields.FirstOrDefault()?.ActivateInputField();
-                ActiveInputField = InputFields.FirstOrDefault();
-                return;
-            }
-
-            if (FocusPreviousAction != null && FocusPreviousAction.WasPressedThisFrame())
-            {
-                // up
-                var previous = InputFields.Last();
-                foreach (var inputField in InputFields)
-                {
-                    if (ActiveInputField == inputField)
-                    {
-                        previous.ActivateInputField();
-                        ActiveInputField = previous;
-                        break;
-                    }
-
-                    previous = inputField;
-                }
-            }
-            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame())
-            {
-                // down
-                var next = InputFields.First();
-                for (var i = InputFields.Count - 1; i >= 0; i--)
-                {
-                    if (ActiveInputField == InputFields[i])
-                    {
-                        next.ActivateInputField();
-                        ActiveInputField = next;
-                        break;
-                    }
-
-                    next = InputFields[i];
-                }
+                if (EventSystem.current.alreadySelecting)
+                    return;
+                EventSystem.current.SetSelectedGameObject(value == null ? null : value.gameObject);
             }
         }
 
@@ -184,6 +142,49 @@ namespace Cgs.Menu
             if (ActiveToggle == null)
                 return;
             ActiveToggle.isOn = !ActiveToggle.isOn;
+        }
+
+        protected void FocusInputField()
+        {
+            if (ActiveInputField == null || InputFields.Count < 1)
+            {
+                InputFields.FirstOrDefault()?.ActivateInputField();
+                ActiveInputField = InputFields.FirstOrDefault();
+                return;
+            }
+
+            if (FocusPreviousAction != null && FocusPreviousAction.WasPressedThisFrame())
+            {
+                // up
+                var previous = InputFields.Last();
+                foreach (var inputField in InputFields)
+                {
+                    if (ActiveInputField == inputField)
+                    {
+                        previous.ActivateInputField();
+                        ActiveInputField = previous;
+                        break;
+                    }
+
+                    previous = inputField;
+                }
+            }
+            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame())
+            {
+                // down
+                var next = InputFields.First();
+                for (var i = InputFields.Count - 1; i >= 0; i--)
+                {
+                    if (ActiveInputField == InputFields[i])
+                    {
+                        next.ActivateInputField();
+                        ActiveInputField = next;
+                        break;
+                    }
+
+                    next = InputFields[i];
+                }
+            }
         }
 
         protected virtual void Start()

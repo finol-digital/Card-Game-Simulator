@@ -1163,7 +1163,7 @@
                 {
                     "name": "",
                     "id": "4050b0b8-89ab-4011-9ac5-b5cc7df80e8d",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1174,7 +1174,7 @@
                 {
                     "name": "",
                     "id": "171e9597-1270-43f6-b8da-0a3c8b28eadb",
-                    "path": "<Keyboard>/backslash",
+                    "path": "<Keyboard>/p",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1231,7 +1231,7 @@
                 {
                     "name": "",
                     "id": "1e4b130e-cdee-4c5a-947b-6f1622b0ea31",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1242,6 +1242,17 @@
                 {
                     "name": "",
                     "id": "f148a66e-b3a8-41b7-9956-438a774fbebd",
+                    "path": "<Keyboard>/semicolon",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Save",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f5fba8d0-213e-410e-8669-0d5e05540882",
                     "path": "<Keyboard>/backslash",
                     "interactions": "",
                     "processors": "",
@@ -2646,6 +2657,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "28dd0582-4912-4af3-bd6b-17b1c31bf334",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false

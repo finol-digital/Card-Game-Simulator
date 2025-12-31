@@ -69,7 +69,6 @@ namespace Cgs.Cards
             CardGameManager.Instance.OnSceneActions.Add(ResetBannerCardsAndButtons);
 
             InputSystem.actions.FindAction(Tags.CardsSort).performed += InputCardsSort;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputCardsFilter;
             InputSystem.actions.FindAction(Tags.CardsNew).performed += InputNewCard;
@@ -198,7 +197,6 @@ namespace Cgs.Cards
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.CardsSort).performed -= InputCardsSort;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputCardsFilter;
             InputSystem.actions.FindAction(Tags.CardsNew).performed -= InputNewCard;

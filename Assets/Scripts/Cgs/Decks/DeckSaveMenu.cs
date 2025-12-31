@@ -44,7 +44,6 @@ namespace Cgs.Decks
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
             InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed += InputCopyShare;
@@ -257,7 +256,6 @@ namespace Cgs.Decks
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
             InputSystem.actions.FindAction(Tags.SubMenuCopyShare).performed -= InputCopyShare;
