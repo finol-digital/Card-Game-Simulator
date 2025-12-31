@@ -30,6 +30,8 @@ namespace Cgs.Play.Multiplayer
             "You may need to ensure that all connecting players have manually loaded the latest .zip for this game.\n" +
             "For assistance, contact david@finoldigital.com";
 
+        public const string InvalidPasswordWarningMessage = "Password NOT applied, as password length must be between 8 and 64 characters.";
+
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
@@ -345,6 +347,11 @@ namespace Cgs.Play.Multiplayer
                 if (CardGameManager.Current.AutoUpdateUrl == null ||
                     !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
                     CardGameManager.Instance.Messenger.Show(ShareWarningMessage);
+                if (!string.IsNullOrEmpty(_password) && _password.Length is < 8 or > 64)
+                {
+                    Debug.LogWarning(InvalidPasswordWarningMessage);
+                    CardGameManager.Instance.Messenger.Show(InvalidPasswordWarningMessage);
+                }
                 CgsNetManager.Instance.StartBroadcastHost(_password);
             }
             else

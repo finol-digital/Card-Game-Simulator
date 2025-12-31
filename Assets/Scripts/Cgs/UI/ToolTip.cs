@@ -68,7 +68,7 @@ namespace Cgs.UI
                 var inputBinding = Gamepad.current != null
                     ? InputBinding.MaskByGroup("Gamepad")
                     : InputBinding.MaskByGroup("Keyboard&Mouse");
-                return inputAction.GetBindingDisplayString(inputBinding).Replace("| Backspace", "");
+                return inputAction.GetBindingDisplayString(inputBinding).Replace("| `", "").Replace("| Backspace", "");
             }
         }
 

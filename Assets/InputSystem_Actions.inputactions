@@ -88,6 +88,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6ada1cf4-1fa3-447b-9e68-4a1ddcb8886b",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "4ec6cf3f-2b32-4479-88ff-20b5cf789de7",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -1935,6 +1946,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Shift",
+                    "type": "Value",
+                    "id": "b290cd88-a82e-4ef2-9922-0b2246141f31",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -2038,15 +2058,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "0a0b8f31-f068-4257-8520-412e3a5d3361",
-                    "path": "<Keyboard>/backquote",
+                    "name": "One Modifier",
+                    "id": "7d212df9-fea1-4554-891a-956570f17db0",
+                    "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "",
+                    "action": "FocusPrevious",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "073b3b50-166c-4a0b-8c5b-8586d1e207a6",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "FocusPrevious",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "51142def-f47a-4e96-8499-df9840438752",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FocusPrevious",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -2111,6 +2153,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "No",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d8b8e0e-3c91-433e-bcf4-c15cd549fdaa",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Shift",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
