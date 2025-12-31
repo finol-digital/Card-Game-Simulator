@@ -32,6 +32,8 @@ EditorBuildSettings:
       guid: 1a729b68d47fa5e468576bb0901ca500, type: 2}
     com.unity.addressableassets: {fileID: 11400000, guid: f954f45e1e6704247b223bbbb6456a01,
       type: 2}
+    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f,
+      type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 05aadddcd5d2360478d81adae954f8dc,
       type: 3}
     com.unity.localization.settings: {fileID: 11400000, guid: 488333c7d54871d488f436b5bcc4f1b2,
