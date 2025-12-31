@@ -34,21 +34,11 @@ namespace Cgs.Cards
 
         public OnSearchDelegate SearchCallback { get; set; }
 
-        protected override List<InputField> InputFields
-        {
-            get => _inputFields;
-            set => _inputFields = value;
-        }
+        protected override List<InputField> InputFields => _inputFields;
+        private readonly List<InputField> _inputFields = new();
 
-        private List<InputField> _inputFields = new();
-
-        protected override List<Toggle> Toggles
-        {
-            get => _toggles;
-            set => _toggles = value;
-        }
-
-        private List<Toggle> _toggles = new();
+        protected override List<Toggle> Toggles => _toggles;
+        private readonly List<Toggle> _toggles = new();
 
         private readonly List<GameObject> _filterPanels = new();
         private readonly CardSearchFilters _filters = new();

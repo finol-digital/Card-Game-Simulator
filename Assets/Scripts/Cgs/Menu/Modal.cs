@@ -23,8 +23,8 @@ namespace Cgs.Menu
         public virtual bool IsBlocked =>
             !IsFocused || !WasFocused || InputFields.Any(inputField => inputField.isFocused);
 
-        protected virtual List<Toggle> Toggles { get; set; } = new();
-        protected virtual List<InputField> InputFields { get; set; } = new();
+        protected virtual List<Toggle> Toggles { get; private set; } = new();
+        protected virtual List<InputField> InputFields { get; private set; } = new();
 
         protected InputAction MoveAction { get; private set; }
         protected InputAction PageAction { get; private set; }
@@ -190,14 +190,17 @@ namespace Cgs.Menu
         protected virtual void Start()
         {
             CardGameManager.Instance.ModalCanvases.Add(GetComponent<Canvas>());
-            InputFields = new List<InputField>(GetComponentsInChildren<InputField>());
-            Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
                 canvasScaler.referenceResolution = ResolutionManager.Resolution;
-            FocusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
-            FocusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
+
+            InputFields = new List<InputField>(GetComponentsInChildren<InputField>());
+            Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
+
             MoveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             PageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+
+            FocusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
+            FocusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
         }
 
         private void LateUpdate()
