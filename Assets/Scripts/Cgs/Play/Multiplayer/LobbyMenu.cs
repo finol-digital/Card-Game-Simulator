@@ -96,8 +96,8 @@ namespace Cgs.Play.Multiplayer
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputToggleConnection;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusIp;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusPassword;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
             InputSystem.actions.FindAction(Tags.SubMenuHost).performed += InputHost;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -294,12 +294,12 @@ namespace Cgs.Play.Multiplayer
                 Join();
         }
 
-        private void InputFocusIp(InputAction.CallbackContext callbackContext)
+        private void InputFocusPrevious(InputAction.CallbackContext callbackContext)
         {
-            if (Menu.IsBlocked)
+            if (!Menu.IsFocused || !Menu.WasFocused)
                 return;
 
-            roomIdIpInputField.ActivateInputField();
+            Menu.FocusInputField();
         }
 
         [UsedImplicitly]
@@ -314,12 +314,12 @@ namespace Cgs.Play.Multiplayer
                                       && Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
         }
 
-        private void InputFocusPassword(InputAction.CallbackContext callbackContext)
+        private void InputFocusNext(InputAction.CallbackContext callbackContext)
         {
-            if (Menu.IsBlocked || _shiftAction?.ReadValue<float>() > 0.9f)
+            if (!Menu.IsFocused || !Menu.WasFocused || _shiftAction?.ReadValue<float>() > 0.9f)
                 return;
 
-            passwordInputField.ActivateInputField();
+            Menu.FocusInputField();
         }
 
         [UsedImplicitly]
@@ -448,8 +448,8 @@ namespace Cgs.Play.Multiplayer
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusIp;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusPassword;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
             InputSystem.actions.FindAction(Tags.SubMenuHost).performed -= InputHost;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;

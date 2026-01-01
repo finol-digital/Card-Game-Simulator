@@ -15,10 +15,10 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Canvas))]
     public class Modal : MonoBehaviour
     {
-        protected bool IsFocused => CardGameManager.Instance.ModalCanvas != null &&
-                                    CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
+        public bool IsFocused => CardGameManager.Instance.ModalCanvas != null &&
+                                 CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
 
-        private bool WasFocused { get; set; }
+        public bool WasFocused { get; private set; }
 
         public virtual bool IsBlocked =>
             !IsFocused || !WasFocused || InputFields.Any(inputField => inputField.isFocused);
@@ -144,7 +144,7 @@ namespace Cgs.Menu
             ActiveToggle.isOn = !ActiveToggle.isOn;
         }
 
-        protected void FocusInputField()
+        public void FocusInputField()
         {
             if (ActiveInputField == null || InputFields.Count < 1)
             {
@@ -157,16 +157,17 @@ namespace Cgs.Menu
             {
                 // up
                 var previous = InputFields.Last();
-                foreach (var inputField in InputFields)
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (var i = 0; i < InputFields.Count; i++)
                 {
-                    if (ActiveInputField == inputField)
+                    if (ActiveInputField == InputFields[i])
                     {
                         previous.ActivateInputField();
                         ActiveInputField = previous;
                         break;
                     }
 
-                    previous = inputField;
+                    previous = InputFields[i];
                 }
             }
             else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame())
@@ -193,8 +194,8 @@ namespace Cgs.Menu
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
                 canvasScaler.referenceResolution = ResolutionManager.Resolution;
 
-            InputFields = new List<InputField>(GetComponentsInChildren<InputField>());
             Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
+            InputFields = new List<InputField>(GetComponentsInChildren<InputField>());
 
             MoveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             PageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
