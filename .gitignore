@@ -86,3 +86,8 @@ fastlane/api-*.json
 ProjectSettings/RiderScriptEditorPersistedState.asset
 CodeCoverage/
 .DS_Store
+
+Assets/Resources/PerformanceTestRunInfo.json
+Assets/Resources/PerformanceTestRunInfo.json.meta
+Assets/Resources/PerformanceTestRunSettings.json
+Assets/Resources/PerformanceTestRunSettings.json.meta
