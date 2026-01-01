@@ -63,6 +63,7 @@ namespace Cgs.Play.Drawer
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed += InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed += InputAdd;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
+            InputSystem.actions.FindAction(Tags.SubMenuNo).performed += InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
         }
 
@@ -157,6 +158,7 @@ namespace Cgs.Play.Drawer
             InputSystem.actions.FindAction(Tags.PlayGameSub).performed -= InputSub;
             InputSystem.actions.FindAction(Tags.PlayGameAdd).performed -= InputAdd;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
+            InputSystem.actions.FindAction(Tags.SubMenuNo).performed -= InputCancel;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
         }
     }

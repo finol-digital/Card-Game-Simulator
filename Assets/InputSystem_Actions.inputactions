@@ -88,6 +88,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6ada1cf4-1fa3-447b-9e68-4a1ddcb8886b",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "4ec6cf3f-2b32-4479-88ff-20b5cf789de7",
                     "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
@@ -1152,7 +1163,7 @@
                 {
                     "name": "",
                     "id": "4050b0b8-89ab-4011-9ac5-b5cc7df80e8d",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1163,7 +1174,7 @@
                 {
                     "name": "",
                     "id": "171e9597-1270-43f6-b8da-0a3c8b28eadb",
-                    "path": "<Keyboard>/backslash",
+                    "path": "<Keyboard>/p",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1220,7 +1231,7 @@
                 {
                     "name": "",
                     "id": "1e4b130e-cdee-4c5a-947b-6f1622b0ea31",
-                    "path": "<Keyboard>/tab",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
@@ -1231,6 +1242,17 @@
                 {
                     "name": "",
                     "id": "f148a66e-b3a8-41b7-9956-438a774fbebd",
+                    "path": "<Keyboard>/semicolon",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Save",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f5fba8d0-213e-410e-8669-0d5e05540882",
                     "path": "<Keyboard>/backslash",
                     "interactions": "",
                     "processors": "",
@@ -1883,6 +1905,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "No",
+                    "type": "Button",
+                    "id": "598a3d4d-3293-426f-acce-09e067ec4ecc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Host",
                     "type": "Button",
                     "id": "9745a6f5-620e-4f94-8442-7b670775b5f6",
@@ -1926,6 +1957,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Shift",
+                    "type": "Value",
+                    "id": "b290cd88-a82e-4ef2-9922-0b2246141f31",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -2029,15 +2069,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "0a0b8f31-f068-4257-8520-412e3a5d3361",
-                    "path": "<Keyboard>/backquote",
+                    "name": "One Modifier",
+                    "id": "7d212df9-fea1-4554-891a-956570f17db0",
+                    "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "",
+                    "action": "FocusPrevious",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "073b3b50-166c-4a0b-8c5b-8586d1e207a6",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
                     "action": "FocusPrevious",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "51142def-f47a-4e96-8499-df9840438752",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FocusPrevious",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -2053,7 +2115,7 @@
                 {
                     "name": "",
                     "id": "7bd2c099-0706-450e-b3fc-f0dcf52686b8",
-                    "path": "<Gamepad>/start",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
@@ -2080,6 +2142,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Host",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dca3d8cd-44f5-4e05-94da-5b16d8a863a2",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "No",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f6d04d2f-6629-4fda-bd68-8074c5aa2825",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "No",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d8b8e0e-3c91-433e-bcf4-c15cd549fdaa",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Shift",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -2562,6 +2657,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "28dd0582-4912-4af3-bd6b-17b1c31bf334",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
                     "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false

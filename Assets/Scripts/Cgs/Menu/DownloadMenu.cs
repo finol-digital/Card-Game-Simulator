@@ -29,7 +29,6 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed += InputPaste;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
@@ -157,7 +156,6 @@ namespace Cgs.Menu
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
             InputSystem.actions.FindAction(Tags.SubMenuPaste).performed -= InputPaste;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;

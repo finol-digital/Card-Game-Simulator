@@ -1082,11 +1082,6 @@ PrefabInstance:
       propertyPath: tooltip
       value: No
       objectReference: {fileID: 0}
-    - target: {fileID: 1912139460416580352, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
-        type: 3}
-      propertyPath: inputActionId
-      value: SubMenu/Menu
-      objectReference: {fileID: 0}
     - target: {fileID: 6042467856956256676, guid: 21e5f1e733cf8274f9fbbeb6b1e4cc6e,
         type: 3}
       propertyPath: m_TargetGraphic

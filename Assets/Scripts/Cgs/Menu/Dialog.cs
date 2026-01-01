@@ -40,7 +40,7 @@ namespace Cgs.Menu
         private bool _isNewMessage;
 
         private InputAction _submitAction;
-        private InputAction _menuAction;
+        private InputAction _noAction;
         private InputAction _copyShareAction;
         private InputAction _cancelAction;
 
@@ -60,7 +60,7 @@ namespace Cgs.Menu
 #endif
 
             _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
-            _menuAction = InputSystem.actions.FindAction(Tags.SubMenuMenu);
+            _noAction = InputSystem.actions.FindAction(Tags.SubMenuNo);
             _copyShareAction = InputSystem.actions.FindAction(Tags.SubMenuCopyShare);
             _cancelAction = InputSystem.actions.FindAction(Tags.PlayerCancel);
         }
@@ -88,7 +88,7 @@ namespace Cgs.Menu
                 else
                     OkClose();
             }
-            else if (_menuAction != null && _menuAction.WasPressedThisFrame() && noButton.gameObject.activeInHierarchy)
+            else if (_noAction != null && _noAction.WasPressedThisFrame() && noButton.gameObject.activeInHierarchy)
                 noButton.onClick?.Invoke();
             else if (_copyShareAction != null && _copyShareAction.WasPressedThisFrame())
                 CopyShare();

@@ -15,35 +15,22 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Canvas))]
     public class Modal : MonoBehaviour
     {
-        protected bool IsFocused => CardGameManager.Instance.ModalCanvas != null &&
-                                    CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
+        public bool IsFocused => CardGameManager.Instance.ModalCanvas != null &&
+                                 CardGameManager.Instance.ModalCanvas.gameObject == gameObject;
 
-        private bool WasFocused { get; set; }
+        public bool WasFocused { get; private set; }
 
         public virtual bool IsBlocked =>
             !IsFocused || !WasFocused || InputFields.Any(inputField => inputField.isFocused);
 
-        protected virtual List<InputField> InputFields { get; set; } = new();
-        protected virtual List<Toggle> Toggles { get; set; } = new();
+        protected virtual List<Toggle> Toggles { get; private set; } = new();
+        protected virtual List<InputField> InputFields { get; private set; } = new();
 
-        protected InputAction FocusPreviousAction { get; private set; }
-        private InputAction FocusNextAction { get; set; }
         protected InputAction MoveAction { get; private set; }
         protected InputAction PageAction { get; private set; }
 
-        protected static InputField ActiveInputField
-        {
-            get =>
-                EventSystem.current.currentSelectedGameObject != null
-                    ? EventSystem.current.currentSelectedGameObject.GetComponent<InputField>()
-                    : null;
-            private set
-            {
-                if (EventSystem.current.alreadySelecting)
-                    return;
-                EventSystem.current.SetSelectedGameObject(value == null ? null : value.gameObject);
-            }
-        }
+        private InputAction FocusPreviousAction { get; set; }
+        private InputAction FocusNextAction { get; set; }
 
         protected static Toggle ActiveToggle
         {
@@ -58,46 +45,17 @@ namespace Cgs.Menu
             }
         }
 
-        protected void FocusInputField()
+        protected static InputField ActiveInputField
         {
-            if (ActiveInputField == null || InputFields.Count < 1)
+            get =>
+                EventSystem.current.currentSelectedGameObject != null
+                    ? EventSystem.current.currentSelectedGameObject.GetComponent<InputField>()
+                    : null;
+            private set
             {
-                InputFields.FirstOrDefault()?.ActivateInputField();
-                ActiveInputField = InputFields.FirstOrDefault();
-                return;
-            }
-
-            if (FocusPreviousAction != null && FocusPreviousAction.WasPressedThisFrame())
-            {
-                // up
-                var previous = InputFields.Last();
-                foreach (var inputField in InputFields)
-                {
-                    if (ActiveInputField == inputField)
-                    {
-                        previous.ActivateInputField();
-                        ActiveInputField = previous;
-                        break;
-                    }
-
-                    previous = inputField;
-                }
-            }
-            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame())
-            {
-                // down
-                var next = InputFields.First();
-                for (var i = InputFields.Count - 1; i >= 0; i--)
-                {
-                    if (ActiveInputField == InputFields[i])
-                    {
-                        next.ActivateInputField();
-                        ActiveInputField = next;
-                        break;
-                    }
-
-                    next = InputFields[i];
-                }
+                if (EventSystem.current.alreadySelecting)
+                    return;
+                EventSystem.current.SetSelectedGameObject(value == null ? null : value.gameObject);
             }
         }
 
@@ -186,17 +144,64 @@ namespace Cgs.Menu
             ActiveToggle.isOn = !ActiveToggle.isOn;
         }
 
+        public void FocusInputField()
+        {
+            if (ActiveInputField == null || InputFields.Count < 1)
+            {
+                InputFields.FirstOrDefault()?.ActivateInputField();
+                ActiveInputField = InputFields.FirstOrDefault();
+                return;
+            }
+
+            if (FocusPreviousAction != null && FocusPreviousAction.WasPressedThisFrame())
+            {
+                // up
+                var previous = InputFields.Last();
+                // ReSharper disable once ForCanBeConvertedToForeach
+                for (var i = 0; i < InputFields.Count; i++)
+                {
+                    if (ActiveInputField == InputFields[i])
+                    {
+                        previous.ActivateInputField();
+                        ActiveInputField = previous;
+                        break;
+                    }
+
+                    previous = InputFields[i];
+                }
+            }
+            else if (FocusNextAction != null && FocusNextAction.WasPressedThisFrame())
+            {
+                // down
+                var next = InputFields.First();
+                for (var i = InputFields.Count - 1; i >= 0; i--)
+                {
+                    if (ActiveInputField == InputFields[i])
+                    {
+                        next.ActivateInputField();
+                        ActiveInputField = next;
+                        break;
+                    }
+
+                    next = InputFields[i];
+                }
+            }
+        }
+
         protected virtual void Start()
         {
             CardGameManager.Instance.ModalCanvases.Add(GetComponent<Canvas>());
-            InputFields = new List<InputField>(GetComponentsInChildren<InputField>());
-            Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
             foreach (var canvasScaler in GetComponentsInChildren<CanvasScaler>())
                 canvasScaler.referenceResolution = ResolutionManager.Resolution;
-            FocusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
-            FocusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
+
+            Toggles = new List<Toggle>(GetComponentsInChildren<Toggle>());
+            InputFields = new List<InputField>(GetComponentsInChildren<InputField>());
+
             MoveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             PageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+
+            FocusPreviousAction = InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious);
+            FocusNextAction = InputSystem.actions.FindAction(Tags.SubMenuFocusNext);
         }
 
         private void LateUpdate()

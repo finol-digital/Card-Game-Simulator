@@ -34,32 +34,23 @@ namespace Cgs.Cards
 
         public OnSearchDelegate SearchCallback { get; set; }
 
-        protected override List<InputField> InputFields
-        {
-            get => _inputFields;
-            set => _inputFields = value;
-        }
+        protected override List<InputField> InputFields => _inputFields;
+        private readonly List<InputField> _inputFields = new();
 
-        private List<InputField> _inputFields = new();
-
-        protected override List<Toggle> Toggles
-        {
-            get => _toggles;
-            set => _toggles = value;
-        }
-
-        private List<Toggle> _toggles = new();
+        protected override List<Toggle> Toggles => _toggles;
+        private readonly List<Toggle> _toggles = new();
 
         private readonly List<GameObject> _filterPanels = new();
         private readonly CardSearchFilters _filters = new();
         private readonly List<UnityCard> _results = new();
 
+        private InputAction _shiftAction;
         private InputAction _submitAction;
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputToggleEnum;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
@@ -69,6 +60,7 @@ namespace Cgs.Cards
         protected override void Start()
         {
             base.Start();
+            _shiftAction = InputSystem.actions.FindAction(Tags.SubMenuShift);
             _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
         }
 
@@ -88,9 +80,17 @@ namespace Cgs.Cards
             }
         }
 
-        private void InputFocus(InputAction.CallbackContext callbackContext)
+        private void InputFocusPrevious(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (!IsFocused || !WasFocused)
+                return;
+
+            FocusInputField();
+        }
+
+        private void InputFocusNext(InputAction.CallbackContext callbackContext)
+        {
+            if (!IsFocused || !WasFocused || _shiftAction?.ReadValue<float>() > 0.9f)
                 return;
 
             FocusInputField();
@@ -498,8 +498,8 @@ namespace Cgs.Cards
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputToggleEnum;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;

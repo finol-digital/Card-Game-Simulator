@@ -909,7 +909,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     : CT_FB;CT_FB_PRO
     Android: PORTABLE
-    Standalone: PORTABLE
+    Standalone: PORTABLE;APP_UI_EDITOR_ONLY
     WebGL: PORTABLE
     Windows Store Apps: PORTABLE
     iPhone: PORTABLE

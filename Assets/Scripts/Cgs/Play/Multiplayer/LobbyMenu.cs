@@ -30,6 +30,9 @@ namespace Cgs.Play.Multiplayer
             "You may need to ensure that all connecting players have manually loaded the latest .zip for this game.\n" +
             "For assistance, contact david@finoldigital.com";
 
+        public const string InvalidPasswordWarningMessage =
+            "Password NOT applied, as password length must be between 8 and 64 characters.";
+
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
 
@@ -87,13 +90,14 @@ namespace Cgs.Play.Multiplayer
 
         private InputAction _moveAction;
         private InputAction _pageAction;
+        private InputAction _shiftAction;
 
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputToggleConnection;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusIp;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusPassword;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
             InputSystem.actions.FindAction(Tags.SubMenuHost).performed += InputHost;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -103,6 +107,7 @@ namespace Cgs.Play.Multiplayer
         {
             _moveAction = InputSystem.actions.FindAction(Tags.PlayerMove);
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
+            _shiftAction = InputSystem.actions.FindAction(Tags.SubMenuShift);
 
             roomIdIpInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
             passwordInputField.onValidateInput += (_, _, addedChar) => Tags.FilterFocusInput(addedChar);
@@ -289,12 +294,12 @@ namespace Cgs.Play.Multiplayer
                 Join();
         }
 
-        private void InputFocusIp(InputAction.CallbackContext callbackContext)
+        private void InputFocusPrevious(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (!Menu.IsFocused || !Menu.WasFocused)
                 return;
 
-            roomIdIpInputField.ActivateInputField();
+            Menu.FocusInputField();
         }
 
         [UsedImplicitly]
@@ -309,19 +314,18 @@ namespace Cgs.Play.Multiplayer
                                       && Uri.IsWellFormedUriString(_selectedServer, UriKind.RelativeOrAbsolute);
         }
 
-        private void InputFocusPassword(InputAction.CallbackContext callbackContext)
+        private void InputFocusNext(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (!Menu.IsFocused || !Menu.WasFocused || _shiftAction?.ReadValue<float>() > 0.9f)
                 return;
 
-            passwordInputField.ActivateInputField();
+            Menu.FocusInputField();
         }
 
         [UsedImplicitly]
         public void SetPassword(string password)
         {
-            if (password != null)
-                _password = password;
+            _password = password;
         }
 
         private void InputHost(InputAction.CallbackContext callbackContext)
@@ -346,6 +350,12 @@ namespace Cgs.Play.Multiplayer
                 if (CardGameManager.Current.AutoUpdateUrl == null ||
                     !CardGameManager.Current.AutoUpdateUrl.IsWellFormedOriginalString())
                     CardGameManager.Instance.Messenger.Show(ShareWarningMessage);
+                if (!string.IsNullOrEmpty(_password) && _password.Length is < 8 or > 64)
+                {
+                    Debug.LogWarning(InvalidPasswordWarningMessage);
+                    CardGameManager.Instance.Messenger.Show(InvalidPasswordWarningMessage);
+                }
+
                 CgsNetManager.Instance.StartBroadcastHost(_password);
             }
             else
@@ -438,8 +448,8 @@ namespace Cgs.Play.Multiplayer
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputToggleConnection;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputToggleConnection;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusIp;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusPassword;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
             InputSystem.actions.FindAction(Tags.SubMenuHost).performed -= InputHost;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
