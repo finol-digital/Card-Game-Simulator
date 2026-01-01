@@ -44,12 +44,13 @@ namespace Cgs.Cards
         private readonly CardSearchFilters _filters = new();
         private readonly List<UnityCard> _results = new();
 
+        private InputAction _shiftAction;
         private InputAction _submitAction;
 
         private void OnEnable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed += InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
             InputSystem.actions.FindAction(Tags.DecksNew).performed += InputToggleEnum;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed += InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
@@ -59,6 +60,7 @@ namespace Cgs.Cards
         protected override void Start()
         {
             base.Start();
+            _shiftAction = InputSystem.actions.FindAction(Tags.SubMenuShift);
             _submitAction = InputSystem.actions.FindAction(Tags.PlayerSubmit);
         }
 
@@ -78,9 +80,17 @@ namespace Cgs.Cards
             }
         }
 
-        private void InputFocus(InputAction.CallbackContext callbackContext)
+        private void InputFocusPrevious(InputAction.CallbackContext callbackContext)
         {
-            if (IsBlocked)
+            if (!IsFocused || !WasFocused)
+                return;
+
+            FocusInputField();
+        }
+
+        private void InputFocusNext(InputAction.CallbackContext callbackContext)
+        {
+            if (!IsFocused || !WasFocused || _shiftAction?.ReadValue<float>() > 0.9f)
                 return;
 
             FocusInputField();
@@ -488,8 +498,8 @@ namespace Cgs.Cards
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocus;
-            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocus;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusPrevious).performed -= InputFocusPrevious;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
             InputSystem.actions.FindAction(Tags.DecksNew).performed -= InputToggleEnum;
             InputSystem.actions.FindAction(Tags.PlayerDelete).performed -= InputDelete;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
