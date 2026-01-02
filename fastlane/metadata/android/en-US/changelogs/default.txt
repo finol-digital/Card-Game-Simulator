@@ -1,3 +1,4 @@
 ## What's Changed
-- Multi-player Fix: Change color of dice and tokens on client
-- Display keyboard shortcuts/hotkeys as button tooltips
+- Multi-Player hosting can now set an optional password
+- Remapped shortcuts/hotkeys and added full support for gamepads
+- Fixed multiplayer bugs
