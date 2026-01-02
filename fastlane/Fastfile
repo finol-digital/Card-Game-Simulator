@@ -13,6 +13,11 @@ platform :android do
     upload_to_play_store(track: 'production', release_status: 'completed', aab: "#{ENV['ANDROID_BUILD_FILE_PATH']}")
   end
 
+  desc "Upload a new Android version to Amazon"
+  lane :amazon do
+    upload_to_amazon_appstore(apk: "#{ENV['ANDROID_BUILD_FILE_PATH']}", client_id: "#{ENV['AMAZON_CLIENT_ID']}", client_secret: "#{ENV['AMAZON_CLIENT_SECRET']}")
+  end
+
 end
 
 

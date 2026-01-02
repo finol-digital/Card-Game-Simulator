@@ -393,7 +393,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public void RequestInsert(int index, string cardId)
         {
-            if (LacksOwnership)
+            if (LacksOwnership || (CgsNetManager.Instance.IsOnline && !IsServer))
                 CgsNetManager.Instance.LocalPlayer.RequestInsert(gameObject, index, cardId);
             else
                 OwnerInsert(index, cardId);
