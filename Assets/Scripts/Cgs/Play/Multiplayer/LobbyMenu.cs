@@ -31,7 +31,7 @@ namespace Cgs.Play.Multiplayer
             "For assistance, contact david@finoldigital.com";
 
         public const string InvalidPasswordWarningMessage =
-            "Password NOT applied, as password length must be between 8 and 64 characters.";
+            "Password not applied: password length must be between 8 and 64 characters.";
 
         public const string InvalidServerErrorMessage =
             "Error: Attempted to join a game without having selected a valid server!";
@@ -325,7 +325,7 @@ namespace Cgs.Play.Multiplayer
         [UsedImplicitly]
         public void SetPassword(string password)
         {
-            _password = password;
+            _password = password ?? string.Empty;
         }
 
         private void InputHost(InputAction.CallbackContext callbackContext)
@@ -354,6 +354,7 @@ namespace Cgs.Play.Multiplayer
                 {
                     Debug.LogWarning(InvalidPasswordWarningMessage);
                     CardGameManager.Instance.Messenger.Show(InvalidPasswordWarningMessage);
+                    _password = string.Empty;
                 }
 
                 CgsNetManager.Instance.StartBroadcastHost(_password);
