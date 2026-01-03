@@ -53,6 +53,7 @@ namespace Cgs.Play
         public void ShowPlaySettingsMenu()
         {
             controller.ShowPlaySettingsMenu();
+            Hide();
         }
 
         private void InputCardsFilter(InputAction.CallbackContext callbackContext)
@@ -68,6 +69,7 @@ namespace Cgs.Play
         public void ShowCardsMenu()
         {
             controller.ShowCardsMenu();
+            Hide();
         }
 
         private void InputDecksLoad(InputAction.CallbackContext callbackContext)
@@ -83,6 +85,7 @@ namespace Cgs.Play
         public void ShowDeckMenu()
         {
             controller.ShowDeckMenu();
+            Hide();
         }
 
         private void InputDie(InputAction.CallbackContext callbackContext)
@@ -98,6 +101,7 @@ namespace Cgs.Play
         public void CreateDie()
         {
             controller.CreateDefaultDie();
+            Hide();
         }
 
         private void InputToken(InputAction.CallbackContext callbackContext)
@@ -113,6 +117,7 @@ namespace Cgs.Play
         public void CreateToken()
         {
             controller.CreateDefaultToken();
+            Hide();
         }
 
         [UsedImplicitly]

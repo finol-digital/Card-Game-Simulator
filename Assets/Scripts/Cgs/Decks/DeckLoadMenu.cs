@@ -250,6 +250,15 @@ namespace Cgs.Decks
             BuildDeckFileSelectionOptions();
         }
 
+        private void InputDecksLoad(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            if (!newDeckPanel.gameObject.activeSelf && loadFromFileButton.gameObject.activeSelf)
+                Edit();
+        }
+
         [UsedImplicitly]
         public void Edit()
         {
@@ -299,15 +308,6 @@ namespace Cgs.Decks
                 Debug.LogError(DeckLoadErrorMessage + e);
                 CardGameManager.Instance.Messenger.Show(DeckLoadErrorMessage + e.Message);
             }
-        }
-
-        private void InputDecksLoad(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            if (!newDeckPanel.gameObject.activeSelf && loadFromFileButton.gameObject.activeSelf)
-                LoadFromFileAndHide();
         }
 
         [UsedImplicitly]
