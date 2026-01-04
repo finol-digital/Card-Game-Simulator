@@ -1361,7 +1361,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Token",
+                    "name": "Counter",
                     "type": "Button",
                     "id": "007b6af3-cdae-4638-8e22-a58f3965cf88",
                     "expectedControlType": "",
@@ -1504,7 +1504,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Token",
+                    "action": "Counter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1515,7 +1515,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Token",
+                    "action": "Counter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1526,7 +1526,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Token",
+                    "action": "Counter",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

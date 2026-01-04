@@ -47,7 +47,7 @@ namespace Cgs
         public const string PlayGameMenu = "PlayGame/Menu";
         public const string PlayGameSettings = "PlayGame/Settings";
         public const string PlayGameDie = "PlayGame/Die";
-        public const string PlayGameToken = "PlayGame/Token";
+        public const string PlayGameCounter = "PlayGame/Counter";
         public const string PlayGameToggleZoomRotation = "PlayGame/ToggleZoomRotation";
         public const string PlayGameSub = "PlayGame/Sub";
         public const string PlayGameAdd = "PlayGame/Add";

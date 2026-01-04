@@ -592,13 +592,53 @@ jobs:
     needs: buildWithLinux
     if: github.event.action == 'published' || (contains(github.event.inputs.workflow_mode, 'release') && contains(github.event.inputs.workflow_mode, 'Android'))
     steps:
+      - name: Pre-pull Unity Docker image
+        run: |
+          docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-${{ matrix.targetPlatform }}-3 &
       - name: Checkout Repository
         uses: actions/checkout@v6
-      - name: Download Android Artifact
-        uses: actions/download-artifact@v7
         with:
-          name: cgs-Android
-          path: build/Android
+          fetch-depth: 0
+      - name: Create LFS file list
+        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+      - name: Restore LFS cache
+        uses: actions/cache@v5
+        id: lfs-cache
+        with:
+          path: .git/lfs
+          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+      - name: Git LFS Pull
+        run: |
+          git lfs pull
+          git add .
+          git reset --hard
+      - name: Free Disk Space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+      - name: Cache Library
+        uses: actions/cache@v5
+        with:
+          path: Library
+          key: Library-buildLinuxAmazon-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: Library-buildLinuxAmazon-
+      - name: Build Unity Project
+        id: buildStep
+        uses: game-ci/unity-builder@main
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL_PERSONAL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
+          androidExportType: androidPackage
+          androidKeystoreName: finoldigital.keystore
+          androidKeystoreBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          androidKeystorePass: ${{ secrets.ANDROID_KEYSTORE_PASS }}
+          androidKeyaliasName: cgs
+          androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
+          androidTargetSdkVersion: AndroidApiLevel36
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
@@ -613,7 +653,7 @@ jobs:
         env:
           AMAZON_CLIENT_ID: ${{ secrets.AMAZON_CLIENT_ID }}
           AMAZON_CLIENT_SECRET: ${{ secrets.AMAZON_CLIENT_SECRET }}
-          ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.aab', github.workspace) }}
+          ANDROID_BUILD_FILE_PATH: ${{ format('{0}/build/Android/Android.apk', github.workspace) }}
           ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
         uses: maierj/fastlane-action@v3.1.0
         with:
@@ -1061,7 +1101,7 @@ jobs:
           $pass = ConvertTo-SecureString $env:MICROSOFT_KEY -AsPlainText -Force
           $cred = New-Object System.Management.Automation.PSCredential ($env:MICROSOFT_CLIENT_ID, $pass)
           Set-StoreBrokerAuthentication -TenantId $env:MICROSOFT_TENANT_ID -Credential $cred
-          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppPackageUploadPath "$env:APPX_PATH" -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
+          New-SubmissionPackage -ConfigPath $env:STOREBROKER_CONFIG_PATH -PDPRootPath $env:PDP_ROOT_PATH -ImagesRootPath $env:IMAGES_ROOT_PATH -AppxPath "$env:APPX_PATH" -OutPath $env:OUT_PATH -OutName 'upload' -Verbose
           Update-ApplicationSubmission -AppId $env:MICROSOFT_APP_ID -SubmissionDataPath $env:SUBMISSION_DATA_PATH -PackagePath $env:PACKAGE_PATH -ReplacePackages -UpdateListings -AutoCommit -Force
 
   announceReleaseToSocialMedia:
