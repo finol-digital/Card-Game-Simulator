@@ -40,7 +40,7 @@ And also consider joining our social media!
 [![GitHub icon][4.1]][4] [GitHub](https://www.cardgamesimulator.com/github) 
 
 [1.1]: /assets/img/Discord.png
-[2.1]: /assets/img/Reddit.png
+[2.1]: /assets/img/reddit.png
 [3.1]: /assets/img/Bluesky.png
 [4.1]: /assets/img/GitHub.png
 
