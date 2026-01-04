@@ -9,21 +9,21 @@ using UnityEngine.UI;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class Token : CgsNetPlayable
+    public class Counter : CgsNetPlayable
     {
-        public override string ViewValue => "Token";
-        public override string DeletePrompt => "Delete token?";
+        public override string ViewValue => "Counter";
+        public override string DeletePrompt => "Delete counter?";
 
         public Image logoImage;
 
-        public Color LogoColor
+        public Color CounterColor
         {
-            get => _logoColor;
+            get => _counterColor;
             set
             {
-                var oldValue = new Vector3(_logoColor.r, _logoColor.g, _logoColor.b);
-                _logoColor = value;
-                var newValue = new Vector3(_logoColor.r, _logoColor.g, _logoColor.b);
+                var oldValue = new Vector3(_counterColor.r, _counterColor.g, _counterColor.b);
+                _counterColor = value;
+                var newValue = new Vector3(_counterColor.r, _counterColor.g, _counterColor.b);
                 if (IsSpawned)
                     UpdateColorServerRpc(newValue);
                 else
@@ -31,7 +31,7 @@ namespace Cgs.CardGameView.Multiplayer
             }
         }
 
-        private Color _logoColor = Color.white;
+        private Color _counterColor = Color.white;
 
         private NetworkVariable<Vector3> _colorNetworkVariable;
 
@@ -59,8 +59,8 @@ namespace Cgs.CardGameView.Multiplayer
         [PublicAPI]
         public void OnChangeColor(Vector3 oldValue, Vector3 newValue)
         {
-            _logoColor = new Color(newValue.x, newValue.y, newValue.z);
-            logoImage.color = _logoColor;
+            _counterColor = new Color(newValue.x, newValue.y, newValue.z);
+            logoImage.color = _counterColor;
         }
     }
 }

@@ -631,18 +631,18 @@ namespace Cgs.Play.Multiplayer
 
         #endregion
 
-        #region Tokens
+        #region Counters
 
-        public void RequestNewToken(Vector2 position, Quaternion rotation, Vector3 color)
+        public void RequestNewCounter(Vector2 position, Quaternion rotation, Vector3 color)
         {
-            CreateTokenServerRpc(position, rotation, color);
+            CreateCounterServerRpc(position, rotation, color);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateTokenServerRpc(Vector2 position, Quaternion rotation, Vector3 color)
+        private void CreateCounterServerRpc(Vector2 position, Quaternion rotation, Vector3 color)
         {
-            PlayController.Instance.CreateToken(position, rotation, new Color(color.x, color.y, color.z));
+            PlayController.Instance.CreateCounter(position, rotation, new Color(color.x, color.y, color.z));
         }
 
         #endregion
@@ -684,8 +684,8 @@ namespace Cgs.Play.Multiplayer
                 cardModel.MyNetworkObject.Despawn();
             foreach (var die in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Die>())
                 die.MyNetworkObject.Despawn();
-            foreach (var token in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Token>())
-                token.MyNetworkObject.Despawn();
+            foreach (var counter in PlayController.Instance.playAreaCardZone.GetComponentsInChildren<Counter>())
+                counter.MyNetworkObject.Despawn();
             foreach (var player in FindObjectsByType<CgsNetPlayer>(FindObjectsSortMode.None))
                 player.RestartClientRpc(player.OwnerClientRpcParams);
         }

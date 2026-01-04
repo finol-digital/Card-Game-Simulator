@@ -23,6 +23,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 using CardAction = FinolDigital.Cgs.Json.CardAction;
@@ -67,7 +68,7 @@ namespace Cgs.Play
         public GameObject cardStackPrefab;
         public GameObject cardModelPrefab;
         public GameObject diePrefab;
-        public GameObject tokenPrefab;
+        [FormerlySerializedAs("tokenPrefab")] public GameObject counterPrefab;
 
         public GameObject horizontalCardZonePrefab;
         public GameObject verticalCardZonePrefab;
@@ -673,26 +674,26 @@ namespace Cgs.Play
             return die;
         }
 
-        public void CreateDefaultToken()
+        public void CreateDefaultCounter()
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewToken(Vector2.zero,
+                CgsNetManager.Instance.LocalPlayer.RequestNewCounter(Vector2.zero,
                     CgsNetManager.Instance.LocalPlayer.DefaultRotation, Vector3.one);
             else
-                CreateToken(Vector2.zero, Quaternion.identity, Color.white);
+                CreateCounter(Vector2.zero, Quaternion.identity, Color.white);
         }
 
-        public Token CreateToken(Vector2 position, Quaternion rotation, Color color)
+        public Counter CreateCounter(Vector2 position, Quaternion rotation, Color color)
         {
-            var token = Instantiate(tokenPrefab, playAreaCardZone.transform).GetOrAddComponent<Token>();
+            var counter = Instantiate(counterPrefab, playAreaCardZone.transform).GetOrAddComponent<Counter>();
             if (CgsNetManager.Instance.IsOnline)
-                token.MyNetworkObject.Spawn();
+                counter.MyNetworkObject.Spawn();
 
-            token.Position = position;
-            token.Rotation = rotation;
-            token.LogoColor = color;
+            counter.Position = position;
+            counter.Rotation = rotation;
+            counter.CounterColor = color;
 
-            return token;
+            return counter;
         }
 
         private void CreateZones()
