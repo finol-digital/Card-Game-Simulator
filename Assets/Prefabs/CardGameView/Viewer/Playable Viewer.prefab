@@ -123,14 +123,15 @@ MonoBehaviour:
   view: {fileID: 2194002677946485457}
   dieActionPanel: {fileID: 198146522612501599}
   stackActionPanel: {fileID: 1998985133142810657}
-  tokenActionPanel: {fileID: 2394856817997104161}
+  counterActionPanel: {fileID: 2394856817997104161}
   valueTexts:
   - {fileID: 7437930296677555684}
   - {fileID: 4159148351361970319}
   dieValueInputField: {fileID: 4819420345818905078}
   dieMaxInputField: {fileID: 4182352698561528279}
   dieDropdown: {fileID: 698995707495592207}
-  tokenDropdown: {fileID: 636659739143836996}
+  counterValueInputField: {fileID: 6556665162098242402}
+  counterDropdown: {fileID: 636659739143836996}
 --- !u!1 &3229226146847586547
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,13 +374,14 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8463352598051708881}
   - {fileID: 746512894044639646}
   m_Father: {fileID: 224256216305895768}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -160}
-  m_SizeDelta: {x: 600, y: 300}
+  m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &9057480516217315255
 CanvasRenderer:
@@ -762,7 +764,7 @@ PrefabInstance:
     - target: {fileID: 1023399211122107466, guid: 8d611347712873941990408a695ae759,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 1023399211122107466, guid: 8d611347712873941990408a695ae759,
         type: 3}
@@ -1430,6 +1432,250 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1060782754166042104, guid: 050b35c711bf97548b7054e54e7b44b4,
     type: 3}
   m_PrefabInstance: {fileID: 1961705764480268539}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2388082935933928852
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1924475088526215125}
+    m_Modifications:
+    - target: {fileID: 217125330643465880, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: ignoreDeselect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4256648480057836142, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7043608188858395400}
+    - target: {fileID: 4256648480057836142, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: IncrementCounter
+      objectReference: {fileID: 0}
+    - target: {fileID: 4256648480057836142, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.CardGameView.Viewer.PlayableViewer, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6586188746411127836, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7043608188858395400}
+    - target: {fileID: 6586188746411127836, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DecrementCounter
+      objectReference: {fileID: 0}
+    - target: {fileID: 6586188746411127836, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.CardGameView.Viewer.PlayableViewer, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_Name
+      value: Value Widget
+      objectReference: {fileID: 0}
+    - target: {fileID: 7167217870964867306, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: ignoreDeselect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8811413502816055666, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_Name
+      value: Value InputField
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_Text
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnSubmit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7043608188858395400}
+    - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnSubmit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeCounterValue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7043608188858395400}
+    - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeCounterValue
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnSubmit.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.CardGameView.Viewer.PlayableViewer, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Cgs.CardGameView.Viewer.PlayableViewer, Cgs
+      objectReference: {fileID: 0}
+    - target: {fileID: 8924809854681962932, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      propertyPath: m_Text
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8811413502816055666, guid: 31559ced7dfe08f44a5eb0473961e323,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5409969596301670227}
+  m_SourcePrefab: {fileID: 100100000, guid: 31559ced7dfe08f44a5eb0473961e323, type: 3}
+--- !u!114 &6556665162098242402 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8924402726214366966, guid: 31559ced7dfe08f44a5eb0473961e323,
+    type: 3}
+  m_PrefabInstance: {fileID: 2388082935933928852}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6587711970545104102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d199490a83bb2b844b9695cbf13b01ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &6587711970545104102 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8811413502816055666, guid: 31559ced7dfe08f44a5eb0473961e323,
+    type: 3}
+  m_PrefabInstance: {fileID: 2388082935933928852}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5409969596301670227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6587711970545104102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf48ea0f1cb2a02428c1bf86966a8deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignoreDeselect: 1
+--- !u!224 &8463352598051708881 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
+    type: 3}
+  m_PrefabInstance: {fileID: 2388082935933928852}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2410227006813351432
 PrefabInstance:
@@ -2525,11 +2771,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.CardGameView.Viewer.PlayableViewer, Cgs
       objectReference: {fileID: 0}
-    - target: {fileID: 4485005921340226510, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: isBelow
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6077592990317271621, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2644,11 +2885,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Cgs.CardGameView.Viewer.PlayableViewer, Cgs
-      objectReference: {fileID: 0}
-    - target: {fileID: 6794104342322253244, guid: 31559ced7dfe08f44a5eb0473961e323,
-        type: 3}
-      propertyPath: isBelow
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6960160640668461690, guid: 31559ced7dfe08f44a5eb0473961e323,
         type: 3}

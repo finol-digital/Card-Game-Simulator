@@ -51,6 +51,8 @@ namespace Cgs
         public const string PlayGameToggleZoomRotation = "PlayGame/ToggleZoomRotation";
         public const string PlayGameSub = "PlayGame/Sub";
         public const string PlayGameAdd = "PlayGame/Add";
+        public const string PlayGameAction0 = "PlayGame/Action0";
+        public const string PlayGameAction1 = "PlayGame/Action1";
 
         public const string MainMenuGamesManagementMenu = "MainMenu/GamesManagementMenu";
         public const string MainMenuSettings = "MainMenu/Settings";

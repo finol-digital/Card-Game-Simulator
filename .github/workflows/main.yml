@@ -594,7 +594,7 @@ jobs:
     steps:
       - name: Pre-pull Unity Docker image
         run: |
-          docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-${{ matrix.targetPlatform }}-3 &
+          docker pull unityci/editor:${{ env.UNITY_VERSION }}-linux-android-3 &
       - name: Checkout Repository
         uses: actions/checkout@v6
         with:
@@ -630,7 +630,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD_PERSONAL }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL_PERSONAL }}
         with:
-          targetPlatform: ${{ matrix.targetPlatform }}
+          targetPlatform: Android
           buildMethod: Cgs.Editor.BuildCgs.BuildWithOptions
           androidExportType: androidPackage
           androidKeystoreName: finoldigital.keystore

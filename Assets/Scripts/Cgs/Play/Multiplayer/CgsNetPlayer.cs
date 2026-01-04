@@ -633,16 +633,16 @@ namespace Cgs.Play.Multiplayer
 
         #region Counters
 
-        public void RequestNewCounter(Vector2 position, Quaternion rotation, Vector3 color)
+        public void RequestNewCounter(Vector2 position, Quaternion rotation, int value, Vector3 color)
         {
-            CreateCounterServerRpc(position, rotation, color);
+            CreateCounterServerRpc(position, rotation, value, color);
         }
 
         [ServerRpc]
         // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CreateCounterServerRpc(Vector2 position, Quaternion rotation, Vector3 color)
+        private void CreateCounterServerRpc(Vector2 position, Quaternion rotation, int value, Vector3 color)
         {
-            PlayController.Instance.CreateCounter(position, rotation, new Color(color.x, color.y, color.z));
+            PlayController.Instance.CreateCounter(position, rotation, value, new Color(color.x, color.y, color.z));
         }
 
         #endregion
