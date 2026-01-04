@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 5440288174317396176}
   - component: {fileID: 2394856817997104161}
   m_Layer: 5
-  m_Name: Token Action Panel
+  m_Name: Counter Action Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,7 +667,7 @@ PrefabInstance:
     - target: {fileID: 917083975517249680, guid: 8d611347712873941990408a695ae759,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ChangeTokenColor
+      value: ChangeCounterColor
       objectReference: {fileID: 0}
     - target: {fileID: 917083975517249680, guid: 8d611347712873941990408a695ae759,
         type: 3}

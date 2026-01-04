@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -53,19 +54,23 @@ namespace Cgs.CardGameView.Viewer
 
         private Die Dice => SelectedPlayable as Die;
         private CardStack Stack => SelectedPlayable as CardStack;
-        private Token SelectedToken => SelectedPlayable as Token;
+        private Counter SelectedCounter => SelectedPlayable as Counter;
 
         public CanvasGroup preview;
         public CanvasGroup view;
         public CanvasGroup dieActionPanel;
         public CanvasGroup stackActionPanel;
-        public CanvasGroup tokenActionPanel;
+
+        [FormerlySerializedAs("tokenActionPanel")]
+        public CanvasGroup counterActionPanel;
 
         public List<Text> valueTexts;
         public InputField dieValueInputField;
         public InputField dieMaxInputField;
         public Dropdown dieDropdown;
-        public Dropdown tokenDropdown;
+
+        [FormerlySerializedAs("tokenDropdown")]
+        public Dropdown counterDropdown;
 
         public bool IsVisible
         {
@@ -130,8 +135,8 @@ namespace Cgs.CardGameView.Viewer
                     case Die when IsVisible:
                         RedisplayDie();
                         break;
-                    case Token when IsVisible:
-                        RedisplayToken();
+                    case Counter when IsVisible:
+                        RedisplayCounter();
                         break;
                 }
         }
@@ -174,14 +179,16 @@ namespace Cgs.CardGameView.Viewer
             stackActionPanel.blocksRaycasts =
                 PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is CardStack;
 
-            tokenActionPanel.alpha = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token ? 1 : 0;
-            tokenActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token;
-            tokenActionPanel.blocksRaycasts = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Token;
+            counterActionPanel.alpha =
+                PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Counter ? 1 : 0;
+            counterActionPanel.interactable = PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Counter;
+            counterActionPanel.blocksRaycasts =
+                PlaySettings.ShowActionsMenu && IsVisible && _selectedPlayable is Counter;
 
             if (Dice != null)
                 RedisplayDie();
-            else if (SelectedToken != null)
-                RedisplayToken();
+            else if (SelectedCounter != null)
+                RedisplayCounter();
         }
 
         private void RedisplayDie()
@@ -210,32 +217,32 @@ namespace Cgs.CardGameView.Viewer
                 dieDropdown.value = 4;
         }
 
-        private void RedisplayToken()
+        private void RedisplayCounter()
         {
-            if (SelectedToken == null)
+            if (SelectedCounter == null)
             {
-                Debug.LogWarning("Attempted to redisplay token without SelectedToken!");
+                Debug.LogWarning("Attempted to redisplay counter without SelectedCounter!");
                 return;
             }
 
-            if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) &&
-                Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
-                Mathf.Approximately(SelectedToken.LogoColor.b, 1) && tokenDropdown.value != 0)
-                tokenDropdown.value = 0;
-            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 1) &&
-                     Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
-                     Mathf.Approximately(SelectedToken.LogoColor.b, 0) && tokenDropdown.value != 1)
-                tokenDropdown.value = 1;
-            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) &&
-                     Mathf.Approximately(SelectedToken.LogoColor.g, 1) &&
-                     Mathf.Approximately(SelectedToken.LogoColor.b, 0) && tokenDropdown.value != 2)
-                tokenDropdown.value = 2;
-            else if (Mathf.Approximately(SelectedToken.LogoColor.r, 0) &&
-                     Mathf.Approximately(SelectedToken.LogoColor.g, 0) &&
-                     Mathf.Approximately(SelectedToken.LogoColor.b, 1) && tokenDropdown.value != 3)
-                tokenDropdown.value = 3;
-            else if (SelectedToken.LogoColor is { r: < 1, g: < 1, b: < 1 } && tokenDropdown.value != 4)
-                tokenDropdown.value = 4;
+            if (Mathf.Approximately(SelectedCounter.CounterColor.r, 1) &&
+                Mathf.Approximately(SelectedCounter.CounterColor.g, 1) &&
+                Mathf.Approximately(SelectedCounter.CounterColor.b, 1) && counterDropdown.value != 0)
+                counterDropdown.value = 0;
+            else if (Mathf.Approximately(SelectedCounter.CounterColor.r, 1) &&
+                     Mathf.Approximately(SelectedCounter.CounterColor.g, 0) &&
+                     Mathf.Approximately(SelectedCounter.CounterColor.b, 0) && counterDropdown.value != 1)
+                counterDropdown.value = 1;
+            else if (Mathf.Approximately(SelectedCounter.CounterColor.r, 0) &&
+                     Mathf.Approximately(SelectedCounter.CounterColor.g, 1) &&
+                     Mathf.Approximately(SelectedCounter.CounterColor.b, 0) && counterDropdown.value != 2)
+                counterDropdown.value = 2;
+            else if (Mathf.Approximately(SelectedCounter.CounterColor.r, 0) &&
+                     Mathf.Approximately(SelectedCounter.CounterColor.g, 0) &&
+                     Mathf.Approximately(SelectedCounter.CounterColor.b, 1) && counterDropdown.value != 3)
+                counterDropdown.value = 3;
+            else if (SelectedCounter.CounterColor is { r: < 1, g: < 1, b: < 1 } && counterDropdown.value != 4)
+                counterDropdown.value = 4;
         }
 
         public void Preview(CgsNetPlayable playable)
@@ -479,15 +486,15 @@ namespace Cgs.CardGameView.Viewer
         }
 
         [UsedImplicitly]
-        public void ChangeTokenColor(int option)
+        public void ChangeCounterColor(int option)
         {
-            if (SelectedToken == null)
+            if (SelectedCounter == null)
             {
-                Debug.LogWarning("Ignoring change color since there is no token selected.");
+                Debug.LogWarning("Ignoring change color since there is no counter selected.");
                 return;
             }
 
-            SelectedToken.LogoColor = option switch
+            SelectedCounter.CounterColor = option switch
             {
                 0 => Color.white,
                 1 => Color.red,

@@ -24,7 +24,7 @@ namespace Cgs.Play
             InputSystem.actions.FindAction(Tags.CardsFilter).performed += InputCardsFilter;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputDecksLoad;
             InputSystem.actions.FindAction(Tags.PlayGameDie).performed += InputDie;
-            InputSystem.actions.FindAction(Tags.PlayGameToken).performed += InputToken;
+            InputSystem.actions.FindAction(Tags.PlayGameCounter).performed += InputCounter;
         }
 
 #if CGS_SINGLEPLAYER
@@ -104,19 +104,19 @@ namespace Cgs.Play
             Hide();
         }
 
-        private void InputToken(InputAction.CallbackContext callbackContext)
+        private void InputCounter(InputAction.CallbackContext callbackContext)
         {
             if (!panels.activeSelf || CardViewer.Instance.IsVisible || CardViewer.Instance.Zoom
                 || CardGameManager.Instance.ModalCanvas != null || controller.scoreboard.nameInputField.isFocused)
                 return;
 
-            CreateToken();
+            CreateCounter();
         }
 
         [UsedImplicitly]
-        public void CreateToken()
+        public void CreateCounter()
         {
-            controller.CreateDefaultToken();
+            controller.CreateDefaultCounter();
             Hide();
         }
 
@@ -146,7 +146,7 @@ namespace Cgs.Play
             InputSystem.actions.FindAction(Tags.CardsFilter).performed -= InputCardsFilter;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputDecksLoad;
             InputSystem.actions.FindAction(Tags.PlayGameDie).performed -= InputDie;
-            InputSystem.actions.FindAction(Tags.PlayGameToken).performed -= InputToken;
+            InputSystem.actions.FindAction(Tags.PlayGameCounter).performed -= InputCounter;
         }
     }
 }
