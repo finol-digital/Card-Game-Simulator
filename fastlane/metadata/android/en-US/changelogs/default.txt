@@ -1,4 +1,2 @@
 ## What's Changed
-- Multi-Player hosting can now set an optional password
-- Remapped shortcuts/hotkeys and added full support for gamepads
-- Fixed multiplayer bugs
+- Tokens upgraded to Counters
