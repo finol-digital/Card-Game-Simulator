@@ -67,6 +67,8 @@ namespace Cgs.Play.Drawer
             InputSystem.actions.FindAction(Tags.ViewerMax).performed += InputMax;
             InputSystem.actions.FindAction(Tags.ViewerMid).performed += InputMid;
             InputSystem.actions.FindAction(Tags.ViewerMin).performed += InputMin;
+            InputSystem.actions.FindAction(Tags.PlayGameAction0).performed += InputAction0;
+            InputSystem.actions.FindAction(Tags.PlayGameAction1).performed += InputAction1;
         }
 
         private void Awake()
@@ -139,10 +141,26 @@ namespace Cgs.Play.Drawer
             viewer.AddCard(card);
         }
 
+        private void InputAction0(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            Deal();
+        }
+
         [UsedImplicitly]
         public void Deal()
         {
             PlayController.Instance.ShowDealer();
+        }
+
+        private void InputAction1(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            Draw();
         }
 
         [UsedImplicitly]
@@ -333,6 +351,8 @@ namespace Cgs.Play.Drawer
             InputSystem.actions.FindAction(Tags.ViewerMax).performed -= InputMax;
             InputSystem.actions.FindAction(Tags.ViewerMid).performed -= InputMid;
             InputSystem.actions.FindAction(Tags.ViewerMin).performed -= InputMin;
+            InputSystem.actions.FindAction(Tags.PlayGameAction0).performed -= InputAction0;
+            InputSystem.actions.FindAction(Tags.PlayGameAction1).performed -= InputAction1;
         }
     }
 }

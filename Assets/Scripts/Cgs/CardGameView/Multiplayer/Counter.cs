@@ -5,16 +5,41 @@
 using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityExtensionMethods;
 
 namespace Cgs.CardGameView.Multiplayer
 {
-    public class Counter : CgsNetPlayable
+    public class Counter : CgsNetPlayable, ICounterDropHandler
     {
-        public override string ViewValue => "Counter";
         public override string DeletePrompt => "Delete counter?";
 
-        public Image logoImage;
+        public const int DefaultValue = 1;
+
+        [FormerlySerializedAs("logoImage")] public Image counterImage;
+        public Transform logoTransform;
+        public Text valueText;
+
+        public override string ViewValue => $"Counter: {Value}";
+
+        public int Value
+        {
+            get => IsSpawned ? _valueNetworkVariable.Value : _value;
+            set
+            {
+                var oldValue = _value;
+                _value = value;
+                if (IsSpawned)
+                    UpdateValueServerRpc(_value);
+                else
+                    OnChangeValue(oldValue, _value);
+            }
+        }
+
+        private int _value = DefaultValue;
+        private NetworkVariable<int> _valueNetworkVariable;
 
         public Color CounterColor
         {
@@ -37,16 +62,47 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnAwakePlayable()
         {
+            _valueNetworkVariable = new NetworkVariable<int>();
+            _valueNetworkVariable.OnValueChanged += OnChangeValue;
             _colorNetworkVariable = new NetworkVariable<Vector3>();
             _colorNetworkVariable.OnValueChanged += OnChangeColor;
+        }
+
+        protected override void OnStartPlayable()
+        {
+            base.OnStartPlayable();
+            gameObject.GetOrAddComponent<CounterDropArea>().DropHandler = this;
         }
 
         protected override void OnNetworkSpawnPlayable()
         {
             if (!Vector3.zero.Equals(_colorNetworkVariable.Value))
             {
-                logoImage.color = new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
+                counterImage.color = new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
                     _colorNetworkVariable.Value.z);
+            }
+        }
+
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        private void UpdateValueServerRpc(int value)
+        {
+            _valueNetworkVariable.Value = value;
+        }
+
+        [PublicAPI]
+        public void OnChangeValue(int oldValue, int newValue)
+        {
+            _value = newValue;
+            if (newValue == DefaultValue)
+            {
+                logoTransform.gameObject.SetActive(true);
+                valueText.gameObject.SetActive(false);
+            }
+            else
+            {
+                logoTransform.gameObject.SetActive(false);
+                valueText.gameObject.SetActive(true);
+                valueText.text = newValue.ToString();
             }
         }
 
@@ -60,7 +116,18 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnChangeColor(Vector3 oldValue, Vector3 newValue)
         {
             _counterColor = new Color(newValue.x, newValue.y, newValue.z);
-            logoImage.color = _counterColor;
+            counterImage.color = _counterColor;
+        }
+
+        public static Counter GetPointerDrag(PointerEventData eventData)
+        {
+            return eventData.pointerDrag == null ? null : eventData.pointerDrag.GetComponent<Counter>();
+        }
+
+        public void OnDrop(Counter counter)
+        {
+            counter.Value += Value;
+            RequestDelete();
         }
     }
 }

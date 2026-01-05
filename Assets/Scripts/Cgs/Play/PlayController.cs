@@ -678,12 +678,12 @@ namespace Cgs.Play
         {
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
                 CgsNetManager.Instance.LocalPlayer.RequestNewCounter(Vector2.zero,
-                    CgsNetManager.Instance.LocalPlayer.DefaultRotation, Vector3.one);
+                    CgsNetManager.Instance.LocalPlayer.DefaultRotation, Counter.DefaultValue, Vector3.one);
             else
-                CreateCounter(Vector2.zero, Quaternion.identity, Color.white);
+                CreateCounter(Vector2.zero, Quaternion.identity, Counter.DefaultValue, Color.white);
         }
 
-        public Counter CreateCounter(Vector2 position, Quaternion rotation, Color color)
+        public Counter CreateCounter(Vector2 position, Quaternion rotation, int value, Color color)
         {
             var counter = Instantiate(counterPrefab, playAreaCardZone.transform).GetOrAddComponent<Counter>();
             if (CgsNetManager.Instance.IsOnline)
@@ -691,6 +691,7 @@ namespace Cgs.Play
 
             counter.Position = position;
             counter.Rotation = rotation;
+            counter.Value = value;
             counter.CounterColor = color;
 
             return counter;

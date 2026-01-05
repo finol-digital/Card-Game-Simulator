@@ -68,6 +68,7 @@ namespace Cgs.CardGameView.Viewer
         public InputField dieValueInputField;
         public InputField dieMaxInputField;
         public Dropdown dieDropdown;
+        public InputField counterValueInputField;
 
         [FormerlySerializedAs("tokenDropdown")]
         public Dropdown counterDropdown;
@@ -93,7 +94,9 @@ namespace Cgs.CardGameView.Viewer
                                              || EventSystem.current.currentSelectedGameObject ==
                                              dieValueInputField.gameObject
                                              || EventSystem.current.currentSelectedGameObject ==
-                                             dieMaxInputField.gameObject;
+                                             dieMaxInputField.gameObject
+                                             || EventSystem.current.currentSelectedGameObject ==
+                                             counterValueInputField.gameObject || counterValueInputField.isFocused;
 
         private void OnEnable()
         {
@@ -225,6 +228,7 @@ namespace Cgs.CardGameView.Viewer
                 return;
             }
 
+            counterValueInputField.text = SelectedCounter.Value.ToString();
             if (Mathf.Approximately(SelectedCounter.CounterColor.r, 1) &&
                 Mathf.Approximately(SelectedCounter.CounterColor.g, 1) &&
                 Mathf.Approximately(SelectedCounter.CounterColor.b, 1) && counterDropdown.value != 0)
@@ -311,7 +315,15 @@ namespace Cgs.CardGameView.Viewer
             if (IsBlocked)
                 return;
 
-            DecrementDie();
+            switch (SelectedPlayable)
+            {
+                case Die:
+                    DecrementDie();
+                    break;
+                case Counter:
+                    DecrementCounter();
+                    break;
+            }
         }
 
         [UsedImplicitly]
@@ -324,6 +336,18 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Dice.Value -= 1;
+        }
+
+        [UsedImplicitly]
+        public void DecrementCounter()
+        {
+            if (SelectedCounter == null)
+            {
+                Debug.LogWarning("Ignoring decrement request since there is no counter selected.");
+                return;
+            }
+
+            SelectedCounter.Value -= 1;
         }
 
         [UsedImplicitly]
@@ -343,7 +367,15 @@ namespace Cgs.CardGameView.Viewer
             if (IsBlocked)
                 return;
 
-            IncrementDie();
+            switch (SelectedPlayable)
+            {
+                case Die:
+                    IncrementDie();
+                    break;
+                case Counter:
+                    IncrementCounter();
+                    break;
+            }
         }
 
         [UsedImplicitly]
@@ -356,6 +388,18 @@ namespace Cgs.CardGameView.Viewer
             }
 
             Dice.Value += 1;
+        }
+
+        [UsedImplicitly]
+        public void IncrementCounter()
+        {
+            if (SelectedCounter == null)
+            {
+                Debug.LogWarning("Ignoring increment request since there is no counter selected.");
+                return;
+            }
+
+            SelectedCounter.Value += 1;
         }
 
         [UsedImplicitly]
@@ -393,6 +437,19 @@ namespace Cgs.CardGameView.Viewer
 
             if (int.TryParse(value, out var valueInt) && valueInt != Dice.Value)
                 Dice.Value = valueInt;
+        }
+
+        [UsedImplicitly]
+        public void ChangeCounterValue(string value)
+        {
+            if (SelectedCounter == null)
+            {
+                Debug.LogWarning("Ignoring change value request since there is no counter selected.");
+                return;
+            }
+
+            if (int.TryParse(value, out var valueInt) && valueInt != SelectedCounter.Value)
+                SelectedCounter.Value = valueInt;
         }
 
         [UsedImplicitly]
