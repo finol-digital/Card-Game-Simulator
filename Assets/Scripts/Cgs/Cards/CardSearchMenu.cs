@@ -70,14 +70,15 @@ namespace Cgs.Cards
             if (IsBlocked || ActiveInputField != null && ActiveInputField.isFocused)
                 return;
 
+            var pageVertical = PageAction?.ReadValue<Vector2>().y ?? 0;
+            if (Mathf.Abs(pageVertical) > 0)
+            {
+                var delta = pageVertical * Time.deltaTime;
+                scrollbar.value = Mathf.Clamp01(scrollbar.value + delta);
+            }
+
             if (MoveAction?.WasPressedThisFrame() ?? false)
                 FocusToggle();
-            else if (PageAction?.WasPressedThisFrame() ?? false)
-            {
-                var pageVertical = PageAction.ReadValue<Vector2>().y;
-                if (Mathf.Abs(pageVertical) > 0)
-                    Scroll(pageVertical < 0);
-            }
         }
 
         private void InputFocusPrevious(InputAction.CallbackContext callbackContext)
@@ -103,11 +104,6 @@ namespace Cgs.Cards
 
             if (ActiveToggle != null)
                 ToggleEnum();
-        }
-
-        private void Scroll(bool scrollDown)
-        {
-            scrollbar.value = Mathf.Clamp01(scrollbar.value + (scrollDown ? -0.1f : 0.1f));
         }
 
         public void Show(OnSearchDelegate searchCallback)

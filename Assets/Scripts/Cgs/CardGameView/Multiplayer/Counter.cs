@@ -68,19 +68,16 @@ namespace Cgs.CardGameView.Multiplayer
             _colorNetworkVariable.OnValueChanged += OnChangeColor;
         }
 
-        protected override void OnStartPlayable()
-        {
-            base.OnStartPlayable();
-            gameObject.GetOrAddComponent<CounterDropArea>().DropHandler = this;
-        }
-
         protected override void OnNetworkSpawnPlayable()
         {
             if (!Vector3.zero.Equals(_colorNetworkVariable.Value))
-            {
                 counterImage.color = new Color(_colorNetworkVariable.Value.x, _colorNetworkVariable.Value.y,
                     _colorNetworkVariable.Value.z);
-            }
+        }
+
+        protected override void OnStartPlayable()
+        {
+            gameObject.GetOrAddComponent<CounterDropArea>().DropHandler = this;
         }
 
         [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]

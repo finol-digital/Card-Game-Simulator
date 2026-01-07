@@ -97,24 +97,24 @@ namespace Cgs.Decks
             if (IsBlocked || newDeckPanel.gameObject.activeSelf)
                 return;
 
-            if (_moveAction?.WasPressedThisFrame() ?? false)
+            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
+            if (Mathf.Abs(pageVertical) > 0)
             {
-                var moveVertical = _moveAction.ReadValue<Vector2>().y;
-                switch (moveVertical)
-                {
-                    case > 0:
-                        SelectPrevious();
-                        break;
-                    case < 0:
-                        SelectNext();
-                        break;
-                }
+                var delta = pageVertical * Time.deltaTime;
+                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
             }
-            else if (_pageAction?.WasPressedThisFrame() ?? false)
+
+            if (!(_moveAction?.WasPressedThisFrame() ?? false))
+                return;
+            var moveVertical = _moveAction.ReadValue<Vector2>().y;
+            switch (moveVertical)
             {
-                var pageVertical = _pageAction.ReadValue<Vector2>().y;
-                if (Mathf.Abs(pageVertical) > 0)
-                    ScrollPage(pageVertical < 0);
+                case > 0:
+                    SelectPrevious();
+                    break;
+                case < 0:
+                    SelectNext();
+                    break;
             }
         }
 

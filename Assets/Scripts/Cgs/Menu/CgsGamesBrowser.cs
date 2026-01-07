@@ -53,19 +53,24 @@ namespace Cgs.Menu
             if (Menu.IsBlocked)
                 return;
 
-            if (_moveAction?.WasPressedThisFrame() ?? false)
+            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
+            if (Mathf.Abs(pageVertical) > 0)
             {
-                var moveVertical = _moveAction.ReadValue<Vector2>().y;
-                if (moveVertical > 0 && _gameOptions.Count > 0)
-                    SelectPrevious();
-                else if (moveVertical < 0 && _gameOptions.Count > 0)
-                    SelectNext();
+                var delta = pageVertical * Time.deltaTime;
+                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
             }
-            else if (_pageAction?.WasPressedThisFrame() ?? false)
+
+            if (!(_moveAction?.WasPressedThisFrame() ?? false))
+                return;
+            var moveVertical = _moveAction.ReadValue<Vector2>().y;
+            switch (moveVertical)
             {
-                var pageVertical = _pageAction.ReadValue<Vector2>().y;
-                if (Mathf.Abs(pageVertical) > 0)
-                    ScrollPage(pageVertical < 0);
+                case > 0 when _gameOptions.Count > 0:
+                    SelectPrevious();
+                    break;
+                case < 0 when _gameOptions.Count > 0:
+                    SelectNext();
+                    break;
             }
         }
 

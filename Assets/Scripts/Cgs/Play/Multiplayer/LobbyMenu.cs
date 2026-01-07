@@ -146,22 +146,36 @@ namespace Cgs.Play.Multiplayer
                 Redisplay();
 
             // Poll for Vector2 inputs
-            if (!(_moveAction?.WasPressedThisFrame() ?? false) && !(_pageAction?.WasPressedThisFrame() ?? false))
-                return;
-
             if (IsBlocked)
                 return;
 
-            var move = _moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
-            var page = _pageAction.ReadValue<Vector2>();
-            if (move.y > 0)
-                SelectPrevious();
-            else if (move.y < 0)
-                SelectNext();
-            else if (Mathf.Abs(move.x) > 0 || Mathf.Abs(page.x) > 0)
+            var pageVector2 = _pageAction?.ReadValue<Vector2>() ?? Vector2.zero;
+            if ((_pageAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(pageVector2.x) > 0.5f)
                 ToggleConnectionSource();
-            else if (Mathf.Abs(page.y) > 0)
-                ScrollPage(page.y < 0);
+            else if (Mathf.Abs(pageVector2.y) > 0)
+            {
+                var delta = pageVector2.y * Time.deltaTime;
+                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
+            }
+
+            if (!(_moveAction?.WasPressedThisFrame() ?? false))
+                return;
+            var moveVector2 = _moveAction.ReadValue<Vector2>();
+            switch (moveVector2.y)
+            {
+                case > 0:
+                    SelectPrevious();
+                    break;
+                case < 0:
+                    SelectNext();
+                    break;
+                default:
+                {
+                    if (Mathf.Abs(moveVector2.x) > 0)
+                        ToggleConnectionSource();
+                    break;
+                }
+            }
         }
 
         public void Show()
