@@ -49,14 +49,12 @@ namespace Cgs.Cards
                         break;
                 }
             }
-            else
+            else if (!CardViewer.Instance.IsVisible || CardViewer.Instance.Mode != CardViewerMode.Maximal)
             {
-                if (CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
-                    return;
-                if (pageVector2.y < 0)
-                    scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition - 0.1f);
-                else if (pageVector2.y > 0)
-                    scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + 0.1f);
+                var delta = pageVector2.y * Time.deltaTime;
+                if (Mathf.Abs(delta) > 0)
+                    scrollRect.verticalNormalizedPosition =
+                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
             }
 
             if (!(_moveAction?.WasPressedThisFrame() ?? false))

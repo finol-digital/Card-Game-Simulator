@@ -457,6 +457,7 @@ jobs:
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
           PROJECT_NAME: Card Game Simulator
         run: |
+          xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
           xcodebuild -downloadPlatform iOS
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
@@ -505,6 +506,7 @@ jobs:
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
           PROJECT_NAME: Card Game Simulator
         run: |
+          xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
           xcodebuild -downloadPlatform iOS
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
@@ -645,6 +647,7 @@ jobs:
           path: build/Android/Android.apk
           name: Android.apk
       - name: Upload to GitHub Release
+        if: github.event.action == 'published'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.CGS_PAT }}
