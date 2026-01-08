@@ -23,7 +23,6 @@ namespace Cgs.UI.ScrollRects
         public const float DefaultZoom = 0.5f;
         public const float MaxZoom = 1.5f; // Also in PlayMatZoom slider
         private const float MouseRotationSensitivity = 360;
-        private const float ZoomWheelSensitivity = 0.5f;
         private const float ZoomLerpSpeed = 7.5f;
         private const float ZoomThreshold = 0.001f;
         private const float ScrollWheelSensitivity = 20; // Can be overridden by scrollSensitivity
@@ -200,10 +199,10 @@ namespace Cgs.UI.ScrollRects
                     // Mouse ScrollWheel zoom
                     if (Mouse.current != null)
                     {
-                        var scrollDelta = Mouse.current.scroll.ReadValue().y;
-                        _blockPan = Mathf.Abs(scrollDelta) > 0 &&
-                                    (EventSystem.current?.IsPointerOverGameObject() ?? false) && _isOver;
-                        CurrentZoom *= 1 + (scrollDelta / 120f) * ZoomWheelSensitivity;
+                        _blockPan = IsCtrl || !(_isOver || (EventSystem.current?.IsPointerOverGameObject() ?? false));
+                        var delta = Mouse.current.scroll.ReadValue().y * Time.deltaTime;
+                        var zoomFactor = Mathf.Clamp(1 + delta, MinZoom, MaxZoom);
+                        CurrentZoom = Mathf.Clamp(CurrentZoom * zoomFactor, MinZoom, MaxZoom);
                     }
                 }
             }
