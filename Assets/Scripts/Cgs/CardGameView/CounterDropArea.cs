@@ -23,7 +23,7 @@ namespace Cgs.CardGameView
             if (counter == null)
                 return;
 
-            DropHandler.OnDrop(counter);
+            DropHandler?.OnDrop(counter);
         }
     }
 }

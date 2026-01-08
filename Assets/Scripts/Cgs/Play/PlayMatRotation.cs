@@ -18,7 +18,7 @@ namespace Cgs.Play
         public Slider slider;
         public CanvasGroup sliderCanvasGroup;
 
-        private const float PageHorizontalSensitivity = 0.1f;
+        private const float PageHorizontalSensitivity = 0.2f;
         private const float Tolerance = 0.01f;
         private const float TimeToDisappear = 3f;
 
@@ -70,23 +70,18 @@ namespace Cgs.Play
             }
 
             // Poll for Vector2 inputs
-            if (_pageAction == null || !_pageAction.WasPressedThisFrame() || IsBlocked)
+            if (IsBlocked)
                 return;
 
-            var pageHorizontal = _pageAction.ReadValue<Vector2>().x;
+            var pageHorizontal = _pageAction?.ReadValue<Vector2>().x ?? 0;
             if (Mathf.Abs(pageHorizontal) < PageHorizontalSensitivity)
                 return;
 
+            var delta = pageHorizontal * Time.deltaTime;
             if (_rotationEnabled)
-            {
-                if (pageHorizontal < 0)
-                    _playController.playArea.CurrentRotation -= 90;
-                else
-                    _playController.playArea.CurrentRotation += 90;
-            }
+                _playController.playArea.CurrentRotation += delta * 50;
             else
-                _playController.playArea.horizontalNormalizedPosition +=
-                    pageHorizontal * PageHorizontalSensitivity;
+                _playController.playArea.horizontalNormalizedPosition += delta;
         }
 
         private void InputToggleRotation(InputAction.CallbackContext obj)

@@ -84,12 +84,6 @@ namespace Cgs.UI
                 scrollRect.verticalNormalizedPosition = 1f - (currentSelectionIndex / (options.Count - 1f));
         }
 
-        protected void ScrollPage(bool scrollDown)
-        {
-            scrollRect.verticalNormalizedPosition =
-                Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDown ? -0.1f : 0.1f));
-        }
-
         protected void SelectPrevious()
         {
             if (EventSystem.current.alreadySelecting || Toggles.Count < 1)

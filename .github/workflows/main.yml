@@ -457,6 +457,7 @@ jobs:
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
           PROJECT_NAME: Card Game Simulator
         run: |
+          xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
           xcodebuild -downloadPlatform iOS
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
@@ -505,6 +506,7 @@ jobs:
           IOS_BUNDLE_ID: com.finoldigital.CardGameSim
           PROJECT_NAME: Card Game Simulator
         run: |
+          xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
           xcodebuild -downloadPlatform iOS
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
@@ -639,6 +641,21 @@ jobs:
           androidKeyaliasName: cgs
           androidKeyaliasPass: ${{ secrets.ANDROID_KEYALIAS_PASS }}
           androidTargetSdkVersion: AndroidApiLevel36
+      - name: Upload Build
+        uses: actions/upload-artifact@v6
+        with:
+          path: build/Android/Android.apk
+          name: Android.apk
+      - name: Upload to GitHub Release
+        if: github.event.action == 'published'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.CGS_PAT }}
+          asset_name: Android.apk
+          file: build/Android/Android.apk
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: ${{ github.event.release.body }}
       - name: Update Release Notes
         if: github.event.action == 'published'
         env:
@@ -1082,6 +1099,7 @@ jobs:
           app-id: 9N96N5S4W3J0
           package-path: ${{ format('{0}\build\WSAPlayer\WSAPlayer\AppPackages\Card Game Simulator\Card Game Simulator_{1}.0_x64_bundle_Master.msixupload', 'C:\Card-Game-Simulator.git', needs.buildWSAPlayer.outputs.buildVersion) }}
       - name: Upload to the Microsoft Store via StoreBroker
+        if: false
         working-directory: C:/Card-Game-Simulator.git
         shell: pwsh
         env:

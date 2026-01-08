@@ -101,18 +101,18 @@ namespace Cgs.Menu
             if (CardGameManager.Instance.ModalCanvas != null)
                 return;
 
-            if (_moveAction?.WasPressedThisFrame() ?? false)
+            var pageVertical = _pageAction?.ReadValue<Vector2>().y ?? 0;
+            if (Mathf.Abs(pageVertical) > 0)
             {
-                if (EventSystem.current.currentSelectedGameObject == null
-                    && !Vector2.zero.Equals(_moveAction.ReadValue<Vector2>()))
-                    EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
+                var delta = pageVertical * Time.deltaTime;
+                scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
             }
-            else if (_pageAction?.WasPressedThisFrame() ?? false)
-            {
-                var pageVertical = _pageAction.ReadValue<Vector2>().y;
-                if (Mathf.Abs(pageVertical) > 0)
-                    ScrollPage(pageVertical < 0);
-            }
+
+            if (!(_moveAction?.WasPressedThisFrame() ?? false))
+                return;
+            if (EventSystem.current.currentSelectedGameObject == null
+                && !Vector2.zero.Equals(_moveAction.ReadValue<Vector2>()))
+                EventSystem.current.SetSelectedGameObject(framerateDropdown.gameObject);
         }
 
         private void InputRedisplay(InputAction.CallbackContext callbackContext)
@@ -162,12 +162,6 @@ namespace Cgs.Menu
 #if UNITY_WEBGL
             developerModeToggle.interactable = false;
 #endif
-        }
-
-        private void ScrollPage(bool scrollDown)
-        {
-            scrollRect.verticalNormalizedPosition =
-                Mathf.Clamp01(scrollRect.verticalNormalizedPosition + (scrollDown ? -0.1f : 0.1f));
         }
 
         [UsedImplicitly]

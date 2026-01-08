@@ -36,36 +36,51 @@ namespace Cgs.Cards
             if (CardGameManager.Instance.ModalCanvas != null || results.inputField.isFocused)
                 return;
 
-            if (_moveAction?.WasPressedThisFrame() ?? false)
+            var pageVector2 = _pageAction?.ReadValue<Vector2>() ?? Vector2.zero;
+            if ((_pageAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(pageVector2.x) > 0.5f)
             {
-                var moveVector2 = _moveAction.ReadValue<Vector2>();
-                if (moveVector2.y < 0)
-                    SelectDown();
-                else if (moveVector2.y > 0)
-                    SelectUp();
-                else if (moveVector2.x < 0)
-                    SelectLeft();
-                else if (moveVector2.x > 0)
-                    SelectRight();
-            }
-            else if (_pageAction?.WasPressedThisFrame() ?? false)
-            {
-                var pageVector2 = _pageAction.ReadValue<Vector2>();
-                if (Mathf.Abs(pageVector2.y) > 0)
+                switch (pageVector2.x)
                 {
-                    if (CardViewer.Instance.IsVisible && CardViewer.Instance.Mode == CardViewerMode.Maximal)
-                        return;
-                    if (pageVector2.y < 0)
-                        PageDown();
-                    else if (pageVector2.y > 0)
-                        PageUp();
-                }
-                else
-                {
-                    if (pageVector2.x < 0)
+                    case < 0:
                         PageLeft();
-                    else if (pageVector2.x > 0)
+                        break;
+                    case > 0:
                         PageRight();
+                        break;
+                }
+            }
+            else if (!CardViewer.Instance.IsVisible || CardViewer.Instance.Mode != CardViewerMode.Maximal)
+            {
+                var delta = pageVector2.y * Time.deltaTime;
+                if (Mathf.Abs(delta) > 0)
+                    scrollRect.verticalNormalizedPosition =
+                        Mathf.Clamp01(scrollRect.verticalNormalizedPosition + delta);
+            }
+
+            if (!(_moveAction?.WasPressedThisFrame() ?? false))
+                return;
+            var moveVector2 = _moveAction.ReadValue<Vector2>();
+            switch (moveVector2.y)
+            {
+                case < 0:
+                    SelectDown();
+                    break;
+                case > 0:
+                    SelectUp();
+                    break;
+                default:
+                {
+                    switch (moveVector2.x)
+                    {
+                        case < 0:
+                            SelectLeft();
+                            break;
+                        case > 0:
+                            SelectRight();
+                            break;
+                    }
+
+                    break;
                 }
             }
         }
@@ -234,18 +249,6 @@ namespace Cgs.Cards
             scrollRect.verticalNormalizedPosition = 0;
             if (CardViewer.Instance != null && CardViewer.Instance.SelectedCardModel != null)
                 CardViewer.Instance.IsVisible = true;
-        }
-
-        [UsedImplicitly]
-        public void PageDown()
-        {
-            scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition - 0.1f);
-        }
-
-        [UsedImplicitly]
-        public void PageUp()
-        {
-            scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition + 0.1f);
         }
 
         [UsedImplicitly]
