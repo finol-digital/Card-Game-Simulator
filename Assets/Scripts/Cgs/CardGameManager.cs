@@ -243,6 +243,8 @@ namespace Cgs
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
                 var gameDirectoryName = gameDirectory[(UnityCardGame.GamesDirectoryPath.Length + 1)..];
+                if ("aa".Equals(gameDirectoryName))
+                    continue;
                 var newCardGame = new UnityCardGame(this, gameDirectoryName);
                 newCardGame.ReadProperties();
                 if (!string.IsNullOrEmpty(newCardGame.Error))
