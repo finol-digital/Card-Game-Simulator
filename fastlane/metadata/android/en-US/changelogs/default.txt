@@ -1,2 +1,3 @@
 ## What's Changed
-- Tokens upgraded to Counters
+- Fixed error on first launch
+- Improved scrolling
