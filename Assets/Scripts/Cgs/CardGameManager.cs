@@ -30,6 +30,7 @@ namespace Cgs
     {
         // Show all Debug.Log() to help with debugging?
         private const bool IsMessengerDebugLogVerbose = false;
+        private const string AddressableAssetsFolderName = "aa";
         public const string PlayerPrefsDefaultGame = "DefaultGame";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
         public const string DownloadErrorMessage = "Error downloading game!: ";
@@ -228,6 +229,9 @@ namespace Cgs
             UnityFileMethods.ExtractAndroidStreamingAssets(UnityCardGame.GamesDirectoryPath);
 #elif !UNITY_WEBGL
             UnityFileMethods.CopyDirectory(Application.streamingAssetsPath, UnityCardGame.GamesDirectoryPath);
+            var aaDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, AddressableAssetsFolderName);
+            if (Directory.Exists(aaDirectory))
+                Directory.Delete(aaDirectory, true);
 #endif
         }
 
@@ -243,6 +247,8 @@ namespace Cgs
             foreach (var gameDirectory in Directory.GetDirectories(UnityCardGame.GamesDirectoryPath))
             {
                 var gameDirectoryName = gameDirectory[(UnityCardGame.GamesDirectoryPath.Length + 1)..];
+                if (AddressableAssetsFolderName.Equals(gameDirectoryName))
+                    continue;
                 var newCardGame = new UnityCardGame(this, gameDirectoryName);
                 newCardGame.ReadProperties();
                 if (!string.IsNullOrEmpty(newCardGame.Error))

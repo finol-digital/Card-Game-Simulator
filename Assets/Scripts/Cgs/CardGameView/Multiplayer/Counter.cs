@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using UnityExtensionMethods;
 
@@ -18,7 +17,7 @@ namespace Cgs.CardGameView.Multiplayer
 
         public const int DefaultValue = 1;
 
-        [FormerlySerializedAs("logoImage")] public Image counterImage;
+        public Image counterImage;
         public Transform logoTransform;
         public Text valueText;
 
@@ -57,7 +56,6 @@ namespace Cgs.CardGameView.Multiplayer
         }
 
         private Color _counterColor = Color.white;
-
         private NetworkVariable<Vector3> _colorNetworkVariable;
 
         protected override void OnAwakePlayable()

@@ -81,7 +81,8 @@ namespace Cgs.Play
             if (_rotationEnabled)
                 _playController.playArea.CurrentRotation += delta * 50;
             else
-                _playController.playArea.horizontalNormalizedPosition += delta;
+                _playController.playArea.horizontalNormalizedPosition =
+                    Mathf.Clamp01(_playController.playArea.horizontalNormalizedPosition + delta);
         }
 
         private void InputToggleRotation(InputAction.CallbackContext obj)

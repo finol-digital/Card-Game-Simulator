@@ -78,7 +78,8 @@ namespace Cgs.Play
             var delta = pageVertical * Time.deltaTime;
             if (_playController.playArea.ZoomEnabled)
             {
-                var zoomFactor = Mathf.Clamp(1 + delta, 0.5f, 1.5f);
+                var zoomFactor = Mathf.Clamp(1 + delta, RotateZoomableScrollRect.MinZoom,
+                    RotateZoomableScrollRect.MaxZoom);
                 _playController.playArea.CurrentZoom = Mathf.Clamp(
                     _playController.playArea.CurrentZoom * zoomFactor,
                     RotateZoomableScrollRect.MinZoom,
