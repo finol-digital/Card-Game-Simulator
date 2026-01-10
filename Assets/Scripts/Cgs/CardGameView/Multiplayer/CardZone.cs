@@ -39,12 +39,12 @@ namespace Cgs.CardGameView.Multiplayer
 
         public CardZoneType Type
         {
-            get => IsSpawned ? (CardZoneType) _typeNetworkVariable.Value : type;
+            get => IsSpawned ? (CardZoneType)_typeNetworkVariable.Value : type;
             set
             {
                 type = value;
                 if (IsSpawned)
-                    _typeNetworkVariable.Value = (int) value;
+                    _typeNetworkVariable.Value = (int)value;
             }
         }
 
@@ -56,7 +56,7 @@ namespace Cgs.CardGameView.Multiplayer
             set
             {
                 _size = value;
-                ((RectTransform) transform).sizeDelta = _size;
+                ((RectTransform)transform).sizeDelta = _size;
                 if (IsSpawned)
                     _sizeNetworkVariable.Value = _size;
             }
@@ -67,30 +67,30 @@ namespace Cgs.CardGameView.Multiplayer
 
         public FacePreference DefaultFace
         {
-            get => IsSpawned ? (FacePreference) _faceNetworkVariable.Value : _facePreference;
+            get => IsSpawned ? (FacePreference)_faceNetworkVariable.Value : _facePreference;
             set
             {
                 _facePreference = value;
                 if (IsSpawned)
-                    _faceNetworkVariable.Value = (int) value;
+                    _faceNetworkVariable.Value = (int)value;
             }
         }
 
-        private FacePreference _facePreference;
+        private FacePreference _facePreference = FacePreference.Any;
         private NetworkVariable<int> _faceNetworkVariable;
 
         public CardAction DefaultAction
         {
-            get => IsSpawned ? (CardAction) _actionNetworkVariable.Value : _cardAction;
+            get => IsSpawned ? (CardAction)_actionNetworkVariable.Value : _cardAction;
             set
             {
                 _cardAction = value;
                 if (IsSpawned)
-                    _actionNetworkVariable.Value = (int) value;
+                    _actionNetworkVariable.Value = (int)value;
             }
         }
 
-        private CardAction _cardAction;
+        private CardAction _cardAction = CardAction.Move;
         private NetworkVariable<int> _actionNetworkVariable;
 
         public bool DoesImmediatelyRelease { get; set; }
@@ -111,13 +111,13 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnNetworkSpawnPlayable()
         {
             if (CardZoneType.Area.Equals(type))
-                type = (CardZoneType) _typeNetworkVariable.Value;
+                type = (CardZoneType)_typeNetworkVariable.Value;
             if (Vector2.zero.Equals(_size))
                 _size = _sizeNetworkVariable.Value;
             if (FacePreference.Any.Equals(_facePreference))
-                _facePreference = (FacePreference) _faceNetworkVariable.Value;
+                _facePreference = (FacePreference)_faceNetworkVariable.Value;
             if (CardAction.Move.Equals(_cardAction))
-                _cardAction = (CardAction) _actionNetworkVariable.Value;
+                _cardAction = (CardAction)_actionNetworkVariable.Value;
         }
 
         protected override void OnStartPlayable()
@@ -126,16 +126,12 @@ namespace Cgs.CardGameView.Multiplayer
                 PlayController.Instance.playAreaCardZone.transform != transform.parent)
                 return;
 
-            var rectTransform = (RectTransform) transform;
+            var rectTransform = (RectTransform)transform;
             rectTransform.anchorMin = 0.5f * Vector2.one;
             rectTransform.anchorMax = 0.5f * Vector2.one;
             rectTransform.anchoredPosition = Vector2.zero;
             if (!Vector2.zero.Equals(Position))
                 rectTransform.localPosition = Position;
-
-            if (_sizeNetworkVariable.Value != _size && !Vector2.zero.Equals(_size))
-                _sizeNetworkVariable.Value = _size;
-
             if (!Vector2.zero.Equals(Size))
                 rectTransform.sizeDelta = Size;
 
@@ -158,12 +154,6 @@ namespace Cgs.CardGameView.Multiplayer
             allowsRotation = true;
             scrollRectContainer = PlayController.Instance.playArea;
             DoesImmediatelyRelease = true;
-
-            if (_faceNetworkVariable.Value != (int) _facePreference && (int) _facePreference != 0)
-                _faceNetworkVariable.Value = (int) _facePreference;
-
-            if (_actionNetworkVariable.Value != (int) _cardAction && (int) _cardAction != 0)
-                _actionNetworkVariable.Value = (int) _cardAction;
 
             OnAddCardActions.Add((cardZone, cardModel) =>
             {
