@@ -833,7 +833,7 @@
           ]
         },
         "type": {
-          "description": "The Game Play Zone type from area, horizontal, or vertical",
+          "description": "The Game Play Zone type from area, dice, horizontal, or vertical",
           "default": "area",
           "oneOf": [
             {
@@ -862,11 +862,13 @@
       "description": "",
       "x-enumNames": [
         "Area",
+        "Dice",
         "Horizontal",
         "Vertical"
       ],
       "enum": [
         "area",
+        "dice",
         "horizontal",
         "vertical"
       ]
