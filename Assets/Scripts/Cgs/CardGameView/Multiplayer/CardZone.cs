@@ -50,48 +50,33 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkVariable<int> _typeNetworkVariable;
 
-        public Vector2 Size
-        {
-            get => IsSpawned ? _sizeNetworkVariable.Value : _size;
-            set
-            {
-                _size = value;
-                ((RectTransform)transform).sizeDelta = _size;
-                if (IsSpawned)
-                    _sizeNetworkVariable.Value = _size;
-            }
-        }
-
-        private Vector2 _size = Vector2.zero;
-        private NetworkVariable<Vector2> _sizeNetworkVariable;
-
         public FacePreference DefaultFace
         {
-            get => IsSpawned ? (FacePreference)_faceNetworkVariable.Value : _facePreference;
+            get => IsSpawned ? (FacePreference)_facePreferenceNetworkVariable.Value : _facePreference;
             set
             {
                 _facePreference = value;
                 if (IsSpawned)
-                    _faceNetworkVariable.Value = (int)value;
+                    _facePreferenceNetworkVariable.Value = (int)value;
             }
         }
 
         private FacePreference _facePreference = FacePreference.Any;
-        private NetworkVariable<int> _faceNetworkVariable;
+        private NetworkVariable<int> _facePreferenceNetworkVariable;
 
         public CardAction DefaultAction
         {
-            get => IsSpawned ? (CardAction)_actionNetworkVariable.Value : _cardAction;
+            get => IsSpawned ? (CardAction)_cardActionNetworkVariable.Value : _cardAction;
             set
             {
                 _cardAction = value;
                 if (IsSpawned)
-                    _actionNetworkVariable.Value = (int)value;
+                    _cardActionNetworkVariable.Value = (int)value;
             }
         }
 
         private CardAction _cardAction = CardAction.Move;
-        private NetworkVariable<int> _actionNetworkVariable;
+        private NetworkVariable<int> _cardActionNetworkVariable;
 
         public bool DoesImmediatelyRelease { get; set; }
 
@@ -103,21 +88,19 @@ namespace Cgs.CardGameView.Multiplayer
         protected override void OnAwakePlayable()
         {
             _typeNetworkVariable = new NetworkVariable<int>();
-            _sizeNetworkVariable = new NetworkVariable<Vector2>();
-            _faceNetworkVariable = new NetworkVariable<int>();
-            _actionNetworkVariable = new NetworkVariable<int>();
+            _facePreferenceNetworkVariable = new NetworkVariable<int>();
+            _cardActionNetworkVariable = new NetworkVariable<int>();
         }
 
         protected override void OnNetworkSpawnPlayable()
         {
-            if (CardZoneType.Area.Equals(type))
+            if (CardZoneType.Area.Equals(type) && (CardZoneType)_typeNetworkVariable.Value != CardZoneType.Area)
                 type = (CardZoneType)_typeNetworkVariable.Value;
-            if (Vector2.zero.Equals(_size))
-                _size = _sizeNetworkVariable.Value;
-            if (FacePreference.Any.Equals(_facePreference))
-                _facePreference = (FacePreference)_faceNetworkVariable.Value;
-            if (CardAction.Move.Equals(_cardAction))
-                _cardAction = (CardAction)_actionNetworkVariable.Value;
+            if (FacePreference.Any.Equals(_facePreference) &&
+                (FacePreference)_facePreferenceNetworkVariable.Value != FacePreference.Any)
+                _facePreference = (FacePreference)_facePreferenceNetworkVariable.Value;
+            if (CardAction.Move.Equals(_cardAction) && (CardAction)_cardActionNetworkVariable.Value != CardAction.Move)
+                _cardAction = (CardAction)_cardActionNetworkVariable.Value;
         }
 
         protected override void OnStartPlayable()

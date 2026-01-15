@@ -632,7 +632,9 @@ MonoBehaviour:
   cardModelPrefab: {fileID: 1700305412181862, guid: 3b506588d6983aa468c58a6d81eea204,
     type: 3}
   diePrefab: {fileID: 1968217138345596, guid: ad08570ff81cf4145b19e1647f828c6e, type: 3}
-  tokenPrefab: {fileID: 5127053305123712531, guid: c6a1cf8ae8ec3d647b7d1abc3b0a4b7b,
+  counterPrefab: {fileID: 5127053305123712531, guid: c6a1cf8ae8ec3d647b7d1abc3b0a4b7b,
+    type: 3}
+  diceZonePrefab: {fileID: 4882463832953300616, guid: 27490be58ff37514fb042881206a91d2,
     type: 3}
   horizontalCardZonePrefab: {fileID: 3075554628274637118, guid: 21036df1d45067b4387821a32693828f,
     type: 3}
@@ -3175,17 +3177,17 @@ PrefabInstance:
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.578622
+      value: 0.79183996
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.578622
+      value: 0.79183996
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.578622
+      value: 0.79183996
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
