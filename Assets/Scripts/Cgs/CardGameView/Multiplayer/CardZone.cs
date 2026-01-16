@@ -94,13 +94,16 @@ namespace Cgs.CardGameView.Multiplayer
 
         protected override void OnNetworkSpawnPlayable()
         {
-            if (CardZoneType.Area.Equals(type) && (CardZoneType)_typeNetworkVariable.Value != CardZoneType.Area)
-                type = (CardZoneType)_typeNetworkVariable.Value;
-            if (FacePreference.Any.Equals(_facePreference) &&
-                (FacePreference)_facePreferenceNetworkVariable.Value != FacePreference.Any)
-                _facePreference = (FacePreference)_facePreferenceNetworkVariable.Value;
-            if (CardAction.Move.Equals(_cardAction) && (CardAction)_cardActionNetworkVariable.Value != CardAction.Move)
-                _cardAction = (CardAction)_cardActionNetworkVariable.Value;
+            if (IsServer)
+            {
+                _typeNetworkVariable.Value = (int)type;
+                _facePreferenceNetworkVariable.Value = (int)_facePreference;
+                _cardActionNetworkVariable.Value = (int)_cardAction;
+            }
+
+            type = (CardZoneType)_typeNetworkVariable.Value;
+            _facePreference = (FacePreference)_facePreferenceNetworkVariable.Value;
+            _cardAction = (CardAction)_cardActionNetworkVariable.Value;
         }
 
         protected override void OnStartPlayable()

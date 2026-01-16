@@ -277,9 +277,12 @@ namespace Cgs
                 return;
             }
 
-            var gameId = Path.GetFileNameWithoutExtension(zipFilePath);
+            var fileName = Path.GetFileName(zipFilePath);
+            var gameId = fileName.EndsWith(CgsZipExtension, StringComparison.OrdinalIgnoreCase)
+                ? fileName[..^CgsZipExtension.Length]
+                : Path.GetFileNameWithoutExtension(fileName);
             var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
-            if (File.Exists(targetGameDirectory))
+            if (Directory.Exists(targetGameDirectory))
             {
                 Messenger.Ask(OverwriteGamePrompt, () => { },
                     () => ForceImportCardGame(zipFilePath));

@@ -5,7 +5,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,10 +22,11 @@ namespace Cgs.CardGameView.Multiplayer
         public Text sumLabel;
 
         private Collider2D _collider2D;
+        private readonly List<Collider2D> _overlapResults = new(32);
 
         protected override void OnAwakePlayable()
         {
-            _collider2D = gameObject.GetOrAddComponent<Collider2D>();
+            _collider2D = gameObject.GetOrAddComponent<BoxCollider2D>();
         }
 
         private void Update()
@@ -34,9 +34,9 @@ namespace Cgs.CardGameView.Multiplayer
             _diceInZone.Clear();
             var diceSum = 0;
 
-            List<Collider2D> overlapResults = new(32);
-            _collider2D.Overlap(overlapResults);
-            foreach (var die in overlapResults
+            _overlapResults.Clear();
+            _collider2D.Overlap(_overlapResults);
+            foreach (var die in _overlapResults
                          .Select(overlapResult => overlapResult.GetComponent<Die>())
                          .Where(die => die != null))
             {
@@ -44,7 +44,8 @@ namespace Cgs.CardGameView.Multiplayer
                 diceSum += die.Value;
             }
 
-            sumLabel.text = diceSum.ToString();
+            if (sumLabel != null)
+                sumLabel.text = diceSum.ToString();
         }
 
         [UsedImplicitly]
