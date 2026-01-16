@@ -1,3 +1,3 @@
 ## What's Changed
-- Fixed error on first launch
-- Improved scrolling
+- Added support for Dice Zones
+- Fixed game loading error
