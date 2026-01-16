@@ -70,6 +70,7 @@ namespace Cgs.Play
         public GameObject diePrefab;
         [FormerlySerializedAs("tokenPrefab")] public GameObject counterPrefab;
 
+        public GameObject diceZonePrefab;
         public GameObject horizontalCardZonePrefab;
         public GameObject verticalCardZonePrefab;
         public GameObject playMatPrefab;
@@ -705,53 +706,52 @@ namespace Cgs.Play
 
         private void CreateZone(GamePlayZone gamePlayZone)
         {
+            var zoneType = gamePlayZone.Type.ToString();
             var position = CardGameManager.PixelsPerInch *
                            new Vector2(gamePlayZone.Position.X, gamePlayZone.Position.Y);
             var rotation = Quaternion.Euler(0, 0, gamePlayZone.Rotation);
             var size = CardGameManager.PixelsPerInch *
                        new Vector2(gamePlayZone.Size.X, gamePlayZone.Size.Y);
+            var facePreference = gamePlayZone.Face.ToString();
             var cardAction = gamePlayZone.DefaultCardAction ?? CardGameManager.Current.GameDefaultCardAction;
 
             if (CgsNetManager.Instance.IsOnline && CgsNetManager.Instance.LocalPlayer != null)
-                CgsNetManager.Instance.LocalPlayer.RequestNewZone(gamePlayZone.Type.ToString(), position,
-                    rotation, size, gamePlayZone.Face.ToString(), cardAction.ToString());
+                CgsNetManager.Instance.LocalPlayer.RequestNewZone(zoneType, position, rotation, size, facePreference,
+                    cardAction.ToString());
             else
-                CreateZone(gamePlayZone.Type.ToString(), position, rotation, size,
-                    gamePlayZone.Face.ToString(), cardAction.ToString());
+                CreateZone(zoneType, position, rotation, size, facePreference, cardAction.ToString());
         }
 
-        public CardZone CreateZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
+        public CgsNetPlayable CreateZone(string type, Vector2 position, Quaternion rotation, Vector2 size, string face,
             string action)
         {
-            if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType)
-                && Enum.TryParse(face, true, out FacePreference facePreference)
-                && Enum.TryParse(action, true, out CardAction cardAction))
+            if (Enum.TryParse(type, true, out GamePlayZoneType gamePlayZoneType))
             {
-                var cardZone = gamePlayZoneType switch
+                CgsNetPlayable zone = gamePlayZoneType switch
                 {
                     GamePlayZoneType.Area => CreateAreaZone(position, rotation),
+                    GamePlayZoneType.Dice => CreateDiceZone(position, rotation),
                     GamePlayZoneType.Horizontal => CreateHorizontalZone(position, rotation),
                     GamePlayZoneType.Vertical => CreateVerticalZone(position, rotation),
                     _ => CreateAreaZone(position, rotation)
                 };
 
-                var rectTransform = (RectTransform)cardZone.transform;
-                rectTransform.anchorMin = 0.5f * Vector2.one;
-                rectTransform.anchorMax = 0.5f * Vector2.one;
-                rectTransform.anchoredPosition = Vector2.zero;
-                rectTransform.localPosition = position;
-                rectTransform.sizeDelta = size;
+                zone.Position = position;
+                zone.Rotation = rotation;
+                zone.Size = size;
 
-                cardZone.Position = position;
-                cardZone.Rotation = rotation;
-                cardZone.Size = size;
-                cardZone.DefaultFace = facePreference;
-                cardZone.DefaultAction = cardAction;
+                if (zone is not CardZone cardZone)
+                    return zone;
 
-                return cardZone;
+                if (Enum.TryParse(face, true, out FacePreference facePreference))
+                    cardZone.DefaultFace = facePreference;
+                if (Enum.TryParse(action, true, out CardAction cardAction))
+                    cardZone.DefaultAction = cardAction;
+
+                return zone;
             }
 
-            Debug.LogError($"CreateZone failed to parse type: {type}, face: {face}, action: {action}");
+            Debug.LogError($"CreateZone failed to parse gamePlayZoneType: {type}");
             return null;
         }
 
@@ -760,6 +760,15 @@ namespace Cgs.Play
         {
             Debug.LogWarning($"CreateAreaZone position: {position}, rotation: {rotation}");
             return null;
+        }
+
+        private DiceZone CreateDiceZone(Vector2 position, Quaternion rotation)
+        {
+            var diceZone = Instantiate(diceZonePrefab, position, rotation, playAreaCardZone.transform)
+                .GetOrAddComponent<DiceZone>();
+            if (CgsNetManager.Instance.IsOnline)
+                diceZone.MyNetworkObject.Spawn();
+            return diceZone;
         }
 
         private CardZone CreateHorizontalZone(Vector2 position, Quaternion rotation)

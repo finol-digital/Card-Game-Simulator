@@ -27,24 +27,9 @@ namespace Cgs.CardGameView.Multiplayer
         private string _gameBoardId = string.Empty;
         private NetworkVariable<CgsNetString> _idNetworkVariable;
 
-        public Vector2 Size
-        {
-            get => IsSpawned ? _sizeNetworkVariable.Value : _size;
-            set
-            {
-                _size = value;
-                if (IsSpawned)
-                    _sizeNetworkVariable.Value = value;
-            }
-        }
-
-        private Vector2 _size;
-        private NetworkVariable<Vector2> _sizeNetworkVariable;
-
         protected override void OnAwakePlayable()
         {
             _idNetworkVariable = new NetworkVariable<CgsNetString>();
-            _sizeNetworkVariable = new NetworkVariable<Vector2>();
         }
 
         protected override void OnStartPlayable()
@@ -55,6 +40,7 @@ namespace Cgs.CardGameView.Multiplayer
 
             rectTransform.anchorMin = Vector2.zero;
             rectTransform.anchorMax = Vector2.zero;
+
             rectTransform.offsetMin =
                 new Vector2(Position.x, Position.y) * CardGameManager.PixelsPerInch;
             rectTransform.offsetMax =

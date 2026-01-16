@@ -30,19 +30,20 @@ namespace Cgs
     {
         // Show all Debug.Log() to help with debugging?
         private const bool IsMessengerDebugLogVerbose = false;
+        private const string CgsZipExtension = ".cgs.zip";
         private const string AddressableAssetsFolderName = "aa";
         public const string PlayerPrefsDefaultGame = "DefaultGame";
         public const string SelectionErrorMessage = "Could not select the card game because it is not recognized!: ";
         public const string DownloadErrorMessage = "Error downloading game!: ";
         public const string LoadErrorMessage = "Error loading game!: ";
-        public const string LoadErrorDeletePrompt = "Error loading game! Delete?: ";
 
         public const string FileNotFoundErrorMessage = "ERROR: File Not Found at {0}";
+        public const string InvalidCgsZipFileErrorMessage = "Not a valid .cgs.zip file at {0}";
         public const string OverwriteGamePrompt = "Game already exists. Overwrite?";
         public const string ImportFailureErrorMessage = "ERROR: Failed to Import! ";
 
         public const string LoadErrorPrompt =
-            "Error loading game! The game may be corrupted. RequestDelete (note that any decks would also be deleted)?";
+            "Error loading game! The game may be corrupted. Delete (note that any decks would also be deleted)?";
 
         public const string CardsLoadedMessage = "{0} cards loaded!";
         public const string CardsLoadingMessage = "{0} cards loading...";
@@ -252,11 +253,7 @@ namespace Cgs
                 var newCardGame = new UnityCardGame(this, gameDirectoryName);
                 newCardGame.ReadProperties();
                 if (!string.IsNullOrEmpty(newCardGame.Error))
-                {
                     Debug.LogError(newCardGame.Error);
-                    Messenger.Ask(LoadErrorDeletePrompt + gameDirectoryName, () => { },
-                        () => { Directory.Delete(gameDirectory, true); });
-                }
                 else
                     AllCardGames[newCardGame.Id] = newCardGame;
             }
@@ -272,9 +269,20 @@ namespace Cgs
                 return;
             }
 
-            var gameId = Path.GetFileNameWithoutExtension(zipFilePath);
+            if (!zipFilePath.EndsWith(CgsZipExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                var errorMessage = string.Format(InvalidCgsZipFileErrorMessage, zipFilePath);
+                Debug.LogError(errorMessage);
+                Messenger.Show(errorMessage);
+                return;
+            }
+
+            var fileName = Path.GetFileName(zipFilePath);
+            var gameId = fileName.EndsWith(CgsZipExtension, StringComparison.OrdinalIgnoreCase)
+                ? fileName[..^CgsZipExtension.Length]
+                : Path.GetFileNameWithoutExtension(fileName);
             var targetGameDirectory = Path.Combine(UnityCardGame.GamesDirectoryPath, gameId);
-            if (File.Exists(targetGameDirectory))
+            if (Directory.Exists(targetGameDirectory))
             {
                 Messenger.Ask(OverwriteGamePrompt, () => { },
                     () => ForceImportCardGame(zipFilePath));
@@ -732,7 +740,7 @@ namespace Cgs
             Debug.Log("CGS Share::subContainer: " + subContainer);
             UnityFileMethods.CopyDirectory(Current.GameDirectoryPath, subContainer);
 
-            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + ".cgs.zip");
+            var zipFileName = UnityFileMethods.GetSafeFileName(Current.Id + CgsZipExtension);
             Debug.Log("CGS Share::zipFileName: " + zipFileName);
             UnityFileMethods.CreateZip(container, UnityCardGame.GamesExportPath, zipFileName);
             Directory.Delete(container, true);
@@ -771,7 +779,7 @@ namespace Cgs
                 }
             }, false);
 #elif UNITY_ANDROID && !UNITY_EDITOR
-            var tempCgsZipFilePath = Path.Combine( Application.temporaryCachePath, Current.Id + ".cgs.zip" );
+            var tempCgsZipFilePath = Path.Combine( Application.temporaryCachePath, Current.Id + CgsZipExtension );
             Instance.StartCoroutine(Instance.OpenZip(exportGameZipUri, tempCgsZipFilePath));
 #elif UNITY_IOS && !UNITY_EDITOR
             UnityNative.Sharing.UnityNativeSharing.Create().ShareScreenshotAndText("", targetZipFilePath, false, "", "");

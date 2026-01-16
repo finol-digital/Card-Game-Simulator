@@ -108,6 +108,28 @@ namespace Cgs.CardGameView.Multiplayer
 
         private NetworkVariable<Quaternion> _rotationNetworkVariable;
 
+        public Vector2 Size
+        {
+            get => IsSpawned ? _sizeNetworkVariable.Value : _size;
+            set
+            {
+                _size = value;
+                ((RectTransform)transform).sizeDelta = _size;
+                var boxCollider2D = GetComponent<BoxCollider2D>();
+                if (boxCollider2D != null)
+                    boxCollider2D.size = _size;
+                if (!IsSpawned)
+                    return;
+                if (IsServer)
+                    _sizeNetworkVariable.Value = _size;
+                else
+                    RequestUpdateSize(_size);
+            }
+        }
+
+        private Vector2 _size = Vector2.zero;
+        private NetworkVariable<Vector2> _sizeNetworkVariable;
+
         public PointerEventData CurrentPointerEventData { get; protected set; }
         public Dictionary<int, Vector2> PointerPositions { get; } = new();
         protected Dictionary<int, Vector2> PointerDragOffsets { get; } = new();
@@ -176,6 +198,9 @@ namespace Cgs.CardGameView.Multiplayer
             _rotationNetworkVariable = new NetworkVariable<Quaternion>();
             _rotationNetworkVariable.OnValueChanged += OnChangeRotation;
 
+            _sizeNetworkVariable = new NetworkVariable<Vector2>();
+            _sizeNetworkVariable.OnValueChanged += OnChangeSize;
+
             OnAwakePlayable();
         }
 
@@ -206,6 +231,18 @@ namespace Cgs.CardGameView.Multiplayer
 
             if (!Quaternion.identity.Equals(Rotation))
                 transform.localRotation = Rotation;
+
+            if (IsServer && !Vector2.zero.Equals(((RectTransform)transform).sizeDelta))
+            {
+                _size = ((RectTransform)transform).sizeDelta;
+                _sizeNetworkVariable.Value = _size;
+            }
+
+            if (!Vector2.zero.Equals(Size))
+            {
+                _size = Size;
+                ((RectTransform)transform).sizeDelta = _size;
+            }
 
             OnNetworkSpawnPlayable();
         }
@@ -554,6 +591,27 @@ namespace Cgs.CardGameView.Multiplayer
         public void OnChangeRotation(Quaternion oldValue, Quaternion newValue)
         {
             transform.localRotation = newValue;
+        }
+
+        private void RequestUpdateSize(Vector2 size)
+        {
+            UpdateSizeServerRpc(size);
+        }
+
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        private void UpdateSizeServerRpc(Vector2 size)
+        {
+            Size = size;
+        }
+
+        [PublicAPI]
+        public void OnChangeSize(Vector2 oldValue, Vector2 newValue)
+        {
+            _size = newValue;
+            ((RectTransform)transform).sizeDelta = _size;
+            var boxCollider2D = GetComponent<BoxCollider2D>();
+            if (boxCollider2D != null)
+                boxCollider2D.size = _size;
         }
 
         [Rpc(SendTo.Server)]
