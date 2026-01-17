@@ -294,7 +294,10 @@ namespace Cgs
 
         private void ForceImportCardGame(string zipFilePath)
         {
-            var gameId = Path.GetFileNameWithoutExtension(zipFilePath);
+            var fileName = Path.GetFileName(zipFilePath);
+            var gameId = fileName.EndsWith(CgsZipExtension, StringComparison.OrdinalIgnoreCase)
+                ? fileName[..^CgsZipExtension.Length]
+                : Path.GetFileNameWithoutExtension(fileName);
             if (string.IsNullOrEmpty(gameId))
             {
                 var errorMessage = string.Format(FileNotFoundErrorMessage, zipFilePath);
