@@ -214,7 +214,8 @@ body{
   .hero-right{ flex-basis:100%; width:100%; order:2; }
   .hero-left{ order:1; }
   .hero-logo-large{ max-width:140px; }
-n  .nav-toggle{ display:inline-flex; }
+
+n  .nav-toggle{ display:inline-flex; }
   .main-nav{ position:fixed; inset:60px 16px auto 16px; right:16px; left:16px; background:var(--brown-700); border-radius:10px; padding:12px; display:none; }
   .main-nav.open{ display:block; }
   .nav-list{ flex-direction:column; gap:8px; }

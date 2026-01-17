@@ -21,18 +21,17 @@
 
       <nav id="main-nav" class="main-nav" aria-label="Main navigation">
         <ul class="nav-list">
-          <li class="nav-item"><a class="nav-link" href="https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course">Create</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS">Create</a></li>
           <li class="nav-item"><a class="nav-link" href="https://cgs.games/">Share</a></li>
 
           <li class="nav-item nav-dropdown">
             <button class="nav-link dropdown-toggle" aria-expanded="false">Play ▾</button>
             <ul class="dropdown">
               <li><a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim">Android</a></li>
-              <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553">iOS</a></li>
-              <li><a href="https://cgs.gg/downloads/macos">macOS</a></li>
+              <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1">iOS</a></li>
+              <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12">macOS</a></li>
               <li><a href="https://apps.microsoft.com/detail/9n96n5s4w3j0">Windows</a></li>
               <li><a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/">Steam</a></li>
-              <li><a href="https://cgs.gg/">Web</a></li>
             </ul>
           </li>
 
@@ -76,14 +75,15 @@
     <section class="features">
       <h2>Why CGS?</h2>
       <ul class="feature-list">
-        <li><strong>Fast prototyping:</strong> Author card rules with JSON or visual tools.</li>
-        <li><strong>Cross-platform:</strong> Web, Windows, macOS, iOS, Android, Steam.</li>
+        <li><strong>Fast prototyping:</strong> Author cards with JSON or visual tools.</li>
+        <li><strong>Cross-platform:</strong> Windows, macOS, iOS, Android, Steam, and Web.</li>
         <li><strong>Community-driven:</strong> Publish and discover games in the CGS ecosystem.</li>
       </ul>
-      <div class="three-features">
+
+      <div class="three-features">
         <div class="feature">
           <h3>Create</h3>
-          <p>Author rules using the CGS spec or use starter templates — perfect for designers and hobbyists.</p>
+          <p>Author games using the CGS spec or the UI — perfect for designers and hobbyists.</p>
         </div>
         <div class="feature">
           <h3>Play</h3>
@@ -121,7 +121,8 @@
         this.setAttribute('aria-expanded', String(!expanded));
         mainNav.classList.toggle('open');
       });
-      // Dropdown toggle for Play on small screens
+
+      // Dropdown toggle for Play on small screens
       document.querySelectorAll('.nav-dropdown .dropdown-toggle').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
           var expanded = this.getAttribute('aria-expanded') === 'true';
