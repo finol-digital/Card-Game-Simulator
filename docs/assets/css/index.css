@@ -127,6 +127,31 @@ body{
   font-weight:700;
 }
 
+/* Make Play dropdown button high-contrast like the primary CTA */
+.nav-link.dropdown-toggle,
+.nav-dropdown .dropdown-toggle {
+  background: #e7cfa9;         /* matches primary CTA bg */
+  color: #3a2b1f;              /* dark text for legibility */
+  border-radius: 6px;
+  padding: 8px 12px;
+  border: none;
+  font-weight: 700;
+}
+
+/* Keep visible state consistent when dropdown is open or aria-expanded is true */
+.nav-dropdown.open > .dropdown-toggle,
+.nav-dropdown .dropdown-toggle[aria-expanded="true"] {
+  background: #e7cfa9;
+  color: #3a2b1f;
+}
+
+/* Hover / focus states for keyboard users */
+.nav-link.dropdown-toggle:hover,
+.nav-link.dropdown-toggle:focus {
+  filter: brightness(0.96);
+  outline: 3px solid rgba(231,207,169,0.18);
+}
+
 /* Dropdown */
 .nav-dropdown .dropdown{
   position:absolute;
@@ -215,7 +240,7 @@ body{
   .hero-left{ order:1; }
   .hero-logo-large{ max-width:140px; }
 
-n  .nav-toggle{ display:inline-flex; }
+  .nav-toggle{ display:inline-flex; }
   .main-nav{ position:fixed; inset:60px 16px auto 16px; right:16px; left:16px; background:var(--brown-700); border-radius:10px; padding:12px; display:none; }
   .main-nav.open{ display:block; }
   .nav-list{ flex-direction:column; gap:8px; }
