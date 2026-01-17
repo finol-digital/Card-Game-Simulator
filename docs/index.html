@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Card Game Simulator</title>
+  <meta name="description" content="Create, Share, and Play Card Games — Anywhere" />
+  <link rel="stylesheet" href="/assets/css/index.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/">
+        <img src="/assets/img/Logo.png" alt="Card Game Simulator logo" class="brand-logo" />
+        <span class="brand-text">Card Game Simulator</span>
+      </a>
+
+      <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" id="navToggle" title="Toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+
+      <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li class="nav-item"><a class="nav-link" href="https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course">Create</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://cgs.games/">Share</a></li>
+
+          <li class="nav-item nav-dropdown">
+            <button class="nav-link dropdown-toggle" aria-expanded="false">Play ▾</button>
+            <ul class="dropdown">
+              <li><a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim">Android</a></li>
+              <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553">iOS</a></li>
+              <li><a href="https://cgs.gg/downloads/macos">macOS</a></li>
+              <li><a href="https://apps.microsoft.com/detail/9n96n5s4w3j0">Windows</a></li>
+              <li><a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/">Steam</a></li>
+              <li><a href="https://cgs.gg/">Web</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item cta"><a class="btn" href="https://cgs.gg/">Play Now — Web</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-left">
+          <img class="hero-logo-large" src="/assets/img/Logo.png" alt="Card Game Simulator" />
+          <h1>Create, Share, and Play Card Games — Anywhere</h1>
+          <p class="lead">Design custom card games, play with friends online or locally, and publish your creations. CGS is a flexible tabletop sandbox for players and creators.</p>
+
+          <p class="cta-row">
+            <a class="btn primary" href="https://cgs.gg/">Play Now — Web</a>
+            <a class="btn outline" href="https://github.com/finol-digital/Card-Game-Simulator">Get the App</a>
+          </p>
+
+          <div class="store-row">
+            <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="/assets/img/ms-badge.png" alt="Microsoft Store" /></a>
+            <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/appstore-badge.png" alt="App Store" /></a>
+            <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="/assets/img/play-badge.png" alt="Google Play" /></a>
+            <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/"><img src="/assets/img/steam-badge.png" alt="Steam" /></a>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="video-card">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/PriDuaM6MEk" title="CGS demo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>Why CGS?</h2>
+      <ul class="feature-list">
+        <li><strong>Fast prototyping:</strong> Author card rules with JSON or visual tools.</li>
+        <li><strong>Cross-platform:</strong> Web, Windows, macOS, iOS, Android, Steam.</li>
+        <li><strong>Community-driven:</strong> Publish and discover games in the CGS ecosystem.</li>
+      </ul>
+n      <div class="three-features">
+        <div class="feature">
+          <h3>Create</h3>
+          <p>Author rules using the CGS spec or use starter templates — perfect for designers and hobbyists.</p>
+        </div>
+        <div class="feature">
+          <h3>Play</h3>
+          <p>Play locally or online with friends — private tables, spectating, and matchmaking supported.</p>
+        </div>
+        <div class="feature">
+          <h3>Share</h3>
+          <p>Publish your game to the CGS directory. Others can play, fork, and give feedback.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="community">
+      <h2>Join the community</h2>
+      <p>Find us on Discord, Reddit, GitHub, and more. Help shape the roadmap or ask for help.</p>
+      <p><a href="/discord">Discord</a> · <a href="/reddit">Reddit</a> · <a href="/github">GitHub</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p><a href="/PRIVACY.html">Privacy Policy</a></p>
+      <p>&copy; Card Game Simulator</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // Toggle mobile nav
+      var navToggle = document.getElementById('navToggle');
+      var mainNav = document.getElementById('main-nav');
+
+      navToggle.addEventListener('click', function () {
+        var expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        mainNav.classList.toggle('open');
+      });
+n      // Dropdown toggle for Play on small screens
+      document.querySelectorAll('.nav-dropdown .dropdown-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          var expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', String(!expanded));
+          this.parentElement.classList.toggle('open');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
