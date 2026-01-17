@@ -30,7 +30,7 @@
         <div class="hero-inner">
           <div class="hero-left" aria-labelledby="hero-heading">
             <!-- page content (hero copy) -->
-            {{ content | markdownify }}
+            {{ page.content | split: '<!--more-->' | first | strip | markdownify }}
           </div>
 
           <aside class="hero-right" aria-hidden="false">

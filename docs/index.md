@@ -3,7 +3,7 @@ layout: home
 playYoutubeId: PriDuaM6MEk
 ---
 
-![Card Game Simulator](/assets/img/CGSLogo.png)
+<img class="hero-logo" src="/assets/img/CGSLogo.png" alt="Card Game Simulator" width="480" />
 
 # Create, Share, and Play Card Games — Anywhere
 
