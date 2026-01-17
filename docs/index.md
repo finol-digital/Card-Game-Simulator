@@ -15,10 +15,10 @@ playYoutubeId: PriDuaM6MEk
     </p>
 
     <div class="store-row">
-      <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="/assets/img/badge-microsoft.svg" alt="Microsoft Store" /></a>
-      <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/badge-appstore.svg" alt="App Store" /></a>
-      <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="/assets/img/badge-playstore.svg" alt="Google Play" /></a>
-      <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/"><img src="/assets/img/badge-steam.svg" alt="Steam" /></a>
+      <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="/assets/img/ms-badge.png" alt="Microsoft Store" /></a>
+      <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/appstore-badge.png" alt="App Store" /></a>
+      <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="/assets/img/play-badge.png" alt="Google Play" /></a>
+      <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/"><img src="/assets/img/steam-badge.png" alt="Steam" /></a>
     </div>
   </div>
 </div>
