@@ -3,7 +3,7 @@ layout: home
 playYoutubeId: PriDuaM6MEk
 ---
 
-<img class="hero-logo" src="/assets/img/CGSLogo.png" alt="Card Game Simulator" width="420" />
+![Card Game Simulator](/assets/img/CGSLogo.png)
 
 # Create, Share, and Play Card Games — Anywhere
 
@@ -28,16 +28,16 @@ Design custom card games, play with friends online or locally, and publish your 
 
 <section class="features">
   <div class="feature">
-    ### Create
-    Author rules using the CGS spec or use starter templates — perfect for designers and hobbyists.
+    <h3>Create</h3>
+    <p>Author rules using the CGS spec or use starter templates — perfect for designers and hobbyists.</p>
   </div>
   <div class="feature">
-    ### Play
-    Play locally or online with friends — private tables, spectating, and matchmaking supported.
+    <h3>Play</h3>
+    <p>Play locally or online with friends — private tables, spectating, and matchmaking supported.</p>
   </div>
   <div class="feature">
-    ### Share
-    Publish your game to the CGS directory. Others can play, fork, and give feedback.
+    <h3>Share</h3>
+    <p>Publish your game to the CGS directory. Others can play, fork, and give feedback.</p>
   </div>
 </section>
 
