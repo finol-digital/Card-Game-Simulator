@@ -3,48 +3,64 @@ layout: home
 playYoutubeId: PriDuaM6MEk
 ---
 
-# Play Anywhere
-- Windows via [the Microsoft Store](https://apps.microsoft.com/detail/9n96n5s4w3j0)
-- macOS via [the Mac App Store](https://apps.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12)
-- iOS via [the App Store](https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1)
-- Android via [Google Play](https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim)
-- Linux via [Steam](https://store.steampowered.com/app/1742850/Card_Game_Simulator/)
-- Web via [cgs.gg](https://cgs.gg/)
+<div class="marketing-hero">
+  <div class="hero-inner">
+    <img class="hero-logo" src="/assets/img/CGSLogo.png" alt="Card Game Simulator" width="420" />
+    <h1>Create, Share, and Play Card Games — Anywhere</h1>
+    <p class="lead">Design custom card games, play with friends online or locally, and publish your creations. CGS is a flexible tabletop sandbox for players and creators.</p>
 
-## How to Play
+    <p class="cta-row">
+      <a class="btn primary" href="https://cgs.gg/">Play Now — Web</a>
+      <a class="btn outline" href="https://github.com/finol-digital/Card-Game-Simulator">Get the App</a>
+    </p>
+
+    <div class="store-row">
+      <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="/assets/img/ms-badge.png" alt="Microsoft Store" /></a>
+      <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/appstore-badge.png" alt="App Store" /></a>
+      <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="/assets/img/play-badge.png" alt="Google Play" /></a>
+      <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/"><img src="/assets/img/steam-badge.png" alt="Steam" /></a>
+    </div>
+  </div>
+</div>
+
+<!--more-->
+
+## Why CGS?
+
+- Fast prototyping: Author card rules with JSON or visual tools.
+- Cross-platform: Web, Windows, macOS, iOS, Android, Steam.
+- Community-driven: Publish and discover games in the CGS ecosystem.
+
+
+<section class="features">
+  <div class="feature">
+    <h3>Create</h3>
+    <p>Author rules using the CGS spec or use starter templates — perfect for designers and hobbyists.</p>
+  </div>
+  <div class="feature">
+    <h3>Play</h3>
+    <p>Play locally or online with friends — private tables, spectating, and matchmaking supported.</p>
+  </div>
+  <div class="feature">
+    <h3>Share</h3>
+    <p>Publish your game to the CGS directory. Others can play, fork, and give feedback.</p>
+  </div>
+</section>
+
+<section class="demo">
+
+## See it in action
 
 {% include youtubePlayer.html id=page.playYoutubeId %}
 
-See [the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki).
+</section>
 
-## How to Create
+<section class="community">
 
-Refer to [the crash course on the wiki](https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS) and [the CGS card game specification](https://github.com/finol-digital/FinolDigital.Cgs.Json).
+## Join the community
 
-## How to Share
+Find us on Discord, Reddit, GitHub, and more. Help shape the roadmap or ask for help.
 
-Check out [the CGS games website](https://cgs.games).
+[Discord](/discord) · [Reddit](/reddit) · [GitHub](/github)
 
-## Feedback
-
-If you'd like to see the development plans for CGS, see [the CGS roadmap](https://github.com/orgs/finol-digital/projects/1/views/1). 
-Please react to individual issues on the roadmap, as issues with more reactions will be prioritized!
-
-You can also send any additional feature requests/bug reports/other feedback to <david@finoldigital.com>.
-
-And also consider joining our social media!
-
-[![Discord icon][1.1]][1] [Discord](https://www.cardgamesimulator.com/discord) 
-[![Reddit icon][2.1]][2] [Reddit](https://www.cardgamesimulator.com/reddit) 
-[![Bluesky icon][3.1]][3] [Bluesky](https://www.cardgamesimulator.com/bluesky) 
-[![GitHub icon][4.1]][4] [GitHub](https://www.cardgamesimulator.com/github) 
-
-[1.1]: /assets/img/Discord.png
-[2.1]: /assets/img/reddit.png
-[3.1]: /assets/img/Bluesky.png
-[4.1]: /assets/img/GitHub.png
-
-[1]: https://www.cardgamesimulator.com/discord
-[2]: https://www.cardgamesimulator.com/reddit
-[3]: https://www.cardgamesimulator.com/bluesky
-[4]: https://www.cardgamesimulator.com/github
+</section>
