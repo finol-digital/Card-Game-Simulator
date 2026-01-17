@@ -4,6 +4,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cgs.UI;
 using FinolDigital.Cgs.Json.Unity;
 using JetBrains.Annotations;
@@ -19,6 +20,18 @@ namespace Cgs.Menu
     [RequireComponent(typeof(Modal))]
     public class CgsGamesBrowser : SelectionPanel
     {
+        public string Filter
+        {
+            get => _filter;
+            set
+            {
+                _filter = value;
+                BuildGameSelectionOptions();
+            }
+        }
+
+        private string _filter = string.Empty;
+
         protected override bool AllowSwitchOff => false;
 
         private Modal Menu => _menu ??= gameObject.GetOrAddComponent<Modal>();
@@ -35,6 +48,7 @@ namespace Cgs.Menu
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed += InputMenu;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed += InputFocusNext;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed += InputLoad;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed += InputCancel;
@@ -106,9 +120,23 @@ namespace Cgs.Menu
             BuildGameSelectionOptions();
         }
 
-        private void BuildGameSelectionOptions()
+        private void InputFocusNext(InputAction.CallbackContext callbackContext)
         {
-            Rebuild(_gameOptions, SelectGame, _selectedGameId);
+            if (Menu.IsBlocked)
+                return;
+
+            Menu.FocusInputField();
+        }
+
+        [UsedImplicitly]
+        public void BuildGameSelectionOptions()
+        {
+            var gameOptionsFiltered = new Dictionary<int, CgsGame>();
+            foreach (var gameOption in _gameOptions.Where(gameOption =>
+                         string.IsNullOrEmpty(Filter) || gameOption.Value.Name.ToLower().Contains(Filter.ToLower())))
+                gameOptionsFiltered[gameOption.Key] = gameOption.Value;
+
+            Rebuild(gameOptionsFiltered, SelectGame, _selectedGameId);
         }
 
         [UsedImplicitly]
@@ -181,6 +209,7 @@ namespace Cgs.Menu
         private void OnDisable()
         {
             InputSystem.actions.FindAction(Tags.SubMenuMenu).performed -= InputMenu;
+            InputSystem.actions.FindAction(Tags.SubMenuFocusNext).performed -= InputFocusNext;
             InputSystem.actions.FindAction(Tags.DecksLoad).performed -= InputLoad;
             InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.PlayerCancel).performed -= InputCancel;
