@@ -251,9 +251,44 @@ body{
   height: 64px;
   width: auto;
 }
+
+/* Make iframes (embedded store widgets) responsive and match anchors/images */
+.store-row iframe,
+.store-row > iframe,
+.store-row > a iframe,
+.store-row .store-iframe {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  border: 0;
+  padding: 6px; /* match anchor padding so widget spacing is consistent */
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  transition: transform .12s ease, box-shadow .12s ease;
+  box-sizing: border-box;
+}
+/* Allow the iframe to lift on hover like the anchor badge */
+.store-row > a:hover iframe,
+.store-row > a:focus iframe,
+.store-row iframe:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+/* Special larger iframe badge handling (if used) */
+.store-row iframe.store-badge-iframe {
+  /* keep slightly larger look on wide screens */
+  max-height: 64px;
+  width: auto;
+}
+
 @media (max-width: 640px) {
   .store-row img { height: 40px; }
   .store-row img.store-badge-image { display: none; }
+
+  /* Reduce or hide large iframe badge on narrow viewports */
+  .store-row iframe { max-height: 40px; width: auto; }
+  .store-row iframe.store-badge-iframe { display: none; }
 }
 
 /* Features & community */
