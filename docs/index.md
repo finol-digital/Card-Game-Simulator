@@ -22,6 +22,8 @@ layout: home
           src="https://store.steampowered.com/widget/1742850/"
           title="Steam store widget"
           loading="lazy"
+          width="646"
+          height="190"
         ></iframe>
       </div>
     </div>
@@ -29,7 +31,7 @@ layout: home
     <div class="hero-right">
       <div class="video-card">
         <div class="video-wrapper">
-          <iframe src="https://www.youtube.com/embed/PriDuaM6MEk" title="CGS demo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/PriDuaM6MEk" title="Card Game Simulator Demo Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </div>
