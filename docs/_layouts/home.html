@@ -30,7 +30,9 @@
             <li class="nav-item"><a class="nav-link" href="https://cgs.games/">Share</a></li>
     
             <li class="nav-item nav-dropdown">
-              <button class="nav-link dropdown-toggle" aria-expanded="false">Play ▾</button>
+              <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                Play <span aria-hidden="true">▾</span><span class="visually-hidden">menu</span>
+              </button>
               <ul class="dropdown">
                 <li><a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim">Android</a></li>
                 <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1">iOS</a></li>
@@ -73,6 +75,8 @@
         // Dropdown toggle for Play on small screens
         document.querySelectorAll('.nav-dropdown .dropdown-toggle').forEach(function (btn) {
           btn.addEventListener('click', function (e) {
+            // Prevent default to avoid form submission or navigation
+            e.preventDefault();
             var expanded = this.getAttribute('aria-expanded') === 'true';
             this.setAttribute('aria-expanded', String(!expanded));
             this.parentElement.classList.toggle('open');

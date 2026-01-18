@@ -9,6 +9,21 @@
 
 *{box-sizing:border-box}
 html,body{height:100%}
+
+/* Accessibility utility class for visually hidden content */
+.visually-hidden{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0); /* Legacy browsers */
+  clip-path:inset(50%); /* Modern browsers */
+  white-space:nowrap;
+  border:0;
+}
+
 body{
   margin:0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -165,7 +180,8 @@ body{
   display:none;
   box-shadow:0 8px 20px rgba(0,0,0,0.5);
 }
-.nav-dropdown:hover .dropdown{ display:block; }
+.nav-dropdown:hover .dropdown,
+.nav-dropdown:focus-within .dropdown{ display:block; }
 .nav-dropdown.open .dropdown{ display:block; }
 .dropdown li{ list-style:none; }
 .dropdown a{
