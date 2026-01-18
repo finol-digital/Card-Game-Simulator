@@ -18,9 +18,10 @@ layout: home
         <a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?itsct=apps_box_badge&amp;itscg=30200"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1536624000" alt="App Store" /></a>
         <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-mac-app-store.svg" alt="Mac App Store" /></a>
         <iframe
+          class="store-embed"
           src="https://store.steampowered.com/widget/1742850/"
-          width="646"
-          height="190"
+          title="Steam store widget"
+          loading="lazy"
         ></iframe>
       </div>
     </div>
