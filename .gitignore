@@ -92,3 +92,9 @@ Assets/Resources/PerformanceTestRunInfo.json
 Assets/Resources/PerformanceTestRunInfo.json.meta
 Assets/Resources/PerformanceTestRunSettings.json
 Assets/Resources/PerformanceTestRunSettings.json.meta
+
+
+# GitHub Pages Jekyll local
+docs/Gemfile
+docs/Gemfile.lock
+docs/_site/
