@@ -1,0 +1,877 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://cardgamesim.finoldigital.com/schema/cgs.json",
+  "title": "CGS Card Game Specification",
+  "type": "object",
+  "description": "Card Game Simulator (CGS) Card Game Specification",
+  "additionalProperties": false,
+  "required": [
+    "name"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the custom card game as it appears to the user. This name is required for the *Game:Id*."
+    },
+    "allCardsUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "From allCardsUrl, CGS downloads the json that contains the Card data for the game. If CGS is able to successfully download this file, it will save it as AllCards.json.",
+      "format": "uri"
+    },
+    "allCardsUrlPageCount": {
+      "type": "integer",
+      "description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl> with <allCardsUrlPageIdentifier>+<page> for each page.",
+      "format": "int32",
+      "default": 1
+    },
+    "allCardsUrlPageCountIdentifier": {
+      "type": "string",
+      "description": "If allCardsUrlPageCountIdentifier is set, CGS will set the allCardsUrlPageCount to the response value of <allCardsUrlPageCountIdentifier> from <allCardsUrl>."
+    },
+    "allCardsUrlPageCountDivisor": {
+      "type": "integer",
+      "description": "allCardsUrlPageCountDivisor can be set to the # of cards per page, ie: allCardsUrlPageCount = <allCardsUrlPageCountIdentifier pointing to total # of cards>/<allCardsUrlPageCountDivisor>.",
+      "format": "int32",
+      "default": 1
+    },
+    "allCardsUrlPageCountStartIndex": {
+      "type": "integer",
+      "description": "allCardsUrlPageCountStartIndex is used to identify the first page of allCardsUrlPageCount.",
+      "format": "int32",
+      "default": 1
+    },
+    "allCardsUrlPageIdentifier": {
+      "type": "string",
+      "description": "If allCardsUrlPageCount > 1, CGS will download <allCardsUrl> with <allCardsUrlPageIdentifier>+<page> for each page.",
+      "default": "?page="
+    },
+    "allCardsUrlPostBodyContent": {
+      "type": "string",
+      "description": "If allCardsUrlPostBodyContent is set, CGS will make a POST to <allCardsUrl> with a JSON body that contains <allCardsUrlPostBodyContent>. If not set, CGS will just GET from <allCardsUrl>."
+    },
+    "allCardsUrlRequestHeader": {
+      "type": "string",
+      "description": "allCardsUrlRequestHeader and allCardsUrlRequestHeader can be used together for secured APIs.",
+      "default": "X-Api-Key"
+    },
+    "allCardsUrlRequestHeaderValue": {
+      "type": "string",
+      "description": "allCardsUrlRequestHeader and allCardsUrlRequestHeader can be used together for secured APIs."
+    },
+    "allCardsUrlWrapped": {
+      "type": "boolean",
+      "description": "If allCardsUrl points to file(s) enclosed by extra characters, set allCardsUrlWrapped to true, and CGS will trim the first and last characters."
+    },
+    "allCardsUrlZipped": {
+      "type": "boolean",
+      "description": "If allCardsUrl points to zipped file(s), set allCardsUrlZipped to true, and CGS will unzip the file(s)."
+    },
+    "allDecksUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "From allDecksUrl, CGS downloads the json that contains the Deck data for the game. If CGS is able to successfully download this file, it will save it as AllDecks.json.",
+      "format": "uri"
+    },
+    "allDecksUrlDataIdentifier": {
+      "type": "string",
+      "description": "If allDecksUrlDataIdentifier is set to a non-empty string, AllDecks.json will be parsed as a JSON object: {\"@allDecksUrlDataIdentifier\":{\"$ref\":\"AllDecks.json\"}}"
+    },
+    "allDecksUrlPostBodyContent": {
+      "type": "string",
+      "description": "If allDecksUrlPostBodyContent is set, CGS will make a POST to <allDecksUrl> with a JSON body that contains <allDecksUrlPostBodyContent>. If not set, CGS will just GET from <allDecksUrl>."
+    },
+    "allDecksUrlTxtRoot": {
+      "type": "string",
+      "description": "If allDecksUrlTxtRoot is set, CGS will parse deck urls as <allDecksUrlTxtRoot>+*DeckUrl:Txt*"
+    },
+    "allSetsUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "From allSetsUrl, CGS downloads the json that contains the Set data for the game. If CGS is able to successfully download this json, it will save it as AllSets.json.",
+      "format": "uri"
+    },
+    "allSetsUrlWrapped": {
+      "type": "boolean",
+      "description": "If allSetsUrl points to a file enclosed by extra characters, set allSetsUrlWrapped to true, and CGS will trim the first and last characters."
+    },
+    "allSetsUrlZipped": {
+      "type": "boolean",
+      "description": "If allSetsUrl points to a zipped file, set allSetsUrlZipped to true, and CGS will unzip the file."
+    },
+    "autoUpdate": {
+      "type": "integer",
+      "description": "autoUpdate indicates how many days to use cached files instead of re-downloading. autoUpdate=0 will re-download files at every opportunity. autoUpdate<0 will never attempt to download anything.",
+      "format": "int32",
+      "default": 30
+    },
+    "autoUpdateUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "autoUpdateUrl indicates the url from which users download *Game:Name*.json, and CGS will automatically re-download the custom game from this url every <autoUpdate> days. This url is used in the *Game:Id*. You should host *Game:Name*.json at this url, but if you do not, you can set autoUpdate to -1, and there should be no issues.",
+      "format": "uri"
+    },
+    "bannerImageFileType": {
+      "type": "string",
+      "description": "bannerImageFileType is the file type extension for the image file that CGS downloads from bannerImageUrl.",
+      "default": "png"
+    },
+    "bannerImageUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "If bannerImageUrl is a valid url, CGS will download the image at that url and save it as Banner.<bannerImageFileType>. CGS will attempt to display the Banner.<bannerImageFileType> as an identifier to the user. If it is unable to read Banner.<bannerImageFileType>, CGS will simply display the CGS logo.",
+      "format": "uri"
+    },
+    "cardBackFaceImageUrls": {
+      "type": "array",
+      "description": "CGS will go through each CardBackFaceImageUrl and save the data from *CardBackFaceImageUrl:Url* to 'backs/*CardBackFaceImageUrl:Id*.<cardBackImageFileType>'",
+      "items": {
+        "$ref": "#/definitions/CardBackFaceImageUrl"
+      }
+    },
+    "cardBackImageFileType": {
+      "type": "string",
+      "description": "cardBackImageFileType is the file type extension for the image file that CGS downloads from cardBackImageUrl.",
+      "default": "png"
+    },
+    "cardBackImageUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "If cardBackImageUrl is a valid url, CGS will download the image at that url and save it as CardBack.<cardBackImageFileType>. CGS will display the CardBack.<cardBackImageFileType> when the user turns a card facedown or if CGS is unable to find the appropriate card image. If CGS is unable to get a custom card back, CGS will use the default CGS card back.",
+      "format": "uri"
+    },
+    "cardDataIdentifier": {
+      "type": "string",
+      "description": "If cardDataIdentifier is set to a non-empty string, AllCards.json will be parsed as a JSON object: {\"@cardDataIdentifier\":{\"$ref\":\"AllCards.json\"}}"
+    },
+    "cardIdIdentifier": {
+      "type": "string",
+      "description": "Every Card must have a unique id. When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by cardIdIdentifier. Most custom games will likely want to keep the default cardIdIdentifier.",
+      "default": "id"
+    },
+    "cardIdStop": {
+      "type": "string",
+      "description": "Every Card must have a unique id. When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Id* mapped to the field defined by cardIdIdentifier. Most custom games will likely want to keep the default cardIdIdentifier. If cardIdStop is set, any id that contains cardIdStop will be stopped at <cardIdStop>."
+    },
+    "cardImageFileType": {
+      "type": "string",
+      "description": "cardImageFileType is the file type extension for the image files that CGS downloads for each individual Card.",
+      "default": "png"
+    },
+    "cardImageFileTypeIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, cardImageFileTypeIdentifier is the *Card:Property* that overrides the cardImageFileType for this Card. If <cardImageFileTypeIdentifier> is empty, this Card's image file will still be saved as <cardImageFileType>."
+    },
+    "cardImageProperty": {
+      "type": "string",
+      "description": "cardImageProperty is the *Card:Property* which points to the image for this Card. If <cardImageProperty> is empty, <cardImageUrl> will be used instead."
+    },
+    "cardImageUrl": {
+      "type": "string",
+      "description": "cardImageUrl is a parameterized template url from which CGS downloads card image files if <cardImageProperty> is empty. Parameters: {cardId}=*Card:Id*, {cardName}=*Card:Name*, {cardSet}=*Card:SetCode*, {cardImageFileType}=<cardImageFileType>, {<property>}=*Card:<property>*. Example: https://www.cardgamesimulator.com/games/Standard/sets/{cardSet}/{cardId}.{cardImageFileType}",
+      "format": "uri-template"
+    },
+    "cardNameBackIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Name* of the back face mapped to the field defined by cardNameBackIdentifier. Most custom games will likely want to keep the default cardNameBackIdentifier."
+    },
+    "cardNameIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, you can have the *Card:Name* mapped to the field defined by cardNameIdentifier. Most custom games will likely want to keep the default cardNameIdentifier.",
+      "default": "name"
+    },
+    "cardNameIsUnique": {
+      "type": "boolean",
+      "description": "If cardNameIsUnique is true, different Cards are not allowed to have the same *Card:Name*. Cards with the same name will be treated as reprints, with the option to hide reprints available. If cardNameIsUnique is false, DeckFileType.Txt will require <deckFileTxtId> for every Card.",
+      "default": true
+    },
+    "cardPrimaryProperty": {
+      "type": "string",
+      "description": "The cardPrimaryProperty is the *Card:Property* that is first selected and displayed in the Card Viewer, which appears whenever a user selects a card."
+    },
+    "cardProperties": {
+      "type": "array",
+      "description": "cardProperties defines the name keys for *Card:Property*s. The values should be mapped in AllCards.json or AllSets.json.",
+      "items": {
+        "$ref": "#/definitions/PropertyDef"
+      }
+    },
+    "cardPropertyIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, you can integrate objectEnum and objectEnumList properties with enums by using cardPropertyIdentifier. Most custom games will likely want to keep the default cardPropertyIdentifier.",
+      "default": "id"
+    },
+    "cardRotationDefault": {
+      "type": "integer",
+      "description": "Cards will be rotated <cardRotationDefault> degrees, unless you override with cardRotationIdentifier. Most custom games will likely want to keep the default cardRotationDefault.",
+      "format": "int32",
+      "default": 0
+    },
+    "cardRotationIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json or AllSets.json, you can set <cardRotationIdentifier> to an int field that indicates the rotation of a card in degrees. If left blank or missing, cards will be rotated <cardRotationDefault> degrees."
+    },
+    "cardSetIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. If the mapping is missing, CGS will use <setCodeDefault>. Most custom games will likely want to keep the default cardSetIdentifier.",
+      "default": "set"
+    },
+    "cardSetIsObject": {
+      "type": "boolean",
+      "description": "If cardSetIsObject is set to true, <cardSetIdentifier> should point to an object (or list of objects) that follows the rules for AllSets.json."
+    },
+    "cardSetNameIdentifier": {
+      "type": "string",
+      "description": "When defining a Card in AllCards.json, you can have the *Card:SetCode* mapped to the field defined by cardSetIdentifier. That Set's name can be defined by cardSetNameIdentifier.",
+      "default": "setname"
+    },
+    "cardSetsInList": {
+      "type": "boolean",
+      "description": "If cardSetInList is set to true, Cards will be duplicated for each Set in <cardSetIdentifier>."
+    },
+    "cardSetsInListIsCsv": {
+      "type": "boolean",
+      "description": "If cardSetsInListIsCsv is set to true, Cards will be duplicated for each Set found in the comma-separated list of <cardSetIdentifier>."
+    },
+    "cardSize": {
+      "description": "cardSize indicates a card's width and height in inches.",
+      "default": "(x: 2.5, y: 3.5)",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Float2"
+        }
+      ]
+    },
+    "cgsGamesLink": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "cgsGamesLink is a clickable url that will take the user directly to this game on the CGS Games website, which can be shared between users.",
+      "format": "uri"
+    },
+    "copyright": {
+      "type": "string",
+      "description": "copyright indicates the legal owner of this Card Game. CGS will display this value in the bottom-left corner of the Main Menu."
+    },
+    "deckFileAltId": {
+      "type": "string",
+      "description": "When saving or loading a deck with <deckFileType> NOT txt, deckFileAltId refers to the *Card:Property* used to uniquely identify each Card. For hsd, this is stored as a varint within the deck string.",
+      "default": "dbfId"
+    },
+    "deckFileTxtId": {
+      "description": "When saving a deck as txt, different Cards may share the same name, and if they do, the *Card:<deckFileTxtId>* will be used to uniquely identify Cards.",
+      "default": "set",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/DeckFileTxtId"
+        }
+      ]
+    },
+    "deckFileType": {
+      "description": "When saving a deck, the formatting for how it is saved and loaded is defined by the deckFileType. dec refers to the old MTGO deck file format. hsd refers to the Hearthstone deck string format. ydk refers to the YGOPRO deck file format. txt parses each line for the following: <Quantity> [*Card:Id*] *Card:Name* (*Card:SetCode*).",
+      "default": "txt",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/DeckFileType"
+        }
+      ]
+    },
+    "deckPlayCards": {
+      "type": "array",
+      "description": "deckPlayCards indicates cards that should automatically be played when a player loads a deck in Play Mode.",
+      "items": {
+        "$ref": "#/definitions/DeckPlayCard"
+      }
+    },
+    "deckSharePreference": {
+      "description": "For networked games, CGS will use deckSharePreference to: ask players if they want to share the same deck, force all players to share the same deck, or force an individual deck for each player.",
+      "default": "share",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/SharePreference"
+        }
+      ]
+    },
+    "deckUrls": {
+      "type": "array",
+      "description": "CGS will go through each DeckUrl and save the data from *DeckUrl:Url* to 'decks/*DeckUrl:Name*.<deckFileType>'",
+      "items": {
+        "$ref": "#/definitions/DeckUrl"
+      }
+    },
+    "enums": {
+      "type": "array",
+      "description": "The value is displayed to the user through the UI while the keys remain hidden. If the keys are entered as a hexadecimal integers (prefixed with 0x), multiple values can go through bitwise and/ors to have a single enumValue represent multiple values. The multiple values would be displayed together to the user, using | as the delimiter.",
+      "items": {
+        "$ref": "#/definitions/EnumDef"
+      }
+    },
+    "extras": {
+      "type": "array",
+      "description": "Describes extra cards separate from the main deck: The hsd deckFileType treats all extra cards as Heroes, and the ydk deckFileType treats all extra cards as extra deck cards.",
+      "items": {
+        "$ref": "#/definitions/ExtraDef"
+      }
+    },
+    "gameBoardImageFileType": {
+      "type": "string",
+      "description": "gameBoardImageFileType is the file type extension for the image files that CGS downloads for each game board.",
+      "default": "png"
+    },
+    "gameBoardCards": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GameBoardCard"
+      }
+    },
+    "gameBoardUrls": {
+      "type": "array",
+      "description": "CGS will go through each GameBoardUrl and save the data from *GameBoardUrl:Url* to 'boards/*GameBoardUrl:Id*.<gameBoardImageFileType>'",
+      "items": {
+        "$ref": "#/definitions/GameBoardUrl"
+      }
+    },
+    "gameCardRotationDegrees": {
+      "type": "integer",
+      "description": "gameCardRotationDegrees indicates how many degrees to rotate Cards in Play Mode.",
+      "format": "int32",
+      "default": 90
+    },
+    "gameDefaultCardAction": {
+      "description": "If possible, CGS will take the gameDefaultCardAction when a Card is double-clicked in Play Mode.",
+      "default": "flip",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/CardAction"
+        }
+      ]
+    },
+    "gamePlayDeckName": {
+      "type": "string",
+      "description": "gamePlayDeckName is the name of the card stack shown when a player loads a deck. If <gamePlayDeckName> is empty, the *Deck:Name* is used."
+    },
+    "gamePlayDeckPositions": {
+      "type": "array",
+      "description": "Each deck loaded during a game will be loaded to its corresponding position in gamePlayDeckPositions. The first deck loaded will go to the first position, second to second, etc.",
+      "items": {
+        "$ref": "#/definitions/Float2"
+      }
+    },
+    "gamePlayZones": {
+      "type": "array",
+      "description": "gamePlayZones will appear in the Play Area in Play Mode.",
+      "items": {
+        "$ref": "#/definitions/GamePlayZone"
+      }
+    },
+    "gameStartDecks": {
+      "type": "array",
+      "description": "gameStartDecks indicates decks that should automatically be loaded when a player starts playing in Play Mode.",
+      "items": {
+        "$ref": "#/definitions/DeckUrl"
+      }
+    },
+    "gameStartHandCount": {
+      "type": "integer",
+      "description": "gameStartHandCount indicates how many cards are automatically dealt from a loaded deck to a player's hand.",
+      "format": "int32"
+    },
+    "gameStartPointsCount": {
+      "type": "integer",
+      "description": "gameStartPointsCount indicates how many points are automatically assigned to each player.",
+      "format": "int32"
+    },
+    "playMatImageFileType": {
+      "type": "string",
+      "description": "playMatImageFileType is the file type extension for the image file that CGS downloads from playMatImageUrl.",
+      "default": "png"
+    },
+    "playMatImageUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "If playMatImageUrl is a valid url, CGS will download the image at that url and save it as PlayMat.<playMatImageFileType>. CGS will use the PlayMat.<playMatImageFileType> as the background image while in Play Mode. If CGS is unable to get this image, CGS will use the default table image.",
+      "format": "uri"
+    },
+    "playMatSize": {
+      "description": "playMatSize indicates the width and height in inches of the play area in Play Mode.",
+      "default": "(x: 36, y: 36)",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Float2"
+        }
+      ]
+    },
+    "playMatGridCellSize": {
+      "description": "playMatGridCellSize indicates the width and height in inches of each cell in the play area in Play Mode.",
+      "default": "(x: 0.5, y: 0.5)",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/Float2"
+        }
+      ]
+    },
+    "rulesUrl": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "rulesUrl should link to this game's online rulebook.",
+      "format": "uri"
+    },
+    "setCardsIdentifier": {
+      "type": "string",
+      "description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with setCardsIdentifier. Most custom games will likely want to keep the default setCardsIdentifier.",
+      "default": "cards"
+    },
+    "setCardsUrlIdentifier": {
+      "type": "string",
+      "description": "When defining a Set in AllSets.json, you can also define Cards to include in that Set by indicating them with SetCardsUrlIdentifier. Most custom games will likely want to keep the default SetCardsUrlIdentifier.",
+      "default": "cardsUrl"
+    },
+    "setCodeDefault": {
+      "type": "string",
+      "description": "If a Card does not specify its Set, it will be included in the Set with *Set:Code* specified by setCodeDefault. This Set's name is specified by setNameDefault.",
+      "default": "_CGSDEFAULT_"
+    },
+    "setCodeIdentifier": {
+      "type": "string",
+      "description": "When defining a Set in AllSets.json, you can have the *Set:Code* mapped to the field defined by setCodeIdentifier. Most custom games will likely want to keep the default setCodeIdentifier.",
+      "default": "code"
+    },
+    "setDataIdentifier": {
+      "type": "string",
+      "description": "If setDataIdentifier is set to a non-empty string, AllSets.json will be parsed as a JSON object: {\"@setDataIdentifier\":{\"$ref\":\"AllSets.json\"}}"
+    },
+    "setNameDefault": {
+      "type": "string",
+      "description": "If a Card does not specify its Set, it will be included in the Set with *Set:Code* specified by setCodeDefault. This Set's name is specified by setNameDefault.",
+      "default": "_CGSDEFAULT_"
+    },
+    "setNameIdentifier": {
+      "type": "string",
+      "description": "When defining a Set in AllSets.json, you can have the *Set:Name* mapped to the field defined by setNameIdentifier. If the mapping is missing, CGS will use the *Set:Code*. Most custom games will likely want to keep the default setNameIdentifier.",
+      "default": "name"
+    }
+  },
+  "definitions": {
+    "CardBackFaceImageUrl": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id of the card back"
+        },
+        "url": {
+          "type": "string",
+          "description": "The url from which to download the card back",
+          "format": "uri"
+        }
+      }
+    },
+    "PropertyDef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the property: This name can be referenced to lookup a Card's property"
+        },
+        "type": {
+          "description": "The type of the property",
+          "default": "string",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/PropertyType"
+            }
+          ]
+        },
+        "display": {
+          "type": "string",
+          "description": "The name of the property as it is displayed to the end user"
+        },
+        "displayEmpty": {
+          "type": "string",
+          "description": "The value to display if the value is null or empty"
+        },
+        "displayEmptyFirst": {
+          "type": "boolean",
+          "description": "List <displayEmpty> as the first option if this property is an enum?"
+        },
+        "delimiter": {
+          "type": "string",
+          "description": "If this property is a stringList or stringEnumList, the value will be delimited by this delimiter"
+        },
+        "backName": {
+          "type": "string",
+          "description": "If the Card is a back Face: This name can be referenced to lookup a Card's property"
+        },
+        "frontName": {
+          "type": "string",
+          "description": "If the Card is a front Face: This name can be referenced to lookup a Card's property"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyDef"
+          }
+        }
+      }
+    },
+    "PropertyType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "String",
+        "EscapedString",
+        "Integer",
+        "Boolean",
+        "Object",
+        "StringEnum",
+        "StringList",
+        "StringEnumList",
+        "ObjectEnum",
+        "ObjectList",
+        "ObjectEnumList"
+      ],
+      "enum": [
+        "string",
+        "escapedString",
+        "integer",
+        "boolean",
+        "object",
+        "stringEnum",
+        "stringList",
+        "stringEnumList",
+        "objectEnum",
+        "objectList",
+        "objectEnumList"
+      ]
+    },
+    "Float2": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "number",
+          "format": "float"
+        },
+        "y": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "DeckFileTxtId": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Id",
+        "Set"
+      ],
+      "enum": [
+        "id",
+        "set"
+      ]
+    },
+    "DeckFileType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Dec",
+        "Hsd",
+        "Lor",
+        "Txt",
+        "Ydk"
+      ],
+      "enum": [
+        "dec",
+        "hsd",
+        "lor",
+        "txt",
+        "ydk"
+      ]
+    },
+    "DeckPlayCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cardQuery": {
+          "type": "string",
+          "description": "CGS will automatically play the Card that matches cardQuery, when the player loads a Deck in Play Mode matching deckQuery"
+        },
+        "deckQuery": {
+          "type": "string",
+          "description": "CGS will automatically play the Card that matches cardQuery, when the player loads a Deck in Play Mode matching deckQuery"
+        },
+        "position": {
+          "description": "Indicates the played Card's position in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "rotation": {
+          "type": "integer",
+          "description": "Indicates the played Card's rotation in degrees",
+          "format": "int32"
+        }
+      }
+    },
+    "SharePreference": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Ask",
+        "Share",
+        "Individual"
+      ],
+      "enum": [
+        "ask",
+        "share",
+        "individual"
+      ]
+    },
+    "DeckUrl": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the deck"
+        },
+        "txt": {
+          "type": "string",
+          "description": "An optional path that can be used to override the url. See @cgs.json#/properties/allDecksUrlTxtRoot"
+        },
+        "url": {
+          "type": "string",
+          "description": "The url from which to download the deck",
+          "format": "uri"
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "description": "Optionally set to false to ignore this deck url",
+          "default": "true"
+        }
+      }
+    },
+    "EnumDef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "property": {
+          "type": "string",
+          "description": "Refers to a *Property:Name* in <cardProperties>"
+        },
+        "values": {
+          "type": "object",
+          "description": "Dictionary with string key-value pairs",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ExtraDef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "group": {
+          "type": "string",
+          "description": "A group of extra cards is displayed together with this label in Play Mode",
+          "default": "Extras"
+        },
+        "property": {
+          "type": "string",
+          "description": "Refers to a *Property:Name* in <cardProperties>"
+        },
+        "value": {
+          "type": "string",
+          "description": "If *Card:Properties[ExtraDef:Property]* equals *ExtraDef:Value*, then that card will be moved from the main deck to this extra deck"
+        }
+      }
+    },
+    "GameBoardCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "type": "string",
+          "description": "When a deck is loaded in Play Mode, any card with *Card:Id* = *Card* will cause *Boards* to be put into the play area."
+        },
+        "boards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GameBoard"
+          }
+        }
+      }
+    },
+    "GameBoard": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id of the board"
+        },
+        "offsetMin": {
+          "description": "Indicates the position (in inches) of the bottom-left corner",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "size": {
+          "description": "Indicates the board's width and height in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        }
+      }
+    },
+    "GameBoardUrl": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id of the board"
+        },
+        "url": {
+          "type": "string",
+          "description": "The url from which to download the board image",
+          "format": "uri"
+        }
+      }
+    },
+    "CardAction": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Move",
+        "Rotate",
+        "Tap",
+        "Flip",
+        "Discard"
+      ],
+      "enum": [
+        "move",
+        "rotate",
+        "tap",
+        "flip",
+        "discard"
+      ]
+    },
+    "GamePlayZone": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "face": {
+          "description": "When a Card enters the Game Play Zone, the Card will display this face",
+          "default": "any",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/FacePreference"
+            }
+          ]
+        },
+        "defaultCardAction": {
+          "description": "If possible, CGS will take the defaultCardAction when a Card is double-clicked in the Game Play Zone. If null, defaults to <gameDefaulCardAction>",
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/CardAction"
+            }
+          ]
+        },
+        "position": {
+          "description": "Indicates the Game Play Zone's position in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "rotation": {
+          "type": "integer",
+          "description": "Indicates the Game Play Zone's rotation in degrees",
+          "format": "int32"
+        },
+        "size": {
+          "description": "Indicates the Game Play Zone's width and height in inches",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/Float2"
+            }
+          ]
+        },
+        "type": {
+          "description": "The Game Play Zone type from area, dice, horizontal, or vertical",
+          "default": "area",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GamePlayZoneType"
+            }
+          ]
+        }
+      }
+    },
+    "FacePreference": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Any",
+        "Down",
+        "Up"
+      ],
+      "enum": [
+        "any",
+        "down",
+        "up"
+      ]
+    },
+    "GamePlayZoneType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": [
+        "Area",
+        "Dice",
+        "Horizontal",
+        "Vertical"
+      ],
+      "enum": [
+        "area",
+        "dice",
+        "horizontal",
+        "vertical"
+      ]
+    }
+  }
+}

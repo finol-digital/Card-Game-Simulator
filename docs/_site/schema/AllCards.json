@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://cardgamesim.finoldigital.com/schema/AllCards.json",
+  "title": "CGS Card Game Specification - Cards",
+  "description": "Lists out Card information. You should have at least 1 of either AllCards.json or AllSets.json. You may have both, and if you have both, CGS will combine the data from both to use in-game.",
+  "items": {
+    "title": "Card",
+    "type": "object",
+    "properties": {
+      "$cgs.json#/properties/cardIdIdentifier": {
+        "description": "The id of the Card",
+        "type": "string"
+      },
+      "$cgs.json#/properties/cardNameIdentifier": {
+        "description": "The name of the Card",
+        "type": "string"
+      },
+      "$cgs.json/properties/cardSetIdentifier": {
+        "description": "The code for the Card's Set",
+        "type": "string"
+      },
+      "backs": {
+        "description": "List of backs for the Card. If blank, the default CardBackImage is used. If populated, each back must correspond to an id in <cardBackFaceImageUrls>. The empty string corresponds to the default CardBackImage.",
+        "type": "array"
+        "items": {
+          "description": "*CardBackFaceImageUrl:Id*",
+          "type": "string"
+        }
+      }
+    },
+    "additionalProperties": {
+      "$ref": "cgs.json#/properties/cardProperties"
+    },
+    "required": [
+      "$cgs.json#/properties/cardIdIdentifier"
+    ]
+  },
+  "type": "array",
+  "uniqueItems": true
+}

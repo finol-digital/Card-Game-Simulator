@@ -1,0 +1,290 @@
+{
+	"name": "Grand Archive TCG",
+	"allCardsUrl": "https://api.gatcg.com/cards/search",
+	"allCardsUrlPageCountIdentifier": "total_pages",
+	"autoUpdateUrl": "https://www.cardgamesimulator.com/games/grand_archive/cgs.json",
+	"bannerImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/Banner.png",
+	"cardBackImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/CardBack.png",
+	"cardDataIdentifier": "data",
+	"cardIdIdentifier": "uuid",
+	"cardImageFileType": "jpg",
+	"cardImageProperty": "editions0.other_orientations0.edition.image",
+	"cardImageUrl": "https://api.gatcg.com{editions[0].image}",
+	"cardNameBackIdentifier": "editions[].other_orientations[].name",
+	"cardPrimaryProperty": "effect_raw",
+	"cardProperties": [
+		{
+			"name": "types",
+			"display": "Type",
+			"type": "stringEnumList",
+			"backName": "editions[].other_orientations[].types"
+		},
+		{
+			"name": "classes",
+			"display": "Class",
+			"type": "stringEnumList",
+			"backName": "editions[].other_orientations[].classes"
+		},
+		{
+			"name": "subtypes",
+			"display": "Subtype(s)",
+			"type": "stringList",
+			"backName": "editions[].other_orientations[].subtypes"
+		},
+		{
+			"name": "element",
+			"display": "Element",
+			"type": "stringEnum",
+			"backName": "editions[].other_orientations[].element"
+		},
+		{
+			"name": "effect_raw",
+			"display": "Effect",
+			"displayEmpty": "-",
+			"type": "string",
+			"backName": "editions[].other_orientations[].effect_raw"
+		},
+		{
+			"name": "flavor",
+			"display": "Flavor",
+			"displayEmpty": "-",
+			"type": "string",
+			"backName": "editions[].other_orientations[].flavor"
+		},
+		{
+			"name": "cost_memory",
+			"display": "Memory Cost",
+			"displayEmpty": "-",
+			"type": "integer",
+			"backName": "editions[].other_orientations[].cost_memory"
+		},
+		{
+			"name": "cost_reserve",
+			"display": "Reserve Cost",
+			"displayEmpty": "-",
+			"type": "integer",
+			"backName": "editions[].other_orientations[].cost_reserve"
+		},
+		{
+			"name": "level",
+			"display": "Level",
+			"displayEmpty": "-",
+			"type": "integer",
+			"backName": "editions[].other_orientations[].level"
+		},
+		{
+			"name": "power",
+			"display": "Power",
+			"displayEmpty": "-",
+			"type": "integer",
+			"backName": "editions[].other_orientations[].power"
+		},
+		{
+			"name": "life",
+			"display": "Life",
+			"displayEmpty": "-",
+			"type": "integer",
+			"backName": "editions[].other_orientations[].life"
+		},
+		{
+			"name": "durability",
+			"display": "Durability",
+			"displayEmpty": "-",
+			"type": "integer",
+			"backName": "editions[].other_orientations[].durability"
+		},
+		{
+			"name": "speed",
+			"display": "Speed: Fast?",
+			"displayEmpty": "N / A",
+			"type": "boolean",
+			"backName": "editions[].other_orientations[].speed"
+		},
+		{
+			"name": "editions",
+			"display": "Edition(s)",
+			"type": "objectList",
+			"properties": [
+				{
+					"name": "slug",
+					"display": "Slug",
+					"type": "string",
+					"backName": "other_orientations[].edition.slug"
+				},
+				{
+					"name": "image",
+					"display": "Image",
+					"type": "string",
+					"backName": "other_orientations[].edition.image"
+				},
+				{
+					"name": "illustrator",
+					"display": "Illustrator",
+					"type": "string",
+					"backName": "other_orientations[].edition.illustrator"
+				},
+				{
+					"name": "rarity",
+					"display": "Rarity",
+					"type": "integer",
+					"backName": "other_orientations[].edition.rarity"
+				}
+			]
+		}
+	],
+	"cardSetIsObject": true,
+	"cardSetsInList": true,
+	"cardSetIdentifier": "editions",
+	"cgsGamesLink": "https://cgs.games/gatcg/grand_archive_tcg",
+	"copyright": "Weebs of the Shore LLC",
+	"deckPlayCards": [
+		{
+			"cardQuery": "classes:spirit",
+			"deckQuery": "playerCount=1",
+			"position": {
+				"x": -20,
+				"y": -5.5
+			},
+			"rotation": 0
+		},
+		{
+			"cardQuery": "classes:spirit",
+			"deckQuery": "playerCount=2",
+			"position": {
+				"x": 20,
+				"y": 5.5
+			},
+			"rotation": 180
+		}
+	],
+	"deckSharePreference": "individual",
+	"deckUrls": [
+		{
+			"name": "Merlin, Brilliant Vestige ReCollection Deck",
+			"url": "https://www.cardgamesimulator.com/games/grand_archive/decks/Merlin,%20Brilliant%20Vestige%20ReCollection%20Deck.txt"
+		}
+	],
+	"enums": [
+		{
+			"property": "types",
+			"values": {
+				"ACTION": "Action",
+				"ALLY": "Ally",
+				"ATTACK": "Attack",
+				"CHAMPION": "Champion",
+				"DOMAIN": "Domain",
+				"ITEM": "Item",
+				"PHANTASIA": "Phantasia",
+				"REGALIA": "Regalia",
+				"TOKEN": "Token",
+				"UNIQUE": "Unique",
+				"WEAPON": "Weapon"
+			}
+		},
+		{
+			"property": "classes",
+			"values": {
+				"ASSASSIN": "Assassin",
+				"CLERIC": "Cleric",
+				"GUARDIAN": "Guardian",
+				"MAGE": "Mage",
+				"RANGER": "Ranger",
+				"TAMER": "Tamer",
+				"WARRIOR": "Warrior"
+			}
+		},
+		{
+			"property": "element",
+			"values": {
+				"ARCANE": "Arcane",
+				"ASTRA": "Astra",
+				"CRUX": "Crux",
+				"EXIA": "Exia",
+				"FIRE": "Fire",
+				"LUXEM": "Luxem",
+				"NORM": "Normal",
+				"NEOS": "Neos",
+				"TERA": "Tera",
+				"UMBRA": "Umbra",
+				"WATER": "Water",
+				"WIND": "Wind"
+			}
+		}
+	],
+	"extras": [
+		{
+			"group": "Material Deck",
+			"property": "types",
+			"value": "Champion"
+		},
+		{
+			"group": "Material Deck",
+			"property": "types",
+			"value": "Regalia"
+		}
+	],
+	"gameDefaultCardAction": "tap",
+	"gamePlayDeckName": "Main Deck",
+	"gamePlayDeckPositions": [
+		{
+			"x": 25,
+			"y": -5.5
+		},
+		{
+			"x": -25,
+			"y": -5.5
+		},
+		{
+			"x": -25,
+			"y": 5.5
+		},
+		{
+			"x": 25,
+			"y": 5.5
+		}
+	],
+	"gamePlayZones": [
+		{
+			"defaultCardAction": "flip",
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": -10.5
+			},
+			"rotation": 0,
+			"size": {
+				"x": 42,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		},
+		{
+			"defaultCardAction": "flip",
+			"face": "down",
+			"position": {
+				"x": 0,
+				"y": 10.5
+			},
+			"rotation": 180,
+			"size": {
+				"x": 42,
+				"y": 3.5
+			},
+			"type": "horizontal"
+		}
+	],
+	"gameStartHandCount": 7,
+	"playMatImageFileType": "jpg",
+	"playMatImageUrl": "https://www.cardgamesimulator.com/games/grand_archive/PlayMat.jpg",
+	"playMatGridCellSize": {
+		"x": 0,
+		"y": 0
+	},
+	"playMatSize": {
+		"x": 56,
+		"y": 30
+	},
+	"rulesUrl": "https://www.gatcg.com/article/rules",
+	"setCodeIdentifier": "set.prefix",
+	"setNameIdentifier": "set.name"
+}
