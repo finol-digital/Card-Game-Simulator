@@ -223,7 +223,7 @@ body{
 }
 
 /* Ensure hero logo and text scale on small screens */
-.hero-logo-large{ width:200px; max-width:45%; height:auto; display:block; margin-bottom:8px; }
+.hero-logo-large{ width:200px; max-width:45%; height:auto; display:block; margin:0 auto 8px; }
 
 /* Video */
 .video-card{
