@@ -1,3 +1,6 @@
+---
+layout: home
+---
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-left">
