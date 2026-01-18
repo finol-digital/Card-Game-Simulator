@@ -266,6 +266,8 @@ body{
 
 /* Footer */
 .site-footer{ margin-top:28px; padding:18px 0; color:var(--muted); border-top:1px solid rgba(0,0,0,0.18); }
+.site-footer a{ color:var(--accent); text-decoration:underline; text-decoration-thickness:1px; font-weight:600; }
+.site-footer a:hover, .site-footer a:focus{ color:#ffffff; text-decoration-color:rgba(255,255,255,0.7); filter:brightness(1.05); }
 .footer-inner{ max-width:var(--max-width); margin:0 auto; padding:0 16px; display:flex; justify-content:space-between; align-items:center; }
 
 /* Responsive */
