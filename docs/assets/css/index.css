@@ -156,7 +156,7 @@ body{
 .nav-dropdown .dropdown{
   position:absolute;
   right:0;
-  top:calc(100% + 8px);
+  top:100%;
   background:var(--brown-700);
   border:1px solid rgba(0,0,0,0.3);
   padding:8px 6px;
