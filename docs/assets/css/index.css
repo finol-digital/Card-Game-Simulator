@@ -286,3 +286,14 @@ body{
 @media (min-width: 881px) {
   .main-nav{ display:block; }
 }
+
+/* Community social icons */
+.social-links{ display:flex; gap:12px; align-items:center; margin-top:12px; }
+.social-links a{ display:inline-flex; align-items:center; justify-content:center; padding:4px; background: rgba(255,255,255,0.02); border-radius:6px; transition: transform .12s ease, box-shadow .12s ease; text-decoration:none; }
+.social-links a:hover{ transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.12); }
+.social-icon{ width:32px; height:32px; display:block; object-fit:contain; }
+
+@media (max-width: 480px){
+  .social-icon{ width:28px; height:28px; }
+  .social-links{ gap:8px; }
+}
