@@ -75,6 +75,7 @@
         // Dropdown toggle for Play on small screens
         document.querySelectorAll('.nav-dropdown .dropdown-toggle').forEach(function (btn) {
           btn.addEventListener('click', function (e) {
+            // Prevent default to avoid form submission or navigation
             e.preventDefault();
             var expanded = this.getAttribute('aria-expanded') === 'true';
             this.setAttribute('aria-expanded', String(!expanded));
