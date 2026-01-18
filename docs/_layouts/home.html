@@ -1,53 +1,88 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
-
   <head>
     <meta name="facebook-domain-verification" content="gi07f096jt2ukz5h2ozufgg3ytwsp2" />
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width,maximum-scale=2">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="{{ site.title | default: site.github.repository_name }} : {{ site.description | default: site.github.project_tagline }}">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-
+    <link rel="stylesheet" href="/assets/css/index.css" />
 {% seo %}
   </head>
 
   <body>
 
     <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-            <img src="/assets/img/CGSLogo.png" width="480" height="235" alt="Create, Share, and Play with Card Game Simulator" />
-        </header>
-    </div>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">
+          <img src="/assets/img/Logo.png" alt="Card Game Simulator logo" class="brand-logo" />
+          <span class="brand-text">Card Game Simulator</span>
+        </a>
+    
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" id="navToggle" aria-label="Toggle navigation" title="Toggle navigation">
+          <span class="hamburger"></span>
+        </button>
+    
+        <nav id="main-nav" class="main-nav" aria-label="Main navigation">
+          <ul class="nav-list">
+            <li class="nav-item"><a class="nav-link" href="https://github.com/finol-digital/Card-Game-Simulator/wiki/Crash-Course-into-Game-Development-with-CGS">Create</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://cgs.games/">Share</a></li>
+    
+            <li class="nav-item nav-dropdown">
+              <button class="nav-link dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                Play <span aria-hidden="true">▾</span><span class="visually-hidden">menu</span>
+              </button>
+              <ul class="dropdown">
+                <li><a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim">Android</a></li>
+                <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?ls=1">iOS</a></li>
+                <li><a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553?ls=1&mt=12">macOS</a></li>
+                <li><a href="https://apps.microsoft.com/detail/9n96n5s4w3j0">Windows</a></li>
+                <li><a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/">Steam</a></li>
+                <li><a href="https://cgs.gg/">Web</a></li>
+              </ul>
+            </li>
+    
+          </ul>
+        </nav>
+      </div>
+    </header>
 
     <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        {{ content }}
-      </section>
-    </div>
+    <main class="page">
+      {{ content }}
+    </main>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p><a href="PRIVACY.html">Privacy Policy</a></p>
-        {% if site.github.is_project_page %}
-        <p class="copyright">{{ site.title | default: site.github.repository_name }} maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
-      </footer>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p><a href="/PRIVACY.html">Privacy Policy</a></p>
+      <p>&copy; Finol Digital LLC</p>
     </div>
+  </footer>
 
-    {% if site.google_analytics %}
-      <script type="text/javascript">
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', '{{ site.google_analytics }}', 'auto');
-        ga('send', 'pageview');
-      </script>
-    {% endif %}
+    <script>
+      (function () {
+        // Toggle mobile nav
+        var navToggle = document.getElementById('navToggle');
+        var mainNav = document.getElementById('main-nav');
+    
+        navToggle.addEventListener('click', function () {
+          var expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', String(!expanded));
+          mainNav.classList.toggle('open');
+        });
+    
+        // Dropdown toggle for Play on small screens
+        document.querySelectorAll('.nav-dropdown .dropdown-toggle').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            // Prevent default to avoid form submission or navigation
+            e.preventDefault();
+            var expanded = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', String(!expanded));
+            this.parentElement.classList.toggle('open');
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
