@@ -350,3 +350,9 @@ body{
   .social-icon{ width:28px; height:28px; }
   .social-links{ gap:8px; }
 }
+
+@media (max-width: 767px) {
+  /* Hide the Steam store widget (Steam store iframe) on narrow/mobile viewports */
+  .store-row iframe[src*="steampowered.com"],
+  .store-embed { display: none !important; }
+}
