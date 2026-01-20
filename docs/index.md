@@ -18,7 +18,7 @@ layout: home
         <a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?itsct=apps_box_badge&amp;itscg=30200"><img src="/assets/img/app-store-badge.svg" alt="App Store" /></a>
         <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/mac-app-store-badge.svg" alt="Mac App Store" /></a>
         <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/" title="Card Game Simulator on Steam">
-          <img class="store-embed" src="/assets/img/steam_logo.png" alt="Card Game Simulator on Steam" width="600" height="240" />
+          <img class="store-embed" src="/assets/img/steam_logo.png" alt="Card Game Simulator on Steam" />
         </a>
       </div>
     </div>
