@@ -15,7 +15,7 @@ layout: home
       <div class="store-row">
         <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="/assets/img/microsoft-store-badge.svg" alt="Microsoft Store" /></a>
         <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="/assets/img/google-play-badge.png" alt="Google Play" /></a>
-        <a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?itsct=apps_box_badge&amp;itscg=30200"><img src="/assets/img/app-store-badge.png" alt="App Store" /></a>
+        <a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?itsct=apps_box_badge&amp;itscg=30200"><img src="/assets/img/app-store-badge.svg" alt="App Store" /></a>
         <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/mac-app-store-badge.svg" alt="Mac App Store" /></a>
         <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/" title="Card Game Simulator on Steam">
           <img class="store-embed" src="/assets/img/steam-store-preview.png" alt="Steam store preview" width="646" height="190" loading="lazy" />
