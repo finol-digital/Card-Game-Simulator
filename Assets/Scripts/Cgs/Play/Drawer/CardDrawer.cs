@@ -64,9 +64,8 @@ namespace Cgs.Play.Drawer
         {
             CardGameManager.Instance.OnSceneActions.Add(Resize);
 
-            InputSystem.actions.FindAction(Tags.ViewerMax).performed += InputMax;
-            InputSystem.actions.FindAction(Tags.ViewerMid).performed += InputMid;
-            InputSystem.actions.FindAction(Tags.ViewerMin).performed += InputMin;
+            InputSystem.actions.FindAction(Tags.ViewerLess).performed += InputLess;
+            InputSystem.actions.FindAction(Tags.ViewerMore).performed += InputMore;
             InputSystem.actions.FindAction(Tags.PlayGameAction0).performed += InputAction0;
             InputSystem.actions.FindAction(Tags.PlayGameAction1).performed += InputAction1;
         }
@@ -104,31 +103,79 @@ namespace Cgs.Play.Drawer
                 cardZoneRectTransform.sizeDelta = new Vector2(cardZoneRectTransform.sizeDelta.x, cardHeight);
         }
 
-        private void InputMax(InputAction.CallbackContext context)
+        private void InputLess(InputAction.CallbackContext context)
         {
             if (IsBlocked)
                 return;
 
-            Show();
+            ViewLess();
         }
 
         [UsedImplicitly]
-        public void Show()
+        public void ViewLess()
+        {
+            var pos = panelRectTransform.anchoredPosition;
+            var dHidden = Vector2.Distance(pos, HiddenPosition);
+            var dMid = Vector2.Distance(pos, MidPosition);
+            var dShown = Vector2.Distance(pos, ShownPosition);
+
+            if (dShown <= dMid && dShown <= dHidden)
+            {
+                // Shown -> SemiShow
+                SemiShow();
+            }
+            else if (dMid <= dShown && dMid <= dHidden)
+            {
+                // SemiShow -> Hidden
+                Hide();
+            }
+            else
+            {
+                // Hidden -> stay Hidden
+                Hide();
+            }
+        }
+
+        private void InputMore(InputAction.CallbackContext context)
+        {
+            if (IsBlocked)
+                return;
+
+            ViewMore();
+        }
+
+        [UsedImplicitly]
+        public void ViewMore()
+        {
+            var pos = panelRectTransform.anchoredPosition;
+            var dHidden = Vector2.Distance(pos, HiddenPosition);
+            var dMid = Vector2.Distance(pos, MidPosition);
+            var dShown = Vector2.Distance(pos, ShownPosition);
+
+            if (dHidden <= dMid && dHidden <= dShown)
+            {
+                // Hidden -> SemiShow
+                SemiShow();
+            }
+            else if (dMid <= dHidden && dMid <= dShown)
+            {
+                // SemiShow -> Shown
+                Show();
+            }
+            else
+            {
+                // Shown -> stay Shown
+                Show();
+            }
+        }
+
+        private void Show()
         {
             panelRectTransform.anchoredPosition = ShownPosition;
             downButton.interactable = true;
             upButton.interactable = false;
         }
 
-        private void InputMid(InputAction.CallbackContext context)
-        {
-            if (IsBlocked)
-                return;
-
-            SemiShow();
-        }
-
-        [UsedImplicitly]
         public void SemiShow()
         {
             panelRectTransform.anchoredPosition = MidPosition;
@@ -330,16 +377,7 @@ namespace Cgs.Play.Drawer
                 cardZone.Clear();
         }
 
-        private void InputMin(InputAction.CallbackContext context)
-        {
-            if (IsBlocked)
-                return;
-
-            Hide();
-        }
-
-        [UsedImplicitly]
-        public void Hide()
+        private void Hide()
         {
             panelRectTransform.anchoredPosition = HiddenPosition;
             downButton.interactable = false;
@@ -348,9 +386,8 @@ namespace Cgs.Play.Drawer
 
         private void OnDisable()
         {
-            InputSystem.actions.FindAction(Tags.ViewerMax).performed -= InputMax;
-            InputSystem.actions.FindAction(Tags.ViewerMid).performed -= InputMid;
-            InputSystem.actions.FindAction(Tags.ViewerMin).performed -= InputMin;
+            InputSystem.actions.FindAction(Tags.ViewerLess).performed -= InputLess;
+            InputSystem.actions.FindAction(Tags.ViewerMore).performed -= InputMore;
             InputSystem.actions.FindAction(Tags.PlayGameAction0).performed -= InputAction0;
             InputSystem.actions.FindAction(Tags.PlayGameAction1).performed -= InputAction1;
         }

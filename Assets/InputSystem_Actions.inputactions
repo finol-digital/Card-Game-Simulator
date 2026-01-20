@@ -791,7 +791,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Min",
+                    "name": "Less",
                     "type": "Button",
                     "id": "c302e330-27eb-4bbc-a55a-c62126938bc5",
                     "expectedControlType": "",
@@ -800,18 +800,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Mid",
+                    "name": "More",
                     "type": "Button",
                     "id": "cb457e58-ceaa-4c39-b0b6-424b05322dff",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Max",
-                    "type": "Button",
-                    "id": "e10a45cb-d546-4cbf-a411-11b84d345f86",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -925,7 +916,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Min",
+                    "action": "Less",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -936,7 +927,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Min",
+                    "action": "Less",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -947,7 +938,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Min",
+                    "action": "Less",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -958,7 +949,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Mid",
+                    "action": "More",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -969,7 +960,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Mid",
+                    "action": "More",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -980,29 +971,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Mid",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "a1485505-0043-49b8-a30c-780553067f96",
-                    "path": "<Keyboard>/v",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Max",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2b70e77d-ea67-4983-b376-cda949361807",
-                    "path": "<Keyboard>/o",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Max",
+                    "action": "More",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
