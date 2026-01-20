@@ -26,7 +26,7 @@ layout: home
     <div class="hero-right">
       <div class="video-card">
         <div class="video-wrapper">
-          <iframe src="https://www.youtube-nocookie.com/embed/PriDuaM6MEk" title="Card Game Simulator Demo Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+          <iframe src="https://www.youtube-nocookie.com/embed/PriDuaM6MEk" title="Card Game Simulator Demo Video" style="border: 0;" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
         </div>
       </div>
     </div>
