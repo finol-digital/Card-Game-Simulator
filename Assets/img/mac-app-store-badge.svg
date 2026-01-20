@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Local copy of Mac App Store badge (simplified). Replace with original if you have a higher-fidelity copy) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="54" viewBox="0 0 200 54">
+  <rect width="200" height="54" fill="#000" rx="6" />
+  <text x="16" y="34" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="18">Download on the Mac App Store</text>
+</svg>

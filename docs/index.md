@@ -13,25 +13,20 @@ layout: home
       </p>
 
       <div class="store-row">
-        <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="https://get.microsoft.com/images/en-us%20dark.svg" alt="Microsoft Store" /></a>
-        <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Google Play" /></a>
-        <a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?itsct=apps_box_badge&amp;itscg=30200"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1536624000" alt="App Store" /></a>
-        <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-mac-app-store.svg" alt="Mac App Store" /></a>
-        <iframe
-          class="store-embed"
-          src="https://store.steampowered.com/widget/1742850/"
-          title="Steam store widget"
-          loading="lazy"
-          width="646"
-          height="190"
-        ></iframe>
+        <a href="https://apps.microsoft.com/detail/9n96n5s4w3j0"><img src="/assets/img/microsoft-store-badge.svg" alt="Microsoft Store" /></a>
+        <a href="https://play.google.com/store/apps/details?id=com.finoldigital.cardgamesim"><img src="/assets/img/google-play-badge.png" alt="Google Play" /></a>
+        <a href="https://apps.apple.com/us/app/card-game-simulator/id1392877362?itsct=apps_box_badge&amp;itscg=30200"><img src="/assets/img/app-store-badge.png" alt="App Store" /></a>
+        <a href="https://apps.apple.com/us/app/card-game-simulator/id1398206553"><img src="/assets/img/mac-app-store-badge.svg" alt="Mac App Store" /></a>
+        <a href="https://store.steampowered.com/app/1742850/Card_Game_Simulator/" title="Card Game Simulator on Steam">
+          <img class="store-embed" src="/assets/img/steam-store-preview.png" alt="Steam store preview" width="646" height="190" loading="lazy" />
+        </a>
       </div>
     </div>
 
     <div class="hero-right">
       <div class="video-card">
         <div class="video-wrapper">
-          <iframe src="https://www.youtube.com/embed/PriDuaM6MEk" title="Card Game Simulator Demo Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe src="https://www.youtube-nocookie.com/embed/PriDuaM6MEk" title="Card Game Simulator Demo Video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
         </div>
       </div>
     </div>
