@@ -295,8 +295,6 @@ body{
 
 @media (max-width: 640px) {
   .store-row img { height: 40px; }
-  .store-row img.store-badge-image { display: none; }
-  
 }
 
 /* Features & community */
