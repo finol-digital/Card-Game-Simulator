@@ -31,9 +31,8 @@ namespace Cgs
         public const string ViewerZoom = "Viewer/Zoom";
         public const string ViewerSelectPrevious = "Viewer/SelectPrevious";
         public const string ViewerSelectNext = "Viewer/SelectNext";
-        public const string ViewerMin = "Viewer/Min";
-        public const string ViewerMid = "Viewer/Mid";
-        public const string ViewerMax = "Viewer/Max";
+        public const string ViewerLess = "Viewer/Less";
+        public const string ViewerMore = "Viewer/More";
 
         public const string CardsNew = "Cards/New";
         public const string CardsEdit = "Cards/Edit";

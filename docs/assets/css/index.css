@@ -305,6 +305,22 @@ body{
 .three-features{ display:flex; gap:18px; flex-wrap:wrap; }
 .three-features .feature{ background: rgba(0,0,0,0.03); padding:12px; border-radius:8px; flex:1 1 220px; }
 
+/* Improve contrast and accessibility for links inside feature content (eg. the cgs.games link) */
+.features a{
+  color: var(--accent); /* high-contrast, brand-accent tone */
+  font-weight:700;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+}
+.features a:hover,
+.features a:focus{
+  color: #ffffff;
+  filter:brightness(1.05);
+  outline: 3px solid rgba(231,207,169,0.12);
+  border-radius:4px;
+  text-decoration-color: rgba(255,255,255,0.85);
+}
+
 /* Footer */
 .site-footer{ margin-top:28px; padding:18px 0; color:var(--muted); border-top:1px solid rgba(0,0,0,0.18); }
 .site-footer a{ color:var(--accent); text-decoration:underline; text-decoration-thickness:1px; font-weight:600; }

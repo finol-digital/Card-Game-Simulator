@@ -52,7 +52,7 @@ layout: home
     </div>
     <div class="feature">
       <h3>Share</h3>
-      <p>Publish your game to the CGS directory. Others can play, fork, and give feedback.</p>
+      <p>Publish your game to <a href="https://cgs.games/">cgs.games</a>. Others can play, fork, and give feedback.</p>
     </div>
   </div>
 </section>

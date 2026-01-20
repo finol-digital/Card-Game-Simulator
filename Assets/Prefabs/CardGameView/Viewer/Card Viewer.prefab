@@ -5054,12 +5054,12 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Max
+      value: More
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/Max
+      value: Viewer/More
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -6795,12 +6795,12 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Min
+      value: Less
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/Min
+      value: Viewer/Less
       objectReference: {fileID: 0}
     - target: {fileID: 7317508625745834898, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -7764,12 +7764,12 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Mid
+      value: More
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/Mid
+      value: Viewer/More
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -8112,7 +8112,7 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Mid
+      value: Less
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -8122,7 +8122,7 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: inputActionId
-      value: Viewer/Mid
+      value: Viewer/Less
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}

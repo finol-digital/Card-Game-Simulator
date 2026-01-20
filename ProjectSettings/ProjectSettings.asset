@@ -639,6 +639,9 @@ PlayerSettings:
   - serializedVersion: 3
     m_BuildTarget: Android
     m_Formats: 01000000
+  - serializedVersion: 3
+    m_BuildTarget: WebGL
+    m_Formats: 05000000
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
@@ -872,9 +875,9 @@ PlayerSettings:
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 551d6fc92ca02455fbbf5d23982723bf,
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 9f4281763601643338c72f95b4159913,
     type: 3}
-  splashScreenBackgroundSourcePortrait: {fileID: 21300000, guid: 294e35a0d74d4435e8b023db1dd4552c,
+  splashScreenBackgroundSourcePortrait: {fileID: 21300000, guid: 2537b93f85bdc4894bf124b45ab648db,
     type: 3}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 
@@ -1018,7 +1021,7 @@ PlayerSettings:
   syncCapabilities: 0
   platformCapabilities:
     WindowsStoreApps:
-      EnterpriseAuthentication: False
+      CodeGeneration: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -1054,8 +1057,8 @@ PlayerSettings:
       Contacts: False
       Proximity: False
       InternetClient: True
-      CodeGeneration: False
       BackgroundMediaPlayback: False
+      EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
