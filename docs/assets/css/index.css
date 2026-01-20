@@ -262,11 +262,6 @@ body{
   width: auto;
   display: block;
 }
-/* Special larger badge (e.g. Steam static badge) */
-.store-row img.store-badge-image {
-  height: 64px;
-  width: auto;
-}
 
 /* Make iframes (embedded store widgets) responsive and match anchors/images */
 .store-row iframe,
@@ -301,13 +296,7 @@ body{
 @media (max-width: 640px) {
   .store-row img { height: 40px; }
   .store-row img.store-badge-image { display: none; }
-
-  /* Reduce or hide large iframe badge on narrow viewports */
-  .store-row iframe { max-height: 40px; width: auto; }
-  .store-row iframe.store-badge-iframe { display: none; }
   
-  /* Hide the Steam store widget on mobile viewports */
-  .store-embed { display: none !important; }
 }
 
 /* Features & community */
