@@ -418,12 +418,10 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void JoinGame()
         {
-#if !UNITY_WEBGL
             if (Time.timeSinceLevelLoad < StartBufferTime)
                 return;
             CardGameManager.Instance.IsSearchingForServer = true;
             SceneManager.LoadScene(Tags.PlayModeSceneIndex);
-#endif
         }
 
         private void InputStartGame(InputAction.CallbackContext context)
