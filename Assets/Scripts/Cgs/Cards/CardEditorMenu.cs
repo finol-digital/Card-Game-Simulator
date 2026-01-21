@@ -23,6 +23,10 @@ namespace Cgs.Cards
 {
     public class CardEditorMenu : Modal
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        public const string WebWarningMessage =
+ "The CGS web client cannot access files on your device; please use the appropriate CGS native app";
+#endif
         public const string DownloadCardImage = "Download Card Image";
         public const string DownloadCardImagePrompt = "Enter card image url...";
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
@@ -256,10 +260,21 @@ namespace Cgs.Cards
             yield return UpdateCardImage();
         }
 
+        private void InputImportFile(InputAction.CallbackContext callbackContext)
+        {
+            if (IsBlocked)
+                return;
+
+            ImportCardImageFromFile();
+        }
+
         [UsedImplicitly]
         public void ImportCardImageFromFile()
         {
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogWarning(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+#elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardImageFromFile(UwpFileBrowser.OpenFilePanel());
@@ -274,14 +289,6 @@ namespace Cgs.Cards
             StandaloneFileBrowser.OpenFilePanelAsync(SelectCardImageFilePrompt, string.Empty, string.Empty, false,
                 paths => { ImportCardImageFromFile(paths?.Length > 0 ? paths[0] : string.Empty); });
 #endif
-        }
-
-        private void InputImportFile(InputAction.CallbackContext callbackContext)
-        {
-            if (IsBlocked)
-                return;
-
-            ImportCardImageFromFile();
         }
 
 #if ENABLE_WINMD_SUPPORT
