@@ -59,7 +59,7 @@ layout: home
 
 <section class="community">
   <h2>Join the community</h2>
-  <p>Find us on Discord, Reddit, GitHub, and more. Help shape the roadmap or ask for help.</p>
+  <p>Find us on Discord, Reddit, GitHub, and more. Help shape the <a href="https://github.com/orgs/finol-digital/projects/1">roadmap</a> or ask for help.</p>
   <p class="social-links">
     <a href="/discord" title="Discord"><img src="/assets/img/Discord.png" alt="Discord" class="social-icon" /></a>
     <a href="/reddit" title="Reddit"><img src="/assets/img/reddit.png" alt="Reddit" class="social-icon" /></a>
