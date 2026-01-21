@@ -159,9 +159,6 @@ namespace Cgs.Menu
             foreach (var option in orientationOptions)
                 option.gameObject.SetActive(false);
 #endif
-#if UNITY_WEBGL
-            developerModeToggle.interactable = false;
-#endif
         }
 
         [UsedImplicitly]

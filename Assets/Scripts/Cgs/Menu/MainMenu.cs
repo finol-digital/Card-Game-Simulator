@@ -58,7 +58,6 @@ namespace Cgs.Menu
         public Image offRightImage;
         public List<GameObject> selectableButtons;
 
-        public Button joinButton;
         public Button fullscreenButton;
         public GameObject quitButton;
 
@@ -134,7 +133,6 @@ namespace Cgs.Menu
             versionText.text = TitleScreen.VersionMessage;
 
 #if UNITY_WEBGL
-            joinButton.interactable = false;
             fullscreenButton.gameObject.SetActive(true);
             quitButton.gameObject.SetActive(false);
 #endif

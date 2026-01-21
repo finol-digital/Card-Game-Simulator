@@ -24,8 +24,13 @@ namespace Cgs.Menu
 {
     public class CardGameEditorMenu : Modal
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        public const string WebWarningMessage =
+ "The CGS web client cannot access files on your device; please use the appropriate CGS native app";
+#endif
 #if ENABLE_WINMD_SUPPORT
-        public const string PlatformWarningMessage = "Sorry, Backs Folder is not supported from Windows Store!";
+        public const string UwpWarningMessage =
+ "The CGS Windows Store client cannot access folders; please use the Steam client or other native app";
 #endif
 
         public const string DownloadBannerImage = "Download Banner Image";
@@ -298,7 +303,10 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ImportBannerImageFromFile()
         {
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogWarning(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+#elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportBannerImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportBannerImageFromFile(UwpFileBrowser.OpenFilePanel());
@@ -367,7 +375,10 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ImportCardBackImageFromFile()
         {
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogWarning(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+#elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportCardBackImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportCardBackImageFromFile(UwpFileBrowser.OpenFilePanel());
@@ -436,7 +447,10 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void ImportPlayMatImageFromFile()
         {
-#if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogWarning(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+#elif (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
             NativeGallery.GetImageFromGallery(ImportPlayMatImageFromFile, ImportImage);
 #elif ENABLE_WINMD_SUPPORT
             ImportPlayMatImageFromFile(UwpFileBrowser.OpenFilePanel());
@@ -594,9 +608,12 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void SelectBacksFolder()
         {
-#if ENABLE_WINMD_SUPPORT
-            CardGameManager.Instance.Messenger.Show(PlatformWarningMessage);
-            Hide();
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogWarning(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+#elif ENABLE_WINMD_SUPPORT
+            Debug.LogWarning(UwpWarningMessage);
+            CardGameManager.Instance.Messenger.Show(UwpWarningMessage);
 #else
             FileBrowser.ShowLoadDialog((paths) => { BacksFolderPath = paths[0]; }, () => { },
                 FileBrowser.PickMode.Folders, false, null, null, SelectFolderPrompt);

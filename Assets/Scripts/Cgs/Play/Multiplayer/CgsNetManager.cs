@@ -144,6 +144,9 @@ namespace Cgs.Play.Multiplayer
             var relayServerData = serverRelayUtilityTask.Result;
             Transport = Transports.relayUnityTransport;
             Transport.SetRelayServerData(relayServerData.Item1);
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Transport.UseWebSockets = true;
+#endif
             StartHost();
 
             yield return null;
@@ -204,7 +207,11 @@ namespace Cgs.Play.Multiplayer
                 throw;
             }
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+            return Tuple.Create(allocation.ToRelayServerData("wss"), relayJoinCode);
+#else
             return Tuple.Create(allocation.ToRelayServerData("dtls"), relayJoinCode);
+#endif
         }
 
         private static async Task<Lobby> CreateLobby(RelayServerData relayServerData, string relayJoinCode,
@@ -406,6 +413,9 @@ namespace Cgs.Play.Multiplayer
 
             Transport = Transports.relayUnityTransport;
             Transport.SetRelayServerData(relayServerData);
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Transports.relayUnityTransport.UseWebSockets = true;
+#endif
             StartClient();
 
             yield return null;
@@ -433,7 +443,11 @@ namespace Cgs.Play.Multiplayer
             Debug.Log($"[CgsNet] host: {allocation.HostConnectionData[0]} {allocation.HostConnectionData[1]}");
             Debug.Log($"[CgsNet] client: {allocation.AllocationId}");
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+            return allocation.ToRelayServerData("wss");
+#else
             return allocation.ToRelayServerData("dtls");
+#endif
         }
 
         private async Task UpdatePlayerRelayInfoAsync(string allocationId, string connectionInfo)

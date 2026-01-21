@@ -22,8 +22,13 @@ namespace Cgs.Cards
 {
     public class SetImportMenu : Modal, IProgressible
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        public const string WebWarningMessage =
+ "The CGS web client cannot access files on your device; please use the appropriate CGS native app";
+#endif
 #if ENABLE_WINMD_SUPPORT
-        public const string PlatformWarningMessage = "Sorry, Set Import is not supported from Windows Store!";
+        public const string UwpWarningMessage =
+ "The CGS Windows Store client cannot access folders; please use the Steam client or other native app";
 #endif
 
         public const string SelectFolderPrompt = "Select Folder";
@@ -127,9 +132,12 @@ namespace Cgs.Cards
         [UsedImplicitly]
         public void SelectFolder()
         {
-#if ENABLE_WINMD_SUPPORT
-            CardGameManager.Instance.Messenger.Show(PlatformWarningMessage);
-            Hide();
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogWarning(WebWarningMessage);
+            CardGameManager.Instance.Messenger.Show(WebWarningMessage);
+#elif ENABLE_WINMD_SUPPORT
+            Debug.LogWarning(UwpWarningMessage);
+            CardGameManager.Instance.Messenger.Show(UwpWarningMessage);
 #else
             FileBrowser.ShowLoadDialog((paths) => { SetFolderPath = paths[0]; }, () => { },
                 FileBrowser.PickMode.Folders, false, null, null, SelectFolderPrompt);
