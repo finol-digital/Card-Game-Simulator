@@ -321,6 +321,22 @@ body{
   text-decoration-color: rgba(255,255,255,0.85);
 }
 
+/* Community links (roadmap, help) need stronger contrast against the hero background */
+.community a{
+  color: #ffffff; /* full white for best contrast */
+  font-weight:700;
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+}
+.community a:hover,
+.community a:focus{
+  color: #ffffff;
+  filter:brightness(1.05);
+  outline: 3px solid rgba(231,207,169,0.18);
+  border-radius:4px;
+  text-decoration-color: rgba(255,255,255,0.95);
+}
+
 /* Footer */
 .site-footer{ margin-top:28px; padding:18px 0; color:var(--muted); border-top:1px solid rgba(0,0,0,0.18); }
 .site-footer a{ color:var(--accent); text-decoration:underline; text-decoration-thickness:1px; font-weight:600; }
