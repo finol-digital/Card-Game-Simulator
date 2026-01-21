@@ -1,3 +1,4 @@
 ## What's Changed
-- Added support for Dice Zones
-- Fixed game loading error
+- Added filter/search to the CGS Games Browser
+- Condensed Hand Drawer buttons
+- Minor fixes
