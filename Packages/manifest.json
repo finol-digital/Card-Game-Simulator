@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity",
     "com.davidmfinol.sfb": "https://github.com/davidmfinol/UnityStandaloneFileBrowser.git",
     "com.kyrylokuzyk.primetween": "1.3.5",
     "com.netpyoung.webp": "0.3.21",
