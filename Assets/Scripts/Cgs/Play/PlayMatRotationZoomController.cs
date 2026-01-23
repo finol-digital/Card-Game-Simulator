@@ -129,7 +129,8 @@ namespace Cgs.Play
                     RotateZoomableScrollRect.MaxZoom);
             }
             else
-                _playController.playArea.verticalNormalizedPosition += delta;
+                _playController.playArea.verticalNormalizedPosition =
+                    Mathf.Clamp01(_playController.playArea.verticalNormalizedPosition + delta);
         }
 
         private void InputToggleRotation(InputAction.CallbackContext obj)
