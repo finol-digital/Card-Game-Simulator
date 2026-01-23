@@ -17,11 +17,12 @@ namespace Cgs.UI.ScrollRects
 {
     public class RotateZoomableScrollRect : ScrollRect, IPointerEnterHandler, IPointerExitHandler
     {
-        private const float MinRotation = -180; // Also in PlayMatRotation slider
-        private const float MaxRotation = 180; // Also in PlayMatRotation slider
-        public const float MinZoom = 0.25f; // Also in PlayMatZoom slider
+        public const float RotationSpeed = 50;
+        private const float MinRotation = -180; // Also in rotation slider
+        private const float MaxRotation = 180; // Also in rotation slider
+        public const float MinZoom = 0.25f; // Also in zoom slider
         public const float DefaultZoom = 0.5f;
-        public const float MaxZoom = 1.5f; // Also in PlayMatZoom slider
+        public const float MaxZoom = 1.5f; // Also in zoom slider
         private const float MouseRotationSensitivity = 360;
         private const float ZoomLerpSpeed = 7.5f;
         private const float ZoomThreshold = 0.001f;
@@ -53,6 +54,8 @@ namespace Cgs.UI.ScrollRects
 
         private Vector3 _currentEulerAngles = Vector3.zero;
         private Quaternion _currentRotation = Quaternion.identity;
+
+        public bool RotationEnabled { get; set; }
 
         public float CurrentZoom
         {
@@ -154,6 +157,9 @@ namespace Cgs.UI.ScrollRects
             }
 
             OnDragPan(touchEventData);
+
+            if (!RotationEnabled)
+                return;
 
             Vector2 referencePoint = content.position;
             foreach (var position in
