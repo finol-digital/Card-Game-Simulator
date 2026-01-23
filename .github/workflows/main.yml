@@ -154,7 +154,7 @@ jobs:
             /k:"finol-digital_Card-Game-Simulator" \
             /d:sonar.token="$SONAR_TOKEN" \
             /d:sonar.host.url=https://sonarcloud.io \
-            /d:sonar.exclusions=**/Plugins/**
+            /d:sonar.exclusions=**/docs/**,**/Plugins/**,**/Library/**
           dotnet build Card-Game-Simulator.sln
           ./dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
           cd Card-Game-Simulator
