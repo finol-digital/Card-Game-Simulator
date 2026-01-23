@@ -1,4 +1,2 @@
 ## What's Changed
-- Added filter/search to the CGS Games Browser
-- Condensed Hand Drawer buttons
-- Minor fixes
+- Added Lock for Play Mat Rotation and Zoom
