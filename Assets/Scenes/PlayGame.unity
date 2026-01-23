@@ -1821,7 +1821,7 @@ PrefabInstance:
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
       propertyPath: tooltip
-      value: Lock Rotation
+      value: Lock Zoom
       objectReference: {fileID: 0}
     - target: {fileID: 60276916285824526, guid: 849115afddf0d7d48b0bd0f145f7349d,
         type: 3}
@@ -3410,17 +3410,17 @@ PrefabInstance:
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.64469904
+      value: 0.4724344
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.64469904
+      value: 0.4724344
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.64469904
+      value: 0.4724344
       objectReference: {fileID: 0}
     - target: {fileID: 6011053665317500076, guid: c8e7f505c702b24459297d8fff70d96e,
         type: 3}

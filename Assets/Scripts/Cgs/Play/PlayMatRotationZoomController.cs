@@ -37,6 +37,11 @@ namespace Cgs.Play
                                   _playController.menu.panels.activeSelf ||
                                   _playController.scoreboard.nameInputField.isFocused;
 
+        private void Awake()
+        {
+            _playController = GetComponent<PlayController>();
+        }
+
         private void OnEnable()
         {
             InputSystem.actions.FindAction(Tags.PlayGameToggleZoomRotation).performed += InputToggleRotation;
@@ -46,7 +51,6 @@ namespace Cgs.Play
         private void Start()
         {
             _pageAction = InputSystem.actions.FindAction(Tags.PlayerPage);
-            _playController = GetComponent<PlayController>();
         }
 
         private void Update()
