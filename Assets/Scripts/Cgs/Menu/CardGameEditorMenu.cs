@@ -61,6 +61,8 @@ namespace Cgs.Menu
         public Text backsFolderText;
         public Button saveButton;
 
+        public GamesManagementMenu ParentMenu { get; set; }
+
         public override bool IsBlocked => base.IsBlocked || inputFields.Any(inputField => inputField.isFocused);
 
         private DownloadMenu Downloader =>
@@ -602,6 +604,7 @@ namespace Cgs.Menu
                 CardGameManager.Instance.AllCardGames[unityCardGame.Id] = unityCardGame;
                 CardGameManager.Instance.Select(unityCardGame.Id);
                 Hide();
+                ParentMenu?.Hide();
             }
         }
 
