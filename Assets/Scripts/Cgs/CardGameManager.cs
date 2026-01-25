@@ -684,9 +684,6 @@ namespace Cgs
 
         private IEnumerator ResetGameSceneAsync()
         {
-            // Give one frame for UI to update (allow animations to start) before running scene actions
-            yield return null;
-
             if (!Current.HasLoaded)
             {
                 Current.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
