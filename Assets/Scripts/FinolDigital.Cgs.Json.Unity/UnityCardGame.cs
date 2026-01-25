@@ -77,6 +77,21 @@ namespace FinolDigital.Cgs.Json.Unity
             }
         }
 
+        // Helper used to ensure sprite creation errors don't interfere with coroutine yielding
+        private static Sprite SafeCreateSprite(string path)
+        {
+            try
+            {
+                if (!File.Exists(path)) return null;
+                return UnityFileMethods.CreateSprite(path);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("SafeCreateSprite failed: " + e);
+                return null;
+            }
+        }
+
         private bool _isDownloading;
 
         public float DownloadProgress { get; private set; }
@@ -656,39 +671,36 @@ namespace FinolDigital.Cgs.Json.Unity
             }
 
             // Phase 4: Load banner, cardback, playmat, and backs sprites in small batches
-            try
-            {
-                if (File.Exists(BannerImageFilePath))
-                    BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
-                if (File.Exists(CardBackImageFilePath))
-                    CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
+            if (File.Exists(BannerImageFilePath))
+                BannerImageSprite = SafeCreateSprite(BannerImageFilePath);
+            if (File.Exists(CardBackImageFilePath))
+                CardBackImageSprite = SafeCreateSprite(CardBackImageFilePath);
 
-                if (Directory.Exists(BacksDirectoryPath))
+            if (Directory.Exists(BacksDirectoryPath))
+            {
+                var backFiles = Directory.EnumerateFiles(BacksDirectoryPath).ToList();
+                var count = 0;
+                foreach (var backFilePath in backFiles)
                 {
-                    var backFiles = Directory.EnumerateFiles(BacksDirectoryPath).ToList();
-                    var count = 0;
-                    foreach (var backFilePath in backFiles)
+                    var id = Path.GetFileNameWithoutExtension(backFilePath);
+                    var sprite = SafeCreateSprite(backFilePath);
+                    if (sprite != null)
                     {
-                        var id = Path.GetFileNameWithoutExtension(backFilePath);
-                        if (CardBackFaceImageSprites.TryGetValue(id, out var sprite))
+                        if (CardBackFaceImageSprites.TryGetValue(id, out var oldSprite))
                         {
-                            Object.Destroy(sprite.texture);
-                            Object.Destroy(sprite);
+                            Object.Destroy(oldSprite.texture);
+                            Object.Destroy(oldSprite);
                         }
-                        CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
-                        count++;
-                        if (count % 3 == 0) yield return null;
+                        CardBackFaceImageSprites[id] = sprite;
                     }
-                }
 
-                if (File.Exists(PlayMatImageFilePath))
-                    PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
+                    count++;
+                    if (count % 3 == 0) yield return null;
+                }
             }
-            catch (Exception e)
-            {
-                Debug.LogWarning("LoadAsyncImpl::ImageLoadFailed: " + e);
-                Error += e.Message + e.StackTrace + Environment.NewLine;
-            }
+
+            if (File.Exists(PlayMatImageFilePath))
+                PlayMatImageSprite = SafeCreateSprite(PlayMatImageFilePath);
 
             // Only considered as loaded if none of the steps failed
             if (string.IsNullOrEmpty(Error))
