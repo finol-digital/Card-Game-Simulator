@@ -676,8 +676,50 @@ namespace Cgs
                 return;
             }
 
+            // Immediately set current so UI can update without waiting for heavy load work
             Current = game;
-            ResetGameScene();
+            // Start an async reset so heavy load work doesn't block the main thread/UI animation
+            StartCoroutine(ResetGameSceneAsync());
+        }
+
+        private IEnumerator ResetGameSceneAsync()
+        {
+            if (!Current.HasLoaded)
+            {
+                // Start an asynchronous load if available. LoadAsync will return immediately.
+                try
+                {
+                    Current.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
+                }
+                catch (Exception)
+                {
+                    // If LoadAsync isn't implemented or fails, fall back to synchronous Load to preserve behavior
+                    Current.Load(UpdateCardGame, LoadCards, LoadSetCards);
+                }
+
+                if (Current.IsDownloading)
+                    yield break;
+            }
+
+            // Give one frame for UI to update (allow animations to start) before running scene actions
+            yield return null;
+
+            if (!string.IsNullOrEmpty(Current.Error))
+            {
+                if (UnityCardGame.UnityInvalid == Current || Current == CardGame.Invalid)
+                    yield break;
+                Debug.LogError(LoadErrorMessage + Current.Error);
+                Messenger.Ask(LoadErrorPrompt, IgnoreCurrentErroredGame, Delete);
+                yield break;
+            }
+
+            // Now is the safest time to set this game as the preferred default game for the player
+            PlayerPrefs.SetString(PlayerPrefsDefaultGame, Current.Id);
+
+            // Each scene is responsible for adding to OnSceneActions, but they may not remove
+            OnSceneActions.RemoveWhere((action) => action == null);
+            foreach (var action in OnSceneActions)
+                action();
         }
 
         internal void ResetGameScene()

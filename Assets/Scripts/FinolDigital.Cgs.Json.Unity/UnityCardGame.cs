@@ -504,6 +504,37 @@ namespace FinolDigital.Cgs.Json.Unity
                 HasLoaded = true;
         }
 
+        /// <summary>
+        /// Start a non-blocking load. This will defer the synchronous load slightly so UI animations
+        /// triggered by selection can begin without immediate main-thread blocking.
+        /// This is a conservative, low-risk improvement: a future iteration will move heavy parsing
+        /// off-thread and perform sprite creation in throttled batches.
+        /// </summary>
+        public void LoadAsync(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
+            CardGameCoroutineDelegate loadSetCardsCoroutine)
+        {
+            if (CoroutineRunner != null)
+            {
+                CoroutineRunner.StartCoroutine(LoadAsyncImpl(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine));
+            }
+            else
+            {
+                Debug.LogWarning($"LoadAsync called for {Name} but CoroutineRunner is null! Falling back to Load.");
+                Load(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine);
+            }
+        }
+
+        private IEnumerator LoadAsyncImpl(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
+            CardGameCoroutineDelegate loadSetCardsCoroutine)
+        {
+            // Small delay to allow UI selection animations to start and avoid immediate frame spikes.
+            // This is intentionally conservative; future improvements will split heavy work.
+            yield return new WaitForSeconds(0.32f);
+
+            // Call the existing synchronous Load on the main thread.
+            Load(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine);
+        }
+
         public void LoadCards(int page)
         {
             var cardsFilePath =
