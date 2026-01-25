@@ -12,7 +12,6 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityExtensionMethods;
 using Object = UnityEngine.Object;
@@ -74,21 +73,6 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 _isDownloading = value;
                 Debug.Log("Download " + (_isDownloading ? "Start" : "End"));
-            }
-        }
-
-        // Helper used to ensure sprite creation errors don't interfere with coroutine yielding
-        private static Sprite SafeCreateSprite(string path)
-        {
-            try
-            {
-                if (!File.Exists(path)) return null;
-                return UnityFileMethods.CreateSprite(path);
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning("SafeCreateSprite failed: " + e);
-                return null;
             }
         }
 
@@ -520,19 +504,12 @@ namespace FinolDigital.Cgs.Json.Unity
                 HasLoaded = true;
         }
 
-        /// <summary>
-        /// Start a non-blocking load. This will defer the synchronous load slightly so UI animations
-        /// triggered by selection can begin without immediate main-thread blocking.
-        /// This is a conservative, low-risk improvement: a future iteration will move heavy parsing
-        /// off-thread and perform sprite creation in throttled batches.
-        /// </summary>
         public void LoadAsync(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
             if (CoroutineRunner != null)
-            {
-                CoroutineRunner.StartCoroutine(LoadAsyncImpl(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine));
-            }
+                CoroutineRunner.StartCoroutine(
+                    LoadAsyncImpl(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine));
             else
             {
                 Debug.LogWarning($"LoadAsync called for {Name} but CoroutineRunner is null! Falling back to Load.");
@@ -540,179 +517,85 @@ namespace FinolDigital.Cgs.Json.Unity
             }
         }
 
-        private IEnumerator LoadAsyncImpl(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
+        private IEnumerator LoadAsyncImpl(CardGameCoroutineDelegate updateCoroutine,
+            CardGameCoroutineDelegate loadCardsCoroutine,
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
-            // Ensure we have basic properties loaded (this may be light). ReadProperties uses file I/O
-            // but may also create sprites; attempt to keep that quick — it's acceptable to call here.
+            // We should have already read the cgs.json, but we need to be sure
             if (!HasReadProperties)
             {
                 ReadProperties();
                 if (!HasReadProperties)
                 {
-                    // If we still failed to read properties, abort.
+                    // ReadProperties() should have already populated the Error
+                    HasLoaded = false;
                     yield break;
                 }
             }
 
-            // Phase 1: Offload heavy JSON parsing (cards and sets) to background tasks.
-            var cardJTokenLists = new List<JToken>();
-            var setJTokenList = new List<JToken>();
-
-            // Collect card files to parse
-            var cardFiles = new List<string>();
-            for (var page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
+            // Don't waste time loading if we need to update first
+            var daysSinceUpdate = 0;
+            try
             {
-                var cardsFilePath = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
-                if (File.Exists(cardsFilePath)) cardFiles.Add(cardsFilePath);
+                var gameFilePath = GameFilePath;
+                if (!File.Exists(gameFilePath))
+                    gameFilePath = GameBackupFilePath;
+                daysSinceUpdate = (int)DateTime.Today.Subtract(File.GetLastWriteTime(gameFilePath).Date).TotalDays;
+            }
+            catch
+            {
+                Debug.Log($"Unable to determine last update date for {Name}. Assuming today.");
             }
 
-            var setFile = SetsFilePath;
-
-            var parseCardTasks = new List<Task<JToken>>();
-            foreach (var file in cardFiles)
+            var shouldUpdate = AutoUpdate >= 0 && daysSinceUpdate >= AutoUpdate && updateCoroutine != null;
+            if (shouldUpdate)
             {
-                var f = file;
-                parseCardTasks.Add(Task.Run(() =>
-                {
-                    try
-                    {
-                        var text = File.ReadAllText(f);
-                        return JToken.Parse(text);
-                    }
-                    catch (Exception e)
-                    {
-                        Error += e.Message + e.StackTrace + Environment.NewLine;
-                        return null;
-                    }
-                }));
-            }
-
-            Task<JToken> parseSetTask = null;
-            if (File.Exists(setFile))
-            {
-                var sf = setFile;
-                parseSetTask = Task.Run(() =>
-                {
-                    try
-                    {
-                        var text = File.ReadAllText(sf);
-                        return JToken.Parse(text);
-                    }
-                    catch (Exception e)
-                    {
-                        Error += e.Message + e.StackTrace + Environment.NewLine;
-                        return null;
-                    }
-                });
-            }
-
-            // Wait for parse tasks to complete, yielding each frame
-            while (parseCardTasks.Any(t => !t.IsCompleted) || (parseSetTask != null && !parseSetTask.IsCompleted))
-                yield return null;
-
-            foreach (var t in parseCardTasks)
-            {
-                if (t.Result != null)
-                {
-                    if (t.Result is JArray arr)
-                        foreach (var jt in arr) cardJTokenLists.Add(jt);
-                    else
-                        cardJTokenLists.Add(t.Result);
-                }
-            }
-
-            if (parseSetTask != null && parseSetTask.Result != null)
-            {
-                if (parseSetTask.Result is JArray sArr)
-                    foreach (var jt in sArr) setJTokenList.Add(jt);
+                if (CoroutineRunner != null)
+                    CoroutineRunner.StartCoroutine(updateCoroutine(this));
                 else
-                    setJTokenList.Add(parseSetTask.Result);
+                    Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
+                yield break;
             }
 
-            // Phase 2: Populate sets in small batches on main thread
-            if (setJTokenList.Count > 0)
-            {
-                var batchSize = 50;
-                for (var i = 0; i < setJTokenList.Count; i++)
-                {
-                    try
-                    {
-                        LoadSetFromJToken(setJTokenList[i], null);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning($"LoadAsyncImpl::LoadSetFromJToken failed: {e}");
-                        Error += e.Message + e.StackTrace + Environment.NewLine;
-                    }
+            // These enum lookups need to be initialized before we load cards and sets
+            foreach (var enumDef in Enums)
+                enumDef.InitializeLookups();
 
-                    if (i % batchSize == 0) yield return null;
-                }
-            }
+            // The main load action is to load cards and sets
+            CardNames.Clear();
+            if (CoroutineRunner != null)
+                CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
+            else
+                Debug.LogWarning($"Should load cards for {Name}, but CoroutineRunner is null!");
+            yield return null; // Ensure we yield at least once to allow card loading to start
+            LoadSets();
+            if (CoroutineRunner != null && LoadedSets.Values.Any(set => !string.IsNullOrEmpty(set.CardsUrl)))
+                CoroutineRunner.StartCoroutine(loadSetCardsCoroutine(this));
+            yield return null; // Ensure we yield at least once to allow set card loading to start
 
-            // Phase 3: Populate cards in small batches on main thread
-            if (cardJTokenLists.Count > 0)
-            {
-                var batchSize = 100;
-                for (var i = 0; i < cardJTokenLists.Count; i++)
-                {
-                    try
-                    {
-                        LoadCardFromJToken(cardJTokenLists[i], SetCodeDefault);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning($"LoadAsyncImpl::LoadCardFromJToken failed: {e}");
-                        Error += e.Message + e.StackTrace + Environment.NewLine;
-                    }
-
-                    if (i % batchSize == 0) yield return null;
-                }
-            }
-
-            // Phase 4: Load banner, cardback, playmat, and backs sprites in small batches
-            if (File.Exists(BannerImageFilePath))
-                BannerImageSprite = SafeCreateSprite(BannerImageFilePath);
-            if (File.Exists(CardBackImageFilePath))
-                CardBackImageSprite = SafeCreateSprite(CardBackImageFilePath);
-
+            // Load card back images
             if (Directory.Exists(BacksDirectoryPath))
             {
-                var backFiles = Directory.EnumerateFiles(BacksDirectoryPath).ToList();
-                var count = 0;
-                foreach (var backFilePath in backFiles)
+                foreach (var backFilePath in Directory.EnumerateFiles(BacksDirectoryPath))
                 {
                     var id = Path.GetFileNameWithoutExtension(backFilePath);
-                    var sprite = SafeCreateSprite(backFilePath);
-                    if (sprite != null)
+                    if (CardBackFaceImageSprites.TryGetValue(id, out var sprite))
                     {
-                        if (CardBackFaceImageSprites.TryGetValue(id, out var oldSprite))
-                        {
-                            Object.Destroy(oldSprite.texture);
-                            Object.Destroy(oldSprite);
-                        }
-                        CardBackFaceImageSprites[id] = sprite;
+                        Object.Destroy(sprite.texture);
+                        Object.Destroy(sprite);
                     }
 
-                    count++;
-                    if (count % 3 == 0) yield return null;
+                    CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
+                    yield return null;
                 }
             }
 
+            // The play mat can be loaded last
             if (File.Exists(PlayMatImageFilePath))
-                PlayMatImageSprite = SafeCreateSprite(PlayMatImageFilePath);
+                PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
 
-            // Only considered as loaded if none of the steps failed
-            if (string.IsNullOrEmpty(Error))
-                HasLoaded = true;
-
-            // Kick off any coroutines the caller wanted (update/loadCards/loadSetCards) but do not block
-            if (CoroutineRunner != null)
-            {
-                if (updateCoroutine != null) CoroutineRunner.StartCoroutine(updateCoroutine(this));
-                if (loadCardsCoroutine != null) CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
-                if (loadSetCardsCoroutine != null) CoroutineRunner.StartCoroutine(loadSetCardsCoroutine(this));
-            }
+            // Require checking for Errors
+            HasLoaded = true;
         }
 
         public void LoadCards(int page)
@@ -859,7 +742,8 @@ namespace FinolDigital.Cgs.Json.Unity
             {
                 var nameBackDef = new PropertyDef(CardNameBackIdentifier, PropertyType.String);
                 PopulateCardProperty(metaProperties, cardJToken, nameBackDef, nameBackDef.Name);
-                if (metaProperties.TryGetValue(CardNameBackIdentifier.Replace("[].", "[]0."), out var cardNameBackEntry))
+                if (metaProperties.TryGetValue(CardNameBackIdentifier.Replace("[].", "[]0."),
+                        out var cardNameBackEntry))
                     cardBackName = cardNameBackEntry.Value;
             }
 
@@ -1196,11 +1080,14 @@ namespace FinolDigital.Cgs.Json.Unity
                                     && childProcessorJToken?[currentSegment[..^2]] is JArray { Count: > 0 } arrayToken)
                                     childProcessorJToken = arrayToken[0];
                                 else
-                                    (childProcessorJToken as JObject)?.TryGetValue(currentSegment, out childProcessorJToken);
+                                    (childProcessorJToken as JObject)?.TryGetValue(currentSegment,
+                                        out childProcessorJToken);
                             }
+
                             cardJToken = childProcessorJToken;
                             identifier = segments[^1];
                         }
+
                         newProperty.Value = cardJToken?.Value<string>(identifier) ?? string.Empty;
                         cardProperties[key] = newProperty;
                         break;
