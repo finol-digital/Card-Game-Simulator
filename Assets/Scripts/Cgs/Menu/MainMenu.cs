@@ -80,6 +80,7 @@ namespace Cgs.Menu
 
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed += InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed += InputSelectNext;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed += InputSubmit;
             InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed += InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.MainMenuSettings).performed += InputSettings;
             InputSystem.actions.FindAction(Tags.MainMenuExploreCards).performed += InputExploreCards;
@@ -173,7 +174,7 @@ namespace Cgs.Menu
             }
             else if ((_moveAction?.WasPressedThisFrame() ?? false) && Mathf.Abs(moveHorizontal) > 0 &&
                      (EventSystem.current.currentSelectedGameObject == null ||
-                     EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
+                      EventSystem.current.currentSelectedGameObject == selectableButtons[0].gameObject))
             {
                 if (moveHorizontal < 0)
                     SelectPrevious();
@@ -351,6 +352,12 @@ namespace Cgs.Menu
                 });
         }
 
+        private void InputSubmit(InputAction.CallbackContext context)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null && CardGameManager.Instance.ModalCanvas == null)
+                ShowGamesManagementMenu();
+        }
+
         private void InputGamesManagementMenu(InputAction.CallbackContext context)
         {
             if (CardGameManager.Instance.ModalCanvas == null)
@@ -479,6 +486,7 @@ namespace Cgs.Menu
         {
             InputSystem.actions.FindAction(Tags.ViewerSelectPrevious).performed -= InputSelectPrevious;
             InputSystem.actions.FindAction(Tags.ViewerSelectNext).performed -= InputSelectNext;
+            InputSystem.actions.FindAction(Tags.PlayerSubmit).performed -= InputSubmit;
             InputSystem.actions.FindAction(Tags.MainMenuGamesManagementMenu).performed -= InputGamesManagementMenu;
             InputSystem.actions.FindAction(Tags.MainMenuSettings).performed -= InputSettings;
             InputSystem.actions.FindAction(Tags.MainMenuExploreCards).performed -= InputExploreCards;

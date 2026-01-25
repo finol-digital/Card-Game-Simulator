@@ -614,6 +614,7 @@ GameObject:
   - component: {fileID: 1943692645}
   - component: {fileID: 1943692647}
   - component: {fileID: 1943692646}
+  - component: {fileID: 1943692648}
   m_Layer: 5
   m_Name: Footer
   m_TagString: Untagged
@@ -681,6 +682,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1943692644}
   m_CullTransparentMesh: 0
+--- !u!114 &1943692648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943692644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35199c418c8f9546b6899c6f4e3f6b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Cgs::Cgs.UI.SelectableHighlight
 --- !u!1 &2083170147
 GameObject:
   m_ObjectHideFlags: 0

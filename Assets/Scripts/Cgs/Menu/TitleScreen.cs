@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -89,12 +90,20 @@ namespace Cgs.Menu
             }
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
 #if !UNITY_ANDROID && !UNITY_IOS
             centerText.text = TouchlessStartMessage;
 #endif
             versionText.text = VersionMessage;
+
+            yield return null;
+
+            while (EventSystem.current.alreadySelecting)
+                yield return null;
+            EventSystem.current.SetSelectedGameObject(centerText.transform.parent.gameObject);
+
+            yield return null;
 
             _anyButtonPressListener = InputSystem.onAnyButtonPress
                 .CallOnce(_ => GoToMainMenu());

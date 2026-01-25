@@ -53,38 +53,13 @@ All C# files must start with the MPL 2.0 license header:
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 ```
 
-### Import Organization
-Imports should be organized in this specific order:
-1. System namespaces (System.*, System.Collections.*)
-2. Unity namespaces (UnityEngine.*, Unity.*)
-3. Third-party libraries (JetBrains.*, Newtonsoft.*)
-4. Project namespaces (Cgs.*, FinolDigital.*)
-5. Local/relative imports
-
-Example:
-```csharp
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using JetBrains.Annotations;
-using Cgs;
-using Cgs.Menu;
-using FinolDigital.Cgs.Json;
-using UnityExtensionMethods;
-```
-
 ### Naming Conventions
 - **Classes**: PascalCase (e.g., `CardGameManager`, `PlayController`)
 - **Methods**: PascalCase (e.g., `LoadGame`, `HandleInput`)
-- **Variables**: camelCase (e.g., `cardGameManager`, `isFocused`)
 - **Constants**: PascalCase with descriptive names (e.g., `LoadErrorMessage`, `MainMenuSceneIndex`)
-- **Private fields**: camelCase with underscore prefix (e.g., `_moveAction`, `_inputFields`)
 - **Properties**: PascalCase (e.g., `IsFocused`, `WasFocused`)
+- **Variables**: camelCase (e.g., `cardGameManager`, `isFocused`)
+- **Private fields**: camelCase with underscore prefix (e.g., `_moveAction`, `_inputFields`)
 
 ### Code Structure
 - Use regions for organizing large classes
@@ -132,61 +107,11 @@ using UnityExtensionMethods;
 - Handle client/server authority properly
 - Test multiplayer functionality thoroughly
 
-### Documentation
-- Use XML documentation for public APIs
-- Add comments for complex logic
-- Update README.md for major feature changes
-- Maintain docs/ folder with game schemas
-
-## Common Patterns
-
-### Singleton Pattern
-```csharp
-public static CardGameManager Instance { get; private set; }
-
-private void Awake()
-{
-    if (Instance != null && Instance != this)
-        Destroy(gameObject);
-    else
-        Instance = this;
-}
-```
-
-### Unity Event Handling
-```csharp
-private void OnEnable()
-{
-    MoveAction?.Enable();
-}
-
-private void OnDisable()
-{
-    MoveAction?.Disable();
-}
-```
-
-### Input System Usage
-```csharp
-protected virtual void Awake()
-{
-    MoveAction = new InputAction(type: InputActionType.PassThrough);
-    MoveAction.AddBinding("<Mouse>/scroll");
-}
-
-protected virtual void OnEnable()
-{
-    MoveAction.Enable();
-    MoveAction.performed += OnMove;
-}
-```
-
 ## Git Workflow
 - Main development branch: `develop`
 - PRs target `main` branch
 - Use descriptive commit messages
 - Include tests for new features
-- Update documentation as needed
 
 ## Resources
 - Unity Documentation: https://docs.unity3d.com/

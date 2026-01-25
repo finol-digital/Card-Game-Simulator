@@ -25,7 +25,7 @@ namespace Cgs.UI
 
         private void Start()
         {
-            if (_image.material != null)
+            if (_image == null)
                 return;
 
             var shader = Shader.Find("Shader Graphs/SelectableShader");
@@ -35,6 +35,9 @@ namespace Cgs.UI
 
         public void OnSelect(BaseEventData eventData)
         {
+            if (_image == null)
+                return;
+
             _image.material.SetFloat(IsSelectedPropertyId, 1);
             _image.SetMaterialDirty();
             if (_outline != null)
@@ -43,6 +46,9 @@ namespace Cgs.UI
 
         public void OnDeselect(BaseEventData eventData)
         {
+            if (_image == null)
+                return;
+
             _image.material.SetFloat(IsSelectedPropertyId, 0);
             _image.SetMaterialDirty();
             if (_outline != null)

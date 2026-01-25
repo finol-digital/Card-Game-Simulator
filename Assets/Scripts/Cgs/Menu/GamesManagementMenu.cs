@@ -168,6 +168,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void CreateNew()
         {
+            CardGameEditor.ParentMenu = this;
             CardGameEditor.ShowNew();
         }
 
@@ -185,6 +186,7 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void EditCurrent()
         {
+            CardGameEditor.ParentMenu = this;
             CardGameEditor.ShowCurrent();
         }
 
