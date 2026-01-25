@@ -690,7 +690,8 @@ namespace Cgs
             if (!Current.HasLoaded)
             {
                 Current.LoadAsync(UpdateCardGame, LoadCards, LoadSetCards);
-                while (!Current.HasLoaded)
+                yield return null;
+                while (Current.IsLoading)
                     yield return null;
             }
 

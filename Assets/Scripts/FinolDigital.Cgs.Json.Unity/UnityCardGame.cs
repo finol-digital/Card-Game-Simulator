@@ -93,6 +93,7 @@ namespace FinolDigital.Cgs.Json.Unity
         private string _downloadStatus = "N / A";
 
         public bool HasDownloaded { get; private set; }
+        public bool IsLoading { get; private set; }
         public bool HasLoaded { get; private set; }
         public string Error { get; private set; }
 
@@ -521,6 +522,7 @@ namespace FinolDigital.Cgs.Json.Unity
             CardGameCoroutineDelegate loadCardsCoroutine,
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
+            IsLoading = true;
             // We should have already read the cgs.json, but we need to be sure
             if (!HasReadProperties)
             {
@@ -529,6 +531,7 @@ namespace FinolDigital.Cgs.Json.Unity
                 {
                     // ReadProperties() should have already populated the Error
                     HasLoaded = false;
+                    IsLoading = false;
                     yield break;
                 }
             }
@@ -554,6 +557,7 @@ namespace FinolDigital.Cgs.Json.Unity
                     CoroutineRunner.StartCoroutine(updateCoroutine(this));
                 else
                     Debug.LogWarning($"Should update {Name}, but CoroutineRunner is null!");
+                IsLoading = false;
                 yield break;
             }
 
@@ -594,8 +598,10 @@ namespace FinolDigital.Cgs.Json.Unity
             if (File.Exists(PlayMatImageFilePath))
                 PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
 
-            // Require checking for Errors
-            HasLoaded = true;
+            // Only considered as loaded if none of the steps failed
+            IsLoading = false;
+            if (string.IsNullOrEmpty(Error))
+                HasLoaded = true;
         }
 
         public void LoadCards(int page)
