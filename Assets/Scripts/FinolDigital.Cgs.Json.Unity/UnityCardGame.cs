@@ -12,6 +12,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityExtensionMethods;
 using Object = UnityEngine.Object;
@@ -527,12 +528,179 @@ namespace FinolDigital.Cgs.Json.Unity
         private IEnumerator LoadAsyncImpl(CardGameCoroutineDelegate updateCoroutine, CardGameCoroutineDelegate loadCardsCoroutine,
             CardGameCoroutineDelegate loadSetCardsCoroutine)
         {
-            // Small delay to allow UI selection animations to start and avoid immediate frame spikes.
-            // This is intentionally conservative; future improvements will split heavy work.
-            yield return new WaitForSeconds(0.32f);
+            // Ensure we have basic properties loaded (this may be light). ReadProperties uses file I/O
+            // but may also create sprites; attempt to keep that quick — it's acceptable to call here.
+            if (!HasReadProperties)
+            {
+                ReadProperties();
+                if (!HasReadProperties)
+                {
+                    // If we still failed to read properties, abort.
+                    yield break;
+                }
+            }
 
-            // Call the existing synchronous Load on the main thread.
-            Load(updateCoroutine, loadCardsCoroutine, loadSetCardsCoroutine);
+            // Phase 1: Offload heavy JSON parsing (cards and sets) to background tasks.
+            var cardJTokenLists = new List<JToken>();
+            var setJTokenList = new List<JToken>();
+
+            // Collect card files to parse
+            var cardFiles = new List<string>();
+            for (var page = AllCardsUrlPageCountStartIndex; page < AllCardsUrlPageCountStartIndex + AllCardsUrlPageCount; page++)
+            {
+                var cardsFilePath = CardsFilePath + (page != AllCardsUrlPageCountStartIndex ? page.ToString() : string.Empty);
+                if (File.Exists(cardsFilePath)) cardFiles.Add(cardsFilePath);
+            }
+
+            var setFile = SetsFilePath;
+
+            var parseCardTasks = new List<Task<JToken>>();
+            foreach (var file in cardFiles)
+            {
+                var f = file;
+                parseCardTasks.Add(Task.Run(() =>
+                {
+                    try
+                    {
+                        var text = File.ReadAllText(f);
+                        return JToken.Parse(text);
+                    }
+                    catch (Exception e)
+                    {
+                        Error += e.Message + e.StackTrace + Environment.NewLine;
+                        return null;
+                    }
+                }));
+            }
+
+            Task<JToken> parseSetTask = null;
+            if (File.Exists(setFile))
+            {
+                var sf = setFile;
+                parseSetTask = Task.Run(() =>
+                {
+                    try
+                    {
+                        var text = File.ReadAllText(sf);
+                        return JToken.Parse(text);
+                    }
+                    catch (Exception e)
+                    {
+                        Error += e.Message + e.StackTrace + Environment.NewLine;
+                        return null;
+                    }
+                });
+            }
+
+            // Wait for parse tasks to complete, yielding each frame
+            while (parseCardTasks.Any(t => !t.IsCompleted) || (parseSetTask != null && !parseSetTask.IsCompleted))
+                yield return null;
+
+            foreach (var t in parseCardTasks)
+            {
+                if (t.Result != null)
+                {
+                    if (t.Result is JArray arr)
+                        foreach (var jt in arr) cardJTokenLists.Add(jt);
+                    else
+                        cardJTokenLists.Add(t.Result);
+                }
+            }
+
+            if (parseSetTask != null && parseSetTask.Result != null)
+            {
+                if (parseSetTask.Result is JArray sArr)
+                    foreach (var jt in sArr) setJTokenList.Add(jt);
+                else
+                    setJTokenList.Add(parseSetTask.Result);
+            }
+
+            // Phase 2: Populate sets in small batches on main thread
+            if (setJTokenList.Count > 0)
+            {
+                var batchSize = 50;
+                for (var i = 0; i < setJTokenList.Count; i++)
+                {
+                    try
+                    {
+                        LoadSetFromJToken(setJTokenList[i], null);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogWarning($"LoadAsyncImpl::LoadSetFromJToken failed: {e}");
+                        Error += e.Message + e.StackTrace + Environment.NewLine;
+                    }
+
+                    if (i % batchSize == 0) yield return null;
+                }
+            }
+
+            // Phase 3: Populate cards in small batches on main thread
+            if (cardJTokenLists.Count > 0)
+            {
+                var batchSize = 100;
+                for (var i = 0; i < cardJTokenLists.Count; i++)
+                {
+                    try
+                    {
+                        LoadCardFromJToken(cardJTokenLists[i], SetCodeDefault);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogWarning($"LoadAsyncImpl::LoadCardFromJToken failed: {e}");
+                        Error += e.Message + e.StackTrace + Environment.NewLine;
+                    }
+
+                    if (i % batchSize == 0) yield return null;
+                }
+            }
+
+            // Phase 4: Load banner, cardback, playmat, and backs sprites in small batches
+            try
+            {
+                if (File.Exists(BannerImageFilePath))
+                    BannerImageSprite = UnityFileMethods.CreateSprite(BannerImageFilePath);
+                if (File.Exists(CardBackImageFilePath))
+                    CardBackImageSprite = UnityFileMethods.CreateSprite(CardBackImageFilePath);
+
+                if (Directory.Exists(BacksDirectoryPath))
+                {
+                    var backFiles = Directory.EnumerateFiles(BacksDirectoryPath).ToList();
+                    var count = 0;
+                    foreach (var backFilePath in backFiles)
+                    {
+                        var id = Path.GetFileNameWithoutExtension(backFilePath);
+                        if (CardBackFaceImageSprites.TryGetValue(id, out var sprite))
+                        {
+                            Object.Destroy(sprite.texture);
+                            Object.Destroy(sprite);
+                        }
+                        CardBackFaceImageSprites[id] = UnityFileMethods.CreateSprite(backFilePath);
+                        count++;
+                        if (count % 3 == 0) yield return null;
+                    }
+                }
+
+                if (File.Exists(PlayMatImageFilePath))
+                    PlayMatImageSprite = UnityFileMethods.CreateSprite(PlayMatImageFilePath);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("LoadAsyncImpl::ImageLoadFailed: " + e);
+                Error += e.Message + e.StackTrace + Environment.NewLine;
+            }
+
+            // Only considered as loaded if none of the steps failed
+            if (string.IsNullOrEmpty(Error))
+                HasLoaded = true;
+
+            // Kick off any coroutines the caller wanted (update/loadCards/loadSetCards) but do not block
+            if (CoroutineRunner != null)
+            {
+                if (updateCoroutine != null) CoroutineRunner.StartCoroutine(updateCoroutine(this));
+                if (loadCardsCoroutine != null) CoroutineRunner.StartCoroutine(loadCardsCoroutine(this));
+                if (loadSetCardsCoroutine != null) CoroutineRunner.StartCoroutine(loadSetCardsCoroutine(this));
+            }
         }
 
         public void LoadCards(int page)
