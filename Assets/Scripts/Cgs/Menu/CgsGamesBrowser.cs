@@ -131,12 +131,13 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void BuildGameSelectionOptions()
         {
-            var gameOptionsFiltered = new Dictionary<int, CgsGame>();
-            foreach (var gameOption in _gameOptions.Where(gameOption =>
-                         string.IsNullOrEmpty(Filter) || gameOption.Value.Name.ToLower().Contains(Filter.ToLower())))
-                gameOptionsFiltered[gameOption.Key] = gameOption.Value;
+            var filteredGameOptions = BuildFilteredGameOptions();
+            if (filteredGameOptions.Count == 0)
+                _selectedGameId = -1;
+            else if (!filteredGameOptions.ContainsKey(_selectedGameId))
+                _selectedGameId = filteredGameOptions.Keys.OrderBy(key => key).First();
 
-            Rebuild(gameOptionsFiltered, SelectGame, _selectedGameId);
+            Rebuild(filteredGameOptions, SelectGame, _selectedGameId);
         }
 
         [UsedImplicitly]
@@ -188,8 +189,23 @@ namespace Cgs.Menu
         [UsedImplicitly]
         public void Import()
         {
-            CardGameManager.Instance.StartGetCardGame(_gameOptions[_selectedGameId].AutoUpdateUrl);
+            var filteredGameOptions = BuildFilteredGameOptions();
+            if (filteredGameOptions.Count == 0 ||
+                !filteredGameOptions.TryGetValue(_selectedGameId, out var selectedGame))
+                return;
+
+            CardGameManager.Instance.StartGetCardGame(selectedGame.AutoUpdateUrl);
             Hide();
+        }
+
+        private Dictionary<int, CgsGame> BuildFilteredGameOptions()
+        {
+            var filteredGameOptions = new Dictionary<int, CgsGame>();
+            foreach (var gameOption in _gameOptions.Where(gameOption =>
+                         string.IsNullOrEmpty(Filter) || gameOption.Value.Name.ToLower().Contains(Filter.ToLower())))
+                filteredGameOptions[gameOption.Key] = gameOption.Value;
+
+            return filteredGameOptions;
         }
 
         private void InputCancel(InputAction.CallbackContext callbackContext)
